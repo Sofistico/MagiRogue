@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# IDE0052: Remover membros particulares não lidos
+dotnet_diagnostic.IDE0052.severity = none
