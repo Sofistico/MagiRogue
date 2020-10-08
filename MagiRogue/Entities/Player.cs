@@ -13,6 +13,11 @@ namespace MagiRogue.Entities
     {
         public Player(Color foreground, Color background) : base(foreground, background, '@')
         {
+            // sets the most fundamental stats
+            BodyStat = 1;
+            MindStat = 1;
+            SoulStat = 1;
+
             Attack = 10;
             AttackChance = 40;
             Defense = 5;

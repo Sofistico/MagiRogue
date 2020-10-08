@@ -1,8 +1,11 @@
 ﻿using MagiRogue.Entities;
+using MagiRogue.System.Tiles;
 using Microsoft.Xna.Framework;
 using SadConsole;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace MagiRogue.UI
 {
@@ -55,6 +58,16 @@ namespace MagiRogue.UI
                 inventory.Add(item);
                 inventoryConsole.Print(0, indexInventoryY, item.Name);
                 indexInventoryY++;
+            }
+        }
+
+        public void RemoveItemFromConsole(Item item)
+        {
+            if (item != null)
+            {
+                int indexInventoryX = item.Name.Length;
+                inventory.Remove(item);
+                inventoryConsole.Clear(new Rectangle(0, 0, Width, Height));
             }
         }
     }

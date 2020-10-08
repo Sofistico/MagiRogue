@@ -22,6 +22,7 @@ namespace MagiRogue.UI
         public Window MapWindow;
         public MessageLogWindow MessageLog;
         public InventoryWindow InventoryScreen;
+        public StatusWindow StatusWindow;
 
         public UIManager()
         {
@@ -135,10 +136,17 @@ namespace MagiRogue.UI
             if (Global.KeyboardState.IsKeyPressed(Keys.A))
                 GameLoop.CommandManager.DirectAttack(GameLoop.World.Player);
 
-            if (Global.KeyboardState.IsKeyReleased(Keys.G))
+            if (Global.KeyboardState.IsKeyPressed(Keys.G))
             {
                 Item item = GameLoop.World.CurrentMap.GetEntityAt<Item>(GameLoop.World.Player.Position);
                 GameLoop.CommandManager.PickUp(GameLoop.World.Player, item);
+                InventoryScreen.ShowItems(GameLoop.World.Player);
+            }
+            if (Global.KeyboardState.IsKeyPressed(Keys.D))
+            {
+                GameLoop.CommandManager.DropItems(GameLoop.World.Player);
+                Item item = GameLoop.World.CurrentMap.GetEntityAt<Item>(GameLoop.World.Player.Position);
+                InventoryScreen.RemoveItemFromConsole(item);
                 InventoryScreen.ShowItems(GameLoop.World.Player);
             }
         }

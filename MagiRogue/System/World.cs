@@ -6,6 +6,7 @@ using MagiRogue.Entities;
 using Microsoft.Xna.Framework;
 using SadConsole;
 using MagiRogue.System.Tiles;
+using MagiRogue.Entities.Items;
 
 namespace MagiRogue.System
 {
@@ -129,6 +130,7 @@ namespace MagiRogue.System
                 // Create an Item with some standard attributes
                 int lootPosition = 0;
                 Item newLoot = new Item(Color.Gold, Color.White, "Gold bar", '=', 12.5);
+                IronBar ironBar = new IronBar();
 
                 // Let SadConsole know that this Item's position be tracked on the map
                 //newLoot.Components.Add(new EntityViewSyncComponent());
@@ -142,9 +144,11 @@ namespace MagiRogue.System
 
                 // set the loot's new position
                 newLoot.Position = new Point(lootPosition % CurrentMap.Width, lootPosition / CurrentMap.Height);
+                ironBar.Position = new Point(lootPosition / CurrentMap.Width, lootPosition % CurrentMap.Height);
 
                 // add the Item to the MultiSpatialMap
                 CurrentMap.Add(newLoot);
+                CurrentMap.Add(ironBar);
             }
         }
     }

@@ -6,18 +6,83 @@ using SadConsole.Entities;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using MagiRogue.Entities.Materials;
 
 namespace MagiRogue.Entities
 {
     public abstract class Actor : Entity
     {
-        public int Health { get; set; } // current health
-        public int MaxHealth { get; set; } // maximum health
-        public int Attack { get; set; } // attack strength
-        public int AttackChance { get; set; } // percent chance of successful hit
-        public int Defense { get; set; } // defensive strength
-        public int DefenseChance { get; set; } // percent chance of successfully blocking a hit
-        public int Gold { get; set; } // amount of gold carried
+        private int _health;
+        private int _maxHealth;
+        private int _attack;
+        private int _attackChance;
+        private int _defense;
+        private int _defenseChance;
+        private int _bodyStat;
+        private int _mindStat;
+        private int _soulStat;
+
+        public int Health
+        {
+            get { return _health; }
+            set { _health = value; }
+        } // current health
+
+        public int MaxHealth
+        {
+            get { return _maxHealth; }
+            set { _maxHealth = value; }
+        } // maximum health
+
+        public int Attack
+        {
+            get { return _attack; }
+            set
+            {
+                _attack += BodyStat;
+                _attack = value;
+            }
+        } // attack strength
+
+        public int AttackChance
+        {
+            get { return _attackChance; }
+            set
+            {
+                _attackChance += BodyStat;
+                _attackChance = value;
+            }
+        } // percent chance of successful hit
+
+        public int Defense
+        {
+            get { return _defense; }
+            set { _defense = value; }
+        } // defensive strength
+
+        public int DefenseChance
+        {
+            get { return _defenseChance; }
+            set { _defenseChance = value; }
+        } // percent chance of successfully blocking a hit
+
+        public int BodyStat
+        {
+            get { return _bodyStat; }
+            set { _bodyStat = value; }
+        }   // The body stat of the actor
+
+        public int MindStat
+        {
+            get { return _mindStat; }
+            set { _mindStat = value; }
+        } // The mind stat of the actor
+
+        public int SoulStat
+        {
+            get { return _soulStat; }
+            set { _soulStat = value; }
+        } // The soul stat of the actor
 
         public List<Item> Inventory = new List<Item>(); // the inventory of the actor;
 

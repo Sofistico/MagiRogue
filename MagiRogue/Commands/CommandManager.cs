@@ -241,5 +241,20 @@ namespace MagiRogue.Commands
                 GameLoop.UIManager.MessageLog.Add($"{actor.Name} opened a {door.Name}");
             }
         }
+
+        public void DropItems(Actor inv)
+        {
+            try
+            {
+                Item item = inv.Inventory.First();
+                inv.Inventory.Remove(item);
+                item.Position = inv.Position;
+                GameLoop.World.CurrentMap.Add(item);
+            }
+            catch (Exception)
+            {
+                GameLoop.UIManager.MessageLog.Add("There is no item to drop in your inventory");
+            }
+        }
     }
 }

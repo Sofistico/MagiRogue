@@ -63,6 +63,7 @@
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationFramework" />
     <Reference Include="PriorityQueue, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\OptimizedPriorityQueue.5.0.0\lib\net45\PriorityQueue.dll</HintPath>
     </Reference>
@@ -107,10 +108,13 @@
     <Reference Include="Troschuetz.Random, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Troschuetz.Random.5.0.1\lib\net472\Troschuetz.Random.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CommandManager.cs" />
     <Compile Include="Entities\Entity.cs" />
+    <Compile Include="Entities\Items\IronBar.cs" />
+    <Compile Include="Entities\Materials\MaterialJsonClass.cs" />
     <Compile Include="Entities\Monster.cs" />
     <Compile Include="GameLoop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -125,14 +129,19 @@
     <Compile Include="System\Tiles\TileWall.cs" />
     <Compile Include="UI\InventoryWindow.cs" />
     <Compile Include="UI\MessageLogWindow.cs" />
+    <Compile Include="UI\StatusWindow.cs" />
     <Compile Include="UI\UIManager.cs" />
     <Compile Include="System\World.cs" />
+    <Compile Include="Utils\JsonUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.editorconfig">
       <Link>.editorconfig</Link>
     </None>
     <None Include="App.config" />
+    <Content Include="Entities\Materials\MaterialDefinition.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -147,6 +156,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MonoGame.Framework.WindowsDX.3.8.0.1641\build\MonoGame.Framework.WindowsDX.targets" Condition="Exists('..\packages\MonoGame.Framework.WindowsDX.3.8.0.1641\build\MonoGame.Framework.WindowsDX.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
