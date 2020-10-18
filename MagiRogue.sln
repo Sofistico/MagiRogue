@@ -1,14 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-VisualStudioVersion = 16.0.30413.136
+VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagiRogue", "MagiRogue\MagiRogue.csproj", "{8C8C6FA0-0580-4B92-A113-DAACD9B4D64A}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{654B08CC-7136-4D32-B9C4-3735EDF41677}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagiRogue", "MagiRogue\MagiRogue.csproj", "{07446F58-66E1-4B55-84FB-70C67E6E0BC8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -16,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8C8C6FA0-0580-4B92-A113-DAACD9B4D64A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8C8C6FA0-0580-4B92-A113-DAACD9B4D64A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8C8C6FA0-0580-4B92-A113-DAACD9B4D64A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8C8C6FA0-0580-4B92-A113-DAACD9B4D64A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07446F58-66E1-4B55-84FB-70C67E6E0BC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07446F58-66E1-4B55-84FB-70C67E6E0BC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07446F58-66E1-4B55-84FB-70C67E6E0BC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07446F58-66E1-4B55-84FB-70C67E6E0BC8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {95B85394-2789-4C51-9678-747663162ABA}
+		SolutionGuid = {2FE90E55-E44A-4EF3-9614-020E1112F28A}
 	EndGlobalSection
 EndGlobal
