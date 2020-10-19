@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using MagiRogue.Entities.Materials;
+using MagiRogue.System;
 
 namespace MagiRogue.Entities
 {
@@ -86,12 +87,9 @@ namespace MagiRogue.Entities
 
         public List<Item> Inventory = new List<Item>(); // the inventory of the actor;
 
-        protected Actor(Color foreground, Color background, int glyph, int width = 1, int height = 1) : base(foreground, background,
-            glyph, width, height)
+        protected Actor(Color foreground, Color background, int glyph, int layer, int width = 1, int height = 1) : base(foreground, background,
+            glyph, layer, width, height)
         {
-            Animation.CurrentFrame[0].Foreground = foreground;
-            Animation.CurrentFrame[0].Background = background;
-            Animation.CurrentFrame[0].Glyph = glyph;
         }
 
         // Moves the Actor BY positionChange tiles in any X/Y direction

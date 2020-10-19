@@ -14,7 +14,7 @@ namespace MagiRogue.System.Tiles
 
         // Default constructor
         //A TileDoor can be set locked/unlocked/open/closed using the constructor.
-        public TileDoor(bool locked, bool open) : base(Color.Gray, Color.Transparent, '+')
+        public TileDoor(bool locked, bool open) : base(Color.Gray, Color.Transparent, '+', (int)MapLayer.FURNITURE)
         {
             //+ is the closed glyph
             //closed by default
@@ -36,16 +36,16 @@ namespace MagiRogue.System.Tiles
         {
             IsOpen = false;
             Glyph = '+';
-            isBlockingMove = true;
-            isBlockingSight = true;
+            IsBlockingMove = true;
+            IsBlockingSight = true;
         }
 
         // opens a door
         public void Open()
         {
             IsOpen = true;
-            isBlockingSight = false;
-            isBlockingMove = false;
+            IsBlockingSight = false;
+            IsBlockingMove = false;
             Glyph = '-';
         }
     }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using MagiRogue.System;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,8 @@ namespace MagiRogue.Entities
     {
         private readonly Random rndNum = new Random();
 
-        public Monster(Color foreground, Color background) : base(foreground, background, 'M')
+        public Monster(Color foreground, Color background, int layer = (int)MapLayer.MONSTER) :
+            base(foreground, background, 'M', layer)
         {
             //number of loot to spawn for monster
             int lootNum = rndNum.Next(1, 4);

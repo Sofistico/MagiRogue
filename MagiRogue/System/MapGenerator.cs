@@ -276,19 +276,19 @@ namespace MagiRogue.System
             }
 
             //if all the prior checks are okay, make sure that the door is placed along a horizontal wall
-            if (!_map.Tiles[right.ToIndex(_map.Width)].isBlockingMove &&
-                !_map.Tiles[left.ToIndex(_map.Width)].isBlockingMove &&
-                !_map.Tiles[top.ToIndex(_map.Width)].isBlockingMove &&
-                !_map.Tiles[bottom.ToIndex(_map.Width)].isBlockingMove)
+            if (!_map.Tiles[right.ToIndex(_map.Width)].IsBlockingMove &&
+                !_map.Tiles[left.ToIndex(_map.Width)].IsBlockingMove &&
+                !_map.Tiles[top.ToIndex(_map.Width)].IsBlockingMove &&
+                !_map.Tiles[bottom.ToIndex(_map.Width)].IsBlockingMove)
             {
                 return true;
             }
 
             //or make sure that the door is placed along a vertical wall
-            if (_map.Tiles[right.ToIndex(_map.Width)].isBlockingMove &&
-                _map.Tiles[left.ToIndex(_map.Width)].isBlockingMove &&
-                !_map.Tiles[top.ToIndex(_map.Width)].isBlockingMove &&
-                !_map.Tiles[bottom.ToIndex(_map.Width)].isBlockingMove)
+            if (_map.Tiles[right.ToIndex(_map.Width)].IsBlockingMove &&
+                _map.Tiles[left.ToIndex(_map.Width)].IsBlockingMove &&
+                !_map.Tiles[top.ToIndex(_map.Width)].IsBlockingMove &&
+                !_map.Tiles[bottom.ToIndex(_map.Width)].IsBlockingMove)
             {
                 return true;
             }

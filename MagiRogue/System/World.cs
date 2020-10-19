@@ -69,7 +69,7 @@ namespace MagiRogue.System
             // Place the player on the first non-movement-blocking tile on the map
             for (int i = 0; i < CurrentMap.Tiles.Length; i++)
             {
-                if (!CurrentMap.Tiles[i].isBlockingMove)
+                if (!CurrentMap.Tiles[i].IsBlockingMove)
                 {
                     // Set the player's position to the index of the current map position
                     Player.Position = Helpers.GetPointFromIndex(i, CurrentMap.Width);
@@ -98,7 +98,7 @@ namespace MagiRogue.System
                 int monsterPosition = 0;
                 Monster newMonster = new Monster(Color.Blue, Color.Transparent);
                 //newMonster.Components.Add(new EntityViewSyncComponent());
-                while (CurrentMap.Tiles[monsterPosition].isBlockingMove)
+                while (CurrentMap.Tiles[monsterPosition].IsBlockingMove)
                 {
                     // pick a random spot on the map
                     monsterPosition = rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);
@@ -136,7 +136,7 @@ namespace MagiRogue.System
                 //newLoot.Components.Add(new EntityViewSyncComponent());
 
                 // Try placing the Item at lootPosition; if this fails, try random positions on the map's tile array
-                while (CurrentMap.Tiles[lootPosition].isBlockingMove)
+                while (CurrentMap.Tiles[lootPosition].IsBlockingMove)
                 {
                     // pick a random spot on the map
                     lootPosition = rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);

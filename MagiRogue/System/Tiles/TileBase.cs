@@ -12,8 +12,9 @@ namespace MagiRogue.System.Tiles
     {
         // Movement and Line of Sight Flags
 
-        public bool isBlockingMove;
-        public bool isBlockingSight;
+        public bool IsBlockingMove;
+        public bool IsBlockingSight;
+        public int Layer;
 
         // Tile's name
         public string Name;
@@ -22,12 +23,13 @@ namespace MagiRogue.System.Tiles
         // representing the most basic form of of all Tiles used.
         // Every TileBase has a Foreground Colour, Background Colour, and Glyph
         // isBlockingMove and isBlockingSight are optional parameters, set to false by default
-        public TileBase(Color foregroud, Color background, int glyph, bool blockingMove = false,
+        public TileBase(Color foregroud, Color background, int glyph, int layer, bool blockingMove = false,
             bool blockingSight = false, string name = "") : base(foregroud, background, glyph)
         {
-            isBlockingMove = blockingMove;
-            isBlockingSight = blockingSight;
+            IsBlockingMove = blockingMove;
+            IsBlockingSight = blockingSight;
             Name = name;
+            Layer = layer;
         }
     }
 }

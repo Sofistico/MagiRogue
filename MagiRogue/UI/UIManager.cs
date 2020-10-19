@@ -1,13 +1,8 @@
 ﻿using SadConsole;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
-using System.Threading.Tasks;
 using MagiRogue.Entities;
 using Microsoft.Xna.Framework.Input;
-using SadConsole.Themes;
 using MagiRogue.System;
 using GoRogue;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
@@ -18,11 +13,14 @@ namespace MagiRogue.UI
     // and makes consoles easily addressable from a central place.
     public class UIManager : ContainerConsole
     {
+        // Here are the managers
         public ScrollingConsole MapConsole;
+
         public Window MapWindow;
         public MessageLogWindow MessageLog;
         public InventoryWindow InventoryScreen;
         public StatusWindow StatusWindow;
+        public MainMenuWindow MainMenu;
 
         public UIManager()
         {
@@ -38,7 +36,17 @@ namespace MagiRogue.UI
 
         public void Init()
         {
+            MainMenu = new MainMenuWindow(GameLoop.GameWidth, GameLoop.GameHeight);
+            MainMenu.Show();
+            Children.Add(MainMenu);
+
             CreateConsoles();
+        }
+
+        public void StartGameMainMenu()
+        {
+            // Hides the main menu, so that it's possible to interact with the other windows.
+            MainMenu.Hide();
 
             //Message Log initialization
             MessageLog = new MessageLogWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Message Log");
@@ -76,16 +84,9 @@ namespace MagiRogue.UI
             MapConsole.CenterViewPortOnPoint(actor.Position);
         }
 
-        // Custom Update method which allows for a vertical scrollbar
-        public override void Update(TimeSpan timeElapsed)
-        {
-            CheckKeyboard();
-            base.Update(timeElapsed);
-        }
-
         // Scans the SadConsole's Global KeyboardState and triggers behaviour
         // based on the button pressed.
-        private void CheckKeyboard()
+        public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
         {
             if (Global.KeyboardState.IsKeyPressed(Keys.F5))
                 Settings.ToggleFullScreen();
@@ -149,6 +150,8 @@ namespace MagiRogue.UI
                 InventoryScreen.RemoveItemFromConsole(item);
                 InventoryScreen.ShowItems(GameLoop.World.Player);
             }
+
+            return base.ProcessKeyboard(info);
         }
 
         // Creates a window that encloses a map console

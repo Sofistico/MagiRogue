@@ -1,4 +1,5 @@
-﻿using Microsoft;
+﻿using MagiRogue.System;
+using Microsoft;
 using Microsoft.Xna.Framework;
 using System.Dynamic;
 
@@ -29,9 +30,8 @@ namespace MagiRogue.Entities
 
         // By default, a new Item is sized 1x1, with a weight of 1, and at 100% condition
         public Item(Color foreground, Color background, string name, int glyph,
-#pragma warning disable IDE0060 // Remover o parâmetro não utilizado
-            double weight = 1, int condition = 100, int width = 1, int height = 1) : base(foreground, background, glyph)
-#pragma warning restore IDE0060 // Remover o parâmetro não utilizado
+            double weight = 1, int condition = 100, int width = 1, int height = 1, int layer = (int)MapLayer.ITEMS) :
+            base(foreground, background, glyph, layer)
         {
             Animation.CurrentFrame[0].Foreground = foreground;
             Animation.CurrentFrame[0].Background = background;

@@ -42,7 +42,7 @@ namespace MagiRogue.System
             if (location.X < 0 || location.Y < 0 || location.X >= Width || location.Y >= Height)
                 return false;
             // then return whether the tile is walkable
-            return !_tiles[location.Y * Width + location.X].isBlockingMove;
+            return !_tiles[location.Y * Width + location.X].IsBlockingMove;
         }
 
         // Checking whether a certain type of

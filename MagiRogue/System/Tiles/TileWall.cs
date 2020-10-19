@@ -15,7 +15,7 @@ namespace MagiRogue.System.Tiles
         // and have a light gray foreground and a transparent background
         // represented by the # symbol
         public TileWall(bool blocksMovement = true, bool blocksSight = true) :
-            base(Color.LightGray, Color.Transparent, '#', blocksMovement, blocksSight)
+            base(Color.LightGray, Color.Transparent, '#', (int)MapLayer.TERRAIN, blocksMovement, blocksSight)
         {
             Name = "Wall";
         }
