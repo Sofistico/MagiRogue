@@ -1,5 +1,7 @@
-﻿{
-  /*"Example": {
+﻿[
+  /*Example: {
+    "Id": "idOfMaterial" // Id of the material, it must be unique
+    "Name": "nameOfMaterial" // Dont need any extra comment
     "Flamability": false, // inserts if a given material is flammable
     "Hardness": 0, // How hard something is
     "HitPoints": 0, // the total hitpoints the material has
@@ -9,7 +11,10 @@
     "Melting_Point": 0, // Melting point of something in C° if it can melt, normally something flamable isn't capable of melt
     "Boiling_Point": 0, // Boiling point of something in C° if it can boil, normally something flamable isn't capable of boil
   },*/
-  "Flesh": {
+
+  {
+    "Id": "flesh",
+    "Name": "Flesh",
     "Flamability": false,
     "Hardness": 3,
     "MP_Infusion_Limit": 1,
@@ -17,15 +22,19 @@
     "Density": 1.1,
     "Melting_Point": 41
   },
-  "Stone": {
+  {
+    "Id": "stone",
+    "Name": "Stone",
     "Flamability": false,
     "Hardness": 7,
     "MP_Infusion_Limit": 1,
     "CanRegen": false,
     "Density": 1.6,
-    "Melting_Point": 1200,
+    "Melting_Point": 1200
   },
-  "Iron": {
+  {
+    "Id": "iron",
+    "Name": "Iron",
     "Flamability": false,
     "Hardness": 10,
     "MP_Infusion_Limit": 2,
@@ -34,14 +43,18 @@
     "Melting_Point": 1538,
     "Boiling_Point": 2862
   },
-  "Wood": {
+  {
+    "Id": "wood",
+    "Name": "Wood",
     "Flamability": true,
     "Hardness": 5,
     "MP_Infusion_Limit": 3,
     "CanRegen": false,
-    "Density": 0.9,
+    "Density": 0.9
   },
-  "Water": {
+  {
+    "Id": "h20",
+    "Name": "Water",
     "Flamability": false,
     "Hardness": 3,
     "MP_Infusion_Limit": 1,
@@ -50,4 +63,4 @@
     "Melting_Point": 0,
     "Boiling_Point": 100
   }
-}
+]

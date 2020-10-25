@@ -1,11 +1,8 @@
 ﻿using MagiRogue.Entities;
-using MagiRogue.System.Tiles;
 using Microsoft.Xna.Framework;
 using SadConsole;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace MagiRogue.UI
 {

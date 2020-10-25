@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using MagiRogue.Commands;
 using MagiRogue.System;
 using MagiRogue.UI;
-using MagiRogue.Commands;
+using Microsoft.Xna.Framework;
 
 namespace MagiRogue
 {
@@ -41,7 +41,8 @@ namespace MagiRogue
             UIManager = new UIManager();
 
             // Build the world!
-            World = new World();
+            // The world is being built before the main menu even appears
+            //World = new World();
 
             //Instantiate a new CommandManager
             CommandManager = new CommandManager();

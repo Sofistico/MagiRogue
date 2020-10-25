@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
 namespace MagiRogue.System.Tiles
 {
@@ -18,6 +13,7 @@ namespace MagiRogue.System.Tiles
             base(Color.LightGray, Color.Transparent, '#', (int)MapLayer.TERRAIN, blocksMovement, blocksSight)
         {
             Name = "Wall";
+            SetMaterial("stone");
         }
     }
 }

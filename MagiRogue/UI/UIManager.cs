@@ -1,10 +1,10 @@
-﻿using SadConsole;
-using System;
-using Microsoft.Xna.Framework;
+﻿using GoRogue;
 using MagiRogue.Entities;
-using Microsoft.Xna.Framework.Input;
 using MagiRogue.System;
-using GoRogue;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
+using SadConsole;
+using System;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace MagiRogue.UI
@@ -15,7 +15,6 @@ namespace MagiRogue.UI
     {
         // Here are the managers
         public ScrollingConsole MapConsole;
-
         public Window MapWindow;
         public MessageLogWindow MessageLog;
         public InventoryWindow InventoryScreen;
@@ -37,14 +36,16 @@ namespace MagiRogue.UI
         public void Init()
         {
             MainMenu = new MainMenuWindow(GameLoop.GameWidth, GameLoop.GameHeight);
-            MainMenu.Show();
             Children.Add(MainMenu);
+            MainMenu.Show();
+            MainMenu.Position = new Point(0, 0);
 
             CreateConsoles();
         }
 
         public void StartGameMainMenu()
         {
+            GameLoop.World = new World();
             // Hides the main menu, so that it's possible to interact with the other windows.
             MainMenu.Hide();
 
@@ -88,62 +89,62 @@ namespace MagiRogue.UI
         // based on the button pressed.
         public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
         {
-            if (Global.KeyboardState.IsKeyPressed(Keys.F5))
+            if (info.IsKeyPressed(Keys.F5))
                 Settings.ToggleFullScreen();
-            if (Global.KeyboardState.IsKeyPressed(Keys.NumPad8))
+            if (info.IsKeyPressed(Keys.NumPad8))
             {
                 GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(0, -1));
                 CenterOnActor(GameLoop.World.Player);
             }
 
-            if (Global.KeyboardState.IsKeyPressed(Keys.NumPad2))
+            if (info.IsKeyPressed(Keys.NumPad2))
             {
                 GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(0, 1));
                 CenterOnActor(GameLoop.World.Player);
             }
-            if (Global.KeyboardState.IsKeyPressed(Keys.NumPad4))
+            if (info.IsKeyPressed(Keys.NumPad4))
             {
                 GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(-1, 0));
                 CenterOnActor(GameLoop.World.Player);
             }
-            if (Global.KeyboardState.IsKeyPressed(Keys.NumPad6))
+            if (info.IsKeyPressed(Keys.NumPad6))
             {
                 GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(1, 0));
                 CenterOnActor(GameLoop.World.Player);
             }
-            if (Global.KeyboardState.IsKeyPressed(Keys.NumPad7))
+            if (info.IsKeyPressed(Keys.NumPad7))
             {
                 GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(-1, -1));
                 CenterOnActor(GameLoop.World.Player);
             }
-            if (Global.KeyboardState.IsKeyPressed(Keys.NumPad9))
+            if (info.IsKeyPressed(Keys.NumPad9))
             {
                 GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(1, -1));
                 CenterOnActor(GameLoop.World.Player);
             }
-            if (Global.KeyboardState.IsKeyPressed(Keys.NumPad1))
+            if (info.IsKeyPressed(Keys.NumPad1))
             {
                 GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(-1, 1));
                 CenterOnActor(GameLoop.World.Player);
             }
-            if (Global.KeyboardState.IsKeyPressed(Keys.NumPad3))
+            if (info.IsKeyPressed(Keys.NumPad3))
             {
                 GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(1, 1));
                 CenterOnActor(GameLoop.World.Player);
             }
-            if (Global.KeyboardState.IsKeyPressed(Keys.Escape))
+            if (info.IsKeyPressed(Keys.Escape))
                 SadConsole.Game.Instance.Exit();
 
-            if (Global.KeyboardState.IsKeyPressed(Keys.A))
+            if (info.IsKeyPressed(Keys.A))
                 GameLoop.CommandManager.DirectAttack(GameLoop.World.Player);
 
-            if (Global.KeyboardState.IsKeyPressed(Keys.G))
+            if (info.IsKeyPressed(Keys.G))
             {
                 Item item = GameLoop.World.CurrentMap.GetEntityAt<Item>(GameLoop.World.Player.Position);
                 GameLoop.CommandManager.PickUp(GameLoop.World.Player, item);
                 InventoryScreen.ShowItems(GameLoop.World.Player);
             }
-            if (Global.KeyboardState.IsKeyPressed(Keys.D))
+            if (info.IsKeyPressed(Keys.D))
             {
                 GameLoop.CommandManager.DropItems(GameLoop.World.Player);
                 Item item = GameLoop.World.CurrentMap.GetEntityAt<Item>(GameLoop.World.Player.Position);

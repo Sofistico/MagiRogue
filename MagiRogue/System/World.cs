@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using MagiRogue.Entities;
+﻿using MagiRogue.Entities;
+using MagiRogue.Entities.Items;
+using MagiRogue.System.Tiles;
 using Microsoft.Xna.Framework;
 using SadConsole;
-using MagiRogue.System.Tiles;
-using MagiRogue.Entities.Items;
+using System;
 
 namespace MagiRogue.System
 {
@@ -63,7 +60,7 @@ namespace MagiRogue.System
         // and set its starting position
         private void CreatePlayer()
         {
-            Player = new Player(Color.White, Color.Transparent);
+            Player = new Player(Color.White, Color.Black);
             //Player.Components.Add(new EntityViewSyncComponent());
 
             // Place the player on the first non-movement-blocking tile on the map

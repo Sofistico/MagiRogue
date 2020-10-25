@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MagiRogue.System;
+﻿using MagiRogue.System;
 using Microsoft.Xna.Framework;
 
 namespace MagiRogue.Entities
@@ -15,16 +10,19 @@ namespace MagiRogue.Entities
         public Player(Color foreground, Color background, int layer = (int)MapLayer.PLAYER) :
             base(foreground, background, '@', layer)
         {
-            // sets the most fundamental stats
+            // sets the most fundamental stats, needs to set the godly flag up top, because it superseeds GodPower if it is
+            // below.
+            Godly = true;
             BodyStat = 1;
             MindStat = 1;
             SoulStat = 1;
+            GodPower = 1;
 
             Attack = 10;
             AttackChance = 40;
             Defense = 5;
             DefenseChance = 20;
-            Name = "Adventurer";
+            Name = "Magi";
         }
     }
 }

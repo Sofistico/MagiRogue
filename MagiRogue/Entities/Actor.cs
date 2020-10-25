@@ -1,20 +1,14 @@
 ﻿using MagiRogue.System.Tiles;
-using GoRogue;
 using Microsoft.Xna.Framework;
-using SadConsole;
-using SadConsole.Entities;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using MagiRogue.Entities.Materials;
-using MagiRogue.System;
 
 namespace MagiRogue.Entities
 {
     public abstract class Actor : Entity
     {
-        private int _health;
-        private int _maxHealth;
+        private int _health; // Will remove in favor of a limb like system
+        private int _maxHealth; // Will remove in favor of a limb like system
+        private int _mana; // Is to be earned, the limit is soul + mind + body, a more potent form than natural mana
         private int _attack;
         private int _attackChance;
         private int _defense;
@@ -22,6 +16,8 @@ namespace MagiRogue.Entities
         private int _bodyStat;
         private int _mindStat;
         private int _soulStat;
+        private int _godPower;
+        private bool _godly;
 
         public int Health
         {
@@ -34,6 +30,18 @@ namespace MagiRogue.Entities
             get { return _maxHealth; }
             set { _maxHealth = value; }
         } // maximum health
+
+        public int AmbientMana
+        {
+            get { return _mana; }
+            set
+            {
+                if (_mana >= _bodyStat + _mindStat + _soulStat)
+                    _mana = value;
+                else
+                    _mana = _bodyStat + _mindStat + _soulStat;
+            }
+        }
 
         public int Attack
         {
@@ -84,6 +92,35 @@ namespace MagiRogue.Entities
             get { return _soulStat; }
             set { _soulStat = value; }
         } // The soul stat of the actor
+
+        public int GodPower
+        {
+            get { return _godPower; }
+            set
+            {
+                if (this._godly)
+                {
+                    _godPower = value;
+                }
+                else
+                {
+                    _godPower = 0;
+                }
+            }
+        } //The god stat of the actor, checks if the actor is a god as well
+
+        public bool Godly
+        {
+            get { return _godly; }
+            set { _godly = value; }
+        }
+
+        // Formula is soul + (mind*2) + body, this is pure mana made inside the body, it difers from just mana because it's
+        // easier to work with and all beings can easily use it, if they train to do it.
+        public int NaturalMana
+        {
+            get { return _bodyStat + (_mindStat * 2) + _soulStat; }
+        }
 
         public List<Item> Inventory = new List<Item>(); // the inventory of the actor;
 

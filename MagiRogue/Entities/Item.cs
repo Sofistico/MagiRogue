@@ -1,7 +1,5 @@
 ﻿using MagiRogue.System;
-using Microsoft;
 using Microsoft.Xna.Framework;
-using System.Dynamic;
 
 namespace MagiRogue.Entities
 {

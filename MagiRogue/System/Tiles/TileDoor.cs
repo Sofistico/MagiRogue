@@ -1,9 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MagiRogue.System.Tiles
 {
@@ -16,6 +11,9 @@ namespace MagiRogue.System.Tiles
         //A TileDoor can be set locked/unlocked/open/closed using the constructor.
         public TileDoor(bool locked, bool open) : base(Color.Gray, Color.Transparent, '+', (int)MapLayer.FURNITURE)
         {
+            SetMaterial("wood");
+
+            Name = "wooden door";
             //+ is the closed glyph
             //closed by default
             Glyph = '+';

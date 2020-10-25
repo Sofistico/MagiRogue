@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using Microsoft.Xna.Framework;
+﻿using GoRogue;
 using MagiRogue.Entities;
-using GoRogue;
 using MagiRogue.System.Tiles;
+using Microsoft.Xna.Framework;
 using SadConsole;
+using System.Linq;
 
 namespace MagiRogue.System
 {

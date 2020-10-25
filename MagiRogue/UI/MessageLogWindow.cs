@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Xna.Framework;
 using SadConsole;
 using System;
-using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace MagiRogue.UI
 {

@@ -1,12 +1,12 @@
-﻿using System;
+﻿using GoRogue.DiceNotation;
+using MagiRogue.Entities;
+using MagiRogue.System.Tiles;
+using Microsoft.Xna.Framework;
+using SadConsole;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using MagiRogue.Entities;
-using GoRogue.DiceNotation;
-using Microsoft.Xna.Framework;
-using SadConsole;
-using MagiRogue.System.Tiles;
 
 namespace MagiRogue.Commands
 {

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using MagiRogue.System.Tiles;
+using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Xna.Framework;
-using MagiRogue.System.Tiles;
 
 namespace MagiRogue.System
 {
