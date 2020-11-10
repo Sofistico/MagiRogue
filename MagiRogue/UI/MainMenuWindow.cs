@@ -36,8 +36,8 @@ namespace MagiRogue.UI
             };
 
             Children.Add(controlConsole);
-            startGame.Click += StartGame_Click;
-            quitGame.Click += QuitGame_Click;
+            startGame.Click += StartGameClick;
+            quitGame.Click += QuitGameClick;
 
             controlConsole.Add(startGame);
             controlConsole.Add(quitGame);
@@ -45,9 +45,9 @@ namespace MagiRogue.UI
             PositionButtons();
         }
 
-        private void QuitGame_Click(object sender, EventArgs e)
+        private void QuitGameClick(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            SadConsole.Game.Instance.Exit();
         }
 
         private void PositionButtons()
@@ -60,7 +60,7 @@ namespace MagiRogue.UI
             }
         }
 
-        private void StartGame_Click(object sender, EventArgs e)
+        private void StartGameClick(object sender, EventArgs e)
         {
             GameLoop.UIManager.StartGameMainMenu();
         }

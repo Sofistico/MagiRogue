@@ -16,7 +16,7 @@ namespace MagiRogue.UI
 
         // account for the thickness of the window border to prevent UI element spillover
         // check to see if it will be needed.
-        private readonly int _windowBorderThickness = 2;
+        private readonly int windowBorderThickness = 2;
 
         // This constructor creates a new inventory window and defines the inventory console inside this window
         public InventoryWindow(int width, int height, string title) : base(width, height)
@@ -37,7 +37,7 @@ namespace MagiRogue.UI
             {
                 Position = new Point(1, 1)
             };
-            inventoryConsole.ViewPort = new Rectangle(0, 0, width - 1, height - _windowBorderThickness);
+            inventoryConsole.ViewPort = new Rectangle(0, 0, width - 1, height - windowBorderThickness);
             inventoryConsole.DefaultBackground = Color.Black;
 
             UseMouse = true;

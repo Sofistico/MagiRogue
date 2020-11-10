@@ -6,120 +6,120 @@ namespace MagiRogue.Entities
 {
     public abstract class Actor : Entity
     {
-        private int _health; // Will remove in favor of a limb like system
-        private int _maxHealth; // Will remove in favor of a limb like system
-        private int _mana; // Is to be earned, the limit is soul + mind + body, a more potent form than natural mana
-        private int _attack;
-        private int _attackChance;
-        private int _defense;
-        private int _defenseChance;
-        private int _bodyStat;
-        private int _mindStat;
-        private int _soulStat;
-        private int _godPower;
-        private bool _godly;
+        private int health; // Will remove in favor of a limb like system
+        private int maxHealth; // Will remove in favor of a limb like system
+        private int mana; // Is to be earned, the limit is soul + mind + body, a more potent form than natural mana
+        private int attack;
+        private int attackChance;
+        private int defense;
+        private int defenseChance;
+        private int bodyStat;
+        private int mindStat;
+        private int soulStat;
+        private int godPower;
+        private bool godly;
 
         public int Health
         {
-            get { return _health; }
-            set { _health = value; }
+            get { return health; }
+            set { health = value; }
         } // current health
 
         public int MaxHealth
         {
-            get { return _maxHealth; }
-            set { _maxHealth = value; }
+            get { return maxHealth; }
+            set { maxHealth = value; }
         } // maximum health
 
         public int AmbientMana
         {
-            get { return _mana; }
+            get { return mana; }
             set
             {
-                if (_mana >= _bodyStat + _mindStat + _soulStat)
-                    _mana = value;
+                if (mana >= bodyStat + mindStat + soulStat)
+                    mana = value;
                 else
-                    _mana = _bodyStat + _mindStat + _soulStat;
+                    mana = bodyStat + mindStat + soulStat;
             }
         }
 
         public int Attack
         {
-            get { return _attack; }
+            get { return attack; }
             set
             {
-                _attack += BodyStat;
-                _attack = value;
+                attack += BodyStat;
+                attack = value;
             }
         } // attack strength
 
         public int AttackChance
         {
-            get { return _attackChance; }
+            get { return attackChance; }
             set
             {
-                _attackChance += BodyStat;
-                _attackChance = value;
+                attackChance += BodyStat;
+                attackChance = value;
             }
         } // percent chance of successful hit
 
         public int Defense
         {
-            get { return _defense; }
-            set { _defense = value; }
+            get { return defense; }
+            set { defense = value; }
         } // defensive strength
 
         public int DefenseChance
         {
-            get { return _defenseChance; }
-            set { _defenseChance = value; }
+            get { return defenseChance; }
+            set { defenseChance = value; }
         } // percent chance of successfully blocking a hit
 
         public int BodyStat
         {
-            get { return _bodyStat; }
-            set { _bodyStat = value; }
+            get { return bodyStat; }
+            set { bodyStat = value; }
         }   // The body stat of the actor
 
         public int MindStat
         {
-            get { return _mindStat; }
-            set { _mindStat = value; }
+            get { return mindStat; }
+            set { mindStat = value; }
         } // The mind stat of the actor
 
         public int SoulStat
         {
-            get { return _soulStat; }
-            set { _soulStat = value; }
+            get { return soulStat; }
+            set { soulStat = value; }
         } // The soul stat of the actor
 
         public int GodPower
         {
-            get { return _godPower; }
+            get { return godPower; }
             set
             {
-                if (this._godly)
+                if (this.godly)
                 {
-                    _godPower = value;
+                    godPower = value;
                 }
                 else
                 {
-                    _godPower = 0;
+                    godPower = 0;
                 }
             }
         } //The god stat of the actor, checks if the actor is a god as well
 
         public bool Godly
         {
-            get { return _godly; }
-            set { _godly = value; }
+            get { return godly; }
+            set { godly = value; }
         }
 
         // Formula is soul + (mind*2) + body, this is pure mana made inside the body, it difers from just mana because it's
         // easier to work with and all beings can easily use it, if they train to do it.
         public int NaturalMana
         {
-            get { return _bodyStat + (_mindStat * 2) + _soulStat; }
+            get { return bodyStat + (mindStat * 2) + soulStat; }
         }
 
         public List<Item> Inventory = new List<Item>(); // the inventory of the actor;
@@ -139,15 +139,18 @@ namespace MagiRogue.Entities
             // Check the current map if we can move to this new position
             if (GameLoop.World.CurrentMap.IsTileWalkable(Position + positionChange))
             {
-                // if there's a monster here,
-                // do a bump attack
-                Monster monster = GameLoop.World.CurrentMap.GetEntityAt<Monster>(Position + positionChange);
-                //Item item = GameLoop.World.CurrentMap.GetEntityAt<Item>(Position + positionChange);
-
-                if (monster != null)
+                if (this is Player)
                 {
-                    GameLoop.CommandManager.Attack(this, monster);
-                    return true;
+                    // if there's a monster here,
+                    // do a bump attack
+                    Monster monster = GameLoop.World.CurrentMap.GetEntityAt<Monster>(Position + positionChange);
+                    //Item item = GameLoop.World.CurrentMap.GetEntityAt<Item>(Position + positionChange);
+
+                    if (monster != null)
+                    {
+                        GameLoop.CommandManager.Attack(this, monster);
+                        return true;
+                    }
                 }
 
                 // if there's an item here,
@@ -184,8 +187,15 @@ namespace MagiRogue.Entities
         // returns true if actor was able to move, false if failed to move
         public bool MoveTo(Point newPosition)
         {
-            Position = newPosition;
-            return true;
+            if (GameLoop.World.CurrentMap.IsTileWalkable(newPosition))
+            {
+                Position = newPosition;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

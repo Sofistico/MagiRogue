@@ -1,4 +1,5 @@
 ﻿using GoRogue;
+using MagiRogue.Commands;
 using MagiRogue.Entities;
 using MagiRogue.System;
 using Microsoft.Xna.Framework;
@@ -46,6 +47,7 @@ namespace MagiRogue.UI
         public void StartGameMainMenu()
         {
             GameLoop.World = new World();
+
             // Hides the main menu, so that it's possible to interact with the other windows.
             MainMenu.Hide();
 
@@ -53,7 +55,7 @@ namespace MagiRogue.UI
             MessageLog = new MessageLogWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Message Log");
             Children.Add(MessageLog);
             MessageLog.Show();
-            MessageLog.Position = new Point(0, GameLoop.GameHeight / 2);
+            MessageLog.Position = new Point(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2);
 
             // Inventory initialization
             InventoryScreen = new InventoryWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Inventory Window");
@@ -65,7 +67,7 @@ namespace MagiRogue.UI
             LoadMap(GameLoop.World.CurrentMap);
 
             // Now that the MapConsole is ready, build the Window
-            CreateMapWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Game Map");
+            CreateMapWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight, "Game Map");
             UseMouse = true;
 
             // Start the game with the camera focused on the player

@@ -14,8 +14,13 @@ namespace MagiRogue.Commands
     // including combat, movement, and so on.
     public class CommandManager
     {
+        // Pathfinding field
+        public Pathfinding Pathfinding { get; set; }
+
         public CommandManager()
         {
+            // Instantietes the pathfinding field so that all actors can acess it
+            //pathfinding = new Pathfinding();
         }
 
         // Move the actor BY +/- X&Y coordinates
@@ -24,6 +29,13 @@ namespace MagiRogue.Commands
         public bool MoveActorBy(Actor actor, Point position)
         {
             return actor.MoveBy(position);
+        }
+
+        // Moves the actor To a position, by means of teleport
+        // returns true if the move was successful and false if unable to move
+        public bool MoveActorTo(Actor actor, Point position)
+        {
+            return actor.MoveTo(position);
         }
 
         // An method that when a button is pressed, attacks the monster.

@@ -5,11 +5,11 @@
     "Flamability": false, // inserts if a given material is flammable
     "Hardness": 0, // How hard something is
     "HitPoints": 0, // the total hitpoints the material has
-    "MP_Infusion_Limit": 0, // The total mp someone can infuse in the material
+    "MPInfusionLimit": 0, // The total mp someone can infuse in the material
     "CanRegen": false, // Check if the material can regain HP
     "Density" : 0, // multiplies with gravity and mass for weight calculations, in g/c³
-    "Melting_Point": 0, // Melting point of something in C° if it can melt, normally something flamable isn't capable of melt
-    "Boiling_Point": 0, // Boiling point of something in C° if it can boil, normally something flamable isn't capable of boil
+    "MeltingPoint": 0, // Melting point of something in C° if it can melt, normally something flamable isn't capable of melt
+    "BoilingPoint": 0, // Boiling point of something in C° if it can boil, normally something flamable isn't capable of boil
   },*/
 
   {
@@ -17,38 +17,38 @@
     "Name": "Flesh",
     "Flamability": false,
     "Hardness": 3,
-    "MP_Infusion_Limit": 1,
+    "MPInfusionLimit": 1,
     "CanRegen": true,
     "Density": 1.1,
-    "Melting_Point": 41
+    "MeltingPoint": 41
   },
   {
     "Id": "stone",
     "Name": "Stone",
     "Flamability": false,
     "Hardness": 7,
-    "MP_Infusion_Limit": 1,
+    "MPInfusionLimit": 1,
     "CanRegen": false,
     "Density": 1.6,
-    "Melting_Point": 1200
+    "MeltingPoint": 1200
   },
   {
     "Id": "iron",
     "Name": "Iron",
     "Flamability": false,
     "Hardness": 10,
-    "MP_Infusion_Limit": 2,
+    "MPInfusionLimit": 2,
     "CanRegen": false,
     "Density": 7.8,
-    "Melting_Point": 1538,
-    "Boiling_Point": 2862
+    "MeltingPoint": 1538,
+    "BoilingPoint": 2862
   },
   {
     "Id": "wood",
     "Name": "Wood",
     "Flamability": true,
     "Hardness": 5,
-    "MP_Infusion_Limit": 3,
+    "MPInfusionLimit": 3,
     "CanRegen": false,
     "Density": 0.9
   },
@@ -57,10 +57,10 @@
     "Name": "Water",
     "Flamability": false,
     "Hardness": 3,
-    "MP_Infusion_Limit": 1,
+    "MPInfusionLimit": 1,
     "CanRegen": true,
     "Density": 1.1,
-    "Melting_Point": 0,
-    "Boiling_Point": 100
+    "MeltingPoint": 0,
+    "BoilingPoint": 100
   }
 ]

@@ -10,23 +10,23 @@ namespace MagiRogue.UI
     public class MessageLogWindow : Window
     {
         //max number of lines to store in message log
-        private readonly int _maxLines = 100;
+        private readonly int maxLines = 100;
 
         // a Queue works using a FIFO structure, where the first line added
         // is the first line removed when we exceed the max number of lines
-        private readonly Queue<string> _lines;
+        private readonly Queue<string> lines;
 
         // the messageConsole displays the active messages
-        private readonly ScrollingConsole _messageConsole;
+        private readonly ScrollingConsole messageConsole;
 
         //scrollbar for message console
-        private readonly SadConsole.Controls.ScrollBar _messageScrollBar;
+        private readonly SadConsole.Controls.ScrollBar messageScrollBar;
 
         //Track the current position of the scrollbar
-        private int _scrollBarCurrentPosition;
+        private int scrollBarCurrentPosition;
 
         // account for the thickness of the window border to prevent UI element spillover
-        private readonly int _windowBorderThickness = 2;
+        private readonly int windowBorderThickness = 2;
 
         // Create a new window with the title centered
         // the window is draggable by default
@@ -35,84 +35,84 @@ namespace MagiRogue.UI
             // Ensure that the window background is the correct colour
             Theme.FillStyle.Background = DefaultBackground;
 
-            _lines = new Queue<string>();
+            lines = new Queue<string>();
             CanDrag = true;
 
             Title = title.Align(HorizontalAlignment.Center, Width);
 
             // add the message console, reposition, enable the viewport, and add it to the window
-            _messageConsole = new ScrollingConsole(width - _windowBorderThickness, height - _windowBorderThickness)
+            messageConsole = new ScrollingConsole(width - windowBorderThickness, height - windowBorderThickness)
             {
                 Position = new Point(1, 1)
             };
-            _messageConsole.ViewPort = new Rectangle(0, 0, width - 1, height - _windowBorderThickness);
-            _messageConsole.DefaultBackground = Color.Black;
+            messageConsole.ViewPort = new Rectangle(0, 0, width - 1, height - windowBorderThickness);
+            messageConsole.DefaultBackground = Color.Black;
 
             // create a scrollbar and attach it to an event handler, then add it to the Window
-            _messageScrollBar = new SadConsole.Controls.ScrollBar
-                (Orientation.Vertical, height - _windowBorderThickness)
+            messageScrollBar = new SadConsole.Controls.ScrollBar
+                (Orientation.Vertical, height - windowBorderThickness)
             {
-                Position = new Point(_messageConsole.Width + 1, _messageConsole.Position.X),
+                Position = new Point(messageConsole.Width + 1, messageConsole.Position.X),
                 IsEnabled = false
             };
-            _messageScrollBar.ValueChanged += MessageScrollBar_ValueChanged;
-            Add(_messageScrollBar);
+            messageScrollBar.ValueChanged += MessageScrollBarValueChanged;
+            Add(messageScrollBar);
 
             // enable mouse input
             UseMouse = true;
 
             // Add the child consoles to the window
-            Children.Add(_messageConsole);
+            Children.Add(messageConsole);
         }
 
         public void Add(string message)
         {
-            _lines.Enqueue(message);
+            lines.Enqueue(message);
             // when exceeding the max number of lines remove the oldest one
-            if (_lines.Count > _maxLines)
+            if (lines.Count > maxLines)
             {
-                _lines.Dequeue();
+                lines.Dequeue();
             }
             // Move the cursor to the last line and print the message.
-            _messageConsole.Cursor.Position = new Point(1, _lines.Count);
-            _messageConsole.Cursor.Print(message + "\n");
+            messageConsole.Cursor.Position = new Point(1, lines.Count);
+            messageConsole.Cursor.Print(message + "\n");
         }
 
         // Controls the position of the messagelog viewport
         // based on the scrollbar position using an event handler
-        private void MessageScrollBar_ValueChanged(object sender, EventArgs e)
+        private void MessageScrollBarValueChanged(object sender, EventArgs e)
         {
-            _messageConsole.ViewPort = new Rectangle(0, _messageScrollBar.Value + _windowBorderThickness,
-                _messageConsole.Width, _messageConsole.ViewPort.Height);
+            messageConsole.ViewPort = new Rectangle(0, messageScrollBar.Value + windowBorderThickness,
+                messageConsole.Width, messageConsole.ViewPort.Height);
         }
 
         public override void Update(TimeSpan time)
         {
             base.Update(time);
 
-            // Ensure that the scrollbar tracks the current position of the _messageConsole.
-            if (_messageConsole.TimesShiftedUp != 0 |
-                _messageConsole.Cursor.Position.Y >= _messageConsole.ViewPort.Height + _scrollBarCurrentPosition)
+            // Ensure that the scrollbar tracks the current position of the messageConsole.
+            if (messageConsole.TimesShiftedUp != 0 |
+                messageConsole.Cursor.Position.Y >= messageConsole.ViewPort.Height + scrollBarCurrentPosition)
             {
                 //enable the scrollbar once the messagelog has filled up with enough text to warrant scrolling
-                _messageScrollBar.IsEnabled = true;
+                messageScrollBar.IsEnabled = true;
 
                 // Make sure we've never scrolled the entire size of the buffer
-                if (_scrollBarCurrentPosition < _messageConsole.Height - _messageConsole.ViewPort.Height)
+                if (scrollBarCurrentPosition < messageConsole.Height - messageConsole.ViewPort.Height)
                 {
                     // Record how much we've scrolled to enable how far back the bar can see
-                    _scrollBarCurrentPosition += _messageConsole.TimesShiftedUp != 0 ? _messageConsole.TimesShiftedUp : 1;
+                    scrollBarCurrentPosition += messageConsole.TimesShiftedUp != 0 ? messageConsole.TimesShiftedUp : 1;
                 }
 
                 // Determines the scrollbar's max vertical position
                 // Thanks @Kaev for simplifying this math!
-                _messageScrollBar.Maximum = _scrollBarCurrentPosition - _windowBorderThickness;
+                messageScrollBar.Maximum = scrollBarCurrentPosition - windowBorderThickness;
 
                 // This will follow the cursor since we move the render area in the event.
-                _messageScrollBar.Value = _scrollBarCurrentPosition;
+                messageScrollBar.Value = scrollBarCurrentPosition;
 
                 // Reset the shift amount.
-                _messageConsole.TimesShiftedUp = 0;
+                messageConsole.TimesShiftedUp = 0;
             }
         }
     }

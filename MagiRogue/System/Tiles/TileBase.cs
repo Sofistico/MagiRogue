@@ -19,7 +19,6 @@ namespace MagiRogue.System.Tiles
         // Creates a list of possible materials, and then assings it to the tile, need to move it to a fitting area, like
         // World or GameLoop, because if need to port, every new object will have more than one possible material without
         // any need.
-        private static IList<Material> _listOfMaterials;
         public IEnumerable<Material> Material;
 
         // Tile's name
@@ -40,9 +39,7 @@ namespace MagiRogue.System.Tiles
 
         public void SetMaterial(string id)
         {
-            _listOfMaterials = JsonUtils.JsonDeseralize<List<Material>>(Path.Combine
-                (AppDomain.CurrentDomain.BaseDirectory.ToString(), "Entities", "Materials", "MaterialDefinition.json"));
-            var foundMaterial = _listOfMaterials.Where(a => a.Id == $"{id}");
+            IEnumerable<Material> foundMaterial = GameLoop.PhysicsManager.ListOfMaterials.Where(a => a.Id == $"{id}");
             Material = foundMaterial.ToList();
         }
     }

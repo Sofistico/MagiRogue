@@ -5,10 +5,11 @@ namespace MagiRogue.Entities
 {
     // Item: Describes things that can be picked up or used
     // by actors, or destroyed on the map.
+    // TODO: jsonize it.
     public class Item : Entity
     {
         // backing field for Condition
-        private int _condition;
+        private int condition;
 
         public double Weight { get; set; } // Weight of the item in Kilo
 
@@ -17,11 +18,11 @@ namespace MagiRogue.Entities
         // 0 = item is destroyed
         public int Condition
         {
-            get { return _condition; }
+            get { return condition; }
             set
             {
-                _condition += value;
-                if (_condition < 0)
+                condition += value;
+                if (condition < 0)
                     Destroy();
             }
         }
@@ -31,9 +32,6 @@ namespace MagiRogue.Entities
             double weight = 1, int condition = 100, int width = 1, int height = 1, int layer = (int)MapLayer.ITEMS) :
             base(foreground, background, glyph, layer)
         {
-            Animation.CurrentFrame[0].Foreground = foreground;
-            Animation.CurrentFrame[0].Background = background;
-            Animation.CurrentFrame[0].Glyph = glyph;
             Weight = weight;
             Condition = condition;
             Name = name;

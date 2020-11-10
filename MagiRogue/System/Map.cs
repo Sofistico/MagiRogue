@@ -90,9 +90,7 @@ namespace MagiRogue.System
             // make sure the index is within the boundaries of the map!
             if (locationIndex <= Width * Height && locationIndex >= 0)
             {
-                if (Tiles[locationIndex] is T)
-                    return (T)Tiles[locationIndex];
-                else return null;
+                return Tiles[locationIndex] is T ? (T)Tiles[locationIndex] : null;
             }
             else return null;
         }

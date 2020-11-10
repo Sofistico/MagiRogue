@@ -1,4 +1,6 @@
-﻿using MagiRogue.Entities;
+﻿using GoRogue.MapViews;
+using MagiRogue.Commands;
+using MagiRogue.Entities;
 using MagiRogue.Entities.Items;
 using MagiRogue.System.Tiles;
 using Microsoft.Xna.Framework;
@@ -16,7 +18,8 @@ namespace MagiRogue.System
 
         private readonly int _mapWidth = 100;
         private readonly int _mapHeight = 100;
-        private TileBase[] _mapTiles;
+        //private TileBase[] _mapTiles;
+        private ArrayMap<TileBase> _mapTiles;
         private readonly int _maxRooms = 100;
         private readonly int _minRoomSize = 4;
         private readonly int _maxRoomSize = 15;
@@ -27,6 +30,8 @@ namespace MagiRogue.System
         public Player Player { get; set; }
 
         private readonly Random rndNum = new Random();
+
+        public IMapView<bool> walkabilityMap;
 
         // Creates a new game world and stores it in
         // publicly accessible
@@ -50,10 +55,12 @@ namespace MagiRogue.System
         // parameters to determine geometry
         private void CreateMap()
         {
-            _mapTiles = new TileBase[_mapWidth * _mapHeight];
+            _mapTiles = new ArrayMap<TileBase>(_mapWidth, _mapHeight);
             CurrentMap = new Map(_mapWidth, _mapHeight);
             MapGenerator mapGen = new MapGenerator();
             CurrentMap = mapGen.GenerateMap(_mapWidth, _mapHeight, _maxRooms, _minRoomSize, _maxRoomSize);
+            var pathView = new LambdaTranslationMap<TileBase, bool>(_mapTiles, val => !val.IsBlockingMove);
+            GameLoop.CommandManager.Pathfinding = new Pathfinding(pathView);
         }
 
         // Create a player using the Player class

@@ -10,10 +10,10 @@
         public string Name { get; set; }
         public bool Flamability { get; set; }
         public int Hardness { get; set; }
-        public int? MP_Infusion_Limit { get; set; }
+        public int? MPInfusionLimit { get; set; }
         public bool CanRegen { get; set; }
         public double Density { get; set; }
-        public int? Melting_Point { get; set; }
-        public int? Boiling_Point { get; set; }
+        public int? MeltingPoint { get; set; }
+        public int? BoilingPoint { get; set; }
     }
 }

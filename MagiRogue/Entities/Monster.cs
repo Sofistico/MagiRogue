@@ -7,6 +7,7 @@ namespace MagiRogue.Entities
     //A generic monster capable of
     //combat and interaction
     //yields treasure upon death
+    // todo: tranform this class in a json class, so that i can define monsters via json.
     public class Monster : Actor
     {
         private readonly Random rndNum = new Random();

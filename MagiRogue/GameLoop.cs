@@ -1,5 +1,6 @@
 ﻿using MagiRogue.Commands;
 using MagiRogue.System;
+using MagiRogue.System.Physics;
 using MagiRogue.UI;
 using Microsoft.Xna.Framework;
 
@@ -12,10 +13,9 @@ namespace MagiRogue
 
         // Managers
         public static UIManager UIManager;
-
         public static World World;
-
         public static CommandManager CommandManager;
+        public static PhysicsManager PhysicsManager;
 
         static void Main()
         {
@@ -46,6 +46,9 @@ namespace MagiRogue
 
             //Instantiate a new CommandManager
             CommandManager = new CommandManager();
+
+            //Instantiate a new PhysicsManager
+            PhysicsManager = new PhysicsManager();
 
             // Now let the UIManager create its consoles
             // so they can use the World data
