@@ -23,23 +23,31 @@ namespace MagiRogue.Commands
             fastPath = new FastAStar(walkabilityMap, Distance.CHEBYSHEV);
         }
 
-        public void WalkPath(Coord target, Actor mob)
+        public bool WalkPath(Coord target, Actor mob)
         {
             if (mob != null)
             {
                 Path path = fastPath.ShortestPath(mob.Position, target);
-                FollowPath(path, mob);
+                return FollowPath(path, mob);
             }
+            else
+                return false;
         }
 
-        private void FollowPath(Path path, Actor actor)
+        private bool FollowPath(Path path, Actor actor)
         {
             if (path != null)
             {
                 foreach (Coord steps in path.Steps)
                 {
                     GameLoop.CommandManager.MoveActorBy(actor, steps);
+                    return true;
                 }
+                return false;
+            }
+            else
+            {
+                return false;
             }
         }
     }

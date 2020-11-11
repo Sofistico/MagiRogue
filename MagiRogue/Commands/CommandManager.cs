@@ -38,6 +38,18 @@ namespace MagiRogue.Commands
             return actor.MoveTo(position);
         }
 
+        public bool FollowPlayer(Actor actor)
+        {
+            if (GameLoop.World.Player != null) // Implement a way for an actor to check if the player is near, so that it can follow the player
+            {
+                return Pathfinding.WalkPath(GameLoop.World.Player.Position, actor);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         // An method that when a button is pressed, attacks the monster.
         // TODO: An df inspired menu with body parts located.
 

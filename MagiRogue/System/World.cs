@@ -18,8 +18,8 @@ namespace MagiRogue.System
 
         private readonly int _mapWidth = 100;
         private readonly int _mapHeight = 100;
-        //private TileBase[] _mapTiles;
-        private ArrayMap<TileBase> _mapTiles;
+        private TileBase[] _mapTiles;
+        //private ArrayMap<TileBase> _mapTiles; // maybe add it someday
         private readonly int _maxRooms = 100;
         private readonly int _minRoomSize = 4;
         private readonly int _maxRoomSize = 15;
@@ -55,12 +55,13 @@ namespace MagiRogue.System
         // parameters to determine geometry
         private void CreateMap()
         {
-            _mapTiles = new ArrayMap<TileBase>(_mapWidth, _mapHeight);
+            _mapTiles = new TileBase[_mapWidth * _mapHeight];
             CurrentMap = new Map(_mapWidth, _mapHeight);
             MapGenerator mapGen = new MapGenerator();
             CurrentMap = mapGen.GenerateMap(_mapWidth, _mapHeight, _maxRooms, _minRoomSize, _maxRoomSize);
-            var pathView = new LambdaTranslationMap<TileBase, bool>(_mapTiles, val => !val.IsBlockingMove);
-            GameLoop.CommandManager.Pathfinding = new Pathfinding(pathView);
+            ArrayMap<TileBase> array = new ArrayMap<TileBase>(CurrentMap.Tiles, _mapHeight);
+            var pathFinder = new LambdaTranslationMap<TileBase, bool>(array, val => val.IsBlockingMove);
+            GameLoop.CommandManager.Pathfinding = new Pathfinding(pathFinder);
         }
 
         // Create a player using the Player class
