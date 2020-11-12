@@ -17,6 +17,8 @@ namespace MagiRogue.Entities
             MindStat = 1;
             SoulStat = 1;
             GodPower = 1;
+            Health = 10;
+            MaxHealth = 10;
 
             Attack = 10;
             AttackChance = 40;
@@ -24,6 +26,9 @@ namespace MagiRogue.Entities
             DefenseChance = 20;
             Name = "Magi";
             ViewRadius = 8;
+
+            Weight = 50;
+            Size = 165;
         }
     }
 }
