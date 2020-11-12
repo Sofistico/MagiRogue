@@ -15,7 +15,7 @@ namespace MagiRogue.Commands
     {
         private readonly IMapView<bool> mapNodes; // Views the map by simpliyfing tilebase to a bool that something is walkable
 
-        private FastAStar fastPath;
+        private readonly FastAStar fastPath;
 
         public Pathfinding(IMapView<bool> walkabilityMap)
         {
@@ -40,7 +40,9 @@ namespace MagiRogue.Commands
             {
                 foreach (Coord steps in path.Steps)
                 {
-                    GameLoop.CommandManager.MoveActorBy(actor, steps);
+                    // I think this solves the bug of getting an entitiy out of the bordes of the map
+                    //Direction.GetDirection(path.Start, path.End); // thoughts for a future upgrade.
+                    actor.Position = new Coord(steps.X, steps.Y);
                     return true;
                 }
                 return false;

@@ -22,7 +22,7 @@ namespace MagiRogue.Entities
             {
                 // monsters are made out of spork, obvs.
                 Item newItem = new Item(Color.Red, Color.Black, "Debug Remains", '%', 1.5);
-                newItem.Components.Add(new SadConsole.Components.EntityViewSyncComponent());
+                //newItem.Components.Add(new SadConsole.Components.EntityViewSyncComponent());
                 Inventory.Add(newItem);
             }
         }

@@ -1,4 +1,6 @@
 ﻿using GoRogue;
+using GoRogue.MapViews;
+using MagiRogue.Commands;
 using MagiRogue.Entities;
 using MagiRogue.System.Tiles;
 using Microsoft.Xna.Framework;
@@ -10,6 +12,8 @@ namespace MagiRogue.System
     // Stores, manipulates and queries Tile data
     public class Map
     {
+        #region Properties
+
         private TileBase[] _tiles; // Contains all tiles objects
         private int _width;
         private int _height;
@@ -17,9 +21,16 @@ namespace MagiRogue.System
         public TileBase[] Tiles { get { return _tiles; } set { _tiles = value; } }
         public int Width { get { return _width; } set { _width = value; } }
         public int Height { get { return _height; } set { _height = value; } }
+        public Pathfinding Pathfinding { get; set; } // pathfinding property
 
         public MultiSpatialMap<Entity> Entities; // Keeps track of all the Entities on the map
         public static IDGenerator IDGenerator = new IDGenerator(); // A static IDGenerator that all Entities can access
+        public IMapView<bool> WalkabilityMap; // Holds the information of all walkables positions
+        public IMapView<bool> ViewMap; // Holds the information of the view map
+
+        #endregion Properties
+
+        #region Constructor
 
         //Build a new map with a specified width and height
         public Map(int width, int height)
@@ -28,7 +39,15 @@ namespace MagiRogue.System
             _height = height;
             Tiles = new TileBase[width * height];
             Entities = new MultiSpatialMap<Entity>();
+            ArrayMap<TileBase> viewTiles = new ArrayMap<TileBase>(Tiles, _height);
+            WalkabilityMap = new LambdaTranslationMap<TileBase, bool>(viewTiles, val => val.IsBlockingMove);
+            ViewMap = new LambdaTranslationMap<TileBase, bool>(viewTiles, val => val.IsBlockingSight);
+            Pathfinding = new Pathfinding(WalkabilityMap);
         }
+
+        #endregion Constructor
+
+        #region HelperMethods
 
         // IsTileWalkable checks
         // to see if the actor has tried
@@ -59,6 +78,12 @@ namespace MagiRogue.System
             // Remove from spatial map
             Entities.Remove(entity);
 
+            // Clears the memory of the field of view
+            if (entity is Actor actor)
+            {
+                actor.FieldOfViewSystem.Reset();
+            }
+
             // Link up the entity's Moved event to a new handler
             entity.Moved -= OnEntityMoved;
         }
@@ -69,6 +94,13 @@ namespace MagiRogue.System
             // add entity to spatial map
             Entities.Add(entity, entity.Position);
 
+            // Initilizes the field of view of the actor
+            if (entity is Actor actor)
+            {
+                actor.FieldOfViewSystem.Initialize(ViewMap);
+                actor.FieldOfViewSystem.Calculate();
+            }
+
             // Link up the entity's Moved event to a new handler
             entity.Moved += OnEntityMoved;
         }
@@ -77,6 +109,11 @@ namespace MagiRogue.System
         // which updates the Entity's current position in the SpatialMap
         private void OnEntityMoved(object sender, Entity.EntityMovedEventArgs args)
         {
+            if (args.Entity is Actor actor)
+            {
+                actor.FieldOfViewSystem.Calculate();
+            }
+
             Entities.Move(args.Entity as Entity, args.Entity.Position);
         }
 
@@ -102,5 +139,7 @@ namespace MagiRogue.System
         {
             return GetTileAt<T>(location.X, location.Y);
         }
+
+        #endregion HelperMethods
     }
 }

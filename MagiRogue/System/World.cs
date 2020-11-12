@@ -31,8 +31,6 @@ namespace MagiRogue.System
 
         private readonly Random rndNum = new Random();
 
-        public IMapView<bool> walkabilityMap;
-
         // Creates a new game world and stores it in
         // publicly accessible
         public World()
@@ -59,9 +57,6 @@ namespace MagiRogue.System
             CurrentMap = new Map(_mapWidth, _mapHeight);
             MapGenerator mapGen = new MapGenerator();
             CurrentMap = mapGen.GenerateMap(_mapWidth, _mapHeight, _maxRooms, _minRoomSize, _maxRoomSize);
-            ArrayMap<TileBase> array = new ArrayMap<TileBase>(CurrentMap.Tiles, _mapHeight);
-            var pathFinder = new LambdaTranslationMap<TileBase, bool>(array, val => val.IsBlockingMove);
-            GameLoop.CommandManager.Pathfinding = new Pathfinding(pathFinder);
         }
 
         // Create a player using the Player class
@@ -115,6 +110,7 @@ namespace MagiRogue.System
                 newMonster.Attack = rndNum.Next(0, 10);
                 newMonster.AttackChance = rndNum.Next(0, 50);
                 newMonster.Name = "a common troll";
+                newMonster.ViewRadius = 5;
 
                 // Set the monster's new position
                 // Note: this fancy math will be replaced by a new helper method

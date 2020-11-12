@@ -252,8 +252,6 @@ namespace MagiRogue.UI
             UIManagerConsoles.Print(4, 3, $"{UIManagerConsoles.Width} {UIManagerConsoles.Height}");
         }
 
-#pragma warning disable IDE0051 // Remover membros privados não utilizados
-
         // Adds the entire list of entities found in the
         // World.CurrentMap's Entities SpatialMap to the
         // MapConsole, so they can be seen onscreen

@@ -23,6 +23,7 @@ namespace MagiRogue.Entities
             Defense = 5;
             DefenseChance = 20;
             Name = "Magi";
+            ViewRadius = 8;
         }
     }
 }

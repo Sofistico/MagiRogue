@@ -14,9 +14,6 @@ namespace MagiRogue.Commands
     // including combat, movement, and so on.
     public class CommandManager
     {
-        // Pathfinding field
-        public Pathfinding Pathfinding { get; set; }
-
         public CommandManager()
         {
             // Instantietes the pathfinding field so that all actors can acess it
@@ -42,7 +39,7 @@ namespace MagiRogue.Commands
         {
             if (GameLoop.World.Player != null) // Implement a way for an actor to check if the player is near, so that it can follow the player
             {
-                return Pathfinding.WalkPath(GameLoop.World.Player.Position, actor);
+                return GameLoop.World.CurrentMap.Pathfinding.WalkPath(GameLoop.World.Player.Position, actor);
             }
             else
             {
@@ -188,7 +185,7 @@ namespace MagiRogue.Commands
             else
             {
                 // The monster carries no loot, so don't show any loot dropped
-                deathMessage.Append(".");
+                deathMessage.Append('.');
             }
 
             // actor goes bye-bye

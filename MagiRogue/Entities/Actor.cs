@@ -1,4 +1,6 @@
-﻿using MagiRogue.System.Tiles;
+﻿using GoRogue;
+using MagiRogue.System;
+using MagiRogue.System.Tiles;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
@@ -6,6 +8,8 @@ namespace MagiRogue.Entities
 {
     public abstract class Actor : Entity
     {
+        #region Stats
+
         private int health; // Will remove in favor of a limb like system
         private int maxHealth; // Will remove in favor of a limb like system
         private int mana; // Is to be earned, the limit is soul + mind + body, a more potent form than natural mana
@@ -122,12 +126,21 @@ namespace MagiRogue.Entities
             get { return bodyStat + (mindStat * 2) + soulStat; }
         }
 
+        public int ViewRadius { get; set; }
+
+        public FOVSystem FieldOfViewSystem { get; private set; }
+
         public List<Item> Inventory = new List<Item>(); // the inventory of the actor;
+
+        #endregion Stats
 
         protected Actor(Color foreground, Color background, int glyph, int layer, int width = 1, int height = 1) : base(foreground, background,
             glyph, layer, width, height)
         {
+            FieldOfViewSystem = new FOVSystem(this, Distance.CHEBYSHEV);
         }
+
+        #region HelpCode
 
         // Moves the Actor BY positionChange tiles in any X/Y direction
         // returns true if actor was able to move, false if failed to move
@@ -197,5 +210,7 @@ namespace MagiRogue.Entities
                 return false;
             }
         }
+
+        #endregion HelpCode
     }
 }

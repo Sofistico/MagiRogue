@@ -37,7 +37,7 @@ namespace MagiRogue.System.Tiles
             Layer = layer;
         }
 
-        public void SetMaterial(string id)
+        protected void SetMaterial(string id)
         {
             IEnumerable<Material> foundMaterial = GameLoop.PhysicsManager.ListOfMaterials.Where(a => a.Id == $"{id}");
             Material = foundMaterial.ToList();
