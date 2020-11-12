@@ -16,7 +16,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.301
+        dotnet-version: 5.0.100
     - name: Install dependencies
       run: dotnet restore
     - name: Build
@@ -29,3 +29,6 @@ jobs:
     # You may pin to the exact commit or the version.
     # uses: baruchiro/github-actions@cfa460ee18f07031ba85ff00d2184fabf03f9f1f
       uses: baruchiro/github-actions@0.0.1
+    - name: Create a Release
+      uses: actions/create-release@v1
+
