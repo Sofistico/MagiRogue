@@ -26,6 +26,7 @@ namespace MagiRogue.Entities
         private int bloodCount; // the amount of blood inside the actor, its in ml, to facilitate the calculus of blood volume, the formula is ml/kg
         private int size; // the size in meters of the actor
         private int weight; // the weight of the being in kg
+        private int temperature; // the temperature of the creature, don't know if i will use or not
 
         /// <summary>
         /// current health
@@ -185,9 +186,22 @@ namespace MagiRogue.Entities
             }
         }
 
+        /// <summary>
+        /// The size of the actor in centimeters
+        /// </summary>
         public int Size { get { return size; } set { size = value; } }
+        /// <summary>
+        /// The weight of the actor in kg
+        /// </summary>
         public int Weight { get { return weight; } set { weight = value; } }
+        /// <summary>
+        /// The temperature of the actor in celsius
+        /// </summary>
+        public int Temperature { get { return temperature; } set { temperature = value; } }
 
+        /// <summary>
+        /// The view radius of the actor, for seeing things
+        /// </summary>
         public int ViewRadius { get; set; }
 
         public FOVSystem FieldOfViewSystem { get; private set; }

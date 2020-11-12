@@ -1,14 +1,9 @@
-﻿using MagiRogue.System.Tiles;
-using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using GoRogue.Pathing;
+﻿using GoRogue;
 using GoRogue.MapViews;
-using GoRogue;
+using GoRogue.Pathing;
 using MagiRogue.Entities;
 
-namespace MagiRogue.Commands
+namespace MagiRogue.System
 {
     // Will insert Dijikstra algorith, and then A* algorithm
     public class Pathfinding

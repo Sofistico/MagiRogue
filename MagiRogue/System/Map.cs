@@ -1,6 +1,5 @@
 ﻿using GoRogue;
 using GoRogue.MapViews;
-using MagiRogue.Commands;
 using MagiRogue.Entities;
 using MagiRogue.System.Tiles;
 using Microsoft.Xna.Framework;
