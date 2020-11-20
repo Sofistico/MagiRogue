@@ -52,17 +52,6 @@ namespace MagiRogue.System
                 return;
 
             fieldOfView.Calculate(actorView.Position, actorView.ViewRadius, distanceMeasureView);
-
-            if (GameLoop.World != null)
-            {
-                //GameLoop.World.CurrentMap.CalculateFOV(actorView.Position, actorView.ViewRadius);
-                foreach (Tiles.TileBase tile in GameLoop.World.CurrentMap.Tiles)
-                {
-                    if (!tile.IsExplored)
-                    {
-                    }
-                }
-            }
         }
 
         /// <summary>
