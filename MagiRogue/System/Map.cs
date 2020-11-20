@@ -9,7 +9,7 @@ using System.Linq;
 namespace MagiRogue.System
 {
     // Stores, manipulates and queries Tile data
-    public class Map : GoRogue.GameFramework.Map
+    public class Map
     {
         #region Properties
 
@@ -18,21 +18,26 @@ namespace MagiRogue.System
         private int _height;
 
         public TileBase[] Tiles { get { return _tiles; } set { _tiles = value; } }
-        //public int Width { get { return _width; } set { _width = value; } }
-        //public int Height { get { return _height; } set { _height = value; } }
+        public int Width { get { return _width; } set { _width = value; } }
+        public int Height { get { return _height; } set { _height = value; } }
         public Pathfinding Pathfinding { get; set; } // pathfinding property
 
-        public new MultiSpatialMap<Entity> Entities; // Keeps track of all the Entities on the map
+        public MultiSpatialMap<Entity> Entities; // Keeps track of all the Entities on the map
         public static IDGenerator IDGenerator = new IDGenerator(); // A static IDGenerator that all Entities can access
         public IMapView<bool> WalkabilityMap; // Holds the information of all walkables positions
         public IMapView<bool> ViewMap; // Holds the information of the view map
+        /// <summary>
+        /// Holds the information of all explored tiles, true for explored and false for not explored, change color if not
+        /// explored.
+        /// </summary>
+        public IMapView<bool> ExploredMap;
 
         #endregion Properties
 
         #region Constructor
 
         //Build a new map with a specified width and height
-        public Map(int width, int height) : base(width, height, 5, Distance.EUCLIDEAN)
+        public Map(int width, int height)
         {
             _width = width;
             _height = height;
@@ -42,6 +47,7 @@ namespace MagiRogue.System
             WalkabilityMap = new LambdaTranslationMap<TileBase, bool>(viewTiles, val => val.IsBlockingMove);
             ViewMap = new LambdaTranslationMap<TileBase, bool>(viewTiles, val => val.IsBlockingSight);
             Pathfinding = new Pathfinding(WalkabilityMap);
+            ExploredMap = new LambdaTranslationMap<TileBase, bool>(viewTiles, a => a.IsExplored);
         }
 
         #endregion Constructor
@@ -61,6 +67,11 @@ namespace MagiRogue.System
                 return false;
             // then return whether the tile is walkable
             return !_tiles[location.Y * Width + location.X].IsBlockingMove;
+        }
+
+        public bool IsTileVisible(Point location)
+        {
+            return false;
         }
 
         // Checking whether a certain type of
