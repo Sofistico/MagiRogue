@@ -9,7 +9,7 @@ using System.Linq;
 namespace MagiRogue.System
 {
     // Stores, manipulates and queries Tile data
-    public class Map
+    public class Map : GoRogue.GameFramework.Map
     {
         #region Properties
 
@@ -18,11 +18,11 @@ namespace MagiRogue.System
         private int _height;
 
         public TileBase[] Tiles { get { return _tiles; } set { _tiles = value; } }
-        public int Width { get { return _width; } set { _width = value; } }
-        public int Height { get { return _height; } set { _height = value; } }
+        //public int Width { get { return _width; } set { _width = value; } }
+        //public int Height { get { return _height; } set { _height = value; } }
         public Pathfinding Pathfinding { get; set; } // pathfinding property
 
-        public MultiSpatialMap<Entity> Entities; // Keeps track of all the Entities on the map
+        public new MultiSpatialMap<Entity> Entities; // Keeps track of all the Entities on the map
         public static IDGenerator IDGenerator = new IDGenerator(); // A static IDGenerator that all Entities can access
         public IMapView<bool> WalkabilityMap; // Holds the information of all walkables positions
         public IMapView<bool> ViewMap; // Holds the information of the view map
@@ -32,7 +32,7 @@ namespace MagiRogue.System
         #region Constructor
 
         //Build a new map with a specified width and height
-        public Map(int width, int height)
+        public Map(int width, int height) : base(width, height, 5, Distance.EUCLIDEAN)
         {
             _width = width;
             _height = height;
@@ -78,7 +78,7 @@ namespace MagiRogue.System
             Entities.Remove(entity);
 
             // Clears the memory of the field of view
-            if (entity is Actor actor)
+            if (entity is Player actor)
             {
                 actor.FieldOfViewSystem.Reset();
             }
@@ -93,8 +93,8 @@ namespace MagiRogue.System
             // add entity to spatial map
             Entities.Add(entity, entity.Position);
 
-            // Initilizes the field of view of the actor
-            if (entity is Actor actor)
+            // Initilizes the field of view of the player, will do different for monsters
+            if (entity is Player actor)
             {
                 actor.FieldOfViewSystem.Initialize(ViewMap);
                 actor.FieldOfViewSystem.Calculate();

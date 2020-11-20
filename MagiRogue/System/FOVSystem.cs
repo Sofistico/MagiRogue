@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using GoRogue;
 using GoRogue.MapViews;
 using MagiRogue.Entities;
+using Microsoft.Xna.Framework;
+using SadConsole;
 
 namespace MagiRogue.System
 {
@@ -48,7 +50,19 @@ namespace MagiRogue.System
         {
             if (fieldOfView == null)
                 return;
+
             fieldOfView.Calculate(actorView.Position, actorView.ViewRadius, distanceMeasureView);
+
+            if (GameLoop.World != null)
+            {
+                //GameLoop.World.CurrentMap.CalculateFOV(actorView.Position, actorView.ViewRadius);
+                foreach (Tiles.TileBase tile in GameLoop.World.CurrentMap.Tiles)
+                {
+                    if (!tile.IsExplored)
+                    {
+                    }
+                }
+            }
         }
 
         /// <summary>
