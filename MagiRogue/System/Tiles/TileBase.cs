@@ -18,7 +18,7 @@ namespace MagiRogue.System.Tiles
         /// <summary>
         /// False means it's not explored, true means that it is
         /// </summary>
-        public bool IsExplored;
+        //public bool IsExplored;
 
         // Creates a list of possible materials, and then assings it to the tile, need to move it to a fitting area, like
         // World or GameLoop, because if need to port, every new object will have more than one possible material without
@@ -39,7 +39,7 @@ namespace MagiRogue.System.Tiles
             IsBlockingSight = blockingSight;
             Name = name;
             Layer = layer;
-            IsExplored = false;
+            //IsExplored = false;
         }
 
         protected void SetMaterial(string id)

@@ -17,26 +17,61 @@ namespace MagiRogue.System
         private int _width;
         private int _height;
 
+        /// <summary>
+        /// All cell tiles of the map, it's a TileBase array
+        /// </summary>
         public TileBase[] Tiles { get { return _tiles; } set { _tiles = value; } }
-        public int Width { get { return _width; } set { _width = value; } }
-        public int Height { get { return _height; } set { _height = value; } }
-        public Pathfinding Pathfinding { get; set; } // pathfinding property
 
-        public MultiSpatialMap<Entity> Entities; // Keeps track of all the Entities on the map
-        public static IDGenerator IDGenerator = new IDGenerator(); // A static IDGenerator that all Entities can access
-        public IMapView<bool> WalkabilityMap; // Holds the information of all walkables positions
-        public IMapView<bool> ViewMap; // Holds the information of the view map
+        /// <summary>
+        /// Width of the map
+        /// </summary>
+        public int Width { get { return _width; } set { _width = value; } }
+
+        /// <summary>
+        /// Height of the map
+        /// </summary>
+        public int Height { get { return _height; } set { _height = value; } }
+
+        /// <summary>
+        /// Keeps track of all the Entities on the map
+        /// </summary>
+        public MultiSpatialMap<Entity> Entities;
+
+        /// <summary>
+        /// A static IDGenerator that all Entities can access
+        /// </summary>
+        public static IDGenerator IDGenerator = new IDGenerator();
+
+        /// <summary>
+        /// Holds the information of all walkables positions
+        /// </summary>
+        public IMapView<bool> WalkabilityMap { get; }
+
+        /// <summary>
+        /// pathfinding property
+        /// </summary>
+        public Pathfinding Pathfinding { get; }
+
+        /// <summary>
+        /// Holds the information of the view map
+        /// </summary>
+        public IMapView<bool> ViewMap { get; }
+
         /// <summary>
         /// Holds the information of all explored tiles, true for explored and false for not explored, change color if not
         /// explored.
         /// </summary>
-        public IMapView<bool> ExploredMap;
+        //public IMapView<bool> ExploredMap;
 
         #endregion Properties
 
         #region Constructor
 
-        //Build a new map with a specified width and height
+        /// <summary>
+        /// Build a new map with a specified width and height
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
         public Map(int width, int height)
         {
             _width = width;
@@ -47,18 +82,22 @@ namespace MagiRogue.System
             WalkabilityMap = new LambdaTranslationMap<TileBase, bool>(viewTiles, val => val.IsBlockingMove);
             ViewMap = new LambdaTranslationMap<TileBase, bool>(viewTiles, val => val.IsBlockingSight);
             Pathfinding = new Pathfinding(WalkabilityMap);
-            ExploredMap = new LambdaTranslationMap<TileBase, bool>(viewTiles, a => a.IsExplored);
+            //ExploredMap = new LambdaTranslationMap<TileBase, bool>(viewTiles, a => a.IsExplored);
         }
 
         #endregion Constructor
 
         #region HelperMethods
 
-        // IsTileWalkable checks
-        // to see if the actor has tried
-        // to walk off the map or into a non-walkable tile
-        // Returns true if the tile location is walkable
-        // false if tile location is not walkable or is off-map
+        /// <summary>
+        /// IsTileWalkable checks
+        /// to see if the actor has tried
+        /// to walk off the map or into a non-walkable tile
+        /// Returns true if the tile location is walkable
+        /// false if tile location is not walkable or is off-map
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
         public bool IsTileWalkable(Point location)
         {
             // first make sure that actor isn't trying to move
@@ -74,22 +113,30 @@ namespace MagiRogue.System
             return false;
         }
 
-        // Checking whether a certain type of
-        // entity is at a specified location the manager's list of entities
-        // and if it exists, return that Entity
+        /// <summary>
+        /// Checking whether a certain type of
+        /// entity is at a specified location the manager's list of entities
+        /// and if it exists, return that Entity
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="location"></param>
+        /// <returns></returns>
         public T GetEntityAt<T>(Point location) where T : Entity
         {
             return Entities.GetItems(location).OfType<T>().FirstOrDefault();
         }
 
-        // Removes an Entity from the MultiSpatialMap
+        /// <summary>
+        /// Removes an Entity from the MultiSpatialMap
+        /// </summary>
+        /// <param name="entity"></param>
         public void Remove(Entity entity)
         {
             // Remove from spatial map
             Entities.Remove(entity);
 
             // Clears the memory of the field of view
-            if (entity is Player actor)
+            if (entity is Actor actor)
             {
                 actor.FieldOfViewSystem.Reset();
             }
@@ -98,14 +145,17 @@ namespace MagiRogue.System
             entity.Moved -= OnEntityMoved;
         }
 
-        // Adds an Entity to the MultiSpatialMap
+        /// <summary>
+        /// Adds an Entity to the MultiSpatialMap
+        /// </summary>
+        /// <param name="entity"></param>
         public void Add(Entity entity)
         {
             // add entity to spatial map
             Entities.Add(entity, entity.Position);
 
             // Initilizes the field of view of the player, will do different for monsters
-            if (entity is Player actor)
+            if (entity is Actor actor)
             {
                 actor.FieldOfViewSystem.Initialize(ViewMap);
                 actor.FieldOfViewSystem.Calculate();
@@ -115,8 +165,12 @@ namespace MagiRogue.System
             entity.Moved += OnEntityMoved;
         }
 
-        // When the Entity's .Moved value changes, it triggers this event handler
-        // which updates the Entity's current position in the SpatialMap
+        /// <summary>
+        /// When the Entity's .Moved value changes, it triggers this event handler
+        /// which updates the Entity's current position in the SpatialMap
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         private void OnEntityMoved(object sender, Entity.EntityMovedEventArgs args)
         {
             if (args.Entity is Actor actor)
@@ -127,10 +181,16 @@ namespace MagiRogue.System
             Entities.Move(args.Entity as Entity, args.Entity.Position);
         }
 
-        //really snazzy way of checking whether a certain type of
-        //tile is at a specified location in the map's Tiles
-        //and if it exists, return that Tile
-        //accepts an x/y coordinate
+        /// <summary>
+        /// really snazzy way of checking whether a certain type of
+        /// tile is at a specified location in the map's Tiles
+        /// and if it exists, return that Tile
+        /// accepts an x/y coordinate
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         public T GetTileAt<T>(int x, int y) where T : TileBase
         {
             int locationIndex = Helpers.GetIndexFromPoint(x, y, Width);
@@ -142,9 +202,14 @@ namespace MagiRogue.System
             else return null;
         }
 
-        // Checks if a specific type of tile at a specified location
-        // is on the map. If it exists, returns that Tile
-        // This form of the method accepts a Point coordinate.
+        /// <summary>
+        /// Checks if a specific type of tile at a specified location
+        /// is on the map. If it exists, returns that Tile
+        /// This form of the method accepts a Point coordinate.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="location"></param>
+        /// <returns></returns>
         public T GetTileAt<T>(Point location) where T : TileBase
         {
             return GetTileAt<T>(location.X, location.Y);

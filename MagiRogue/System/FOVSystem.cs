@@ -17,6 +17,7 @@ namespace MagiRogue.System
         private readonly Actor actorView;
         private readonly Distance distanceMeasureView;
         private FOV fieldOfView;
+        private Map map; // a field to hold information of the map that is being worked
 
         /// <summary>
         /// The constructor for the FOVSystem
@@ -52,6 +53,18 @@ namespace MagiRogue.System
                 return;
 
             fieldOfView.Calculate(actorView.Position, actorView.ViewRadius, distanceMeasureView);
+        }
+
+        /// <summary>
+        /// Returns true if the position is in the field of view of this actor
+        /// If the FieldOfView component is not yet initialized, it will return false
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        public bool PositionInFieldOfView(Point position)
+        {
+            if (fieldOfView == null) return false;
+            return fieldOfView.BooleanFOV[position];
         }
 
         /// <summary>
