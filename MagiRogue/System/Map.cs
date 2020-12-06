@@ -1,15 +1,17 @@
 ﻿using GoRogue;
+using System;
 using GoRogue.MapViews;
 using MagiRogue.Entities;
 using MagiRogue.System.Tiles;
 using Microsoft.Xna.Framework;
 using SadConsole;
 using System.Linq;
+using GoRogue.GameFramework;
 
 namespace MagiRogue.System
 {
     // Stores, manipulates and queries Tile data
-    public class Map
+    public class Map : GoRogue.GameFramework.Map
     {
         #region Properties
 
@@ -25,17 +27,17 @@ namespace MagiRogue.System
         /// <summary>
         /// Width of the map
         /// </summary>
-        public int Width { get { return _width; } set { _width = value; } }
+        //public int Width { get { return _width; } set { _width = value; } }
 
         /// <summary>
         /// Height of the map
         /// </summary>
-        public int Height { get { return _height; } set { _height = value; } }
+        //public int Height { get { return _height; } set { _height = value; } }
 
         /// <summary>
         /// Keeps track of all the Entities on the map
         /// </summary>
-        public MultiSpatialMap<Entity> Entities;
+        public new MultiSpatialMap<Entity> Entities;
 
         /// <summary>
         /// A static IDGenerator that all Entities can access
@@ -68,20 +70,21 @@ namespace MagiRogue.System
         #region Constructor
 
         /// <summary>
-        /// Build a new map with a specified width and height
+        /// Build a new map with a specified width and height, has 4 entity layers,
+        /// they being 1-Furniture, 2-Items, 3-Monsters, 4-Player
         /// </summary>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public Map(int width, int height)
+        public Map(int width, int height) : base(width, height, 4, Distance.EUCLIDEAN)
         {
             _width = width;
             _height = height;
             Tiles = new TileBase[width * height];
             Entities = new MultiSpatialMap<Entity>();
-            ArrayMap<TileBase> viewTiles = new ArrayMap<TileBase>(Tiles, _height);
-            WalkabilityMap = new LambdaTranslationMap<TileBase, bool>(viewTiles, val => val.IsBlockingMove);
-            ViewMap = new LambdaTranslationMap<TileBase, bool>(viewTiles, val => val.IsBlockingSight);
-            Pathfinding = new Pathfinding(WalkabilityMap);
+            /*ArrayMap<TileBase> viewTiles = new ArrayMap<TileBase>(Tiles, _height);
+            WalkabilityMap = new LambdaTranslationMap<TileBase, bool>(viewTiles, val => val.IsBlockingMove);*/
+            //ViewMap = new LambdaTranslationMap<TileBase, bool>(viewTiles, val => val.IsBlockingSight);
+            //Pathfinding = new Pathfinding(WalkabilityMap);
             //ExploredMap = new LambdaTranslationMap<TileBase, bool>(viewTiles, a => a.IsExplored);
         }
 
@@ -110,7 +113,7 @@ namespace MagiRogue.System
 
         public bool IsTileVisible(Point location)
         {
-            return false;
+            throw new NotImplementedException("Go put this shit up");
         }
 
         /// <summary>
@@ -138,9 +141,10 @@ namespace MagiRogue.System
             // Clears the memory of the field of view
             if (entity is Actor actor)
             {
-                actor.FieldOfViewSystem.Reset();
+                // Does nothing
             }
 
+            RemoveEntity(entity);
             // Link up the entity's Moved event to a new handler
             entity.Moved -= OnEntityMoved;
         }
@@ -157,9 +161,12 @@ namespace MagiRogue.System
             // Initilizes the field of view of the player, will do different for monsters
             if (entity is Actor actor)
             {
-                actor.FieldOfViewSystem.Initialize(ViewMap);
-                actor.FieldOfViewSystem.Calculate();
+                /*actor.FieldOfViewSystem.Initialize(ViewMap);
+                actor.FieldOfViewSystem.Calculate();*/
+                CalculateFOV(position: actor.Position, actor.ViewRadius, radiusShape: Radius.CIRCLE);
             }
+
+            AddEntity(entity);
 
             // Link up the entity's Moved event to a new handler
             entity.Moved += OnEntityMoved;
@@ -175,7 +182,8 @@ namespace MagiRogue.System
         {
             if (args.Entity is Actor actor)
             {
-                actor.FieldOfViewSystem.Calculate();
+                //actor.FieldOfViewSystem.Calculate();
+                CalculateFOV(position: actor.Position, actor.ViewRadius, radiusShape: Radius.CIRCLE);
             }
 
             Entities.Move(args.Entity as Entity, args.Entity.Position);
@@ -216,5 +224,15 @@ namespace MagiRogue.System
         }
 
         #endregion HelperMethods
+    }
+
+    // enum for defining maplayer for things, so that a monster and a player can occupy the same tile as an item for example.
+    public enum MapLayer
+    {
+        TERRAIN,
+        FURNITURE,
+        ITEMS,
+        MONSTER,
+        PLAYER
     }
 }

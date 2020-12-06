@@ -204,7 +204,7 @@ namespace MagiRogue.Entities
         /// </summary>
         public int ViewRadius { get; set; }
 
-        public FOVSystem FieldOfViewSystem { get; private set; }
+        //public FOVSystem FieldOfViewSystem { get; private set; }
 
         public List<Item> Inventory = new List<Item>(); // the inventory of the actor;
 
@@ -215,7 +215,7 @@ namespace MagiRogue.Entities
         protected Actor(Color foreground, Color background, int glyph, int layer, int width = 1, int height = 1) : base(foreground, background,
             glyph, layer, width, height)
         {
-            FieldOfViewSystem = new FOVSystem(this, Distance.CHEBYSHEV);
+            //FieldOfViewSystem = new FOVSystem(this, Distance.CHEBYSHEV);
         }
 
         #endregion Constructor

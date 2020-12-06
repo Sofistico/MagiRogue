@@ -6,16 +6,6 @@ using System.Linq;
 
 namespace MagiRogue.System
 {
-    // enum for defining maplayer for things, so that a monster and a player can occupy the same tile as an item for example.
-    public enum MapLayer
-    {
-        TERRAIN,
-        FURNITURE,
-        ITEMS,
-        MONSTER,
-        PLAYER
-    }
-
     // based on tunnelling room generation algorithm
     // from RogueSharp tutorial
     // https://roguesharp.wordpress.com/2016/03/26/roguesharp-v3-tutorial-simple-room-generation/
@@ -125,13 +115,13 @@ namespace MagiRogue.System
         // Creates a Floor tile at the specified X/Y location
         private void CreateFloor(Point location)
         {
-            _map.Tiles[location.ToIndex(_map.Width)] = new TileFloor();
+            _map.Tiles[location.ToIndex(_map.Width)] = new TileFloor(location);
         }
 
         // Creates a Wall tile at the specified X/Y location
         private void CreateWall(Point location)
         {
-            _map.Tiles[location.ToIndex(_map.Width)] = new TileWall();
+            _map.Tiles[location.ToIndex(_map.Width)] = new TileWall(location);
         }
 
         // Fills the map with walls
@@ -139,7 +129,7 @@ namespace MagiRogue.System
         {
             for (int i = 0; i < _map.Tiles.Length; i++)
             {
-                _map.Tiles[i] = new TileWall();
+                _map.Tiles[i] = new TileWall(i.ToPoint(_map.Width));
             }
         }
 
@@ -312,7 +302,7 @@ namespace MagiRogue.System
                 if (IsPotentialDoor(location))
                 {
                     // Create a new door that is closed and unlocked.
-                    TileDoor newDoor = new TileDoor(false, false);
+                    TileDoor newDoor = new TileDoor(false, false, location);
                     _map.Tiles[locationIndex] = newDoor;
                 }
             }

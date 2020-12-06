@@ -9,8 +9,8 @@ namespace MagiRogue.System.Tiles
         // Walls are set to block movement and line of sight by default
         // and have a light gray foreground and a transparent background
         // represented by the # symbol
-        public TileWall(bool blocksMovement = true, bool blocksSight = true) :
-            base(Color.LightGray, Color.Transparent, '#', (int)MapLayer.TERRAIN, blocksMovement, blocksSight)
+        public TileWall(Point position, bool blocksMovement = true, bool blocksSight = true) :
+            base(Color.LightGray, Color.Transparent, '#', (int)MapLayer.TERRAIN, position, blocksMovement, blocksSight)
         {
             Name = "Wall";
             SetMaterial("stone");
