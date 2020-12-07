@@ -18,11 +18,11 @@ namespace MagiRogue.System
     {
         // map creation and storage data
 
-        private readonly int _mapWidth = 80;
+        private readonly int _mapWidth = 50;
         private readonly int _mapHeight = 50;
         private TileBase[] _mapTiles;
         //private ArrayMap<TileBase> _mapTiles; // maybe add it someday
-        private readonly int _maxRooms = 5;
+        private readonly int _maxRooms = 20;
         private readonly int _minRoomSize = 4;
         private readonly int _maxRoomSize = 10;
 

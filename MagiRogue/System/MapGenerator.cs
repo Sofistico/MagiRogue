@@ -115,13 +115,16 @@ namespace MagiRogue.System
         // Creates a Floor tile at the specified X/Y location
         private void CreateFloor(Point location)
         {
-            _map.Tiles[location.ToIndex(_map.Width)] = new TileFloor(location);
+            TileFloor floor = new TileFloor(location);
+            _map.Tiles[location.ToIndex(_map.Width)] = floor;
+            _map.SetTerrain(floor);
         }
 
         // Creates a Wall tile at the specified X/Y location
         private void CreateWall(Point location)
         {
-            _map.Tiles[location.ToIndex(_map.Width)] = new TileWall(location);
+            TileWall wall = new TileWall(location);
+            _map.Tiles[location.ToIndex(_map.Width)] = wall;
         }
 
         // Fills the map with walls
@@ -129,7 +132,9 @@ namespace MagiRogue.System
         {
             for (int i = 0; i < _map.Tiles.Length; i++)
             {
-                _map.Tiles[i] = new TileWall(i.ToPoint(_map.Width));
+                TileWall wall = new TileWall(i.ToPoint(_map.Width));
+                _map.Tiles[i] = wall;
+                _map.SetTerrain(wall);
             }
         }
 

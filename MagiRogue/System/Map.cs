@@ -75,12 +75,16 @@ namespace MagiRogue.System
         /// </summary>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public Map(int width, int height) : base(width, height, 4, Distance.EUCLIDEAN)
+        public Map(int width, int height) : base(width,
+            height, Enum.GetNames(typeof(MapLayer)).Length - 1,
+            Distance.EUCLIDEAN,
+            entityLayersSupportingMultipleItems: LayerMasker.DEFAULT.Mask((int)MapLayer.ITEMS))
         {
             _width = width;
             _height = height;
             Tiles = new TileBase[width * height];
             Entities = new MultiSpatialMap<Entity>();
+
             /*ArrayMap<TileBase> viewTiles = new ArrayMap<TileBase>(Tiles, _height);
             WalkabilityMap = new LambdaTranslationMap<TileBase, bool>(viewTiles, val => val.IsBlockingMove);*/
             //ViewMap = new LambdaTranslationMap<TileBase, bool>(viewTiles, val => val.IsBlockingSight);
@@ -159,7 +163,7 @@ namespace MagiRogue.System
             Entities.Add(entity, entity.Position);
 
             // Initilizes the field of view of the player, will do different for monsters
-            if (entity is Actor actor)
+            if (entity is Player actor)
             {
                 /*actor.FieldOfViewSystem.Initialize(ViewMap);
                 actor.FieldOfViewSystem.Calculate();*/
@@ -180,7 +184,7 @@ namespace MagiRogue.System
         /// <param name="args"></param>
         private void OnEntityMoved(object sender, Entity.EntityMovedEventArgs args)
         {
-            if (args.Entity is Actor actor)
+            if (args.Entity is Player actor)
             {
                 //actor.FieldOfViewSystem.Calculate();
                 CalculateFOV(position: actor.Position, actor.ViewRadius, radiusShape: Radius.CIRCLE);
@@ -232,7 +236,6 @@ namespace MagiRogue.System
         TERRAIN,
         FURNITURE,
         ITEMS,
-        MONSTER,
-        PLAYER
+        ACTORS
     }
 }

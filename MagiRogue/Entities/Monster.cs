@@ -12,7 +12,7 @@ namespace MagiRogue.Entities
     {
         private readonly Random rndNum = new Random();
 
-        public Monster(Color foreground, Color background, int layer = (int)MapLayer.MONSTER) :
+        public Monster(Color foreground, Color background, int layer = (int)MapLayer.ACTORS) :
             base(foreground, background, 'M', layer)
         {
             //number of loot to spawn for monster

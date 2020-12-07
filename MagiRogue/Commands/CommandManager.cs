@@ -265,16 +265,16 @@ namespace MagiRogue.Commands
 
         public void DropItems(Actor inv)
         {
-            try
+            if (inv.Inventory.Count == 0)
+            {
+                GameLoop.UIManager.MessageLog.Add("There is no item to drop in your inventory");
+            }
+            else
             {
                 Item item = inv.Inventory.First();
                 inv.Inventory.Remove(item);
                 item.Position = inv.Position;
                 GameLoop.World.CurrentMap.Add(item);
-            }
-            catch (Exception)
-            {
-                GameLoop.UIManager.MessageLog.Add("There is no item to drop in your inventory");
             }
         }
     }

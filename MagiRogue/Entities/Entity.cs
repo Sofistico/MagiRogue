@@ -9,7 +9,7 @@ namespace MagiRogue.Entities
 {
     // Extends the SadConsole.Entities.Entity class
     // by adding an ID to it using GoRogue's ID system
-    public abstract class Entity : SadConsole.Entities.Entity, GoRogue.IHasID, IGameObject
+    public abstract class Entity : SadConsole.Entities.Entity, IGameObject
     {
         public uint ID { get; private set; } // stores the entity's unique identification number
         public int Layer { get; set; } // stores and sets the layer that the entity is rendered
@@ -107,6 +107,5 @@ namespace MagiRogue.Entities
         }
 
         #endregion IGameObject Interface
-
     }
 }

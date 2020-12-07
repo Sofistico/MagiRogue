@@ -56,7 +56,7 @@ namespace MagiRogue.System.Tiles
             IsBlockingSight = blockingSight;
             Name = name;
             Layer = layer;
-            backingField = new GameObject(position, layer, parentObject: this, isStatic: false, blockingMove, blockingSight);
+            backingField = new GameObject(position, layer, parentObject: this, isStatic: true, blockingMove, blockingSight);
         }
 
         protected void SetMaterial(string id)
