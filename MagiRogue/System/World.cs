@@ -9,21 +9,26 @@ using System;
 
 namespace MagiRogue.System
 {
-    // All game state data is stored in World
-    // also creates and processes generators
-    // for map creation
+    /// <summary>
+    /// All game state data is stored in World
+    /// also creates and processes generators
+    /// for map creation
+    /// </summary>
     public class World
     {
         // map creation and storage data
 
-        private readonly int _mapWidth = 100;
-        private readonly int _mapHeight = 100;
+        private readonly int _mapWidth = 80;
+        private readonly int _mapHeight = 50;
         private TileBase[] _mapTiles;
         //private ArrayMap<TileBase> _mapTiles; // maybe add it someday
-        private readonly int _maxRooms = 100;
+        private readonly int _maxRooms = 5;
         private readonly int _minRoomSize = 4;
-        private readonly int _maxRoomSize = 15;
+        private readonly int _maxRoomSize = 10;
 
+        /// <summary>
+        /// Stores the current map
+        /// </summary>
         public Map CurrentMap { get; set; }
 
         // Player data
@@ -31,8 +36,10 @@ namespace MagiRogue.System
 
         private readonly Random rndNum = new Random();
 
-        // Creates a new game world and stores it in
-        // publicly accessible
+        /// <summary>
+        /// Creates a new game world and stores it in a
+        /// publicly accessible constructor.
+        /// </summary>
         public World()
         {
             // Build a map
