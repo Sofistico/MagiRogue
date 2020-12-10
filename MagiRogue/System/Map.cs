@@ -66,6 +66,11 @@ namespace MagiRogue.System
         public event EventHandler FOVRecalculated;
 
         /// <summary>
+        /// The current fov handler of the map
+        /// </summary>
+        public FOVHandler FOVHandler { get; }
+
+        /// <summary>
         /// Holds the information of all explored tiles, true for explored and false for not explored, change color if not
         /// explored.
         /// </summary>
@@ -90,7 +95,7 @@ namespace MagiRogue.System
             _height = height;
             Tiles = new TileBase[width * height];
             Entities = new MultiSpatialMap<Entity>();
-
+            FOVHandler = new DefaultFOVVisibilityHandler(this, Color.Gray, FOVHandler.FovState.Enabled);
             //CalculateFOV(position: actor.Position, actor.ViewRadius, radiusShape: Radius.CIRCLE);
 
             /*ArrayMap<TileBase> viewTiles = new ArrayMap<TileBase>(Tiles, _height);

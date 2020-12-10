@@ -49,14 +49,14 @@ namespace MagiRogue.System.Tiles
         // representing the most basic form of of all Tiles used.
         // Every TileBase has a Foreground Colour, Background Colour, and Glyph
         // isBlockingMove and isBlockingSight are optional parameters, set to false by default
-        public TileBase(Color foregroud, Color background, int glyph, int layer, Coord position, bool blockingMove = false,
-            bool blockingSight = false, string name = "") : base(foregroud, background, glyph)
+        public TileBase(Color foregroud, Color background, int glyph, int layer, Coord position, bool blockingMove = true,
+            bool dontBlocksSight = true, string name = "") : base(foregroud, background, glyph)
         {
             IsBlockingMove = blockingMove;
-            IsBlockingSight = blockingSight;
+            IsBlockingSight = dontBlocksSight;
             Name = name;
             Layer = layer;
-            backingField = new GameObject(position, layer, parentObject: this, isStatic: true, blockingMove, blockingSight);
+            backingField = new GameObject(position, layer, parentObject: this, isStatic: true, blockingMove, dontBlocksSight);
         }
 
         protected void SetMaterial(string id)

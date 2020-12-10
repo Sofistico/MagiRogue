@@ -17,8 +17,8 @@ namespace MagiRogue.System.Tiles
         /// </summary>
         /// <param name="position"></param>
         /// <param name="blocksMove"></param>
-        /// <param name="blocksSight"></param>
-        public TileFloor(Point position, bool blocksMove = false, bool blocksSight = false) : base(Color.DarkGray, Color.Transparent, '.', (int)MapLayer.TERRAIN, position, blocksMove, blocksSight)
+        /// <param name="dontBlocksSight"></param>
+        public TileFloor(Point position, bool blocksMove = false, bool dontBlocksSight = true) : base(Color.DarkGray, Color.Transparent, '.', (int)MapLayer.TERRAIN, position, blocksMove, dontBlocksSight)
         {
             Name = "Floor";
             SetMaterial("stone");
