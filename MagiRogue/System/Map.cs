@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using SadConsole;
 using System.Linq;
 using GoRogue.GameFramework;
+using CalculateFOV = MagiRogue.System.Map;
 
 namespace MagiRogue.System
 {
@@ -52,12 +53,17 @@ namespace MagiRogue.System
         /// <summary>
         /// pathfinding property
         /// </summary>
-        public Pathfinding Pathfinding { get; }
+        //public Pathfinding Pathfinding { get; }
 
         /// <summary>
         /// Holds the information of the view map
         /// </summary>
-        public IMapView<bool> ViewMap { get; }
+       // public IMapView<bool> ViewMap { get; }
+
+        /// <summary>
+        /// Fires whenever FOV is recalculated.
+        /// </summary>
+        public event EventHandler FOVRecalculated;
 
         /// <summary>
         /// Holds the information of all explored tiles, true for explored and false for not explored, change color if not
@@ -84,6 +90,8 @@ namespace MagiRogue.System
             _height = height;
             Tiles = new TileBase[width * height];
             Entities = new MultiSpatialMap<Entity>();
+
+            //CalculateFOV(position: actor.Position, actor.ViewRadius, radiusShape: Radius.CIRCLE);
 
             /*ArrayMap<TileBase> viewTiles = new ArrayMap<TileBase>(Tiles, _height);
             WalkabilityMap = new LambdaTranslationMap<TileBase, bool>(viewTiles, val => val.IsBlockingMove);*/
@@ -228,6 +236,26 @@ namespace MagiRogue.System
         }
 
         #endregion HelperMethods
+
+        #region Overload
+
+        /// <inheritdoc />
+        public override void CalculateFOV(int x, int y, double radius, Distance radiusShape)
+        {
+            base.CalculateFOV(x, y, radius, radiusShape);
+
+            FOVRecalculated?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <inheritdoc />
+        public override void CalculateFOV(int x, int y, double radius, Distance radiusShape, double angle, double span)
+        {
+            base.CalculateFOV(x, y, radius, radiusShape, angle, span);
+
+            FOVRecalculated?.Invoke(this, EventArgs.Empty);
+        }
+
+        #endregion Overload
     }
 
     // enum for defining maplayer for things, so that a monster and a player can occupy the same tile as an item for example.

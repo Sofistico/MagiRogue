@@ -39,7 +39,7 @@ namespace MagiRogue.Commands
         {
             if (GameLoop.World.Player != null) // Implement a way for an actor to check if the player is near, so that it can follow the player
             {
-                return GameLoop.World.CurrentMap.Pathfinding.WalkPath(GameLoop.World.Player.Position, actor);
+                return true;//GameLoop.World.CurrentMap.AStar.ShortestPath(actor.Position, GameLoop.World.Player.Position);
             }
             else
             {
