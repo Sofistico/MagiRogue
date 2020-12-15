@@ -15,7 +15,7 @@ namespace MagiRogue.System.Tiles
     {
         // Movement and Line of Sight Flags
         public bool IsBlockingMove;
-        public bool IsBlockingSight;
+        public bool TileIsTransparent;
         public int Layer;
         //public Coord TilePosition;
 
@@ -50,13 +50,13 @@ namespace MagiRogue.System.Tiles
         // Every TileBase has a Foreground Colour, Background Colour, and Glyph
         // isBlockingMove and isBlockingSight are optional parameters, set to false by default
         public TileBase(Color foregroud, Color background, int glyph, int layer, Coord position, bool blockingMove = true,
-            bool dontBlocksSight = true, string name = "") : base(foregroud, background, glyph)
+            bool isTransparent = true, string name = "") : base(foregroud, background, glyph)
         {
             IsBlockingMove = blockingMove;
-            IsBlockingSight = dontBlocksSight;
+            TileIsTransparent = isTransparent;
             Name = name;
             Layer = layer;
-            backingField = new GameObject(position, layer, parentObject: this, isStatic: true, blockingMove, dontBlocksSight);
+            backingField = new GameObject(position, layer, parentObject: this, isStatic: true, blockingMove, isTransparent);
         }
 
         protected void SetMaterial(string id)

@@ -14,7 +14,7 @@ namespace MagiRogue.System.Tiles
         /// <param name="locked">If the door is locked</param>
         /// <param name="open">If the door is open</param>
         /// <param name="position">The position in the map of the door</param>
-        public TileDoor(bool locked, bool open, Point position) : base(Color.Gray, Color.Transparent, '+', (int)MapLayer.FURNITURE, position)
+        public TileDoor(bool locked, bool open, Point position) : base(Color.Gray, Color.Transparent, '+', (int)MapLayer.FURNITURE, position, isTransparent: false)
         {
             SetMaterial("wood");
 
@@ -40,14 +40,14 @@ namespace MagiRogue.System.Tiles
             IsOpen = false;
             Glyph = '+';
             IsBlockingMove = true;
-            IsBlockingSight = true;
+            IsTransparent = false;
         }
 
         // opens a door
         public void Open()
         {
             IsOpen = true;
-            IsBlockingSight = false;
+            IsTransparent = true;
             IsBlockingMove = false;
             Glyph = '-';
         }

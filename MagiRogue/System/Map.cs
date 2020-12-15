@@ -176,7 +176,7 @@ namespace MagiRogue.System
             Entities.Add(entity, entity.Position);
 
             // Initilizes the field of view of the player, will do different for monsters
-            if (entity is Player actor)
+            if (entity is Actor actor)
             {
                 /*actor.FieldOfViewSystem.Initialize(ViewMap);
                 actor.FieldOfViewSystem.Calculate();*/
