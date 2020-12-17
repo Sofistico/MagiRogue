@@ -148,7 +148,8 @@ namespace MagiRogue.Entities
                 }
             }
         }
-
+        
+        // To do magic this value must be true, because magic and being a god are the same thing.
         public bool Godly
         {
             get { return godly; }
