@@ -17,8 +17,8 @@ namespace MagiRogue.System
         #region Properties
 
         private TileBase[] _tiles; // Contains all tiles objects
-        private int _width;
-        private int _height;
+        private readonly int _width;
+        private readonly int _height;
 
         /// <summary>
         /// All cell tiles of the map, it's a TileBase array
