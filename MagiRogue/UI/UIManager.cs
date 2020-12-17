@@ -2,6 +2,7 @@
 using MagiRogue.Commands;
 using MagiRogue.Entities;
 using MagiRogue.System;
+using MagiRogue.System.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using SadConsole;
@@ -152,6 +153,10 @@ namespace MagiRogue.UI
                 Item item = GameLoop.World.CurrentMap.GetEntityAt<Item>(GameLoop.World.Player.Position);
                 InventoryScreen.RemoveItemFromConsole(item);
                 InventoryScreen.ShowItems(GameLoop.World.Player);
+            }
+            if (info.IsKeyPressed(Keys.C))
+            {
+                GameLoop.CommandManager.CloseDoor(GameLoop.World.Player);
             }
 
             return base.ProcessKeyboard(info);

@@ -26,7 +26,7 @@ namespace MagiRogue.System
         /// <param name="map">The map this handler will manage visibility for.</param>
         /// <param name="unexploredColor">Foreground color to set to all terrain tiles that are outside of FOV but have been explored.</param>
         /// <param name="startingState">The starting state to put the handler in.</param>
-        public DefaultFOVVisibilityHandler(Map map, Color unexploredColor, FovState startingState) :
+        public DefaultFOVVisibilityHandler(Map map, Color unexploredColor, FovState startingState = FovState.Enabled) :
             base(map, startingState) => ExploredColor = unexploredColor;
 
         /// <summary>
@@ -67,7 +67,11 @@ namespace MagiRogue.System
             if (Map.Explored[terrain.Position])
             {
                 terrain.SaveState();
+#if DEBUG
+                terrain.Background = ExploredColor;
+#else
                 terrain.Foreground = ExploredColor;
+#endif
             }
             else
                 terrain.IsVisible = false;

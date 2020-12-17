@@ -25,10 +25,11 @@ namespace MagiRogue.Entities
             Defense = 5;
             DefenseChance = 20;
             Name = "Magi";
-            ViewRadius = 8;
+            ViewRadius = 5;
 
             Weight = 50;
             Size = 165;
+            //IsVisible = false;
         }
     }
 }

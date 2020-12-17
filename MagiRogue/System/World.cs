@@ -45,14 +45,14 @@ namespace MagiRogue.System
             // Build a map
             CreateMap();
 
-            // create an instance of player
-            CreatePlayer();
-
             // spawn a bunch of monsters
             CreateMonster();
 
             // Spawn a bunch of loot
             CreateLoot();
+
+            // create an instance of player
+            CreatePlayer();
         }
 
         // Create a new map using the Map class

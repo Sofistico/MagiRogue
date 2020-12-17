@@ -95,7 +95,7 @@ namespace MagiRogue.System
             _height = height;
             Tiles = new TileBase[width * height];
             Entities = new MultiSpatialMap<Entity>();
-            FOVHandler = new DefaultFOVVisibilityHandler(this, Color.Gray, FOVHandler.FovState.Enabled);
+            FOVHandler = new DefaultFOVVisibilityHandler(this, ColorAnsi.BlackBright);
             //CalculateFOV(position: actor.Position, actor.ViewRadius, radiusShape: Radius.CIRCLE);
 
             /*ArrayMap<TileBase> viewTiles = new ArrayMap<TileBase>(Tiles, _height);
@@ -176,7 +176,7 @@ namespace MagiRogue.System
             Entities.Add(entity, entity.Position);
 
             // Initilizes the field of view of the player, will do different for monsters
-            if (entity is Actor actor)
+            if (entity is Player actor)
             {
                 /*actor.FieldOfViewSystem.Initialize(ViewMap);
                 actor.FieldOfViewSystem.Calculate();*/

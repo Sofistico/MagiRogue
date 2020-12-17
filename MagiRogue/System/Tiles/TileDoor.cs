@@ -39,9 +39,11 @@ namespace MagiRogue.System.Tiles
         public void Close()
         {
             IsOpen = false;
-            Glyph = '+';
             IsBlockingMove = true;
             IsTransparent = false;
+            TileIsTransparent = false;
+            Glyph = '+';
+            GameLoop.UIManager.MapConsole.IsDirty = true;
         }
 
         // opens a door
@@ -49,8 +51,10 @@ namespace MagiRogue.System.Tiles
         {
             IsOpen = true;
             IsTransparent = true;
+            TileIsTransparent = true;
             IsBlockingMove = false;
             Glyph = '-';
+            GameLoop.UIManager.MapConsole.IsDirty = true;
         }
     }
 }

@@ -263,6 +263,29 @@ namespace MagiRogue.Commands
             }
         }
 
+        /// <summary>
+        /// Closes an open door
+        /// </summary>
+        /// <param name="actor">Actor that closes the door</param>
+        /// <param name="door">Door that wil be closed></param>
+        public void CloseDoor(Actor actor)
+        {
+            Point[] allDirections = Directions.GetDirectionPoints(actor.Position);
+            foreach (Point points in allDirections)
+            {
+                TileDoor possibleDoor = GameLoop.World.CurrentMap.GetTileAt<TileDoor>(points);
+                if (possibleDoor != null)
+                {
+                    if (possibleDoor.IsOpen)
+                    {
+                        possibleDoor.Close();
+                        GameLoop.UIManager.MessageLog.Add($"{actor.Name} closed a {possibleDoor.Name}");
+                        break;
+                    }
+                }
+            }
+        }
+
         public void DropItems(Actor inv)
         {
             if (inv.Inventory.Count == 0)
