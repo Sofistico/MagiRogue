@@ -3,6 +3,7 @@ using MagiRogue.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace MagiRogue.System.Physics
@@ -16,6 +17,17 @@ namespace MagiRogue.System.Physics
         {
             ListOfMaterials = JsonUtils.JsonDeseralize<List<Material>>(Path.Combine
                 (AppDomain.CurrentDomain.BaseDirectory.ToString(), "Entities", "Materials", "MaterialDefinition.json"));
+        }
+
+        /// <summary>
+        /// Sets the material of the object by the id of the material
+        /// </summary>
+        /// <param name="id">Id of the material you want, must consult the json file</param>
+        /// <returns></returns>
+        public Material SetMaterial(string id, Material oldMaterial)
+        {
+            Material newMaterial = ListOfMaterials.Where(a => a.Id == id).FirstOrDefault();
+            return oldMaterial = newMaterial;
         }
     }
 }

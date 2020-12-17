@@ -14,9 +14,10 @@ namespace MagiRogue.System.Tiles
         /// <param name="locked">If the door is locked</param>
         /// <param name="open">If the door is open</param>
         /// <param name="position">The position in the map of the door</param>
-        public TileDoor(bool locked, bool open, Point position) : base(Color.Gray, Color.Transparent, '+', (int)MapLayer.FURNITURE, position, isTransparent: false)
+        /// <param name="idMaterial">The id of the material that will be used to make the door</param>
+        public TileDoor(bool locked, bool open, Point position, string idMaterial) : base(Color.Gray, Color.Transparent, '+', (int)MapLayer.FURNITURE, position, isTransparent: false, idOfMaterial: idMaterial)
         {
-            SetMaterial("wood");
+            //SetMaterial("wood");
 
             Name = "wooden door";
             //+ is the closed glyph

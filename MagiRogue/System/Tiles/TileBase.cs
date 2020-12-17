@@ -24,7 +24,8 @@ namespace MagiRogue.System.Tiles
         // Creates a list of possible materials, and then assings it to the tile, need to move it to a fitting area, like
         // World or GameLoop, because if need to port, every new object will have more than one possible material without
         // any need.
-        public IEnumerable<Material> Material;
+        //public IEnumerable<Material> Material;
+        public Material Material { get; set; }
 
         // Tile's name
         public string Name;
@@ -49,21 +50,22 @@ namespace MagiRogue.System.Tiles
         // representing the most basic form of of all Tiles used.
         // Every TileBase has a Foreground Colour, Background Colour, and Glyph
         // isBlockingMove and isBlockingSight are optional parameters, set to false by default
-        public TileBase(Color foregroud, Color background, int glyph, int layer, Coord position, bool blockingMove = true,
-            bool isTransparent = true, string name = "") : base(foregroud, background, glyph)
+        public TileBase(Color foregroud, Color background, int glyph, int layer, Coord position, string idOfMaterial, bool blockingMove = true,
+            bool isTransparent = true, string name = "ForgotToChangeName") : base(foregroud, background, glyph)
         {
             IsBlockingMove = blockingMove;
             TileIsTransparent = isTransparent;
             Name = name;
             Layer = layer;
             backingField = new GameObject(position, layer, parentObject: this, isStatic: true, blockingMove, isTransparent);
+            Material = GameLoop.PhysicsManager.SetMaterial(idOfMaterial, Material);
         }
 
-        protected void SetMaterial(string id)
+        /*protected void SetMaterial(string id)
         {
             IEnumerable<Material> foundMaterial = GameLoop.PhysicsManager.ListOfMaterials.Where(a => a.Id == $"{id}");
-            Material = foundMaterial.ToList();
-        }
+            Material = foundMaterial.ToList().First();
+        }*/
 
         #region IGameObject Interface
 

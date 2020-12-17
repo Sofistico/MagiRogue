@@ -1,4 +1,5 @@
 ﻿using MagiRogue.System;
+using MagiRogue.Entities.Materials;
 using Microsoft.Xna.Framework;
 
 namespace MagiRogue.Entities
@@ -12,6 +13,8 @@ namespace MagiRogue.Entities
         private int condition;
 
         public double Weight { get; set; } // Weight of the item in Kilo
+
+        public Material Material { get; set; }
 
         // physical condition of item, in percent
         // 100 = item undamaged
