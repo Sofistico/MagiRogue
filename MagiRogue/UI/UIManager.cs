@@ -94,6 +94,10 @@ namespace MagiRogue.UI
         {
             if (info.IsKeyPressed(Keys.F5))
                 Settings.ToggleFullScreen();
+            if (info.IsKeyPressed(Keys.F8))
+            {
+                GameLoop.World.Player.AddComponent(new Entities.Components.TestComponent(GameLoop.World.Player));
+            }
             if (info.IsKeyPressed(Keys.NumPad8))
             {
                 GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(0, -1));
@@ -144,13 +148,15 @@ namespace MagiRogue.UI
             if (info.IsKeyPressed(Keys.G))
             {
                 Item item = GameLoop.World.CurrentMap.GetEntityAt<Item>(GameLoop.World.Player.Position);
+                // Item item = GameLoop.World.CurrentMap.GetEntity<Item>(GameLoop.World.Player.Position);
+                //Item ite2= GameLoop.World.CurrentMap.GetE
                 GameLoop.CommandManager.PickUp(GameLoop.World.Player, item);
                 InventoryScreen.ShowItems(GameLoop.World.Player);
             }
             if (info.IsKeyPressed(Keys.D))
             {
                 GameLoop.CommandManager.DropItems(GameLoop.World.Player);
-                Item item = GameLoop.World.CurrentMap.GetEntityAt<Item>(GameLoop.World.Player.Position);
+                Item item = GameLoop.World.CurrentMap.GetEntity<Item>(GameLoop.World.Player.Position);
                 InventoryScreen.RemoveItemFromConsole(item);
                 InventoryScreen.ShowItems(GameLoop.World.Player);
             }
@@ -279,15 +285,15 @@ namespace MagiRogue.UI
         }
 
         // Remove an Entity from the MapConsole every time the Map's Entity collection changes
-        public void OnMapEntityRemoved(object sender, ItemEventArgs<Entity> args)
+        public void OnMapEntityRemoved(object sender, ItemEventArgs<GoRogue.GameFramework.IGameObject> e)
         {
-            MapConsole.Children.Remove(args.Item);
+            MapConsole.Children.Remove(e.Item as Entity);
         }
 
         // Add an Entity to the MapConsole every time the Map's Entity collection changes
-        public void OnMapEntityAdded(object sender, ItemEventArgs<Entity> args)
+        public void OnMapEntityAdded(object sender, ItemEventArgs<GoRogue.GameFramework.IGameObject> e)
         {
-            MapConsole.Children.Add(args.Item);
+            MapConsole.Children.Add(e.Item as Entity);
         }
 
         // Loads a Map into the MapConsole

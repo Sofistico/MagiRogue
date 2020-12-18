@@ -125,6 +125,7 @@ namespace MagiRogue.System
         {
             TileWall wall = new TileWall(location, "stone");
             _map.Tiles[location.ToIndex(_map.Width)] = wall;
+            _map.SetTerrain(wall);
         }
 
         // Fills the map with walls
@@ -309,6 +310,7 @@ namespace MagiRogue.System
                     // Create a new door that is closed and unlocked.
                     TileDoor newDoor = new TileDoor(false, false, location, "stone");
                     _map.Tiles[locationIndex] = newDoor;
+                    _map.SetTerrain(newDoor);
                 }
             }
         }

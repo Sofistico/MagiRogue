@@ -17,8 +17,6 @@ namespace MagiRogue.System
         #region Properties
 
         private TileBase[] _tiles; // Contains all tiles objects
-        private readonly int _width;
-        private readonly int _height;
 
         /// <summary>
         /// All cell tiles of the map, it's a TileBase array
@@ -26,39 +24,9 @@ namespace MagiRogue.System
         public TileBase[] Tiles { get { return _tiles; } set { _tiles = value; } }
 
         /// <summary>
-        /// Width of the map
-        /// </summary>
-        //public int Width { get { return _width; } set { _width = value; } }
-
-        /// <summary>
-        /// Height of the map
-        /// </summary>
-        //public int Height { get { return _height; } set { _height = value; } }
-
-        /// <summary>
-        /// Keeps track of all the Entities on the map
-        /// </summary>
-        public new MultiSpatialMap<Entity> Entities;
-
-        /// <summary>
         /// A static IDGenerator that all Entities can access
         /// </summary>
         public static IDGenerator IDGenerator = new IDGenerator();
-
-        /// <summary>
-        /// Holds the information of all walkables positions
-        /// </summary>
-        public IMapView<bool> WalkabilityMap { get; }
-
-        /// <summary>
-        /// pathfinding property
-        /// </summary>
-        //public Pathfinding Pathfinding { get; }
-
-        /// <summary>
-        /// Holds the information of the view map
-        /// </summary>
-       // public IMapView<bool> ViewMap { get; }
 
         /// <summary>
         /// Fires whenever FOV is recalculated.
@@ -69,12 +37,6 @@ namespace MagiRogue.System
         /// The current fov handler of the map
         /// </summary>
         public FOVHandler FOVHandler { get; }
-
-        /// <summary>
-        /// Holds the information of all explored tiles, true for explored and false for not explored, change color if not
-        /// explored.
-        /// </summary>
-        //public IMapView<bool> ExploredMap;
 
         #endregion Properties
 
@@ -91,18 +53,9 @@ namespace MagiRogue.System
             Distance.EUCLIDEAN,
             entityLayersSupportingMultipleItems: LayerMasker.DEFAULT.Mask((int)MapLayer.ITEMS))
         {
-            _width = width;
-            _height = height;
             Tiles = new TileBase[width * height];
-            Entities = new MultiSpatialMap<Entity>();
+            //Entities = new MultiSpatialMap<Entity>();
             FOVHandler = new DefaultFOVVisibilityHandler(this, ColorAnsi.BlackBright);
-            //CalculateFOV(position: actor.Position, actor.ViewRadius, radiusShape: Radius.CIRCLE);
-
-            /*ArrayMap<TileBase> viewTiles = new ArrayMap<TileBase>(Tiles, _height);
-            WalkabilityMap = new LambdaTranslationMap<TileBase, bool>(viewTiles, val => val.IsBlockingMove);*/
-            //ViewMap = new LambdaTranslationMap<TileBase, bool>(viewTiles, val => val.IsBlockingSight);
-            //Pathfinding = new Pathfinding(WalkabilityMap);
-            //ExploredMap = new LambdaTranslationMap<TileBase, bool>(viewTiles, a => a.IsExplored);
         }
 
         #endregion Constructor
@@ -128,11 +81,6 @@ namespace MagiRogue.System
             return !_tiles[location.Y * Width + location.X].IsBlockingMove;
         }
 
-        public bool IsTileVisible(Point location)
-        {
-            throw new NotImplementedException("Go put this shit up");
-        }
-
         /// <summary>
         /// Checking whether a certain type of
         /// entity is at a specified location the manager's list of entities
@@ -153,7 +101,7 @@ namespace MagiRogue.System
         public void Remove(Entity entity)
         {
             // Remove from spatial map
-            Entities.Remove(entity);
+            //Entities.Remove(entity);
 
             // Clears the memory of the field of view
             if (entity is Actor actor)
@@ -173,7 +121,7 @@ namespace MagiRogue.System
         public void Add(Entity entity)
         {
             // add entity to spatial map
-            Entities.Add(entity, entity.Position);
+            //Entities.Add(entity, entity.Position);
 
             // Initilizes the field of view of the player, will do different for monsters
             if (entity is Player actor)
@@ -202,8 +150,6 @@ namespace MagiRogue.System
                 //actor.FieldOfViewSystem.Calculate();
                 CalculateFOV(position: actor.Position, actor.ViewRadius, radiusShape: Radius.CIRCLE);
             }
-
-            Entities.Move(args.Entity as Entity, args.Entity.Position);
         }
 
         /// <summary>
@@ -267,7 +213,6 @@ namespace MagiRogue.System
     public enum MapLayer
     {
         TERRAIN,
-        FURNITURE,
         ITEMS,
         ACTORS
     }

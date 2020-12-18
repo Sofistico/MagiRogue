@@ -15,7 +15,7 @@ namespace MagiRogue.System.Tiles
         /// <param name="open">If the door is open</param>
         /// <param name="position">The position in the map of the door</param>
         /// <param name="idMaterial">The id of the material that will be used to make the door</param>
-        public TileDoor(bool locked, bool open, Point position, string idMaterial) : base(Color.Gray, Color.Transparent, '+', (int)MapLayer.FURNITURE, position, isTransparent: false, idOfMaterial: idMaterial)
+        public TileDoor(bool locked, bool open, Point position, string idMaterial) : base(Color.Gray, Color.Transparent, '+', (int)MapLayer.TERRAIN, position, isTransparent: false, idOfMaterial: idMaterial)
         {
             //SetMaterial("wood");
 
@@ -44,6 +44,7 @@ namespace MagiRogue.System.Tiles
             TileIsTransparent = false;
             Glyph = '+';
             GameLoop.UIManager.MapConsole.IsDirty = true;
+            //GameLoop.World.CurrentMap.CalculateFOV(GameLoop.World.Player.Position, GameLoop.World.Player.ViewRadius);
         }
 
         // opens a door

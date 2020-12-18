@@ -208,7 +208,7 @@ namespace MagiRogue.Commands
 
             foreach (Point direction in directions)
             {
-                Monster monsterLocation = GameLoop.World.CurrentMap.GetEntityAt<Monster>(direction);
+                Monster monsterLocation = GameLoop.World.CurrentMap.GetEntity<Monster>(direction);
 
                 if (monsterLocation != null)
                 {

@@ -36,6 +36,7 @@ namespace MagiRogue.System
         protected override void UpdateEntitySeen(Entity entity)
         {
             entity.IsVisible = true;
+            GameLoop.UIManager.MapConsole.IsDirty = true;
         }
 
         /// <summary>
@@ -45,6 +46,7 @@ namespace MagiRogue.System
         protected override void UpdateEntityUnseen(Entity entity)
         {
             entity.IsVisible = false;
+            GameLoop.UIManager.MapConsole.IsDirty = true;
         }
 
         /// <summary>

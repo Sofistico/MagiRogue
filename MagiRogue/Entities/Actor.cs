@@ -148,7 +148,7 @@ namespace MagiRogue.Entities
                 }
             }
         }
-        
+
         // To do magic this value must be true, because magic and being a god are the same thing.
         public bool Godly
         {
@@ -237,7 +237,7 @@ namespace MagiRogue.Entities
                 {
                     // if there's a monster here,
                     // do a bump attack
-                    Monster monster = GameLoop.World.CurrentMap.GetEntityAt<Monster>(Position + positionChange);
+                    Monster monster = GameLoop.World.CurrentMap.GetEntity<Monster>(Position + positionChange);
                     //Item item = GameLoop.World.CurrentMap.GetEntityAt<Item>(Position + positionChange);
 
                     if (monster != null)
