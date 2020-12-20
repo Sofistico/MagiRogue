@@ -28,6 +28,11 @@ namespace MagiRogue.System
         /// </summary>
         public static IDGenerator IDGenerator = new IDGenerator();
 
+        /* /// <summary>
+         /// Keeps track of all the Entities on the map
+         /// </summary>
+         public new MultiSpatialMap<Entity> Entities;*/
+
         /// <summary>
         /// Fires whenever FOV is recalculated.
         /// </summary>
