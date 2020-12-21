@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework;
 using SadConsole;
 using System.Linq;
 using GoRogue.GameFramework;
-using CalculateFOV = MagiRogue.System.Map;
 
 namespace MagiRogue.System
 {
