@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework;
 using SadConsole;
 using System.Linq;
 using GoRogue.GameFramework;
-using CalculateFOV = MagiRogue.System.Map;
 
 namespace MagiRogue.System
 {
@@ -27,6 +26,11 @@ namespace MagiRogue.System
         /// A static IDGenerator that all Entities can access
         /// </summary>
         public static IDGenerator IDGenerator = new IDGenerator();
+
+        /* /// <summary>
+         /// Keeps track of all the Entities on the map
+         /// </summary>
+         public new MultiSpatialMap<Entity> Entities;*/
 
         /// <summary>
         /// Fires whenever FOV is recalculated.
