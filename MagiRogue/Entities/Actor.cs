@@ -213,8 +213,8 @@ namespace MagiRogue.Entities
 
         #region Constructor
 
-        protected Actor(Color foreground, Color background, int glyph, int layer, int width = 1, int height = 1) : base(foreground, background,
-            glyph, layer, width, height)
+        protected Actor(Color foreground, Color background, int glyph, int layer, Coord coord, int width = 1, int height = 1) : base(foreground, background,
+            glyph, coord, layer, width, height)
         {
             //FieldOfViewSystem = new FOVSystem(this, Distance.CHEBYSHEV);
         }
@@ -237,7 +237,7 @@ namespace MagiRogue.Entities
                 {
                     // if there's a monster here,
                     // do a bump attack
-                    Monster monster = GameLoop.World.CurrentMap.GetEntity<Monster>(CalculatedPosition + positionChange);
+                    Monster monster = GameLoop.World.CurrentMap.GetEntity<Monster>(Position + positionChange);
                     //Item item = GameLoop.World.CurrentMap.GetEntityAt<Item>(Position + positionChange);
 
                     if (monster != null)

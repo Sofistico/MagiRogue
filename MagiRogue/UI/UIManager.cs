@@ -164,7 +164,12 @@ namespace MagiRogue.UI
             {
                 GameLoop.CommandManager.CloseDoor(GameLoop.World.Player);
             }
-
+#if DEBUG
+            if (info.IsKeyPressed(Keys.F10))
+            {
+                GameLoop.CommandManager.ToggleFOV();
+            }
+#endif
             return base.ProcessKeyboard(info);
         }
 

@@ -2,9 +2,9 @@
 
 namespace MagiRogue.Entities.Items
 {
-    class IronBar : Item
+    internal class IronBar : Item
     {
-        public IronBar() : base(Color.Gray, Color.Transparent, "Iron Bar", '_', 10)
+        public IronBar(Point position) : base(Color.Gray, Color.Transparent, "Iron Bar", '_', position, 10)
         {
         }
     }

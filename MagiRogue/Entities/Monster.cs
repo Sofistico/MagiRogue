@@ -12,8 +12,8 @@ namespace MagiRogue.Entities
     {
         private readonly Random rndNum = new Random();
 
-        public Monster(Color foreground, Color background, int layer = (int)MapLayer.ACTORS) :
-            base(foreground, background, 'M', layer)
+        public Monster(Color foreground, Color background, Point position, int layer = (int)MapLayer.ACTORS) :
+            base(foreground, background, 'M', layer, position)
         {
             //number of loot to spawn for monster
             int lootNum = rndNum.Next(1, 4);
@@ -22,7 +22,7 @@ namespace MagiRogue.Entities
             for (int i = 0; i < lootNum; i++)
             {
                 // monsters are made out of spork, obvs.
-                Item newItem = new Item(Color.Red, Color.Black, "Debug Remains", '%', 1.5);
+                Item newItem = new Item(Color.Red, Color.Black, "Debug Remains", '%', Position, 1.5);
                 //newItem.Components.Add(new SadConsole.Components.EntityViewSyncComponent());
                 Inventory.Add(newItem);
             }

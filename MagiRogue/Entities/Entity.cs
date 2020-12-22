@@ -20,11 +20,11 @@ namespace MagiRogue.Entities
 
         public bool IsTransparent { get => backingField.IsTransparent; set => backingField.IsTransparent = value; }
         public bool IsWalkable { get => backingField.IsWalkable; set => backingField.IsWalkable = value; }
-        Coord IGameObject.Position { get => backingField.Position; set => backingField.Position = Position; }
+        Coord IGameObject.Position { get => backingField.Position; set => backingField.Position = value; }
 
         private IGameObject backingField;
 
-        protected Entity(Color foreground, Color background, int glyph, int layer, Coord coord, int width = 1, int height = 1) : base(width, height)
+        protected Entity(Color foreground, Color background, int glyph, Coord coord, int layer, int width = 1, int height = 1) : base(width, height)
         {
             Animation.CurrentFrame[0].Foreground = foreground;
             Animation.CurrentFrame[0].Background = background;

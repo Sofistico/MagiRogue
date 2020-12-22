@@ -300,5 +300,19 @@ namespace MagiRogue.Commands
                 GameLoop.World.CurrentMap.Add(item);
             }
         }
+
+#if DEBUG
+
+        public void ToggleFOV()
+        {
+            if (GameLoop.World.CurrentMap.FOVHandler.Enabled)
+            {
+                GameLoop.World.CurrentMap.FOVHandler.Disable(false);
+            }
+            else
+                GameLoop.World.CurrentMap.FOVHandler.Enable();
+        }
+
+#endif
     }
 }
