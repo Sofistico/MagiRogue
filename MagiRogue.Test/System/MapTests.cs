@@ -10,7 +10,7 @@ namespace MagiRogue.System.Tests
 {
     public class MapTests
     {
-        [Fact()]
+        /*[Fact()]
         public void AddTest()
         {
             throw new NotImplementedException();
@@ -68,6 +68,6 @@ namespace MagiRogue.System.Tests
         public void CalculateFOVTest1()
         {
             throw new NotImplementedException();
-        }
+        }*/
     }
 }
