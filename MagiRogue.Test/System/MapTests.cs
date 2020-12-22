@@ -10,25 +10,44 @@ namespace MagiRogue.System.Tests
 {
     public class MapTests
     {
-        /*[Fact()]
-        public void AddTest()
+        private readonly Map map = new Map(20, 20);
+        //private MagiRogue.Entities.Materials.Material Material = new Entities.Materials.Material();
+        //private readonly SadConsole.Console ui = new SadConsole.Console(10, 10);
+
+        public MapTests()
         {
-            throw new NotImplementedException();
+            //uiManger.Init();
+            //uiManger
         }
+
+        /*[Fact()]
+        public void AddEntityTest()
+        {
+            var entity = new Entities.Monster(Microsoft.Xna.Framework.Color.Red, Microsoft.Xna.Framework.Color.Green);
+            map.Add(entity);
+            Assert.True(map.Entities.Contains(entity));
+        }*/
 
         [Fact()]
         public void MapTest()
         {
-            throw new NotImplementedException();
+            //Map map = new Map(10, 10);
+            Assert.True(map.Tiles.Length == 20 * 20);
+            Assert.True(map.Entities != null);
         }
 
-        [Fact()]
+        /*[Fact()]
         public void IsTileWalkableTest()
         {
-            throw new NotImplementedException();
-        }
+            map.SetTerrain(new Tiles.TileFloor(new Microsoft.Xna.Framework.Point(10, 10), "stone"));
+            var walkability = map.IsTileWalkable(new Microsoft.Xna.Framework.Point(10, 10));
+            if (walkability)
+                Assert.True(walkability);
+            else
+                Assert.False(walkability);
+        }*/
 
-        [Fact()]
+        /*[Fact()]
         public void GetEntityAtTest()
         {
             throw new NotImplementedException();

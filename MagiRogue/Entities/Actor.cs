@@ -237,7 +237,7 @@ namespace MagiRogue.Entities
                 {
                     // if there's a monster here,
                     // do a bump attack
-                    Monster monster = GameLoop.World.CurrentMap.GetEntity<Monster>(Position + positionChange);
+                    Monster monster = GameLoop.World.CurrentMap.GetEntity<Monster>(CalculatedPosition + positionChange);
                     //Item item = GameLoop.World.CurrentMap.GetEntityAt<Item>(Position + positionChange);
 
                     if (monster != null)

@@ -27,10 +27,10 @@ namespace MagiRogue.System
         /// </summary>
         public static IDGenerator IDGenerator = new IDGenerator();
 
-        /* /// <summary>
-         /// Keeps track of all the Entities on the map
-         /// </summary>
-         public new MultiSpatialMap<Entity> Entities;*/
+        /*/// <summary>
+        /// Keeps track of all the Entities on the map
+        /// </summary>
+        public new MultiSpatialMap<Entity> Entities;*/
 
         /// <summary>
         /// Fires whenever FOV is recalculated.
@@ -47,8 +47,8 @@ namespace MagiRogue.System
         #region Constructor
 
         /// <summary>
-        /// Build a new map with a specified width and height, has 4 entity layers,
-        /// they being 1-Furniture, 2-Items, 3-Monsters, 4-Player
+        /// Build a new map with a specified width and height, has  entity layers,
+        /// they being 1-Furniture, 2-Items, 3-Actors
         /// </summary>
         /// <param name="width"></param>
         /// <param name="height"></param>
@@ -136,9 +136,15 @@ namespace MagiRogue.System
             }
 
             AddEntity(entity);
+            Entities.ItemAdded += Entities_ItemAdded;
 
             // Link up the entity's Moved event to a new handler
             entity.Moved += OnEntityMoved;
+        }
+
+        private void Entities_ItemAdded(object sender, ItemEventArgs<IGameObject> e)
+        {
+            var test = e.Position;
         }
 
         /// <summary>
