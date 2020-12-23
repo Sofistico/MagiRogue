@@ -7,18 +7,27 @@ using Microsoft.Xna.Framework;
 using SadConsole;
 using System.Linq;
 using GoRogue.GameFramework;
+using SadConsole.Components;
 
 namespace MagiRogue.System
 {
-    // Stores, manipulates and queries Tile data
+    /// <summary>
+    /// Stores, manipulates and queries Tile data, uses GoRogue Map class
+    /// </summary>
     public class Map : GoRogue.GameFramework.Map
     {
         #region Properties
 
+        // One of these per layer, so we force the rendering order to be what we want (high layers
+        // appearing on top of low layers). They're added to consoles in order of this array, first
+        // to last, which controls the render order.
+        private readonly MultipleConsoleEntityDrawingComponent[] entitySyncersByLayer;
+
         private TileBase[] _tiles; // Contains all tiles objects
 
         /// <summary>
-        /// All cell tiles of the map, it's a TileBase array
+        /// All cell tiles of the map, it's a TileBase array, should never be directly declared to create new tiles, rather
+        /// it must use <see cref="Map.SetTerrain(IGameObject)"/>.
         /// </summary>
         public TileBase[] Tiles { get { return _tiles; } set { _tiles = value; } }
 
@@ -52,19 +61,29 @@ namespace MagiRogue.System
         /// </summary>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public Map(int width, int height) : base(width,
-            height, Enum.GetNames(typeof(MapLayer)).Length - 1,
+        public Map(int width, int height) : base(CreateTerrain(width, height), Enum.GetNames(typeof(MapLayer)).Length - 1,
             Distance.EUCLIDEAN,
             entityLayersSupportingMultipleItems: LayerMasker.DEFAULT.Mask((int)MapLayer.ITEMS))
         {
-            Tiles = new TileBase[width * height];
+            //Tiles = new TileBase[width * height];
+            Tiles = ((ArrayMap<TileBase>)((LambdaSettableTranslationMap<TileBase, IGameObject>)Terrain).BaseMap);
             //Entities = new MultiSpatialMap<Entity>();
             FOVHandler = new DefaultFOVVisibilityHandler(this, ColorAnsi.BlackBright);
+
+            entitySyncersByLayer = new MultipleConsoleEntityDrawingComponent[Enum.GetNames(typeof(MapLayer)).Length - 1];
+            for (int i = 0; i < entitySyncersByLayer.Length; i++)
+                entitySyncersByLayer[i] = new MultipleConsoleEntityDrawingComponent();
         }
 
         #endregion Constructor
 
         #region HelperMethods
+
+        private static ISettableMapView<IGameObject> CreateTerrain(int width, int heigth)
+        {
+            var goRogueTerrain = new ArrayMap<TileBase>(width, heigth);
+            return new LambdaSettableTranslationMap<TileBase, IGameObject>(goRogueTerrain, t => t, g => g as TileBase);
+        }
 
         /// <summary>
         /// IsTileWalkable checks

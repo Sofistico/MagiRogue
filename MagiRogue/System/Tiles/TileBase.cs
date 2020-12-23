@@ -1,12 +1,9 @@
 ﻿using MagiRogue.Entities.Materials;
-using MagiRogue.Utils;
 using Microsoft.Xna.Framework;
 using SadConsole;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using GoRogue.GameFramework;
-using System.Linq;
 using GoRogue;
 
 namespace MagiRogue.System.Tiles
