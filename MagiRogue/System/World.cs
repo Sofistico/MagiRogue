@@ -117,10 +117,7 @@ namespace MagiRogue.System
                 // Note: this fancy math will be replaced by a new helper method
                 // in the next revision of SadConsole
                 var pos = new Point(monsterPosition % CurrentMap.Width, monsterPosition / CurrentMap.Height);
-                Monster newMonster = new Monster(Color.Blue, Color.Transparent, pos)
-                {
-                    Position = pos
-                };
+                Monster newMonster = new Monster(Color.Blue, Color.Transparent, pos);
 
                 // plug in some magic numbers for attack and defense values
                 newMonster.Defense = rndNum.Next(0, 10);
