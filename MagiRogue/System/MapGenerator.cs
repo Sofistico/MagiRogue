@@ -304,7 +304,7 @@ namespace MagiRogue.System
             //go through every border cell and look for potential door candidates
             foreach (Point location in borderCells)
             {
-                int locationIndex = location.ToIndex(_map.Width);
+                //int locationIndex = location.ToIndex(_map.Width);
                 if (IsPotentialDoor(location))
                 {
                     // Create a new door that is closed and unlocked.
