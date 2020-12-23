@@ -14,6 +14,8 @@ namespace MagiRogue.Entities
         public uint ID { get; private set; } // stores the entity's unique identification number
         public int Layer { get; set; } // stores and sets the layer that the entity is rendered
 
+        #region BackingField fields
+
         public Map CurrentMap => backingField.CurrentMap;
 
         public bool IsStatic => backingField.IsStatic;
@@ -22,23 +24,57 @@ namespace MagiRogue.Entities
         public bool IsWalkable { get => backingField.IsWalkable; set => backingField.IsWalkable = value; }
         Coord IGameObject.Position { get => backingField.Position; set => backingField.Position = value; }
 
+        #endregion BackingField fields
+
         private IGameObject backingField;
 
-        protected Entity(Color foreground, Color background, int glyph, int layer, int width = 1, int height = 1) : base(width, height)
+        protected Entity(Color foreground, Color background, int glyph, Coord coord, int layer, int width = 1, int height = 1) : base(width, height)
+        {
+            InitializeObject(foreground, background, glyph, coord, layer);
+        }
+
+        private void InitializeObject(Color foreground, Color background, int glyph, Coord coord, int layer)
         {
             Animation.CurrentFrame[0].Foreground = foreground;
             Animation.CurrentFrame[0].Background = background;
             Animation.CurrentFrame[0].Glyph = glyph;
 
-            Layer = layer;
-
             // Create a new unique identifier for this entity
             ID = System.Map.IDGenerator.UseID();
+
+            Layer = layer;
 
             // Ensure that the entity position/offset is tracked by scrollingconsoles
             Components.Add(new EntityViewSyncComponent());
 
-            backingField = new GameObject(Position, layer, this);
+            backingField = new GameObject(coord, layer, this);
+            base.Position = backingField.Position;
+
+            base.Moved += SadMoved;
+            backingField.Moved += GoRogueMoved;
+        }
+
+        private void GoRogueMoved(object sender, ItemMovedEventArgs<IGameObject> e)
+        {
+            if (backingField.Position != base.Position)
+            {
+                base.Position = backingField.Position;
+            }
+        }
+
+        private void SadMoved(object sender, EntityMovedEventArgs e)
+        {
+            if (base.Position != backingField.Position)
+            {
+                backingField.Position = base.Position;
+
+                // In this case, GoRogue wouldn't allow the position set, so set SadConsole's position back to the way it was
+                // to keep them in sync.  Since GoRogue's position never changed, this won't infinite loop.
+                if (backingField.Position != base.Position)
+                {
+                    base.Position = backingField.Position;
+                }
+            }
         }
 
         #region IGameObject Interface

@@ -7,8 +7,8 @@ namespace MagiRogue.Entities
     // Default glyph is @
     public class Player : Actor
     {
-        public Player(Color foreground, Color background, int layer = (int)MapLayer.ACTORS) :
-            base(foreground, background, '@', layer)
+        public Player(Color foreground, Color background, Point position, int layer = (int)MapLayer.ACTORS) :
+            base(foreground, background, '@', layer, position)
         {
             // sets the most fundamental stats, needs to set the godly flag up top, because it superseeds GodPower if it is
             // below.

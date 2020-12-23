@@ -70,7 +70,6 @@ namespace MagiRogue.System
         // and set its starting position
         private void CreatePlayer()
         {
-            Player = new Player(Color.White, Color.Black);
             //Player.Components.Add(new EntityViewSyncComponent());
 
             // Place the player on the first non-movement-blocking tile on the map
@@ -79,7 +78,11 @@ namespace MagiRogue.System
                 if (!CurrentMap.Tiles[i].IsBlockingMove)
                 {
                     // Set the player's position to the index of the current map position
-                    Player.Position = Helpers.GetPointFromIndex(i, CurrentMap.Width);
+                    var pos = Helpers.GetPointFromIndex(i, CurrentMap.Width);
+                    Player = new Player(Color.White, Color.Black, pos)
+                    {
+                        Position = pos
+                    };
                     break;
                 }
             }
@@ -103,13 +106,18 @@ namespace MagiRogue.System
             for (int i = 0; i < numMonster; i++)
             {
                 int monsterPosition = 0;
-                Monster newMonster = new Monster(Color.Blue, Color.Transparent);
                 //newMonster.Components.Add(new EntityViewSyncComponent());
                 while (CurrentMap.Tiles[monsterPosition].IsBlockingMove)
                 {
                     // pick a random spot on the map
                     monsterPosition = rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);
                 }
+
+                // Set the monster's new position
+                // Note: this fancy math will be replaced by a new helper method
+                // in the next revision of SadConsole
+                var pos = new Point(monsterPosition % CurrentMap.Width, monsterPosition / CurrentMap.Height);
+                Monster newMonster = new Monster(Color.Blue, Color.Transparent, pos);
 
                 // plug in some magic numbers for attack and defense values
                 newMonster.Defense = rndNum.Next(0, 10);
@@ -119,10 +127,6 @@ namespace MagiRogue.System
                 newMonster.Name = "a common troll";
                 newMonster.ViewRadius = 5;
 
-                // Set the monster's new position
-                // Note: this fancy math will be replaced by a new helper method
-                // in the next revision of SadConsole
-                newMonster.Position = new Point(monsterPosition % CurrentMap.Width, monsterPosition / CurrentMap.Height);
                 CurrentMap.Add(newMonster);
             }
         }
@@ -137,8 +141,6 @@ namespace MagiRogue.System
             {
                 // Create an Item with some standard attributes
                 int lootPosition = 0;
-                Item newLoot = new Item(Color.Gold, Color.White, "Gold bar", '=', 12.5);
-                IronBar ironBar = new IronBar();
 
                 // Let SadConsole know that this Item's position be tracked on the map
                 //newLoot.Components.Add(new EntityViewSyncComponent());
@@ -151,8 +153,13 @@ namespace MagiRogue.System
                 }
 
                 // set the loot's new position
-                newLoot.Position = new Point(lootPosition % CurrentMap.Width, lootPosition / CurrentMap.Height);
-                ironBar.Position = new Point(lootPosition / CurrentMap.Width, lootPosition % CurrentMap.Height);
+                //newLoot.Position = new Point(lootPosition % CurrentMap.Width, lootPosition / CurrentMap.Height);
+                //ironBar.Position = new Point(lootPosition / CurrentMap.Width, lootPosition % CurrentMap.Height);
+                Point posNew = new Point(lootPosition % CurrentMap.Width, lootPosition / CurrentMap.Height);
+                Point posIron = new Point(lootPosition / CurrentMap.Width, lootPosition % CurrentMap.Height);
+
+                Item newLoot = new Item(Color.Gold, Color.White, "Gold bar", '=', posNew, 12.5);
+                IronBar ironBar = new IronBar(posIron);
 
                 // add the Item to the MultiSpatialMap
                 CurrentMap.Add(newLoot);
