@@ -92,8 +92,9 @@ namespace MagiRogue.UI
         // based on the button pressed.
         public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
         {
-            if (info.IsKeyPressed(Keys.F5))
-                Settings.ToggleFullScreen();
+            //if (info.IsKeyPressed(Keys.F11))
+            //Settings.ToggleFullScreen(); // Too bugged right now to be used
+
             if (info.IsKeyPressed(Keys.F8))
             {
                 GameLoop.World.Player.AddComponent(new Entities.Components.TestComponent(GameLoop.World.Player));
@@ -103,7 +104,6 @@ namespace MagiRogue.UI
                 GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(0, -1));
                 CenterOnActor(GameLoop.World.Player);
             }
-
             if (info.IsKeyPressed(Keys.NumPad2))
             {
                 GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(0, 1));

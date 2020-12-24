@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "MagiRogue": {
+      "commandName": "Project",
+      "nativeDebugging": false
+    }
+  }
+}
