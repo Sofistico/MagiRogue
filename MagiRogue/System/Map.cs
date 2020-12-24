@@ -126,6 +126,12 @@ namespace MagiRogue.System
             // Remove from spatial map
             //Entities.Remove(entity);
 
+            // Clears the memory of the field of view
+            if (entity is Actor actor)
+            {
+                // Does nothing
+            }
+
             RemoveEntity(entity);
             // Link up the entity's Moved event to a new handler
             entity.Moved -= OnEntityMoved;
@@ -164,6 +170,7 @@ namespace MagiRogue.System
         {
             if (args.Entity is Player actor)
             {
+                //actor.FieldOfViewSystem.Calculate();
                 CalculateFOV(position: actor.Position, actor.ViewRadius, radiusShape: Radius.CIRCLE);
             }
         }
