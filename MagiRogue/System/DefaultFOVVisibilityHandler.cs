@@ -35,12 +35,9 @@ namespace MagiRogue.System
         /// <param name="entity">Entity to modify.</param>
         protected override void UpdateEntitySeen(Entity entity)
         {
-            if(entity != GameLoop.World.Player)
-            {
-                entity.IsVisible = true;
-                entity.IsDirty = true;
-                GameLoop.UIManager.MapConsole.IsDirty = true;
-            }         
+            entity.IsVisible = true;
+            entity.IsDirty = true;
+            GameLoop.UIManager.MapConsole.IsDirty = true;
         }
 
         /// <summary>

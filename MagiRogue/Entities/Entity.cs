@@ -27,6 +27,7 @@ namespace MagiRogue.Entities
         #endregion BackingField fields
 
         private IGameObject backingField;
+        private EntityViewSyncComponent entityViewSync;
 
         protected Entity(Color foreground, Color background, int glyph, Coord coord, int layer, int width = 1, int height = 1) : base(width, height)
         {
@@ -38,6 +39,7 @@ namespace MagiRogue.Entities
             Animation.CurrentFrame[0].Foreground = foreground;
             Animation.CurrentFrame[0].Background = background;
             Animation.CurrentFrame[0].Glyph = glyph;
+            Animation.CurrentFrame[0].IsVisible = IsVisible;
 
             // Create a new unique identifier for this entity
             ID = System.Map.IDGenerator.UseID();
@@ -45,7 +47,9 @@ namespace MagiRogue.Entities
             Layer = layer;
 
             // Ensure that the entity position/offset is tracked by scrollingconsoles
-            Components.Add(new EntityViewSyncComponent());
+            entityViewSync = new EntityViewSyncComponent();
+            Components.Add(entityViewSync);
+            entityViewSync.HandleIsVisible = false;
 
             backingField = new GameObject(coord, layer, this);
             base.Position = backingField.Position;
