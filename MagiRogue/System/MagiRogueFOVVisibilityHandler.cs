@@ -13,7 +13,7 @@ namespace MagiRogue.System
     /// Handler that will make all terrain/entities inside FOV visible as normal, all entities outside of FOV invisible, all
     /// terrain outside of FOV invisible if unexplored, and set its foreground to <see cref="ExploredColor"/> if explored but out of FOV.
     /// </summary>
-    public class DefaultFOVVisibilityHandler : FOVHandler
+    public class MagiRogueFOVVisibilityHandler : FOVHandler
     {
         /// <summary>
         /// Foreground color to set to all terrain that is outside of FOV but has been explored.
@@ -26,7 +26,7 @@ namespace MagiRogue.System
         /// <param name="map">The map this handler will manage visibility for.</param>
         /// <param name="unexploredColor">Foreground color to set to all terrain tiles that are outside of FOV but have been explored.</param>
         /// <param name="startingState">The starting state to put the handler in.</param>
-        public DefaultFOVVisibilityHandler(Map map, Color unexploredColor, FovState startingState = FovState.Enabled) :
+        public MagiRogueFOVVisibilityHandler(Map map, Color unexploredColor, FovState startingState = FovState.Enabled) :
             base(map, startingState) => ExploredColor = unexploredColor;
 
         /// <summary>
@@ -41,13 +41,17 @@ namespace MagiRogue.System
         }
 
         /// <summary>
-        /// Makes entity invisible.
+        /// Makes entity invisible and add a ghost like entity containing its appearence and last know position
         /// </summary>
         /// <param name="entity">Entity to modify.</param>
         protected override void UpdateEntityUnseen(Entity entity)
         {
             entity.IsVisible = false;
             entity.IsDirty = true;
+            if (Map.Explored[entity.Position])
+            {
+
+            }
             GameLoop.UIManager.MapConsole.IsDirty = true;
         }
 
@@ -71,11 +75,11 @@ namespace MagiRogue.System
             if (Map.Explored[terrain.Position])
             {
                 terrain.SaveState();
-#if DEBUG
+                /*#if DEBUG
                 terrain.Background = ExploredColor;
-#else
+                #else*/
                 terrain.Foreground = ExploredColor;
-#endif
+                //#endif
             }
             else
                 terrain.IsVisible = false;

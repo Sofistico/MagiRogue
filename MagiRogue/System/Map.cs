@@ -68,7 +68,7 @@ namespace MagiRogue.System
             //Tiles = new TileBase[width * height];
             Tiles = ((ArrayMap<TileBase>)((LambdaSettableTranslationMap<TileBase, IGameObject>)Terrain).BaseMap);
             //Entities = new MultiSpatialMap<Entity>();
-            FOVHandler = new DefaultFOVVisibilityHandler(this, ColorAnsi.BlackBright);
+            FOVHandler = new MagiRogueFOVVisibilityHandler(this, ColorAnsi.BlackBright);
 
             entitySyncersByLayer = new MultipleConsoleEntityDrawingComponent[Enum.GetNames(typeof(MapLayer)).Length - 1];
             for (int i = 0; i < entitySyncersByLayer.Length; i++)
