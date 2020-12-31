@@ -16,7 +16,7 @@ namespace MagiRogue.System.Tiles
         public int Layer;
         //public Coord TilePosition;
 
-        private IGameObject backingField;
+        private readonly IGameObject backingField;
 
         // Creates a list of possible materials, and then assings it to the tile, need to move it to a fitting area, like
         // World or GameLoop, because if need to port, every new object will have more than one possible material without

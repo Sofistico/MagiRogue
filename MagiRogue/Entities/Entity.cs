@@ -9,8 +9,10 @@ namespace MagiRogue.Entities
 {
     // Extends the SadConsole.Entities.Entity class
     // by adding an ID to it using GoRogue's ID system
-    public abstract class Entity : SadConsole.Entities.Entity, IGameObject
+    public class Entity : SadConsole.Entities.Entity, IGameObject
     {
+        #region Fields
+
         public uint ID { get; private set; } // stores the entity's unique identification number
         public int Layer { get; set; } // stores and sets the layer that the entity is rendered
 
@@ -27,11 +29,20 @@ namespace MagiRogue.Entities
         #endregion BackingField fields
 
         private IGameObject backingField;
+        private EntityViewSyncComponent entityViewSync;
 
-        protected Entity(Color foreground, Color background, int glyph, Coord coord, int layer, int width = 1, int height = 1) : base(width, height)
+        #endregion Fields
+
+        #region Constructor
+
+        public Entity(Color foreground, Color background, int glyph, Coord coord, int layer, int width = 1, int height = 1) : base(width, height)
         {
             InitializeObject(foreground, background, glyph, coord, layer);
         }
+
+        #endregion Constructor
+
+        #region Helper Methods
 
         private void InitializeObject(Color foreground, Color background, int glyph, Coord coord, int layer)
         {
@@ -45,7 +56,9 @@ namespace MagiRogue.Entities
             Layer = layer;
 
             // Ensure that the entity position/offset is tracked by scrollingconsoles
-            Components.Add(new EntityViewSyncComponent());
+            entityViewSync = new EntityViewSyncComponent();
+            Components.Add(entityViewSync);
+            entityViewSync.HandleIsVisible = false;
 
             backingField = new GameObject(coord, layer, this);
             base.Position = backingField.Position;
@@ -76,6 +89,8 @@ namespace MagiRogue.Entities
                 }
             }
         }
+
+        #endregion Helper Methods
 
         #region IGameObject Interface
 
