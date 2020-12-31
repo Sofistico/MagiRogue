@@ -1,4 +1,5 @@
-﻿using MagiRogue.Entities;
+﻿using GoRogue;
+using MagiRogue.Entities;
 using MagiRogue.System.Tiles;
 using Microsoft.Xna.Framework;
 using System;
@@ -15,6 +16,8 @@ namespace MagiRogue.System
     /// </summary>
     public class MagiRogueFOVVisibilityHandler : FOVHandler
     {
+        private int _ghostLayer;
+
         /// <summary>
         /// Foreground color to set to all terrain that is outside of FOV but has been explored.
         /// </summary>
@@ -26,8 +29,31 @@ namespace MagiRogue.System
         /// <param name="map">The map this handler will manage visibility for.</param>
         /// <param name="unexploredColor">Foreground color to set to all terrain tiles that are outside of FOV but have been explored.</param>
         /// <param name="startingState">The starting state to put the handler in.</param>
-        public MagiRogueFOVVisibilityHandler(Map map, Color unexploredColor, FovState startingState = FovState.Enabled) :
-            base(map, startingState) => ExploredColor = unexploredColor;
+        public MagiRogueFOVVisibilityHandler(Map map, Color unexploredColor, int ghostLayer, FovState startingState = FovState.Enabled) :
+            base(map, startingState)
+        {
+            ExploredColor = unexploredColor;
+            _ghostLayer = ghostLayer;
+        }
+
+        /// <summary>
+        /// Foreground color to set to all terrain that is outside of FOV but has been explored.
+        /// </summary>
+        public void RefreshExploredTerrain()
+        {
+            for (int x = 0; x < Map.Width; x++)
+            {
+                for (int y = 0; y < Map.Height; y++)
+                {
+                    if (Map.Explored[x, y])
+                    {
+                        TileBase tile = Map.Terrain[x, y] as TileBase;
+                        UpdateTerrainSeen(tile);
+                        UpdateTerrainUnseen(tile);
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Makes entity visible.
@@ -35,9 +61,15 @@ namespace MagiRogue.System
         /// <param name="entity">Entity to modify.</param>
         protected override void UpdateEntitySeen(Entity entity)
         {
+            if (entity.Layer == _ghostLayer)
+            {
+                Map.Remove(entity);
+                return;
+            }
+
             entity.IsVisible = true;
-            entity.IsDirty = true;
-            GameLoop.UIManager.MapConsole.IsDirty = true;
+            /*entity.IsDirty = true;
+            GameLoop.UIManager.MapConsole.IsDirty = true;*/
         }
 
         /// <summary>
@@ -46,13 +78,24 @@ namespace MagiRogue.System
         /// <param name="entity">Entity to modify.</param>
         protected override void UpdateEntityUnseen(Entity entity)
         {
-            entity.IsVisible = false;
-            entity.IsDirty = true;
-            if (Map.Explored[entity.Position])
-            {
+            if (entity.Layer == _ghostLayer)
+                return;
 
+            if (entity.Layer != _ghostLayer && Map.Explored[entity.Position])
+            {
+                Entity ghost = new Entity
+                    (ExploredColor,
+                    entity.Animation[0].Background,
+                    entity.Animation[0].Glyph,
+                    entity.Position,
+                    _ghostLayer);
+                ghost.IsVisible = true;
+
+                ghost.OnCalculateRenderPosition();
+
+                Map.Add(ghost);
             }
-            GameLoop.UIManager.MapConsole.IsDirty = true;
+            entity.IsVisible = false;
         }
 
         /// <summary>

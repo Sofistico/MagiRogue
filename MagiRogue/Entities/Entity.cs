@@ -9,7 +9,7 @@ namespace MagiRogue.Entities
 {
     // Extends the SadConsole.Entities.Entity class
     // by adding an ID to it using GoRogue's ID system
-    public abstract class Entity : SadConsole.Entities.Entity, IGameObject
+    public class Entity : SadConsole.Entities.Entity, IGameObject
     {
         #region Fields
 
@@ -35,7 +35,7 @@ namespace MagiRogue.Entities
 
         #region Constructor
 
-        protected Entity(Color foreground, Color background, int glyph, Coord coord, int layer, int width = 1, int height = 1) : base(width, height)
+        public Entity(Color foreground, Color background, int glyph, Coord coord, int layer, int width = 1, int height = 1) : base(width, height)
         {
             InitializeObject(foreground, background, glyph, coord, layer);
         }

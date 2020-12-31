@@ -63,12 +63,12 @@ namespace MagiRogue.System
         /// <param name="height"></param>
         public Map(int width, int height) : base(CreateTerrain(width, height), Enum.GetNames(typeof(MapLayer)).Length - 1,
             Distance.EUCLIDEAN,
-            entityLayersSupportingMultipleItems: LayerMasker.DEFAULT.Mask((int)MapLayer.ITEMS))
+            entityLayersSupportingMultipleItems: LayerMasker.DEFAULT.Mask((int)MapLayer.ITEMS, (int)MapLayer.GHOSTS))
         {
             //Tiles = new TileBase[width * height];
             Tiles = ((ArrayMap<TileBase>)((LambdaSettableTranslationMap<TileBase, IGameObject>)Terrain).BaseMap);
             //Entities = new MultiSpatialMap<Entity>();
-            FOVHandler = new MagiRogueFOVVisibilityHandler(this, ColorAnsi.BlackBright);
+            FOVHandler = new MagiRogueFOVVisibilityHandler(this, ColorAnsi.BlackBright, (int)MapLayer.GHOSTS);
 
             entitySyncersByLayer = new MultipleConsoleEntityDrawingComponent[Enum.GetNames(typeof(MapLayer)).Length - 1];
             for (int i = 0; i < entitySyncersByLayer.Length; i++)
@@ -229,7 +229,9 @@ namespace MagiRogue.System
     public enum MapLayer
     {
         TERRAIN,
+        GHOSTS,
         ITEMS,
-        ACTORS
+        ACTORS,
+        PLAYER
     }
 }
