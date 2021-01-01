@@ -258,6 +258,7 @@ namespace MagiRogue.Entities
                 }*/
 
                 Position += positionChange;
+                GameLoop.UIManager.IsDirty = true;
                 return true;
             }
             // Handle situations where there are non-walkable tiles that CAN be used

@@ -65,9 +65,7 @@ namespace MagiRogue.System
             Distance.EUCLIDEAN,
             entityLayersSupportingMultipleItems: LayerMasker.DEFAULT.Mask((int)MapLayer.ITEMS, (int)MapLayer.GHOSTS))
         {
-            //Tiles = new TileBase[width * height];
             Tiles = ((ArrayMap<TileBase>)((LambdaSettableTranslationMap<TileBase, IGameObject>)Terrain).BaseMap);
-            //Entities = new MultiSpatialMap<Entity>();
             FOVHandler = new MagiRogueFOVVisibilityHandler(this, ColorAnsi.BlackBright, (int)MapLayer.GHOSTS);
 
             entitySyncersByLayer = new MultipleConsoleEntityDrawingComponent[Enum.GetNames(typeof(MapLayer)).Length - 1];
