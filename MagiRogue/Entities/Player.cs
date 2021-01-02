@@ -19,6 +19,7 @@ namespace MagiRogue.Entities
             GodPower = 1;
             Health = 10;
             MaxHealth = 10;
+            BaseHpRegen = 0.1f;
 
             Attack = 10;
             AttackChance = 40;

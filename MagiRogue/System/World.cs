@@ -83,6 +83,7 @@ namespace MagiRogue.System
                     {
                         Position = pos
                     };
+                    Player.AddComponent(new Components.HealthComponent(10, 10, 0.1f));
                     break;
                 }
             }

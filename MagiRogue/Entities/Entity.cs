@@ -51,7 +51,7 @@ namespace MagiRogue.Entities
             Animation.CurrentFrame[0].Glyph = glyph;
 
             // Create a new unique identifier for this entity
-            ID = System.Map.IDGenerator.UseID();
+            //ID = System.Map.IDGenerator.UseID();
 
             Layer = layer;
 

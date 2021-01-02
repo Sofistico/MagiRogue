@@ -10,49 +10,49 @@ using System.Text;
 
 namespace MagiRogue.Commands
 {
-    // Contains all generic actions performed on entities and tiles
-    // including combat, movement, and so on.
+    /// <summary>
+    /// Contains all generic actions performed on entities and tiles
+    /// including combat, movement, and so on.
+    /// </summary>
     public class CommandManager
     {
         public CommandManager()
         {
-            // Instantietes the pathfinding field so that all actors can acess it
-            //pathfinding = new Pathfinding();
         }
 
-        // Move the actor BY +/- X&Y coordinates
-        // returns true if the move was successful
-        // and false if unable to move there
+        /// <summary>
+        /// Move the actor BY +/- X&Y coordinates
+        /// returns true if the move was successful
+        /// and false if unable to move there
+        /// </summary>
+        /// <param name="actor"></param>
+        /// <param name="position"></param>
+        /// <returns></returns>
         public bool MoveActorBy(Actor actor, Point position)
         {
             return actor.MoveBy(position);
         }
 
-        // Moves the actor To a position, by means of teleport
-        // returns true if the move was successful and false if unable to move
+        /// <summary>
+        /// Moves the actor To a position, by means of teleport
+        /// returns true if the move was successful and false if unable to move
+        /// </summary>
+        /// <param name="actor"></param>
+        /// <param name="position"></param>
+        /// <returns></returns>
         public bool MoveActorTo(Actor actor, Point position)
         {
             return actor.MoveTo(position);
         }
 
-        public bool FollowPlayer(Actor actor)
-        {
-            if (GameLoop.World.Player != null) // Implement a way for an actor to check if the player is near, so that it can follow the player
-            {
-                return true;//GameLoop.World.CurrentMap.AStar.ShortestPath(actor.Position, GameLoop.World.Player.Position);
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        // An method that when a button is pressed, attacks the monster.
         // TODO: An df inspired menu with body parts located.
-
-        // Executes an attack from an attacking actor
-        // on a defending actor, and then describes
-        // the outcome of the attack in the Message Log
+        /// <summary>
+        /// Executes an attack from an attacking actor
+        /// on a defending actor, and then describes
+        /// the outcome of the attack in the Message Log
+        /// </summary>
+        /// <param name="attacker"></param>
+        /// <param name="defender"></param>
         public void Attack(Actor attacker, Actor defender)
         {
             // Create two messages that describe the outcome
@@ -76,11 +76,17 @@ namespace MagiRogue.Commands
             ResolveDamage(defender, damage);
         }
 
-        // Calculates the outcome of an attacker's attempt
-        // at scoring a hit on a defender, using the attacker's
-        // AttackChance and a random d100 roll as the basis.
-        // Modifies a StringBuilder message that will be displayed
-        // in the MessageLog
+        /// <summary>
+        /// Calculates the outcome of an attacker's attempt
+        /// at scoring a hit on a defender, using the attacker's
+        /// AttackChance and a random d100 roll as the basis.
+        /// Modifies a StringBuilder message that will be displayed
+        /// in the MessageLog
+        /// </summary>
+        /// <param name="attacker"></param>
+        /// <param name="defender"></param>
+        /// <param name="attackMessage"></param>
+        /// <returns></returns>
         private static int ResolveAttack(Actor attacker, Actor defender, StringBuilder attackMessage)
         {
             // Create a string that expresses the attacker and defender's names
@@ -102,10 +108,17 @@ namespace MagiRogue.Commands
             return hits;
         }
 
-        // Calculates the outcome of a defender's attempt
-        // at blocking incoming hits.
-        // Modifies a StringBuilder messages that will be displayed
-        // in the MessageLog, expressing the number of hits blocked.
+        /// <summary>
+        /// Calculates the outcome of a defender's attempt
+        /// at blocking incoming hits.
+        /// Modifies a StringBuilder messages that will be displayed
+        /// in the MessageLog, expressing the number of hits blocked.
+        /// </summary>
+        /// <param name="defender"></param>
+        /// <param name="hits"></param>
+        /// <param name="attackMessage"></param>
+        /// <param name="defenseMessage"></param>
+        /// <returns></returns>
         private static int ResolveDefense(Actor defender, int hits, StringBuilder attackMessage, StringBuilder defenseMessage)
         {
             int blocks = 0;
@@ -136,15 +149,19 @@ namespace MagiRogue.Commands
             return blocks;
         }
 
-        // Calculates the damage a defender takes after a successful hit
-        // and subtracts it from its Health
-        // Then displays the outcome in the MessageLog.
+        /// <summary>
+        /// Calculates the damage a defender takes after a successful hit
+        /// and subtracts it from its Health
+        /// Then displays the outcome in the MessageLog.
+        /// </summary>
+        /// <param name="defender"></param>
+        /// <param name="damage"></param>
         private static void ResolveDamage(Actor defender, int damage)
         {
             if (damage > 0)
             {
                 defender.Health -= damage;
-                GameLoop.UIManager.MessageLog.Add($"{defender.Name} was hit for {damage} damage");
+                GameLoop.UIManager.MessageLog.Add($" {defender.Name} was hit for {damage} damage");
                 if (defender.Health < 0)
                     ResolveDeath(defender);
             }
@@ -152,9 +169,12 @@ namespace MagiRogue.Commands
                 GameLoop.UIManager.MessageLog.Add($"{defender.Name} blocked all damage!");
         }
 
-        // Removes an Actor that has died
-        // and displays a message showing
-        // the actor that has died, and they loot they dropped
+        /// <summary>
+        /// Removes an Actor that has died
+        /// and displays a message showing
+        /// the actor that has died, and the loot they dropped
+        /// </summary>
+        /// <param name="defender"></param>
         private static void ResolveDeath(Actor defender)
         {
             // Set up a customized death message
@@ -164,7 +184,7 @@ namespace MagiRogue.Commands
             // at the map position where it died
             if (defender.Inventory.Count > 0)
             {
-                deathMessage.Append(" and dropped");
+                deathMessage.Append("and dropped");
 
                 foreach (Item item in defender.Inventory)
                 {
@@ -198,6 +218,11 @@ namespace MagiRogue.Commands
             GameLoop.UIManager.MessageLog.Add(deathMessage.ToString());
         }
 
+        /// <summary>
+        /// Gets
+        /// </summary>
+        /// <param name="attacker"></param>
+        /// <returns></returns>
         public bool DirectAttack(Actor attacker)
         {
             // Lists all monsters that are close and their locations

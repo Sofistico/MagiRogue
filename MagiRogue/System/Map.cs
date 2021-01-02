@@ -34,7 +34,7 @@ namespace MagiRogue.System
         /// <summary>
         /// A static IDGenerator that all Entities can access
         /// </summary>
-        public static IDGenerator IDGenerator = new IDGenerator();
+        //public static IDGenerator IDGenerator = new IDGenerator();
 
         /*/// <summary>
         /// Keeps track of all the Entities on the map

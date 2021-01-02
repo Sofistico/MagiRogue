@@ -27,11 +27,5 @@ namespace MagiRogue.Entities
                 Inventory.Add(newItem);
             }
         }
-
-        // implement a way for the monster to follow, the error was caused because the World wasn't instantieted properly
-        private void BasicAi()
-        {
-            GameLoop.CommandManager.FollowPlayer(this);
-        }
     }
 }

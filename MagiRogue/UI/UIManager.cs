@@ -97,7 +97,7 @@ namespace MagiRogue.UI
 
             if (info.IsKeyPressed(Keys.F8))
             {
-                GameLoop.World.Player.AddComponent(new Entities.Components.TestComponent(GameLoop.World.Player));
+                GameLoop.World.Player.AddComponent(new Components.TestComponent(GameLoop.World.Player));
             }
             if (info.IsKeyPressed(Keys.NumPad8))
             {
