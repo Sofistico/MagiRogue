@@ -33,7 +33,8 @@ namespace MagiRogue.UI
             Parent = Global.CurrentScreen;
         }
 
-        public void Init()
+        // Initiates the game by means of going to the menu first
+        public void InitGameViaMainMenu()
         {
             MainMenu = new MainMenuWindow(GameLoop.GameWidth, GameLoop.GameHeight);
             Children.Add(MainMenu);

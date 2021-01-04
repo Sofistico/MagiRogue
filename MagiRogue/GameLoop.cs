@@ -11,12 +11,13 @@ namespace MagiRogue
         public const int GameWidth = 120;
         public const int GameHeight = 30;
 
-        // Managers
+        // Fields for the managers
         private static UIManager uIManager;
         private static World world;
         private static CommandManager commandManager;
         private static PhysicsManager physicsManager;
 
+        // Managers
         public static UIManager UIManager { get => uIManager; set => uIManager = value; }
         public static World World { get => world; set => world = value; }
         public static CommandManager CommandManager { get => commandManager; set => commandManager = value; }
@@ -45,10 +46,6 @@ namespace MagiRogue
             //Instantiate the UIManager
             UIManager = new UIManager();
 
-            // Build the world!
-            // The world is being built before the main menu even appears
-            //World = new World();
-
             //Instantiate a new CommandManager
             CommandManager = new CommandManager();
 
@@ -57,7 +54,7 @@ namespace MagiRogue
 
             // Now let the UIManager create its consoles
             // so they can use the World data
-            UIManager.Init();
+            UIManager.InitGameViaMainMenu();
         }
 
         private static void Update(GameTime time)
