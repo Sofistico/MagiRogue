@@ -1,8 +1,6 @@
 ﻿using GoRogue;
-using MagiRogue.Commands;
 using MagiRogue.Entities;
 using MagiRogue.System;
-using MagiRogue.System.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using SadConsole;

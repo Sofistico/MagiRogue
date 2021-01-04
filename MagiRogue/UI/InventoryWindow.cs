@@ -19,7 +19,7 @@ namespace MagiRogue.UI
         // check to see if it will be needed.
         private readonly int windowBorderThickness = 2;
 
-        private ScrollBar invScrollBar;
+        private readonly ScrollBar invScrollBar;
 
         /// <summary>
         /// This constructor creates a new inventory window and defines the inventory console inside this window
@@ -52,9 +52,11 @@ namespace MagiRogue.UI
             UseKeyboard = true;
 
             //close window button
-            Button closeButton = new Button(3, 1);
-            closeButton.Position = new Point(0, 0);
-            closeButton.Text = "[X]";
+            Button closeButton = new Button(3, 1)
+            {
+                Position = new Point(0, 0),
+                Text = "[X]"
+            };
 
             closeButton.Click += CloseButton_Click;
 

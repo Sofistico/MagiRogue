@@ -12,12 +12,17 @@ namespace MagiRogue
         public const int GameHeight = 30;
 
         // Managers
-        public static UIManager UIManager;
-        public static World World;
-        public static CommandManager CommandManager;
-        public static PhysicsManager PhysicsManager;
+        private static UIManager uIManager;
+        private static World world;
+        private static CommandManager commandManager;
+        private static PhysicsManager physicsManager;
 
-        static void Main()
+        public static UIManager UIManager { get => uIManager; set => uIManager = value; }
+        public static World World { get => world; set => world = value; }
+        public static CommandManager CommandManager { get => commandManager; set => commandManager = value; }
+        public static PhysicsManager PhysicsManager { get => physicsManager; set => physicsManager = value; }
+
+        private static void Main()
         {
             // Setup the engine and creat the main window.
             SadConsole.Game.Create(GameWidth, GameHeight);

@@ -9,9 +9,9 @@ namespace MagiRogue.UI
 {
     public class StatusWindow : Window
     {
-        private Player player;
-        private ScrollingConsole statsConsole;
-        private ScrollBar statusScroll;
+        private readonly Player player;
+        private readonly ScrollingConsole statsConsole;
+        private readonly ScrollBar statusScroll;
 
         private const int windowBorderThickness = 2;
 
@@ -57,9 +57,9 @@ namespace MagiRogue.UI
 
         public void PrintStats()
         {
-            statsConsole.Print(0, 0, player.Name);
-            statsConsole.Print(0, 2, player.Health.ToString(), Color.Red);
-            statsConsole.Print(2, 2, player.MaxHealth.ToString(), Color.DarkRed);
+            statsConsole.Print(0, 0, $"{player.Name}");
+            statsConsole.Print(0, 2, $"Health: {player.Health} / {player.MaxHealth}", Color.Red);
+            //statsConsole.Print(2, 2, player.MaxHealth.ToString(), Color.DarkRed);
         }
     }
 }
