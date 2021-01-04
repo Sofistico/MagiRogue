@@ -16,6 +16,8 @@ namespace MagiRogue.UI
 
         public MainMenuWindow(int width, int height, string title = "Main Menu") : base(width, height)
         {
+            ThemeColors = SadConsole.Themes.Colors.CreateAnsi();
+
             Title = title.Align(HorizontalAlignment.Left, width);
 
             controlConsole = new ControlsConsole(width, height - windowBorder)

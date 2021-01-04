@@ -20,7 +20,7 @@ namespace MagiRogue.UI
         public Window MapWindow;
         public MessageLogWindow MessageLog;
         public InventoryWindow InventoryScreen;
-        public StatusWindow StatusWindow;
+        public StatusWindow StatusConsole;
         public MainMenuWindow MainMenu;
 
         public UIManager()
@@ -61,8 +61,13 @@ namespace MagiRogue.UI
             // Inventory initialization
             InventoryScreen = new InventoryWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Inventory Window");
             Children.Add(InventoryScreen);
-            InventoryScreen.Show();
+            InventoryScreen.Hide();
             InventoryScreen.Position = new Point(GameLoop.GameWidth / 2, 0);
+
+            StatusConsole = new StatusWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Status Window");
+            Children.Add(StatusConsole);
+            StatusConsole.Position = new Point(GameLoop.GameWidth / 2, 0);
+            StatusConsole.Show();
 
             // Load the map into the MapConsole
             LoadMap(GameLoop.World.CurrentMap);
@@ -164,6 +169,12 @@ namespace MagiRogue.UI
             {
                 GameLoop.CommandManager.CloseDoor(GameLoop.World.Player);
             }
+            if (info.IsKeyPressed(Keys.I))
+            {
+                InventoryScreen.Show();
+                // InventoryScreen.UseKeyboard = true;
+                //InventoryScreen.UseMouse = true;
+            }
 #if DEBUG
             if (info.IsKeyPressed(Keys.F10))
             {
@@ -182,8 +193,10 @@ namespace MagiRogue.UI
         {
             MapWindow = new Window(width, height)
             {
-                CanDrag = true
+                CanDrag = false
             };
+
+            MapWindow.ThemeColors = SadConsole.Themes.Colors.CreateAnsi();
 
             //make console short enough to show the window title
             //and borders, and position it away from borders

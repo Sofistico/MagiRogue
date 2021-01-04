@@ -33,10 +33,12 @@ namespace MagiRogue.UI
         public MessageLogWindow(int width, int height, string title) : base(width, height)
         {
             // Ensure that the window background is the correct colour
-            Theme.FillStyle.Background = DefaultBackground;
+            //Theme.FillStyle.Background = DefaultBackground;
+
+            ThemeColors = SadConsole.Themes.Colors.CreateAnsi();
 
             lines = new Queue<string>();
-            CanDrag = true;
+            CanDrag = false;
 
             Title = title.Align(HorizontalAlignment.Center, Width);
 
@@ -65,6 +67,11 @@ namespace MagiRogue.UI
             Children.Add(messageConsole);
         }
 
+        public override void Draw(TimeSpan drawTime)
+        {
+            base.Draw(drawTime);
+        }
+
         public void Add(string message)
         {
             lines.Enqueue(message);
@@ -82,14 +89,15 @@ namespace MagiRogue.UI
         // based on the scrollbar position using an event handler
         private void MessageScrollBarValueChanged(object sender, EventArgs e)
         {
-            messageConsole.ViewPort = new Rectangle(0, messageScrollBar.Value + windowBorderThickness,
-                messageConsole.Width, messageConsole.ViewPort.Height);
+            messageConsole.ViewPort = new Rectangle(0,
+                messageScrollBar.Value
+                + windowBorderThickness,
+                messageConsole.Width,
+                messageConsole.ViewPort.Height);
         }
 
         public override void Update(TimeSpan time)
         {
-            base.Update(time);
-
             // Ensure that the scrollbar tracks the current position of the messageConsole.
             if (messageConsole.TimesShiftedUp != 0 |
                 messageConsole.Cursor.Position.Y >= messageConsole.ViewPort.Height + scrollBarCurrentPosition)
@@ -112,8 +120,10 @@ namespace MagiRogue.UI
                 messageScrollBar.Value = scrollBarCurrentPosition;
 
                 // Reset the shift amount.
-                messageConsole.TimesShiftedUp = 0;
+                //messageConsole.TimesShiftedUp = 0;
             }
+
+            base.Update(time);
         }
     }
 }

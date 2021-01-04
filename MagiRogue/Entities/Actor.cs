@@ -184,7 +184,7 @@ namespace MagiRogue.Entities
         /// </summary>
         public int BloodCount
         {
-            get { return bloodCount = weight * 75; }
+            get { return bloodCount; }
             set
             {
                 if (value <= weight * 75)
