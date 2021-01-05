@@ -174,6 +174,11 @@ namespace MagiRogue.UI
                 // InventoryScreen.UseKeyboard = true;
                 //InventoryScreen.UseMouse = true;
             }
+
+            if (info.IsKeyPressed(Keys.H))
+            {
+                GameLoop.CommandManager.HurtYourself(GameLoop.World.Player);
+            }
 #if DEBUG
             if (info.IsKeyPressed(Keys.F10))
             {

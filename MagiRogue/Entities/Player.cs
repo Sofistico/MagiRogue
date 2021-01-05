@@ -31,6 +31,8 @@ namespace MagiRogue.Entities
             Weight = 50;
             Size = 165;
             //IsVisible = false;
+
+            CalculateBlood();
         }
     }
 }

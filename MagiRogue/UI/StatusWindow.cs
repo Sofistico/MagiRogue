@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using SadConsole;
 using SadConsole.Controls;
+using SadConsole.Input;
 using System;
 using System.Collections.Generic;
 
@@ -46,7 +47,7 @@ namespace MagiRogue.UI
             UseMouse = true;
 
             Children.Add(statsConsole);
-            PrintStats();
+            //PrintStats();
         }
 
         private void StatusScroll_ValueChanged(object sender, EventArgs e)
@@ -55,11 +56,14 @@ namespace MagiRogue.UI
                 statsConsole.Width, statsConsole.ViewPort.Height);
         }
 
-        public void PrintStats()
+        public override void Update(TimeSpan time)
         {
             statsConsole.Print(0, 0, $"{player.Name}");
-            statsConsole.Print(0, 2, $"Health: {player.Health} / {player.MaxHealth}", Color.Red);
-            //statsConsole.Print(2, 2, player.MaxHealth.ToString(), Color.DarkRed);
+            statsConsole.Print(0, 2, $"Health: {player.Health} / {player.MaxHealth}   ", Color.Red);
+            statsConsole.Print(0, 4, $"Blood Mana: {player.BloodyMana}  ", Color.DarkRed);
+            statsConsole.Print(0, 5, $"Natural Mana: {player.NaturalMana}   ", Color.LightBlue);
+
+            base.Update(time);
         }
     }
 }

@@ -339,5 +339,12 @@ namespace MagiRogue.Commands
         }
 
 #endif
+
+        public void HurtYourself(Actor actor)
+        {
+            actor.Health -= 1;
+            actor.BloodCount -= 100f;
+            actor.BloodyMana += 0.1f;
+        }
     }
 }
