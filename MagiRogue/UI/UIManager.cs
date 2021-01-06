@@ -34,7 +34,7 @@ namespace MagiRogue.UI
         }
 
         // Initiates the game by means of going to the menu first
-        public void InitGameViaMainMenu()
+        public void InitMainMenu()
         {
             MainMenu = new MainMenuWindow(GameLoop.GameWidth, GameLoop.GameHeight);
             Children.Add(MainMenu);
@@ -44,7 +44,7 @@ namespace MagiRogue.UI
             CreateConsoles();
         }
 
-        public void StartGameMainMenu()
+        public void StartGame()
         {
             GameLoop.World = new World();
 

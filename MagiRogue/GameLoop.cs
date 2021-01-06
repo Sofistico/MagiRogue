@@ -54,7 +54,7 @@ namespace MagiRogue
 
             // Now let the UIManager create its consoles
             // so they can use the World data
-            UIManager.InitGameViaMainMenu();
+            UIManager.InitMainMenu();
         }
 
         private static void Update(GameTime time)

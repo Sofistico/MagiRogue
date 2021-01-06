@@ -344,6 +344,7 @@ namespace MagiRogue.Commands
         {
             actor.Health -= 1;
             actor.BloodCount -= 100f;
+            // Need to redo the logic to properly calculate this
             actor.BloodyMana += 0.1f;
         }
     }

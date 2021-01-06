@@ -55,16 +55,13 @@ namespace MagiRogue.UI
         private void PositionButtons()
         {
             int i = 0;
-            foreach (var button in controlConsole)
+            foreach (ControlBase button in controlConsole)
             {
                 button.Position = new Point(55, 2 + (i * 2));
                 ++i;
             }
         }
 
-        private void StartGameClick(object sender, EventArgs e)
-        {
-            GameLoop.UIManager.StartGameMainMenu();
-        }
+        private void StartGameClick(object sender, EventArgs e) => GameLoop.UIManager.StartGame();
     }
 }
