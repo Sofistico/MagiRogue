@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Globalization;
 
 namespace MagiRogue.Commands
 {
@@ -342,10 +343,18 @@ namespace MagiRogue.Commands
 
         public void HurtYourself(Actor actor)
         {
-            actor.Health -= 1;
-            actor.BloodCount -= 100f;
-            // Need to redo the logic to properly calculate this
-            actor.BloodyMana += 0.1f;
+            int maxMana = actor.BodyStat + actor.SoulStat + actor.MindStat;
+            if (actor.BloodyMana != maxMana)
+            {
+                actor.Health -= 1;
+                actor.BloodCount -= 100f;
+                int roll = Dice.Roll("1d3");
+                float bloodyManaGained = float.Parse($"0.{roll}", CultureInfo.InvariantCulture.NumberFormat);
+                actor.BloodyMana = (float)Math.Round(actor.BloodyMana + bloodyManaGained, 1);
+                GameLoop.UIManager.MessageLog.Add($"You ritually wound yourself, channeling your blood into mana, gaining {bloodyManaGained} blood mana");
+            }
+            else
+                GameLoop.UIManager.MessageLog.Add("Maxed out your blood mana");
         }
     }
 }

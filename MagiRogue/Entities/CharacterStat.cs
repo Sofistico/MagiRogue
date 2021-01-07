@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace MagiRogue.Entities
 {
-    public class BaseStat
+    public class CharacterStat
     {
+
     }
 }
