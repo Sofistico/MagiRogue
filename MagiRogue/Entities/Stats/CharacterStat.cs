@@ -68,7 +68,7 @@ namespace MagiRogue.Entities.Stats
                 {
                     finalValue += mod.Value;
                 }
-                else if (mod.ModType == StatModType.Percent)
+                else if (mod.ModType == StatModType.PercentMulti)
                 {
                     finalValue *= 1 + mod.Value;
                 }

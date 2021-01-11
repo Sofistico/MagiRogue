@@ -9,7 +9,8 @@ namespace MagiRogue.Entities.Stats
     public enum StatModType
     {
         Flat,
-        Percent
+        PercentAdd,
+        PercentMulti,
     }
 
     public class StatModifier
