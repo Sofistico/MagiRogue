@@ -1,6 +1,7 @@
 ﻿using MagiRogue.System;
 using MagiRogue.Entities.Materials;
 using Microsoft.Xna.Framework;
+using System;
 
 namespace MagiRogue.Entities
 {
@@ -47,6 +48,27 @@ namespace MagiRogue.Entities
         public void Destroy()
         {
             GameLoop.World.CurrentMap.Remove(this);
+        }
+
+        public void Equip(Actor actor)
+        {
+            // We need to store our modifiers in variables before adding them to the stat.
+            // just example code
+
+            /*c.Strength.AddModifier(new StatModifier(10, StatModType.Flat, this));
+            c.Strength.AddModifier(new StatModifier(0.1, StatModType.Percent, this));*/
+
+            throw new NotImplementedException();
+        }
+
+        public void Unequip(Actor actor)
+        {
+            // Here we need to use the stored modifiers in order to remove them.
+            // Otherwise they would be "lost" in the stat forever.
+            // just example code
+            //c.Strength.RemoveAllModifiersFromSource(this);
+
+            throw new NotImplementedException();
         }
     }
 }

@@ -12,15 +12,18 @@ namespace MagiRogue.Entities.Stats
         private float _statValue;
 
         private readonly List<StatModifier> statModifiers;
+        public readonly IReadOnlyCollection<StatModifier> StatModifiers;
 
         public float BaseValue;
+        private float lastBaseValue = float.MinValue;
 
         public float StatValue
         {
             get
             {
-                if (needsUpdate)
+                if (needsUpdate || lastBaseValue != BaseValue)
                 {
+                    lastBaseValue = BaseValue;
                     _statValue = CalculateFinalValue();
                     needsUpdate = false;
                 }
@@ -32,6 +35,7 @@ namespace MagiRogue.Entities.Stats
         {
             BaseValue = baseValue;
             statModifiers = new List<StatModifier>();
+            StatModifier = statModifiers.AsReadOnly();
         }
 
         public void AddModifier(StatModifier mod)
@@ -52,13 +56,18 @@ namespace MagiRogue.Entities.Stats
 
         public bool RemoveModifier(StatModifier mod)
         {
-            needsUpdate = true;
-            return statModifiers.Remove(mod);
+            if (statModifiers.Remove(mod))
+            {
+                needsUpdate = true;
+                return true;
+            }
+            return false;
         }
 
         private float CalculateFinalValue()
         {
             float finalValue = BaseValue;
+            float sumPercentAdd = 0; // This will hold the sum of our "PercentAdd" modifiers
 
             for (int i = 0; i < statModifiers.Count; ++i)
             {
@@ -67,6 +76,17 @@ namespace MagiRogue.Entities.Stats
                 if (mod.ModType == StatModType.Flat)
                 {
                     finalValue += mod.Value;
+                }
+                else if (mod.ModType == StatModType.PercentAdd)
+                {
+                    sumPercentAdd += mod.Value; // Start adding together all modifiers of this type
+
+                    // If we're at the end of the list OR the next modifer isn't of this type
+                    if (i + 1 >= statModifiers.Count || statModifiers[i + 1].ModType != StatModType.PercentAdd)
+                    {
+                        finalValue *= 1 + sumPercentAdd; // Multiply the sum with the "finalValue", like we do for "PercentMult" modifiers
+                        sumPercentAdd = 0; // Rests back to zero
+                    }
                 }
                 else if (mod.ModType == StatModType.PercentMulti)
                 {
@@ -77,6 +97,23 @@ namespace MagiRogue.Entities.Stats
             // Rounding gets around dumb float calculation errors (like getting 12.0001f, instead of 12f)
             // 4 significant digits is usually precise enough, but feel free to change this to fit your needs
             return (float)Math.Round(finalValue, 4);
+        }
+
+        public bool RemoveAllModifierFromSource(object source)
+        {
+            bool didRemove = false;
+
+            for (int i = statModifiers.Count - 1; i >= 0; i--)
+            {
+                if (statModifiers[i].Source == source)
+                {
+                    needsUpdate = true;
+                    didRemove = true;
+                    statModifiers.RemoveAt(i);
+                }
+            }
+
+            return didRemove;
         }
     }
 }
