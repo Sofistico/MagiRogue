@@ -4,17 +4,22 @@ using GoRogue.GameFramework;
 using GoRogue;
 using System;
 using System.Collections.Generic;
+using MagiRogue.Entities.Stats;
+using System.Diagnostics;
 
 namespace MagiRogue.Entities
 {
     // Extends the SadConsole.Entities.Entity class
     // by adding an ID to it using GoRogue's ID system
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public class Entity : SadConsole.Entities.Entity, IGameObject
     {
         #region Fields
 
         public uint ID { get; private set; } // stores the entity's unique identification number
         public int Layer { get; set; } // stores and sets the layer that the entity is rendered
+
+        public List<BaseAttributes> Attributes { get; set; }
 
         #region BackingField fields
 
@@ -65,6 +70,8 @@ namespace MagiRogue.Entities
 
             base.Moved += SadMoved;
             backingField.Moved += GoRogueMoved;
+
+            Attributes = new List<BaseAttributes>();
         }
 
         private void GoRogueMoved(object sender, ItemMovedEventArgs<IGameObject> e)
@@ -87,6 +94,14 @@ namespace MagiRogue.Entities
                 {
                     base.Position = backingField.Position;
                 }
+            }
+        }
+
+        private string DebuggerDisplay
+        {
+            get
+            {
+                return string.Format($"{nameof(Actor)} : {Name}");
             }
         }
 

@@ -1,11 +1,54 @@
 ﻿using GoRogue;
 using MagiRogue.System;
 using MagiRogue.System.Tiles;
+using MagiRogue.Entities.Stats;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace MagiRogue.Entities
 {
+    #region Enums
+
+    public enum Archtypes
+    {
+        WARRIOR,
+        WIZARD,
+        ROGUE,
+        SORCEROR,
+        WARLOCK,
+        DRUID,
+        RANGER,
+        PRIEST,
+        GODLING, // This one will be fun, caracterized as a lovecraftian monstrosity
+    }
+
+    public enum HumanoidRace
+    {
+        HUMAN,
+        ELF,
+        DWARF,
+        HALFELF,
+        GNOME,
+        LIZARD,
+        GOBLIN,
+        OGRE,
+        NYMPH,
+    }
+
+    public enum MonsterRace
+    {
+        GENERICBEAST,
+        DRAGON,
+        DOG,
+        CAT,
+        BEAR,
+        DONKEY,
+        HORSE
+    }
+
+    #endregion Enums
+
     public abstract class Actor : Entity
     {
         #region Stats
@@ -21,7 +64,7 @@ namespace MagiRogue.Entities
         private int attackChance;
         private int defense;
         private int defenseChance;
-        private int bodyStat;
+        private BaseAttributes bodyStat;
         private int mindStat;
         private int soulStat;
         private int godPower;
@@ -68,10 +111,10 @@ namespace MagiRogue.Entities
             get { return bloodyMana; }
             set
             {
-                if (value <= bodyStat + mindStat + soulStat)
+                if (value <= bodyStat.StatValue + mindStat + soulStat)
                     bloodyMana = value;
                 else
-                    bloodyMana = bodyStat + mindStat + soulStat;
+                    bloodyMana = bodyStat.StatValue + mindStat + soulStat;
             }
         }
 
@@ -83,7 +126,7 @@ namespace MagiRogue.Entities
             get { return attack; }
             set
             {
-                attack = BodyStat + value;
+                attack = (int)bodyStat.StatValue + value;
             }
         }
 
@@ -95,7 +138,7 @@ namespace MagiRogue.Entities
             get { return attackChance; }
             set
             {
-                attackChance = BodyStat + value;
+                attackChance = (int)BodyStat.StatValue + value;
             }
         }
 
@@ -120,7 +163,7 @@ namespace MagiRogue.Entities
         /// <summary>
         /// The body stat of the actor
         /// </summary>
-        public int BodyStat
+        public BaseAttributes BodyStat
         {
             get { return bodyStat; }
             set { bodyStat = value; }
@@ -179,10 +222,10 @@ namespace MagiRogue.Entities
             get { return naturalMana; }
             set
             {
-                if (value <= bodyStat + (mindStat * 2) + soulStat)
+                if (value <= bodyStat.StatValue + (mindStat * 2) + soulStat)
                     naturalMana = value;
                 else
-                    naturalMana = bodyStat + (mindStat * 2) + soulStat;
+                    naturalMana = (int)bodyStat.StatValue + (mindStat * 2) + soulStat;
             }
         }
 
@@ -307,6 +350,10 @@ namespace MagiRogue.Entities
         }
 
         protected void CalculateBlood() => bloodCount = Weight * 75;
+
+        public void SetAttributes()
+        {
+        }
 
         #endregion HelpCode
     }

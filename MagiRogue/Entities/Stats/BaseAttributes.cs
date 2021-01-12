@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace MagiRogue.Entities.Stats
 {
-    public class CharacterStat
+    public class BaseAttributes
     {
-        private bool needsUpdate = true;
-        private float _statValue;
+        protected bool needsUpdate = true;
+        protected float _statValue;
 
-        private readonly List<StatModifier> statModifiers;
+        protected readonly List<StatModifier> statModifiers;
         public readonly IReadOnlyCollection<StatModifier> StatModifiers;
 
         public float BaseValue;
-        private float lastBaseValue = float.MinValue;
+        protected float lastBaseValue = float.MinValue;
 
-        public float StatValue
+        public virtual float StatValue
         {
             get
             {
@@ -31,21 +31,27 @@ namespace MagiRogue.Entities.Stats
             }
         }
 
-        public CharacterStat(float baseValue)
+        public BaseAttributes()
+        {
+            statModifiers = new List<StatModifier>();
+            StatModifiers = statModifiers.AsReadOnly();
+        }
+
+        public BaseAttributes(float baseValue) : this()
         {
             BaseValue = baseValue;
             statModifiers = new List<StatModifier>();
-            StatModifier = statModifiers.AsReadOnly();
+            StatModifiers = statModifiers.AsReadOnly();
         }
 
-        public void AddModifier(StatModifier mod)
+        public virtual void AddModifier(StatModifier mod)
         {
             needsUpdate = true;
             statModifiers.Add(mod);
             statModifiers.Sort(CompareModifierOrder);
         }
 
-        private int CompareModifierOrder(StatModifier a, StatModifier b)
+        protected int CompareModifierOrder(StatModifier a, StatModifier b)
         {
             if (a.Order < b.Order)
                 return -1;
@@ -54,7 +60,7 @@ namespace MagiRogue.Entities.Stats
             return 0; // the same as return a.order == b.order
         }
 
-        public bool RemoveModifier(StatModifier mod)
+        public virtual bool RemoveModifier(StatModifier mod)
         {
             if (statModifiers.Remove(mod))
             {
@@ -64,7 +70,7 @@ namespace MagiRogue.Entities.Stats
             return false;
         }
 
-        private float CalculateFinalValue()
+        protected float CalculateFinalValue()
         {
             float finalValue = BaseValue;
             float sumPercentAdd = 0; // This will hold the sum of our "PercentAdd" modifiers
@@ -99,7 +105,7 @@ namespace MagiRogue.Entities.Stats
             return (float)Math.Round(finalValue, 4);
         }
 
-        public bool RemoveAllModifierFromSource(object source)
+        public virtual bool RemoveAllModifierFromSource(object source)
         {
             bool didRemove = false;
 

@@ -103,6 +103,26 @@ namespace MagiRogue.UI
             {
                 GameLoop.World.Player.AddComponent(new Components.TestComponent(GameLoop.World.Player));
             }
+            if (info.IsKeyPressed(Keys.Up))
+            {
+                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(0, -1));
+                CenterOnActor(GameLoop.World.Player);
+            }
+            if (info.IsKeyPressed(Keys.Down))
+            {
+                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(0, 1));
+                CenterOnActor(GameLoop.World.Player);
+            }
+            if (info.IsKeyPressed(Keys.Left))
+            {
+                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(-1, 0));
+                CenterOnActor(GameLoop.World.Player);
+            }
+            if (info.IsKeyPressed(Keys.Right))
+            {
+                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(1, 0));
+                CenterOnActor(GameLoop.World.Player);
+            }
             if (info.IsKeyPressed(Keys.NumPad8))
             {
                 GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(0, -1));

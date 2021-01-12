@@ -12,8 +12,9 @@ namespace MagiRogue.Entities
         {
             // sets the most fundamental stats, needs to set the godly flag up top, because it superseeds GodPower if it is
             // below.
+
             Godly = true;
-            BodyStat = 1;
+            BodyStat = new Stats.BaseAttributes(1);
             MindStat = 1;
             SoulStat = 1;
             GodPower = 1;
@@ -27,6 +28,8 @@ namespace MagiRogue.Entities
             DefenseChance = 20;
             Name = "Magi";
             ViewRadius = 5;
+
+            Attributes.Add(BodyStat);
 
             Weight = 50;
             Size = 165;
