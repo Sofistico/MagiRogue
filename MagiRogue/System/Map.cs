@@ -125,6 +125,10 @@ namespace MagiRogue.System
             //Entities.Remove(entity);
 
             RemoveEntity(entity);
+
+            // Set this up to sycer properly
+            entitySyncersByLayer[entity.Layer - 1].Entities.Remove(entity);
+
             // Link up the entity's Moved event to a new handler
             entity.Moved -= OnEntityMoved;
         }
@@ -139,12 +143,15 @@ namespace MagiRogue.System
             //Entities.Add(entity, entity.Position);
 
             // Initilizes the field of view of the player, will do different for monsters
-            if (entity is Player actor)
+            if (entity is Player player)
             {
                 /*actor.FieldOfViewSystem.Initialize(ViewMap);
                 actor.FieldOfViewSystem.Calculate();*/
-                CalculateFOV(position: actor.Position, actor.ViewRadius, radiusShape: Radius.CIRCLE);
+                CalculateFOV(position: player.Position, player.ViewRadius, radiusShape: Radius.CIRCLE);
             }
+
+            // Set this up to sycer properly
+            entitySyncersByLayer[entity.Layer - 1].Entities.Add(entity);
 
             AddEntity(entity);
 

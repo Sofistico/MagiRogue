@@ -1,7 +1,6 @@
 ﻿using GoRogue;
 using MagiRogue.System;
 using MagiRogue.System.Tiles;
-using MagiRogue.Entities.Stats;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -64,7 +63,7 @@ namespace MagiRogue.Entities
         private int attackChance;
         private int defense;
         private int defenseChance;
-        private BaseAttributes bodyStat;
+        private int bodyStat;
         private int mindStat;
         private int soulStat;
         private int godPower;
@@ -73,6 +72,7 @@ namespace MagiRogue.Entities
         private int size; // the size in meters of the actor
         private int weight; // the weight of the being in kg
         private int temperature; // the temperature of the creature, don't know if i will use or not
+        private bool hasBlood;
 
         #endregion StatsFields
 
@@ -111,10 +111,10 @@ namespace MagiRogue.Entities
             get { return bloodyMana; }
             set
             {
-                if (value <= bodyStat.StatValue + mindStat + soulStat)
+                if (value <= bodyStat + mindStat + soulStat)
                     bloodyMana = value;
                 else
-                    bloodyMana = bodyStat.StatValue + mindStat + soulStat;
+                    bloodyMana = bodyStat + mindStat + soulStat;
             }
         }
 
@@ -126,7 +126,7 @@ namespace MagiRogue.Entities
             get { return attack; }
             set
             {
-                attack = (int)bodyStat.StatValue + value;
+                attack = bodyStat + value;
             }
         }
 
@@ -138,7 +138,7 @@ namespace MagiRogue.Entities
             get { return attackChance; }
             set
             {
-                attackChance = (int)BodyStat.StatValue + value;
+                attackChance = BodyStat + value;
             }
         }
 
@@ -163,7 +163,7 @@ namespace MagiRogue.Entities
         /// <summary>
         /// The body stat of the actor
         /// </summary>
-        public BaseAttributes BodyStat
+        public int BodyStat
         {
             get { return bodyStat; }
             set { bodyStat = value; }
@@ -222,10 +222,10 @@ namespace MagiRogue.Entities
             get { return naturalMana; }
             set
             {
-                if (value <= bodyStat.StatValue + (mindStat * 2) + soulStat)
+                if (value <= bodyStat + (mindStat * 2) + soulStat)
                     naturalMana = value;
                 else
-                    naturalMana = (int)bodyStat.StatValue + (mindStat * 2) + soulStat;
+                    naturalMana = bodyStat + (mindStat * 2) + soulStat;
             }
         }
 
@@ -240,7 +240,7 @@ namespace MagiRogue.Entities
                 if (value <= weight * 75)
                     bloodCount = value;
                 else
-                    bloodCount = weight * 75;
+                    return;
             }
         }
 
@@ -261,6 +261,8 @@ namespace MagiRogue.Entities
         /// The view radius of the actor, for seeing things
         /// </summary>
         public int ViewRadius { get; set; }
+
+        public bool HasBlood { get { return hasBlood; } set { hasBlood = value; } }
 
         #endregion StatsProperties
 
@@ -349,10 +351,51 @@ namespace MagiRogue.Entities
             }
         }
 
-        protected void CalculateBlood() => bloodCount = Weight * 75;
-
-        public void SetAttributes()
+        protected void CalculateBlood()
         {
+            if (hasBlood)
+                bloodCount = Weight * 75;
+        }
+
+        public void SetAttributes(
+            string name,
+            int viewRadius,
+            float health,
+            float maxHealth,
+            float baseHpRegen,
+            int bodyStat,
+            int mindStat,
+            int soulStat,
+            int attack,
+            int attackChance,
+            int defense,
+            int defenseChance,
+            int godPower,
+            int size,
+            int weight,
+            bool hasBlood = true,
+            bool godly = false
+            )
+        {
+            this.Name = name;
+            this.ViewRadius = viewRadius;
+            this.Health = health;
+            this.MaxHealth = maxHealth;
+            this.BaseHpRegen = baseHpRegen;
+            this.BodyStat = bodyStat;
+            this.MindStat = mindStat;
+            this.SoulStat = soulStat;
+            this.Attack = attack;
+            this.AttackChance = attackChance;
+            this.Defense = defense;
+            this.DefenseChance = defenseChance;
+            this.Godly = godly;
+            if (godly)
+                this.GodPower = godPower;
+            this.Size = size;
+            this.Weight = weight;
+            this.HasBlood = hasBlood;
+            CalculateBlood();
         }
 
         #endregion HelpCode

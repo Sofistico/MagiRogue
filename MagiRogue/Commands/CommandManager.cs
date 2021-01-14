@@ -343,7 +343,7 @@ namespace MagiRogue.Commands
 
         public void HurtYourself(Actor actor)
         {
-            int maxMana = (int)actor.BodyStat.StatValue + actor.SoulStat + actor.MindStat;
+            int maxMana = actor.BodyStat + actor.SoulStat + actor.MindStat;
             if (actor.BloodyMana != maxMana)
             {
                 actor.Health -= 1;
