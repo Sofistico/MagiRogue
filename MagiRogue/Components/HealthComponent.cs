@@ -41,9 +41,9 @@ namespace MagiRogue.Components
 
         public HealthComponent(Actor actor)
         {
-            CurrentHealth = actor.Health;
-            MaxHealth = actor.MaxHealth;
-            BaseHpRegen = actor.BaseHpRegen;
+            CurrentHealth = actor.Stats.Health;
+            MaxHealth = actor.Stats.MaxHealth;
+            BaseHpRegen = actor.Stats.BaseHpRegen;
         }
 
         public HealthComponent(float health, float maxHealth, float baseHpRegen)

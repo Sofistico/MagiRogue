@@ -147,7 +147,7 @@ namespace MagiRogue.System
             {
                 /*actor.FieldOfViewSystem.Initialize(ViewMap);
                 actor.FieldOfViewSystem.Calculate();*/
-                CalculateFOV(position: player.Position, player.ViewRadius, radiusShape: Radius.CIRCLE);
+                CalculateFOV(position: player.Position, player.Stats.ViewRadius, radiusShape: Radius.CIRCLE);
             }
 
             // Set this up to sycer properly
@@ -169,7 +169,7 @@ namespace MagiRogue.System
         {
             if (args.Entity is Player actor)
             {
-                CalculateFOV(position: actor.Position, actor.ViewRadius, radiusShape: Radius.CIRCLE);
+                CalculateFOV(position: actor.Position, actor.Stats.ViewRadius, radiusShape: Radius.CIRCLE);
             }
         }
 

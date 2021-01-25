@@ -96,7 +96,7 @@ namespace MagiRogue.Entities
         {
             get
             {
-                return string.Format($"{nameof(Actor)} : {Name}");
+                return string.Format($"{nameof(Entity)} : {Name}");
             }
         }
 
