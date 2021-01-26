@@ -59,9 +59,9 @@ namespace MagiRogue.UI
         public override void Update(TimeSpan time)
         {
             statsConsole.Print(0, 0, $"{player.Name}");
-            statsConsole.Print(0, 2, $"Health: {player.Health} / {player.MaxHealth}   ", Color.Red);
-            statsConsole.Print(0, 3, $"Blood Mana: {player.BloodyMana}  ", Color.DarkRed);
-            statsConsole.Print(0, 4, $"Natural Mana: {player.NaturalMana}   ", Color.LightBlue);
+            statsConsole.Print(0, 2, $"Health: {player.Stats.Health} / {player.Stats.MaxHealth}   ", Color.Red);
+            statsConsole.Print(0, 3, $"Blood Mana: {player.Stats.BloodyMana}  ", Color.DarkRed);
+            statsConsole.Print(0, 4, $"Natural Mana: {player.Stats.NaturalMana}   ", Color.LightBlue);
 
             base.Update(time);
         }

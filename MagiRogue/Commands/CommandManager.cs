@@ -95,14 +95,14 @@ namespace MagiRogue.Commands
             attackMessage.AppendFormat("{0} attacks {1}", attacker.Name, defender.Name);
 
             // The attacker's Attack value determines the number of D100 dice rolled
-            for (int dice = 0; dice < attacker.Attack; dice++)
+            for (int dice = 0; dice < attacker.Stats.Attack; dice++)
             {
                 //Roll a single D100 and add its results to the attack Message
                 int diceOutcome = Dice.Roll("1d100");
 
                 //Resolve the dicing outcome and register a hit, governed by the
                 //attacker's AttackChance value.
-                if (diceOutcome >= 100 - attacker.AttackChance)
+                if (diceOutcome >= 100 - attacker.Stats.AttackChance)
                     hits++;
             }
 
@@ -131,14 +131,14 @@ namespace MagiRogue.Commands
                 defenseMessage.AppendFormat(" {0} defends and rolls: ", defender.Name);
 
                 //The defender's Defense value determines the number of D100 dice rolled
-                for (int dice = 0; dice < defender.Defense; dice++)
+                for (int dice = 0; dice < defender.Stats.Defense; dice++)
                 {
                     //Roll a single D100 and add its results to the defense Message
                     int diceOutcome = Dice.Roll("1d100");
 
                     //Resolve the dicing outcome and register a block, governed by the
                     //attacker's DefenceChance value.
-                    if (diceOutcome >= 100 - defender.DefenseChance)
+                    if (diceOutcome >= 100 - defender.Stats.DefenseChance)
                         blocks++;
                 }
 
@@ -161,9 +161,9 @@ namespace MagiRogue.Commands
         {
             if (damage > 0)
             {
-                defender.Health -= damage;
+                defender.Stats.Health -= damage;
                 GameLoop.UIManager.MessageLog.Add($" {defender.Name} was hit for {damage} damage");
-                if (defender.Health < 0)
+                if (defender.Stats.Health < 0)
                     ResolveDeath(defender);
             }
             else
@@ -343,14 +343,14 @@ namespace MagiRogue.Commands
 
         public void HurtYourself(Actor actor)
         {
-            int maxMana = (int)actor.BodyStat.StatValue + actor.SoulStat + actor.MindStat;
-            if (actor.BloodyMana != maxMana)
+            int maxMana = actor.Stats.BodyStat + actor.Stats.SoulStat + actor.Stats.MindStat;
+            if (actor.Stats.BloodyMana != maxMana)
             {
-                actor.Health -= 1;
-                actor.BloodCount -= 100f;
+                actor.Stats.Health -= 1;
+                actor.Stats.BloodCount -= 100f;
                 int roll = Dice.Roll("1d3");
                 float bloodyManaGained = float.Parse($"0.{roll}", CultureInfo.InvariantCulture.NumberFormat);
-                actor.BloodyMana = (float)Math.Round(actor.BloodyMana + bloodyManaGained, 1);
+                actor.Stats.BloodyMana = (float)Math.Round(actor.Stats.BloodyMana + bloodyManaGained, 1);
                 GameLoop.UIManager.MessageLog.Add($"You ritually wound yourself, channeling your blood into mana, gaining {bloodyManaGained} blood mana");
             }
             else

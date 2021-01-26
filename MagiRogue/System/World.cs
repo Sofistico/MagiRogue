@@ -83,7 +83,7 @@ namespace MagiRogue.System
                     {
                         Position = pos
                     };
-                    Player.AddComponent(new Components.HealthComponent(10, 10, 0.1f));
+                    //Player.AddComponent(new Components.HealthComponent(10, 10, 0.1f));
                     break;
                 }
             }
@@ -121,13 +121,15 @@ namespace MagiRogue.System
                 Monster newMonster = new Monster(Color.Blue, Color.Transparent, pos)
                 {
                     // plug in some magic numbers for attack and defense values
-                    Defense = rndNum.Next(0, 10),
-                    DefenseChance = rndNum.Next(0, 50),
-                    Attack = rndNum.Next(0, 10),
-                    AttackChance = rndNum.Next(0, 50),
+
                     Name = "a common troll",
-                    ViewRadius = 5
                 };
+
+                newMonster.Stats.Defense = rndNum.Next(0, 10);
+                newMonster.Stats.DefenseChance = rndNum.Next(0, 50);
+                newMonster.Stats.Attack = rndNum.Next(0, 10);
+                newMonster.Stats.AttackChance = rndNum.Next(0, 50);
+                newMonster.Stats.ViewRadius = 5;
 
                 CurrentMap.Add(newMonster);
             }
