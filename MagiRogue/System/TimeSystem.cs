@@ -19,6 +19,7 @@ namespace MagiRogue.System
         public int Tick { get; set; } = 0;
 
         // Add a priority queue to represent the queue that an actor will act, or a linked dictionary, or whatever
+        private GenericPriorityQueue<Entities.Entity, int> turnQueue = new GenericPriorityQueue<Entities.Entity, int>();
 
         public void ProcessTick()
         {
