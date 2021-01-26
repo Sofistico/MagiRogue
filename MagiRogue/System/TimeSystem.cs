@@ -23,6 +23,13 @@ namespace MagiRogue.System
 
         public void ProcessTick()
         {
+            if (TickToTurn.Equals(100))
+            {
+                ProcessTurn();
+            }
+            else
+            {
+            }
         }
 
         private void ProcessTurn()
