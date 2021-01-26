@@ -23,7 +23,7 @@ namespace MagiRogue.System
 
         public void ProcessTick()
         {
-            if (TickToTurn.Equals(100))
+            if (Tick.Equals(TickToTurn))
             {
                 ProcessTurn();
             }
