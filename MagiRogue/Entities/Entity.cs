@@ -11,7 +11,7 @@ namespace MagiRogue.Entities
     // Extends the SadConsole.Entities.Entity class
     // by adding an ID to it using GoRogue's ID system
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public class Entity : SadConsole.Entities.Entity, IGameObject, System.ITimeEntity
+    public class Entity : SadConsole.Entities.Entity, IGameObject
     {
         #region Fields
 
@@ -34,8 +34,6 @@ namespace MagiRogue.Entities
         private EntityViewSyncComponent entityViewSync;
 
         public Action TurnHandler { get; set; }
-        public int Speed { get; set; }
-        public int Energy { get; set; }
 
         #endregion Fields
 

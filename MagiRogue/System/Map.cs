@@ -116,8 +116,6 @@ namespace MagiRogue.System
             // Set this up to sycer properly
             entitySyncersByLayer[entity.Layer - 1].Entities.Remove(entity);
 
-            GameLoop.World.TimeSystem.Deregister(entity);
-
             // Link up the entity's Moved event to a new handler
             entity.Moved -= OnEntityMoved;
         }

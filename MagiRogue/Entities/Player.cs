@@ -31,7 +31,7 @@ namespace MagiRogue.Entities
                 godPower: 1,
                 size: 165,
                 weight: 55,
-                speed: 10);
+                speed: 100);
         }
     }
 }
