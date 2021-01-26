@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MagiRogue.System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -298,6 +299,7 @@ namespace MagiRogue.Entities
            int godPower,
            int size,
            int weight,
+           int speed,
            bool hasBlood = true,
            bool godly = false
            )
@@ -320,6 +322,7 @@ namespace MagiRogue.Entities
             this.Size = size;
             this.Weight = weight;
             this.HasBlood = hasBlood;
+            actor.Speed = speed;
             CalculateBlood();
         }
 

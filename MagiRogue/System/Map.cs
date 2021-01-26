@@ -32,16 +32,6 @@ namespace MagiRogue.System
         public TileBase[] Tiles { get { return _tiles; } set { _tiles = value; } }
 
         /// <summary>
-        /// A static IDGenerator that all Entities can access
-        /// </summary>
-        //public static IDGenerator IDGenerator = new IDGenerator();
-
-        /*/// <summary>
-        /// Keeps track of all the Entities on the map
-        /// </summary>
-        public new MultiSpatialMap<Entity> Entities;*/
-
-        /// <summary>
         /// Fires whenever FOV is recalculated.
         /// </summary>
         public event EventHandler FOVRecalculated;
@@ -121,13 +111,12 @@ namespace MagiRogue.System
         /// <param name="entity"></param>
         public void Remove(Entity entity)
         {
-            // Remove from spatial map
-            //Entities.Remove(entity);
-
             RemoveEntity(entity);
 
             // Set this up to sycer properly
             entitySyncersByLayer[entity.Layer - 1].Entities.Remove(entity);
+
+            GameLoop.World.TimeSystem.Deregister(entity);
 
             // Link up the entity's Moved event to a new handler
             entity.Moved -= OnEntityMoved;
@@ -139,14 +128,9 @@ namespace MagiRogue.System
         /// <param name="entity"></param>
         public void Add(Entity entity)
         {
-            // add entity to spatial map
-            //Entities.Add(entity, entity.Position);
-
             // Initilizes the field of view of the player, will do different for monsters
             if (entity is Player player)
             {
-                /*actor.FieldOfViewSystem.Initialize(ViewMap);
-                actor.FieldOfViewSystem.Calculate();*/
                 CalculateFOV(position: player.Position, player.Stats.ViewRadius, radiusShape: Radius.CIRCLE);
             }
 

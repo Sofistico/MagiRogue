@@ -34,6 +34,10 @@ namespace MagiRogue.System
         // Player data
         public Player Player { get; set; }
 
+        public TimeSystem TimeSystem { get; set; }
+
+        public int Turns { get; set; }
+
         private readonly Random rndNum = new Random();
 
         /// <summary>
@@ -42,6 +46,8 @@ namespace MagiRogue.System
         /// </summary>
         public World()
         {
+            SetUpTime();
+
             // Build a map
             CreateMap();
 
@@ -169,6 +175,12 @@ namespace MagiRogue.System
                 CurrentMap.Add(newLoot);
                 CurrentMap.Add(ironBar);
             }
+        }
+
+        public void SetUpTime()
+        {
+            TimeSystem = new TimeSystem();
+            Turns = 0;
         }
     }
 }
