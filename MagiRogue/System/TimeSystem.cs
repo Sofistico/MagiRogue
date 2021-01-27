@@ -14,7 +14,7 @@ namespace MagiRogue.System
         /// </summary>
         public const int TickToTurn = 100;
 
-        public int EnergyPool { get; set; } = 0;
+        public int EnergyPoolActor { get; set; } = 0;
         public int Turns { get; set; } = 0;
         public int Tick { get; set; } = 0;
 

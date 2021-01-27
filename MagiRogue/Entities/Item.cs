@@ -33,7 +33,7 @@ namespace MagiRogue.Entities
 
         // By default, a new Item is sized 1x1, with a weight of 1, and at 100% condition
         public Item(Color foreground, Color background, string name, int glyph, Point coord,
-            double weight = 1, int condition = 100, int width = 1, int height = 1, int layer = (int)MapLayer.ITEMS) :
+            double weight = 1, int condition = 100, int layer = (int)MapLayer.ITEMS) :
             base(foreground, background, glyph, coord, layer)
         {
             Weight = weight;

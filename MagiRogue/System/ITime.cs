@@ -8,7 +8,7 @@ namespace MagiRogue.System
 {
     public interface ITime
     {
-        int EnergyPool { get; set; }
+        int EnergyPoolActor { get; set; }
 
         int Turns { get; set; }
 
