@@ -30,8 +30,8 @@ namespace MagiRogue.Entities
                 godly: true,
                 godPower: 1,
                 size: 165,
-                weight: 55,
-                speed: 100);
+                weight: 55
+                );
         }
     }
 }
