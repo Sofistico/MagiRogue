@@ -89,7 +89,7 @@ namespace MagiRogue.Entities
 
                     if (monster != null)
                     {
-                        GameLoop.CommandManager.Attack(this, monster);
+                        GameLoop.CommandManager.Attack(this, monster, 100);
                         return true;
                     }
                 }
@@ -118,7 +118,7 @@ namespace MagiRogue.Entities
                 // try to use it
                 if (door != null)
                 {
-                    GameLoop.CommandManager.UseDoor(this, door);
+                    GameLoop.CommandManager.UseDoor(this, door, 100);
                     return true;
                 }
                 return false;

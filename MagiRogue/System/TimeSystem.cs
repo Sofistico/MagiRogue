@@ -20,7 +20,14 @@ namespace MagiRogue.System
         public int Turns { get; set; } = 0;
 
         // Add a priority queue to represent the queue that an actor will act, or a linked dictionary, or whatever
-        private SimplePriorityQueue<Entity, int> turnQueue = new SimplePriorityQueue<Entity, int>();
+        private readonly SimplePriorityQueue<Entity, int> turnQueue = new SimplePriorityQueue<Entity, int>();
+        private readonly World worldBackingField;
+
+        public TimeSystem(World world)
+        {
+            worldBackingField = world;
+            turnQueue = new SimplePriorityQueue<Entity, int>();
+        }
 
         public void RegisterEntity(Entity entity)
         {

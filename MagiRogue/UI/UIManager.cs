@@ -167,26 +167,26 @@ namespace MagiRogue.UI
                 SadConsole.Game.Instance.Exit();
 
             if (info.IsKeyPressed(Keys.A))
-                GameLoop.CommandManager.DirectAttack(GameLoop.World.Player);
+                GameLoop.CommandManager.DirectAttack(GameLoop.World.Player, 100);
 
             if (info.IsKeyPressed(Keys.G))
             {
                 Item item = GameLoop.World.CurrentMap.GetEntityAt<Item>(GameLoop.World.Player.Position);
                 // Item item = GameLoop.World.CurrentMap.GetEntity<Item>(GameLoop.World.Player.Position);
                 //Item ite2= GameLoop.World.CurrentMap.GetE
-                GameLoop.CommandManager.PickUp(GameLoop.World.Player, item);
+                GameLoop.CommandManager.PickUp(GameLoop.World.Player, item, 50);
                 InventoryScreen.ShowItems(GameLoop.World.Player);
             }
             if (info.IsKeyPressed(Keys.D))
             {
-                GameLoop.CommandManager.DropItems(GameLoop.World.Player);
+                GameLoop.CommandManager.DropItems(GameLoop.World.Player, 50);
                 Item item = GameLoop.World.CurrentMap.GetEntity<Item>(GameLoop.World.Player.Position);
                 InventoryScreen.RemoveItemFromConsole(item);
                 InventoryScreen.ShowItems(GameLoop.World.Player);
             }
             if (info.IsKeyPressed(Keys.C))
             {
-                GameLoop.CommandManager.CloseDoor(GameLoop.World.Player);
+                GameLoop.CommandManager.CloseDoor(GameLoop.World.Player, 50);
             }
             if (info.IsKeyPressed(Keys.I))
             {
@@ -197,7 +197,7 @@ namespace MagiRogue.UI
 
             if (info.IsKeyPressed(Keys.H))
             {
-                GameLoop.CommandManager.HurtYourself(GameLoop.World.Player);
+                GameLoop.CommandManager.HurtYourself(GameLoop.World.Player, 50);
             }
 #if DEBUG
             if (info.IsKeyPressed(Keys.F10))

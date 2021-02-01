@@ -177,7 +177,7 @@ namespace MagiRogue.System
 
         public void SetUpTime()
         {
-            TimeSystem = new TimeSystem();
+            TimeSystem = new TimeSystem(this);
         }
     }
 }

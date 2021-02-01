@@ -29,8 +29,9 @@ namespace MagiRogue.Commands
         /// <param name="actor"></param>
         /// <param name="position"></param>
         /// <returns></returns>
-        public bool MoveActorBy(Actor actor, Point position)
+        public bool MoveActorBy(Actor actor, Point position, int energyCost = 100)
         {
+            actor.EnergyGain -= energyCost;
             return actor.MoveBy(position);
         }
 
@@ -54,7 +55,7 @@ namespace MagiRogue.Commands
         /// </summary>
         /// <param name="attacker"></param>
         /// <param name="defender"></param>
-        public void Attack(Actor attacker, Actor defender)
+        public void Attack(Actor attacker, Actor defender, int energyCost)
         {
             // Create two messages that describe the outcome
             // of the attack and defense
@@ -75,6 +76,8 @@ namespace MagiRogue.Commands
 
             // The defender now takes damage
             ResolveDamage(defender, damage);
+
+            attacker.EnergyGain -= energyCost;
         }
 
         /// <summary>
@@ -224,7 +227,7 @@ namespace MagiRogue.Commands
         /// </summary>
         /// <param name="attacker"></param>
         /// <returns></returns>
-        public bool DirectAttack(Actor attacker)
+        public bool DirectAttack(Actor attacker, int energyCost)
         {
             // Lists all monsters that are close and their locations
             List<Monster> monsterClose = new List<Monster>();
@@ -245,7 +248,8 @@ namespace MagiRogue.Commands
                         // TODO: make it possible to choose which monster to strike and test what happens when there is more
                         // than one monster nearby.
                         Monster closestMonster = monsterClose.First<Monster>();
-                        GameLoop.CommandManager.Attack(attacker, closestMonster);
+                        GameLoop.CommandManager.Attack(attacker, closestMonster, energyCost);
+                        attacker.EnergyGain -= energyCost;
                         return true;
                     }
                 }
@@ -256,7 +260,7 @@ namespace MagiRogue.Commands
 
         // Tries to pick up an Item and add it to the Actor's
         // inventory list
-        public void PickUp(Actor actor, Item item)
+        public void PickUp(Actor actor, Item item, int energyCost)
         {
             // Add the item to the Actor's inventory list
             // and then destroy it
@@ -274,7 +278,7 @@ namespace MagiRogue.Commands
 
         // Triggered when an Actor attempts to move into a doorway.
         // A closed door opens when used by an Actor.
-        public void UseDoor(Actor actor, TileDoor door)
+        public void UseDoor(Actor actor, TileDoor door, int energyCost)
         {
             // Handle a locked door
             if (door.Locked)
@@ -286,6 +290,7 @@ namespace MagiRogue.Commands
             {
                 door.Open();
                 GameLoop.UIManager.MessageLog.Add($"{actor.Name} opened a {door.Name}");
+                actor.EnergyGain -= energyCost;
             }
         }
 
@@ -294,7 +299,7 @@ namespace MagiRogue.Commands
         /// </summary>
         /// <param name="actor">Actor that closes the door</param>
         /// <param name="door">Door that wil be closed></param>
-        public void CloseDoor(Actor actor)
+        public void CloseDoor(Actor actor, int energyCost)
         {
             Point[] allDirections = Directions.GetDirectionPoints(actor.Position);
             foreach (Point points in allDirections)
@@ -306,13 +311,14 @@ namespace MagiRogue.Commands
                     {
                         possibleDoor.Close();
                         GameLoop.UIManager.MessageLog.Add($"{actor.Name} closed a {possibleDoor.Name}");
+                        actor.EnergyGain -= energyCost;
                         break;
                     }
                 }
             }
         }
 
-        public void DropItems(Actor inv)
+        public void DropItems(Actor inv, int energyCost)
         {
             if (inv.Inventory.Count == 0)
             {
@@ -324,6 +330,7 @@ namespace MagiRogue.Commands
                 inv.Inventory.Remove(item);
                 item.Position = inv.Position;
                 GameLoop.World.CurrentMap.Add(item);
+                inv.EnergyGain -= energyCost;
             }
         }
 
@@ -341,7 +348,7 @@ namespace MagiRogue.Commands
 
 #endif
 
-        public void HurtYourself(Actor actor)
+        public void HurtYourself(Actor actor, int energyCost)
         {
             int maxMana = actor.Stats.BodyStat + actor.Stats.SoulStat + actor.Stats.MindStat;
             if (actor.Stats.BloodyMana != maxMana)
@@ -352,6 +359,7 @@ namespace MagiRogue.Commands
                 float bloodyManaGained = float.Parse($"0.{roll}", CultureInfo.InvariantCulture.NumberFormat);
                 actor.Stats.BloodyMana = (float)Math.Round(actor.Stats.BloodyMana + bloodyManaGained, 1);
                 GameLoop.UIManager.MessageLog.Add($"You ritually wound yourself, channeling your blood into mana, gaining {bloodyManaGained} blood mana");
+                actor.EnergyGain -= energyCost;
             }
             else
                 GameLoop.UIManager.MessageLog.Add("Maxed out your blood mana");
