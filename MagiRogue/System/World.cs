@@ -36,8 +36,6 @@ namespace MagiRogue.System
 
         public TimeSystem TimeSystem { get; set; }
 
-        public int Turns { get; set; }
-
         private readonly Random rndNum = new Random();
 
         /// <summary>
@@ -180,7 +178,6 @@ namespace MagiRogue.System
         public void SetUpTime()
         {
             TimeSystem = new TimeSystem();
-            Turns = 0;
         }
     }
 }
