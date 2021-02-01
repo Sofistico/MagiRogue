@@ -3,39 +3,45 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MagiRogue.Entities;
 using Priority_Queue;
 
 namespace MagiRogue.System
 {
-    public class TimeSystem : ITime
+    public class TimeSystem : ITimeSystem
     {
-        /// <summary>
-        /// Every 100 ticks represents 1 second
-        /// </summary>
-        public const int TickToTurn = 100;
+        public event EventHandler TurnPassed;
 
-        public int EnergyPoolActor { get; set; } = 0;
+        /// <summary>
+        /// Every 100 energy represents 1 second
+        /// </summary>
+        public const int EnergyToTurn = 100;
+
         public int Turns { get; set; } = 0;
-        public int Tick { get; set; } = 0;
 
         // Add a priority queue to represent the queue that an actor will act, or a linked dictionary, or whatever
-        private SimplePriorityQueue<Entities.Entity, int> turnQueue = new SimplePriorityQueue<Entities.Entity, int>();
+        private SimplePriorityQueue<Entity, int> turnQueue = new SimplePriorityQueue<Entity, int>();
 
-        public void ProcessTick()
+        public void RegisterEntity(Entity entity)
         {
-            if (Tick.Equals(TickToTurn))
+            if (!turnQueue.Contains(entity))
             {
-                ProcessTurn();
-            }
-            else
-            {
+                turnQueue.EnqueueWithoutDuplicates(entity, entity.EnergyGain);
             }
         }
 
-        private void ProcessTurn()
+        public void DeRegisterEntity(Entity entity)
         {
-            Tick = 0;
-            Turns++;
+            if (turnQueue.Contains(entity))
+            {
+                turnQueue.Remove(entity);
+            }
+        }
+
+        public void ProgressTime()
+        {
+            if (turnQueue.Count == 0)
+                return;
         }
     }
 }

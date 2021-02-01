@@ -223,7 +223,7 @@ namespace MagiRogue.Entities
 
         public bool HasBlood { get { return hasBlood; } set { hasBlood = value; } }
 
-        public int Speed { get; set; }
+        //public int Speed { get; set; }
 
         #endregion StatsProperties
 
@@ -301,7 +301,6 @@ namespace MagiRogue.Entities
            int godPower,
            int size,
            int weight,
-           int speed,
            bool hasBlood = true,
            bool godly = false
            )
@@ -324,7 +323,7 @@ namespace MagiRogue.Entities
             this.Size = size;
             this.Weight = weight;
             this.HasBlood = hasBlood;
-            this.Speed = speed;
+            //this.Speed = speed;
             CalculateBlood();
         }
 

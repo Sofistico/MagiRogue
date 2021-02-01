@@ -33,7 +33,10 @@ namespace MagiRogue.Entities
         private IGameObject backingField;
         private EntityViewSyncComponent entityViewSync;
 
-        public Action TurnHandler { get; set; }
+        /// <summary>
+        /// Base gain is equal to 100, this means that all entity can take one turn, if nothing else changes it
+        /// </summary>
+        public int EnergyGain { get; set; } = 100;
 
         #endregion Fields
 
