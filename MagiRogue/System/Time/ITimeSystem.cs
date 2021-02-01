@@ -5,14 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using MagiRogue.Entities;
 
-namespace MagiRogue.System
+namespace MagiRogue.System.Time
 {
     public interface ITimeSystem
     {
-        void RegisterEntity(Entity entity);
+        void RegisterEntity(ITimeNode node);
 
-        void DeRegisterEntity(Entity entity);
+        void DeRegisterEntity(ITimeNode node);
 
-        void ProgressTime();
+        ITimeNode NextNode();
     }
 }

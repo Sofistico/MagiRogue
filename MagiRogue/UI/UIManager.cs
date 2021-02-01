@@ -99,70 +99,16 @@ namespace MagiRogue.UI
             //if (info.IsKeyPressed(Keys.F11))
             //Settings.ToggleFullScreen(); // Too bugged right now to be used
 
+            if (HandleMove(info))
+            {
+                GameLoop.World.ProcessTurn();
+            }
+
             if (info.IsKeyPressed(Keys.F8))
             {
                 GameLoop.World.Player.AddComponent(new Components.TestComponent(GameLoop.World.Player));
             }
-            if (info.IsKeyPressed(Keys.Up))
-            {
-                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(0, -1));
-                CenterOnActor(GameLoop.World.Player);
-            }
-            if (info.IsKeyPressed(Keys.Down))
-            {
-                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(0, 1));
-                CenterOnActor(GameLoop.World.Player);
-            }
-            if (info.IsKeyPressed(Keys.Left))
-            {
-                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(-1, 0));
-                CenterOnActor(GameLoop.World.Player);
-            }
-            if (info.IsKeyPressed(Keys.Right))
-            {
-                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(1, 0));
-                CenterOnActor(GameLoop.World.Player);
-            }
-            if (info.IsKeyPressed(Keys.NumPad8))
-            {
-                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(0, -1));
-                CenterOnActor(GameLoop.World.Player);
-            }
-            if (info.IsKeyPressed(Keys.NumPad2))
-            {
-                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(0, 1));
-                CenterOnActor(GameLoop.World.Player);
-            }
-            if (info.IsKeyPressed(Keys.NumPad4))
-            {
-                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(-1, 0));
-                CenterOnActor(GameLoop.World.Player);
-            }
-            if (info.IsKeyPressed(Keys.NumPad6))
-            {
-                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(1, 0));
-                CenterOnActor(GameLoop.World.Player);
-            }
-            if (info.IsKeyPressed(Keys.NumPad7))
-            {
-                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(-1, -1));
-                CenterOnActor(GameLoop.World.Player);
-            }
-            if (info.IsKeyPressed(Keys.NumPad9))
-            {
-                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(1, -1));
-                CenterOnActor(GameLoop.World.Player);
-            }
-            if (info.IsKeyPressed(Keys.NumPad1))
-            {
-                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(-1, 1));
-                CenterOnActor(GameLoop.World.Player);
-            }
-            if (info.IsKeyPressed(Keys.NumPad3))
-            {
-                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(1, 1));
-                CenterOnActor(GameLoop.World.Player);
-            }
+
             if (info.IsKeyPressed(Keys.Escape))
                 SadConsole.Game.Instance.Exit();
 
@@ -206,6 +152,84 @@ namespace MagiRogue.UI
             }
 #endif
             return base.ProcessKeyboard(info);
+        }
+
+        private bool HandleMove(SadConsole.Input.Keyboard info)
+        {
+            if (info.IsKeyPressed(Keys.Up))
+            {
+                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(0, -1));
+                CenterOnActor(GameLoop.World.Player);
+                return true;
+            }
+            if (info.IsKeyPressed(Keys.Down))
+            {
+                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(0, 1));
+                CenterOnActor(GameLoop.World.Player);
+                return true;
+            }
+            if (info.IsKeyPressed(Keys.Left))
+            {
+                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(-1, 0));
+                CenterOnActor(GameLoop.World.Player);
+                return true;
+            }
+            if (info.IsKeyPressed(Keys.Right))
+            {
+                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(1, 0));
+                CenterOnActor(GameLoop.World.Player);
+                return true;
+            }
+            if (info.IsKeyPressed(Keys.NumPad8))
+            {
+                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(0, -1));
+                CenterOnActor(GameLoop.World.Player);
+                return true;
+            }
+            if (info.IsKeyPressed(Keys.NumPad2))
+            {
+                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(0, 1));
+                CenterOnActor(GameLoop.World.Player);
+                return true;
+            }
+            if (info.IsKeyPressed(Keys.NumPad4))
+            {
+                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(-1, 0));
+                CenterOnActor(GameLoop.World.Player);
+                return true;
+            }
+            if (info.IsKeyPressed(Keys.NumPad6))
+            {
+                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(1, 0));
+                CenterOnActor(GameLoop.World.Player);
+                return true;
+            }
+            if (info.IsKeyPressed(Keys.NumPad7))
+            {
+                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(-1, -1));
+                CenterOnActor(GameLoop.World.Player);
+                return true;
+            }
+            if (info.IsKeyPressed(Keys.NumPad9))
+            {
+                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(1, -1));
+                CenterOnActor(GameLoop.World.Player);
+                return true;
+            }
+            if (info.IsKeyPressed(Keys.NumPad1))
+            {
+                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(-1, 1));
+                CenterOnActor(GameLoop.World.Player);
+                return true;
+            }
+            if (info.IsKeyPressed(Keys.NumPad3))
+            {
+                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(1, 1));
+                CenterOnActor(GameLoop.World.Player);
+                return true;
+            }
+            else
+                return false;
         }
 
         // Creates a window that encloses a map console

@@ -15,7 +15,7 @@ namespace MagiRogue.Entities
     {
         #region Fields
 
-        public uint ID { get; private set; } // stores the entity's unique identification number
+        public uint ID => backingField.ID; // stores the entity's unique identification number
         public int Layer { get; set; } // stores and sets the layer that the entity is rendered
 
         #region BackingField fields
@@ -33,10 +33,7 @@ namespace MagiRogue.Entities
         private IGameObject backingField;
         private EntityViewSyncComponent entityViewSync;
 
-        /// <summary>
-        /// Base gain is equal to 100, this means that all entity can take one turn, if nothing else changes it
-        /// </summary>
-        public int EnergyGain { get; set; } = 100;
+        public int EnergyPool { get; set; }
 
         #endregion Fields
 

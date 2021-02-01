@@ -223,6 +223,8 @@ namespace MagiRogue.Entities
 
         public bool HasBlood { get { return hasBlood; } set { hasBlood = value; } }
 
+        public int Speed { get; set; }
+
         #endregion StatsProperties
 
         #endregion Stats

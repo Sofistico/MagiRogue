@@ -1,8 +1,7 @@
-﻿using GoRogue.MapViews;
-using MagiRogue.Commands;
-using MagiRogue.Entities;
+﻿using MagiRogue.Entities;
 using MagiRogue.Entities.Items;
 using MagiRogue.System.Tiles;
+using MagiRogue.System.Time;
 using Microsoft.Xna.Framework;
 using SadConsole;
 using System;
@@ -34,7 +33,7 @@ namespace MagiRogue.System
         // Player data
         public Player Player { get; set; }
 
-        public TimeSystem TimeSystem { get; set; }
+        public TimeSystem GetTime => CurrentMap.Time;
 
         private readonly Random rndNum = new Random();
 
@@ -44,8 +43,6 @@ namespace MagiRogue.System
         /// </summary>
         public World()
         {
-            SetUpTime();
-
             // Build a map
             CreateMap();
 
@@ -175,9 +172,34 @@ namespace MagiRogue.System
             }
         }
 
-        public void SetUpTime()
+        public void ProcessTurn()
         {
-            TimeSystem = new TimeSystem(this);
+            // TODO: define the way that entity regain energy better.
+            PlayerTimeNode playerTurn = new PlayerTimeNode(GetTime.TimePassed.Ticks + Player.EnergyPool);
+            GetTime.RegisterEntity(playerTurn);
+
+            Player.ApplyHpRegen();
+
+            var node = GetTime.NextNode();
+
+            while (node is not PlayerTimeNode)
+            {
+                switch (node)
+                {
+                    case EntityTimeNode entityTurn:
+                        ProcessAiTurn(entityTurn.EntityId, CurrentMap.Time.TimePassed.Ticks);
+                        break;
+
+                    default:
+                        throw new NotSupportedException($"Unhandled time master node type: {node.GetType()}");
+                }
+
+                node = GetTime.NextNode();
+            }
+        }
+
+        private void ProcessAiTurn(uint entityId, long tick)
+        {
         }
     }
 }

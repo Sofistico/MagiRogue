@@ -140,6 +140,15 @@ namespace MagiRogue.Entities
             }
         }
 
+        public void ApplyHpRegen()
+        {
+            if (this.Stats.Health < this.Stats.MaxHealth)
+            {
+                float newHp = (this.Stats.BaseHpRegen + this.Stats.Health);
+                this.Stats.Health = (float)Math.Round(newHp);
+            }
+        }
+
         #endregion HelpCode
     }
 }

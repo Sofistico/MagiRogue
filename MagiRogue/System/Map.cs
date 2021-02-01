@@ -8,6 +8,7 @@ using SadConsole;
 using System.Linq;
 using GoRogue.GameFramework;
 using SadConsole.Components;
+using MagiRogue.System.Time;
 
 namespace MagiRogue.System
 {
@@ -41,6 +42,8 @@ namespace MagiRogue.System
         /// </summary>
         public FOVHandler FOVHandler { get; }
 
+        public Time.TimeSystem Time;
+
         #endregion Properties
 
         #region Constructor
@@ -61,6 +64,8 @@ namespace MagiRogue.System
             entitySyncersByLayer = new MultipleConsoleEntityDrawingComponent[Enum.GetNames(typeof(MapLayer)).Length - 1];
             for (int i = 0; i < entitySyncersByLayer.Length; i++)
                 entitySyncersByLayer[i] = new MultipleConsoleEntityDrawingComponent();
+
+            Time = new Time.TimeSystem();
         }
 
         #endregion Constructor
@@ -130,12 +135,19 @@ namespace MagiRogue.System
             if (entity is Player player)
             {
                 CalculateFOV(position: player.Position, player.Stats.ViewRadius, radiusShape: Radius.CIRCLE);
+                Time.PlayerTimeNode playerNode = new Time.PlayerTimeNode(Time.TimePassed.Ticks);
+                Time.RegisterEntity(playerNode);
             }
 
             // Set this up to sycer properly
             entitySyncersByLayer[entity.Layer - 1].Entities.Add(entity);
 
             AddEntity(entity);
+            if (entity is Monster monster)
+            {
+                EntityTimeNode entityNode = new EntityTimeNode(monster.ID, Time.TimePassed.Ticks + 100);
+                Time.RegisterEntity(entityNode);
+            }
 
             // Link up the entity's Moved event to a new handler
             entity.Moved += OnEntityMoved;
