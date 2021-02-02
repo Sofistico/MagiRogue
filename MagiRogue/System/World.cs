@@ -1,10 +1,13 @@
-﻿using MagiRogue.Entities;
+﻿using GoRogue;
+using MagiRogue.Components;
+using MagiRogue.Entities;
 using MagiRogue.Entities.Items;
 using MagiRogue.System.Tiles;
 using MagiRogue.System.Time;
 using Microsoft.Xna.Framework;
 using SadConsole;
 using System;
+using System.Linq;
 
 namespace MagiRogue.System
 {
@@ -130,7 +133,7 @@ namespace MagiRogue.System
                 newMonster.Stats.DefenseChance = rndNum.Next(0, 50);
                 newMonster.Stats.Attack = rndNum.Next(0, 10);
                 newMonster.Stats.AttackChance = rndNum.Next(0, 50);
-                newMonster.Stats.ViewRadius = 5;
+                newMonster.AddComponent(new BasicAIComponent(newMonster.Stats.ViewRadius));
 
                 CurrentMap.Add(newMonster);
             }
@@ -172,34 +175,56 @@ namespace MagiRogue.System
             }
         }
 
-        public void ProcessTurn()
+        public void ProcessTurn(long playerTime, bool sucess)
         {
             // TODO: define the way that entity regain energy better.
-            PlayerTimeNode playerTurn = new PlayerTimeNode(GetTime.TimePassed.Ticks + Player.EnergyPool);
-            GetTime.RegisterEntity(playerTurn);
-
-            Player.ApplyHpRegen();
-
-            var node = GetTime.NextNode();
-
-            while (node is not PlayerTimeNode)
+            if (sucess)
             {
-                switch (node)
-                {
-                    case EntityTimeNode entityTurn:
-                        ProcessAiTurn(entityTurn.EntityId, CurrentMap.Time.TimePassed.Ticks);
-                        break;
+                PlayerTimeNode playerTurn = new PlayerTimeNode(GetTime.TimePassed.Ticks + playerTime);
+                GetTime.RegisterEntity(playerTurn);
 
-                    default:
-                        throw new NotSupportedException($"Unhandled time master node type: {node.GetType()}");
+                Player.ApplyHpRegen();
+                CurrentMap.CalculateFOV(position: Player.Position, Player.Stats.ViewRadius, radiusShape: Radius.CIRCLE);
+
+                var node = GetTime.NextNode();
+
+                while (node is not PlayerTimeNode)
+                {
+                    switch (node)
+                    {
+                        case EntityTimeNode entityTurn:
+                            ProcessAiTurn(entityTurn.EntityId, GetTime.TimePassed.Ticks);
+                            break;
+
+                        default:
+                            throw new NotSupportedException($"Unhandled time master node type: {node.GetType()}");
+                    }
+
+                    node = GetTime.NextNode();
                 }
 
-                node = GetTime.NextNode();
+#if DEBUG
+                GameLoop.UIManager.MessageLog.Add($"Turns: {GetTime.Turns}, Tick: {GetTime.TimePassed.Ticks}");
+#endif
             }
         }
 
-        private void ProcessAiTurn(uint entityId, long tick)
+        private void ProcessAiTurn(uint entityId, long time)
         {
+            // TODO: Add some basic ai handling
+            Entity entity = CurrentMap.GetEntityById(entityId);
+
+            if (entity != null)
+            {
+                IAiComponent ai = entity.GetGoRogueComponent<IAiComponent>();
+                (bool sucess, long tick) = ai?.RunAi(CurrentMap, GameLoop.UIManager.MessageLog) ?? (false, -1);
+
+                if (!sucess || tick < -1)
+                    return;
+
+                EntityTimeNode nextTurnNode = new EntityTimeNode(entityId, time + tick);
+                GetTime.RegisterEntity(nextTurnNode);
+            }
         }
     }
 }

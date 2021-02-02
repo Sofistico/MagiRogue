@@ -33,8 +33,6 @@ namespace MagiRogue.Entities
         private IGameObject backingField;
         private EntityViewSyncComponent entityViewSync;
 
-        public int EnergyPool { get; set; }
-
         #endregion Fields
 
         #region Constructor
@@ -100,6 +98,16 @@ namespace MagiRogue.Entities
             {
                 return string.Format($"{nameof(Entity)} : {Name}");
             }
+        }
+
+        /// <summary>
+        /// Returns a GoRogue component
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T GetGoRogueComponent<T>() where T : GoRogue.GameFramework.Components.IGameObjectComponent
+        {
+            return backingField.GetComponent<T>();
         }
 
         #endregion Helper Methods

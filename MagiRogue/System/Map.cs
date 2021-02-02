@@ -135,8 +135,6 @@ namespace MagiRogue.System
             if (entity is Player player)
             {
                 CalculateFOV(position: player.Position, player.Stats.ViewRadius, radiusShape: Radius.CIRCLE);
-                Time.PlayerTimeNode playerNode = new Time.PlayerTimeNode(Time.TimePassed.Ticks);
-                Time.RegisterEntity(playerNode);
             }
 
             // Set this up to sycer properly
@@ -183,7 +181,9 @@ namespace MagiRogue.System
             // make sure the index is within the boundaries of the map!
             if (locationIndex <= Width * Height && locationIndex >= 0)
             {
+#pragma warning disable IDE0038 // Usar a correspondência de padrão
                 return Tiles[locationIndex] is T ? (T)Tiles[locationIndex] : null;
+#pragma warning restore IDE0038 // Usar a correspondência de padrão
             }
             else return null;
         }
@@ -199,6 +199,26 @@ namespace MagiRogue.System
         public T GetTileAt<T>(Point location) where T : TileBase
         {
             return GetTileAt<T>(location.X, location.Y);
+        }
+
+        /// <summary>
+        /// Gets the entity by it's id
+        /// </summary>
+        /// <typeparam name="T">Any type of entity</typeparam>
+        /// <param name="id">The id of the entity to find</param>
+        /// <returns>Returns the entity owner of the id</returns>
+        public Entity GetEntityById(uint id)
+        {
+            // TODO: this shit is wonky, need to do something about it
+            var filter = from entity in Entities.Items
+                         where entity.ID == id
+                         select entity;
+
+            if (filter.Any())
+            {
+                return (Entity)filter.FirstOrDefault();
+            }
+            return null;
         }
 
         #endregion HelperMethods
