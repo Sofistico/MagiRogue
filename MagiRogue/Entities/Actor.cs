@@ -1,4 +1,5 @@
 ﻿using GoRogue;
+using MagiRogue.Commands;
 using MagiRogue.System;
 using MagiRogue.System.Tiles;
 using Microsoft.Xna.Framework;
@@ -57,6 +58,8 @@ namespace MagiRogue.Entities
 
         public Stat Stats = new Stat();
 
+        public bool Bumped = false;
+
         #endregion Fields
 
         #region Constructor
@@ -80,29 +83,7 @@ namespace MagiRogue.Entities
             // Check the current map if we can move to this new position
             if (GameLoop.World.CurrentMap.IsTileWalkable(Position + positionChange))
             {
-                if (this is Player)
-                {
-                    // if there's a monster here,
-                    // do a bump attack
-                    Monster monster = GameLoop.World.CurrentMap.GetEntity<Monster>(Position + positionChange);
-                    //Item item = GameLoop.World.CurrentMap.GetEntityAt<Item>(Position + positionChange);
-
-                    if (monster != null)
-                    {
-                        GameLoop.CommandManager.Attack(this, monster, 100);
-                        return true;
-                    }
-                }
-
-                // if there's an item here,
-                // try to pick it up
-                // implement this like an option
-                // if settings allow auto pickup for example
-                /*else if (item != null)
-                {
-                    GameLoop.CommandManager.PickUp(this, item);
-                    return true;
-                }*/
+                CheckIfCanAttack(positionChange);
 
                 Position += positionChange;
                 GameLoop.UIManager.IsDirty = true;
@@ -118,11 +99,28 @@ namespace MagiRogue.Entities
                 // try to use it
                 if (door != null)
                 {
-                    GameLoop.CommandManager.UseDoor(this, door, 100);
+                    CommandManager.UseDoor(this, door);
                     return true;
                 }
                 return false;
             }
+        }
+
+        private bool CheckIfCanAttack(Point positionChange)
+        {
+            // if there's a monster here,
+            // do a bump attack
+            Actor actor = GameLoop.World.CurrentMap.GetEntity<Actor>(Position + positionChange);
+
+            if (actor != null)
+            {
+                CommandManager.Attack(this, actor);
+                Bumped = true;
+                return Bumped;
+            }
+
+            Bumped = false;
+            return Bumped;
         }
 
         // Moves the Actor TO newPosition location

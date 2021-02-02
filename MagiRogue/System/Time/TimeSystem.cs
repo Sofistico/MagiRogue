@@ -12,11 +12,6 @@ namespace MagiRogue.System.Time
     {
         public event EventHandler<TimeDefSpan> TurnPassed;
 
-        /// <summary>
-        /// Every 100 energy represents 1 second
-        /// </summary>
-        public const int EnergyToTurn = 100;
-
         public TimeDefSpan TimePassed => new TimeDefSpan(timeSpan.Ticks);
         public int Turns => (int)timeSpan.Seconds;
 

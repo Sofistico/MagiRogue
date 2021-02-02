@@ -1,10 +1,13 @@
 ﻿using GoRogue;
+using MagiRogue.Commands;
 using MagiRogue.Entities;
 using MagiRogue.System;
+using MagiRogue.System.Time;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using SadConsole;
 using System;
+using System.Collections.Generic;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace MagiRogue.UI
@@ -13,6 +16,8 @@ namespace MagiRogue.UI
     // and makes consoles easily addressable from a central place.
     public class UIManager : ContainerConsole
     {
+        #region Managers
+
         // Here are the managers
         public ScrollingConsole MapConsole;
         public Window MapWindow;
@@ -20,6 +25,10 @@ namespace MagiRogue.UI
         public InventoryWindow InventoryScreen;
         public StatusWindow StatusConsole;
         public MainMenuWindow MainMenu;
+
+        #endregion Managers
+
+        #region ConstructorAndInitCode
 
         public UIManager()
         {
@@ -79,6 +88,10 @@ namespace MagiRogue.UI
             CenterOnActor(GameLoop.World.Player);
         }
 
+        #endregion ConstructorAndInitCode
+
+        #region HelperMethods
+
         // Creates all child consoles to be managed
         private void CreateConsoles()
         {
@@ -92,6 +105,16 @@ namespace MagiRogue.UI
             MapConsole.CenterViewPortOnPoint(actor.Position);
         }
 
+        #region Input
+
+        private static readonly Dictionary<Keys, Direction> MovementDirectionMapping = new Dictionary<Keys, Direction>
+        {
+            { Keys.NumPad7, Direction.UP_LEFT }, { Keys.NumPad8, Direction.UP }, { Keys.NumPad9, Direction.UP_RIGHT },
+            { Keys.NumPad4, Direction.LEFT }, { Keys.NumPad6, Direction.RIGHT },
+            { Keys.NumPad1, Direction.DOWN_LEFT }, { Keys.NumPad2, Direction.DOWN }, { Keys.NumPad3, Direction.DOWN_RIGHT },
+            { Keys.Up, Direction.UP }, { Keys.Down, Direction.DOWN }, { Keys.Left, Direction.LEFT }, { Keys.Right, Direction.RIGHT }
+        };
+
         // Scans the SadConsole's Global KeyboardState and triggers behaviour
         // based on the button pressed.
         public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
@@ -101,8 +124,15 @@ namespace MagiRogue.UI
 
             if (HandleMove(info))
             {
-                GameLoop.World.ProcessTurn();
+                var player = GameLoop.World.Player;
+                if (!player.Bumped)
+                    GameLoop.World.ProcessTurn(TimeHelper.GetWalkTime(player), true);
+                else
+                    GameLoop.World.ProcessTurn(TimeHelper.GetAttackTime(player), true);
             }
+
+            if (info.IsKeyPressed(Keys.NumPad5))
+                GameLoop.World.ProcessTurn(TimeHelper.Wait, true);
 
             if (info.IsKeyPressed(Keys.F8))
             {
@@ -113,42 +143,45 @@ namespace MagiRogue.UI
                 SadConsole.Game.Instance.Exit();
 
             if (info.IsKeyPressed(Keys.A))
-                GameLoop.CommandManager.DirectAttack(GameLoop.World.Player, 100);
+            {
+                bool sucess = CommandManager.DirectAttack(GameLoop.World.Player);
+                GameLoop.World.ProcessTurn(TimeHelper.GetAttackTime(GameLoop.World.Player), sucess);
+            }
 
             if (info.IsKeyPressed(Keys.G))
             {
                 Item item = GameLoop.World.CurrentMap.GetEntityAt<Item>(GameLoop.World.Player.Position);
-                // Item item = GameLoop.World.CurrentMap.GetEntity<Item>(GameLoop.World.Player.Position);
-                //Item ite2= GameLoop.World.CurrentMap.GetE
-                GameLoop.CommandManager.PickUp(GameLoop.World.Player, item, 50);
+                bool sucess = CommandManager.PickUp(GameLoop.World.Player, item);
                 InventoryScreen.ShowItems(GameLoop.World.Player);
+                GameLoop.World.ProcessTurn(TimeHelper.Interact, sucess);
             }
             if (info.IsKeyPressed(Keys.D))
             {
-                GameLoop.CommandManager.DropItems(GameLoop.World.Player, 50);
+                bool sucess = CommandManager.DropItems(GameLoop.World.Player);
                 Item item = GameLoop.World.CurrentMap.GetEntity<Item>(GameLoop.World.Player.Position);
                 InventoryScreen.RemoveItemFromConsole(item);
                 InventoryScreen.ShowItems(GameLoop.World.Player);
+                GameLoop.World.ProcessTurn(TimeHelper.Interact, sucess);
             }
             if (info.IsKeyPressed(Keys.C))
             {
-                GameLoop.CommandManager.CloseDoor(GameLoop.World.Player, 50);
+                bool sucess = CommandManager.CloseDoor(GameLoop.World.Player);
+                GameLoop.World.ProcessTurn(TimeHelper.Interact, sucess);
             }
             if (info.IsKeyPressed(Keys.I))
             {
                 InventoryScreen.Show();
-                // InventoryScreen.UseKeyboard = true;
-                //InventoryScreen.UseMouse = true;
             }
 
             if (info.IsKeyPressed(Keys.H))
             {
-                GameLoop.CommandManager.HurtYourself(GameLoop.World.Player, 50);
+                bool sucess = CommandManager.HurtYourself(GameLoop.World.Player);
+                GameLoop.World.ProcessTurn(TimeHelper.MagicalThings, sucess);
             }
 #if DEBUG
             if (info.IsKeyPressed(Keys.F10))
             {
-                GameLoop.CommandManager.ToggleFOV();
+                Commands.CommandManager.ToggleFOV();
             }
 #endif
             return base.ProcessKeyboard(info);
@@ -156,81 +189,23 @@ namespace MagiRogue.UI
 
         private bool HandleMove(SadConsole.Input.Keyboard info)
         {
-            if (info.IsKeyPressed(Keys.Up))
+            foreach (Keys key in MovementDirectionMapping.Keys)
             {
-                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(0, -1));
-                CenterOnActor(GameLoop.World.Player);
-                return true;
+                if (info.IsKeyPressed(key))
+                {
+                    Direction moveDirection = MovementDirectionMapping[key];
+                    Coord coorToMove = new Coord(moveDirection.DeltaX, moveDirection.DeltaY);
+
+                    bool sucess = CommandManager.MoveActorBy(GameLoop.World.Player, coorToMove);
+                    CenterOnActor(GameLoop.World.Player);
+                    return sucess;
+                }
             }
-            if (info.IsKeyPressed(Keys.Down))
-            {
-                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(0, 1));
-                CenterOnActor(GameLoop.World.Player);
-                return true;
-            }
-            if (info.IsKeyPressed(Keys.Left))
-            {
-                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(-1, 0));
-                CenterOnActor(GameLoop.World.Player);
-                return true;
-            }
-            if (info.IsKeyPressed(Keys.Right))
-            {
-                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(1, 0));
-                CenterOnActor(GameLoop.World.Player);
-                return true;
-            }
-            if (info.IsKeyPressed(Keys.NumPad8))
-            {
-                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(0, -1));
-                CenterOnActor(GameLoop.World.Player);
-                return true;
-            }
-            if (info.IsKeyPressed(Keys.NumPad2))
-            {
-                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(0, 1));
-                CenterOnActor(GameLoop.World.Player);
-                return true;
-            }
-            if (info.IsKeyPressed(Keys.NumPad4))
-            {
-                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(-1, 0));
-                CenterOnActor(GameLoop.World.Player);
-                return true;
-            }
-            if (info.IsKeyPressed(Keys.NumPad6))
-            {
-                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(1, 0));
-                CenterOnActor(GameLoop.World.Player);
-                return true;
-            }
-            if (info.IsKeyPressed(Keys.NumPad7))
-            {
-                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(-1, -1));
-                CenterOnActor(GameLoop.World.Player);
-                return true;
-            }
-            if (info.IsKeyPressed(Keys.NumPad9))
-            {
-                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(1, -1));
-                CenterOnActor(GameLoop.World.Player);
-                return true;
-            }
-            if (info.IsKeyPressed(Keys.NumPad1))
-            {
-                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(-1, 1));
-                CenterOnActor(GameLoop.World.Player);
-                return true;
-            }
-            if (info.IsKeyPressed(Keys.NumPad3))
-            {
-                GameLoop.CommandManager.MoveActorBy(GameLoop.World.Player, new Point(1, 1));
-                CenterOnActor(GameLoop.World.Player);
-                return true;
-            }
-            else
-                return false;
+
+            return false;
         }
+
+        #endregion Input
 
         // Creates a window that encloses a map console
         // of a specified height and width
@@ -285,9 +260,8 @@ namespace MagiRogue.UI
 
         // Method helper to print the X and Y of the console.
         // Use only for debugging purposes
-#pragma warning disable IDE0051 // Remover membros privados não utilizados
 
-        private static void PrintHeader()
+        /*private static void PrintHeader()
         {
             int counter = 0;
             var startingColor = Color.Black.GetRandomColor(SadConsole.Global.Random);
@@ -327,7 +301,7 @@ namespace MagiRogue.UI
             UIManagerConsoles.Print(4, 2, "Console Size");
             UIManagerConsoles.Print(4, 3, "                         ");
             UIManagerConsoles.Print(4, 3, $"{UIManagerConsoles.Width} {UIManagerConsoles.Height}");
-        }
+        }*/
 
         // Adds the entire list of entities found in the
         // World.CurrentMap's Entities SpatialMap to the
@@ -372,5 +346,7 @@ namespace MagiRogue.UI
             // Now Sync all of the map's entities
             SyncMapEntities(map);
         }
+
+        #endregion HelperMethods
     }
 }

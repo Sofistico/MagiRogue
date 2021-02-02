@@ -17,7 +17,7 @@ namespace MagiRogue.Entities
         {
             //number of loot to spawn for monster
             int lootNum = rndNum.Next(1, 4);
-            Stats.ViewRadius = 5;
+            Stats.ViewRadius = 4;
 
             for (int i = 0; i < lootNum; i++)
             {
