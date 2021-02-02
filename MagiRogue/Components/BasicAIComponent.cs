@@ -1,15 +1,10 @@
-﻿using MagiRogue.Entities;
-using MagiRogue.System;
-using MagiRogue.UI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Troschuetz.Random;
-using MagiRogue.System.Time;
+﻿using GoRogue;
 using GoRogue.Pathing;
-using GoRogue;
+using MagiRogue.Entities;
+using MagiRogue.System;
+using MagiRogue.System.Time;
+using MagiRogue.UI;
+using System.Linq;
 
 namespace MagiRogue.Components
 {

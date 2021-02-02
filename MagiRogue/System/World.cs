@@ -7,7 +7,6 @@ using MagiRogue.System.Time;
 using Microsoft.Xna.Framework;
 using SadConsole;
 using System;
-using System.Linq;
 
 namespace MagiRogue.System
 {
