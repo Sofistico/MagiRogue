@@ -29,7 +29,7 @@ namespace MagiRogue.Entities
         private bool godly;
         private float bloodCount; // the amount of blood inside the actor, its in ml, to facilitate the calculus of blood volume, the formula is ml/kg
         private int size; // the size in meters of the actor
-        private int weight; // the weight of the being in kg
+        private float weight; // the weight of the being in kg
         private int temperature; // the temperature of the creature, don't know if i will use or not
         private bool hasBlood;
 
@@ -196,7 +196,7 @@ namespace MagiRogue.Entities
             get => bloodCount;
             set
             {
-                if (value <= weight * 75)
+                if (value <= (float)Math.Round((float)weight * 75, 2))
                     bloodCount = value;
                 else
                     return;
@@ -210,7 +210,7 @@ namespace MagiRogue.Entities
         /// <summary>
         /// The weight of the actor in kg
         /// </summary>
-        public int Weight { get { return weight; } set { weight = value; } }
+        public float Weight { get { return weight; } set { weight = value; } }
         /// <summary>
         /// The temperature of the actor in celsius
         /// </summary>
@@ -242,7 +242,7 @@ namespace MagiRogue.Entities
         protected void CalculateBlood()
         {
             if (hasBlood)
-                bloodCount = Weight * 75;
+                bloodCount = (float)Math.Round(Weight * 75);
         }
 
         public void SetAttributes(

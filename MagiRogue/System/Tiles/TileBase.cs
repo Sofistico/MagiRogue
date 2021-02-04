@@ -11,6 +11,10 @@ namespace MagiRogue.System.Tiles
     public abstract class TileBase : Cell, GoRogue.GameFramework.IGameObject
     {
         // Movement and Line of Sight Flags
+        /// <summary>
+        /// It's really complicated the relation between IsBlockingMove and the IsWalkable field from the backing field, but
+        /// it can be said that IsWalkable = !IsBlockingMove.
+        /// </summary>
         public bool IsBlockingMove;
         public bool TileIsTransparent;
         public int Layer;

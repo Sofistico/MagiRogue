@@ -145,7 +145,7 @@ namespace MagiRogue.Commands
                 defenseMessage.AppendFormat("resulting in {0} blocks.", blocks);
             }
             else
-                attackMessage.Append("and misses completely!");
+                attackMessage.Append(" and misses completely!");
 
             return blocks;
         }

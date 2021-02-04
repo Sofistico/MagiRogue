@@ -99,7 +99,7 @@ namespace MagiRogue.UI
         public override void Update(TimeSpan time)
         {
             // Ensure that the scrollbar tracks the current position of the messageConsole.
-            if (messageConsole.TimesShiftedUp != 0 |
+            if (messageConsole.TimesShiftedUp != 0 ||
                 messageConsole.Cursor.Position.Y >= messageConsole.ViewPort.Height + scrollBarCurrentPosition)
             {
                 //enable the scrollbar once the messagelog has filled up with enough text to warrant scrolling

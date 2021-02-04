@@ -91,7 +91,6 @@ namespace MagiRogue.UI
         public void ShowItems(Actor actorInventory)
         {
             int indexInventoryY = 0;
-            //inventory.Clear();
             foreach (Item item in actorInventory.Inventory)
             {
                 inventory.Add(item);
