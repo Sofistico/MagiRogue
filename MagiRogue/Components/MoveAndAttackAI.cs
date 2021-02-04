@@ -8,13 +8,13 @@ using System.Linq;
 
 namespace MagiRogue.Components
 {
-    public class BasicAIComponent : IAiComponent
+    public class MoveAndAttackAI : IAiComponent
     {
         public GoRogue.GameFramework.IGameObject Parent { get; set; }
 
         private readonly int perceptionAi;
 
-        public BasicAIComponent(int perception)
+        public MoveAndAttackAI(int perception)
         {
             perceptionAi = perception;
         }

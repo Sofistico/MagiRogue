@@ -8,20 +8,18 @@ using GoRogue;
 
 namespace MagiRogue.System.Tiles
 {
-    public class TileBase : Cell, GoRogue.GameFramework.IGameObject
+    public abstract class TileBase : Cell, GoRogue.GameFramework.IGameObject
     {
         // Movement and Line of Sight Flags
         public bool IsBlockingMove;
         public bool TileIsTransparent;
         public int Layer;
-        //public Coord TilePosition;
 
         private readonly IGameObject backingField;
 
         // Creates a list of possible materials, and then assings it to the tile, need to move it to a fitting area, like
         // World or GameLoop, because if need to port, every new object will have more than one possible material without
         // any need.
-        //public IEnumerable<Material> Material;
         public Material Material { get; set; }
 
         // Tile's name
@@ -34,7 +32,7 @@ namespace MagiRogue.System.Tiles
         public bool IsStatic => backingField.IsStatic;
 
         public bool IsTransparent { get => backingField.IsTransparent; set => backingField.IsTransparent = value; }
-        public bool IsWalkable { get => backingField.IsWalkable; set => backingField.IsWalkable = value; }
+        public bool IsWalkable { get => !IsBlockingMove; set => backingField.IsWalkable = !IsBlockingMove; }
         public Coord Position { get => backingField.Position; set => backingField.Position = value; }
 
         public uint ID => backingField.ID;
@@ -47,14 +45,14 @@ namespace MagiRogue.System.Tiles
         // representing the most basic form of of all Tiles used.
         // Every TileBase has a Foreground Colour, Background Colour, and Glyph
         // isBlockingMove and isBlockingSight are optional parameters, set to false by default
-        public TileBase(Color foregroud, Color background, int glyph, int layer, Coord position, string idOfMaterial, bool blockingMove = true,
+        public TileBase(Color foregroud, Color background, int glyph, int layer, Coord position, string idOfMaterial, bool blocksMove = true,
             bool isTransparent = true, string name = "ForgotToChangeName") : base(foregroud, background, glyph)
         {
-            IsBlockingMove = blockingMove;
+            IsBlockingMove = blocksMove;
             TileIsTransparent = isTransparent;
             Name = name;
             Layer = layer;
-            backingField = new GameObject(position, layer, parentObject: this, isStatic: true, blockingMove, isTransparent);
+            backingField = new GameObject(position, layer, parentObject: this, isStatic: true, !blocksMove, isTransparent);
             Material = GameLoop.PhysicsManager.SetMaterial(idOfMaterial, Material);
         }
 

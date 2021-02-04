@@ -132,7 +132,8 @@ namespace MagiRogue.System
                 newMonster.Stats.DefenseChance = rndNum.Next(0, 50);
                 newMonster.Stats.Attack = rndNum.Next(0, 10);
                 newMonster.Stats.AttackChance = rndNum.Next(0, 50);
-                newMonster.AddComponent(new BasicAIComponent(newMonster.Stats.ViewRadius));
+                newMonster.Stats.Speed = 1;
+                newMonster.AddComponent(new MoveAndAttackAI(newMonster.Stats.ViewRadius));
 
                 CurrentMap.Add(newMonster);
             }

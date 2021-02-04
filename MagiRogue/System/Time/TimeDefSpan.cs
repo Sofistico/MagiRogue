@@ -10,7 +10,6 @@ namespace MagiRogue.System.Time
     {
         private const int DaysPerMonth = 31;
         private const int MonthsPerYear = 12;
-        //private const int HoursPerDay = 24;
         private const int MinutesPerHour = 60;
         private const int SecondsPerMinute = 60;
         private const int SecondsPerDay = 86400;
