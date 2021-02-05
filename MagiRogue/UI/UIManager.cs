@@ -28,6 +28,12 @@ namespace MagiRogue.UI
 
         #endregion Managers
 
+        #region Fields
+
+        private static Player getPlayer => GameLoop.World.Player;
+
+        #endregion Fields
+
         #region ConstructorAndInitCode
 
         public UIManager()
@@ -85,7 +91,7 @@ namespace MagiRogue.UI
             UseMouse = true;
 
             // Start the game with the camera focused on the player
-            CenterOnActor(GameLoop.World.Player);
+            CenterOnActor(getPlayer);
         }
 
         #endregion ConstructorAndInitCode
@@ -124,7 +130,7 @@ namespace MagiRogue.UI
 
             if (HandleMove(info))
             {
-                var player = GameLoop.World.Player;
+                var player = getPlayer;
                 if (!player.Bumped)
                     GameLoop.World.ProcessTurn(TimeHelper.GetWalkTime(player), true);
                 else
@@ -136,7 +142,7 @@ namespace MagiRogue.UI
 
             if (info.IsKeyPressed(Keys.F8))
             {
-                GameLoop.World.Player.AddComponent(new Components.TestComponent(GameLoop.World.Player));
+                getPlayer.AddComponent(new Components.TestComponent(getPlayer));
             }
 
             if (info.IsKeyPressed(Keys.Escape))
@@ -144,28 +150,28 @@ namespace MagiRogue.UI
 
             if (info.IsKeyPressed(Keys.A))
             {
-                bool sucess = CommandManager.DirectAttack(GameLoop.World.Player);
-                GameLoop.World.ProcessTurn(TimeHelper.GetAttackTime(GameLoop.World.Player), sucess);
+                bool sucess = CommandManager.DirectAttack(getPlayer);
+                GameLoop.World.ProcessTurn(TimeHelper.GetAttackTime(getPlayer), sucess);
             }
 
             if (info.IsKeyPressed(Keys.G))
             {
-                Item item = GameLoop.World.CurrentMap.GetEntityAt<Item>(GameLoop.World.Player.Position);
-                bool sucess = CommandManager.PickUp(GameLoop.World.Player, item);
-                InventoryScreen.ShowItems(GameLoop.World.Player);
+                Item item = GameLoop.World.CurrentMap.GetEntityAt<Item>(getPlayer.Position);
+                bool sucess = CommandManager.PickUp(getPlayer, item);
+                InventoryScreen.ShowItems(getPlayer);
                 GameLoop.World.ProcessTurn(TimeHelper.Interact, sucess);
             }
             if (info.IsKeyPressed(Keys.D))
             {
-                bool sucess = CommandManager.DropItems(GameLoop.World.Player);
-                Item item = GameLoop.World.CurrentMap.GetEntity<Item>(GameLoop.World.Player.Position);
+                bool sucess = CommandManager.DropItems(getPlayer);
+                Item item = GameLoop.World.CurrentMap.GetEntity<Item>(getPlayer.Position);
                 InventoryScreen.RemoveItemFromConsole(item);
-                InventoryScreen.ShowItems(GameLoop.World.Player);
+                InventoryScreen.ShowItems(getPlayer);
                 GameLoop.World.ProcessTurn(TimeHelper.Interact, sucess);
             }
             if (info.IsKeyPressed(Keys.C))
             {
-                bool sucess = CommandManager.CloseDoor(GameLoop.World.Player);
+                bool sucess = CommandManager.CloseDoor(getPlayer);
                 GameLoop.World.ProcessTurn(TimeHelper.Interact, sucess);
             }
             if (info.IsKeyPressed(Keys.I))
@@ -175,7 +181,7 @@ namespace MagiRogue.UI
 
             if (info.IsKeyPressed(Keys.H))
             {
-                bool sucess = CommandManager.HurtYourself(GameLoop.World.Player);
+                bool sucess = CommandManager.HurtYourself(getPlayer);
                 GameLoop.World.ProcessTurn(TimeHelper.MagicalThings, sucess);
             }
 #if DEBUG
@@ -196,8 +202,8 @@ namespace MagiRogue.UI
                     Direction moveDirection = MovementDirectionMapping[key];
                     Coord coorToMove = new Coord(moveDirection.DeltaX, moveDirection.DeltaY);
 
-                    bool sucess = CommandManager.MoveActorBy(GameLoop.World.Player, coorToMove);
-                    CenterOnActor(GameLoop.World.Player);
+                    bool sucess = CommandManager.MoveActorBy(getPlayer, coorToMove);
+                    CenterOnActor(getPlayer);
                     return sucess;
                 }
             }
@@ -252,7 +258,7 @@ namespace MagiRogue.UI
             Children.Add(MapWindow);
 
             // Add the player to the MapConsole's render list
-            MapConsole.Children.Add(GameLoop.World.Player);
+            MapConsole.Children.Add(getPlayer);
 
             // Without this, the window will never be visible on screen
             MapWindow.Show();

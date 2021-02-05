@@ -66,7 +66,7 @@ namespace MagiRogue.System
             _mapTiles = new TileBase[_mapWidth * _mapHeight];
             CurrentMap = new Map(_mapWidth, _mapHeight);
             MapGenerator mapGen = new MapGenerator();
-            CurrentMap = mapGen.GenerateMap(_mapWidth, _mapHeight, _maxRooms, _minRoomSize, _maxRoomSize);
+            CurrentMap = mapGen.GenerateMazeMap(_mapWidth, _mapHeight, _maxRooms, _minRoomSize, _maxRoomSize);
         }
 
         // Create a player using the Player class
