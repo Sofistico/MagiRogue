@@ -28,6 +28,12 @@ namespace MagiRogue.UI
 
         #endregion Managers
 
+        #region Field
+
+        private Player getPlayer => GameLoop.World.Player;
+
+        #endregion Field
+
         #region ConstructorAndInitCode
 
         public UIManager()
