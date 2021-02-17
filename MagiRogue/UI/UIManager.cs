@@ -124,20 +124,14 @@ namespace MagiRogue.UI
 
             if (HandleMove(info))
             {
-                var player = GameLoop.World.Player;
-                if (!player.Bumped)
-                    GameLoop.World.ProcessTurn(TimeHelper.GetWalkTime(player), true);
+                if (!getPlayer.Bumped)
+                    GameLoop.World.ProcessTurn(TimeHelper.GetWalkTime(getPlayer), true);
                 else
-                    GameLoop.World.ProcessTurn(TimeHelper.GetAttackTime(player), true);
+                    GameLoop.World.ProcessTurn(TimeHelper.GetAttackTime(getPlayer), true);
             }
 
             if (info.IsKeyPressed(Keys.NumPad5))
                 GameLoop.World.ProcessTurn(TimeHelper.Wait, true);
-
-            if (info.IsKeyPressed(Keys.F8))
-            {
-                GameLoop.World.Player.AddComponent(new Components.TestComponent(GameLoop.World.Player));
-            }
 
             if (info.IsKeyPressed(Keys.Escape))
                 SadConsole.Game.Instance.Exit();
@@ -181,7 +175,12 @@ namespace MagiRogue.UI
 #if DEBUG
             if (info.IsKeyPressed(Keys.F10))
             {
-                Commands.CommandManager.ToggleFOV();
+                CommandManager.ToggleFOV();
+            }
+
+            if (info.IsKeyPressed(Keys.F8))
+            {
+                getPlayer.AddComponent(new Components.TestComponent(getPlayer));
             }
 #endif
             return base.ProcessKeyboard(info);

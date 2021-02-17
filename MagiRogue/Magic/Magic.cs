@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace MagiRogue.Magic
 {
-    class Magic
+    public class Magic
     {
+        // Create a magic inspired both by Mushoku Tensei and Full Metal Alchemist
     }
 }

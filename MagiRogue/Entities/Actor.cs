@@ -95,16 +95,11 @@ namespace MagiRogue.Entities
             // Handle situations where there are non-walkable tiles that CAN be used
             else
             {
-                // Check for the presence of a door
-                TileDoor door = GameLoop.World.CurrentMap.GetTileAt<TileDoor>(Position + positionChange);
+                bool doorThere = CheckIfThereIsDoor(positionChange);
 
-                // if there's a door here,
-                // try to use it
-                if (door != null)
-                {
-                    CommandManager.UseDoor(this, door);
-                    return true;
-                }
+                if (doorThere)
+                    return doorThere;
+
                 return false;
             }
         }
@@ -124,6 +119,22 @@ namespace MagiRogue.Entities
 
             Bumped = false;
             return Bumped;
+        }
+
+        private bool CheckIfThereIsDoor(Coord positionChange)
+        {
+            // Check for the presence of a door
+            TileDoor door = GameLoop.World.CurrentMap.GetTileAt<TileDoor>(Position + positionChange);
+
+            // if there's a door here,
+            // try to use it
+            if (door != null)
+            {
+                CommandManager.UseDoor(this, door);
+                return true;
+            }
+
+            return false;
         }
 
         // Moves the Actor TO newPosition location
