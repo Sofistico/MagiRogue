@@ -217,6 +217,7 @@ namespace MagiRogue.Entities
             int defense,
             int defenseChance,
             int godPower,
+            int speed,
             bool godly = false
             )
         {
@@ -234,6 +235,7 @@ namespace MagiRogue.Entities
             this.Godly = godly;
             if (godly)
                 this.GodPower = godPower;
+            this.Speed = speed;
         }
 
         public void SetAttributes(
@@ -251,6 +253,7 @@ namespace MagiRogue.Entities
            int defense,
            int defenseChance,
            int godPower,
+           int speed,
            bool godly = false
            )
         {
@@ -269,6 +272,7 @@ namespace MagiRogue.Entities
             this.Godly = godly;
             if (godly)
                 this.GodPower = godPower;
+            this.Speed = speed;
         }
 
         #endregion Methods

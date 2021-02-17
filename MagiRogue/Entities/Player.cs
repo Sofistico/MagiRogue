@@ -29,10 +29,10 @@ namespace MagiRogue.Entities
                 defenseChance: 20,
                 godly: true,
                 godPower: 1,
-                size: 165,
-                weight: 55,
                 speed: 1
                 );
+
+            Anatomy.SetHumanoidBody(this, HumanoidRace.HUMAN);
         }
     }
 }

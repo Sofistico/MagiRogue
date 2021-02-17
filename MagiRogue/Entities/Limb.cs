@@ -35,15 +35,14 @@ namespace MagiRogue.Entities
     {
         private readonly TypeOfLimb typeLimb;
         private int limbHp;
-        private int maxLimbHp;
 
         public int LimbHp
         {
             get
             {
-                if (limbHp > maxLimbHp)
+                if (limbHp > MaxLimbHp)
                 {
-                    return maxLimbHp;
+                    return MaxLimbHp;
                 }
                 else if (limbHp < (LimbWeight * -2))
                 {
@@ -56,9 +55,9 @@ namespace MagiRogue.Entities
             }
             set
             {
-                if (value > maxLimbHp)
+                if (value > MaxLimbHp)
                 {
-                    limbHp = maxLimbHp;
+                    limbHp = MaxLimbHp;
                 }
                 else if (value < (LimbWeight * -2))
                 {

@@ -48,7 +48,6 @@ namespace MagiRogue.Entities
         private float weight; // the weight of the being in kg
         private int temperature; // the temperature of the creature, don't know if i will use or not
         private bool hasBlood;
-        private bool isHumanoid => race.IsHumanoid;
         private Race race;
 
         #endregion Fields
@@ -100,12 +99,9 @@ namespace MagiRogue.Entities
 
         #region Constructor
 
-        public Anatomy(Actor actor, )
+        public Anatomy()
         {
-            if (isHumanoid)
-            {
-                SetHumanoidBody()
-            }
+            //CalculateBlood();
             Race = new Race();
         }
 
