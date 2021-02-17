@@ -24,30 +24,6 @@ namespace MagiRogue.Entities
         GODLING, // This one will be fun, caracterized as a lovecraftian monstrosity
     }
 
-    public enum HumanoidRace
-    {
-        HUMAN,
-        ELF,
-        DWARF,
-        HALFELF,
-        GNOME,
-        LIZARD,
-        GOBLIN,
-        OGRE,
-        NYMPH,
-    }
-
-    public enum MonsterRace
-    {
-        GENERICBEAST,
-        DRAGON,
-        DOG,
-        CAT,
-        BEAR,
-        DONKEY,
-        HORSE
-    }
-
     #endregion Enums
 
     public abstract class Actor : Entity
@@ -57,6 +33,10 @@ namespace MagiRogue.Entities
         public List<Item> Inventory = new List<Item>(); // the inventory of the actor;
 
         public Stat Stats = new Stat();
+
+        public Anatomy Anatomy = new Anatomy();
+
+        public Race Race = new Race();
 
         public bool Bumped = false;
 

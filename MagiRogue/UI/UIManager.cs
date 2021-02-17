@@ -30,7 +30,7 @@ namespace MagiRogue.UI
 
         #region Field
 
-        private Player getPlayer => GameLoop.World.Player;
+        private static Player getPlayer => GameLoop.World.Player;
 
         #endregion Field
 

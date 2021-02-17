@@ -360,7 +360,7 @@ namespace MagiRogue.Commands
             if (actor.Stats.BloodyMana != maxMana)
             {
                 actor.Stats.Health -= 1;
-                actor.Stats.BloodCount -= 100f;
+                actor.Anatomy.BloodCount -= 100f;
                 int roll = Dice.Roll("1d3");
                 float bloodyManaGained = float.Parse($"0.{roll}", CultureInfo.InvariantCulture.NumberFormat);
                 actor.Stats.BloodyMana = (float)Math.Round(actor.Stats.BloodyMana + bloodyManaGained, 1);
