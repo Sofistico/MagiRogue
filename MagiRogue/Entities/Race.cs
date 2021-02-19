@@ -43,11 +43,11 @@ namespace MagiRogue.Entities
         {
         }
 
-        private Race(HumanoidRace humanoidRace)
+        protected Race(HumanoidRace humanoidRace)
         {
         }
 
-        private Race(MonsterRace monsterRace)
+        protected Race(MonsterRace monsterRace)
         {
         }
 
