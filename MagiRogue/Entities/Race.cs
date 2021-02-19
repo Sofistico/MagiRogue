@@ -37,7 +37,7 @@ namespace MagiRogue.Entities
     public class Race : IRace
     {
         public bool IsHumanoid;
-        public Dictionary<HumanoidBody, Limb> Limbs;
+        public List<Limb> Limbs;
 
         public Race()
         {
@@ -63,11 +63,11 @@ namespace MagiRogue.Entities
         {
             actor.Anatomy.Race = new Race(humanoidRace);
             IsHumanoid = true;
-            Limbs = new Dictionary<HumanoidBody, Limb>()
+            Limbs = new List<Limb>()
             {
-                {HumanoidBody.Head, new Limb(TypeOfLimb.Head,10, 10, 10, $"{actor.Name}'s Head")},
-                {HumanoidBody.L_arm, new Limb(TypeOfLimb.L_arm, 5, 5, 5, $"{actor.Name}'s Left arm") },
-                {HumanoidBody.L_hand, new Limb(TypeOfLimb.L_hand, 2, 2,2, $"{actor.Name}'s Left hand" ) }
+                new Limb(TypeOfLimb.Head,10, 10, 10, $"{actor.Name}'s Head", null),
+                new Limb(TypeOfLimb.Arm, 5, 5, 5, $"{actor.Name}'s Left arm",false) ,
+                new Limb(TypeOfLimb.Arm, 2, 2,2, $"{actor.Name}'s Left hand",false )
             };
         }
     }

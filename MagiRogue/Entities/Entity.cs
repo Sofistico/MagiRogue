@@ -5,6 +5,7 @@ using GoRogue;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using MagiRogue.Entities.Materials;
 
 namespace MagiRogue.Entities
 {
@@ -17,6 +18,9 @@ namespace MagiRogue.Entities
 
         public uint ID => backingField.ID; // stores the entity's unique identification number
         public int Layer { get; set; } // stores and sets the layer that the entity is rendered
+
+        public double Weight { get; set; }
+        public Material Material { get; set; }
 
         #region BackingField fields
 
@@ -67,6 +71,8 @@ namespace MagiRogue.Entities
 
             base.Moved += SadMoved;
             backingField.Moved += GoRogueMoved;
+
+            Material = new Material();
         }
 
         private void GoRogueMoved(object sender, ItemMovedEventArgs<IGameObject> e)

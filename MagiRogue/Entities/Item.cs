@@ -13,10 +13,6 @@ namespace MagiRogue.Entities
         // backing field for Condition
         private int condition;
 
-        public double Weight { get; set; } // Weight of the item in Kilo
-
-        public Material Material { get; set; }
-
         // physical condition of item, in percent
         // 100 = item undamaged
         // 0 = item is destroyed

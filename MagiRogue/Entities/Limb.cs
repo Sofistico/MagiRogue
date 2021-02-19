@@ -10,30 +10,15 @@ namespace MagiRogue.Entities
     {
         Head,
         Torso,
-        R_arm,
-        R_hand,
-        L_arm,
-        L_hand,
-        R_leg,
-        R_foot,
-        L_leg,
-        L_foot,
-        R_FrontalLeg,
-        L_FrontalLeg,
-        R_FrontalPaw,
-        L_FrontalPaw,
-        R_BackPaw,
-        L_BackPaw,
-        Tail,
-        R_wing,
-        L_wing,
-        R_BackLeg,
-        L_BackLeg,
+        Arm,
+        Leg,
+        Foot,
+        Hand,
+        Tail
     }
 
     public class Limb
     {
-        private readonly TypeOfLimb typeLimb;
         private int limbHp;
 
         public int LimbHp
@@ -72,11 +57,17 @@ namespace MagiRogue.Entities
         public int MaxLimbHp { get; set; }
         public int LimbWeight { get; set; }
         public bool Attached { get; set; }
-        public string LimbName { get; set; }
 
-        public Limb(TypeOfLimb limb, int limbHp, int maxLimbHp, int limbWeight, string limbName)
+        /// <summary>
+        /// Marks if the limb is right or left, being false left and right true.\n Also null means it's in the center
+        /// </summary>
+        public bool? Orientation { get; set; }
+        public string LimbName { get; set; }
+        public TypeOfLimb TypeLimb { get; set; }
+
+        public Limb(TypeOfLimb limb, int limbHp, int maxLimbHp, int limbWeight, string limbName, bool? orientation)
         {
-            typeLimb = limb;
+            TypeLimb = limb;
 
             MaxLimbHp = maxLimbHp;
             LimbHp = limbHp;
@@ -84,8 +75,8 @@ namespace MagiRogue.Entities
             // Defaults to true
             Attached = true;
             LimbName = limbName;
-        }
 
-        public TypeOfLimb GetTypeOfLimb() => typeLimb;
+            Orientation = orientation;
+        }
     }
 }
