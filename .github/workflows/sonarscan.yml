@@ -5,12 +5,11 @@ on:
       - master
     pull_request:
       branches: [ master ]
-    
     workflow_dispatch:
 
 jobs:
   build:
-    name: Build
+    name: SonarScan
     runs-on: windows-latest
     steps:
       - name: Set up JDK 11
