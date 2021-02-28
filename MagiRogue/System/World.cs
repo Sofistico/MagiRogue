@@ -23,7 +23,6 @@ namespace MagiRogue.System
         private readonly int _mapWidth = 50;
         private readonly int _mapHeight = 50;
         private TileBase[] _mapTiles;
-        //private ArrayMap<TileBase> _mapTiles; // maybe add it someday
         private readonly int _maxRooms = 20;
         private readonly int _minRoomSize = 4;
         private readonly int _maxRoomSize = 10;
@@ -44,19 +43,28 @@ namespace MagiRogue.System
         /// Creates a new game world and stores it in a
         /// publicly accessible constructor.
         /// </summary>
-        public World()
+        public World(bool testGame = false)
         {
-            // Build a map
-            CreateMap();
+            if (testGame == false)
+            {
+                // Build a map
+                CreateMap();
 
-            // spawn a bunch of monsters
-            CreateMonster();
+                // spawn a bunch of monsters
+                CreateMonster();
 
-            // Spawn a bunch of loot
-            CreateLoot();
+                // Spawn a bunch of loot
+                CreateLoot();
 
-            // create an instance of player
-            CreatePlayer();
+                // create an instance of player
+                CreatePlayer();
+            }
+            else
+            {
+                CreateTestMap();
+
+                CreatePlayer();
+            }
         }
 
         // Create a new map using the Map class
@@ -68,6 +76,14 @@ namespace MagiRogue.System
             CurrentMap = new Map(_mapWidth, _mapHeight);
             MapGenerator mapGen = new MapGenerator();
             CurrentMap = mapGen.GenerateMap(_mapWidth, _mapHeight, _maxRooms, _minRoomSize, _maxRoomSize);
+        }
+
+        private void CreateTestMap()
+        {
+            _mapTiles = new TileBase[_mapWidth * _mapHeight];
+            CurrentMap = new Map(_mapWidth, _mapHeight);
+            MapGenerator mapGen = new MapGenerator();
+            CurrentMap = mapGen.GenerateTestMap(_mapWidth, _mapHeight);
         }
 
         // Create a player using the Player class

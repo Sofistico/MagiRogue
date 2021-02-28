@@ -1,4 +1,5 @@
-﻿using MagiRogue.System.Tiles;
+﻿using GoRogue.MapViews;
+using MagiRogue.System.Tiles;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -86,6 +87,35 @@ namespace MagiRogue.System
 
             // spit out the final map
             return _map;
+        }
+
+        public Map GenerateTestMap(int mapWidth, int mapHeight)
+        {
+            _map = new Map(mapWidth, mapHeight);
+
+            PrepareForFloors();
+            PrepareForOuterWalls();
+
+            return _map;
+        }
+
+        private void PrepareForFloors()
+        {
+            foreach (var pos in _map.Positions())
+            {
+                _map.SetTerrain(new TileFloor(pos, "stone"));
+            }
+        }
+
+        private void PrepareForOuterWalls()
+        {
+            foreach (var pos in _map.Positions())
+            {
+                if (pos.X == 0 || pos.Y == 0 || pos.X == _map.Width - 1 || pos.Y == _map.Height - 1)
+                {
+                    _map.SetTerrain(new TileWall(pos, "stone"));
+                }
+            }
         }
 
         // Builds a room composed of walls and floors using the supplied Rectangle

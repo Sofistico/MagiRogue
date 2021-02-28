@@ -94,6 +94,41 @@ namespace MagiRogue.UI
             CenterOnActor(GameLoop.World.Player);
         }
 
+        public void StartTestGame()
+        {
+            GameLoop.World = new World(true);
+
+            // Hides the main menu, so that it's possible to interact with the other windows.
+            MainMenu.Hide();
+
+            //Message Log initialization
+            MessageLog = new MessageLogWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Message Log");
+            Children.Add(MessageLog);
+            MessageLog.Show();
+            MessageLog.Position = new Point(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2);
+
+            // Inventory initialization
+            InventoryScreen = new InventoryWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Inventory Window");
+            Children.Add(InventoryScreen);
+            InventoryScreen.Hide();
+            InventoryScreen.Position = new Point(GameLoop.GameWidth / 2, 0);
+
+            StatusConsole = new StatusWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Status Window");
+            Children.Add(StatusConsole);
+            StatusConsole.Position = new Point(GameLoop.GameWidth / 2, 0);
+            StatusConsole.Show();
+
+            // Load the map into the MapConsole
+            LoadMap(GameLoop.World.CurrentMap);
+
+            // Now that the MapConsole is ready, build the Window
+            CreateMapWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight, "Game Map");
+            UseMouse = true;
+
+            // Start the game with the camera focused on the player
+            CenterOnActor(GameLoop.World.Player);
+        }
+
         #endregion ConstructorAndInitCode
 
         #region HelperMethods
