@@ -7,6 +7,7 @@ using MagiRogue.System.Time;
 using Microsoft.Xna.Framework;
 using SadConsole;
 using System;
+using MagiRogue.Entities.Data;
 
 namespace MagiRogue.System
 {
@@ -121,21 +122,33 @@ namespace MagiRogue.System
                 // Note: this fancy math will be replaced by a new helper method
                 // in the next revision of SadConsole
                 var pos = new Point(monsterPosition % CurrentMap.Width, monsterPosition / CurrentMap.Height);
-                Monster newMonster = new Monster(Color.Blue, Color.Transparent, pos)
-                {
-                    // plug in some magic numbers for attack and defense values
 
-                    Name = "a common troll",
+                Stat monsterStat = new Stat()
+                {
+                    Defense = rndNum.Next(0, 10),
+                    DefenseChance = rndNum.Next(0, 50),
+                    Attack = rndNum.Next(0, 10),
+                    AttackChance = rndNum.Next(0, 50),
+                    Speed = 1,
+                    ViewRadius = 7,
+                    Health = 10,
+                    MaxHealth = 10
                 };
 
-                newMonster.Stats.Defense = rndNum.Next(0, 10);
-                newMonster.Stats.DefenseChance = rndNum.Next(0, 50);
-                newMonster.Stats.Attack = rndNum.Next(0, 10);
-                newMonster.Stats.AttackChance = rndNum.Next(0, 50);
-                newMonster.Stats.Speed = 1;
-                newMonster.AddComponent(new MoveAndAttackAI(newMonster.Stats.ViewRadius));
+                Anatomy monsterAnatomy = new Anatomy();
+                monsterAnatomy.SetRace(new Race("Debug Race"));
 
-                CurrentMap.Add(newMonster);
+                Actor debugMonster = EntityFactory.ActorCreator(
+                    pos,
+                    new ActorTemplate(Color.Blue, Color.Transparent, 'M', monsterStat, monsterAnatomy));
+
+                debugMonster.Name = "Debug Monster";
+
+                debugMonster.AddComponent(new MoveAndAttackAI(debugMonster.Stats.ViewRadius));
+                debugMonster.Inventory.Add(EntityFactory.ItemCreator(debugMonster.Position,
+                    new ItemTemplate("Debug Remains", Color.Red, Color.Black, '%', 1.5)));
+
+                CurrentMap.Add(debugMonster);
             }
         }
 
@@ -183,7 +196,7 @@ namespace MagiRogue.System
                 PlayerTimeNode playerTurn = new PlayerTimeNode(GetTime.TimePassed.Ticks + playerTime);
                 GetTime.RegisterEntity(playerTurn);
 
-                Player.ApplyHpRegen();
+                Player.Stats.ApplyHpRegen();
                 CurrentMap.CalculateFOV(position: Player.Position, Player.Stats.ViewRadius, radiusShape: Radius.CIRCLE);
 
                 var node = GetTime.NextNode();

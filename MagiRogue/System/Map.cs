@@ -141,7 +141,7 @@ namespace MagiRogue.System
             entitySyncersByLayer[entity.Layer - 1].Entities.Add(entity);
 
             AddEntity(entity);
-            if (entity is Monster monster)
+            if (entity is Actor monster)
             {
                 EntityTimeNode entityNode = new EntityTimeNode(monster.ID, Time.TimePassed.Ticks + 100);
                 Time.RegisterEntity(entityNode);
@@ -245,6 +245,7 @@ namespace MagiRogue.System
     }
 
     // enum for defining maplayer for things, so that a monster and a player can occupy the same tile as an item for example.
+    // If it stops working, add back the player map layer
     public enum MapLayer
     {
         TERRAIN,

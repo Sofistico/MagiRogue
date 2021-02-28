@@ -30,7 +30,7 @@ namespace MagiRogue.UI
 
         #region Field
 
-        private static Player getPlayer => GameLoop.World.Player;
+        private static Player GetPlayer => GameLoop.World.Player;
 
         #endregion Field
 
@@ -130,10 +130,10 @@ namespace MagiRogue.UI
 
             if (HandleMove(info))
             {
-                if (!getPlayer.Bumped)
-                    GameLoop.World.ProcessTurn(TimeHelper.GetWalkTime(getPlayer), true);
+                if (!GetPlayer.Bumped)
+                    GameLoop.World.ProcessTurn(TimeHelper.GetWalkTime(GetPlayer), true);
                 else
-                    GameLoop.World.ProcessTurn(TimeHelper.GetAttackTime(getPlayer), true);
+                    GameLoop.World.ProcessTurn(TimeHelper.GetAttackTime(GetPlayer), true);
             }
 
             if (info.IsKeyPressed(Keys.NumPad5))
@@ -186,7 +186,7 @@ namespace MagiRogue.UI
 
             if (info.IsKeyPressed(Keys.F8))
             {
-                getPlayer.AddComponent(new Components.TestComponent(getPlayer));
+                GetPlayer.AddComponent(new Components.TestComponent(GetPlayer));
             }
 #endif
             return base.ProcessKeyboard(info);

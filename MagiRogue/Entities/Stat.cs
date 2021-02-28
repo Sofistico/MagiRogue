@@ -217,7 +217,7 @@ namespace MagiRogue.Entities
             int defense,
             int defenseChance,
             int godPower,
-            int speed,
+            float speed,
             bool godly = false
             )
         {
@@ -253,7 +253,7 @@ namespace MagiRogue.Entities
            int defense,
            int defenseChance,
            int godPower,
-           int speed,
+           float speed,
            bool godly = false
            )
         {
@@ -273,6 +273,15 @@ namespace MagiRogue.Entities
             if (godly)
                 this.GodPower = godPower;
             this.Speed = speed;
+        }
+
+        public void ApplyHpRegen()
+        {
+            if (Health < MaxHealth)
+            {
+                float newHp = (BaseHpRegen + Health);
+                Health = (float)Math.Round(newHp);
+            }
         }
 
         #endregion Methods

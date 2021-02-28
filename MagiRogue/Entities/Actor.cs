@@ -26,25 +26,30 @@ namespace MagiRogue.Entities
 
     #endregion Enums
 
-    public abstract class Actor : Entity
+    public class Actor : Entity
     {
         #region Fields
 
         public List<Item> Inventory = new List<Item>(); // the inventory of the actor;
 
-        public Stat Stats = new Stat();
-
-        public Anatomy Anatomy = new Anatomy();
-
-        public Race Race = new Race();
-
-        public bool Bumped = false;
+        private bool bumped = false;
+        private Stat stats = new Stat();
+        private Anatomy anatomy = new Anatomy();
 
         #endregion Fields
 
+        #region Properties
+
+        public Stat Stats { get => stats; set => stats = value; }
+        public Anatomy Anatomy { get => anatomy; set => anatomy = value; }
+        public bool Bumped { get => bumped; set => bumped = value; }
+
+        #endregion Properties
+
         #region Constructor
 
-        protected Actor(Color foreground, Color background, int glyph, int layer, Coord coord, int width = 1, int height = 1) : base(foreground, background,
+        public Actor(Color foreground, Color background, int glyph, int layer, Coord coord,
+            int width = 1, int height = 1) : base(foreground, background,
             glyph, coord, layer, width, height)
         {
         }
@@ -129,15 +134,6 @@ namespace MagiRogue.Entities
             else
             {
                 return false;
-            }
-        }
-
-        public void ApplyHpRegen()
-        {
-            if (this.Stats.Health < this.Stats.MaxHealth)
-            {
-                float newHp = (this.Stats.BaseHpRegen + this.Stats.Health);
-                this.Stats.Health = (float)Math.Round(newHp);
             }
         }
 

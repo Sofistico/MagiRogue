@@ -59,7 +59,7 @@ namespace MagiRogue.Entities
         public Race Race
         {
             get => race;
-            set
+            private set
             {
                 race = value;
             }
@@ -102,7 +102,6 @@ namespace MagiRogue.Entities
         public Anatomy()
         {
             //CalculateBlood();
-            Race = new Race();
         }
 
         #endregion Constructor
@@ -115,9 +114,14 @@ namespace MagiRogue.Entities
                 bloodCount = (float)Math.Round(Weight * 75);
         }
 
-        public void SetHumanoidBody(Actor actor, HumanoidRace humanoidRace)
+        public void SetRace(Race race) => Race = race;
+
+        public void SetLimbs(params Limb[] limbs)
         {
-            Race.SetHumanoidRace(actor, humanoidRace);
+            foreach (Limb limb in limbs)
+            {
+                Limbs.Add(limb);
+            }
         }
 
         #endregion Methods
