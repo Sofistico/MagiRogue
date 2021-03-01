@@ -49,7 +49,7 @@ namespace MagiRogue.System
         /// </summary>
         /// <param name="map">The map this handler will manage visibility for.</param>
         /// <param name="startingState">The starting state to put the handler in.</param>
-        public FOVHandler(Map map, FovState startingState)
+        protected FOVHandler(Map map, FovState startingState)
         {
             Map = map;
 

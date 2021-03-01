@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace MagiRogue
 {
-    public class GameLoop
+    public static class GameLoop
     {
         public const int GameWidth = 120;
         public const int GameHeight = 30;
@@ -14,13 +14,12 @@ namespace MagiRogue
         // Fields for the managers
         private static UIManager uIManager;
         private static World world;
-        private static CommandManager commandManager;
         private static PhysicsManager physicsManager;
 
         // Managers
         public static UIManager UIManager { get => uIManager; set => uIManager = value; }
         public static World World { get => world; set => world = value; }
-        public static CommandManager CommandManager { get => commandManager; set => commandManager = value; }
+        //public static CommandManager CommandManager { get => commandManager; set => commandManager = value; }
         public static PhysicsManager PhysicsManager { get => physicsManager; set => physicsManager = value; }
 
         private static void Main()
@@ -45,9 +44,6 @@ namespace MagiRogue
         {
             //Instantiate the UIManager
             UIManager = new UIManager();
-
-            //Instantiate a new CommandManager
-            CommandManager = new CommandManager();
 
             //Instantiate a new PhysicsManager
             PhysicsManager = new PhysicsManager();

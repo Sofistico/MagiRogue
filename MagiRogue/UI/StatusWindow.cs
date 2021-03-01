@@ -47,7 +47,6 @@ namespace MagiRogue.UI
             UseMouse = true;
 
             Children.Add(statsConsole);
-            //PrintStats();
         }
 
         private void StatusScroll_ValueChanged(object sender, EventArgs e)
@@ -56,6 +55,7 @@ namespace MagiRogue.UI
                 statsConsole.Width, statsConsole.ViewPort.Height);
         }
 
+        // Probably needs to create a way to make it update only when needed, by an event.
         public override void Update(TimeSpan time)
         {
             statsConsole.Print(0, 0, $"{player.Name}");

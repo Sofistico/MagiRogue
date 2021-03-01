@@ -1,11 +1,8 @@
 ﻿using GoRogue;
 using MagiRogue.Commands;
-using MagiRogue.System;
 using MagiRogue.System.Tiles;
 using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace MagiRogue.Entities
 {
@@ -30,7 +27,7 @@ namespace MagiRogue.Entities
     {
         #region Fields
 
-        public List<Item> Inventory = new List<Item>(); // the inventory of the actor;
+        public List<Item> Inventory = new List<Item>();
 
         private bool bumped = false;
         private Stat stats = new Stat();

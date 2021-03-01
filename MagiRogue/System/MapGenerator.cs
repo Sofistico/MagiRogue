@@ -146,7 +146,7 @@ namespace MagiRogue.System
         private void CreateFloor(Point location)
         {
             TileFloor floor = new TileFloor(location, "stone");
-            //_map.Tiles[location.ToIndex(_map.Width)] = floor;
+            // a simple setterrain already does it for me
             _map.SetTerrain(floor);
         }
 
@@ -154,7 +154,6 @@ namespace MagiRogue.System
         private void CreateWall(Point location)
         {
             TileWall wall = new TileWall(location, "stone");
-            //_map.Tiles[location.ToIndex(_map.Width)] = wall;
             _map.SetTerrain(wall);
         }
 
@@ -164,7 +163,6 @@ namespace MagiRogue.System
             for (int i = 0; i < _map.Tiles.Length; i++)
             {
                 TileWall wall = new TileWall(i.ToPoint(_map.Width), "stone");
-                //_map.Tiles[i] = wall;
                 _map.SetTerrain(wall);
             }
         }
@@ -339,7 +337,6 @@ namespace MagiRogue.System
                 {
                     // Create a new door that is closed and unlocked.
                     TileDoor newDoor = new TileDoor(false, false, location, "stone");
-                    //_map.Tiles[locationIndex] = newDoor;
                     _map.SetTerrain(newDoor);
                 }
             }

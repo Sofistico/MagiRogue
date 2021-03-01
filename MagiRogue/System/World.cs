@@ -90,8 +90,6 @@ namespace MagiRogue.System
         // and set its starting position
         private void CreatePlayer()
         {
-            //Player.Components.Add(new EntityViewSyncComponent());
-
             // Place the player on the first non-movement-blocking tile on the map
             for (int i = 0; i < CurrentMap.Tiles.Length; i++)
             {
@@ -128,7 +126,6 @@ namespace MagiRogue.System
             for (int i = 0; i < numMonster; i++)
             {
                 int monsterPosition = 0;
-                //newMonster.Components.Add(new EntityViewSyncComponent());
                 while (CurrentMap.Tiles[monsterPosition].IsBlockingMove)
                 {
                     // pick a random spot on the map
@@ -152,6 +149,8 @@ namespace MagiRogue.System
                     MaxHealth = 10
                 };
 
+                // Need to refactor this so that it's simpler to create a monster, propably gonna use the example
+                // of moving castle to make a static class containing blueprints on how to create the actors and items.
                 Anatomy monsterAnatomy = new Anatomy();
                 monsterAnatomy.SetRace(new Race("Debug Race"));
 
@@ -180,9 +179,6 @@ namespace MagiRogue.System
                 // Create an Item with some standard attributes
                 int lootPosition = 0;
 
-                // Let SadConsole know that this Item's position be tracked on the map
-                //newLoot.Components.Add(new EntityViewSyncComponent());
-
                 // Try placing the Item at lootPosition; if this fails, try random positions on the map's tile array
                 while (CurrentMap.Tiles[lootPosition].IsBlockingMove)
                 {
@@ -191,12 +187,12 @@ namespace MagiRogue.System
                 }
 
                 // set the loot's new position
-                //newLoot.Position = new Point(lootPosition % CurrentMap.Width, lootPosition / CurrentMap.Height);
-                //ironBar.Position = new Point(lootPosition / CurrentMap.Width, lootPosition % CurrentMap.Height);
                 Point posNew = new Point(lootPosition % CurrentMap.Width, lootPosition / CurrentMap.Height);
                 Point posIron = new Point(lootPosition / CurrentMap.Width, lootPosition % CurrentMap.Height);
 
-                Item newLoot = new Item(Color.Gold, Color.White, "Gold bar", '=', posNew, 12.5);
+                Item newLoot = EntityFactory.ItemCreator(posNew,
+                    new ItemTemplate("Gold Bar", Color.Gold, Color.White, '=', 12.5));
+
                 IronBar ironBar = new IronBar(posIron);
 
                 // add the Item to the MultiSpatialMap
@@ -207,7 +203,6 @@ namespace MagiRogue.System
 
         public void ProcessTurn(long playerTime, bool sucess)
         {
-            // TODO: define the way that entity regain energy better.
             if (sucess)
             {
                 PlayerTimeNode playerTurn = new PlayerTimeNode(GetTime.TimePassed.Ticks + playerTime);
@@ -241,7 +236,6 @@ namespace MagiRogue.System
 
         private void ProcessAiTurn(uint entityId, long time)
         {
-            // TODO: Add some basic ai handling
             Entity entity = CurrentMap.GetEntityById(entityId);
 
             if (entity != null)

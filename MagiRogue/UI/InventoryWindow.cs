@@ -66,6 +66,7 @@ namespace MagiRogue.UI
                 Position = new Point(inventoryConsole.Width + 1, inventoryConsole.Position.X)
                 //IsEnabled = false
             };
+
             invScrollBar.ValueChanged += InvScrollBar_ValueChanged; ; ;
             Add(invScrollBar);
 
@@ -81,12 +82,7 @@ namespace MagiRogue.UI
                     inventoryConsole.Width, inventoryConsole.ViewPort.Height);
         }
 
-        private void CloseButton_Click(object sender, EventArgs e)
-        {
-            Hide();
-            //UseKeyboard = false;
-            //UseMouse = false;
-        }
+        private void CloseButton_Click(object sender, EventArgs e) => Hide();
 
         public void ShowItems(Actor actorInventory)
         {

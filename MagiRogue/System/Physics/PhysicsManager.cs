@@ -24,10 +24,6 @@ namespace MagiRogue.System.Physics
         /// </summary>
         /// <param name="id">Id of the material you want, must consult the json file</param>
         /// <returns></returns>
-        public Material SetMaterial(string id, Material oldMaterial)
-        {
-            Material newMaterial = ListOfMaterials.Where(a => a.Id == id).FirstOrDefault();
-            return oldMaterial = newMaterial;
-        }
+        public Material SetMaterial(string id) => ListOfMaterials.Where(a => a.Id == id).FirstOrDefault();
     }
 }

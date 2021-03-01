@@ -17,7 +17,7 @@ namespace MagiRogue.Commands
     /// </summary>
     public class CommandManager
     {
-        public CommandManager()
+        protected CommandManager()
         {
         }
 
@@ -227,16 +227,16 @@ namespace MagiRogue.Commands
         public static bool DirectAttack(Actor attacker)
         {
             // Lists all monsters that are close and their locations
-            List<Monster> monsterClose = new List<Monster>();
+            List<Actor> monsterClose = new List<Actor>();
 
             // Saves all Points directions of the attacker.
             Point[] directions = Directions.GetDirectionPoints(attacker.Position);
 
             foreach (Point direction in directions)
             {
-                Monster monsterLocation = GameLoop.World.CurrentMap.GetEntity<Monster>(direction);
+                Actor monsterLocation = GameLoop.World.CurrentMap.GetEntity<Actor>(direction);
 
-                if (monsterLocation != null)
+                if (monsterLocation != null && monsterLocation is not Player)
                 {
                     monsterClose.Add(monsterLocation);
                     if (monsterClose.Count > 0)
@@ -244,7 +244,7 @@ namespace MagiRogue.Commands
                         // add logic for attack here
                         // TODO: make it possible to choose which monster to strike and test what happens when there is more
                         // than one monster nearby.
-                        Monster closestMonster = monsterClose.First();
+                        Actor closestMonster = monsterClose.First();
                         Attack(attacker, closestMonster);
                         return true;
                     }
