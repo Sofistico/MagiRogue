@@ -99,6 +99,7 @@ namespace MagiRogue.System
                 {
                     // Set the player's position to the index of the current map position
                     var pos = Helpers.GetPointFromIndex(i, CurrentMap.Width);
+
                     Player = new Player(Color.White, Color.Black, pos)
                     {
                         Position = pos

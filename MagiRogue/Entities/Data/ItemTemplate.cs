@@ -2,11 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MagiRogue.Entities.Data
 {
+    [DataContract]
+    [Serializable]
     public class ItemTemplate
     {
         /// <summary>
@@ -28,11 +31,17 @@ namespace MagiRogue.Entities.Data
             Condition = condition;
         }
 
+        [DataMember]
         public string Name { get; internal set; }
+        [DataMember]
         public Color Foreground { get; internal set; }
+        [DataMember]
         public Color Background { get; internal set; }
+        [DataMember]
         public int Glyph { get; internal set; }
+        [DataMember]
         public double Weight { get; internal set; }
+        [DataMember]
         public int Condition { get; internal set; }
     }
 }
