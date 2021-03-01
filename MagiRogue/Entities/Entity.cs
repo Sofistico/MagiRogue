@@ -1,11 +1,11 @@
-﻿using Microsoft.Xna.Framework;
-using SadConsole.Components;
+﻿using GoRogue;
 using GoRogue.GameFramework;
-using GoRogue;
+using MagiRogue.Entities.Materials;
+using Microsoft.Xna.Framework;
+using SadConsole.Components;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using MagiRogue.Entities.Materials;
 
 namespace MagiRogue.Entities
 {

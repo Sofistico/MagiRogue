@@ -1,5 +1,4 @@
 ﻿using MagiRogue.System;
-using MagiRogue.Entities.Materials;
 using Microsoft.Xna.Framework;
 using System;
 

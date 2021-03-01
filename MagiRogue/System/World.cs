@@ -1,13 +1,13 @@
 ﻿using GoRogue;
 using MagiRogue.Components;
 using MagiRogue.Entities;
+using MagiRogue.Entities.Data;
 using MagiRogue.Entities.Items;
 using MagiRogue.System.Tiles;
 using MagiRogue.System.Time;
 using Microsoft.Xna.Framework;
 using SadConsole;
 using System;
-using MagiRogue.Entities.Data;
 
 namespace MagiRogue.System
 {

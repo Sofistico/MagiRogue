@@ -1,9 +1,5 @@
 ﻿using GoRogue.GameFramework.Components;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MagiRogue.Components
 {

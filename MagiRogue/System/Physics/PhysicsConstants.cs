@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MagiRogue.System.Physics
+﻿namespace MagiRogue.System.Physics
 {
     public static class PhysicsConstants
     {

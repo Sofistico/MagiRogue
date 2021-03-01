@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using GoRogue;
-using System.Threading.Tasks;
+﻿using GoRogue;
 
 namespace MagiRogue.Entities.Data
 {

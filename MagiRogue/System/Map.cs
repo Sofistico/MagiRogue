@@ -1,14 +1,14 @@
 ﻿using GoRogue;
-using System;
+using GoRogue.GameFramework;
 using GoRogue.MapViews;
 using MagiRogue.Entities;
 using MagiRogue.System.Tiles;
+using MagiRogue.System.Time;
 using Microsoft.Xna.Framework;
 using SadConsole;
-using System.Linq;
-using GoRogue.GameFramework;
 using SadConsole.Components;
-using MagiRogue.System.Time;
+using System;
+using System.Linq;
 
 namespace MagiRogue.System
 {

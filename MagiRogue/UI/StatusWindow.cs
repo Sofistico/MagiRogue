@@ -2,9 +2,7 @@
 using Microsoft.Xna.Framework;
 using SadConsole;
 using SadConsole.Controls;
-using SadConsole.Input;
 using System;
-using System.Collections.Generic;
 
 namespace MagiRogue.UI
 {

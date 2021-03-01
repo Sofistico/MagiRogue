@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GoRogue.GameFramework.Components;
 using MagiRogue.System;
 using MagiRogue.UI;
-using Troschuetz.Random;
-using GoRogue.GameFramework.Components;
 
 namespace MagiRogue.Components
 {

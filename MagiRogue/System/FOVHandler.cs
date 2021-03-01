@@ -1,10 +1,10 @@
-﻿using System;
-using System.Linq;
-using GoRogue;
+﻿using GoRogue;
 using GoRogue.GameFramework;
 using GoRogue.MapViews;
 using MagiRogue.Entities;
 using MagiRogue.System.Tiles;
+using System;
+using System.Linq;
 
 namespace MagiRogue.System
 {
