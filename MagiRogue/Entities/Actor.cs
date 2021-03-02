@@ -38,7 +38,7 @@ namespace MagiRogue.Entities
         public Stat Stats { get => stats; set => stats = value; }
         public Anatomy Anatomy { get => anatomy; set => anatomy = value; }
         public bool Bumped { get => bumped; set => bumped = value; }
-        public List<Item> Inventory { get; init; }
+        public List<Item> Inventory { get; set; }
 
         #endregion Properties
 
@@ -49,6 +49,7 @@ namespace MagiRogue.Entities
             glyph, coord, layer)
         {
             anatomy = new Anatomy();
+            Inventory = new List<Item>();
         }
 
         #endregion Constructor
