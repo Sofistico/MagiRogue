@@ -18,7 +18,6 @@ namespace MagiRogue
         // Managers
         public static UIManager UIManager { get => uIManager; set => uIManager = value; }
         public static World World { get => world; set => world = value; }
-        //public static CommandManager CommandManager { get => commandManager; set => commandManager = value; }
         public static PhysicsManager PhysicsManager { get => physicsManager; set => physicsManager = value; }
 
         private static void Main()

@@ -43,10 +43,7 @@ namespace MagiRogue.Entities
         #region Fields
 
         private float bloodCount; // the amount of blood inside the actor, its in ml, to facilitate the calculus of blood volume, the formula is ml/kg
-        private int size; // the size in meters of the actor
-        private float weight; // the weight of the being in kg
         private int temperature; // the temperature of the creature, don't know if i will use or not
-        private bool hasBlood;
         private Race race;
         private readonly TRandom random = new TRandom();
 
@@ -74,27 +71,25 @@ namespace MagiRogue.Entities
             get => bloodCount;
             set
             {
-                if (value <= (float)Math.Round((float)weight * 75, 2))
+                if (value <= (float)Math.Round(Weight * 75, 2))
                     bloodCount = value;
-                else
-                    return;
             }
         }
 
         /// <summary>
         /// The size of the actor in centimeters
         /// </summary>
-        public int Size { get { return size; } set { size = value; } }
+        public int Size { get; set; }
         /// <summary>
         /// The weight of the actor in kg
         /// </summary>
-        public float Weight { get { return weight; } set { weight = value; } }
+        public float Weight { get; set; }
         /// <summary>
         /// The temperature of the actor in celsius
         /// </summary>
         public int Temperature { get { return temperature; } set { temperature = value; } }
 
-        public bool HasBlood { get { return hasBlood; } set { hasBlood = value; } }
+        public bool HasBlood { get; set; }
 
         #endregion Properties
 
@@ -124,7 +119,7 @@ namespace MagiRogue.Entities
 
         protected void CalculateBlood()
         {
-            if (hasBlood)
+            if (HasBlood)
                 bloodCount = (float)Math.Round(Weight * 75);
         }
 
@@ -179,7 +174,7 @@ namespace MagiRogue.Entities
             DismemberMessage(actor, bodyPart);
         }
 
-        private void DismemberMessage(Actor actor, Limb limb)
+        private static void DismemberMessage(Actor actor, Limb limb)
         {
             StringBuilder dismemberMessage = new StringBuilder();
 

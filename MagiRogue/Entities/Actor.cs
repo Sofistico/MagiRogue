@@ -27,8 +27,6 @@ namespace MagiRogue.Entities
     {
         #region Fields
 
-        public List<Item> Inventory = new List<Item>();
-
         private bool bumped = false;
         private Stat stats = new Stat();
         private Anatomy anatomy;
@@ -40,6 +38,7 @@ namespace MagiRogue.Entities
         public Stat Stats { get => stats; set => stats = value; }
         public Anatomy Anatomy { get => anatomy; set => anatomy = value; }
         public bool Bumped { get => bumped; set => bumped = value; }
+        public List<Item> Inventory { get; init; }
 
         #endregion Properties
 

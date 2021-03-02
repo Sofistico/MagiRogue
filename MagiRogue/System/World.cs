@@ -45,7 +45,7 @@ namespace MagiRogue.System
         /// </summary>
         public World(bool testGame = false)
         {
-            if (testGame == false)
+            if (!testGame)
             {
                 // Build a map
                 CreateMap();

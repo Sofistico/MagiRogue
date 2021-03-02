@@ -2,7 +2,7 @@
 
 namespace MagiRogue.Entities.Data
 {
-    public class EntityFactory
+    public static class EntityFactory
     {
         public static Actor ActorCreator(Coord position, ActorTemplate actorTemplate)
         {

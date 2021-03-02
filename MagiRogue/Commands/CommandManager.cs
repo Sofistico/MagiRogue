@@ -236,7 +236,7 @@ namespace MagiRogue.Commands
             {
                 Actor monsterLocation = GameLoop.World.CurrentMap.GetEntity<Actor>(direction);
 
-                if (monsterLocation != null && monsterLocation is not Player)
+                if (monsterLocation != null)
                 {
                     monsterClose.Add(monsterLocation);
                     if (monsterClose.Count > 0)
