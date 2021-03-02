@@ -178,7 +178,7 @@ namespace MagiRogue.Entities
         {
             StringBuilder dismemberMessage = new StringBuilder();
 
-            dismemberMessage.Append($"{actor.Name} lost {limb}");
+            dismemberMessage.Append($"{actor.Name} lost {limb.LimbName}");
 
             GameLoop.UIManager.MessageLog.Add(dismemberMessage.ToString());
         }
