@@ -17,7 +17,7 @@ namespace MagiRogue.Entities.Data
         /// <param name="glyph"></param>
         /// <param name="weight"></param>
         /// <param name="condition">Defaults to 100%</param>
-        public ItemTemplate(string name, Color foreground, Color background, int glyph, double weight, int condition = 100)
+        public ItemTemplate(string name, Color foreground, Color background, int glyph, float weight, int condition = 100)
         {
             Name = name;
             Foreground = foreground;
@@ -36,7 +36,9 @@ namespace MagiRogue.Entities.Data
         [DataMember]
         public int Glyph { get; internal set; }
         [DataMember]
-        public double Weight { get; internal set; }
+        public float Weight { get; internal set; }
+        [DataMember]
+        public int Size { get; set; }
         [DataMember]
         public int Condition { get; internal set; }
     }

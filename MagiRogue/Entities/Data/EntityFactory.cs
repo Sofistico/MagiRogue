@@ -32,6 +32,7 @@ namespace MagiRogue.Entities.Data
                     itemTemplate.Name,
                     itemTemplate.Glyph,
                     position,
+                    itemTemplate.Size,
                     itemTemplate.Weight,
                     itemTemplate.Condition
                 );

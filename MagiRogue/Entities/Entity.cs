@@ -19,8 +19,15 @@ namespace MagiRogue.Entities
         public uint ID => backingField.ID; // stores the entity's unique identification number
         public int Layer { get; set; } // stores and sets the layer that the entity is rendered
 
-        public double Weight { get; set; }
+        /// <summary>
+        /// The weight of the entity in kg
+        /// </summary>
+        public float Weight { get; set; }
         public Material Material { get; set; }
+        /// <summary>
+        /// The size of the entity in meters
+        /// </summary>
+        public int Size { get; set; }
 
         #region BackingField fields
 
@@ -41,7 +48,9 @@ namespace MagiRogue.Entities
 
         #region Constructor
 
-        public Entity(Color foreground, Color background, int glyph, Coord coord, int layer, int width = 1, int height = 1) : base(width, height)
+        public Entity(Color foreground, Color background,
+            int glyph, Coord coord, int layer,
+            int width = 1, int height = 1) : base(width, height)
         {
             InitializeObject(foreground, background, glyph, coord, layer);
         }
@@ -50,7 +59,8 @@ namespace MagiRogue.Entities
 
         #region Helper Methods
 
-        private void InitializeObject(Color foreground, Color background, int glyph, Coord coord, int layer)
+        private void InitializeObject(
+            Color foreground, Color background, int glyph, Coord coord, int layer)
         {
             Animation.CurrentFrame[0].Foreground = foreground;
             Animation.CurrentFrame[0].Background = background;

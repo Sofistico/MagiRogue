@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Troschuetz.Random;
+using System.Text;
 
 namespace MagiRogue.Entities
 {
@@ -46,12 +48,14 @@ namespace MagiRogue.Entities
         private int temperature; // the temperature of the creature, don't know if i will use or not
         private bool hasBlood;
         private Race race;
+        private readonly TRandom random = new TRandom();
 
         #endregion Fields
 
         #region Properties
 
-        public List<Limb> Limbs { get; set; }
+        public List<Limb> Limbs
+        { get; set; }
 
         public Race Race
         {
@@ -96,9 +100,22 @@ namespace MagiRogue.Entities
 
         #region Constructor
 
+        public Anatomy(int size, float weight)
+        {
+            Size = size;
+            Weight = weight;
+            CalculateBlood();
+        }
+
         public Anatomy()
         {
-            //CalculateBlood();
+        }
+
+        public Anatomy(Actor actor)
+        {
+            Size = actor.Size;
+            Weight = actor.Weight;
+            CalculateBlood();
         }
 
         #endregion Constructor
@@ -119,6 +136,56 @@ namespace MagiRogue.Entities
             {
                 Limbs.Add(limb);
             }
+        }
+
+        public void Dismember(TypeOfLimb limb, Actor actor)
+        {
+            List<Limb> bodyParts;
+            int bodyPartIndex;
+            Limb bodyPart;
+
+            if (limb == TypeOfLimb.Head)
+            {
+                bodyParts = Limbs.FindAll(h => h.TypeLimb == TypeOfLimb.Head);
+                if (bodyParts.Count > 1)
+                {
+                    bodyParts[0].Attached = false;
+                    DismemberMessage(actor, bodyParts[0]);
+                    Commands.CommandManager.ResolveDeath(actor);
+                    return;
+                }
+                else
+                {
+                    bodyPartIndex = random.Next(bodyParts.Count);
+                    bodyPart = bodyParts[bodyPartIndex];
+                    bodyPart.Attached = false;
+                    DismemberMessage(actor, bodyPart);
+                    return;
+                }
+            }
+            else if (limb == TypeOfLimb.Torso)
+            {
+                DismemberMessage(actor, Limbs.Find(a => a.TypeLimb == TypeOfLimb.Torso));
+                Commands.CommandManager.ResolveDeath(actor);
+                return;
+            }
+
+            bodyParts = Limbs.FindAll(l => l.TypeLimb == limb);
+
+            bodyPartIndex = random.Next(bodyParts.Count);
+            bodyPart = bodyParts[bodyPartIndex];
+
+            bodyPart.Attached = false;
+            DismemberMessage(actor, bodyPart);
+        }
+
+        private void DismemberMessage(Actor actor, Limb limb)
+        {
+            StringBuilder dismemberMessage = new StringBuilder();
+
+            dismemberMessage.Append($"{actor.Name} lost {limb}");
+
+            GameLoop.UIManager.MessageLog.Add(dismemberMessage.ToString());
         }
 
         #endregion Methods

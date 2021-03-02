@@ -176,7 +176,7 @@ namespace MagiRogue.Commands
         /// the actor that has died, and the loot they dropped
         /// </summary>
         /// <param name="defender"></param>
-        private static void ResolveDeath(Actor defender)
+        public static void ResolveDeath(Actor defender)
         {
             // Set up a customized death message
             StringBuilder deathMessage = new StringBuilder();

@@ -156,13 +156,13 @@ namespace MagiRogue.System
 
                 Actor debugMonster = EntityFactory.ActorCreator(
                     pos,
-                    new ActorTemplate(Color.Blue, Color.Transparent, 'M', monsterStat, monsterAnatomy));
+                    new ActorTemplate(Color.Blue, Color.Transparent, 'M', monsterStat, monsterAnatomy, 70, 180));
 
                 debugMonster.Name = "Debug Monster";
 
                 debugMonster.AddComponent(new MoveAndAttackAI(debugMonster.Stats.ViewRadius));
                 debugMonster.Inventory.Add(EntityFactory.ItemCreator(debugMonster.Position,
-                    new ItemTemplate("Debug Remains", Color.Red, Color.Black, '%', 1.5)));
+                    new ItemTemplate("Debug Remains", Color.Red, Color.Black, '%', 1.5f)));
 
                 CurrentMap.Add(debugMonster);
             }
@@ -191,7 +191,7 @@ namespace MagiRogue.System
                 Point posIron = new Point(lootPosition / CurrentMap.Width, lootPosition % CurrentMap.Height);
 
                 Item newLoot = EntityFactory.ItemCreator(posNew,
-                    new ItemTemplate("Gold Bar", Color.Gold, Color.White, '=', 12.5));
+                    new ItemTemplate("Gold Bar", Color.Gold, Color.White, '=', 12.5f));
 
                 IronBar ironBar = new IronBar(posIron);
 

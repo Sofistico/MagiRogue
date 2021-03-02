@@ -37,11 +37,12 @@ namespace MagiRogue.Entities.Tests
         [Fact()]
         public void ApplyHpRegenTest()
         {
-            Stat test = new Stat();
-
-            test.Health = 5;
-            test.BaseHpRegen = 1;
-            test.MaxHealth = 5;
+            Stat test = new Stat
+            {
+                Health = 5,
+                BaseHpRegen = 1,
+                MaxHealth = 5
+            };
 
             test.Health -= 5;
 

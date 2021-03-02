@@ -31,7 +31,7 @@ namespace MagiRogue.Entities
 
         private bool bumped = false;
         private Stat stats = new Stat();
-        private Anatomy anatomy = new Anatomy();
+        private Anatomy anatomy;
 
         #endregion Fields
 
@@ -45,10 +45,11 @@ namespace MagiRogue.Entities
 
         #region Constructor
 
-        public Actor(Color foreground, Color background, int glyph, int layer, Coord coord,
-            int width = 1, int height = 1) : base(foreground, background,
-            glyph, coord, layer, width, height)
+        public Actor(Color foreground, Color background, int glyph, int layer, Coord coord
+            ) : base(foreground, background,
+            glyph, coord, layer)
         {
+            anatomy = new Anatomy();
         }
 
         #endregion Constructor
