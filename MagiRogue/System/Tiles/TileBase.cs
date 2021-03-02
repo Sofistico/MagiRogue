@@ -71,7 +71,8 @@ namespace MagiRogue.System.Tiles
         // representing the most basic form of of all Tiles used.
         // Every TileBase has a Foreground Colour, Background Colour, and Glyph
         // isBlockingMove and isBlockingSight are optional parameters, set to false by default
-        protected TileBase(Color foregroud, Color background, int glyph, int layer, Coord position, string idOfMaterial, bool blocksMove = true,
+        protected TileBase(Color foregroud, Color background, int glyph, int layer,
+            Coord position, string idOfMaterial, bool blocksMove = true,
             bool isTransparent = true, string name = "ForgotToChangeName") : base(foregroud, background, glyph)
         {
             IsBlockingMove = blocksMove;
@@ -83,6 +84,15 @@ namespace MagiRogue.System.Tiles
         }
 
         protected void CalculateTileHealth() => _tileHealth = (int)MaterialOfTile.Density * MaterialOfTile.Hardness;
+
+        protected virtual void DestroyTile(TileBase changeTile, Entities.Item itemDropped)
+        {
+            if (_destroyed)
+            {
+                GameLoop.World.CurrentMap.SetTerrain(changeTile);
+                GameLoop.World.CurrentMap.Add(itemDropped);
+            }
+        }
 
         #region IGameObject Interface
 

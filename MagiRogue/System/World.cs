@@ -156,7 +156,7 @@ namespace MagiRogue.System
 
                 Actor debugMonster = EntityFactory.ActorCreator(
                     pos,
-                    new ActorTemplate(Color.Blue, Color.Transparent, 'M', monsterStat, monsterAnatomy, 70, 180));
+                    new ActorTemplate(Color.Blue, Color.Transparent, 'M', monsterStat, monsterAnatomy));
 
                 debugMonster.Name = "Debug Monster";
 
