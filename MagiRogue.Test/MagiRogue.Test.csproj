@@ -17,6 +17,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <SonarQubeSetting Include="sonar.stylecop.projectFilePath">
+    <Value>$(MSBuildProjectFullPath)</Value>
+  </SonarQubeSetting>
+
   </ItemGroup>
 
   <ItemGroup>
