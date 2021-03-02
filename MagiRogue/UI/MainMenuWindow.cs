@@ -54,7 +54,7 @@ namespace MagiRogue.UI
             PositionButtons();
         }
 
-        private void TestMap_Click(object sender, EventArgs e) => GameLoop.UIManager.StartTestGame();
+        private void TestMap_Click(object sender, EventArgs e) => GameLoop.UIManager.StartGame(true);
 
         private void QuitGameClick(object sender, EventArgs e)
         {
