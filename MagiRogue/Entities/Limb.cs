@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+using MagiRogue.Entities.Materials;
 
 namespace MagiRogue.Entities
 {
@@ -18,6 +19,7 @@ namespace MagiRogue.Entities
     public class Limb
     {
         private int limbHp;
+        private double weight;
 
         [DataMember]
         public int LimbHp
@@ -28,12 +30,6 @@ namespace MagiRogue.Entities
                 {
                     return MaxLimbHp;
                 }
-                else if (limbHp < (LimbWeight * -2))
-                {
-                    Attached = false;
-                    GameLoop.UIManager.MessageLog.Add($"You lost your {LimbName}");
-                    return (LimbWeight * -2);
-                }
                 else
                     return limbHp;
             }
@@ -43,12 +39,6 @@ namespace MagiRogue.Entities
                 {
                     limbHp = MaxLimbHp;
                 }
-                else if (value < (LimbWeight * -2))
-                {
-                    Attached = false;
-                    GameLoop.UIManager.MessageLog.Add($"You lost your {LimbName}");
-                    limbHp = (LimbWeight * -2);
-                }
                 else
                     limbHp = value;
             }
@@ -56,7 +46,14 @@ namespace MagiRogue.Entities
         [DataMember]
         public int MaxLimbHp { get; set; }
         [DataMember]
-        public int LimbWeight { get; set; }
+        public double LimbWeight
+        {
+            get { return weight; }
+            set
+            {
+                weight = value * LimbMaterial.Density;
+            }
+        }
         [DataMember]
         public bool Attached { get; set; }
 
@@ -78,9 +75,23 @@ namespace MagiRogue.Entities
         [DataMember]
         public TypeOfLimb TypeLimb { get; set; }
 
-        public Limb(TypeOfLimb limb, int limbHp, int maxLimbHp, int limbWeight, string limbName, LimbOrientation orientation)
+        [DataMember]
+        public Material LimbMaterial { get; set; }
+
+        /// <summary>
+        /// This class creates a limb for a body.
+        /// </summary>
+        /// <param name="limbType">The type of the limb, if its a arm or a leg or etc...</param>
+        /// <param name="limbHp">the total hp of the limb</param>
+        /// <param name="maxLimbHp">the max limb hp that it can recover</param>
+        /// <param name="limbWeight">The total weight of the limb</param>
+        /// <param name="limbName">The name of the limb</param>
+        /// <param name="orientation">If it's in the center, left or right of the body</param>
+        /// <param name="materialID">The id to define the material, if needeed look at the material definition json</param>
+        public Limb(TypeOfLimb limbType, int limbHp, int maxLimbHp,
+            double limbWeight, string limbName, LimbOrientation orientation, string materialID)
         {
-            TypeLimb = limb;
+            TypeLimb = limbType;
 
             MaxLimbHp = maxLimbHp;
             LimbHp = limbHp;
@@ -90,6 +101,8 @@ namespace MagiRogue.Entities
             LimbName = limbName;
 
             Orientation = orientation;
+
+            LimbMaterial = GameLoop.PhysicsManager.SetMaterial(materialID);
         }
     }
 }
