@@ -10,7 +10,6 @@ namespace MagiRogue.UI
     public class InventoryWindow : Window
     {
         // alocate the inventory memory
-        private readonly List<Item> inventory;
 
         // Create the field
         private readonly ScrollingConsole inventoryConsole;
@@ -34,7 +33,6 @@ namespace MagiRogue.UI
 
             // instantiete the inventory of the actor, passing the actor value if and when i implement helpers, to make it
             // possible to see and use their inventory.
-            inventory = new List<Item>();
 
             CanDrag = false;
 
@@ -64,7 +62,6 @@ namespace MagiRogue.UI
                 (Orientation.Vertical, heigth - windowBorderThickness)
             {
                 Position = new Point(inventoryConsole.Width + 1, inventoryConsole.Position.X)
-                //IsEnabled = false
             };
 
             invScrollBar.ValueChanged += InvScrollBar_ValueChanged; ; ;
@@ -89,7 +86,6 @@ namespace MagiRogue.UI
             int indexInventoryY = 0;
             foreach (Item item in actorInventory.Inventory)
             {
-                inventory.Add(item);
                 inventoryConsole.Print(0, indexInventoryY, item.Name);
                 indexInventoryY++;
             }
@@ -99,7 +95,6 @@ namespace MagiRogue.UI
         {
             if (item != null)
             {
-                inventory.Remove(item);
                 inventoryConsole.Clear(new Rectangle(0, 0, Width, Height));
             }
         }
