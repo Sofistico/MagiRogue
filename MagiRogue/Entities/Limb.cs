@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Diagnostics;
+using System.Runtime.Serialization;
 using MagiRogue.Entities.Materials;
 
 namespace MagiRogue.Entities
@@ -16,6 +17,7 @@ namespace MagiRogue.Entities
     }
 
     [DataContract]
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public class Limb
     {
         private int limbHp;
@@ -104,6 +106,14 @@ namespace MagiRogue.Entities
             LimbName = limbName;
 
             Orientation = orientation;
+        }
+
+        private string DebuggerDisplay
+        {
+            get
+            {
+                return string.Format($"{nameof(Limb)} : {LimbName}, {TypeLimb}");
+            }
         }
     }
 }
