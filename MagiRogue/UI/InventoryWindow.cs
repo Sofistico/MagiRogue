@@ -58,8 +58,7 @@ namespace MagiRogue.UI
 
             closeButton.Click += CloseButton_Click;
 
-            invScrollBar = new ScrollBar
-                (Orientation.Vertical, heigth - windowBorderThickness)
+            invScrollBar = new ScrollBar(Orientation.Vertical, heigth - windowBorderThickness)
             {
                 Position = new Point(inventoryConsole.Width + 1, inventoryConsole.Position.X)
             };
