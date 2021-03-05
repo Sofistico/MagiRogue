@@ -185,7 +185,7 @@ namespace MagiRogue.Commands
             // at the map position where it died
             if (defender.Inventory.Count > 0)
             {
-                deathMessage.Append("and dropped");
+                deathMessage.Append("died and dropped");
 
                 foreach (Item item in defender.Inventory)
                 {

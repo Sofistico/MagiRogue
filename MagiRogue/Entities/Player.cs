@@ -32,6 +32,8 @@ namespace MagiRogue.Entities
                 godPower: 1,
                 speed: 1.5f
                 );
+
+            Anatomy.Limbs = Data.LimbTemplate.BasicHumanoidBody(this);
         }
     }
 }

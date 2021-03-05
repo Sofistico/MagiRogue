@@ -87,10 +87,13 @@ namespace MagiRogue.Entities
         /// <param name="limbWeight">The total weight of the limb</param>
         /// <param name="limbName">The name of the limb</param>
         /// <param name="orientation">If it's in the center, left or right of the body</param>
-        /// <param name="materialID">The id to define the material, if needeed look at the material definition json</param>
+        /// <param name="materialID">The id to define the material, if needeed look at the material definition json\n
+        /// Defaults to "flesh"</param>
         public Limb(TypeOfLimb limbType, int limbHp, int maxLimbHp,
-            double limbWeight, string limbName, LimbOrientation orientation, string materialID)
+            double limbWeight, string limbName, LimbOrientation orientation, string materialID = "flesh")
         {
+            LimbMaterial = GameLoop.PhysicsManager.SetMaterial(materialID);
+
             TypeLimb = limbType;
 
             MaxLimbHp = maxLimbHp;
@@ -101,8 +104,6 @@ namespace MagiRogue.Entities
             LimbName = limbName;
 
             Orientation = orientation;
-
-            LimbMaterial = GameLoop.PhysicsManager.SetMaterial(materialID);
         }
     }
 }
