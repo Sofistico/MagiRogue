@@ -31,6 +31,11 @@ namespace MagiRogue.UI
                 Text = "Start Game",
                 ThemeColors = Colors.CreateAnsi()
             };
+            Button testMap = new Button(12, 1)
+            {
+                Text = "Test Map",
+                ThemeColors = Colors.CreateAnsi()
+            };
             Button quitGame = new Button(11, 1)
             {
                 Text = "Quit Game",
@@ -39,13 +44,17 @@ namespace MagiRogue.UI
 
             Children.Add(controlConsole);
             startGame.Click += StartGameClick;
+            testMap.Click += TestMap_Click;
             quitGame.Click += QuitGameClick;
 
             controlConsole.Add(startGame);
+            controlConsole.Add(testMap);
             controlConsole.Add(quitGame);
 
             PositionButtons();
         }
+
+        private void TestMap_Click(object sender, EventArgs e) => GameLoop.UIManager.StartGame(true);
 
         private void QuitGameClick(object sender, EventArgs e)
         {

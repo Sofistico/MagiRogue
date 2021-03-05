@@ -1,9 +1,4 @@
-﻿using MagiRogue.System;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace MagiRogue.Entities
 {
@@ -27,11 +22,6 @@ namespace MagiRogue.Entities
         private int soulStat;
         private int godPower;
         private bool godly;
-        private float bloodCount; // the amount of blood inside the actor, its in ml, to facilitate the calculus of blood volume, the formula is ml/kg
-        private int size; // the size in meters of the actor
-        private float weight; // the weight of the being in kg
-        private int temperature; // the temperature of the creature, don't know if i will use or not
-        private bool hasBlood;
 
         #endregion StatsFields
 
@@ -189,39 +179,9 @@ namespace MagiRogue.Entities
         }
 
         /// <summary>
-        /// It uses an aproximation of blood count equal to 75 ml/kg for an adult male
-        /// </summary>
-        public float BloodCount
-        {
-            get => bloodCount;
-            set
-            {
-                if (value <= (float)Math.Round((float)weight * 75, 2))
-                    bloodCount = value;
-                else
-                    return;
-            }
-        }
-
-        /// <summary>
-        /// The size of the actor in centimeters
-        /// </summary>
-        public int Size { get { return size; } set { size = value; } }
-        /// <summary>
-        /// The weight of the actor in kg
-        /// </summary>
-        public float Weight { get { return weight; } set { weight = value; } }
-        /// <summary>
-        /// The temperature of the actor in celsius
-        /// </summary>
-        public int Temperature { get { return temperature; } set { temperature = value; } }
-
-        /// <summary>
         /// The view radius of the actor, for seeing things
         /// </summary>
         public int ViewRadius { get; set; }
-
-        public bool HasBlood { get { return hasBlood; } set { hasBlood = value; } }
 
         public float Speed { get; set; }
 
@@ -239,12 +199,6 @@ namespace MagiRogue.Entities
 
         #region Methods
 
-        protected void CalculateBlood()
-        {
-            if (hasBlood)
-                bloodCount = (float)Math.Round(Weight * 75);
-        }
-
         public void SetAttributes(
             int viewRadius,
             float health,
@@ -258,10 +212,7 @@ namespace MagiRogue.Entities
             int defense,
             int defenseChance,
             int godPower,
-            int size,
-            int weight,
             float speed,
-            bool hasBlood = true,
             bool godly = false
             )
         {
@@ -279,11 +230,7 @@ namespace MagiRogue.Entities
             this.Godly = godly;
             if (godly)
                 this.GodPower = godPower;
-            this.Size = size;
-            this.Weight = weight;
-            this.HasBlood = hasBlood;
             this.Speed = speed;
-            CalculateBlood();
         }
 
         public void SetAttributes(
@@ -301,10 +248,7 @@ namespace MagiRogue.Entities
            int defense,
            int defenseChance,
            int godPower,
-           int size,
-           int weight,
            float speed,
-           bool hasBlood = true,
            bool godly = false
            )
         {
@@ -323,11 +267,16 @@ namespace MagiRogue.Entities
             this.Godly = godly;
             if (godly)
                 this.GodPower = godPower;
-            this.Size = size;
-            this.Weight = weight;
-            this.HasBlood = hasBlood;
             this.Speed = speed;
-            CalculateBlood();
+        }
+
+        public void ApplyHpRegen()
+        {
+            if (Health < MaxHealth)
+            {
+                float newHp = (BaseHpRegen + Health);
+                Health = (float)Math.Round(newHp);
+            }
         }
 
         #endregion Methods

@@ -5,9 +5,9 @@ using Microsoft.Xna.Framework;
 using SadConsole;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Globalization;
 
 namespace MagiRogue.Commands
 {
@@ -17,7 +17,7 @@ namespace MagiRogue.Commands
     /// </summary>
     public class CommandManager
     {
-        public CommandManager()
+        protected CommandManager()
         {
         }
 
@@ -176,7 +176,7 @@ namespace MagiRogue.Commands
         /// the actor that has died, and the loot they dropped
         /// </summary>
         /// <param name="defender"></param>
-        private static void ResolveDeath(Actor defender)
+        public static void ResolveDeath(Actor defender)
         {
             // Set up a customized death message
             StringBuilder deathMessage = new StringBuilder();
@@ -185,7 +185,7 @@ namespace MagiRogue.Commands
             // at the map position where it died
             if (defender.Inventory.Count > 0)
             {
-                deathMessage.Append("and dropped");
+                deathMessage.Append("died and dropped");
 
                 foreach (Item item in defender.Inventory)
                 {
@@ -227,14 +227,14 @@ namespace MagiRogue.Commands
         public static bool DirectAttack(Actor attacker)
         {
             // Lists all monsters that are close and their locations
-            List<Monster> monsterClose = new List<Monster>();
+            List<Actor> monsterClose = new List<Actor>();
 
             // Saves all Points directions of the attacker.
             Point[] directions = Directions.GetDirectionPoints(attacker.Position);
 
             foreach (Point direction in directions)
             {
-                Monster monsterLocation = GameLoop.World.CurrentMap.GetEntity<Monster>(direction);
+                Actor monsterLocation = GameLoop.World.CurrentMap.GetEntity<Actor>(direction);
 
                 if (monsterLocation != null)
                 {
@@ -244,7 +244,7 @@ namespace MagiRogue.Commands
                         // add logic for attack here
                         // TODO: make it possible to choose which monster to strike and test what happens when there is more
                         // than one monster nearby.
-                        Monster closestMonster = monsterClose.First();
+                        Actor closestMonster = monsterClose.First();
                         Attack(attacker, closestMonster);
                         return true;
                     }
@@ -360,7 +360,7 @@ namespace MagiRogue.Commands
             if (actor.Stats.BloodyMana != maxMana)
             {
                 actor.Stats.Health -= 1;
-                actor.Stats.BloodCount -= 100f;
+                actor.Anatomy.BloodCount -= 100f;
                 int roll = Dice.Roll("1d3");
                 float bloodyManaGained = float.Parse($"0.{roll}", CultureInfo.InvariantCulture.NumberFormat);
                 actor.Stats.BloodyMana = (float)Math.Round(actor.Stats.BloodyMana + bloodyManaGained, 1);

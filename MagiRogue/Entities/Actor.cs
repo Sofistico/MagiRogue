@@ -1,11 +1,8 @@
 ﻿using GoRogue;
 using MagiRogue.Commands;
-using MagiRogue.System;
 using MagiRogue.System.Tiles;
 using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace MagiRogue.Entities
 {
@@ -24,49 +21,35 @@ namespace MagiRogue.Entities
         GODLING, // This one will be fun, caracterized as a lovecraftian monstrosity
     }
 
-    public enum HumanoidRace
-    {
-        HUMAN,
-        ELF,
-        DWARF,
-        HALFELF,
-        GNOME,
-        LIZARD,
-        GOBLIN,
-        OGRE,
-        NYMPH,
-    }
-
-    public enum MonsterRace
-    {
-        GENERICBEAST,
-        DRAGON,
-        DOG,
-        CAT,
-        BEAR,
-        DONKEY,
-        HORSE
-    }
-
     #endregion Enums
 
-    public abstract class Actor : Entity
+    public class Actor : Entity
     {
         #region Fields
 
-        public List<Item> Inventory = new List<Item>(); // the inventory of the actor;
-
-        public Stat Stats = new Stat();
-
-        public bool Bumped = false;
+        private bool bumped = false;
+        private Stat stats = new Stat();
+        private Anatomy anatomy;
 
         #endregion Fields
 
+        #region Properties
+
+        public Stat Stats { get => stats; set => stats = value; }
+        public Anatomy Anatomy { get => anatomy; set => anatomy = value; }
+        public bool Bumped { get => bumped; set => bumped = value; }
+        public List<Item> Inventory { get; set; }
+
+        #endregion Properties
+
         #region Constructor
 
-        protected Actor(Color foreground, Color background, int glyph, int layer, Coord coord, int width = 1, int height = 1) : base(foreground, background,
-            glyph, coord, layer, width, height)
+        public Actor(Color foreground, Color background, int glyph, int layer, Coord coord
+            ) : base(foreground, background,
+            glyph, coord, layer)
         {
+            anatomy = new Anatomy();
+            Inventory = new List<Item>();
         }
 
         #endregion Constructor
@@ -95,16 +78,11 @@ namespace MagiRogue.Entities
             // Handle situations where there are non-walkable tiles that CAN be used
             else
             {
-                // Check for the presence of a door
-                TileDoor door = GameLoop.World.CurrentMap.GetTileAt<TileDoor>(Position + positionChange);
+                bool doorThere = CheckIfThereIsDoor(positionChange);
 
-                // if there's a door here,
-                // try to use it
-                if (door != null)
-                {
-                    CommandManager.UseDoor(this, door);
-                    return true;
-                }
+                if (doorThere)
+                    return doorThere;
+
                 return false;
             }
         }
@@ -126,6 +104,22 @@ namespace MagiRogue.Entities
             return Bumped;
         }
 
+        private bool CheckIfThereIsDoor(Coord positionChange)
+        {
+            // Check for the presence of a door
+            TileDoor door = GameLoop.World.CurrentMap.GetTileAt<TileDoor>(Position + positionChange);
+
+            // if there's a door here,
+            // try to use it
+            if (door != null)
+            {
+                CommandManager.UseDoor(this, door);
+                return true;
+            }
+
+            return false;
+        }
+
         // Moves the Actor TO newPosition location
         // returns true if actor was able to move, false if failed to move
         public bool MoveTo(Point newPosition)
@@ -138,15 +132,6 @@ namespace MagiRogue.Entities
             else
             {
                 return false;
-            }
-        }
-
-        public void ApplyHpRegen()
-        {
-            if (this.Stats.Health < this.Stats.MaxHealth)
-            {
-                float newHp = (this.Stats.BaseHpRegen + this.Stats.Health);
-                this.Stats.Health = (float)Math.Round(newHp);
             }
         }
 

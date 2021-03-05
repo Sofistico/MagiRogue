@@ -1,6 +1,7 @@
 ﻿using GoRogue;
 using MagiRogue.Components;
 using MagiRogue.Entities;
+using MagiRogue.Entities.Data;
 using MagiRogue.Entities.Items;
 using MagiRogue.System.Tiles;
 using MagiRogue.System.Time;
@@ -22,7 +23,6 @@ namespace MagiRogue.System
         private readonly int _mapWidth = 50;
         private readonly int _mapHeight = 50;
         private TileBase[] _mapTiles;
-        //private ArrayMap<TileBase> _mapTiles; // maybe add it someday
         private readonly int _maxRooms = 20;
         private readonly int _minRoomSize = 4;
         private readonly int _maxRoomSize = 10;
@@ -43,19 +43,28 @@ namespace MagiRogue.System
         /// Creates a new game world and stores it in a
         /// publicly accessible constructor.
         /// </summary>
-        public World()
+        public World(bool testGame = false)
         {
-            // Build a map
-            CreateMap();
+            if (!testGame)
+            {
+                // Build a map
+                CreateMap();
 
-            // spawn a bunch of monsters
-            CreateMonster();
+                // spawn a bunch of monsters
+                CreateMonster();
 
-            // Spawn a bunch of loot
-            CreateLoot();
+                // Spawn a bunch of loot
+                CreateLoot();
 
-            // create an instance of player
-            CreatePlayer();
+                // create an instance of player
+                CreatePlayer();
+            }
+            else
+            {
+                CreateTestMap();
+
+                CreatePlayer();
+            }
         }
 
         // Create a new map using the Map class
@@ -69,12 +78,18 @@ namespace MagiRogue.System
             CurrentMap = mapGen.GenerateMap(_mapWidth, _mapHeight, _maxRooms, _minRoomSize, _maxRoomSize);
         }
 
+        private void CreateTestMap()
+        {
+            _mapTiles = new TileBase[_mapWidth * _mapHeight];
+            CurrentMap = new Map(_mapWidth, _mapHeight);
+            MapGenerator mapGen = new MapGenerator();
+            CurrentMap = mapGen.GenerateTestMap(_mapWidth, _mapHeight);
+        }
+
         // Create a player using the Player class
         // and set its starting position
         private void CreatePlayer()
         {
-            //Player.Components.Add(new EntityViewSyncComponent());
-
             // Place the player on the first non-movement-blocking tile on the map
             for (int i = 0; i < CurrentMap.Tiles.Length; i++)
             {
@@ -82,6 +97,7 @@ namespace MagiRogue.System
                 {
                     // Set the player's position to the index of the current map position
                     var pos = Helpers.GetPointFromIndex(i, CurrentMap.Width);
+
                     Player = new Player(Color.White, Color.Black, pos)
                     {
                         Position = pos
@@ -110,7 +126,6 @@ namespace MagiRogue.System
             for (int i = 0; i < numMonster; i++)
             {
                 int monsterPosition = 0;
-                //newMonster.Components.Add(new EntityViewSyncComponent());
                 while (CurrentMap.Tiles[monsterPosition].IsBlockingMove)
                 {
                     // pick a random spot on the map
@@ -121,21 +136,36 @@ namespace MagiRogue.System
                 // Note: this fancy math will be replaced by a new helper method
                 // in the next revision of SadConsole
                 var pos = new Point(monsterPosition % CurrentMap.Width, monsterPosition / CurrentMap.Height);
-                Monster newMonster = new Monster(Color.Blue, Color.Transparent, pos)
-                {
-                    // plug in some magic numbers for attack and defense values
 
-                    Name = "a common troll",
+                Stat monsterStat = new Stat()
+                {
+                    Defense = rndNum.Next(0, 10),
+                    DefenseChance = rndNum.Next(0, 50),
+                    Attack = rndNum.Next(0, 10),
+                    AttackChance = rndNum.Next(0, 50),
+                    Speed = 1,
+                    ViewRadius = 7,
+                    Health = 10,
+                    MaxHealth = 10
                 };
 
-                newMonster.Stats.Defense = rndNum.Next(0, 10);
-                newMonster.Stats.DefenseChance = rndNum.Next(0, 50);
-                newMonster.Stats.Attack = rndNum.Next(0, 10);
-                newMonster.Stats.AttackChance = rndNum.Next(0, 50);
-                newMonster.Stats.Speed = 1;
-                newMonster.AddComponent(new MoveAndAttackAI(newMonster.Stats.ViewRadius));
+                // Need to refactor this so that it's simpler to create a monster, propably gonna use the example
+                // of moving castle to make a static class containing blueprints on how to create the actors and items.
+                Anatomy monsterAnatomy = new Anatomy();
+                monsterAnatomy.SetRace(new Race("Debug Race"));
 
-                CurrentMap.Add(newMonster);
+                Actor debugMonster = EntityFactory.ActorCreator(
+                    pos,
+                    new ActorTemplate(Color.Blue, Color.Transparent, 'M', monsterStat, monsterAnatomy));
+
+                debugMonster.Name = "Debug Monster";
+
+                debugMonster.AddComponent(new MoveAndAttackAI(debugMonster.Stats.ViewRadius));
+                debugMonster.Inventory.Add(EntityFactory.ItemCreator(debugMonster.Position,
+                    new ItemTemplate("Debug Remains", Color.Red, Color.Black, '%', 1.5f)));
+                debugMonster.Anatomy.Limbs = LimbTemplate.BasicHumanoidBody(debugMonster);
+
+                CurrentMap.Add(debugMonster);
             }
         }
 
@@ -150,9 +180,6 @@ namespace MagiRogue.System
                 // Create an Item with some standard attributes
                 int lootPosition = 0;
 
-                // Let SadConsole know that this Item's position be tracked on the map
-                //newLoot.Components.Add(new EntityViewSyncComponent());
-
                 // Try placing the Item at lootPosition; if this fails, try random positions on the map's tile array
                 while (CurrentMap.Tiles[lootPosition].IsBlockingMove)
                 {
@@ -161,12 +188,12 @@ namespace MagiRogue.System
                 }
 
                 // set the loot's new position
-                //newLoot.Position = new Point(lootPosition % CurrentMap.Width, lootPosition / CurrentMap.Height);
-                //ironBar.Position = new Point(lootPosition / CurrentMap.Width, lootPosition % CurrentMap.Height);
                 Point posNew = new Point(lootPosition % CurrentMap.Width, lootPosition / CurrentMap.Height);
                 Point posIron = new Point(lootPosition / CurrentMap.Width, lootPosition % CurrentMap.Height);
 
-                Item newLoot = new Item(Color.Gold, Color.White, "Gold bar", '=', posNew, 12.5);
+                Item newLoot = EntityFactory.ItemCreator(posNew,
+                    new ItemTemplate("Gold Bar", Color.Gold, Color.White, '=', 12.5f));
+
                 IronBar ironBar = new IronBar(posIron);
 
                 // add the Item to the MultiSpatialMap
@@ -177,13 +204,12 @@ namespace MagiRogue.System
 
         public void ProcessTurn(long playerTime, bool sucess)
         {
-            // TODO: define the way that entity regain energy better.
             if (sucess)
             {
                 PlayerTimeNode playerTurn = new PlayerTimeNode(GetTime.TimePassed.Ticks + playerTime);
                 GetTime.RegisterEntity(playerTurn);
 
-                Player.ApplyHpRegen();
+                Player.Stats.ApplyHpRegen();
                 CurrentMap.CalculateFOV(position: Player.Position, Player.Stats.ViewRadius, radiusShape: Radius.CIRCLE);
 
                 var node = GetTime.NextNode();
@@ -211,7 +237,6 @@ namespace MagiRogue.System
 
         private void ProcessAiTurn(uint entityId, long time)
         {
-            // TODO: Add some basic ai handling
             Entity entity = CurrentMap.GetEntityById(entityId);
 
             if (entity != null)

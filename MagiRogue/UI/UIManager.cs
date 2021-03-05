@@ -28,6 +28,12 @@ namespace MagiRogue.UI
 
         #endregion Managers
 
+        #region Field
+
+        private static Player GetPlayer => GameLoop.World.Player;
+
+        #endregion Field
+
         #region ConstructorAndInitCode
 
         public UIManager()
@@ -53,9 +59,9 @@ namespace MagiRogue.UI
             CreateConsoles();
         }
 
-        public void StartGame()
+        public void StartGame(bool testGame = false)
         {
-            GameLoop.World = new World();
+            GameLoop.World = new World(testGame);
 
             // Hides the main menu, so that it's possible to interact with the other windows.
             MainMenu.Hide();
@@ -124,20 +130,14 @@ namespace MagiRogue.UI
 
             if (HandleMove(info))
             {
-                var player = GameLoop.World.Player;
-                if (!player.Bumped)
-                    GameLoop.World.ProcessTurn(TimeHelper.GetWalkTime(player), true);
+                if (!GetPlayer.Bumped)
+                    GameLoop.World.ProcessTurn(TimeHelper.GetWalkTime(GetPlayer), true);
                 else
-                    GameLoop.World.ProcessTurn(TimeHelper.GetAttackTime(player), true);
+                    GameLoop.World.ProcessTurn(TimeHelper.GetAttackTime(GetPlayer), true);
             }
 
             if (info.IsKeyPressed(Keys.NumPad5))
                 GameLoop.World.ProcessTurn(TimeHelper.Wait, true);
-
-            if (info.IsKeyPressed(Keys.F8))
-            {
-                GameLoop.World.Player.AddComponent(new Components.TestComponent(GameLoop.World.Player));
-            }
 
             if (info.IsKeyPressed(Keys.Escape))
                 SadConsole.Game.Instance.Exit();
@@ -181,7 +181,12 @@ namespace MagiRogue.UI
 #if DEBUG
             if (info.IsKeyPressed(Keys.F10))
             {
-                Commands.CommandManager.ToggleFOV();
+                CommandManager.ToggleFOV();
+            }
+
+            if (info.IsKeyPressed(Keys.F8))
+            {
+                GetPlayer.AddComponent(new Components.TestComponent(GetPlayer));
             }
 #endif
             return base.ProcessKeyboard(info);

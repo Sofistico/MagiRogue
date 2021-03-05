@@ -1,15 +1,18 @@
-﻿using MagiRogue.Entities.Materials;
+﻿using GoRogue;
+using GoRogue.GameFramework;
+using MagiRogue.Entities.Materials;
 using Microsoft.Xna.Framework;
 using SadConsole;
 using System;
 using System.Collections.Generic;
-using GoRogue.GameFramework;
-using GoRogue;
 
 namespace MagiRogue.System.Tiles
 {
     public abstract class TileBase : Cell, GoRogue.GameFramework.IGameObject
     {
+        private int _tileHealth;
+        private bool _destroyed;
+
         // Movement and Line of Sight Flags
         /// <summary>
         /// It's really complicated the relation between IsBlockingMove and the IsWalkable field from the backing field, but
@@ -24,7 +27,26 @@ namespace MagiRogue.System.Tiles
         // Creates a list of possible materials, and then assings it to the tile, need to move it to a fitting area, like
         // World or GameLoop, because if need to port, every new object will have more than one possible material without
         // any need.
-        public Material Material { get; set; }
+        public Material MaterialOfTile { get; set; }
+
+        // TOOD: Add a way to mine terrain, to make the tile health drop to zero and give some item.
+        /// <summary>
+        /// The health of the tile, if it gets to zero, the tiles gets destroyed and becomes a floor of the same material
+        /// , a way to abstract the debris
+        /// </summary>
+        public int TileHealth
+        {
+            get => _tileHealth;
+            set
+            {
+                if (value <= 0)
+                {
+                    _tileHealth = 0;
+                    _destroyed = true;
+                }
+                _tileHealth = value;
+            }
+        }
 
         // Tile's name
         public string Name;
@@ -49,7 +71,8 @@ namespace MagiRogue.System.Tiles
         // representing the most basic form of of all Tiles used.
         // Every TileBase has a Foreground Colour, Background Colour, and Glyph
         // isBlockingMove and isBlockingSight are optional parameters, set to false by default
-        public TileBase(Color foregroud, Color background, int glyph, int layer, Coord position, string idOfMaterial, bool blocksMove = true,
+        protected TileBase(Color foregroud, Color background, int glyph, int layer,
+            Coord position, string idOfMaterial, bool blocksMove = true,
             bool isTransparent = true, string name = "ForgotToChangeName") : base(foregroud, background, glyph)
         {
             IsBlockingMove = blocksMove;
@@ -57,14 +80,19 @@ namespace MagiRogue.System.Tiles
             Name = name;
             Layer = layer;
             backingField = new GameObject(position, layer, parentObject: this, isStatic: true, !blocksMove, isTransparent);
-            Material = GameLoop.PhysicsManager.SetMaterial(idOfMaterial, Material);
+            MaterialOfTile = GameLoop.PhysicsManager.SetMaterial(idOfMaterial);
         }
 
-        /*protected void SetMaterial(string id)
+        protected void CalculateTileHealth() => _tileHealth = (int)MaterialOfTile.Density * MaterialOfTile.Hardness;
+
+        protected virtual void DestroyTile(TileBase changeTile, Entities.Item itemDropped)
         {
-            IEnumerable<Material> foundMaterial = GameLoop.PhysicsManager.ListOfMaterials.Where(a => a.Id == $"{id}");
-            Material = foundMaterial.ToList().First();
-        }*/
+            if (_destroyed)
+            {
+                GameLoop.World.CurrentMap.SetTerrain(changeTile);
+                GameLoop.World.CurrentMap.Add(itemDropped);
+            }
+        }
 
         #region IGameObject Interface
 

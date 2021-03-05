@@ -1,12 +1,6 @@
-﻿using GoRogue;
-using MagiRogue.Entities;
+﻿using MagiRogue.Entities;
 using MagiRogue.System.Tiles;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MagiRogue.System
 {
@@ -16,7 +10,7 @@ namespace MagiRogue.System
     /// </summary>
     public class MagiRogueFOVVisibilityHandler : FOVHandler
     {
-        private int _ghostLayer;
+        private readonly int _ghostLayer;
 
         /// <summary>
         /// Foreground color to set to all terrain that is outside of FOV but has been explored.
@@ -68,8 +62,6 @@ namespace MagiRogue.System
             }
 
             entity.IsVisible = true;
-            /*entity.IsDirty = true;
-            GameLoop.UIManager.MapConsole.IsDirty = true;*/
         }
 
         /// <summary>
@@ -88,8 +80,10 @@ namespace MagiRogue.System
                     entity.Animation[0].Background,
                     entity.Animation[0].Glyph,
                     entity.Position,
-                    _ghostLayer);
-                ghost.IsVisible = true;
+                    _ghostLayer)
+                {
+                    IsVisible = true
+                };
 
                 ghost.OnCalculateRenderPosition();
 
@@ -118,11 +112,7 @@ namespace MagiRogue.System
             if (Map.Explored[terrain.Position])
             {
                 terrain.SaveState();
-                /*#if DEBUG
-                terrain.Background = ExploredColor;
-                #else*/
                 terrain.Foreground = ExploredColor;
-                //#endif
             }
             else
                 terrain.IsVisible = false;

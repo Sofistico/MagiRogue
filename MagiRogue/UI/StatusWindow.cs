@@ -2,9 +2,7 @@
 using Microsoft.Xna.Framework;
 using SadConsole;
 using SadConsole.Controls;
-using SadConsole.Input;
 using System;
-using System.Collections.Generic;
 
 namespace MagiRogue.UI
 {
@@ -47,7 +45,6 @@ namespace MagiRogue.UI
             UseMouse = true;
 
             Children.Add(statsConsole);
-            //PrintStats();
         }
 
         private void StatusScroll_ValueChanged(object sender, EventArgs e)
@@ -56,6 +53,7 @@ namespace MagiRogue.UI
                 statsConsole.Width, statsConsole.ViewPort.Height);
         }
 
+        // Probably needs to create a way to make it update only when needed, by an event.
         public override void Update(TimeSpan time)
         {
             statsConsole.Print(0, 0, $"{player.Name}");

@@ -7,7 +7,8 @@ namespace MagiRogue.Entities
     // Default glyph is @
     public class Player : Actor
     {
-        public Player(Color foreground, Color background, Point position, int layer = (int)MapLayer.PLAYER) :
+        public Player(Color foreground, Color background, Point position,
+             int layer = (int)MapLayer.PLAYER) :
             base(foreground, background, '@', layer, position)
         {
             // sets the most fundamental stats, needs to set the godly flag up top, because it superseeds GodPower if it is
@@ -29,10 +30,10 @@ namespace MagiRogue.Entities
                 defenseChance: 20,
                 godly: true,
                 godPower: 1,
-                size: 165,
-                weight: 55,
-                speed: 1
+                speed: 1.5f
                 );
+
+            Anatomy.Limbs = Data.LimbTemplate.BasicHumanoidBody(this);
         }
     }
 }

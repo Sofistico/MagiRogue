@@ -1,5 +1,4 @@
 ﻿using MagiRogue.System;
-using MagiRogue.Entities.Materials;
 using Microsoft.Xna.Framework;
 using System;
 
@@ -12,10 +11,6 @@ namespace MagiRogue.Entities
     {
         // backing field for Condition
         private int condition;
-
-        public double Weight { get; set; } // Weight of the item in Kilo
-
-        public Material Material { get; set; }
 
         // physical condition of item, in percent
         // 100 = item undamaged
@@ -32,10 +27,11 @@ namespace MagiRogue.Entities
         }
 
         // By default, a new Item is sized 1x1, with a weight of 1, and at 100% condition
-        public Item(Color foreground, Color background, string name, int glyph, Point coord,
-            double weight = 1, int condition = 100, int layer = (int)MapLayer.ITEMS) :
+        public Item(Color foreground, Color background, string name, int glyph, Point coord, int size,
+            float weight = 1, int condition = 100, int layer = (int)MapLayer.ITEMS) :
             base(foreground, background, glyph, coord, layer)
         {
+            Size = size;
             Weight = weight;
             Condition = condition;
             Name = name;
