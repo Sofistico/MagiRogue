@@ -19,12 +19,11 @@ namespace MagiRogue.UI
         #region Managers
 
         // Here are the managers
-        public ScrollingConsole MapConsole;
-        public Window MapWindow;
-        public MessageLogWindow MessageLog;
-        public InventoryWindow InventoryScreen;
-        public StatusWindow StatusConsole;
-        public MainMenuWindow MainMenu;
+        public MapWindow MapWindow { get; set; }
+        public MessageLogWindow MessageLog { get; set; }
+        public InventoryWindow InventoryScreen { get; set; }
+        public StatusWindow StatusConsole { get; set; }
+        public MainMenuWindow MainMenu { get; set; }
 
         #endregion Managers
 
@@ -55,8 +54,6 @@ namespace MagiRogue.UI
             Children.Add(MainMenu);
             MainMenu.Show();
             MainMenu.Position = new Point(0, 0);
-
-            CreateConsoles();
         }
 
         public void StartGame(bool testGame = false)
@@ -83,33 +80,19 @@ namespace MagiRogue.UI
             StatusConsole.Position = new Point(GameLoop.GameWidth / 2, 0);
             StatusConsole.Show();
 
-            // Load the map into the MapConsole
-            LoadMap(GameLoop.World.CurrentMap);
-
-            // Now that the MapConsole is ready, build the Window
+            // Build the Window
             CreateMapWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight, "Game Map");
-            UseMouse = true;
+
+            // Then load the map into the MapConsole
+            MapWindow.LoadMap(GameLoop.World.CurrentMap);
 
             // Start the game with the camera focused on the player
-            CenterOnActor(GameLoop.World.Player);
+            MapWindow.CenterOnActor(GameLoop.World.Player);
         }
 
         #endregion ConstructorAndInitCode
 
         #region HelperMethods
-
-        // Creates all child consoles to be managed
-        private void CreateConsoles()
-        {
-            // Temporarily create a console with *no* tile data that will later be replaced with map data
-            MapConsole = new ScrollingConsole(GameLoop.GameWidth, GameLoop.GameHeight);
-        }
-
-        // centers the viewport camera on an Actor
-        public void CenterOnActor(Actor actor)
-        {
-            MapConsole.CenterViewPortOnPoint(actor.Position);
-        }
 
         #region Input
 
@@ -167,6 +150,7 @@ namespace MagiRogue.UI
             {
                 bool sucess = CommandManager.CloseDoor(GameLoop.World.Player);
                 GameLoop.World.ProcessTurn(TimeHelper.Interact, sucess);
+                MapWindow.MapConsole.IsDirty = true;
             }
             if (info.IsKeyPressed(Keys.I))
             {
@@ -188,6 +172,9 @@ namespace MagiRogue.UI
             {
                 GetPlayer.AddComponent(new Components.TestComponent(GetPlayer));
             }
+
+            if (info.IsKeyPressed(Keys.F12))
+                PrintHeader();
 #endif
             return base.ProcessKeyboard(info);
         }
@@ -202,7 +189,7 @@ namespace MagiRogue.UI
                     Coord coorToMove = new Coord(moveDirection.DeltaX, moveDirection.DeltaY);
 
                     bool sucess = CommandManager.MoveActorBy(GameLoop.World.Player, coorToMove);
-                    CenterOnActor(GameLoop.World.Player);
+                    MapWindow.CenterOnActor(GameLoop.World.Player);
                     return sucess;
                 }
             }
@@ -219,45 +206,16 @@ namespace MagiRogue.UI
         // so it is updated and drawn
         public void CreateMapWindow(int width, int height, string title)
         {
-            MapWindow = new Window(width, height)
-            {
-                CanDrag = false
-            };
-
-            MapWindow.ThemeColors = SadConsole.Themes.Colors.CreateAnsi();
-
-            //make console short enough to show the window title
-            //and borders, and position it away from borders
-            int mapConsoleWidth = width - 2;
-            int mapConsoleHeight = height - 2;
-
-            // Resize the Map Console's ViewPort to fit inside of the window's borders snugly
-            MapConsole.ViewPort = new Rectangle(0, 0, mapConsoleWidth, mapConsoleHeight);
-
-            //reposition the MapConsole so it doesnt overlap with the left/top window edges
-            MapConsole.Position = new Point(1, 1);
-
-            MapConsole.DefaultBackground = Color.Black;
-
-            //close window button
-            /*Button closeButton = new Button(3, 1);
-            closeButton.Position = new Point(0, 0);
-            closeButton.Text = "[X]";
-
-            //Add the close button to the Window's list of UI elements
-            MapWindow.Add(closeButton);*/
-
-            // center the title of the console at the top of the window
-            MapWindow.Title = title.Align(HorizontalAlignment.Center, mapConsoleWidth);
-
-            //add the map viewer to the window
-            MapWindow.Children.Add(MapConsole);
+            MapWindow = new MapWindow(width, height, title);
 
             // The MapWindow becomes a child console of the UIManager
             Children.Add(MapWindow);
 
+            // Add the map console to it
+            MapWindow.CreateMapConsole();
+
             // Add the player to the MapConsole's render list
-            MapConsole.Children.Add(GameLoop.World.Player);
+            MapWindow.MapConsole.Children.Add(GameLoop.World.Player);
 
             // Without this, the window will never be visible on screen
             MapWindow.Show();
@@ -266,7 +224,9 @@ namespace MagiRogue.UI
         // Method helper to print the X and Y of the console.
         // Use only for debugging purposes
 
-        /*private static void PrintHeader()
+#if DEBUG
+
+        private static void PrintHeader()
         {
             int counter = 0;
             var startingColor = Color.Black.GetRandomColor(SadConsole.Global.Random);
@@ -306,51 +266,9 @@ namespace MagiRogue.UI
             UIManagerConsoles.Print(4, 2, "Console Size");
             UIManagerConsoles.Print(4, 3, "                         ");
             UIManagerConsoles.Print(4, 3, $"{UIManagerConsoles.Width} {UIManagerConsoles.Height}");
-        }*/
-
-        // Adds the entire list of entities found in the
-        // World.CurrentMap's Entities SpatialMap to the
-        // MapConsole, so they can be seen onscreen
-        private void SyncMapEntities(Map map)
-        {
-            // remove all Entities from the console first
-            MapConsole.Children.Clear();
-
-            // Now pull all of the entities into the MapConsole in bulk
-            foreach (Entity entity in map.Entities.Items)
-            {
-                MapConsole.Children.Add(entity);
-            }
-
-            // Subscribe to the Entities ItemAdded listener, so we can keep our MapConsole entities in sync
-            map.Entities.ItemAdded += OnMapEntityAdded;
-
-            // Subscribe to the Entities ItemRemoved listener, so we can keep our MapConsole entities in sync
-            map.Entities.ItemRemoved += OnMapEntityRemoved;
         }
 
-        // Remove an Entity from the MapConsole every time the Map's Entity collection changes
-        public void OnMapEntityRemoved(object sender, ItemEventArgs<GoRogue.GameFramework.IGameObject> e)
-        {
-            MapConsole.Children.Remove(e.Item as Entity);
-        }
-
-        // Add an Entity to the MapConsole every time the Map's Entity collection changes
-        public void OnMapEntityAdded(object sender, ItemEventArgs<GoRogue.GameFramework.IGameObject> e)
-        {
-            MapConsole.Children.Add(e.Item as Entity);
-        }
-
-        // Loads a Map into the MapConsole
-        private void LoadMap(Map map)
-        {
-            // First load the map's tiles into the console
-            MapConsole = new ScrollingConsole(GameLoop.World.CurrentMap.Width, GameLoop.World.CurrentMap.Height, Global.FontDefault,
-                new Rectangle(0, 0, GameLoop.GameWidth, GameLoop.GameHeight), map.Tiles);
-
-            // Now Sync all of the map's entities
-            SyncMapEntities(map);
-        }
+#endif
 
         #endregion HelperMethods
     }

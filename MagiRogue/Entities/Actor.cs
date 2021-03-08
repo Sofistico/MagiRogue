@@ -114,6 +114,7 @@ namespace MagiRogue.Entities
             if (door != null)
             {
                 CommandManager.UseDoor(this, door);
+                GameLoop.UIManager.MapWindow.MapConsole.IsDirty = true;
                 return true;
             }
 

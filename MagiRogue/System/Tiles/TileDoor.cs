@@ -41,7 +41,6 @@ namespace MagiRogue.System.Tiles
             IsTransparent = false;
             TileIsTransparent = false;
             Glyph = '+';
-            GameLoop.UIManager.MapConsole.IsDirty = true;
         }
 
         // opens a door
@@ -52,7 +51,6 @@ namespace MagiRogue.System.Tiles
             TileIsTransparent = true;
             IsBlockingMove = false;
             Glyph = '-';
-            GameLoop.UIManager.MapConsole.IsDirty = true;
         }
     }
 }
