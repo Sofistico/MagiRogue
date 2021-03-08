@@ -214,9 +214,6 @@ namespace MagiRogue.UI
             // Add the map console to it
             MapWindow.CreateMapConsole();
 
-            // Add the player to the MapConsole's render list
-            MapWindow.MapConsole.Children.Add(GameLoop.World.Player);
-
             // Without this, the window will never be visible on screen
             MapWindow.Show();
         }
