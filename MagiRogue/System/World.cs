@@ -229,6 +229,8 @@ namespace MagiRogue.System
                     node = GetTime.NextNode();
                 }
 
+                GameLoop.UIManager.MapWindow.MapConsole.IsDirty = true;
+
 #if DEBUG
                 GameLoop.UIManager.MessageLog.Add($"Turns: {GetTime.Turns}, Tick: {GetTime.TimePassed.Ticks}");
 #endif
