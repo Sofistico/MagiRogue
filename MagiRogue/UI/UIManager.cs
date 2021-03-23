@@ -31,6 +31,8 @@ namespace MagiRogue.UI
 
         private static Player GetPlayer => GameLoop.World.Player;
 
+        public SadConsole.Themes.Colors CustomColors;
+
         #endregion Field
 
         #region ConstructorAndInitCode
@@ -50,6 +52,8 @@ namespace MagiRogue.UI
         // Initiates the game by means of going to the menu first
         public void InitMainMenu()
         {
+            SetUpCustomColors();
+
             MainMenu = new MainMenuWindow(GameLoop.GameWidth, GameLoop.GameHeight);
             Children.Add(MainMenu);
             MainMenu.Show();
@@ -266,6 +270,36 @@ namespace MagiRogue.UI
         }
 
 #endif
+
+        // Build a new coloured theme based on SC's default theme
+        // and then set it as the program's default theme.
+        private void SetUpCustomColors()
+        {
+            // Create a set of default colours that we will modify
+            CustomColors = new SadConsole.Themes.Colors();
+
+            // Pick a couple of background colours that we will apply to all consoles.
+            Color backgroundColor = Color.Black;
+
+            // Set background colour for controls consoles and their controls
+            CustomColors.ControlHostBack = backgroundColor;
+            CustomColors.ControlBack = backgroundColor;
+
+            // Generate background colours for dark and light themes based on
+            // the default background colour.
+            CustomColors.ControlBackLight = (backgroundColor * 1.3f).FillAlpha();
+            CustomColors.ControlBackDark = (backgroundColor * 0.7f).FillAlpha();
+
+            // Set a color for currently selected controls. This should always
+            // be different from the background colour.
+            CustomColors.ControlBackSelected = CustomColors.GrayDark;
+
+            // Rebuild all objects' themes with the custom colours we picked above.
+            CustomColors.RebuildAppearances();
+
+            // Now set all of these colours as default for SC's default theme.
+            SadConsole.Themes.Library.Default.Colors = CustomColors;
+        }
 
         #endregion HelperMethods
     }

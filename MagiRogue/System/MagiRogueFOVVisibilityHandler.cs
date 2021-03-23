@@ -75,14 +75,14 @@ namespace MagiRogue.System
 
             if (entity.Layer != _ghostLayer && Map.Explored[entity.Position])
             {
-                Entity ghost = new Entity
-                    (ExploredColor,
+                Entity ghost = new Entity(ExploredColor,
                     entity.Animation[0].Background,
                     entity.Animation[0].Glyph,
                     entity.Position,
                     _ghostLayer)
                 {
-                    IsVisible = true
+                    IsVisible = true,
+                    Name = $"Ghost {entity.Name}"
                 };
 
                 ghost.OnCalculateRenderPosition();

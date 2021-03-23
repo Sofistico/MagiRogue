@@ -42,7 +42,7 @@ namespace MagiRogue.System
         /// </summary>
         public FOVHandler FOVHandler { get; }
 
-        public Time.TimeSystem Time;
+        public TimeSystem Time;
 
         #endregion Properties
 
@@ -116,7 +116,10 @@ namespace MagiRogue.System
         /// <param name="entity"></param>
         public void Remove(Entity entity)
         {
-            RemoveEntity(entity);
+            if (!RemoveEntity(entity))
+            {
+                throw new Exception($"Failed to remove {entity.Name} || {entity.Position} || {entity.GetType()}");
+            }
 
             // Set this up to sycer properly
             entitySyncersByLayer[entity.Layer - 1].Entities.Remove(entity);
@@ -140,7 +143,11 @@ namespace MagiRogue.System
             // Set this up to sycer properly
             entitySyncersByLayer[entity.Layer - 1].Entities.Add(entity);
 
-            AddEntity(entity);
+            if (!AddEntity(entity))
+            {
+                throw new Exception($"Failed to add {entity.Name} || {entity.Position} || {entity.GetType()}");
+            }
+
             if (entity is Actor monster)
             {
                 EntityTimeNode entityNode = new EntityTimeNode(monster.ID, Time.TimePassed.Ticks + 100);
@@ -219,6 +226,20 @@ namespace MagiRogue.System
                 return (Entity)filter.FirstOrDefault();
             }
             return null;
+        }
+
+        public void ConfigureRender(SadConsole.Console renderer)
+        {
+            // Syncs the entity and addeds to the renderer
+            foreach (MultipleConsoleEntityDrawingComponent sync in entitySyncersByLayer)
+            {
+                renderer.Components.Add(sync);
+                // Necessary so that the MultipleConsoleEntityDrawingComponent doesn't try to forcefully update
+                // visibility.
+                sync.HandleIsVisible = false;
+            }
+
+            renderer.IsDirty = true;
         }
 
         #endregion HelperMethods

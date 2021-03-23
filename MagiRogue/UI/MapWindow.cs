@@ -46,28 +46,12 @@ namespace MagiRogue.UI
             MapConsole.Children.Clear();
 
             // Now pull all of the entities into the MapConsole in bulk
-            foreach (Entity entity in map.Entities.Items)
-            {
-                MapConsole.Children.Add(entity);
-            }
+            /* foreach (Entity entity in map.Entities.Items)
+             {
+                 MapConsole.Children.Add(entity);
+             }*/
 
-            // Subscribe to the Entities ItemAdded listener, so we can keep our MapConsole entities in sync
-            map.Entities.ItemAdded += OnMapEntityAdded;
-
-            // Subscribe to the Entities ItemRemoved listener, so we can keep our MapConsole entities in sync
-            map.Entities.ItemRemoved += OnMapEntityRemoved;
-        }
-
-        // Remove an Entity from the MapConsole every time the Map's Entity collection changes
-        public void OnMapEntityRemoved(object sender, ItemEventArgs<GoRogue.GameFramework.IGameObject> e)
-        {
-            MapConsole.Children.Remove(e.Item as Entity);
-        }
-
-        // Add an Entity to the MapConsole every time the Map's Entity collection changes
-        public void OnMapEntityAdded(object sender, ItemEventArgs<GoRogue.GameFramework.IGameObject> e)
-        {
-            MapConsole.Children.Add(e.Item as Entity);
+            map.ConfigureRender(MapConsole);
         }
 
         // Loads a Map into the MapConsole

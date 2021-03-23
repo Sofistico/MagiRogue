@@ -34,7 +34,10 @@ namespace MagiRogue.UI
         {
             // Ensure that the window background is the correct colour
 
-            ThemeColors = SadConsole.Themes.Colors.CreateAnsi();
+            ThemeColors = GameLoop.UIManager.CustomColors;
+            ThemeColors.ControlBack = Color.DarkRed;
+            ThemeColors.TitleText = Color.Red;
+            ThemeColors.RebuildAppearances();
 
             lines = new Queue<string>();
             CanDrag = false;
@@ -50,8 +53,7 @@ namespace MagiRogue.UI
             messageConsole.DefaultBackground = Color.Black;
 
             // create a scrollbar and attach it to an event handler, then add it to the Window
-            messageScrollBar = new SadConsole.Controls.ScrollBar
-                (Orientation.Vertical, height - windowBorderThickness)
+            messageScrollBar = new SadConsole.Controls.ScrollBar(Orientation.Vertical, height - windowBorderThickness)
             {
                 Position = new Point(messageConsole.Width + 1, messageConsole.Position.X),
                 IsEnabled = false

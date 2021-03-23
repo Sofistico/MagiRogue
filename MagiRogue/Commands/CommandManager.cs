@@ -328,7 +328,7 @@ namespace MagiRogue.Commands
             if (inv.Inventory.Count == 0)
             {
                 GameLoop.UIManager.MessageLog.Add("There is no item to drop in your inventory");
-                return true;
+                return false;
             }
             else
             {
@@ -336,7 +336,8 @@ namespace MagiRogue.Commands
                 inv.Inventory.Remove(item);
                 item.Position = inv.Position;
                 GameLoop.World.CurrentMap.Add(item);
-                return false;
+                GameLoop.UIManager.MessageLog.Add($"{inv.Name} dropped {item.Name}");
+                return true;
             }
         }
 

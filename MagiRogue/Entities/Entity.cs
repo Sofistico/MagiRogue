@@ -42,7 +42,6 @@ namespace MagiRogue.Entities
         #endregion BackingField fields
 
         private IGameObject backingField;
-        private EntityViewSyncComponent entityViewSync;
 
         #endregion Fields
 
@@ -69,9 +68,9 @@ namespace MagiRogue.Entities
             Layer = layer;
 
             // Ensure that the entity position/offset is tracked by scrollingconsoles
-            entityViewSync = new EntityViewSyncComponent();
+            /*entityViewSync = new EntityViewSyncComponent();
             Components.Add(entityViewSync);
-            entityViewSync.HandleIsVisible = false;
+            entityViewSync.HandleIsVisible = false;*/
 
             backingField = new GameObject(coord, layer, this);
             base.Position = backingField.Position;
