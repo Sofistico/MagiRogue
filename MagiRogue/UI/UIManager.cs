@@ -183,7 +183,7 @@ namespace MagiRogue.UI
             return base.ProcessKeyboard(info);
         }
 
-        private bool HandleMove(SadConsole.Input.Keyboard info)
+        public bool HandleMove(SadConsole.Input.Keyboard info)
         {
             foreach (Keys key in MovementDirectionMapping.Keys)
             {

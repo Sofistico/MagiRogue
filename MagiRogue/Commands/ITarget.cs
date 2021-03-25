@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MagiRogue.Entities;
 using MagiRogue.System.Tiles;
 using SadConsole;
+using SadConsole.Input;
 
 namespace MagiRogue.Commands
 {
@@ -15,6 +16,6 @@ namespace MagiRogue.Commands
 
         T TargetTile<T>(TileBase tile) where T : TileBase;
 
-        void ControlCursor(ScrollingConsole console);
+        bool ControlCursor(Keyboard keys);
     }
 }

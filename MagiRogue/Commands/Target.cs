@@ -1,6 +1,8 @@
 ﻿using GoRogue;
 using MagiRogue.Entities;
+using MagiRogue.System;
 using MagiRogue.System.Tiles;
+using Microsoft.Xna.Framework;
 using SadConsole;
 using System;
 using System.Collections.Generic;
@@ -14,16 +16,19 @@ namespace MagiRogue.Commands
     {
         private int _targetGlyph;
         private Coord _targetCoord;
+        private Entity cursor;
 
         public Target(int targetGlyph, Coord targetCoord)
         {
             _targetGlyph = targetGlyph;
             _targetCoord = targetCoord;
+
+            cursor = new Entity(Color.Black, Color.Transparent, _targetGlyph, _targetCoord, (int)MapLayer.PLAYER);
         }
 
-        public void ControlCursor(ScrollingConsole console)
+        public bool ControlCursor(SadConsole.Input.Keyboard keys)
         {
-            throw new NotImplementedException();
+            return GameLoop.UIManager.HandleMove(keys);
         }
 
         public T TargetEntity<T>(Entity entity) where T : Entity
