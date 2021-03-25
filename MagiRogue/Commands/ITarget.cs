@@ -15,7 +15,5 @@ namespace MagiRogue.Commands
         T TargetEntity<T>(Entity entity) where T : Entity;
 
         T TargetTile<T>(TileBase tile) where T : TileBase;
-
-        bool ControlCursor(Keyboard keys);
     }
 }

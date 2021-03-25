@@ -100,7 +100,7 @@ namespace MagiRogue.UI
 
         #region Input
 
-        private static readonly Dictionary<Keys, Direction> MovementDirectionMapping = new Dictionary<Keys, Direction>
+        public static readonly Dictionary<Keys, Direction> MovementDirectionMapping = new Dictionary<Keys, Direction>
         {
             { Keys.NumPad7, Direction.UP_LEFT }, { Keys.NumPad8, Direction.UP }, { Keys.NumPad9, Direction.UP_RIGHT },
             { Keys.NumPad4, Direction.LEFT }, { Keys.NumPad6, Direction.RIGHT },
@@ -166,6 +166,14 @@ namespace MagiRogue.UI
                 bool sucess = CommandManager.HurtYourself(GameLoop.World.Player);
                 GameLoop.World.ProcessTurn(TimeHelper.MagicalThings, sucess);
             }
+
+            if (info.IsKeyPressed(Keys.L))
+            {
+                Target target = new Target(GetPlayer.Position);
+                GameLoop.World.CurrentMap.Add(target.Cursor);
+
+                target.HandleCursorMove(info);
+            }
 #if DEBUG
             if (info.IsKeyPressed(Keys.F10))
             {
@@ -185,19 +193,19 @@ namespace MagiRogue.UI
 
         public bool HandleMove(SadConsole.Input.Keyboard info)
         {
-            foreach (Keys key in MovementDirectionMapping.Keys)
-            {
-                if (info.IsKeyPressed(key))
+                foreach (Keys key in MovementDirectionMapping.Keys)
                 {
-                    Direction moveDirection = MovementDirectionMapping[key];
-                    Coord coorToMove = new Coord(moveDirection.DeltaX, moveDirection.DeltaY);
+                    if (info.IsKeyPressed(key))
+                    {
+                        Direction moveDirection = MovementDirectionMapping[key];
+                        Coord coorToMove = new Coord(moveDirection.DeltaX, moveDirection.DeltaY);
 
-                    bool sucess = CommandManager.MoveActorBy(GameLoop.World.Player, coorToMove);
-                    MapWindow.CenterOnActor(GameLoop.World.Player);
-                    return sucess;
+                        bool sucess = CommandManager.MoveActorBy(GameLoop.World.Player, coorToMove);
+                        MapWindow.CenterOnActor(GameLoop.World.Player);
+                        return sucess;
+                    }
                 }
-            }
-
+            
             return false;
         }
 

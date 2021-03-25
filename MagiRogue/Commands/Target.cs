@@ -2,7 +2,9 @@
 using MagiRogue.Entities;
 using MagiRogue.System;
 using MagiRogue.System.Tiles;
+using MagiRogue.UI;
 using Microsoft.Xna.Framework;
+using SadConsole.Input;
 using SadConsole;
 using System;
 using System.Collections.Generic;
@@ -14,21 +16,16 @@ namespace MagiRogue.Commands
 {
     public class Target : ITarget
     {
-        private int _targetGlyph;
-        private Coord _targetCoord;
-        private Entity cursor;
+        public Coord TargetCoord { get; set; }
+        public Entity Cursor { get; set; }
 
-        public Target(int targetGlyph, Coord targetCoord)
+        public Target(Coord targetCoord)
         {
-            _targetGlyph = targetGlyph;
-            _targetCoord = targetCoord;
+            TargetCoord = targetCoord;
 
-            cursor = new Entity(Color.Black, Color.Transparent, _targetGlyph, _targetCoord, (int)MapLayer.PLAYER);
-        }
-
-        public bool ControlCursor(SadConsole.Input.Keyboard keys)
-        {
-            return GameLoop.UIManager.HandleMove(keys);
+            Cursor = new Entity(Color.White, Color.Transparent, 'X', TargetCoord, (int)MapLayer.PLAYER);
+            //Cursor.Animation.Frames[1].DefaultForeground = Color.Transparent;
+            //Cursor.Animation.AnimationDuration = 1.0f;
         }
 
         public T TargetEntity<T>(Entity entity) where T : Entity
@@ -39,6 +36,18 @@ namespace MagiRogue.Commands
         public T TargetTile<T>(TileBase tile) where T : TileBase
         {
             throw new NotImplementedException();
+        }
+
+        public void HandleCursorMove(Keyboard info)
+        {
+            foreach (var key in UIManager.MovementDirectionMapping)
+            {
+                if (info.IsKeyPressed(key.Key))
+                {
+                    Cursor.Position += key.Value;
+                    return;
+                }
+            }
         }
     }
 }
