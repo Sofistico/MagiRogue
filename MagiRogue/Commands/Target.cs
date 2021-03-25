@@ -24,8 +24,16 @@ namespace MagiRogue.Commands
             TargetCoord = targetCoord;
 
             Cursor = new Entity(Color.White, Color.Transparent, 'X', TargetCoord, (int)MapLayer.PLAYER);
-            //Cursor.Animation.Frames[1].DefaultForeground = Color.Transparent;
-            //Cursor.Animation.AnimationDuration = 1.0f;
+
+            var frameCell = Cursor.Animation.CreateFrame()[0];
+            frameCell.Foreground = Color.Transparent;
+            frameCell.Background = Color.Transparent;
+            frameCell.Glyph = 'X';
+
+            Cursor.Animation.AnimationDuration = 2.0f;
+            Cursor.Animation.Repeat = true;
+
+            Cursor.Animation.Start();
         }
 
         public T TargetEntity<T>(Entity entity) where T : Entity
