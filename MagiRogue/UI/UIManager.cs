@@ -193,19 +193,19 @@ namespace MagiRogue.UI
 
         public bool HandleMove(SadConsole.Input.Keyboard info)
         {
-                foreach (Keys key in MovementDirectionMapping.Keys)
+            foreach (Keys key in MovementDirectionMapping.Keys)
+            {
+                if (info.IsKeyPressed(key))
                 {
-                    if (info.IsKeyPressed(key))
-                    {
-                        Direction moveDirection = MovementDirectionMapping[key];
-                        Coord coorToMove = new Coord(moveDirection.DeltaX, moveDirection.DeltaY);
+                    Direction moveDirection = MovementDirectionMapping[key];
+                    Coord coorToMove = new Coord(moveDirection.DeltaX, moveDirection.DeltaY);
 
-                        bool sucess = CommandManager.MoveActorBy(GameLoop.World.Player, coorToMove);
-                        MapWindow.CenterOnActor(GameLoop.World.Player);
-                        return sucess;
-                    }
+                    bool sucess = CommandManager.MoveActorBy(GameLoop.World.Player, coorToMove);
+                    MapWindow.CenterOnActor(GameLoop.World.Player);
+                    return sucess;
                 }
-            
+            }
+
             return false;
         }
 

@@ -48,14 +48,19 @@ namespace MagiRogue.Commands
 
         public void HandleCursorMove(Keyboard info)
         {
-            foreach (var key in UIManager.MovementDirectionMapping)
+            do
             {
-                if (info.IsKeyPressed(key.Key))
+                foreach (var key in UIManager.MovementDirectionMapping)
                 {
-                    Cursor.Position += key.Value;
-                    return;
+                    if (info.IsKeyPressed(key.Key))
+                    {
+                        Cursor.Position += key.Value;
+                        //return;
+                    }
                 }
-            }
+            } while (info.IsKeyUp(Microsoft.Xna.Framework.Input.Keys.F) || info.IsKeyUp(Microsoft.Xna.Framework.Input.Keys.Escape));
+
+            GameLoop.World.CurrentMap.Remove(Cursor);
         }
     }
 }
