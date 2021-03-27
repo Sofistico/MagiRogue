@@ -14,7 +14,7 @@ namespace MagiRogue.UI
 {
     public class MapWindow : Window
     {
-        private string _title;
+        private readonly string _title;
 
         public ScrollingConsole MapConsole { get; set; }
 
