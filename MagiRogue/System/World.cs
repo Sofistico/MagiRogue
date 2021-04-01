@@ -253,5 +253,10 @@ namespace MagiRogue.System
                 GetTime.RegisterEntity(nextTurnNode);
             }
         }
+
+        public void ChangeControlledEntity(Entity entity)
+        {
+            CurrentMap.ControlledEntitiy = entity;
+        }
     }
 }

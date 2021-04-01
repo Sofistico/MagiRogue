@@ -23,7 +23,10 @@ namespace MagiRogue.Commands
         {
             TargetCoord = targetCoord;
 
-            Cursor = new Entity(Color.White, Color.Transparent, 'X', TargetCoord, (int)MapLayer.PLAYER);
+            Cursor = new Actor(Color.DarkGray, Color.Transparent, 'X', (int)MapLayer.PLAYER, TargetCoord)
+            {
+                Name = "Target Cursor"
+            };
 
             var frameCell = Cursor.Animation.CreateFrame()[0];
             frameCell.Foreground = Color.Transparent;
@@ -44,23 +47,6 @@ namespace MagiRogue.Commands
         public T TargetTile<T>(TileBase tile) where T : TileBase
         {
             throw new NotImplementedException();
-        }
-
-        public void HandleCursorMove(Keyboard info)
-        {
-            do
-            {
-                foreach (var key in UIManager.MovementDirectionMapping)
-                {
-                    if (info.IsKeyPressed(key.Key))
-                    {
-                        Cursor.Position += key.Value;
-                        //return;
-                    }
-                }
-            } while (info.IsKeyUp(Microsoft.Xna.Framework.Input.Keys.F) || info.IsKeyUp(Microsoft.Xna.Framework.Input.Keys.Escape));
-
-            GameLoop.World.CurrentMap.Remove(Cursor);
         }
     }
 }

@@ -18,6 +18,8 @@ namespace MagiRogue.Entities.Data
         public Stat Stats { get; set; }
         [DataMember]
         public Anatomy Anatomy { get; set; }
+        [DataMember]
+        public int Layer { get; set; }
 
         public ActorTemplate(Color foreground, Color background, int glyph, Stat stats, Anatomy anatomy)
         {
@@ -26,6 +28,14 @@ namespace MagiRogue.Entities.Data
             Glyph = glyph;
             Stats = stats;
             Anatomy = anatomy;
+        }
+
+        public ActorTemplate(Color foreground, Color background, int glyph, int layer)
+        {
+            Foreground = foreground;
+            Background = background;
+            Glyph = glyph;
+            Layer = layer;
         }
     }
 }

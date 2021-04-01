@@ -47,11 +47,11 @@ namespace MagiRogue.System
         public TimeSystem Time { get; private set; }
 
         /// <summary>
-        /// Fires whenever the value of <see cref="GameObjectEntity"/> is changed.
+        /// Fires whenever the value of <see cref="ControlledEntitiy"/> is changed.
         /// </summary>
         public event EventHandler<ControlledGameObjectChangedArgs> ControlledGameObjectChanged;
 
-        public Entity GameObjectEntity
+        public Entity ControlledEntitiy
         {
             get => _gameObjectControlled;
             set
@@ -159,7 +159,7 @@ namespace MagiRogue.System
             if (entity is Player player)
             {
                 CalculateFOV(position: player.Position, player.Stats.ViewRadius, radiusShape: Radius.CIRCLE);
-                GameObjectEntity = player;
+                ControlledEntitiy = player;
             }
 
             // Set this up to sycer properly

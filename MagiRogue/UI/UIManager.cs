@@ -117,17 +117,16 @@ namespace MagiRogue.UI
 
             if (HandleMove(info))
             {
-                if (!GetPlayer.Bumped)
+                if (!GetPlayer.Bumped && GameLoop.World.CurrentMap.ControlledEntitiy is Player)
                     GameLoop.World.ProcessTurn(TimeHelper.GetWalkTime(GetPlayer), true);
-                else
+                else if (GameLoop.World.CurrentMap.ControlledEntitiy is Player)
                     GameLoop.World.ProcessTurn(TimeHelper.GetAttackTime(GetPlayer), true);
+
+                return true;
             }
 
             if (info.IsKeyPressed(Keys.NumPad5))
                 GameLoop.World.ProcessTurn(TimeHelper.Wait, true);
-
-            if (info.IsKeyPressed(Keys.Escape))
-                SadConsole.Game.Instance.Exit();
 
             if (info.IsKeyPressed(Keys.A))
             {
@@ -170,9 +169,25 @@ namespace MagiRogue.UI
             if (info.IsKeyPressed(Keys.L))
             {
                 Target target = new Target(GetPlayer.Position);
+
+                if (GameLoop.World.CurrentMap.ControlledEntitiy is not Player)
+                {
+                    GameLoop.World.ChangeControlledEntity(GetPlayer);
+                    GameLoop.World.CurrentMap.Remove(target.Cursor);
+                    return true;
+                }
+
                 GameLoop.World.CurrentMap.Add(target.Cursor);
 
-                target.HandleCursorMove(info);
+                GameLoop.World.ChangeControlledEntity(target.Cursor);
+
+                //target.HandleCursorMove(info);
+
+                return true;
+            }
+
+            if (info.IsKeyPressed(Keys.L) || info.IsKeyPressed(Keys.Escape))
+            {
             }
 #if DEBUG
             if (info.IsKeyPressed(Keys.F10))
@@ -187,7 +202,12 @@ namespace MagiRogue.UI
 
             if (info.IsKeyPressed(Keys.F12))
                 PrintHeader();
+
 #endif
+
+            if (info.IsKeyPressed(Keys.Escape))
+                SadConsole.Game.Instance.Exit();
+
             return base.ProcessKeyboard(info);
         }
 
@@ -200,8 +220,8 @@ namespace MagiRogue.UI
                     Direction moveDirection = MovementDirectionMapping[key];
                     Coord coorToMove = new Coord(moveDirection.DeltaX, moveDirection.DeltaY);
 
-                    bool sucess = CommandManager.MoveActorBy(GameLoop.World.Player, coorToMove);
-                    MapWindow.CenterOnActor(GameLoop.World.Player);
+                    bool sucess = CommandManager.MoveActorBy((Actor)GameLoop.World.CurrentMap.ControlledEntitiy, coorToMove);
+                    MapWindow.CenterOnActor((Actor)GameLoop.World.CurrentMap.ControlledEntitiy);
                     return sucess;
                 }
             }
