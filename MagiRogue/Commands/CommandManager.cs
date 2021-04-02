@@ -56,6 +56,9 @@ namespace MagiRogue.Commands
         /// <param name="defender"></param>
         public static void Attack(Actor attacker, Actor defender)
         {
+            if (!defender.CanBeAttacked)
+                return;
+
             // Create two messages that describe the outcome
             // of the attack and defense
             StringBuilder attackMessage = new StringBuilder();
@@ -178,6 +181,10 @@ namespace MagiRogue.Commands
         /// <param name="defender"></param>
         public static void ResolveDeath(Actor defender)
         {
+            // if the defender can't be killed, do nothing.
+            if (!defender.CanBeKilled)
+                return;
+
             // Set up a customized death message
             StringBuilder deathMessage = new StringBuilder();
 

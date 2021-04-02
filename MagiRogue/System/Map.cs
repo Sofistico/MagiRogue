@@ -132,14 +132,14 @@ namespace MagiRogue.System
         }
 
         /// <summary>
-        /// Removes an Entity from the MultiSpatialMap
+        /// Removes an Entity from the Entities Field
         /// </summary>
         /// <param name="entity"></param>
         public void Remove(Entity entity)
         {
             if (!RemoveEntity(entity))
             {
-                throw new Exception($"Failed to remove {entity.Name} || {entity.Position} || {entity.GetType()}");
+                //throw new Exception($"Failed to remove {entity.Name} || {entity.Position} || {entity.GetType()}");
             }
 
             // Set this up to sycer properly
@@ -150,7 +150,7 @@ namespace MagiRogue.System
         }
 
         /// <summary>
-        /// Adds an Entity to the MultiSpatialMap
+        /// Adds an Entity to the Entities field
         /// </summary>
         /// <param name="entity"></param>
         public void Add(Entity entity)

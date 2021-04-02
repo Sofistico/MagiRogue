@@ -33,6 +33,8 @@ namespace MagiRogue.UI
 
         public SadConsole.Themes.Colors CustomColors;
 
+        private Target target;
+
         #endregion Field
 
         #region ConstructorAndInitCode
@@ -168,12 +170,14 @@ namespace MagiRogue.UI
 
             if (info.IsKeyPressed(Keys.L))
             {
-                Target target = new Target(GetPlayer.Position);
+                if (!(target != null))
+                    target = new Target(GetPlayer.Position);
 
                 if (GameLoop.World.CurrentMap.ControlledEntitiy is not Player)
                 {
                     GameLoop.World.ChangeControlledEntity(GetPlayer);
                     GameLoop.World.CurrentMap.Remove(target.Cursor);
+                    target = null;
                     return true;
                 }
 
@@ -181,18 +185,14 @@ namespace MagiRogue.UI
 
                 GameLoop.World.ChangeControlledEntity(target.Cursor);
 
-                //target.HandleCursorMove(info);
-
                 return true;
             }
 
-            if (info.IsKeyPressed(Keys.L) || info.IsKeyPressed(Keys.Escape))
-            {
-            }
 #if DEBUG
             if (info.IsKeyPressed(Keys.F10))
             {
                 CommandManager.ToggleFOV();
+                MapWindow.MapConsole.IsDirty = true;
             }
 
             if (info.IsKeyPressed(Keys.F8))

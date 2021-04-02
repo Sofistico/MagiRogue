@@ -2,6 +2,9 @@
 
 namespace MagiRogue.Entities.Data
 {
+    /// <summary>
+    /// Utility method for easy creating an actor and item, along with any possible function and extra.
+    /// </summary>
     public static class EntityFactory
     {
         public static Actor ActorCreator(Coord position, ActorTemplate actorTemplate)
