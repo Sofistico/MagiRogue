@@ -203,10 +203,19 @@ namespace MagiRogue.UI
             if (info.IsKeyPressed(Keys.F12))
                 PrintHeader();
 
+            if (info.IsKeyPressed(Keys.NumPad0))
+            {
+                PopUpWindow.PopConsole.ShowMenu(new Point(10, 15),
+                    new List<(string, Action)> { ("do some", () => { }) }, "Teste");
+            }
+
 #endif
 
             if (info.IsKeyPressed(Keys.Escape))
-                SadConsole.Game.Instance.Exit();
+            {
+                //SadConsole.Game.Instance.Exit();
+                MainMenu.Show();
+            }
 
             return base.ProcessKeyboard(info);
         }

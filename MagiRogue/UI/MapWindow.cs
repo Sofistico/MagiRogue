@@ -12,18 +12,12 @@ using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace MagiRogue.UI
 {
-    public class MapWindow : Window
+    public class MapWindow : MagiBaseWindow
     {
-        private readonly string _title;
-
         public ScrollingConsole MapConsole { get; set; }
 
-        public MapWindow(int width, int height, string title) : base(width, height)
+        public MapWindow(int width, int height, string title) : base(width, height, title)
         {
-            ThemeColors = SadConsole.Themes.Colors.CreateAnsi();
-            CanDrag = false;
-
-            _title = title;
         }
 
         // centers the viewport camera on an Actor
@@ -44,12 +38,6 @@ namespace MagiRogue.UI
         {
             // remove all Entities from the console first
             MapConsole.Children.Clear();
-
-            // Now pull all of the entities into the MapConsole in bulk
-            /* foreach (Entity entity in map.Entities.Items)
-             {
-                 MapConsole.Children.Add(entity);
-             }*/
 
             map.ConfigureRender(MapConsole);
         }
@@ -74,8 +62,6 @@ namespace MagiRogue.UI
 
                 DefaultBackground = Color.Black
             };
-
-            Title = _title.Align(HorizontalAlignment.Center, mapConsoleWidth);
 
             // Adds the console to the children list of the window
             Children.Add(MapConsole);

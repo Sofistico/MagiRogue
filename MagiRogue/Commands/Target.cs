@@ -33,7 +33,8 @@ namespace MagiRogue.Commands
                 IsWalkable = true,
                 CanBeKilled = false,
                 CanBeAttacked = false,
-                CanInteract = false
+                CanInteract = false,
+                LeavesGhost = false
             };
 
             var frameCell = Cursor.Animation.CreateFrame()[0];

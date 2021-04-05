@@ -6,7 +6,7 @@ using System;
 
 namespace MagiRogue.UI
 {
-    public class MainMenuWindow : Window
+    public class MainMenuWindow : MagiBaseWindow
     {
         // The control console where all buttons will be inside
         private readonly ControlsConsole controlConsole;
@@ -14,39 +14,43 @@ namespace MagiRogue.UI
         // The window border, to make the console fit inside the window
         private readonly int windowBorder = 1;
 
-        public MainMenuWindow(int width, int height, string title = "Main Menu") : base(width, height)
+        private bool _gameStarted;
+
+        private Button startGame;
+        private Button testMap;
+        private Button continueGame;
+
+        public MainMenuWindow(int width, int height, string title = "Main Menu") : base(width, height, title)
         {
-            ThemeColors = SadConsole.Themes.Colors.CreateAnsi();
-
-            Title = title.Align(HorizontalAlignment.Left, width);
-
             controlConsole = new ControlsConsole(width, height - windowBorder)
             {
                 Position = new Point(0, 1),
-                ThemeColors = Colors.CreateAnsi()
             };
 
-            Button startGame = new Button(12, 1)
+            continueGame = new Button(15, 1)
             {
-                Text = "Start Game",
-                ThemeColors = Colors.CreateAnsi()
+                Text = "Continue Game"
             };
-            Button testMap = new Button(12, 1)
+            startGame = new Button(12, 1)
             {
-                Text = "Test Map",
-                ThemeColors = Colors.CreateAnsi()
+                Text = "Start Game"
+            };
+            testMap = new Button(12, 1)
+            {
+                Text = "Test Map"
             };
             Button quitGame = new Button(11, 1)
             {
-                Text = "Quit Game",
-                ThemeColors = Colors.CreateAnsi()
+                Text = "Quit Game"
             };
 
             Children.Add(controlConsole);
+            continueGame.Click += ContinueGame_Click;
             startGame.Click += StartGameClick;
             testMap.Click += TestMap_Click;
             quitGame.Click += QuitGameClick;
 
+            controlConsole.Add(continueGame);
             controlConsole.Add(startGame);
             controlConsole.Add(testMap);
             controlConsole.Add(quitGame);
@@ -54,7 +58,26 @@ namespace MagiRogue.UI
             PositionButtons();
         }
 
-        private void TestMap_Click(object sender, EventArgs e) => GameLoop.UIManager.StartGame(true);
+        private void ContinueGame_Click(object sender, EventArgs e)
+        {
+            if (_gameStarted)
+            {
+                Hide();
+            }
+        }
+
+        private void TestMap_Click(object sender, EventArgs e)
+        {
+            if (!_gameStarted)
+            {
+                GameLoop.UIManager.StartGame(true);
+                _gameStarted = true;
+            }
+            else
+            {
+                testMap.IsEnabled = false;
+            }
+        }
 
         private void QuitGameClick(object sender, EventArgs e)
         {
@@ -71,6 +94,17 @@ namespace MagiRogue.UI
             }
         }
 
-        private void StartGameClick(object sender, EventArgs e) => GameLoop.UIManager.StartGame();
+        private void StartGameClick(object sender, EventArgs e)
+        {
+            if (!_gameStarted)
+            {
+                GameLoop.UIManager.StartGame();
+                _gameStarted = true;
+            }
+            else
+            {
+                startGame.IsEnabled = false;
+            }
+        }
     }
 }

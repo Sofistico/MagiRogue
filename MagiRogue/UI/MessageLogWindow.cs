@@ -7,7 +7,7 @@ namespace MagiRogue.UI
 {
     //A scrollable window that displays messages
     //using a FIFO (first-in-first-out) Queue data structure
-    public class MessageLogWindow : Window
+    public class MessageLogWindow : MagiBaseWindow
     {
         //max number of lines to store in message log
         private static readonly int maxLines = 100;
@@ -30,19 +30,9 @@ namespace MagiRogue.UI
 
         // Create a new window with the title centered
         // the window is draggable by default
-        public MessageLogWindow(int width, int height, string title) : base(width, height)
+        public MessageLogWindow(int width, int height, string title) : base(width, height, title)
         {
-            // Ensure that the window background is the correct colour
-
-            ThemeColors = GameLoop.UIManager.CustomColors;
-            ThemeColors.ControlBack = Color.DarkRed;
-            ThemeColors.TitleText = Color.Red;
-            ThemeColors.RebuildAppearances();
-
             lines = new Queue<string>();
-            CanDrag = false;
-
-            Title = title.Align(HorizontalAlignment.Center, Width);
 
             // add the message console, reposition, enable the viewport, and add it to the window
             messageConsole = new ScrollingConsole(width - windowBorderThickness, maxLines)

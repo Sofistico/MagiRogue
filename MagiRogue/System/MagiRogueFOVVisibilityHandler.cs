@@ -73,7 +73,7 @@ namespace MagiRogue.System
             if (entity.Layer == _ghostLayer)
                 return;
 
-            if (entity.Layer != _ghostLayer && Map.Explored[entity.Position])
+            if (entity.Layer != _ghostLayer && Map.Explored[entity.Position] && entity.LeavesGhost)
             {
                 Entity ghost = new Entity(ExploredColor,
                     entity.Animation[0].Background,

@@ -6,7 +6,7 @@ using System;
 
 namespace MagiRogue.UI
 {
-    public class StatusWindow : Window
+    public class StatusWindow : MagiBaseWindow
     {
         private readonly Player player;
         private readonly ScrollingConsole statsConsole;
@@ -14,16 +14,9 @@ namespace MagiRogue.UI
 
         private const int windowBorderThickness = 2;
 
-        public StatusWindow(int width, int heigth, string title) : base(width, heigth)
+        public StatusWindow(int width, int heigth, string title) : base(width, heigth, title)
         {
-            // Ensure that the window background is the correct colour
-            ThemeColors = SadConsole.Themes.Colors.CreateAnsi();
-
-            CanDrag = false;
-
             player = GameLoop.World.Player;
-
-            Title = title.Align(HorizontalAlignment.Center, width);
 
             statsConsole = new ScrollingConsole(width - windowBorderThickness, heigth - windowBorderThickness)
             {

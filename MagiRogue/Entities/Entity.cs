@@ -29,6 +29,11 @@ namespace MagiRogue.Entities
         /// </summary>
         public int Size { get; set; }
 
+        /// <summary>
+        /// Determines whetever the entity leaves an ghost when it leaves the fov
+        /// </summary>
+        public bool LeavesGhost { get; set; } = true;
+
         #region BackingField fields
 
         public Map CurrentMap => backingField.CurrentMap;
@@ -66,11 +71,6 @@ namespace MagiRogue.Entities
             Animation.CurrentFrame[0].Glyph = glyph;
 
             Layer = layer;
-
-            // Ensure that the entity position/offset is tracked by scrollingconsoles
-            /*entityViewSync = new EntityViewSyncComponent();
-            Components.Add(entityViewSync);
-            entityViewSync.HandleIsVisible = false;*/
 
             backingField = new GameObject(coord, layer, this);
             base.Position = backingField.Position;

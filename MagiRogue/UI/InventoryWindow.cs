@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace MagiRogue.UI
 {
-    public class InventoryWindow : Window
+    public class InventoryWindow : MagiBaseWindow
     {
         // alocate the inventory memory
 
@@ -26,18 +26,8 @@ namespace MagiRogue.UI
         /// <param name="width"></param>
         /// <param name="heigth"></param>
         /// <param name="title"></param>
-        public InventoryWindow(int width, int heigth, string title) : base(width, heigth)
+        public InventoryWindow(int width, int heigth, string title) : base(width, heigth, title)
         {
-            // Ensure that the window background is the correct colour
-            ThemeColors = SadConsole.Themes.Colors.CreateAnsi();
-
-            // instantiete the inventory of the actor, passing the actor value if and when i implement helpers, to make it
-            // possible to see and use their inventory.
-
-            CanDrag = false;
-
-            Title = title.Align(HorizontalAlignment.Center, width);
-
             // define the inventory console
             inventoryConsole = new ScrollingConsole(width - windowBorderThickness, heigth - windowBorderThickness)
             {
