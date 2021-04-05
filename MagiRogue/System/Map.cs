@@ -139,7 +139,7 @@ namespace MagiRogue.System
         {
             if (!RemoveEntity(entity))
             {
-                //throw new Exception($"Failed to remove {entity.Name} || {entity.Position} || {entity.GetType()}");
+                throw new Exception($"Failed to remove {entity.Name} || {entity.Position} || {entity.GetType()}");
             }
 
             // Set this up to sycer properly

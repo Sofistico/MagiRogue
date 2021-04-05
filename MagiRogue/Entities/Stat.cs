@@ -195,6 +195,24 @@ namespace MagiRogue.Entities
         {
         }
 
+        public Stat(float health, float maxHealth, float baseHpRegen, float bloodyMana, int naturalMana, int attack, int attackChance, int defense, int defenseChance, int bodyStat, int mindStat, int soulStat, int godPower, bool godly = false)
+        {
+            this.health = health;
+            this.maxHealth = maxHealth;
+            _baseHpRegen = baseHpRegen;
+            this.bloodyMana = bloodyMana;
+            this.naturalMana = naturalMana;
+            this.attack = attack;
+            this.attackChance = attackChance;
+            this.defense = defense;
+            this.defenseChance = defenseChance;
+            this.bodyStat = bodyStat;
+            this.mindStat = mindStat;
+            this.soulStat = soulStat;
+            this.godPower = godPower;
+            this.godly = godly;
+        }
+
         #endregion Constructor
 
         #region Methods
@@ -275,7 +293,7 @@ namespace MagiRogue.Entities
             if (Health < MaxHealth)
             {
                 float newHp = (BaseHpRegen + Health);
-                Health = (float)Math.Round(newHp);
+                Health = (float)Math.Round(newHp, 1);
             }
         }
 

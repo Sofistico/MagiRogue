@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using SadConsole;
 namespace MagiRogue.UI
 {
     // Will contain relevant custom code here, maybe
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public class MagiBaseWindow : Window
     {
         public MagiBaseWindow(int width, int height, string title) : base(width, height)
@@ -28,6 +30,14 @@ namespace MagiRogue.UI
             CanDrag = false;
 
             Title = title.Align(HorizontalAlignment.Center, width);
+        }
+
+        private string DebuggerDisplay
+        {
+            get
+            {
+                return ($"Nameof Screen: {Title}");
+            }
         }
     }
 }

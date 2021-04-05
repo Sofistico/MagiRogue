@@ -26,6 +26,7 @@ namespace MagiRogue.UI.PopUpWindow
             {
                 CurrentMenu.Hide();
                 CurrentMenu = null;
+                return;
             }
             CurrentMenu = new DynamicContextMenu(items.Max(item => item.Item1.Length) + 4, items.Count + 2, title, items)
             {
@@ -36,12 +37,21 @@ namespace MagiRogue.UI.PopUpWindow
 
         public class DynamicContextMenu : MagiBaseWindow
         {
+            private List<char> alphabet = Enumerable.Range('a', 27).Select(x => (char)x).ToList();
+
             internal DynamicContextMenu(int width, int height, string title, List<(string, Action)> items)
                 : base(width, height, title)
             {
-                for (int i = 0; i < items.Count(); i++)
+                for (int i = 0; i < items.Count; i++)
                 {
                     (string text, Action action) = items[i];
+
+                    StringBuilder str = new StringBuilder(alphabet[i].ToString());
+
+                    str.Append(" - ");
+                    str.Append(text);
+
+                    text = str.ToString();
 
                     var button = new Button(width - 2)
                     {

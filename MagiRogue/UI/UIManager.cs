@@ -205,8 +205,11 @@ namespace MagiRogue.UI
 
             if (info.IsKeyPressed(Keys.NumPad0))
             {
-                PopUpWindow.PopConsole.ShowMenu(new Point(10, 15),
-                    new List<(string, Action)> { ("do some", () => { }) }, "Teste");
+                int xCenter = (MapWindow.Position.X + MapWindow.Width) / 2;
+                int yCenter = (MapWindow.Position.Y + MapWindow.Height) / 2;
+                PopUpWindow.PopConsole.ShowMenu(new Point(xCenter, yCenter),
+                    new List<(string, Action)>
+                    { ("Max Health", () => { GetPlayer.Stats.MaxHealth += 1; }) }, "Teste");
             }
 
 #endif
