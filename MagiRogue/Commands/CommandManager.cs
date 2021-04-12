@@ -362,16 +362,17 @@ namespace MagiRogue.Commands
 
 #endif
 
-        public static bool HurtYourself(Actor actor)
+        // TODO: Needs to be more inline with the flavorr of mol and add a counter to a insanity stat or an problem to using and etc...
+        public static bool ForcefulyIntegrateAmbientMana(Actor actor)
         {
             int maxMana = actor.Stats.BodyStat + actor.Stats.SoulStat + actor.Stats.MindStat;
-            if (actor.Stats.BloodyMana != maxMana)
+            if (actor.Stats.PersonalMana != maxMana)
             {
                 actor.Stats.Health -= 1;
                 actor.Anatomy.BloodCount -= 100f;
                 int roll = Dice.Roll("1d3");
                 float bloodyManaGained = float.Parse($"0.{roll}", CultureInfo.InvariantCulture.NumberFormat);
-                actor.Stats.BloodyMana = (float)Math.Round(actor.Stats.BloodyMana + bloodyManaGained, 1);
+                actor.Stats.PersonalMana = (float)Math.Round(actor.Stats.PersonalMana + bloodyManaGained, 1);
                 GameLoop.UIManager.MessageLog.Add($"You ritually wound yourself, channeling your blood into mana, gaining {bloodyManaGained} blood mana");
                 return true;
             }

@@ -171,7 +171,7 @@ namespace MagiRogue.UI
 
                 if (info.IsKeyPressed(Keys.H))
                 {
-                    bool sucess = CommandManager.HurtYourself(GameLoop.World.Player);
+                    bool sucess = CommandManager.ForcefulyIntegrateAmbientMana(GameLoop.World.Player);
                     GameLoop.World.ProcessTurn(TimeHelper.MagicalThings, sucess);
                 }
 
