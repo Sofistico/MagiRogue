@@ -3,7 +3,7 @@ using SadConsole;
 using System;
 using System.Collections.Generic;
 
-namespace MagiRogue.UI
+namespace MagiRogue.UI.Windows
 {
     //A scrollable window that displays messages
     //using a FIFO (first-in-first-out) Queue data structure

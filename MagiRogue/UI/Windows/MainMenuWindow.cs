@@ -1,61 +1,50 @@
-﻿using Microsoft.Xna.Framework;
+﻿using MagiRogue.UI.Controls;
+using Microsoft.Xna.Framework;
 using SadConsole;
 using SadConsole.Controls;
 using SadConsole.Themes;
 using System;
+using System.Collections.Generic;
 
-namespace MagiRogue.UI
+namespace MagiRogue.UI.Windows
 {
     public class MainMenuWindow : MagiBaseWindow
     {
-        // The control console where all buttons will be inside
-        private readonly ControlsConsole controlConsole;
-
-        // The window border, to make the console fit inside the window
-        private readonly int windowBorder = 1;
-
         private bool _gameStarted;
 
-        private Button startGame;
-        private Button testMap;
-        private Button continueGame;
+        private MagiButton startGame;
+        private MagiButton testMap;
+        private MagiButton continueGame;
 
         public MainMenuWindow(int width, int height, string title = "Main Menu") : base(width, height, title)
         {
-            controlConsole = new ControlsConsole(width, height - windowBorder)
-            {
-                Position = new Point(0, 1),
-            };
-
-            continueGame = new Button(15, 1)
+            continueGame = new MagiButton(15, 1)
             {
                 Text = "Continue Game"
             };
-            startGame = new Button(12, 1)
+            startGame = new MagiButton(12, 1)
             {
                 Text = "Start Game"
             };
-            testMap = new Button(12, 1)
+            testMap = new MagiButton(12, 1)
             {
                 Text = "Test Map"
             };
-            Button quitGame = new Button(11, 1)
+            MagiButton quitGame = new MagiButton(11, 1)
             {
                 Text = "Quit Game"
             };
 
-            Children.Add(controlConsole);
             continueGame.Click += ContinueGame_Click;
             startGame.Click += StartGameClick;
             testMap.Click += TestMap_Click;
             quitGame.Click += QuitGameClick;
 
-            controlConsole.Add(continueGame);
-            controlConsole.Add(startGame);
-            controlConsole.Add(testMap);
-            controlConsole.Add(quitGame);
+            SetupSelectionButtons(startGame, continueGame, testMap, quitGame);
 
             PositionButtons();
+
+            IsFocused = true;
         }
 
         private void ContinueGame_Click(object sender, EventArgs e)
@@ -63,6 +52,7 @@ namespace MagiRogue.UI
             if (_gameStarted)
             {
                 Hide();
+                GameLoop.UIManager.IsFocused = true;
             }
         }
 
@@ -87,7 +77,7 @@ namespace MagiRogue.UI
         private void PositionButtons()
         {
             int i = 0;
-            foreach (ControlBase button in controlConsole)
+            foreach (ControlBase button in Controls)
             {
                 button.Position = new Point(55, 2 + (i * 2));
                 ++i;

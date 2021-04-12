@@ -10,7 +10,7 @@ using MagiRogue.System;
 using GoRogue;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
-namespace MagiRogue.UI
+namespace MagiRogue.UI.Windows
 {
     public class MapWindow : MagiBaseWindow
     {

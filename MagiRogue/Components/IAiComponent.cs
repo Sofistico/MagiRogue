@@ -1,6 +1,6 @@
 ﻿using GoRogue.GameFramework.Components;
 using MagiRogue.System;
-using MagiRogue.UI;
+using MagiRogue.UI.Windows;
 
 namespace MagiRogue.Components
 {

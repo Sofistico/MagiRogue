@@ -40,6 +40,10 @@ namespace MagiRogue
 
         private static void Init()
         {
+            // Makes so that no excpetion happens for a custom control
+            SadConsole.Themes.Library.Default.SetControlTheme(typeof(UI.Controls.MagiButton),
+                new SadConsole.Themes.ButtonTheme());
+
             //Instantiate the UIManager
             UIManager = new UIManager();
 

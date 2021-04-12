@@ -4,7 +4,7 @@ using SadConsole;
 using SadConsole.Controls;
 using System;
 
-namespace MagiRogue.UI
+namespace MagiRogue.UI.Windows
 {
     public class StatusWindow : MagiBaseWindow
     {
@@ -50,7 +50,7 @@ namespace MagiRogue.UI
         public override void Update(TimeSpan time)
         {
             statsConsole.Print(0, 0, $"{player.Name}");
-            statsConsole.Print(0, 2, $"Health: {player.Stats.Health} / {player.Stats.MaxHealth}   ", Color.Red);
+            statsConsole.Print(0, 2, $"Health: {(int)player.Stats.Health} / {player.Stats.MaxHealth}   ", Color.Red);
             statsConsole.Print(0, 3, $"Blood Mana: {player.Stats.BloodyMana}  ", Color.DarkRed);
             statsConsole.Print(0, 4, $"Natural Mana: {player.Stats.NaturalMana}   ", Color.LightBlue);
 

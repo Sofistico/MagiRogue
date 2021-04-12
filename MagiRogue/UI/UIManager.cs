@@ -3,6 +3,7 @@ using MagiRogue.Commands;
 using MagiRogue.Entities;
 using MagiRogue.System;
 using MagiRogue.System.Time;
+using MagiRogue.UI.Windows;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using SadConsole;
@@ -29,7 +30,9 @@ namespace MagiRogue.UI
 
         #region Field
 
+#nullable enable
         private static Player GetPlayer => GameLoop.World.Player;
+#nullable disable
 
         public SadConsole.Themes.Colors CustomColors;
 
@@ -56,7 +59,10 @@ namespace MagiRogue.UI
         {
             SetUpCustomColors();
 
-            MainMenu = new MainMenuWindow(GameLoop.GameWidth, GameLoop.GameHeight);
+            MainMenu = new MainMenuWindow(GameLoop.GameWidth, GameLoop.GameHeight)
+            {
+                IsFocused = true
+            };
             Children.Add(MainMenu);
             MainMenu.Show();
             MainMenu.Position = new Point(0, 0);
@@ -64,6 +70,8 @@ namespace MagiRogue.UI
 
         public void StartGame(bool testGame = false)
         {
+            IsFocused = true;
+
             GameLoop.World = new World(testGame);
 
             // Hides the main menu, so that it's possible to interact with the other windows.
@@ -114,110 +122,111 @@ namespace MagiRogue.UI
         // based on the button pressed.
         public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
         {
-            //if (info.IsKeyPressed(Keys.F11))
-            //Settings.ToggleFullScreen(); // Too bugged right now to be used
-
-            if (HandleMove(info))
+            if (GameLoop.World != null)
             {
-                if (!GetPlayer.Bumped && GameLoop.World.CurrentMap.ControlledEntitiy is Player)
-                    GameLoop.World.ProcessTurn(TimeHelper.GetWalkTime(GetPlayer), true);
-                else if (GameLoop.World.CurrentMap.ControlledEntitiy is Player)
-                    GameLoop.World.ProcessTurn(TimeHelper.GetAttackTime(GetPlayer), true);
-
-                return true;
-            }
-
-            if (info.IsKeyPressed(Keys.NumPad5))
-                GameLoop.World.ProcessTurn(TimeHelper.Wait, true);
-
-            if (info.IsKeyPressed(Keys.A))
-            {
-                bool sucess = CommandManager.DirectAttack(GameLoop.World.Player);
-                GameLoop.World.ProcessTurn(TimeHelper.GetAttackTime(GameLoop.World.Player), sucess);
-            }
-
-            if (info.IsKeyPressed(Keys.G))
-            {
-                Item item = GameLoop.World.CurrentMap.GetEntityAt<Item>(GameLoop.World.Player.Position);
-                bool sucess = CommandManager.PickUp(GameLoop.World.Player, item);
-                InventoryScreen.ShowItems(GameLoop.World.Player);
-                GameLoop.World.ProcessTurn(TimeHelper.Interact, sucess);
-            }
-            if (info.IsKeyPressed(Keys.D))
-            {
-                bool sucess = CommandManager.DropItems(GameLoop.World.Player);
-                Item item = GameLoop.World.CurrentMap.GetEntity<Item>(GameLoop.World.Player.Position);
-                InventoryScreen.RemoveItemFromConsole(item);
-                InventoryScreen.ShowItems(GameLoop.World.Player);
-                GameLoop.World.ProcessTurn(TimeHelper.Interact, sucess);
-            }
-            if (info.IsKeyPressed(Keys.C))
-            {
-                bool sucess = CommandManager.CloseDoor(GameLoop.World.Player);
-                GameLoop.World.ProcessTurn(TimeHelper.Interact, sucess);
-                MapWindow.MapConsole.IsDirty = true;
-            }
-            if (info.IsKeyPressed(Keys.I))
-            {
-                InventoryScreen.Show();
-            }
-
-            if (info.IsKeyPressed(Keys.H))
-            {
-                bool sucess = CommandManager.HurtYourself(GameLoop.World.Player);
-                GameLoop.World.ProcessTurn(TimeHelper.MagicalThings, sucess);
-            }
-
-            if (info.IsKeyPressed(Keys.L))
-            {
-                if (!(target != null))
-                    target = new Target(GetPlayer.Position);
-
-                if (GameLoop.World.CurrentMap.ControlledEntitiy is not Player)
+                if (HandleMove(info))
                 {
-                    GameLoop.World.ChangeControlledEntity(GetPlayer);
-                    GameLoop.World.CurrentMap.Remove(target.Cursor);
-                    target = null;
+                    if (!GetPlayer.Bumped && GameLoop.World.CurrentMap.ControlledEntitiy is Player)
+                        GameLoop.World.ProcessTurn(TimeHelper.GetWalkTime(GetPlayer), true);
+                    else if (GameLoop.World.CurrentMap.ControlledEntitiy is Player)
+                        GameLoop.World.ProcessTurn(TimeHelper.GetAttackTime(GetPlayer), true);
+
                     return true;
                 }
 
-                GameLoop.World.CurrentMap.Add(target.Cursor);
+                if (info.IsKeyPressed(Keys.NumPad5))
+                    GameLoop.World.ProcessTurn(TimeHelper.Wait, true);
 
-                GameLoop.World.ChangeControlledEntity(target.Cursor);
+                if (info.IsKeyPressed(Keys.A))
+                {
+                    bool sucess = CommandManager.DirectAttack(GameLoop.World.Player);
+                    GameLoop.World.ProcessTurn(TimeHelper.GetAttackTime(GameLoop.World.Player), sucess);
+                }
 
-                return true;
-            }
+                if (info.IsKeyPressed(Keys.G))
+                {
+                    Item item = GameLoop.World.CurrentMap.GetEntityAt<Item>(GameLoop.World.Player.Position);
+                    bool sucess = CommandManager.PickUp(GameLoop.World.Player, item);
+                    InventoryScreen.ShowItems(GameLoop.World.Player);
+                    GameLoop.World.ProcessTurn(TimeHelper.Interact, sucess);
+                }
+                if (info.IsKeyPressed(Keys.D))
+                {
+                    bool sucess = CommandManager.DropItems(GameLoop.World.Player);
+                    Item item = GameLoop.World.CurrentMap.GetEntity<Item>(GameLoop.World.Player.Position);
+                    InventoryScreen.RemoveItemFromConsole(item);
+                    InventoryScreen.ShowItems(GameLoop.World.Player);
+                    GameLoop.World.ProcessTurn(TimeHelper.Interact, sucess);
+                }
+                if (info.IsKeyPressed(Keys.C))
+                {
+                    bool sucess = CommandManager.CloseDoor(GameLoop.World.Player);
+                    GameLoop.World.ProcessTurn(TimeHelper.Interact, sucess);
+                    MapWindow.MapConsole.IsDirty = true;
+                }
+                if (info.IsKeyPressed(Keys.I))
+                {
+                    InventoryScreen.Show();
+                }
+
+                if (info.IsKeyPressed(Keys.H))
+                {
+                    bool sucess = CommandManager.HurtYourself(GameLoop.World.Player);
+                    GameLoop.World.ProcessTurn(TimeHelper.MagicalThings, sucess);
+                }
+
+                if (info.IsKeyPressed(Keys.L))
+                {
+                    if (!(target != null))
+                        target = new Target(GetPlayer.Position);
+
+                    if (GameLoop.World.CurrentMap.ControlledEntitiy is not Player)
+                    {
+                        GameLoop.World.ChangeControlledEntity(GetPlayer);
+                        GameLoop.World.CurrentMap.Remove(target.Cursor);
+                        target = null;
+                        return true;
+                    }
+
+                    GameLoop.World.CurrentMap.Add(target.Cursor);
+
+                    GameLoop.World.ChangeControlledEntity(target.Cursor);
+
+                    return true;
+                }
 
 #if DEBUG
-            if (info.IsKeyPressed(Keys.F10))
-            {
-                CommandManager.ToggleFOV();
-                MapWindow.MapConsole.IsDirty = true;
-            }
+                if (info.IsKeyPressed(Keys.F10))
+                {
+                    CommandManager.ToggleFOV();
+                    MapWindow.MapConsole.IsDirty = true;
+                }
 
-            if (info.IsKeyPressed(Keys.F8))
-            {
-                GetPlayer.AddComponent(new Components.TestComponent(GetPlayer));
-            }
+                if (info.IsKeyPressed(Keys.F8))
+                {
+                    GetPlayer.AddComponent(new Components.TestComponent(GetPlayer));
+                }
 
-            if (info.IsKeyPressed(Keys.F12))
-                PrintHeader();
+                if (info.IsKeyPressed(Keys.F12))
+                    PrintHeader();
 
-            if (info.IsKeyPressed(Keys.NumPad0))
-            {
-                int xCenter = (MapWindow.Position.X + MapWindow.Width) / 2;
-                int yCenter = (MapWindow.Position.Y + MapWindow.Height) / 2;
-                PopUpWindow.PopConsole.ShowMenu(new Point(xCenter, yCenter),
-                    new List<(string, Action)>
-                    { ("Max Health", () => { GetPlayer.Stats.MaxHealth += 1; }) }, "Teste");
-            }
+                if (info.IsKeyPressed(Keys.NumPad0))
+                {
+                    int xCenter = (MapWindow.Position.X + MapWindow.Width) / 2;
+                    int yCenter = (MapWindow.Position.Y + MapWindow.Height) / 2;
+                    PopWindow.ShowMenu(new Point(xCenter, yCenter),
+                        new List<(string, Action)>
+                        { ("Max Health", () => { GetPlayer.Stats.MaxHealth += 1; }) }, "Teste");
+                }
 
 #endif
 
-            if (info.IsKeyPressed(Keys.Escape))
-            {
-                //SadConsole.Game.Instance.Exit();
-                MainMenu.Show();
+                if (info.IsKeyPressed(Keys.Escape))
+                {
+                    //SadConsole.Game.Instance.Exit();
+                    MainMenu.Show();
+                    MainMenu.IsFocused = true;
+                }
             }
 
             return base.ProcessKeyboard(info);

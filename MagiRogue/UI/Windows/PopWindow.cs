@@ -9,14 +9,14 @@ using SadConsole.Controls;
 using SadConsole.Input;
 using Console = SadConsole.Console;
 
-namespace MagiRogue.UI.PopUpWindow
+namespace MagiRogue.UI.Windows
 {
-    public class PopConsole
+    public class PopWindow
     {
         public static DynamicContextMenu CurrentMenu { get; set; }
         public static bool IsOpen => CurrentMenu != null;
 
-        public PopConsole()
+        public PopWindow()
         {
         }
 

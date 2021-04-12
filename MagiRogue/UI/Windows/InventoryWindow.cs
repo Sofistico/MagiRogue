@@ -5,7 +5,7 @@ using SadConsole.Controls;
 using System;
 using System.Collections.Generic;
 
-namespace MagiRogue.UI
+namespace MagiRogue.UI.Windows
 {
     public class InventoryWindow : MagiBaseWindow
     {
