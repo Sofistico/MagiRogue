@@ -214,9 +214,8 @@ namespace MagiRogue.UI
                 {
                     int xCenter = (MapWindow.Position.X + MapWindow.Width) / 2;
                     int yCenter = (MapWindow.Position.Y + MapWindow.Height) / 2;
-                    PopWindow.ShowMenu(new Point(xCenter, yCenter),
-                        new List<(string, Action)>
-                        { ("Max Health", () => { GetPlayer.Stats.MaxHealth += 1; }) }, "Teste");
+                    PopWindow w = new PopWindow("Test");
+                    w.Show();
                 }
 
 #endif
