@@ -21,6 +21,7 @@ namespace MagiRogue.Entities.Data
                     Stats = actorTemplate.Stats,
                     Anatomy = actorTemplate.Anatomy
                 };
+            actor.Description = actorTemplate.Description;
 
             return actor;
         }
@@ -39,6 +40,7 @@ namespace MagiRogue.Entities.Data
                     itemTemplate.Weight,
                     itemTemplate.Condition
                 );
+            item.Description = itemTemplate.Description;
 
             return item;
         }

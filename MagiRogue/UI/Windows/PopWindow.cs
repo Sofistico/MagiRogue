@@ -11,28 +11,41 @@ using Console = SadConsole.Console;
 
 namespace MagiRogue.UI.Windows
 {
+    /// <summary>
+    /// This creates a base pop window, keep in mind to create a console in the right plae the math is
+    /// Width - ButtonWidth - 3, Height - 4, for the position = ButtonWidth + 2, 1
+    /// </summary>
     public abstract class PopWindow : MagiBaseWindow
     {
-        private const int buttonWidth = 40;
+        public const int ButtonWidth = 40;
 
         private readonly Button _cancelButton;
-        private readonly Console _popConsole;
-        private readonly Dictionary<char, Button> _hotKeys;
 
-        private Action<Button> _onClick;
-
+        /// <summary>
+        /// This creates a base pop window, keep in mind to create a console in the right plae the math is
+        /// Width - ButtonWidth - 3, Height - 4, for the position = ButtonWidth + 2, 1
+        /// </summary>
+        /// <param name="title"></param>
         public PopWindow(string title) : base(100, 20, title)
         {
-            _hotKeys = new Dictionary<char, Button>();
-
             CloseOnEscKey = true;
-
-            _popConsole = new Console(Width, Height);
-            _popConsole.FillWithRandomGarbage();
-            Children.Add(_popConsole);
 
             Center();
             IsFocused = true;
+
+            const string cancelButtonText = "Cancel";
+
+            int cancelButtonWidth = cancelButtonText.Length + 4;
+
+            _cancelButton = new Button(cancelButtonWidth)
+            {
+                Text = cancelButtonText,
+                Position = new Point(ButtonWidth + 1, Height - 2)
+            };
+
+            _cancelButton.Click += (_, __) => Hide();
+
+            Add(_cancelButton);
         }
     }
 }

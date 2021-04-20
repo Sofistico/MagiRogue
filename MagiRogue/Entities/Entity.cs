@@ -34,6 +34,8 @@ namespace MagiRogue.Entities
         /// </summary>
         public bool LeavesGhost { get; set; } = true;
 
+        public string Description { get; set; }
+
         #region BackingField fields
 
         public Map CurrentMap => backingField.CurrentMap;

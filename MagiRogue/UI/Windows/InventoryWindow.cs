@@ -9,8 +9,6 @@ namespace MagiRogue.UI.Windows
 {
     public class InventoryWindow : MagiBaseWindow
     {
-        // alocate the inventory memory
-
         // Create the field
         private readonly ScrollingConsole inventoryConsole;
 

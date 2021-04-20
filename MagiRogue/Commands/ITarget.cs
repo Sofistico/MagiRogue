@@ -12,8 +12,8 @@ namespace MagiRogue.Commands
 {
     public interface ITarget
     {
-        T TargetEntity<T>(Entity entity) where T : Entity;
+        T TargetEntity<T>() where T : Entity;
 
-        T TargetTile<T>(TileBase tile) where T : TileBase;
+        T TargetTile<T>() where T : TileBase;
     }
 }

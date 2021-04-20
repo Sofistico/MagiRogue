@@ -19,15 +19,13 @@ namespace MagiRogue.Commands
     /// </summary>
     public class Target : ITarget
     {
-        public Coord TargetCoord { get; set; }
         public Entity Cursor { get; set; }
 
-        public Target(Coord targetCoord)
+        public Target(Coord spawnCoord)
         {
-            TargetCoord = targetCoord;
             Color targetColor = new Color(255, 0, 0);
 
-            Cursor = new Actor(targetColor, Color.Transparent, 'X', (int)MapLayer.PLAYER, TargetCoord)
+            Cursor = new Actor(targetColor, Color.Transparent, 'X', (int)MapLayer.PLAYER, spawnCoord)
             {
                 Name = "Target Cursor",
                 IsWalkable = true,
@@ -48,14 +46,14 @@ namespace MagiRogue.Commands
             Cursor.Animation.Start();
         }
 
-        public T TargetEntity<T>(Entity entity) where T : Entity
+        public T TargetEntity<T>() where T : Entity
         {
-            throw new NotImplementedException();
+            return GameLoop.World.CurrentMap.GetEntityAt<T>(Cursor.Position);
         }
 
-        public T TargetTile<T>(TileBase tile) where T : TileBase
+        public T TargetTile<T>() where T : TileBase
         {
-            throw new NotImplementedException();
+            return GameLoop.World.CurrentMap.GetTileAt<T>(Cursor.Position);
         }
     }
 }

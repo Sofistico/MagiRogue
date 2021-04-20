@@ -30,9 +30,7 @@ namespace MagiRogue.UI
 
         #region Field
 
-#nullable enable
         private static Player GetPlayer => GameLoop.World.Player;
-#nullable disable
 
         public SadConsole.Themes.Colors CustomColors;
 
@@ -212,10 +210,9 @@ namespace MagiRogue.UI
 
                 if (info.IsKeyPressed(Keys.NumPad0))
                 {
-                    int xCenter = (MapWindow.Position.X + MapWindow.Width) / 2;
-                    int yCenter = (MapWindow.Position.Y + MapWindow.Height) / 2;
-                    PopWindow w = new PopWindow("Test");
+                    LookWindow w = new LookWindow(GetPlayer);
                     w.Show();
+                    IsFocused = true;
                 }
 
 #endif
