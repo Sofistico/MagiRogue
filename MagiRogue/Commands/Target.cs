@@ -21,6 +21,8 @@ namespace MagiRogue.Commands
     {
         public Entity Cursor { get; set; }
 
+        public Action TargetAction;
+
         public Target(Coord spawnCoord)
         {
             Color targetColor = new Color(255, 0, 0);
