@@ -23,9 +23,13 @@ namespace MagiRogue.Commands
 
         public Action TargetAction;
 
+        public Coord OriginCoord { get; set; }
+
         public Target(Coord spawnCoord)
         {
             Color targetColor = new Color(255, 0, 0);
+
+            spawnCoord = OriginCoord;
 
             Cursor = new Actor(targetColor, Color.Transparent, 'X', (int)MapLayer.PLAYER, spawnCoord)
             {

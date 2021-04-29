@@ -26,6 +26,8 @@ namespace MagiRogue.System
         private readonly int _maxRooms = 20;
         private readonly int _minRoomSize = 4;
         private readonly int _maxRoomSize = 10;
+        private const int _zMaxUpLevel = 10;
+        private const int _zMaxLowLevel = -10;
 
         /// <summary>
         /// Stores the current map

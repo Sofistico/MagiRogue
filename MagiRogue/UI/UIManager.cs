@@ -104,8 +104,6 @@ namespace MagiRogue.UI
 
         #endregion ConstructorAndInitCode
 
-        #region HelperMethods
-
         #region Input
 
         public static readonly Dictionary<Keys, Direction> MovementDirectionMapping = new Dictionary<Keys, Direction>
@@ -247,6 +245,8 @@ namespace MagiRogue.UI
         }
 
         #endregion Input
+
+        #region HelperMethods
 
         // Creates a window that encloses a map console
         // of a specified height and width
