@@ -176,12 +176,17 @@ namespace MagiRogue.UI
                     if (!(target != null))
                         target = new Target(GetPlayer.Position);
 
-                    if (GameLoop.World.CurrentMap.ControlledEntitiy is not Player)
+                    if (GameLoop.World.CurrentMap.ControlledEntitiy is not Player
+                        && !target.EntityInTarget(target.Cursor.Position))
                     {
                         GameLoop.World.ChangeControlledEntity(GetPlayer);
                         GameLoop.World.CurrentMap.Remove(target.Cursor);
                         target = null;
                         return true;
+                    }
+                    if(target.EntityInTarget(target.Cursor.Position))
+                    {
+                        LookWindow w = new LookWindow(target.TargetEntity<Entity>());
                     }
 
                     GameLoop.World.CurrentMap.Add(target.Cursor);

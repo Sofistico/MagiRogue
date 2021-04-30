@@ -29,7 +29,7 @@ namespace MagiRogue.Commands
         {
             Color targetColor = new Color(255, 0, 0);
 
-            spawnCoord = OriginCoord;
+            OriginCoord = spawnCoord;
 
             Cursor = new Actor(targetColor, Color.Transparent, 'X', (int)MapLayer.PLAYER, spawnCoord)
             {
@@ -54,12 +54,36 @@ namespace MagiRogue.Commands
 
         public T TargetEntity<T>() where T : Entity
         {
-            return GameLoop.World.CurrentMap.GetEntityAt<T>(Cursor.Position);
+            var entities = GameLoop.World.CurrentMap.GetEntities<T>(Cursor.Position);
+            var entity = entities.Where(e => e.Layer != (int)MapLayer.PLAYER).FirstOrDefault();
+
+            return entity;
         }
 
         public T TargetTile<T>() where T : TileBase
         {
             return GameLoop.World.CurrentMap.GetTileAt<T>(Cursor.Position);
+        }
+
+        public bool EntityInTarget(Coord coord)
+        {
+            var test = GameLoop.World.CurrentMap.GetEntities<Entity>(coord);
+
+            if (test.Any())
+            {
+                var t = test.Select<Entity, bool>(e => e.Layer != (int)MapLayer.PLAYER);
+
+                return t.Any();
+            }
+
+            return false;
+        }
+
+        public Actor TargetRandomActor(int searchRadius, Coord centerRadius)
+        {
+            RadiusAreaProvider radius = new RadiusAreaProvider(centerRadius, searchRadius, Radius.CIRCLE);
+
+            throw new NotImplementedException();
         }
     }
 }
