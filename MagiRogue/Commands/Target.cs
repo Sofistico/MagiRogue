@@ -79,6 +79,10 @@ namespace MagiRogue.Commands
             return false;
         }
 
+        public Coord CheckIfEntityThere()
+        {
+        }
+
         public Actor TargetRandomActor(int searchRadius, Coord centerRadius)
         {
             RadiusAreaProvider radius = new RadiusAreaProvider(centerRadius, searchRadius, Radius.CIRCLE);
