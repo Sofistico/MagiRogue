@@ -28,10 +28,13 @@ namespace MagiRogue.UI.Windows
         /// <param name="title"></param>
         public PopWindow(string title) : base(100, 20, title)
         {
+            GameLoop.UIManager.NoPopWindow = false;
+
+            IsFocused = true;
+
             CloseOnEscKey = true;
 
             Center();
-            IsFocused = true;
 
             const string cancelButtonText = "Cancel";
 
@@ -46,6 +49,14 @@ namespace MagiRogue.UI.Windows
             _cancelButton.Click += (_, __) => Hide();
 
             Add(_cancelButton);
+        }
+
+        public override void Hide()
+        {
+            GameLoop.UIManager.NoPopWindow = true;
+            GameLoop.UIManager.IsFocused = true;
+
+            base.Hide();
         }
     }
 }

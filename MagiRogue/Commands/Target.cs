@@ -21,7 +21,7 @@ namespace MagiRogue.Commands
     {
         public Entity Cursor { get; set; }
 
-        public Action TargetAction;
+        public IList<Entity> TargetList { get; set; }
 
         public Coord OriginCoord { get; set; }
 
@@ -52,12 +52,21 @@ namespace MagiRogue.Commands
             Cursor.Animation.Start();
         }
 
-        public T TargetEntity<T>() where T : Entity
+        public IList<T> TargetEntity<T>() where T : Entity
         {
-            var entities = GameLoop.World.CurrentMap.GetEntities<T>(Cursor.Position);
-            var entity = entities.Where(e => e.Layer != (int)MapLayer.PLAYER).FirstOrDefault();
+            TargetList = null;
 
-            return entity;
+            IList<T> entities = GameLoop.World.CurrentMap.GetEntities<T>(Cursor.Position).ToList();
+
+            entities.RemoveAt(0);
+
+            if (entities.Count != 0)
+            {
+                TargetList = (IList<Entity>)entities;
+                return entities;
+            }
+
+            return null;
         }
 
         public T TargetTile<T>() where T : TileBase
@@ -65,22 +74,15 @@ namespace MagiRogue.Commands
             return GameLoop.World.CurrentMap.GetTileAt<T>(Cursor.Position);
         }
 
-        public bool EntityInTarget(Coord coord)
+        public bool EntityInTarget()
         {
-            var test = GameLoop.World.CurrentMap.GetEntities<Entity>(coord);
-
-            if (test.Any())
+            if (GameLoop.World.CurrentMap.GetEntities<Entity>(Cursor.Position).Any(e => e.ID != Cursor.ID)
+                && GameLoop.World.CurrentMap.GetEntity<Entity>(Cursor.Position) is not Player)
             {
-                var t = test.Select<Entity, bool>(e => e.Layer != (int)MapLayer.PLAYER);
-
-                return t.Any();
+                TargetEntity<Entity>();
+                return true;
             }
-
             return false;
-        }
-
-        public Coord CheckIfEntityThere()
-        {
         }
 
         public Actor TargetRandomActor(int searchRadius, Coord centerRadius)

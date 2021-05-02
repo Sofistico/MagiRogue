@@ -26,6 +26,8 @@ namespace MagiRogue.UI
         public StatusWindow StatusConsole { get; set; }
         public MainMenuWindow MainMenu { get; set; }
 
+        public bool NoPopWindow { get; set; } = true;
+
         #endregion Managers
 
         #region Field
@@ -176,17 +178,24 @@ namespace MagiRogue.UI
                     if (!(target != null))
                         target = new Target(GetPlayer.Position);
 
+                    if (target.EntityInTarget())
+                    {
+                        if (target.TargetList != null)
+                        {
+                            LookWindow w = new LookWindow(target.TargetList[0]);
+                            w.Show();
+
+                            return true;
+                        }
+                    }
+
                     if (GameLoop.World.CurrentMap.ControlledEntitiy is not Player
-                        && !target.EntityInTarget(target.Cursor.Position))
+                        && !target.EntityInTarget())
                     {
                         GameLoop.World.ChangeControlledEntity(GetPlayer);
                         GameLoop.World.CurrentMap.Remove(target.Cursor);
                         target = null;
                         return true;
-                    }
-                    if(target.EntityInTarget(target.Cursor.Position))
-                    {
-                        LookWindow w = new LookWindow(target.TargetEntity<Entity>());
                     }
 
                     GameLoop.World.CurrentMap.Add(target.Cursor);
@@ -220,7 +229,7 @@ namespace MagiRogue.UI
 
 #endif
 
-                if (info.IsKeyPressed(Keys.Escape))
+                if (info.IsKeyPressed(Keys.Escape) && NoPopWindow)
                 {
                     //SadConsole.Game.Instance.Exit();
                     MainMenu.Show();
