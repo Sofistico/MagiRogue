@@ -4,9 +4,9 @@ using SadConsole;
 using SadConsole.Controls;
 using System;
 
-namespace MagiRogue.UI
+namespace MagiRogue.UI.Windows
 {
-    public class StatusWindow : Window
+    public class StatusWindow : MagiBaseWindow
     {
         private readonly Player player;
         private readonly ScrollingConsole statsConsole;
@@ -14,16 +14,9 @@ namespace MagiRogue.UI
 
         private const int windowBorderThickness = 2;
 
-        public StatusWindow(int width, int heigth, string title) : base(width, heigth)
+        public StatusWindow(int width, int heigth, string title) : base(width, heigth, title)
         {
-            // Ensure that the window background is the correct colour
-            ThemeColors = SadConsole.Themes.Colors.CreateAnsi();
-
-            CanDrag = false;
-
             player = GameLoop.World.Player;
-
-            Title = title.Align(HorizontalAlignment.Center, width);
 
             statsConsole = new ScrollingConsole(width - windowBorderThickness, heigth - windowBorderThickness)
             {
@@ -57,9 +50,9 @@ namespace MagiRogue.UI
         public override void Update(TimeSpan time)
         {
             statsConsole.Print(0, 0, $"{player.Name}");
-            statsConsole.Print(0, 2, $"Health: {player.Stats.Health} / {player.Stats.MaxHealth}   ", Color.Red);
-            statsConsole.Print(0, 3, $"Blood Mana: {player.Stats.BloodyMana}  ", Color.DarkRed);
-            statsConsole.Print(0, 4, $"Natural Mana: {player.Stats.NaturalMana}   ", Color.LightBlue);
+            statsConsole.Print(0, 2, $"Health: {(int)player.Stats.Health} / {player.Stats.MaxHealth}   ", Color.Red);
+            statsConsole.Print(0, 3, $"Blood Mana: {player.Stats.PersonalMana}  ", Color.DarkRed);
+            statsConsole.Print(0, 4, $"Natural Mana: {player.Stats.AmbientMana}   ", Color.LightBlue);
 
             base.Update(time);
         }

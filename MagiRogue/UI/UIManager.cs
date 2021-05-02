@@ -3,6 +3,7 @@ using MagiRogue.Commands;
 using MagiRogue.Entities;
 using MagiRogue.System;
 using MagiRogue.System.Time;
+using MagiRogue.UI.Windows;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using SadConsole;
@@ -19,18 +20,23 @@ namespace MagiRogue.UI
         #region Managers
 
         // Here are the managers
-        public ScrollingConsole MapConsole;
-        public Window MapWindow;
-        public MessageLogWindow MessageLog;
-        public InventoryWindow InventoryScreen;
-        public StatusWindow StatusConsole;
-        public MainMenuWindow MainMenu;
+        public MapWindow MapWindow { get; set; }
+        public MessageLogWindow MessageLog { get; set; }
+        public InventoryWindow InventoryScreen { get; set; }
+        public StatusWindow StatusConsole { get; set; }
+        public MainMenuWindow MainMenu { get; set; }
+
+        public bool NoPopWindow { get; set; } = true;
 
         #endregion Managers
 
         #region Field
 
         private static Player GetPlayer => GameLoop.World.Player;
+
+        public SadConsole.Themes.Colors CustomColors;
+
+        private Target target;
 
         #endregion Field
 
@@ -51,16 +57,21 @@ namespace MagiRogue.UI
         // Initiates the game by means of going to the menu first
         public void InitMainMenu()
         {
-            MainMenu = new MainMenuWindow(GameLoop.GameWidth, GameLoop.GameHeight);
+            SetUpCustomColors();
+
+            MainMenu = new MainMenuWindow(GameLoop.GameWidth, GameLoop.GameHeight)
+            {
+                IsFocused = true
+            };
             Children.Add(MainMenu);
             MainMenu.Show();
             MainMenu.Position = new Point(0, 0);
-
-            CreateConsoles();
         }
 
         public void StartGame(bool testGame = false)
         {
+            IsFocused = true;
+
             GameLoop.World = new World(testGame);
 
             // Hides the main menu, so that it's possible to interact with the other windows.
@@ -83,37 +94,21 @@ namespace MagiRogue.UI
             StatusConsole.Position = new Point(GameLoop.GameWidth / 2, 0);
             StatusConsole.Show();
 
-            // Load the map into the MapConsole
-            LoadMap(GameLoop.World.CurrentMap);
-
-            // Now that the MapConsole is ready, build the Window
+            // Build the Window
             CreateMapWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight, "Game Map");
-            UseMouse = true;
+
+            // Then load the map into the MapConsole
+            MapWindow.LoadMap(GameLoop.World.CurrentMap);
 
             // Start the game with the camera focused on the player
-            CenterOnActor(GameLoop.World.Player);
+            MapWindow.CenterOnActor(GameLoop.World.Player);
         }
 
         #endregion ConstructorAndInitCode
 
-        #region HelperMethods
-
-        // Creates all child consoles to be managed
-        private void CreateConsoles()
-        {
-            // Temporarily create a console with *no* tile data that will later be replaced with map data
-            MapConsole = new ScrollingConsole(GameLoop.GameWidth, GameLoop.GameHeight);
-        }
-
-        // centers the viewport camera on an Actor
-        public void CenterOnActor(Actor actor)
-        {
-            MapConsole.CenterViewPortOnPoint(actor.Position);
-        }
-
         #region Input
 
-        private static readonly Dictionary<Keys, Direction> MovementDirectionMapping = new Dictionary<Keys, Direction>
+        public static readonly Dictionary<Keys, Direction> MovementDirectionMapping = new Dictionary<Keys, Direction>
         {
             { Keys.NumPad7, Direction.UP_LEFT }, { Keys.NumPad8, Direction.UP }, { Keys.NumPad9, Direction.UP_RIGHT },
             { Keys.NumPad4, Direction.LEFT }, { Keys.NumPad6, Direction.RIGHT },
@@ -125,74 +120,127 @@ namespace MagiRogue.UI
         // based on the button pressed.
         public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
         {
-            //if (info.IsKeyPressed(Keys.F11))
-            //Settings.ToggleFullScreen(); // Too bugged right now to be used
+            if (GameLoop.World != null)
+            {
+                if (HandleMove(info))
+                {
+                    if (!GetPlayer.Bumped && GameLoop.World.CurrentMap.ControlledEntitiy is Player)
+                        GameLoop.World.ProcessTurn(TimeHelper.GetWalkTime(GetPlayer), true);
+                    else if (GameLoop.World.CurrentMap.ControlledEntitiy is Player)
+                        GameLoop.World.ProcessTurn(TimeHelper.GetAttackTime(GetPlayer), true);
 
-            if (HandleMove(info))
-            {
-                if (!GetPlayer.Bumped)
-                    GameLoop.World.ProcessTurn(TimeHelper.GetWalkTime(GetPlayer), true);
-                else
-                    GameLoop.World.ProcessTurn(TimeHelper.GetAttackTime(GetPlayer), true);
-            }
+                    return true;
+                }
 
-            if (info.IsKeyPressed(Keys.NumPad5))
-                GameLoop.World.ProcessTurn(TimeHelper.Wait, true);
+                if (info.IsKeyPressed(Keys.NumPad5))
+                    GameLoop.World.ProcessTurn(TimeHelper.Wait, true);
 
-            if (info.IsKeyPressed(Keys.Escape))
-                SadConsole.Game.Instance.Exit();
+                if (info.IsKeyPressed(Keys.A))
+                {
+                    bool sucess = CommandManager.DirectAttack(GameLoop.World.Player);
+                    GameLoop.World.ProcessTurn(TimeHelper.GetAttackTime(GameLoop.World.Player), sucess);
+                }
 
-            if (info.IsKeyPressed(Keys.A))
-            {
-                bool sucess = CommandManager.DirectAttack(GameLoop.World.Player);
-                GameLoop.World.ProcessTurn(TimeHelper.GetAttackTime(GameLoop.World.Player), sucess);
-            }
+                if (info.IsKeyPressed(Keys.G))
+                {
+                    Item item = GameLoop.World.CurrentMap.GetEntityAt<Item>(GameLoop.World.Player.Position);
+                    bool sucess = CommandManager.PickUp(GameLoop.World.Player, item);
+                    InventoryScreen.ShowItems(GameLoop.World.Player);
+                    GameLoop.World.ProcessTurn(TimeHelper.Interact, sucess);
+                }
+                if (info.IsKeyPressed(Keys.D))
+                {
+                    bool sucess = CommandManager.DropItems(GameLoop.World.Player);
+                    Item item = GameLoop.World.CurrentMap.GetEntity<Item>(GameLoop.World.Player.Position);
+                    InventoryScreen.RemoveItemFromConsole(item);
+                    InventoryScreen.ShowItems(GameLoop.World.Player);
+                    GameLoop.World.ProcessTurn(TimeHelper.Interact, sucess);
+                }
+                if (info.IsKeyPressed(Keys.C))
+                {
+                    bool sucess = CommandManager.CloseDoor(GameLoop.World.Player);
+                    GameLoop.World.ProcessTurn(TimeHelper.Interact, sucess);
+                    MapWindow.MapConsole.IsDirty = true;
+                }
+                if (info.IsKeyPressed(Keys.I))
+                {
+                    InventoryScreen.Show();
+                }
 
-            if (info.IsKeyPressed(Keys.G))
-            {
-                Item item = GameLoop.World.CurrentMap.GetEntityAt<Item>(GameLoop.World.Player.Position);
-                bool sucess = CommandManager.PickUp(GameLoop.World.Player, item);
-                InventoryScreen.ShowItems(GameLoop.World.Player);
-                GameLoop.World.ProcessTurn(TimeHelper.Interact, sucess);
-            }
-            if (info.IsKeyPressed(Keys.D))
-            {
-                bool sucess = CommandManager.DropItems(GameLoop.World.Player);
-                Item item = GameLoop.World.CurrentMap.GetEntity<Item>(GameLoop.World.Player.Position);
-                InventoryScreen.RemoveItemFromConsole(item);
-                InventoryScreen.ShowItems(GameLoop.World.Player);
-                GameLoop.World.ProcessTurn(TimeHelper.Interact, sucess);
-            }
-            if (info.IsKeyPressed(Keys.C))
-            {
-                bool sucess = CommandManager.CloseDoor(GameLoop.World.Player);
-                GameLoop.World.ProcessTurn(TimeHelper.Interact, sucess);
-            }
-            if (info.IsKeyPressed(Keys.I))
-            {
-                InventoryScreen.Show();
-            }
+                if (info.IsKeyPressed(Keys.H))
+                {
+                    bool sucess = CommandManager.ForcefulyIntegrateAmbientMana(GameLoop.World.Player);
+                    GameLoop.World.ProcessTurn(TimeHelper.MagicalThings, sucess);
+                }
 
-            if (info.IsKeyPressed(Keys.H))
-            {
-                bool sucess = CommandManager.HurtYourself(GameLoop.World.Player);
-                GameLoop.World.ProcessTurn(TimeHelper.MagicalThings, sucess);
-            }
+                if (info.IsKeyPressed(Keys.L))
+                {
+                    if (!(target != null))
+                        target = new Target(GetPlayer.Position);
+
+                    if (target.EntityInTarget())
+                    {
+                        if (target.TargetList != null)
+                        {
+                            LookWindow w = new LookWindow(target.TargetList[0]);
+                            w.Show();
+
+                            return true;
+                        }
+                    }
+
+                    if (GameLoop.World.CurrentMap.ControlledEntitiy is not Player
+                        && !target.EntityInTarget())
+                    {
+                        GameLoop.World.ChangeControlledEntity(GetPlayer);
+                        GameLoop.World.CurrentMap.Remove(target.Cursor);
+                        target = null;
+                        return true;
+                    }
+
+                    GameLoop.World.CurrentMap.Add(target.Cursor);
+
+                    GameLoop.World.ChangeControlledEntity(target.Cursor);
+
+                    return true;
+                }
+
 #if DEBUG
-            if (info.IsKeyPressed(Keys.F10))
-            {
-                CommandManager.ToggleFOV();
+                if (info.IsKeyPressed(Keys.F10))
+                {
+                    CommandManager.ToggleFOV();
+                    MapWindow.MapConsole.IsDirty = true;
+                }
+
+                if (info.IsKeyPressed(Keys.F8))
+                {
+                    GetPlayer.AddComponent(new Components.TestComponent(GetPlayer));
+                }
+
+                if (info.IsKeyPressed(Keys.F12))
+                    PrintHeader();
+
+                if (info.IsKeyPressed(Keys.NumPad0))
+                {
+                    LookWindow w = new LookWindow(GetPlayer);
+                    w.Show();
+                    IsFocused = true;
+                }
+
+#endif
+
+                if (info.IsKeyPressed(Keys.Escape) && NoPopWindow)
+                {
+                    //SadConsole.Game.Instance.Exit();
+                    MainMenu.Show();
+                    MainMenu.IsFocused = true;
+                }
             }
 
-            if (info.IsKeyPressed(Keys.F8))
-            {
-                GetPlayer.AddComponent(new Components.TestComponent(GetPlayer));
-            }
-#endif
             return base.ProcessKeyboard(info);
         }
 
-        private bool HandleMove(SadConsole.Input.Keyboard info)
+        public bool HandleMove(SadConsole.Input.Keyboard info)
         {
             foreach (Keys key in MovementDirectionMapping.Keys)
             {
@@ -201,8 +249,8 @@ namespace MagiRogue.UI
                     Direction moveDirection = MovementDirectionMapping[key];
                     Coord coorToMove = new Coord(moveDirection.DeltaX, moveDirection.DeltaY);
 
-                    bool sucess = CommandManager.MoveActorBy(GameLoop.World.Player, coorToMove);
-                    CenterOnActor(GameLoop.World.Player);
+                    bool sucess = CommandManager.MoveActorBy((Actor)GameLoop.World.CurrentMap.ControlledEntitiy, coorToMove);
+                    MapWindow.CenterOnActor((Actor)GameLoop.World.CurrentMap.ControlledEntitiy);
                     return sucess;
                 }
             }
@@ -212,6 +260,8 @@ namespace MagiRogue.UI
 
         #endregion Input
 
+        #region HelperMethods
+
         // Creates a window that encloses a map console
         // of a specified height and width
         // and displays a centered window title
@@ -219,45 +269,13 @@ namespace MagiRogue.UI
         // so it is updated and drawn
         public void CreateMapWindow(int width, int height, string title)
         {
-            MapWindow = new Window(width, height)
-            {
-                CanDrag = false
-            };
-
-            MapWindow.ThemeColors = SadConsole.Themes.Colors.CreateAnsi();
-
-            //make console short enough to show the window title
-            //and borders, and position it away from borders
-            int mapConsoleWidth = width - 2;
-            int mapConsoleHeight = height - 2;
-
-            // Resize the Map Console's ViewPort to fit inside of the window's borders snugly
-            MapConsole.ViewPort = new Rectangle(0, 0, mapConsoleWidth, mapConsoleHeight);
-
-            //reposition the MapConsole so it doesnt overlap with the left/top window edges
-            MapConsole.Position = new Point(1, 1);
-
-            MapConsole.DefaultBackground = Color.Black;
-
-            //close window button
-            /*Button closeButton = new Button(3, 1);
-            closeButton.Position = new Point(0, 0);
-            closeButton.Text = "[X]";
-
-            //Add the close button to the Window's list of UI elements
-            MapWindow.Add(closeButton);*/
-
-            // center the title of the console at the top of the window
-            MapWindow.Title = title.Align(HorizontalAlignment.Center, mapConsoleWidth);
-
-            //add the map viewer to the window
-            MapWindow.Children.Add(MapConsole);
+            MapWindow = new MapWindow(width, height, title);
 
             // The MapWindow becomes a child console of the UIManager
             Children.Add(MapWindow);
 
-            // Add the player to the MapConsole's render list
-            MapConsole.Children.Add(GameLoop.World.Player);
+            // Add the map console to it
+            MapWindow.CreateMapConsole();
 
             // Without this, the window will never be visible on screen
             MapWindow.Show();
@@ -266,7 +284,9 @@ namespace MagiRogue.UI
         // Method helper to print the X and Y of the console.
         // Use only for debugging purposes
 
-        /*private static void PrintHeader()
+#if DEBUG
+
+        private static void PrintHeader()
         {
             int counter = 0;
             var startingColor = Color.Black.GetRandomColor(SadConsole.Global.Random);
@@ -306,50 +326,38 @@ namespace MagiRogue.UI
             UIManagerConsoles.Print(4, 2, "Console Size");
             UIManagerConsoles.Print(4, 3, "                         ");
             UIManagerConsoles.Print(4, 3, $"{UIManagerConsoles.Width} {UIManagerConsoles.Height}");
-        }*/
-
-        // Adds the entire list of entities found in the
-        // World.CurrentMap's Entities SpatialMap to the
-        // MapConsole, so they can be seen onscreen
-        private void SyncMapEntities(Map map)
-        {
-            // remove all Entities from the console first
-            MapConsole.Children.Clear();
-
-            // Now pull all of the entities into the MapConsole in bulk
-            foreach (Entity entity in map.Entities.Items)
-            {
-                MapConsole.Children.Add(entity);
-            }
-
-            // Subscribe to the Entities ItemAdded listener, so we can keep our MapConsole entities in sync
-            map.Entities.ItemAdded += OnMapEntityAdded;
-
-            // Subscribe to the Entities ItemRemoved listener, so we can keep our MapConsole entities in sync
-            map.Entities.ItemRemoved += OnMapEntityRemoved;
         }
 
-        // Remove an Entity from the MapConsole every time the Map's Entity collection changes
-        public void OnMapEntityRemoved(object sender, ItemEventArgs<GoRogue.GameFramework.IGameObject> e)
-        {
-            MapConsole.Children.Remove(e.Item as Entity);
-        }
+#endif
 
-        // Add an Entity to the MapConsole every time the Map's Entity collection changes
-        public void OnMapEntityAdded(object sender, ItemEventArgs<GoRogue.GameFramework.IGameObject> e)
+        // Build a new coloured theme based on SC's default theme
+        // and then set it as the program's default theme.
+        private void SetUpCustomColors()
         {
-            MapConsole.Children.Add(e.Item as Entity);
-        }
+            // Create a set of default colours that we will modify
+            CustomColors = new SadConsole.Themes.Colors();
 
-        // Loads a Map into the MapConsole
-        private void LoadMap(Map map)
-        {
-            // First load the map's tiles into the console
-            MapConsole = new ScrollingConsole(GameLoop.World.CurrentMap.Width, GameLoop.World.CurrentMap.Height, Global.FontDefault,
-                new Rectangle(0, 0, GameLoop.GameWidth, GameLoop.GameHeight), map.Tiles);
+            // Pick a couple of background colours that we will apply to all consoles.
+            Color backgroundColor = Color.Black;
 
-            // Now Sync all of the map's entities
-            SyncMapEntities(map);
+            // Set background colour for controls consoles and their controls
+            CustomColors.ControlHostBack = backgroundColor;
+            CustomColors.ControlBack = backgroundColor;
+
+            // Generate background colours for dark and light themes based on
+            // the default background colour.
+            CustomColors.ControlBackLight = (backgroundColor * 1.3f).FillAlpha();
+            CustomColors.ControlBackDark = (backgroundColor * 0.7f).FillAlpha();
+
+            // Set a color for currently selected controls. This should always
+            // be different from the background colour.
+            CustomColors.ControlBackSelected = CustomColors.GrayDark;
+
+            // Rebuild all objects' themes with the custom colours we picked above.
+            CustomColors.RebuildAppearances();
+
+            // Now set all of these colours as default for SC's default theme.
+            SadConsole.Themes.Library.Default.Colors = CustomColors;
         }
 
         #endregion HelperMethods

@@ -56,6 +56,9 @@ namespace MagiRogue.Commands
         /// <param name="defender"></param>
         public static void Attack(Actor attacker, Actor defender)
         {
+            if (!defender.CanBeAttacked)
+                return;
+
             // Create two messages that describe the outcome
             // of the attack and defense
             StringBuilder attackMessage = new StringBuilder();
@@ -178,6 +181,10 @@ namespace MagiRogue.Commands
         /// <param name="defender"></param>
         public static void ResolveDeath(Actor defender)
         {
+            // if the defender can't be killed, do nothing.
+            if (!defender.CanBeKilled)
+                return;
+
             // Set up a customized death message
             StringBuilder deathMessage = new StringBuilder();
 
@@ -328,7 +335,7 @@ namespace MagiRogue.Commands
             if (inv.Inventory.Count == 0)
             {
                 GameLoop.UIManager.MessageLog.Add("There is no item to drop in your inventory");
-                return true;
+                return false;
             }
             else
             {
@@ -336,7 +343,8 @@ namespace MagiRogue.Commands
                 inv.Inventory.Remove(item);
                 item.Position = inv.Position;
                 GameLoop.World.CurrentMap.Add(item);
-                return false;
+                GameLoop.UIManager.MessageLog.Add($"{inv.Name} dropped {item.Name}");
+                return true;
             }
         }
 
@@ -354,16 +362,17 @@ namespace MagiRogue.Commands
 
 #endif
 
-        public static bool HurtYourself(Actor actor)
+        // TODO: Needs to be more inline with the flavorr of mol and add a counter to a insanity stat or an problem to using and etc...
+        public static bool ForcefulyIntegrateAmbientMana(Actor actor)
         {
             int maxMana = actor.Stats.BodyStat + actor.Stats.SoulStat + actor.Stats.MindStat;
-            if (actor.Stats.BloodyMana != maxMana)
+            if (actor.Stats.PersonalMana != maxMana)
             {
                 actor.Stats.Health -= 1;
                 actor.Anatomy.BloodCount -= 100f;
                 int roll = Dice.Roll("1d3");
                 float bloodyManaGained = float.Parse($"0.{roll}", CultureInfo.InvariantCulture.NumberFormat);
-                actor.Stats.BloodyMana = (float)Math.Round(actor.Stats.BloodyMana + bloodyManaGained, 1);
+                actor.Stats.PersonalMana = (float)Math.Round(actor.Stats.PersonalMana + bloodyManaGained, 1);
                 GameLoop.UIManager.MessageLog.Add($"You ritually wound yourself, channeling your blood into mana, gaining {bloodyManaGained} blood mana");
                 return true;
             }

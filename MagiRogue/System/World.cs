@@ -26,6 +26,8 @@ namespace MagiRogue.System
         private readonly int _maxRooms = 20;
         private readonly int _minRoomSize = 4;
         private readonly int _maxRoomSize = 10;
+        private const int _zMaxUpLevel = 10;
+        private const int _zMaxLowLevel = -10;
 
         /// <summary>
         /// Stores the current map
@@ -100,7 +102,8 @@ namespace MagiRogue.System
 
                     Player = new Player(Color.White, Color.Black, pos)
                     {
-                        Position = pos
+                        Position = pos,
+                        Description = "Here is you, you are beautiful"
                     };
                     //Player.AddComponent(new Components.HealthComponent(10, 10, 0.1f));
                     break;
@@ -156,13 +159,13 @@ namespace MagiRogue.System
 
                 Actor debugMonster = EntityFactory.ActorCreator(
                     pos,
-                    new ActorTemplate(Color.Blue, Color.Transparent, 'M', monsterStat, monsterAnatomy));
+                    new ActorTemplate(Color.Blue, Color.Transparent, 'M', monsterStat, monsterAnatomy, "DebugTest"));
 
                 debugMonster.Name = "Debug Monster";
 
                 debugMonster.AddComponent(new MoveAndAttackAI(debugMonster.Stats.ViewRadius));
                 debugMonster.Inventory.Add(EntityFactory.ItemCreator(debugMonster.Position,
-                    new ItemTemplate("Debug Remains", Color.Red, Color.Black, '%', 1.5f)));
+                    new ItemTemplate("Debug Remains", Color.Red, Color.Black, '%', 1.5f, "DebugRotten")));
                 debugMonster.Anatomy.Limbs = LimbTemplate.BasicHumanoidBody(debugMonster);
 
                 CurrentMap.Add(debugMonster);
@@ -192,7 +195,7 @@ namespace MagiRogue.System
                 Point posIron = new Point(lootPosition / CurrentMap.Width, lootPosition % CurrentMap.Height);
 
                 Item newLoot = EntityFactory.ItemCreator(posNew,
-                    new ItemTemplate("Gold Bar", Color.Gold, Color.White, '=', 12.5f));
+                    new ItemTemplate("Gold Bar", Color.Gold, Color.White, '=', 12.5f, "Here is a gold bar, pretty heavy"));
 
                 IronBar ironBar = new IronBar(posIron);
 
@@ -229,6 +232,8 @@ namespace MagiRogue.System
                     node = GetTime.NextNode();
                 }
 
+                GameLoop.UIManager.MapWindow.MapConsole.IsDirty = true;
+
 #if DEBUG
                 GameLoop.UIManager.MessageLog.Add($"Turns: {GetTime.Turns}, Tick: {GetTime.TimePassed.Ticks}");
 #endif
@@ -250,6 +255,11 @@ namespace MagiRogue.System
                 EntityTimeNode nextTurnNode = new EntityTimeNode(entityId, time + tick);
                 GetTime.RegisterEntity(nextTurnNode);
             }
+        }
+
+        public void ChangeControlledEntity(Entity entity)
+        {
+            CurrentMap.ControlledEntitiy = entity;
         }
     }
 }

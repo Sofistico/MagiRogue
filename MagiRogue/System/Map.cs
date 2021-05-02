@@ -26,6 +26,8 @@ namespace MagiRogue.System
 
         private TileBase[] _tiles; // Contains all tiles objects
 
+        private Entity _gameObjectControlled;
+
         /// <summary>
         /// All cell tiles of the map, it's a TileBase array, should never be directly declared to create new tiles, rather
         /// it must use <see cref="Map.SetTerrain(IGameObject)"/>.
@@ -42,7 +44,26 @@ namespace MagiRogue.System
         /// </summary>
         public FOVHandler FOVHandler { get; }
 
-        public Time.TimeSystem Time;
+        public TimeSystem Time { get; private set; }
+
+        /// <summary>
+        /// Fires whenever the value of <see cref="ControlledEntitiy"/> is changed.
+        /// </summary>
+        public event EventHandler<ControlledGameObjectChangedArgs> ControlledGameObjectChanged;
+
+        public Entity ControlledEntitiy
+        {
+            get => _gameObjectControlled;
+            set
+            {
+                if (_gameObjectControlled != value)
+                {
+                    Entity oldObject = _gameObjectControlled;
+                    _gameObjectControlled = value;
+                    ControlledGameObjectChanged?.Invoke(this, new ControlledGameObjectChangedArgs(oldObject));
+                }
+            }
+        }
 
         #endregion Properties
 
@@ -50,13 +71,13 @@ namespace MagiRogue.System
 
         /// <summary>
         /// Build a new map with a specified width and height, has  entity layers,
-        /// they being 1-Furniture, 2-Items, 3-Actors
+        /// they being 0-Furniture, 1-ghosts, 2-Items, 3-Actors, 4-Player
         /// </summary>
         /// <param name="width"></param>
         /// <param name="height"></param>
         public Map(int width, int height) : base(CreateTerrain(width, height), Enum.GetNames(typeof(MapLayer)).Length - 1,
             Distance.EUCLIDEAN,
-            entityLayersSupportingMultipleItems: LayerMasker.DEFAULT.Mask((int)MapLayer.ITEMS, (int)MapLayer.GHOSTS))
+            entityLayersSupportingMultipleItems: LayerMasker.DEFAULT.Mask((int)MapLayer.ITEMS, (int)MapLayer.GHOSTS, (int)MapLayer.PLAYER))
         {
             Tiles = ((ArrayMap<TileBase>)((LambdaSettableTranslationMap<TileBase, IGameObject>)Terrain).BaseMap);
             FOVHandler = new MagiRogueFOVVisibilityHandler(this, ColorAnsi.BlackBright, (int)MapLayer.GHOSTS);
@@ -65,7 +86,7 @@ namespace MagiRogue.System
             for (int i = 0; i < entitySyncersByLayer.Length; i++)
                 entitySyncersByLayer[i] = new MultipleConsoleEntityDrawingComponent();
 
-            Time = new Time.TimeSystem();
+            Time = new TimeSystem();
         }
 
         #endregion Constructor
@@ -111,12 +132,15 @@ namespace MagiRogue.System
         }
 
         /// <summary>
-        /// Removes an Entity from the MultiSpatialMap
+        /// Removes an Entity from the Entities Field
         /// </summary>
         /// <param name="entity"></param>
         public void Remove(Entity entity)
         {
-            RemoveEntity(entity);
+            if (!RemoveEntity(entity))
+            {
+                throw new Exception($"Failed to remove {entity.Name} || {entity.Position} || {entity.GetType()}");
+            }
 
             // Set this up to sycer properly
             entitySyncersByLayer[entity.Layer - 1].Entities.Remove(entity);
@@ -126,7 +150,7 @@ namespace MagiRogue.System
         }
 
         /// <summary>
-        /// Adds an Entity to the MultiSpatialMap
+        /// Adds an Entity to the Entities field
         /// </summary>
         /// <param name="entity"></param>
         public void Add(Entity entity)
@@ -135,12 +159,17 @@ namespace MagiRogue.System
             if (entity is Player player)
             {
                 CalculateFOV(position: player.Position, player.Stats.ViewRadius, radiusShape: Radius.CIRCLE);
+                ControlledEntitiy = player;
             }
 
             // Set this up to sycer properly
             entitySyncersByLayer[entity.Layer - 1].Entities.Add(entity);
 
-            AddEntity(entity);
+            if (!AddEntity(entity))
+            {
+                throw new Exception($"Failed to add {entity.Name} || {entity.Position} || {entity.GetType()}");
+            }
+
             if (entity is Actor monster)
             {
                 EntityTimeNode entityNode = new EntityTimeNode(monster.ID, Time.TimePassed.Ticks + 100);
@@ -221,6 +250,20 @@ namespace MagiRogue.System
             return null;
         }
 
+        public void ConfigureRender(SadConsole.Console renderer)
+        {
+            // Syncs the entity and addeds to the renderer
+            foreach (MultipleConsoleEntityDrawingComponent sync in entitySyncersByLayer)
+            {
+                renderer.Components.Add(sync);
+                // Necessary so that the MultipleConsoleEntityDrawingComponent doesn't try to forcefully update
+                // visibility.
+                sync.HandleIsVisible = false;
+            }
+
+            renderer.IsDirty = true;
+        }
+
         #endregion HelperMethods
 
         #region Overload
@@ -254,4 +297,19 @@ namespace MagiRogue.System
         ACTORS,
         PLAYER
     }
+
+    #region Event
+
+    public class ControlledGameObjectChangedArgs : EventArgs
+    {
+        public Entity OldObject;
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="oldObject"/>
+        public ControlledGameObjectChangedArgs(Entity oldObject) => OldObject = oldObject;
+    }
+
+    #endregion Event
 }

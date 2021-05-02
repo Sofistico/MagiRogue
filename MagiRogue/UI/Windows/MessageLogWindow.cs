@@ -3,14 +3,14 @@ using SadConsole;
 using System;
 using System.Collections.Generic;
 
-namespace MagiRogue.UI
+namespace MagiRogue.UI.Windows
 {
     //A scrollable window that displays messages
     //using a FIFO (first-in-first-out) Queue data structure
-    public class MessageLogWindow : Window
+    public class MessageLogWindow : MagiBaseWindow
     {
         //max number of lines to store in message log
-        private readonly int maxLines = 100;
+        private static readonly int maxLines = 100;
 
         // a Queue works using a FIFO structure, where the first line added
         // is the first line removed when we exceed the max number of lines
@@ -20,29 +20,22 @@ namespace MagiRogue.UI
         private readonly ScrollingConsole messageConsole;
 
         //scrollbar for message console
-        private readonly SadConsole.Controls.ScrollBar messageScrollBar;
+        private SadConsole.Controls.ScrollBar messageScrollBar;
 
         //Track the current position of the scrollbar
         private int scrollBarCurrentPosition;
 
         // account for the thickness of the window border to prevent UI element spillover
-        private readonly int windowBorderThickness = 2;
+        private static readonly int windowBorderThickness = 2;
 
         // Create a new window with the title centered
         // the window is draggable by default
-        public MessageLogWindow(int width, int height, string title) : base(width, height)
+        public MessageLogWindow(int width, int height, string title) : base(width, height, title)
         {
-            // Ensure that the window background is the correct colour
-
-            ThemeColors = SadConsole.Themes.Colors.CreateAnsi();
-
             lines = new Queue<string>();
-            CanDrag = false;
-
-            Title = title.Align(HorizontalAlignment.Center, Width);
 
             // add the message console, reposition, enable the viewport, and add it to the window
-            messageConsole = new ScrollingConsole(width - windowBorderThickness, height - windowBorderThickness)
+            messageConsole = new ScrollingConsole(width - windowBorderThickness, maxLines)
             {
                 Position = new Point(1, 1)
             };
@@ -50,8 +43,7 @@ namespace MagiRogue.UI
             messageConsole.DefaultBackground = Color.Black;
 
             // create a scrollbar and attach it to an event handler, then add it to the Window
-            messageScrollBar = new SadConsole.Controls.ScrollBar
-                (Orientation.Vertical, height - windowBorderThickness)
+            messageScrollBar = new SadConsole.Controls.ScrollBar(Orientation.Vertical, height - windowBorderThickness)
             {
                 Position = new Point(messageConsole.Width + 1, messageConsole.Position.X),
                 IsEnabled = false
@@ -66,11 +58,6 @@ namespace MagiRogue.UI
             Children.Add(messageConsole);
         }
 
-        public override void Draw(TimeSpan drawTime)
-        {
-            base.Draw(drawTime);
-        }
-
         public void Add(string message)
         {
             lines.Enqueue(message);
@@ -79,9 +66,9 @@ namespace MagiRogue.UI
             {
                 lines.Dequeue();
             }
-            // Move the cursor to the last line and print the message.
-            messageConsole.Cursor.Position = new Point(1, lines.Count);
-            messageConsole.Cursor.Print(message + "\n");
+
+            // This here says that there will be a new line, so i don't need position the cursor:
+            messageConsole.Cursor.Print(message).NewLine();
         }
 
         // Controls the position of the messagelog viewport
@@ -97,6 +84,8 @@ namespace MagiRogue.UI
 
         public override void Update(TimeSpan time)
         {
+            base.Update(time);
+
             // Ensure that the scrollbar tracks the current position of the messageConsole.
             if (messageConsole.TimesShiftedUp != 0 ||
                 messageConsole.Cursor.Position.Y >= messageConsole.ViewPort.Height + scrollBarCurrentPosition)
@@ -119,10 +108,8 @@ namespace MagiRogue.UI
                 messageScrollBar.Value = scrollBarCurrentPosition;
 
                 // Reset the shift amount.
-                //messageConsole.TimesShiftedUp = 0;
+                messageConsole.TimesShiftedUp = 0;
             }
-
-            base.Update(time);
         }
     }
 }

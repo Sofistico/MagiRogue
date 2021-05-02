@@ -35,15 +35,51 @@ namespace MagiRogue.Entities
 
         #region Properties
 
+        /// <summary>
+        /// The stats of the actor
+        /// </summary>
         public Stat Stats { get => stats; set => stats = value; }
+
+        /// <summary>
+        /// The anatomy of the actor
+        /// </summary>
         public Anatomy Anatomy { get => anatomy; set => anatomy = value; }
+
+        /// <summary>
+        /// Sets if the char has bumbed in something
+        /// </summary>
         public bool Bumped { get => bumped; set => bumped = value; }
+
+        /// <summary>
+        /// Here we define were the inventory is
+        /// </summary>
         public List<Item> Inventory { get; set; }
+
+        /// <summary>
+        /// Defines if this actor can be killed
+        /// </summary>
+        public bool CanBeKilled { get; set; } = true;
+        /// <summary>
+        /// Defines if a actor can target or be attacked by this actor
+        /// </summary>
+        public bool CanBeAttacked { get; set; } = true;
+        /// <summary>
+        /// Defines if the actor can interact with it's surrondings
+        /// </summary>
+        public bool CanInteract { get; set; } = true;
 
         #endregion Properties
 
         #region Constructor
 
+        /// <summary>
+        /// This here defines an actor, must be used with the <see cref= "Data.EntityFactory">
+        /// </summary>
+        /// <param name="foreground"></param>
+        /// <param name="background"></param>
+        /// <param name="glyph"></param>
+        /// <param name="layer"></param>
+        /// <param name="coord"></param>
         public Actor(Color foreground, Color background, int glyph, int layer, Coord coord
             ) : base(foreground, background,
             glyph, coord, layer)
@@ -93,7 +129,7 @@ namespace MagiRogue.Entities
             // do a bump attack
             Actor actor = GameLoop.World.CurrentMap.GetEntity<Actor>(Position + positionChange);
 
-            if (actor != null)
+            if (actor != null && CanBeAttacked)
             {
                 CommandManager.Attack(this, actor);
                 Bumped = true;
@@ -111,9 +147,10 @@ namespace MagiRogue.Entities
 
             // if there's a door here,
             // try to use it
-            if (door != null)
+            if (door != null && CanInteract)
             {
                 CommandManager.UseDoor(this, door);
+                GameLoop.UIManager.MapWindow.MapConsole.IsDirty = true;
                 return true;
             }
 

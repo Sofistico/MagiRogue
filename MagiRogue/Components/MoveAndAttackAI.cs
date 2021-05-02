@@ -3,7 +3,7 @@ using GoRogue.Pathing;
 using MagiRogue.Entities;
 using MagiRogue.System;
 using MagiRogue.System.Time;
-using MagiRogue.UI;
+using MagiRogue.UI.Windows;
 using System.Linq;
 
 namespace MagiRogue.Components
