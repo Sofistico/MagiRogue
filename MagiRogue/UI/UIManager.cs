@@ -224,7 +224,6 @@ namespace MagiRogue.UI
                 {
                     LookWindow w = new LookWindow(GetPlayer);
                     w.Show();
-                    IsFocused = true;
                 }
 
 #endif
