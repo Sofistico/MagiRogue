@@ -2,6 +2,6 @@
 {
     public class Magic
     {
-        // Create a magic inspired both by Mushoku Tensei and Full Metal Alchemist
+        // Create a magic inspired by Mother of learning
     }
 }
