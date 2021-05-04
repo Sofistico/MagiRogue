@@ -1,0 +1,13 @@
+﻿[
+  {
+    "Id": "test", // the id of the item
+    "Name": "Test Item", // Name of the item
+    "Description": "An test item. you shouldn't see it", // Description of the item
+    "Foreground": "Green", // Foreground of the item
+    "Background": "Black", // blackground of the item
+    "Glyph": "-", // the glyph of the item
+    "Weight": 12, // the weight of the item in kg
+    "Size": 10, // The size of the item in cm
+    "Condition": 100 // Percentage of the condition of the item, pretty much an health for the item
+  }
+]

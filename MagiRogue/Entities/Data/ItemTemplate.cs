@@ -28,6 +28,12 @@ namespace MagiRogue.Entities.Data
             Description = description;
         }
 
+        public ItemTemplate()
+        {
+        }
+
+        [DataMember]
+        public string Id { get; set; }
         [DataMember]
         public string Name { get; internal set; }
         [DataMember]
@@ -42,7 +48,7 @@ namespace MagiRogue.Entities.Data
         public int Size { get; set; }
         [DataMember]
         public int Condition { get; internal set; }
-
+        [DataMember]
         public string Description { get; set; }
     }
 }
