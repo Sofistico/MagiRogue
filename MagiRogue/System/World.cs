@@ -8,6 +8,9 @@ using MagiRogue.System.Time;
 using Microsoft.Xna.Framework;
 using SadConsole;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace MagiRogue.System
 {
@@ -203,6 +206,12 @@ namespace MagiRogue.System
                 CurrentMap.Add(newLoot);
                 CurrentMap.Add(ironBar);
             }
+
+            IList<ItemTemplate> itemTest = Utils.JsonUtils.JsonDeseralize<List<ItemTemplate>>(Path.Combine(
+                AppDomain.CurrentDomain.BaseDirectory,
+                "Entities", "Items", "Bars.json"));
+
+            Item test = EntityFactory.ItemCreator(new Coord(5, 5), itemTest.FirstOrDefault(i => i.Id == "test"));
         }
 
         public void ProcessTurn(long playerTime, bool sucess)
