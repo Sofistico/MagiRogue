@@ -1,9 +1,22 @@
 ﻿using Microsoft.Xna.Framework;
+using SadConsole.SerializedTypes;
 using System;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace MagiRogue.Entities.Data
 {
+    public class ItemJsonConverter : JsonConverter<Item>
+    {
+        public override Item ReadJson(JsonReader reader,
+            Type objectType,
+            Item existingValue,
+            bool hasExistingValue,
+            JsonSerializer serializer) => serializer.Deserialize<ItemTemplate>(reader);
+
+        public override void WriteJson(JsonWriter writer, Item value, JsonSerializer serializer) => serializer.Serialize(writer, (ItemTemplate)value);
+    }
+
     [DataContract]
     [Serializable]
     public class ItemTemplate
@@ -37,9 +50,9 @@ namespace MagiRogue.Entities.Data
         [DataMember]
         public string Name { get; internal set; }
         [DataMember]
-        public Color Foreground { get; internal set; }
+        public ColorSerialized Foreground { get; internal set; }
         [DataMember]
-        public Color Background { get; internal set; }
+        public ColorSerialized Background { get; internal set; }
         [DataMember]
         public int Glyph { get; internal set; }
         [DataMember]
@@ -50,5 +63,13 @@ namespace MagiRogue.Entities.Data
         public int Condition { get; internal set; }
         [DataMember]
         public string Description { get; set; }
+
+        public static implicit operator ItemTemplate(Item item)
+        {
+        }
+
+        public static implicit operator Item(ItemTemplate itemTemplate)
+        {
+        }
     }
 }

@@ -205,13 +205,17 @@ namespace MagiRogue.System
                 // add the Item to the MultiSpatialMap
                 CurrentMap.Add(newLoot);
                 CurrentMap.Add(ironBar);
+
+                //Serializer.Save<Entity>(newLoot, @"C:\Users\joaorodrigues\Test.txt", false);
             }
 
             IList<ItemTemplate> itemTest = Utils.JsonUtils.JsonDeseralize<List<ItemTemplate>>(Path.Combine(
                 AppDomain.CurrentDomain.BaseDirectory,
                 "Entities", "Items", "Bars.json"));
 
-            Item test = EntityFactory.ItemCreator(new Coord(5, 5), itemTest.FirstOrDefault(i => i.Id == "test"));
+            Item test = EntityFactory.ItemCreator(new Coord(10, 10), itemTest.FirstOrDefault(i => i.Id == "test"));
+
+            CurrentMap.Add(test);
         }
 
         public void ProcessTurn(long playerTime, bool sucess)

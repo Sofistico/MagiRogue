@@ -24,8 +24,10 @@ namespace MagiRogue.UI.Windows
             };
 
             lookConsole.Cursor.Position = new Point(1, 1);
-            lookConsole.Cursor.Print(entity.Description);
-
+            if (entity.Description != null)
+            {
+                lookConsole.Cursor.Print(entity.Description);
+            }
             Children.Add(lookConsole);
         }
     }
