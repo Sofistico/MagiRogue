@@ -30,7 +30,7 @@ namespace MagiRogue.Entities.Data
         /// <param name="glyph"></param>
         /// <param name="weight"></param>
         /// <param name="condition">Defaults to 100%</param>
-        public ItemTemplate(string name, Color foreground, Color background, int glyph, float weight, string description, int condition = 100)
+        public ItemTemplate(string name, Color foreground, Color background, int glyph, float weight, int size, string description, int condition = 100)
         {
             Name = name;
             Foreground = foreground;
@@ -39,6 +39,7 @@ namespace MagiRogue.Entities.Data
             Weight = weight;
             Condition = condition;
             Description = description;
+            Size = size;
         }
 
         public ItemTemplate()
@@ -64,12 +65,34 @@ namespace MagiRogue.Entities.Data
         [DataMember]
         public string Description { get; set; }
 
+        // Will need to see if it works, but so far the logic seems to check
         public static implicit operator ItemTemplate(Item item)
         {
+            ItemTemplate itemSerialized = new ItemTemplate(item.Name,
+                item.Animation[0].Foreground,
+                item.Animation[0].Background,
+                item.Animation[0].Glyph,
+                item.Weight,
+                item.Size,
+                item.Description,
+                item.Condition
+                );
+
+            return itemSerialized;
         }
 
         public static implicit operator Item(ItemTemplate itemTemplate)
         {
+            Item item = new Item(itemTemplate.Foreground,
+                itemTemplate.Background,
+                itemTemplate.Name,
+                itemTemplate.Glyph,
+                new GoRogue.Coord(),
+                itemTemplate.Size,
+                itemTemplate.Weight,
+                itemTemplate.Condition);
+
+            return item;
         }
     }
 }
