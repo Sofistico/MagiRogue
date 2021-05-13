@@ -168,7 +168,7 @@ namespace MagiRogue.System
 
                 debugMonster.AddComponent(new MoveAndAttackAI(debugMonster.Stats.ViewRadius));
                 debugMonster.Inventory.Add(EntityFactory.ItemCreator(debugMonster.Position,
-                    new ItemTemplate("Debug Remains", Color.Red, Color.Black, '%', 1.5f, "DebugRotten")));
+                    new ItemTemplate("Debug Remains", Color.Red, Color.Black, '%', 1.5f, 35, "DebugRotten")));
                 debugMonster.Anatomy.Limbs = LimbTemplate.BasicHumanoidBody(debugMonster);
 
                 CurrentMap.Add(debugMonster);
@@ -198,7 +198,7 @@ namespace MagiRogue.System
                 Point posIron = new Point(lootPosition / CurrentMap.Width, lootPosition % CurrentMap.Height);
 
                 Item newLoot = EntityFactory.ItemCreator(posNew,
-                    new ItemTemplate("Gold Bar", Color.Gold, Color.White, '=', 12.5f, "Here is a gold bar, pretty heavy"));
+                    new ItemTemplate("Gold Bar", Color.Gold, Color.White, '=', 12.5f, 15, "Here is a gold bar, pretty heavy"));
 
                 IronBar ironBar = new IronBar(posIron);
 
@@ -209,13 +209,15 @@ namespace MagiRogue.System
                 //Serializer.Save<Entity>(newLoot, @"C:\Users\joaorodrigues\Test.txt", false);
             }
 
+            /*ItemJsonConverter jsonConverter = new ItemJsonConverter();
+
             IList<ItemTemplate> itemTest = Utils.JsonUtils.JsonDeseralize<List<ItemTemplate>>(Path.Combine(
                 AppDomain.CurrentDomain.BaseDirectory,
-                "Entities", "Items", "Bars.json"));
+                "Entities", "Items", "Bars.json"), jsonConverter);
 
             Item test = EntityFactory.ItemCreator(new Coord(10, 10), itemTest.FirstOrDefault(i => i.Id == "test"));
 
-            CurrentMap.Add(test);
+            CurrentMap.Add(test);*/
         }
 
         public void ProcessTurn(long playerTime, bool sucess)
