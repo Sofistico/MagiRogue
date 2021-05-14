@@ -1,5 +1,8 @@
 ﻿namespace MagiRogue.System.Time
 {
+    /// <summary>
+    /// Definition of time, has converter to and from various dates and ticks.
+    /// </summary>
     public sealed class TimeDefSpan
     {
         private const int DaysPerMonth = 31;

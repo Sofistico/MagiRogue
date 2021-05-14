@@ -6,6 +6,7 @@ using SadConsole.Components;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using MagiRogue.System.Magic;
 
 namespace MagiRogue.Entities
 {
@@ -35,6 +36,8 @@ namespace MagiRogue.Entities
         public bool LeavesGhost { get; set; } = true;
 
         public string Description { get; set; }
+
+        public Magic Magic { get; set; }
 
         #region BackingField fields
 
@@ -81,6 +84,7 @@ namespace MagiRogue.Entities
             backingField.Moved += GoRogueMoved;
 
             Material = new Material();
+            Magic = new Magic();
         }
 
         private void GoRogueMoved(object sender, ItemMovedEventArgs<IGameObject> e)
@@ -154,6 +158,12 @@ namespace MagiRogue.Entities
         public void AddComponent(object component)
         {
             backingField.AddComponent(component);
+        }
+
+        public void AddComponent(params object[] components)
+        {
+            foreach (object component in components)
+                AddComponent(component);
         }
 
         T IHasComponents.GetComponent<T>()

@@ -33,12 +33,15 @@ namespace MagiRogue.Utils
     [Flags]
     public enum DamageType
     {
-        Physical = 0,
-        Force = 1 >> 1,
-        Fire = 1 >> 2,
-        Cold = 1 >> 3,
-        Poison = 1 >> 4,
-        Acid = 1 >> 5,
-        Electricity = 1 >> 6
+        None = 0,
+        Physical = 1 >> 1,
+        Force = 1 >> 2,
+        Fire = 1 >> 3,
+        Cold = 1 >> 4,
+        Poison = 1 >> 5,
+        Acid = 1 >> 6,
+        Electricity = 1 >> 7,
+        Soul = 1 >> 8,
+        Mind = 1 >> 9
     }
 }
