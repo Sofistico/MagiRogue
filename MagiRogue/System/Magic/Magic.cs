@@ -22,7 +22,7 @@ namespace MagiRogue.System.Magic
 
             if (spellCasted.CanCast(spellCaster.Magic, spellCaster.Stats) && KnowSpells.Contains(spellCasted))
             {
-                spellCasted.SpellAction.Invoke();
+                spellCasted.SpellCast.Invoke(target.Position);
             }
             else
             {

@@ -4,6 +4,7 @@ using MagiRogue.System.Time;
 using MagiRogue.Entities;
 using GoRogue.DiceNotation;
 using System;
+using System.Text;
 
 namespace MagiRogue.System.Magic
 {
@@ -12,16 +13,14 @@ namespace MagiRogue.System.Magic
         private double proficency;
         private int requiredShapingSkill;
 
+        public SpellEffects Effects { get; set; }
         public string SpellName { get; set; }
         public string Description { get; set; }
-        public SpellEffect SpellEffect { get; set; }
-        public SpellAreaEffect AreaOfEffect { get; set; }
         public Coord Target { get; set; }
-        public DamageType SpellDamageType { get; set; }
-        public TimeDefSpan SpellDuration { get; set; }
         public MagicSchool SpellSchool { get; set; }
         public int SpellRange { get; set; }
-        public Action SpellAction { get; set; }
+        public Action<Coord> SpellCast { get; set; }
+        public TimeDefSpan SpellDuration { get; set; }
 
         /// <summary>
         /// From 1 to 9
@@ -49,42 +48,36 @@ namespace MagiRogue.System.Magic
         {
         }
 
-        public SpellBase(string spellName, SpellEffect spellEffect,
-            SpellAreaEffect areaOfEffect, DamageType damageType, TimeDefSpan spellDuration,
+        public SpellBase(string spellName, SpellEffects spellEffects, TimeDefSpan spellDuration,
             MagicSchool spellScholl,
             int spellRange,
             int spellLevel = 1, double manaCost = 0.1)
         {
             SpellName = spellName;
-            SpellEffect = spellEffect;
-            AreaOfEffect = areaOfEffect;
-            SpellDamageType = damageType;
-            SpellDuration = spellDuration;
+            Effects = spellEffects;
             SpellLevel = spellLevel;
             ManaCost = manaCost;
             SpellSchool = spellScholl;
             SpellRange = spellRange;
             requiredShapingSkill = (int)((spellLevel * manaCost) * 0.5);
+            SpellDuration = spellDuration;
         }
 
         public SpellBase(string spellName,
-            DamageType dmgType,
+            SpellEffects effects,
             MagicSchool spellSchool,
             int spellRange,
             int spellLevel = 1,
             double manaCost = 0.1)
         {
             SpellName = spellName;
-            SpellDamageType = dmgType;
             SpellSchool = spellSchool;
             SpellRange = spellRange;
             SpellLevel = spellLevel;
             ManaCost = manaCost;
-
+            Effects = effects;
             requiredShapingSkill = (int)((spellLevel * manaCost) * 0.5);
         }
-
-        public void ChangeDamageType(DamageType newType) => SpellDamageType = newType;
 
         public int CalculateDamage(Stat entityStats)
         {
@@ -104,43 +97,31 @@ namespace MagiRogue.System.Magic
             return requiredShapingSkill < magicSkills.ShapingSkills;
         }
 
-        public void DefineSpell(Action spellAction)
+        public void DefineSpell(Action<Coord> spellAction)
         {
-            SpellAction = spellAction;
+            SpellCast = spellAction;
         }
 
         public void SetTarget(Coord target)
         {
-            switch (AreaOfEffect)
-            {
-                case SpellAreaEffect.Target:
-                    break;
+            Target = target;
+        }
 
-                case SpellAreaEffect.Point:
-                    break;
+        public void SetDescription(string description)
+        {
+            Description = description;
+        }
 
-                case SpellAreaEffect.Ball:
-                    break;
+        public override string ToString()
+        {
+            string bobBuilder = new StringBuilder().Append(SpellName).Append(": ")
+                .AppendLine(Description).ToString();
 
-                case SpellAreaEffect.Shape:
-                    break;
-
-                case SpellAreaEffect.Beam:
-                    break;
-
-                case SpellAreaEffect.Level:
-                    break;
-
-                case SpellAreaEffect.World:
-                    break;
-
-                default:
-                    break;
-            }
+            return bobBuilder;
         }
     }
 
-    public enum SpellEffect
+    public enum SpellTypeEnum
     {
         Damage, // Can be the same as healing
         Teleport,
@@ -156,7 +137,9 @@ namespace MagiRogue.System.Magic
         Soul,
         Telekinesis,
         Ritual,
-        Dimension
+        Dimension,
+        Buff,
+        Debuff
     }
 
     public enum SpellAreaEffect

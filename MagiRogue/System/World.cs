@@ -209,7 +209,7 @@ namespace MagiRogue.System
                 //Serializer.Save<Entity>(newLoot, @"C:\Users\joaorodrigues\Test.txt", false);
             }
 
-            /*ItemJsonConverter jsonConverter = new ItemJsonConverter();
+            ItemJsonConverter jsonConverter = new ItemJsonConverter();
 
             IList<ItemTemplate> itemTest = Utils.JsonUtils.JsonDeseralize<List<ItemTemplate>>(Path.Combine(
                 AppDomain.CurrentDomain.BaseDirectory,
@@ -217,7 +217,7 @@ namespace MagiRogue.System
 
             Item test = EntityFactory.ItemCreator(new Coord(10, 10), itemTest.FirstOrDefault(i => i.Id == "test"));
 
-            CurrentMap.Add(test);*/
+            CurrentMap.Add(test);
         }
 
         public void ProcessTurn(long playerTime, bool sucess)

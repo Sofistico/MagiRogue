@@ -35,7 +35,7 @@ namespace MagiRogue.Entities.Data
             Name = name;
             Foreground = foreground;
             Background = background;
-            Glyph = glyph;
+            Glyph = (char)glyph;
             Weight = weight;
             Condition = condition;
             Description = description;
@@ -55,7 +55,7 @@ namespace MagiRogue.Entities.Data
         [DataMember]
         public ColorSerialized Background { get; internal set; }
         [DataMember]
-        public int Glyph { get; internal set; }
+        public char Glyph { get; internal set; }
         [DataMember]
         public float Weight { get; internal set; }
         [DataMember]
