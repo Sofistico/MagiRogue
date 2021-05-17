@@ -131,6 +131,28 @@ namespace MagiRogue.System
             return Entities.GetItems(location).OfType<T>().FirstOrDefault();
         }
 
+        public T GetClosestEntity<T>(Coord originPos, int range) where T : Entity
+        {
+            T closest = null;
+            double bestDistance = double.MaxValue;
+
+            foreach (Entity entity in Entities.Items)
+            {
+                if (entity is not Player)
+                {
+                    double distance = Coord.EuclideanDistanceMagnitude(originPos, entity.Position);
+
+                    if (distance < bestDistance && (distance <= range || range == 0))
+                    {
+                        bestDistance = distance;
+                        closest = (T)entity;
+                    }
+                }
+            }
+
+            return closest;
+        }
+
         /// <summary>
         /// Removes an Entity from the Entities Field
         /// </summary>

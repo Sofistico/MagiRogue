@@ -3,6 +3,7 @@ using MagiRogue.Utils;
 using MagiRogue.System.Time;
 using MagiRogue.Entities;
 using GoRogue.DiceNotation;
+using System;
 
 namespace MagiRogue.System.Magic
 {
@@ -19,13 +20,15 @@ namespace MagiRogue.System.Magic
         public DamageType SpellDamageType { get; set; }
         public TimeDefSpan SpellDuration { get; set; }
         public MagicSchool SpellSchool { get; set; }
+        public int SpellRange { get; set; }
+        public Action SpellAction { get; set; }
 
         /// <summary>
         /// From 1 to 9
         /// </summary>
         public int SpellLevel { get; set; }
         public double ManaCost { get; set; }
-        public double Proficiency
+        public double Proficency
         {
             get
             {
@@ -49,28 +52,47 @@ namespace MagiRogue.System.Magic
         public SpellBase(string spellName, SpellEffect spellEffect,
             SpellAreaEffect areaOfEffect, DamageType damageType, TimeDefSpan spellDuration,
             MagicSchool spellScholl,
-            int spellPower = 1, double manaCost = 0.1)
+            int spellRange,
+            int spellLevel = 1, double manaCost = 0.1)
         {
             SpellName = spellName;
             SpellEffect = spellEffect;
             AreaOfEffect = areaOfEffect;
             SpellDamageType = damageType;
             SpellDuration = spellDuration;
-            SpellLevel = spellPower;
+            SpellLevel = spellLevel;
             ManaCost = manaCost;
             SpellSchool = spellScholl;
-            requiredShapingSkill = (int)((spellPower * manaCost) * 0.5);
+            SpellRange = spellRange;
+            requiredShapingSkill = (int)((spellLevel * manaCost) * 0.5);
+        }
+
+        public SpellBase(string spellName,
+            DamageType dmgType,
+            MagicSchool spellSchool,
+            int spellRange,
+            int spellLevel = 1,
+            double manaCost = 0.1)
+        {
+            SpellName = spellName;
+            SpellDamageType = dmgType;
+            SpellSchool = spellSchool;
+            SpellRange = spellRange;
+            SpellLevel = spellLevel;
+            ManaCost = manaCost;
+
+            requiredShapingSkill = (int)((spellLevel * manaCost) * 0.5);
         }
 
         public void ChangeDamageType(DamageType newType) => SpellDamageType = newType;
 
-        public int CalculateDamage(Stat entityStats, Magic magicStats)
+        public int CalculateDamage(Stat entityStats)
         {
             int baseDamage = (int)(SpellLevel + (entityStats.MindStat * 0.5) + (entityStats.SoulStat * 0.5));
 
             int rngDmg = Dice.Roll($"{SpellLevel}d{baseDamage}");
 
-            int damageAfterModifiers = (int)(rngDmg * proficency);
+            int damageAfterModifiers = (int)(rngDmg * Proficency);
 
             return damageAfterModifiers;
         }
@@ -80,6 +102,11 @@ namespace MagiRogue.System.Magic
             requiredShapingSkill /= stats.SoulStat;
 
             return requiredShapingSkill < magicSkills.ShapingSkills;
+        }
+
+        public void DefineSpell(Action spellAction)
+        {
+            SpellAction = spellAction;
         }
 
         public void SetTarget(Coord target)

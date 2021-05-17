@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using MagiRogue.Entities;
+using MagiRogue.Commands;
+using GoRogue;
 
 namespace MagiRogue.System.Magic
 {
@@ -14,14 +16,17 @@ namespace MagiRogue.System.Magic
         {
         }
 
-        public void CastSpell(SpellBase spellCasted, Actor spellCaster)
+        public void CastSpellAtTarget(SpellBase spellCasted, Actor spellCaster, Actor target)
         {
+            string e = $"Coundn't cast the spell {spellCasted.SpellName}";
+
             if (spellCasted.CanCast(spellCaster.Magic, spellCaster.Stats) && KnowSpells.Contains(spellCasted))
             {
+                spellCasted.SpellAction.Invoke();
             }
             else
             {
-                GameLoop.UIManager.MessageLog.Add($"Coundn't cast the spell {spellCasted.SpellName}");
+                GameLoop.UIManager.MessageLog.Add(e);
             }
         }
     }

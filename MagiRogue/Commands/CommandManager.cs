@@ -80,6 +80,11 @@ namespace MagiRogue.Commands
             ResolveDamage(defender, damage);
         }
 
+        public static void DealDamage(Actor defender, int damage)
+        {
+            ResolveDamage(defender, damage);
+        }
+
         /// <summary>
         /// Calculates the outcome of an attacker's attempt
         /// at scoring a hit on a defender, using the attacker's
