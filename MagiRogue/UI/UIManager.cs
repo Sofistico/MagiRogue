@@ -132,7 +132,7 @@ namespace MagiRogue.UI
                     return true;
                 }
 
-                if (info.IsKeyPressed(Keys.NumPad5))
+                if (info.IsKeyPressed(Keys.NumPad5) || info.IsKeyPressed(Keys.OemPeriod))
                     GameLoop.World.ProcessTurn(TimeHelper.Wait, true);
 
                 if (info.IsKeyPressed(Keys.A))
@@ -169,7 +169,7 @@ namespace MagiRogue.UI
 
                 if (info.IsKeyPressed(Keys.H))
                 {
-                    bool sucess = CommandManager.ForcefulyIntegrateAmbientMana(GameLoop.World.Player);
+                    bool sucess = CommandManager.SacrificeLifeEnergyToMana(GameLoop.World.Player);
                     GameLoop.World.ProcessTurn(TimeHelper.MagicalThings, sucess);
                 }
 

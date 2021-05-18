@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace MagiRogue.Entities
 {
@@ -14,6 +15,7 @@ namespace MagiRogue.Entities
         private float _baseManaRegen; // Must take into account the ambient mana
                                       // from the enviroment and inside the body of the caster
         private float personalMana; // Wil be measured in magnitude, in how many magic missile you can cast
+        private float _maxPersonalMana;
         private int ambientMana; // This will be here to model a new MOL like magic system
         private int attack;
         private int attackChance;
@@ -22,13 +24,12 @@ namespace MagiRogue.Entities
         private int bodyStat = 1; // the minimum value is 1, the maximum is 20
         private int mindStat = 1; // the minimum value is 1, the maximum is 20
         private int soulStat = 1; // the minimum value is 1, the maximum is 20
-        private int godPower;
-        private bool godly;
 
         #endregion StatsFields
 
         #region StatsProperties
 
+        [DataMember]
         /// <summary>
         /// current health
         /// </summary>
@@ -38,6 +39,7 @@ namespace MagiRogue.Entities
             set { health = value; }
         }
 
+        [DataMember]
         /// <summary>
         /// maximum health
         /// </summary>
@@ -47,21 +49,24 @@ namespace MagiRogue.Entities
             set { maxHealth = value; }
         }
 
+        [DataMember]
         public float BaseHpRegen
         {
             get { return _baseHpRegen; }
             set { _baseHpRegen = value; }
         }
 
+        [DataMember]
         public float BaseManaRegen
         {
             get { return _baseManaRegen; }
             set { _baseManaRegen = value; }
         }
 
+        [DataMember]
         /// <summary>
-        /// the limit is soul + mind + body, a more potent form than natural mana
-        /// \nFor every 100 ml/kg of blood, creates 0,1 of blood mana
+        /// The size of the mana pool, represents how many times someone can cast magic missile, going normally
+        /// anywhere from 8 to 25.
         /// </summary>
         public float PersonalMana
         {
@@ -75,13 +80,61 @@ namespace MagiRogue.Entities
             }
             set
             {
+                if (value < 0)
+                {
+                    personalMana = 0;
+                    return;
+                }
+
+                if (value >= MaxPersonalMana && MaxPersonalMana != 0)
+                {
+                    personalMana = MaxPersonalMana;
+                    return;
+                }
                 personalMana = value;
+            }
+        }
+
+        public float MaxPersonalMana
+        {
+            get
+            {
+                if (_maxPersonalMana < 0)
+                {
+                    _maxPersonalMana = 0;
+                    return _maxPersonalMana;
+                }
+
+                if (_maxPersonalMana == 0 & personalMana != 0)
+                {
+                    _maxPersonalMana = personalMana;
+                    return _maxPersonalMana;
+                }
+
+                return _maxPersonalMana;
+            }
+
+            set
+            {
+                if (value < 0)
+                {
+                    _maxPersonalMana = 0;
+                    return;
+                }
+
+                if (_maxPersonalMana < personalMana)
+                {
+                    _maxPersonalMana = personalMana;
+                    return;
+                }
+                _maxPersonalMana = value;
             }
         }
 
         /// <summary>
         /// attack strength
         /// </summary>
+        [DataMember]
         public int Attack
         {
             get { return attack; }
@@ -94,6 +147,7 @@ namespace MagiRogue.Entities
         /// <summary>
         /// percent chance of successful hit
         /// </summary>
+        [DataMember]
         public int AttackChance
         {
             get { return attackChance; }
@@ -106,6 +160,7 @@ namespace MagiRogue.Entities
         /// <summary>
         /// defensive strength
         /// </summary>
+        [DataMember]
         public int Defense
         {
             get { return defense; }
@@ -115,6 +170,7 @@ namespace MagiRogue.Entities
         /// <summary>
         /// percent chance of successfully blocking a hit
         /// </summary>
+        [DataMember]
         public int DefenseChance
         {
             get { return defenseChance; }
@@ -124,6 +180,7 @@ namespace MagiRogue.Entities
         /// <summary>
         /// The body stat of the actor
         /// </summary>
+        [DataMember]
         public int BodyStat
         {
             get { return bodyStat; }
@@ -133,6 +190,7 @@ namespace MagiRogue.Entities
         /// <summary>
         /// The mind stat of the actor
         /// </summary>
+        [DataMember]
         public int MindStat
         {
             get { return mindStat; }
@@ -142,6 +200,7 @@ namespace MagiRogue.Entities
         /// <summary>
         /// The soul stat of the actor
         /// </summary>
+        [DataMember]
         public int SoulStat
         {
             get { return soulStat; }
@@ -149,36 +208,11 @@ namespace MagiRogue.Entities
         }
 
         /// <summary>
-        /// The god stat of the actor, checks if the actor is a god as well
-        /// </summary>
-        public int GodPower
-        {
-            get { return godPower; }
-            set
-            {
-                if (godly)
-                {
-                    godPower = value;
-                }
-                else
-                {
-                    godPower = 0;
-                }
-            }
-        }
-
-        // To do magic this value must be true, because magic and being a god are the same thing.
-        public bool Godly
-        {
-            get { return godly; }
-            set { godly = value; }
-        }
-
-        /// <summary>
         /// Formula is (soul*2) + mind + body, this is raw mana made outside the body, it difers from just mana because it's
         /// produced by the world, it's hard to use and gives a boost to mana regen, also if you get more than you can
         /// handle you become crazy.
         /// </summary>
+        [DataMember]
         public int AmbientMana
         {
             get { return ambientMana; }
@@ -194,8 +228,13 @@ namespace MagiRogue.Entities
         /// <summary>
         /// The view radius of the actor, for seeing things
         /// </summary>
+        [DataMember]
         public int ViewRadius { get; set; }
 
+        /// <summary>
+        /// The speed of the actor, how fast it does the things, goes from 0.5 to 2.0
+        /// </summary>
+        [DataMember]
         public float Speed { get; set; }
 
         #endregion StatsProperties
@@ -206,24 +245,6 @@ namespace MagiRogue.Entities
 
         public Stat()
         {
-        }
-
-        public Stat(float health, float maxHealth, float baseHpRegen, float bloodyMana, int naturalMana, int attack, int attackChance, int defense, int defenseChance, int bodyStat, int mindStat, int soulStat, int godPower, bool godly = false)
-        {
-            this.health = health;
-            this.maxHealth = maxHealth;
-            _baseHpRegen = baseHpRegen;
-            this.personalMana = bloodyMana;
-            this.ambientMana = naturalMana;
-            this.attack = attack;
-            this.attackChance = attackChance;
-            this.defense = defense;
-            this.defenseChance = defenseChance;
-            this.bodyStat = bodyStat;
-            this.mindStat = mindStat;
-            this.soulStat = soulStat;
-            this.godPower = godPower;
-            this.godly = godly;
         }
 
         #endregion Constructor
@@ -242,9 +263,9 @@ namespace MagiRogue.Entities
             int attackChance,
             int defense,
             int defenseChance,
-            int godPower,
             float speed,
-            bool godly = false
+            float _baseManaRegen,
+            int personalMana
             )
         {
             this.ViewRadius = viewRadius;
@@ -258,10 +279,9 @@ namespace MagiRogue.Entities
             this.AttackChance = attackChance;
             this.Defense = defense;
             this.DefenseChance = defenseChance;
-            this.Godly = godly;
-            if (godly)
-                this.GodPower = godPower;
             this.Speed = speed;
+            this.BaseManaRegen = _baseManaRegen;
+            this.PersonalMana = personalMana;
         }
 
         public void SetAttributes(
@@ -278,10 +298,9 @@ namespace MagiRogue.Entities
            int attackChance,
            int defense,
            int defenseChance,
-           int godPower,
            float speed,
-           bool godly = false
-           )
+           float _baseManaRegen,
+           int personalMana)
         {
             actor.Name = name;
             this.ViewRadius = viewRadius;
@@ -295,10 +314,9 @@ namespace MagiRogue.Entities
             this.AttackChance = attackChance;
             this.Defense = defense;
             this.DefenseChance = defenseChance;
-            this.Godly = godly;
-            if (godly)
-                this.GodPower = godPower;
             this.Speed = speed;
+            this.BaseManaRegen = _baseManaRegen;
+            this.PersonalMana = personalMana;
         }
 
         public void ApplyHpRegen()
@@ -308,6 +326,21 @@ namespace MagiRogue.Entities
                 float newHp = (BaseHpRegen + Health);
                 Health = (float)Math.Round(newHp, 1);
             }
+        }
+
+        public void ApplyManaRegen()
+        {
+            if (PersonalMana < MaxPersonalMana)
+            {
+                float newMana = (BaseManaRegen + PersonalMana);
+                PersonalMana = (float)Math.Round(newMana, 1);
+            }
+        }
+
+        public void ApplyAllRegen()
+        {
+            ApplyHpRegen();
+            ApplyManaRegen();
         }
 
         #endregion Methods

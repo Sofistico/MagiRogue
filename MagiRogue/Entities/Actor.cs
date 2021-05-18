@@ -2,6 +2,7 @@
 using MagiRogue.Commands;
 using MagiRogue.System.Tiles;
 using Microsoft.Xna.Framework;
+using MagiRogue.System;
 using System.Collections.Generic;
 
 namespace MagiRogue.Entities
@@ -29,7 +30,6 @@ namespace MagiRogue.Entities
 
         private bool bumped = false;
         private Stat stats = new Stat();
-        private Anatomy anatomy;
 
         #endregion Fields
 
@@ -43,8 +43,7 @@ namespace MagiRogue.Entities
         /// <summary>
         /// The anatomy of the actor
         /// </summary>
-        public Anatomy Anatomy { get => anatomy; set => anatomy = value; }
-
+        public Anatomy Anatomy { get; set; }
         /// <summary>
         /// Sets if the char has bumbed in something
         /// </summary>
@@ -80,11 +79,11 @@ namespace MagiRogue.Entities
         /// <param name="glyph"></param>
         /// <param name="layer"></param>
         /// <param name="coord"></param>
-        public Actor(Color foreground, Color background, int glyph, int layer, Coord coord
+        public Actor(Color foreground, Color background, int glyph, Coord coord, int layer = (int)MapLayer.ACTORS
             ) : base(foreground, background,
             glyph, coord, layer)
         {
-            anatomy = new Anatomy();
+            Anatomy = new Anatomy();
             Inventory = new List<Item>();
         }
 

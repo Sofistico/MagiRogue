@@ -14,7 +14,8 @@ namespace MagiRogue.Entities.Data
             bool hasExistingValue,
             JsonSerializer serializer) => serializer.Deserialize<ItemTemplate>(reader);
 
-        public override void WriteJson(JsonWriter writer, Item value, JsonSerializer serializer) => serializer.Serialize(writer, (ItemTemplate)value);
+        public override void WriteJson(JsonWriter writer, Item value, JsonSerializer serializer)
+            => serializer.Serialize(writer, (ItemTemplate)value);
     }
 
     [DataContract]

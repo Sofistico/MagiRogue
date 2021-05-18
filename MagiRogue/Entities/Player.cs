@@ -9,11 +9,10 @@ namespace MagiRogue.Entities
     {
         public Player(Color foreground, Color background, Point position,
              int layer = (int)MapLayer.PLAYER) :
-            base(foreground, background, '@', layer, position)
+            base(foreground, background, '@', position, layer)
         {
             // sets the most fundamental stats, needs to set the godly flag up top, because it superseeds GodPower if it is
             // below.
-
             Stats.SetAttributes(
                 this,
                 name: "Magus",
@@ -28,9 +27,9 @@ namespace MagiRogue.Entities
                 attackChance: 40,
                 defense: 5,
                 defenseChance: 20,
-                godly: true,
-                godPower: 1,
-                speed: 1.5f
+                speed: 1.0f,
+                _baseManaRegen: 0.1f,
+                personalMana: 12
                 );
 
             Anatomy.Limbs = Data.LimbTemplate.BasicHumanoidBody(this);

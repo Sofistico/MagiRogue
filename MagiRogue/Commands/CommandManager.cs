@@ -367,8 +367,7 @@ namespace MagiRogue.Commands
 
 #endif
 
-        // TODO: Needs to be more inline with the flavorr of mol and add a counter to a insanity stat or an problem to using and etc...
-        public static bool ForcefulyIntegrateAmbientMana(Actor actor)
+        public static bool SacrificeLifeEnergyToMana(Actor actor)
         {
             int maxMana = actor.Stats.BodyStat + actor.Stats.SoulStat + actor.Stats.MindStat;
             if (actor.Stats.PersonalMana != maxMana)
@@ -382,7 +381,7 @@ namespace MagiRogue.Commands
                 return true;
             }
 
-            GameLoop.UIManager.MessageLog.Add("Maxed out your blood mana");
+            GameLoop.UIManager.MessageLog.Add("You feel too full for this right now");
             return false;
         }
     }

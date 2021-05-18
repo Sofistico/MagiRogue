@@ -21,15 +21,16 @@ namespace MagiRogue.Entities.Tests
                 attackChance: 50,
                 defense: 1,
                 defenseChance: 50,
-                godPower: 1,
                 speed: 1,
-                godly: true);
+                _baseManaRegen: 1,
+                personalMana: 1
+                );
 
             bool testOk = testStat.ViewRadius == 1 & testStat.Health == 5 & testStat.MaxHealth == 5
                 & testStat.BaseHpRegen == 1.5f & testStat.BodyStat == 2 & testStat.MindStat == 2
                 & testStat.SoulStat == 2 & testStat.Attack == 5 & testStat.AttackChance == 52 &
-                testStat.Defense == 1 & testStat.DefenseChance == 50 & testStat.GodPower == 1 &
-                testStat.Speed == 1 & testStat.Godly;
+                testStat.Defense == 1 & testStat.DefenseChance == 50 &
+                testStat.Speed == 1 & testStat.BaseManaRegen == 1 & testStat.PersonalMana == 1;
 
             Assert.True(testOk);
         }

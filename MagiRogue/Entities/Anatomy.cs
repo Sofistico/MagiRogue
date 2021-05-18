@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Troschuetz.Random;
 using System.Text;
+using System.Runtime.Serialization;
 
 namespace MagiRogue.Entities
 {
@@ -51,9 +52,10 @@ namespace MagiRogue.Entities
 
         #region Properties
 
-        public List<Limb> Limbs
-        { get; set; }
+        [DataMember]
+        public List<Limb> Limbs { get; set; }
 
+        [DataMember]
         public Race Race
         {
             get => race;
@@ -63,6 +65,7 @@ namespace MagiRogue.Entities
             }
         }
 
+        [DataMember]
         /// <summary>
         /// It uses an aproximation of blood count equal to 75 ml/kg for an adult male
         /// </summary>
@@ -76,19 +79,25 @@ namespace MagiRogue.Entities
             }
         }
 
+        [DataMember]
         /// <summary>
         /// The size of the actor in centimeters
         /// </summary>
         public int Size { get; set; }
+
+        [DataMember]
         /// <summary>
         /// The weight of the actor in kg
         /// </summary>
         public float Weight { get; set; }
+
+        [DataMember]
         /// <summary>
         /// The temperature of the actor in celsius
         /// </summary>
         public int Temperature { get { return temperature; } set { temperature = value; } }
 
+        [DataMember]
         public bool HasBlood { get; set; }
 
         #endregion Properties

@@ -14,7 +14,6 @@ namespace MagiRogue.Entities.Data
                 actorTemplate.Foreground,
                 actorTemplate.Background,
                 actorTemplate.Glyph,
-                (int)System.MapLayer.ACTORS,
                 position
                 )
                 {

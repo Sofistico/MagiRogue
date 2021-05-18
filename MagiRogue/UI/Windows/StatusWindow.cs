@@ -51,8 +51,7 @@ namespace MagiRogue.UI.Windows
         {
             statsConsole.Print(0, 0, $"{player.Name}");
             statsConsole.Print(0, 2, $"Health: {(int)player.Stats.Health} / {player.Stats.MaxHealth}   ", Color.Red);
-            statsConsole.Print(0, 3, $"Blood Mana: {player.Stats.PersonalMana}  ", Color.DarkRed);
-            statsConsole.Print(0, 4, $"Natural Mana: {player.Stats.AmbientMana}   ", Color.LightBlue);
+            statsConsole.Print(0, 3, $"Mana: {(int)player.Stats.PersonalMana} / {player.Stats.MaxPersonalMana}", Color.LightBlue);
 
             base.Update(time);
         }

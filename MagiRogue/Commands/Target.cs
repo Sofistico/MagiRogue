@@ -31,7 +31,7 @@ namespace MagiRogue.Commands
 
             OriginCoord = spawnCoord;
 
-            Cursor = new Actor(targetColor, Color.Transparent, 'X', (int)MapLayer.PLAYER, spawnCoord)
+            Cursor = new Actor(targetColor, Color.Transparent, 'X', spawnCoord, (int)MapLayer.PLAYER)
             {
                 Name = "Target Cursor",
                 IsWalkable = true,

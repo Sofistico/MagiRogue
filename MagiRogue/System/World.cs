@@ -162,7 +162,7 @@ namespace MagiRogue.System
 
                 Actor debugMonster = EntityFactory.ActorCreator(
                     pos,
-                    new ActorTemplate(Color.Blue, Color.Transparent, 'M', monsterStat, monsterAnatomy, "DebugTest"));
+                    new ActorTemplate(Color.Blue, Color.Transparent, 'M', (int)MapLayer.ACTORS, monsterStat, monsterAnatomy, "DebugTest"));
 
                 debugMonster.Name = "Debug Monster";
 
@@ -228,6 +228,7 @@ namespace MagiRogue.System
                 GetTime.RegisterEntity(playerTurn);
 
                 Player.Stats.ApplyHpRegen();
+                Player.Stats.ApplyManaRegen();
                 CurrentMap.CalculateFOV(position: Player.Position, Player.Stats.ViewRadius, radiusShape: Radius.CIRCLE);
 
                 var node = GetTime.NextNode();
@@ -257,12 +258,13 @@ namespace MagiRogue.System
 
         private void ProcessAiTurn(uint entityId, long time)
         {
-            Entity entity = CurrentMap.GetEntityById(entityId);
+            Actor entity = (Actor)CurrentMap.GetEntityById(entityId);
 
             if (entity != null)
             {
                 IAiComponent ai = entity.GetGoRogueComponent<IAiComponent>();
                 (bool sucess, long tick) = ai?.RunAi(CurrentMap, GameLoop.UIManager.MessageLog) ?? (false, -1);
+                entity.Stats.ApplyAllRegen();
 
                 if (!sucess || tick < -1)
                     return;
