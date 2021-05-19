@@ -13,15 +13,23 @@ using Newtonsoft.Json;
 
 namespace MagiRogue.Test.Entities
 {
-    public class EntitySerializationTest
+    public class EntitySerializationTest : IDisposable
     {
-        [Fact]
-        public void ItemSerializingTest()
+        public void Dispose()
+        {
+            Game.Instance.Exit();
+        }
+
+        public EntitySerializationTest()
         {
             Game.Create(1, 1);
 
             Game.Instance.RunOneFrame();
+        }
 
+        [Fact]
+        public void ItemSerializingTest()
+        {
             const string name = "Serialization Test";
 
             Item item = new Item(Color.Red, Color.Transparent, name, 'T', GoRogue.Coord.NONE, 100);
@@ -30,8 +38,6 @@ namespace MagiRogue.Test.Entities
             Item deserialized = JsonConvert.DeserializeObject<Item>(serialized);
 
             Assert.Equal(name, deserialized.Name);
-
-            Game.Instance.Exit();
         }
 
         [Fact]
@@ -49,8 +55,6 @@ namespace MagiRogue.Test.Entities
             Actor deserialized = JsonConvert.DeserializeObject<Actor>(serialized);
 
             Assert.Equal(name, deserialized.Name);
-
-            Game.Instance.Exit();
         }
     }
 }
