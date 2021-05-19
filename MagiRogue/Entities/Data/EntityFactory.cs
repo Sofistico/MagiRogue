@@ -22,6 +22,7 @@ namespace MagiRogue.Entities.Data
                     Anatomy = actorTemplate.Anatomy
                 };
             actor.Description = actorTemplate.Description;
+            actor.Material = System.Physics.PhysicsManager.SetMaterial(actorTemplate.MaterialId);
 
             return actor;
         }
@@ -41,6 +42,7 @@ namespace MagiRogue.Entities.Data
                     itemTemplate.Condition
                 );
             item.Description = itemTemplate.Description;
+            item.Material = System.Physics.PhysicsManager.SetMaterial(itemTemplate.MaterialId);
 
             return item;
         }

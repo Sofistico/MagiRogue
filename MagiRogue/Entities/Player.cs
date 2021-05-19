@@ -16,7 +16,6 @@ namespace MagiRogue.Entities
             Stats.SetAttributes(
                 viewRadius: 5,
                 health: 10,
-                maxHealth: 10,
                 baseHpRegen: 0.1f,
                 bodyStat: 1,
                 mindStat: 1,

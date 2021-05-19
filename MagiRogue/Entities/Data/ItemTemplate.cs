@@ -66,6 +66,8 @@ namespace MagiRogue.Entities.Data
         public int Condition { get; internal set; }
         [DataMember]
         public string Description { get; set; }
+        [DataMember]
+        public string MaterialId { get; set; }
 
         // Will need to see if it works, but so far the logic seems to check
         public static implicit operator ItemTemplate(Item item)
@@ -79,6 +81,7 @@ namespace MagiRogue.Entities.Data
                 item.Description,
                 item.Condition
                 );
+            itemSerialized.MaterialId = item.Material.Id;
 
             return itemSerialized;
         }
@@ -93,6 +96,7 @@ namespace MagiRogue.Entities.Data
                 itemTemplate.Size,
                 itemTemplate.Weight,
                 itemTemplate.Condition);
+            item.Material = System.Physics.PhysicsManager.SetMaterial(itemTemplate.MaterialId);
 
             return item;
         }

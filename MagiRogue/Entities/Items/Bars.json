@@ -18,6 +18,7 @@
     "Glyph": "M", // the glyph of the item
     "Weight": 12, // the weight of the item in kg
     "Size": 10, // The size of the item in cm
-    "Condition": 100 // Percentage of the condition of the item, pretty much an health for the item
+    "Condition": 100, // Percentage of the condition of the item, pretty much an health for the item
+    "MaterialId": "iron"
   }
 ]

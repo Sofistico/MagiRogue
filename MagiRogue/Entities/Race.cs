@@ -4,6 +4,7 @@ using System.Runtime.Serialization;
 namespace MagiRogue.Entities
 {
     [DebuggerDisplay("{DebuggerDisplay, nq}")]
+    [DataContract]
     public struct Race
     {
         [DataMember]

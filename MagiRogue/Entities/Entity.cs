@@ -86,8 +86,8 @@ namespace MagiRogue.Entities
             base.Moved += SadMoved;
             backingField.Moved += GoRogueMoved;
 
-            Material = new Material();
             Magic = new Magic();
+            Material = new Material();
         }
 
         private void GoRogueMoved(object sender, ItemMovedEventArgs<IGameObject> e)

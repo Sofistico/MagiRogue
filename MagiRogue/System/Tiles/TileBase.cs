@@ -80,7 +80,7 @@ namespace MagiRogue.System.Tiles
             Name = name;
             Layer = layer;
             backingField = new GameObject(position, layer, parentObject: this, isStatic: true, !blocksMove, isTransparent);
-            MaterialOfTile = GameLoop.PhysicsManager.SetMaterial(idOfMaterial);
+            MaterialOfTile = System.Physics.PhysicsManager.SetMaterial(idOfMaterial);
         }
 
         protected void CalculateTileHealth() => _tileHealth = (int)MaterialOfTile.Density * MaterialOfTile.Hardness;

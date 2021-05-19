@@ -94,7 +94,7 @@ namespace MagiRogue.Entities
         public Limb(TypeOfLimb limbType, int limbHp, int maxLimbHp,
             double limbWeight, string limbName, LimbOrientation orientation, string materialID = "flesh")
         {
-            LimbMaterial = GameLoop.PhysicsManager.SetMaterial(materialID);
+            LimbMaterial = System.Physics.PhysicsManager.SetMaterial(materialID);
 
             TypeLimb = limbType;
 

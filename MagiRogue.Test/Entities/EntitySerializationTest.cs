@@ -10,6 +10,8 @@ using MagiRogue.Entities.Data;
 using MagiRogue.Entities;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
+using MagiRogue.Entities.Materials;
+using System.IO;
 
 namespace MagiRogue.Test.Entities
 {
@@ -43,10 +45,6 @@ namespace MagiRogue.Test.Entities
         [Fact]
         public void ActorSerializingTest()
         {
-            Game.Create(1, 1);
-
-            Game.Instance.RunOneFrame();
-
             const string name = "Actor Serialization Test";
 
             Actor actor = new Actor(name, Color.White, Color.Black, '@', GoRogue.Coord.NONE);
@@ -55,6 +53,15 @@ namespace MagiRogue.Test.Entities
             Actor deserialized = JsonConvert.DeserializeObject<Actor>(serialized);
 
             Assert.Equal(name, deserialized.Name);
+        }
+
+        [Fact]
+        public void ActorDeserializationFromFile()
+        {
+            List<ActorTemplate> deserialized = Utils.JsonUtils.JsonDeseralize<List<ActorTemplate>>
+                (Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Entities", "Actors", "Humanoids.json"));
+            Actor found = EntityFactory.ActorCreator(GoRogue.Coord.NONE, deserialized.FirstOrDefault(i => i.Id == "test_troll"));
+            Assert.Equal(found.Name, deserialized.FirstOrDefault(i => i.Id == "test_troll").Name);
         }
     }
 }

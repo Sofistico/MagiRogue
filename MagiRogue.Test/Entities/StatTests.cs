@@ -13,7 +13,6 @@ namespace MagiRogue.Test.Entities
             testStat.SetAttributes(
                 viewRadius: 1,
                 health: 5,
-                maxHealth: 5,
                 baseHpRegen: 1.5f,
                 bodyStat: 2,
                 mindStat: 2,

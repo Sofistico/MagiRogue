@@ -39,16 +39,49 @@ namespace MagiRogue.Entities
             set { health = value; }
         }
 
-        [DataMember]
+        [DataMember(EmitDefaultValue = false, IsRequired = false)]
         /// <summary>
         /// maximum health
         /// </summary>
         public float MaxHealth
         {
-            get { return maxHealth; }
-            set { maxHealth = value; }
+            get
+            {
+                if (maxHealth < 0)
+                {
+                    maxHealth = 0;
+                    return maxHealth;
+                }
+
+                if (maxHealth == 0 & health != 0)
+                {
+                    maxHealth = health;
+                    return maxHealth;
+                }
+
+                return maxHealth;
+            }
+
+            set
+            {
+                if (value < 0)
+                {
+                    maxHealth = 0;
+                    return;
+                }
+
+                if (maxHealth < health)
+                {
+                    maxHealth = health;
+                    return;
+                }
+                maxHealth = value;
+            }
         }
 
+        /// <summary>
+        /// Should be between 0.01 to 2, it's applied before any possible multipliers
+        /// </summary>
         [DataMember]
         public float BaseHpRegen
         {
@@ -212,7 +245,7 @@ namespace MagiRogue.Entities
         /// produced by the world, it's hard to use and gives a boost to mana regen, also if you get more than you can
         /// handle you become crazy.
         /// </summary>
-        [DataMember]
+        [DataMember(EmitDefaultValue = false, IsRequired = false)]
         public int AmbientMana
         {
             get { return ambientMana; }
@@ -254,7 +287,6 @@ namespace MagiRogue.Entities
         public void SetAttributes(
            int viewRadius,
            float health,
-           float maxHealth,
            float baseHpRegen,
            int bodyStat,
            int mindStat,
@@ -269,7 +301,6 @@ namespace MagiRogue.Entities
         {
             this.ViewRadius = viewRadius;
             this.Health = health;
-            this.MaxHealth = maxHealth;
             this.BaseHpRegen = baseHpRegen;
             this.BodyStat = bodyStat;
             this.MindStat = mindStat;

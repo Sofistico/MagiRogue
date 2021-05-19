@@ -163,7 +163,7 @@ namespace MagiRogue.System
                 Actor debugMonster = EntityFactory.ActorCreator(
                     pos,
                     new ActorTemplate("Debug Monster", Color.Blue, Color.Transparent, 'M',
-                    (int)MapLayer.ACTORS, monsterStat, monsterAnatomy, "DebugTest", 150, 60));
+                    (int)MapLayer.ACTORS, monsterStat, monsterAnatomy, "DebugTest", 150, 60, "flesh"));
 
                 debugMonster.AddComponent(new MoveAndAttackAI(debugMonster.Stats.ViewRadius));
                 debugMonster.Inventory.Add(EntityFactory.ItemCreator(debugMonster.Position,
@@ -208,11 +208,9 @@ namespace MagiRogue.System
                 //Serializer.Save<Entity>(newLoot, @"C:\Users\joaorodrigues\Test.txt", false);
             }
 
-            ItemJsonConverter jsonConverter = new ItemJsonConverter();
-
             IList<ItemTemplate> itemTest = Utils.JsonUtils.JsonDeseralize<List<ItemTemplate>>(Path.Combine(
                 AppDomain.CurrentDomain.BaseDirectory,
-                "Entities", "Items", "Bars.json"), jsonConverter);
+                "Entities", "Items", "Bars.json"));
 
             Item test = EntityFactory.ItemCreator(new Coord(10, 10), itemTest.FirstOrDefault(i => i.Id == "test"));
 

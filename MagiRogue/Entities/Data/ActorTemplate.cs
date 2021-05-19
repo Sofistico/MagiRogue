@@ -36,22 +36,24 @@ namespace MagiRogue.Entities.Data
         [DataMember]
         public char Glyph { get; set; }
         [DataMember]
+        public int Size { get; set; }
+        [DataMember]
+        public float Weight { get; set; }
+        [DataMember]
+        public string MaterialId { get; set; }
+        [DataMember]
         public Stat Stats { get; set; }
         [DataMember]
         public Anatomy Anatomy { get; set; }
-        [DataMember]
+        [DataMember(EmitDefaultValue = false, IsRequired = false)]
         public int Layer { get; set; }
         [DataMember]
         public ColorSerialized Foreground { get; set; }
         [DataMember]
         public ColorSerialized Background { get; set; }
-        [DataMember]
-        public int Size { get; set; }
-        [DataMember]
-        public float Weight { get; set; }
 
         public ActorTemplate(string name, Color foreground, Color background, int glyph,
-            int layer, Stat stats, Anatomy anatomy, string description, int size, float weight)
+            int layer, Stat stats, Anatomy anatomy, string description, int size, float weight, string materialId)
         {
             Name = name;
             Foreground = foreground;
@@ -63,6 +65,7 @@ namespace MagiRogue.Entities.Data
             Layer = layer;
             Size = size;
             Weight = weight;
+            MaterialId = materialId;
         }
 
         public ActorTemplate()
@@ -81,7 +84,8 @@ namespace MagiRogue.Entities.Data
                     Stats = actorTemplate.Stats,
                     Anatomy = actorTemplate.Anatomy,
                     Size = actorTemplate.Size,
-                    Weight = actorTemplate.Weight
+                    Weight = actorTemplate.Weight,
+                    Material = System.Physics.PhysicsManager.SetMaterial(actorTemplate.MaterialId)
                 };
 
             return actor;
@@ -97,7 +101,8 @@ namespace MagiRogue.Entities.Data
                actor.Anatomy,
                actor.Description,
                actor.Size,
-               (float)actor.Weight);
+               (float)actor.Weight,
+               actor.Material.Id);
 
             return actorTemplate;
         }
