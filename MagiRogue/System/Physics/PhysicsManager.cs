@@ -10,10 +10,10 @@ namespace MagiRogue.System.Physics
     // For now it just deals with the list material, but in the future all interactions will go here
     public class PhysicsManager
     {
-        public static IEnumerable<Material> ListOfMaterials = JsonUtils.JsonDeseralize<List<Material>>(Path.Combine
+        public readonly static IEnumerable<Material> ListOfMaterials = JsonUtils.JsonDeseralize<List<Material>>(Path.Combine
                 (AppDomain.CurrentDomain.BaseDirectory.ToString(), "Entities", "Materials", "MaterialDefinition.json"));
 
-        public PhysicsManager()
+        protected PhysicsManager()
         {
         }
 

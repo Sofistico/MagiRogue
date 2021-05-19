@@ -101,7 +101,7 @@ namespace MagiRogue.Entities.Data
                actor.Anatomy,
                actor.Description,
                actor.Size,
-               (float)actor.Weight,
+               actor.Weight,
                actor.Material.Id);
 
             return actorTemplate;

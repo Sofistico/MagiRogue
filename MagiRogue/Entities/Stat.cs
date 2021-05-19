@@ -53,7 +53,7 @@ namespace MagiRogue.Entities
                     return maxHealth;
                 }
 
-                if (maxHealth == 0 & health != 0)
+                if (maxHealth == 0 && health != 0)
                 {
                     maxHealth = health;
                     return maxHealth;
@@ -138,7 +138,7 @@ namespace MagiRogue.Entities
                     return _maxPersonalMana;
                 }
 
-                if (_maxPersonalMana == 0 & personalMana != 0)
+                if (_maxPersonalMana == 0 && personalMana != 0)
                 {
                     _maxPersonalMana = personalMana;
                     return _maxPersonalMana;
