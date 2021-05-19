@@ -13,12 +13,10 @@ namespace MagiRogue
         // Fields for the managers
         private static UIManager uIManager;
         private static World world;
-        private static PhysicsManager physicsManager;
 
         // Managers
         public static UIManager UIManager { get => uIManager; set => uIManager = value; }
         public static World World { get => world; set => world = value; }
-        public static PhysicsManager PhysicsManager { get => physicsManager; set => physicsManager = value; }
 
         private static void Main()
         {
@@ -46,9 +44,6 @@ namespace MagiRogue
 
             //Instantiate the UIManager
             UIManager = new UIManager();
-
-            //Instantiate a new PhysicsManager
-            PhysicsManager = new PhysicsManager();
 
             // Now let the UIManager create its consoles
             // so they can use the World data
