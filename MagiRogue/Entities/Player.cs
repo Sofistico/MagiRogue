@@ -9,13 +9,11 @@ namespace MagiRogue.Entities
     {
         public Player(Color foreground, Color background, Point position,
              int layer = (int)MapLayer.PLAYER) :
-            base(foreground, background, '@', position, layer)
+            base("Magus", foreground, background, '@', position, layer)
         {
             // sets the most fundamental stats, needs to set the godly flag up top, because it superseeds GodPower if it is
             // below.
             Stats.SetAttributes(
-                this,
-                name: "Magus",
                 viewRadius: 5,
                 health: 10,
                 maxHealth: 10,

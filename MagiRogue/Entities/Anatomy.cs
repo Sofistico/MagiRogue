@@ -65,7 +65,6 @@ namespace MagiRogue.Entities
             }
         }
 
-        [DataMember]
         /// <summary>
         /// It uses an aproximation of blood count equal to 75 ml/kg for an adult male
         /// </summary>
@@ -79,13 +78,11 @@ namespace MagiRogue.Entities
             }
         }
 
-        [DataMember]
         /// <summary>
         /// The size of the actor in centimeters
         /// </summary>
         public int Size { get; set; }
 
-        [DataMember]
         /// <summary>
         /// The weight of the actor in kg
         /// </summary>

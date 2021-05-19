@@ -1,6 +1,7 @@
 ﻿using Xunit;
+using MagiRogue.Entities;
 
-namespace MagiRogue.Entities.Tests
+namespace MagiRogue.Test.Entities
 {
     public class StatTests
     {

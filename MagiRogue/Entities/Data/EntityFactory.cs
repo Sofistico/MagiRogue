@@ -11,6 +11,7 @@ namespace MagiRogue.Entities.Data
         {
             Actor actor =
                 new Actor(
+                actorTemplate.Name,
                 actorTemplate.Foreground,
                 actorTemplate.Background,
                 actorTemplate.Glyph,

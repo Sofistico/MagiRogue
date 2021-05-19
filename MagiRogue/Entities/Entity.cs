@@ -2,7 +2,7 @@
 using GoRogue.GameFramework;
 using MagiRogue.Entities.Materials;
 using Microsoft.Xna.Framework;
-using SadConsole.Components;
+using System.Runtime.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -19,12 +19,14 @@ namespace MagiRogue.Entities
 
         public uint ID => backingField.ID; // stores the entity's unique identification number
         public int Layer { get; set; } // stores and sets the layer that the entity is rendered
-
+        [DataMember]
         /// <summary>
         /// The weight of the entity in kg
         /// </summary>
         public float Weight { get; set; }
+        [DataMember]
         public Material Material { get; set; }
+        [DataMember]
         /// <summary>
         /// The size of the entity in meters
         /// </summary>
@@ -35,6 +37,7 @@ namespace MagiRogue.Entities
         /// </summary>
         public bool LeavesGhost { get; set; } = true;
 
+        [DataMember]
         public string Description { get; set; }
 
         public Magic Magic { get; set; }

@@ -4,6 +4,7 @@ using MagiRogue.System.Tiles;
 using Microsoft.Xna.Framework;
 using MagiRogue.System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace MagiRogue.Entities
 {
@@ -24,6 +25,7 @@ namespace MagiRogue.Entities
 
     #endregion Enums
 
+    [JsonConverter(typeof(Data.ActorJsonConverter))]
     public class Actor : Entity
     {
         #region Fields
@@ -79,12 +81,13 @@ namespace MagiRogue.Entities
         /// <param name="glyph"></param>
         /// <param name="layer"></param>
         /// <param name="coord"></param>
-        public Actor(Color foreground, Color background, int glyph, Coord coord, int layer = (int)MapLayer.ACTORS
+        public Actor(string name, Color foreground, Color background, int glyph, Coord coord, int layer = (int)MapLayer.ACTORS
             ) : base(foreground, background,
             glyph, coord, layer)
         {
             Anatomy = new Anatomy();
             Inventory = new List<Item>();
+            Name = name;
         }
 
         #endregion Constructor

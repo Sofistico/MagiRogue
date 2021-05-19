@@ -31,7 +31,8 @@ namespace MagiRogue.Entities.Data
         /// <param name="glyph"></param>
         /// <param name="weight"></param>
         /// <param name="condition">Defaults to 100%</param>
-        public ItemTemplate(string name, Color foreground, Color background, int glyph, float weight, int size, string description, int condition = 100)
+        public ItemTemplate(string name, Color foreground, Color background, int glyph,
+            float weight, int size, string description, int condition = 100)
         {
             Name = name;
             Foreground = foreground;
@@ -88,7 +89,7 @@ namespace MagiRogue.Entities.Data
                 itemTemplate.Background,
                 itemTemplate.Name,
                 itemTemplate.Glyph,
-                new GoRogue.Coord(),
+                GoRogue.Coord.NONE,
                 itemTemplate.Size,
                 itemTemplate.Weight,
                 itemTemplate.Condition);

@@ -252,41 +252,6 @@ namespace MagiRogue.Entities
         #region Methods
 
         public void SetAttributes(
-            int viewRadius,
-            float health,
-            float maxHealth,
-            float baseHpRegen,
-            int bodyStat,
-            int mindStat,
-            int soulStat,
-            int attack,
-            int attackChance,
-            int defense,
-            int defenseChance,
-            float speed,
-            float _baseManaRegen,
-            int personalMana
-            )
-        {
-            this.ViewRadius = viewRadius;
-            this.Health = health;
-            this.MaxHealth = maxHealth;
-            this.BaseHpRegen = baseHpRegen;
-            this.BodyStat = bodyStat;
-            this.MindStat = mindStat;
-            this.SoulStat = soulStat;
-            this.Attack = attack;
-            this.AttackChance = attackChance;
-            this.Defense = defense;
-            this.DefenseChance = defenseChance;
-            this.Speed = speed;
-            this.BaseManaRegen = _baseManaRegen;
-            this.PersonalMana = personalMana;
-        }
-
-        public void SetAttributes(
-           Actor actor,
-           string name,
            int viewRadius,
            float health,
            float maxHealth,
@@ -302,7 +267,6 @@ namespace MagiRogue.Entities
            float _baseManaRegen,
            int personalMana)
         {
-            actor.Name = name;
             this.ViewRadius = viewRadius;
             this.Health = health;
             this.MaxHealth = maxHealth;
