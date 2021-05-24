@@ -15,20 +15,6 @@ namespace MagiRogue.System.Magic
         public Magic()
         {
         }
-
-        public void CastSpellAtTarget(SpellBase spellCasted, Actor spellCaster, Actor target)
-        {
-            string e = $"Coundn't cast the spell {spellCasted.SpellName}";
-
-            if (spellCasted.CanCast(spellCaster.Magic, spellCaster.Stats) && KnowSpells.Contains(spellCasted))
-            {
-                spellCasted.SpellCast.Invoke(target.Position);
-            }
-            else
-            {
-                GameLoop.UIManager.MessageLog.Add(e);
-            }
-        }
     }
 
     public enum MagicSchool

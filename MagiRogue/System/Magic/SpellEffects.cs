@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GoRogue;
 
 namespace MagiRogue.System.Magic
 {
@@ -28,5 +29,9 @@ namespace MagiRogue.System.Magic
         }
 
         public void ChangeDamageType(DamageType newType) => SpellDamageType = newType;
+
+        public void DoEffect(Coord action)
+        {
+        }
     }
 }

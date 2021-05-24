@@ -5,6 +5,7 @@ using MagiRogue.Entities;
 using GoRogue.DiceNotation;
 using System;
 using System.Text;
+using System.Collections.Generic;
 
 namespace MagiRogue.System.Magic
 {
@@ -13,15 +14,12 @@ namespace MagiRogue.System.Magic
         private double proficency;
         private int requiredShapingSkill;
 
-        public SpellEffects Effects { get; set; }
+        public List<SpellEffects> Effects { get; set; }
         public string SpellName { get; set; }
         public string Description { get; set; }
         public Coord Target { get; set; }
         public MagicSchool SpellSchool { get; set; }
         public int SpellRange { get; set; }
-        public Action<Coord> SpellCast { get; set; }
-        public TimeDefSpan SpellDuration { get; set; }
-
         /// <summary>
         /// From 1 to 9
         /// </summary>
@@ -48,23 +46,8 @@ namespace MagiRogue.System.Magic
         {
         }
 
-        public SpellBase(string spellName, SpellEffects spellEffects, TimeDefSpan spellDuration,
-            MagicSchool spellScholl,
-            int spellRange,
-            int spellLevel = 1, double manaCost = 0.1)
-        {
-            SpellName = spellName;
-            Effects = spellEffects;
-            SpellLevel = spellLevel;
-            ManaCost = manaCost;
-            SpellSchool = spellScholl;
-            SpellRange = spellRange;
-            requiredShapingSkill = (int)((spellLevel * manaCost) * 0.5);
-            SpellDuration = spellDuration;
-        }
-
         public SpellBase(string spellName,
-            SpellEffects effects,
+            List<SpellEffects> effects,
             MagicSchool spellSchool,
             int spellRange,
             int spellLevel = 1,
@@ -92,19 +75,25 @@ namespace MagiRogue.System.Magic
 
         public bool CanCast(Magic magicSkills, Stat stats)
         {
-            requiredShapingSkill /= stats.SoulStat;
+            if (magicSkills.KnowSpells.Contains(this))
+            {
+                requiredShapingSkill /= stats.SoulStat;
 
-            return requiredShapingSkill < magicSkills.ShapingSkills;
+                return requiredShapingSkill < magicSkills.ShapingSkills;
+            }
+            return false;
         }
 
-        public void DefineSpell(Action<Coord> spellAction)
+        public void CastSpell(Coord target, Actor caster)
         {
-            SpellCast = spellAction;
-        }
-
-        public void SetTarget(Coord target)
-        {
-            Target = target;
+            if (CanCast(caster.Magic, caster.Stats))
+            {
+                Target = target;
+                foreach (SpellEffects effect in Effects)
+                {
+                    effect.DoEffect(target);
+                }
+            }
         }
 
         public void SetDescription(string description)
