@@ -1,34 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
-using SadConsole;
-using Game = SadConsole.Game;
 using MagiRogue.Entities.Data;
 using MagiRogue.Entities;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
-using MagiRogue.Entities.Materials;
 using System.IO;
 
 namespace MagiRogue.Test.Entities
 {
-    public class EntitySerializationTest : IDisposable
+    public class EntitySerializationTest : MockGame
     {
-        public void Dispose()
-        {
-            Game.Instance.Exit();
-        }
-
-        public EntitySerializationTest()
-        {
-            Game.Create(1, 1);
-
-            Game.Instance.RunOneFrame();
-        }
-
         [Fact]
         public void ItemSerializingTest()
         {
