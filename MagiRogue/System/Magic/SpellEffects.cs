@@ -13,13 +13,9 @@ namespace MagiRogue.System.Magic
     public class SpellEffects
     {
         public SpellTypeEnum SpellEffect { get; set; }
-
         public SpellAreaEffect AreaOfEffect { get; set; }
-
         public DamageType SpellDamageType { get; set; }
-
         public TimeDefSpan Duration { get; set; }
-
         public Stat StatsChange { get; set; }
 
         public SpellEffects(SpellTypeEnum spellEffect,
