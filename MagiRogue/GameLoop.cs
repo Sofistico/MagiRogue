@@ -24,10 +24,7 @@ namespace MagiRogue
             SadConsole.Game.Create(GameWidth, GameHeight);
 
             // Hook the start event so we can add consoles to the system.
-            SadConsole.Game.OnInitialize = Init;
-
-            // Hook the update event that happens each frame so we can trap keys and respond.
-            SadConsole.Game.OnUpdate = Update;
+            SadConsole.Game.Instance.OnStart = Init;
 
             //Start the game.
             SadConsole.Game.Instance.Run();
@@ -48,11 +45,6 @@ namespace MagiRogue
             // Now let the UIManager create its consoles
             // so they can use the World data
             UIManager.InitMainMenu();
-        }
-
-        private static void Update(GameTime time)
-        {
-            // Necessary for the game to update
         }
     }
 }
