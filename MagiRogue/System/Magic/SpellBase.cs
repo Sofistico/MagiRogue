@@ -15,11 +15,11 @@ namespace MagiRogue.System.Magic
 
         private int requiredShapingSkill;
 
-        public List<SpellEffects> Effects { get; set; }
+        public List<ISpellEffect> Effects { get; set; }
 
         public string SpellName { get; set; }
 
-        public string Description { get; set; }
+        public string Description { get; private set; }
 
         public Coord Target { get; set; }
 
@@ -34,10 +34,15 @@ namespace MagiRogue.System.Magic
 
         public double ManaCost { get; set; }
 
+        public string SpellId { get; set; }
+
         public double Proficency
         {
             get
             {
+                if (proficency == 0)
+                    proficency = 0.5;
+
                 return proficency;
             }
 
@@ -56,13 +61,15 @@ namespace MagiRogue.System.Magic
         {
         }
 
-        public SpellBase(string spellName,
-            List<SpellEffects> effects,
+        public SpellBase(string spellId,
+            string spellName,
+            List<ISpellEffect> effects,
             MagicSchool spellSchool,
             int spellRange,
             int spellLevel = 1,
-            double manaCost = 0.1)
+            double manaCost = 0.1f)
         {
+            SpellId = spellId;
             SpellName = spellName;
             SpellSchool = spellSchool;
             SpellRange = spellRange;
@@ -72,20 +79,9 @@ namespace MagiRogue.System.Magic
             requiredShapingSkill = (int)((spellLevel * manaCost) * 0.5);
         }
 
-        public int CalculateDamage(Stat entityStats)
-        {
-            int baseDamage = (int)(SpellLevel + (entityStats.MindStat * 0.5) + (entityStats.SoulStat * 0.5));
-
-            int rngDmg = Dice.Roll($"{SpellLevel}d{baseDamage}");
-
-            int damageAfterModifiers = (int)(rngDmg * Proficency);
-
-            return damageAfterModifiers;
-        }
-
         public bool CanCast(Magic magicSkills, Stat stats)
         {
-            if (magicSkills.KnowSpells.Contains(this))
+            if (magicSkills.KnowSpells.Contains(this) && stats.PersonalMana >= ManaCost)
             {
                 requiredShapingSkill /= stats.SoulStat;
 
@@ -94,16 +90,24 @@ namespace MagiRogue.System.Magic
             return false;
         }
 
-        public void CastSpell(Coord target, Actor caster)
+        public bool CastSpell(Coord target, Actor caster)
         {
-            if (CanCast(caster.Magic, caster.Stats))
+            if (CanCast(caster.Magic, caster.Stats) && target != Coord.NONE)
             {
                 Target = target;
-                foreach (SpellEffects effect in Effects)
+                foreach (ISpellEffect effect in Effects)
                 {
-                    effect.ApplyEffect(target);
+                    effect.ApplyEffect(target, caster.Stats);
                 }
+
+                caster.Stats.PersonalMana -= (float)ManaCost;
+
+                return true;
             }
+
+            GameLoop.UIManager.MessageLog.Add("Couldn't cast the spell");
+
+            return false;
         }
 
         public void SetDescription(string description)
@@ -113,7 +117,7 @@ namespace MagiRogue.System.Magic
 
         public override string ToString()
         {
-            string bobBuilder = new StringBuilder().Append(SpellName).Append(": ")
+            string bobBuilder = new StringBuilder().Append(SpellName).Append(": ").Append(SpellLevel)
                 .AppendLine(Description).ToString();
 
             return bobBuilder;
@@ -144,7 +148,6 @@ namespace MagiRogue.System.Magic
     public enum SpellAreaEffect
     {
         Target,
-        Point,
         Ball,
         Shape,
         Beam,

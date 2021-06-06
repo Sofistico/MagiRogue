@@ -2,6 +2,8 @@
 using MagiRogue.Commands;
 using MagiRogue.Entities;
 using MagiRogue.System;
+using MagiRogue.System.Magic;
+using MagiRogue.System.Magic.Effects;
 using MagiRogue.System.Time;
 using MagiRogue.UI.Windows;
 using Microsoft.Xna.Framework;
@@ -203,6 +205,28 @@ namespace MagiRogue.UI
                     GameLoop.World.ChangeControlledEntity(target.Cursor);
 
                     return true;
+                }
+
+                if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.Z))
+                {
+                    var spellBase = GetPlayer.Magic.QuerySpell("magic_missile");
+
+                    var entity = GameLoop.World.CurrentMap.GetClosestEntity(GetPlayer.Position, spellBase.SpellRange);
+
+                    if (entity != null)
+                    {
+                        bool sucess = spellBase.CastSpell(
+                        entity.Position,
+                        GetPlayer);
+
+                        GameLoop.World.ProcessTurn(TimeHelper.MagicalThings, sucess);
+                        return true;
+                    }
+                    else
+                    {
+                        GameLoop.UIManager.MessageLog.Add("There is no target for the spell!");
+                        return false;
+                    }
                 }
 
 #if DEBUG

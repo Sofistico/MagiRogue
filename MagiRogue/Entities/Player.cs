@@ -1,5 +1,8 @@
 ﻿using MagiRogue.System;
+using MagiRogue.System.Magic;
+using MagiRogue.System.Magic.Effects;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace MagiRogue.Entities
 {
@@ -30,6 +33,21 @@ namespace MagiRogue.Entities
                 );
 
             Anatomy.Limbs = Data.LimbTemplate.BasicHumanoidBody(this);
+
+            Magic.ShapingSkills = 5;
+
+            SpellBase spellBase = new SpellBase("magic_missile",
+                 "Magic Missile",
+                new List<ISpellEffect>(), MagicSchool.Projection, 5, manaCost: 1.0);
+
+            spellBase.Effects.Add(
+            new DamageEffect
+            (Magic.CalculateSpellDamage(Stats, spellBase),
+            SpellAreaEffect.Target,
+            Utils.DamageType.Force)
+            );
+
+            Magic.KnowSpells.Add(spellBase);
         }
     }
 }

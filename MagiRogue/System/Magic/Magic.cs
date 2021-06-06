@@ -2,6 +2,8 @@
 using MagiRogue.Entities;
 using MagiRogue.Commands;
 using GoRogue;
+using GoRogue.DiceNotation;
+using System.Linq;
 
 namespace MagiRogue.System.Magic
 {
@@ -14,6 +16,23 @@ namespace MagiRogue.System.Magic
 
         public Magic()
         {
+            KnowSpells = new List<SpellBase>();
+        }
+
+        public int CalculateSpellDamage(Stat entityStats, SpellBase spellCasted)
+        {
+            int baseDamage = (int)(spellCasted.SpellLevel + (entityStats.MindStat * 0.5) + (entityStats.SoulStat * 0.5));
+
+            int rngDmg = Dice.Roll($"{spellCasted.SpellLevel}d{baseDamage}");
+
+            int damageAfterModifiers = (int)(rngDmg * spellCasted.Proficency);
+
+            return damageAfterModifiers;
+        }
+
+        public SpellBase QuerySpell(string spellId)
+        {
+            return KnowSpells.Where(i => i.SpellId.Equals(spellId)).FirstOrDefault();
         }
     }
 

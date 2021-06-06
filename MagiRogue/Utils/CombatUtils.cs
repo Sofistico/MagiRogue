@@ -29,20 +29,44 @@ namespace MagiRogue.Utils
         {
             return a ^ b;
         }
+
+        public static void DealDamage(int dmg, Entity entity, DamageType dmgType)
+        {
+            if (entity is Actor)
+            {
+                Actor actor = (Actor)entity;
+
+                actor.Stats.Health -= dmg;
+
+                if (actor.Stats.Health < 0)
+                {
+                    Commands.CommandManager.ResolveDeath(actor);
+                }
+            }
+
+            if (entity is Item)
+            {
+                Item item = (Item)entity;
+
+                item.Condition -= dmg;
+            }
+
+            GameLoop.UIManager.MessageLog.Add($"The {entity.Name} took {dmg} {dmgType}");
+        }
     }
 
     [Flags]
     public enum DamageType
     {
         None = 0,
-        Physical = 1 >> 1,
-        Force = 1 >> 2,
-        Fire = 1 >> 3,
-        Cold = 1 >> 4,
-        Poison = 1 >> 5,
-        Acid = 1 >> 6,
-        Electricity = 1 >> 7,
-        Soul = 1 >> 8,
-        Mind = 1 >> 9
+        Physical = 1,
+        Force = 2,
+        Fire = 3,
+        Cold = 4,
+        Poison = 5,
+        Acid = 6,
+        Electricity = 7,
+        Soul = 8,
+        Mind = 9
     }
 }

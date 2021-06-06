@@ -131,9 +131,9 @@ namespace MagiRogue.System
             return Entities.GetItems(location).OfType<T>().FirstOrDefault();
         }
 
-        public T GetClosestEntity<T>(Coord originPos, int range) where T : Entity
+        public Entity GetClosestEntity(Coord originPos, int range)
         {
-            T closest = null;
+            Entity closest = null;
             double bestDistance = double.MaxValue;
 
             foreach (Entity entity in Entities.Items)
@@ -145,7 +145,7 @@ namespace MagiRogue.System
                     if (distance < bestDistance && (distance <= range || range == 0))
                     {
                         bestDistance = distance;
-                        closest = (T)entity;
+                        closest = entity;
                     }
                 }
             }
