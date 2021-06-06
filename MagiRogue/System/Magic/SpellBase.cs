@@ -12,25 +12,35 @@ namespace MagiRogue.System.Magic
     public class SpellBase
     {
         private double proficency;
+
         private int requiredShapingSkill;
 
         public List<SpellEffects> Effects { get; set; }
+
         public string SpellName { get; set; }
+
         public string Description { get; set; }
+
         public Coord Target { get; set; }
+
         public MagicSchool SpellSchool { get; set; }
+
         public int SpellRange { get; set; }
+
         /// <summary>
         /// From 1 to 9
         /// </summary>
         public int SpellLevel { get; set; }
+
         public double ManaCost { get; set; }
+
         public double Proficency
         {
             get
             {
                 return proficency;
             }
+
             set
             {
                 if (value >= 2.0)
@@ -91,7 +101,7 @@ namespace MagiRogue.System.Magic
                 Target = target;
                 foreach (SpellEffects effect in Effects)
                 {
-                    effect.DoEffect(target);
+                    effect.ApplyEffect(target);
                 }
             }
         }

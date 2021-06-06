@@ -13,9 +13,13 @@ namespace MagiRogue.System.Magic
     public class SpellEffects
     {
         public SpellTypeEnum SpellEffect { get; set; }
+
         public SpellAreaEffect AreaOfEffect { get; set; }
+
         public DamageType SpellDamageType { get; set; }
+
         public TimeDefSpan Duration { get; set; }
+
         public Stat StatsChange { get; set; }
 
         public SpellEffects(SpellTypeEnum spellEffect,
@@ -28,9 +32,7 @@ namespace MagiRogue.System.Magic
             Duration = spellDuration;
         }
 
-        public void ChangeDamageType(DamageType newType) => SpellDamageType = newType;
-
-        public void DoEffect(Coord action)
+        public void ApplyEffect(Coord action)
         {
         }
     }
