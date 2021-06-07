@@ -17,7 +17,7 @@ namespace MagiRogue.UI
 {
     // Creates/Holds/Destroys all consoles used in the game
     // and makes consoles easily addressable from a central place.
-    public class UIManager : ContainerConsole
+    public class UIManager : ScreenObject
     {
         #region Managers
 
@@ -36,7 +36,7 @@ namespace MagiRogue.UI
 
         private static Player GetPlayer => GameLoop.World.Player;
 
-        public SadConsole.Themes.Colors CustomColors;
+        public SadConsole.UI.Themes.Library CustomColors;
 
         private Target target;
 
@@ -358,7 +358,7 @@ namespace MagiRogue.UI
         private void SetUpCustomColors()
         {
             // Create a set of default colours that we will modify
-            CustomColors = new SadConsole.Themes.Colors();
+            CustomColors = new SadConsole.UI.Themes.Library();
 
             // Pick a couple of background colours that we will apply to all consoles.
             Color backgroundColor = Color.Black;
@@ -380,7 +380,7 @@ namespace MagiRogue.UI
             CustomColors.RebuildAppearances();
 
             // Now set all of these colours as default for SC's default theme.
-            SadConsole.Themes.Library.Default.Colors = CustomColors;
+            SadConsole.UI.Themes.Library.Default.Colors = CustomColors;
         }
 
         #endregion HelperMethods

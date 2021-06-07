@@ -22,7 +22,7 @@ namespace MagiRogue.System
         // One of these per layer, so we force the rendering order to be what we want (high layers
         // appearing on top of low layers). They're added to consoles in order of this array, first
         // to last, which controls the render order.
-        private readonly MultipleConsoleEntityDrawingComponent[] entitySyncersByLayer;
+        //private readonly MultipleConsoleEntityDrawingComponent[] entitySyncersByLayer;
 
         private TileBase[] _tiles; // Contains all tiles objects
 
@@ -80,11 +80,11 @@ namespace MagiRogue.System
             entityLayersSupportingMultipleItems: LayerMasker.DEFAULT.Mask((int)MapLayer.ITEMS, (int)MapLayer.GHOSTS, (int)MapLayer.PLAYER))
         {
             Tiles = ((ArrayMap<TileBase>)((LambdaSettableTranslationMap<TileBase, IGameObject>)Terrain).BaseMap);
-            FOVHandler = new MagiRogueFOVVisibilityHandler(this, ColorAnsi.BlackBright, (int)MapLayer.GHOSTS);
+            FOVHandler = new MagiRogueFOVVisibilityHandler(this, Color.Black, (int)MapLayer.GHOSTS);
 
-            entitySyncersByLayer = new MultipleConsoleEntityDrawingComponent[Enum.GetNames(typeof(MapLayer)).Length - 1];
+            /*entitySyncersByLayer = new MultipleConsoleEntityDrawingComponent[Enum.GetNames(typeof(MapLayer)).Length - 1];
             for (int i = 0; i < entitySyncersByLayer.Length; i++)
-                entitySyncersByLayer[i] = new MultipleConsoleEntityDrawingComponent();
+                entitySyncersByLayer[i] = new MultipleConsoleEntityDrawingComponent();*/
 
             Time = new TimeSystem();
         }
