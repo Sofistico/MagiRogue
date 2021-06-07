@@ -3,7 +3,7 @@ using MagiRogue.Entities;
 using MagiRogue.System;
 using MagiRogue.System.Tiles;
 using MagiRogue.UI;
-using Microsoft.Xna.Framework;
+using SadRogue.Primitives;
 using SadConsole.Input;
 using SadConsole;
 using System;
@@ -23,9 +23,9 @@ namespace MagiRogue.Commands
 
         public IList<Entity> TargetList { get; set; }
 
-        public Coord OriginCoord { get; set; }
+        public Point OriginCoord { get; set; }
 
-        public Target(Coord spawnCoord)
+        public Target(Point spawnCoord)
         {
             Color targetColor = new Color(255, 0, 0);
 
@@ -40,7 +40,7 @@ namespace MagiRogue.Commands
                 LeavesGhost = false
             };
 
-            var frameCell = Cursor.Animation.CreateFrame()[0];
+            var frameCell = Cursor.Effect;
             frameCell.Foreground = Color.Transparent;
             frameCell.Background = Color.Transparent;
             frameCell.Glyph = 'X';
@@ -55,7 +55,7 @@ namespace MagiRogue.Commands
         {
             TargetList = null;
 
-            IList<T> entities = GameLoop.World.CurrentMap.GetEntities<T>(Cursor.Position).ToList();
+            IList<T> entities = GameLoop.World.CurrentMap.GetEntitiesAt<T>(Cursor.Position).ToList();
 
             entities.RemoveAt(0);
 
@@ -75,20 +75,13 @@ namespace MagiRogue.Commands
 
         public bool EntityInTarget()
         {
-            if (GameLoop.World.CurrentMap.GetEntities<Entity>(Cursor.Position).Any(e => e.ID != Cursor.ID)
-                && GameLoop.World.CurrentMap.GetEntity<Entity>(Cursor.Position) is not Player)
+            if (GameLoop.World.CurrentMap.GetEntitiesAt<Entity>(Cursor.Position).Any(e => e.ID != Cursor.ID)
+                && GameLoop.World.CurrentMap.GetEntityAt<Entity>(Cursor.Position) is not Player)
             {
                 TargetEntity<Entity>();
                 return true;
             }
             return false;
-        }
-
-        public Actor TargetRandomActor(int searchRadius, Coord centerRadius)
-        {
-            RadiusAreaProvider radius = new RadiusAreaProvider(centerRadius, searchRadius, Radius.CIRCLE);
-
-            throw new NotImplementedException();
         }
     }
 }

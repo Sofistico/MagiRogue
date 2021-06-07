@@ -5,8 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using GoRogue;
+using SadRogue.Primitives;
 
 namespace MagiRogue.System.Magic
 {
@@ -16,6 +15,6 @@ namespace MagiRogue.System.Magic
         public SpellAreaEffect AreaOfEffect { get; set; }
         public DamageType SpellDamageType { get; set; }
 
-        public void ApplyEffect(Coord target, Stat casterStats);
+        public void ApplyEffect(Point target, Stat casterStats);
     }
 }

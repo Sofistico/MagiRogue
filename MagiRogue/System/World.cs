@@ -2,7 +2,6 @@
 using MagiRogue.Components;
 using MagiRogue.Entities;
 using MagiRogue.Entities.Data;
-using MagiRogue.Entities.Items;
 using MagiRogue.System.Tiles;
 using MagiRogue.System.Time;
 using SadRogue.Primitives;

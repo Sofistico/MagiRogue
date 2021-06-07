@@ -242,7 +242,7 @@ namespace MagiRogue.Commands
             List<Actor> monsterClose = new List<Actor>();
 
             // Saves all Points directions of the attacker.
-            Point[] directions = Directions.GetDirectionPoints(attacker.Position);
+            Point[] directions = SadConsole.PointExtensions.GetDirectionPoints(attacker.Position);
 
             foreach (Point direction in directions)
             {
@@ -320,7 +320,7 @@ namespace MagiRogue.Commands
         /// <param name="door">Door that wil be closed></param>
         public static bool CloseDoor(Actor actor)
         {
-            Point[] allDirections = Directions.GetDirectionPoints(actor.Position);
+            Point[] allDirections = SadConsole.PointExtensions.GetDirectionPoints(actor.Position);
             foreach (Point points in allDirections)
             {
                 TileDoor possibleDoor = GameLoop.World.CurrentMap.GetTileAt<TileDoor>(points);

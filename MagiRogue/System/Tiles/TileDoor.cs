@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+﻿using SadRogue.Primitives;
 
 namespace MagiRogue.System.Tiles
 {
@@ -18,6 +18,7 @@ namespace MagiRogue.System.Tiles
         public TileDoor(bool locked, bool open, Point position, string idMaterial) : base(Color.Gray, Color.Transparent, '+', (int)MapLayer.TERRAIN, position, isTransparent: false, idOfMaterial: idMaterial)
         {
             Name = "wooden door";
+
             //+ is the closed glyph
             //closed by default
             Glyph = '+';

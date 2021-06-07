@@ -210,6 +210,7 @@ namespace MagiRogue.System
             {
                 //CalculateFOV(position: actor.Position, actor.Stats.ViewRadius, radiusShape: Radius.Circle);
                 PlayerFOV.Calculate(actor.Position, actor.Stats.ViewRadius);
+                FOVRecalculated?.Invoke(this, EventArgs.Empty);
             }
         }
 

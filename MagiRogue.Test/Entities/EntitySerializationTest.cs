@@ -4,7 +4,7 @@ using System.Linq;
 using Xunit;
 using MagiRogue.Entities.Data;
 using MagiRogue.Entities;
-using Microsoft.Xna.Framework;
+using SadRogue.Primitives;
 using Newtonsoft.Json;
 using System.IO;
 
@@ -17,7 +17,7 @@ namespace MagiRogue.Test.Entities
         {
             const string name = "Serialization Test";
 
-            Item item = new Item(Color.Red, Color.Transparent, name, 'T', GoRogue.Coord.NONE, 100);
+            Item item = new Item(Color.Red, Color.Transparent, name, 'T', Point.None, 100);
 
             string serialized = JsonConvert.SerializeObject(item);
             Item deserialized = JsonConvert.DeserializeObject<Item>(serialized);
@@ -30,7 +30,7 @@ namespace MagiRogue.Test.Entities
         {
             const string name = "Actor Serialization Test";
 
-            Actor actor = new Actor(name, Color.White, Color.Black, '@', GoRogue.Coord.NONE);
+            Actor actor = new Actor(name, Color.White, Color.Black, '@', Point.None);
 
             string serialized = JsonConvert.SerializeObject(actor);
             Actor deserialized = JsonConvert.DeserializeObject<Actor>(serialized);
@@ -43,7 +43,7 @@ namespace MagiRogue.Test.Entities
         {
             List<ActorTemplate> deserialized = Utils.JsonUtils.JsonDeseralize<List<ActorTemplate>>
                 (Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Entities", "Actors", "Humanoids.json"));
-            Actor found = EntityFactory.ActorCreator(GoRogue.Coord.NONE, deserialized.FirstOrDefault(i => i.Id == "test_troll"));
+            Actor found = EntityFactory.ActorCreator(Point.None, deserialized.FirstOrDefault(i => i.Id == "test_troll"));
             Assert.Equal(found.Name, deserialized.FirstOrDefault(i => i.Id == "test_troll").Name);
         }
     }

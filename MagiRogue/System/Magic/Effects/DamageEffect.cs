@@ -1,6 +1,7 @@
 ﻿using GoRogue;
 using MagiRogue.Entities;
 using MagiRogue.System.Time;
+using SadRogue.Primitives;
 using MagiRogue.Utils;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace MagiRogue.System.Magic.Effects
             SpellDamageType = spellDamageType;
         }
 
-        public void ApplyEffect(Coord target, Stat casterStats)
+        public void ApplyEffect(Point target, Stat casterStats)
         {
             switch (AreaOfEffect)
             {
@@ -41,10 +42,10 @@ namespace MagiRogue.System.Magic.Effects
 
                     if (poorGuy is Item)
                     {
-                       // Custom logic here
+                        // Custom logic here
                     }
 
-                    if(poorGuy is Actor)
+                    if (poorGuy is Actor)
                     {
                         // Custom logic here
                     }

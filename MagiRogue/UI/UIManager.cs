@@ -241,9 +241,6 @@ namespace MagiRogue.UI
                     GetPlayer.AddComponent(new Components.TestComponent(GetPlayer));
                 }
 
-                if (info.IsKeyPressed(Keys.F12))
-                    PrintHeader();
-
                 if (info.IsKeyPressed(Keys.NumPad0))
                 {
                     LookWindow w = new LookWindow(GetPlayer);

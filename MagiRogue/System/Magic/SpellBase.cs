@@ -2,6 +2,7 @@
 using MagiRogue.Utils;
 using MagiRogue.System.Time;
 using MagiRogue.Entities;
+using SadRogue.Primitives;
 using GoRogue.DiceNotation;
 using System;
 using System.Text;
@@ -21,7 +22,7 @@ namespace MagiRogue.System.Magic
 
         public string Description { get; private set; }
 
-        public Coord Target { get; set; }
+        public Point Target { get; set; }
 
         public MagicSchool SpellSchool { get; set; }
 
@@ -90,9 +91,9 @@ namespace MagiRogue.System.Magic
             return false;
         }
 
-        public bool CastSpell(Coord target, Actor caster)
+        public bool CastSpell(Point target, Actor caster)
         {
-            if (CanCast(caster.Magic, caster.Stats) && target != Coord.NONE)
+            if (CanCast(caster.Magic, caster.Stats) && target != Point.None)
             {
                 Target = target;
                 foreach (ISpellEffect effect in Effects)
