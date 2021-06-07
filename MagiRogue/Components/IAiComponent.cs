@@ -1,4 +1,5 @@
 ﻿using GoRogue.GameFramework.Components;
+using GoRogue.Components;
 using MagiRogue.System;
 using MagiRogue.UI.Windows;
 

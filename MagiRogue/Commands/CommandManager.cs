@@ -1,7 +1,7 @@
 ﻿using GoRogue.DiceNotation;
 using MagiRogue.Entities;
 using MagiRogue.System.Tiles;
-using Microsoft.Xna.Framework;
+using SadRogue.Primitives;
 using SadConsole;
 using System;
 using System.Collections.Generic;
@@ -246,7 +246,7 @@ namespace MagiRogue.Commands
 
             foreach (Point direction in directions)
             {
-                Actor monsterLocation = GameLoop.World.CurrentMap.GetEntity<Actor>(direction);
+                Actor monsterLocation = GameLoop.World.CurrentMap.GetEntityAt<Actor>(direction);
 
                 if (monsterLocation != null)
                 {
@@ -262,6 +262,7 @@ namespace MagiRogue.Commands
                     }
                 }
             }
+
             // default response
             return false;
         }
@@ -301,6 +302,7 @@ namespace MagiRogue.Commands
             {
                 // TODO: make it possible to unlock a door though magic or magic of lockpicks.
             }
+
             // Handled an unlocked door that is closed
             else if (!door.Locked && !door.IsOpen)
             {

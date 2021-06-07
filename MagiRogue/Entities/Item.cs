@@ -1,5 +1,5 @@
 ﻿using MagiRogue.System;
-using Microsoft.Xna.Framework;
+using SadRogue.Primitives;
 using System;
 using Newtonsoft.Json;
 using MagiRogue.Entities.Data;
@@ -22,6 +22,7 @@ namespace MagiRogue.Entities
         public int Condition
         {
             get { return condition; }
+
             set
             {
                 condition += value;

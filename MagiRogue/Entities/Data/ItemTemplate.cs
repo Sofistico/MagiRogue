@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+﻿using SadRogue.Primitives;
 using SadConsole.SerializedTypes;
 using System;
 using System.Runtime.Serialization;
@@ -50,22 +50,31 @@ namespace MagiRogue.Entities.Data
 
         [DataMember]
         public string Id { get; set; }
+
         [DataMember]
         public string Name { get; internal set; }
+
         [DataMember]
-        public ColorSerialized Foreground { get; internal set; }
+        public Color Foreground { get; internal set; }
+
         [DataMember]
-        public ColorSerialized Background { get; internal set; }
+        public Color Background { get; internal set; }
+
         [DataMember]
         public char Glyph { get; internal set; }
+
         [DataMember]
         public float Weight { get; internal set; }
+
         [DataMember]
         public int Size { get; set; }
+
         [DataMember]
         public int Condition { get; internal set; }
+
         [DataMember]
         public string Description { get; set; }
+
         [DataMember]
         public string MaterialId { get; set; }
 
@@ -73,15 +82,17 @@ namespace MagiRogue.Entities.Data
         public static implicit operator ItemTemplate(Item item)
         {
             ItemTemplate itemSerialized = new ItemTemplate(item.Name,
-                item.Animation[0].Foreground,
-                item.Animation[0].Background,
-                item.Animation[0].Glyph,
+                item.Appearance.Foreground,
+                item.Appearance.Background,
+                item.Appearance.Glyph,
                 item.Weight,
                 item.Size,
                 item.Description,
                 item.Condition
-                );
-            itemSerialized.MaterialId = item.Material.Id;
+                )
+            {
+                MaterialId = item.Material.Id
+            };
 
             return itemSerialized;
         }
@@ -92,7 +103,7 @@ namespace MagiRogue.Entities.Data
                 itemTemplate.Background,
                 itemTemplate.Name,
                 itemTemplate.Glyph,
-                GoRogue.Coord.NONE,
+                Point.None,
                 itemTemplate.Size,
                 itemTemplate.Weight,
                 itemTemplate.Condition);

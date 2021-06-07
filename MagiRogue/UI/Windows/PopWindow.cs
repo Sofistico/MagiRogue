@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
 using SadConsole;
-using SadConsole.Controls;
+using SadConsole.UI.Controls;
+using SadRogue.Primitives;
 using SadConsole.Input;
 using Console = SadConsole.Console;
 
@@ -48,7 +48,7 @@ namespace MagiRogue.UI.Windows
 
             _cancelButton.Click += (_, __) => Hide();
 
-            Add(_cancelButton);
+            Controls.Add(_cancelButton);
         }
 
         public override void Hide()

@@ -1,4 +1,4 @@
-﻿using GoRogue;
+﻿using SadRogue.Primitives;
 using GoRogue.Pathing;
 using MagiRogue.Entities;
 using MagiRogue.System;
@@ -54,7 +54,7 @@ namespace MagiRogue.Components
                 direction = Direction.GetDirection(shortPath.Steps.First() - Parent.Position);
             }
 
-            Coord coord = new Coord(direction.DeltaX, direction.DeltaY);
+            Point coord = new Point(direction.DeltaX, direction.DeltaY);
             return Commands.CommandManager.MoveActorBy(actor, coord);
         }
     }

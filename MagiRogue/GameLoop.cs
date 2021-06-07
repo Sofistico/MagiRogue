@@ -1,7 +1,5 @@
 ﻿using MagiRogue.System;
-using MagiRogue.System.Physics;
 using MagiRogue.UI;
-using Microsoft.Xna.Framework;
 
 namespace MagiRogue
 {
@@ -12,10 +10,12 @@ namespace MagiRogue
 
         // Fields for the managers
         private static UIManager uIManager;
+
         private static World world;
 
         // Managers
         public static UIManager UIManager { get => uIManager; set => uIManager = value; }
+
         public static World World { get => world; set => world = value; }
 
         private static void Main()

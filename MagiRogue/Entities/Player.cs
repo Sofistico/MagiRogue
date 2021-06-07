@@ -1,7 +1,7 @@
 ﻿using MagiRogue.System;
 using MagiRogue.System.Magic;
 using MagiRogue.System.Magic.Effects;
-using Microsoft.Xna.Framework;
+using SadRogue.Primitives;
 using System.Collections.Generic;
 
 namespace MagiRogue.Entities

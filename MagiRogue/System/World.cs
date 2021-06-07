@@ -5,8 +5,7 @@ using MagiRogue.Entities.Data;
 using MagiRogue.Entities.Items;
 using MagiRogue.System.Tiles;
 using MagiRogue.System.Time;
-using Microsoft.Xna.Framework;
-using SadConsole;
+using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -101,13 +100,14 @@ namespace MagiRogue.System
                 if (!CurrentMap.Tiles[i].IsBlockingMove)
                 {
                     // Set the player's position to the index of the current map position
-                    var pos = Helpers.GetPointFromIndex(i, CurrentMap.Width);
+                    var pos = Point.FromIndex(i, CurrentMap.Width);
 
                     Player = new Player(Color.White, Color.Black, pos)
                     {
                         Position = pos,
                         Description = "Here is you, you are beautiful"
                     };
+
                     //Player.AddComponent(new Components.HealthComponent(10, 10, 0.1f));
                     break;
                 }
@@ -199,20 +199,15 @@ namespace MagiRogue.System
                 Item newLoot = EntityFactory.ItemCreator(posNew,
                     new ItemTemplate("Gold Bar", Color.Gold, Color.White, '=', 12.5f, 15, "Here is a gold bar, pretty heavy"));
 
-                IronBar ironBar = new IronBar(posIron);
-
                 // add the Item to the MultiSpatialMap
                 CurrentMap.Add(newLoot);
-                CurrentMap.Add(ironBar);
-
-                //Serializer.Save<Entity>(newLoot, @"C:\Users\joaorodrigues\Test.txt", false);
             }
 
             IList<ItemTemplate> itemTest = Utils.JsonUtils.JsonDeseralize<List<ItemTemplate>>(Path.Combine(
                 AppDomain.CurrentDomain.BaseDirectory,
                 "Entities", "Items", "Bars.json"));
 
-            Item test = EntityFactory.ItemCreator(new Coord(10, 10), itemTest.FirstOrDefault(i => i.Id == "test"));
+            Item test = EntityFactory.ItemCreator(new Point(10, 10), itemTest.FirstOrDefault(i => i.Id == "test"));
 
             CurrentMap.Add(test);
         }
@@ -226,7 +221,7 @@ namespace MagiRogue.System
 
                 Player.Stats.ApplyHpRegen();
                 Player.Stats.ApplyManaRegen();
-                CurrentMap.CalculateFOV(position: Player.Position, Player.Stats.ViewRadius, radiusShape: Radius.CIRCLE);
+                CurrentMap.PlayerFOV.Calculate(Player.Position, Player.Stats.ViewRadius);
 
                 var node = GetTime.NextNode();
 

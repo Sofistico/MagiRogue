@@ -1,6 +1,6 @@
-﻿using Microsoft.Xna.Framework.Input;
-using SadConsole.Controls;
-using SadConsole.Themes;
+﻿using SadRogue.Primitives;
+using SadConsole.UI.Controls;
+using SadConsole.UI.Themes;
 using SadConsole.Input;
 using System;
 using System.Collections.Generic;
@@ -33,7 +33,7 @@ namespace MagiRogue.UI.Controls
         /// <param name="width">The width of the selection button.</param>
         public MagiButton(int width, int height = 1) : base(width, height)
         {
-            ThemeColors = GameLoop.UIManager.CustomColors;
+            //ThemeColors = GameLoop.UIManager.CustomColors;
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace MagiRogue.UI.Controls
             }
             else if (info.IsKeyReleased(Keys.Enter))
             {
-                DoClick();
+                InvokeClick();
             }
 
             return base.ProcessKeyboard(info);

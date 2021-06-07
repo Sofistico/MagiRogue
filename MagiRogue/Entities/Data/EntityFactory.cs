@@ -1,4 +1,4 @@
-﻿using GoRogue;
+﻿using SadRogue.Primitives;
 
 namespace MagiRogue.Entities.Data
 {
@@ -7,7 +7,7 @@ namespace MagiRogue.Entities.Data
     /// </summary>
     public static class EntityFactory
     {
-        public static Actor ActorCreator(Coord position, ActorTemplate actorTemplate)
+        public static Actor ActorCreator(Point position, ActorTemplate actorTemplate)
         {
             Actor actor =
                 new Actor(
@@ -27,7 +27,7 @@ namespace MagiRogue.Entities.Data
             return actor;
         }
 
-        public static Item ItemCreator(Coord position, ItemTemplate itemTemplate)
+        public static Item ItemCreator(Point position, ItemTemplate itemTemplate)
         {
             Item item =
                 new Item

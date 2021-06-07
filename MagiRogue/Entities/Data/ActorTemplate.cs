@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+﻿using SadRogue.Primitives;
 using System;
 using System.Runtime.Serialization;
 using SadConsole.SerializedTypes;
@@ -29,28 +29,39 @@ namespace MagiRogue.Entities.Data
         /// </summary>
         [DataMember]
         public string Id { get; set; }
+
         [DataMember]
         public string Name { get; set; }
+
         [DataMember]
         public string Description { get; set; }
+
         [DataMember]
         public char Glyph { get; set; }
+
         [DataMember]
         public int Size { get; set; }
+
         [DataMember]
         public float Weight { get; set; }
+
         [DataMember]
         public string MaterialId { get; set; }
+
         [DataMember]
         public Stat Stats { get; set; }
+
         [DataMember]
         public Anatomy Anatomy { get; set; }
+
         [DataMember(EmitDefaultValue = false, IsRequired = false)]
         public int Layer { get; set; }
+
         [DataMember]
-        public ColorSerialized Foreground { get; set; }
+        public Color Foreground { get; set; }
+
         [DataMember]
-        public ColorSerialized Background { get; set; }
+        public Color Background { get; set; }
 
         public ActorTemplate(string name, Color foreground, Color background, int glyph,
             int layer, Stat stats, Anatomy anatomy, string description, int size, float weight, string materialId)
@@ -78,7 +89,7 @@ namespace MagiRogue.Entities.Data
                 new Actor(actorTemplate.Name, actorTemplate.Foreground,
                 actorTemplate.Background,
                 actorTemplate.Glyph,
-                GoRogue.Coord.NONE)
+                Point.None)
                 {
                     Description = actorTemplate.Description,
                     Stats = actorTemplate.Stats,
@@ -93,9 +104,9 @@ namespace MagiRogue.Entities.Data
 
         public static implicit operator ActorTemplate(Actor actor)
         {
-            ActorTemplate actorTemplate = new ActorTemplate(actor.Name, actor.Animation[0].Foreground,
-               actor.Animation[0].Background,
-               actor.Animation[0].Glyph,
+            ActorTemplate actorTemplate = new ActorTemplate(actor.Name, actor.Appearance.Foreground,
+               actor.Appearance.Background,
+               actor.Appearance.Glyph,
                actor.Layer,
                actor.Stats,
                actor.Anatomy,

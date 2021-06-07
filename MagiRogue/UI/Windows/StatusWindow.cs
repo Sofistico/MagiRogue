@@ -1,15 +1,16 @@
 ﻿using MagiRogue.Entities;
-using Microsoft.Xna.Framework;
+using SadRogue.Primitives;
 using SadConsole;
-using SadConsole.Controls;
+using SadConsole.UI.Controls;
 using System;
+using Console = SadConsole.Console;
 
 namespace MagiRogue.UI.Windows
 {
     public class StatusWindow : MagiBaseWindow
     {
         private readonly Player player;
-        private readonly ScrollingConsole statsConsole;
+        private readonly Console statsConsole;
         private readonly ScrollBar statusScroll;
 
         private const int windowBorderThickness = 2;
@@ -18,10 +19,10 @@ namespace MagiRogue.UI.Windows
         {
             player = GameLoop.World.Player;
 
-            statsConsole = new ScrollingConsole(width - windowBorderThickness, heigth - windowBorderThickness)
+            statsConsole = new Console(width - windowBorderThickness, heigth - windowBorderThickness)
             {
                 Position = new Point(1, 1),
-                ViewPort = new Rectangle(0, 0, width - 1, heigth - windowBorderThickness),
+                View = new Rectangle(0, 0, width - 1, heigth - windowBorderThickness),
                 DefaultBackground = Color.Black
             };
 
@@ -29,10 +30,11 @@ namespace MagiRogue.UI.Windows
                 (Orientation.Vertical, heigth - windowBorderThickness)
             {
                 Position = new Point(statsConsole.Width + 1, statsConsole.Position.X)
+
                 //IsEnabled = false
             };
             statusScroll.ValueChanged += StatusScroll_ValueChanged; ;
-            Add(statusScroll);
+            Controls.Add(statusScroll);
 
             // enable mouse input
             UseMouse = true;
@@ -42,8 +44,8 @@ namespace MagiRogue.UI.Windows
 
         private void StatusScroll_ValueChanged(object sender, EventArgs e)
         {
-            statsConsole.ViewPort = new Rectangle(0, statusScroll.Value + windowBorderThickness,
-                statsConsole.Width, statsConsole.ViewPort.Height);
+            statsConsole.View = new Rectangle(0, statusScroll.Value + windowBorderThickness,
+                statsConsole.Width, statsConsole.View.Height);
         }
 
         // Probably needs to create a way to make it update only when needed, by an event.

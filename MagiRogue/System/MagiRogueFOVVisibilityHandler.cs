@@ -1,6 +1,6 @@
 ﻿using MagiRogue.Entities;
 using MagiRogue.System.Tiles;
-using Microsoft.Xna.Framework;
+using SadRogue.Primitives;
 
 namespace MagiRogue.System
 {
@@ -39,7 +39,7 @@ namespace MagiRogue.System
             {
                 for (int y = 0; y < Map.Height; y++)
                 {
-                    if (Map.Explored[x, y])
+                    if (Map.PlayerExplored[x, y])
                     {
                         TileBase tile = Map.Terrain[x, y] as TileBase;
                         UpdateTerrainSeen(tile);
@@ -73,11 +73,11 @@ namespace MagiRogue.System
             if (entity.Layer == _ghostLayer)
                 return;
 
-            if (entity.Layer != _ghostLayer && Map.Explored[entity.Position] && entity.LeavesGhost)
+            if (entity.Layer != _ghostLayer && Map.PlayerExplored[entity.Position] && entity.LeavesGhost)
             {
                 Entity ghost = new Entity(ExploredColor,
-                    entity.Animation[0].Background,
-                    entity.Animation[0].Glyph,
+                    entity.Appearance.Background,
+                    entity.Appearance.Glyph,
                     entity.Position,
                     _ghostLayer)
                 {
@@ -85,7 +85,7 @@ namespace MagiRogue.System
                     Name = $"Ghost {entity.Name}"
                 };
 
-                ghost.OnCalculateRenderPosition();
+                //ghost.OnCalculateRenderPosition();
 
                 Map.Add(ghost);
             }
@@ -99,7 +99,8 @@ namespace MagiRogue.System
         protected override void UpdateTerrainSeen(TileBase terrain)
         {
             terrain.IsVisible = true;
-            terrain.RestoreState();
+
+            //terrain.RestoreState();
         }
 
         /// <summary>
@@ -109,9 +110,9 @@ namespace MagiRogue.System
         /// <param name="terrain">Terrain to modify.</param>
         protected override void UpdateTerrainUnseen(TileBase terrain)
         {
-            if (Map.Explored[terrain.Position])
+            if (Map.PlayerExplored[terrain.Position])
             {
-                terrain.SaveState();
+                //terrain.SaveState();
                 terrain.Foreground = ExploredColor;
             }
             else

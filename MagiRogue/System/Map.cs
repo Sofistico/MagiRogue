@@ -1,12 +1,12 @@
 ﻿using GoRogue;
 using GoRogue.GameFramework;
-using GoRogue.MapViews;
+using GoRogue.SpatialMaps;
 using MagiRogue.Entities;
 using MagiRogue.System.Tiles;
 using MagiRogue.System.Time;
-using Microsoft.Xna.Framework;
 using SadConsole;
-using SadConsole.Components;
+using SadRogue.Primitives;
+using SadRogue.Primitives.GridViews;
 using System;
 using System.Linq;
 
@@ -54,6 +54,7 @@ namespace MagiRogue.System
         public Entity ControlledEntitiy
         {
             get => _gameObjectControlled;
+
             set
             {
                 if (_gameObjectControlled != value)
@@ -76,10 +77,10 @@ namespace MagiRogue.System
         /// <param name="width"></param>
         /// <param name="height"></param>
         public Map(int width, int height) : base(CreateTerrain(width, height), Enum.GetNames(typeof(MapLayer)).Length - 1,
-            Distance.EUCLIDEAN,
+            Distance.Euclidean,
             entityLayersSupportingMultipleItems: LayerMasker.DEFAULT.Mask((int)MapLayer.ITEMS, (int)MapLayer.GHOSTS, (int)MapLayer.PLAYER))
         {
-            Tiles = ((ArrayMap<TileBase>)((LambdaSettableTranslationMap<TileBase, IGameObject>)Terrain).BaseMap);
+            Tiles = ((ArrayView<TileBase>)((LambdaSettableTranslationGridView<TileBase, IGameObject>)Terrain).BaseGrid);
             FOVHandler = new MagiRogueFOVVisibilityHandler(this, Color.Black, (int)MapLayer.GHOSTS);
 
             /*entitySyncersByLayer = new MultipleConsoleEntityDrawingComponent[Enum.GetNames(typeof(MapLayer)).Length - 1];
@@ -93,10 +94,10 @@ namespace MagiRogue.System
 
         #region HelperMethods
 
-        private static ISettableMapView<IGameObject> CreateTerrain(int width, int heigth)
+        private static ISettableGridView<IGameObject> CreateTerrain(int width, int heigth)
         {
-            var goRogueTerrain = new ArrayMap<TileBase>(width, heigth);
-            return new LambdaSettableTranslationMap<TileBase, IGameObject>(goRogueTerrain, t => t, g => g as TileBase);
+            var goRogueTerrain = new ArrayView<TileBase>(width, heigth);
+            return new LambdaSettableTranslationGridView<TileBase, IGameObject>(goRogueTerrain, t => t, g => g as TileBase);
         }
 
         /// <summary>
@@ -114,6 +115,7 @@ namespace MagiRogue.System
             // off the limits of the map
             if (location.X < 0 || location.Y < 0 || location.X >= Width || location.Y >= Height)
                 return false;
+
             // then return whether the tile is walkable
             return !_tiles[location.Y * Width + location.X].IsBlockingMove;
         }
@@ -128,10 +130,10 @@ namespace MagiRogue.System
         /// <returns></returns>
         public T GetEntityAt<T>(Point location) where T : Entity
         {
-            return Entities.GetItems(location).OfType<T>().FirstOrDefault();
+            return Entities.GetItemsAt(location).OfType<T>().FirstOrDefault();
         }
 
-        public Entity GetClosestEntity(Coord originPos, int range)
+        public Entity GetClosestEntity(Point originPos, int range)
         {
             Entity closest = null;
             double bestDistance = double.MaxValue;
@@ -140,7 +142,7 @@ namespace MagiRogue.System
             {
                 if (entity is not Player)
                 {
-                    double distance = Coord.EuclideanDistanceMagnitude(originPos, entity.Position);
+                    double distance = Point.EuclideanDistanceMagnitude(originPos, entity.Position);
 
                     if (distance < bestDistance && (distance <= range || range == 0))
                     {
@@ -159,13 +161,10 @@ namespace MagiRogue.System
         /// <param name="entity"></param>
         public void Remove(Entity entity)
         {
-            if (!RemoveEntity(entity))
-            {
-                throw new Exception($"Failed to remove {entity.Name} || {entity.Position} || {entity.GetType()}");
-            }
+            RemoveEntity(entity);
 
             // Set this up to sycer properly
-            entitySyncersByLayer[entity.Layer - 1].Entities.Remove(entity);
+            //entitySyncersByLayer[entity.Layer - 1].Entities.Remove(entity);
 
             // Link up the entity's Moved event to a new handler
             entity.Moved -= OnEntityMoved;
@@ -180,17 +179,14 @@ namespace MagiRogue.System
             // Initilizes the field of view of the player, will do different for monsters
             if (entity is Player player)
             {
-                CalculateFOV(position: player.Position, player.Stats.ViewRadius, radiusShape: Radius.CIRCLE);
+                PlayerFOV.Calculate(player.Position, player.Stats.ViewRadius);
                 ControlledEntitiy = player;
             }
 
             // Set this up to sycer properly
-            entitySyncersByLayer[entity.Layer - 1].Entities.Add(entity);
+            //entitySyncersByLayer[entity.Layer - 1].Entities.Add(entity);
 
-            if (!AddEntity(entity))
-            {
-                throw new Exception($"Failed to add {entity.Name} || {entity.Position} || {entity.GetType()}");
-            }
+            AddEntity(entity);
 
             if (entity is Actor monster)
             {
@@ -208,11 +204,12 @@ namespace MagiRogue.System
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        private void OnEntityMoved(object sender, Entity.EntityMovedEventArgs args)
+        private void OnEntityMoved(object sender, GameObjectPropertyChanged<Point> args)
         {
-            if (args.Entity is Player actor)
+            if (args.Item is Player actor)
             {
-                CalculateFOV(position: actor.Position, actor.Stats.ViewRadius, radiusShape: Radius.CIRCLE);
+                //CalculateFOV(position: actor.Position, actor.Stats.ViewRadius, radiusShape: Radius.Circle);
+                PlayerFOV.Calculate(actor.Position, actor.Stats.ViewRadius);
             }
         }
 
@@ -228,7 +225,8 @@ namespace MagiRogue.System
         /// <returns></returns>
         public T GetTileAt<T>(int x, int y) where T : TileBase
         {
-            int locationIndex = Helpers.GetIndexFromPoint(x, y, Width);
+            int locationIndex = Point.ToIndex(x, y, Width);
+
             // make sure the index is within the boundaries of the map!
             if (locationIndex <= Width * Height && locationIndex >= 0)
             {
@@ -272,26 +270,27 @@ namespace MagiRogue.System
             return null;
         }
 
-        public void ConfigureRender(SadConsole.Console renderer)
+        /*public void ConfigureRender(SadConsole.Console renderer)
         {
             // Syncs the entity and addeds to the renderer
             foreach (MultipleConsoleEntityDrawingComponent sync in entitySyncersByLayer)
             {
                 renderer.Components.Add(sync);
+
                 // Necessary so that the MultipleConsoleEntityDrawingComponent doesn't try to forcefully update
                 // visibility.
                 sync.HandleIsVisible = false;
             }
 
             renderer.IsDirty = true;
-        }
+        }*/
 
         #endregion HelperMethods
 
         #region Overload
 
         /// <inheritdoc />
-        public override void CalculateFOV(int x, int y, double radius, Distance radiusShape)
+        /*public override void CalculateFOV(int x, int y, double radius, Distance radiusShape)
         {
             base.CalculateFOV(x, y, radius, radiusShape);
 
@@ -304,7 +303,7 @@ namespace MagiRogue.System
             base.CalculateFOV(x, y, radius, radiusShape, angle, span);
 
             FOVRecalculated?.Invoke(this, EventArgs.Empty);
-        }
+        }*/
 
         #endregion Overload
     }

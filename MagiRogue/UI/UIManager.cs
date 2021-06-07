@@ -6,12 +6,11 @@ using MagiRogue.System.Magic;
 using MagiRogue.System.Magic.Effects;
 using MagiRogue.System.Time;
 using MagiRogue.UI.Windows;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using SadConsole;
+using SadConsole.Input;
+using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
-using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace MagiRogue.UI
 {
@@ -23,6 +22,7 @@ namespace MagiRogue.UI
 
         // Here are the managers
         public MapWindow MapWindow { get; set; }
+
         public MessageLogWindow MessageLog { get; set; }
         public InventoryWindow InventoryScreen { get; set; }
         public StatusWindow StatusConsole { get; set; }
@@ -53,7 +53,7 @@ namespace MagiRogue.UI
 
             // The UIManager becomes the only
             // screen that SadConsole processes
-            Parent = Global.CurrentScreen;
+            Parent = GameHost.Instance.Screen;
         }
 
         // Initiates the game by means of going to the menu first
@@ -112,10 +112,10 @@ namespace MagiRogue.UI
 
         public static readonly Dictionary<Keys, Direction> MovementDirectionMapping = new Dictionary<Keys, Direction>
         {
-            { Keys.NumPad7, Direction.UP_LEFT }, { Keys.NumPad8, Direction.UP }, { Keys.NumPad9, Direction.UP_RIGHT },
-            { Keys.NumPad4, Direction.LEFT }, { Keys.NumPad6, Direction.RIGHT },
-            { Keys.NumPad1, Direction.DOWN_LEFT }, { Keys.NumPad2, Direction.DOWN }, { Keys.NumPad3, Direction.DOWN_RIGHT },
-            { Keys.Up, Direction.UP }, { Keys.Down, Direction.DOWN }, { Keys.Left, Direction.LEFT }, { Keys.Right, Direction.RIGHT }
+            { Keys.NumPad7, Direction.UpLeft }, { Keys.NumPad8, Direction.Up }, { Keys.NumPad9, Direction.UpRight },
+            { Keys.NumPad4, Direction.Left }, { Keys.NumPad6, Direction.Right },
+            { Keys.NumPad1, Direction.DownLeft }, { Keys.NumPad2, Direction.Down }, { Keys.NumPad3, Direction.DownRight },
+            { Keys.Up, Direction.Up }, { Keys.Down, Direction.Down }, { Keys.Left, Direction.Left }, { Keys.Right, Direction.Right }
         };
 
         // Scans the SadConsole's Global KeyboardState and triggers behaviour
@@ -153,7 +153,7 @@ namespace MagiRogue.UI
                 if (info.IsKeyPressed(Keys.D))
                 {
                     bool sucess = CommandManager.DropItems(GameLoop.World.Player);
-                    Item item = GameLoop.World.CurrentMap.GetEntity<Item>(GameLoop.World.Player.Position);
+                    Item item = GameLoop.World.CurrentMap.GetEntityAt<Item>(GameLoop.World.Player.Position);
                     InventoryScreen.RemoveItemFromConsole(item);
                     InventoryScreen.ShowItems(GameLoop.World.Player);
                     GameLoop.World.ProcessTurn(TimeHelper.Interact, sucess);
@@ -270,7 +270,7 @@ namespace MagiRogue.UI
                 if (info.IsKeyPressed(key))
                 {
                     Direction moveDirection = MovementDirectionMapping[key];
-                    Coord coorToMove = new Coord(moveDirection.DeltaX, moveDirection.DeltaY);
+                    Point coorToMove = new Point(moveDirection.DeltaX, moveDirection.DeltaY);
 
                     bool sucess = CommandManager.MoveActorBy((Actor)GameLoop.World.CurrentMap.ControlledEntitiy, coorToMove);
                     MapWindow.CenterOnActor((Actor)GameLoop.World.CurrentMap.ControlledEntitiy);
@@ -303,55 +303,6 @@ namespace MagiRogue.UI
             // Without this, the window will never be visible on screen
             MapWindow.Show();
         }
-
-        // Method helper to print the X and Y of the console.
-        // Use only for debugging purposes
-
-#if DEBUG
-
-        private static void PrintHeader()
-        {
-            int counter = 0;
-            var startingColor = Color.Black.GetRandomColor(SadConsole.Global.Random);
-            var color = startingColor;
-            var UIManagerConsoles = Global.CurrentScreen;
-            for (int x = 0; x < UIManagerConsoles.Width; x++)
-            {
-                UIManagerConsoles[x].Glyph = counter.ToString()[0];
-                UIManagerConsoles[x].Foreground = color;
-
-                counter++;
-
-                if (counter == 10)
-                {
-                    counter = 0;
-                    color = color.GetRandomColor(SadConsole.Global.Random);
-                }
-            }
-
-            counter = 0;
-            color = startingColor;
-            for (int y = 0; y < UIManagerConsoles.Height; y++)
-            {
-                UIManagerConsoles[0, y].Glyph = counter.ToString()[0];
-                UIManagerConsoles[0, y].Foreground = color;
-
-                counter++;
-
-                if (counter == 10)
-                {
-                    counter = 0;
-                    color = color.GetRandomColor(SadConsole.Global.Random);
-                }
-            }
-
-            // Display console size
-            UIManagerConsoles.Print(4, 2, "Console Size");
-            UIManagerConsoles.Print(4, 3, "                         ");
-            UIManagerConsoles.Print(4, 3, $"{UIManagerConsoles.Width} {UIManagerConsoles.Height}");
-        }
-
-#endif
 
         // Build a new coloured theme based on SC's default theme
         // and then set it as the program's default theme.
