@@ -132,9 +132,9 @@ namespace MagiRogue.Entities
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public T GetGoRogueComponent<T>() where T : GoRogue.GameFramework.Components.IGameObjectComponent
+        public T GetGoRogueComponent<T>() where T : GoRogue.GameFramework.Components.ComponentBase
         {
-            return backingField.GoRogueComponents.GetFirst<T>();
+            return this.GoRogueComponents.GetFirstOrDefault<T>();
         }
 
         #endregion Helper Methods
@@ -188,7 +188,7 @@ namespace MagiRogue.Entities
         public void AddComponent(params object[] components)
         {
             foreach (object component in components)
-                AddComponent(component);
+                backingField.GoRogueComponents.Add(component);
         }
 
         #endregion IGameObject Interface

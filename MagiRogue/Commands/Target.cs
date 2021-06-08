@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SadConsole.Components;
+using MagiRogue.Components;
 
 namespace MagiRogue.Commands
 {
@@ -40,15 +42,18 @@ namespace MagiRogue.Commands
                 LeavesGhost = false
             };
 
-            var frameCell = Cursor.Effect;
+            ColoredGlyph frameCell = Cursor.Appearance;
             frameCell.Foreground = Color.Transparent;
             frameCell.Background = Color.Transparent;
             frameCell.Glyph = 'X';
 
-            Cursor.Animation.AnimationDuration = 2.0f;
-            Cursor.Animation.Repeat = true;
+            Timer timer = new Timer(TimeSpan.FromSeconds(2.0));
 
-            Cursor.Animation.Start();
+            timer.Repeat = true;
+
+            Cursor.GoRogueComponents.Add(new AnimationComponent(timer, Cursor.Appearance, frameCell));
+
+            timer.TimerElapsed += (s, e) => Cursor.Appearance.CopyAppearanceFrom(frameCell);
         }
 
         public IList<T> TargetEntity<T>() where T : Entity
