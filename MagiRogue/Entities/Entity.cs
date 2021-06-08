@@ -132,7 +132,7 @@ namespace MagiRogue.Entities
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public T GetGoRogueComponent<T>() where T : GoRogue.GameFramework.Components.ComponentBase
+        public T GetGoRogueComponent<T>() where T : GoRogue.GameFramework.Components.IGameObjectComponent
         {
             return this.GoRogueComponents.GetFirstOrDefault<T>();
         }
