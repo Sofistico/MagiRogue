@@ -9,7 +9,7 @@ using MagiRogue.UI.Windows;
 using SadConsole;
 using SadConsole.Input;
 using SadRogue.Primitives;
-using System;
+using System.Linq;
 using System.Collections.Generic;
 using Color = SadConsole.UI.AdjustableColor;
 
@@ -85,6 +85,7 @@ namespace MagiRogue.UI
             Children.Add(MessageLog);
             MessageLog.Show();
             MessageLog.Position = new Point(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2);
+            MessageLog.Add("Test message log works");
 
             // Inventory initialization
             InventoryScreen = new InventoryWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Inventory Window");
@@ -119,9 +120,13 @@ namespace MagiRogue.UI
             { Keys.Up, Direction.Up }, { Keys.Down, Direction.Down }, { Keys.Left, Direction.Left }, { Keys.Right, Direction.Right }
         };
 
-        // Scans the SadConsole's Global KeyboardState and triggers behaviour
-        // based on the button pressed.
-        public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
+        /// <summary>
+        /// Scans the SadConsole's Global KeyboardState and triggers behaviour
+        /// based on the button pressed.
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        public override bool ProcessKeyboard(Keyboard info)
         {
             if (GameLoop.World != null)
             {

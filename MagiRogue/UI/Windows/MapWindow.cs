@@ -16,10 +16,13 @@ namespace MagiRogue.UI.Windows
 {
     public class MapWindow : MagiBaseWindow
     {
+        private SadConsole.Entities.Renderer _entityRender;
+
         public Console MapConsole { get; set; }
 
         public MapWindow(int width, int height, string title) : base(width, height, title)
         {
+            _entityRender = new();
         }
 
         // centers the viewport camera on an Actor
@@ -41,11 +44,13 @@ namespace MagiRogue.UI.Windows
             // remove all Entities from the console first
             MapConsole.Children.Clear();
 
-            //map.ConfigureRender(MapConsole);
-
+            map.ConfigureRender(MapConsole);
+            _entityRender.OnAdded(MapConsole);
+            _entityRender.DoEntityUpdate = true;
             foreach (Entity item in map.Entities.Items)
             {
                 MapConsole.Children.Add(item);
+                _entityRender.Add(item);
             }
         }
 

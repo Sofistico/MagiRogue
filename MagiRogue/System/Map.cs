@@ -271,7 +271,7 @@ namespace MagiRogue.System
             return null;
         }
 
-        /*public void ConfigureRender(SadConsole.Console renderer)
+        public void ConfigureRender(SadConsole.Console renderer)
         {
             foreach (var item in Entities)
             {
@@ -279,7 +279,7 @@ namespace MagiRogue.System
             }
 
             renderer.IsDirty = true;
-        }*/
+        }
 
         #endregion HelperMethods
 
