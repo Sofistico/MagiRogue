@@ -5,12 +5,13 @@ using MagiRogue.System;
 using MagiRogue.System.Time;
 using MagiRogue.UI.Windows;
 using System.Linq;
+using GoRogue.Components.ParentAware;
 
 namespace MagiRogue.Components
 {
     public class MoveAndAttackAI : IAiComponent
     {
-        public GoRogue.GameFramework.IGameObject Parent { get; set; }
+        //public GoRogue.GameFramework.IGameObject Parent { get; set; }
 
         private readonly int perceptionAi;
 
@@ -18,6 +19,8 @@ namespace MagiRogue.Components
         {
             perceptionAi = perception;
         }
+
+        public IObjectWithComponents Parent { get; set; }
 
         public (bool sucess, long ticks) RunAi(Map map, MessageLogWindow messageLog)
         {
@@ -43,6 +46,8 @@ namespace MagiRogue.Components
         {
             Path shortPath = map.AStar.ShortestPath(actor.Position, GameLoop.World.Player.Position);
 
+            var parent = (Entity)Parent;
+
             Direction direction;
 
             if (shortPath == null || shortPath.Length > perceptionAi)
@@ -51,7 +56,7 @@ namespace MagiRogue.Components
             }
             else
             {
-                direction = Direction.GetDirection(shortPath.Steps.First() - Parent.Position);
+                direction = Direction.GetDirection(shortPath.Steps.First() - parent.Position);
             }
 
             Point coord = new Point(direction.DeltaX, direction.DeltaY);

@@ -49,11 +49,7 @@ namespace MagiRogue.Commands
 
             Timer timer = new Timer(TimeSpan.FromSeconds(2.0));
 
-            timer.Repeat = true;
-
-            Cursor.GoRogueComponents.Add(new AnimationComponent(timer, Cursor.Appearance, frameCell));
-
-            timer.TimerElapsed += (s, e) => Cursor.Appearance.CopyAppearanceFrom(frameCell);
+            Cursor.AddComponent(new AnimationComponent(timer, Cursor.Appearance, frameCell));
         }
 
         public IList<T> TargetEntity<T>() where T : Entity

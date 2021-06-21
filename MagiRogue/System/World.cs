@@ -253,7 +253,7 @@ namespace MagiRogue.System
 
             if (entity != null)
             {
-                IAiComponent ai = entity.GetGoRogueComponent<IAiComponent>();
+                IAiComponent ai = entity.GoRogueComponents.GetFirstOrDefault<IAiComponent>();
                 (bool sucess, long tick) = ai?.RunAi(CurrentMap, GameLoop.UIManager.MessageLog) ?? (false, -1);
                 entity.Stats.ApplyAllRegen();
 

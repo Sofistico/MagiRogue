@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using GoRogue.Components;
 using GoRogue.SpatialMaps;
+using GoRogue.Components.ParentAware;
 
 namespace MagiRogue.System.Tiles
 {
@@ -67,7 +68,9 @@ namespace MagiRogue.System.Tiles
 
         int IHasLayer.Layer => backingField.Layer;
 
-        public ITaggableComponentCollection GoRogueComponents => backingField.GoRogueComponents;
+        //public ITaggableComponentCollection GoRogueComponents => backingField.GoRogueComponents;
+
+        public IComponentCollection GoRogueComponents => backingField.GoRogueComponents;
 
         #endregion backingField Data
 
@@ -136,6 +139,32 @@ namespace MagiRogue.System.Tiles
             remove
             {
                 backingField.Moved -= value;
+            }
+        }
+
+        public event EventHandler<GameObjectCurrentMapChanged> AddedToMap
+        {
+            add
+            {
+                backingField.AddedToMap += value;
+            }
+
+            remove
+            {
+                backingField.AddedToMap -= value;
+            }
+        }
+
+        public event EventHandler<GameObjectCurrentMapChanged> RemovedFromMap
+        {
+            add
+            {
+                backingField.RemovedFromMap += value;
+            }
+
+            remove
+            {
+                backingField.RemovedFromMap -= value;
             }
         }
 

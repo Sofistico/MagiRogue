@@ -1,11 +1,10 @@
-﻿using GoRogue.GameFramework.Components;
-using GoRogue.Components;
+﻿using GoRogue.Components;
 using MagiRogue.System;
 using MagiRogue.UI.Windows;
 
 namespace MagiRogue.Components
 {
-    public interface IAiComponent : IGameObjectComponent
+    public interface IAiComponent : GoRogue.Components.ParentAware.IParentAwareComponent
     {
         (bool sucess, long ticks) RunAi(Map map, MessageLogWindow messageLog);
     }

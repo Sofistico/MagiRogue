@@ -11,6 +11,7 @@ using SadConsole.Input;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
+using Color = SadConsole.UI.AdjustableColor;
 
 namespace MagiRogue.UI
 {
@@ -36,7 +37,7 @@ namespace MagiRogue.UI
 
         private static Player GetPlayer => GameLoop.World.Player;
 
-        public SadConsole.UI.Themes.Library CustomColors;
+        public SadConsole.UI.Colors CustomColors;
 
         private Target target;
 
@@ -306,23 +307,23 @@ namespace MagiRogue.UI
         private void SetUpCustomColors()
         {
             // Create a set of default colours that we will modify
-            CustomColors = new SadConsole.UI.Themes.Library();
+            CustomColors = SadConsole.UI.Themes.Library.Default.Colors.Clone();
 
             // Pick a couple of background colours that we will apply to all consoles.
-            Color backgroundColor = Color.Black;
+            Color backgroundColor = new Color(CustomColors.Black, "Black");
 
             // Set background colour for controls consoles and their controls
-            CustomColors.ControlHostBack = backgroundColor;
-            CustomColors.ControlBack = backgroundColor;
+            CustomColors.ControlHostBackground = backgroundColor;
+            CustomColors.ControlBackgroundNormal = backgroundColor;
 
             // Generate background colours for dark and light themes based on
             // the default background colour.
-            CustomColors.ControlBackLight = (backgroundColor * 1.3f).FillAlpha();
-            CustomColors.ControlBackDark = (backgroundColor * 0.7f).FillAlpha();
+            //CustomColors.ControlH = (backgroundColor * 1.3f).FillAlpha();
+            //CustomColors.ControlBackDark = (backgroundColor * 0.7f).FillAlpha();
 
             // Set a color for currently selected controls. This should always
             // be different from the background colour.
-            CustomColors.ControlBackSelected = CustomColors.GrayDark;
+            CustomColors.ControlBackgroundSelected = new Color(CustomColors.GrayDark, "Grey");
 
             // Rebuild all objects' themes with the custom colours we picked above.
             CustomColors.RebuildAppearances();

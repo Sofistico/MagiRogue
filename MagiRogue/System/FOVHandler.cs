@@ -15,7 +15,7 @@ namespace MagiRogue.System
     public abstract class FOVHandler
     {
         /// <summary>
-        /// Possible states for the FOVVisibilityHandler to be in.
+        /// Possible states for the <see cref="FOVHandler"/> FOVVisibilityHandler to be in.
         /// </summary>
         public enum FovState
         {
@@ -40,7 +40,37 @@ namespace MagiRogue.System
         /// <summary>
         /// Whether or not the FOVVisibilityHandler is actively setting things to seen/unseen as appropriate.
         /// </summary>
-        public bool Enabled { get; private set; }
+        public bool IsEnabled => CurrentState == FovState.Enabled;
+
+        private FovState _currentState;
+
+        /// <summary>
+        /// The current state of the handler.  See <see cref="State"/> documentation for details
+        /// on each possible value.
+        /// </summary>
+        /// <remarks>
+        /// If the component has been added to a map, setting this value will set all values in
+        /// the map according to the new state.
+        ///
+        /// When the component is added to a map, the visibility of all values in that map will
+        /// be set according to this value.
+        /// </remarks>
+        public FovState CurrentState
+        {
+            get => _currentState;
+
+            set
+            {
+                // Nothing to do if the old value is the same as the new
+                if (value == _currentState) return;
+
+                // Otherwise, set the state value, and apply it to the map if
+                // there is one.
+                _currentState = value;
+
+                //ApplyStateToMap()
+            }
+        }
 
         /// <summary>
         /// The map that this handler manages visibility of objects for.
@@ -60,6 +90,8 @@ namespace MagiRogue.System
             map.ObjectMoved += Map_ObjectMoved;
             map.FOVRecalculated += Map_FOVRecalculated;
 
+            //CurrentState = startingState;
+
             SetState(startingState);
         }
 
@@ -69,14 +101,15 @@ namespace MagiRogue.System
         /// <param name="state">The new state for the FOVVisibilityHandler.  See <see cref="FovState"/> documentation for details.</param>
         private void SetState(FovState state)
         {
+            CurrentState = state;
+
             switch (state)
             {
                 case FovState.Enabled:
-                    Enabled = true;
-
                     foreach (Point pos in Map.Positions())
                     {
                         TileBase terrain = Map.GetTerrainAt<TileBase>(pos);
+                        if (terrain == null) return;
                         if (terrain != null && Map.PlayerFOV.BooleanFOV[pos])
                         {
                             UpdateTerrainSeen(terrain);
@@ -95,13 +128,13 @@ namespace MagiRogue.System
                     break;
 
                 case FovState.DisabledResetVisibility:
-                    Enabled = false;
                     break;
 
                 case FovState.DisabledNoResetVisibility:
                     foreach (Point pos in Map.Positions())
                     {
                         TileBase terrain = Map.GetTerrainAt<TileBase>(pos);
+                        if (terrain == null) return;
                         if (terrain != null)
                             UpdateTerrainSeen(terrain);
                     }
@@ -111,7 +144,6 @@ namespace MagiRogue.System
                         UpdateEntitySeen(entity);
                     }
 
-                    Enabled = false;
                     break;
 
                 default:
@@ -158,7 +190,7 @@ namespace MagiRogue.System
 
         private void Map_ObjectMoved(object sender, ItemMovedEventArgs<IGameObject> e)
         {
-            if (!Enabled) return;
+            if (!IsEnabled) return;
 
             if (Map.PlayerFOV.BooleanFOV[e.NewPosition])
                 UpdateEntitySeen((Entity)(e.Item));
@@ -168,7 +200,7 @@ namespace MagiRogue.System
 
         private void Map_ObjectAdded(object sender, ItemEventArgs<IGameObject> e)
         {
-            if (!Enabled) return;
+            if (!IsEnabled) return;
 
             if (e.Item.Layer == 0) // terrain
             {
@@ -188,7 +220,7 @@ namespace MagiRogue.System
 
         private void Map_FOVRecalculated(object sender, EventArgs e)
         {
-            if (!Enabled) return;
+            if (!IsEnabled) return;
 
             foreach (Point position in Map.PlayerFOV.NewlySeen)
             {

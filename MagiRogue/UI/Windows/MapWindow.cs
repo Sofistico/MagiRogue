@@ -10,6 +10,7 @@ using SadRogue.Primitives;
 using Point = SadRogue.Primitives.Point;
 using Rectangle = SadRogue.Primitives.Rectangle;
 using Console = SadConsole.Console;
+using MagiRogue.System.Tiles;
 
 namespace MagiRogue.UI.Windows
 {
@@ -41,6 +42,11 @@ namespace MagiRogue.UI.Windows
             MapConsole.Children.Clear();
 
             //map.ConfigureRender(MapConsole);
+
+            foreach (Entity item in map.Entities.Items)
+            {
+                MapConsole.Children.Add(item);
+            }
         }
 
         // Loads a Map into the MapConsole
@@ -53,7 +59,8 @@ namespace MagiRogue.UI.Windows
 
             // First load the map's tiles into the console
             MapConsole = new Console(GameLoop.World.CurrentMap.Width,
-                GameLoop.World.CurrentMap.Height, GameLoop.GameWidth, GameLoop.GameHeight, map.Tiles)
+                GameLoop.World.CurrentMap.Height, GameLoop.World.CurrentMap.Width,
+                GameLoop.World.CurrentMap.Width, map.Tiles)
             {
                 View = new Rectangle(0, 0, mapConsoleWidth, mapConsoleHeight),
 
@@ -68,6 +75,8 @@ namespace MagiRogue.UI.Windows
 
             // Now Sync all of the map's entities
             SyncMapEntities(map);
+
+            IsDirty = true;
         }
     }
 }

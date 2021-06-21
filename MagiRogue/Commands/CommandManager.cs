@@ -359,7 +359,7 @@ namespace MagiRogue.Commands
 
         public static void ToggleFOV()
         {
-            if (GameLoop.World.CurrentMap.FOVHandler.Enabled)
+            if (GameLoop.World.CurrentMap.FOVHandler.IsEnabled)
             {
                 GameLoop.World.CurrentMap.FOVHandler.Disable(false);
             }

@@ -9,6 +9,7 @@ using System.Diagnostics;
 using MagiRogue.System.Magic;
 using GoRogue.Components;
 using GoRogue.SpatialMaps;
+using GoRogue.Components.ParentAware;
 
 namespace MagiRogue.Entities
 {
@@ -56,6 +57,7 @@ namespace MagiRogue.Entities
         public bool IsTransparent { get => backingField.IsTransparent; set => backingField.IsTransparent = value; }
         public bool IsWalkable { get => backingField.IsWalkable; set => backingField.IsWalkable = value; }
         Point IGameObject.Position { get => backingField.Position; set => backingField.Position = value; }
+        public IComponentCollection GoRogueComponents => backingField.GoRogueComponents;
 
         #endregion BackingField fields
 
@@ -125,18 +127,6 @@ namespace MagiRogue.Entities
             }
         }
 
-        public ITaggableComponentCollection GoRogueComponents => backingField.GoRogueComponents;
-
-        /// <summary>
-        /// Returns a GoRogue component
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public T GetGoRogueComponent<T>() where T : GoRogue.GameFramework.Components.IGameObjectComponent
-        {
-            return this.GoRogueComponents.GetFirstOrDefault<T>();
-        }
-
         #endregion Helper Methods
 
         #region IGameObject Interface
@@ -177,6 +167,32 @@ namespace MagiRogue.Entities
             remove
             {
                 backingField.Moved -= value;
+            }
+        }
+
+        public event EventHandler<GameObjectCurrentMapChanged> AddedToMap
+        {
+            add
+            {
+                backingField.AddedToMap += value;
+            }
+
+            remove
+            {
+                backingField.AddedToMap -= value;
+            }
+        }
+
+        public event EventHandler<GameObjectCurrentMapChanged> RemovedFromMap
+        {
+            add
+            {
+                backingField.RemovedFromMap += value;
+            }
+
+            remove
+            {
+                backingField.RemovedFromMap -= value;
             }
         }
 

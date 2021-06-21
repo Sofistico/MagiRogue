@@ -273,14 +273,9 @@ namespace MagiRogue.System
 
         /*public void ConfigureRender(SadConsole.Console renderer)
         {
-            // Syncs the entity and addeds to the renderer
-            foreach (MultipleConsoleEntityDrawingComponent sync in entitySyncersByLayer)
+            foreach (var item in Entities)
             {
-                renderer.Components.Add(sync);
-
-                // Necessary so that the MultipleConsoleEntityDrawingComponent doesn't try to forcefully update
-                // visibility.
-                sync.HandleIsVisible = false;
+                renderer.IsVisible = true;
             }
 
             renderer.IsDirty = true;
