@@ -189,6 +189,7 @@ namespace MagiRogue.System
             if (entity is Player player)
             {
                 PlayerFOV.Calculate(player.Position, player.Stats.ViewRadius);
+                FOVRecalculated?.Invoke(this, EventArgs.Empty);
                 ControlledEntitiy = player;
             }
 
@@ -215,7 +216,6 @@ namespace MagiRogue.System
         /// <param name="args"></param>
         private void OnEntityMoved(object sender, GameObjectPropertyChanged<Point> args)
         {
-            var test = args.NewValue;
             if (args.Item is Player actor)
             {
                 //CalculateFOV(position: actor.Position, actor.Stats.ViewRadius, radiusShape: Radius.Circle);
