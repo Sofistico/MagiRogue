@@ -49,12 +49,12 @@ namespace MagiRogue.Entities
 
             Magic.KnowSpells.Add(spellBase);
 
-            PositionChanged += (s, e) => CalculateFov();
+            //PositionChanged += (s, e) => CalculateFov();
         }
 
-        private void CalculateFov()
+        /*public void CalculateFov()
         {
             CurrentMap?.PlayerFOV.Calculate(Position, Stats.ViewRadius, CurrentMap.DistanceMeasurement);
-        }
+        }*/
     }
 }

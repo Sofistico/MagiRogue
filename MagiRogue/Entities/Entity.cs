@@ -7,9 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using MagiRogue.System.Magic;
+using System.Linq;
 using GoRogue.Components;
 using GoRogue.SpatialMaps;
 using GoRogue.Components.ParentAware;
+using SadConsole;
 
 namespace MagiRogue.Entities
 {
@@ -56,7 +58,7 @@ namespace MagiRogue.Entities
 
         public bool IsTransparent { get => backingField.IsTransparent; set => backingField.IsTransparent = value; }
         public bool IsWalkable { get => backingField.IsWalkable; set => backingField.IsWalkable = value; }
-        Point IGameObject.Position { get => backingField.Position; set => backingField.Position = value; }
+        Point IGameObject.Position { get => Position; set => Position = value; }
         public IComponentCollection GoRogueComponents => backingField.GoRogueComponents;
 
         #endregion BackingField fields
@@ -87,16 +89,25 @@ namespace MagiRogue.Entities
             Layer = layer;
 
             backingField = new GameObject(coord, layer);
-            base.Position = backingField.Position;
+            Position = backingField.Position;
 
-            this.Moved += SadMoved;
-            backingField.Moved += GoRogueMoved;
+            //this.Moved += SadMoved;
+            //backingField.Moved += GoRogueMoved;
+
+            PositionChanged += Position_Changed;
 
             Magic = new Magic();
             Material = new Material();
 
             //IsWalkable = false;
         }
+
+#nullable enable
+
+        private void Position_Changed(object? sender, ValueChangedEventArgs<Point> e)
+            => Moved?.Invoke(sender, new GameObjectPropertyChanged<Point>(this, e.OldValue, e.NewValue));
+
+#nullable disable
 
         private void GoRogueMoved(object sender, GameObjectPropertyChanged<Point> e)
         {
@@ -159,18 +170,11 @@ namespace MagiRogue.Entities
             }
         }
 
-        public event EventHandler<GameObjectPropertyChanged<Point>> Moved
-        {
-            add
-            {
-                backingField.Moved += value;
-            }
+#nullable enable
 
-            remove
-            {
-                backingField.Moved -= value;
-            }
-        }
+        public event EventHandler<GameObjectPropertyChanged<Point>>? Moved;
+
+#nullable disable
 
         public event EventHandler<GameObjectCurrentMapChanged> AddedToMap
         {
