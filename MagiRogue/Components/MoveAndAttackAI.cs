@@ -25,10 +25,12 @@ namespace MagiRogue.Components
         public (bool sucess, long ticks) RunAi(Map map, MessageLogWindow messageLog)
         {
             // TODO: Fix, because it hardly works, at least i saw the actor attacking
-            if (Parent is not Actor actor)
+            if (Parent is not GoRogue.GameFramework.IGameObject parent)
             {
                 return (false, -1);
             }
+
+            Actor actor = (Actor)GameLoop.World.CurrentMap.GetEntityById(parent.ID);
 
             int walkSpeed = TimeHelper.GetWalkTime(actor);
 
@@ -46,7 +48,8 @@ namespace MagiRogue.Components
         {
             Path shortPath = map.AStar.ShortestPath(actor.Position, GameLoop.World.Player.Position);
 
-            var parent = (Entity)Parent;
+            GoRogue.GameFramework.IGameObject iGame = (GoRogue.GameFramework.IGameObject)Parent;
+            var parent = GameLoop.World.CurrentMap.GetEntityById(iGame.ID);
 
             Direction direction;
 

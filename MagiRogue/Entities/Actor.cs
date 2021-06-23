@@ -91,6 +91,7 @@ namespace MagiRogue.Entities
             Anatomy = new Anatomy();
             Inventory = new List<Item>();
             Name = name;
+            IsWalkable = false;
         }
 
         #endregion Constructor

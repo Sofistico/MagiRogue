@@ -94,6 +94,8 @@ namespace MagiRogue.Entities
 
             Magic = new Magic();
             Material = new Material();
+
+            //IsWalkable = false;
         }
 
         private void GoRogueMoved(object sender, GameObjectPropertyChanged<Point> e)

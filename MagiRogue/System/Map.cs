@@ -66,6 +66,8 @@ namespace MagiRogue.System
             }
         }
 
+        private SadConsole.Entities.Renderer _entityRender;
+
         #endregion Properties
 
         #region Constructor
@@ -82,6 +84,8 @@ namespace MagiRogue.System
         {
             Tiles = ((ArrayView<TileBase>)((LambdaSettableTranslationGridView<TileBase, IGameObject>)Terrain).BaseGrid);
             FOVHandler = new MagiRogueFOVVisibilityHandler(this, Color.Black, (int)MapLayer.GHOSTS);
+
+            _entityRender = new SadConsole.Entities.Renderer();
 
             /*entitySyncersByLayer = new MultipleConsoleEntityDrawingComponent[Enum.GetNames(typeof(MapLayer)).Length - 1];
             for (int i = 0; i < entitySyncersByLayer.Length; i++)
@@ -165,6 +169,7 @@ namespace MagiRogue.System
 
             // Set this up to sycer properly
             //entitySyncersByLayer[entity.Layer - 1].Entities.Remove(entity);
+            _entityRender.Remove(entity);
 
             // Link up the entity's Moved event to a new handler
             entity.Moved -= OnEntityMoved;
@@ -188,6 +193,8 @@ namespace MagiRogue.System
 
             AddEntity(entity);
 
+            //_entityRender.Add(entity);
+
             if (entity is Actor monster)
             {
                 EntityTimeNode entityNode = new EntityTimeNode(monster.ID, Time.TimePassed.Ticks + 100);
@@ -209,9 +216,11 @@ namespace MagiRogue.System
             if (args.Item is Player actor)
             {
                 //CalculateFOV(position: actor.Position, actor.Stats.ViewRadius, radiusShape: Radius.Circle);
-                PlayerFOV.Calculate(actor.Position, actor.Stats.ViewRadius);
+                PlayerFOV.Calculate(actor.Position, actor.Stats.ViewRadius, Radius.Circle);
                 FOVRecalculated?.Invoke(this, EventArgs.Empty);
             }
+
+            _entityRender.IsDirty = true;
         }
 
         /// <summary>
@@ -273,9 +282,12 @@ namespace MagiRogue.System
 
         public void ConfigureRender(SadConsole.Console renderer)
         {
-            foreach (var item in Entities)
+            _entityRender.OnAdded(renderer);
+            _entityRender.DoEntityUpdate = false;
+
+            foreach (Entity item in Entities.Items)
             {
-                renderer.IsVisible = true;
+                _entityRender.Add(item);
             }
 
             renderer.IsDirty = true;
@@ -289,8 +301,6 @@ namespace MagiRogue.System
         /*public override void CalculateFOV(int x, int y, double radius, Distance radiusShape)
         {
             base.CalculateFOV(x, y, radius, radiusShape);
-
-            FOVRecalculated?.Invoke(this, EventArgs.Empty);
         }
 
         /// <inheritdoc />

@@ -16,19 +16,17 @@ namespace MagiRogue.UI.Windows
 {
     public class MapWindow : MagiBaseWindow
     {
-        private SadConsole.Entities.Renderer _entityRender;
-
         public Console MapConsole { get; set; }
 
         public MapWindow(int width, int height, string title) : base(width, height, title)
         {
-            _entityRender = new();
         }
 
         // centers the viewport camera on an Actor
         public void CenterOnActor(Actor actor)
         {
-            SadComponents.Add(new SadConsole.Components.SurfaceComponentFollowTarget() { Target = actor });
+            MapConsole.SadComponents.Add
+                (new SadConsole.Components.SurfaceComponentFollowTarget() { Target = actor });
         }
 
         public void CreateMapConsole()
@@ -45,13 +43,6 @@ namespace MagiRogue.UI.Windows
             MapConsole.Children.Clear();
 
             map.ConfigureRender(MapConsole);
-            _entityRender.OnAdded(MapConsole);
-            _entityRender.DoEntityUpdate = true;
-            foreach (Entity item in map.Entities.Items)
-            {
-                MapConsole.Children.Add(item);
-                _entityRender.Add(item);
-            }
         }
 
         // Loads a Map into the MapConsole
@@ -62,12 +53,15 @@ namespace MagiRogue.UI.Windows
             int mapConsoleWidth = Width - 2;
             int mapConsoleHeight = Height - 2;
 
+            Rectangle rec =
+                new BoundedRectangle((0, 0, mapConsoleWidth, mapConsoleHeight), (0, 0, map.Width, map.Height)).Area;
+
             // First load the map's tiles into the console
             MapConsole = new Console(GameLoop.World.CurrentMap.Width,
                 GameLoop.World.CurrentMap.Height, GameLoop.World.CurrentMap.Width,
                 GameLoop.World.CurrentMap.Width, map.Tiles)
             {
-                View = new Rectangle(0, 0, mapConsoleWidth, mapConsoleHeight),
+                View = rec,
 
                 //reposition the MapConsole so it doesnt overlap with the left/top window edges
                 Position = new Point(1, 1),
