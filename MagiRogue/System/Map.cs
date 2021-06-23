@@ -42,7 +42,7 @@ namespace MagiRogue.System
         /// <summary>
         /// The current fov handler of the map
         /// </summary>
-        public FOVHandler FOVMap { get; }
+        //public FOVHandler FOVMap { get; }
 
         public TimeSystem Time { get; private set; }
 
@@ -85,7 +85,7 @@ namespace MagiRogue.System
         {
             Tiles = ((ArrayView<TileBase>)((LambdaSettableTranslationGridView<TileBase, IGameObject>)Terrain).BaseGrid);
 
-            FOVMap = new MagiRogueFOVVisibilityHandler(this, Color.Gray, (int)MapLayer.GHOSTS);
+            //FOVMap = new MagiRogueFOVVisibilityHandler(this, Color.Gray, (int)MapLayer.GHOSTS);
 
             GoRogueComponents.Add(new MagiRogueFOVVisibilityHandler(this, Color.Gray, (int)MapLayer.GHOSTS));
 
