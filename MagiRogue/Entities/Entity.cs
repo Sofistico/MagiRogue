@@ -91,9 +91,6 @@ namespace MagiRogue.Entities
             backingField = new GameObject(coord, layer);
             Position = backingField.Position;
 
-            //this.Moved += SadMoved;
-            //backingField.Moved += GoRogueMoved;
-
             PositionChanged += Position_Changed;
 
             Magic = new Magic();
@@ -108,29 +105,6 @@ namespace MagiRogue.Entities
             => Moved?.Invoke(sender, new GameObjectPropertyChanged<Point>(this, e.OldValue, e.NewValue));
 
 #nullable disable
-
-        private void GoRogueMoved(object sender, GameObjectPropertyChanged<Point> e)
-        {
-            if (backingField.Position != base.Position)
-            {
-                base.Position = backingField.Position;
-            }
-        }
-
-        private void SadMoved(object sender, GameObjectPropertyChanged<Point> e)
-        {
-            if (base.Position != backingField.Position)
-            {
-                backingField.Position = base.Position;
-
-                // In this case, GoRogue wouldn't allow the position set, so set SadConsole's position back to the way it was
-                // to keep them in sync.  Since GoRogue's position never changed, this won't infinite loop.
-                if (backingField.Position != base.Position)
-                {
-                    base.Position = backingField.Position;
-                }
-            }
-        }
 
         private string DebuggerDisplay
         {
