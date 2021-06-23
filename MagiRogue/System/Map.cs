@@ -42,7 +42,7 @@ namespace MagiRogue.System
         /// <summary>
         /// The current fov handler of the map
         /// </summary>
-        public FOVHandler FOVHandler { get; }
+        public FOVHandler FOVMap { get; }
 
         public TimeSystem Time { get; private set; }
 
@@ -80,10 +80,14 @@ namespace MagiRogue.System
         /// <param name="height"></param>
         public Map(int width, int height) : base(CreateTerrain(width, height), Enum.GetNames(typeof(MapLayer)).Length - 1,
             Distance.Euclidean,
-            entityLayersSupportingMultipleItems: LayerMasker.DEFAULT.Mask((int)MapLayer.ITEMS, (int)MapLayer.GHOSTS, (int)MapLayer.PLAYER))
+            entityLayersSupportingMultipleItems: LayerMasker.DEFAULT.Mask
+            ((int)MapLayer.ITEMS, (int)MapLayer.GHOSTS, (int)MapLayer.PLAYER))
         {
             Tiles = ((ArrayView<TileBase>)((LambdaSettableTranslationGridView<TileBase, IGameObject>)Terrain).BaseGrid);
-            FOVHandler = new MagiRogueFOVVisibilityHandler(this, Color.Black, (int)MapLayer.GHOSTS);
+
+            FOVMap = new MagiRogueFOVVisibilityHandler(this, Color.Gray, (int)MapLayer.GHOSTS);
+
+            GoRogueComponents.Add(new MagiRogueFOVVisibilityHandler(this, Color.Gray, (int)MapLayer.GHOSTS));
 
             _entityRender = new SadConsole.Entities.Renderer();
 
@@ -190,9 +194,7 @@ namespace MagiRogue.System
 
             // Set this up to sycer properly
             //entitySyncersByLayer[entity.Layer - 1].Entities.Add(entity);
-
             AddEntity(entity);
-
             //_entityRender.Add(entity);
 
             if (entity is Actor monster)
@@ -213,6 +215,7 @@ namespace MagiRogue.System
         /// <param name="args"></param>
         private void OnEntityMoved(object sender, GameObjectPropertyChanged<Point> args)
         {
+            var test = args.NewValue;
             if (args.Item is Player actor)
             {
                 //CalculateFOV(position: actor.Position, actor.Stats.ViewRadius, radiusShape: Radius.Circle);
@@ -289,7 +292,6 @@ namespace MagiRogue.System
             {
                 _entityRender.Add(item);
             }
-
             renderer.IsDirty = true;
         }
 

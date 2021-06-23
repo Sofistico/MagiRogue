@@ -109,7 +109,7 @@ namespace MagiRogue.System
                     foreach (Point pos in Map.Positions())
                     {
                         TileBase terrain = Map.GetTerrainAt<TileBase>(pos);
-                        if (terrain == null) return;
+                        if (terrain == null) continue;
                         if (terrain != null && Map.PlayerFOV.BooleanFOV[pos])
                         {
                             UpdateTerrainSeen(terrain);

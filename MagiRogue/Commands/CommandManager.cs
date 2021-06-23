@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using MagiRogue.System;
 
 namespace MagiRogue.Commands
 {
@@ -359,12 +360,12 @@ namespace MagiRogue.Commands
 
         public static void ToggleFOV()
         {
-            if (GameLoop.World.CurrentMap.FOVHandler.IsEnabled)
+            if (GameLoop.World.CurrentMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().IsEnabled)
             {
-                GameLoop.World.CurrentMap.FOVHandler.Disable(false);
+                GameLoop.World.CurrentMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().Disable(false);
             }
             else
-                GameLoop.World.CurrentMap.FOVHandler.Enable();
+                GameLoop.World.CurrentMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().Enable();
         }
 
 #endif
