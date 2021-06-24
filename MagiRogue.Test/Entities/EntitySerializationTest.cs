@@ -30,9 +30,9 @@ namespace MagiRogue.Test.Entities
         {
             const string name = "Actor Serialization Test";
 
-            Actor actor = new Actor(name, Color.White, Color.Black, '@', Point.None);
-
+            ActorTemplate actor = new ActorTemplate(new Actor(name, Color.White, Color.Black, '@', Point.None));
             string serialized = JsonConvert.SerializeObject(actor);
+            var t = SadConsole.Serializer.Serialize(new Actor("tst", Color.AliceBlue, Color.AliceBlue, '2', Point.None));
             Actor deserialized = JsonConvert.DeserializeObject<Actor>(serialized);
 
             Assert.Equal(name, deserialized.Name);

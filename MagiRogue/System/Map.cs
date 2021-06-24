@@ -77,7 +77,7 @@ namespace MagiRogue.System
             Tiles = ((ArrayView<TileBase>)((LambdaSettableTranslationGridView<TileBase, IGameObject>)Terrain).BaseGrid);
 
             // Treat the fov as a component.
-            GoRogueComponents.Add(new MagiRogueFOVVisibilityHandler(this, Color.Gray, (int)MapLayer.GHOSTS));
+            GoRogueComponents.Add(new MagiRogueFOVVisibilityHandler(this, Color.Black, (int)MapLayer.GHOSTS));
 
             _entityRender = new SadConsole.Entities.Renderer();
             _entityRender.OnAdded(_hackyScreen = new(1, 1));

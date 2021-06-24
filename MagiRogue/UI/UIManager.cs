@@ -85,8 +85,9 @@ namespace MagiRogue.UI
             Children.Add(MessageLog);
             MessageLog.Show();
             MessageLog.Position = new Point(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2);
+#if DEBUG
             MessageLog.Add("Test message log works");
-
+#endif
             // Inventory initialization
             InventoryScreen = new InventoryWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Inventory Window");
             Children.Add(InventoryScreen);

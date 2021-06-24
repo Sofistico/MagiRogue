@@ -57,11 +57,14 @@ namespace MagiRogue.Entities.Data
         [DataMember(EmitDefaultValue = false, IsRequired = false)]
         public int Layer { get; set; }
 
-        [DataMember]
+        //[DataMember]
         public Color Foreground { get; set; }
 
-        [DataMember]
+        //[DataMember]
         public Color Background { get; set; }
+
+        [DataMember]
+        public ColoredGlyphSerialized ColoredGlyphSerialized { get; set; }
 
         public ActorTemplate(string name, Color foreground, Color background, int glyph,
             int layer, Stat stats, Anatomy anatomy, string description, int size, float weight, string materialId)
@@ -77,6 +80,28 @@ namespace MagiRogue.Entities.Data
             Size = size;
             Weight = weight;
             MaterialId = materialId;
+            ColoredGlyphSerialized = new ColoredGlyphSerialized()
+            {
+                Background = background,
+                Foreground = foreground,
+                Glyph = glyph
+            };
+        }
+
+        public ActorTemplate(Actor actor)
+        {
+            Name = actor.Name;
+            Foreground = actor.Appearance.Foreground;
+            Background = actor.Appearance.Background;
+            Glyph = (char)actor.Appearance.Glyph;
+            Stats = actor.Stats;
+            Anatomy = actor.Anatomy;
+            Description = actor.Description;
+            Layer = actor.Layer;
+            Size = actor.Size;
+            Weight = actor.Weight;
+            MaterialId = actor.Material.Id;
+            ColoredGlyphSerialized = actor.Appearance;
         }
 
         public ActorTemplate()

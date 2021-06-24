@@ -85,7 +85,6 @@ namespace MagiRogue.Entities
             Appearance.Foreground = foreground;
             Appearance.Background = background;
             Appearance.Glyph = glyph;
-
             Layer = layer;
 
             backingField = new GameObject(coord, layer);
