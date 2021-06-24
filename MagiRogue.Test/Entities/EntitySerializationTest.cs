@@ -10,7 +10,7 @@ using System.IO;
 
 namespace MagiRogue.Test.Entities
 {
-    public class EntitySerializationTest : MockGame
+    public class EntitySerializationTest
     {
         [Fact]
         public void ItemSerializingTest()

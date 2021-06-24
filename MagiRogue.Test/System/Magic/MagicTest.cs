@@ -10,7 +10,7 @@ using Xunit;
 
 namespace MagiRogue.Test.System.Magic
 {
-    public class MagicTest : MockGame
+    public class MagicTest
     {
     }
 }

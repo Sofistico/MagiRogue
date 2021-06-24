@@ -19,11 +19,6 @@ namespace MagiRogue.System
     {
         #region Properties
 
-        // One of these per layer, so we force the rendering order to be what we want (high layers
-        // appearing on top of low layers). They're added to consoles in order of this array, first
-        // to last, which controls the render order.
-        //private readonly MultipleConsoleEntityDrawingComponent[] entitySyncersByLayer;
-
         private TileBase[] _tiles; // Contains all tiles objects
 
         private Entity _gameObjectControlled;
@@ -38,11 +33,6 @@ namespace MagiRogue.System
         /// Fires whenever FOV is recalculated.
         /// </summary>
         public event EventHandler FOVRecalculated;
-
-        /// <summary>
-        /// The current fov handler of the map
-        /// </summary>
-        //public FOVHandler FOVMap { get; }
 
         public TimeSystem Time { get; private set; }
 
@@ -67,6 +57,7 @@ namespace MagiRogue.System
         }
 
         private SadConsole.Entities.Renderer _entityRender;
+        private ScreenSurface _hackyScreen;
 
         #endregion Properties
 
@@ -85,15 +76,11 @@ namespace MagiRogue.System
         {
             Tiles = ((ArrayView<TileBase>)((LambdaSettableTranslationGridView<TileBase, IGameObject>)Terrain).BaseGrid);
 
-            //FOVMap = new MagiRogueFOVVisibilityHandler(this, Color.Gray, (int)MapLayer.GHOSTS);
-
+            // Treat the fov as a component.
             GoRogueComponents.Add(new MagiRogueFOVVisibilityHandler(this, Color.Gray, (int)MapLayer.GHOSTS));
 
             _entityRender = new SadConsole.Entities.Renderer();
-
-            /*entitySyncersByLayer = new MultipleConsoleEntityDrawingComponent[Enum.GetNames(typeof(MapLayer)).Length - 1];
-            for (int i = 0; i < entitySyncersByLayer.Length; i++)
-                entitySyncersByLayer[i] = new MultipleConsoleEntityDrawingComponent();*/
+            _entityRender.OnAdded(_hackyScreen = new(1, 1));
 
             Time = new TimeSystem();
         }
@@ -196,7 +183,7 @@ namespace MagiRogue.System
             // Set this up to sycer properly
             //entitySyncersByLayer[entity.Layer - 1].Entities.Add(entity);
             AddEntity(entity);
-            //_entityRender.Add(entity);
+            _entityRender.Add(entity);
 
             if (entity is Actor monster)
             {
@@ -285,6 +272,14 @@ namespace MagiRogue.System
 
         public void ConfigureRender(SadConsole.Console renderer)
         {
+            foreach (Entity item in Entities.Items)
+            {
+                _entityRender.Remove(item);
+            }
+            _entityRender.IsDirty = true;
+            _entityRender.OnRemoved(_hackyScreen);
+            _hackyScreen.Dispose();
+
             _entityRender.OnAdded(renderer);
             _entityRender.DoEntityUpdate = false;
 

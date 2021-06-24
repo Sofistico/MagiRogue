@@ -42,14 +42,24 @@ namespace MagiRogue.Commands
                 LeavesGhost = false
             };
 
-            ColoredGlyph frameCell = Cursor.Appearance;
-            frameCell.Foreground = Color.Transparent;
-            frameCell.Background = Color.Transparent;
-            frameCell.Glyph = 'X';
+            /* ColoredGlyph frameCell = Cursor.Appearance;
+             frameCell.Foreground = Color.Transparent;
+             frameCell.Background = Color.Transparent;
+             frameCell.Glyph = 'X';
 
-            Timer timer = new Timer(TimeSpan.FromSeconds(2.0));
+             Timer timer = new Timer(TimeSpan.FromSeconds(2.0));*/
 
-            Cursor.AddComponent(new AnimationComponent(timer, Cursor.Appearance, frameCell));
+            SadConsole.Effects.EffectsManager.ColoredGlyphState s = new SadConsole.Effects.EffectsManager.ColoredGlyphState(Cursor.Appearance);
+
+            SadConsole.Effects.Blink blink = new SadConsole.Effects.Blink()
+            {
+                BlinkCount = -1,
+                BlinkSpeed = 2.0,
+                BlinkOutColor = Color.TransparentBlack,
+                UseCellBackgroundColor = false
+            };
+            blink.ApplyToCell(Cursor.Appearance, s);
+            //Cursor.AddComponent(new AnimationComponent(timer, Cursor.Appearance, frameCell));
         }
 
         public IList<T> TargetEntity<T>() where T : Entity
