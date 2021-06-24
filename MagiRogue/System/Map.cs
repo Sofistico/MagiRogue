@@ -56,8 +56,8 @@ namespace MagiRogue.System
             }
         }
 
-        private SadConsole.Entities.Renderer _entityRender;
-        private ScreenSurface _hackyScreen;
+        private readonly SadConsole.Entities.Renderer _entityRender;
+        private readonly ScreenSurface _hackyScreen;
 
         #endregion Properties
 
@@ -158,8 +158,6 @@ namespace MagiRogue.System
         {
             RemoveEntity(entity);
 
-            // Set this up to sycer properly
-            //entitySyncersByLayer[entity.Layer - 1].Entities.Remove(entity);
             _entityRender.Remove(entity);
 
             // Link up the entity's Moved event to a new handler
@@ -180,8 +178,6 @@ namespace MagiRogue.System
                 ControlledEntitiy = player;
             }
 
-            // Set this up to sycer properly
-            //entitySyncersByLayer[entity.Layer - 1].Entities.Add(entity);
             AddEntity(entity);
             _entityRender.Add(entity);
 
@@ -205,7 +201,6 @@ namespace MagiRogue.System
         {
             if (args.Item is Player actor)
             {
-                //CalculateFOV(position: actor.Position, actor.Stats.ViewRadius, radiusShape: Radius.Circle);
                 PlayerFOV.Calculate(actor.Position, actor.Stats.ViewRadius, Radius.Circle);
                 FOVRecalculated?.Invoke(this, EventArgs.Empty);
             }
@@ -230,9 +225,7 @@ namespace MagiRogue.System
             // make sure the index is within the boundaries of the map!
             if (locationIndex <= Width * Height && locationIndex >= 0)
             {
-#pragma warning disable IDE0038 // Usar a correspondência de padrão
-                return Tiles[locationIndex] is T ? (T)Tiles[locationIndex] : null;
-#pragma warning restore IDE0038 // Usar a correspondência de padrão
+                return Tiles[locationIndex] is T t ? t : null;
             }
             else return null;
         }
@@ -291,24 +284,6 @@ namespace MagiRogue.System
         }
 
         #endregion HelperMethods
-
-        #region Overload
-
-        /// <inheritdoc />
-        /*public override void CalculateFOV(int x, int y, double radius, Distance radiusShape)
-        {
-            base.CalculateFOV(x, y, radius, radiusShape);
-        }
-
-        /// <inheritdoc />
-        public override void CalculateFOV(int x, int y, double radius, Distance radiusShape, double angle, double span)
-        {
-            base.CalculateFOV(x, y, radius, radiusShape, angle, span);
-
-            FOVRecalculated?.Invoke(this, EventArgs.Empty);
-        }*/
-
-        #endregion Overload
     }
 
     // enum for defining maplayer for things, so that a monster and a player can occupy the same tile as an item for example.

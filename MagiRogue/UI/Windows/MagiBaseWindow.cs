@@ -92,7 +92,7 @@ namespace MagiRogue.UI.Windows
 
         public override void Update(TimeSpan time)
         {
-            if (!(Controls.FocusedControl is MagiButton focusedButton) || focusedButton == lastFocusedButton)
+            if (Controls.FocusedControl is not MagiButton focusedButton || focusedButton == lastFocusedButton)
             {
                 base.Update(time);
                 return;
