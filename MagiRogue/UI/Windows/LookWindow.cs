@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using MagiRogue.Entities;
 using SadConsole;
 using Console = SadConsole.Console;
-using Microsoft.Xna.Framework;
+using SadRogue.Primitives;
 
 namespace MagiRogue.UI.Windows
 {
@@ -24,8 +24,10 @@ namespace MagiRogue.UI.Windows
             };
 
             lookConsole.Cursor.Position = new Point(1, 1);
-            lookConsole.Cursor.Print(entity.Description);
-
+            if (entity.Description != null)
+            {
+                lookConsole.Cursor.Print(entity.Description);
+            }
             Children.Add(lookConsole);
         }
     }

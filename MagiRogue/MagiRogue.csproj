@@ -7,13 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GoRogue" Version="2.6.4" />
+    <PackageReference Include="GoRogue" Version="3.0.0-alpha03" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="SadConsole" Version="8.99.3" />
+    <PackageReference Include="SadConsole" Version="9.0.0" />
+    <PackageReference Include="SadConsole.Host.MonoGame" Version="9.0.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Entities\Actors\Humanoids.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Entities\Items\Bars.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Entities\Materials\MaterialDefinition.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

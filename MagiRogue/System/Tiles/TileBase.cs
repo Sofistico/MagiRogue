@@ -1,14 +1,17 @@
 ﻿using GoRogue;
 using GoRogue.GameFramework;
 using MagiRogue.Entities.Materials;
-using Microsoft.Xna.Framework;
+using SadRogue.Primitives;
 using SadConsole;
 using System;
 using System.Collections.Generic;
+using GoRogue.Components;
+using GoRogue.SpatialMaps;
+using GoRogue.Components.ParentAware;
 
 namespace MagiRogue.System.Tiles
 {
-    public abstract class TileBase : Cell, GoRogue.GameFramework.IGameObject
+    public abstract class TileBase : ColoredGlyph, IGameObject
     {
         private int _tileHealth;
         private bool _destroyed;
@@ -19,6 +22,7 @@ namespace MagiRogue.System.Tiles
         /// it can be said that IsWalkable = !IsBlockingMove.
         /// </summary>
         public bool IsBlockingMove;
+
         public bool TileIsTransparent;
         public int Layer;
 
@@ -37,6 +41,7 @@ namespace MagiRogue.System.Tiles
         public int TileHealth
         {
             get => _tileHealth;
+
             set
             {
                 if (value <= 0)
@@ -55,15 +60,17 @@ namespace MagiRogue.System.Tiles
 
         public GoRogue.GameFramework.Map CurrentMap => backingField.CurrentMap;
 
-        public bool IsStatic => backingField.IsStatic;
-
         public bool IsTransparent { get => backingField.IsTransparent; set => backingField.IsTransparent = value; }
         public bool IsWalkable { get => !IsBlockingMove; set => backingField.IsWalkable = !IsBlockingMove; }
-        public Coord Position { get => backingField.Position; set => backingField.Position = value; }
+        public Point Position { get => backingField.Position; set => backingField.Position = value; }
 
         public uint ID => backingField.ID;
 
         int IHasLayer.Layer => backingField.Layer;
+
+        //public ITaggableComponentCollection GoRogueComponents => backingField.GoRogueComponents;
+
+        public IComponentCollection GoRogueComponents => backingField.GoRogueComponents;
 
         #endregion backingField Data
 
@@ -72,15 +79,15 @@ namespace MagiRogue.System.Tiles
         // Every TileBase has a Foreground Colour, Background Colour, and Glyph
         // isBlockingMove and isBlockingSight are optional parameters, set to false by default
         protected TileBase(Color foregroud, Color background, int glyph, int layer,
-            Coord position, string idOfMaterial, bool blocksMove = true,
+            Point position, string idOfMaterial, bool blocksMove = true,
             bool isTransparent = true, string name = "ForgotToChangeName") : base(foregroud, background, glyph)
         {
             IsBlockingMove = blocksMove;
             TileIsTransparent = isTransparent;
             Name = name;
             Layer = layer;
-            backingField = new GameObject(position, layer, parentObject: this, isStatic: true, !blocksMove, isTransparent);
-            MaterialOfTile = GameLoop.PhysicsManager.SetMaterial(idOfMaterial);
+            backingField = new GameObject(position, layer, !blocksMove, isTransparent);
+            MaterialOfTile = System.Physics.PhysicsManager.SetMaterial(idOfMaterial);
         }
 
         protected void CalculateTileHealth() => _tileHealth = (int)MaterialOfTile.Density * MaterialOfTile.Hardness;
@@ -96,7 +103,33 @@ namespace MagiRogue.System.Tiles
 
         #region IGameObject Interface
 
-        public event EventHandler<ItemMovedEventArgs<IGameObject>> Moved
+        public event EventHandler<GameObjectPropertyChanged<bool>> TransparencyChanged
+        {
+            add
+            {
+                backingField.TransparencyChanged += value;
+            }
+
+            remove
+            {
+                backingField.TransparencyChanged -= value;
+            }
+        }
+
+        public event EventHandler<GameObjectPropertyChanged<bool>> WalkabilityChanged
+        {
+            add
+            {
+                backingField.WalkabilityChanged += value;
+            }
+
+            remove
+            {
+                backingField.WalkabilityChanged -= value;
+            }
+        }
+
+        event EventHandler<GameObjectPropertyChanged<Point>> IGameObject.Moved
         {
             add
             {
@@ -109,54 +142,35 @@ namespace MagiRogue.System.Tiles
             }
         }
 
-        public bool MoveIn(Direction direction)
+        public event EventHandler<GameObjectCurrentMapChanged> AddedToMap
         {
-            return backingField.MoveIn(direction);
+            add
+            {
+                backingField.AddedToMap += value;
+            }
+
+            remove
+            {
+                backingField.AddedToMap -= value;
+            }
+        }
+
+        public event EventHandler<GameObjectCurrentMapChanged> RemovedFromMap
+        {
+            add
+            {
+                backingField.RemovedFromMap += value;
+            }
+
+            remove
+            {
+                backingField.RemovedFromMap -= value;
+            }
         }
 
         public void OnMapChanged(GoRogue.GameFramework.Map newMap)
         {
             backingField.OnMapChanged(newMap);
-        }
-
-        public void AddComponent(object component)
-        {
-            backingField.AddComponent(component);
-        }
-
-        public T GetComponent<T>()
-        {
-            return backingField.GetComponent<T>();
-        }
-
-        public IEnumerable<T> GetComponents<T>()
-        {
-            return backingField.GetComponents<T>();
-        }
-
-        public bool HasComponent(Type componentType)
-        {
-            return backingField.HasComponent(componentType);
-        }
-
-        public bool HasComponent<T>()
-        {
-            return backingField.HasComponent<T>();
-        }
-
-        public bool HasComponents(params Type[] componentTypes)
-        {
-            return backingField.HasComponents(componentTypes);
-        }
-
-        public void RemoveComponent(object component)
-        {
-            backingField.RemoveComponent(component);
-        }
-
-        public void RemoveComponents(params object[] components)
-        {
-            backingField.RemoveComponents(components);
         }
 
         #endregion IGameObject Interface

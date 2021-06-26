@@ -4,9 +4,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+using SadRogue.Primitives;
 using SadConsole;
 using MagiRogue.UI.Controls;
+using SadConsole.UI.Themes;
+using SadConsole.UI;
 
 namespace MagiRogue.UI.Windows
 {
@@ -20,14 +22,14 @@ namespace MagiRogue.UI.Windows
         public MagiBaseWindow(int width, int height, string title) : base(width, height)
         {
             // Ensure that the window background is the correct colour
-            ThemeColors = GameLoop.UIManager.CustomColors;
+            /*ThemeColors = GameLoop.UIManager.CustomColors;
             ThemeColors.ControlBack = Color.Black;
             ThemeColors.TitleText = Color.Red;
             ThemeColors.ModalBackground = Color.Black;
             ThemeColors.ControlHostBack = Color.Black;
             ThemeColors.ControlBackSelected = Color.DarkRed;
             ThemeColors.ControlBackLight = Color.LightSlateGray;
-            ThemeColors.RebuildAppearances();
+            ThemeColors.RebuildAppearances();*/
 
             // instantiete the inventory of the actor, passing the actor value if and when i implement helpers, to make it
             // possible to see and use their inventory.
@@ -63,16 +65,16 @@ namespace MagiRogue.UI.Windows
 
             foreach (var button in buttons)
             {
-                Add(button);
+                Controls.Add(button);
                 button.MouseEnter += (_, __) =>
                 {
-                    FocusedControl = button;
+                    Controls.FocusedControl = button;
                 };
             }
 
             if (buttons[0].IsEnabled)
             {
-                FocusedControl = buttons[0];
+                Controls.FocusedControl = buttons[0];
             }
             else
             {
@@ -90,7 +92,7 @@ namespace MagiRogue.UI.Windows
 
         public override void Update(TimeSpan time)
         {
-            if (!(FocusedControl is MagiButton focusedButton) || focusedButton == lastFocusedButton)
+            if (Controls.FocusedControl is not MagiButton focusedButton || focusedButton == lastFocusedButton)
             {
                 base.Update(time);
                 return;

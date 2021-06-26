@@ -1,10 +1,11 @@
-﻿using GoRogue;
-using GoRogue.GameFramework;
-using GoRogue.MapViews;
+﻿using GoRogue.GameFramework;
+using SadRogue.Primitives.GridViews;
+using SadRogue.Primitives;
 using MagiRogue.Entities;
 using MagiRogue.System.Tiles;
 using System;
 using System.Linq;
+using GoRogue.SpatialMaps;
 
 namespace MagiRogue.System
 {
@@ -14,7 +15,7 @@ namespace MagiRogue.System
     public abstract class FOVHandler
     {
         /// <summary>
-        /// Possible states for the FOVVisibilityHandler to be in.
+        /// Possible states for the <see cref="FOVHandler"/> FOVVisibilityHandler to be in.
         /// </summary>
         public enum FovState
         {
@@ -22,11 +23,13 @@ namespace MagiRogue.System
             /// Enabled state -- FOVVisibilityHandler will actively set things as seen/unseen when appropriate.
             /// </summary>
             Enabled,
+
             /// <summary>
             /// Disabled state.  All items in the map will be set as seen, and the FOVVisibilityHandler
             /// will not set visibility of any items as FOV changes or as items are added/removed.
             /// </summary>
             DisabledResetVisibility,
+
             /// <summary>
             /// Disabled state.  No changes to the current visibility of terrain/entities will be made, and the FOVVisibilityHandler
             /// will not set visibility of any items as FOV changes or as items are added/removed.
@@ -37,7 +40,37 @@ namespace MagiRogue.System
         /// <summary>
         /// Whether or not the FOVVisibilityHandler is actively setting things to seen/unseen as appropriate.
         /// </summary>
-        public bool Enabled { get; private set; }
+        public bool IsEnabled => CurrentState == FovState.Enabled;
+
+        private FovState _currentState;
+
+        /// <summary>
+        /// The current state of the handler.  See <see cref="State"/> documentation for details
+        /// on each possible value.
+        /// </summary>
+        /// <remarks>
+        /// If the component has been added to a map, setting this value will set all values in
+        /// the map according to the new state.
+        ///
+        /// When the component is added to a map, the visibility of all values in that map will
+        /// be set according to this value.
+        /// </remarks>
+        public FovState CurrentState
+        {
+            get => _currentState;
+
+            set
+            {
+                // Nothing to do if the old value is the same as the new
+                if (value == _currentState) return;
+
+                // Otherwise, set the state value, and apply it to the map if
+                // there is one.
+                _currentState = value;
+
+                //ApplyStateToMap()
+            }
+        }
 
         /// <summary>
         /// The map that this handler manages visibility of objects for.
@@ -57,6 +90,8 @@ namespace MagiRogue.System
             map.ObjectMoved += Map_ObjectMoved;
             map.FOVRecalculated += Map_FOVRecalculated;
 
+            //CurrentState = startingState;
+
             SetState(startingState);
         }
 
@@ -66,15 +101,16 @@ namespace MagiRogue.System
         /// <param name="state">The new state for the FOVVisibilityHandler.  See <see cref="FovState"/> documentation for details.</param>
         private void SetState(FovState state)
         {
+            CurrentState = state;
+
             switch (state)
             {
                 case FovState.Enabled:
-                    Enabled = true;
-
-                    foreach (Coord pos in Map.Positions())
+                    foreach (Point pos in Map.Positions())
                     {
-                        TileBase terrain = Map.GetTerrain<TileBase>(pos);
-                        if (terrain != null && Map.FOV.BooleanFOV[pos])
+                        TileBase terrain = Map.GetTerrainAt<TileBase>(pos);
+                        if (terrain == null) continue;
+                        if (terrain != null && Map.PlayerFOV.BooleanFOV[pos])
                         {
                             UpdateTerrainSeen(terrain);
                         }
@@ -83,7 +119,7 @@ namespace MagiRogue.System
                     }
                     foreach (Entity entity in Map.Entities.Items.Cast<Entity>())
                     {
-                        if (Map.FOV.BooleanFOV[entity.Position])
+                        if (Map.PlayerFOV.BooleanFOV[entity.Position])
                             UpdateEntitySeen(entity);
                         else
                             UpdateEntityUnseen(entity);
@@ -92,13 +128,13 @@ namespace MagiRogue.System
                     break;
 
                 case FovState.DisabledResetVisibility:
-                    Enabled = false;
                     break;
 
                 case FovState.DisabledNoResetVisibility:
-                    foreach (Coord pos in Map.Positions())
+                    foreach (Point pos in Map.Positions())
                     {
-                        TileBase terrain = Map.GetTerrain<TileBase>(pos);
+                        TileBase terrain = Map.GetTerrainAt<TileBase>(pos);
+                        if (terrain == null) return;
                         if (terrain != null)
                             UpdateTerrainSeen(terrain);
                     }
@@ -108,7 +144,6 @@ namespace MagiRogue.System
                         UpdateEntitySeen(entity);
                     }
 
-                    Enabled = false;
                     break;
 
                 default:
@@ -155,9 +190,9 @@ namespace MagiRogue.System
 
         private void Map_ObjectMoved(object sender, ItemMovedEventArgs<IGameObject> e)
         {
-            if (!Enabled) return;
+            if (!IsEnabled) return;
 
-            if (Map.FOV.BooleanFOV[e.NewPosition])
+            if (Map.PlayerFOV.BooleanFOV[e.NewPosition])
                 UpdateEntitySeen((Entity)(e.Item));
             else
                 UpdateEntityUnseen((Entity)(e.Item));
@@ -165,18 +200,18 @@ namespace MagiRogue.System
 
         private void Map_ObjectAdded(object sender, ItemEventArgs<IGameObject> e)
         {
-            if (!Enabled) return;
+            if (!IsEnabled) return;
 
             if (e.Item.Layer == 0) // terrain
             {
-                if (Map.FOV.BooleanFOV[e.Position])
+                if (Map.PlayerFOV.BooleanFOV[e.Position])
                     UpdateTerrainSeen((TileBase)(e.Item));
                 else
                     UpdateTerrainUnseen((TileBase)(e.Item));
             }
             else // Entities
             {
-                if (Map.FOV.BooleanFOV[e.Position])
+                if (Map.PlayerFOV.BooleanFOV[e.Position])
                     UpdateEntitySeen((Entity)e.Item);
                 else
                     UpdateEntityUnseen((Entity)e.Item);
@@ -185,25 +220,25 @@ namespace MagiRogue.System
 
         private void Map_FOVRecalculated(object sender, EventArgs e)
         {
-            if (!Enabled) return;
+            if (!IsEnabled) return;
 
-            foreach (Coord position in Map.FOV.NewlySeen)
+            foreach (Point position in Map.PlayerFOV.NewlySeen)
             {
-                TileBase terrain = Map.GetTerrain<TileBase>(position);
+                TileBase terrain = Map.GetTerrainAt<TileBase>(position);
                 if (terrain != null)
                     UpdateTerrainSeen(terrain);
 
-                foreach (Entity entity in Map.GetEntities<Entity>(position))
+                foreach (Entity entity in Map.GetEntitiesAt<Entity>(position))
                     UpdateEntitySeen(entity);
             }
 
-            foreach (Coord position in Map.FOV.NewlyUnseen)
+            foreach (Point position in Map.PlayerFOV.NewlyUnseen)
             {
-                TileBase terrain = Map.GetTerrain<TileBase>(position);
+                TileBase terrain = Map.GetTerrainAt<TileBase>(position);
                 if (terrain != null)
                     UpdateTerrainUnseen(terrain);
 
-                foreach (Entity entity in Map.GetEntities<Entity>(position))
+                foreach (Entity entity in Map.GetEntitiesAt<Entity>(position))
                     UpdateEntityUnseen(entity);
             }
         }

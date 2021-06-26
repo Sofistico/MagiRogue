@@ -3,7 +3,7 @@ using MagiRogue.Entities;
 using MagiRogue.System;
 using MagiRogue.System.Tiles;
 using MagiRogue.UI;
-using Microsoft.Xna.Framework;
+using SadRogue.Primitives;
 using SadConsole.Input;
 using SadConsole;
 using System;
@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SadConsole.Components;
+using MagiRogue.Components;
 
 namespace MagiRogue.Commands
 {
@@ -23,17 +25,16 @@ namespace MagiRogue.Commands
 
         public IList<Entity> TargetList { get; set; }
 
-        public Coord OriginCoord { get; set; }
+        public Point OriginCoord { get; set; }
 
-        public Target(Coord spawnCoord)
+        public Target(Point spawnCoord)
         {
             Color targetColor = new Color(255, 0, 0);
 
             OriginCoord = spawnCoord;
 
-            Cursor = new Actor(targetColor, Color.Transparent, 'X', (int)MapLayer.PLAYER, spawnCoord)
+            Cursor = new Actor("Target Cursor", targetColor, Color.Transparent, 'X', spawnCoord, (int)MapLayer.PLAYER)
             {
-                Name = "Target Cursor",
                 IsWalkable = true,
                 CanBeKilled = false,
                 CanBeAttacked = false,
@@ -41,22 +42,32 @@ namespace MagiRogue.Commands
                 LeavesGhost = false
             };
 
-            var frameCell = Cursor.Animation.CreateFrame()[0];
-            frameCell.Foreground = Color.Transparent;
-            frameCell.Background = Color.Transparent;
-            frameCell.Glyph = 'X';
+            /* ColoredGlyph frameCell = Cursor.Appearance;
+             frameCell.Foreground = Color.Transparent;
+             frameCell.Background = Color.Transparent;
+             frameCell.Glyph = 'X';
 
-            Cursor.Animation.AnimationDuration = 2.0f;
-            Cursor.Animation.Repeat = true;
+             Timer timer = new Timer(TimeSpan.FromSeconds(2.0));*/
 
-            Cursor.Animation.Start();
+            SadConsole.Effects.EffectsManager.ColoredGlyphState s = new SadConsole.Effects.EffectsManager.ColoredGlyphState(Cursor.Appearance);
+
+            SadConsole.Effects.Blink blink = new SadConsole.Effects.Blink()
+            {
+                BlinkCount = -1,
+                BlinkSpeed = 2.0,
+                //BlinkOutColor = Color.Green,
+                UseCellBackgroundColor = true
+            };
+            Cursor.Effect = blink;
+            blink.Restart();
+            //Cursor.AddComponent(new AnimationComponent(timer, Cursor.Appearance, frameCell));
         }
 
         public IList<T> TargetEntity<T>() where T : Entity
         {
             TargetList = null;
 
-            IList<T> entities = GameLoop.World.CurrentMap.GetEntities<T>(Cursor.Position).ToList();
+            IList<T> entities = GameLoop.World.CurrentMap.GetEntitiesAt<T>(Cursor.Position).ToList();
 
             entities.RemoveAt(0);
 
@@ -76,20 +87,13 @@ namespace MagiRogue.Commands
 
         public bool EntityInTarget()
         {
-            if (GameLoop.World.CurrentMap.GetEntities<Entity>(Cursor.Position).Any(e => e.ID != Cursor.ID)
-                && GameLoop.World.CurrentMap.GetEntity<Entity>(Cursor.Position) is not Player)
+            if (GameLoop.World.CurrentMap.GetEntitiesAt<Entity>(Cursor.Position).Any(e => e.ID != Cursor.ID)
+                && GameLoop.World.CurrentMap.GetEntityAt<Entity>(Cursor.Position) is not Player)
             {
                 TargetEntity<Entity>();
                 return true;
             }
             return false;
-        }
-
-        public Actor TargetRandomActor(int searchRadius, Coord centerRadius)
-        {
-            RadiusAreaProvider radius = new RadiusAreaProvider(centerRadius, searchRadius, Radius.CIRCLE);
-
-            throw new NotImplementedException();
         }
     }
 }

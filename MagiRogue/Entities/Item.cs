@@ -1,12 +1,16 @@
 ﻿using MagiRogue.System;
-using Microsoft.Xna.Framework;
+using SadRogue.Primitives;
 using System;
+using Newtonsoft.Json;
+using MagiRogue.Entities.Data;
 
 namespace MagiRogue.Entities
 {
-    // Item: Describes things that can be picked up or used
-    // by actors, or destroyed on the map.
-    // TODO: jsonize it.
+    /// <summary>
+    /// Item: Describes things that can be picked up or used
+    /// by actors, or destroyed on the map.
+    /// </summary>
+    [JsonConverter(typeof(ItemJsonConverter))]
     public class Item : Entity
     {
         // backing field for Condition
@@ -18,6 +22,7 @@ namespace MagiRogue.Entities
         public int Condition
         {
             get { return condition; }
+
             set
             {
                 condition += value;

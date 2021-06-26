@@ -1,11 +1,17 @@
 ﻿using GoRogue;
 using GoRogue.GameFramework;
 using MagiRogue.Entities.Materials;
-using Microsoft.Xna.Framework;
-using SadConsole.Components;
+using SadRogue.Primitives;
+using System.Runtime.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using MagiRogue.System.Magic;
+using System.Linq;
+using GoRogue.Components;
+using GoRogue.SpatialMaps;
+using GoRogue.Components.ParentAware;
+using SadConsole;
 
 namespace MagiRogue.Entities
 {
@@ -19,11 +25,18 @@ namespace MagiRogue.Entities
         public uint ID => backingField.ID; // stores the entity's unique identification number
         public int Layer { get; set; } // stores and sets the layer that the entity is rendered
 
+        [DataMember]
+
         /// <summary>
         /// The weight of the entity in kg
         /// </summary>
         public float Weight { get; set; }
+
+        [DataMember]
         public Material Material { get; set; }
+
+        [DataMember]
+
         /// <summary>
         /// The size of the entity in meters
         /// </summary>
@@ -34,17 +47,19 @@ namespace MagiRogue.Entities
         /// </summary>
         public bool LeavesGhost { get; set; } = true;
 
+        [DataMember]
         public string Description { get; set; }
+
+        public Magic Magic { get; set; }
 
         #region BackingField fields
 
         public Map CurrentMap => backingField.CurrentMap;
 
-        public bool IsStatic => backingField.IsStatic;
-
         public bool IsTransparent { get => backingField.IsTransparent; set => backingField.IsTransparent = value; }
         public bool IsWalkable { get => backingField.IsWalkable; set => backingField.IsWalkable = value; }
-        Coord IGameObject.Position { get => backingField.Position; set => backingField.Position = value; }
+        Point IGameObject.Position { get => Position; set => Position = value; }
+        public IComponentCollection GoRogueComponents => backingField.GoRogueComponents;
 
         #endregion BackingField fields
 
@@ -55,8 +70,7 @@ namespace MagiRogue.Entities
         #region Constructor
 
         public Entity(Color foreground, Color background,
-            int glyph, Coord coord, int layer,
-            int width = 1, int height = 1) : base(width, height)
+            int glyph, Point coord, int layer) : base(foreground, background, glyph, layer)
         {
             InitializeObject(foreground, background, glyph, coord, layer);
         }
@@ -66,45 +80,30 @@ namespace MagiRogue.Entities
         #region Helper Methods
 
         private void InitializeObject(
-            Color foreground, Color background, int glyph, Coord coord, int layer)
+            Color foreground, Color background, int glyph, Point coord, int layer)
         {
-            Animation.CurrentFrame[0].Foreground = foreground;
-            Animation.CurrentFrame[0].Background = background;
-            Animation.CurrentFrame[0].Glyph = glyph;
-
+            Appearance.Foreground = foreground;
+            Appearance.Background = background;
+            Appearance.Glyph = glyph;
             Layer = layer;
 
-            backingField = new GameObject(coord, layer, this);
-            base.Position = backingField.Position;
+            backingField = new GameObject(coord, layer);
+            Position = backingField.Position;
 
-            base.Moved += SadMoved;
-            backingField.Moved += GoRogueMoved;
+            PositionChanged += Position_Changed;
 
+            Magic = new Magic();
             Material = new Material();
+
+            //IsWalkable = false;
         }
 
-        private void GoRogueMoved(object sender, ItemMovedEventArgs<IGameObject> e)
-        {
-            if (backingField.Position != base.Position)
-            {
-                base.Position = backingField.Position;
-            }
-        }
+#nullable enable
 
-        private void SadMoved(object sender, EntityMovedEventArgs e)
-        {
-            if (base.Position != backingField.Position)
-            {
-                backingField.Position = base.Position;
+        private void Position_Changed(object? sender, ValueChangedEventArgs<Point> e)
+            => Moved?.Invoke(sender, new GameObjectPropertyChanged<Point>(this, e.OldValue, e.NewValue));
 
-                // In this case, GoRogue wouldn't allow the position set, so set SadConsole's position back to the way it was
-                // to keep them in sync.  Since GoRogue's position never changed, this won't infinite loop.
-                if (backingField.Position != base.Position)
-                {
-                    base.Position = backingField.Position;
-                }
-            }
-        }
+#nullable disable
 
         private string DebuggerDisplay
         {
@@ -114,36 +113,66 @@ namespace MagiRogue.Entities
             }
         }
 
-        /// <summary>
-        /// Returns a GoRogue component
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public T GetGoRogueComponent<T>() where T : GoRogue.GameFramework.Components.IGameObjectComponent
-        {
-            return backingField.GetComponent<T>();
-        }
-
         #endregion Helper Methods
 
         #region IGameObject Interface
 
-        event EventHandler<ItemMovedEventArgs<IGameObject>> IGameObject.Moved
+        public event EventHandler<GameObjectPropertyChanged<bool>> TransparencyChanged
         {
             add
             {
-                backingField.Moved += value;
+                backingField.TransparencyChanged += value;
             }
 
             remove
             {
-                backingField.Moved -= value;
+                backingField.TransparencyChanged -= value;
             }
         }
 
-        public bool MoveIn(Direction direction)
+        public event EventHandler<GameObjectPropertyChanged<bool>> WalkabilityChanged
         {
-            return backingField.MoveIn(direction);
+            add
+            {
+                backingField.WalkabilityChanged += value;
+            }
+
+            remove
+            {
+                backingField.WalkabilityChanged -= value;
+            }
+        }
+
+#nullable enable
+
+        public event EventHandler<GameObjectPropertyChanged<Point>>? Moved;
+
+#nullable disable
+
+        public event EventHandler<GameObjectCurrentMapChanged> AddedToMap
+        {
+            add
+            {
+                backingField.AddedToMap += value;
+            }
+
+            remove
+            {
+                backingField.AddedToMap -= value;
+            }
+        }
+
+        public event EventHandler<GameObjectCurrentMapChanged> RemovedFromMap
+        {
+            add
+            {
+                backingField.RemovedFromMap += value;
+            }
+
+            remove
+            {
+                backingField.RemovedFromMap -= value;
+            }
         }
 
         public void OnMapChanged(Map newMap)
@@ -151,44 +180,10 @@ namespace MagiRogue.Entities
             backingField.OnMapChanged(newMap);
         }
 
-        public void AddComponent(object component)
+        public void AddComponent(params object[] components)
         {
-            backingField.AddComponent(component);
-        }
-
-        T IHasComponents.GetComponent<T>()
-        {
-            return backingField.GetComponent<T>();
-        }
-
-        IEnumerable<T> IHasComponents.GetComponents<T>()
-        {
-            return backingField.GetComponents<T>();
-        }
-
-        public bool HasComponent(Type componentType)
-        {
-            return backingField.HasComponent(componentType);
-        }
-
-        public bool HasComponent<T>()
-        {
-            return backingField.HasComponent<T>();
-        }
-
-        public bool HasComponents(params Type[] componentTypes)
-        {
-            return backingField.HasComponents(componentTypes);
-        }
-
-        public void RemoveComponent(object component)
-        {
-            backingField.RemoveComponent(component);
-        }
-
-        public void RemoveComponents(params object[] components)
-        {
-            backingField.RemoveComponents(components);
+            foreach (object component in components)
+                backingField.GoRogueComponents.Add(component);
         }
 
         #endregion IGameObject Interface

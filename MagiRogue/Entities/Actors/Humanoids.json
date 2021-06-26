@@ -1,0 +1,46 @@
+﻿[
+  {
+    "Id": "test_troll",
+    "Name": "Test Troll",
+    "Description": "A test entitiy, if you see it's either a bug or a test",
+    "Glyph": "T",
+    "Size": 200,
+    "Weight": 100,
+    "MaterialId": "flesh",
+    "Stats": {
+      "Health": 15,
+      "PersonalMana": 5,
+      "BaseHpRegen": 0.5,
+      "BaseManaRegen": 0.1,
+      "Attack": 10,
+      "AttackChance": 30,
+      "Defense": 5,
+      "DefenseChance": 20,
+      "BodyStat": 7,
+      "MindStat": 2,
+      "SoulStat": 1,
+      "ViewRadius": 5,
+      "Speed": 0.9
+    },
+    "Anatomy": {
+      "Limbs": null,
+      "Race": {
+        "RaceName": "Test Troll"
+      },
+      "Temperature": 35,
+      "HasBlood": true
+    },
+    "Foreground": {
+      "R": 0,
+      "G": 0,
+      "B": 0,
+      "A": 0
+    },
+    "Background": {
+      "R": 255,
+      "G": 255,
+      "B": 255,
+      "A": 255
+    }
+  }
+]

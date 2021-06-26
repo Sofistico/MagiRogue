@@ -4,17 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MagiRogue.Entities;
-using Microsoft.Xna.Framework;
 using SadConsole;
 using MagiRogue.System;
-using GoRogue;
-using Rectangle = Microsoft.Xna.Framework.Rectangle;
+using SadRogue.Primitives;
+using Point = SadRogue.Primitives.Point;
+using Rectangle = SadRogue.Primitives.Rectangle;
+using Console = SadConsole.Console;
+using MagiRogue.System.Tiles;
 
 namespace MagiRogue.UI.Windows
 {
     public class MapWindow : MagiBaseWindow
     {
-        public ScrollingConsole MapConsole { get; set; }
+        public Console MapConsole { get; set; }
 
         public MapWindow(int width, int height, string title) : base(width, height, title)
         {
@@ -23,12 +25,13 @@ namespace MagiRogue.UI.Windows
         // centers the viewport camera on an Actor
         public void CenterOnActor(Actor actor)
         {
-            MapConsole.CenterViewPortOnPoint(actor.Position);
+            MapConsole.SadComponents.Add
+                (new SadConsole.Components.SurfaceComponentFollowTarget() { Target = actor });
         }
 
         public void CreateMapConsole()
         {
-            MapConsole = new ScrollingConsole(Width, Height);
+            MapConsole = new Console(Width, Height);
         }
 
         // Adds the entire list of entities found in the
@@ -50,12 +53,15 @@ namespace MagiRogue.UI.Windows
             int mapConsoleWidth = Width - 2;
             int mapConsoleHeight = Height - 2;
 
+            Rectangle rec =
+                new BoundedRectangle((0, 0, mapConsoleWidth, mapConsoleHeight), (0, 0, map.Width, map.Height)).Area;
+
             // First load the map's tiles into the console
-            MapConsole = new ScrollingConsole(GameLoop.World.CurrentMap.Width,
-                GameLoop.World.CurrentMap.Height, Global.FontDefault,
-                new Rectangle(0, 0, GameLoop.GameWidth, GameLoop.GameHeight), map.Tiles)
+            MapConsole = new Console(GameLoop.World.CurrentMap.Width,
+                GameLoop.World.CurrentMap.Height, GameLoop.World.CurrentMap.Width,
+                GameLoop.World.CurrentMap.Width, map.Tiles)
             {
-                ViewPort = new Rectangle(0, 0, mapConsoleWidth, mapConsoleHeight),
+                View = rec,
 
                 //reposition the MapConsole so it doesnt overlap with the left/top window edges
                 Position = new Point(1, 1),
@@ -68,6 +74,8 @@ namespace MagiRogue.UI.Windows
 
             // Now Sync all of the map's entities
             SyncMapEntities(map);
+
+            IsDirty = true;
         }
     }
 }

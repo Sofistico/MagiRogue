@@ -1,8 +1,8 @@
 ﻿using MagiRogue.UI.Controls;
-using Microsoft.Xna.Framework;
+using SadRogue.Primitives;
 using SadConsole;
-using SadConsole.Controls;
-using SadConsole.Themes;
+using SadConsole.UI.Controls;
+using SadConsole.UI.Themes;
 using System;
 using System.Collections.Generic;
 
@@ -71,7 +71,7 @@ namespace MagiRogue.UI.Windows
 
         private void QuitGameClick(object sender, EventArgs e)
         {
-            SadConsole.Game.Instance.Exit();
+            SadConsole.Game.Instance.Dispose();
         }
 
         private void PositionButtons()

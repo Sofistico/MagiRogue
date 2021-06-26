@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Troschuetz.Random;
 using System.Text;
+using System.Runtime.Serialization;
 
 namespace MagiRogue.Entities
 {
@@ -42,7 +43,6 @@ namespace MagiRogue.Entities
     {
         #region Fields
 
-        private float bloodCount; // the amount of blood inside the actor, its in ml, to facilitate the calculus of blood volume, the formula is ml/kg
         private int temperature; // the temperature of the creature, don't know if i will use or not
         private Race race;
         private readonly TRandom random = new TRandom();
@@ -51,9 +51,10 @@ namespace MagiRogue.Entities
 
         #region Properties
 
-        public List<Limb> Limbs
-        { get; set; }
+        [DataMember]
+        public List<Limb> Limbs { get; set; }
 
+        [DataMember]
         public Race Race
         {
             get => race;
@@ -66,61 +67,37 @@ namespace MagiRogue.Entities
         /// <summary>
         /// It uses an aproximation of blood count equal to 75 ml/kg for an adult male
         /// </summary>
-        public float BloodCount
-        {
-            get => bloodCount;
-            set
-            {
-                if (value <= (float)Math.Round(Weight * 75, 2))
-                    bloodCount = value;
-            }
-        }
+        public float BloodCount { get; set; }  // the amount of blood inside the actor, its in ml, to facilitate the calculus of blood volume, the formula is ml/kg
 
-        /// <summary>
-        /// The size of the actor in centimeters
-        /// </summary>
-        public int Size { get; set; }
-        /// <summary>
-        /// The weight of the actor in kg
-        /// </summary>
-        public float Weight { get; set; }
+        [DataMember]
         /// <summary>
         /// The temperature of the actor in celsius
         /// </summary>
         public int Temperature { get { return temperature; } set { temperature = value; } }
 
+        [DataMember]
         public bool HasBlood { get; set; }
 
         #endregion Properties
 
         #region Constructor
-
-        public Anatomy(int size, float weight)
-        {
-            Size = size;
-            Weight = weight;
-            CalculateBlood();
-        }
-
         public Anatomy()
         {
         }
 
         public Anatomy(Actor actor)
         {
-            Size = actor.Size;
-            Weight = actor.Weight;
-            CalculateBlood();
+            CalculateBlood(actor.Weight);
         }
 
         #endregion Constructor
 
         #region Methods
 
-        protected void CalculateBlood()
+        protected void CalculateBlood(float weight)
         {
             if (HasBlood)
-                bloodCount = (float)Math.Round(Weight * 75);
+                BloodCount = (float)Math.Round(weight * 75);
         }
 
         public void SetRace(Race race) => Race = race;

@@ -1,13 +1,14 @@
 ﻿using GoRogue.DiceNotation;
 using MagiRogue.Entities;
 using MagiRogue.System.Tiles;
-using Microsoft.Xna.Framework;
+using SadRogue.Primitives;
 using SadConsole;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using MagiRogue.System;
 
 namespace MagiRogue.Commands
 {
@@ -77,6 +78,11 @@ namespace MagiRogue.Commands
             int damage = hits - blocks;
 
             // The defender now takes damage
+            ResolveDamage(defender, damage);
+        }
+
+        public static void DealDamage(Actor defender, int damage)
+        {
             ResolveDamage(defender, damage);
         }
 
@@ -237,11 +243,11 @@ namespace MagiRogue.Commands
             List<Actor> monsterClose = new List<Actor>();
 
             // Saves all Points directions of the attacker.
-            Point[] directions = Directions.GetDirectionPoints(attacker.Position);
+            Point[] directions = SadConsole.PointExtensions.GetDirectionPoints(attacker.Position);
 
             foreach (Point direction in directions)
             {
-                Actor monsterLocation = GameLoop.World.CurrentMap.GetEntity<Actor>(direction);
+                Actor monsterLocation = GameLoop.World.CurrentMap.GetEntityAt<Actor>(direction);
 
                 if (monsterLocation != null)
                 {
@@ -257,6 +263,7 @@ namespace MagiRogue.Commands
                     }
                 }
             }
+
             // default response
             return false;
         }
@@ -296,6 +303,7 @@ namespace MagiRogue.Commands
             {
                 // TODO: make it possible to unlock a door though magic or magic of lockpicks.
             }
+
             // Handled an unlocked door that is closed
             else if (!door.Locked && !door.IsOpen)
             {
@@ -313,7 +321,7 @@ namespace MagiRogue.Commands
         /// <param name="door">Door that wil be closed></param>
         public static bool CloseDoor(Actor actor)
         {
-            Point[] allDirections = Directions.GetDirectionPoints(actor.Position);
+            Point[] allDirections = SadConsole.PointExtensions.GetDirectionPoints(actor.Position);
             foreach (Point points in allDirections)
             {
                 TileDoor possibleDoor = GameLoop.World.CurrentMap.GetTileAt<TileDoor>(points);
@@ -352,18 +360,17 @@ namespace MagiRogue.Commands
 
         public static void ToggleFOV()
         {
-            if (GameLoop.World.CurrentMap.FOVHandler.Enabled)
+            if (GameLoop.World.CurrentMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().IsEnabled)
             {
-                GameLoop.World.CurrentMap.FOVHandler.Disable(false);
+                GameLoop.World.CurrentMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().Disable(false);
             }
             else
-                GameLoop.World.CurrentMap.FOVHandler.Enable();
+                GameLoop.World.CurrentMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().Enable();
         }
 
 #endif
 
-        // TODO: Needs to be more inline with the flavorr of mol and add a counter to a insanity stat or an problem to using and etc...
-        public static bool ForcefulyIntegrateAmbientMana(Actor actor)
+        public static bool SacrificeLifeEnergyToMana(Actor actor)
         {
             int maxMana = actor.Stats.BodyStat + actor.Stats.SoulStat + actor.Stats.MindStat;
             if (actor.Stats.PersonalMana != maxMana)
@@ -377,7 +384,7 @@ namespace MagiRogue.Commands
                 return true;
             }
 
-            GameLoop.UIManager.MessageLog.Add("Maxed out your blood mana");
+            GameLoop.UIManager.MessageLog.Add("You feel too full for this right now");
             return false;
         }
     }

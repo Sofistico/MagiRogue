@@ -1,13 +1,13 @@
-﻿using GoRogue;
-using MagiRogue.Components;
+﻿using MagiRogue.Components;
 using MagiRogue.Entities;
 using MagiRogue.Entities.Data;
-using MagiRogue.Entities.Items;
 using MagiRogue.System.Tiles;
 using MagiRogue.System.Time;
-using Microsoft.Xna.Framework;
-using SadConsole;
+using SadRogue.Primitives;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace MagiRogue.System
 {
@@ -98,13 +98,14 @@ namespace MagiRogue.System
                 if (!CurrentMap.Tiles[i].IsBlockingMove)
                 {
                     // Set the player's position to the index of the current map position
-                    var pos = Helpers.GetPointFromIndex(i, CurrentMap.Width);
+                    var pos = Point.FromIndex(i, CurrentMap.Width);
 
                     Player = new Player(Color.White, Color.Black, pos)
                     {
                         Position = pos,
                         Description = "Here is you, you are beautiful"
                     };
+
                     //Player.AddComponent(new Components.HealthComponent(10, 10, 0.1f));
                     break;
                 }
@@ -159,13 +160,12 @@ namespace MagiRogue.System
 
                 Actor debugMonster = EntityFactory.ActorCreator(
                     pos,
-                    new ActorTemplate(Color.Blue, Color.Transparent, 'M', monsterStat, monsterAnatomy, "DebugTest"));
-
-                debugMonster.Name = "Debug Monster";
+                    new ActorTemplate("Debug Monster", Color.Blue, Color.Transparent, 'M',
+                    (int)MapLayer.ACTORS, monsterStat, monsterAnatomy, "DebugTest", 150, 60, "flesh"));
 
                 debugMonster.AddComponent(new MoveAndAttackAI(debugMonster.Stats.ViewRadius));
                 debugMonster.Inventory.Add(EntityFactory.ItemCreator(debugMonster.Position,
-                    new ItemTemplate("Debug Remains", Color.Red, Color.Black, '%', 1.5f, "DebugRotten")));
+                    new ItemTemplate("Debug Remains", Color.Red, Color.Black, '%', 1.5f, 35, "DebugRotten")));
                 debugMonster.Anatomy.Limbs = LimbTemplate.BasicHumanoidBody(debugMonster);
 
                 CurrentMap.Add(debugMonster);
@@ -192,17 +192,21 @@ namespace MagiRogue.System
 
                 // set the loot's new position
                 Point posNew = new Point(lootPosition % CurrentMap.Width, lootPosition / CurrentMap.Height);
-                Point posIron = new Point(lootPosition / CurrentMap.Width, lootPosition % CurrentMap.Height);
 
                 Item newLoot = EntityFactory.ItemCreator(posNew,
-                    new ItemTemplate("Gold Bar", Color.Gold, Color.White, '=', 12.5f, "Here is a gold bar, pretty heavy"));
-
-                IronBar ironBar = new IronBar(posIron);
+                    new ItemTemplate("Gold Bar", Color.Gold, Color.White, '=', 12.5f, 15, "Here is a gold bar, pretty heavy"));
 
                 // add the Item to the MultiSpatialMap
                 CurrentMap.Add(newLoot);
-                CurrentMap.Add(ironBar);
             }
+
+            IList<ItemTemplate> itemTest = Utils.JsonUtils.JsonDeseralize<List<ItemTemplate>>(Path.Combine(
+                AppDomain.CurrentDomain.BaseDirectory,
+                "Entities", "Items", "Bars.json"));
+
+            Item test = EntityFactory.ItemCreator(new Point(10, 10), itemTest.FirstOrDefault(i => i.Id == "test"));
+
+            CurrentMap.Add(test);
         }
 
         public void ProcessTurn(long playerTime, bool sucess)
@@ -213,7 +217,8 @@ namespace MagiRogue.System
                 GetTime.RegisterEntity(playerTurn);
 
                 Player.Stats.ApplyHpRegen();
-                CurrentMap.CalculateFOV(position: Player.Position, Player.Stats.ViewRadius, radiusShape: Radius.CIRCLE);
+                Player.Stats.ApplyManaRegen();
+                CurrentMap.PlayerFOV.Calculate(Player.Position, Player.Stats.ViewRadius);
 
                 var node = GetTime.NextNode();
 
@@ -242,12 +247,13 @@ namespace MagiRogue.System
 
         private void ProcessAiTurn(uint entityId, long time)
         {
-            Entity entity = CurrentMap.GetEntityById(entityId);
+            Actor entity = (Actor)CurrentMap.GetEntityById(entityId);
 
             if (entity != null)
             {
-                IAiComponent ai = entity.GetGoRogueComponent<IAiComponent>();
+                IAiComponent ai = entity.GoRogueComponents.GetFirstOrDefault<IAiComponent>();
                 (bool sucess, long tick) = ai?.RunAi(CurrentMap, GameLoop.UIManager.MessageLog) ?? (false, -1);
+                entity.Stats.ApplyAllRegen();
 
                 if (!sucess || tick < -1)
                     return;

@@ -1,8 +1,10 @@
 ﻿using GoRogue;
 using MagiRogue.Commands;
 using MagiRogue.System.Tiles;
-using Microsoft.Xna.Framework;
+using SadRogue.Primitives;
+using MagiRogue.System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace MagiRogue.Entities
 {
@@ -23,13 +25,13 @@ namespace MagiRogue.Entities
 
     #endregion Enums
 
+    [JsonConverter(typeof(Data.ActorJsonConverter))]
     public class Actor : Entity
     {
         #region Fields
 
         private bool bumped = false;
         private Stat stats = new Stat();
-        private Anatomy anatomy;
 
         #endregion Fields
 
@@ -43,7 +45,7 @@ namespace MagiRogue.Entities
         /// <summary>
         /// The anatomy of the actor
         /// </summary>
-        public Anatomy Anatomy { get => anatomy; set => anatomy = value; }
+        public Anatomy Anatomy { get; set; }
 
         /// <summary>
         /// Sets if the char has bumbed in something
@@ -59,10 +61,12 @@ namespace MagiRogue.Entities
         /// Defines if this actor can be killed
         /// </summary>
         public bool CanBeKilled { get; set; } = true;
+
         /// <summary>
         /// Defines if a actor can target or be attacked by this actor
         /// </summary>
         public bool CanBeAttacked { get; set; } = true;
+
         /// <summary>
         /// Defines if the actor can interact with it's surrondings
         /// </summary>
@@ -80,12 +84,13 @@ namespace MagiRogue.Entities
         /// <param name="glyph"></param>
         /// <param name="layer"></param>
         /// <param name="coord"></param>
-        public Actor(Color foreground, Color background, int glyph, int layer, Coord coord
+        public Actor(string name, Color foreground, Color background, int glyph, Point coord, int layer = (int)MapLayer.ACTORS
             ) : base(foreground, background,
             glyph, coord, layer)
         {
-            anatomy = new Anatomy();
+            Anatomy = new Anatomy();
             Inventory = new List<Item>();
+            Name = name;
         }
 
         #endregion Constructor
@@ -108,9 +113,11 @@ namespace MagiRogue.Entities
                     return attacked;
 
                 Position += positionChange;
-                GameLoop.UIManager.IsDirty = true;
+
+                //GameLoop.UIManager.IsDi = true;
                 return true;
             }
+
             // Handle situations where there are non-walkable tiles that CAN be used
             else
             {
@@ -127,7 +134,7 @@ namespace MagiRogue.Entities
         {
             // if there's a monster here,
             // do a bump attack
-            Actor actor = GameLoop.World.CurrentMap.GetEntity<Actor>(Position + positionChange);
+            Actor actor = GameLoop.World.CurrentMap.GetEntityAt<Actor>(Position + positionChange);
 
             if (actor != null && CanBeAttacked)
             {
@@ -140,7 +147,7 @@ namespace MagiRogue.Entities
             return Bumped;
         }
 
-        private bool CheckIfThereIsDoor(Coord positionChange)
+        private bool CheckIfThereIsDoor(Point positionChange)
         {
             // Check for the presence of a door
             TileDoor door = GameLoop.World.CurrentMap.GetTileAt<TileDoor>(Position + positionChange);

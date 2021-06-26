@@ -2,25 +2,28 @@
 using MagiRogue.Commands;
 using MagiRogue.Entities;
 using MagiRogue.System;
+using MagiRogue.System.Magic;
+using MagiRogue.System.Magic.Effects;
 using MagiRogue.System.Time;
 using MagiRogue.UI.Windows;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using SadConsole;
-using System;
+using SadConsole.Input;
+using SadRogue.Primitives;
+using System.Linq;
 using System.Collections.Generic;
-using Rectangle = Microsoft.Xna.Framework.Rectangle;
+using Color = SadConsole.UI.AdjustableColor;
 
 namespace MagiRogue.UI
 {
     // Creates/Holds/Destroys all consoles used in the game
     // and makes consoles easily addressable from a central place.
-    public class UIManager : ContainerConsole
+    public class UIManager : ScreenObject
     {
         #region Managers
 
         // Here are the managers
         public MapWindow MapWindow { get; set; }
+
         public MessageLogWindow MessageLog { get; set; }
         public InventoryWindow InventoryScreen { get; set; }
         public StatusWindow StatusConsole { get; set; }
@@ -34,7 +37,7 @@ namespace MagiRogue.UI
 
         private static Player GetPlayer => GameLoop.World.Player;
 
-        public SadConsole.Themes.Colors CustomColors;
+        public SadConsole.UI.Colors CustomColors;
 
         private Target target;
 
@@ -51,7 +54,7 @@ namespace MagiRogue.UI
 
             // The UIManager becomes the only
             // screen that SadConsole processes
-            Parent = Global.CurrentScreen;
+            Parent = GameHost.Instance.Screen;
         }
 
         // Initiates the game by means of going to the menu first
@@ -82,7 +85,9 @@ namespace MagiRogue.UI
             Children.Add(MessageLog);
             MessageLog.Show();
             MessageLog.Position = new Point(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2);
-
+#if DEBUG
+            MessageLog.Add("Test message log works");
+#endif
             // Inventory initialization
             InventoryScreen = new InventoryWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Inventory Window");
             Children.Add(InventoryScreen);
@@ -110,15 +115,19 @@ namespace MagiRogue.UI
 
         public static readonly Dictionary<Keys, Direction> MovementDirectionMapping = new Dictionary<Keys, Direction>
         {
-            { Keys.NumPad7, Direction.UP_LEFT }, { Keys.NumPad8, Direction.UP }, { Keys.NumPad9, Direction.UP_RIGHT },
-            { Keys.NumPad4, Direction.LEFT }, { Keys.NumPad6, Direction.RIGHT },
-            { Keys.NumPad1, Direction.DOWN_LEFT }, { Keys.NumPad2, Direction.DOWN }, { Keys.NumPad3, Direction.DOWN_RIGHT },
-            { Keys.Up, Direction.UP }, { Keys.Down, Direction.DOWN }, { Keys.Left, Direction.LEFT }, { Keys.Right, Direction.RIGHT }
+            { Keys.NumPad7, Direction.UpLeft }, { Keys.NumPad8, Direction.Up }, { Keys.NumPad9, Direction.UpRight },
+            { Keys.NumPad4, Direction.Left }, { Keys.NumPad6, Direction.Right },
+            { Keys.NumPad1, Direction.DownLeft }, { Keys.NumPad2, Direction.Down }, { Keys.NumPad3, Direction.DownRight },
+            { Keys.Up, Direction.Up }, { Keys.Down, Direction.Down }, { Keys.Left, Direction.Left }, { Keys.Right, Direction.Right }
         };
 
-        // Scans the SadConsole's Global KeyboardState and triggers behaviour
-        // based on the button pressed.
-        public override bool ProcessKeyboard(SadConsole.Input.Keyboard info)
+        /// <summary>
+        /// Scans the SadConsole's Global KeyboardState and triggers behaviour
+        /// based on the button pressed.
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        public override bool ProcessKeyboard(Keyboard info)
         {
             if (GameLoop.World != null)
             {
@@ -132,7 +141,7 @@ namespace MagiRogue.UI
                     return true;
                 }
 
-                if (info.IsKeyPressed(Keys.NumPad5))
+                if (info.IsKeyPressed(Keys.NumPad5) || info.IsKeyPressed(Keys.OemPeriod))
                     GameLoop.World.ProcessTurn(TimeHelper.Wait, true);
 
                 if (info.IsKeyPressed(Keys.A))
@@ -151,7 +160,7 @@ namespace MagiRogue.UI
                 if (info.IsKeyPressed(Keys.D))
                 {
                     bool sucess = CommandManager.DropItems(GameLoop.World.Player);
-                    Item item = GameLoop.World.CurrentMap.GetEntity<Item>(GameLoop.World.Player.Position);
+                    Item item = GameLoop.World.CurrentMap.GetEntityAt<Item>(GameLoop.World.Player.Position);
                     InventoryScreen.RemoveItemFromConsole(item);
                     InventoryScreen.ShowItems(GameLoop.World.Player);
                     GameLoop.World.ProcessTurn(TimeHelper.Interact, sucess);
@@ -169,7 +178,7 @@ namespace MagiRogue.UI
 
                 if (info.IsKeyPressed(Keys.H))
                 {
-                    bool sucess = CommandManager.ForcefulyIntegrateAmbientMana(GameLoop.World.Player);
+                    bool sucess = CommandManager.SacrificeLifeEnergyToMana(GameLoop.World.Player);
                     GameLoop.World.ProcessTurn(TimeHelper.MagicalThings, sucess);
                 }
 
@@ -205,6 +214,28 @@ namespace MagiRogue.UI
                     return true;
                 }
 
+                if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.Z))
+                {
+                    var spellBase = GetPlayer.Magic.QuerySpell("magic_missile");
+
+                    var entity = GameLoop.World.CurrentMap.GetClosestEntity(GetPlayer.Position, spellBase.SpellRange);
+
+                    if (entity != null)
+                    {
+                        bool sucess = spellBase.CastSpell(
+                        entity.Position,
+                        GetPlayer);
+
+                        GameLoop.World.ProcessTurn(TimeHelper.MagicalThings, sucess);
+                        return true;
+                    }
+                    else
+                    {
+                        GameLoop.UIManager.MessageLog.Add("There is no target for the spell!");
+                        return false;
+                    }
+                }
+
 #if DEBUG
                 if (info.IsKeyPressed(Keys.F10))
                 {
@@ -216,9 +247,6 @@ namespace MagiRogue.UI
                 {
                     GetPlayer.AddComponent(new Components.TestComponent(GetPlayer));
                 }
-
-                if (info.IsKeyPressed(Keys.F12))
-                    PrintHeader();
 
                 if (info.IsKeyPressed(Keys.NumPad0))
                 {
@@ -246,7 +274,7 @@ namespace MagiRogue.UI
                 if (info.IsKeyPressed(key))
                 {
                     Direction moveDirection = MovementDirectionMapping[key];
-                    Coord coorToMove = new Coord(moveDirection.DeltaX, moveDirection.DeltaY);
+                    Point coorToMove = new Point(moveDirection.DeltaX, moveDirection.DeltaY);
 
                     bool sucess = CommandManager.MoveActorBy((Actor)GameLoop.World.CurrentMap.ControlledEntitiy, coorToMove);
                     MapWindow.CenterOnActor((Actor)GameLoop.World.CurrentMap.ControlledEntitiy);
@@ -280,83 +308,34 @@ namespace MagiRogue.UI
             MapWindow.Show();
         }
 
-        // Method helper to print the X and Y of the console.
-        // Use only for debugging purposes
-
-#if DEBUG
-
-        private static void PrintHeader()
-        {
-            int counter = 0;
-            var startingColor = Color.Black.GetRandomColor(SadConsole.Global.Random);
-            var color = startingColor;
-            var UIManagerConsoles = Global.CurrentScreen;
-            for (int x = 0; x < UIManagerConsoles.Width; x++)
-            {
-                UIManagerConsoles[x].Glyph = counter.ToString()[0];
-                UIManagerConsoles[x].Foreground = color;
-
-                counter++;
-
-                if (counter == 10)
-                {
-                    counter = 0;
-                    color = color.GetRandomColor(SadConsole.Global.Random);
-                }
-            }
-
-            counter = 0;
-            color = startingColor;
-            for (int y = 0; y < UIManagerConsoles.Height; y++)
-            {
-                UIManagerConsoles[0, y].Glyph = counter.ToString()[0];
-                UIManagerConsoles[0, y].Foreground = color;
-
-                counter++;
-
-                if (counter == 10)
-                {
-                    counter = 0;
-                    color = color.GetRandomColor(SadConsole.Global.Random);
-                }
-            }
-
-            // Display console size
-            UIManagerConsoles.Print(4, 2, "Console Size");
-            UIManagerConsoles.Print(4, 3, "                         ");
-            UIManagerConsoles.Print(4, 3, $"{UIManagerConsoles.Width} {UIManagerConsoles.Height}");
-        }
-
-#endif
-
         // Build a new coloured theme based on SC's default theme
         // and then set it as the program's default theme.
         private void SetUpCustomColors()
         {
             // Create a set of default colours that we will modify
-            CustomColors = new SadConsole.Themes.Colors();
+            CustomColors = SadConsole.UI.Themes.Library.Default.Colors.Clone();
 
             // Pick a couple of background colours that we will apply to all consoles.
-            Color backgroundColor = Color.Black;
+            Color backgroundColor = new Color(CustomColors.Black, "Black");
 
             // Set background colour for controls consoles and their controls
-            CustomColors.ControlHostBack = backgroundColor;
-            CustomColors.ControlBack = backgroundColor;
+            CustomColors.ControlHostBackground = backgroundColor;
+            CustomColors.ControlBackgroundNormal = backgroundColor;
 
             // Generate background colours for dark and light themes based on
             // the default background colour.
-            CustomColors.ControlBackLight = (backgroundColor * 1.3f).FillAlpha();
-            CustomColors.ControlBackDark = (backgroundColor * 0.7f).FillAlpha();
+            //CustomColors.ControlH = (backgroundColor * 1.3f).FillAlpha();
+            //CustomColors.ControlBackDark = (backgroundColor * 0.7f).FillAlpha();
 
             // Set a color for currently selected controls. This should always
             // be different from the background colour.
-            CustomColors.ControlBackSelected = CustomColors.GrayDark;
+            CustomColors.ControlBackgroundSelected = new Color(CustomColors.GrayDark, "Grey");
 
             // Rebuild all objects' themes with the custom colours we picked above.
             CustomColors.RebuildAppearances();
 
             // Now set all of these colours as default for SC's default theme.
-            SadConsole.Themes.Library.Default.Colors = CustomColors;
+            SadConsole.UI.Themes.Library.Default.Colors = CustomColors;
         }
 
         #endregion HelperMethods

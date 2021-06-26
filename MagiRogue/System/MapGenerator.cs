@@ -1,6 +1,6 @@
-﻿using GoRogue.MapViews;
+﻿using SadRogue.Primitives.GridViews;
 using MagiRogue.System.Tiles;
-using Microsoft.Xna.Framework;
+using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -125,9 +125,9 @@ namespace MagiRogue.System
         private void CreateRoom(Rectangle room)
         {
             // Place floors in interior area
-            for (int x = room.Left + 1; x < room.Right; x++)
+            for (int x = room.ToMonoRectangle().Left + 1; x < room.ToMonoRectangle().Right; x++)
             {
-                for (int y = room.Top + 1; y < room.Bottom; y++)
+                for (int y = room.ToMonoRectangle().Top + 1; y < room.ToMonoRectangle().Bottom; y++)
                 {
                     CreateFloor(new Point(x, y));
                 }
@@ -146,6 +146,7 @@ namespace MagiRogue.System
         private void CreateFloor(Point location)
         {
             TileFloor floor = new TileFloor(location, "stone");
+
             // a simple setterrain already does it for me
             _map.SetTerrain(floor);
         }
@@ -162,7 +163,7 @@ namespace MagiRogue.System
         {
             for (int i = 0; i < _map.Tiles.Length; i++)
             {
-                TileWall wall = new TileWall(i.ToPoint(_map.Width), "stone");
+                TileWall wall = new TileWall(Point.FromIndex(i, _map.Width), "stone");
                 _map.SetTerrain(wall);
             }
         }
@@ -171,10 +172,10 @@ namespace MagiRogue.System
         private List<Point> GetBorderCellLocations(Rectangle room)
         {
             //establish room boundaries
-            int xMin = room.Left;
-            int xMax = room.Right;
-            int yMin = room.Bottom;
-            int yMax = room.Top;
+            int xMin = room.ToMonoRectangle().Left;
+            int xMax = room.ToMonoRectangle().Right;
+            int yMin = room.ToMonoRectangle().Bottom;
+            int yMax = room.ToMonoRectangle().Top;
 
             // build a list of room border cells using a series of
             // straight lines
@@ -233,6 +234,7 @@ namespace MagiRogue.System
             else if (x > _map.Width - 1)
                 x = _map.Width - 1;
             return x;
+
             // OR using ternary conditional operators: return (x < 0) ? 0 : (x > _map.Width - 1) ? _map.Width - 1 : x;
         }
 
@@ -245,6 +247,7 @@ namespace MagiRogue.System
             else if (y > _map.Height - 1)
                 y = _map.Height - 1;
             return y;
+
             // OR using ternary conditional operators: return (y < 0) ? 0 : (y > _map.Height - 1) ? _map.Height - 1 : y;
         }
 

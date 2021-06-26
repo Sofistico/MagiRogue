@@ -10,12 +10,11 @@ namespace MagiRogue.System.Physics
     // For now it just deals with the list material, but in the future all interactions will go here
     public class PhysicsManager
     {
-        public IEnumerable<Material> ListOfMaterials;
-
-        public PhysicsManager()
-        {
-            ListOfMaterials = JsonUtils.JsonDeseralize<List<Material>>(Path.Combine
+        public readonly static IEnumerable<Material> ListOfMaterials = JsonUtils.JsonDeseralize<List<Material>>(Path.Combine
                 (AppDomain.CurrentDomain.BaseDirectory.ToString(), "Entities", "Materials", "MaterialDefinition.json"));
+
+        protected PhysicsManager()
+        {
         }
 
         /// <summary>
@@ -23,6 +22,6 @@ namespace MagiRogue.System.Physics
         /// </summary>
         /// <param name="id">Id of the material you want, must consult the json file</param>
         /// <returns></returns>
-        public Material SetMaterial(string id) => ListOfMaterials.FirstOrDefault(a => a.Id == id);
+        public static Material SetMaterial(string id) => ListOfMaterials.FirstOrDefault(a => a.Id == id);
     }
 }

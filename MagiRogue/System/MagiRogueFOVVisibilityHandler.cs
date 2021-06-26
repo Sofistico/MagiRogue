@@ -1,21 +1,27 @@
 ﻿using MagiRogue.Entities;
 using MagiRogue.System.Tiles;
-using Microsoft.Xna.Framework;
+using SadRogue.Primitives;
+using SadConsole;
+using SadConsole.Effects;
+using System.Linq;
+using System;
 
 namespace MagiRogue.System
 {
     /// <summary>
     /// Handler that will make all terrain/entities inside FOV visible as normal, all entities outside of FOV invisible, all
-    /// terrain outside of FOV invisible if unexplored, and set its foreground to <see cref="ExploredColor"/> if explored but out of FOV.
+    /// terrain outside of FOV invisible if unexplored, and set its foreground to <see cref="ExploredColorTint"/> if explored but out of FOV.
     /// </summary>
     public class MagiRogueFOVVisibilityHandler : FOVHandler
     {
         private readonly int _ghostLayer;
 
+        public CellDecorator ExploredCell { get; }
+
         /// <summary>
         /// Foreground color to set to all terrain that is outside of FOV but has been explored.
         /// </summary>
-        public Color ExploredColor { get; }
+        public Color? ExploredColorTint { get; }
 
         /// <summary>
         /// Creates a DefaultFOVVisibilityHandler that will manage visibility of objects for the given map as noted in the class description.
@@ -23,11 +29,15 @@ namespace MagiRogue.System
         /// <param name="map">The map this handler will manage visibility for.</param>
         /// <param name="unexploredColor">Foreground color to set to all terrain tiles that are outside of FOV but have been explored.</param>
         /// <param name="startingState">The starting state to put the handler in.</param>
-        public MagiRogueFOVVisibilityHandler(Map map, Color unexploredColor, int ghostLayer, FovState startingState = FovState.Enabled) :
+        public MagiRogueFOVVisibilityHandler(Map map, Color? unexploredColor, int ghostLayer, int tintGlyph = 219,
+            FovState startingState = FovState.Enabled) :
             base(map, startingState)
         {
-            ExploredColor = unexploredColor;
+            ExploredColorTint = unexploredColor;
             _ghostLayer = ghostLayer;
+
+            ExploredCell = new CellDecorator(ExploredColorTint ?? new Color(0.05f, 0.05f, 0.05f, 0.75f), tintGlyph,
+                Mirror.None);
         }
 
         /// <summary>
@@ -39,7 +49,7 @@ namespace MagiRogue.System
             {
                 for (int y = 0; y < Map.Height; y++)
                 {
-                    if (Map.Explored[x, y])
+                    if (Map.PlayerExplored[x, y])
                     {
                         TileBase tile = Map.Terrain[x, y] as TileBase;
                         UpdateTerrainSeen(tile);
@@ -73,11 +83,11 @@ namespace MagiRogue.System
             if (entity.Layer == _ghostLayer)
                 return;
 
-            if (entity.Layer != _ghostLayer && Map.Explored[entity.Position] && entity.LeavesGhost)
+            if (entity.Layer != _ghostLayer && Map.PlayerExplored[entity.Position] && entity.LeavesGhost)
             {
-                Entity ghost = new Entity(ExploredColor,
-                    entity.Animation[0].Background,
-                    entity.Animation[0].Glyph,
+                Entity ghost = new Entity((Color)ExploredColorTint,
+                    entity.Appearance.Background,
+                    entity.Appearance.Glyph,
                     entity.Position,
                     _ghostLayer)
                 {
@@ -85,7 +95,7 @@ namespace MagiRogue.System
                     Name = $"Ghost {entity.Name}"
                 };
 
-                ghost.OnCalculateRenderPosition();
+                //ghost.OnCalculateRenderPosition();
 
                 Map.Add(ghost);
             }
@@ -99,20 +109,25 @@ namespace MagiRogue.System
         protected override void UpdateTerrainSeen(TileBase terrain)
         {
             terrain.IsVisible = true;
-            terrain.RestoreState();
+
+            if (terrain.Decorators.Contains(ExploredCell))
+            {
+                // If there is only 1 decorator, it must be ours so we can replace
+                // the array with a static blank one
+                terrain.Decorators = terrain.Decorators.Length == 1 ? Array.Empty<CellDecorator>() : terrain.Decorators.Where(i => i != ExploredCell).ToArray();
+            }
         }
 
         /// <summary>
         /// Makes terrain invisible if it is not explored.  Makes terrain visible but sets its foreground to
-        /// <see cref="ExploredColor"/> if it is explored.
+        /// <see cref="ExploredColorTint"/> if it is explored.
         /// </summary>
         /// <param name="terrain">Terrain to modify.</param>
         protected override void UpdateTerrainUnseen(TileBase terrain)
         {
-            if (Map.Explored[terrain.Position])
+            if (Map.PlayerExplored[terrain.Position])
             {
-                terrain.SaveState();
-                terrain.Foreground = ExploredColor;
+                terrain.Decorators = terrain.Decorators.Append(ExploredCell).ToArray();
             }
             else
                 terrain.IsVisible = false;

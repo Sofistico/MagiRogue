@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MagiRogue.System.Magic
 {
-    public class Mana
+    public class AmbientMana
     {
     }
 }
