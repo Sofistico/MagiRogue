@@ -1,5 +1,4 @@
-﻿using GoRogue;
-using MagiRogue.Components;
+﻿using MagiRogue.Components;
 using MagiRogue.Entities;
 using MagiRogue.Entities.Data;
 using MagiRogue.System.Tiles;
@@ -193,7 +192,6 @@ namespace MagiRogue.System
 
                 // set the loot's new position
                 Point posNew = new Point(lootPosition % CurrentMap.Width, lootPosition / CurrentMap.Height);
-                Point posIron = new Point(lootPosition / CurrentMap.Width, lootPosition % CurrentMap.Height);
 
                 Item newLoot = EntityFactory.ItemCreator(posNew,
                     new ItemTemplate("Gold Bar", Color.Gold, Color.White, '=', 12.5f, 15, "Here is a gold bar, pretty heavy"));
