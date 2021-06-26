@@ -55,10 +55,11 @@ namespace MagiRogue.Commands
             {
                 BlinkCount = -1,
                 BlinkSpeed = 2.0,
-                BlinkOutColor = Color.TransparentBlack,
-                UseCellBackgroundColor = false
+                //BlinkOutColor = Color.Green,
+                UseCellBackgroundColor = true
             };
-            blink.ApplyToCell(Cursor.Appearance, s);
+            Cursor.Effect = blink;
+            blink.Restart();
             //Cursor.AddComponent(new AnimationComponent(timer, Cursor.Appearance, frameCell));
         }
 
