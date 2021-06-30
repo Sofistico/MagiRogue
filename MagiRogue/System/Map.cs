@@ -77,10 +77,12 @@ namespace MagiRogue.System
             Tiles = ((ArrayView<TileBase>)((LambdaSettableTranslationGridView<TileBase, IGameObject>)Terrain).BaseGrid);
 
             // Treat the fov as a component.
-            GoRogueComponents.Add(new MagiRogueFOVVisibilityHandler(this, Color.Black, (int)MapLayer.GHOSTS));
+            GoRogueComponents.Add(new MagiRogueFOVVisibilityHandler(this, Color.DarkSlateGray, (int)MapLayer.GHOSTS));
 
             _entityRender = new SadConsole.Entities.Renderer();
-            _entityRender.OnAdded(_hackyScreen = new(1, 1));
+            _hackyScreen = new(1, 1);
+
+            _hackyScreen.SadComponents.Add(_entityRender);
 
             Time = new TimeSystem();
         }
@@ -270,11 +272,11 @@ namespace MagiRogue.System
                 _entityRender.Remove(item);
             }
             _entityRender.IsDirty = true;
-            _entityRender.OnRemoved(_hackyScreen);
+            _hackyScreen.SadComponents.Remove(_entityRender);
             _hackyScreen.Dispose();
 
-            _entityRender.OnAdded(renderer);
-            _entityRender.DoEntityUpdate = false;
+            renderer.SadComponents.Add(_entityRender);
+            _entityRender.DoEntityUpdate = true;
 
             foreach (Entity item in Entities.Items)
             {

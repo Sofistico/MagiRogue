@@ -110,7 +110,7 @@ namespace MagiRogue.System
                     {
                         TileBase terrain = Map.GetTerrainAt<TileBase>(pos);
                         if (terrain == null) continue;
-                        if (terrain != null && Map.PlayerFOV.BooleanFOV[pos])
+                        if (terrain != null && Map.PlayerFOV.BooleanResultView[pos])
                         {
                             UpdateTerrainSeen(terrain);
                         }
@@ -119,7 +119,7 @@ namespace MagiRogue.System
                     }
                     foreach (Entity entity in Map.Entities.Items.Cast<Entity>())
                     {
-                        if (Map.PlayerFOV.BooleanFOV[entity.Position])
+                        if (Map.PlayerFOV.BooleanResultView[entity.Position])
                             UpdateEntitySeen(entity);
                         else
                             UpdateEntityUnseen(entity);
@@ -192,7 +192,7 @@ namespace MagiRogue.System
         {
             if (!IsEnabled) return;
 
-            if (Map.PlayerFOV.BooleanFOV[e.NewPosition])
+            if (Map.PlayerFOV.BooleanResultView[e.NewPosition])
                 UpdateEntitySeen((Entity)(e.Item));
             else
                 UpdateEntityUnseen((Entity)(e.Item));
@@ -204,14 +204,14 @@ namespace MagiRogue.System
 
             if (e.Item.Layer == 0) // terrain
             {
-                if (Map.PlayerFOV.BooleanFOV[e.Position])
+                if (Map.PlayerFOV.BooleanResultView[e.Position])
                     UpdateTerrainSeen((TileBase)(e.Item));
                 else
                     UpdateTerrainUnseen((TileBase)(e.Item));
             }
             else // Entities
             {
-                if (Map.PlayerFOV.BooleanFOV[e.Position])
+                if (Map.PlayerFOV.BooleanResultView[e.Position])
                     UpdateEntitySeen((Entity)e.Item);
                 else
                     UpdateEntityUnseen((Entity)e.Item);
