@@ -40,8 +40,8 @@ namespace MagiRogue.System.Tiles
             IsOpen = false;
             IsBlockingMove = true;
             IsTransparent = false;
-            TileIsTransparent = false;
             Glyph = '+';
+            LastSeenAppereance.Glyph = Glyph;
         }
 
         // opens a door
@@ -49,9 +49,9 @@ namespace MagiRogue.System.Tiles
         {
             IsOpen = true;
             IsTransparent = true;
-            TileIsTransparent = true;
             IsBlockingMove = false;
             Glyph = '-';
+            LastSeenAppereance.Glyph = Glyph;
         }
     }
 }

@@ -71,7 +71,7 @@ namespace MagiRogue.UI.Windows
 
         private void QuitGameClick(object sender, EventArgs e)
         {
-            SadConsole.Game.Instance.Dispose();
+            SadConsole.GameHost.Instance.Dispose();
         }
 
         private void PositionButtons()

@@ -23,7 +23,6 @@ namespace MagiRogue.System.Tiles
         /// it can be said that IsWalkable = !IsBlockingMove.
         /// </summary>
         public bool IsBlockingMove { get; set; }
-        public bool TileIsTransparent { get; set; }
         public int Layer { get; set; }
 
         public ColoredGlyph LastSeenAppereance { get; set; }
@@ -83,14 +82,11 @@ namespace MagiRogue.System.Tiles
             bool isTransparent = true, string name = "ForgotToChangeName") : base(foregroud, background, glyph)
         {
             IsBlockingMove = blocksMove;
-            TileIsTransparent = isTransparent;
             Name = name;
             Layer = layer;
             backingField = new GameObject(position, layer, !blocksMove, isTransparent);
             MaterialOfTile = System.Physics.PhysicsManager.SetMaterial(idOfMaterial);
             LastSeenAppereance = new ColoredGlyph(Foreground, Background, Glyph);
-
-            IsVisible = false;
             LastSeenAppereance.IsVisible = false;
         }
 

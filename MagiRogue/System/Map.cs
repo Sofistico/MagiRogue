@@ -175,8 +175,7 @@ namespace MagiRogue.System
             // Initilizes the field of view of the player, will do different for monsters
             if (entity is Player player)
             {
-                PlayerFOV.Calculate(player.Position, player.Stats.ViewRadius);
-                FOVRecalculated?.Invoke(this, EventArgs.Empty);
+                FovCalculate(player);
                 ControlledEntitiy = player;
             }
 
@@ -201,10 +200,9 @@ namespace MagiRogue.System
         /// <param name="args"></param>
         private void OnEntityMoved(object sender, GameObjectPropertyChanged<Point> args)
         {
-            if (args.Item is Player actor)
+            if (args.Item is Player player)
             {
-                PlayerFOV.Calculate(actor.Position, actor.Stats.ViewRadius, Radius.Circle);
-                FOVRecalculated?.Invoke(this, EventArgs.Empty);
+                FovCalculate(player);
             }
 
             _entityRender.IsDirty = true;
@@ -283,6 +281,17 @@ namespace MagiRogue.System
                 _entityRender.Add(item);
             }
             renderer.IsDirty = true;
+        }
+
+        private void FovCalculate(Actor actor)
+        {
+            PlayerFOV.Calculate(actor.Position, actor.Stats.ViewRadius, Radius.Circle);
+            FOVRecalculated?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void ForceFovCalculation()
+        {
+            FovCalculate((Actor)ControlledEntitiy);
         }
 
         #endregion HelperMethods

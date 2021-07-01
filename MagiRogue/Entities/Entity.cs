@@ -12,6 +12,7 @@ using GoRogue.Components;
 using GoRogue.SpatialMaps;
 using GoRogue.Components.ParentAware;
 using SadConsole;
+using MagiRogue.System.Tiles;
 
 namespace MagiRogue.Entities
 {

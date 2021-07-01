@@ -104,21 +104,12 @@ namespace MagiRogue.System
         protected override void UpdateTerrainSeen(TileBase terrain)
         {
             terrain.IsVisible = true;
+
             // If the appearances don't match currently, synchronize them
             if (!terrain.LastSeenAppereance.Matches(terrain))
             {
                 terrain.CopyAppearanceFrom(terrain.LastSeenAppereance);
-                terrain.LastSeenAppereance.IsVisible = false;
             }
-
-            // Set up an event handler that will keep the actual appearance in sync with the
-            // true one, so long as the tile remains visible to the player.  Because this could be
-            // called twice in certain state changes, we make sure we do not add the handler twice.
-            //
-            // Removing the event even if it does not exist does not throw exception and appears to be the
-            // most performant way to account for duplicates.
-            terrain.IsDirtySet -= On_VisibleTileTrueAppearanceIsDirtySet;
-            terrain.IsDirtySet += On_VisibleTileTrueAppearanceIsDirtySet;
         }
 
         /// <summary>
@@ -128,10 +119,6 @@ namespace MagiRogue.System
         /// <param name="terrain">Terrain to modify.</param>
         protected override void UpdateTerrainUnseen(TileBase terrain)
         {
-            // If the event handler for synchronizing the appearance with true appearance is added, remove it
-            // which will cause the appearance to remain as last-seen if it changes
-            terrain.IsDirtySet -= On_VisibleTileTrueAppearanceIsDirtySet;
-
             if (Map.PlayerExplored[terrain.Position])
             {
                 ApplyMemoryAppearance(terrain);
@@ -139,11 +126,8 @@ namespace MagiRogue.System
             else
             {
                 // If the unseen tile isn't explored, it's invisible
-                terrain.LastSeenAppereance.IsVisible = false;
-                //terrain.IsVisible = false;
+                terrain.IsVisible = false;
             }
-            terrain.LastSeenAppereance.IsDirty = true;
-            terrain.IsDirty = true;
         }
 
         private void ApplyMemoryAppearance(ColoredGlyph tile)
@@ -166,7 +150,7 @@ namespace MagiRogue.System
 
             // Otherwise, synchronize them
             awareTerrain.LastSeenAppereance.CopyAppearanceFrom(awareTerrain);
-            awareTerrain.LastSeenAppereance.IsVisible = awareTerrain.IsVisible;
+            // awareTerrain.LastSeenAppereance.IsVisible = awareTerrain.IsVisible;
         }
     }
 }
