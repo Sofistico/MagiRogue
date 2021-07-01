@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SadConsole.Components;
 using MagiRogue.Components;
+using MagiRogue.System.Magic;
 
 namespace MagiRogue.Commands
 {
@@ -27,13 +28,16 @@ namespace MagiRogue.Commands
 
         public Point OriginCoord { get; set; }
 
+        public TargetState State { get; set; }
+
         public Target(Point spawnCoord)
         {
             Color targetColor = new Color(255, 0, 0);
 
             OriginCoord = spawnCoord;
 
-            Cursor = new Actor("Target Cursor", targetColor, Color.Transparent, 'X', spawnCoord, (int)MapLayer.PLAYER)
+            Cursor = new Actor("Target Cursor",
+                targetColor, Color.Transparent, 'X', spawnCoord, (int)MapLayer.PLAYER)
             {
                 IsWalkable = true,
                 CanBeKilled = false,
@@ -42,25 +46,16 @@ namespace MagiRogue.Commands
                 LeavesGhost = false
             };
 
-            /* ColoredGlyph frameCell = Cursor.Appearance;
-             frameCell.Foreground = Color.Transparent;
-             frameCell.Background = Color.Transparent;
-             frameCell.Glyph = 'X';
-
-             Timer timer = new Timer(TimeSpan.FromSeconds(2.0));*/
-
-            SadConsole.Effects.EffectsManager.ColoredGlyphState s = new SadConsole.Effects.EffectsManager.ColoredGlyphState(Cursor.Appearance);
-
             SadConsole.Effects.Blink blink = new SadConsole.Effects.Blink()
             {
                 BlinkCount = -1,
                 BlinkSpeed = 2.0,
-                //BlinkOutColor = Color.Green,
                 UseCellBackgroundColor = true
             };
             Cursor.Effect = blink;
             blink.Restart();
-            //Cursor.AddComponent(new AnimationComponent(timer, Cursor.Appearance, frameCell));
+
+            State = TargetState.Resting;
         }
 
         public IList<T> TargetEntity<T>() where T : Entity
@@ -91,9 +86,54 @@ namespace MagiRogue.Commands
                 && GameLoop.World.CurrentMap.GetEntityAt<Entity>(Cursor.Position) is not Player)
             {
                 TargetEntity<Entity>();
+                State = TargetState.Targeting;
                 return true;
             }
             return false;
+        }
+
+        public void OnSelectSpell(SpellBase spell, Actor caster)
+        {
+            var (targetDistance, sucess) = StartTargetting();
+
+            if (sucess)
+            {
+                var distance = Distance.Chebyshev.Calculate(OriginCoord, targetDistance);
+
+                if (distance <= spell.SpellRange)
+                {
+                    spell.CastSpell(targetDistance, caster);
+                    EndTargetting();
+                    return;
+                }
+            }
+            else
+                return;
+        }
+
+        private (Point targetDistance, bool sucess) StartTargetting()
+        {
+            GameLoop.World.ChangeControlledEntity(Cursor);
+            State = TargetState.Targeting;
+
+            if (EntityInTarget())
+            {
+                return (TargetList.FirstOrDefault().Position, true);
+            }
+            return (Point.None, false);
+        }
+
+        private void EndTargetting()
+        {
+            GameLoop.World.ChangeControlledEntity(GameLoop.World.Player);
+            GameLoop.World.CurrentMap.Remove(Cursor);
+            State = TargetState.Resting;
+        }
+
+        public enum TargetState
+        {
+            Resting,
+            Targeting
         }
     }
 }

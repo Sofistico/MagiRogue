@@ -96,6 +96,7 @@ namespace MagiRogue.System.Magic
             if (CanCast(caster.Magic, caster.Stats) && target != Point.None)
             {
                 Target = target;
+                GameLoop.UIManager.MessageLog.Add($"{caster.Name} casted {SpellName}");
                 foreach (ISpellEffect effect in Effects)
                 {
                     effect.ApplyEffect(target, caster.Stats);
@@ -119,6 +120,8 @@ namespace MagiRogue.System.Magic
         public override string ToString()
         {
             string bobBuilder = new StringBuilder().Append(SpellName).Append(": ").Append(SpellLevel)
+                .Append($", Range: {SpellRange}")
+                .AppendLine(SpellSchool.ToString())
                 .AppendLine(Description).ToString();
 
             return bobBuilder;

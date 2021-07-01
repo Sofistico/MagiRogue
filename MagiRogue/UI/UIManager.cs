@@ -52,6 +52,8 @@ namespace MagiRogue.UI
             IsVisible = true;
             IsFocused = true;
 
+            UseMouse = false;
+
             // The UIManager becomes the only
             // screen that SadConsole processes
             Parent = GameHost.Instance.Screen;
@@ -216,24 +218,42 @@ namespace MagiRogue.UI
 
                 if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.Z))
                 {
-                    var spellBase = GetPlayer.Magic.QuerySpell("magic_missile");
+                    SpellSelectWindow spell =
+                        new SpellSelectWindow(GetPlayer.Magic.KnowSpells, GetPlayer.Stats.PersonalMana);
 
-                    var entity = GameLoop.World.CurrentMap.GetClosestEntity(GetPlayer.Position, spellBase.SpellRange);
-
-                    if (entity != null)
+                    if (target is null)
                     {
-                        bool sucess = spellBase.CastSpell(
-                        entity.Position,
-                        GetPlayer);
+                        target = new Target(GetPlayer.Position);
+                        GameLoop.World.CurrentMap.Add(target.Cursor);
+                    }
+                    spell.Show(GetPlayer.Magic.KnowSpells,
+                        selectedSpell => target.OnSelectSpell(selectedSpell, (Actor)GameLoop.World.CurrentMap.ControlledEntitiy),
+                        GetPlayer.Stats.PersonalMana);
 
-                        GameLoop.World.ProcessTurn(TimeHelper.MagicalThings, sucess);
-                        return true;
-                    }
-                    else
+                    if (target.State == Target.TargetState.Targeting)
                     {
-                        GameLoop.UIManager.MessageLog.Add("There is no target for the spell!");
-                        return false;
                     }
+
+                    return true;
+
+                    /* var spellBase = GetPlayer.Magic.QuerySpell("magic_missile");
+
+                     var entity = GameLoop.World.CurrentMap.GetClosestEntity(GetPlayer.Position, spellBase.SpellRange);
+
+                     if (entity != null)
+                     {
+                         bool sucess = spellBase.CastSpell(
+                         entity.Position,
+                         GetPlayer);
+
+                         GameLoop.World.ProcessTurn(TimeHelper.MagicalThings, sucess);
+                         return true;
+                     }
+                     else
+                     {
+                         GameLoop.UIManager.MessageLog.Add("There is no target for the spell!");
+                         return false;
+                     }*/
                 }
 
 #if DEBUG
@@ -258,7 +278,6 @@ namespace MagiRogue.UI
 
                 if (info.IsKeyPressed(Keys.Escape) && NoPopWindow)
                 {
-                    //SadConsole.Game.Instance.Exit();
                     MainMenu.Show();
                     MainMenu.IsFocused = true;
                 }
@@ -276,7 +295,20 @@ namespace MagiRogue.UI
                     Direction moveDirection = MovementDirectionMapping[key];
                     Point coorToMove = new Point(moveDirection.DeltaX, moveDirection.DeltaY);
 
-                    bool sucess = CommandManager.MoveActorBy((Actor)GameLoop.World.CurrentMap.ControlledEntitiy, coorToMove);
+                    if (GameLoop.World.CurrentMap.ControlledEntitiy is not Player player)
+                    {
+                        if (GameLoop.World.CurrentMap.PlayerFOV.CurrentFOV.Contains
+                            (GameLoop.World.CurrentMap.ControlledEntitiy.Position + coorToMove))
+                        {
+                            return CommandManager.MoveActorBy
+                                ((Actor)GameLoop.World.CurrentMap.ControlledEntitiy, coorToMove);
+                        }
+                        else
+                            return false;
+                    }
+
+                    bool sucess =
+                        CommandManager.MoveActorBy((Actor)GameLoop.World.CurrentMap.ControlledEntitiy, coorToMove);
                     return sucess;
                 }
             }

@@ -41,11 +41,9 @@ namespace MagiRogue.Entities
                 new List<ISpellEffect>(), MagicSchool.Projection, 5, manaCost: 1.0);
 
             spellBase.Effects.Add(
-            new DamageEffect
-            (Magic.CalculateSpellDamage(Stats, spellBase),
+            new DamageEffect(Magic.CalculateSpellDamage(Stats, spellBase),
             SpellAreaEffect.Target,
-            Utils.DamageType.Force)
-            );
+            Utils.DamageType.Force));
 
             Magic.KnowSpells.Add(spellBase);
         }

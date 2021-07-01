@@ -1,5 +1,6 @@
 ﻿using GoRogue;
 using MagiRogue.Entities;
+using MagiRogue;
 using MagiRogue.System.Time;
 using SadRogue.Primitives;
 using MagiRogue.Utils;
@@ -36,6 +37,11 @@ namespace MagiRogue.System.Magic.Effects
                     if (poorGuy == null)
                     {
                         return;
+                    }
+
+                    if (poorGuy == GameLoop.World.CurrentMap.ControlledEntitiy && poorGuy is Player)
+                    {
+                        poorGuy = GameLoop.World.CurrentMap.GetClosestEntity(poorGuy.Position, 1);
                     }
 
                     CombatUtils.DealDamage(Damage, poorGuy, SpellDamageType);
