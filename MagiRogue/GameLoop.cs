@@ -35,6 +35,8 @@ namespace MagiRogue
 
         private static void Init()
         {
+            SadConsole.Settings.WindowTitle = "MagiRogue";
+
             // Makes so that no excpetion happens for a custom control
             SadConsole.UI.Themes.Library.Default.SetControlTheme(typeof(UI.Controls.MagiButton),
                 new SadConsole.UI.Themes.ButtonTheme());

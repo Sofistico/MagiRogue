@@ -277,7 +277,6 @@ namespace MagiRogue.UI
                     Point coorToMove = new Point(moveDirection.DeltaX, moveDirection.DeltaY);
 
                     bool sucess = CommandManager.MoveActorBy((Actor)GameLoop.World.CurrentMap.ControlledEntitiy, coorToMove);
-                    MapWindow.CenterOnActor((Actor)GameLoop.World.CurrentMap.ControlledEntitiy);
                     return sucess;
                 }
             }

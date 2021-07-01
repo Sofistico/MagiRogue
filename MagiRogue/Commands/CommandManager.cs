@@ -309,6 +309,7 @@ namespace MagiRogue.Commands
             {
                 door.Open();
                 GameLoop.UIManager.MessageLog.Add($"{actor.Name} opened a {door.Name}");
+                GameLoop.World.CurrentMap.ForceFovCalculation();
                 return true;
             }
             return false;
@@ -331,6 +332,7 @@ namespace MagiRogue.Commands
                     {
                         possibleDoor.Close();
                         GameLoop.UIManager.MessageLog.Add($"{actor.Name} closed a {possibleDoor.Name}");
+                        GameLoop.World.CurrentMap.ForceFovCalculation();
                         return true;
                     }
                 }

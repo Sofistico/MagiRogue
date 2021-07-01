@@ -114,7 +114,6 @@ namespace MagiRogue.Entities
 
                 Position += positionChange;
 
-                //GameLoop.UIManager.IsDi = true;
                 return true;
             }
 

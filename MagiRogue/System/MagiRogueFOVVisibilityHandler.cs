@@ -16,12 +16,10 @@ namespace MagiRogue.System
     {
         private readonly int _ghostLayer;
 
-        public CellDecorator ExploredCell { get; }
-
         /// <summary>
         /// Foreground color to set to all terrain that is outside of FOV but has been explored.
         /// </summary>
-        public Color? ExploredColorTint { get; }
+        public Color ExploredColorTint { get; }
 
         /// <summary>
         /// Creates a DefaultFOVVisibilityHandler that will manage visibility of objects for the given map as noted in the class description.
@@ -29,15 +27,12 @@ namespace MagiRogue.System
         /// <param name="map">The map this handler will manage visibility for.</param>
         /// <param name="unexploredColor">Foreground color to set to all terrain tiles that are outside of FOV but have been explored.</param>
         /// <param name="startingState">The starting state to put the handler in.</param>
-        public MagiRogueFOVVisibilityHandler(Map map, Color? unexploredColor, int ghostLayer, int tintGlyph = 219,
+        public MagiRogueFOVVisibilityHandler(Map map, Color unexploredColor, int ghostLayer,
             FovState startingState = FovState.Enabled) :
             base(map, startingState)
         {
             ExploredColorTint = unexploredColor;
             _ghostLayer = ghostLayer;
-
-            ExploredCell = new CellDecorator(ExploredColorTint ?? new Color(0.05f, 0.05f, 0.05f, 0.75f), tintGlyph,
-                Mirror.None);
         }
 
         /// <summary>
@@ -110,11 +105,10 @@ namespace MagiRogue.System
         {
             terrain.IsVisible = true;
 
-            if (terrain.Decorators.Contains(ExploredCell))
+            // If the appearances don't match currently, synchronize them
+            if (!terrain.LastSeenAppereance.Matches(terrain))
             {
-                // If there is only 1 decorator, it must be ours so we can replace
-                // the array with a static blank one
-                terrain.Decorators = terrain.Decorators.Length == 1 ? Array.Empty<CellDecorator>() : terrain.Decorators.Where(i => i != ExploredCell).ToArray();
+                terrain.CopyAppearanceFrom(terrain.LastSeenAppereance);
             }
         }
 
@@ -127,10 +121,36 @@ namespace MagiRogue.System
         {
             if (Map.PlayerExplored[terrain.Position])
             {
-                terrain.Decorators = terrain.Decorators.Append(ExploredCell).ToArray();
+                ApplyMemoryAppearance(terrain);
             }
             else
+            {
+                // If the unseen tile isn't explored, it's invisible
                 terrain.IsVisible = false;
+            }
+        }
+
+        private void ApplyMemoryAppearance(ColoredGlyph tile)
+        {
+            tile.Foreground = ExploredColorTint;
+        }
+
+#nullable enable
+
+        private void On_VisibleTileTrueAppearanceIsDirtySet(object? sender, EventArgs e)
+#nullable disable
+        {
+            // Sender will not be null because of event invariants.  Cast is safe since we
+            // control what this handler is added to and it is checked first
+            var awareTerrain = (TileBase)sender!;
+
+            // If appearances are synchronized, there is nothing to do
+            if (awareTerrain.LastSeenAppereance.Matches(awareTerrain))
+                return;
+
+            // Otherwise, synchronize them
+            awareTerrain.LastSeenAppereance.CopyAppearanceFrom(awareTerrain);
+            // awareTerrain.LastSeenAppereance.IsVisible = awareTerrain.IsVisible;
         }
     }
 }

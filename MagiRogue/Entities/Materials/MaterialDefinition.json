@@ -11,7 +11,16 @@
     "MeltingPoint": 0, // Melting point of something in C° if it can melt, normally something flamable isn't capable of melt
     "BoilingPoint": 0, // Boiling point of something in C° if it can boil, normally something flamable isn't capable of boil
   },*/
-
+  {
+    "Id": "memory_stuff",
+    "Name": "Memory",
+    "Flamability": false,
+    "Hardness": 999,
+    "MPInfusionLimit": 0,
+    "CanRegen": true,
+    "Density": 0,
+    "MeltingPoint": 999
+  },
   {
     "Id": "flesh",
     "Name": "Flesh",

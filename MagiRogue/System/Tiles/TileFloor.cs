@@ -8,7 +8,6 @@ namespace MagiRogue.System.Tiles
     /// </summary>
     public class TileFloor : TileBase
     {
-        //
         /// <summary>
         /// Default constructor
         /// \nFloors are set to allow movement and line of sight by default
@@ -17,7 +16,7 @@ namespace MagiRogue.System.Tiles
         /// </summary>
         /// <param name="position"></param>
         /// <param name="blocksMove"></param>
-        /// <param name="dontBlocksSight"></param>
+        /// <param name="tileIsTransparent"></param>
         public TileFloor(Point position, string idMaterial, bool blocksMove = false, bool tileIsTransparent = true) : base(Color.DarkGray, Color.Transparent, '.', (int)MapLayer.TERRAIN, position, idMaterial, blocksMove, tileIsTransparent)
         {
             Name = "Floor";

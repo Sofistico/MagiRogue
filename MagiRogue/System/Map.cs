@@ -77,10 +77,12 @@ namespace MagiRogue.System
             Tiles = ((ArrayView<TileBase>)((LambdaSettableTranslationGridView<TileBase, IGameObject>)Terrain).BaseGrid);
 
             // Treat the fov as a component.
-            GoRogueComponents.Add(new MagiRogueFOVVisibilityHandler(this, Color.Black, (int)MapLayer.GHOSTS));
+            GoRogueComponents.Add(new MagiRogueFOVVisibilityHandler(this, Color.DarkSlateGray, (int)MapLayer.GHOSTS));
 
             _entityRender = new SadConsole.Entities.Renderer();
-            _entityRender.OnAdded(_hackyScreen = new(1, 1));
+            _hackyScreen = new(1, 1);
+
+            _hackyScreen.SadComponents.Add(_entityRender);
 
             Time = new TimeSystem();
         }
@@ -173,8 +175,7 @@ namespace MagiRogue.System
             // Initilizes the field of view of the player, will do different for monsters
             if (entity is Player player)
             {
-                PlayerFOV.Calculate(player.Position, player.Stats.ViewRadius);
-                FOVRecalculated?.Invoke(this, EventArgs.Empty);
+                FovCalculate(player);
                 ControlledEntitiy = player;
             }
 
@@ -199,10 +200,9 @@ namespace MagiRogue.System
         /// <param name="args"></param>
         private void OnEntityMoved(object sender, GameObjectPropertyChanged<Point> args)
         {
-            if (args.Item is Player actor)
+            if (args.Item is Player player)
             {
-                PlayerFOV.Calculate(actor.Position, actor.Stats.ViewRadius, Radius.Circle);
-                FOVRecalculated?.Invoke(this, EventArgs.Empty);
+                FovCalculate(player);
             }
 
             _entityRender.IsDirty = true;
@@ -270,17 +270,28 @@ namespace MagiRogue.System
                 _entityRender.Remove(item);
             }
             _entityRender.IsDirty = true;
-            _entityRender.OnRemoved(_hackyScreen);
+            _hackyScreen.SadComponents.Remove(_entityRender);
             _hackyScreen.Dispose();
 
-            _entityRender.OnAdded(renderer);
-            _entityRender.DoEntityUpdate = false;
+            renderer.SadComponents.Add(_entityRender);
+            _entityRender.DoEntityUpdate = true;
 
             foreach (Entity item in Entities.Items)
             {
                 _entityRender.Add(item);
             }
             renderer.IsDirty = true;
+        }
+
+        private void FovCalculate(Actor actor)
+        {
+            PlayerFOV.Calculate(actor.Position, actor.Stats.ViewRadius, Radius.Circle);
+            FOVRecalculated?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void ForceFovCalculation()
+        {
+            FovCalculate((Actor)ControlledEntitiy);
         }
 
         #endregion HelperMethods

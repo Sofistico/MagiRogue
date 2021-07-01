@@ -15,18 +15,17 @@ namespace MagiRogue.System.Tiles
     {
         private int _tileHealth;
         private bool _destroyed;
+        private readonly IGameObject backingField;
 
         // Movement and Line of Sight Flags
         /// <summary>
         /// It's really complicated the relation between IsBlockingMove and the IsWalkable field from the backing field, but
         /// it can be said that IsWalkable = !IsBlockingMove.
         /// </summary>
-        public bool IsBlockingMove;
+        public bool IsBlockingMove { get; set; }
+        public int Layer { get; set; }
 
-        public bool TileIsTransparent;
-        public int Layer;
-
-        private readonly IGameObject backingField;
+        public ColoredGlyph LastSeenAppereance { get; set; }
 
         // Creates a list of possible materials, and then assings it to the tile, need to move it to a fitting area, like
         // World or GameLoop, because if need to port, every new object will have more than one possible material without
@@ -54,7 +53,7 @@ namespace MagiRogue.System.Tiles
         }
 
         // Tile's name
-        public string Name;
+        public string Name { get; set; }
 
         #region backingField Data
 
@@ -83,11 +82,12 @@ namespace MagiRogue.System.Tiles
             bool isTransparent = true, string name = "ForgotToChangeName") : base(foregroud, background, glyph)
         {
             IsBlockingMove = blocksMove;
-            TileIsTransparent = isTransparent;
             Name = name;
             Layer = layer;
             backingField = new GameObject(position, layer, !blocksMove, isTransparent);
             MaterialOfTile = System.Physics.PhysicsManager.SetMaterial(idOfMaterial);
+            LastSeenAppereance = new ColoredGlyph(Foreground, Background, Glyph);
+            LastSeenAppereance.IsVisible = false;
         }
 
         protected void CalculateTileHealth() => _tileHealth = (int)MaterialOfTile.Density * MaterialOfTile.Hardness;
