@@ -9,6 +9,7 @@ using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 using System;
 using System.Linq;
+using System.Diagnostics;
 
 namespace MagiRogue.System
 {
@@ -179,7 +180,19 @@ namespace MagiRogue.System
                 ControlledEntitiy = player;
             }
 
-            AddEntity(entity);
+            try
+            {
+                AddEntity(entity);
+            }
+            catch (ArgumentException)
+            {
+                entity.Position = GetRandomWalkableTile();
+                AddEntity(entity);
+#if DEBUG
+                Debug.Print("An entity tried to telefrag another");
+#endif
+            }
+
             _entityRender.Add(entity);
 
             if (entity is Actor monster)
@@ -292,6 +305,25 @@ namespace MagiRogue.System
         public void ForceFovCalculation()
         {
             FovCalculate((Actor)ControlledEntitiy);
+        }
+
+        /// <summary>
+        /// This is used to get a random point that is walkable inside the map, mainly used when adding an entity
+        /// and there is already an entity there, so it picks another random location.
+        /// </summary>
+        /// <returns>Returns an Point to a tile that is walkable and there is no actor there</returns>
+        private Point GetRandomWalkableTile()
+        {
+            foreach (var terrain in Tiles)
+            {
+                Actor entityThere = GetEntityAt<Actor>(terrain.Position);
+                if (terrain.IsWalkable && (entityThere is null || entityThere.IsWalkable))
+                {
+                    return terrain.Position;
+                }
+            }
+            // should never go to this
+            return Point.None;
         }
 
         #endregion HelperMethods

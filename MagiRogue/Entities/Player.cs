@@ -17,7 +17,7 @@ namespace MagiRogue.Entities
             // sets the most fundamental stats, needs to set the godly flag up top, because it superseeds GodPower if it is
             // below.
             Stats.SetAttributes(
-                viewRadius: 5,
+                viewRadius: 7,
                 health: 10,
                 baseHpRegen: 0.1f,
                 bodyStat: 1,

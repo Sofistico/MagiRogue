@@ -34,12 +34,12 @@ namespace MagiRogue.UI.Windows
             _currentMana = currentMana;
 
             const string castText = "Cast";
-            int castButtonWidth = castText.Length + 4;
+            int castButtonWidth = castText.Length + 2;
 
             _castButton = new MagiButton(castButtonWidth)
             {
                 Text = castText,
-                Position = new Point(Width - castButtonWidth, Height - 2)
+                Position = new Point(Width - castButtonWidth - 1, Height - 2)
             };
             _castButton.Click += (_, __) =>
             {
@@ -88,20 +88,20 @@ namespace MagiRogue.UI.Windows
         {
             _hotKeys.Clear();
 
-            int yCount = 0;
+            int yCount = 1;
 
             var controlDictionary = listSpells
                 .OrderBy(s => s.SpellName)
                 .ToDictionary
                 (s =>
                     {
-                        var hotkeyLetter = (char)('a' + yCount);
+                        var hotkeyLetter = (char)(96 + yCount);
                         _hotKeys.Add(hotkeyLetter, s);
 
-                        var spellButton = new MagiButton(ButtonWidth - 1)
+                        var spellButton = new MagiButton(ButtonWidth - 2)
                         {
-                            Text = $"{char.ToUpper(hotkeyLetter)}. {s.SpellName}",
-                            Position = new Point(0, yCount++),
+                            Text = $"{hotkeyLetter}. {s.SpellName}",
+                            Position = new Point(1, yCount++),
                             IsEnabled = _currentMana >= s.ManaCost
                         };
                         spellButton.Click += (_, __) =>
@@ -128,7 +128,7 @@ namespace MagiRogue.UI.Windows
         {
             _selectedSpell = spell;
             _descriptionArea.Clear();
-            _descriptionArea.Cursor.Position = new Point(0, 0);
+            _descriptionArea.Cursor.Position = new Point(0, 1);
             _descriptionArea.Cursor.Print(_selectedSpell.ToString());
             _castButton.IsEnabled = true;
         }

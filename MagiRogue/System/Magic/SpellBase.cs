@@ -16,16 +16,34 @@ namespace MagiRogue.System.Magic
 
         private int requiredShapingSkill;
 
+        /// <summary>
+        /// All the effects that the spell can have
+        /// </summary>
         public List<ISpellEffect> Effects { get; set; }
 
+        /// <summary>
+        /// Spell name
+        /// </summary>
         public string SpellName { get; set; }
 
+        /// <summary>
+        /// Description of the spell
+        /// </summary>
         public string Description { get; private set; }
 
+        /// <summary>
+        /// The target of the spell
+        /// </summary>
         public Point Target { get; set; }
 
+        /// <summary>
+        /// What school the spell is
+        /// </summary>
         public MagicSchool SpellSchool { get; set; }
 
+        /// <summary>
+        /// The range that the spell can act, can be anything from 0 - self to 999 - map
+        /// </summary>
         public int SpellRange { get; set; }
 
         /// <summary>
@@ -33,10 +51,22 @@ namespace MagiRogue.System.Magic
         /// </summary>
         public int SpellLevel { get; set; }
 
+        /// <summary>
+        /// The total mana cost of the spell, ranging from 0.1 for simple feats of magic to anything beyond
+        /// </summary>
         public double ManaCost { get; set; }
 
+        /// <summary>
+        /// The id of the spell, required for quick look up and human redable serialization.
+        /// </summary>
         public string SpellId { get; set; }
 
+        /// <summary>
+        /// The total proficiency, goes up slowly as you use the spell or train with it in your downtime, makes
+        /// it more effective and cost less, goes from 0.0(not learned) to 2.0(double effectiviness),
+        /// for newly trained spell shoud be 0.5, see <see cref="Magic.ShapingSkills"> for more details about
+        /// effectiviness of magic
+        /// </summary>
         public double Proficency
         {
             get
@@ -62,6 +92,16 @@ namespace MagiRogue.System.Magic
         {
         }
 
+        /// <summary>
+        /// The spell being created.
+        /// </summary>
+        /// <param name="spellId">Should be something unique with spaces separated by _</param>
+        /// <param name="spellName">The name of the spell</param>
+        /// <param name="effects">All the effects that the spell will have</param>
+        /// <param name="spellSchool">What school is this spell part of?</param>
+        /// <param name="spellRange">The range of the spell</param>
+        /// <param name="spellLevel">The level of the spell, going from 1 to 9</param>
+        /// <param name="manaCost">The mana cost of the spell, should be more than 0.1</param>
         public SpellBase(string spellId,
             string spellName,
             List<ISpellEffect> effects,
@@ -120,33 +160,12 @@ namespace MagiRogue.System.Magic
         public override string ToString()
         {
             string bobBuilder = new StringBuilder().Append(SpellName).Append(": ").Append(SpellLevel)
-                .Append($", Range: {SpellRange}")
+                .Append($", Range: {SpellRange} ")
                 .AppendLine(SpellSchool.ToString())
                 .AppendLine(Description).ToString();
 
             return bobBuilder;
         }
-    }
-
-    public enum SpellTypeEnum
-    {
-        Damage, // Can be the same as healing
-        Teleport,
-        Summon,
-        Divination,
-        Dispel,
-        Haste,
-        Animation,
-        Ward,
-        Transformation,
-        Illusion,
-        Control,
-        Soul,
-        Telekinesis,
-        Ritual,
-        Dimension,
-        Buff,
-        Debuff
     }
 
     public enum SpellAreaEffect

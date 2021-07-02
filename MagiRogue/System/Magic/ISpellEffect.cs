@@ -11,7 +11,6 @@ namespace MagiRogue.System.Magic
 {
     public interface ISpellEffect
     {
-        public SpellTypeEnum SpellEffect { get; set; }
         public SpellAreaEffect AreaOfEffect { get; set; }
         public DamageType SpellDamageType { get; set; }
 

@@ -22,6 +22,9 @@ namespace MagiRogue.Commands
     /// </summary>
     public class Target : ITarget
     {
+        private SpellBase _spellSelected;
+        private Actor _caster;
+
         public Entity Cursor { get; set; }
 
         public IList<Entity> TargetList { get; set; }
@@ -49,7 +52,7 @@ namespace MagiRogue.Commands
             SadConsole.Effects.Blink blink = new SadConsole.Effects.Blink()
             {
                 BlinkCount = -1,
-                BlinkSpeed = 2.0,
+                BlinkSpeed = 1.3,
                 UseCellBackgroundColor = true
             };
             Cursor.Effect = blink;
@@ -94,33 +97,32 @@ namespace MagiRogue.Commands
 
         public void OnSelectSpell(SpellBase spell, Actor caster)
         {
-            var (targetDistance, sucess) = StartTargetting();
-
-            if (sucess)
-            {
-                var distance = Distance.Chebyshev.Calculate(OriginCoord, targetDistance);
-
-                if (distance <= spell.SpellRange)
-                {
-                    spell.CastSpell(targetDistance, caster);
-                    EndTargetting();
-                    return;
-                }
-            }
-            else
-                return;
+            _spellSelected = spell;
+            _caster = caster;
+            StartTargetting();
         }
 
-        private (Point targetDistance, bool sucess) StartTargetting()
+        private void StartTargetting()
         {
             GameLoop.World.ChangeControlledEntity(Cursor);
+            GameLoop.World.CurrentMap.Add(Cursor);
             State = TargetState.Targeting;
+        }
 
-            if (EntityInTarget())
+        public bool EndSpellTargetting()
+        {
+            int distance = (int)Distance.Chebyshev.Calculate(OriginCoord, Cursor.Position);
+
+            if (distance <= _spellSelected.SpellRange)
             {
-                return (TargetList.FirstOrDefault().Position, true);
+                _spellSelected.CastSpell(TargetList[0].Position, _caster);
+                _spellSelected = null;
+                _caster = null;
+                EndTargetting();
+                return true;
             }
-            return (Point.None, false);
+            GameLoop.UIManager.MessageLog.Add("The target is too far!");
+            return false;
         }
 
         private void EndTargetting()

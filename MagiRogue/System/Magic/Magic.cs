@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using GoRogue.DiceNotation;
 using MagiRogue.Entities;
-using MagiRogue.Commands;
-using GoRogue;
-using GoRogue.DiceNotation;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MagiRogue.System.Magic
@@ -21,7 +19,7 @@ namespace MagiRogue.System.Magic
 
         public int CalculateSpellDamage(Stat entityStats, SpellBase spellCasted)
         {
-            int baseDamage = (int)(spellCasted.SpellLevel + (entityStats.MindStat * 0.5) + (entityStats.SoulStat * 0.5));
+            int baseDamage = (int)(spellCasted.SpellLevel + entityStats.MindStat + (entityStats.SoulStat * 0.5));
 
             int rngDmg = Dice.Roll($"{spellCasted.SpellLevel}d{baseDamage}");
 
