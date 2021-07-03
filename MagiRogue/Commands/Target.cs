@@ -59,11 +59,13 @@ namespace MagiRogue.Commands
             blink.Restart();
 
             State = TargetState.Resting;
+
+            TargetList = new List<Entity>();
         }
 
         public IList<T> TargetEntity<T>() where T : Entity
         {
-            TargetList = null;
+            TargetList.Clear();
 
             IList<T> entities = GameLoop.World.CurrentMap.GetEntitiesAt<T>(Cursor.Position).ToList();
 
@@ -71,7 +73,7 @@ namespace MagiRogue.Commands
 
             if (entities.Count != 0)
             {
-                TargetList = (IList<Entity>)entities;
+                TargetList = (List<Entity>)entities;
                 return entities;
             }
 
@@ -99,6 +101,12 @@ namespace MagiRogue.Commands
         {
             _spellSelected = spell;
             _caster = caster;
+            if (_spellSelected.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Self))
+            {
+                TargetList.Add(_caster);
+                EndSpellTargetting();
+                return;
+            }
             StartTargetting();
         }
 
@@ -127,9 +135,16 @@ namespace MagiRogue.Commands
 
         private void EndTargetting()
         {
+            if (Cursor.CurrentMap is null)
+            {
+                State = TargetState.Resting;
+                TargetList.Clear();
+                return;
+            }
             GameLoop.World.ChangeControlledEntity(GameLoop.World.Player);
             GameLoop.World.CurrentMap.Remove(Cursor);
             State = TargetState.Resting;
+            TargetList.Clear();
         }
 
         public enum TargetState

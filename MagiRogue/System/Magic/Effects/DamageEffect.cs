@@ -29,6 +29,10 @@ namespace MagiRogue.System.Magic.Effects
         {
             switch (AreaOfEffect)
             {
+                case SpellAreaEffect.Self:
+                    CombatUtils.ApplyHealing(Damage, casterStats, SpellDamageType);
+                    break;
+
                 case SpellAreaEffect.Target:
                     Entity poorGuy = GameLoop.World.CurrentMap.GetEntityAt<Entity>(target);
                     if (poorGuy == null)

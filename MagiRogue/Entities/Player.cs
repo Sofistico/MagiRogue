@@ -36,16 +36,28 @@ namespace MagiRogue.Entities
 
             Magic.ShapingSkills = 5;
 
-            SpellBase spellBase = new SpellBase("magic_missile",
+            SpellBase missile = new SpellBase("magic_missile",
                  "Magic Missile",
                 new List<ISpellEffect>(), MagicSchool.Projection, 5, manaCost: 1.0);
 
-            spellBase.Effects.Add(
-            new DamageEffect(Magic.CalculateSpellDamage(Stats, spellBase),
+            missile.Effects.Add(
+            new DamageEffect(Magic.CalculateSpellDamage(Stats, missile),
             SpellAreaEffect.Target,
             Utils.DamageType.Force));
 
-            Magic.KnowSpells.Add(spellBase);
+            SpellBase cure = new SpellBase("cure_test", "Cure Test", new List<ISpellEffect>(),
+                MagicSchool.MedicalMagic, 0, 1, 1);
+
+            cure.Effects.Add(new DamageEffect(Magic.CalculateSpellDamage(Stats, cure),
+                SpellAreaEffect.Self, Utils.DamageType.Force));
+
+            List<SpellBase> testSpells = new List<SpellBase>()
+            {
+                missile,
+                cure
+            };
+
+            Magic.KnowSpells.AddRange(testSpells);
         }
     }
 }

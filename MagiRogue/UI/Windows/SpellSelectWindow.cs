@@ -14,10 +14,11 @@ using SadConsole.Input;
 
 namespace MagiRogue.UI.Windows
 {
+    /// <summary>
+    /// The window of the spell selector.
+    /// </summary>
     public class SpellSelectWindow : PopWindow
     {
-        //private const int SpellButtonWidth = 40;
-
         private List<SpellBase> _spellList;
         private MagiButton _castButton;
         private readonly Console _descriptionArea;
@@ -130,6 +131,9 @@ namespace MagiRogue.UI.Windows
             _descriptionArea.Clear();
             _descriptionArea.Cursor.Position = new Point(0, 1);
             _descriptionArea.Cursor.Print(_selectedSpell.ToString());
+            _descriptionArea.Cursor.Position = new Point(0, 5);
+            if (_selectedSpell.Description is object)
+                _descriptionArea.Cursor.Print(_selectedSpell.Description);
             _castButton.IsEnabled = true;
         }
 

@@ -117,7 +117,7 @@ namespace MagiRogue.System.Magic
             SpellLevel = spellLevel;
             ManaCost = manaCost;
             Effects = effects;
-            requiredShapingSkill = (int)((spellLevel * manaCost) * 0.5);
+            requiredShapingSkill = (int)((spellLevel + manaCost) * 2);
         }
 
         public bool CanCast(Magic magicSkills, Stat stats)
@@ -160,9 +160,8 @@ namespace MagiRogue.System.Magic
         public override string ToString()
         {
             string bobBuilder = new StringBuilder().Append(SpellName).Append(": ").Append(SpellLevel)
-                .Append($", Range: {SpellRange} ")
-                .AppendLine(SpellSchool.ToString())
-                .AppendLine(Description).ToString();
+                .Append($", Range: {SpellRange} \n")
+                .AppendLine(SpellSchool.ToString()).ToString();
 
             return bobBuilder;
         }
@@ -170,6 +169,7 @@ namespace MagiRogue.System.Magic
 
     public enum SpellAreaEffect
     {
+        Self,
         Target,
         Ball,
         Shape,
