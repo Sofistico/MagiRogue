@@ -72,7 +72,7 @@ namespace MagiRogue.UI.Controls
             }
             else if (info.IsKeyReleased(Keys.Enter))
             {
-                InvokeClick();
+                //InvokeClick();
             }
 
             return base.ProcessKeyboard(info);

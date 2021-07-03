@@ -51,10 +51,15 @@ namespace MagiRogue.Entities
             cure.Effects.Add(new DamageEffect(Magic.CalculateSpellDamage(Stats, cure),
                 SpellAreaEffect.Self, Utils.DamageType.Force));
 
+            SpellBase haste = new SpellBase("haste_self", "Haste", new List<ISpellEffect>(),
+                MagicSchool.Dimensionalism, 0, 1, 1);
+            haste.Effects.Add(new HasteEffect(SpellAreaEffect.Self, 2, 5));
+
             List<SpellBase> testSpells = new List<SpellBase>()
             {
                 missile,
-                cure
+                cure,
+                haste
             };
 
             Magic.KnowSpells.AddRange(testSpells);
