@@ -58,7 +58,6 @@ namespace MagiRogue.System
         }
 
         private readonly SadConsole.Entities.Renderer _entityRender;
-        private readonly ScreenSurface _hackyScreen;
 
         #endregion Properties
 
@@ -81,9 +80,6 @@ namespace MagiRogue.System
             GoRogueComponents.Add(new MagiRogueFOVVisibilityHandler(this, Color.DarkSlateGray, (int)MapLayer.GHOSTS));
 
             _entityRender = new SadConsole.Entities.Renderer();
-            _hackyScreen = new(1, 1);
-
-            _hackyScreen.SadComponents.Add(_entityRender);
 
             Time = new TimeSystem();
         }
@@ -278,14 +274,6 @@ namespace MagiRogue.System
 
         public void ConfigureRender(SadConsole.Console renderer)
         {
-            foreach (Entity item in Entities.Items)
-            {
-                _entityRender.Remove(item);
-            }
-            _entityRender.IsDirty = true;
-            _hackyScreen.SadComponents.Remove(_entityRender);
-            _hackyScreen.Dispose();
-
             renderer.SadComponents.Add(_entityRender);
             _entityRender.DoEntityUpdate = true;
 

@@ -184,17 +184,17 @@ namespace MagiRogue.UI.Windows
                 return true;
             }
 
-            if (info.IsKeyPressed(Keys.Enter) && (target is object || target.State == Target.TargetState.Targeting))
+            if (info.IsKeyPressed(Keys.Enter) && target is not null && target.State == Target.TargetState.Targeting)
             {
                 if (target.EntityInTarget())
                 {
-                    var sucess = target.EndSpellTargetting();
+                    var (sucess, spellCasted) = target.EndSpellTargetting();
 
                     if (sucess)
                     {
                         target = null;
 
-                        world.ProcessTurn(TimeHelper.MagicalThings, sucess);
+                        world.ProcessTurn(TimeHelper.GetCastingTime(GetPlayer, spellCasted), sucess);
                     }
                     return sucess;
                 }
@@ -202,6 +202,14 @@ namespace MagiRogue.UI.Windows
                 {
                     ui.MessageLog.Add("There is no one to target there!");
                 }
+            }
+            if (info.IsKeyPressed(Keys.Escape) && (target is object))
+            {
+                target.EndTargetting();
+
+                target = null;
+
+                return true;
             }
 
 #if DEBUG

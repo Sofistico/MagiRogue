@@ -143,6 +143,8 @@ namespace MagiRogue.System.Magic
                 }
 
                 caster.Stats.PersonalMana -= (float)ManaCost;
+                Proficency += 0.01;
+                Proficency = Math.Round(Proficency, 2);
 
                 return true;
             }

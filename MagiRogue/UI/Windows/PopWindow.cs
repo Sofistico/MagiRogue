@@ -36,7 +36,7 @@ namespace MagiRogue.UI.Windows
 
             Center();
 
-            const string cancelButtonText = "Cancel";
+            const string cancelButtonText = "Close(Esc)";
 
             int cancelButtonWidth = cancelButtonText.Length + 4;
 
@@ -57,6 +57,14 @@ namespace MagiRogue.UI.Windows
             GameLoop.UIManager.IsFocused = true;
 
             base.Hide();
+        }
+
+        public override void Show(bool modal)
+        {
+            GameLoop.UIManager.NoPopWindow = false;
+            IsFocused = true;
+
+            base.Show(modal);
         }
     }
 }

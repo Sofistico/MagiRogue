@@ -90,7 +90,7 @@ namespace MagiRogue.UI
             InventoryScreen = new InventoryWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Inventory Window");
             Children.Add(InventoryScreen);
             InventoryScreen.Hide();
-            InventoryScreen.Position = new Point(GameLoop.GameWidth / 2, 0);
+            //InventoryScreen.Position = new Point(GameLoop.GameWidth / 2, 0);
 
             StatusConsole = new StatusWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Status Window");
             Children.Add(StatusConsole);

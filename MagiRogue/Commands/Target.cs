@@ -117,23 +117,24 @@ namespace MagiRogue.Commands
             State = TargetState.Targeting;
         }
 
-        public bool EndSpellTargetting()
+        public (bool, SpellBase) EndSpellTargetting()
         {
             int distance = (int)Distance.Chebyshev.Calculate(OriginCoord, Cursor.Position);
 
             if (distance <= _spellSelected.SpellRange)
             {
                 _spellSelected.CastSpell(TargetList[0].Position, _caster);
+                var spellCasted = _spellSelected;
                 _spellSelected = null;
                 _caster = null;
                 EndTargetting();
-                return true;
+                return (true, spellCasted);
             }
             GameLoop.UIManager.MessageLog.Add("The target is too far!");
-            return false;
+            return (false, null);
         }
 
-        private void EndTargetting()
+        public void EndTargetting()
         {
             if (Cursor.CurrentMap is null)
             {

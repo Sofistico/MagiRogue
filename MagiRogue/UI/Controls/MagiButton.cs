@@ -70,10 +70,6 @@ namespace MagiRogue.UI.Controls
                 NextSelection.IsFocused = true;
                 return true;
             }
-            else if (info.IsKeyReleased(Keys.Enter))
-            {
-                //InvokeClick();
-            }
 
             return base.ProcessKeyboard(info);
         }

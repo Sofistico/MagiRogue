@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Entities;
+using MagiRogue.System.Magic;
 
 namespace MagiRogue.System.Time
 {
@@ -19,6 +20,11 @@ namespace MagiRogue.System.Time
         public static int GetAttackTime(Actor actor)
         {
             return (int)(AttackTime / actor.Stats.Speed);
+        }
+
+        public static int GetCastingTime(Actor actor, SpellBase spellCasted)
+        {
+            return (int)((MagicalThings + spellCasted.SpellLevel) / (actor.Stats.Speed + actor.Magic.ShapingSkills));
         }
     }
 }

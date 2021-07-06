@@ -64,6 +64,13 @@ namespace MagiRogue.UI.Windows
                 {
                     _onCast(spell);
                     Hide();
+
+                    if (spell.Effects.Any(s => s.AreaOfEffect is SpellAreaEffect.Self))
+                    {
+                        GameLoop.World.ProcessTurn(System.Time.TimeHelper
+                            .GetCastingTime(GameLoop.World.Player, spell), true);
+                    }
+
                     return true;
                 }
             }

@@ -58,6 +58,14 @@ namespace MagiRogue.Utils
         {
             stats.Health += dmg;
 
+            if (stats.Health >= stats.MaxHealth)
+            {
+                stats.Health = stats.MaxHealth;
+
+                GameLoop.UIManager.MessageLog.Add("You don't need healing");
+                return;
+            }
+
             StringBuilder bobTheBuilder = new StringBuilder($"You healed for {dmg} damage");
             switch (healingType)
             {

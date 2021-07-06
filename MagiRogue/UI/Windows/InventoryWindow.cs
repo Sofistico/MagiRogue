@@ -8,14 +8,14 @@ using System.Collections.Generic;
 
 namespace MagiRogue.UI.Windows
 {
-    public class InventoryWindow : MagiBaseWindow
+    public class InventoryWindow : PopWindow
     {
         // Create the field
         private readonly Console inventoryConsole;
 
         // account for the thickness of the window border to prevent UI element spillover
         // check to see if it will be needed.
-        private readonly int windowBorderThickness = 2;
+        private const int windowBorderThickness = 2;
 
         private readonly ScrollBar invScrollBar;
 
@@ -25,7 +25,7 @@ namespace MagiRogue.UI.Windows
         /// <param name="width"></param>
         /// <param name="heigth"></param>
         /// <param name="title"></param>
-        public InventoryWindow(int width, int heigth, string title) : base(width, heigth, title)
+        public InventoryWindow(int width, int heigth, string title) : base(title)
         {
             // define the inventory console
             inventoryConsole = new Console(width - windowBorderThickness, heigth - windowBorderThickness)
@@ -33,30 +33,14 @@ namespace MagiRogue.UI.Windows
                 Position = new Point(1, 1)
             };
             inventoryConsole.View = new Rectangle(0, 0, width - 1, heigth - windowBorderThickness);
-            inventoryConsole.DefaultBackground = Color.Black;
-
-            UseMouse = true;
-            UseKeyboard = true;
-
-            //close window button
-            Button closeButton = new Button(3, 1)
-            {
-                Position = new Point(0, 0),
-                Text = "[X]"
-            };
-
-            closeButton.Click += CloseButton_Click;
 
             invScrollBar = new ScrollBar(Orientation.Vertical, heigth - windowBorderThickness)
             {
-                Position = new Point(inventoryConsole.Width + 1, inventoryConsole.Position.X)
+                Position = new Point(Width - windowBorderThickness, inventoryConsole.Position.X)
             };
 
-            invScrollBar.ValueChanged += InvScrollBar_ValueChanged; ; ;
+            invScrollBar.ValueChanged += InvScrollBar_ValueChanged;
             Controls.Add(invScrollBar);
-
-            //Add the close button to the Window's list of UI elements
-            Controls.Add(closeButton);
 
             Children.Add(inventoryConsole);
         }
@@ -66,8 +50,6 @@ namespace MagiRogue.UI.Windows
             inventoryConsole.View = new Rectangle(0, invScrollBar.Value + windowBorderThickness,
                     inventoryConsole.Width, inventoryConsole.View.Height);
         }
-
-        private void CloseButton_Click(object sender, EventArgs e) => Hide();
 
         public void ShowItems(Actor actorInventory)
         {
