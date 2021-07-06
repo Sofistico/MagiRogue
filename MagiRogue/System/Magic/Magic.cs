@@ -17,7 +17,7 @@ namespace MagiRogue.System.Magic
             KnowSpells = new List<SpellBase>();
         }
 
-        public int CalculateSpellDamage(Stat entityStats, SpellBase spellCasted)
+        public static int CalculateSpellDamage(Stat entityStats, SpellBase spellCasted)
         {
             int baseDamage = (int)(spellCasted.SpellLevel + entityStats.MindStat + (entityStats.SoulStat * 0.5));
 

@@ -104,7 +104,9 @@ namespace MagiRogue.Commands
             if (_spellSelected.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Self))
             {
                 TargetList.Add(_caster);
-                EndSpellTargetting();
+                var (sucess, s) = EndSpellTargetting();
+                GameLoop.World.ProcessTurn
+                    (System.Time.TimeHelper.GetCastingTime(GameLoop.World.Player, s), sucess);
                 return;
             }
             StartTargetting();
