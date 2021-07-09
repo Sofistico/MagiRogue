@@ -10,7 +10,7 @@ namespace MagiRogue.System.Time
         public const int Wait = 100;
         public const int Interact = 50;
         public const int Wear = 200;
-        public const int MagicalThings = 200;
+        public const int MagicalThings = 400;
 
         public static int GetWalkTime(Actor actor)
         {
@@ -24,7 +24,9 @@ namespace MagiRogue.System.Time
 
         public static int GetCastingTime(Actor actor, SpellBase spellCasted)
         {
-            return (int)((MagicalThings + spellCasted.SpellLevel) / (actor.Stats.Speed + actor.Magic.ShapingSkills));
+            return (int)
+                ((MagicalThings + spellCasted.SpellLevel + spellCasted.ManaCost)
+                / (actor.Stats.Speed + actor.Magic.ShapingSkills * 0.5));
         }
     }
 }

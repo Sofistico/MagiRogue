@@ -32,10 +32,8 @@ namespace MagiRogue.Utils
 
         public static void DealDamage(int dmg, Entity entity, DamageType dmgType)
         {
-            if (entity is Actor)
+            if (entity is Actor actor)
             {
-                Actor actor = (Actor)entity;
-
                 actor.Stats.Health -= dmg;
 
                 if (actor.Stats.Health < 0)
@@ -44,10 +42,8 @@ namespace MagiRogue.Utils
                 }
             }
 
-            if (entity is Item)
+            if (entity is Item item)
             {
-                Item item = (Item)entity;
-
                 item.Condition -= dmg;
             }
 

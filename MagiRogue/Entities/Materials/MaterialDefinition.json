@@ -71,5 +71,14 @@
     "Density": 1.1,
     "MeltingPoint": 0,
     "BoilingPoint": 100
+  },
+  {
+    "Id": "pure_magic",
+    "Name": "Magic Energy",
+    "Flamability": false,
+    "Hardness": 1,
+    "MPInfusionLimit": 100,
+    "CanRegen": true,
+    "Density": 3.5
   }
 ]

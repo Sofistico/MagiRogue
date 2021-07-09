@@ -230,12 +230,17 @@ namespace MagiRogue.UI.Windows
                 w.Show();
             }
 
+            if (info.IsKeyPressed(Keys.T))
+            {
+                GameLoop.UIManager.MessageLog.Add("Future place to test node functions here");
+            }
+
 #endif
 
             return false;
         }
 
-        private bool HandleMove(SadConsole.Input.Keyboard info, World world)
+        private static bool HandleMove(SadConsole.Input.Keyboard info, World world)
         {
             foreach (Keys key in UIManager.MovementDirectionMapping.Keys)
             {
@@ -244,7 +249,7 @@ namespace MagiRogue.UI.Windows
                     Direction moveDirection = UIManager.MovementDirectionMapping[key];
                     Point coorToMove = new Point(moveDirection.DeltaX, moveDirection.DeltaY);
 
-                    if (world.CurrentMap.ControlledEntitiy is not Player player)
+                    if (world.CurrentMap.ControlledEntitiy is not Player)
                     {
                         if (world.CurrentMap.PlayerFOV.CurrentFOV.Contains
                             (world.CurrentMap.ControlledEntitiy.Position + coorToMove))

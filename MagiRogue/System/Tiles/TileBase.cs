@@ -16,6 +16,7 @@ namespace MagiRogue.System.Tiles
         private int _tileHealth;
         private bool _destroyed;
         private readonly IGameObject backingField;
+        private int _infusedMp;
 
         // Movement and Line of Sight Flags
         /// <summary>
@@ -55,6 +56,26 @@ namespace MagiRogue.System.Tiles
         // Tile's name
         public string Name { get; set; }
 
+        public int InfusedMp
+        {
+            get
+            {
+                return _infusedMp;
+            }
+
+            set
+            {
+                if (MaterialOfTile.MPInfusionLimit is object && MaterialOfTile.MPInfusionLimit > 0)
+                {
+                    _infusedMp = value;
+                }
+                else
+                {
+                    _infusedMp = 0;
+                }
+            }
+        }
+
         #region backingField Data
 
         public GoRogue.GameFramework.Map CurrentMap => backingField.CurrentMap;
@@ -86,13 +107,15 @@ namespace MagiRogue.System.Tiles
             Layer = layer;
             backingField = new GameObject(position, layer, !blocksMove, isTransparent);
             MaterialOfTile = System.Physics.PhysicsManager.SetMaterial(idOfMaterial);
-            LastSeenAppereance = new ColoredGlyph(Foreground, Background, Glyph);
-            LastSeenAppereance.IsVisible = false;
+            LastSeenAppereance = new ColoredGlyph(Foreground, Background, Glyph)
+            {
+                IsVisible = false
+            };
         }
 
         protected void CalculateTileHealth() => _tileHealth = (int)MaterialOfTile.Density * MaterialOfTile.Hardness;
 
-        protected virtual void DestroyTile(TileBase changeTile, Entities.Item itemDropped)
+        public virtual void DestroyTile(TileBase changeTile, Entities.Item itemDropped)
         {
             if (_destroyed)
             {

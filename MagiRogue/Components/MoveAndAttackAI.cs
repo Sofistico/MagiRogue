@@ -11,8 +11,6 @@ namespace MagiRogue.Components
 {
     public class MoveAndAttackAI : IAiComponent
     {
-        //public GoRogue.GameFramework.IGameObject Parent { get; set; }
-
         private readonly int perceptionAi;
 
         public MoveAndAttackAI(int perception)

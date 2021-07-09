@@ -19,8 +19,8 @@ namespace MagiRogue.UI.Windows
     /// </summary>
     public class SpellSelectWindow : PopWindow
     {
-        private List<SpellBase> _spellList;
-        private MagiButton _castButton;
+        private readonly List<SpellBase> _spellList;
+        private readonly MagiButton _castButton;
         private readonly Console _descriptionArea;
         private readonly Dictionary<char, SpellBase> _hotKeys;
 
@@ -65,11 +65,11 @@ namespace MagiRogue.UI.Windows
                     _onCast(spell);
                     Hide();
 
-                    if (spell.Effects.Any(s => s.AreaOfEffect is SpellAreaEffect.Self))
+                    /*if (spell.Effects.Any(s => s.AreaOfEffect is SpellAreaEffect.Self))
                     {
                         GameLoop.World.ProcessTurn(System.Time.TimeHelper
                             .GetCastingTime(GameLoop.World.Player, spell), true);
-                    }
+                    }*/
 
                     return true;
                 }

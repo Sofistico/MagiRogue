@@ -10,6 +10,8 @@ using SadRogue.Primitives.GridViews;
 using System;
 using System.Linq;
 using System.Diagnostics;
+using MagiRogue.System.Physics;
+using System.Collections.Generic;
 
 namespace MagiRogue.System
 {
@@ -21,8 +23,8 @@ namespace MagiRogue.System
         #region Properties
 
         private TileBase[] _tiles; // Contains all tiles objects
-
         private Entity _gameObjectControlled;
+        private readonly SadConsole.Entities.Renderer _entityRender;
 
         /// <summary>
         /// All cell tiles of the map, it's a TileBase array, should never be directly declared to create new tiles, rather
@@ -57,19 +59,18 @@ namespace MagiRogue.System
             }
         }
 
-        private readonly SadConsole.Entities.Renderer _entityRender;
-
         #endregion Properties
 
         #region Constructor
 
         /// <summary>
-        /// Build a new map with a specified width and height, has  entity layers,
+        /// Build a new map with a specified width and height, has entity layers,
         /// they being 0-Furniture, 1-ghosts, 2-Items, 3-Actors, 4-Player
         /// </summary>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public Map(int width, int height) : base(CreateTerrain(width, height), Enum.GetNames(typeof(MapLayer)).Length - 1,
+        public Map(int width, int height) :
+            base(CreateTerrain(width, height), Enum.GetNames(typeof(MapLayer)).Length - 1,
             Distance.Euclidean,
             entityLayersSupportingMultipleItems: LayerMasker.DEFAULT.Mask
             ((int)MapLayer.ITEMS, (int)MapLayer.GHOSTS, (int)MapLayer.PLAYER))
@@ -305,7 +306,7 @@ namespace MagiRogue.System
             foreach (var terrain in Tiles)
             {
                 Actor entityThere = GetEntityAt<Actor>(terrain.Position);
-                if (terrain.IsWalkable && (entityThere is null || entityThere.IsWalkable))
+                if (terrain.IsWalkable && entityThere is null)
                 {
                     return terrain.Position;
                 }
