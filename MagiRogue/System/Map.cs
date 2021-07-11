@@ -311,6 +311,7 @@ namespace MagiRogue.System
                     return terrain.Position;
                 }
             }
+
             // should never go to this
             return Point.None;
         }

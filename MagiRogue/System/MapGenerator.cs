@@ -86,6 +86,8 @@ namespace MagiRogue.System
             foreach (Rectangle room in Rooms)
                 CreateDoor(room);
 
+            PlaceNodes(10);
+
             // spit out the final map
             return _map;
         }
@@ -186,6 +188,23 @@ namespace MagiRogue.System
             borderCells.AddRange(GetTileLocationsAlongLine(xMax, yMin, xMax, yMax));
 
             return borderCells;
+        }
+
+        private void PlaceNodes(int nodes)
+        {
+            for (int i = 0; i < nodes; i++)
+            {
+                int rnd = randNum.Next(_map.Tiles.Length);
+
+                TileBase rndTile = _map.GetTerrainAt<TileBase>(Point.FromIndex(rnd, _map.Width));
+
+                TileBase nodeTile = new NodeTile
+                    (Color.Purple, Color.Transparent, Point.FromIndex(rnd, _map.Width), 5, (int)NodeStrength.Normal);
+
+                nodeTile.GoRogueComponents.Add(new Components.IllusionComponent(rndTile), "illusion");
+
+                _map.SetTerrain(nodeTile);
+            }
         }
 
         // returns a collection of Points which represent

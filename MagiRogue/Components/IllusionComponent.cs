@@ -9,7 +9,15 @@ using MagiRogue.System.Tiles;
 
 namespace MagiRogue.Components
 {
-    public class IllusionComponent : GoRogue.Components.ParentAware.ParentAwareComponentBase<TileBase>
+    public class IllusionComponent : GoRogue.Components.ParentAware.IParentAwareComponent
     {
+        public TileBase FakeAppearence { get; set; }
+        public IObjectWithComponents Parent { get; set; }
+
+        public IllusionComponent(TileBase fakeAppearence)
+        {
+            FakeAppearence = fakeAppearence;
+            FakeAppearence.IsVisible = true;
+        }
     }
 }

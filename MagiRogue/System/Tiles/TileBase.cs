@@ -111,15 +111,19 @@ namespace MagiRogue.System.Tiles
             {
                 IsVisible = false
             };
+            CalculateTileHealth();
         }
 
         protected void CalculateTileHealth() => _tileHealth = (int)MaterialOfTile.Density * MaterialOfTile.Hardness;
 
-        public virtual void DestroyTile(TileBase changeTile, Entities.Item itemDropped)
+#nullable enable
+
+        public virtual void DestroyTile(TileBase changeTile, Entities.Item? itemDropped = null)
+#nullable disable
         {
-            if (_destroyed)
+            GameLoop.World.CurrentMap.SetTerrain(changeTile);
+            if (itemDropped is not null)
             {
-                GameLoop.World.CurrentMap.SetTerrain(changeTile);
                 GameLoop.World.CurrentMap.Add(itemDropped);
             }
         }

@@ -358,6 +358,22 @@ namespace MagiRogue.Commands
             }
         }
 
+        public static bool NodeDrain(Actor actor)
+        {
+            Point[] direction = actor.Position.GetDirectionPoints();
+
+            foreach (Point item in direction)
+            {
+                if (GameLoop.World.CurrentMap.Tiles[item.ToIndex(GameLoop.World.CurrentMap.Width)] is NodeTile node)
+                {
+                    node.DrainNode(actor);
+                    return true;
+                }
+            }
+            GameLoop.UIManager.MessageLog.Add("No node here to drain");
+            return false;
+        }
+
 #if DEBUG
 
         public static void ToggleFOV()

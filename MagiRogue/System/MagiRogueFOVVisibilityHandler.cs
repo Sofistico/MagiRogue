@@ -105,6 +105,12 @@ namespace MagiRogue.System
         {
             terrain.IsVisible = true;
 
+            if (terrain.GoRogueComponents.Contains<Components.IllusionComponent>())
+            {
+                var illusion = terrain.GoRogueComponents.GetFirstOrDefault<Components.IllusionComponent>();
+                terrain.LastSeenAppereance = illusion.FakeAppearence;
+            }
+
             // If the appearances don't match currently, synchronize them
             if (!terrain.LastSeenAppereance.Matches(terrain))
             {
@@ -130,7 +136,7 @@ namespace MagiRogue.System
             }
         }
 
-        private void ApplyMemoryAppearance(ColoredGlyph tile)
+        private void ApplyMemoryAppearance(TileBase tile)
         {
             tile.Foreground = ExploredColorTint;
         }

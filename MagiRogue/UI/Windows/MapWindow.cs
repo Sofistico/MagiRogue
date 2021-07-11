@@ -132,9 +132,14 @@ namespace MagiRogue.UI.Windows
                 world.ProcessTurn(TimeHelper.Interact, sucess);
                 MapConsole.IsDirty = true;
             }
-            if (info.IsKeyPressed(Keys.H))
+            if (info.IsKeyPressed(Keys.H) && !info.IsKeyDown(Keys.LeftShift))
             {
                 bool sucess = CommandManager.SacrificeLifeEnergyToMana(world.Player);
+                world.ProcessTurn(TimeHelper.MagicalThings, sucess);
+            }
+            if (info.IsKeyPressed(Keys.H) && info.IsKeyDown(Keys.LeftShift))
+            {
+                bool sucess = CommandManager.NodeDrain(GetPlayer);
                 world.ProcessTurn(TimeHelper.MagicalThings, sucess);
             }
             if (info.IsKeyPressed(Keys.L))
@@ -232,7 +237,14 @@ namespace MagiRogue.UI.Windows
 
             if (info.IsKeyPressed(Keys.T))
             {
-                GameLoop.UIManager.MessageLog.Add("Future place to test node functions here");
+                foreach (NodeTile node in world.CurrentMap.Tiles.Where(t => t is NodeTile))
+                {
+                    if (node.TrueAppearence.Matches(node))
+                    {
+                        break;
+                    }
+                    node.RestoreOriginalAppearence();
+                }
             }
 
 #endif
