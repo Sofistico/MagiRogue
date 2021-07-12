@@ -14,7 +14,10 @@ namespace MagiRogue.System.Magic
     {
         private double proficency;
 
-        private int requiredShapingSkill;
+        public int RequiredShapingSkill
+        {
+            get => (int)((SpellLevel + ManaCost) * 2 / Proficency);
+        }
 
         /// <summary>
         /// All the effects that the spell can have
@@ -117,16 +120,15 @@ namespace MagiRogue.System.Magic
             SpellLevel = spellLevel;
             ManaCost = manaCost;
             Effects = effects;
-            requiredShapingSkill = (int)((spellLevel + manaCost) * 2);
         }
 
         public bool CanCast(Magic magicSkills, Stat stats)
         {
             if (magicSkills.KnowSpells.Contains(this) && stats.PersonalMana >= ManaCost)
             {
-                requiredShapingSkill /= stats.SoulStat;
+                int reqShapingWithDiscount = RequiredShapingSkill / stats.SoulStat;
 
-                return requiredShapingSkill < magicSkills.ShapingSkills;
+                return reqShapingWithDiscount < magicSkills.ShapingSkills;
             }
             return false;
         }

@@ -10,6 +10,10 @@ namespace MagiRogue.System.Magic
         // Create a magic inspired by Mother of learning
         public List<SpellBase> KnowSpells { get; set; }
 
+        /// <summary>
+        /// The amount of mana finess required to pull of a spell, something can only be casted if you can
+        /// have enough control to properly control the mana.
+        /// </summary>
         public int ShapingSkills { get; set; }
 
         public Magic()

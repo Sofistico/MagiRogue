@@ -12,7 +12,7 @@ namespace MagiRogue.Components
 {
     public class SpellCastingAI : IAiComponent
     {
-        private Magic _spellsKnow;
+        private readonly Magic _spellsKnow;
 
         public IObjectWithComponents Parent { get; set; }
 
