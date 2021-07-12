@@ -14,7 +14,8 @@ namespace MagiRogue.System.Tiles
     public abstract class TileBase : ColoredGlyph, IGameObject
     {
         private int _tileHealth;
-        private bool _destroyed;
+
+        //private bool _destroyed;
         private readonly IGameObject backingField;
         private int _infusedMp;
 
@@ -47,7 +48,7 @@ namespace MagiRogue.System.Tiles
                 if (value <= 0)
                 {
                     _tileHealth = 0;
-                    _destroyed = true;
+                    //_destroyed = true;
                 }
                 _tileHealth = value;
             }

@@ -8,23 +8,6 @@ using Newtonsoft.Json;
 
 namespace MagiRogue.Entities
 {
-    #region Enums
-
-    public enum Archtypes
-    {
-        WARRIOR,
-        WIZARD,
-        ROGUE,
-        SORCEROR,
-        WARLOCK,
-        DRUID,
-        RANGER,
-        PRIEST,
-        GODLING, // This one will be fun, caracterized as a lovecraftian monstrosity
-    }
-
-    #endregion Enums
-
     [JsonConverter(typeof(Data.ActorJsonConverter))]
     public class Actor : Entity
     {

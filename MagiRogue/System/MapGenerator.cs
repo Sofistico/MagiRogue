@@ -198,10 +198,14 @@ namespace MagiRogue.System
 
                 TileBase rndTile = _map.GetTerrainAt<TileBase>(Point.FromIndex(rnd, _map.Width));
 
-                TileBase nodeTile = new NodeTile
-                    (Color.Purple, Color.Transparent, Point.FromIndex(rnd, _map.Width), 5, (int)NodeStrength.Normal);
+                int rndMp = randNum.Next(1, 15);
 
-                nodeTile.GoRogueComponents.Add(new Components.IllusionComponent(rndTile), "illusion");
+                TileBase nodeTile = new NodeTile
+                    (Color.Purple, Color.Transparent, Point.FromIndex(rnd, _map.Width), rndMp,
+                    (int)NodeStrength.Normal);
+
+                nodeTile.GoRogueComponents.Add(new Components.IllusionComponent(rndTile),
+                    Components.IllusionComponent.Tag);
 
                 _map.SetTerrain(nodeTile);
             }

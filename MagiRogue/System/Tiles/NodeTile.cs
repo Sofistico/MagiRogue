@@ -12,6 +12,7 @@ namespace MagiRogue.System.Tiles
     public class NodeTile : TileBase
     {
         private float _mpRecovering;
+        private Components.IllusionComponent illusion;
 
         public float MpPoints { get; set; }
 
@@ -53,10 +54,18 @@ namespace MagiRogue.System.Tiles
         public void RestoreOriginalAppearence()
         {
             CopyAppearanceFrom(TrueAppearence);
+            LastSeenAppereance.CopyAppearanceFrom(TrueAppearence);
             if (GoRogueComponents.Contains<Components.IllusionComponent>())
             {
-                GoRogueComponents.Remove("illusion");
+                illusion = GoRogueComponents.GetFirstOrDefault<Components.IllusionComponent>();
+                GoRogueComponents.Remove(Components.IllusionComponent.Tag);
             }
+        }
+
+        public void RestoreIllusionComponent()
+        {
+            GoRogueComponents.Add(illusion, Components.IllusionComponent.Tag);
+            LastSeenAppereance.CopyAppearanceFrom(GoRogueComponents.GetFirstOrDefault<Components.IllusionComponent>().FakeAppearence);
         }
 
         /// <summary>

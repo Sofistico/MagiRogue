@@ -9,18 +9,19 @@ using System.Threading.Tasks;
 
 namespace MagiRogue.System.Magic.Effects
 {
-    public class HasteEffect : ISpellEffect
+    public class HasteEffect : ISpellEffect, ITimedEffect
     {
-        private int turnApllied;
         private float previousSpeed;
         private Stat currentStats;
         private bool isHasted;
+        private int turnToRemove;
 
         public SpellAreaEffect AreaOfEffect { get; set; }
         public DamageType SpellDamageType { get; set; }
 
         public float HastePower { get; set; }
-        public int TurnToRemove { get; set; }
+        public int Turns { get; private set; }
+        public int TurnApplied { get; private set; }
 
         public HasteEffect(SpellAreaEffect areaOfEffect, float hastePower, int turns,
             DamageType spellDamageType = DamageType.Force)
@@ -28,7 +29,7 @@ namespace MagiRogue.System.Magic.Effects
             AreaOfEffect = areaOfEffect;
             SpellDamageType = spellDamageType;
             HastePower = hastePower;
-            TurnToRemove = turns;
+            Turns = turns;
         }
 
         public void ApplyEffect(Point target, Stat casterStats)
@@ -36,7 +37,7 @@ namespace MagiRogue.System.Magic.Effects
             switch (AreaOfEffect)
             {
                 case SpellAreaEffect.Self:
-                    if (TurnToRemove == 0)
+                    if (turnToRemove == 0)
                         GameLoop.World.GetTime.TurnPassed -= GetTime_TurnPassed;
                     if (isHasted)
                     {
@@ -46,8 +47,8 @@ namespace MagiRogue.System.Magic.Effects
                     currentStats = casterStats;
                     previousSpeed = casterStats.Speed;
                     casterStats.Speed += HastePower;
-                    turnApllied = GameLoop.World.GetTime.Turns;
-                    TurnToRemove += turnApllied;
+                    TurnApplied = GameLoop.World.GetTime.Turns;
+                    turnToRemove = TurnApplied + Turns;
                     isHasted = true;
 
                     GameLoop.World.GetTime.TurnPassed += GetTime_TurnPassed;
@@ -79,11 +80,14 @@ namespace MagiRogue.System.Magic.Effects
 
         private void GetTime_TurnPassed(object sender, Time.TimeDefSpan e)
         {
-            if (e.Seconds == TurnToRemove)
+            if (e.Seconds >= turnToRemove)
             {
                 currentStats.Speed = previousSpeed;
-                TurnToRemove = 0;
+                turnToRemove = 0;
                 isHasted = false;
+
+                GameLoop.UIManager.MessageLog.Add("You feel yourself slowing down");
+                GameLoop.World.GetTime.TurnPassed -= GetTime_TurnPassed;
             }
         }
     }

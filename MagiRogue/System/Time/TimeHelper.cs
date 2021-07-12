@@ -11,6 +11,7 @@ namespace MagiRogue.System.Time
         public const int Interact = 50;
         public const int Wear = 200;
         public const int MagicalThings = 400;
+        public const int Year = 31536000;
 
         public static int GetWalkTime(Actor actor)
         {

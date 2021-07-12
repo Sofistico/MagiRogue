@@ -306,7 +306,7 @@ namespace MagiRogue.System
             foreach (var terrain in Tiles)
             {
                 Actor entityThere = GetEntityAt<Actor>(terrain.Position);
-                if (terrain.IsWalkable && entityThere is null)
+                if (terrain.IsWalkable && entityThere is null && terrain is not NodeTile)
                 {
                     return terrain.Position;
                 }

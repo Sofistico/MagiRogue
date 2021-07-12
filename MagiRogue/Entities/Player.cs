@@ -38,7 +38,7 @@ namespace MagiRogue.Entities
 
             SpellBase missile = new SpellBase("magic_missile",
                  "Magic Missile",
-                new List<ISpellEffect>(), MagicSchool.Projection, 5, manaCost: 1.0);
+                new List<ISpellEffect>(), MagicSchool.Projection, 5, manaCost: 1.0f);
 
             missile.Effects.Add(
             new DamageEffect(Magic.CalculateSpellDamage(Stats, missile),
@@ -55,11 +55,16 @@ namespace MagiRogue.Entities
                 MagicSchool.Dimensionalism, 0, 1, 1);
             haste.Effects.Add(new HasteEffect(SpellAreaEffect.Self, 2, 5));
 
+            SpellBase mageSight = new SpellBase("mage_sight", "Mage Sight", new List<ISpellEffect>(),
+                MagicSchool.Divination, 0, 1, 1);
+            mageSight.Effects.Add(new MageSightEffect(5));
+
             List<SpellBase> testSpells = new List<SpellBase>()
             {
                 missile,
                 cure,
-                haste
+                haste,
+                mageSight
             };
 
             Magic.KnowSpells.AddRange(testSpells);

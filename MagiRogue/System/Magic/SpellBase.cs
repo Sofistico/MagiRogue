@@ -108,7 +108,7 @@ namespace MagiRogue.System.Magic
             MagicSchool spellSchool,
             int spellRange,
             int spellLevel = 1,
-            double manaCost = 0.1f)
+            float manaCost = 0.1f)
         {
             SpellId = spellId;
             SpellName = spellName;

@@ -108,7 +108,7 @@ namespace MagiRogue.System
             if (terrain.GoRogueComponents.Contains<Components.IllusionComponent>())
             {
                 var illusion = terrain.GoRogueComponents.GetFirstOrDefault<Components.IllusionComponent>();
-                terrain.LastSeenAppereance = illusion.FakeAppearence;
+                terrain.LastSeenAppereance.CopyAppearanceFrom(illusion.FakeAppearence);
             }
 
             // If the appearances don't match currently, synchronize them
@@ -139,24 +139,6 @@ namespace MagiRogue.System
         private void ApplyMemoryAppearance(TileBase tile)
         {
             tile.Foreground = ExploredColorTint;
-        }
-
-#nullable enable
-
-        private void On_VisibleTileTrueAppearanceIsDirtySet(object? sender, EventArgs e)
-#nullable disable
-        {
-            // Sender will not be null because of event invariants.  Cast is safe since we
-            // control what this handler is added to and it is checked first
-            var awareTerrain = (TileBase)sender!;
-
-            // If appearances are synchronized, there is nothing to do
-            if (awareTerrain.LastSeenAppereance.Matches(awareTerrain))
-                return;
-
-            // Otherwise, synchronize them
-            awareTerrain.LastSeenAppereance.CopyAppearanceFrom(awareTerrain);
-            // awareTerrain.LastSeenAppereance.IsVisible = awareTerrain.IsVisible;
         }
     }
 }
