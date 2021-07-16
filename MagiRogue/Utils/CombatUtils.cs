@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using MagiRogue.Entities;
+using System;
 using System.Text;
-using System.Threading.Tasks;
-using MagiRogue.Entities;
 
 namespace MagiRogue.Utils
 {
@@ -32,10 +29,8 @@ namespace MagiRogue.Utils
 
         public static void DealDamage(int dmg, Entity entity, DamageType dmgType)
         {
-            if (entity is Actor)
+            if (entity is Actor actor)
             {
-                Actor actor = (Actor)entity;
-
                 actor.Stats.Health -= dmg;
 
                 if (actor.Stats.Health < 0)
@@ -44,14 +39,83 @@ namespace MagiRogue.Utils
                 }
             }
 
-            if (entity is Item)
+            if (entity is Item item)
             {
-                Item item = (Item)entity;
-
                 item.Condition -= dmg;
             }
 
             GameLoop.UIManager.MessageLog.Add($"The {entity.Name} took {dmg} {dmgType}");
+        }
+
+        public static void ApplyHealing(int dmg, Stat stats, DamageType healingType)
+        {
+            stats.Health += dmg;
+
+            if (stats.Health >= stats.MaxHealth)
+            {
+                stats.Health = stats.MaxHealth;
+
+                GameLoop.UIManager.MessageLog.Add("You don't need healing");
+                return;
+            }
+
+            StringBuilder bobTheBuilder = new StringBuilder($"You healed for {dmg} damage");
+            switch (healingType)
+            {
+                case DamageType.None:
+                    GameLoop.UIManager.MessageLog.Add(bobTheBuilder.ToString());
+                    break;
+
+                case DamageType.Physical:
+                    GameLoop.UIManager.MessageLog.Add(bobTheBuilder
+                        .Append(", feeling your bones and flesh growing over your wounds!").ToString());
+                    break;
+
+                case DamageType.Force:
+                    GameLoop.UIManager.MessageLog.Add(bobTheBuilder
+                        .Append(", filling your movements with a spring!").ToString());
+                    break;
+
+                case DamageType.Fire:
+                    GameLoop.UIManager.MessageLog.Add(bobTheBuilder
+                        .Append(", firing your will!").ToString());
+                    break;
+
+                case DamageType.Cold:
+
+                    GameLoop.UIManager.MessageLog.Add(bobTheBuilder
+                        .Append(", leaving you lethargic.").ToString());
+                    break;
+
+                case DamageType.Poison:
+                    GameLoop.UIManager.MessageLog.Add(bobTheBuilder
+                        .Append(", ouch it hurt!").ToString());
+                    break;
+
+                case DamageType.Acid:
+                    stats.Health -= dmg;
+                    GameLoop.UIManager.MessageLog.Add(bobTheBuilder
+                        .Append(", dealing equal damage to yourself, shouldn't have done that.").ToString());
+                    break;
+
+                case DamageType.Electricity:
+                    GameLoop.UIManager.MessageLog.Add(bobTheBuilder
+                        .Append(", felling yourself speeding up!").ToString());
+                    break;
+
+                case DamageType.Soul:
+                    GameLoop.UIManager.MessageLog.Add(bobTheBuilder
+                        .Append(", feeling your soul at rest.").ToString());
+                    break;
+
+                case DamageType.Mind:
+                    GameLoop.UIManager.MessageLog.Add(bobTheBuilder
+                        .Append(", feeling your mind at ease.").ToString());
+                    break;
+
+                default:
+                    break;
+            }
         }
     }
 

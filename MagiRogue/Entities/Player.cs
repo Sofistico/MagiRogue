@@ -17,7 +17,7 @@ namespace MagiRogue.Entities
             // sets the most fundamental stats, needs to set the godly flag up top, because it superseeds GodPower if it is
             // below.
             Stats.SetAttributes(
-                viewRadius: 5,
+                viewRadius: 7,
                 health: 10,
                 baseHpRegen: 0.1f,
                 bodyStat: 1,
@@ -34,20 +34,44 @@ namespace MagiRogue.Entities
 
             Anatomy.Limbs = Data.LimbTemplate.BasicHumanoidBody(this);
 
-            Magic.ShapingSkills = 5;
+            Magic.ShapingSkills = 8;
 
-            SpellBase spellBase = new SpellBase("magic_missile",
+            SpellBase missile = new SpellBase("magic_missile",
                  "Magic Missile",
-                new List<ISpellEffect>(), MagicSchool.Projection, 5, manaCost: 1.0);
+                new List<ISpellEffect>(), MagicSchool.Projection, 5, manaCost: 1.0f)
+            { Proficency = 1 };
 
-            spellBase.Effects.Add(
-            new DamageEffect
-            (Magic.CalculateSpellDamage(Stats, spellBase),
+            missile.Effects.Add(
+            new DamageEffect(Magic.CalculateSpellDamage(Stats, missile),
             SpellAreaEffect.Target,
-            Utils.DamageType.Force)
-            );
+            Utils.DamageType.Force));
 
-            Magic.KnowSpells.Add(spellBase);
+            SpellBase cure = new SpellBase("cure_test", "Cure Test", new List<ISpellEffect>(),
+                MagicSchool.MedicalMagic, 0, 1, 1)
+            { Proficency = 1 };
+
+            cure.Effects.Add(new DamageEffect(Magic.CalculateSpellDamage(Stats, cure),
+                SpellAreaEffect.Self, Utils.DamageType.Force));
+
+            SpellBase haste = new SpellBase("haste_self", "Haste", new List<ISpellEffect>(),
+                MagicSchool.Dimensionalism, 0, 1, 1)
+            { Proficency = 1 };
+            haste.Effects.Add(new HasteEffect(SpellAreaEffect.Self, 2, 5));
+
+            SpellBase mageSight = new SpellBase("mage_sight", "Mage Sight", new List<ISpellEffect>(),
+                MagicSchool.Divination, 0, 1, 1)
+            { Proficency = 1 };
+            mageSight.Effects.Add(new MageSightEffect(5));
+
+            List<SpellBase> testSpells = new List<SpellBase>()
+            {
+                missile,
+                cure,
+                haste,
+                mageSight
+            };
+
+            Magic.KnowSpells.AddRange(testSpells);
         }
     }
 }

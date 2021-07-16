@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MagiRogue.Entities;
+﻿using MagiRogue.Entities;
 using MagiRogue.System.Tiles;
-using SadConsole;
-using SadConsole.Input;
+using System.Collections.Generic;
 
 namespace MagiRogue.Commands
 {

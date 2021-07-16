@@ -60,12 +60,27 @@ namespace MagiRogue.System
 
                 // create an instance of player
                 CreatePlayer();
+
+                // Set up anything that needs to be set up for the world to work
+                SetUpStuff();
             }
             else
             {
                 CreateTestMap();
 
                 CreatePlayer();
+            }
+        }
+
+        /// <summary>
+        /// Sets up anything that needs to be set up after map gen and after placing entities, like the nodes turn
+        /// system
+        /// </summary>
+        private void SetUpStuff()
+        {
+            foreach (NodeTile node in CurrentMap.Tiles.Where(t => t is NodeTile))
+            {
+                node.SetUpNodeTurn(this);
             }
         }
 
@@ -95,7 +110,7 @@ namespace MagiRogue.System
             // Place the player on the first non-movement-blocking tile on the map
             for (int i = 0; i < CurrentMap.Tiles.Length; i++)
             {
-                if (!CurrentMap.Tiles[i].IsBlockingMove)
+                if (!CurrentMap.Tiles[i].IsBlockingMove && CurrentMap.Tiles[i] is not NodeTile)
                 {
                     // Set the player's position to the index of the current map position
                     var pos = Point.FromIndex(i, CurrentMap.Width);
@@ -105,8 +120,6 @@ namespace MagiRogue.System
                         Position = pos,
                         Description = "Here is you, you are beautiful"
                     };
-
-                    //Player.AddComponent(new Components.HealthComponent(10, 10, 0.1f));
                     break;
                 }
             }
@@ -134,6 +147,10 @@ namespace MagiRogue.System
                 {
                     // pick a random spot on the map
                     monsterPosition = rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);
+                    if (CurrentMap.Tiles[monsterPosition] is NodeTile)
+                    {
+                        monsterPosition = rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);
+                    }
                 }
 
                 // Set the monster's new position
@@ -188,6 +205,10 @@ namespace MagiRogue.System
                 {
                     // pick a random spot on the map
                     lootPosition = rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);
+                    if (CurrentMap.Tiles[lootPosition] is NodeTile)
+                    {
+                        lootPosition = rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);
+                    }
                 }
 
                 // set the loot's new position

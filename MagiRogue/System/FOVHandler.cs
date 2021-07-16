@@ -1,11 +1,11 @@
 ﻿using GoRogue.GameFramework;
-using SadRogue.Primitives.GridViews;
-using SadRogue.Primitives;
+using GoRogue.SpatialMaps;
 using MagiRogue.Entities;
 using MagiRogue.System.Tiles;
+using SadRogue.Primitives;
+using SadRogue.Primitives.GridViews;
 using System;
 using System.Linq;
-using GoRogue.SpatialMaps;
 
 namespace MagiRogue.System
 {

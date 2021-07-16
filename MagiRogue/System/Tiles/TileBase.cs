@@ -1,21 +1,20 @@
 ﻿using GoRogue;
+using GoRogue.Components;
 using GoRogue.GameFramework;
 using MagiRogue.Entities.Materials;
-using SadRogue.Primitives;
 using SadConsole;
+using SadRogue.Primitives;
 using System;
-using System.Collections.Generic;
-using GoRogue.Components;
-using GoRogue.SpatialMaps;
-using GoRogue.Components.ParentAware;
 
 namespace MagiRogue.System.Tiles
 {
     public abstract class TileBase : ColoredGlyph, IGameObject
     {
         private int _tileHealth;
-        private bool _destroyed;
+
+        //private bool _destroyed;
         private readonly IGameObject backingField;
+        private int _infusedMp;
 
         // Movement and Line of Sight Flags
         /// <summary>
@@ -46,7 +45,7 @@ namespace MagiRogue.System.Tiles
                 if (value <= 0)
                 {
                     _tileHealth = 0;
-                    _destroyed = true;
+                    //_destroyed = true;
                 }
                 _tileHealth = value;
             }
@@ -54,6 +53,26 @@ namespace MagiRogue.System.Tiles
 
         // Tile's name
         public string Name { get; set; }
+
+        public int InfusedMp
+        {
+            get
+            {
+                return _infusedMp;
+            }
+
+            set
+            {
+                if (MaterialOfTile.MPInfusionLimit is object && MaterialOfTile.MPInfusionLimit > 0)
+                {
+                    _infusedMp = value;
+                }
+                else
+                {
+                    _infusedMp = 0;
+                }
+            }
+        }
 
         #region backingField Data
 
@@ -86,17 +105,23 @@ namespace MagiRogue.System.Tiles
             Layer = layer;
             backingField = new GameObject(position, layer, !blocksMove, isTransparent);
             MaterialOfTile = System.Physics.PhysicsManager.SetMaterial(idOfMaterial);
-            LastSeenAppereance = new ColoredGlyph(Foreground, Background, Glyph);
-            LastSeenAppereance.IsVisible = false;
+            LastSeenAppereance = new ColoredGlyph(Foreground, Background, Glyph)
+            {
+                IsVisible = false
+            };
+            CalculateTileHealth();
         }
 
         protected void CalculateTileHealth() => _tileHealth = (int)MaterialOfTile.Density * MaterialOfTile.Hardness;
 
-        protected virtual void DestroyTile(TileBase changeTile, Entities.Item itemDropped)
+#nullable enable
+
+        public virtual void DestroyTile(TileBase changeTile, Entities.Item? itemDropped = null)
+#nullable disable
         {
-            if (_destroyed)
+            GameLoop.World.CurrentMap.SetTerrain(changeTile);
+            if (itemDropped is not null)
             {
-                GameLoop.World.CurrentMap.SetTerrain(changeTile);
                 GameLoop.World.CurrentMap.Add(itemDropped);
             }
         }

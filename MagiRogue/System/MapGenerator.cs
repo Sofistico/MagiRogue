@@ -1,6 +1,6 @@
-﻿using SadRogue.Primitives.GridViews;
-using MagiRogue.System.Tiles;
+﻿using MagiRogue.System.Tiles;
 using SadRogue.Primitives;
+using SadRogue.Primitives.GridViews;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -84,6 +84,8 @@ namespace MagiRogue.System
             // Create doors now that the tunnels have been carved out
             foreach (Rectangle room in Rooms)
                 CreateDoor(room);
+
+            PlaceNodes(10);
 
             // spit out the final map
             return _map;
@@ -185,6 +187,27 @@ namespace MagiRogue.System
             borderCells.AddRange(GetTileLocationsAlongLine(xMax, yMin, xMax, yMax));
 
             return borderCells;
+        }
+
+        private void PlaceNodes(int nodes)
+        {
+            for (int i = 0; i < nodes; i++)
+            {
+                int rnd = randNum.Next(_map.Tiles.Length);
+
+                TileBase rndTile = _map.GetTerrainAt<TileBase>(Point.FromIndex(rnd, _map.Width));
+
+                int rndMp = randNum.Next(1, 15);
+
+                TileBase nodeTile = new NodeTile
+                    (Color.Purple, Color.Transparent, Point.FromIndex(rnd, _map.Width), rndMp,
+                    (int)NodeStrength.Normal);
+
+                nodeTile.GoRogueComponents.Add(new Components.IllusionComponent(rndTile),
+                    Components.IllusionComponent.Tag);
+
+                _map.SetTerrain(nodeTile);
+            }
         }
 
         // returns a collection of Points which represent

@@ -1,5 +1,5 @@
-﻿using Xunit;
-using SadConsole;
+﻿using SadConsole;
+using Xunit;
 
 namespace MagiRogue.System.Tests
 {
@@ -12,7 +12,7 @@ namespace MagiRogue.System.Tests
             Game.Create(20, 20);
         }
 
-        [Fact(Skip = "nullref when we try to init map")]
+        [Fact]
         public void MapTest()
         {
             Assert.True(map.Tiles.Length == 20 * 20);

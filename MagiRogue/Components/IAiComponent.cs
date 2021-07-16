@@ -1,5 +1,4 @@
-﻿using GoRogue.Components;
-using MagiRogue.System;
+﻿using MagiRogue.System;
 using MagiRogue.UI.Windows;
 
 namespace MagiRogue.Components

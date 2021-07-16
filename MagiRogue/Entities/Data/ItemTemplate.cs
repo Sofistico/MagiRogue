@@ -1,8 +1,7 @@
-﻿using SadRogue.Primitives;
-using SadConsole.SerializedTypes;
+﻿using Newtonsoft.Json;
+using SadRogue.Primitives;
 using System;
 using System.Runtime.Serialization;
-using Newtonsoft.Json;
 
 namespace MagiRogue.Entities.Data
 {

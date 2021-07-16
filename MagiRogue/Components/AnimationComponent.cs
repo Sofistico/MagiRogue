@@ -1,21 +1,13 @@
-﻿using SadConsole;
-using GoRogue;
+﻿using MagiRogue.Entities;
+using SadConsole;
 using SadConsole.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GoRogue.GameFramework;
-using MagiRogue.Entities;
-using GoRogue.Components.ParentAware;
 
 namespace MagiRogue.Components
 {
     public class AnimationComponent : GoRogue.Components.ParentAware.ParentAwareComponentBase<Entity>
     {
-        private ColoredGlyph[] _animationFrames;
-        private Timer _timer;
+        private readonly ColoredGlyph[] _animationFrames;
+        private readonly Timer _timer;
         protected int animationIndex;
         public bool Animating { get; protected set; }
 

@@ -1,14 +1,10 @@
-﻿using System;
+﻿using MagiRogue.UI.Controls;
+using SadConsole;
+using SadConsole.UI;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SadRogue.Primitives;
-using SadConsole;
-using MagiRogue.UI.Controls;
-using SadConsole.UI.Themes;
-using SadConsole.UI;
 
 namespace MagiRogue.UI.Windows
 {
@@ -22,6 +18,7 @@ namespace MagiRogue.UI.Windows
         public MagiBaseWindow(int width, int height, string title) : base(width, height)
         {
             // Ensure that the window background is the correct colour
+
             /*ThemeColors = GameLoop.UIManager.CustomColors;
             ThemeColors.ControlBack = Color.Black;
             ThemeColors.TitleText = Color.Red;

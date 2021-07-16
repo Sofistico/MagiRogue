@@ -1,18 +1,12 @@
-﻿using GoRogue;
+﻿using GoRogue.Components;
 using GoRogue.GameFramework;
 using MagiRogue.Entities.Materials;
-using SadRogue.Primitives;
-using System.Runtime.Serialization;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using MagiRogue.System.Magic;
-using System.Linq;
-using GoRogue.Components;
-using GoRogue.SpatialMaps;
-using GoRogue.Components.ParentAware;
 using SadConsole;
-using MagiRogue.System.Tiles;
+using SadRogue.Primitives;
+using System;
+using System.Diagnostics;
+using System.Runtime.Serialization;
 
 namespace MagiRogue.Entities
 {

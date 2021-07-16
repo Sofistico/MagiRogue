@@ -1,28 +1,19 @@
-﻿using GoRogue;
-using MagiRogue.Entities;
-using MagiRogue.System.Time;
-using SadRogue.Primitives;
+﻿using MagiRogue.Entities;
 using MagiRogue.Utils;
+using SadRogue.Primitives;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MagiRogue.System.Magic.Effects
 {
     public class DamageEffect : ISpellEffect
     {
-        public SpellTypeEnum SpellEffect { get; set; }
         public SpellAreaEffect AreaOfEffect { get; set; }
         public DamageType SpellDamageType { get; set; }
         public int Damage { get; set; }
 
-        public DamageEffect(int dmg, SpellAreaEffect areaOfEffect, DamageType spellDamageType,
-            SpellTypeEnum spellEffect = SpellTypeEnum.Damage)
+        public DamageEffect(int dmg, SpellAreaEffect areaOfEffect, DamageType spellDamageType)
         {
             Damage = dmg;
-            SpellEffect = spellEffect;
             AreaOfEffect = areaOfEffect;
             SpellDamageType = spellDamageType;
         }
@@ -31,11 +22,20 @@ namespace MagiRogue.System.Magic.Effects
         {
             switch (AreaOfEffect)
             {
+                case SpellAreaEffect.Self:
+                    CombatUtils.ApplyHealing(Damage, casterStats, SpellDamageType);
+                    break;
+
                 case SpellAreaEffect.Target:
                     Entity poorGuy = GameLoop.World.CurrentMap.GetEntityAt<Entity>(target);
                     if (poorGuy == null)
                     {
                         return;
+                    }
+
+                    if (poorGuy == GameLoop.World.CurrentMap.ControlledEntitiy || poorGuy is Player)
+                    {
+                        poorGuy = GameLoop.World.CurrentMap.GetClosestEntity(poorGuy.Position, 1);
                     }
 
                     CombatUtils.DealDamage(Damage, poorGuy, SpellDamageType);

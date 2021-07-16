@@ -1,18 +1,16 @@
-﻿using SadRogue.Primitives;
+﻿using GoRogue.Components.ParentAware;
 using GoRogue.Pathing;
 using MagiRogue.Entities;
 using MagiRogue.System;
 using MagiRogue.System.Time;
 using MagiRogue.UI.Windows;
+using SadRogue.Primitives;
 using System.Linq;
-using GoRogue.Components.ParentAware;
 
 namespace MagiRogue.Components
 {
     public class MoveAndAttackAI : IAiComponent
     {
-        //public GoRogue.GameFramework.IGameObject Parent { get; set; }
-
         private readonly int perceptionAi;
 
         public MoveAndAttackAI(int perception)

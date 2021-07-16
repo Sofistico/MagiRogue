@@ -1,5 +1,5 @@
-﻿using Xunit;
-using MagiRogue.Entities;
+﻿using MagiRogue.Entities;
+using Xunit;
 
 namespace MagiRogue.Test.Entities
 {

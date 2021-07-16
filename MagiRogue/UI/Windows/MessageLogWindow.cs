@@ -1,5 +1,5 @@
-﻿using SadRogue.Primitives;
-using SadConsole;
+﻿using SadConsole;
+using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using Console = SadConsole.Console;
@@ -21,7 +21,7 @@ namespace MagiRogue.UI.Windows
         private readonly Console messageConsole;
 
         //scrollbar for message console
-        private SadConsole.UI.Controls.ScrollBar messageScrollBar;
+        private readonly SadConsole.UI.Controls.ScrollBar messageScrollBar;
 
         //Track the current position of the scrollbar
         private int scrollBarCurrentPosition;

@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SadConsole;
-using SadConsole.UI.Controls;
+﻿using SadConsole.UI.Controls;
 using SadRogue.Primitives;
-using SadConsole.Input;
-using Console = SadConsole.Console;
 
 namespace MagiRogue.UI.Windows
 {
@@ -36,7 +28,7 @@ namespace MagiRogue.UI.Windows
 
             Center();
 
-            const string cancelButtonText = "Cancel";
+            const string cancelButtonText = "Close(Esc)";
 
             int cancelButtonWidth = cancelButtonText.Length + 4;
 
@@ -57,6 +49,14 @@ namespace MagiRogue.UI.Windows
             GameLoop.UIManager.IsFocused = true;
 
             base.Hide();
+        }
+
+        public override void Show(bool modal)
+        {
+            GameLoop.UIManager.NoPopWindow = false;
+            IsFocused = true;
+
+            base.Show(modal);
         }
     }
 }

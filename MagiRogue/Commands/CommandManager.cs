@@ -1,14 +1,14 @@
 ﻿using GoRogue.DiceNotation;
 using MagiRogue.Entities;
+using MagiRogue.System;
 using MagiRogue.System.Tiles;
-using SadRogue.Primitives;
 using SadConsole;
+using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using MagiRogue.System;
 
 namespace MagiRogue.Commands
 {
@@ -356,6 +356,22 @@ namespace MagiRogue.Commands
                 GameLoop.UIManager.MessageLog.Add($"{inv.Name} dropped {item.Name}");
                 return true;
             }
+        }
+
+        public static bool NodeDrain(Actor actor)
+        {
+            Point[] direction = actor.Position.GetDirectionPoints();
+
+            foreach (Point item in direction)
+            {
+                if (GameLoop.World.CurrentMap.Tiles[item.ToIndex(GameLoop.World.CurrentMap.Width)] is NodeTile node)
+                {
+                    node.DrainNode(actor);
+                    return true;
+                }
+            }
+            GameLoop.UIManager.MessageLog.Add("No node here to drain");
+            return false;
         }
 
 #if DEBUG

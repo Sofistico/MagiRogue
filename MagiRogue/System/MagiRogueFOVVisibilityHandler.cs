@@ -1,10 +1,6 @@
 ﻿using MagiRogue.Entities;
 using MagiRogue.System.Tiles;
 using SadRogue.Primitives;
-using SadConsole;
-using SadConsole.Effects;
-using System.Linq;
-using System;
 
 namespace MagiRogue.System
 {
@@ -80,7 +76,7 @@ namespace MagiRogue.System
 
             if (entity.Layer != _ghostLayer && Map.PlayerExplored[entity.Position] && entity.LeavesGhost)
             {
-                Entity ghost = new Entity((Color)ExploredColorTint,
+                Entity ghost = new Entity(ExploredColorTint,
                     entity.Appearance.Background,
                     entity.Appearance.Glyph,
                     entity.Position,
@@ -104,6 +100,12 @@ namespace MagiRogue.System
         protected override void UpdateTerrainSeen(TileBase terrain)
         {
             terrain.IsVisible = true;
+
+            if (terrain.GoRogueComponents.Contains<Components.IllusionComponent>())
+            {
+                var illusion = terrain.GoRogueComponents.GetFirstOrDefault<Components.IllusionComponent>();
+                terrain.LastSeenAppereance.CopyAppearanceFrom(illusion.FakeAppearence);
+            }
 
             // If the appearances don't match currently, synchronize them
             if (!terrain.LastSeenAppereance.Matches(terrain))
@@ -130,27 +132,9 @@ namespace MagiRogue.System
             }
         }
 
-        private void ApplyMemoryAppearance(ColoredGlyph tile)
+        private void ApplyMemoryAppearance(TileBase tile)
         {
             tile.Foreground = ExploredColorTint;
-        }
-
-#nullable enable
-
-        private void On_VisibleTileTrueAppearanceIsDirtySet(object? sender, EventArgs e)
-#nullable disable
-        {
-            // Sender will not be null because of event invariants.  Cast is safe since we
-            // control what this handler is added to and it is checked first
-            var awareTerrain = (TileBase)sender!;
-
-            // If appearances are synchronized, there is nothing to do
-            if (awareTerrain.LastSeenAppereance.Matches(awareTerrain))
-                return;
-
-            // Otherwise, synchronize them
-            awareTerrain.LastSeenAppereance.CopyAppearanceFrom(awareTerrain);
-            // awareTerrain.LastSeenAppereance.IsVisible = awareTerrain.IsVisible;
         }
     }
 }
