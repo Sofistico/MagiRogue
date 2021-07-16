@@ -1,19 +1,10 @@
-﻿using GoRogue;
-using MagiRogue.Entities;
+﻿using MagiRogue.Entities;
 using MagiRogue.System;
+using MagiRogue.System.Magic;
 using MagiRogue.System.Tiles;
-using MagiRogue.UI;
 using SadRogue.Primitives;
-using SadConsole.Input;
-using SadConsole;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SadConsole.Components;
-using MagiRogue.Components;
-using MagiRogue.System.Magic;
 
 namespace MagiRogue.Commands
 {

@@ -1,17 +1,13 @@
-﻿using GoRogue;
-using GoRogue.GameFramework;
+﻿using GoRogue.GameFramework;
 using GoRogue.SpatialMaps;
 using MagiRogue.Entities;
 using MagiRogue.System.Tiles;
 using MagiRogue.System.Time;
-using SadConsole;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 using System;
-using System.Linq;
 using System.Diagnostics;
-using MagiRogue.System.Physics;
-using System.Collections.Generic;
+using System.Linq;
 
 namespace MagiRogue.System
 {

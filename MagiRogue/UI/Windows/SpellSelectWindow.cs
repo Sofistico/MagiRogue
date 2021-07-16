@@ -1,16 +1,12 @@
-﻿using SadConsole;
+﻿using MagiRogue.System.Magic;
+using MagiRogue.UI.Controls;
+using SadConsole;
+using SadConsole.Input;
+using SadRogue.Primitives;
 using System;
-using Console = SadConsole.Console;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MagiRogue.System;
-using MagiRogue.System.Magic;
-using MagiRogue.Entities;
-using MagiRogue.UI.Controls;
-using SadRogue.Primitives;
-using SadConsole.Input;
+using Console = SadConsole.Console;
 
 namespace MagiRogue.UI.Windows
 {

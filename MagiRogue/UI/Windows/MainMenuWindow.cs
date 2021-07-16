@@ -1,10 +1,7 @@
 ﻿using MagiRogue.UI.Controls;
-using SadRogue.Primitives;
-using SadConsole;
 using SadConsole.UI.Controls;
-using SadConsole.UI.Themes;
+using SadRogue.Primitives;
 using System;
-using System.Collections.Generic;
 
 namespace MagiRogue.UI.Windows
 {
@@ -12,9 +9,9 @@ namespace MagiRogue.UI.Windows
     {
         private bool _gameStarted;
 
-        private MagiButton startGame;
-        private MagiButton testMap;
-        private MagiButton continueGame;
+        private readonly MagiButton startGame;
+        private readonly MagiButton testMap;
+        private readonly MagiButton continueGame;
 
         public MainMenuWindow(int width, int height, string title = "Main Menu") : base(width, height, title)
         {

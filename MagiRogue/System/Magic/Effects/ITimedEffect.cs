@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MagiRogue.System.Magic.Effects
+﻿namespace MagiRogue.System.Magic.Effects
 {
     public interface ITimedEffect
     {

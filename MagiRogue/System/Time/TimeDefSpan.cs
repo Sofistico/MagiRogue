@@ -24,7 +24,7 @@
         public int Year => (int)(Seconds / SecondsPerYear);
         public int Month => ((int)(Seconds % SecondsPerYear) / SecondsPerMonth) + 1;
         public int Day => ((int)(Seconds % SecondsPerMonth) / SecondsPerDay) + 1;
-        public int Hours => (int)(Minutes / MinutesPerHour);
+        public int Hours => Minutes / MinutesPerHour;
         public int Minutes => (int)(Seconds / SecondsPerMinute);
         public long Seconds => _centiseconds / CentisecondsPerSecond;
         public long Ticks => _centiseconds;

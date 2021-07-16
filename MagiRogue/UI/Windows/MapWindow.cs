@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MagiRogue.Commands;
 using MagiRogue.Entities;
-using SadConsole;
 using MagiRogue.System;
+using MagiRogue.System.Tiles;
+using MagiRogue.System.Time;
+using SadConsole.Input;
 using SadRogue.Primitives;
+using System;
+using System.Linq;
+using Console = SadConsole.Console;
 using Point = SadRogue.Primitives.Point;
 using Rectangle = SadRogue.Primitives.Rectangle;
-using Console = SadConsole.Console;
-using MagiRogue.System.Tiles;
-using SadConsole.Input;
-using MagiRogue.Commands;
-using MagiRogue.System.Time;
 
 namespace MagiRogue.UI.Windows
 {

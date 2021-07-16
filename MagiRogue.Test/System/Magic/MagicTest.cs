@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GoRogue;
+﻿using MagiRogue.Entities;
 using MagiRogue.System.Magic;
-using MagiRogue.Entities;
-using Xunit;
 using SadConsole;
 using SadRogue.Primitives;
+using System.Collections.Generic;
+using System.Linq;
+using Xunit;
 
 namespace MagiRogue.Test.System.Magic
 {

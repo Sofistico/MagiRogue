@@ -1,6 +1,6 @@
-﻿using System.Diagnostics;
+﻿using MagiRogue.Entities.Materials;
+using System.Diagnostics;
 using System.Runtime.Serialization;
-using MagiRogue.Entities.Materials;
 
 namespace MagiRogue.Entities
 {

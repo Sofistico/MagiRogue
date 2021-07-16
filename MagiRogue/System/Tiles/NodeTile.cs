@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SadRogue.Primitives;
+﻿using MagiRogue.Entities;
 using SadConsole;
-using MagiRogue.Entities;
+using SadRogue.Primitives;
+using System;
 
 namespace MagiRogue.System.Tiles
 {
@@ -22,7 +18,7 @@ namespace MagiRogue.System.Tiles
         {
             get
             {
-                _mpRecovering = (int)NodeStrength;
+                _mpRecovering = NodeStrength;
                 return _mpRecovering;
             }
         }

@@ -1,10 +1,9 @@
-﻿using GoRogue;
-using MagiRogue.Commands;
-using MagiRogue.System.Tiles;
-using SadRogue.Primitives;
+﻿using MagiRogue.Commands;
 using MagiRogue.System;
-using System.Collections.Generic;
+using MagiRogue.System.Tiles;
 using Newtonsoft.Json;
+using SadRogue.Primitives;
+using System.Collections.Generic;
 
 namespace MagiRogue.Entities
 {

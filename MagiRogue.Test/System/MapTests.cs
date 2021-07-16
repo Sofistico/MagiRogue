@@ -1,5 +1,5 @@
-﻿using Xunit;
-using SadConsole;
+﻿using SadConsole;
+using Xunit;
 
 namespace MagiRogue.System.Tests
 {

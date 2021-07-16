@@ -1,8 +1,8 @@
-﻿using MagiRogue.System;
+﻿using MagiRogue.Entities.Data;
+using MagiRogue.System;
+using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System;
-using Newtonsoft.Json;
-using MagiRogue.Entities.Data;
 
 namespace MagiRogue.Entities
 {

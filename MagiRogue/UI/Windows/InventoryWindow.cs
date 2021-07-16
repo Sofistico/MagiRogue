@@ -1,10 +1,9 @@
 ﻿using MagiRogue.Entities;
-using SadRogue.Primitives;
 using SadConsole;
 using SadConsole.UI.Controls;
+using SadRogue.Primitives;
 using System;
 using Console = SadConsole.Console;
-using System.Collections.Generic;
 
 namespace MagiRogue.UI.Windows
 {

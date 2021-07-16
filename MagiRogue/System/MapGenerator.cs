@@ -1,10 +1,9 @@
-﻿using SadRogue.Primitives.GridViews;
-using MagiRogue.System.Tiles;
+﻿using MagiRogue.System.Tiles;
 using SadRogue.Primitives;
+using SadRogue.Primitives.GridViews;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using MagiRogue.System.Physics;
 
 namespace MagiRogue.System
 {

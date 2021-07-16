@@ -1,14 +1,14 @@
 ﻿using GoRogue.DiceNotation;
 using MagiRogue.Entities;
+using MagiRogue.System;
 using MagiRogue.System.Tiles;
-using SadRogue.Primitives;
 using SadConsole;
+using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using MagiRogue.System;
 
 namespace MagiRogue.Commands
 {

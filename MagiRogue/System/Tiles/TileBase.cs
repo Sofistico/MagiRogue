@@ -1,13 +1,10 @@
 ﻿using GoRogue;
+using GoRogue.Components;
 using GoRogue.GameFramework;
 using MagiRogue.Entities.Materials;
-using SadRogue.Primitives;
 using SadConsole;
+using SadRogue.Primitives;
 using System;
-using System.Collections.Generic;
-using GoRogue.Components;
-using GoRogue.SpatialMaps;
-using GoRogue.Components.ParentAware;
 
 namespace MagiRogue.System.Tiles
 {

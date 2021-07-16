@@ -1,10 +1,5 @@
-﻿using MagiRogue.System.Time;
+﻿using MagiRogue.Entities;
 using MagiRogue.Utils;
-using MagiRogue.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using SadRogue.Primitives;
 
 namespace MagiRogue.System.Magic

@@ -1,7 +1,4 @@
-﻿using GoRogue.GameFramework;
-using GoRogue;
-using GoRogue.Components;
-using GoRogue.Components.ParentAware;
+﻿using GoRogue.Components.ParentAware;
 
 namespace MagiRogue.Components
 {

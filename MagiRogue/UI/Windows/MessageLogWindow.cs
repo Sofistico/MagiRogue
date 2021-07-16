@@ -1,5 +1,5 @@
-﻿using SadRogue.Primitives;
-using SadConsole;
+﻿using SadConsole;
+using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using Console = SadConsole.Console;

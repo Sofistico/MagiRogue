@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GoRogue.Components.ParentAware;
-using SadConsole;
+﻿using GoRogue.Components.ParentAware;
 using MagiRogue.System.Tiles;
+using SadConsole;
 
 namespace MagiRogue.Components
 {

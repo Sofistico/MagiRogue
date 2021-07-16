@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace MagiRogue.System.Magic
 {
+    /// <summary>
+    /// The class that is the manager of the magic system to an entity
+    /// </summary>
     public class Magic
     {
         // Create a magic inspired by Mother of learning
@@ -12,9 +15,15 @@ namespace MagiRogue.System.Magic
 
         /// <summary>
         /// The amount of mana finess required to pull of a spell, something can only be casted if you can
-        /// have enough control to properly control the mana.
+        /// have enough control to properly control the mana, see <see cref="SpellBase.Proficency"/>.
+        /// <para> Should be at minimum a 5 to cast the simplest battle spell.</para>
         /// </summary>
         public int ShapingSkills { get; set; }
+
+        /// <summary>
+        /// The innate resistance to magic from a being
+        /// </summary>
+        public int InnateResistance { get; set; }
 
         public Magic()
         {

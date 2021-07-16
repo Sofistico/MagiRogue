@@ -1,15 +1,8 @@
-﻿using GoRogue;
-using MagiRogue.Commands;
-using MagiRogue.Entities;
-using MagiRogue.System;
-using MagiRogue.System.Magic;
-using MagiRogue.System.Magic.Effects;
-using MagiRogue.System.Time;
+﻿using MagiRogue.System;
 using MagiRogue.UI.Windows;
 using SadConsole;
 using SadConsole.Input;
 using SadRogue.Primitives;
-using System.Linq;
 using System.Collections.Generic;
 using Color = SadConsole.UI.AdjustableColor;
 

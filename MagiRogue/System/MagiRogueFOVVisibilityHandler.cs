@@ -1,10 +1,6 @@
 ﻿using MagiRogue.Entities;
 using MagiRogue.System.Tiles;
 using SadRogue.Primitives;
-using SadConsole;
-using SadConsole.Effects;
-using System.Linq;
-using System;
 
 namespace MagiRogue.System
 {
@@ -80,7 +76,7 @@ namespace MagiRogue.System
 
             if (entity.Layer != _ghostLayer && Map.PlayerExplored[entity.Position] && entity.LeavesGhost)
             {
-                Entity ghost = new Entity((Color)ExploredColorTint,
+                Entity ghost = new Entity(ExploredColorTint,
                     entity.Appearance.Background,
                     entity.Appearance.Glyph,
                     entity.Position,

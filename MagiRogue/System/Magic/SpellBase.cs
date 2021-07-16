@@ -1,12 +1,8 @@
-﻿using GoRogue;
-using MagiRogue.Utils;
-using MagiRogue.System.Time;
-using MagiRogue.Entities;
+﻿using MagiRogue.Entities;
 using SadRogue.Primitives;
-using GoRogue.DiceNotation;
 using System;
-using System.Text;
 using System.Collections.Generic;
+using System.Text;
 
 namespace MagiRogue.System.Magic
 {
@@ -14,6 +10,9 @@ namespace MagiRogue.System.Magic
     {
         private double proficency;
 
+        /// <summary>
+        /// The required shaping skill to cast the spell at it's most basic parameters.
+        /// </summary>
         public int RequiredShapingSkill
         {
             get => (int)((SpellLevel + ManaCost) * 2 / Proficency);
@@ -67,8 +66,8 @@ namespace MagiRogue.System.Magic
         /// <summary>
         /// The total proficiency, goes up slowly as you use the spell or train with it in your downtime, makes
         /// it more effective and cost less, goes from 0.0(not learned) to 2.0(double effectiviness),
-        /// for newly trained spell shoud be 0.5, see <see cref="Magic.ShapingSkills"> for more details about
-        /// effectiviness of magic
+        /// for newly trained spell shoud be 0.5, see <see cref="Magic.ShapingSkills"/> for more details about
+        /// the shaping of mana
         /// </summary>
         public double Proficency
         {

@@ -1,12 +1,12 @@
-﻿using System;
+﻿using MagiRogue.Entities;
+using MagiRogue.Entities.Data;
+using Newtonsoft.Json;
+using SadRogue.Primitives;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Xunit;
-using MagiRogue.Entities.Data;
-using MagiRogue.Entities;
-using SadRogue.Primitives;
-using Newtonsoft.Json;
-using System.IO;
 
 namespace MagiRogue.Test.Entities
 {
