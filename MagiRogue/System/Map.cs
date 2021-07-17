@@ -81,6 +81,14 @@ namespace MagiRogue.System
             Time = new TimeSystem();
         }
 
+        public void RemoveAllEntities()
+        {
+            foreach (Entity item in Entities.Items)
+            {
+                Remove(item);
+            }
+        }
+
         #endregion Constructor
 
         #region HelperMethods
@@ -158,6 +166,8 @@ namespace MagiRogue.System
 
             // Link up the entity's Moved event to a new handler
             entity.Moved -= OnEntityMoved;
+
+            entity = null;
         }
 
         /// <summary>
@@ -313,6 +323,22 @@ namespace MagiRogue.System
         }
 
         #endregion HelperMethods
+
+        #region Desconstructor
+
+        ~Map()
+        {
+            foreach (Entity item in Entities.Items)
+            {
+                Remove(item);
+            }
+            Tiles = null;
+            this.ControlledEntitiy = null;
+            this.Time = null;
+            GoRogueComponents.Clear();
+        }
+
+        #endregion Desconstructor
     }
 
     // enum for defining maplayer for things, so that a monster and a player can occupy the same tile as an item for example.

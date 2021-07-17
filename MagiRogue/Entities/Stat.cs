@@ -89,6 +89,9 @@ namespace MagiRogue.Entities
             set { _baseHpRegen = value; }
         }
 
+        /// <summary>
+        /// Should be between 0.01 to 2, it's applied before any possible multipliers
+        /// </summary>
         [DataMember]
         public float BaseManaRegen
         {
@@ -111,6 +114,7 @@ namespace MagiRogue.Entities
                 }
                 return personalMana;
             }
+
             set
             {
                 if (value < 0)
@@ -171,6 +175,7 @@ namespace MagiRogue.Entities
         public int Attack
         {
             get { return attack; }
+
             set
             {
                 attack = bodyStat + value;
@@ -184,6 +189,7 @@ namespace MagiRogue.Entities
         public int AttackChance
         {
             get { return attackChance; }
+
             set
             {
                 attackChance = BodyStat + value;
@@ -249,6 +255,7 @@ namespace MagiRogue.Entities
         public int AmbientMana
         {
             get { return ambientMana; }
+
             set
             {
                 if (value <= bodyStat + mindStat + (soulStat * 2))

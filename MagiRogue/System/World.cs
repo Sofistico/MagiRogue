@@ -22,7 +22,6 @@ namespace MagiRogue.System
 
         private readonly int _mapWidth = 50;
         private readonly int _mapHeight = 50;
-        private TileBase[] _mapTiles;
         private readonly int _maxRooms = 20;
         private readonly int _minRoomSize = 4;
         private readonly int _maxRoomSize = 10;
@@ -89,7 +88,6 @@ namespace MagiRogue.System
         // parameters to determine geometry
         private void CreateMap()
         {
-            _mapTiles = new TileBase[_mapWidth * _mapHeight];
             CurrentMap = new Map(_mapWidth, _mapHeight);
             MapGenerator mapGen = new MapGenerator();
             CurrentMap = mapGen.GenerateMap(_mapWidth, _mapHeight, _maxRooms, _minRoomSize, _maxRoomSize);
@@ -97,7 +95,6 @@ namespace MagiRogue.System
 
         private void CreateTestMap()
         {
-            _mapTiles = new TileBase[_mapWidth * _mapHeight];
             CurrentMap = new Map(_mapWidth, _mapHeight);
             MapGenerator mapGen = new MapGenerator();
             CurrentMap = mapGen.GenerateTestMap(_mapWidth, _mapHeight);
@@ -240,6 +237,16 @@ namespace MagiRogue.System
                 Player.Stats.ApplyHpRegen();
                 Player.Stats.ApplyManaRegen();
                 CurrentMap.PlayerFOV.Calculate(Player.Position, Player.Stats.ViewRadius);
+
+                if (Player.Stats.Health <= 0)
+                {
+                    CurrentMap.RemoveAllEntities();
+                    CurrentMap = null;
+                    Player = null;
+
+                    GameLoop.UIManager.MainMenu.RestartGame();
+                    return;
+                }
 
                 var node = GetTime.NextNode();
 

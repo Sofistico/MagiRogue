@@ -51,6 +51,8 @@ namespace MagiRogue.UI.Windows
                 Hide();
                 GameLoop.UIManager.IsFocused = true;
             }
+            else
+                continueGame.IsEnabled = false;
         }
 
         private void TestMap_Click(object sender, EventArgs e)
@@ -92,6 +94,21 @@ namespace MagiRogue.UI.Windows
             {
                 startGame.IsEnabled = false;
             }
+        }
+
+        public void RestartGame()
+        {
+            _gameStarted = false;
+            GameLoop.World = null;
+            startGame.IsEnabled = true;
+            GameLoop.UIManager.MessageLog = null;
+            GameLoop.UIManager.MapWindow = null;
+            GameLoop.UIManager.StatusConsole = null;
+            GameLoop.UIManager.InventoryScreen = null;
+            GameLoop.UIManager.Children.Clear();
+            GameLoop.UIManager.Children.Add(this);
+
+            Show();
         }
     }
 }

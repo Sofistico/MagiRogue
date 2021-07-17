@@ -93,6 +93,11 @@ namespace MagiRogue.UI.Windows
                 return true;
             }
 
+            if (info.IsKeyPressed(Keys.NumPad5) && info.IsKeyDown(Keys.LeftControl))
+            {
+                return CommandManager.RestTillFull(GetPlayer);
+            }
+
             if (info.IsKeyPressed(Keys.NumPad5) || info.IsKeyPressed(Keys.OemPeriod))
             {
                 world.ProcessTurn(TimeHelper.Wait, true);

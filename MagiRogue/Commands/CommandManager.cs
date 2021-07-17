@@ -2,6 +2,7 @@
 using MagiRogue.Entities;
 using MagiRogue.System;
 using MagiRogue.System.Tiles;
+using MagiRogue.System.Time;
 using SadConsole;
 using SadRogue.Primitives;
 using System;
@@ -226,7 +227,9 @@ namespace MagiRogue.Commands
             GameLoop.World.CurrentMap.Remove(defender);
 
             if (defender is Player)
+            {
                 GameLoop.UIManager.MessageLog.Add($" {defender.Name} was killed.");
+            }
 
             // Now show the deathMessage in the messagelog
             GameLoop.UIManager.MessageLog.Add(deathMessage.ToString());
@@ -403,6 +406,45 @@ namespace MagiRogue.Commands
             }
 
             GameLoop.UIManager.MessageLog.Add("You feel too full for this right now");
+            return false;
+        }
+
+        public static bool RestTillFull(Actor actor)
+        {
+            Stat stats = actor.Stats;
+
+            if ((stats.Health < stats.MaxHealth || stats.PersonalMana < stats.MaxPersonalMana))
+            {
+                // calculate here the amount of time that it will take in turns to rest to full
+                float healDif, manaDif;
+
+                healDif = (float)Math.Round((stats.MaxHealth - stats.Health) / stats.BaseHpRegen);
+                manaDif = (float)Math.Round((stats.MaxPersonalMana - stats.PersonalMana) / stats.BaseManaRegen);
+
+                float totalTurnsWait = healDif + manaDif;
+
+                for (int i = 0; i < totalTurnsWait + 1; i++)
+                {
+                    foreach (Point p in GameLoop.World.CurrentMap.PlayerFOV.CurrentFOV)
+                    {
+                        Actor possibleActor = GameLoop.World.CurrentMap.GetEntityAt<Actor>(p);
+                        if (possibleActor is not null && !possibleActor.Equals(actor))
+                        {
+                            GameLoop.UIManager.MessageLog.Add("There is an enemy in view, stop resting!");
+                            return false;
+                        }
+                    }
+
+                    GameLoop.World.ProcessTurn(TimeHelper.Wait, true);
+                }
+
+                GameLoop.UIManager.MessageLog.Add($"You have rested for {totalTurnsWait} turns");
+
+                return true;
+            }
+
+            GameLoop.UIManager.MessageLog.Add("You have no need to rest");
+
             return false;
         }
     }

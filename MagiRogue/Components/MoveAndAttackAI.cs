@@ -5,6 +5,7 @@ using MagiRogue.System;
 using MagiRogue.System.Time;
 using MagiRogue.UI.Windows;
 using SadRogue.Primitives;
+using System;
 using System.Linq;
 
 namespace MagiRogue.Components
@@ -57,7 +58,14 @@ namespace MagiRogue.Components
             }
             else
             {
-                direction = Direction.GetDirection(shortPath.Steps.First() - parent.Position);
+                try
+                {
+                    direction = Direction.GetDirection(shortPath.Steps.First() - parent.Position);
+                }
+                catch (InvalidOperationException)
+                {
+                    return false;
+                }
             }
 
             Point coord = new Point(direction.DeltaX, direction.DeltaY);

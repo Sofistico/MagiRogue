@@ -59,6 +59,7 @@ namespace MagiRogue.System.Magic.Effects
                     break;
 
                 case SpellAreaEffect.Beam:
+
                     break;
 
                 case SpellAreaEffect.Level:
