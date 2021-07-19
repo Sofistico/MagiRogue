@@ -31,6 +31,12 @@ namespace MagiRogue.Utils
         {
             if (entity is Actor actor)
             {
+                if (!actor.CanBeAttacked)
+                {
+                    GameLoop.UIManager.MessageLog.Add("Can't hit your target");
+                    return;
+                }
+
                 actor.Stats.Health -= dmg;
 
                 if (actor.Stats.Health < 0)

@@ -5,13 +5,15 @@ using MagiRogue.System.Tiles;
 using SadRogue.Primitives;
 using System.Collections.Generic;
 using System.Linq;
+using GoRogue.Pathing;
+using SadConsole;
 
 namespace MagiRogue.Commands
 {
     /// <summary>
     /// Defines an target system.
     /// </summary>
-    public class Target : ITarget
+    public class Target
     {
         private SpellBase _spellSelected;
         private Actor _caster;
@@ -23,6 +25,8 @@ namespace MagiRogue.Commands
         public Point OriginCoord { get; set; }
 
         public TargetState State { get; set; }
+
+        public Dictionary<Point, TileBase> TravelPath { get; set; }
 
         public Target(Point spawnCoord)
         {
@@ -52,9 +56,10 @@ namespace MagiRogue.Commands
             State = TargetState.Resting;
 
             TargetList = new List<Entity>();
+            TravelPath = new Dictionary<Point, TileBase>();
         }
 
-        public IList<T> TargetEntity<T>() where T : Entity
+        private IList<T> TargetEntity<T>() where T : Entity
         {
             TargetList.Clear();
 
@@ -71,7 +76,7 @@ namespace MagiRogue.Commands
             return null;
         }
 
-        public T TargetTile<T>() where T : TileBase
+        private T TargetTile<T>() where T : TileBase
         {
             return GameLoop.World.CurrentMap.GetTileAt<T>(Cursor.Position);
         }
@@ -100,28 +105,52 @@ namespace MagiRogue.Commands
                     (System.Time.TimeHelper.GetCastingTime(GameLoop.World.Player, s), sucess);
                 return;
             }
+
+            if (_spellSelected.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Beam))
+            {
+                Cursor.Moved += (_, __) =>
+                {
+                    var tile = GameLoop.World.CurrentMap.GetTileAt<TileBase>(__.NewValue);
+
+                    if (!TravelPath.Keys.Contains(__.NewValue))
+                    {
+                        TravelPath.Add(__.NewValue, tile);
+                        tile.Background = Color.Yellow;
+                    }
+                    else
+                    {
+                        TravelPath.Remove(__.NewValue);
+                        tile.Background = tile.LastSeenAppereance.Background;
+                    }
+                };
+            }
+
             StartTargetting();
         }
 
-        private void StartTargetting()
+        public void StartTargetting()
         {
             GameLoop.World.ChangeControlledEntity(Cursor);
             GameLoop.World.CurrentMap.Add(Cursor);
             State = TargetState.Targeting;
         }
 
+        // TODO: Customize who should you target
         public (bool, SpellBase) EndSpellTargetting()
         {
             int distance = (int)Distance.Chebyshev.Calculate(OriginCoord, Cursor.Position);
 
+            if (_spellSelected.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Beam))
+            {
+                return AffectPath();
+            }
+
             if (distance <= _spellSelected.SpellRange)
             {
-                _spellSelected.CastSpell(TargetList[0].Position, _caster);
+                bool casted = _spellSelected.CastSpell(TargetList[0].Position, _caster);
                 var spellCasted = _spellSelected;
-                _spellSelected = null;
-                _caster = null;
                 EndTargetting();
-                return (true, spellCasted);
+                return (casted, spellCasted);
             }
             GameLoop.UIManager.MessageLog.Add("The target is too far!");
             return (false, null);
@@ -129,16 +158,38 @@ namespace MagiRogue.Commands
 
         public void EndTargetting()
         {
-            if (Cursor.CurrentMap is null)
-            {
-                State = TargetState.Resting;
-                TargetList.Clear();
-                return;
-            }
-            GameLoop.World.ChangeControlledEntity(GameLoop.World.Player);
-            GameLoop.World.CurrentMap.Remove(Cursor);
             State = TargetState.Resting;
             TargetList.Clear();
+            _spellSelected = null;
+            _caster = null;
+
+            // if there is anything in the path, clear it
+            foreach (TileBase tile in TravelPath.Values)
+            {
+                tile.CopyAppearanceFrom(tile.LastSeenAppereance);
+            }
+            TravelPath.Clear();
+
+            GameLoop.World.ChangeControlledEntity(GameLoop.World.Player);
+            GameLoop.World.CurrentMap.Remove(Cursor);
+        }
+
+        private (bool, SpellBase) AffectPath()
+        {
+            if (TravelPath.Count >= 1)
+            {
+                foreach (Point target in TravelPath.Keys)
+                {
+                    _spellSelected.CastSpell(target, _caster);
+                }
+                var casted = _spellSelected;
+
+                EndTargetting();
+
+                return (true, casted);
+            }
+
+            return (false, null);
         }
 
         public enum TargetState

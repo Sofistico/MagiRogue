@@ -127,8 +127,20 @@ namespace MagiRogue.System.Magic
             {
                 int reqShapingWithDiscount = RequiredShapingSkill / stats.SoulStat;
 
-                return reqShapingWithDiscount < magicSkills.ShapingSkills;
+                bool canCast = reqShapingWithDiscount < magicSkills.ShapingSkills;
+
+                if (!canCast)
+                {
+                    GameLoop.UIManager.MessageLog.Add("You don't have the required shaping skills to cast this spell");
+#if DEBUG
+                    GameLoop.UIManager.MessageLog.Add($"Shaping skills required: {reqShapingWithDiscount}");
+#endif
+                    TickProfiency();
+                }
+
+                return canCast;
             }
+
             return false;
         }
 
@@ -144,12 +156,10 @@ namespace MagiRogue.System.Magic
                 }
 
                 caster.Stats.PersonalMana -= (float)ManaCost;
-                Proficency = Math.Round(Proficency += 0.01, 2);
+                TickProfiency();
 
                 return true;
             }
-
-            GameLoop.UIManager.MessageLog.Add("Couldn't cast the spell");
 
             return false;
         }
@@ -158,6 +168,8 @@ namespace MagiRogue.System.Magic
         {
             Description = description;
         }
+
+        private void TickProfiency() => Proficency = Math.Round(Proficency += 0.01, 2);
 
         public override string ToString()
         {

@@ -7,15 +7,18 @@ namespace MagiRogue.System.Magic.Effects
 {
     public class DamageEffect : ISpellEffect
     {
+        private bool isHealing;
+
         public SpellAreaEffect AreaOfEffect { get; set; }
         public DamageType SpellDamageType { get; set; }
         public int Damage { get; set; }
 
-        public DamageEffect(int dmg, SpellAreaEffect areaOfEffect, DamageType spellDamageType)
+        public DamageEffect(int dmg, SpellAreaEffect areaOfEffect, DamageType spellDamageType, bool isHeal = false)
         {
             Damage = dmg;
             AreaOfEffect = areaOfEffect;
             SpellDamageType = spellDamageType;
+            isHealing = isHeal;
         }
 
         public void ApplyEffect(Point target, Stat casterStats)
@@ -23,33 +26,14 @@ namespace MagiRogue.System.Magic.Effects
             switch (AreaOfEffect)
             {
                 case SpellAreaEffect.Self:
-                    CombatUtils.ApplyHealing(Damage, casterStats, SpellDamageType);
+                    HealEffect(Point.None, casterStats);
                     break;
 
                 case SpellAreaEffect.Target:
-                    Entity poorGuy = GameLoop.World.CurrentMap.GetEntityAt<Entity>(target);
-                    if (poorGuy == null)
-                    {
-                        return;
-                    }
-
-                    if (poorGuy == GameLoop.World.CurrentMap.ControlledEntitiy || poorGuy is Player)
-                    {
-                        poorGuy = GameLoop.World.CurrentMap.GetClosestEntity(poorGuy.Position, 1);
-                    }
-
-                    CombatUtils.DealDamage(Damage, poorGuy, SpellDamageType);
-
-                    if (poorGuy is Item)
-                    {
-                        // Custom logic here
-                    }
-
-                    if (poorGuy is Actor)
-                    {
-                        // Custom logic here
-                    }
-
+                    if (!isHealing)
+                        DmgEff(target);
+                    else
+                        HealEffect(target, casterStats);
                     break;
 
                 case SpellAreaEffect.Ball:
@@ -59,7 +43,10 @@ namespace MagiRogue.System.Magic.Effects
                     break;
 
                 case SpellAreaEffect.Beam:
-
+                    if (!isHealing)
+                        DmgEff(target);
+                    else
+                        HealEffect(target, casterStats);
                     break;
 
                 case SpellAreaEffect.Level:
@@ -70,6 +57,45 @@ namespace MagiRogue.System.Magic.Effects
 
                 default:
                     break;
+            }
+        }
+
+        private void DmgEff(Point target)
+        {
+            Entity poorGuy = GameLoop.World.CurrentMap.GetEntityAt<Entity>(target);
+            if (poorGuy == null)
+            {
+                return;
+            }
+
+            if (poorGuy == GameLoop.World.CurrentMap.ControlledEntitiy || poorGuy is Player)
+            {
+                poorGuy = GameLoop.World.CurrentMap.GetClosestEntity(poorGuy.Position, 1);
+            }
+
+            CombatUtils.DealDamage(Damage, poorGuy, SpellDamageType);
+        }
+
+        private void HealEffect(Point target, Stat casterStats)
+        {
+            if (AreaOfEffect is SpellAreaEffect.Self)
+                CombatUtils.ApplyHealing(Damage, casterStats, SpellDamageType);
+            else
+            {
+                Actor happyGuy = GameLoop.World.CurrentMap.GetEntityAt<Actor>(target);
+
+                if (happyGuy == null)
+                {
+                    return;
+                }
+
+                if (happyGuy.CanBeAttacked)
+                {
+                    GameLoop.UIManager.MessageLog.Add("You can't heal what can't take damage");
+                    return;
+                }
+
+                CombatUtils.ApplyHealing(Damage, happyGuy.Stats, SpellDamageType);
             }
         }
     }

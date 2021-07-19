@@ -25,7 +25,7 @@ namespace MagiRogue.Entities
 
             set
             {
-                condition += value;
+                condition = value;
                 if (condition < 0)
                     Destroy();
             }

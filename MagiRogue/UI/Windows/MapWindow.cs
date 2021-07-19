@@ -162,15 +162,11 @@ namespace MagiRogue.UI.Windows
                 if (world.CurrentMap.ControlledEntitiy is not Player
                     && !target.EntityInTarget())
                 {
-                    world.ChangeControlledEntity(GetPlayer);
-                    world.CurrentMap.Remove(target.Cursor);
-                    target = null;
+                    target.EndTargetting();
                     return true;
                 }
 
-                world.CurrentMap.Add(target.Cursor);
-
-                world.ChangeControlledEntity(target.Cursor);
+                target.StartTargetting();
 
                 return true;
             }

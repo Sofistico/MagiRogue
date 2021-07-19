@@ -63,12 +63,18 @@ namespace MagiRogue.Entities
             { Proficency = 1 };
             mageSight.Effects.Add(new MageSightEffect(5));
 
+            SpellBase fireRay = new SpellBase("fire_ray", "Fire Ray", new List<ISpellEffect>(),
+                MagicSchool.CombatMagic, 5, 1, 1);
+            fireRay.Effects.Add(new DamageEffect(Magic.CalculateSpellDamage(Stats, fireRay),
+                SpellAreaEffect.Beam, Utils.DamageType.Fire));
+
             List<SpellBase> testSpells = new List<SpellBase>()
             {
                 missile,
                 cure,
                 haste,
-                mageSight
+                mageSight,
+                fireRay
             };
 
             Magic.KnowSpells.AddRange(testSpells);

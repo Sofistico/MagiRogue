@@ -33,7 +33,7 @@ namespace MagiRogue.System.Tiles
             }
         }
 
-        public ColoredGlyph TrueAppearence;
+        public ColoredGlyph TrueAppearence { get; private set; }
 
         public NodeTile(Color foreground, Color background, Point position, int mpPower, int nodeStrength) :
             base(foreground, background, '*', (int)MapLayer.TERRAIN, position,
