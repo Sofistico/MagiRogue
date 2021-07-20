@@ -21,32 +21,29 @@ namespace MagiRogue.System.Magic.Effects
             isHealing = isHeal;
         }
 
-        public void ApplyEffect(Point target, Stat casterStats)
+        public void ApplyEffect(Point target, Actor caster, SpellBase spellCasted)
         {
             switch (AreaOfEffect)
             {
                 case SpellAreaEffect.Self:
-                    HealEffect(Point.None, casterStats);
+                    HealEffect(Point.None, caster, spellCasted);
                     break;
 
                 case SpellAreaEffect.Target:
                     if (!isHealing)
-                        DmgEff(target);
+                        DmgEff(target, caster, spellCasted);
                     else
-                        HealEffect(target, casterStats);
+                        HealEffect(target, caster, spellCasted);
                     break;
 
                 case SpellAreaEffect.Ball:
                     break;
 
-                case SpellAreaEffect.Shape:
-                    break;
-
                 case SpellAreaEffect.Beam:
                     if (!isHealing)
-                        DmgEff(target);
-                    else
-                        HealEffect(target, casterStats);
+                        DmgEff(target, caster, spellCasted);
+                    else if (isHealing)
+                        HealEffect(target, caster, spellCasted);
                     break;
 
                 case SpellAreaEffect.Level:
@@ -60,8 +57,10 @@ namespace MagiRogue.System.Magic.Effects
             }
         }
 
-        private void DmgEff(Point target)
+        private void DmgEff(Point target, Actor caster, SpellBase spellCasted)
         {
+            Damage = Magic.CalculateSpellDamage(caster.Stats, spellCasted);
+
             Entity poorGuy = GameLoop.World.CurrentMap.GetEntityAt<Entity>(target);
             if (poorGuy == null)
             {
@@ -76,8 +75,12 @@ namespace MagiRogue.System.Magic.Effects
             CombatUtils.DealDamage(Damage, poorGuy, SpellDamageType);
         }
 
-        private void HealEffect(Point target, Stat casterStats)
+        private void HealEffect(Point target, Actor caster, SpellBase spellCasted)
         {
+            Stat casterStats = caster.Stats;
+
+            Damage = Magic.CalculateSpellDamage(casterStats, spellCasted);
+
             if (AreaOfEffect is SpellAreaEffect.Self)
                 CombatUtils.ApplyHealing(Damage, casterStats, SpellDamageType);
             else

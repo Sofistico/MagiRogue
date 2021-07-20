@@ -9,6 +9,6 @@ namespace MagiRogue.System.Magic
         public SpellAreaEffect AreaOfEffect { get; set; }
         public DamageType SpellDamageType { get; set; }
 
-        public void ApplyEffect(Point target, Stat casterStats);
+        public void ApplyEffect(Point target, Actor caster, SpellBase spellCasted);
     }
 }

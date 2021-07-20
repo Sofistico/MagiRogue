@@ -6,7 +6,6 @@ using SadRogue.Primitives;
 using System.Collections.Generic;
 using System.Linq;
 using GoRogue.Pathing;
-using SadConsole;
 
 namespace MagiRogue.Commands
 {
@@ -17,6 +16,7 @@ namespace MagiRogue.Commands
     {
         private SpellBase _spellSelected;
         private Actor _caster;
+        private Dictionary<Point, TileBase> tileDictionary;
 
         public Entity Cursor { get; set; }
 
@@ -26,7 +26,9 @@ namespace MagiRogue.Commands
 
         public TargetState State { get; set; }
 
-        public Dictionary<Point, TileBase> TravelPath { get; set; }
+        public Path TravelPath { get; set; }
+
+        public int MaxDistance => _spellSelected.SpellRange;
 
         public Target(Point spawnCoord)
         {
@@ -56,7 +58,7 @@ namespace MagiRogue.Commands
             State = TargetState.Resting;
 
             TargetList = new List<Entity>();
-            TravelPath = new Dictionary<Point, TileBase>();
+            tileDictionary = new Dictionary<Point, TileBase>();
         }
 
         private IList<T> TargetEntity<T>() where T : Entity
@@ -108,21 +110,7 @@ namespace MagiRogue.Commands
 
             if (_spellSelected.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Beam))
             {
-                Cursor.Moved += (_, __) =>
-                {
-                    var tile = GameLoop.World.CurrentMap.GetTileAt<TileBase>(__.NewValue);
-
-                    if (!TravelPath.Keys.Contains(__.NewValue))
-                    {
-                        TravelPath.Add(__.NewValue, tile);
-                        tile.Background = Color.Yellow;
-                    }
-                    else
-                    {
-                        TravelPath.Remove(__.NewValue);
-                        tile.Background = tile.LastSeenAppereance.Background;
-                    }
-                };
+                LineTargetting();
             }
 
             StartTargetting();
@@ -158,27 +146,32 @@ namespace MagiRogue.Commands
 
         public void EndTargetting()
         {
-            State = TargetState.Resting;
-            TargetList.Clear();
-            _spellSelected = null;
-            _caster = null;
-
-            // if there is anything in the path, clear it
-            foreach (TileBase tile in TravelPath.Values)
+            if (Cursor.CurrentMap is not null)
             {
-                tile.CopyAppearanceFrom(tile.LastSeenAppereance);
-            }
-            TravelPath.Clear();
+                State = TargetState.Resting;
+                TargetList.Clear();
+                _spellSelected = null;
+                _caster = null;
 
-            GameLoop.World.ChangeControlledEntity(GameLoop.World.Player);
-            GameLoop.World.CurrentMap.Remove(Cursor);
+                // if there is anything in the path, clear it
+                foreach (Point point in TravelPath.Steps)
+                {
+                    var tile = GameLoop.World.CurrentMap.GetTileAt<TileBase>(point);
+                    tile.CopyAppearanceFrom(tile.LastSeenAppereance);
+                }
+
+                TravelPath = null;
+
+                GameLoop.World.ChangeControlledEntity(GameLoop.World.Player);
+                GameLoop.World.CurrentMap.Remove(Cursor);
+            }
         }
 
         private (bool, SpellBase) AffectPath()
         {
-            if (TravelPath.Count >= 1)
+            if (TravelPath.Length >= 1)
             {
-                foreach (Point target in TravelPath.Keys)
+                foreach (Point target in TravelPath.Steps)
                 {
                     _spellSelected.CastSpell(target, _caster);
                 }
@@ -190,6 +183,30 @@ namespace MagiRogue.Commands
             }
 
             return (false, null);
+        }
+
+        private void LineTargetting()
+        {
+            Cursor.Moved += (_, __) =>
+            {
+                TravelPath = GameLoop.World.CurrentMap.AStar.ShortestPath(OriginCoord, __.NewValue);
+                foreach (Point pos in TravelPath.Steps)
+                {
+                    // gets each point in the travel path steps and change the background of the wall
+                    var halp = GameLoop.World.CurrentMap.GetTileAt<TileBase>(pos);
+                    halp.Background = Color.Yellow;
+                    tileDictionary.TryAdd(pos, halp);
+                }
+                // This loops makes sure that all the pos that aren't in the TravelPath gets it's proper appearence
+                foreach (Point item in tileDictionary.Keys)
+                {
+                    if (!TravelPath.Steps.Contains(item))
+                    {
+                        TileBase llop = GameLoop.World.CurrentMap.GetTileAt<TileBase>(item);
+                        llop.Background = llop.LastSeenAppereance.Background;
+                    }
+                }
+            };
         }
 
         public enum TargetState

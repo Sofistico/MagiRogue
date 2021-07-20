@@ -23,7 +23,7 @@ namespace MagiRogue.System.Magic.Effects
             AreaOfEffect = SpellAreaEffect.Self;
         }
 
-        public void ApplyEffect(Point target, Stat casterStats)
+        public void ApplyEffect(Point target, Actor caster, SpellBase spellCasted)
         {
             if (hasMageSight)
             {

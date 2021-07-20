@@ -19,7 +19,7 @@ namespace MagiRogue.UI.Windows
 
         private static Player GetPlayer => GameLoop.World.Player;
 
-        private Target target;
+        private Target targetCursor;
 
         public MapWindow(int width, int height, string title) : base(width, height, title)
         {
@@ -145,14 +145,14 @@ namespace MagiRogue.UI.Windows
             }
             if (info.IsKeyPressed(Keys.L))
             {
-                if (!(target != null))
-                    target = new Target(GetPlayer.Position);
+                if (!(targetCursor != null))
+                    targetCursor = new Target(GetPlayer.Position);
 
-                if (target.EntityInTarget())
+                if (targetCursor.EntityInTarget())
                 {
-                    if (target.TargetList != null)
+                    if (targetCursor.TargetList != null)
                     {
-                        LookWindow w = new LookWindow(target.TargetList[0]);
+                        LookWindow w = new LookWindow(targetCursor.TargetList[0]);
                         w.Show();
 
                         return true;
@@ -160,13 +160,13 @@ namespace MagiRogue.UI.Windows
                 }
 
                 if (world.CurrentMap.ControlledEntitiy is not Player
-                    && !target.EntityInTarget())
+                    && !targetCursor.EntityInTarget())
                 {
-                    target.EndTargetting();
+                    targetCursor.EndTargetting();
                     return true;
                 }
 
-                target.StartTargetting();
+                targetCursor.StartTargetting();
 
                 return true;
             }
@@ -176,25 +176,25 @@ namespace MagiRogue.UI.Windows
                 SpellSelectWindow spell =
                     new SpellSelectWindow(GetPlayer.Magic.KnowSpells, GetPlayer.Stats.PersonalMana);
 
-                target = new Target(GetPlayer.Position);
+                targetCursor = new Target(GetPlayer.Position);
 
                 spell.Show(GetPlayer.Magic.KnowSpells,
-                    selectedSpell => target.OnSelectSpell(selectedSpell,
+                    selectedSpell => targetCursor.OnSelectSpell(selectedSpell,
                     (Actor)world.CurrentMap.ControlledEntitiy),
                     GetPlayer.Stats.PersonalMana);
 
                 return true;
             }
 
-            if (info.IsKeyPressed(Keys.Enter) && target is not null && target.State == Target.TargetState.Targeting)
+            if (info.IsKeyPressed(Keys.Enter) && targetCursor is not null && targetCursor.State == Target.TargetState.Targeting)
             {
-                if (target.EntityInTarget())
+                if (targetCursor.EntityInTarget())
                 {
-                    var (sucess, spellCasted) = target.EndSpellTargetting();
+                    var (sucess, spellCasted) = targetCursor.EndSpellTargetting();
 
                     if (sucess)
                     {
-                        target = null;
+                        targetCursor = null;
 
                         world.ProcessTurn(TimeHelper.GetCastingTime(GetPlayer, spellCasted), sucess);
                     }
@@ -205,11 +205,11 @@ namespace MagiRogue.UI.Windows
                     ui.MessageLog.Add("There is no one to target there!");
                 }
             }
-            if (info.IsKeyPressed(Keys.Escape) && (target is object))
+            if (info.IsKeyPressed(Keys.Escape) && (targetCursor is object))
             {
-                target.EndTargetting();
+                targetCursor.EndTargetting();
 
-                target = null;
+                targetCursor = null;
 
                 return true;
             }
@@ -249,7 +249,7 @@ namespace MagiRogue.UI.Windows
             return false;
         }
 
-        private static bool HandleMove(SadConsole.Input.Keyboard info, World world)
+        private bool HandleMove(SadConsole.Input.Keyboard info, World world)
         {
             foreach (Keys key in UIManager.MovementDirectionMapping.Keys)
             {
@@ -260,8 +260,12 @@ namespace MagiRogue.UI.Windows
 
                     if (world.CurrentMap.ControlledEntitiy is not Player)
                     {
+                        int distance = (int)Distance.Chebyshev.Calculate(targetCursor.OriginCoord,
+                            world.CurrentMap.ControlledEntitiy.Position + coorToMove);
+
                         if (world.CurrentMap.PlayerFOV.CurrentFOV.Contains
-                            (world.CurrentMap.ControlledEntitiy.Position + coorToMove))
+                            (world.CurrentMap.ControlledEntitiy.Position + coorToMove)
+                            &&  distance <= targetCursor.MaxDistance)
                         {
                             return CommandManager.MoveActorBy
                                 ((Actor)world.CurrentMap.ControlledEntitiy, coorToMove);

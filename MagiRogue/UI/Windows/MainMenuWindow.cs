@@ -101,6 +101,13 @@ namespace MagiRogue.UI.Windows
             _gameStarted = false;
             GameLoop.World = null;
             startGame.IsEnabled = true;
+
+            foreach (SadConsole.Console item in GameLoop.UIManager.Children)
+            {
+                if (!item.Equals(this))
+                    item.Dispose();
+            }
+
             GameLoop.UIManager.MessageLog = null;
             GameLoop.UIManager.MapWindow = null;
             GameLoop.UIManager.StatusConsole = null;

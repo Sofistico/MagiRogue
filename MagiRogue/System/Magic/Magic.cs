@@ -32,7 +32,8 @@ namespace MagiRogue.System.Magic
 
         public static int CalculateSpellDamage(Stat entityStats, SpellBase spellCasted)
         {
-            int baseDamage = (int)(spellCasted.SpellLevel + entityStats.MindStat + (entityStats.SoulStat * 0.5));
+            int baseDamage = (int)(spellCasted.Power + spellCasted.SpellLevel
+                + entityStats.MindStat + (entityStats.SoulStat * 0.5));
 
             int rngDmg = Dice.Roll($"{spellCasted.SpellLevel}d{baseDamage}");
 
@@ -61,7 +62,6 @@ namespace MagiRogue.System.Magic
         Summoning,
         Illuminism,
         MedicalMagic,
-        CombatMagic,
         MindMagic,
         SoulMagic,
         BloodMagic

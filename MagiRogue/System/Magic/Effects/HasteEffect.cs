@@ -27,8 +27,10 @@ namespace MagiRogue.System.Magic.Effects
             Turns = turns;
         }
 
-        public void ApplyEffect(Point target, Stat casterStats)
+        public void ApplyEffect(Point target, Actor caster, SpellBase spellCasted)
         {
+            Stat casterStats = caster.Stats;
+
             switch (AreaOfEffect)
             {
                 case SpellAreaEffect.Self:
@@ -54,9 +56,6 @@ namespace MagiRogue.System.Magic.Effects
                     break;
 
                 case SpellAreaEffect.Ball:
-                    break;
-
-                case SpellAreaEffect.Shape:
                     break;
 
                 case SpellAreaEffect.Beam:

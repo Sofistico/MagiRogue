@@ -9,6 +9,7 @@ namespace MagiRogue.System.Magic
     public class SpellBase
     {
         private double proficency;
+        private string errorMessage = "Can't cast the spell";
 
         /// <summary>
         /// The required shaping skill to cast the spell at it's most basic parameters.
@@ -90,6 +91,14 @@ namespace MagiRogue.System.Magic
             }
         } // multiplier, going from 0.0 to 2.0
 
+        /// <summary>
+        /// Normally can be referred as the base damage of a spell, without any kind of spell caster modifier
+        /// </summary>
+        public int Power
+        {
+            get => (int)(SpellLevel + ManaCost);
+        }
+
         public SpellBase()
         {
         }
@@ -131,11 +140,8 @@ namespace MagiRogue.System.Magic
 
                 if (!canCast)
                 {
-                    GameLoop.UIManager.MessageLog.Add("You don't have the required shaping skills to cast this spell");
-#if DEBUG
-                    GameLoop.UIManager.MessageLog.Add($"Shaping skills required: {reqShapingWithDiscount}");
-#endif
                     TickProfiency();
+                    errorMessage = "Can't cast the spell because you don't have the required shaping skills and/or the proficiency";
                 }
 
                 return canCast;
@@ -152,7 +158,7 @@ namespace MagiRogue.System.Magic
                 GameLoop.UIManager.MessageLog.Add($"{caster.Name} casted {SpellName}");
                 foreach (ISpellEffect effect in Effects)
                 {
-                    effect.ApplyEffect(target, caster.Stats);
+                    effect.ApplyEffect(target, caster, this);
                 }
 
                 caster.Stats.PersonalMana -= (float)ManaCost;
@@ -160,6 +166,9 @@ namespace MagiRogue.System.Magic
 
                 return true;
             }
+
+            GameLoop.UIManager.MessageLog.Add(errorMessage);
+            errorMessage = "Can't cast the spell";
 
             return false;
         }
@@ -186,7 +195,6 @@ namespace MagiRogue.System.Magic
         Self,
         Target,
         Ball,
-        Shape,
         Beam,
         Level,
         World

@@ -42,7 +42,7 @@ namespace MagiRogue.Entities
             { Proficency = 1 };
 
             missile.Effects.Add(
-            new DamageEffect(Magic.CalculateSpellDamage(Stats, missile),
+            new DamageEffect(missile.Power,
             SpellAreaEffect.Target,
             Utils.DamageType.Force));
 
@@ -50,7 +50,7 @@ namespace MagiRogue.Entities
                 MagicSchool.MedicalMagic, 0, 1, 1)
             { Proficency = 1 };
 
-            cure.Effects.Add(new DamageEffect(Magic.CalculateSpellDamage(Stats, cure),
+            cure.Effects.Add(new DamageEffect(cure.Power,
                 SpellAreaEffect.Self, Utils.DamageType.Force));
 
             SpellBase haste = new SpellBase("haste_self", "Haste", new List<ISpellEffect>(),
@@ -64,8 +64,8 @@ namespace MagiRogue.Entities
             mageSight.Effects.Add(new MageSightEffect(5));
 
             SpellBase fireRay = new SpellBase("fire_ray", "Fire Ray", new List<ISpellEffect>(),
-                MagicSchool.CombatMagic, 5, 1, 1);
-            fireRay.Effects.Add(new DamageEffect(Magic.CalculateSpellDamage(Stats, fireRay),
+                MagicSchool.Projection, 5, 1, 1);
+            fireRay.Effects.Add(new DamageEffect(fireRay.Power,
                 SpellAreaEffect.Beam, Utils.DamageType.Fire));
 
             List<SpellBase> testSpells = new List<SpellBase>()
