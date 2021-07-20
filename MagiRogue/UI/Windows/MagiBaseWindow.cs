@@ -87,6 +87,7 @@ namespace MagiRogue.UI.Windows
             }
         }
 
+
         public override void Update(TimeSpan time)
         {
             if (Controls.FocusedControl is not MagiButton focusedButton || focusedButton == lastFocusedButton)

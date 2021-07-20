@@ -145,18 +145,13 @@ namespace MagiRogue.UI.Windows
             }
             if (info.IsKeyPressed(Keys.L))
             {
-                if (!(targetCursor != null))
+                if (targetCursor is null)
                     targetCursor = new Target(GetPlayer.Position);
 
                 if (targetCursor.EntityInTarget())
                 {
-                    if (targetCursor.TargetList != null)
-                    {
-                        LookWindow w = new LookWindow(targetCursor.TargetList[0]);
-                        w.Show();
-
-                        return true;
-                    }
+                    targetCursor.LookTarget();
+                    return true;
                 }
 
                 if (world.CurrentMap.ControlledEntitiy is not Player

@@ -96,11 +96,20 @@ namespace MagiRogue.UI.Windows
             }
         }
 
+        private void RefreshButtons()
+        {
+            foreach (var control in Controls)
+            {
+                control.IsEnabled = true;
+            }
+        }
+
+
         public void RestartGame()
         {
             _gameStarted = false;
             GameLoop.World = null;
-            startGame.IsEnabled = true;
+            RefreshButtons();
 
             foreach (SadConsole.Console item in GameLoop.UIManager.Children)
             {

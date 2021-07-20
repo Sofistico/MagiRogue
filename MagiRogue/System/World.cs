@@ -232,22 +232,23 @@ namespace MagiRogue.System
         {
             if (sucess)
             {
-                PlayerTimeNode playerTurn = new PlayerTimeNode(GetTime.TimePassed.Ticks + playerTime);
-                GetTime.RegisterEntity(playerTurn);
-
-                Player.Stats.ApplyHpRegen();
-                Player.Stats.ApplyManaRegen();
-                CurrentMap.PlayerFOV.Calculate(Player.Position, Player.Stats.ViewRadius);
-
                 if (Player.Stats.Health <= 0)
                 {
                     CurrentMap.RemoveAllEntities();
+                    CurrentMap.RemoveAllTiles();
                     CurrentMap = null;
                     Player = null;
 
                     GameLoop.UIManager.MainMenu.RestartGame();
                     return;
                 }
+
+                PlayerTimeNode playerTurn = new PlayerTimeNode(GetTime.TimePassed.Ticks + playerTime);
+                GetTime.RegisterEntity(playerTurn);
+
+                Player.Stats.ApplyHpRegen();
+                Player.Stats.ApplyManaRegen();
+                CurrentMap.PlayerFOV.Calculate(Player.Position, Player.Stats.ViewRadius);
 
                 var node = GetTime.NextNode();
 

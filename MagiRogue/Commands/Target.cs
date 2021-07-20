@@ -6,6 +6,7 @@ using SadRogue.Primitives;
 using System.Collections.Generic;
 using System.Linq;
 using GoRogue.Pathing;
+using MagiRogue.UI.Windows;
 
 namespace MagiRogue.Commands
 {
@@ -27,7 +28,7 @@ namespace MagiRogue.Commands
 
         public Path TravelPath { get; set; }
 
-        public int MaxDistance => SpellSelected.SpellRange;
+        public int MaxDistance => SpellSelected is not null ? SpellSelected.SpellRange : 500;
 
         public SpellBase SpellSelected { get; set; }
 
@@ -74,8 +75,6 @@ namespace MagiRogue.Commands
             {
                 TargetList = (List<Entity>)entities;
             }
-
-            return;
         }
 
         private T TargetTile<T>() where T : TileBase
@@ -86,7 +85,7 @@ namespace MagiRogue.Commands
         public bool EntityInTarget()
         {
             if (GameLoop.World.CurrentMap.GetEntitiesAt<Entity>(Cursor.Position).Any(e => e.ID != Cursor.ID)
-                && GameLoop.World.CurrentMap.GetEntityAt<Entity>(Cursor.Position) is Player)
+                && GameLoop.World.CurrentMap.GetEntityAt<Entity>(Cursor.Position) is not Player)
             {
                 TargetEntity<Entity>();
                 State = TargetState.Targeting;
@@ -148,10 +147,6 @@ namespace MagiRogue.Commands
         {
             if (Cursor.CurrentMap is not null)
             {
-                if (SpellSelected is not null)
-                {
-                }
-
                 State = TargetState.Resting;
                 TargetList.Clear();
                 SpellSelected = null;
@@ -211,6 +206,12 @@ namespace MagiRogue.Commands
                     }
                 }
             };
+        }
+
+        public void LookTarget()
+        {
+            LookWindow w = new LookWindow(TargetList[0]);
+            w.Show();
         }
 
         public enum TargetState

@@ -130,7 +130,7 @@ namespace MagiRogue.System.Magic
 
         public bool CanCast(Magic magicSkills, Stat stats)
         {
-            if (magicSkills.KnowSpells.Contains(this) && stats.PersonalMana >= ManaCost)
+            if (magicSkills.KnowSpells.Contains(this))
             {
                 int reqShapingWithDiscount = RequiredShapingSkill / stats.SoulStat;
 
@@ -140,6 +140,11 @@ namespace MagiRogue.System.Magic
                 {
                     TickProfiency();
                     errorMessage = "Can't cast the spell because you don't have the required shaping skills and/or the proficiency";
+                }
+                if (!(stats.PersonalMana >= ManaCost))
+                {
+                    errorMessage = "You don't have enough mana to cast the spell!";
+                    canCast = false;
                 }
 
                 return canCast;
@@ -163,7 +168,8 @@ namespace MagiRogue.System.Magic
 
                 foreach (ISpellEffect effect in Effects)
                 {
-                    if (entity is not null && !entity.Equals(caster) && entity.CanBeAttacked)
+                    if (entity is not null && (effect.AreaOfEffect is SpellAreaEffect.Self || 
+                        !entity.Equals(caster)) && entity.CanBeAttacked)
                     {
                         effect.ApplyEffect(target, caster, this);
                     }

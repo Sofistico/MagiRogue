@@ -29,30 +29,11 @@ namespace MagiRogue.System.Magic.Effects
                     HealEffect(Point.None, caster, spellCasted);
                     break;
 
-                case SpellAreaEffect.Target:
-                    if (!isHealing)
-                        DmgEff(target, caster, spellCasted);
-                    else
-                        HealEffect(target, caster, spellCasted);
-                    break;
-
-                case SpellAreaEffect.Ball:
-                    break;
-
-                case SpellAreaEffect.Beam:
-                    if (!isHealing)
-                        DmgEff(target, caster, spellCasted);
-                    else
-                        HealEffect(target, caster, spellCasted);
-                    break;
-
-                case SpellAreaEffect.Level:
-                    break;
-
-                case SpellAreaEffect.World:
-                    throw new NotImplementedException();
-
                 default:
+                    if (!isHealing)
+                        DmgEff(target, caster, spellCasted);
+                    else
+                        HealEffect(target, caster, spellCasted);
                     break;
             }
         }

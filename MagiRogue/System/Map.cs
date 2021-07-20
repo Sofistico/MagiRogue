@@ -129,7 +129,7 @@ namespace MagiRogue.System
         /// <returns></returns>
         public T GetEntityAt<T>(Point location) where T : Entity
         {
-            return Entities.GetItemsAt(location).OfType<T>().Where(e => e.CanInteract).FirstOrDefault();
+            return Entities.GetItemsAt(location).OfType<T>().FirstOrDefault(e => e.CanInteract);
         }
 
         public Entity GetClosestEntity(Point originPos, int range)
@@ -255,6 +255,14 @@ namespace MagiRogue.System
         public T GetTileAt<T>(Point location) where T : TileBase
         {
             return GetTileAt<T>(location.X, location.Y);
+        }
+
+        public void RemoveAllTiles()
+        {
+            foreach (TileBase tile in Tiles)
+            {
+                RemoveTerrain(tile);
+            }
         }
 
         /// <summary>

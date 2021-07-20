@@ -29,27 +29,10 @@ namespace MagiRogue.System.Magic.Effects
 
         public void ApplyEffect(Point target, Actor caster, SpellBase spellCasted)
         {
-            Stat casterStats = caster.Stats;
-
             switch (AreaOfEffect)
             {
                 case SpellAreaEffect.Self:
-                    if (turnToRemove == 0)
-                        GameLoop.World.GetTime.TurnPassed -= GetTime_TurnPassed;
-                    if (isHasted)
-                    {
-                        GameLoop.UIManager.MessageLog.Add("Can only have one haste effect per time");
-                        break;
-                    }
-                    currentStats = casterStats;
-                    previousSpeed = casterStats.Speed;
-                    casterStats.Speed += HastePower;
-                    TurnApplied = GameLoop.World.GetTime.Turns;
-                    turnToRemove = TurnApplied + Turns;
-                    isHasted = true;
-
-                    GameLoop.World.GetTime.TurnPassed += GetTime_TurnPassed;
-
+                    Haste(target, caster, spellCasted);
                     break;
 
                 case SpellAreaEffect.Target:
@@ -70,6 +53,27 @@ namespace MagiRogue.System.Magic.Effects
                 default:
                     break;
             }
+        }
+
+        private void Haste(Point target, Actor caster, SpellBase spellCasted)
+        {
+            Stat casterStats = caster.Stats;
+
+            if (turnToRemove == 0)
+                GameLoop.World.GetTime.TurnPassed -= GetTime_TurnPassed;
+            if (isHasted)
+            {
+                GameLoop.UIManager.MessageLog.Add("Can only have one haste effect per time");
+                return;
+            }
+            currentStats = casterStats;
+            previousSpeed = casterStats.Speed;
+            casterStats.Speed += HastePower;
+            TurnApplied = GameLoop.World.GetTime.Turns;
+            turnToRemove = TurnApplied + Turns;
+            isHasted = true;
+
+            GameLoop.World.GetTime.TurnPassed += GetTime_TurnPassed;
         }
 
         private void GetTime_TurnPassed(object sender, Time.TimeDefSpan e)
