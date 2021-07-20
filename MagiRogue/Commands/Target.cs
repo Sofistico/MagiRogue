@@ -16,7 +16,7 @@ namespace MagiRogue.Commands
     {
         private SpellBase _spellSelected;
         private Actor _caster;
-        private Dictionary<Point, TileBase> tileDictionary;
+        private readonly Dictionary<Point, TileBase> tileDictionary;
 
         public Entity Cursor { get; set; }
 
@@ -61,7 +61,7 @@ namespace MagiRogue.Commands
             tileDictionary = new Dictionary<Point, TileBase>();
         }
 
-        private IList<T> TargetEntity<T>() where T : Entity
+        private void TargetEntity<T>() where T : Entity
         {
             TargetList.Clear();
 
@@ -72,10 +72,9 @@ namespace MagiRogue.Commands
             if (entities.Count != 0)
             {
                 TargetList = (List<Entity>)entities;
-                return entities;
             }
 
-            return null;
+            return;
         }
 
         private T TargetTile<T>() where T : TileBase

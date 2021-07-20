@@ -100,7 +100,7 @@ namespace MagiRogue.Test.System.Magic
                 && (canStrongCast.Where(a => a == true).Count().Equals(4)));
         }
 
-        private List<SpellBase> TestSpellsNoEffect()
+        private static List<SpellBase> TestSpellsNoEffect()
         {
             SpellBase missile = new SpellBase("magic_missile",
                  "Magic Missile",

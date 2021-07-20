@@ -174,7 +174,7 @@ namespace MagiRogue.UI.Windows
             if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.Z))
             {
                 SpellSelectWindow spell =
-                    new SpellSelectWindow(GetPlayer.Magic.KnowSpells, GetPlayer.Stats.PersonalMana);
+                    new SpellSelectWindow(GetPlayer.Stats.PersonalMana);
 
                 targetCursor = new Target(GetPlayer.Position);
 
@@ -265,7 +265,7 @@ namespace MagiRogue.UI.Windows
 
                         if (world.CurrentMap.PlayerFOV.CurrentFOV.Contains
                             (world.CurrentMap.ControlledEntitiy.Position + coorToMove)
-                            &&  distance <= targetCursor.MaxDistance)
+                            && distance <= targetCursor.MaxDistance)
                         {
                             return CommandManager.MoveActorBy
                                 ((Actor)world.CurrentMap.ControlledEntitiy, coorToMove);

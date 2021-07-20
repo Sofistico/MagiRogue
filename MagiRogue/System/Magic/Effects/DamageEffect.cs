@@ -7,7 +7,7 @@ namespace MagiRogue.System.Magic.Effects
 {
     public class DamageEffect : ISpellEffect
     {
-        private bool isHealing;
+        private readonly bool isHealing;
 
         public SpellAreaEffect AreaOfEffect { get; set; }
         public DamageType SpellDamageType { get; set; }
@@ -42,7 +42,7 @@ namespace MagiRogue.System.Magic.Effects
                 case SpellAreaEffect.Beam:
                     if (!isHealing)
                         DmgEff(target, caster, spellCasted);
-                    else if (isHealing)
+                    else
                         HealEffect(target, caster, spellCasted);
                     break;
 

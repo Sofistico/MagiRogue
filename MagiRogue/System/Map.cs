@@ -166,8 +166,6 @@ namespace MagiRogue.System
 
             // Link up the entity's Moved event to a new handler
             entity.Moved -= OnEntityMoved;
-
-            entity = null;
         }
 
         /// <summary>

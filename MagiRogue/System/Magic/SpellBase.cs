@@ -178,7 +178,7 @@ namespace MagiRogue.System.Magic
             Description = description;
         }
 
-        private void TickProfiency() => Proficency = Math.Round(Proficency += 0.01, 2);
+        private void TickProfiency() => Proficency = Math.Round(Proficency + 0.01, 2);
 
         public override string ToString()
         {

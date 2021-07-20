@@ -15,7 +15,6 @@ namespace MagiRogue.UI.Windows
     /// </summary>
     public class SpellSelectWindow : PopWindow
     {
-        private readonly List<SpellBase> _spellList;
         private readonly MagiButton _castButton;
         private readonly Console _descriptionArea;
         private readonly Dictionary<char, SpellBase> _hotKeys;
@@ -24,10 +23,9 @@ namespace MagiRogue.UI.Windows
         private Action<SpellBase> _onCast;
         private double _currentMana;
 
-        public SpellSelectWindow(List<SpellBase> spellKnow, double currentMana) : base("Select your spell")
+        public SpellSelectWindow(double currentMana) : base("Select your spell")
         {
             _hotKeys = new Dictionary<char, SpellBase>();
-            _spellList = spellKnow;
             _currentMana = currentMana;
 
             const string castText = "Cast";
@@ -60,12 +58,6 @@ namespace MagiRogue.UI.Windows
                 {
                     _onCast(spell);
                     Hide();
-
-                    /*if (spell.Effects.Any(s => s.AreaOfEffect is SpellAreaEffect.Self))
-                    {
-                        GameLoop.World.ProcessTurn(System.Time.TimeHelper
-                            .GetCastingTime(GameLoop.World.Player, spell), true);
-                    }*/
 
                     return true;
                 }
