@@ -129,7 +129,7 @@ namespace MagiRogue.System
         /// <returns></returns>
         public T GetEntityAt<T>(Point location) where T : Entity
         {
-            return Entities.GetItemsAt(location).OfType<T>().FirstOrDefault();
+            return Entities.GetItemsAt(location).OfType<T>().Where(e => e.CanInteract).FirstOrDefault();
         }
 
         public Entity GetClosestEntity(Point originPos, int range)

@@ -14,7 +14,6 @@ namespace MagiRogue.Commands
     /// </summary>
     public class Target
     {
-        private SpellBase _spellSelected;
         private Actor _caster;
         private readonly Dictionary<Point, TileBase> tileDictionary;
 
@@ -28,7 +27,9 @@ namespace MagiRogue.Commands
 
         public Path TravelPath { get; set; }
 
-        public int MaxDistance => _spellSelected.SpellRange;
+        public int MaxDistance => SpellSelected.SpellRange;
+
+        public SpellBase SpellSelected { get; set; }
 
         public Target(Point spawnCoord)
         {
@@ -85,7 +86,7 @@ namespace MagiRogue.Commands
         public bool EntityInTarget()
         {
             if (GameLoop.World.CurrentMap.GetEntitiesAt<Entity>(Cursor.Position).Any(e => e.ID != Cursor.ID)
-                && GameLoop.World.CurrentMap.GetEntityAt<Entity>(Cursor.Position) is not Player)
+                && GameLoop.World.CurrentMap.GetEntityAt<Entity>(Cursor.Position) is Player)
             {
                 TargetEntity<Entity>();
                 State = TargetState.Targeting;
@@ -96,9 +97,9 @@ namespace MagiRogue.Commands
 
         public void OnSelectSpell(SpellBase spell, Actor caster)
         {
-            _spellSelected = spell;
+            SpellSelected = spell;
             _caster = caster;
-            if (_spellSelected.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Self))
+            if (SpellSelected.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Self))
             {
                 TargetList.Add(_caster);
                 var (sucess, s) = EndSpellTargetting();
@@ -107,7 +108,7 @@ namespace MagiRogue.Commands
                 return;
             }
 
-            if (_spellSelected.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Beam))
+            if (SpellSelected.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Beam))
             {
                 LineTargetting();
             }
@@ -127,15 +128,15 @@ namespace MagiRogue.Commands
         {
             int distance = (int)Distance.Chebyshev.Calculate(OriginCoord, Cursor.Position);
 
-            if (_spellSelected.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Beam))
+            if (SpellSelected.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Beam))
             {
                 return AffectPath();
             }
 
-            if (distance <= _spellSelected.SpellRange)
+            if (distance <= SpellSelected.SpellRange)
             {
-                bool casted = _spellSelected.CastSpell(TargetList[0].Position, _caster);
-                var spellCasted = _spellSelected;
+                bool casted = SpellSelected.CastSpell(TargetList[0].Position, _caster);
+                var spellCasted = SpellSelected;
                 EndTargetting();
                 return (casted, spellCasted);
             }
@@ -147,19 +148,25 @@ namespace MagiRogue.Commands
         {
             if (Cursor.CurrentMap is not null)
             {
-                State = TargetState.Resting;
-                TargetList.Clear();
-                _spellSelected = null;
-                _caster = null;
-
-                // if there is anything in the path, clear it
-                foreach (Point point in TravelPath.Steps)
+                if (SpellSelected is not null)
                 {
-                    var tile = GameLoop.World.CurrentMap.GetTileAt<TileBase>(point);
-                    tile.CopyAppearanceFrom(tile.LastSeenAppereance);
                 }
 
-                TravelPath = null;
+                State = TargetState.Resting;
+                TargetList.Clear();
+                SpellSelected = null;
+                _caster = null;
+
+                if (TravelPath is not null)
+                {
+                    // if there is anything in the path, clear it
+                    foreach (Point point in TravelPath.Steps)
+                    {
+                        var tile = GameLoop.World.CurrentMap.GetTileAt<TileBase>(point);
+                        tile.CopyAppearanceFrom(tile.LastSeenAppereance);
+                    }
+                    TravelPath = null;
+                }
 
                 GameLoop.World.ChangeControlledEntity(GameLoop.World.Player);
                 GameLoop.World.CurrentMap.Remove(Cursor);
@@ -170,15 +177,13 @@ namespace MagiRogue.Commands
         {
             if (TravelPath.Length >= 1)
             {
-                foreach (Point target in TravelPath.Steps)
-                {
-                    _spellSelected.CastSpell(target, _caster);
-                }
-                var casted = _spellSelected;
+                bool sucess = SpellSelected.CastSpell(TravelPath.Steps.ToList(), _caster);
+
+                var casted = SpellSelected;
 
                 EndTargetting();
 
-                return (true, casted);
+                return (sucess, casted);
             }
 
             return (false, null);

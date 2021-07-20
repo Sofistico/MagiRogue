@@ -47,6 +47,21 @@ namespace MagiRogue.Entities
 
         public Magic Magic { get; set; }
 
+        /// <summary>
+        /// Defines if this entity can be killed
+        /// </summary>
+        public bool CanBeKilled { get; set; } = true;
+
+        /// <summary>
+        /// Defines if a entity can target or be attacked by this actor
+        /// </summary>
+        public bool CanBeAttacked { get; set; } = true;
+
+        /// <summary>
+        /// Defines if the entity can interact with it's surrondings
+        /// </summary>
+        public bool CanInteract { get; set; } = true;
+
         #region BackingField fields
 
         public Map CurrentMap => backingField.CurrentMap;

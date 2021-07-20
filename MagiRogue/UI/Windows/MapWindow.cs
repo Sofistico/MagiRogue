@@ -186,25 +186,27 @@ namespace MagiRogue.UI.Windows
                 return true;
             }
 
-            if (info.IsKeyPressed(Keys.Enter) && targetCursor is not null && targetCursor.State == Target.TargetState.Targeting)
+            if (info.IsKeyPressed(Keys.Enter) && targetCursor is not null
+                && targetCursor.State == Target.TargetState.Targeting)
             {
-                if (targetCursor.EntityInTarget())
+                if (targetCursor.EntityInTarget() || targetCursor.SpellSelected.Effects.Any
+                    (a => a.AreaOfEffect is not System.Magic.SpellAreaEffect.Target))
                 {
                     var (sucess, spellCasted) = targetCursor.EndSpellTargetting();
 
                     if (sucess)
                     {
                         targetCursor = null;
-
                         world.ProcessTurn(TimeHelper.GetCastingTime(GetPlayer, spellCasted), sucess);
                     }
                     return sucess;
                 }
                 else
                 {
-                    ui.MessageLog.Add("There is no one to target there!");
+                    ui.MessageLog.Add("Invalid target!");
                 }
             }
+
             if (info.IsKeyPressed(Keys.Escape) && (targetCursor is object))
             {
                 targetCursor.EndTargetting();

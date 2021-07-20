@@ -35,11 +35,6 @@ namespace MagiRogue.System.Magic
         public string Description { get; private set; }
 
         /// <summary>
-        /// The target of the spell
-        /// </summary>
-        public Point Target { get; set; }
-
-        /// <summary>
         /// What school the spell is
         /// </summary>
         public MagicSchool SpellSchool { get; set; }
@@ -99,6 +94,9 @@ namespace MagiRogue.System.Magic
             get => (int)(SpellLevel + ManaCost);
         }
 
+        /// <summary>
+        /// Empty constructor, a waste of space
+        /// </summary>
         public SpellBase()
         {
         }
@@ -150,15 +148,25 @@ namespace MagiRogue.System.Magic
             return false;
         }
 
+        /// <summary>
+        /// Single spell targeting
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="caster"></param>
+        /// <returns></returns>
         public bool CastSpell(Point target, Actor caster)
         {
             if (CanCast(caster.Magic, caster.Stats) && target != Point.None)
             {
-                Target = target;
+                Entity entity = GameLoop.World.CurrentMap.GetEntityAt<Entity>(target);
                 GameLoop.UIManager.MessageLog.Add($"{caster.Name} casted {SpellName}");
+
                 foreach (ISpellEffect effect in Effects)
                 {
-                    effect.ApplyEffect(target, caster, this);
+                    if (entity is not null && !entity.Equals(caster) && entity.CanBeAttacked)
+                    {
+                        effect.ApplyEffect(target, caster, this);
+                    }
                 }
 
                 caster.Stats.PersonalMana -= (float)ManaCost;
@@ -167,6 +175,39 @@ namespace MagiRogue.System.Magic
                 return true;
             }
 
+            GameLoop.UIManager.MessageLog.Add(errorMessage);
+            errorMessage = "Can't cast the spell";
+
+            return false;
+        }
+
+        /// <summary>
+        /// Multi spell targetting
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="caster"></param>
+        /// <returns></returns>
+        public bool CastSpell(List<Point> target, Actor caster)
+        {
+            if (CanCast(caster.Magic, caster.Stats) && target.Count > 0)
+            {
+                GameLoop.UIManager.MessageLog.Add($"{caster.Name} casted {SpellName}");
+
+                foreach (var pos in target)
+                {
+                    Entity entity = GameLoop.World.CurrentMap.GetEntityAt<Entity>(pos);
+                    foreach (ISpellEffect effect in Effects)
+                    {
+                        if (entity is not null && !entity.Equals(caster) && entity.CanBeAttacked)
+                            effect.ApplyEffect(pos, caster, this);
+                    }
+                }
+
+                caster.Stats.PersonalMana -= (float)ManaCost;
+                TickProfiency();
+
+                return true;
+            }
             GameLoop.UIManager.MessageLog.Add(errorMessage);
             errorMessage = "Can't cast the spell";
 
