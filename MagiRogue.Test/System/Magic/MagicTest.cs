@@ -104,18 +104,18 @@ namespace MagiRogue.Test.System.Magic
         {
             SpellBase missile = new SpellBase("magic_missile",
                  "Magic Missile",
-                new List<ISpellEffect>(), MagicSchool.Projection, 5, manaCost: 1.0f)
+                MagicSchool.Projection, 5, manaCost: 1.0f)
             { Proficency = 1 };
 
-            SpellBase cure = new SpellBase("cure_test", "Cure Test", new List<ISpellEffect>(),
+            SpellBase cure = new SpellBase("cure_test", "Cure Test",
                 MagicSchool.MedicalMagic, 0, 1, 4)
             { Proficency = 1 };
 
-            SpellBase haste = new SpellBase("haste_self", "Haste", new List<ISpellEffect>(),
+            SpellBase haste = new SpellBase("haste_self", "Haste",
                 MagicSchool.Dimensionalism, 0, 1, 7)
             { Proficency = 1 };
 
-            SpellBase mageSight = new SpellBase("mage_sight", "Mage Sight", new List<ISpellEffect>(),
+            SpellBase mageSight = new SpellBase("mage_sight", "Mage Sight",
                 MagicSchool.Divination, 0, 1, 8)
             { Proficency = 1 };
 

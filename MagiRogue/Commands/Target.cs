@@ -18,7 +18,7 @@ namespace MagiRogue.Commands
     {
         private Actor _caster;
         private readonly Dictionary<Point, TileBase> tileDictionary;
-        private Radius radius;
+        private static readonly Radius radius = Radius.Circle;
         private RadiusLocationContext radiusLocation;
 
         public Entity Cursor { get; set; }
@@ -168,7 +168,8 @@ namespace MagiRogue.Commands
                     foreach (Point point in tileDictionary.Keys)
                     {
                         var tile = GameLoop.World.CurrentMap.GetTileAt<TileBase>(point);
-                        tile.CopyAppearanceFrom(tile.LastSeenAppereance);
+                        if (tile is not null)
+                            tile.CopyAppearanceFrom(tile.LastSeenAppereance);
                     }
                     Cursor.Moved -= Cursor_Moved;
                     TravelPath = null;
@@ -249,14 +250,12 @@ namespace MagiRogue.Commands
             {
                 radiusLocation =
                    new RadiusLocationContext(Cursor.Position, SpellSelected.Effects.FirstOrDefault().Radius);
-                radius = Radius.Circle;
-                radius.PositionsInRadius(radiusLocation);
 
                 foreach (Point point in radius.PositionsInRadius(radiusLocation))
                 {
                     var halp = GameLoop.World.CurrentMap.GetTileAt<TileBase>(point);
                     var entity = GameLoop.World.CurrentMap.GetEntityAt<Entity>(point);
-                    if (entity is not null)
+                    if (entity is not null && !TargetList.Contains(entity))
                         TargetList.Add(GameLoop.World.CurrentMap.GetEntityAt<Entity>(point));
                     if (halp is not null)
                         halp.Background = Color.Yellow;
