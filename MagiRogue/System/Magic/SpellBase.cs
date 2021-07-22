@@ -2,6 +2,7 @@
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace MagiRogue.System.Magic
@@ -113,7 +114,6 @@ namespace MagiRogue.System.Magic
         /// <param name="manaCost">The mana cost of the spell, should be more than 0.1</param>
         public SpellBase(string spellId,
             string spellName,
-            List<ISpellEffect> effects,
             MagicSchool spellSchool,
             int spellRange,
             int spellLevel = 1,
@@ -125,7 +125,7 @@ namespace MagiRogue.System.Magic
             SpellRange = spellRange;
             SpellLevel = spellLevel;
             ManaCost = manaCost;
-            Effects = effects;
+            Effects = new List<ISpellEffect>();
         }
 
         public bool CanCast(Magic magicSkills, Stat stats)
@@ -164,11 +164,12 @@ namespace MagiRogue.System.Magic
             if (CanCast(caster.Magic, caster.Stats) && target != Point.None)
             {
                 Entity entity = GameLoop.World.CurrentMap.GetEntityAt<Entity>(target);
+
                 GameLoop.UIManager.MessageLog.Add($"{caster.Name} casted {SpellName}");
 
                 foreach (ISpellEffect effect in Effects)
                 {
-                    if (entity is not null && (effect.AreaOfEffect is SpellAreaEffect.Self || 
+                    if (entity is not null && (effect.AreaOfEffect is SpellAreaEffect.Self ||
                         !entity.Equals(caster)) && entity.CanBeAttacked)
                     {
                         effect.ApplyEffect(target, caster, this);
@@ -204,7 +205,7 @@ namespace MagiRogue.System.Magic
                     Entity entity = GameLoop.World.CurrentMap.GetEntityAt<Entity>(pos);
                     foreach (ISpellEffect effect in Effects)
                     {
-                        if (entity is not null && !entity.Equals(caster) && entity.CanBeAttacked)
+                        if (entity is not null  && entity.CanBeAttacked)
                             effect.ApplyEffect(pos, caster, this);
                     }
                 }

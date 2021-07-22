@@ -12,13 +12,16 @@ namespace MagiRogue.System.Magic.Effects
         public SpellAreaEffect AreaOfEffect { get; set; }
         public DamageType SpellDamageType { get; set; }
         public int Damage { get; set; }
+        public int Radius { get; set; }
 
-        public DamageEffect(int dmg, SpellAreaEffect areaOfEffect, DamageType spellDamageType, bool isHeal = false)
+        public DamageEffect(int dmg, SpellAreaEffect areaOfEffect, DamageType spellDamageType,
+            bool isHeal = false, int radius = 0)
         {
             Damage = dmg;
             AreaOfEffect = areaOfEffect;
             SpellDamageType = spellDamageType;
             isHealing = isHeal;
+            Radius = radius;
         }
 
         public void ApplyEffect(Point target, Actor caster, SpellBase spellCasted)
@@ -43,14 +46,16 @@ namespace MagiRogue.System.Magic.Effects
             Damage = Magic.CalculateSpellDamage(caster.Stats, spellCasted);
 
             Entity poorGuy = GameLoop.World.CurrentMap.GetEntityAt<Entity>(target);
-            if (poorGuy == null)
+
+            if ((poorGuy == GameLoop.World.CurrentMap.ControlledEntitiy || poorGuy is Player)
+                && AreaOfEffect is not SpellAreaEffect.Ball)
             {
-                return;
+                poorGuy = null;
             }
 
-            if (poorGuy == GameLoop.World.CurrentMap.ControlledEntitiy || poorGuy is Player)
+            if (poorGuy is null)
             {
-                poorGuy = GameLoop.World.CurrentMap.GetClosestEntity(poorGuy.Position, 1);
+                return;
             }
 
             CombatUtils.DealDamage(Damage, poorGuy, SpellDamageType);

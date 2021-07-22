@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GoRogue.Pathing;
 using MagiRogue.UI.Windows;
+using System;
 
 namespace MagiRogue.Commands
 {
@@ -17,6 +18,8 @@ namespace MagiRogue.Commands
     {
         private Actor _caster;
         private readonly Dictionary<Point, TileBase> tileDictionary;
+        private Radius radius;
+        private RadiusLocationContext radiusLocation;
 
         public Entity Cursor { get; set; }
 
@@ -107,11 +110,7 @@ namespace MagiRogue.Commands
                 return;
             }
 
-            if (SpellSelected.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Beam))
-            {
-                LineTargetting();
-            }
-
+            Cursor.Moved += Cursor_Moved;
             StartTargetting();
         }
 
@@ -132,15 +131,25 @@ namespace MagiRogue.Commands
                 return AffectPath();
             }
 
+            if (SpellSelected.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Ball))
+            {
+                return AffectArea();
+            }
+
             if (distance <= SpellSelected.SpellRange)
             {
-                bool casted = SpellSelected.CastSpell(TargetList[0].Position, _caster);
-                var spellCasted = SpellSelected;
-                EndTargetting();
-                return (casted, spellCasted);
+                return AffectTarget();
             }
             GameLoop.UIManager.MessageLog.Add("The target is too far!");
             return (false, null);
+        }
+
+        private (bool, SpellBase) AffectTarget()
+        {
+            bool casted = SpellSelected.CastSpell(TargetList[0].Position, _caster);
+            var spellCasted = SpellSelected;
+            EndTargetting();
+            return (casted, spellCasted);
         }
 
         public void EndTargetting()
@@ -149,18 +158,21 @@ namespace MagiRogue.Commands
             {
                 State = TargetState.Resting;
                 TargetList.Clear();
+
                 SpellSelected = null;
                 _caster = null;
 
                 if (TravelPath is not null)
                 {
                     // if there is anything in the path, clear it
-                    foreach (Point point in TravelPath.Steps)
+                    foreach (Point point in tileDictionary.Keys)
                     {
                         var tile = GameLoop.World.CurrentMap.GetTileAt<TileBase>(point);
                         tile.CopyAppearanceFrom(tile.LastSeenAppereance);
                     }
+                    Cursor.Moved -= Cursor_Moved;
                     TravelPath = null;
+                    radiusLocation = null;
                 }
 
                 GameLoop.World.ChangeControlledEntity(GameLoop.World.Player);
@@ -184,28 +196,73 @@ namespace MagiRogue.Commands
             return (false, null);
         }
 
-        private void LineTargetting()
+        private (bool, SpellBase) AffectArea()
         {
-            Cursor.Moved += (_, __) =>
+            if (SpellSelected.Effects.Any(e => e.Radius > 0))
             {
-                TravelPath = GameLoop.World.CurrentMap.AStar.ShortestPath(OriginCoord, __.NewValue);
-                foreach (Point pos in TravelPath.Steps)
+                var _spellCasted = SpellSelected;
+                var allPosEntities = new List<Point>();
+
+                foreach (var entity in TargetList)
                 {
-                    // gets each point in the travel path steps and change the background of the wall
-                    var halp = GameLoop.World.CurrentMap.GetTileAt<TileBase>(pos);
-                    halp.Background = Color.Yellow;
-                    tileDictionary.TryAdd(pos, halp);
+                    if (entity.CanBeAttacked)
+                        allPosEntities.Add(entity.Position);
                 }
-                // This loops makes sure that all the pos that aren't in the TravelPath gets it's proper appearence
-                foreach (Point item in tileDictionary.Keys)
+
+                var sucess = SpellSelected.CastSpell(allPosEntities, _caster);
+
+                EndTargetting();
+
+                return (sucess, _spellCasted);
+            }
+            return (false, null);
+        }
+
+        /// <summary>
+        /// Makes the render and the path to the target
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Cursor_Moved(object sender, GoRogue.GameFramework.GameObjectPropertyChanged<Point> e)
+        {
+            TravelPath = GameLoop.World.CurrentMap.AStar.ShortestPath(OriginCoord, e.NewValue);
+            foreach (Point pos in TravelPath.Steps)
+            {
+                // gets each point in the travel path steps and change the background of the wall
+                var halp = GameLoop.World.CurrentMap.GetTileAt<TileBase>(pos);
+                halp.Background = Color.Yellow;
+                tileDictionary.TryAdd(pos, halp);
+            }
+
+            // This loops makes sure that all the pos that aren't in the TravelPath gets it's proper appearence
+            foreach (Point item in tileDictionary.Keys)
+            {
+                if (!TravelPath.Steps.Contains(item))
                 {
-                    if (!TravelPath.Steps.Contains(item))
-                    {
-                        TileBase llop = GameLoop.World.CurrentMap.GetTileAt<TileBase>(item);
+                    TileBase llop = GameLoop.World.CurrentMap.GetTileAt<TileBase>(item);
+                    if (llop is not null)
                         llop.Background = llop.LastSeenAppereance.Background;
-                    }
                 }
-            };
+            }
+
+            if (SpellSelected.Effects.Any(a => a.AreaOfEffect is SpellAreaEffect.Ball))
+            {
+                radiusLocation =
+                   new RadiusLocationContext(Cursor.Position, SpellSelected.Effects.FirstOrDefault().Radius);
+                radius = Radius.Circle;
+                radius.PositionsInRadius(radiusLocation);
+
+                foreach (Point point in radius.PositionsInRadius(radiusLocation))
+                {
+                    var halp = GameLoop.World.CurrentMap.GetTileAt<TileBase>(point);
+                    var entity = GameLoop.World.CurrentMap.GetEntityAt<Entity>(point);
+                    if (entity is not null)
+                        TargetList.Add(GameLoop.World.CurrentMap.GetEntityAt<Entity>(point));
+                    if (halp is not null)
+                        halp.Background = Color.Yellow;
+                    tileDictionary.TryAdd(point, halp);
+                }
+            }
         }
 
         public void LookTarget()

@@ -334,6 +334,12 @@ namespace MagiRogue.System
 
         ~Map()
         {
+#if DEBUG
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+#endif
+
             foreach (Entity item in Entities.Items)
             {
                 Remove(item);
@@ -342,6 +348,12 @@ namespace MagiRogue.System
             this.ControlledEntitiy = null;
             this.Time = null;
             GoRogueComponents.Clear();
+
+#if DEBUG
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+#endif
         }
 
         #endregion Desconstructor

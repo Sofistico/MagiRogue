@@ -59,7 +59,6 @@ namespace MagiRogue.System.Magic
         Dimensionalism,
         Conjuration,
         Transformation,
-        Summoning,
         Illuminism,
         MedicalMagic,
         MindMagic,

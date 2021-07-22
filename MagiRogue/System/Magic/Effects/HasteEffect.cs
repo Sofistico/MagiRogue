@@ -17,6 +17,7 @@ namespace MagiRogue.System.Magic.Effects
         public float HastePower { get; set; }
         public int Turns { get; private set; }
         public int TurnApplied { get; private set; }
+        public int Radius { get; set; } = 0;
 
         public HasteEffect(SpellAreaEffect areaOfEffect, float hastePower, int turns,
             DamageType spellDamageType = DamageType.Force)

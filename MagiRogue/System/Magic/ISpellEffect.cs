@@ -8,6 +8,7 @@ namespace MagiRogue.System.Magic
     {
         public SpellAreaEffect AreaOfEffect { get; set; }
         public DamageType SpellDamageType { get; set; }
+        public int Radius { get; set; }
 
         public void ApplyEffect(Point target, Actor caster, SpellBase spellCasted);
     }

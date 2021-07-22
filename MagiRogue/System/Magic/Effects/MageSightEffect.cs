@@ -15,6 +15,7 @@ namespace MagiRogue.System.Magic.Effects
 
         public int Turns { get; set; }
         public int TurnApplied { get; set; }
+        public int Radius { get; set; } = 0;
 
         public MageSightEffect(int turnsToRemove)
         {
