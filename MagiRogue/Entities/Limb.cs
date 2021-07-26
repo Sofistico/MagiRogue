@@ -13,7 +13,8 @@ namespace MagiRogue.Entities
         Leg,
         Foot,
         Hand,
-        Tail
+        Tail,
+        Wing
     }
 
     [DataContract]
@@ -35,6 +36,7 @@ namespace MagiRogue.Entities
                 else
                     return limbHp;
             }
+
             set
             {
                 if (value > MaxLimbHp)
@@ -45,17 +47,21 @@ namespace MagiRogue.Entities
                     limbHp = value;
             }
         }
+
         [DataMember]
         public int MaxLimbHp { get; set; }
+
         [DataMember]
         public double LimbWeight
         {
             get { return weight; }
+
             set
             {
                 weight = value * LimbMaterial.Density;
             }
         }
+
         [DataMember]
         public bool Attached { get; set; }
 

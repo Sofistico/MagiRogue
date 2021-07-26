@@ -27,7 +27,7 @@ namespace MagiRogue.System.Time
         {
             return (int)
                 ((MagicalThings + spellCasted.SpellLevel + spellCasted.ManaCost)
-                / (actor.Stats.Speed + actor.Magic.ShapingSkills * 0.5));
+                / (actor.Stats.Speed + actor.Magic.ShapingSkill * 0.5));
         }
     }
 }

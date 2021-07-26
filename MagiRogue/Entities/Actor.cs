@@ -51,7 +51,8 @@ namespace MagiRogue.Entities
         /// <param name="glyph"></param>
         /// <param name="layer"></param>
         /// <param name="coord"></param>
-        public Actor(string name, Color foreground, Color background, int glyph, Point coord, int layer = (int)MapLayer.ACTORS
+        public Actor(string name, Color foreground, Color background,
+            int glyph, Point coord, int layer = (int)MapLayer.ACTORS
             ) : base(foreground, background,
             glyph, coord, layer)
         {

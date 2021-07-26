@@ -17,7 +17,7 @@ namespace MagiRogue.System.Magic
         /// </summary>
         public int RequiredShapingSkill
         {
-            get => (int)((SpellLevel + ManaCost) * 2 / Proficency);
+            get => (int)((SpellLevel + ManaCost) * 2 / Proficiency);
         }
 
         /// <summary>
@@ -63,10 +63,10 @@ namespace MagiRogue.System.Magic
         /// <summary>
         /// The total proficiency, goes up slowly as you use the spell or train with it in your downtime, makes
         /// it more effective and cost less, goes from 0.0(not learned) to 2.0(double effectiviness),
-        /// for newly trained spell shoud be 0.5, see <see cref="Magic.ShapingSkills"/> for more details about
+        /// for newly trained spell shoud be 0.5, see <see cref="Magic.ShapingSkill"/> for more details about
         /// the shaping of mana
         /// </summary>
-        public double Proficency
+        public double Proficiency
         {
             get
             {
@@ -134,7 +134,7 @@ namespace MagiRogue.System.Magic
             {
                 int reqShapingWithDiscount = RequiredShapingSkill / stats.SoulStat;
 
-                bool canCast = reqShapingWithDiscount < magicSkills.ShapingSkills;
+                bool canCast = reqShapingWithDiscount <= magicSkills.ShapingSkill;
 
                 if (!canCast)
                 {
@@ -205,7 +205,7 @@ namespace MagiRogue.System.Magic
                     Entity entity = GameLoop.World.CurrentMap.GetEntityAt<Entity>(pos);
                     foreach (ISpellEffect effect in Effects)
                     {
-                        if (entity is not null  && entity.CanBeAttacked)
+                        if (entity is not null && entity.CanBeAttacked)
                             effect.ApplyEffect(pos, caster, this);
                     }
                 }
@@ -226,7 +226,7 @@ namespace MagiRogue.System.Magic
             Description = description;
         }
 
-        private void TickProfiency() => Proficency = Math.Round(Proficency + 0.01, 2);
+        private void TickProfiency() => Proficiency = Math.Round(Proficiency + 0.01, 2);
 
         public override string ToString()
         {

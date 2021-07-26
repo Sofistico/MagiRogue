@@ -58,6 +58,7 @@ namespace MagiRogue.Entities
         public Race Race
         {
             get => race;
+
             private set
             {
                 race = value;
@@ -78,9 +79,19 @@ namespace MagiRogue.Entities
         [DataMember]
         public bool HasBlood { get; set; }
 
+        [DataMember(IsRequired = false)]
+        public bool HasEnoughArms => Limbs.FindAll(l => l.TypeLimb is TypeOfLimb.Arm).Count >= 1;
+
+        [DataMember(IsRequired = false)]
+        public bool HasEnoughLegs => Limbs.Exists(l => l.TypeLimb is TypeOfLimb.Leg);
+
+        [DataMember(IsRequired = false)]
+        public bool HasEnoughWings => Limbs.FindAll(l => l.TypeLimb is TypeOfLimb.Wing).Count >= 2;
+
         #endregion Properties
 
         #region Constructor
+
         public Anatomy()
         {
         }
@@ -107,6 +118,38 @@ namespace MagiRogue.Entities
             foreach (Limb limb in limbs)
             {
                 Limbs.Add(limb);
+            }
+        }
+
+        public void ContinousBleed(float bleedAmount, InjurySeverity severity)
+        {
+            BloodCount = (float)Math.Round(BloodCount - bleedAmount, 4);
+
+            switch (severity)
+            {
+                case InjurySeverity.Scratch:
+                    break;
+
+                case InjurySeverity.LigthInjury:
+                    break;
+
+                case InjurySeverity.MediumInjury:
+                    break;
+
+                case InjurySeverity.SeriousInjury:
+                    break;
+
+                case InjurySeverity.Crippling:
+                    break;
+
+                case InjurySeverity.Fatal:
+                    break;
+
+                case InjurySeverity.LimbLoss:
+                    break;
+
+                default:
+                    break;
             }
         }
 
@@ -161,5 +204,16 @@ namespace MagiRogue.Entities
         }
 
         #endregion Methods
+    }
+
+    public enum InjurySeverity
+    {
+        Scratch,
+        LigthInjury,
+        MediumInjury,
+        SeriousInjury,
+        Crippling,
+        Fatal,
+        LimbLoss
     }
 }

@@ -50,7 +50,7 @@ namespace MagiRogue.Utils
                 item.Condition -= dmg;
             }
 
-            GameLoop.UIManager.MessageLog.Add($"The {entity.Name} took {dmg} {dmgType}");
+            GameLoop.UIManager.MessageLog.Add($"The {entity.Name} took {dmg} {dmgType} damage!");
         }
 
         public static void ApplyHealing(int dmg, Stat stats, DamageType healingType)
@@ -69,10 +69,6 @@ namespace MagiRogue.Utils
             switch (healingType)
             {
                 case DamageType.None:
-                    GameLoop.UIManager.MessageLog.Add(bobTheBuilder.ToString());
-                    break;
-
-                case DamageType.Physical:
                     GameLoop.UIManager.MessageLog.Add(bobTheBuilder
                         .Append(", feeling your bones and flesh growing over your wounds!").ToString());
                     break;
@@ -129,14 +125,16 @@ namespace MagiRogue.Utils
     public enum DamageType
     {
         None = 0,
-        Physical = 1,
-        Force = 2,
-        Fire = 3,
-        Cold = 4,
-        Poison = 5,
-        Acid = 6,
-        Electricity = 7,
-        Soul = 8,
-        Mind = 9
+        Blunt = 1,
+        Sharp = 2,
+        Point = 3,
+        Force = 4,
+        Fire = 5,
+        Cold = 6,
+        Poison = 7,
+        Acid = 8,
+        Electricity = 9,
+        Soul = 10,
+        Mind = 11
     }
 }

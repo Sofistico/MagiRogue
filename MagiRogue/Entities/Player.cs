@@ -34,12 +34,12 @@ namespace MagiRogue.Entities
 
             Anatomy.Limbs = Data.LimbTemplate.BasicHumanoidBody(this);
 
-            Magic.ShapingSkills = 8;
+            Magic.ShapingSkill = 9;
 
             SpellBase missile = new SpellBase("magic_missile",
                  "Magic Missile",
                  MagicSchool.Projection, 5, manaCost: 1.0f)
-            { Proficency = 1 };
+            { Proficiency = 1 };
 
             missile.Effects.Add(
             new DamageEffect(missile.Power,
@@ -48,19 +48,19 @@ namespace MagiRogue.Entities
 
             SpellBase cure = new SpellBase("cure_test", "Cure Test",
                 MagicSchool.MedicalMagic, 0, 1, 1)
-            { Proficency = 1 };
+            { Proficiency = 1 };
 
             cure.Effects.Add(new DamageEffect(cure.Power,
                 SpellAreaEffect.Self, Utils.DamageType.Force));
 
             SpellBase haste = new SpellBase("haste_self", "Haste",
                 MagicSchool.Dimensionalism, 0, 1, 1)
-            { Proficency = 1 };
+            { Proficiency = 1 };
             haste.Effects.Add(new HasteEffect(SpellAreaEffect.Self, 2, 5));
 
             SpellBase mageSight = new SpellBase("mage_sight", "Mage Sight",
                 MagicSchool.Divination, 0, 1, 1)
-            { Proficency = 1 };
+            { Proficiency = 1 };
             mageSight.Effects.Add(new MageSightEffect(5));
 
             SpellBase fireRay = new SpellBase("fire_ray", "Fire Ray",
@@ -72,6 +72,10 @@ namespace MagiRogue.Entities
             fireBall.Effects.Add(new DamageEffect(fireBall.Power, SpellAreaEffect.Ball, Utils.DamageType.Fire)
             { Radius = 3 });
 
+            SpellBase severWhip = new SpellBase("sever_whip", "Sever Whip", MagicSchool.Projection, 5, 1, 1.5f);
+            severWhip.Effects.Add(new SeverEffect
+                (SpellAreaEffect.Target, Utils.DamageType.Sharp, 1, severWhip.Power));
+
             List<SpellBase> testSpells = new List<SpellBase>()
             {
                 missile,
@@ -79,7 +83,8 @@ namespace MagiRogue.Entities
                 haste,
                 mageSight,
                 fireRay,
-                fireBall
+                fireBall,
+                severWhip
             };
 
             Magic.KnowSpells.AddRange(testSpells);

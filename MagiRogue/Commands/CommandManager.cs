@@ -61,6 +61,13 @@ namespace MagiRogue.Commands
             if (!defender.CanBeAttacked)
                 return;
 
+            if (!attacker.Anatomy.HasEnoughArms)
+            {
+                GameLoop.UIManager.MessageLog.Add
+                    ($"The {attacker.Name} doesn't have enough arms to hit {defender.Name}");
+                return;
+            }
+
             // Create two messages that describe the outcome
             // of the attack and defense
             StringBuilder attackMessage = new StringBuilder();

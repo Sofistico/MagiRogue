@@ -118,6 +118,7 @@ namespace MagiRogue.System.Tiles
 #nullable disable
         {
             GameLoop.World.CurrentMap.SetTerrain(changeTile);
+            LastSeenAppereance = changeTile;
             if (itemDropped is not null)
             {
                 GameLoop.World.CurrentMap.Add(itemDropped);
