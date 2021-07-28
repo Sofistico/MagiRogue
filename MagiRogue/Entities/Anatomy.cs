@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
@@ -43,7 +44,6 @@ namespace MagiRogue.Entities
     {
         #region Fields
 
-        private int temperature; // the temperature of the creature, don't know if i will use or not
         private Race race;
         private readonly TRandom random = new TRandom();
 
@@ -71,21 +71,15 @@ namespace MagiRogue.Entities
         public float BloodCount { get; set; }  // the amount of blood inside the actor, its in ml, to facilitate the calculus of blood volume, the formula is ml/kg
 
         [DataMember]
-        /// <summary>
-        /// The temperature of the actor in celsius
-        /// </summary>
-        public int Temperature { get { return temperature; } set { temperature = value; } }
-
-        [DataMember]
         public bool HasBlood { get; set; }
 
-        [DataMember(IsRequired = false)]
+        [JsonIgnore]
         public bool HasEnoughArms => Limbs.FindAll(l => l.TypeLimb is TypeOfLimb.Arm).Count >= 1;
 
-        [DataMember(IsRequired = false)]
+        [JsonIgnore]
         public bool HasEnoughLegs => Limbs.Exists(l => l.TypeLimb is TypeOfLimb.Leg);
 
-        [DataMember(IsRequired = false)]
+        [JsonIgnore]
         public bool HasEnoughWings => Limbs.FindAll(l => l.TypeLimb is TypeOfLimb.Wing).Count >= 2;
 
         #endregion Properties
@@ -159,7 +153,7 @@ namespace MagiRogue.Entities
             int bodyPartIndex;
             Limb bodyPart;
 
-            if (limb == TypeOfLimb.Head)
+            if (limb == TypeOfLimb.Head || limb == TypeOfLimb.Neck)
             {
                 bodyParts = Limbs.FindAll(h => h.TypeLimb == TypeOfLimb.Head);
                 if (bodyParts.Count > 1)
@@ -175,6 +169,7 @@ namespace MagiRogue.Entities
                     bodyPart = bodyParts[bodyPartIndex];
                     bodyPart.Attached = false;
                     DismemberMessage(actor, bodyPart);
+                    Commands.CommandManager.ResolveDeath(actor);
                     return;
                 }
             }
@@ -185,10 +180,24 @@ namespace MagiRogue.Entities
                 return;
             }
 
-            bodyParts = Limbs.FindAll(l => l.TypeLimb == limb);
+            bodyParts = Limbs.FindAll(l => l.TypeLimb == limb && l.Attached == true);
+
+            if (bodyParts.Count < 1)
+            {
+                GameLoop.UIManager.MessageLog.Add("Fix the game!");
+            }
 
             bodyPartIndex = random.Next(bodyParts.Count);
             bodyPart = bodyParts[bodyPartIndex];
+
+            List<Limb> connectedParts = Limbs.FindAll(c => c.ConnectedTo == bodyPart);
+            if (connectedParts.Count > 0)
+            {
+                foreach (Limb connectedLimb in connectedParts)
+                {
+                    connectedLimb.Attached = false;
+                }
+            }
 
             bodyPart.Attached = false;
             DismemberMessage(actor, bodyPart);

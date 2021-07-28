@@ -166,6 +166,8 @@ namespace MagiRogue.System
 
             // Link up the entity's Moved event to a new handler
             entity.Moved -= OnEntityMoved;
+
+            entity = null;
         }
 
         /// <summary>
@@ -335,6 +337,8 @@ namespace MagiRogue.System
         ~Map()
         {
 #if DEBUG
+            // This is here because i suspect there is a minor memory leak in the map class, with this here
+            // at the very least it seems that the memory is not that great
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();

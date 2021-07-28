@@ -31,6 +31,7 @@ namespace MagiRogue.Entities
                 _baseManaRegen: 0.1f,
                 personalMana: 12
                 );
+            Stats.Precision = 3;
 
             Anatomy.Limbs = Data.LimbTemplate.BasicHumanoidBody(this);
 

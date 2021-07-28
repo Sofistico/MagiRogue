@@ -42,7 +42,8 @@ namespace MagiRogue.Test.Entities
         {
             List<ActorTemplate> deserialized = Utils.JsonUtils.JsonDeseralize<List<ActorTemplate>>
                 (Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Entities", "Actors", "Humanoids.json"));
-            Actor found = EntityFactory.ActorCreator(Point.None, deserialized.FirstOrDefault(i => i.Id == "test_troll"));
+            Actor found = EntityFactory.ActorCreator(Point.None,
+                deserialized.FirstOrDefault(i => i.Id == "test_troll"));
             Assert.Equal(found.Name, deserialized.FirstOrDefault(i => i.Id == "test_troll").Name);
         }
     }

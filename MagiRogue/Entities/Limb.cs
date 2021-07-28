@@ -14,7 +14,8 @@ namespace MagiRogue.Entities
         Foot,
         Hand,
         Tail,
-        Wing
+        Wing,
+        Neck
     }
 
     [DataContract]
@@ -23,6 +24,7 @@ namespace MagiRogue.Entities
     {
         private int limbHp;
         private double weight;
+        private Limb _connectedLimb;
 
         [DataMember]
         public int LimbHp
@@ -86,6 +88,25 @@ namespace MagiRogue.Entities
         [DataMember]
         public Material LimbMaterial { get; set; }
 
+        [DataMember]
+#nullable enable
+        public Limb? ConnectedTo
+#nullable disable
+        {
+            get
+            {
+                if (Attached)
+                    return _connectedLimb;
+                else
+                    return null;
+            }
+
+            set
+            {
+                _connectedLimb = value;
+            }
+        }
+
         /// <summary>
         /// This class creates a limb for a body.
         /// </summary>
@@ -97,21 +118,23 @@ namespace MagiRogue.Entities
         /// <param name="orientation">If it's in the center, left or right of the body</param>
         /// <param name="materialID">The id to define the material, if needeed look at the material definition json\n
         /// Defaults to "flesh"</param>
+#nullable enable
+
         public Limb(TypeOfLimb limbType, int limbHp, int maxLimbHp,
-            double limbWeight, string limbName, LimbOrientation orientation, string materialID = "flesh")
+            double limbWeight, string limbName, LimbOrientation orientation, Limb? connectedTo,
+            string materialID = "flesh")
+#nullable disable
         {
             LimbMaterial = System.Physics.PhysicsManager.SetMaterial(materialID);
-
             TypeLimb = limbType;
-
             MaxLimbHp = maxLimbHp;
             LimbHp = limbHp;
             LimbWeight = limbWeight;
             // Defaults to true
             Attached = true;
             LimbName = limbName;
-
             Orientation = orientation;
+            ConnectedTo = connectedTo;
         }
 
         private string DebuggerDisplay

@@ -36,7 +36,7 @@ namespace MagiRogue.System.Magic.Effects
         {
             // Actor because only actor have an anatomy
             Actor poorGuy = GameLoop.World.CurrentMap.GetEntityAt<Actor>(target);
-            int luck = GoRogue.DiceNotation.Dice.Roll($"{spellCasted.SpellLevel}d20");
+            int luck = GoRogue.DiceNotation.Dice.Roll($"{spellCasted.SpellLevel}d{spellCasted.Power}");
 
             if (poorGuy.Anatomy.Limbs.Count > 0
                 && Magic.PenetrateResistance(spellCasted, caster, poorGuy, luck))
@@ -48,8 +48,12 @@ namespace MagiRogue.System.Magic.Effects
 
                 poorGuy.Anatomy.Dismember(limbToLose, poorGuy);
 
-                DamageEffect damage = new DamageEffect(Damage, AreaOfEffect, SpellDamageType, false, Radius);
-                damage.ApplyEffect(target, caster, spellCasted);
+                if (poorGuy is not null)
+                {
+                    DamageEffect damage = new
+                        DamageEffect(Damage, AreaOfEffect, SpellDamageType, canMiss: true, radius: Radius);
+                    damage.ApplyEffect(target, caster, spellCasted);
+                }
             }
         }
     }

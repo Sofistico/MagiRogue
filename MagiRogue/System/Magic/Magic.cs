@@ -50,7 +50,7 @@ namespace MagiRogue.System.Magic
         }
 
         public static bool PenetrateResistance(SpellBase spellCasted, Actor caster, Actor defender, int bonusLuck) =>
-            ((0.3 * spellCasted.Proficiency) + (caster.Magic.ShapingSkill * 0.5)
+            (int)((0.3 * spellCasted.Proficiency) + (caster.Magic.ShapingSkill * 0.5)
             + caster.Magic.MagicPenetration) + bonusLuck >= defender.Magic.InnateResistance * 2;
 
         public SpellBase QuerySpell(string spellId)

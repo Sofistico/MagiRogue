@@ -277,6 +277,12 @@ namespace MagiRogue.Entities
         [DataMember]
         public float Speed { get; set; }
 
+        /// <summary>
+        /// How likely you are to hit something, it's a bonus to a dice roll of a d20 against defense, if zero
+        /// means you don't have any bonus
+        /// </summary>
+        public int Precision { get; set; }
+
         #endregion StatsProperties
 
         #endregion Stats

@@ -56,7 +56,7 @@ namespace MagiRogue.Entities
             ) : base(foreground, background,
             glyph, coord, layer)
         {
-            Anatomy = new Anatomy();
+            Anatomy = new Anatomy(this);
             Inventory = new List<Item>();
             Name = name;
         }
