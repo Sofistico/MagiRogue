@@ -19,7 +19,6 @@ namespace MagiRogue.Commands
         private Actor _caster;
         private readonly Dictionary<Point, TileBase> tileDictionary;
         private static readonly Radius radius = Radius.Circle;
-        private RadiusLocationContext radiusLocation;
 
         public Entity Cursor { get; set; }
 
@@ -173,7 +172,6 @@ namespace MagiRogue.Commands
                     }
                     Cursor.Moved -= Cursor_Moved;
                     TravelPath = null;
-                    radiusLocation = null;
                 }
 
                 GameLoop.World.ChangeControlledEntity(GameLoop.World.Player);
@@ -248,7 +246,7 @@ namespace MagiRogue.Commands
 
             if (SpellSelected.Effects.Any(a => a.AreaOfEffect is SpellAreaEffect.Ball))
             {
-                radiusLocation =
+                RadiusLocationContext radiusLocation =
                    new RadiusLocationContext(Cursor.Position, SpellSelected.Effects.FirstOrDefault().Radius);
 
                 foreach (Point point in radius.PositionsInRadius(radiusLocation))

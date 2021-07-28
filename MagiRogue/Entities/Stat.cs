@@ -35,8 +35,15 @@ namespace MagiRogue.Entities
         /// </summary>
         public float Health
         {
-            get { return health; }
-            set { health = value; }
+            get
+            {
+                return health;
+            }
+
+            set
+            {
+                health = value;
+            }
         }
 
         [DataMember(EmitDefaultValue = false, IsRequired = false)]

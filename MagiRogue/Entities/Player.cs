@@ -77,6 +77,9 @@ namespace MagiRogue.Entities
             severWhip.Effects.Add(new SeverEffect
                 (SpellAreaEffect.Target, Utils.DamageType.Sharp, 1, severWhip.Power));
 
+            SpellBase teleport = new SpellBase("teleport", "Teleport", MagicSchool.Dimensionalism, 4, 1, 1);
+            teleport.Effects.Add(new TeleportEffect());
+
             List<SpellBase> testSpells = new List<SpellBase>()
             {
                 missile,
@@ -85,7 +88,8 @@ namespace MagiRogue.Entities
                 mageSight,
                 fireRay,
                 fireBall,
-                severWhip
+                severWhip,
+                teleport
             };
 
             Magic.KnowSpells.AddRange(testSpells);

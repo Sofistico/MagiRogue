@@ -38,7 +38,7 @@ namespace MagiRogue.System.Magic.Effects
             Actor poorGuy = GameLoop.World.CurrentMap.GetEntityAt<Actor>(target);
             int luck = GoRogue.DiceNotation.Dice.Roll($"{spellCasted.SpellLevel}d{spellCasted.Power}");
 
-            if (poorGuy.Anatomy.Limbs.Count > 0
+            if (poorGuy is not null && poorGuy.Anatomy.Limbs.Count > 0
                 && Magic.PenetrateResistance(spellCasted, caster, poorGuy, luck))
             {
                 var rng = GoRogue.Random.GlobalRandom.DefaultRNG;

@@ -339,9 +339,9 @@ namespace MagiRogue.System
 #if DEBUG
             // This is here because i suspect there is a minor memory leak in the map class, with this here
             // at the very least it seems that the memory is not that great
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
+            //GC.Collect();
+            //GC.WaitForPendingFinalizers();
+            //GC.Collect();
 #endif
 
             foreach (Entity item in Entities.Items)

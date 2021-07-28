@@ -191,25 +191,34 @@ namespace MagiRogue.Entities
             bodyPart = bodyParts[bodyPartIndex];
 
             List<Limb> connectedParts = Limbs.FindAll(c => c.ConnectedTo == bodyPart);
+            int totalHpLost = 0;
             if (connectedParts.Count > 0)
             {
                 foreach (Limb connectedLimb in connectedParts)
                 {
                     connectedLimb.Attached = false;
+                    totalHpLost += connectedLimb.LimbHp;
                 }
             }
 
             bodyPart.Attached = false;
-            DismemberMessage(actor, bodyPart);
+            totalHpLost += bodyPart.LimbHp;
+            actor.Stats.Health -= totalHpLost;
+            if (actor.Stats.Health <= 0)
+                Commands.CommandManager.ResolveDeath(actor);
+
+            DismemberMessage(actor, bodyPart, totalHpLost);
         }
 
-        private static void DismemberMessage(Actor actor, Limb limb)
+        private static void DismemberMessage(Actor actor, Limb limb, int totalDmg = 0)
         {
             StringBuilder dismemberMessage = new StringBuilder();
 
             dismemberMessage.Append($"{actor.Name} lost {limb.LimbName}");
 
             GameLoop.UIManager.MessageLog.Add(dismemberMessage.ToString());
+            if (totalDmg > 0)
+                GameLoop.UIManager.MessageLog.Add($"And took {totalDmg} damage!");
         }
 
         #endregion Methods

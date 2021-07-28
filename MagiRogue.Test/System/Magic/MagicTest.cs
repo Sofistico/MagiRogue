@@ -96,7 +96,7 @@ namespace MagiRogue.Test.System.Magic
             }
 
             Assert.True((canWeakCast.Where(a => a == true).Count().Equals(1))
-                && (canMediumCast.Where(a => a == true).Count().Equals(2))
+                && (canMediumCast.Where(a => a == true).Count().Equals(3))
                 && (canStrongCast.Where(a => a == true).Count().Equals(4)));
         }
 
