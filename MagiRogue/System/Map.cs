@@ -354,9 +354,9 @@ namespace MagiRogue.System
             GoRogueComponents.Clear();
 
 #if DEBUG
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
+            //GC.Collect();
+            //GC.WaitForPendingFinalizers();
+            //GC.Collect();
 #endif
         }
 

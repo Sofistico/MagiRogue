@@ -265,15 +265,24 @@ namespace MagiRogue.Commands
 
                 foreach (Point point in radius.PositionsInRadius(radiusLocation))
                 {
-                    var halp = GameLoop.World.CurrentMap.GetTileAt<TileBase>(point);
-                    var entity = GameLoop.World.CurrentMap.GetEntityAt<Entity>(point);
-                    if (entity is not null && !TargetList.Contains(entity))
-                        TargetList.Add(GameLoop.World.CurrentMap.GetEntityAt<Entity>(point));
-                    if (halp is not null)
-                        halp.Background = Color.Yellow;
-                    tileDictionary.TryAdd(point, halp);
+                    CheckIfTargetInPoint(point);
                 }
             }
+        }
+
+        /// <summary>
+        /// Check if target is in point
+        /// </summary>
+        /// <param name="point"></param>
+        private void CheckIfTargetInPoint(Point point)
+        {
+            var halp = GameLoop.World.CurrentMap.GetTileAt<TileBase>(point);
+            var entity = GameLoop.World.CurrentMap.GetEntityAt<Entity>(point);
+            if (entity is not null && !TargetList.Contains(entity))
+                TargetList.Add(GameLoop.World.CurrentMap.GetEntityAt<Entity>(point));
+            if (halp is not null)
+                halp.Background = Color.Yellow;
+            tileDictionary.TryAdd(point, halp);
         }
 
         public void LookTarget()

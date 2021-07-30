@@ -6,7 +6,7 @@ using System.IO;
 
 namespace MagiRogue.Data
 {
-    public class DataManager
+    public static class DataManager
     {
         public readonly static IReadOnlyList<ItemTemplate> ListOfItems =
             JsonUtils.JsonDeseralize<List<ItemTemplate>>(Path.Combine(

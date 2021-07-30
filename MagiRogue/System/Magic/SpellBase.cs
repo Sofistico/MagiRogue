@@ -144,7 +144,7 @@ namespace MagiRogue.System.Magic
                     TickProfiency();
                     errorMessage = "Can't cast the spell because you don't have the required shaping skills and/or the proficiency";
                 }
-                if (!(stats.PersonalMana >= ManaCost))
+                if (stats.PersonalMana <= ManaCost)
                 {
                     errorMessage = "You don't have enough mana to cast the spell!";
                     canCast = false;

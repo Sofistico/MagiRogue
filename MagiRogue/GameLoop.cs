@@ -19,8 +19,6 @@ namespace MagiRogue
 
         public static World World { get => world; set => world = value; }
 
-        public static DataManager DataManager { get; set; }
-
         private static void Main()
         {
             // Pre options before creating the game, defines the title and if can resize
@@ -52,9 +50,6 @@ namespace MagiRogue
 
             //Instantiate the UIManager
             UIManager = new UIManager();
-
-            //Intantiate the DataManager class
-            DataManager = new DataManager();
 
             // Now let the UIManager create its consoles
             // so they can use the World data
