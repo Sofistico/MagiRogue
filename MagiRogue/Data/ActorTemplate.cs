@@ -1,10 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using MagiRogue.Entities;
+using Newtonsoft.Json;
 using SadConsole.SerializedTypes;
 using SadRogue.Primitives;
 using System;
 using System.Runtime.Serialization;
 
-namespace MagiRogue.Entities.Data
+namespace MagiRogue.Data
 {
     public class ActorJsonConverter : JsonConverter<Actor>
     {

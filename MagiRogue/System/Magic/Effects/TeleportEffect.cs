@@ -15,6 +15,8 @@ namespace MagiRogue.System.Magic.Effects
         public DamageType SpellDamageType { get; set; }
         public int Radius { get; set; }
 
+        public bool TargetsTile { get; } = true;
+
         public TeleportEffect(SpellAreaEffect areaOfEffect = SpellAreaEffect.Target,
             DamageType spellDamageType = DamageType.None, int radius = 0)
         {
@@ -25,7 +27,10 @@ namespace MagiRogue.System.Magic.Effects
 
         public void ApplyEffect(Point target, Actor caster, SpellBase spellCasted)
         {
-            Commands.CommandManager.MoveActorTo(caster, target);
+            if (Commands.CommandManager.MoveActorTo(caster, target))
+            {
+                GameLoop.UIManager.MessageLog.Add($"{caster.Name} disappeared!");
+            }
         }
     }
 }

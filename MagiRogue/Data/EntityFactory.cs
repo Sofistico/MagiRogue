@@ -1,6 +1,7 @@
-﻿using SadRogue.Primitives;
+﻿using MagiRogue.Entities;
+using SadRogue.Primitives;
 
-namespace MagiRogue.Entities.Data
+namespace MagiRogue.Data
 {
     /// <summary>
     /// Utility method for easy creating an actor and item, along with any possible function and extra.

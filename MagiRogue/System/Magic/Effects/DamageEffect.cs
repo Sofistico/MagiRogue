@@ -17,6 +17,7 @@ namespace MagiRogue.System.Magic.Effects
         public DamageType SpellDamageType { get; set; }
         public int Damage { get; set; }
         public int Radius { get; set; }
+        public bool TargetsTile => false;
 
         public DamageEffect(int dmg, SpellAreaEffect areaOfEffect, DamageType spellDamageType, bool canMiss = false,
             bool isHeal = false, int radius = 0)

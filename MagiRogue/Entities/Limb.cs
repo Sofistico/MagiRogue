@@ -1,4 +1,4 @@
-﻿using MagiRogue.Entities.Materials;
+﻿using MagiRogue.Data.Materials;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 

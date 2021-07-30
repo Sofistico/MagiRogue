@@ -79,9 +79,16 @@ namespace MagiRogue.Commands
             }
         }
 
-        private T TargetTile<T>() where T : TileBase
+        public bool TileInTarget()
         {
-            return GameLoop.World.CurrentMap.GetTileAt<T>(Cursor.Position);
+            TileBase tile = GameLoop.World.CurrentMap.GetTileAt<TileBase>(Cursor.Position);
+
+            if (tile is not null)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public bool EntityInTarget()
@@ -145,7 +152,14 @@ namespace MagiRogue.Commands
 
         private (bool, SpellBase) AffectTarget()
         {
-            bool casted = SpellSelected.CastSpell(TargetList[0].Position, _caster);
+            bool casted;
+            if (TargetList.Count > 0)
+                casted = SpellSelected.CastSpell(TargetList[0].Position, _caster);
+            else
+            {
+                casted = SpellSelected.CastSpell(TravelPath.End, _caster);
+            }
+
             var spellCasted = SpellSelected;
             EndTargetting();
             return (casted, spellCasted);

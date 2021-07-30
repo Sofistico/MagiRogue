@@ -1,5 +1,6 @@
 ﻿using MagiRogue.System;
 using MagiRogue.UI;
+using MagiRogue.Data;
 
 namespace MagiRogue
 {
@@ -17,6 +18,8 @@ namespace MagiRogue
         public static UIManager UIManager { get => uIManager; set => uIManager = value; }
 
         public static World World { get => world; set => world = value; }
+
+        public static DataManager DataManager { get; set; }
 
         private static void Main()
         {
@@ -43,6 +46,9 @@ namespace MagiRogue
 
             //Instantiate the UIManager
             UIManager = new UIManager();
+
+            //Intantiate the DataManager class
+            DataManager = new DataManager();
 
             // Now let the UIManager create its consoles
             // so they can use the World data

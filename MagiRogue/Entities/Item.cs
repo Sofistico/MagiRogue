@@ -1,4 +1,4 @@
-﻿using MagiRogue.Entities.Data;
+﻿using MagiRogue.Data;
 using MagiRogue.System;
 using Newtonsoft.Json;
 using SadRogue.Primitives;

@@ -19,6 +19,8 @@ namespace MagiRogue.System.Magic.Effects
         public int Radius { get; set; }
         public int Damage { get; }
 
+        public bool TargetsTile => false;
+
         public SeverEffect(SpellAreaEffect areaOfEffect, DamageType spellDamageType, int radius, int dmg)
         {
             AreaOfEffect = areaOfEffect;

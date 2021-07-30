@@ -15,13 +15,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Entities\Actors\Humanoids.json">
+    <None Update="Data\Actors\Humanoids.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Entities\Items\Bars.json">
+    <None Update="Data\Items\Bars.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Entities\Materials\MaterialDefinition.json">
+    <None Update="Data\Materials\MaterialDefinition.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

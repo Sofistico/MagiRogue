@@ -1,6 +1,6 @@
 ﻿using MagiRogue.Components;
 using MagiRogue.Entities;
-using MagiRogue.Entities.Data;
+using MagiRogue.Data;
 using MagiRogue.System.Tiles;
 using MagiRogue.System.Time;
 using SadRogue.Primitives;
@@ -219,11 +219,9 @@ namespace MagiRogue.System
                 CurrentMap.Add(newLoot);
             }
 
-            IList<ItemTemplate> itemTest = Utils.JsonUtils.JsonDeseralize<List<ItemTemplate>>(Path.Combine(
-                AppDomain.CurrentDomain.BaseDirectory,
-                "Entities", "Items", "Bars.json"));
-
-            Item test = EntityFactory.ItemCreator(new Point(10, 10), itemTest.FirstOrDefault(i => i.Id == "test"));
+            Item test =
+                EntityFactory.ItemCreator(new Point(10, 10), DataManager.ListOfItems.FirstOrDefault
+                (i => i.Id == "test"));
 
             CurrentMap.Add(test);
         }

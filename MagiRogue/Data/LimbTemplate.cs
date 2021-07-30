@@ -1,8 +1,9 @@
-﻿using System;
+﻿using MagiRogue.Entities;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace MagiRogue.Entities.Data
+namespace MagiRogue.Data
 {
     [DataContract]
     [Serializable]

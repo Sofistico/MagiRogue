@@ -7,6 +7,10 @@ using System.Text;
 
 namespace MagiRogue.System.Magic
 {
+    /// <summary>
+    /// The base class for creating a new Spell, deals with what happens with the spell + defines the
+    /// effects that it will have.
+    /// </summary>
     public class SpellBase
     {
         private double proficency;
@@ -107,7 +111,6 @@ namespace MagiRogue.System.Magic
         /// </summary>
         /// <param name="spellId">Should be something unique with spaces separated by _</param>
         /// <param name="spellName">The name of the spell</param>
-        /// <param name="effects">All the effects that the spell will have</param>
         /// <param name="spellSchool">What school is this spell part of?</param>
         /// <param name="spellRange">The range of the spell</param>
         /// <param name="spellLevel">The level of the spell, going from 1 to 9</param>
@@ -170,7 +173,7 @@ namespace MagiRogue.System.Magic
                 foreach (ISpellEffect effect in Effects)
                 {
                     if (entity is not null && (effect.AreaOfEffect is SpellAreaEffect.Self ||
-                        !entity.Equals(caster)) && entity.CanBeAttacked)
+                        !entity.Equals(caster)) && entity.CanBeAttacked || effect.TargetsTile)
                     {
                         effect.ApplyEffect(target, caster, this);
                     }

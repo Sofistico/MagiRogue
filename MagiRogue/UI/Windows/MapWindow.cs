@@ -184,8 +184,9 @@ namespace MagiRogue.UI.Windows
             if (info.IsKeyPressed(Keys.Enter) && targetCursor is not null
                 && targetCursor.State == Target.TargetState.Targeting)
             {
-                if (targetCursor.EntityInTarget() || targetCursor.SpellSelected.Effects.Any
+                if ((targetCursor.EntityInTarget() || targetCursor.SpellSelected.Effects.Any
                     (a => a.AreaOfEffect is not System.Magic.SpellAreaEffect.Target))
+                    || targetCursor.SpellSelected.Effects.Any(a => a.TargetsTile))
                 {
                     var (sucess, spellCasted) = targetCursor.EndSpellTargetting();
 

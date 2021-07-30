@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace MagiRogue.Entities.Materials
+namespace MagiRogue.Data.Materials
 {
     [DataContract]
     public class Material
@@ -11,20 +11,28 @@ namespace MagiRogue.Entities.Materials
 
         [DataMember]
         public string Id { get; set; }
+
         [DataMember]
         public string Name { get; set; }
+
         [DataMember]
         public bool Flamability { get; set; }
+
         [DataMember]
         public int Hardness { get; set; }
+
         [DataMember]
         public int? MPInfusionLimit { get; set; }
+
         [DataMember]
         public bool CanRegen { get; set; }
+
         [DataMember]
         public double Density { get; set; }
+
         [DataMember]
         public int? MeltingPoint { get; set; }
+
         [DataMember]
         public int? BoilingPoint { get; set; }
     }

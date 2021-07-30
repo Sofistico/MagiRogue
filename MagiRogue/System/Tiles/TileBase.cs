@@ -1,7 +1,7 @@
 ﻿using GoRogue;
 using GoRogue.Components;
 using GoRogue.GameFramework;
-using MagiRogue.Entities.Materials;
+using MagiRogue.Data.Materials;
 using SadConsole;
 using SadRogue.Primitives;
 using System;
