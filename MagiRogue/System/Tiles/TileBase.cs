@@ -27,7 +27,7 @@ namespace MagiRogue.System.Tiles
         // Creates a list of possible materials, and then assings it to the tile, need to move it to a fitting area, like
         // World or GameLoop, because if need to port, every new object will have more than one possible material without
         // any need.
-        public Material MaterialOfTile { get; set; }
+        public MaterialTemplate MaterialOfTile { get; set; }
 
         // TOOD: Add a way to mine terrain, to make the tile health drop to zero and give some item.
         /// <summary>

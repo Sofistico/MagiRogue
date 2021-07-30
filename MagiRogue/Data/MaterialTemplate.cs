@@ -3,7 +3,7 @@
 namespace MagiRogue.Data.Materials
 {
     [DataContract]
-    public class Material
+    public class MaterialTemplate
     {
         // Only putting in here for the sake of future me, only need to use JsonProperty if the name will be diferrent
         // than whats in the json.

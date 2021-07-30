@@ -86,7 +86,7 @@ namespace MagiRogue.Entities
         public TypeOfLimb TypeLimb { get; set; }
 
         [DataMember]
-        public Material LimbMaterial { get; set; }
+        public MaterialTemplate LimbMaterial { get; set; }
 
         [DataMember]
 #nullable enable

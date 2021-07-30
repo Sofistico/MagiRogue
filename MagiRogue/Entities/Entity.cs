@@ -28,7 +28,7 @@ namespace MagiRogue.Entities
         public float Weight { get; set; }
 
         [DataMember]
-        public Material Material { get; set; }
+        public MaterialTemplate Material { get; set; }
 
         [DataMember]
 
@@ -103,7 +103,7 @@ namespace MagiRogue.Entities
             PositionChanged += Position_Changed;
 
             Magic = new Magic();
-            Material = new Material();
+            Material = new MaterialTemplate();
 
             //IsWalkable = false;
         }
