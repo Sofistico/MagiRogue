@@ -13,6 +13,6 @@ namespace MagiRogue.System.Magic.PermEnchantments
         public ISpellEffect Enchantment { get; set; }
         public int NodeCost { get; set; }
 
-        public void Enchant();
+        public void Enchant(int nodesSacrificed);
     }
 }

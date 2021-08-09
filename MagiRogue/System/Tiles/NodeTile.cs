@@ -61,7 +61,8 @@ namespace MagiRogue.System.Tiles
         public void RestoreIllusionComponent()
         {
             GoRogueComponents.Add(illusion, Components.IllusionComponent.Tag);
-            LastSeenAppereance.CopyAppearanceFrom(GoRogueComponents.GetFirstOrDefault<Components.IllusionComponent>().FakeAppearence);
+            LastSeenAppereance.CopyAppearanceFrom
+                (GoRogueComponents.GetFirstOrDefault<Components.IllusionComponent>().FakeAppearence);
         }
 
         /// <summary>
@@ -74,7 +75,7 @@ namespace MagiRogue.System.Tiles
                 MpPoints = (float)Math.Round(MpPoints + MpRecovering, 1);
             }
             else
-                DestroyTile(new TileFloor(Position, "stone"));
+                DestroyTile(BecomeNextTile());
         }
 
         public void DrainNode(Actor actor)
@@ -88,7 +89,7 @@ namespace MagiRogue.System.Tiles
                 if (MpPoints <= 0)
                 {
                     MpPoints = 0;
-                    DestroyTile(new TileFloor(Position, "stone"));
+                    DestroyTile(BecomeNextTile());
                 }
 
                 GameLoop.UIManager.MessageLog.Add($"{actor.Name} drained {rndDrain} from node!");
@@ -103,15 +104,43 @@ namespace MagiRogue.System.Tiles
             }
         }
 
-        public void SetUpNodeTurn(World world)
+        public override void DestroyTile(TileBase changeTile, Item itemDropped = null)
         {
-            world.GetTime.TurnPassed += (_, __) =>
+            GameLoop.World.GetTime.TurnPassed -= GetTime_NodeTurnPassed;
+
+            base.DestroyTile(changeTile, itemDropped);
+        }
+
+        public void SetUpNodeTurn(World world) => world.GetTime.TurnPassed += GetTime_NodeTurnPassed;
+
+        private void GetTime_NodeTurnPassed(object sender, Time.TimeDefSpan e)
+        {
+            if ((e.Minutes + 1) % 5 == 0 && e.Seconds % 60 == 0)
             {
-                if ((__.Minutes + 1) % 5 == 0 && __.Seconds % 60 == 0)
+                RestoreMp();
+            }
+        }
+
+        public Item PickUp()
+        {
+            DestroyTile(BecomeNextTile());
+
+            return new Item(Foreground, Background, Name, Glyph, Position, NodeStrength,
+                (float)MaterialOfTile.Density);
+        }
+
+        private TileBase BecomeNextTile()
+        {
+            foreach (Point point in Position.GetDirectionPoints())
+            {
+                TileBase tile = GameLoop.World.CurrentMap.GetTileAt<TileBase>(point);
+                if (LastSeenAppereance.Matches(tile))
                 {
-                    RestoreMp();
+                    return tile;
                 }
-            };
+            }
+
+            return null;
         }
     }
 

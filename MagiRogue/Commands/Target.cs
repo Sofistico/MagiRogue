@@ -8,6 +8,7 @@ using System.Linq;
 using GoRogue.Pathing;
 using MagiRogue.UI.Windows;
 using System;
+using MagiRogue.Utils;
 
 namespace MagiRogue.Commands
 {
@@ -137,7 +138,8 @@ namespace MagiRogue.Commands
                 return AffectPath();
             }
 
-            if (SpellSelected.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Ball))
+            if (SpellSelected.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Ball)
+                || SpellSelected.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Cone))
             {
                 return AffectArea();
             }
@@ -268,6 +270,17 @@ namespace MagiRogue.Commands
                     CheckIfTargetInPoint(point);
                 }
             }
+
+            if (SpellSelected.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Cone))
+            {
+                ISpellEffect effect = GetSpellEffect(SpellAreaEffect.Cone);
+
+                foreach (Point point in
+                    GeometryUtils.Cone(OriginCoord, effect.Radius, this).Points)
+                {
+                    CheckIfTargetInPoint(point);
+                }
+            }
         }
 
         /// <summary>
@@ -284,6 +297,9 @@ namespace MagiRogue.Commands
                 halp.Background = Color.Yellow;
             tileDictionary.TryAdd(point, halp);
         }
+
+        private ISpellEffect GetSpellEffect(SpellAreaEffect areaEffect) =>
+            SpellSelected.Effects.Find(e => e.AreaOfEffect == areaEffect);
 
         public void LookTarget()
         {

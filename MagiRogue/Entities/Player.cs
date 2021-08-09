@@ -80,6 +80,11 @@ namespace MagiRogue.Entities
             SpellBase teleport = new SpellBase("teleport", "Teleport", MagicSchool.Dimensionalism, 4, 1, 1);
             teleport.Effects.Add(new TeleportEffect());
 
+            SpellBase coneOfCold = new SpellBase("cone_cold", "Cone of Cold", MagicSchool.Projection,
+                spellRange: 1, spellLevel: 1, manaCost: 1);
+            coneOfCold.Effects.Add
+                (new DamageEffect(coneOfCold.Power, SpellAreaEffect.Cone, Utils.DamageType.Cold, radius: 3));
+
             List<SpellBase> testSpells = new List<SpellBase>()
             {
                 missile,
@@ -89,7 +94,8 @@ namespace MagiRogue.Entities
                 fireRay,
                 fireBall,
                 severWhip,
-                teleport
+                teleport,
+                coneOfCold
             };
 
             Magic.KnowSpells.AddRange(testSpells);

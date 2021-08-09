@@ -14,7 +14,6 @@ namespace MagiRogue.System.Magic.Effects
         public SpellAreaEffect AreaOfEffect { get; set; }
         public DamageType SpellDamageType { get; set; }
         public int Radius { get; set; }
-
         public bool TargetsTile { get; } = true;
 
         public TeleportEffect(SpellAreaEffect areaOfEffect = SpellAreaEffect.Target,

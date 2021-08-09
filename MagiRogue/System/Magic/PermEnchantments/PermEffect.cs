@@ -9,6 +9,7 @@ namespace MagiRogue.System.Magic.PermEnchantments
 {
     public class PermEffect : IPermEffect
     {
+        // Will be here for remembering, do not know how it will proced
         private const int _totalTime = Time.TimeHelper.Year;
 
         public Actor Enchanted { get; set; }
@@ -25,13 +26,18 @@ namespace MagiRogue.System.Magic.PermEnchantments
         {
             Enchanted = enchanted;
             Enchantment = enchantment;
-
             NodeCost = nodeCost;
         }
 
-        public void Enchant()
+        public void Enchant(int nodesSacrificed)
         {
-            Enchantment.ApplyEffect(Enchanted.Position, Enchanted, new SpellBase());
+            if (nodesSacrificed >= NodeCost)
+            {
+                Enchantment.ApplyEffect(Enchanted.Position, Enchanted, new SpellBase());
+            }
+            else
+                GameLoop.UIManager.MessageLog
+                    .Add($"{Enchanted.Name} does not have enough nodes for the enchantment");
         }
     }
 }

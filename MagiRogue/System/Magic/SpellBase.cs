@@ -247,6 +247,7 @@ namespace MagiRogue.System.Magic
         Target,
         Ball,
         Beam,
+        Cone,
         Level,
         World
     }
