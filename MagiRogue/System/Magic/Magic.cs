@@ -1,7 +1,9 @@
 ﻿using GoRogue.DiceNotation;
 using MagiRogue.Entities;
+using Newtonsoft.Json.Converters;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace MagiRogue.System.Magic
 {
@@ -59,6 +61,7 @@ namespace MagiRogue.System.Magic
         }
     }
 
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum MagicSchool
     {
         Projection,

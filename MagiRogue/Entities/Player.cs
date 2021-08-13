@@ -1,6 +1,8 @@
-﻿using MagiRogue.System;
+﻿using MagiRogue.Data;
+using MagiRogue.System;
 using MagiRogue.System.Magic;
 using MagiRogue.System.Magic.Effects;
+using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System.Collections.Generic;
 
@@ -99,6 +101,14 @@ namespace MagiRogue.Entities
             };
 
             Magic.KnowSpells.AddRange(testSpells);
+
+            var serializeOption = new JsonSerializerSettings()
+            {
+                Converters = { new SpellJsonConverter() }
+            };
+            var spellSerialized = JsonConvert.SerializeObject(missile, serializeOption);
+            SpellBase spellDeserialized = JsonConvert.DeserializeObject<SpellBase>(spellSerialized,
+                serializeOption);
         }
     }
 }

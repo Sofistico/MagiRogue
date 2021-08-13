@@ -1,11 +1,12 @@
-﻿using MagiRogue.Entities;
+﻿using MagiRogue.Data;
+using MagiRogue.Entities;
 using MagiRogue.Utils;
 using SadRogue.Primitives;
 using System.Linq;
 
 namespace MagiRogue.System.Magic.Effects
 {
-    public class MageSightEffect : ISpellEffect, ITimedEffect
+    public class MageSightEffect : ITimedEffect
     {
         private bool hasMageSight;
         private int turnToRemove;
@@ -13,14 +14,16 @@ namespace MagiRogue.System.Magic.Effects
         public SpellAreaEffect AreaOfEffect { get; set; }
         public DamageType SpellDamageType { get; set; }
 
-        public int Turns { get; set; }
+        public int Duration { get; set; }
         public int TurnApplied { get; set; }
         public int Radius { get; set; } = 0;
-        public bool TargetsTile => false;
+        public bool TargetsTile { get; set; } = false;
+        public EffectTypes EffectType { get; set; } = EffectTypes.MAGESIGHT;
+        public int BaseDamage { get; set; } = 0;
 
-        public MageSightEffect(int turnsToRemove)
+        public MageSightEffect(int duration)
         {
-            Turns = turnsToRemove;
+            Duration = duration;
             SpellDamageType = DamageType.None;
             AreaOfEffect = SpellAreaEffect.Self;
         }
@@ -40,7 +43,7 @@ namespace MagiRogue.System.Magic.Effects
                 node.RestoreOriginalAppearence();
             }
 
-            turnToRemove = TurnApplied + Turns;
+            turnToRemove = TurnApplied + Duration;
 
             hasMageSight = true;
             GameLoop.World.GetTime.TurnPassed += GetTime_TurnPassed;

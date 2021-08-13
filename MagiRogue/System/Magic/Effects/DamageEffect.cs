@@ -1,4 +1,5 @@
-﻿using MagiRogue.Entities;
+﻿using MagiRogue.Data;
+using MagiRogue.Entities;
 using MagiRogue.Utils;
 using SadRogue.Primitives;
 using System;
@@ -8,26 +9,26 @@ namespace MagiRogue.System.Magic.Effects
     /// <summary>
     /// Basic damage effect, can determine if it auto hits or if it heals
     /// </summary>
-    public class DamageEffect : ISpellEffect
+    public class DamageEffect : IDamageSpellEffect
     {
-        private readonly bool isHealing;
-        private readonly bool _canMiss;
-
         public SpellAreaEffect AreaOfEffect { get; set; }
         public DamageType SpellDamageType { get; set; }
-        public int Damage { get; set; }
+        public int BaseDamage { get; set; }
         public int Radius { get; set; }
-        public bool TargetsTile => false;
+        public bool TargetsTile { get; set; } = false;
+        public EffectTypes EffectType { get; set; } = EffectTypes.DAMAGE;
+        public bool IsHealing { get; set; }
+        public bool CanMiss { get; set; }
 
         public DamageEffect(int dmg, SpellAreaEffect areaOfEffect, DamageType spellDamageType, bool canMiss = false,
             bool isHeal = false, int radius = 0)
         {
-            Damage = dmg;
+            BaseDamage = dmg;
             AreaOfEffect = areaOfEffect;
             SpellDamageType = spellDamageType;
-            isHealing = isHeal;
+            IsHealing = isHeal;
             Radius = radius;
-            _canMiss = canMiss;
+            CanMiss = canMiss;
         }
 
         public void ApplyEffect(Point target, Actor caster, SpellBase spellCasted)
@@ -39,7 +40,7 @@ namespace MagiRogue.System.Magic.Effects
                     break;
 
                 default:
-                    if (!isHealing)
+                    if (!IsHealing)
                         DmgEff(target, caster, spellCasted);
                     else
                         HealEffect(target, caster, spellCasted);
@@ -49,7 +50,7 @@ namespace MagiRogue.System.Magic.Effects
 
         private void DmgEff(Point target, Actor caster, SpellBase spellCasted)
         {
-            Damage = Magic.CalculateSpellDamage(caster.Stats, spellCasted);
+            BaseDamage = Magic.CalculateSpellDamage(caster.Stats, spellCasted);
 
             Entity poorGuy = GameLoop.World.CurrentMap.GetEntityAt<Entity>(target);
 
@@ -64,14 +65,14 @@ namespace MagiRogue.System.Magic.Effects
                 return;
             }
 
-            if (!_canMiss)
-                CombatUtils.DealDamage(Damage, poorGuy, SpellDamageType);
+            if (!CanMiss)
+                CombatUtils.DealDamage(BaseDamage, poorGuy, SpellDamageType);
             else
             {
                 int diceRoll = GoRogue.DiceNotation.Dice.Roll($"1d20 + {caster.Stats.Precision}");
                 if (poorGuy is Actor actor && diceRoll >= actor.Stats.Defense)
                 {
-                    CombatUtils.DealDamage(Damage, poorGuy, SpellDamageType);
+                    CombatUtils.DealDamage(BaseDamage, poorGuy, SpellDamageType);
                 }
                 else
                 {
@@ -84,10 +85,10 @@ namespace MagiRogue.System.Magic.Effects
         {
             Stat casterStats = caster.Stats;
 
-            Damage = Magic.CalculateSpellDamage(casterStats, spellCasted);
+            BaseDamage = Magic.CalculateSpellDamage(casterStats, spellCasted);
 
             if (AreaOfEffect is SpellAreaEffect.Self)
-                CombatUtils.ApplyHealing(Damage, casterStats, SpellDamageType);
+                CombatUtils.ApplyHealing(BaseDamage, casterStats, SpellDamageType);
             else
             {
                 Actor happyGuy = GameLoop.World.CurrentMap.GetEntityAt<Actor>(target);
@@ -103,7 +104,7 @@ namespace MagiRogue.System.Magic.Effects
                     return;
                 }
 
-                CombatUtils.ApplyHealing(Damage, happyGuy.Stats, SpellDamageType);
+                CombatUtils.ApplyHealing(BaseDamage, happyGuy.Stats, SpellDamageType);
             }
         }
     }

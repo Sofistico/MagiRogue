@@ -1,4 +1,5 @@
-﻿using MagiRogue.Entities;
+﻿using MagiRogue.Data;
+using MagiRogue.Entities;
 using MagiRogue.Utils;
 using SadRogue.Primitives;
 using System;
@@ -17,16 +18,17 @@ namespace MagiRogue.System.Magic.Effects
         public SpellAreaEffect AreaOfEffect { get; set; }
         public DamageType SpellDamageType { get; set; }
         public int Radius { get; set; }
-        public int Damage { get; }
 
-        public bool TargetsTile => false;
+        public bool TargetsTile { get; set; } = false;
+        public EffectTypes EffectType { get; set; } = EffectTypes.SEVER;
+        public int BaseDamage { get; set; }
 
         public SeverEffect(SpellAreaEffect areaOfEffect, DamageType spellDamageType, int radius, int dmg)
         {
             AreaOfEffect = areaOfEffect;
             SpellDamageType = spellDamageType;
             Radius = radius;
-            Damage = dmg;
+            BaseDamage = dmg;
         }
 
         public void ApplyEffect(Point target, Actor caster, SpellBase spellCasted)
@@ -53,7 +55,7 @@ namespace MagiRogue.System.Magic.Effects
                 if (poorGuy is not null)
                 {
                     DamageEffect damage = new
-                        DamageEffect(Damage, AreaOfEffect, SpellDamageType, canMiss: true, radius: Radius);
+                        DamageEffect(BaseDamage, AreaOfEffect, SpellDamageType, canMiss: true, radius: Radius);
                     damage.ApplyEffect(target, caster, spellCasted);
                 }
             }

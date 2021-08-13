@@ -1,10 +1,11 @@
-﻿using MagiRogue.Entities;
+﻿using MagiRogue.Data;
+using MagiRogue.Entities;
 using MagiRogue.Utils;
 using SadRogue.Primitives;
 
 namespace MagiRogue.System.Magic.Effects
 {
-    public class HasteEffect : ISpellEffect, ITimedEffect
+    public class HasteEffect : IHasteEffect
     {
         private float previousSpeed;
         private Stat currentStats;
@@ -13,20 +14,22 @@ namespace MagiRogue.System.Magic.Effects
 
         public SpellAreaEffect AreaOfEffect { get; set; }
         public DamageType SpellDamageType { get; set; }
+        public int BaseDamage { get; set; }
 
         public float HastePower { get; set; }
-        public int Turns { get; private set; }
+        public int Duration { get; set; }
         public int TurnApplied { get; private set; }
         public int Radius { get; set; } = 0;
-        public bool TargetsTile => false;
+        public bool TargetsTile { get; set; } = false;
+        public EffectTypes EffectType { get; set; } = EffectTypes.HASTE;
 
-        public HasteEffect(SpellAreaEffect areaOfEffect, float hastePower, int turns,
+        public HasteEffect(SpellAreaEffect areaOfEffect, float hastePower, int duration,
             DamageType spellDamageType = DamageType.Force)
         {
             AreaOfEffect = areaOfEffect;
             SpellDamageType = spellDamageType;
             HastePower = hastePower;
-            Turns = turns;
+            Duration = duration;
         }
 
         public void ApplyEffect(Point target, Actor caster, SpellBase spellCasted)
@@ -34,32 +37,18 @@ namespace MagiRogue.System.Magic.Effects
             switch (AreaOfEffect)
             {
                 case SpellAreaEffect.Self:
-                    Haste(target, caster, spellCasted);
-                    break;
-
-                case SpellAreaEffect.Target:
-                    break;
-
-                case SpellAreaEffect.Ball:
-                    break;
-
-                case SpellAreaEffect.Beam:
-                    break;
-
-                case SpellAreaEffect.Level:
-                    break;
-
-                case SpellAreaEffect.World:
+                    Haste(caster.Position, spellCasted);
                     break;
 
                 default:
+                    Haste(target, spellCasted);
                     break;
             }
         }
 
-        private void Haste(Point target, Actor caster, SpellBase spellCasted)
+        private void Haste(Point target, SpellBase spellCasted)
         {
-            Stat casterStats = caster.Stats;
+            Stat targetStats = GameLoop.World.CurrentMap.GetEntityAt<Actor>(target).Stats;
 
             if (turnToRemove == 0)
                 GameLoop.World.GetTime.TurnPassed -= GetTime_TurnPassed;
@@ -68,11 +57,11 @@ namespace MagiRogue.System.Magic.Effects
                 GameLoop.UIManager.MessageLog.Add("Can only have one haste effect per time");
                 return;
             }
-            currentStats = casterStats;
-            previousSpeed = casterStats.Speed;
-            casterStats.Speed += HastePower;
+            currentStats = targetStats;
+            previousSpeed = targetStats.Speed;
+            targetStats.Speed += HastePower;
             TurnApplied = GameLoop.World.GetTime.Turns;
-            turnToRemove = TurnApplied + Turns;
+            turnToRemove = TurnApplied + Duration;
             isHasted = true;
 
             GameLoop.World.GetTime.TurnPassed += GetTime_TurnPassed;

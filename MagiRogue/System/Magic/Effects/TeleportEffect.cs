@@ -1,4 +1,5 @@
-﻿using MagiRogue.Entities;
+﻿using MagiRogue.Data;
+using MagiRogue.Entities;
 using MagiRogue.Utils;
 using SadRogue.Primitives;
 using System;
@@ -14,7 +15,10 @@ namespace MagiRogue.System.Magic.Effects
         public SpellAreaEffect AreaOfEffect { get; set; }
         public DamageType SpellDamageType { get; set; }
         public int Radius { get; set; }
-        public bool TargetsTile { get; } = true;
+        public bool TargetsTile { get; set; } = true;
+
+        public EffectTypes EffectType { get; set; } = EffectTypes.TELEPORT;
+        public int BaseDamage { get; set; } = 0;
 
         public TeleportEffect(SpellAreaEffect areaOfEffect = SpellAreaEffect.Target,
             DamageType spellDamageType = DamageType.None, int radius = 0)

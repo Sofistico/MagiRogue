@@ -1,9 +1,12 @@
 ﻿using MagiRogue.Entities;
+using Newtonsoft.Json.Converters;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Newtonsoft.Json;
+using MagiRogue.Data;
 
 namespace MagiRogue.System.Magic
 {
@@ -37,7 +40,7 @@ namespace MagiRogue.System.Magic
         /// <summary>
         /// Description of the spell
         /// </summary>
-        public string Description { get; private set; }
+        public string Description { get; set; }
 
         /// <summary>
         /// What school the spell is
@@ -120,7 +123,7 @@ namespace MagiRogue.System.Magic
             MagicSchool spellSchool,
             int spellRange,
             int spellLevel = 1,
-            float manaCost = 0.1f)
+            double manaCost = 0.1f)
         {
             SpellId = spellId;
             SpellName = spellName;
@@ -241,6 +244,7 @@ namespace MagiRogue.System.Magic
         }
     }
 
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum SpellAreaEffect
     {
         Self,

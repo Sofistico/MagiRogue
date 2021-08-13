@@ -27,6 +27,8 @@ namespace MagiRogue.Utils
             if (target.TravelPath.Length > 0)
             {
                 angle = Point.BearingOfLine(originCoordinate, target.TravelPath.GetStep(0));
+                // Is a hacky way to ensure the angle goes from right from 0, cince bearing of line considers
+                // up as the 0 point.
                 angle = (angle + 90) % 360;
             }
 
