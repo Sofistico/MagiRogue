@@ -119,32 +119,32 @@ namespace MagiRogue.Entities
         {
             BloodCount = (float)Math.Round(BloodCount - bleedAmount, 4);
 
-            switch (severity)
-            {
-                case InjurySeverity.Scratch:
-                    break;
+            /* switch (severity)
+             {
+                 case InjurySeverity.Scratch:
+                     break;
 
-                case InjurySeverity.LigthInjury:
-                    break;
+                 case InjurySeverity.LigthInjury:
+                     break;
 
-                case InjurySeverity.MediumInjury:
-                    break;
+                 case InjurySeverity.MediumInjury:
+                     break;
 
-                case InjurySeverity.SeriousInjury:
-                    break;
+                 case InjurySeverity.SeriousInjury:
+                     break;
 
-                case InjurySeverity.Crippling:
-                    break;
+                 case InjurySeverity.Crippling:
+                     break;
 
-                case InjurySeverity.Fatal:
-                    break;
+                 case InjurySeverity.Fatal:
+                     break;
 
-                case InjurySeverity.LimbLoss:
-                    break;
+                 case InjurySeverity.LimbLoss:
+                     break;
 
-                default:
-                    break;
-            }
+                 default:
+                     break;
+             }*/
         }
 
         public void Dismember(TypeOfLimb limb, Actor actor)
