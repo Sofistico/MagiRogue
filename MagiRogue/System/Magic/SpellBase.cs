@@ -3,7 +3,6 @@ using Newtonsoft.Json.Converters;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using MagiRogue.Data;
@@ -14,6 +13,7 @@ namespace MagiRogue.System.Magic
     /// The base class for creating a new Spell, deals with what happens with the spell + defines the
     /// effects that it will have.
     /// </summary>
+    [JsonConverter(typeof(SpellJsonConverter))]
     public class SpellBase
     {
         private double proficency;

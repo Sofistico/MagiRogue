@@ -102,13 +102,8 @@ namespace MagiRogue.Entities
 
             Magic.KnowSpells.AddRange(testSpells);
 
-            var serializeOption = new JsonSerializerSettings()
-            {
-                Converters = { new SpellJsonConverter() }
-            };
-            var spellSerialized = JsonConvert.SerializeObject(missile, serializeOption);
-            SpellBase spellDeserialized = JsonConvert.DeserializeObject<SpellBase>(spellSerialized,
-                serializeOption);
+            var spellSerialized = JsonConvert.SerializeObject(missile);
+            SpellBase spellDeserialized = JsonConvert.DeserializeObject<SpellBase>(spellSerialized);
         }
     }
 }

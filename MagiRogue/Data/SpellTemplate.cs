@@ -18,13 +18,12 @@ namespace MagiRogue.Data
         public override SpellBase ReadJson(JsonReader reader, Type objectType,
             SpellBase existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
+            serializer.TypeNameHandling = TypeNameHandling.Auto;
             SpellTemplate spell = serializer.Deserialize<SpellTemplate>(reader);
             var effectsList = new List<ISpellEffect>();
-            var effectTemplate = new List<EffectTemplate>();
 
-            foreach (EffectTemplate template in spell.Effects)
+            foreach (ISpellEffect effect in spell.Effects)
             {
-                ISpellEffect effect = template;
                 switch (effect.EffectType)
                 {
                     case EffectTypes.DAMAGE:
@@ -60,18 +59,14 @@ namespace MagiRogue.Data
                 }
             }
 
-            foreach (ISpellEffect spellEffect in effectsList)
-            {
-                effectTemplate.Add(new EffectTemplate(spellEffect));
-            }
-
-            spell.Effects = effectTemplate;
+            spell.Effects = effectsList;
 
             return spell;
         }
 
         public override void WriteJson(JsonWriter writer, SpellBase value, JsonSerializer serializer)
         {
+            serializer.TypeNameHandling = TypeNameHandling.Auto;
             serializer.Serialize(writer, (SpellTemplate)value);
         }
     }
@@ -84,7 +79,7 @@ namespace MagiRogue.Data
     {
         public int SpellLevel { get; set; }
 
-        public List<EffectTemplate> Effects { get; set; }
+        public List<ISpellEffect> Effects { get; set; }
 
         public string SpellName { get; set; }
 
@@ -101,11 +96,7 @@ namespace MagiRogue.Data
             MagicSchool spellSchool, int spellRange, double manaCost, string spellId)
         {
             SpellLevel = spellLevel;
-            Effects = new List<EffectTemplate>();
-            foreach (var effect in effects)
-            {
-                Effects.Add(new EffectTemplate(effect));
-            }
+            Effects = effects;
             SpellName = spellName;
             Description = description;
             SpellSchool = spellSchool;
