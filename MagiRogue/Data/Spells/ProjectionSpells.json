@@ -1,4 +1,24 @@
 [
   {
+    "SpellLevel": 1,
+    "Effects": [
+      {
+        "$type": "MagiRogue.System.Magic.Effects.DamageEffect, MagiRogue",
+        "AreaOfEffect": "Target",
+        "SpellDamageType": "Force",
+        "BaseDamage": 2,
+        "Radius": 0,
+        "TargetsTile": false,
+        "EffectType": "DAMAGE",
+        "IsHealing": false,
+        "CanMiss": true
+      }
+    ],
+    "SpellName": "Magic Missile",
+    "Description": "Magic missile, the first real combat magic any prospecting wizard will lear it's many use will cary you for a long time\n. It's said that the greatest of training in this magic permits one to shape it as a piercer or as a cutter, make it invisible or add a homing function to it.",
+    "SpellSchool": "Projection",
+    "SpellRange": 5,
+    "ManaCost": 1.0,
+    "SpellId": "magic_missile"
   }
 ]

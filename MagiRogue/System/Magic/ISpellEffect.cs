@@ -50,4 +50,14 @@ namespace MagiRogue.System.Magic
         /// </summary>
         public int Duration { get; }
     }
+
+    public interface IPermEffect
+    {
+        public int NodeCost { get; set; }
+
+        public ISpellEffect Enchantment { get; set; }
+        public Actor Caster { get; set; }
+
+        public void Enchant(int nodesSacrificed);
+    }
 }
