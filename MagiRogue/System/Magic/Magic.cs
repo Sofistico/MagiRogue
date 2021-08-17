@@ -64,7 +64,7 @@ namespace MagiRogue.System.Magic
     [JsonConverter(typeof(StringEnumConverter))]
     public enum MagicSchool
     {
-        Projection,
+        Projection, // Test
         Negation,
         Animation,
         Divination,

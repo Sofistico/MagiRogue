@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using MagiRogue.System.Magic.Effects;
-using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 using MagiRogue.Utils;
 using SadRogue.Primitives;
 using MagiRogue.Entities;
@@ -18,56 +18,147 @@ namespace MagiRogue.Data
         public override SpellBase ReadJson(JsonReader reader, Type objectType,
             SpellBase existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            serializer.TypeNameHandling = TypeNameHandling.Auto;
-            SpellTemplate spell = serializer.Deserialize<SpellTemplate>(reader);
+            JObject spell = JObject.Load(reader);
+            IEnumerable<JToken> listEffectsJson = spell.SelectTokens("$.Effects[*]");
             var effectsList = new List<ISpellEffect>();
 
-            foreach (ISpellEffect effect in spell.Effects)
+            foreach (JToken token in listEffectsJson)
             {
-                switch (effect.EffectType)
-                {
-                    case EffectTypes.DAMAGE:
-                        var dmgEffect = (IDamageSpellEffect)effect;
-                        effectsList.Add(new DamageEffect
-                            (dmgEffect.BaseDamage, dmgEffect.AreaOfEffect, dmgEffect.SpellDamageType,
-                            dmgEffect.CanMiss, dmgEffect.IsHealing, dmgEffect.Radius));
-                        break;
-
-                    case EffectTypes.HASTE:
-                        var haste = (IHasteEffect)effect;
-                        effectsList.Add(new HasteEffect(haste.AreaOfEffect, haste.HastePower,
-                            haste.Duration, haste.SpellDamageType));
-                        break;
-
-                    case EffectTypes.MAGESIGHT:
-                        var timed = (ITimedEffect)effect;
-                        effectsList.Add(new MageSightEffect(timed.Duration));
-                        break;
-
-                    case EffectTypes.SEVER:
-                        effectsList.Add(new SeverEffect(effect.AreaOfEffect, effect.SpellDamageType,
-                            effect.Radius, effect.BaseDamage));
-                        break;
-
-                    case EffectTypes.TELEPORT:
-                        effectsList.Add
-                            (new TeleportEffect(effect.AreaOfEffect, effect.SpellDamageType, effect.Radius));
-                        break;
-
-                    default:
-                        break;
-                }
+                EffectTypes effect = StringToEnumEffectType((string)token["EffectType"]);
+                effectsList.Add(EnumToEffect(effect, token));
             }
 
-            spell.Effects = effectsList;
+            SpellBase createdSpell = new SpellBase((string)spell["SpellId"],
+                (string)spell["SpellName"], StringToSchool((string)spell["SpellSchool"]),
+                (int)spell["SpellRange"], (int)spell["SpellLevel"], (double)spell["ManaCost"]);
+            createdSpell.SetDescription((string)spell["Description"]);
+            createdSpell.Effects = effectsList;
 
-            return spell;
+            return createdSpell;
         }
 
         public override void WriteJson(JsonWriter writer, SpellBase value, JsonSerializer serializer)
         {
-            serializer.TypeNameHandling = TypeNameHandling.Auto;
             serializer.Serialize(writer, (SpellTemplate)value);
+        }
+
+        /// <summary>
+        /// This is used to convert a string to an enum of <see cref="EffectTypes">EffectType</see>
+        /// </summary>
+        /// <param name="st"></param>
+        /// <returns></returns>
+        private static EffectTypes StringToEnumEffectType(string st)
+        {
+            return st switch
+            {
+                "DAMAGE" => EffectTypes.DAMAGE,
+                "HASTE" => EffectTypes.HASTE,
+                "MAGESIGHT" => EffectTypes.MAGESIGHT,
+                "SEVER" => EffectTypes.SEVER,
+                "TELEPORT" => EffectTypes.TELEPORT,
+                _ => throw new Exception($"It wasn't possible to convert the effect, " +
+                    $"please use only the provided effects types.\nEffect used: {st}"),
+            };
+        }
+
+        private static SpellAreaEffect StringToAreaEffect(string st)
+        {
+            return st switch
+            {
+                "Target" => SpellAreaEffect.Target,
+                "Self" => SpellAreaEffect.Self,
+                "Ball" => SpellAreaEffect.Ball,
+                "Beam" => SpellAreaEffect.Beam,
+                "Cone" => SpellAreaEffect.Cone,
+                "Level" => SpellAreaEffect.Level,
+                "World" => SpellAreaEffect.World,
+                _ => throw new Exception($"It wasn't possible to understand this spell area, is it a valid area?/n area = {st}")
+            };
+        }
+
+        private static DamageType StringToDamageType(string st)
+        {
+            return st switch
+            {
+                "None" => DamageType.None,
+                "Blunt" => DamageType.Blunt,
+                "Sharp" => DamageType.Sharp,
+                "Point" => DamageType.Point,
+                "Force" => DamageType.Force,
+                "Fire" => DamageType.Fire,
+                "Cold" => DamageType.Cold,
+                "Poison" => DamageType.Poison,
+                "Acid" => DamageType.Acid,
+                "Shock" => DamageType.Shock,
+                "Soul" => DamageType.Soul,
+                "Mind" => DamageType.Mind,
+                _ => throw new Exception($"This isn't a valid damage type, please use a valid one. Value used: {st}")
+            };
+        }
+
+        /// <summary>
+        /// Is used to instantiate and return any number of possible effects
+        /// </summary>
+        /// <param name="effect"></param>
+        /// <param name="jToken"></param>
+        /// <returns></returns>
+        private static ISpellEffect EnumToEffect(EffectTypes effect, JToken jToken)
+        {
+            switch (effect)
+            {
+                case EffectTypes.DAMAGE:
+                    //var dmgEffect = (IDamageSpellEffect)spellEffect;
+                    return new DamageEffect
+                        ((int)jToken["BaseDamage"], StringToAreaEffect((string)jToken["AreaOfEffect"]),
+                        StringToDamageType((string)jToken["SpellDamageType"]),
+                        (bool)jToken["CanMiss"], (bool)jToken["IsHealing"], (int)jToken["Radius"]);
+
+                case EffectTypes.HASTE:
+                    //var haste = (IHasteEffect)spellEffect;
+                    return new HasteEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]),
+                        (int)jToken["HastePower"],
+                        (int)jToken["Duration"],
+                        StringToDamageType((string)jToken["SpellDamageType"]));
+
+                case EffectTypes.MAGESIGHT:
+                    //var timed = (ITimedEffect)spellEffect;
+                    return new MageSightEffect((int)jToken["Duration"]);
+
+                case EffectTypes.SEVER:
+                    return new SeverEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]),
+                        StringToDamageType((string)jToken["SpellDamageType"]),
+                        (int)jToken["Radius"], (int)jToken["BaseDamage"]);
+
+                case EffectTypes.TELEPORT:
+                    return new TeleportEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]),
+                        StringToDamageType((string)jToken["SpellDamageType"]),
+                        (int)jToken["Radius"]);
+
+                default:
+                    return null;
+            }
+        }
+
+        private static MagicSchool StringToSchool(string st)
+        {
+            return st switch
+            {
+                "Projection" => MagicSchool.Projection,
+                "Negation" => MagicSchool.Negation,
+                "Animation" => MagicSchool.Animation,
+                "Divination" => MagicSchool.Divination,
+                "Alteration" => MagicSchool.Alteration,
+                "Wards" => MagicSchool.Wards,
+                "Dimensionalism" => MagicSchool.Dimensionalism,
+                "Conjuration" => MagicSchool.Conjuration,
+                "Transformation" => MagicSchool.Transformation,
+                "Illuminism" => MagicSchool.Illuminism,
+                "MedicalMagic" => MagicSchool.MedicalMagic,
+                "MindMagic" => MagicSchool.MindMagic,
+                "SoulMagic" => MagicSchool.SoulMagic,
+                "BloodMagic" => MagicSchool.BloodMagic,
+                _ => throw new Exception($"Are you sure the school is correct? it must be a valid one./n School used: {st}")
+            };
         }
     }
 
@@ -114,6 +205,7 @@ namespace MagiRogue.Data
             {
                 spell.Effects.Add(item);
             }
+            spell.SetDescription(spellTemplate.Description);
             return spell;
         }
 
@@ -127,6 +219,7 @@ namespace MagiRogue.Data
         }
     }
 
+    // TODO: If i don't find a way to use it, delete it
     public class EffectTemplate : ISpellEffect
     {
         public SpellAreaEffect AreaOfEffect { get; set; }

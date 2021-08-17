@@ -4,6 +4,7 @@ using MagiRogue.System.Magic;
 using MagiRogue.System.Magic.Effects;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace MagiRogue.Entities
@@ -35,19 +36,12 @@ namespace MagiRogue.Entities
                 );
             Stats.Precision = 3;
 
-            Anatomy.Limbs = Data.LimbTemplate.BasicHumanoidBody(this);
+            Anatomy.Limbs = LimbTemplate.BasicHumanoidBody(this);
 
             Magic.ShapingSkill = 9;
 
-            SpellBase missile = new SpellBase("magic_missile",
-                 "Magic Missile",
-                 MagicSchool.Projection, 5, manaCost: 1.0f)
-            { Proficiency = 1 };
-
-            missile.Effects.Add(
-            new DamageEffect(missile.Power,
-            SpellAreaEffect.Target,
-            Utils.DamageType.Force));
+            SpellBase missile = DataManager.QuerySpellInData("magic_missile");
+            missile.Proficiency = 1;
 
             SpellBase cure = new SpellBase("cure_test", "Cure Test",
                 MagicSchool.MedicalMagic, 0, 1, 1)

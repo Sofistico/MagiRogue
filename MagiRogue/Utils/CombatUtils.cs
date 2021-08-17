@@ -100,7 +100,7 @@ namespace MagiRogue.Utils
                         .Append(", dealing equal damage to yourself, shouldn't have done that.").ToString());
                     break;
 
-                case DamageType.Electricity:
+                case DamageType.Shock:
                     GameLoop.UIManager.MessageLog.Add(bobTheBuilder
                         .Append(", felling yourself speeding up!").ToString());
                     break;
@@ -133,7 +133,7 @@ namespace MagiRogue.Utils
         Cold = 6,
         Poison = 7,
         Acid = 8,
-        Electricity = 9,
+        Shock = 9,
         Soul = 10,
         Mind = 11
     }

@@ -16,6 +16,7 @@ namespace MagiRogue.System.Physics
         /// </summary>
         /// <param name="id">Id of the material you want, must consult the json file</param>
         /// <returns></returns>
-        public static MaterialTemplate SetMaterial(string id) => DataManager.ListOfMaterials.FirstOrDefault(a => a.Id == id);
+        public static MaterialTemplate SetMaterial(string id) =>
+            DataManager.ListOfMaterials.FirstOrDefault(a => a.Id == id);
     }
 }
