@@ -25,7 +25,7 @@ namespace MagiRogue.Data
             JsonUtils.JsonDeseralize<IReadOnlyList<SpellBase>>
             (Path.Combine(_appDomain, "Data", "Spells", "ProjectionSpells.json"));
 
-        public static SpellBase QuerySpellInData(string spellId) => (SpellBase)ListOfProjectionSpells.FirstOrDefault
+        public static SpellBase QuerySpellInData(string spellId) => ListOfProjectionSpells.FirstOrDefault
                 (m => m.SpellId.Equals(spellId));
     }
 }

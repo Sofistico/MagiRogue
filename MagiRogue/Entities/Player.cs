@@ -43,43 +43,29 @@ namespace MagiRogue.Entities
             SpellBase missile = DataManager.QuerySpellInData("magic_missile");
             missile.Proficiency = 1;
 
-            SpellBase cure = new SpellBase("cure_test", "Cure Test",
-                MagicSchool.MedicalMagic, 0, 1, 1)
-            { Proficiency = 1 };
+            SpellBase cure = DataManager.QuerySpellInData("minor_cure");
+            cure.Proficiency = 1;
 
-            cure.Effects.Add(new DamageEffect(cure.Power,
-                SpellAreaEffect.Self, Utils.DamageType.Force));
+            SpellBase haste = DataManager.QuerySpellInData("haste_self");
+            haste.Proficiency = 1;
 
-            SpellBase haste = new SpellBase("haste_self", "Haste",
-                MagicSchool.Dimensionalism, 0, 1, 1)
-            { Proficiency = 1 };
-            haste.Effects.Add(new HasteEffect(SpellAreaEffect.Self, 2, 5));
+            SpellBase mageSight = DataManager.QuerySpellInData("mage_sight");
+            mageSight.Proficiency = 1;
 
-            SpellBase mageSight = new SpellBase("mage_sight", "Mage Sight",
-                MagicSchool.Divination, 0, 1, 1)
-            { Proficiency = 1 };
-            mageSight.Effects.Add(new MageSightEffect(5));
+            SpellBase fireRay = DataManager.QuerySpellInData("fire_ray");
+            fireRay.Proficiency = 1;
 
-            SpellBase fireRay = new SpellBase("fire_ray", "Fire Ray",
-                MagicSchool.Projection, 5, 1, 1);
-            fireRay.Effects.Add(new DamageEffect(fireRay.Power,
-                SpellAreaEffect.Beam, Utils.DamageType.Fire));
+            SpellBase fireBall = DataManager.QuerySpellInData("fire_ball");
+            fireBall.Proficiency = 1;
 
-            SpellBase fireBall = new SpellBase("fire_ball", "Fire Ball", MagicSchool.Projection, 7, 1, 1);
-            fireBall.Effects.Add(new DamageEffect(fireBall.Power, SpellAreaEffect.Ball, Utils.DamageType.Fire)
-            { Radius = 3 });
+            SpellBase severWhip = DataManager.QuerySpellInData("sever_whip");
+            severWhip.Proficiency = 1;
 
-            SpellBase severWhip = new SpellBase("sever_whip", "Sever Whip", MagicSchool.Projection, 5, 1, 1.5f);
-            severWhip.Effects.Add(new SeverEffect
-                (SpellAreaEffect.Target, Utils.DamageType.Sharp, 1, severWhip.Power));
+            SpellBase teleport = DataManager.QuerySpellInData("teleport");
+            teleport.Proficiency = 1;
 
-            SpellBase teleport = new SpellBase("teleport", "Teleport", MagicSchool.Dimensionalism, 4, 1, 1);
-            teleport.Effects.Add(new TeleportEffect());
-
-            SpellBase coneOfCold = new SpellBase("cone_cold", "Cone of Cold", MagicSchool.Projection,
-                spellRange: 1, spellLevel: 1, manaCost: 1);
-            coneOfCold.Effects.Add
-                (new DamageEffect(coneOfCold.Power, SpellAreaEffect.Cone, Utils.DamageType.Cold, radius: 3));
+            SpellBase coneOfCold = DataManager.QuerySpellInData("cone_cold");
+            coneOfCold.Proficiency = 1;
 
             List<SpellBase> testSpells = new List<SpellBase>()
             {

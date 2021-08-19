@@ -7,39 +7,6 @@ using Troschuetz.Random;
 
 namespace MagiRogue.Entities
 {
-    #region Enums
-
-    public enum HumanoidBody
-    {
-        Head,
-        Torso,
-        R_arm,
-        R_hand,
-        L_arm,
-        L_hand,
-        R_leg,
-        R_foot,
-        L_leg,
-        L_foot
-    }
-
-    public enum QuadrupleBody
-    {
-        Head,
-        Torso,
-        R_FrontalLeg,
-        L_FrontalLeg,
-        R_FrontalPaw,
-        L_FrontalPaw,
-        R_BackLeg,
-        L_BackLeg,
-        R_BackPaw,
-        L_BackPaw,
-        Tail
-    }
-
-    #endregion Enums
-
     public class Anatomy
     {
         #region Fields
@@ -180,7 +147,7 @@ namespace MagiRogue.Entities
                 return;
             }
 
-            bodyParts = Limbs.FindAll(l => l.TypeLimb == limb && l.Attached == true);
+            bodyParts = Limbs.FindAll(l => l.TypeLimb == limb && l.Attached);
 
             if (bodyParts.Count < 1)
             {

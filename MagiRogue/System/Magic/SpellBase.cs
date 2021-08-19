@@ -24,47 +24,55 @@ namespace MagiRogue.System.Magic
         /// </summary>
         public int RequiredShapingSkill
         {
-            get => (int)((SpellLevel + ManaCost) * 2 / Proficiency);
+            get => (int)(Power * 2 / Proficiency);
         }
 
         /// <summary>
         /// All the effects that the spell can have
         /// </summary>
+        [JsonProperty(Order = 8)]
         public List<ISpellEffect> Effects { get; set; }
 
         /// <summary>
         /// Spell name
         /// </summary>
+        [JsonProperty(Order = -1)]
         public string SpellName { get; set; }
 
         /// <summary>
         /// Description of the spell
         /// </summary>
-        public string Description { get; set; }
+        [JsonProperty(Order = 0)]
+        public string Description { get; private set; }
 
         /// <summary>
         /// What school the spell is
         /// </summary>
+        [JsonProperty(Order = 6)]
         public MagicSchool SpellSchool { get; set; }
 
         /// <summary>
         /// The range that the spell can act, can be anything from 0 - self to 999 - map
         /// </summary>
+        [JsonProperty(Order = 7)]
         public int SpellRange { get; set; }
 
         /// <summary>
         /// From 1 to 9
         /// </summary>
+        [JsonProperty(Order = 4)]
         public int SpellLevel { get; set; }
 
         /// <summary>
         /// The total mana cost of the spell, ranging from 0.1 for simple feats of magic to anything beyond
         /// </summary>
+        [JsonProperty(Order = 5)]
         public double ManaCost { get; set; }
 
         /// <summary>
         /// The id of the spell, required for quick look up and human redable serialization.
         /// </summary>
+        [JsonProperty(Order = -2)]
         public string SpellId { get; set; }
 
         /// <summary>

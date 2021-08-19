@@ -19,9 +19,8 @@ namespace MagiRogue.Data.Tests
         [Fact()]
         public void SpellTemplateSerializationTest()
         {
-            string spellSerialized = JsonConvert.SerializeObject(missile);
+            string spellSerialized = JsonConvert.SerializeObject(missile, Formatting.Indented);
             SpellBase spellDeserialized = JsonConvert.DeserializeObject<SpellBase>(spellSerialized);
-
             Assert.True(spellDeserialized.SpellId.Equals(missile.SpellId));
         }
     }

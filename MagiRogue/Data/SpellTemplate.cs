@@ -1,15 +1,10 @@
 ﻿using MagiRogue.System.Magic;
+using MagiRogue.System.Magic.Effects;
+using MagiRogue.Utils;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using MagiRogue.System.Magic.Effects;
-using Newtonsoft.Json.Linq;
-using MagiRogue.Utils;
-using SadRogue.Primitives;
-using MagiRogue.Entities;
 
 namespace MagiRogue.Data
 {
@@ -28,9 +23,13 @@ namespace MagiRogue.Data
                 effectsList.Add(EnumToEffect(effect, token));
             }
 
-            SpellBase createdSpell = new SpellBase((string)spell["SpellId"],
-                (string)spell["SpellName"], StringToSchool((string)spell["SpellSchool"]),
-                (int)spell["SpellRange"], (int)spell["SpellLevel"], (double)spell["ManaCost"]);
+            SpellBase createdSpell = new(
+                (string)spell["SpellId"],
+                (string)spell["SpellName"],
+                StringToSchool((string)spell["SpellSchool"]),
+                (int)spell["SpellRange"],
+                (int)spell["SpellLevel"],
+                (double)spell["ManaCost"]);
             createdSpell.SetDescription((string)spell["Description"]);
             createdSpell.Effects = effectsList;
 
@@ -39,6 +38,7 @@ namespace MagiRogue.Data
 
         public override void WriteJson(JsonWriter writer, SpellBase value, JsonSerializer serializer)
         {
+            serializer.Formatting = Formatting.Indented;
             serializer.Serialize(writer, (SpellTemplate)value);
         }
 
@@ -107,21 +107,18 @@ namespace MagiRogue.Data
             switch (effect)
             {
                 case EffectTypes.DAMAGE:
-                    //var dmgEffect = (IDamageSpellEffect)spellEffect;
                     return new DamageEffect
                         ((int)jToken["BaseDamage"], StringToAreaEffect((string)jToken["AreaOfEffect"]),
                         StringToDamageType((string)jToken["SpellDamageType"]),
                         (bool)jToken["CanMiss"], (bool)jToken["IsHealing"], (int)jToken["Radius"]);
 
                 case EffectTypes.HASTE:
-                    //var haste = (IHasteEffect)spellEffect;
                     return new HasteEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]),
                         (int)jToken["HastePower"],
                         (int)jToken["Duration"],
                         StringToDamageType((string)jToken["SpellDamageType"]));
 
                 case EffectTypes.MAGESIGHT:
-                    //var timed = (ITimedEffect)spellEffect;
                     return new MageSightEffect((int)jToken["Duration"]);
 
                 case EffectTypes.SEVER:
@@ -216,32 +213,6 @@ namespace MagiRogue.Data
                 spell.Description, spell.SpellSchool, spell.SpellRange, spell.ManaCost, spell.SpellId);
 
             return template;
-        }
-    }
-
-    // TODO: If i don't find a way to use it, delete it
-    public class EffectTemplate : ISpellEffect
-    {
-        public SpellAreaEffect AreaOfEffect { get; set; }
-        public DamageType SpellDamageType { get; set; }
-        public int Radius { get; set; }
-        public bool TargetsTile { get; set; }
-        public int BaseDamage { get; set; }
-        public EffectTypes EffectType { get; set; }
-
-        public EffectTemplate(ISpellEffect effect)
-        {
-            AreaOfEffect = effect.AreaOfEffect;
-            SpellDamageType = effect.SpellDamageType;
-            Radius = effect.Radius;
-            TargetsTile = effect.TargetsTile;
-            BaseDamage = effect.BaseDamage;
-            EffectType = effect.EffectType;
-        }
-
-        public void ApplyEffect(Point target, Actor caster, SpellBase spellCasted)
-        {
-            throw new Exception("Ops... this shouldn't have happened, tried to acess an EffectTemplate");
         }
     }
 
