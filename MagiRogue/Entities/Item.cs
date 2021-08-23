@@ -31,6 +31,11 @@ namespace MagiRogue.Entities
             }
         }
 
+        /// <summary>
+        /// In what slot can this item be equiped? None means you can't equip the item
+        /// </summary>
+        public EquipType EquipType { get; set; }
+
         // By default, a new Item is sized 1x1, with a weight of 1, and at 100% condition
         public Item(Color foreground, Color background, string name, int glyph, Point coord, int size,
             float weight = 1, int condition = 100, int layer = (int)MapLayer.ITEMS) :
@@ -59,7 +64,25 @@ namespace MagiRogue.Entities
             /*c.Strength.AddModifier(new StatModifier(10, StatModType.Flat, this));
             c.Strength.AddModifier(new StatModifier(0.1, StatModType.Percent, this));*/
 
-            throw new NotImplementedException();
+            if (EquipType == EquipType.None)
+            {
+                GameLoop.UIManager.MessageLog.Add("This item can't be equiped!");
+                return;
+            }
+
+            if (!actor.Equipment.TryAdd(actor.Anatomy.Limbs.Find
+                (l => l.TypeLimb.ToString() == EquipType.ToString()), this))
+            {
+                GameLoop.UIManager.MessageLog.Add($"{actor.Name} has already an item equiped in addHere!");
+                return;
+            }
+
+            if (EquipType == EquipType.Hand)
+            {
+                GameLoop.UIManager.MessageLog.Add($"{actor.Name} wields {Name}");
+            }
+            else
+                GameLoop.UIManager.MessageLog.Add($"{actor.Name} equipped {Name} in {EquipType}");
         }
 
         public void Unequip(Actor actor)
@@ -71,5 +94,25 @@ namespace MagiRogue.Entities
 
             throw new NotImplementedException();
         }
+
+        public override string ToString()
+        {
+            return $"{Name} : Equip {EquipType}";
+        }
+    }
+
+    [JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+    public enum EquipType
+    {
+        None,
+        Head,
+        Torso,
+        Arm,
+        Leg,
+        Foot,
+        Hand,
+        Tail,
+        Wing,
+        Neck
     }
 }

@@ -15,6 +15,11 @@ namespace MagiRogue.UI.Windows
         private Dictionary<MagiButton, Action> _selectionButtons;
         private MagiButton lastFocusedButton;
 
+        /// <summary>
+        /// account for the thickness of the window border to prevent UI element spillover
+        /// </summary>
+        protected const int WindowBorderThickness = 2;
+
         public MagiBaseWindow(int width, int height, string title) : base(width, height)
         {
             // Ensure that the window background is the correct colour
@@ -86,7 +91,6 @@ namespace MagiRogue.UI.Windows
                 return ($"Nameof Screen: {Title}");
             }
         }
-
 
         public override void Update(TimeSpan time)
         {

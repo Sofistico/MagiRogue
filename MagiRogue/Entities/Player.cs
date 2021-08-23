@@ -66,6 +66,7 @@ namespace MagiRogue.Entities
 
             SpellBase coneOfCold = DataManager.QuerySpellInData("cone_cold");
             coneOfCold.Proficiency = 1;
+            SpellBase fingerOfDeath = DataManager.QuerySpellInData("finger_death");
 
             List<SpellBase> testSpells = new List<SpellBase>()
             {
@@ -77,7 +78,8 @@ namespace MagiRogue.Entities
                 fireBall,
                 severWhip,
                 teleport,
-                coneOfCold
+                coneOfCold,
+                fingerOfDeath
             };
 
             Magic.KnowSpells.AddRange(testSpells);

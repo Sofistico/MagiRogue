@@ -16,7 +16,6 @@ namespace MagiRogue.UI.Windows
     public class SpellSelectWindow : PopWindow
     {
         private readonly MagiButton _castButton;
-        private readonly Console _descriptionArea;
         private readonly Dictionary<char, SpellBase> _hotKeys;
 
         private SpellBase _selectedSpell;
@@ -41,13 +40,6 @@ namespace MagiRogue.UI.Windows
                 _onCast?.Invoke(_selectedSpell);
                 Hide();
             };
-
-            _descriptionArea = new Console(Width - ButtonWidth - 3, Height - 4)
-            {
-                Position = new Point(ButtonWidth + 2, 1)
-            };
-
-            Children.Add(_descriptionArea);
         }
 
         public override bool ProcessKeyboard(Keyboard info)
@@ -71,7 +63,7 @@ namespace MagiRogue.UI.Windows
             _onCast = onCast;
 
             _selectedSpell = null;
-            _descriptionArea.Clear();
+            DescriptionArea.Clear();
 
             _castButton.IsEnabled = false;
 
@@ -123,12 +115,12 @@ namespace MagiRogue.UI.Windows
         public void OnSpellSelected(SpellBase spell)
         {
             _selectedSpell = spell;
-            _descriptionArea.Clear();
-            _descriptionArea.Cursor.Position = new Point(0, 1);
-            _descriptionArea.Cursor.Print(_selectedSpell.ToString());
-            _descriptionArea.Cursor.Position = new Point(0, 5);
+            DescriptionArea.Clear();
+            DescriptionArea.Cursor.Position = new Point(0, 1);
+            DescriptionArea.Cursor.Print(_selectedSpell.ToString());
+            DescriptionArea.Cursor.Position = new Point(0, 5);
             if (_selectedSpell.Description is object)
-                _descriptionArea.Cursor.Print(_selectedSpell.Description);
+                DescriptionArea.Cursor.Print(_selectedSpell.Description);
             _castButton.IsEnabled = true;
         }
 

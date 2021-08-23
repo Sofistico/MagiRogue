@@ -1,188 +1,215 @@
 [
-  {
-    "SpellId": "magic_missile",
-    "SpellName": "Magic Missile",
-    "Description": "Magic missile, the first real combat magic any prospecting wizard will learn, it's many use will cary you for a long time.\nIt's said that the greatest of training in this magic permits one to shape it as a piercer or as a cutter, make it invisible or add a homing function to it.",
-    "SpellLevel": 1,
-    "ManaCost": 1.0,
-    "SpellSchool": "Projection",
-    "SpellRange": 5,
-    "Effects": [
-      {
-        "AreaOfEffect": "Target",
-        "SpellDamageType": "Force",
-        "BaseDamage": 2,
-        "Radius": 0,
-        "TargetsTile": false,
-        "EffectType": "DAMAGE",
-        "IsHealing": false,
-        "CanMiss": true
-      }
-    ]
-  },
-  {
-    "SpellLevel": 1,
-    "Effects": [
-      {
-        "AreaOfEffect": "Self",
-        "SpellDamageType": "Force",
-        "BaseDamage": 2,
-        "Radius": 0,
-        "TargetsTile": false,
-        "EffectType": "DAMAGE",
-        "IsHealing": true,
-        "CanMiss": false
-      }
-    ],
-    "SpellName": "Minor Cure",
-    "Description": null,
-    "SpellSchool": "MedicalMagic",
-    "SpellRange": 0,
-    "ManaCost": 1.0,
-    "SpellId": "minor_cure"
-  },
-  {
-    "SpellLevel": 1,
-    "Effects": [
-      {
-        "AreaOfEffect": "Self",
-        "SpellDamageType": "Force",
-        "BaseDamage": 0,
-        "HastePower": 2.0,
-        "Duration": 5,
-        "TurnApplied": 0,
-        "Radius": 0,
-        "TargetsTile": false,
-        "EffectType": "HASTE"
-      }
-    ],
-    "SpellName": "Haste",
-    "Description": null,
-    "SpellSchool": "Dimensionalism",
-    "SpellRange": 0,
-    "ManaCost": 1.0,
-    "SpellId": "haste_self"
-  },
-  {
-    "SpellLevel": 1,
-    "Effects": [
-      {
-        "AreaOfEffect": "Self",
-        "SpellDamageType": "None",
-        "Duration": 5,
-        "TurnApplied": 0,
-        "Radius": 0,
-        "TargetsTile": false,
-        "EffectType": "MAGESIGHT",
-        "BaseDamage": 0
-      }
-    ],
-    "SpellName": "Mage Sight",
-    "Description": null,
-    "SpellSchool": "Divination",
-    "SpellRange": 0,
-    "ManaCost": 1.0,
-    "SpellId": "mage_sight"
-  },
-  {
-    "SpellLevel": 1,
-    "Effects": [
-      {
-        "AreaOfEffect": "Beam",
-        "SpellDamageType": "Fire",
-        "BaseDamage": 2,
-        "Radius": 0,
-        "TargetsTile": false,
-        "EffectType": "DAMAGE",
-        "IsHealing": false,
-        "CanMiss": false
-      }
-    ],
-    "SpellName": "Fire Ray",
-    "Description": null,
-    "SpellSchool": "Projection",
-    "SpellRange": 5,
-    "ManaCost": 1.0,
-    "SpellId": "fire_ray"
-  },
-  {
-    "SpellLevel": 1,
-    "Effects": [
-      {
-        "AreaOfEffect": "Ball",
-        "SpellDamageType": "Fire",
-        "BaseDamage": 2,
-        "Radius": 3,
-        "TargetsTile": false,
-        "EffectType": "DAMAGE",
-        "IsHealing": false,
-        "CanMiss": false
-      }
-    ],
-    "SpellName": "Fire Ball",
-    "Description": null,
-    "SpellSchool": "Projection",
-    "SpellRange": 7,
-    "ManaCost": 1.0,
-    "SpellId": "fire_ball"
-  },
-  {
-    "SpellLevel": 1,
-    "Effects": [
-      {
-        "AreaOfEffect": "Target",
-        "SpellDamageType": "Sharp",
-        "Radius": 1,
-        "TargetsTile": false,
-        "EffectType": "SEVER",
-        "BaseDamage": 2
-      }
-    ],
-    "SpellName": "Sever Whip",
-    "Description": null,
-    "SpellSchool": "Projection",
-    "SpellRange": 5,
-    "ManaCost": 1.5,
-    "SpellId": "sever_whip"
-  },
-  {
-    "SpellLevel": 1,
-    "Effects": [
-      {
-        "AreaOfEffect": "Target",
-        "SpellDamageType": "None",
-        "Radius": 0,
-        "TargetsTile": true,
-        "EffectType": "TELEPORT",
-        "BaseDamage": 0
-      }
-    ],
-    "SpellName": "Teleport",
-    "Description": null,
-    "SpellSchool": "Dimensionalism",
-    "SpellRange": 4,
-    "ManaCost": 1.0,
-    "SpellId": "teleport"
-  },
-  {
-    "SpellLevel": 1,
-    "Effects": [
-      {
-        "AreaOfEffect": "Cone",
-        "SpellDamageType": "Cold",
-        "BaseDamage": 2,
-        "Radius": 3,
-        "TargetsTile": false,
-        "EffectType": "DAMAGE",
-        "IsHealing": false,
-        "CanMiss": false
-      }
-    ],
-    "SpellName": "Cone of Cold",
-    "Description": null,
-    "SpellSchool": "Projection",
-    "SpellRange": 1,
-    "ManaCost": 1.0,
-    "SpellId": "cone_cold"
-  }
+	{
+		"SpellId": "magic_missile",
+		"SpellName": "Magic Missile",
+		"Description": "Magic missile, the first real combat magic any prospecting wizard will learn, it's many use will cary you for a long time.\r\nIt's said that the greatest of training in this magic permits one to shape it as a piercer or as a cutter, make it invisible or add a homing function to it.",
+		"SpellLevel": 1,
+		"ManaCost": 1.0,
+		"SpellSchool": "Projection",
+		"SpellRange": 5,
+		"Effects": [
+			{
+				"AreaOfEffect": "Target",
+				"SpellDamageType": "Force",
+				"BaseDamage": 2,
+				"Radius": 0,
+				"TargetsTile": false,
+				"EffectType": "DAMAGE",
+				"IsHealing": false,
+				"CanMiss": true,
+				"IsResistable": false
+			}
+		]
+	},
+	{
+		"SpellLevel": 1,
+		"Effects": [
+			{
+				"AreaOfEffect": "Self",
+				"SpellDamageType": "Force",
+				"BaseDamage": 2,
+				"Radius": 0,
+				"TargetsTile": false,
+				"EffectType": "DAMAGE",
+				"IsHealing": true,
+				"CanMiss": false,
+				"IsResistable": false
+			}
+		],
+		"SpellName": "Minor Cure",
+		"Description": null,
+		"SpellSchool": "MedicalMagic",
+		"SpellRange": 0,
+		"ManaCost": 1.0,
+		"SpellId": "minor_cure"
+	},
+	{
+		"SpellLevel": 1,
+		"Effects": [
+			{
+				"AreaOfEffect": "Self",
+				"SpellDamageType": "Force",
+				"BaseDamage": 0,
+				"HastePower": 2.0,
+				"Duration": 5,
+				"TurnApplied": 0,
+				"Radius": 0,
+				"TargetsTile": false,
+				"EffectType": "HASTE"
+			}
+		],
+		"SpellName": "Haste",
+		"Description": null,
+		"SpellSchool": "Dimensionalism",
+		"SpellRange": 0,
+		"ManaCost": 1.0,
+		"SpellId": "haste_self"
+	},
+	{
+		"SpellLevel": 1,
+		"Effects": [
+			{
+				"AreaOfEffect": "Self",
+				"SpellDamageType": "None",
+				"Duration": 5,
+				"TurnApplied": 0,
+				"Radius": 0,
+				"TargetsTile": false,
+				"EffectType": "MAGESIGHT",
+				"BaseDamage": 0
+			}
+		],
+		"SpellName": "Mage Sight",
+		"Description": null,
+		"SpellSchool": "Divination",
+		"SpellRange": 0,
+		"ManaCost": 1.0,
+		"SpellId": "mage_sight"
+	},
+	{
+		"SpellLevel": 1,
+		"Effects": [
+			{
+				"AreaOfEffect": "Beam",
+				"SpellDamageType": "Fire",
+				"BaseDamage": 2,
+				"Radius": 0,
+				"TargetsTile": false,
+				"EffectType": "DAMAGE",
+				"IsHealing": false,
+				"CanMiss": false,
+				"IsResistable": false
+			}
+		],
+		"SpellName": "Fire Ray",
+		"Description": null,
+		"SpellSchool": "Projection",
+		"SpellRange": 5,
+		"ManaCost": 1.0,
+		"SpellId": "fire_ray"
+	},
+	{
+		"SpellLevel": 1,
+		"Effects": [
+			{
+				"AreaOfEffect": "Ball",
+				"SpellDamageType": "Fire",
+				"BaseDamage": 2,
+				"Radius": 3,
+				"TargetsTile": false,
+				"EffectType": "DAMAGE",
+				"IsHealing": false,
+				"CanMiss": false,
+				"IsResistable": false
+			}
+		],
+		"SpellName": "Fire Ball",
+		"Description": null,
+		"SpellSchool": "Projection",
+		"SpellRange": 7,
+		"ManaCost": 1.0,
+		"SpellId": "fire_ball"
+	},
+	{
+		"SpellLevel": 1,
+		"Effects": [
+			{
+				"AreaOfEffect": "Target",
+				"SpellDamageType": "Sharp",
+				"Radius": 1,
+				"TargetsTile": false,
+				"EffectType": "SEVER",
+				"BaseDamage": 2
+			}
+		],
+		"SpellName": "Sever Whip",
+		"Description": null,
+		"SpellSchool": "Projection",
+		"SpellRange": 5,
+		"ManaCost": 1.5,
+		"SpellId": "sever_whip"
+	},
+	{
+		"SpellLevel": 1,
+		"Effects": [
+			{
+				"AreaOfEffect": "Target",
+				"SpellDamageType": "None",
+				"Radius": 0,
+				"TargetsTile": true,
+				"EffectType": "TELEPORT",
+				"BaseDamage": 0
+			}
+		],
+		"SpellName": "Teleport",
+		"Description": null,
+		"SpellSchool": "Dimensionalism",
+		"SpellRange": 4,
+		"ManaCost": 1.0,
+		"SpellId": "teleport"
+	},
+	{
+		"SpellLevel": 1,
+		"Effects": [
+			{
+				"AreaOfEffect": "Cone",
+				"SpellDamageType": "Cold",
+				"BaseDamage": 2,
+				"Radius": 3,
+				"TargetsTile": false,
+				"EffectType": "DAMAGE",
+				"IsHealing": false,
+				"CanMiss": false,
+				"IsResistable": false
+			}
+		],
+		"SpellName": "Cone of Cold",
+		"Description": null,
+		"SpellSchool": "Projection",
+		"SpellRange": 1,
+		"ManaCost": 1.0,
+		"SpellId": "cone_cold"
+	},
+	{
+		"SpellId": "finger_death",
+		"SpellName": "Finger of Death",
+		"SpellLevel": 6,
+		"Description": "This spell was createad by an powerful mage using extensive knowledge about the soul to make his enemies die by a point of his finger. \r\nIt's said that he also tried to create the Gaze of Death, but sadly died when the spell proved too powerful when he blinked and killed himself",
+		"SpellRange": 5,
+		"ManaCost": 20,
+		"SpellSchool": "SoulMagic",
+		"Effects": [
+			{
+				"AreaOfEffect": "Target",
+				"SpellDamageType": "Soul",
+				"BaseDamage": 999,
+				"TargetsTile": false,
+				"EffectType": "DAMAGE",
+				"IsHealing": false,
+				"CanMiss": true,
+				"IsResistable": true,
+				"Radius": 0
+			}
+		]
+	}
 ]

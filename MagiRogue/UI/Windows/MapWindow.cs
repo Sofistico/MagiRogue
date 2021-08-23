@@ -81,7 +81,45 @@ namespace MagiRogue.UI.Windows
             IsDirty = true;
         }
 
-        public bool HandleMapInteraction(Keyboard info, UIManager ui, World world)
+        public bool HandleMapInteraction(Keyboard info, UIManager ui, World world) => HandleActions(info, world, ui);
+
+        private bool HandleMove(Keyboard info, World world)
+        {
+            foreach (Keys key in UIManager.MovementDirectionMapping.Keys)
+            {
+                if (info.IsKeyPressed(key))
+                {
+                    Direction moveDirection = UIManager.MovementDirectionMapping[key];
+                    Point coorToMove = new Point(moveDirection.DeltaX, moveDirection.DeltaY);
+
+                    if (world.CurrentMap.ControlledEntitiy is not Player)
+                    {
+                        int distance = (int)Distance.Chebyshev.Calculate(targetCursor.OriginCoord,
+                            world.CurrentMap.ControlledEntitiy.Position + coorToMove);
+
+                        if ((world.CurrentMap.PlayerFOV.CurrentFOV.Contains
+                            (world.CurrentMap.ControlledEntitiy.Position + coorToMove)
+                            || world.CurrentMap.PlayerExplored
+                            [world.CurrentMap.ControlledEntitiy.Position + coorToMove])
+                            && distance <= targetCursor.MaxDistance)
+                        {
+                            return CommandManager.MoveActorBy
+                                ((Actor)world.CurrentMap.ControlledEntitiy, coorToMove);
+                        }
+                        else
+                            return false;
+                    }
+
+                    bool sucess =
+                        CommandManager.MoveActorBy((Actor)world.CurrentMap.ControlledEntitiy, coorToMove);
+                    return sucess;
+                }
+            }
+
+            return false;
+        }
+
+        private bool HandleActions(Keyboard info, World world, UIManager ui)
         {
             if (HandleMove(info, world))
             {
@@ -122,7 +160,6 @@ namespace MagiRogue.UI.Windows
             {
                 bool sucess = CommandManager.DropItems(world.Player);
                 Item item = world.CurrentMap.GetEntityAt<Item>(world.Player.Position);
-                ui.InventoryScreen.RemoveItemFromConsole(item);
                 ui.InventoryScreen.ShowItems(world.Player);
                 world.ProcessTurn(TimeHelper.Interact, sucess);
                 return sucess;
@@ -243,40 +280,6 @@ namespace MagiRogue.UI.Windows
             }
 
 #endif
-
-            return false;
-        }
-
-        private bool HandleMove(SadConsole.Input.Keyboard info, World world)
-        {
-            foreach (Keys key in UIManager.MovementDirectionMapping.Keys)
-            {
-                if (info.IsKeyPressed(key))
-                {
-                    Direction moveDirection = UIManager.MovementDirectionMapping[key];
-                    Point coorToMove = new Point(moveDirection.DeltaX, moveDirection.DeltaY);
-
-                    if (world.CurrentMap.ControlledEntitiy is not Player)
-                    {
-                        int distance = (int)Distance.Chebyshev.Calculate(targetCursor.OriginCoord,
-                            world.CurrentMap.ControlledEntitiy.Position + coorToMove);
-
-                        if (world.CurrentMap.PlayerFOV.CurrentFOV.Contains
-                            (world.CurrentMap.ControlledEntitiy.Position + coorToMove)
-                            && distance <= targetCursor.MaxDistance)
-                        {
-                            return CommandManager.MoveActorBy
-                                ((Actor)world.CurrentMap.ControlledEntitiy, coorToMove);
-                        }
-                        else
-                            return false;
-                    }
-
-                    bool sucess =
-                        CommandManager.MoveActorBy((Actor)world.CurrentMap.ControlledEntitiy, coorToMove);
-                    return sucess;
-                }
-            }
 
             return false;
         }

@@ -55,7 +55,8 @@ namespace MagiRogue.System.Magic.Effects
                 if (poorGuy is not null)
                 {
                     DamageEffect damage = new
-                        DamageEffect(BaseDamage, AreaOfEffect, SpellDamageType, canMiss: true, radius: Radius);
+                        DamageEffect(BaseDamage, AreaOfEffect, SpellDamageType, canMiss: true, radius: Radius,
+                        isResistable: true);
                     damage.ApplyEffect(target, caster, spellCasted);
                 }
             }

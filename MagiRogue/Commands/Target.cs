@@ -66,20 +66,6 @@ namespace MagiRogue.Commands
             tileDictionary = new Dictionary<Point, TileBase>();
         }
 
-        private void TargetEntity<T>() where T : Entity
-        {
-            TargetList.Clear();
-
-            IList<T> entities = GameLoop.World.CurrentMap.GetEntitiesAt<T>(Cursor.Position).ToList();
-
-            entities.RemoveAt(0);
-
-            if (entities.Count != 0)
-            {
-                TargetList = (List<Entity>)entities;
-            }
-        }
-
         public bool TileInTarget()
         {
             TileBase tile = GameLoop.World.CurrentMap.GetTileAt<TileBase>(Cursor.Position);
@@ -97,7 +83,6 @@ namespace MagiRogue.Commands
             if (GameLoop.World.CurrentMap.GetEntitiesAt<Entity>(Cursor.Position).Any(e => e.ID != Cursor.ID)
                 && GameLoop.World.CurrentMap.GetEntityAt<Entity>(Cursor.Position) is not Player)
             {
-                TargetEntity<Entity>();
                 State = TargetState.Targeting;
                 return true;
             }
@@ -182,7 +167,7 @@ namespace MagiRogue.Commands
                     // if there is anything in the path, clear it
                     foreach (Point point in tileDictionary.Keys)
                     {
-                        var tile = GameLoop.World.CurrentMap.GetTileAt<TileBase>(point);
+                        TileBase tile = GameLoop.World.CurrentMap.GetTileAt<TileBase>(point);
                         if (tile is not null)
                             tile.CopyAppearanceFrom(tile.LastSeenAppereance);
                     }
@@ -240,6 +225,7 @@ namespace MagiRogue.Commands
         /// <param name="e"></param>
         private void Cursor_Moved(object sender, GoRogue.GameFramework.GameObjectPropertyChanged<Point> e)
         {
+            TargetList.Clear();
             TravelPath = GameLoop.World.CurrentMap.AStar.ShortestPath(OriginCoord, e.NewValue);
             foreach (Point pos in TravelPath.Steps)
             {
@@ -267,43 +253,56 @@ namespace MagiRogue.Commands
 
                 foreach (Point point in radius.PositionsInRadius(radiusLocation))
                 {
-                    CheckIfTargetInPoint(point);
+                    AddTileToDictionary(point);
+                    AddEntityToList(point);
                 }
             }
 
             if (SpellSelected.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Cone))
             {
-                ISpellEffect effect = GetSpellEffect(SpellAreaEffect.Cone);
-
+                ISpellEffect effect = GetSpellAreaEffect(SpellAreaEffect.Cone);
                 foreach (Point point in
                     GeometryUtils.Cone(OriginCoord, effect.Radius, this).Points)
                 {
-                    CheckIfTargetInPoint(point);
+                    AddTileToDictionary(point);
+                    AddEntityToList(point);
                 }
             }
         }
 
         /// <summary>
-        /// Check if target is in point
+        /// Adds the tile to the <see cref="tileDictionary"/>.
         /// </summary>
         /// <param name="point"></param>
-        private void CheckIfTargetInPoint(Point point)
+        private void AddTileToDictionary(Point point)
         {
             var halp = GameLoop.World.CurrentMap.GetTileAt<TileBase>(point);
+            if (halp is not null)
+            {
+                halp.Background = Color.Yellow;
+                tileDictionary.TryAdd(point, halp);
+            }
+
+            // sanity check
+        }
+
+        /// <summary>
+        /// Adds an entity to the <see cref="TargetList"/>.
+        /// </summary>
+        /// <param name="point"></param>
+        private void AddEntityToList(Point point)
+        {
             var entity = GameLoop.World.CurrentMap.GetEntityAt<Entity>(point);
             if (entity is not null && !TargetList.Contains(entity))
                 TargetList.Add(GameLoop.World.CurrentMap.GetEntityAt<Entity>(point));
-            if (halp is not null)
-                halp.Background = Color.Yellow;
-            tileDictionary.TryAdd(point, halp);
         }
 
-        private ISpellEffect GetSpellEffect(SpellAreaEffect areaEffect) =>
+        private ISpellEffect GetSpellAreaEffect(SpellAreaEffect areaEffect) =>
             SpellSelected.Effects.Find(e => e.AreaOfEffect == areaEffect);
 
         public void LookTarget()
         {
-            LookWindow w = new LookWindow(TargetList[0]);
+            LookWindow w = new(TargetList[0]);
             w.Show();
         }
 

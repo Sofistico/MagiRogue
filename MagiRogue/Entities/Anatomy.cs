@@ -185,7 +185,7 @@ namespace MagiRogue.Entities
 
             GameLoop.UIManager.MessageLog.Add(dismemberMessage.ToString());
             if (totalDmg > 0)
-                GameLoop.UIManager.MessageLog.Add($"And took {totalDmg} damage!");
+                GameLoop.UIManager.MessageLog.Add($"and took {totalDmg} damage!");
         }
 
         #endregion Methods

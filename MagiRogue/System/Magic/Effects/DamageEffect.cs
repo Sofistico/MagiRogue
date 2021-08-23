@@ -19,9 +19,10 @@ namespace MagiRogue.System.Magic.Effects
         public EffectTypes EffectType { get; set; } = EffectTypes.DAMAGE;
         public bool IsHealing { get; set; }
         public bool CanMiss { get; set; }
+        public bool IsResistable { get; set; }
 
         public DamageEffect(int dmg, SpellAreaEffect areaOfEffect, DamageType spellDamageType, bool canMiss = false,
-            bool isHeal = false, int radius = 0)
+            bool isHeal = false, int radius = 0, bool isResistable = false)
         {
             BaseDamage = dmg;
             AreaOfEffect = areaOfEffect;
@@ -29,6 +30,7 @@ namespace MagiRogue.System.Magic.Effects
             IsHealing = isHeal;
             Radius = radius;
             CanMiss = canMiss;
+            IsResistable = isResistable;
         }
 
         public void ApplyEffect(Point target, Actor caster, SpellBase spellCasted)
@@ -65,14 +67,32 @@ namespace MagiRogue.System.Magic.Effects
                 return;
             }
 
-            if (!CanMiss)
+            ResolveHit(poorGuy, caster, spellCasted);
+        }
+
+        private void ResolveResist(Entity poorGuy, Actor caster, SpellBase spellCasted)
+        {
+            int luck = GoRogue.DiceNotation.Dice.Roll("1d20");
+            if (Magic.PenetrateResistance(spellCasted, caster, poorGuy, luck))
+            {
                 CombatUtils.DealDamage(BaseDamage, poorGuy, SpellDamageType);
+            }
+            else
+                GameLoop.UIManager.MessageLog.Add($"{poorGuy.Name} resisted the effects of {spellCasted.SpellName}");
+        }
+
+        private void ResolveHit(Entity poorGuy, Actor caster, SpellBase spellCasted)
+        {
+            if (!CanMiss)
+            {
+                ResolveResist(poorGuy, caster, spellCasted);
+            }
             else
             {
                 int diceRoll = GoRogue.DiceNotation.Dice.Roll($"1d20 + {caster.Stats.Precision}");
                 if (poorGuy is Actor actor && diceRoll >= actor.Stats.Defense)
                 {
-                    CombatUtils.DealDamage(BaseDamage, poorGuy, SpellDamageType);
+                    ResolveResist(poorGuy, caster, spellCasted);
                 }
                 else
                 {

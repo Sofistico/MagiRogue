@@ -39,6 +39,12 @@ namespace MagiRogue.Entities
         /// </summary>
         public List<Item> Inventory { get; set; }
 
+        /// <summary>
+        /// The equipment that the actor is curently using
+        /// </summary>
+        [JsonIgnore]
+        public Dictionary<Limb, Item> Equipment { get; set; }
+
         #endregion Properties
 
         #region Constructor

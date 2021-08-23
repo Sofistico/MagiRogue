@@ -449,5 +449,35 @@ namespace MagiRogue.Commands
 
             return false;
         }
+
+        /// <summary>
+        /// Equips an item
+        /// </summary>
+        /// <param name="actor">The actor that wil receive the item to be equiped</param>
+        /// <param name="item">The item that will be equiped</param>
+        /// <returns>Returns true for sucess and false for failure</returns>
+        public static bool EquipItem(Actor actor, Item item)
+        {
+            item.Equip(actor);
+            if (actor.Equipment.ContainsValue(item))
+                return true;
+            else
+                return false;
+        }
+
+        /// <summary>
+        /// Unequips an item, if there is no item return false
+        /// </summary>
+        /// <param name="actor">The actor that will unequip the item</param>
+        /// <param name="item">The item to be unequiped</param>
+        /// <returns>Returns false for failure and true for sucess</returns>
+        public static bool UnequipItem(Actor actor, Item item)
+        {
+            item.Unequip(actor);
+            if (!actor.Equipment.ContainsValue(item))
+                return true;
+            else
+                return false;
+        }
     }
 }

@@ -110,7 +110,8 @@ namespace MagiRogue.Data
                     return new DamageEffect
                         ((int)jToken["BaseDamage"], StringToAreaEffect((string)jToken["AreaOfEffect"]),
                         StringToDamageType((string)jToken["SpellDamageType"]),
-                        (bool)jToken["CanMiss"], (bool)jToken["IsHealing"], (int)jToken["Radius"]);
+                        (bool)jToken["CanMiss"], (bool)jToken["IsHealing"], (int)jToken["Radius"],
+                        isResistable: (bool)jToken["IsResistable"]);
 
                 case EffectTypes.HASTE:
                     return new HasteEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]),

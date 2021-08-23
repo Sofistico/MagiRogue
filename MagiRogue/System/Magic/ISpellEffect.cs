@@ -31,6 +31,7 @@ namespace MagiRogue.System.Magic
     {
         public bool IsHealing { get; set; }
         public bool CanMiss { get; set; }
+        public bool IsResistable { get; set; }
     }
 
     public interface IHasteEffect : ITimedEffect

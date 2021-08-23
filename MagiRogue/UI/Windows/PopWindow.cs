@@ -1,4 +1,5 @@
-﻿using SadConsole.UI.Controls;
+﻿using SadConsole;
+using SadConsole.UI.Controls;
 using SadRogue.Primitives;
 
 namespace MagiRogue.UI.Windows
@@ -12,6 +13,8 @@ namespace MagiRogue.UI.Windows
         public const int ButtonWidth = 40;
 
         private readonly Button _cancelButton;
+
+        protected readonly Console DescriptionArea;
 
         /// <summary>
         /// This creates a base pop window, keep in mind to create a console in the right plae the math is
@@ -41,6 +44,13 @@ namespace MagiRogue.UI.Windows
             _cancelButton.Click += (_, __) => Hide();
 
             Controls.Add(_cancelButton);
+
+            DescriptionArea = new Console(Width - ButtonWidth - 3, Height - 4)
+            {
+                Position = new Point(ButtonWidth + 2, 1)
+            };
+
+            Children.Add(DescriptionArea);
         }
 
         public override void Hide()
@@ -55,6 +65,8 @@ namespace MagiRogue.UI.Windows
         {
             GameLoop.UIManager.NoPopWindow = false;
             IsFocused = true;
+
+            DescriptionArea.Clear();
 
             base.Show(modal);
         }

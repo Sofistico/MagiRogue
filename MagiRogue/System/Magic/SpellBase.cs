@@ -229,6 +229,7 @@ namespace MagiRogue.System.Magic
 
                 return true;
             }
+            errorMessage = "Can't cast the spell, there must be an entity to target";
             GameLoop.UIManager.MessageLog.Add(errorMessage);
             errorMessage = "Can't cast the spell";
 
