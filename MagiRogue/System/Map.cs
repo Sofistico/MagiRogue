@@ -1,13 +1,12 @@
-﻿using GoRogue;
-using GoRogue.GameFramework;
+﻿using GoRogue.GameFramework;
 using GoRogue.SpatialMaps;
 using MagiRogue.Entities;
 using MagiRogue.System.Tiles;
 using MagiRogue.System.Time;
-using SadConsole;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 using System;
+using System.Diagnostics;
 using System.Linq;
 
 namespace MagiRogue.System
@@ -20,8 +19,8 @@ namespace MagiRogue.System
         #region Properties
 
         private TileBase[] _tiles; // Contains all tiles objects
-
         private Entity _gameObjectControlled;
+        private readonly SadConsole.Entities.Renderer _entityRender;
 
         /// <summary>
         /// All cell tiles of the map, it's a TileBase array, should never be directly declared to create new tiles, rather
@@ -56,20 +55,18 @@ namespace MagiRogue.System
             }
         }
 
-        private readonly SadConsole.Entities.Renderer _entityRender;
-        private readonly ScreenSurface _hackyScreen;
-
         #endregion Properties
 
         #region Constructor
 
         /// <summary>
-        /// Build a new map with a specified width and height, has  entity layers,
+        /// Build a new map with a specified width and height, has entity layers,
         /// they being 0-Furniture, 1-ghosts, 2-Items, 3-Actors, 4-Player
         /// </summary>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public Map(int width, int height) : base(CreateTerrain(width, height), Enum.GetNames(typeof(MapLayer)).Length - 1,
+        public Map(int width, int height) :
+            base(CreateTerrain(width, height), Enum.GetNames(typeof(MapLayer)).Length - 1,
             Distance.Euclidean,
             entityLayersSupportingMultipleItems: LayerMasker.DEFAULT.Mask
             ((int)MapLayer.ITEMS, (int)MapLayer.GHOSTS, (int)MapLayer.PLAYER))
@@ -80,11 +77,16 @@ namespace MagiRogue.System
             GoRogueComponents.Add(new MagiRogueFOVVisibilityHandler(this, Color.DarkSlateGray, (int)MapLayer.GHOSTS));
 
             _entityRender = new SadConsole.Entities.Renderer();
-            _hackyScreen = new(1, 1);
-
-            _hackyScreen.SadComponents.Add(_entityRender);
 
             Time = new TimeSystem();
+        }
+
+        public void RemoveAllEntities()
+        {
+            foreach (Entity item in Entities.Items)
+            {
+                Remove(item);
+            }
         }
 
         #endregion Constructor
@@ -127,7 +129,7 @@ namespace MagiRogue.System
         /// <returns></returns>
         public T GetEntityAt<T>(Point location) where T : Entity
         {
-            return Entities.GetItemsAt(location).OfType<T>().FirstOrDefault();
+            return Entities.GetItemsAt(location).OfType<T>().FirstOrDefault(e => e.CanInteract);
         }
 
         public Entity GetClosestEntity(Point originPos, int range)
@@ -164,6 +166,8 @@ namespace MagiRogue.System
 
             // Link up the entity's Moved event to a new handler
             entity.Moved -= OnEntityMoved;
+
+            entity = null;
         }
 
         /// <summary>
@@ -179,7 +183,19 @@ namespace MagiRogue.System
                 ControlledEntitiy = player;
             }
 
-            AddEntity(entity);
+            try
+            {
+                AddEntity(entity);
+            }
+            catch (ArgumentException)
+            {
+                entity.Position = GetRandomWalkableTile();
+                AddEntity(entity);
+#if DEBUG
+                Debug.Print("An entity tried to telefrag another");
+#endif
+            }
+
             _entityRender.Add(entity);
 
             if (entity is Actor monster)
@@ -243,6 +259,14 @@ namespace MagiRogue.System
             return GetTileAt<T>(location.X, location.Y);
         }
 
+        public void RemoveAllTiles()
+        {
+            foreach (TileBase tile in Tiles)
+            {
+                RemoveTerrain(tile);
+            }
+        }
+
         /// <summary>
         /// Gets the entity by it's id
         /// </summary>
@@ -265,14 +289,6 @@ namespace MagiRogue.System
 
         public void ConfigureRender(SadConsole.Console renderer)
         {
-            foreach (Entity item in Entities.Items)
-            {
-                _entityRender.Remove(item);
-            }
-            _entityRender.IsDirty = true;
-            _hackyScreen.SadComponents.Remove(_entityRender);
-            _hackyScreen.Dispose();
-
             renderer.SadComponents.Add(_entityRender);
             _entityRender.DoEntityUpdate = true;
 
@@ -294,7 +310,57 @@ namespace MagiRogue.System
             FovCalculate((Actor)ControlledEntitiy);
         }
 
+        /// <summary>
+        /// This is used to get a random point that is walkable inside the map, mainly used when adding an entity
+        /// and there is already an entity there, so it picks another random location.
+        /// </summary>
+        /// <returns>Returns an Point to a tile that is walkable and there is no actor there</returns>
+        private Point GetRandomWalkableTile()
+        {
+            foreach (var terrain in Tiles)
+            {
+                Actor entityThere = GetEntityAt<Actor>(terrain.Position);
+                if (terrain.IsWalkable && entityThere is null && terrain is not NodeTile)
+                {
+                    return terrain.Position;
+                }
+            }
+
+            // should never go to this
+            return Point.None;
+        }
+
         #endregion HelperMethods
+
+        #region Desconstructor
+
+        ~Map()
+        {
+#if DEBUG
+            // This is here because i suspect there is a minor memory leak in the map class, with this here
+            // at the very least it seems that the memory is not that great
+            //GC.Collect();
+            //GC.WaitForPendingFinalizers();
+            //GC.Collect();
+#endif
+
+            foreach (Entity item in Entities.Items)
+            {
+                Remove(item);
+            }
+            Tiles = null;
+            this.ControlledEntitiy = null;
+            this.Time = null;
+            GoRogueComponents.Clear();
+
+#if DEBUG
+            //GC.Collect();
+            //GC.WaitForPendingFinalizers();
+            //GC.Collect();
+#endif
+        }
+
+        #endregion Desconstructor
     }
 
     // enum for defining maplayer for things, so that a monster and a player can occupy the same tile as an item for example.

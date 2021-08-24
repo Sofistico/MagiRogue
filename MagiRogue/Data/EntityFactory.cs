@@ -1,6 +1,7 @@
-﻿using SadRogue.Primitives;
+﻿using MagiRogue.Entities;
+using SadRogue.Primitives;
 
-namespace MagiRogue.Entities.Data
+namespace MagiRogue.Data
 {
     /// <summary>
     /// Utility method for easy creating an actor and item, along with any possible function and extra.
@@ -19,7 +20,6 @@ namespace MagiRogue.Entities.Data
                 )
                 {
                     Stats = actorTemplate.Stats,
-                    Anatomy = actorTemplate.Anatomy
                 };
             actor.Description = actorTemplate.Description;
             actor.Material = System.Physics.PhysicsManager.SetMaterial(actorTemplate.MaterialId);
@@ -40,9 +40,11 @@ namespace MagiRogue.Entities.Data
                     itemTemplate.Size,
                     itemTemplate.Weight,
                     itemTemplate.Condition
-                );
-            item.Description = itemTemplate.Description;
-            item.Material = System.Physics.PhysicsManager.SetMaterial(itemTemplate.MaterialId);
+                )
+                {
+                    Description = itemTemplate.Description,
+                    Material = System.Physics.PhysicsManager.SetMaterial(itemTemplate.MaterialId)
+                };
 
             return item;
         }

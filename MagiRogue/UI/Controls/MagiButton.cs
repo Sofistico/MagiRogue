@@ -1,13 +1,7 @@
-﻿using SadRogue.Primitives;
+﻿using SadConsole.Input;
 using SadConsole.UI.Controls;
-using SadConsole.UI.Themes;
-using SadConsole.Input;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MagiRogue.UI.Controls
 {
@@ -69,10 +63,6 @@ namespace MagiRogue.UI.Controls
                 SelectNext();
                 NextSelection.IsFocused = true;
                 return true;
-            }
-            else if (info.IsKeyReleased(Keys.Enter))
-            {
-                InvokeClick();
             }
 
             return base.ProcessKeyboard(info);

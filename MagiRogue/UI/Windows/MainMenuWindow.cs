@@ -1,10 +1,7 @@
 ﻿using MagiRogue.UI.Controls;
-using SadRogue.Primitives;
-using SadConsole;
 using SadConsole.UI.Controls;
-using SadConsole.UI.Themes;
+using SadRogue.Primitives;
 using System;
-using System.Collections.Generic;
 
 namespace MagiRogue.UI.Windows
 {
@@ -12,9 +9,9 @@ namespace MagiRogue.UI.Windows
     {
         private bool _gameStarted;
 
-        private MagiButton startGame;
-        private MagiButton testMap;
-        private MagiButton continueGame;
+        private readonly MagiButton startGame;
+        private readonly MagiButton testMap;
+        private readonly MagiButton continueGame;
 
         public MainMenuWindow(int width, int height, string title = "Main Menu") : base(width, height, title)
         {
@@ -54,6 +51,8 @@ namespace MagiRogue.UI.Windows
                 Hide();
                 GameLoop.UIManager.IsFocused = true;
             }
+            else
+                continueGame.IsEnabled = false;
         }
 
         private void TestMap_Click(object sender, EventArgs e)
@@ -95,6 +94,37 @@ namespace MagiRogue.UI.Windows
             {
                 startGame.IsEnabled = false;
             }
+        }
+
+        private void RefreshButtons()
+        {
+            foreach (var control in Controls)
+            {
+                control.IsEnabled = true;
+            }
+        }
+
+
+        public void RestartGame()
+        {
+            _gameStarted = false;
+            GameLoop.World = null;
+            RefreshButtons();
+
+            foreach (SadConsole.Console item in GameLoop.UIManager.Children)
+            {
+                if (!item.Equals(this))
+                    item.Dispose();
+            }
+
+            GameLoop.UIManager.MessageLog = null;
+            GameLoop.UIManager.MapWindow = null;
+            GameLoop.UIManager.StatusConsole = null;
+            GameLoop.UIManager.InventoryScreen = null;
+            GameLoop.UIManager.Children.Clear();
+            GameLoop.UIManager.Children.Add(this);
+
+            Show();
         }
     }
 }

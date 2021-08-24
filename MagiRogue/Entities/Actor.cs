@@ -1,30 +1,12 @@
-﻿using GoRogue;
-using MagiRogue.Commands;
-using MagiRogue.System.Tiles;
-using SadRogue.Primitives;
+﻿using MagiRogue.Commands;
 using MagiRogue.System;
-using System.Collections.Generic;
+using MagiRogue.System.Tiles;
 using Newtonsoft.Json;
+using SadRogue.Primitives;
+using System.Collections.Generic;
 
 namespace MagiRogue.Entities
 {
-    #region Enums
-
-    public enum Archtypes
-    {
-        WARRIOR,
-        WIZARD,
-        ROGUE,
-        SORCEROR,
-        WARLOCK,
-        DRUID,
-        RANGER,
-        PRIEST,
-        GODLING, // This one will be fun, caracterized as a lovecraftian monstrosity
-    }
-
-    #endregion Enums
-
     [JsonConverter(typeof(Data.ActorJsonConverter))]
     public class Actor : Entity
     {
@@ -58,19 +40,10 @@ namespace MagiRogue.Entities
         public List<Item> Inventory { get; set; }
 
         /// <summary>
-        /// Defines if this actor can be killed
+        /// The equipment that the actor is curently using
         /// </summary>
-        public bool CanBeKilled { get; set; } = true;
-
-        /// <summary>
-        /// Defines if a actor can target or be attacked by this actor
-        /// </summary>
-        public bool CanBeAttacked { get; set; } = true;
-
-        /// <summary>
-        /// Defines if the actor can interact with it's surrondings
-        /// </summary>
-        public bool CanInteract { get; set; } = true;
+        [JsonIgnore]
+        public Dictionary<Limb, Item> Equipment { get; set; }
 
         #endregion Properties
 
@@ -84,11 +57,12 @@ namespace MagiRogue.Entities
         /// <param name="glyph"></param>
         /// <param name="layer"></param>
         /// <param name="coord"></param>
-        public Actor(string name, Color foreground, Color background, int glyph, Point coord, int layer = (int)MapLayer.ACTORS
+        public Actor(string name, Color foreground, Color background,
+            int glyph, Point coord, int layer = (int)MapLayer.ACTORS
             ) : base(foreground, background,
             glyph, coord, layer)
         {
-            Anatomy = new Anatomy();
+            Anatomy = new Anatomy(this);
             Inventory = new List<Item>();
             Name = name;
         }

@@ -1,5 +1,6 @@
 ﻿using MagiRogue.System;
 using MagiRogue.UI;
+using MagiRogue.Data;
 
 namespace MagiRogue
 {
@@ -20,6 +21,14 @@ namespace MagiRogue
 
         private static void Main()
         {
+            // Pre options before creating the game, defines the title and if can resize
+            SadConsole.Settings.WindowTitle = "MagiRogue";
+            SadConsole.Settings.AllowWindowResize = true;
+            // It's ugly, but it's the best
+            SadConsole.Settings.ResizeMode = SadConsole.Settings.WindowResizeOptions.Stretch;
+            // Let's see how this one can be done, will be used in a future serialization work
+            SadConsole.Settings.AutomaticAddColorsToMappings = true;
+
             // Setup the engine and creat the main window.
             SadConsole.Game.Create(GameWidth, GameHeight);
 
@@ -35,8 +44,6 @@ namespace MagiRogue
 
         private static void Init()
         {
-            SadConsole.Settings.WindowTitle = "MagiRogue";
-
             // Makes so that no excpetion happens for a custom control
             SadConsole.UI.Themes.Library.Default.SetControlTheme(typeof(UI.Controls.MagiButton),
                 new SadConsole.UI.Themes.ButtonTheme());

@@ -1,10 +1,10 @@
-﻿using SadRogue.Primitives;
-using SadConsole.SerializedTypes;
+﻿using MagiRogue.Entities;
+using Newtonsoft.Json;
+using SadRogue.Primitives;
 using System;
 using System.Runtime.Serialization;
-using Newtonsoft.Json;
 
-namespace MagiRogue.Entities.Data
+namespace MagiRogue.Data
 {
     public class ItemJsonConverter : JsonConverter<Item>
     {

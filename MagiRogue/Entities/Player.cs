@@ -1,7 +1,10 @@
-﻿using MagiRogue.System;
+﻿using MagiRogue.Data;
+using MagiRogue.System;
 using MagiRogue.System.Magic;
 using MagiRogue.System.Magic.Effects;
+using Newtonsoft.Json;
 using SadRogue.Primitives;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace MagiRogue.Entities
@@ -17,7 +20,7 @@ namespace MagiRogue.Entities
             // sets the most fundamental stats, needs to set the godly flag up top, because it superseeds GodPower if it is
             // below.
             Stats.SetAttributes(
-                viewRadius: 5,
+                viewRadius: 7,
                 health: 10,
                 baseHpRegen: 0.1f,
                 bodyStat: 1,
@@ -31,23 +34,55 @@ namespace MagiRogue.Entities
                 _baseManaRegen: 0.1f,
                 personalMana: 12
                 );
+            Stats.Precision = 3;
 
-            Anatomy.Limbs = Data.LimbTemplate.BasicHumanoidBody(this);
+            Anatomy.Limbs = LimbTemplate.BasicHumanoidBody(this);
 
-            Magic.ShapingSkills = 5;
+            Magic.ShapingSkill = 9;
 
-            SpellBase spellBase = new SpellBase("magic_missile",
-                 "Magic Missile",
-                new List<ISpellEffect>(), MagicSchool.Projection, 5, manaCost: 1.0);
+            SpellBase missile = DataManager.QuerySpellInData("magic_missile");
+            missile.Proficiency = 1;
 
-            spellBase.Effects.Add(
-            new DamageEffect
-            (Magic.CalculateSpellDamage(Stats, spellBase),
-            SpellAreaEffect.Target,
-            Utils.DamageType.Force)
-            );
+            SpellBase cure = DataManager.QuerySpellInData("minor_cure");
+            cure.Proficiency = 1;
 
-            Magic.KnowSpells.Add(spellBase);
+            SpellBase haste = DataManager.QuerySpellInData("haste_self");
+            haste.Proficiency = 1;
+
+            SpellBase mageSight = DataManager.QuerySpellInData("mage_sight");
+            mageSight.Proficiency = 1;
+
+            SpellBase fireRay = DataManager.QuerySpellInData("fire_ray");
+            fireRay.Proficiency = 1;
+
+            SpellBase fireBall = DataManager.QuerySpellInData("fire_ball");
+            fireBall.Proficiency = 1;
+
+            SpellBase severWhip = DataManager.QuerySpellInData("sever_whip");
+            severWhip.Proficiency = 1;
+
+            SpellBase teleport = DataManager.QuerySpellInData("teleport");
+            teleport.Proficiency = 1;
+
+            SpellBase coneOfCold = DataManager.QuerySpellInData("cone_cold");
+            coneOfCold.Proficiency = 1;
+            SpellBase fingerOfDeath = DataManager.QuerySpellInData("finger_death");
+
+            List<SpellBase> testSpells = new List<SpellBase>()
+            {
+                missile,
+                cure,
+                haste,
+                mageSight,
+                fireRay,
+                fireBall,
+                severWhip,
+                teleport,
+                coneOfCold,
+                fingerOfDeath
+            };
+
+            Magic.KnowSpells.AddRange(testSpells);
         }
     }
 }

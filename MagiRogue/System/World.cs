@@ -1,6 +1,6 @@
 ﻿using MagiRogue.Components;
 using MagiRogue.Entities;
-using MagiRogue.Entities.Data;
+using MagiRogue.Data;
 using MagiRogue.System.Tiles;
 using MagiRogue.System.Time;
 using SadRogue.Primitives;
@@ -22,7 +22,6 @@ namespace MagiRogue.System
 
         private readonly int _mapWidth = 50;
         private readonly int _mapHeight = 50;
-        private TileBase[] _mapTiles;
         private readonly int _maxRooms = 20;
         private readonly int _minRoomSize = 4;
         private readonly int _maxRoomSize = 10;
@@ -60,6 +59,9 @@ namespace MagiRogue.System
 
                 // create an instance of player
                 CreatePlayer();
+
+                // Set up anything that needs to be set up for the world to work
+                SetUpStuff();
             }
             else
             {
@@ -69,12 +71,23 @@ namespace MagiRogue.System
             }
         }
 
+        /// <summary>
+        /// Sets up anything that needs to be set up after map gen and after placing entities, like the nodes turn
+        /// system
+        /// </summary>
+        private void SetUpStuff()
+        {
+            foreach (NodeTile node in CurrentMap.Tiles.Where(t => t is NodeTile))
+            {
+                node.SetUpNodeTurn(this);
+            }
+        }
+
         // Create a new map using the Map class
         // and a map generator. Uses several
         // parameters to determine geometry
         private void CreateMap()
         {
-            _mapTiles = new TileBase[_mapWidth * _mapHeight];
             CurrentMap = new Map(_mapWidth, _mapHeight);
             MapGenerator mapGen = new MapGenerator();
             CurrentMap = mapGen.GenerateMap(_mapWidth, _mapHeight, _maxRooms, _minRoomSize, _maxRoomSize);
@@ -82,7 +95,6 @@ namespace MagiRogue.System
 
         private void CreateTestMap()
         {
-            _mapTiles = new TileBase[_mapWidth * _mapHeight];
             CurrentMap = new Map(_mapWidth, _mapHeight);
             MapGenerator mapGen = new MapGenerator();
             CurrentMap = mapGen.GenerateTestMap(_mapWidth, _mapHeight);
@@ -95,7 +107,8 @@ namespace MagiRogue.System
             // Place the player on the first non-movement-blocking tile on the map
             for (int i = 0; i < CurrentMap.Tiles.Length; i++)
             {
-                if (!CurrentMap.Tiles[i].IsBlockingMove)
+                if (!CurrentMap.Tiles[i].IsBlockingMove && CurrentMap.Tiles[i] is not NodeTile
+                    && !CurrentMap.GetEntitiesAt<Entity>(Point.FromIndex(i, _mapWidth)).Any())
                 {
                     // Set the player's position to the index of the current map position
                     var pos = Point.FromIndex(i, CurrentMap.Width);
@@ -105,8 +118,6 @@ namespace MagiRogue.System
                         Position = pos,
                         Description = "Here is you, you are beautiful"
                     };
-
-                    //Player.AddComponent(new Components.HealthComponent(10, 10, 0.1f));
                     break;
                 }
             }
@@ -134,6 +145,10 @@ namespace MagiRogue.System
                 {
                     // pick a random spot on the map
                     monsterPosition = rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);
+                    if (CurrentMap.Tiles[monsterPosition] is NodeTile)
+                    {
+                        monsterPosition = rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);
+                    }
                 }
 
                 // Set the monster's new position
@@ -188,6 +203,10 @@ namespace MagiRogue.System
                 {
                     // pick a random spot on the map
                     lootPosition = rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);
+                    if (CurrentMap.Tiles[lootPosition] is NodeTile)
+                    {
+                        lootPosition = rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);
+                    }
                 }
 
                 // set the loot's new position
@@ -200,11 +219,9 @@ namespace MagiRogue.System
                 CurrentMap.Add(newLoot);
             }
 
-            IList<ItemTemplate> itemTest = Utils.JsonUtils.JsonDeseralize<List<ItemTemplate>>(Path.Combine(
-                AppDomain.CurrentDomain.BaseDirectory,
-                "Entities", "Items", "Bars.json"));
-
-            Item test = EntityFactory.ItemCreator(new Point(10, 10), itemTest.FirstOrDefault(i => i.Id == "test"));
+            Item test =
+                EntityFactory.ItemCreator(new Point(10, 10), DataManager.ListOfItems.FirstOrDefault
+                (i => i.Id == "test"));
 
             CurrentMap.Add(test);
         }
@@ -213,6 +230,17 @@ namespace MagiRogue.System
         {
             if (sucess)
             {
+                if (Player.Stats.Health <= 0)
+                {
+                    CurrentMap.RemoveAllEntities();
+                    CurrentMap.RemoveAllTiles();
+                    CurrentMap = null;
+                    Player = null;
+
+                    GameLoop.UIManager.MainMenu.RestartGame();
+                    return;
+                }
+
                 PlayerTimeNode playerTurn = new PlayerTimeNode(GetTime.TimePassed.Ticks + playerTime);
                 GetTime.RegisterEntity(playerTurn);
 

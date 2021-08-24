@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagiRogue.System.Magic
+namespace MagiRogueTests.Data
 {
-    public class AmbientMana
+    class SpellJsonConverterTests
     {
     }
 }

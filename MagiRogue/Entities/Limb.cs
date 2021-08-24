@@ -1,6 +1,6 @@
-﻿using System.Diagnostics;
+﻿using MagiRogue.Data.Materials;
+using System.Diagnostics;
 using System.Runtime.Serialization;
-using MagiRogue.Entities.Materials;
 
 namespace MagiRogue.Entities
 {
@@ -13,7 +13,9 @@ namespace MagiRogue.Entities
         Leg,
         Foot,
         Hand,
-        Tail
+        Tail,
+        Wing,
+        Neck
     }
 
     [DataContract]
@@ -22,6 +24,7 @@ namespace MagiRogue.Entities
     {
         private int limbHp;
         private double weight;
+        private Limb _connectedLimb;
 
         [DataMember]
         public int LimbHp
@@ -35,6 +38,7 @@ namespace MagiRogue.Entities
                 else
                     return limbHp;
             }
+
             set
             {
                 if (value > MaxLimbHp)
@@ -45,17 +49,21 @@ namespace MagiRogue.Entities
                     limbHp = value;
             }
         }
+
         [DataMember]
         public int MaxLimbHp { get; set; }
+
         [DataMember]
         public double LimbWeight
         {
             get { return weight; }
+
             set
             {
                 weight = value * LimbMaterial.Density;
             }
         }
+
         [DataMember]
         public bool Attached { get; set; }
 
@@ -78,7 +86,26 @@ namespace MagiRogue.Entities
         public TypeOfLimb TypeLimb { get; set; }
 
         [DataMember]
-        public Material LimbMaterial { get; set; }
+        public MaterialTemplate LimbMaterial { get; set; }
+
+        [DataMember]
+#nullable enable
+        public Limb? ConnectedTo
+#nullable disable
+        {
+            get
+            {
+                if (Attached)
+                    return _connectedLimb;
+                else
+                    return null;
+            }
+
+            set
+            {
+                _connectedLimb = value;
+            }
+        }
 
         /// <summary>
         /// This class creates a limb for a body.
@@ -91,21 +118,23 @@ namespace MagiRogue.Entities
         /// <param name="orientation">If it's in the center, left or right of the body</param>
         /// <param name="materialID">The id to define the material, if needeed look at the material definition json\n
         /// Defaults to "flesh"</param>
+#nullable enable
+
         public Limb(TypeOfLimb limbType, int limbHp, int maxLimbHp,
-            double limbWeight, string limbName, LimbOrientation orientation, string materialID = "flesh")
+            double limbWeight, string limbName, LimbOrientation orientation, Limb? connectedTo,
+            string materialID = "flesh")
+#nullable disable
         {
             LimbMaterial = System.Physics.PhysicsManager.SetMaterial(materialID);
-
             TypeLimb = limbType;
-
             MaxLimbHp = maxLimbHp;
             LimbHp = limbHp;
             LimbWeight = limbWeight;
             // Defaults to true
             Attached = true;
             LimbName = limbName;
-
             Orientation = orientation;
+            ConnectedTo = connectedTo;
         }
 
         private string DebuggerDisplay

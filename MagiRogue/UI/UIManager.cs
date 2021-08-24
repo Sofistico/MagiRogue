@@ -1,15 +1,8 @@
-﻿using GoRogue;
-using MagiRogue.Commands;
-using MagiRogue.Entities;
-using MagiRogue.System;
-using MagiRogue.System.Magic;
-using MagiRogue.System.Magic.Effects;
-using MagiRogue.System.Time;
+﻿using MagiRogue.System;
 using MagiRogue.UI.Windows;
 using SadConsole;
 using SadConsole.Input;
 using SadRogue.Primitives;
-using System.Linq;
 using System.Collections.Generic;
 using Color = SadConsole.UI.AdjustableColor;
 
@@ -35,11 +28,7 @@ namespace MagiRogue.UI
 
         #region Field
 
-        private static Player GetPlayer => GameLoop.World.Player;
-
         public SadConsole.UI.Colors CustomColors;
-
-        private Target target;
 
         #endregion Field
 
@@ -51,6 +40,8 @@ namespace MagiRogue.UI
             // or will not call each child's Draw method
             IsVisible = true;
             IsFocused = true;
+
+            UseMouse = false;
 
             // The UIManager becomes the only
             // screen that SadConsole processes
@@ -89,10 +80,10 @@ namespace MagiRogue.UI
             MessageLog.Add("Test message log works");
 #endif
             // Inventory initialization
-            InventoryScreen = new InventoryWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Inventory Window");
+            InventoryScreen = new InventoryWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2);
             Children.Add(InventoryScreen);
             InventoryScreen.Hide();
-            InventoryScreen.Position = new Point(GameLoop.GameWidth / 2, 0);
+            //InventoryScreen.Position = new Point(GameLoop.GameWidth / 2, 0);
 
             StatusConsole = new StatusWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Status Window");
             Children.Add(StatusConsole);
@@ -131,154 +122,32 @@ namespace MagiRogue.UI
         {
             if (GameLoop.World != null)
             {
-                if (HandleMove(info))
+                if (MapWindow.HandleMapInteraction(info, this, GameLoop.World))
                 {
-                    if (!GetPlayer.Bumped && GameLoop.World.CurrentMap.ControlledEntitiy is Player)
-                        GameLoop.World.ProcessTurn(TimeHelper.GetWalkTime(GetPlayer), true);
-                    else if (GameLoop.World.CurrentMap.ControlledEntitiy is Player)
-                        GameLoop.World.ProcessTurn(TimeHelper.GetAttackTime(GetPlayer), true);
-
                     return true;
                 }
-
-                if (info.IsKeyPressed(Keys.NumPad5) || info.IsKeyPressed(Keys.OemPeriod))
-                    GameLoop.World.ProcessTurn(TimeHelper.Wait, true);
-
-                if (info.IsKeyPressed(Keys.A))
+                if (HandleUiKeys(info))
                 {
-                    bool sucess = CommandManager.DirectAttack(GameLoop.World.Player);
-                    GameLoop.World.ProcessTurn(TimeHelper.GetAttackTime(GameLoop.World.Player), sucess);
-                }
-
-                if (info.IsKeyPressed(Keys.G))
-                {
-                    Item item = GameLoop.World.CurrentMap.GetEntityAt<Item>(GameLoop.World.Player.Position);
-                    bool sucess = CommandManager.PickUp(GameLoop.World.Player, item);
-                    InventoryScreen.ShowItems(GameLoop.World.Player);
-                    GameLoop.World.ProcessTurn(TimeHelper.Interact, sucess);
-                }
-                if (info.IsKeyPressed(Keys.D))
-                {
-                    bool sucess = CommandManager.DropItems(GameLoop.World.Player);
-                    Item item = GameLoop.World.CurrentMap.GetEntityAt<Item>(GameLoop.World.Player.Position);
-                    InventoryScreen.RemoveItemFromConsole(item);
-                    InventoryScreen.ShowItems(GameLoop.World.Player);
-                    GameLoop.World.ProcessTurn(TimeHelper.Interact, sucess);
-                }
-                if (info.IsKeyPressed(Keys.C))
-                {
-                    bool sucess = CommandManager.CloseDoor(GameLoop.World.Player);
-                    GameLoop.World.ProcessTurn(TimeHelper.Interact, sucess);
-                    MapWindow.MapConsole.IsDirty = true;
-                }
-                if (info.IsKeyPressed(Keys.I))
-                {
-                    InventoryScreen.Show();
-                }
-
-                if (info.IsKeyPressed(Keys.H))
-                {
-                    bool sucess = CommandManager.SacrificeLifeEnergyToMana(GameLoop.World.Player);
-                    GameLoop.World.ProcessTurn(TimeHelper.MagicalThings, sucess);
-                }
-
-                if (info.IsKeyPressed(Keys.L))
-                {
-                    if (!(target != null))
-                        target = new Target(GetPlayer.Position);
-
-                    if (target.EntityInTarget())
-                    {
-                        if (target.TargetList != null)
-                        {
-                            LookWindow w = new LookWindow(target.TargetList[0]);
-                            w.Show();
-
-                            return true;
-                        }
-                    }
-
-                    if (GameLoop.World.CurrentMap.ControlledEntitiy is not Player
-                        && !target.EntityInTarget())
-                    {
-                        GameLoop.World.ChangeControlledEntity(GetPlayer);
-                        GameLoop.World.CurrentMap.Remove(target.Cursor);
-                        target = null;
-                        return true;
-                    }
-
-                    GameLoop.World.CurrentMap.Add(target.Cursor);
-
-                    GameLoop.World.ChangeControlledEntity(target.Cursor);
-
                     return true;
-                }
-
-                if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.Z))
-                {
-                    var spellBase = GetPlayer.Magic.QuerySpell("magic_missile");
-
-                    var entity = GameLoop.World.CurrentMap.GetClosestEntity(GetPlayer.Position, spellBase.SpellRange);
-
-                    if (entity != null)
-                    {
-                        bool sucess = spellBase.CastSpell(
-                        entity.Position,
-                        GetPlayer);
-
-                        GameLoop.World.ProcessTurn(TimeHelper.MagicalThings, sucess);
-                        return true;
-                    }
-                    else
-                    {
-                        GameLoop.UIManager.MessageLog.Add("There is no target for the spell!");
-                        return false;
-                    }
-                }
-
-#if DEBUG
-                if (info.IsKeyPressed(Keys.F10))
-                {
-                    CommandManager.ToggleFOV();
-                    MapWindow.MapConsole.IsDirty = true;
-                }
-
-                if (info.IsKeyPressed(Keys.F8))
-                {
-                    GetPlayer.AddComponent(new Components.TestComponent(GetPlayer));
-                }
-
-                if (info.IsKeyPressed(Keys.NumPad0))
-                {
-                    LookWindow w = new LookWindow(GetPlayer);
-                    w.Show();
-                }
-
-#endif
-
-                if (info.IsKeyPressed(Keys.Escape) && NoPopWindow)
-                {
-                    //SadConsole.Game.Instance.Exit();
-                    MainMenu.Show();
-                    MainMenu.IsFocused = true;
                 }
             }
 
             return base.ProcessKeyboard(info);
         }
 
-        public bool HandleMove(SadConsole.Input.Keyboard info)
+        private bool HandleUiKeys(Keyboard info)
         {
-            foreach (Keys key in MovementDirectionMapping.Keys)
+            if (info.IsKeyPressed(Keys.I))
             {
-                if (info.IsKeyPressed(key))
-                {
-                    Direction moveDirection = MovementDirectionMapping[key];
-                    Point coorToMove = new Point(moveDirection.DeltaX, moveDirection.DeltaY);
+                InventoryScreen.Show();
+                return true;
+            }
 
-                    bool sucess = CommandManager.MoveActorBy((Actor)GameLoop.World.CurrentMap.ControlledEntitiy, coorToMove);
-                    return sucess;
-                }
+            if (info.IsKeyPressed(Keys.Escape) && NoPopWindow)
+            {
+                MainMenu.Show();
+                MainMenu.IsFocused = true;
+                return true;
             }
 
             return false;

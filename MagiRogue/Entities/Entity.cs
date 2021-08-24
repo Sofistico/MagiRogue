@@ -1,18 +1,12 @@
-﻿using GoRogue;
+﻿using GoRogue.Components;
 using GoRogue.GameFramework;
-using MagiRogue.Entities.Materials;
-using SadRogue.Primitives;
-using System.Runtime.Serialization;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+using MagiRogue.Data.Materials;
 using MagiRogue.System.Magic;
-using System.Linq;
-using GoRogue.Components;
-using GoRogue.SpatialMaps;
-using GoRogue.Components.ParentAware;
 using SadConsole;
-using MagiRogue.System.Tiles;
+using SadRogue.Primitives;
+using System;
+using System.Diagnostics;
+using System.Runtime.Serialization;
 
 namespace MagiRogue.Entities
 {
@@ -34,7 +28,7 @@ namespace MagiRogue.Entities
         public float Weight { get; set; }
 
         [DataMember]
-        public Material Material { get; set; }
+        public MaterialTemplate Material { get; set; }
 
         [DataMember]
 
@@ -52,6 +46,21 @@ namespace MagiRogue.Entities
         public string Description { get; set; }
 
         public Magic Magic { get; set; }
+
+        /// <summary>
+        /// Defines if this entity can be killed
+        /// </summary>
+        public bool CanBeKilled { get; set; } = true;
+
+        /// <summary>
+        /// Defines if a entity can target or be attacked by this actor
+        /// </summary>
+        public bool CanBeAttacked { get; set; } = true;
+
+        /// <summary>
+        /// Defines if the entity can interact with it's surrondings
+        /// </summary>
+        public bool CanInteract { get; set; } = true;
 
         #region BackingField fields
 
@@ -94,7 +103,7 @@ namespace MagiRogue.Entities
             PositionChanged += Position_Changed;
 
             Magic = new Magic();
-            Material = new Material();
+            Material = new MaterialTemplate();
 
             //IsWalkable = false;
         }

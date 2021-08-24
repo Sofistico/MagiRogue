@@ -1,14 +1,15 @@
 ﻿using GoRogue.DiceNotation;
 using MagiRogue.Entities;
+using MagiRogue.System;
 using MagiRogue.System.Tiles;
-using SadRogue.Primitives;
+using MagiRogue.System.Time;
 using SadConsole;
+using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using MagiRogue.System;
 
 namespace MagiRogue.Commands
 {
@@ -60,6 +61,13 @@ namespace MagiRogue.Commands
             if (!defender.CanBeAttacked)
                 return;
 
+            if (!attacker.Anatomy.HasEnoughArms)
+            {
+                GameLoop.UIManager.MessageLog.Add
+                    ($"The {attacker.Name} doesn't have enough arms to hit {defender.Name}");
+                return;
+            }
+
             // Create two messages that describe the outcome
             // of the attack and defense
             StringBuilder attackMessage = new StringBuilder();
@@ -78,11 +86,6 @@ namespace MagiRogue.Commands
             int damage = hits - blocks;
 
             // The defender now takes damage
-            ResolveDamage(defender, damage);
-        }
-
-        public static void DealDamage(Actor defender, int damage)
-        {
             ResolveDamage(defender, damage);
         }
 
@@ -226,7 +229,9 @@ namespace MagiRogue.Commands
             GameLoop.World.CurrentMap.Remove(defender);
 
             if (defender is Player)
+            {
                 GameLoop.UIManager.MessageLog.Add($" {defender.Name} was killed.");
+            }
 
             // Now show the deathMessage in the messagelog
             GameLoop.UIManager.MessageLog.Add(deathMessage.ToString());
@@ -249,7 +254,7 @@ namespace MagiRogue.Commands
             {
                 Actor monsterLocation = GameLoop.World.CurrentMap.GetEntityAt<Actor>(direction);
 
-                if (monsterLocation != null)
+                if (monsterLocation != null && monsterLocation != attacker)
                 {
                     monsterClose.Add(monsterLocation);
                     if (monsterClose.Count > 0)
@@ -358,6 +363,22 @@ namespace MagiRogue.Commands
             }
         }
 
+        public static bool NodeDrain(Actor actor)
+        {
+            Point[] direction = actor.Position.GetDirectionPoints();
+
+            foreach (Point item in direction)
+            {
+                if (GameLoop.World.CurrentMap.Tiles[item.ToIndex(GameLoop.World.CurrentMap.Width)] is NodeTile node)
+                {
+                    node.DrainNode(actor);
+                    return true;
+                }
+            }
+            GameLoop.UIManager.MessageLog.Add("No node here to drain");
+            return false;
+        }
+
 #if DEBUG
 
         public static void ToggleFOV()
@@ -388,6 +409,75 @@ namespace MagiRogue.Commands
 
             GameLoop.UIManager.MessageLog.Add("You feel too full for this right now");
             return false;
+        }
+
+        public static bool RestTillFull(Actor actor)
+        {
+            Stat stats = actor.Stats;
+
+            if ((stats.Health < stats.MaxHealth || stats.PersonalMana < stats.MaxPersonalMana))
+            {
+                // calculate here the amount of time that it will take in turns to rest to full
+                float healDif, manaDif;
+
+                healDif = (float)Math.Round((stats.MaxHealth - stats.Health) / stats.BaseHpRegen);
+                manaDif = (float)Math.Round((stats.MaxPersonalMana - stats.PersonalMana) / stats.BaseManaRegen);
+
+                float totalTurnsWait = healDif + manaDif;
+
+                for (int i = 0; i < totalTurnsWait + 1; i++)
+                {
+                    foreach (Point p in GameLoop.World.CurrentMap.PlayerFOV.CurrentFOV)
+                    {
+                        Actor possibleActor = GameLoop.World.CurrentMap.GetEntityAt<Actor>(p);
+                        if (possibleActor is not null && !possibleActor.Equals(actor))
+                        {
+                            GameLoop.UIManager.MessageLog.Add("There is an enemy in view, stop resting!");
+                            return false;
+                        }
+                    }
+
+                    GameLoop.World.ProcessTurn(TimeHelper.Wait, true);
+                }
+
+                GameLoop.UIManager.MessageLog.Add($"You have rested for {totalTurnsWait} turns");
+
+                return true;
+            }
+
+            GameLoop.UIManager.MessageLog.Add("You have no need to rest");
+
+            return false;
+        }
+
+        /// <summary>
+        /// Equips an item
+        /// </summary>
+        /// <param name="actor">The actor that wil receive the item to be equiped</param>
+        /// <param name="item">The item that will be equiped</param>
+        /// <returns>Returns true for sucess and false for failure</returns>
+        public static bool EquipItem(Actor actor, Item item)
+        {
+            item.Equip(actor);
+            if (actor.Equipment.ContainsValue(item))
+                return true;
+            else
+                return false;
+        }
+
+        /// <summary>
+        /// Unequips an item, if there is no item return false
+        /// </summary>
+        /// <param name="actor">The actor that will unequip the item</param>
+        /// <param name="item">The item to be unequiped</param>
+        /// <returns>Returns false for failure and true for sucess</returns>
+        public static bool UnequipItem(Actor actor, Item item)
+        {
+            item.Unequip(actor);
+            if (!actor.Equipment.ContainsValue(item))
+                return true;
+            else
+                return false;
         }
     }
 }
