@@ -17,9 +17,9 @@ namespace MagiRogue.Entities
         private float personalMana; // Wil be measured in magnitude, in how many magic missile you can cast
         private float _maxPersonalMana;
         private int ambientMana; // This will be here to model a new MOL like magic system
-        private int attack;
+        private int baseAttack;
         private int attackChance;
-        private int defense;
+        private int protection;
         private int defenseChance;
         private int bodyStat = 1; // the minimum value is 1, the maximum is 20
         private int mindStat = 1; // the minimum value is 1, the maximum is 20
@@ -179,13 +179,13 @@ namespace MagiRogue.Entities
         /// attack strength
         /// </summary>
         [DataMember]
-        public int Attack
+        public int BaseAttack
         {
-            get { return attack; }
+            get { return baseAttack; }
 
             set
             {
-                attack = bodyStat + value;
+                baseAttack = bodyStat + value;
             }
         }
 
@@ -204,23 +204,23 @@ namespace MagiRogue.Entities
         }
 
         /// <summary>
-        /// defensive strength
+        /// defensive strength, how much damage is lessened when you are hit
+        /// </summary>
+        [DataMember]
+        public int Protection
+        {
+            get { return protection; }
+            set { protection = value; }
+        }
+
+        /// <summary>
+        /// chance of successfully blocking a hit
         /// </summary>
         [DataMember]
         public int Defense
         {
-            get { return defense; }
-            set { defense = value; }
-        }
-
-        /// <summary>
-        /// percent chance of successfully blocking a hit
-        /// </summary>
-        [DataMember]
-        public int DefenseChance
-        {
             get { return defenseChance; }
-            set { defenseChance = value; }
+            set { defenseChance = value + bodyStat; }
         }
 
         /// <summary>
@@ -300,6 +300,35 @@ namespace MagiRogue.Entities
         {
         }
 
+        public Stat(float health,
+                    float baseManaRegen,
+                    float personalMana,
+                    int baseAttack,
+                    int attackChance,
+                    int protection,
+                    int defense,
+                    int bodyStat,
+                    int mindStat,
+                    int soulStat,
+                    int viewRadius,
+                    float speed,
+                    int precision)
+        {
+            Health = health;
+            BaseManaRegen = baseManaRegen;
+            PersonalMana = personalMana;
+            BaseAttack = baseAttack;
+            AttackChance = attackChance;
+            Protection = protection;
+            Defense = defense;
+            BodyStat = bodyStat;
+            MindStat = mindStat;
+            SoulStat = soulStat;
+            ViewRadius = viewRadius;
+            Speed = speed;
+            Precision = precision;
+        }
+
         #endregion Constructor
 
         #region Methods
@@ -311,9 +340,9 @@ namespace MagiRogue.Entities
            int bodyStat,
            int mindStat,
            int soulStat,
-           int attack,
+           int baseAttack,
            int attackChance,
-           int defense,
+           int protection,
            int defenseChance,
            float speed,
            float _baseManaRegen,
@@ -325,10 +354,10 @@ namespace MagiRogue.Entities
             this.BodyStat = bodyStat;
             this.MindStat = mindStat;
             this.SoulStat = soulStat;
-            this.Attack = attack;
+            this.BaseAttack = baseAttack;
             this.AttackChance = attackChance;
-            this.Defense = defense;
-            this.DefenseChance = defenseChance;
+            this.Protection = protection;
+            this.Defense = defenseChance;
             this.Speed = speed;
             this.BaseManaRegen = _baseManaRegen;
             this.PersonalMana = personalMana;

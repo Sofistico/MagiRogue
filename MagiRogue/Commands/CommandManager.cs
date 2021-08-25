@@ -3,6 +3,7 @@ using MagiRogue.Entities;
 using MagiRogue.System;
 using MagiRogue.System.Tiles;
 using MagiRogue.System.Time;
+using MagiRogue.Utils;
 using SadConsole;
 using SadRogue.Primitives;
 using System;
@@ -70,8 +71,8 @@ namespace MagiRogue.Commands
 
             // Create two messages that describe the outcome
             // of the attack and defense
-            StringBuilder attackMessage = new StringBuilder();
-            StringBuilder defenseMessage = new StringBuilder();
+            StringBuilder attackMessage = new();
+            StringBuilder defenseMessage = new();
 
             // Count up the amount of attacking damage done
             // and the number of successful blocks
@@ -86,7 +87,7 @@ namespace MagiRogue.Commands
             int damage = hits - blocks;
 
             // The defender now takes damage
-            ResolveDamage(defender, damage);
+            ResolveDamage(defender, damage, DamageType.None);
         }
 
         /// <summary>
@@ -107,7 +108,7 @@ namespace MagiRogue.Commands
             attackMessage.AppendFormat("{0} attacks {1}", attacker.Name, defender.Name);
 
             // The attacker's Attack value determines the number of D100 dice rolled
-            for (int dice = 0; dice < attacker.Stats.Attack; dice++)
+            for (int dice = 0; dice < attacker.Stats.BaseAttack; dice++)
             {
                 //Roll a single D100 and add its results to the attack Message
                 int diceOutcome = Dice.Roll("1d100");
@@ -143,14 +144,14 @@ namespace MagiRogue.Commands
                 defenseMessage.AppendFormat(" {0} defends and rolls: ", defender.Name);
 
                 //The defender's Defense value determines the number of D100 dice rolled
-                for (int dice = 0; dice < defender.Stats.Defense; dice++)
+                for (int dice = 0; dice < defender.Stats.Protection; dice++)
                 {
                     //Roll a single D100 and add its results to the defense Message
                     int diceOutcome = Dice.Roll("1d100");
 
                     //Resolve the dicing outcome and register a block, governed by the
                     //attacker's DefenceChance value.
-                    if (diceOutcome >= 100 - defender.Stats.DefenseChance)
+                    if (diceOutcome >= 100 - defender.Stats.Defense)
                         blocks++;
                 }
 
@@ -169,14 +170,11 @@ namespace MagiRogue.Commands
         /// </summary>
         /// <param name="defender"></param>
         /// <param name="damage"></param>
-        private static void ResolveDamage(Actor defender, int damage)
+        private static void ResolveDamage(Actor defender, int damage, DamageType dmgType)
         {
             if (damage > 0)
             {
-                defender.Stats.Health -= damage;
-                GameLoop.UIManager.MessageLog.Add($" {defender.Name} was hit for {damage} damage");
-                if (defender.Stats.Health < 0)
-                    ResolveDeath(defender);
+                CombatUtils.DealDamage(damage, defender, dmgType);
             }
             else
                 GameLoop.UIManager.MessageLog.Add($"{defender.Name} blocked all damage!");

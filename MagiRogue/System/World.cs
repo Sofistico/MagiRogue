@@ -158,9 +158,9 @@ namespace MagiRogue.System
 
                 Stat monsterStat = new Stat()
                 {
-                    Defense = rndNum.Next(0, 10),
-                    DefenseChance = rndNum.Next(0, 50),
-                    Attack = rndNum.Next(0, 10),
+                    Protection = rndNum.Next(0, 10),
+                    Defense = rndNum.Next(0, 50),
+                    BaseAttack = rndNum.Next(0, 10),
                     AttackChance = rndNum.Next(0, 50),
                     Speed = 1,
                     ViewRadius = 7,

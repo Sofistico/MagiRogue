@@ -90,7 +90,7 @@ namespace MagiRogue.System.Magic.Effects
             else
             {
                 int diceRoll = GoRogue.DiceNotation.Dice.Roll($"1d20 + {caster.Stats.Precision}");
-                if (poorGuy is Actor actor && diceRoll >= actor.Stats.Defense)
+                if (poorGuy is Actor actor && diceRoll >= actor.Stats.Protection)
                 {
                     ResolveResist(poorGuy, caster, spellCasted);
                 }
