@@ -1,0 +1,43 @@
+﻿[
+  {
+    "SpellLevel": 1,
+    "Effects": [
+      {
+        "AreaOfEffect": "Target",
+        "SpellDamageType": "None",
+        "Radius": 0,
+        "TargetsTile": true,
+        "EffectType": "TELEPORT",
+        "BaseDamage": 0
+      }
+    ],
+    "SpellName": "Teleport",
+    "Description": null,
+    "SpellSchool": "Dimensionalism",
+    "SpellRange": 4,
+    "ManaCost": 1.0,
+    "SpellId": "teleport"
+  },
+  {
+    "SpellLevel": 1,
+    "Effects": [
+      {
+        "AreaOfEffect": "Self",
+        "SpellDamageType": "Force",
+        "BaseDamage": 0,
+        "HastePower": 2.0,
+        "Duration": 5,
+        "TurnApplied": 0,
+        "Radius": 0,
+        "TargetsTile": false,
+        "EffectType": "HASTE"
+      }
+    ],
+    "SpellName": "Haste",
+    "Description": null,
+    "SpellSchool": "Dimensionalism",
+    "SpellRange": 0,
+    "ManaCost": 1.0,
+    "SpellId": "haste_self"
+  }
+]
