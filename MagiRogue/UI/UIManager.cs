@@ -21,6 +21,7 @@ namespace MagiRogue.UI
         public InventoryWindow InventoryScreen { get; set; }
         public StatusWindow StatusConsole { get; set; }
         public MainMenuWindow MainMenu { get; set; }
+        public CharacterCreationWindow CharCreationWindow { get; set; }
 
         public bool NoPopWindow { get; set; } = true;
 
