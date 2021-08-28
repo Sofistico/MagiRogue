@@ -1,5 +1,6 @@
 ﻿using MagiRogue.Data;
 using MagiRogue.System;
+using MagiRogue.Utils;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System;
@@ -35,6 +36,16 @@ namespace MagiRogue.Entities
         /// In what slot can this item be equiped? None means you can't equip the item
         /// </summary>
         public EquipType EquipType { get; set; }
+
+        /// <summary>
+        /// The damage that an item will deal if hitting someone with it, should alway be 1.
+        /// </summary>
+        public int BaseDmg { get; set; } = 1;
+
+        /// <summary>
+        /// The type of damage the item deals, should be default of blunt type
+        /// </summary>
+        public DamageType ItemDamageType { get; set; } = DamageType.Blunt;
 
         // By default, a new Item is sized 1x1, with a weight of 1, and at 100% condition
         public Item(Color foreground, Color background, string name, int glyph, Point coord, int size,

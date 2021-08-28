@@ -64,6 +64,7 @@ namespace MagiRogue.Entities
         {
             Anatomy = new Anatomy(this);
             Inventory = new List<Item>();
+            Equipment = new Dictionary<Limb, Item>();
             Name = name;
         }
 
@@ -150,6 +151,11 @@ namespace MagiRogue.Entities
             {
                 return false;
             }
+        }
+
+        public Item WieldedItem()
+        {
+            return Equipment.GetValueOrDefault(Anatomy.Limbs.Find(l => l.TypeLimb == TypeOfLimb.Hand));
         }
 
         #endregion HelpCode

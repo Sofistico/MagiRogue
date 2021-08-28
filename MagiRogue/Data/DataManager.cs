@@ -3,8 +3,6 @@ using MagiRogue.System.Magic;
 using MagiRogue.Utils;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 

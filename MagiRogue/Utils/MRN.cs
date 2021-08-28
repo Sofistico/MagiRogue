@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GoRogue.DiceNotation;
+﻿using GoRogue.DiceNotation;
 
 namespace MagiRogue.Utils
 {
@@ -12,7 +7,7 @@ namespace MagiRogue.Utils
     /// </summary>
     public struct MRN
     {
-        public static int RandomNumber => ExplodingDice();
+        public static int ExplodingD6Dice => ExplodingDice();
 
         /// <summary>
         /// This uses a similar number

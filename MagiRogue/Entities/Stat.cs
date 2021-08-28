@@ -179,7 +179,7 @@ namespace MagiRogue.Entities
         /// attack strength
         /// </summary>
         [DataMember]
-        public int BaseAttack
+        public int Strength
         {
             get { return baseAttack; }
 
@@ -190,12 +190,17 @@ namespace MagiRogue.Entities
         }
 
         /// <summary>
-        /// percent chance of successful hit
+        /// How likely an entity is to hit something.
         /// </summary>
         [DataMember]
-        public int AttackChance
+        public int BaseAttack
         {
-            get { return attackChance; }
+            get
+            {
+                if (attackChance == 0)
+                    return 1;
+                return attackChance;
+            }
 
             set
             {
@@ -214,7 +219,7 @@ namespace MagiRogue.Entities
         }
 
         /// <summary>
-        /// chance of successfully blocking a hit
+        /// chance of successfully blocking a hit, how likely you are either to dodge or block damage
         /// </summary>
         [DataMember]
         public int Defense
@@ -276,19 +281,24 @@ namespace MagiRogue.Entities
         /// The view radius of the actor, for seeing things
         /// </summary>
         [DataMember]
-        public int ViewRadius { get; set; }
+        public int ViewRadius { get; set; } = 5;
 
         /// <summary>
         /// The speed of the actor, how fast it does the things, goes from 0.5 to 2.0
         /// </summary>
         [DataMember]
-        public float Speed { get; set; }
+        public float Speed { get; set; } = 1;
 
         /// <summary>
         /// How likely you are to hit something, it's a bonus to a dice roll of a d20 against defense, if zero
         /// means you don't have any bonus
         /// </summary>
-        public int Precision { get; set; }
+        public int Precision { get; set; } = 10;
+
+        /// <summary>
+        /// How many attacks per turn a unit have.
+        /// </summary>
+        public int AttackSpeed { get; set; } = 1;
 
         #endregion StatsProperties
 
@@ -317,8 +327,8 @@ namespace MagiRogue.Entities
             Health = health;
             BaseManaRegen = baseManaRegen;
             PersonalMana = personalMana;
-            BaseAttack = baseAttack;
-            AttackChance = attackChance;
+            Strength = baseAttack;
+            BaseAttack = attackChance;
             Protection = protection;
             Defense = defense;
             BodyStat = bodyStat;
@@ -354,8 +364,8 @@ namespace MagiRogue.Entities
             this.BodyStat = bodyStat;
             this.MindStat = mindStat;
             this.SoulStat = soulStat;
-            this.BaseAttack = baseAttack;
-            this.AttackChance = attackChance;
+            this.Strength = baseAttack;
+            this.BaseAttack = attackChance;
             this.Protection = protection;
             this.Defense = defenseChance;
             this.Speed = speed;

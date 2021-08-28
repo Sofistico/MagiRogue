@@ -1,6 +1,5 @@
 ﻿using MagiRogue.System;
 using MagiRogue.UI;
-using MagiRogue.Data;
 
 namespace MagiRogue
 {

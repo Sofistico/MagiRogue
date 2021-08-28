@@ -28,7 +28,7 @@ namespace MagiRogue.Test.Entities
 
             bool testOk = testStat.ViewRadius == 1 & testStat.Health == 5 & testStat.MaxHealth == 5
                 & testStat.BaseHpRegen == 1.5f & testStat.BodyStat == 2 & testStat.MindStat == 2
-                & testStat.SoulStat == 2 & testStat.BaseAttack == 5 & testStat.AttackChance == 52 &
+                & testStat.SoulStat == 2 & testStat.Strength == 5 & testStat.BaseAttack == 52 &
                 testStat.Protection == 1 & testStat.Defense == 50 &
                 testStat.Speed == 1 & testStat.BaseManaRegen == 1 & testStat.PersonalMana == 1;
 

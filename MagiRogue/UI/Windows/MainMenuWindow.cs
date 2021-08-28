@@ -59,7 +59,7 @@ namespace MagiRogue.UI.Windows
         {
             if (!_gameStarted)
             {
-                GameLoop.UIManager.StartGame(true);
+                GameLoop.UIManager.StartGame(new Entities.Player(Color.Black, Color.White, Point.None), true);
                 _gameStarted = true;
             }
             else
@@ -87,8 +87,7 @@ namespace MagiRogue.UI.Windows
         {
             if (!_gameStarted)
             {
-                GameLoop.UIManager.StartGame();
-                _gameStarted = true;
+                GameLoop.UIManager.CharCreationScreen();
             }
             else
             {
@@ -103,7 +102,6 @@ namespace MagiRogue.UI.Windows
                 control.IsEnabled = true;
             }
         }
-
 
         public void RestartGame()
         {

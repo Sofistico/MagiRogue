@@ -67,7 +67,7 @@ namespace MagiRogue.System.Magic.Effects
                 return;
             }
 
-            ResolveHit(poorGuy, caster, spellCasted);
+            ResolveSpellHit(poorGuy, caster, spellCasted);
         }
 
         private void ResolveResist(Entity poorGuy, Actor caster, SpellBase spellCasted)
@@ -81,7 +81,7 @@ namespace MagiRogue.System.Magic.Effects
                 GameLoop.UIManager.MessageLog.Add($"{poorGuy.Name} resisted the effects of {spellCasted.SpellName}");
         }
 
-        private void ResolveHit(Entity poorGuy, Actor caster, SpellBase spellCasted)
+        private void ResolveSpellHit(Entity poorGuy, Actor caster, SpellBase spellCasted)
         {
             if (!CanMiss)
             {

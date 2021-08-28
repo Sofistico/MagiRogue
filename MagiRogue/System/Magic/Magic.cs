@@ -34,6 +34,11 @@ namespace MagiRogue.System.Magic
         /// </summary>
         public int MagicPenetration { get; set; } = 1;
 
+        /// <summary>
+        /// Any enchantment that affects something
+        /// </summary>
+        public List<ISpellEffect> Enchantments { get; set; } = new List<ISpellEffect>();
+
         public Magic()
         {
             KnowSpells = new List<SpellBase>();

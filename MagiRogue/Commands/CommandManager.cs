@@ -76,15 +76,13 @@ namespace MagiRogue.Commands
 
             // Count up the amount of attacking damage done
             // and the number of successful blocks
-            int hits = ResolveAttack(attacker, defender, attackMessage);
-            int blocks = ResolveDefense(defender, hits, attackMessage, defenseMessage);
+            int hits = ResolveHit(attacker, defender, attackMessage);
+            int damage = ResolveDefense(attacker, defender, hits, attackMessage, defenseMessage);
 
             // Display the outcome of the attack & defense
             GameLoop.UIManager.MessageLog.Add(attackMessage.ToString());
             if (!string.IsNullOrWhiteSpace(defenseMessage.ToString()))
                 GameLoop.UIManager.MessageLog.Add(defenseMessage.ToString());
-
-            int damage = hits - blocks;
 
             // The defender now takes damage
             ResolveDamage(defender, damage, DamageType.None);
@@ -101,21 +99,19 @@ namespace MagiRogue.Commands
         /// <param name="defender"></param>
         /// <param name="attackMessage"></param>
         /// <returns></returns>
-        private static int ResolveAttack(Actor attacker, Actor defender, StringBuilder attackMessage)
+        private static int ResolveHit(Actor attacker, Actor defender, StringBuilder attackMessage)
         {
             // Create a string that expresses the attacker and defender's names
             int hits = 0;
             attackMessage.AppendFormat("{0} attacks {1}", attacker.Name, defender.Name);
 
-            // The attacker's Attack value determines the number of D100 dice rolled
-            for (int dice = 0; dice < attacker.Stats.BaseAttack; dice++)
+            // The attacker's AttackSpeed value determines the number of attacks dice rolled
+            for (int nmrAttack = 0; nmrAttack < attacker.Stats.AttackSpeed; nmrAttack++)
             {
-                //Roll a single D100 and add its results to the attack Message
-                int diceOutcome = Dice.Roll("1d100");
-
                 //Resolve the dicing outcome and register a hit, governed by the
-                //attacker's AttackChance value.
-                if (diceOutcome >= 100 - attacker.Stats.AttackChance)
+                //attacker's BaseAttack value.
+                //TODO: Adds the fatigue atribute and any penalties.
+                if (attacker.Stats.BaseAttack + MRN.ExplodingD6Dice > defender.Stats.Defense + MRN.ExplodingD6Dice)
                     hits++;
             }
 
@@ -133,34 +129,36 @@ namespace MagiRogue.Commands
         /// <param name="attackMessage"></param>
         /// <param name="defenseMessage"></param>
         /// <returns></returns>
-        private static int ResolveDefense(Actor defender, int hits, StringBuilder attackMessage, StringBuilder defenseMessage)
+        private static int ResolveDefense(Actor attacker, Actor defender, int hits, StringBuilder attackMessage,
+            StringBuilder defenseMessage)
         {
-            int blocks = 0;
+            int totalDamage = 0;
 
             if (hits > 0)
             {
                 // Create a string that displays the defender's name and outcomes
                 attackMessage.AppendFormat(" scoring {0} hits.", hits);
-                defenseMessage.AppendFormat(" {0} defends and rolls: ", defender.Name);
 
-                //The defender's Defense value determines the number of D100 dice rolled
-                for (int dice = 0; dice < defender.Stats.Protection; dice++)
+                for (int i = 0; i < hits; i++)
                 {
-                    //Roll a single D100 and add its results to the defense Message
-                    int diceOutcome = Dice.Roll("1d100");
+                    int loopDamage;
+                    Item wieldedItem = attacker.WieldedItem();
+                    // TODO: adds a way to get the attack of the weapon or fist or something else
+                    if (wieldedItem is null)
+                        loopDamage = attacker.Stats.Strength + MRN.ExplodingD6Dice;
+                    else
+                        loopDamage = attacker.Stats.Strength + wieldedItem.BaseDmg + MRN.ExplodingD6Dice;
 
-                    //Resolve the dicing outcome and register a block, governed by the
-                    //attacker's DefenceChance value.
-                    if (diceOutcome >= 100 - defender.Stats.Defense)
-                        blocks++;
+                    loopDamage -= defender.Stats.Protection + MRN.ExplodingD6Dice;
+
+                    defenseMessage.AppendFormat("   Hit {0}: {1} was hit for {2} damage", hits, defender.Name, loopDamage);
+                    totalDamage += loopDamage;
                 }
-
-                defenseMessage.AppendFormat("resulting in {0} blocks.", blocks);
             }
             else
                 attackMessage.Append(" and misses completely!");
 
-            return blocks;
+            return totalDamage;
         }
 
         /// <summary>
@@ -199,7 +197,7 @@ namespace MagiRogue.Commands
             // at the map position where it died
             if (defender.Inventory.Count > 0)
             {
-                deathMessage.Append("died and dropped");
+                deathMessage.AppendFormat("{0} died and dropped", defender.Name);
 
                 foreach (Item item in defender.Inventory)
                 {

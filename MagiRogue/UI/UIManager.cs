@@ -1,8 +1,10 @@
-﻿using MagiRogue.System;
+﻿using MagiRogue.Entities;
+using MagiRogue.System;
 using MagiRogue.UI.Windows;
 using SadConsole;
 using SadConsole.Input;
 using SadRogue.Primitives;
+using System;
 using System.Collections.Generic;
 using Color = SadConsole.UI.AdjustableColor;
 
@@ -63,14 +65,13 @@ namespace MagiRogue.UI
             MainMenu.Position = new Point(0, 0);
         }
 
-        public void StartGame(bool testGame = false)
+        public void StartGame(Player player, bool testGame = false)
         {
             IsFocused = true;
 
-            GameLoop.World = new World(testGame);
+            CharCreationWindow.Hide();
 
-            // Hides the main menu, so that it's possible to interact with the other windows.
-            MainMenu.Hide();
+            GameLoop.World = new World(player, testGame);
 
             //Message Log initialization
             MessageLog = new MessageLogWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Message Log");
@@ -99,6 +100,19 @@ namespace MagiRogue.UI
 
             // Start the game with the camera focused on the player
             MapWindow.CenterOnActor(GameLoop.World.Player);
+        }
+
+        /// <summary>
+        /// The char creation screen, before the initialization of the game.
+        /// </summary>
+        public void CharCreationScreen()
+        {
+            CharCreationWindow = new CharacterCreationWindow(GameLoop.GameWidth, GameLoop.GameHeight);
+            CharCreationWindow.Position = new Point(0, 0);
+            CharCreationWindow.Show();
+            Children.Add(CharCreationWindow);
+            // Hides the main menu to make it possible to interact with the screen.
+            MainMenu.Hide();
         }
 
         #endregion ConstructorAndInitCode
