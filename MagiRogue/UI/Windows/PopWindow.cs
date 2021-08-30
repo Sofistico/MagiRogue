@@ -8,7 +8,7 @@ namespace MagiRogue.UI.Windows
     /// This creates a base pop window, keep in mind to create a console in the right plae the math is
     /// Width - ButtonWidth - 3, Height - 4, for the position = ButtonWidth + 2, 1
     /// </summary>
-    public abstract class PopWindow : MagiBaseWindow
+    public class PopWindow : MagiBaseWindow
     {
         public const int ButtonWidth = 40;
 

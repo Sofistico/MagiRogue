@@ -31,7 +31,7 @@ namespace MagiRogue.UI
 
         #region Field
 
-        public SadConsole.UI.Colors CustomColors;
+        public SadConsole.UI.Colors CustomColors { get; private set; }
 
         #endregion Field
 
@@ -68,8 +68,14 @@ namespace MagiRogue.UI
         public void StartGame(Player player, bool testGame = false)
         {
             IsFocused = true;
+            MainMenu.GameStarted = true;
 
-            CharCreationWindow.Hide();
+            if (testGame)
+            {
+                player = new Player(SadRogue.Primitives.Color.White, SadRogue.Primitives.Color.Black, Point.None);
+            }
+            else
+                CharCreationWindow.Hide();
 
             GameLoop.World = new World(player, testGame);
 
@@ -85,7 +91,6 @@ namespace MagiRogue.UI
             InventoryScreen = new InventoryWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2);
             Children.Add(InventoryScreen);
             InventoryScreen.Hide();
-            //InventoryScreen.Position = new Point(GameLoop.GameWidth / 2, 0);
 
             StatusConsole = new StatusWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Status Window");
             Children.Add(StatusConsole);

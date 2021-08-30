@@ -119,6 +119,7 @@ namespace MagiRogue.Entities
                 {
                     personalMana = 0;
                 }
+
                 return personalMana;
             }
 
@@ -135,6 +136,7 @@ namespace MagiRogue.Entities
                     personalMana = MaxPersonalMana;
                     return;
                 }
+
                 personalMana = value;
             }
         }
