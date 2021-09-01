@@ -125,14 +125,6 @@ namespace MagiRogue.UI
 
         #region Input
 
-        public static readonly Dictionary<Keys, Direction> MovementDirectionMapping = new Dictionary<Keys, Direction>
-        {
-            { Keys.NumPad7, Direction.UpLeft }, { Keys.NumPad8, Direction.Up }, { Keys.NumPad9, Direction.UpRight },
-            { Keys.NumPad4, Direction.Left }, { Keys.NumPad6, Direction.Right },
-            { Keys.NumPad1, Direction.DownLeft }, { Keys.NumPad2, Direction.Down }, { Keys.NumPad3, Direction.DownRight },
-            { Keys.Up, Direction.Up }, { Keys.Down, Direction.Down }, { Keys.Left, Direction.Left }, { Keys.Right, Direction.Right }
-        };
-
         /// <summary>
         /// Scans the SadConsole's Global KeyboardState and triggers behaviour
         /// based on the button pressed.
