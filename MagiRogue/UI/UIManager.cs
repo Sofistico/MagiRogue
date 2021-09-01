@@ -70,12 +70,10 @@ namespace MagiRogue.UI
             IsFocused = true;
             MainMenu.GameStarted = true;
 
-            if (testGame)
+            if (!testGame)
             {
-                player = new Player(SadRogue.Primitives.Color.White, SadRogue.Primitives.Color.Black, Point.None);
-            }
-            else
                 CharCreationWindow.Hide();
+            }
 
             GameLoop.World = new World(player, testGame);
 

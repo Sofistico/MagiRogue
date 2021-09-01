@@ -12,6 +12,7 @@ using MagiRogue.UI.Controls;
 using SadRogue.Primitives;
 using SadConsole.Instructions;
 using SadConsole.UI.Controls;
+using Troschuetz.Random;
 using Console = SadConsole.Console;
 
 namespace MagiRogue.UI.Windows
@@ -19,7 +20,7 @@ namespace MagiRogue.UI.Windows
     public class CharacterCreationWindow : MagiBaseWindow
     {
         private Player player;
-        private const int startPoints = 60;
+        private const int startPoints = 100;
         private int totalSpent = 0;
         private int bodyStat;
         private int mindStat;
@@ -38,6 +39,7 @@ namespace MagiRogue.UI.Windows
             "\n\nThe Soul Stat(Your mp stat, how high that is your innate resistance before trainging as well a major" +
             " effect across the board in the spell casting portion). \n\nYou will have 120 points to distribute as you see" +
             " fit for your base stats.";
+        private TextBox charName;
 
         public CharacterCreationWindow(int width, int height) : base(width, height, "Character Creation")
         {
@@ -46,7 +48,7 @@ namespace MagiRogue.UI.Windows
 
         private void SetUpButtons(int width, int height)
         {
-            string begin = "Next Page";
+            string begin = "Begin!";
             MagiButton beginGame = new(begin.Length + 2)
             {
                 Position = new Point(width / 2, 25),
@@ -60,7 +62,9 @@ namespace MagiRogue.UI.Windows
             };
             beginGame.Click += (_, __) =>
             {
-                GameLoop.UIManager.StartGame(new Player(Color.White, Color.Black, Point.None));
+                player = CreatePlayer();
+                if (player is not null)
+                    GameLoop.UIManager.StartGame(player);
             };
             helpButton.Click += (_, __) =>
             {
@@ -99,6 +103,12 @@ namespace MagiRogue.UI.Windows
                 window.Show(true);
             };
 
+            charName = new(25)
+            {
+                Position = new Point(Width / 2 - 9, Height / 2 + 5)
+            };
+            charName.IsVisible = true;
+            Controls.Add(charName);
             SetupSelectionButtons(beginGame,
                 helpButton);
 
@@ -108,9 +118,49 @@ namespace MagiRogue.UI.Windows
             AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 10, Height / 2 - 8, StatEnum.Soul));
             AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 10, Height / 2 - 7, StatEnum.Str));
             AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 10, Height / 2 - 6, StatEnum.Pre));
-            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 15, Height / 2 - 3, StatEnum.ShapSkill));
-            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 15, Height / 2 - 2, StatEnum.Attack));
-            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 15, Height / 2 - 1, StatEnum.Defense));
+            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 15, Height / 2 - 1, StatEnum.ShapSkill));
+            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 15, Height / 2, StatEnum.Attack));
+            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 15, Height / 2 + 1, StatEnum.Defense));
+        }
+
+        private Player CreatePlayer()
+        {
+            if (charName.Text != "")
+                player = new Player(charName.Text, Color.White, Color.Black, Point.None);
+            else
+            {
+                PopWindow error = new PopWindow("Error");
+                error.Surface.Clear();
+                error.Surface.Print(1, 1, "You need to insert a name!");
+                error.Show(true);
+                return null;
+            }
+            int health = TRandom.New().Next(5, bodyStat + 10) + 3;
+            int mana = TRandom.New().Next(8, soulStat + 10);
+            float speed = (float)Math.Round(TRandom.New().NextDouble(0.9, 1.1), 1);
+            player.Stats = new Stat()
+            {
+                BodyStat = bodyStat,
+                MindStat = mindStat,
+                SoulStat = soulStat,
+                BaseAttack = attackSkill,
+                Defense = defenseSkill,
+                Strength = str,
+                Precision = precision,
+                Health = health,
+                PersonalMana = mana,
+                ViewRadius = 7,
+                Speed = speed,
+                BaseHpRegen = 0.01f,
+                BaseManaRegen = 0.1f
+            };
+            player.Magic.ShapingSkill = shapSkill;
+            // The first spell any mage learns is magic missile, it's the first proper combat spell that doens't require hours of practice
+            // to work,
+            // but if the player doens't have enough shaping skills for the spell, the player would play as an failed mage.
+            player.Magic.KnowSpells.Add(DataManager.QuerySpellInData("magic_missile"));
+
+            return player;
         }
 
         private MagiButton[] SetPlusAndMinusButtons(int x, int y, StatEnum statEnum)
@@ -139,7 +189,7 @@ namespace MagiRogue.UI.Windows
 
         private void SubtractPoints(StatEnum statEnum)
         {
-            if (totalSpent < startPoints && totalSpent > 0)
+            if (totalSpent <= startPoints && totalSpent > 0)
             {
                 switch (statEnum)
                 {
@@ -315,9 +365,12 @@ namespace MagiRogue.UI.Windows
                 Surface.Print(Width / 2 - 9, Height / 2 - 7, $"Strength: {str} / 12");
                 Surface.Print(Width / 2 - 9, Height / 2 - 6, $"Precision: {precision} / 12");
                 Surface.Print(Width / 2 - 9, Height / 2 - 4, "Skills: each is 1 + n * 2");
-                Surface.Print(Width / 2 - 9, Height / 2 - 3, $"Shaping Skills : {shapSkill} / 12");
-                Surface.Print(Width / 2 - 9, Height / 2 - 2, $"Attack Skill: {attackSkill} / 12");
-                Surface.Print(Width / 2 - 9, Height / 2 - 1, $"Defense Skill: {defenseSkill} / 12");
+                Surface.Print(Width / 2 - 9, Height / 2 - 3, "Keep in mind Shaping skills shoud be at a minimum 8 to cast");
+                Surface.Print(Width / 2 - 9, Height / 2 - 2, "the most simple battle spell, unless you want to play as is.");
+                Surface.Print(Width / 2 - 9, Height / 2 - 1, $"Shaping Skills : {shapSkill} / 12");
+                Surface.Print(Width / 2 - 9, Height / 2, $"Attack Skill: {attackSkill} / 12");
+                Surface.Print(Width / 2 - 9, Height / 2 + 1, $"Defense Skill: {defenseSkill} / 12");
+                Surface.Print(Width / 2 - 9, Height / 2 + 4, $"The name of your mage:");
             }
             base.Update(time);
         }

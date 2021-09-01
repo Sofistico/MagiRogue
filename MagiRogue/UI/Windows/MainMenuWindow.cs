@@ -1,4 +1,5 @@
-﻿using MagiRogue.UI.Controls;
+﻿using MagiRogue.Entities;
+using MagiRogue.UI.Controls;
 using SadConsole.UI.Controls;
 using SadRogue.Primitives;
 using System;
@@ -59,7 +60,7 @@ namespace MagiRogue.UI.Windows
         {
             if (!GameStarted)
             {
-                GameLoop.UIManager.StartGame(new Entities.Player(Color.Black, Color.White, Point.None), true);
+                GameLoop.UIManager.StartGame(Player.TestPlayer(), true);
                 GameStarted = true;
             }
             else

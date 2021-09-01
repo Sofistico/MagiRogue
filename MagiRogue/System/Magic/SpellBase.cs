@@ -246,7 +246,9 @@ namespace MagiRogue.System.Magic
         public override string ToString()
         {
             string bobBuilder = new StringBuilder().Append(SpellName).Append(": ").Append(SpellLevel)
-                .Append($", Range: {SpellRange} \n")
+                .Append($", Range: {SpellRange}")
+                .Append($", Proficiency: {Proficiency} \r\n")
+                .Append($"Required shape skills: {RequiredShapingSkill}")
                 .AppendLine(SpellSchool.ToString()).ToString();
 
             return bobBuilder;

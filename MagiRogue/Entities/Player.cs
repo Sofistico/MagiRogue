@@ -13,13 +13,19 @@ namespace MagiRogue.Entities
     // Default glyph is @
     public class Player : Actor
     {
-        public Player(Color foreground, Color background, Point position,
+        public Player(string name, Color foreground, Color background, Point position,
              int layer = (int)MapLayer.PLAYER) :
-            base("Magus", foreground, background, '@', position, layer)
+            base(name, foreground, background, '@', position, layer)
         {
+            Anatomy.Limbs = LimbTemplate.BasicHumanoidBody(this);
+        }
+
+        public static Player TestPlayer()
+        {
+            Player player = new Player("Magus", Color.White, Color.Black, Point.None);
             // sets the most fundamental stats, needs to set the godly flag up top, because it superseeds GodPower if it is
             // below.
-            Stats.SetAttributes(
+            player.Stats.SetAttributes(
                 viewRadius: 7,
                 health: 10,
                 baseHpRegen: 0.1f,
@@ -34,11 +40,11 @@ namespace MagiRogue.Entities
                 _baseManaRegen: 0.1f,
                 personalMana: 12
                 );
-            Stats.Precision = 3;
+            player.Stats.Precision = 3;
 
-            Anatomy.Limbs = LimbTemplate.BasicHumanoidBody(this);
+            player.Anatomy.Limbs = LimbTemplate.BasicHumanoidBody(player);
 
-            Magic.ShapingSkill = 9;
+            player.Magic.ShapingSkill = 9;
 
             SpellBase missile = DataManager.QuerySpellInData("magic_missile");
             missile.Proficiency = 1;
@@ -82,7 +88,9 @@ namespace MagiRogue.Entities
                 fingerOfDeath
             };
 
-            Magic.KnowSpells.AddRange(testSpells);
+            player.Magic.KnowSpells.AddRange(testSpells);
+
+            return player;
         }
     }
 }
