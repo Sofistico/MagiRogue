@@ -112,7 +112,8 @@ namespace MagiRogue.UI
         /// </summary>
         public void CharCreationScreen()
         {
-            CharCreationWindow = new CharacterCreationWindow(GameLoop.GameWidth, GameLoop.GameHeight);
+            if (CharCreationWindow is null)
+                CharCreationWindow = new CharacterCreationWindow(GameLoop.GameWidth, GameLoop.GameHeight);
             CharCreationWindow.Position = new Point(0, 0);
             CharCreationWindow.Show();
             Children.Add(CharCreationWindow);

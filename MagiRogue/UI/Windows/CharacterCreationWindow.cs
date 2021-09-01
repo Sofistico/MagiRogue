@@ -19,7 +19,7 @@ namespace MagiRogue.UI.Windows
     public class CharacterCreationWindow : MagiBaseWindow
     {
         private Player player;
-        private const int startPoints = 120;
+        private const int startPoints = 60;
         private int totalSpent = 0;
         private int bodyStat;
         private int mindStat;
@@ -99,42 +99,225 @@ namespace MagiRogue.UI.Windows
                 window.Show(true);
             };
 
-            MagiButton plusButton = new MagiButton("+".Length + 2)
-            {
-                Text = "+",
-                Position = new Point(Width / 2 + 10, Height / 2 - 10)
-            };
-            plusButton.Click += (_, __) =>
-            {
-                // Fuck me
-            };
-            MagiButton minusButton = new MagiButton("-".Length + 2)
-            {
-                Text = "-",
-                Position = new Point(Width / 2 + 14, Height / 2 - 10)
-            };
+            SetupSelectionButtons(beginGame,
+                helpButton);
 
-            SetupSelectionButtons(beginGame, helpButton, plusButton, minusButton);
+            // Body Stat
+            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 10, Height / 2 - 10, StatEnum.Body));
+            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 10, Height / 2 - 9, StatEnum.Mind));
+            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 10, Height / 2 - 8, StatEnum.Soul));
+            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 10, Height / 2 - 7, StatEnum.Str));
+            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 10, Height / 2 - 6, StatEnum.Pre));
+            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 15, Height / 2 - 3, StatEnum.ShapSkill));
+            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 15, Height / 2 - 2, StatEnum.Attack));
+            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 15, Height / 2 - 1, StatEnum.Defense));
         }
 
-        private void PlayerCreate()
+        private MagiButton[] SetPlusAndMinusButtons(int x, int y, StatEnum statEnum)
         {
+            MagiButton plus = new("+".Length + 2)
+            {
+                Text = "+",
+                Position = new Point(x, y)
+            };
+            plus.Click += (_, __) =>
+            {
+                CalculatePoints(statEnum);
+            };
+            MagiButton minus = new("-".Length + 2)
+            {
+                Text = "-",
+                Position = new Point(x + 4, y)
+            };
+            minus.Click += (_, __) =>
+            {
+                SubtractPoints(statEnum);
+            };
+
+            return new MagiButton[] { plus, minus };
+        }
+
+        private void SubtractPoints(StatEnum statEnum)
+        {
+            if (totalSpent < startPoints && totalSpent > 0)
+            {
+                switch (statEnum)
+                {
+                    case StatEnum.Body:
+                        if (bodyStat > 0 && RemoveTotalSpent(bodyStat))
+                            bodyStat--;
+                        break;
+
+                    case StatEnum.Mind:
+                        if (mindStat > 0 && RemoveTotalSpent(mindStat))
+                            mindStat--;
+                        break;
+
+                    case StatEnum.Soul:
+                        if (soulStat > 0 && RemoveTotalSpent(soulStat))
+                            soulStat--;
+                        break;
+
+                    case StatEnum.Str:
+                        if (str > 0 && RemoveTotalSpent(str))
+                            str--;
+                        break;
+
+                    case StatEnum.Pre:
+                        if (precision > 0 && RemoveTotalSpent(precision))
+                            precision--;
+                        break;
+
+                    case StatEnum.ShapSkill:
+                        if (shapSkill > 0 && RemoveTotalSpent(shapSkill))
+                            shapSkill--;
+                        break;
+
+                    case StatEnum.Attack:
+                        if (attackSkill > 0 && RemoveTotalSpent(attackSkill))
+                            attackSkill--;
+                        break;
+
+                    case StatEnum.Defense:
+                        if (defenseSkill > 0 && RemoveTotalSpent(defenseSkill))
+                            defenseSkill--;
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private void CalculatePoints(StatEnum statEnum)
+        {
+            if (totalSpent <= startPoints)
+            {
+                switch (statEnum)
+                {
+                    case StatEnum.Body:
+                        if (bodyStat < 5)
+                        {
+                            if (CalculateTotalSpent(bodyStat))
+                                bodyStat++;
+                        }
+                        break;
+
+                    case StatEnum.Mind:
+                        if (mindStat < 5)
+                        {
+                            if (CalculateTotalSpent(mindStat))
+                                mindStat++;
+                        }
+                        break;
+
+                    case StatEnum.Soul:
+                        if (soulStat < 5)
+                        {
+                            if (CalculateTotalSpent(soulStat))
+                                soulStat++;
+                        }
+                        break;
+
+                    case StatEnum.Str:
+                        if (str < 12)
+                        {
+                            if (CalculateTotalSpent(str))
+                                str++;
+                        }
+                        break;
+
+                    case StatEnum.Pre:
+                        if (precision < 12)
+                        {
+                            if (CalculateTotalSpent(precision))
+                                precision++;
+                        }
+                        break;
+
+                    case StatEnum.ShapSkill:
+                        if (shapSkill < 12)
+                        {
+                            if (CalculateTotalSpent(shapSkill))
+                                shapSkill++;
+                        }
+                        break;
+
+                    case StatEnum.Attack:
+                        if (attackSkill < 12)
+                        {
+                            if (CalculateTotalSpent(attackSkill))
+                                attackSkill++;
+                        }
+                        break;
+
+                    case StatEnum.Defense:
+                        if (defenseSkill < 12)
+                        {
+                            if (CalculateTotalSpent(defenseSkill))
+                                defenseSkill++;
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private bool CalculateTotalSpent(int stat)
+        {
+            if (totalSpent < startPoints)
+            {
+                totalSpent += stat + 1 * 2;
+                if (totalSpent > startPoints)
+                {
+                    totalSpent -= stat + 1 * 2;
+                    return false;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        private bool RemoveTotalSpent(int stat)
+        {
+            if (totalSpent > 0)
+            {
+                // This -1 is to represent that since the stat will go down, it needs to account here as well.
+                totalSpent -= stat + 1 * 2 - 1;
+                return true;
+            }
+            return false;
+        }
+
+        private enum StatEnum
+        {
+            Body,
+            Mind,
+            Soul,
+            Str,
+            Pre,
+            ShapSkill,
+            Attack,
+            Defense
         }
 
         public override void Update(TimeSpan time)
         {
             if (!GameLoop.UIManager.MainMenu.GameStarted)
             {
-                Surface.Print(Width / 2 - 9, Height / 2 - 11, "Stats:");
-                Surface.Print(Width / 2 - 9, Height / 2 - 10, $"Body Stat : {bodyStat} / 20");
-                Surface.Print(Width / 2 - 9, Height / 2 - 9, $"Mind Stat : {mindStat} / 20");
-                Surface.Print(Width / 2 - 9, Height / 2 - 8, $"Soul Stat : {soulStat} / 20");
-                Surface.Print(Width / 2 - 9, Height / 2 - 7, $"Strength: {str}");
-                Surface.Print(Width / 2 - 9, Height / 2 - 6, $"Precision: {precision}");
-                Surface.Print(Width / 2 - 9, Height / 2 - 4, "Skills:");
-                Surface.Print(Width / 2 - 9, Height / 2 - 3, $"Shaping Skills : {shapSkill}");
-                Surface.Print(Width / 2 - 9, Height / 2 - 2, $"Attack Skill: {attackSkill}");
-                Surface.Print(Width / 2 - 9, Height / 2 - 1, $"Defense Skill: {defenseSkill}");
+                Surface.Print(Width / 2 - 9, Height / 2 - 12, $"Points: {totalSpent} / {startPoints}");
+                Surface.Print(Width / 2 - 9, Height / 2 - 11, "Stats: each is 1 + n * 2, n being the current number of points");
+                Surface.Print(Width / 2 - 9, Height / 2 - 10, $"Body Stat : {bodyStat} / 5");
+                Surface.Print(Width / 2 - 9, Height / 2 - 9, $"Mind Stat : {mindStat} / 5");
+                Surface.Print(Width / 2 - 9, Height / 2 - 8, $"Soul Stat : {soulStat} / 5");
+                Surface.Print(Width / 2 - 9, Height / 2 - 7, $"Strength: {str} / 12");
+                Surface.Print(Width / 2 - 9, Height / 2 - 6, $"Precision: {precision} / 12");
+                Surface.Print(Width / 2 - 9, Height / 2 - 4, "Skills: each is 1 + n * 2");
+                Surface.Print(Width / 2 - 9, Height / 2 - 3, $"Shaping Skills : {shapSkill} / 12");
+                Surface.Print(Width / 2 - 9, Height / 2 - 2, $"Attack Skill: {attackSkill} / 12");
+                Surface.Print(Width / 2 - 9, Height / 2 - 1, $"Defense Skill: {defenseSkill} / 12");
             }
             base.Update(time);
         }

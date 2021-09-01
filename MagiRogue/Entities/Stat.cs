@@ -17,8 +17,8 @@ namespace MagiRogue.Entities
         private float personalMana; // Wil be measured in magnitude, in how many magic missile you can cast
         private float _maxPersonalMana;
         private int ambientMana; // This will be here to model a new MOL like magic system
+        private int baseStrength;
         private int baseAttack;
-        private int attackChance;
         private int protection;
         private int defenseChance;
         private int bodyStat = 1; // the minimum value is 1, the maximum is 20
@@ -183,11 +183,11 @@ namespace MagiRogue.Entities
         [DataMember]
         public int Strength
         {
-            get { return baseAttack; }
+            get { return baseStrength; }
 
             set
             {
-                baseAttack = bodyStat + value;
+                baseStrength = bodyStat + value;
             }
         }
 
@@ -199,14 +199,14 @@ namespace MagiRogue.Entities
         {
             get
             {
-                if (attackChance == 0)
+                if (baseAttack == 0)
                     return 1;
-                return attackChance;
+                return baseAttack;
             }
 
             set
             {
-                attackChance = BodyStat + value;
+                baseAttack = (int)(BodyStat + value + (0.5 * MindStat));
             }
         }
 
@@ -217,7 +217,7 @@ namespace MagiRogue.Entities
         public int Protection
         {
             get { return protection; }
-            set { protection = value; }
+            set { protection = value + (BodyStat / 2); }
         }
 
         /// <summary>
@@ -227,7 +227,7 @@ namespace MagiRogue.Entities
         public int Defense
         {
             get { return defenseChance; }
-            set { defenseChance = value + bodyStat; }
+            set { defenseChance = value + bodyStat + (MindStat / 2); }
         }
 
         /// <summary>
@@ -313,32 +313,42 @@ namespace MagiRogue.Entities
         }
 
         public Stat(float health,
+                    float maxHealth,
+                    float baseHpRegen,
                     float baseManaRegen,
                     float personalMana,
+                    float maxPersonalMana,
+                    int strength,
                     int baseAttack,
-                    int attackChance,
                     int protection,
                     int defense,
                     int bodyStat,
                     int mindStat,
                     int soulStat,
+                    int ambientMana,
                     int viewRadius,
                     float speed,
-                    int precision)
+                    int precision,
+                    int attackSpeed)
         {
             Health = health;
+            MaxHealth = maxHealth;
+            BaseHpRegen = baseHpRegen;
             BaseManaRegen = baseManaRegen;
             PersonalMana = personalMana;
-            Strength = baseAttack;
-            BaseAttack = attackChance;
+            MaxPersonalMana = maxPersonalMana;
+            Strength = strength;
+            BaseAttack = baseAttack;
             Protection = protection;
             Defense = defense;
             BodyStat = bodyStat;
             MindStat = mindStat;
             SoulStat = soulStat;
+            AmbientMana = ambientMana;
             ViewRadius = viewRadius;
             Speed = speed;
             Precision = precision;
+            AttackSpeed = attackSpeed;
         }
 
         #endregion Constructor
