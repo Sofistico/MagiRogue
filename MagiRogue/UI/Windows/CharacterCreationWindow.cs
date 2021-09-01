@@ -307,7 +307,7 @@ namespace MagiRogue.UI.Windows
         {
             if (!GameLoop.UIManager.MainMenu.GameStarted)
             {
-                Surface.Print(Width / 2 - 9, Height / 2 - 12, $"Points: {totalSpent} / {startPoints}");
+                Surface.Print(Width / 2 - 9, Height / 2 - 12, $"Points: {totalSpent} / {startPoints}   ");
                 Surface.Print(Width / 2 - 9, Height / 2 - 11, "Stats: each is 1 + n * 2, n being the current number of points");
                 Surface.Print(Width / 2 - 9, Height / 2 - 10, $"Body Stat : {bodyStat} / 5");
                 Surface.Print(Width / 2 - 9, Height / 2 - 9, $"Mind Stat : {mindStat} / 5");
