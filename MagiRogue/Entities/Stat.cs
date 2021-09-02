@@ -312,45 +312,6 @@ namespace MagiRogue.Entities
         {
         }
 
-        public Stat(float health,
-                    float maxHealth,
-                    float baseHpRegen,
-                    float baseManaRegen,
-                    float personalMana,
-                    float maxPersonalMana,
-                    int strength,
-                    int baseAttack,
-                    int protection,
-                    int defense,
-                    int bodyStat,
-                    int mindStat,
-                    int soulStat,
-                    int ambientMana,
-                    int viewRadius,
-                    float speed,
-                    int precision,
-                    int attackSpeed)
-        {
-            Health = health;
-            MaxHealth = maxHealth;
-            BaseHpRegen = baseHpRegen;
-            BaseManaRegen = baseManaRegen;
-            PersonalMana = personalMana;
-            MaxPersonalMana = maxPersonalMana;
-            Strength = strength;
-            BaseAttack = baseAttack;
-            Protection = protection;
-            Defense = defense;
-            BodyStat = bodyStat;
-            MindStat = mindStat;
-            SoulStat = soulStat;
-            AmbientMana = ambientMana;
-            ViewRadius = viewRadius;
-            Speed = speed;
-            Precision = precision;
-            AttackSpeed = attackSpeed;
-        }
-
         #endregion Constructor
 
         #region Methods

@@ -5,7 +5,7 @@ namespace MagiRogue.Utils
     /// <summary>
     /// MagiRogue random number generation, uses a explodind dice of 2d6 to determine randomness.
     /// </summary>
-    public struct MRN
+    public struct Mrn
     {
         public static int ExplodingD6Dice => ExplodingDice();
 

@@ -41,12 +41,6 @@ namespace MagiRogue.UI.Windows
             Title = title.Align(HorizontalAlignment.Center, width);
         }
 
-        public void SetupSelectionButtons(params MagiButton[] buttons)
-        {
-            SetupSelectionButtons(new Dictionary<MagiButton, Action>
-                (buttons.Select(b => new KeyValuePair<MagiButton, Action>(b, () => { }))));
-        }
-
         public void AddToDictionary(MagiButton[] buttons)
         {
             foreach (MagiButton button in buttons)
@@ -59,6 +53,12 @@ namespace MagiRogue.UI.Windows
         {
             _selectionButtons.Add(button, () => { });
             SetupSelectionButtons(_selectionButtons);
+        }
+
+        public void SetupSelectionButtons(params MagiButton[] buttons)
+        {
+            SetupSelectionButtons(new Dictionary<MagiButton, Action>
+                (buttons.Select(b => new KeyValuePair<MagiButton, Action>(b, () => { }))));
         }
 
         public void SetupSelectionButtons(Dictionary<MagiButton, Action> buttonsSelectionAction)

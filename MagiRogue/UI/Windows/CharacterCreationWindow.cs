@@ -43,10 +43,10 @@ namespace MagiRogue.UI.Windows
 
         public CharacterCreationWindow(int width, int height) : base(width, height, "Character Creation")
         {
-            SetUpButtons(width, height);
+            SetUpButtons(width);
         }
 
-        private void SetUpButtons(int width, int height)
+        private void SetUpButtons(int width)
         {
             string begin = "Begin!";
             MagiButton beginGame = new(begin.Length + 2)
@@ -113,14 +113,14 @@ namespace MagiRogue.UI.Windows
                 helpButton);
 
             // Body Stat
-            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 10, Height / 2 - 10, StatEnum.Body));
-            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 10, Height / 2 - 9, StatEnum.Mind));
-            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 10, Height / 2 - 8, StatEnum.Soul));
-            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 10, Height / 2 - 7, StatEnum.Str));
-            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 10, Height / 2 - 6, StatEnum.Pre));
-            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 15, Height / 2 - 1, StatEnum.ShapSkill));
-            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 15, Height / 2, StatEnum.Attack));
-            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 15, Height / 2 + 1, StatEnum.Defense));
+            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 10, Height / 2 - 10, Stats.Body));
+            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 10, Height / 2 - 9, Stats.Mind));
+            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 10, Height / 2 - 8, Stats.Soul));
+            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 10, Height / 2 - 7, Stats.Str));
+            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 10, Height / 2 - 6, Stats.Pre));
+            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 15, Height / 2 - 1, Stats.ShapSkill));
+            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 15, Height / 2, Stats.Attack));
+            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 15, Height / 2 + 1, Stats.Defense));
         }
 
         private Player CreatePlayer()
@@ -163,7 +163,7 @@ namespace MagiRogue.UI.Windows
             return player;
         }
 
-        private MagiButton[] SetPlusAndMinusButtons(int x, int y, StatEnum statEnum)
+        private MagiButton[] SetPlusAndMinusButtons(int x, int y, Stats statEnum)
         {
             MagiButton plus = new("+".Length + 2)
             {
@@ -187,48 +187,48 @@ namespace MagiRogue.UI.Windows
             return new MagiButton[] { plus, minus };
         }
 
-        private void SubtractPoints(StatEnum statEnum)
+        private void SubtractPoints(Stats statEnum)
         {
             if (totalSpent <= startPoints && totalSpent > 0)
             {
                 switch (statEnum)
                 {
-                    case StatEnum.Body:
+                    case Stats.Body:
                         if (bodyStat > 0 && RemoveTotalSpent(bodyStat))
                             bodyStat--;
                         break;
 
-                    case StatEnum.Mind:
+                    case Stats.Mind:
                         if (mindStat > 0 && RemoveTotalSpent(mindStat))
                             mindStat--;
                         break;
 
-                    case StatEnum.Soul:
+                    case Stats.Soul:
                         if (soulStat > 0 && RemoveTotalSpent(soulStat))
                             soulStat--;
                         break;
 
-                    case StatEnum.Str:
+                    case Stats.Str:
                         if (str > 0 && RemoveTotalSpent(str))
                             str--;
                         break;
 
-                    case StatEnum.Pre:
+                    case Stats.Pre:
                         if (precision > 0 && RemoveTotalSpent(precision))
                             precision--;
                         break;
 
-                    case StatEnum.ShapSkill:
+                    case Stats.ShapSkill:
                         if (shapSkill > 0 && RemoveTotalSpent(shapSkill))
                             shapSkill--;
                         break;
 
-                    case StatEnum.Attack:
+                    case Stats.Attack:
                         if (attackSkill > 0 && RemoveTotalSpent(attackSkill))
                             attackSkill--;
                         break;
 
-                    case StatEnum.Defense:
+                    case Stats.Defense:
                         if (defenseSkill > 0 && RemoveTotalSpent(defenseSkill))
                             defenseSkill--;
                         break;
@@ -239,73 +239,65 @@ namespace MagiRogue.UI.Windows
             }
         }
 
-        private void CalculatePoints(StatEnum statEnum)
+        private void CalculatePoints(Stats statEnum)
         {
             if (totalSpent <= startPoints)
             {
                 switch (statEnum)
                 {
-                    case StatEnum.Body:
-                        if (bodyStat < 5)
+                    case Stats.Body:
+                        if (bodyStat < 5 && CalculateTotalSpent(bodyStat))
                         {
-                            if (CalculateTotalSpent(bodyStat))
-                                bodyStat++;
+                            bodyStat++;
                         }
                         break;
 
-                    case StatEnum.Mind:
-                        if (mindStat < 5)
+                    case Stats.Mind:
+                        if (mindStat < 5 && CalculateTotalSpent(mindStat))
                         {
-                            if (CalculateTotalSpent(mindStat))
-                                mindStat++;
+                            mindStat++;
                         }
                         break;
 
-                    case StatEnum.Soul:
-                        if (soulStat < 5)
+                    case Stats.Soul:
+                        if (soulStat < 5 && CalculateTotalSpent(soulStat))
                         {
-                            if (CalculateTotalSpent(soulStat))
-                                soulStat++;
+                            soulStat++;
                         }
                         break;
 
-                    case StatEnum.Str:
-                        if (str < 12)
+                    case Stats.Str:
+                        if (str < 12 && CalculateTotalSpent(str))
                         {
-                            if (CalculateTotalSpent(str))
-                                str++;
+                            str++;
                         }
                         break;
 
-                    case StatEnum.Pre:
-                        if (precision < 12)
+                    case Stats.Pre:
+                        if (precision < 12 && CalculateTotalSpent(precision))
                         {
-                            if (CalculateTotalSpent(precision))
-                                precision++;
+                            precision++;
                         }
                         break;
 
-                    case StatEnum.ShapSkill:
-                        if (shapSkill < 12)
+                    case Stats.ShapSkill:
+                        if (shapSkill < 12 && CalculateTotalSpent(shapSkill))
                         {
-                            if (CalculateTotalSpent(shapSkill))
-                                shapSkill++;
+                            shapSkill++;
                         }
                         break;
 
-                    case StatEnum.Attack:
-                        if (attackSkill < 12)
+                    case Stats.Attack:
+                        if (attackSkill < 12 && CalculateTotalSpent(attackSkill))
                         {
-                            if (CalculateTotalSpent(attackSkill))
-                                attackSkill++;
+                            attackSkill++;
                         }
                         break;
 
-                    case StatEnum.Defense:
-                        if (defenseSkill < 12)
+                    case Stats.Defense:
+                        if (defenseSkill < 12 && CalculateTotalSpent(defenseSkill))
                         {
-                            if (CalculateTotalSpent(defenseSkill))
-                                defenseSkill++;
+                            defenseSkill++;
                         }
                         break;
 
@@ -341,7 +333,7 @@ namespace MagiRogue.UI.Windows
             return false;
         }
 
-        private enum StatEnum
+        private enum Stats
         {
             Body,
             Mind,
