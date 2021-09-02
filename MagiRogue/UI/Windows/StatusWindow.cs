@@ -55,7 +55,12 @@ namespace MagiRogue.UI.Windows
             statsConsole.Print(0, 2, $"Health: {(int)player.Stats.Health} / {player.Stats.MaxHealth}   ", Color.Red);
             statsConsole.Print(0, 3, $"Mana: {(int)player.Stats.PersonalMana} / {player.Stats.MaxPersonalMana}     ", Color.LightBlue);
             statsConsole.Print(0, 4, $"Ambient Mana: {player.Stats.AmbientMana}    ", Color.DarkBlue);
-            statsConsole.Print(0, 5, $"Speed: {player.Stats.Speed}");
+            statsConsole.Print(0, 5, $"Speed: {player.Stats.Speed}  ");
+            statsConsole.Print(0, 6, $"Attack Skill: {player.Stats.BaseAttack}  ");
+            statsConsole.Print(0, 7, $"Defense Skill: {player.Stats.Defense}  ");
+            statsConsole.Print(0, 8, $"Precision: {player.Stats.Precision}  ");
+            statsConsole.Print(0, 9, $"Strength: {player.Stats.Strength}  ");
+            statsConsole.Print(0, 10, $"Shaping Skills: {player.Magic.ShapingSkill}  ");
             base.Update(time);
         }
     }

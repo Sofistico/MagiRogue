@@ -49,6 +49,11 @@ namespace MagiRogue.Entities
         [JsonIgnore]
         public bool HasEnoughWings => Limbs.FindAll(l => l.TypeLimb is TypeOfLimb.Wing).Count >= 2;
 
+        /// <summary>
+        /// The total lifespan of a character
+        /// </summary>
+        public int Lifespan { get; set; }
+
         #endregion Properties
 
         #region Constructor

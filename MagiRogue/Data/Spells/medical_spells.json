@@ -1,0 +1,24 @@
+﻿[
+  {
+    "SpellLevel": 1,
+    "Effects": [
+      {
+        "AreaOfEffect": "Self",
+        "SpellDamageType": "Force",
+        "BaseDamage": 2,
+        "Radius": 0,
+        "TargetsTile": false,
+        "EffectType": "DAMAGE",
+        "IsHealing": true,
+        "CanMiss": false,
+        "IsResistable": false
+      }
+    ],
+    "SpellName": "Minor Cure",
+    "Description": null,
+    "SpellSchool": "MedicalMagic",
+    "SpellRange": 0,
+    "ManaCost": 1.0,
+    "SpellId": "minor_cure"
+  }
+]

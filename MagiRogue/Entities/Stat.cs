@@ -17,9 +17,9 @@ namespace MagiRogue.Entities
         private float personalMana; // Wil be measured in magnitude, in how many magic missile you can cast
         private float _maxPersonalMana;
         private int ambientMana; // This will be here to model a new MOL like magic system
-        private int attack;
-        private int attackChance;
-        private int defense;
+        private int baseStrength;
+        private int baseAttack;
+        private int protection;
         private int defenseChance;
         private int bodyStat = 1; // the minimum value is 1, the maximum is 20
         private int mindStat = 1; // the minimum value is 1, the maximum is 20
@@ -119,6 +119,7 @@ namespace MagiRogue.Entities
                 {
                     personalMana = 0;
                 }
+
                 return personalMana;
             }
 
@@ -135,6 +136,7 @@ namespace MagiRogue.Entities
                     personalMana = MaxPersonalMana;
                     return;
                 }
+
                 personalMana = value;
             }
         }
@@ -179,48 +181,53 @@ namespace MagiRogue.Entities
         /// attack strength
         /// </summary>
         [DataMember]
-        public int Attack
+        public int Strength
         {
-            get { return attack; }
+            get { return baseStrength; }
 
             set
             {
-                attack = bodyStat + value;
+                baseStrength = bodyStat + value;
             }
         }
 
         /// <summary>
-        /// percent chance of successful hit
+        /// How likely an entity is to hit something.
         /// </summary>
         [DataMember]
-        public int AttackChance
+        public int BaseAttack
         {
-            get { return attackChance; }
+            get
+            {
+                if (baseAttack == 0)
+                    return 1;
+                return baseAttack;
+            }
 
             set
             {
-                attackChance = BodyStat + value;
+                baseAttack = (int)(BodyStat + value + (0.5 * MindStat));
             }
         }
 
         /// <summary>
-        /// defensive strength
+        /// defensive strength, how much damage is lessened when you are hit
+        /// </summary>
+        [DataMember]
+        public int Protection
+        {
+            get { return protection; }
+            set { protection = value + (BodyStat / 2); }
+        }
+
+        /// <summary>
+        /// chance of successfully blocking a hit, how likely you are either to dodge or block damage
         /// </summary>
         [DataMember]
         public int Defense
         {
-            get { return defense; }
-            set { defense = value; }
-        }
-
-        /// <summary>
-        /// percent chance of successfully blocking a hit
-        /// </summary>
-        [DataMember]
-        public int DefenseChance
-        {
             get { return defenseChance; }
-            set { defenseChance = value; }
+            set { defenseChance = value + bodyStat + (MindStat / 2); }
         }
 
         /// <summary>
@@ -276,19 +283,24 @@ namespace MagiRogue.Entities
         /// The view radius of the actor, for seeing things
         /// </summary>
         [DataMember]
-        public int ViewRadius { get; set; }
+        public int ViewRadius { get; set; } = 5;
 
         /// <summary>
         /// The speed of the actor, how fast it does the things, goes from 0.5 to 2.0
         /// </summary>
         [DataMember]
-        public float Speed { get; set; }
+        public float Speed { get; set; } = 1;
 
         /// <summary>
         /// How likely you are to hit something, it's a bonus to a dice roll of a d20 against defense, if zero
         /// means you don't have any bonus
         /// </summary>
-        public int Precision { get; set; }
+        public int Precision { get; set; } = 10;
+
+        /// <summary>
+        /// How many attacks per turn a unit have.
+        /// </summary>
+        public int AttackSpeed { get; set; } = 1;
 
         #endregion StatsProperties
 
@@ -311,9 +323,9 @@ namespace MagiRogue.Entities
            int bodyStat,
            int mindStat,
            int soulStat,
-           int attack,
+           int baseAttack,
            int attackChance,
-           int defense,
+           int protection,
            int defenseChance,
            float speed,
            float _baseManaRegen,
@@ -325,10 +337,10 @@ namespace MagiRogue.Entities
             this.BodyStat = bodyStat;
             this.MindStat = mindStat;
             this.SoulStat = soulStat;
-            this.Attack = attack;
-            this.AttackChance = attackChance;
-            this.Defense = defense;
-            this.DefenseChance = defenseChance;
+            this.Strength = baseAttack;
+            this.BaseAttack = attackChance;
+            this.Protection = protection;
+            this.Defense = defenseChance;
             this.Speed = speed;
             this.BaseManaRegen = _baseManaRegen;
             this.PersonalMana = personalMana;

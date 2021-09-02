@@ -44,7 +44,7 @@ namespace MagiRogue.System
         /// Creates a new game world and stores it in a
         /// publicly accessible constructor.
         /// </summary>
-        public World(bool testGame = false)
+        public World(Player player, bool testGame = false)
         {
             if (!testGame)
             {
@@ -58,7 +58,7 @@ namespace MagiRogue.System
                 CreateLoot();
 
                 // create an instance of player
-                CreatePlayer();
+                PlacePlayer(player);
 
                 // Set up anything that needs to be set up for the world to work
                 SetUpStuff();
@@ -67,7 +67,7 @@ namespace MagiRogue.System
             {
                 CreateTestMap();
 
-                CreatePlayer();
+                PlacePlayer(player);
             }
         }
 
@@ -102,7 +102,7 @@ namespace MagiRogue.System
 
         // Create a player using the Player class
         // and set its starting position
-        private void CreatePlayer()
+        private void PlacePlayer(Player player)
         {
             // Place the player on the first non-movement-blocking tile on the map
             for (int i = 0; i < CurrentMap.Tiles.Length; i++)
@@ -113,11 +113,10 @@ namespace MagiRogue.System
                     // Set the player's position to the index of the current map position
                     var pos = Point.FromIndex(i, CurrentMap.Width);
 
-                    Player = new Player(Color.White, Color.Black, pos)
-                    {
-                        Position = pos,
-                        Description = "Here is you, you are beautiful"
-                    };
+                    Player = player;
+                    Player.Position = pos;
+                    Player.Description = "Here is you, you are beautiful";
+
                     break;
                 }
             }
@@ -158,10 +157,10 @@ namespace MagiRogue.System
 
                 Stat monsterStat = new Stat()
                 {
-                    Defense = rndNum.Next(0, 10),
-                    DefenseChance = rndNum.Next(0, 50),
-                    Attack = rndNum.Next(0, 10),
-                    AttackChance = rndNum.Next(0, 50),
+                    Protection = rndNum.Next(0, 10),
+                    Defense = rndNum.Next(0, 50),
+                    Strength = rndNum.Next(0, 10),
+                    BaseAttack = rndNum.Next(0, 50),
                     Speed = 1,
                     ViewRadius = 7,
                     Health = 10,

@@ -6,6 +6,7 @@ using MagiRogue.System.Time;
 using SadConsole.Input;
 using SadRogue.Primitives;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Console = SadConsole.Console;
 using Point = SadRogue.Primitives.Point;
@@ -20,6 +21,14 @@ namespace MagiRogue.UI.Windows
         private static Player GetPlayer => GameLoop.World.Player;
 
         private Target targetCursor;
+
+        private static readonly Dictionary<Keys, Direction> MovementDirectionMapping = new Dictionary<Keys, Direction>
+        {
+            { Keys.NumPad7, Direction.UpLeft }, { Keys.NumPad8, Direction.Up }, { Keys.NumPad9, Direction.UpRight },
+            { Keys.NumPad4, Direction.Left }, { Keys.NumPad6, Direction.Right },
+            { Keys.NumPad1, Direction.DownLeft }, { Keys.NumPad2, Direction.Down }, { Keys.NumPad3, Direction.DownRight },
+            { Keys.Up, Direction.Up }, { Keys.Down, Direction.Down }, { Keys.Left, Direction.Left }, { Keys.Right, Direction.Right }
+        };
 
         public MapWindow(int width, int height, string title) : base(width, height, title)
         {
@@ -85,11 +94,11 @@ namespace MagiRogue.UI.Windows
 
         private bool HandleMove(Keyboard info, World world)
         {
-            foreach (Keys key in UIManager.MovementDirectionMapping.Keys)
+            foreach (Keys key in MovementDirectionMapping.Keys)
             {
                 if (info.IsKeyPressed(key))
                 {
-                    Direction moveDirection = UIManager.MovementDirectionMapping[key];
+                    Direction moveDirection = MovementDirectionMapping[key];
                     Point coorToMove = new Point(moveDirection.DeltaX, moveDirection.DeltaY);
 
                     if (world.CurrentMap.ControlledEntitiy is not Player)

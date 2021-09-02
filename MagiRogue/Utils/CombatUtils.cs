@@ -1,5 +1,4 @@
 ﻿using MagiRogue.Entities;
-using MagiRogue.System.Magic;
 using System;
 using System.Text;
 
@@ -51,7 +50,7 @@ namespace MagiRogue.Utils
                 item.Condition -= dmg;
             }
 
-            GameLoop.UIManager.MessageLog.Add($"The {entity.Name} took {dmg} {dmgType} damage!");
+            GameLoop.UIManager.MessageLog.Add($"The {entity.Name} took {dmg} {dmgType} total damage!");
         }
 
         public static void ApplyHealing(int dmg, Stat stats, DamageType healingType)

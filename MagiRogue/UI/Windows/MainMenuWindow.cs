@@ -1,4 +1,5 @@
-﻿using MagiRogue.UI.Controls;
+﻿using MagiRogue.Entities;
+using MagiRogue.UI.Controls;
 using SadConsole.UI.Controls;
 using SadRogue.Primitives;
 using System;
@@ -7,7 +8,7 @@ namespace MagiRogue.UI.Windows
 {
     public class MainMenuWindow : MagiBaseWindow
     {
-        private bool _gameStarted;
+        public bool GameStarted { get; set; }
 
         private readonly MagiButton startGame;
         private readonly MagiButton testMap;
@@ -46,7 +47,7 @@ namespace MagiRogue.UI.Windows
 
         private void ContinueGame_Click(object sender, EventArgs e)
         {
-            if (_gameStarted)
+            if (GameStarted)
             {
                 Hide();
                 GameLoop.UIManager.IsFocused = true;
@@ -57,10 +58,10 @@ namespace MagiRogue.UI.Windows
 
         private void TestMap_Click(object sender, EventArgs e)
         {
-            if (!_gameStarted)
+            if (!GameStarted)
             {
-                GameLoop.UIManager.StartGame(true);
-                _gameStarted = true;
+                GameLoop.UIManager.StartGame(Player.TestPlayer(), true);
+                GameStarted = true;
             }
             else
             {
@@ -85,10 +86,9 @@ namespace MagiRogue.UI.Windows
 
         private void StartGameClick(object sender, EventArgs e)
         {
-            if (!_gameStarted)
+            if (!GameStarted)
             {
-                GameLoop.UIManager.StartGame();
-                _gameStarted = true;
+                GameLoop.UIManager.CharCreationScreen();
             }
             else
             {
@@ -104,10 +104,9 @@ namespace MagiRogue.UI.Windows
             }
         }
 
-
         public void RestartGame()
         {
-            _gameStarted = false;
+            GameStarted = false;
             GameLoop.World = null;
             RefreshButtons();
 

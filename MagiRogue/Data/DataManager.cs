@@ -13,19 +13,49 @@ namespace MagiRogue.Data
         private readonly static string _appDomain = AppDomain.CurrentDomain.BaseDirectory;
 
         public readonly static IReadOnlyList<ItemTemplate> ListOfItems =
-            JsonUtils.JsonDeseralize<List<ItemTemplate>>(Path.Combine(
-                _appDomain,
-                "Data", "Items", "Bars.json"));
+            GetSourceTree<ItemTemplate>(@".\Data\Items\*.json");
 
         public readonly static IReadOnlyList<MaterialTemplate> ListOfMaterials =
-            JsonUtils.JsonDeseralize<List<MaterialTemplate>>(Path.Combine
-        (_appDomain, "Data", "Materials", "MaterialDefinition.json"));
+           GetSourceTree<MaterialTemplate>(@".\Data\Materials\*.json");
 
-        public readonly static IReadOnlyList<SpellBase> ListOfProjectionSpells =
-            JsonUtils.JsonDeseralize<IReadOnlyList<SpellBase>>
-            (Path.Combine(_appDomain, "Data", "Spells", "ProjectionSpells.json"));
+        public readonly static IReadOnlyList<SpellBase> ListOfSpells = GetSourceTree<SpellBase>(@".\Data\Spells\*.json");
 
-        public static SpellBase QuerySpellInData(string spellId) => ListOfProjectionSpells.FirstOrDefault
+        public readonly static IReadOnlyList<ActorTemplate> ListOfActors = GetSourceTree<ActorTemplate>(@".\Data\Actors\*.json");
+
+        private static IReadOnlyList<T> GetSourceTree<T>(string wildCard)
+        {
+            string originalWildCard = wildCard;
+
+            string pattern = Path.GetFileName(originalWildCard);
+            string realDir = originalWildCard.Substring(0, originalWildCard.Length - pattern.Length);
+
+            // Get absolutepath
+            string absPath = Path.GetFullPath(Path.Combine(_appDomain, realDir));
+
+            string[] files = Directory.GetFiles(absPath, pattern, SearchOption.TopDirectoryOnly);
+
+            List<List<T>> listTList = new();
+
+            for (int i = 0; i < files.Length; i++)
+            {
+                listTList.Add(JsonUtils.JsonDeseralize<List<T>>(files[i]));
+            }
+            List<T> allTList = new();
+
+            foreach (List<T> tList in listTList)
+            {
+                foreach (T t in tList)
+                {
+                    allTList.Add(t);
+                }
+            }
+
+            IReadOnlyList<T> readOnlyList = allTList.AsReadOnly();
+
+            return readOnlyList;
+        }
+
+        public static SpellBase QuerySpellInData(string spellId) => ListOfSpells.FirstOrDefault
                 (m => m.SpellId.Equals(spellId));
     }
 }

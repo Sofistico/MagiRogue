@@ -1,5 +1,6 @@
 ﻿using MagiRogue.Entities;
 using MagiRogue.Data;
+using MagiRogue.Utils;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System;
@@ -40,7 +41,7 @@ namespace MagiRogue.Test.Entities
         [Fact]
         public void ActorDeserializationFromFile()
         {
-            List<ActorTemplate> deserialized = Utils.JsonUtils.JsonDeseralize<List<ActorTemplate>>
+            List<ActorTemplate> deserialized = JsonUtils.JsonDeseralize<List<ActorTemplate>>
                 (Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "Actors", "Humanoids.json"));
             Actor found = EntityFactory.ActorCreator(Point.None,
                 deserialized.FirstOrDefault(i => i.Id == "test_troll"));

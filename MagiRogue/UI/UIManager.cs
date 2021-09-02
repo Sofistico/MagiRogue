@@ -1,8 +1,10 @@
-﻿using MagiRogue.System;
+﻿using MagiRogue.Entities;
+using MagiRogue.System;
 using MagiRogue.UI.Windows;
 using SadConsole;
 using SadConsole.Input;
 using SadRogue.Primitives;
+using System;
 using System.Collections.Generic;
 using Color = SadConsole.UI.AdjustableColor;
 
@@ -21,6 +23,7 @@ namespace MagiRogue.UI
         public InventoryWindow InventoryScreen { get; set; }
         public StatusWindow StatusConsole { get; set; }
         public MainMenuWindow MainMenu { get; set; }
+        public CharacterCreationWindow CharCreationWindow { get; set; }
 
         public bool NoPopWindow { get; set; } = true;
 
@@ -28,7 +31,7 @@ namespace MagiRogue.UI
 
         #region Field
 
-        public SadConsole.UI.Colors CustomColors;
+        public SadConsole.UI.Colors CustomColors { get; private set; }
 
         #endregion Field
 
@@ -62,14 +65,17 @@ namespace MagiRogue.UI
             MainMenu.Position = new Point(0, 0);
         }
 
-        public void StartGame(bool testGame = false)
+        public void StartGame(Player player, bool testGame = false)
         {
             IsFocused = true;
+            MainMenu.GameStarted = true;
 
-            GameLoop.World = new World(testGame);
+            if (!testGame)
+            {
+                CharCreationWindow.Hide();
+            }
 
-            // Hides the main menu, so that it's possible to interact with the other windows.
-            MainMenu.Hide();
+            GameLoop.World = new World(player, testGame);
 
             //Message Log initialization
             MessageLog = new MessageLogWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Message Log");
@@ -83,7 +89,6 @@ namespace MagiRogue.UI
             InventoryScreen = new InventoryWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2);
             Children.Add(InventoryScreen);
             InventoryScreen.Hide();
-            //InventoryScreen.Position = new Point(GameLoop.GameWidth / 2, 0);
 
             StatusConsole = new StatusWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Status Window");
             Children.Add(StatusConsole);
@@ -100,17 +105,23 @@ namespace MagiRogue.UI
             MapWindow.CenterOnActor(GameLoop.World.Player);
         }
 
+        /// <summary>
+        /// The char creation screen, before the initialization of the game.
+        /// </summary>
+        public void CharCreationScreen()
+        {
+            if (CharCreationWindow is null)
+                CharCreationWindow = new CharacterCreationWindow(GameLoop.GameWidth, GameLoop.GameHeight);
+            CharCreationWindow.Position = new Point(0, 0);
+            CharCreationWindow.Show();
+            Children.Add(CharCreationWindow);
+            // Hides the main menu to make it possible to interact with the screen.
+            MainMenu.Hide();
+        }
+
         #endregion ConstructorAndInitCode
 
         #region Input
-
-        public static readonly Dictionary<Keys, Direction> MovementDirectionMapping = new Dictionary<Keys, Direction>
-        {
-            { Keys.NumPad7, Direction.UpLeft }, { Keys.NumPad8, Direction.Up }, { Keys.NumPad9, Direction.UpRight },
-            { Keys.NumPad4, Direction.Left }, { Keys.NumPad6, Direction.Right },
-            { Keys.NumPad1, Direction.DownLeft }, { Keys.NumPad2, Direction.Down }, { Keys.NumPad3, Direction.DownRight },
-            { Keys.Up, Direction.Up }, { Keys.Down, Direction.Down }, { Keys.Left, Direction.Left }, { Keys.Right, Direction.Right }
-        };
 
         /// <summary>
         /// Scans the SadConsole's Global KeyboardState and triggers behaviour

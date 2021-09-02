@@ -28,11 +28,21 @@ namespace MagiRogue.System.Magic
         public int InnateResistance { get; set; } = 1;
 
         /// <summary>
+        /// The research skill, how long it takes to properly research something, there is no upper limit.
+        /// </summary>
+        public int ResearchSkill { get; set; }
+
+        /// <summary>
         /// How likely it is to penetrate the resistance of another being, the formula should be to win against
         /// the resistance
         /// ((0.3 * Proficiency) + (ShapingSkill * 0.5) + MagicPenetration) + bonusLuck >= InnateResistance * 2
         /// </summary>
         public int MagicPenetration { get; set; } = 1;
+
+        /// <summary>
+        /// Any enchantment that affects something
+        /// </summary>
+        public List<ISpellEffect> Enchantments { get; set; } = new List<ISpellEffect>();
 
         public Magic()
         {

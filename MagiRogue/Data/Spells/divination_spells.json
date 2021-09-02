@@ -1,0 +1,23 @@
+﻿[
+	{
+		"SpellLevel": 1,
+		"Effects": [
+			{
+				"AreaOfEffect": "Self",
+				"SpellDamageType": "None",
+				"Duration": 5,
+				"TurnApplied": 0,
+				"Radius": 0,
+				"TargetsTile": false,
+				"EffectType": "MAGESIGHT",
+				"BaseDamage": 0
+			}
+		],
+		"SpellName": "Mage Sight",
+		"Description": null,
+		"SpellSchool": "Divination",
+		"SpellRange": 0,
+		"ManaCost": 1.0,
+		"SpellId": "mage_sight"
+	}
+]
