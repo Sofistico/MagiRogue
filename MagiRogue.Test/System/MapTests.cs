@@ -1,11 +1,13 @@
-﻿using SadConsole;
+﻿using MagiRogue.Entities;
+using SadConsole;
+using SadRogue.Primitives;
 using Xunit;
 
 namespace MagiRogue.System.Tests
 {
     public class MapTests
     {
-        private readonly Map map = new Map(20, 20);
+        private readonly Map map = new (20, 20);
 
         public MapTests()
         {
@@ -16,7 +18,9 @@ namespace MagiRogue.System.Tests
         public void MapTest()
         {
             Assert.True(map.Tiles.Length == 20 * 20);
-            Assert.True(map.Entities != null);
+            Actor actor = new Actor("Test", Color.Black, Color.Black, '3', new Point(1, 1));
+            map.Add(actor);
+            Assert.True(map.Entities.Contains(actor));
         }
     }
 }
