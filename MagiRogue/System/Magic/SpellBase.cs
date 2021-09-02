@@ -24,7 +24,7 @@ namespace MagiRogue.System.Magic
         /// </summary>
         public int RequiredShapingSkill
         {
-            get => (int)(Power * 2 / Proficiency);
+            get => (int)Math.Round(Power * 2 / Proficiency);
         }
 
         /// <summary>

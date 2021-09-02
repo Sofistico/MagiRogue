@@ -168,7 +168,6 @@ namespace MagiRogue.UI.Windows
             if (info.IsKeyPressed(Keys.D))
             {
                 bool sucess = CommandManager.DropItems(world.Player);
-                Item item = world.CurrentMap.GetEntityAt<Item>(world.Player.Position);
                 ui.InventoryScreen.ShowItems(world.Player);
                 world.ProcessTurn(TimeHelper.Interact, sucess);
                 return sucess;
