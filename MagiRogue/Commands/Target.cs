@@ -80,8 +80,8 @@ namespace MagiRogue.Commands
 
         public bool EntityInTarget()
         {
-            if (GameLoop.World.CurrentMap.GetEntitiesAt<Entity>(Cursor.Position).Any(e => e.ID != Cursor.ID)
-                && GameLoop.World.CurrentMap.GetEntityAt<Entity>(Cursor.Position) is not Player)
+            if (GameLoop.World.CurrentMap.GetEntitiesAt<Entity>(Cursor.Position).Any(e => e.ID != Cursor.ID))
+            //&& GameLoop.World.CurrentMap.GetEntityAt<Entity>(Cursor.Position) is not Player)
             {
                 State = TargetState.Targeting;
                 return true;
@@ -142,11 +142,15 @@ namespace MagiRogue.Commands
             bool casted;
             if (TargetList.Count > 0)
                 casted = SpellSelected.CastSpell(TargetList[0].Position, _caster);
-            else
+            else if (TravelPath is not null)
             {
                 casted = SpellSelected.CastSpell(TravelPath.End, _caster);
             }
-
+            else
+            {
+                casted = false;
+                GameLoop.UIManager.MessageLog.Add("An error ocurred, cound't find a target!");
+            }
             var spellCasted = SpellSelected;
             EndTargetting();
             return (casted, spellCasted);
@@ -182,7 +186,7 @@ namespace MagiRogue.Commands
 
         private (bool, SpellBase) AffectPath()
         {
-            if (TravelPath.Length >= 1)
+            if (TravelPath is not null && TravelPath.Length >= 1)
             {
                 bool sucess = SpellSelected.CastSpell(TravelPath.Steps.ToList(), _caster);
 
@@ -286,6 +290,16 @@ namespace MagiRogue.Commands
             // sanity check
         }
 
+        public bool SpellTargetsTile()
+        {
+            if (SpellSelected is not null && (SpellSelected.Effects.Any(a => a.TargetsTile)
+                || SpellSelected.Effects.Any(a => a.AreaOfEffect is not SpellAreaEffect.Target)))
+            {
+                return true;
+            }
+            return false;
+        }
+
         /// <summary>
         /// Adds an entity to the <see cref="TargetList"/>.
         /// </summary>
@@ -302,9 +316,11 @@ namespace MagiRogue.Commands
 
         public void LookTarget()
         {
-            LookWindow w = new(TargetList[0]);
+            LookWindow w = new(TargetEntity());
             w.Show();
         }
+
+        private Entity TargetEntity() => GameLoop.World.CurrentMap.GetEntityAt<Entity>(Cursor.Position);
 
         public enum TargetState
         {

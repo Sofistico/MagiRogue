@@ -90,7 +90,7 @@ namespace MagiRogue.System
         {
             CurrentMap = new Map(_mapWidth, _mapHeight);
             MapGenerator mapGen = new MapGenerator();
-            CurrentMap = mapGen.GenerateMap(_mapWidth, _mapHeight, _maxRooms, _minRoomSize, _maxRoomSize);
+            CurrentMap = mapGen.GenerateMazeMap(_mapWidth, _mapHeight, _maxRooms, _minRoomSize, _maxRoomSize);
         }
 
         private void CreateTestMap()
@@ -157,10 +157,10 @@ namespace MagiRogue.System
 
                 Stat monsterStat = new Stat()
                 {
-                    Protection = rndNum.Next(0, 10),
-                    Defense = rndNum.Next(0, 50),
-                    Strength = rndNum.Next(0, 10),
-                    BaseAttack = rndNum.Next(0, 50),
+                    Protection = rndNum.Next(0, 5),
+                    Defense = rndNum.Next(7, 12),
+                    Strength = rndNum.Next(3, 10),
+                    BaseAttack = rndNum.Next(3, 12),
                     Speed = 1,
                     ViewRadius = 7,
                     Health = 10,
@@ -169,7 +169,7 @@ namespace MagiRogue.System
 
                 // Need to refactor this so that it's simpler to create a monster, propably gonna use the example
                 // of moving castle to make a static class containing blueprints on how to create the actors and items.
-                Anatomy monsterAnatomy = new Anatomy();
+                Anatomy monsterAnatomy = new();
                 monsterAnatomy.SetRace(new Race("Debug Race"));
 
                 Actor debugMonster = EntityFactory.ActorCreator(
@@ -179,11 +179,13 @@ namespace MagiRogue.System
 
                 debugMonster.AddComponent(new MoveAndAttackAI(debugMonster.Stats.ViewRadius));
                 debugMonster.Inventory.Add(EntityFactory.ItemCreator(debugMonster.Position,
-                    new ItemTemplate("Debug Remains", Color.Red, Color.Black, '%', 1.5f, 35, "DebugRotten")));
+                    new ItemTemplate("Debug Remains", Color.Red, Color.Black, '%', 1.5f, 35, "DebugRotten", "flesh")));
                 debugMonster.Anatomy.Limbs = LimbTemplate.BasicHumanoidBody(debugMonster);
 
                 CurrentMap.Add(debugMonster);
             }
+
+            CurrentMap.Add(DataManager.ListOfActors[0]);
         }
 
         private void CreateLoot()
@@ -212,17 +214,20 @@ namespace MagiRogue.System
                 Point posNew = new Point(lootPosition % CurrentMap.Width, lootPosition / CurrentMap.Height);
 
                 Item newLoot = EntityFactory.ItemCreator(posNew,
-                    new ItemTemplate("Gold Bar", Color.Gold, Color.White, '=', 12.5f, 15, "Here is a gold bar, pretty heavy"));
+                    new ItemTemplate("Gold Bar", "Gold", "White", '=', 12.5f, 15, "Here is a gold bar, pretty heavy", "gold"));
+
+                string oj = Newtonsoft.Json.JsonConvert.SerializeObject(newLoot);
 
                 // add the Item to the MultiSpatialMap
                 CurrentMap.Add(newLoot);
             }
-
+#if DEBUG
             Item test =
                 EntityFactory.ItemCreator(new Point(10, 10), DataManager.ListOfItems.FirstOrDefault
                 (i => i.Id == "test"));
 
             CurrentMap.Add(test);
+#endif
         }
 
         public void ProcessTurn(long playerTime, bool sucess)

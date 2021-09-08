@@ -45,6 +45,9 @@ namespace MagiRogue.Entities
         [JsonIgnore]
         public Dictionary<Limb, Item> Equipment { get; set; }
 
+        [JsonIgnore]
+        public int XP { get; set; }
+
         #endregion Properties
 
         #region Constructor

@@ -80,5 +80,13 @@
     "MPInfusionLimit": 100,
     "CanRegen": true,
     "Density": 3.5
+  },
+  {
+    "Id": "gold",
+    "Name": "Gold",
+    "Hardness": 2,
+    "MPInfusionLimit": 10,
+    "Density": 19.3,
+    "MeltingPoint": 1064
   }
 ]

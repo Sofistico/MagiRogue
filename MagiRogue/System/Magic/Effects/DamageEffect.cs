@@ -67,38 +67,7 @@ namespace MagiRogue.System.Magic.Effects
                 return;
             }
 
-            ResolveSpellHit(poorGuy, caster, spellCasted);
-        }
-
-        private void ResolveResist(Entity poorGuy, Actor caster, SpellBase spellCasted)
-        {
-            int luck = GoRogue.DiceNotation.Dice.Roll("1d20");
-            if (Magic.PenetrateResistance(spellCasted, caster, poorGuy, luck))
-            {
-                CombatUtils.DealDamage(BaseDamage, poorGuy, SpellDamageType);
-            }
-            else
-                GameLoop.UIManager.MessageLog.Add($"{poorGuy.Name} resisted the effects of {spellCasted.SpellName}");
-        }
-
-        private void ResolveSpellHit(Entity poorGuy, Actor caster, SpellBase spellCasted)
-        {
-            if (!CanMiss)
-            {
-                ResolveResist(poorGuy, caster, spellCasted);
-            }
-            else
-            {
-                int diceRoll = GoRogue.DiceNotation.Dice.Roll($"1d20 + {caster.Stats.Precision}");
-                if (poorGuy is Actor actor && diceRoll >= actor.Stats.Protection)
-                {
-                    ResolveResist(poorGuy, caster, spellCasted);
-                }
-                else
-                {
-                    GameLoop.UIManager.MessageLog.Add($"{caster.Name} missed {poorGuy.Name}!");
-                }
-            }
+            CombatUtils.ResolveSpellHit(poorGuy, caster, spellCasted, this);
         }
 
         private void HealEffect(Point target, Actor caster, SpellBase spellCasted)

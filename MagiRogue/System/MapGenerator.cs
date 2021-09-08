@@ -21,7 +21,7 @@ namespace MagiRogue.System
 
         private Map _map; // Temporarily store the map currently worked on
 
-        public Map GenerateMap(int mapWidth, int mapHeight, int maxRooms, int minRoomSize, int maxRoomSize)
+        public Map GenerateMazeMap(int mapWidth, int mapHeight, int maxRooms, int minRoomSize, int maxRoomSize)
         {
             // Create an empty map of size (mapWidht * mapHeight)
             _map = new Map(mapWidth, mapHeight);
@@ -97,6 +97,13 @@ namespace MagiRogue.System
 
             PrepareForFloors();
             PrepareForOuterWalls();
+
+            return _map;
+        }
+
+        public Map GenerateTownMap(int mapWidth, int mapHeight, int maxTownSize, int minRoomSize, int maxRoomSize)
+        {
+            _map = new Map(mapWidth, mapHeight);
 
             return _map;
         }

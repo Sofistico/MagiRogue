@@ -193,12 +193,6 @@ namespace MagiRogue.UI.Windows
                 if (targetCursor is null)
                     targetCursor = new Target(GetPlayer.Position);
 
-                if (targetCursor.EntityInTarget())
-                {
-                    targetCursor.LookTarget();
-                    return true;
-                }
-
                 if (world.CurrentMap.ControlledEntitiy is not Player
                     && !targetCursor.EntityInTarget())
                 {
@@ -229,9 +223,12 @@ namespace MagiRogue.UI.Windows
             if (info.IsKeyPressed(Keys.Enter) && targetCursor is not null
                 && targetCursor.State == Target.TargetState.Targeting)
             {
-                if ((targetCursor.EntityInTarget() || targetCursor.SpellSelected.Effects.Any
-                    (a => a.AreaOfEffect is not System.Magic.SpellAreaEffect.Target))
-                    || targetCursor.SpellSelected.Effects.Any(a => a.TargetsTile))
+                if (targetCursor.EntityInTarget() && targetCursor.SpellSelected is null)
+                {
+                    targetCursor.LookTarget();
+                    return true;
+                }
+                if (targetCursor.EntityInTarget() || targetCursor.SpellTargetsTile())
                 {
                     var (sucess, spellCasted) = targetCursor.EndSpellTargetting();
 
@@ -245,6 +242,7 @@ namespace MagiRogue.UI.Windows
                 else
                 {
                     ui.MessageLog.Add("Invalid target!");
+                    return false;
                 }
             }
 
