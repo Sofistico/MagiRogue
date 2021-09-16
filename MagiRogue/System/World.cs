@@ -33,6 +33,8 @@ namespace MagiRogue.System
         /// </summary>
         public Map CurrentMap { get; set; }
 
+        public List<Map> AllMaps { get; set; }
+
         // Player data
         public Player Player { get; set; }
 
@@ -46,6 +48,7 @@ namespace MagiRogue.System
         /// </summary>
         public World(Player player, bool testGame = false)
         {
+            AllMaps = new List<Map>();
             if (!testGame)
             {
                 // Build a map
@@ -90,7 +93,8 @@ namespace MagiRogue.System
         {
             CurrentMap = new Map(_mapWidth, _mapHeight);
             MapGenerator mapGen = new MapGenerator();
-            CurrentMap = mapGen.GenerateMazeMap(_mapWidth, _mapHeight, _maxRooms, _minRoomSize, _maxRoomSize);
+            CurrentMap = mapGen.GenerateTownMap(_mapWidth, _mapHeight, _maxRooms, _minRoomSize, _maxRoomSize);
+            AllMaps.Add(CurrentMap);
         }
 
         private void CreateTestMap()
@@ -98,6 +102,7 @@ namespace MagiRogue.System
             CurrentMap = new Map(_mapWidth, _mapHeight);
             MapGenerator mapGen = new MapGenerator();
             CurrentMap = mapGen.GenerateTestMap(_mapWidth, _mapHeight);
+            AllMaps.Add(CurrentMap);
         }
 
         // Create a player using the Player class

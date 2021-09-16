@@ -101,9 +101,36 @@ namespace MagiRogue.System
             return _map;
         }
 
-        public Map GenerateTownMap(int mapWidth, int mapHeight, int maxTownSize, int minRoomSize, int maxRoomSize)
+        public Map GenerateTownMap(int mapWidth, int mapHeight, int maxRooms, int minRoomSize, int maxRoomSize)
         {
             _map = new Map(mapWidth, mapHeight);
+
+            PrepareForFloors();
+
+            List<Rectangle> rooms = new List<Rectangle>();
+
+            for (int i = 0; i < maxRooms; i++)
+            {
+                int newRoomWidht = randNum.Next(minRoomSize, maxRoomSize);
+                int newRoomHeight = randNum.Next(minRoomSize, maxRoomSize);
+
+                // sets the room's X/Y Position at a random point between the edges of the map
+                int newRoomX = randNum.Next(0, mapWidth - newRoomWidht - 1);
+                int newRoomY = randNum.Next(0, mapHeight - newRoomHeight - 1);
+
+                Rectangle newRoom = new Rectangle(newRoomX, newRoomY, newRoomWidht, newRoomHeight);
+
+                bool doesRoomIntersect = rooms.Any(room => newRoom.Intersects(room));
+
+                if (!doesRoomIntersect)
+                    rooms.Add(newRoom);
+            }
+
+            foreach (var room in rooms)
+            {
+                CreateRoom(room);
+                CreateDoor(room);
+            }
 
             return _map;
         }
@@ -309,16 +336,28 @@ namespace MagiRogue.System
             //if the target location is not walkable
             //then it's a wall and not a good place for a door
             int locationIndex = location.ToIndex(_map.Width);
-            if (_map.Tiles[locationIndex] != null && _map.Tiles[locationIndex] is TileWall)
+            /*if (_map.Tiles[locationIndex] is null)
+                && _map.Tiles[locationIndex] is TileWall)
             {
                 return false;
-            }
+            }*/
+
+            // first make sure that isn't trying to take a door
+            // off the limits of the map
+            if (location.X < 0 || location.Y < 0 || location.X >= _map.Width || location.Y >= _map.Height)
+                return false;
 
             //store references to all neighbouring cells
             Point right = new Point(location.X + 1, location.Y);
             Point left = new Point(location.X - 1, location.Y);
             Point top = new Point(location.X, location.Y - 1);
             Point bottom = new Point(location.X, location.Y + 1);
+
+            if (top.X < 0 || top.Y < 0 || bottom.X < 0 || bottom.Y < 0
+                || top.X >= _map.Width || top.Y >= _map.Height
+                || bottom.X >= _map.Width
+                || bottom.Y >= _map.Height)
+                return false;
 
             // check to see if there is a door already in the target
             // location, or above/below/right/left of the target location
@@ -358,21 +397,29 @@ namespace MagiRogue.System
         //candidate for a door.
         //When it finds a potential position, creates a closed and
         //unlocked door.
-        private void CreateDoor(Rectangle room)
+        private void CreateDoor(Rectangle room, bool acceptsMoreThanOneDoor = false)
         {
             List<Point> borderCells = GetBorderCellLocations(room);
+            bool alreadyHasDoor = false;
 
             //go through every border cell and look for potential door candidates
             foreach (Point location in borderCells)
             {
                 //int locationIndex = location.ToIndex(_map.Width);
-                if (IsPotentialDoor(location))
+                if (IsPotentialDoor(location) && !alreadyHasDoor)
                 {
                     // Create a new door that is closed and unlocked.
                     TileDoor newDoor = new TileDoor(false, false, location, "stone");
                     _map.SetTerrain(newDoor);
+                    if (!acceptsMoreThanOneDoor)
+                        alreadyHasDoor = true;
                 }
             }
+        }
+
+        private void CreateDoorForTown(Rectangle room)
+        {
+            List<Point> borderCells = GetBorderCellLocations(room);
         }
     }
 }
