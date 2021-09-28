@@ -83,7 +83,7 @@ namespace MagiRogue.Entities
         public bool MoveBy(Point positionChange)
         {
             // Check the current map if we can move to this new position
-            if (GameLoop.World.CurrentMap.WalkabilityView[Position + positionChange])
+            if (GameLoop.World.CurrentMap.IsTileWalkable(Position + positionChange))
             {
                 bool attacked = CheckIfCanAttack(positionChange);
 

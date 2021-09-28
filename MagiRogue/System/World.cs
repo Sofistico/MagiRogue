@@ -55,10 +55,10 @@ namespace MagiRogue.System
                 CreateMap();
 
                 // spawn a bunch of monsters
-                CreateMonster();
+                /*CreateMonster();
 
                 // Spawn a bunch of loot
-                CreateLoot();
+                CreateLoot();*/
 
                 // create an instance of player
                 PlacePlayer(player);

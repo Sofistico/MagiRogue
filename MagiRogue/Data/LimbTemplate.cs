@@ -62,7 +62,7 @@ namespace MagiRogue.Data
             var lFoot = new
                 Limb(TypeOfLimb.Foot, 4, 7, 6, $"{actor.Name}'s Left Foot", Limb.LimbOrientation.Left, lLeg);
 
-            List<Limb> limbs = new List<Limb>()
+            List<Limb> limbs = new()
             {
                 torso,
                 neck,

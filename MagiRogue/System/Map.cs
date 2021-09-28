@@ -112,7 +112,7 @@ namespace MagiRogue.System
         {
             // first make sure that actor isn't trying to move
             // off the limits of the map
-            if (location.X < 0 || location.Y < 0 || location.X >= Width || location.Y >= Height)
+            if (CheckForIndexOutOfBounds(location))
                 return false;
 
             // then return whether the tile is walkable
@@ -166,8 +166,6 @@ namespace MagiRogue.System
 
             // Link up the entity's Moved event to a new handler
             entity.Moved -= OnEntityMoved;
-
-            entity = null;
         }
 
         /// <summary>
@@ -305,6 +303,9 @@ namespace MagiRogue.System
             FOVRecalculated?.Invoke(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// Fix for the FOV problem that sometimes don't work
+        /// </summary>
         public void ForceFovCalculation()
         {
             FovCalculate((Actor)ControlledEntitiy);
@@ -328,6 +329,22 @@ namespace MagiRogue.System
 
             // should never go to this
             return Point.None;
+        }
+
+        /// <summary>
+        /// Returns if the Point is inside the index of the map, makes sure that nothing tries to go outside the map.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public bool CheckForIndexOutOfBounds(Point point)
+        {
+            if (point.X < 0 || point.Y < 0
+                || point.X >= Width || point.Y >= Height)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         #endregion HelperMethods

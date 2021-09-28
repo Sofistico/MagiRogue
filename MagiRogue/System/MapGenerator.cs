@@ -12,7 +12,7 @@ namespace MagiRogue.System
     // https://roguesharp.wordpress.com/2016/03/26/roguesharp-v3-tutorial-simple-room-generation/
     public class MapGenerator
     {
-        private readonly Random randNum = new Random();
+        private readonly Random randNum = new();
 
         // Empty constructor
         public MapGenerator()
@@ -246,7 +246,8 @@ namespace MagiRogue.System
 
         // returns a collection of Points which represent
         // locations along a line
-        public IEnumerable<Point> GetTileLocationsAlongLine(int xOrigin, int yOrigin, int xDestination, int yDestination)
+        public IEnumerable<Point> GetTileLocationsAlongLine
+            (int xOrigin, int yOrigin, int xDestination, int yDestination)
         {
             // prevent line from overflowing
             // boundaries of the map
@@ -335,7 +336,7 @@ namespace MagiRogue.System
         {
             //if the target location is not walkable
             //then it's a wall and not a good place for a door
-            int locationIndex = location.ToIndex(_map.Width);
+            //int locationIndex = location.ToIndex(_map.Width);
             /*if (_map.Tiles[locationIndex] is null)
                 && _map.Tiles[locationIndex] is TileWall)
             {
@@ -344,7 +345,7 @@ namespace MagiRogue.System
 
             // first make sure that isn't trying to take a door
             // off the limits of the map
-            if (location.X < 0 || location.Y < 0 || location.X >= _map.Width || location.Y >= _map.Height)
+            if (_map.CheckForIndexOutOfBounds(location))
                 return false;
 
             //store references to all neighbouring cells
@@ -353,10 +354,8 @@ namespace MagiRogue.System
             Point top = new Point(location.X, location.Y - 1);
             Point bottom = new Point(location.X, location.Y + 1);
 
-            if (top.X < 0 || top.Y < 0 || bottom.X < 0 || bottom.Y < 0
-                || top.X >= _map.Width || top.Y >= _map.Height
-                || bottom.X >= _map.Width
-                || bottom.Y >= _map.Height)
+            if (_map.CheckForIndexOutOfBounds(top) || _map.CheckForIndexOutOfBounds(bottom)
+                || _map.CheckForIndexOutOfBounds(left) || _map.CheckForIndexOutOfBounds(right))
                 return false;
 
             // check to see if there is a door already in the target
@@ -409,17 +408,35 @@ namespace MagiRogue.System
                 if (IsPotentialDoor(location) && !alreadyHasDoor)
                 {
                     // Create a new door that is closed and unlocked.
-                    TileDoor newDoor = new TileDoor(false, false, location, "stone");
+                    TileDoor newDoor = new(false, false, location, "stone");
                     _map.SetTerrain(newDoor);
                     if (!acceptsMoreThanOneDoor)
                         alreadyHasDoor = true;
                 }
             }
         }
+    }
 
-        private void CreateDoorForTown(Rectangle room)
+    public struct Room
+    {
+        public Rectangle RoomRectangle { get; private set; }
+        public RoomTag Tag { get; set; }
+
+        public Room(Rectangle roomRectangle, RoomTag tag)
         {
-            List<Point> borderCells = GetBorderCellLocations(room);
+            RoomRectangle = roomRectangle;
+            Tag = tag;
         }
+
+        public Room(Rectangle roomRectangle)
+        {
+            RoomRectangle = roomRectangle;
+            Tag = RoomTag.Generic;
+        }
+    }
+
+    public enum RoomTag
+    {
+        Generic, Inn, Temple, Blacksmith, Clothier, Alchemist, PlayerHouse, Hovel, Abandoned
     }
 }

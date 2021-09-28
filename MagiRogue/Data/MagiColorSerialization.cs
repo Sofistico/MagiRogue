@@ -11,8 +11,8 @@ namespace MagiRogue.Data
     public struct MagiColorSerialization
     {
         [JsonIgnore]
-        public Color Color { get; }
-        public string ColorName { get; }
+        public readonly Color Color { get; }
+        public readonly string ColorName { get; }
 
         public MagiColorSerialization(string colorName)
         {

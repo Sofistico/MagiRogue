@@ -32,5 +32,39 @@
     },
     "Foreground": "Blue",
     "Background": "Black"
+  },
+  {
+    "Id": "normal_human",
+    "Name": "Human",
+    "Description": "A normal human you can see everywhere",
+    "Glyph": "h",
+    "Size": 175,
+    "Weight": 70,
+    "MaterialId": "flesh",
+    "Stats" {
+      "Health": 10,
+      "PersonalMana": 8,
+      "BaseHpRegen": 0.01,
+      "BaseManaRegen": 0.1,
+      "Strength": 10,
+      "BaseAttack": 10,
+      "Protection": 0,
+      "Defense": 8,
+      "BodyStat": 3,
+      "MindStat": 2,
+      "SoulStat": 1,
+      "ViewRadius": 6,
+      "Speed": 1
+    },
+    "Anatomy": {
+      "Limbs": null,
+      "Race": {
+        "RaceName": "Human"
+      },
+      "Temperature": 37,
+      "HasBlood": true
+    },
+    "Foreground": "White",
+    "Background": "Black"
   }
 ]

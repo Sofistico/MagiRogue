@@ -47,9 +47,9 @@ namespace MagiRogue.Utils
 
     public struct Shape
     {
-        public Point[] Points { get; set; }
+        public readonly Point[] Points { get; }
 
-        public double Radius { get; set; }
+        public readonly double Radius { get; }
 
         public Shape(Point[] points, double radius)
         {
