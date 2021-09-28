@@ -27,7 +27,7 @@ namespace MagiRogue.System
             _map = new Map(mapWidth, mapHeight);
 
             // store a list of the rooms created so far
-            List<Rectangle> Rooms = new List<Rectangle>();
+            List<Room> Rooms = new();
 
             // create up to (maxRooms) rooms on the map
             // and make sure the rooms do not overlap with each other
@@ -42,10 +42,11 @@ namespace MagiRogue.System
                 int newRoomY = randNum.Next(0, mapHeight - newRoomHeigth - 1);
 
                 // create a Rectangle representing the room's perimeter
-                Rectangle newRoom = new Rectangle(newRoomX, newRoomY, newRoomWidth, newRoomHeigth);
+                Rectangle roomRectangle = new Rectangle(newRoomX, newRoomY, newRoomWidth, newRoomHeigth);
+                Room newRoom = new(roomRectangle);
 
                 // Does the new room intersect with other rooms already generated?
-                bool doesRoomIntersect = Rooms.Any(room => newRoom.Intersects(room));
+                bool doesRoomIntersect = Rooms.Any(room => newRoom.RoomRectangle.Intersects(room.RoomRectangle));
 
                 if (!doesRoomIntersect)
                     Rooms.Add(newRoom);
@@ -55,9 +56,9 @@ namespace MagiRogue.System
             FloodWalls();
 
             // carve out rooms for every room in the Rooms list
-            foreach (Rectangle room in Rooms)
+            foreach (var room in Rooms)
             {
-                CreateRoom(room);
+                CreateRoom(room.RoomRectangle);
             }
 
             // carve out tunnels between all rooms
@@ -65,8 +66,8 @@ namespace MagiRogue.System
             for (int r = 1; r < Rooms.Count; r++)
             {
                 //for all remaining rooms get the center of the room and the previous room
-                Point previousRoomCenter = Rooms[r - 1].Center;
-                Point currentRoomCenter = Rooms[r].Center;
+                Point previousRoomCenter = Rooms[r - 1].RoomRectangle.Center;
+                Point currentRoomCenter = Rooms[r].RoomRectangle.Center;
 
                 // give a 50/50 chance of which 'L' shaped connecting hallway to tunnel out
                 if (randNum.Next(1, 2) == 1)
@@ -82,7 +83,7 @@ namespace MagiRogue.System
             }
 
             // Create doors now that the tunnels have been carved out
-            foreach (Rectangle room in Rooms)
+            foreach (var room in Rooms)
                 CreateDoor(room);
 
             PlaceNodes(10);
@@ -107,7 +108,7 @@ namespace MagiRogue.System
 
             PrepareForFloors();
 
-            List<Rectangle> rooms = new List<Rectangle>();
+            List<Room> rooms = new List<Room>();
 
             for (int i = 0; i < maxRooms; i++)
             {
@@ -118,9 +119,10 @@ namespace MagiRogue.System
                 int newRoomX = randNum.Next(0, mapWidth - newRoomWidht - 1);
                 int newRoomY = randNum.Next(0, mapHeight - newRoomHeight - 1);
 
-                Rectangle newRoom = new Rectangle(newRoomX, newRoomY, newRoomWidht, newRoomHeight);
+                Rectangle rectangle = new Rectangle(newRoomX, newRoomY, newRoomWidht, newRoomHeight);
+                Room newRoom = new Room(rectangle);
 
-                bool doesRoomIntersect = rooms.Any(room => newRoom.Intersects(room));
+                bool doesRoomIntersect = rooms.Any(room => newRoom.RoomRectangle.Intersects(room.RoomRectangle));
 
                 if (!doesRoomIntersect)
                     rooms.Add(newRoom);
@@ -128,8 +130,9 @@ namespace MagiRogue.System
 
             foreach (var room in rooms)
             {
-                CreateRoom(room);
+                CreateRoom(room.RoomRectangle);
                 CreateDoor(room);
+                room.LockDoorsRng();
             }
 
             return _map;
@@ -396,9 +399,9 @@ namespace MagiRogue.System
         //candidate for a door.
         //When it finds a potential position, creates a closed and
         //unlocked door.
-        private void CreateDoor(Rectangle room, bool acceptsMoreThanOneDoor = false)
+        private void CreateDoor(Room room, bool acceptsMoreThanOneDoor = false)
         {
-            List<Point> borderCells = GetBorderCellLocations(room);
+            List<Point> borderCells = GetBorderCellLocations(room.RoomRectangle);
             bool alreadyHasDoor = false;
 
             //go through every border cell and look for potential door candidates
@@ -412,15 +415,17 @@ namespace MagiRogue.System
                     _map.SetTerrain(newDoor);
                     if (!acceptsMoreThanOneDoor)
                         alreadyHasDoor = true;
+                    room.Doors.Add(newDoor);
                 }
             }
         }
     }
 
-    public struct Room
+    public class Room
     {
         public Rectangle RoomRectangle { get; private set; }
         public RoomTag Tag { get; set; }
+        public List<TileDoor> Doors { get; set; } = new List<TileDoor>();
 
         public Room(Rectangle roomRectangle, RoomTag tag)
         {
@@ -432,6 +437,18 @@ namespace MagiRogue.System
         {
             RoomRectangle = roomRectangle;
             Tag = RoomTag.Generic;
+        }
+
+        public void LockDoorsRng()
+        {
+            int half = GoRogue.DiceNotation.Dice.Roll("1d2");
+
+            if (half == 1)
+            {
+                int indexDoor = GoRogue.Random.GlobalRandom.DefaultRNG.Next(Doors.Count);
+
+                Doors[indexDoor].Locked = true;
+            }
         }
     }
 

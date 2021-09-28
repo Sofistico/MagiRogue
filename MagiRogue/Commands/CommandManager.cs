@@ -302,7 +302,7 @@ namespace MagiRogue.Commands
             // Handle a locked door
             if (door.Locked)
             {
-                // TODO: make it possible to unlock a door though magic or magic of lockpicks.
+                GameLoop.UIManager.MessageLog.Add("The door is locked!");
             }
 
             // Handled an unlocked door that is closed
