@@ -41,7 +41,7 @@
     "Size": 175,
     "Weight": 70,
     "MaterialId": "flesh",
-    "Stats" {
+    "Stats": {
       "Health": 10,
       "PersonalMana": 8,
       "BaseHpRegen": 0.01,
