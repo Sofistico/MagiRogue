@@ -1,4 +1,6 @@
-﻿namespace MagiRogue.System.Time
+﻿using System;
+
+namespace MagiRogue.System.Time
 {
     /// <summary>
     /// Definition of time, has converter to and from various dates and ticks.
@@ -22,6 +24,7 @@
         }
 
         public int Year => (int)(Seconds / SecondsPerYear);
+        public int Session => (int)((Month / 3) + 0.5f);
         public int Month => ((int)(Seconds % SecondsPerYear) / SecondsPerMonth) + 1;
         public int Day => ((int)(Seconds % SecondsPerMonth) / SecondsPerDay) + 1;
         public int Hours => Minutes / MinutesPerHour;

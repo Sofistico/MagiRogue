@@ -69,9 +69,9 @@ namespace MagiRogue.UI.Windows
                 new BoundedRectangle((0, 0, mapConsoleWidth, mapConsoleHeight), (0, 0, map.Width, map.Height)).Area;
 
             // First load the map's tiles into the console
-            MapConsole = new Console(GameLoop.World.CurrentMap.Width,
-                GameLoop.World.CurrentMap.Height, GameLoop.World.CurrentMap.Width,
-                GameLoop.World.CurrentMap.Width, map.Tiles)
+            MapConsole = new Console(GameLoop.World.CurrentChunk.Map.Width,
+                GameLoop.World.CurrentChunk.Map.Height, GameLoop.World.CurrentChunk.Map.Width,
+                GameLoop.World.CurrentChunk.Map.Width, map.Tiles)
             {
                 View = rec,
 
@@ -101,26 +101,26 @@ namespace MagiRogue.UI.Windows
                     Direction moveDirection = MovementDirectionMapping[key];
                     Point coorToMove = new Point(moveDirection.DeltaX, moveDirection.DeltaY);
 
-                    if (world.CurrentMap.ControlledEntitiy is not Player)
+                    if (world.CurrentChunk.Map.ControlledEntitiy is not Player)
                     {
                         int distance = (int)Distance.Chebyshev.Calculate(targetCursor.OriginCoord,
-                            world.CurrentMap.ControlledEntitiy.Position + coorToMove);
+                            world.CurrentChunk.Map.ControlledEntitiy.Position + coorToMove);
 
-                        if ((world.CurrentMap.PlayerFOV.CurrentFOV.Contains
-                            (world.CurrentMap.ControlledEntitiy.Position + coorToMove)
-                            || world.CurrentMap.PlayerExplored
-                            [world.CurrentMap.ControlledEntitiy.Position + coorToMove])
+                        if ((world.CurrentChunk.Map.PlayerFOV.CurrentFOV.Contains
+                            (world.CurrentChunk.Map.ControlledEntitiy.Position + coorToMove)
+                            || world.CurrentChunk.Map.PlayerExplored
+                            [world.CurrentChunk.Map.ControlledEntitiy.Position + coorToMove])
                             && distance <= targetCursor.MaxDistance)
                         {
                             return CommandManager.MoveActorBy
-                                ((Actor)world.CurrentMap.ControlledEntitiy, coorToMove);
+                                ((Actor)world.CurrentChunk.Map.ControlledEntitiy, coorToMove);
                         }
                         else
                             return false;
                     }
 
                     bool sucess =
-                        CommandManager.MoveActorBy((Actor)world.CurrentMap.ControlledEntitiy, coorToMove);
+                        CommandManager.MoveActorBy((Actor)world.CurrentChunk.Map.ControlledEntitiy, coorToMove);
                     return sucess;
                 }
             }
@@ -132,9 +132,9 @@ namespace MagiRogue.UI.Windows
         {
             if (HandleMove(info, world))
             {
-                if (!GetPlayer.Bumped && world.CurrentMap.ControlledEntitiy is Player)
+                if (!GetPlayer.Bumped && world.CurrentChunk.Map.ControlledEntitiy is Player)
                     world.ProcessTurn(TimeHelper.GetWalkTime(GetPlayer), true);
-                else if (world.CurrentMap.ControlledEntitiy is Player)
+                else if (world.CurrentChunk.Map.ControlledEntitiy is Player)
                     world.ProcessTurn(TimeHelper.GetAttackTime(GetPlayer), true);
 
                 return true;
@@ -159,7 +159,7 @@ namespace MagiRogue.UI.Windows
             }
             if (info.IsKeyPressed(Keys.G))
             {
-                Item item = world.CurrentMap.GetEntityAt<Item>(world.Player.Position);
+                Item item = world.CurrentChunk.Map.GetEntityAt<Item>(world.Player.Position);
                 bool sucess = CommandManager.PickUp(world.Player, item);
                 ui.InventoryScreen.ShowItems(world.Player);
                 world.ProcessTurn(TimeHelper.Interact, sucess);
@@ -193,7 +193,7 @@ namespace MagiRogue.UI.Windows
                 if (targetCursor is null)
                     targetCursor = new Target(GetPlayer.Position);
 
-                if (world.CurrentMap.ControlledEntitiy is not Player
+                if (world.CurrentChunk.Map.ControlledEntitiy is not Player
                     && !targetCursor.EntityInTarget())
                 {
                     targetCursor.EndTargetting();
@@ -214,7 +214,7 @@ namespace MagiRogue.UI.Windows
 
                 spell.Show(GetPlayer.Magic.KnowSpells,
                     selectedSpell => targetCursor.OnSelectSpell(selectedSpell,
-                    (Actor)world.CurrentMap.ControlledEntitiy),
+                    (Actor)world.CurrentChunk.Map.ControlledEntitiy),
                     GetPlayer.Stats.PersonalMana);
 
                 return true;
@@ -275,7 +275,7 @@ namespace MagiRogue.UI.Windows
 
             if (info.IsKeyPressed(Keys.T))
             {
-                foreach (NodeTile node in world.CurrentMap.Tiles.Where(t => t is NodeTile))
+                foreach (NodeTile node in world.CurrentChunk.Map.Tiles.Where(t => t is NodeTile))
                 {
                     if (node.TrueAppearence.Matches(node))
                     {

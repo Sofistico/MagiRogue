@@ -21,10 +21,10 @@ namespace MagiRogue.System
 
         private Map _map; // Temporarily store the map currently worked on
 
-        public Map GenerateMazeMap(int mapWidth, int mapHeight, int maxRooms, int minRoomSize, int maxRoomSize)
+        public Map GenerateMazeMap(int maxRooms, int minRoomSize, int maxRoomSize)
         {
             // Create an empty map of size (mapWidht * mapHeight)
-            _map = new Map(mapWidth, mapHeight);
+            _map = new Map();
 
             // store a list of the rooms created so far
             List<Room> Rooms = new();
@@ -38,8 +38,8 @@ namespace MagiRogue.System
                 int newRoomHeigth = randNum.Next(minRoomSize, maxRoomSize);
 
                 // sets the room's X/Y Position at a random point between the edges of the map
-                int newRoomX = randNum.Next(0, mapWidth - newRoomWidth - 1);
-                int newRoomY = randNum.Next(0, mapHeight - newRoomHeigth - 1);
+                int newRoomX = randNum.Next(0, _map.Width - newRoomWidth - 1);
+                int newRoomY = randNum.Next(0, _map.Height - newRoomHeigth - 1);
 
                 // create a Rectangle representing the room's perimeter
                 Rectangle roomRectangle = new Rectangle(newRoomX, newRoomY, newRoomWidth, newRoomHeigth);
@@ -92,9 +92,9 @@ namespace MagiRogue.System
             return _map;
         }
 
-        public Map GenerateTestMap(int mapWidth, int mapHeight)
+        public Map GenerateTestMap()
         {
-            _map = new Map(mapWidth, mapHeight);
+            _map = new Map();
 
             PrepareForFloors();
             PrepareForOuterWalls();
@@ -102,9 +102,9 @@ namespace MagiRogue.System
             return _map;
         }
 
-        public Map GenerateTownMap(int mapWidth, int mapHeight, int maxRooms, int minRoomSize, int maxRoomSize)
+        public Map GenerateTownMap(int maxRooms, int minRoomSize, int maxRoomSize)
         {
-            _map = new Map(mapWidth, mapHeight);
+            _map = new Map();
 
             PrepareForFloors();
 
@@ -116,8 +116,8 @@ namespace MagiRogue.System
                 int newRoomHeight = randNum.Next(minRoomSize, maxRoomSize);
 
                 // sets the room's X/Y Position at a random point between the edges of the map
-                int newRoomX = randNum.Next(0, mapWidth - newRoomWidht - 1);
-                int newRoomY = randNum.Next(0, mapHeight - newRoomHeight - 1);
+                int newRoomX = randNum.Next(0, _map.Width - newRoomWidht - 1);
+                int newRoomY = randNum.Next(0, _map.Height - newRoomHeight - 1);
 
                 Rectangle rectangle = new Rectangle(newRoomX, newRoomY, newRoomWidht, newRoomHeight);
                 Room newRoom = new Room(rectangle);
@@ -423,7 +423,7 @@ namespace MagiRogue.System
 
     public class Room
     {
-        public Rectangle RoomRectangle { get; private set; }
+        public Rectangle RoomRectangle { get; set; }
         public RoomTag Tag { get; set; }
         public List<TileDoor> Doors { get; set; } = new List<TileDoor>();
 

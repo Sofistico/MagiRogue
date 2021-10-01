@@ -106,12 +106,12 @@ namespace MagiRogue.System.Tiles
 
         public override void DestroyTile(TileBase changeTile, Item itemDropped = null)
         {
-            GameLoop.World.GetTime.TurnPassed -= GetTime_NodeTurnPassed;
+            GameLoop.World.Time.TurnPassed -= GetTime_NodeTurnPassed;
 
             base.DestroyTile(changeTile, itemDropped);
         }
 
-        public void SetUpNodeTurn(World world) => world.GetTime.TurnPassed += GetTime_NodeTurnPassed;
+        public void SetUpNodeTurn(World world) => world.Time.TurnPassed += GetTime_NodeTurnPassed;
 
         private void GetTime_NodeTurnPassed(object sender, Time.TimeDefSpan e)
         {
@@ -133,7 +133,7 @@ namespace MagiRogue.System.Tiles
         {
             foreach (Point point in Position.GetDirectionPoints())
             {
-                TileBase tile = GameLoop.World.CurrentMap.GetTileAt<TileBase>(point);
+                TileBase tile = GameLoop.World.CurrentChunk.Map.GetTileAt<TileBase>(point);
                 if (LastSeenAppereance.Matches(tile))
                 {
                     return tile;

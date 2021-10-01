@@ -33,8 +33,6 @@ namespace MagiRogue.System
         /// </summary>
         public event EventHandler FOVRecalculated;
 
-        public TimeSystem Time { get; private set; }
-
         /// <summary>
         /// Fires whenever the value of <see cref="ControlledEntitiy"/> is changed.
         /// </summary>
@@ -61,11 +59,12 @@ namespace MagiRogue.System
 
         /// <summary>
         /// Build a new map with a specified width and height, has entity layers,
-        /// they being 0-Furniture, 1-ghosts, 2-Items, 3-Actors, 4-Player
+        /// they being 0-Furniture, 1-ghosts, 2-Items, 3-Actors, 4-Player.
+        /// \nAll Maps must have 50x50 size, for a total of 2500 tiles inside of it, for chunck loading.
         /// </summary>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public Map(int width, int height) :
+        public Map(int width = 50, int height = 50) :
             base(CreateTerrain(width, height), Enum.GetNames(typeof(MapLayer)).Length - 1,
             Distance.Euclidean,
             entityLayersSupportingMultipleItems: LayerMasker.DEFAULT.Mask
@@ -77,8 +76,6 @@ namespace MagiRogue.System
             GoRogueComponents.Add(new MagiRogueFOVVisibilityHandler(this, Color.DarkSlateGray, (int)MapLayer.GHOSTS));
 
             _entityRender = new SadConsole.Entities.Renderer();
-
-            Time = new TimeSystem();
         }
 
         public void RemoveAllEntities()
@@ -195,12 +192,6 @@ namespace MagiRogue.System
             }
 
             _entityRender.Add(entity);
-
-            if (entity is Actor monster)
-            {
-                EntityTimeNode entityNode = new EntityTimeNode(monster.ID, Time.TimePassed.Ticks + 100);
-                Time.RegisterEntity(entityNode);
-            }
 
             // Link up the entity's Moved event to a new handler
             entity.Moved += OnEntityMoved;
@@ -367,7 +358,6 @@ namespace MagiRogue.System
             }
             Tiles = null;
             this.ControlledEntitiy = null;
-            this.Time = null;
             GoRogueComponents.Clear();
 
 #if DEBUG
@@ -378,6 +368,20 @@ namespace MagiRogue.System
         }
 
         #endregion Desconstructor
+    }
+
+    public class MapChunk
+    {
+        public int X { get; set; }
+        public int Y { get; set; }
+        public Map Map { get; private set; }
+
+        public MapChunk(int x, int y, Map map)
+        {
+            X = x;
+            Y = y;
+            Map = map;
+        }
     }
 
     // enum for defining maplayer for things, so that a monster and a player can occupy the same tile as an item for example.

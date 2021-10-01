@@ -19,26 +19,29 @@ namespace MagiRogue.System
     public class World
     {
         // map creation and storage data
-
-        private readonly int _mapWidth = 50;
-        private readonly int _mapHeight = 50;
+        private const int CHUNK_SIZE = 2500;
+        private const int _mapWidth = 50;
+        //private const int _mapHeight = 50;
         private readonly int _maxRooms = 20;
         private readonly int _minRoomSize = 4;
         private readonly int _maxRoomSize = 10;
-        private const int _zMaxUpLevel = 10;
-        private const int _zMaxLowLevel = -10;
+        /*private const int _zMaxUpLevel = 10;
+        private const int _zMaxLowLevel = -10;*/
+        private HashSet<Point> existingChunckPositions;
+        private Dictionary<Point, MapChunk> chunks;
+        private Dictionary<Point, RegionChunk> worldChunks;
 
         /// <summary>
         /// Stores the current map
         /// </summary>
-        public Map CurrentMap { get; set; }
+        public MapChunk CurrentChunk { get; set; }
 
-        public List<Map> AllMaps { get; set; }
+        public IReadOnlyCollection<Point> ExistingChunkPositions { get => existingChunckPositions; }
 
         // Player data
         public Player Player { get; set; }
 
-        public TimeSystem GetTime => CurrentMap.Time;
+        public TimeSystem Time { get; private set; }
 
         private readonly Random rndNum = new Random();
 
@@ -48,7 +51,10 @@ namespace MagiRogue.System
         /// </summary>
         public World(Player player, bool testGame = false)
         {
-            AllMaps = new List<Map>();
+            chunks = new();
+            worldChunks = new();
+            existingChunckPositions = new HashSet<Point>();
+            Time = new TimeSystem();
             if (!testGame)
             {
                 // Build a map
@@ -80,7 +86,7 @@ namespace MagiRogue.System
         /// </summary>
         private void SetUpStuff()
         {
-            foreach (NodeTile node in CurrentMap.Tiles.Where(t => t is NodeTile))
+            foreach (NodeTile node in CurrentChunk.Map.Tiles.Where(t => t is NodeTile))
             {
                 node.SetUpNodeTurn(this);
             }
@@ -91,18 +97,16 @@ namespace MagiRogue.System
         // parameters to determine geometry
         private void CreateMap()
         {
-            CurrentMap = new Map(_mapWidth, _mapHeight);
-            MapGenerator mapGen = new MapGenerator();
-            CurrentMap = mapGen.GenerateTownMap(_mapWidth, _mapHeight, _maxRooms, _minRoomSize, _maxRoomSize);
-            AllMaps.Add(CurrentMap);
+            MapGenerator mapGen = new();
+            var map = mapGen.GenerateTownMap(_maxRooms, _minRoomSize, _maxRoomSize);
+            AddChunkToDictionary(map);
         }
 
         private void CreateTestMap()
         {
-            CurrentMap = new Map(_mapWidth, _mapHeight);
-            MapGenerator mapGen = new MapGenerator();
-            CurrentMap = mapGen.GenerateTestMap(_mapWidth, _mapHeight);
-            AllMaps.Add(CurrentMap);
+            MapGenerator mapGen = new();
+            var map = mapGen.GenerateTestMap();
+            AddChunkToDictionary(map);
         }
 
         // Create a player using the Player class
@@ -110,13 +114,13 @@ namespace MagiRogue.System
         private void PlacePlayer(Player player)
         {
             // Place the player on the first non-movement-blocking tile on the map
-            for (int i = 0; i < CurrentMap.Tiles.Length; i++)
+            for (int i = 0; i < CurrentChunk.Map.Tiles.Length; i++)
             {
-                if (!CurrentMap.Tiles[i].IsBlockingMove && CurrentMap.Tiles[i] is not NodeTile
-                    && !CurrentMap.GetEntitiesAt<Entity>(Point.FromIndex(i, _mapWidth)).Any())
+                if (!CurrentChunk.Map.Tiles[i].IsBlockingMove && CurrentChunk.Map.Tiles[i] is not NodeTile
+                    && !CurrentChunk.Map.GetEntitiesAt<Entity>(Point.FromIndex(i, _mapWidth)).Any())
                 {
                     // Set the player's position to the index of the current map position
-                    var pos = Point.FromIndex(i, CurrentMap.Width);
+                    var pos = Point.FromIndex(i, CurrentChunk.Map.Width);
 
                     Player = player;
                     Player.Position = pos;
@@ -127,7 +131,7 @@ namespace MagiRogue.System
             }
 
             // add the player to the Map's collection of Entities
-            CurrentMap.Add(Player);
+            CurrentChunk.Map.Add(Player);
         }
 
         // Create some random monsters with random attack and defense values
@@ -145,20 +149,20 @@ namespace MagiRogue.System
             for (int i = 0; i < numMonster; i++)
             {
                 int monsterPosition = 0;
-                while (CurrentMap.Tiles[monsterPosition].IsBlockingMove)
+                while (CurrentChunk.Map.Tiles[monsterPosition].IsBlockingMove)
                 {
                     // pick a random spot on the map
-                    monsterPosition = rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);
-                    if (CurrentMap.Tiles[monsterPosition] is NodeTile)
+                    monsterPosition = rndNum.Next(0, CurrentChunk.Map.Width * CurrentChunk.Map.Height);
+                    if (CurrentChunk.Map.Tiles[monsterPosition] is NodeTile)
                     {
-                        monsterPosition = rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);
+                        monsterPosition = rndNum.Next(0, CurrentChunk.Map.Width * CurrentChunk.Map.Height);
                     }
                 }
 
                 // Set the monster's new position
                 // Note: this fancy math will be replaced by a new helper method
                 // in the next revision of SadConsole
-                var pos = new Point(monsterPosition % CurrentMap.Width, monsterPosition / CurrentMap.Height);
+                var pos = new Point(monsterPosition % CurrentChunk.Map.Width, monsterPosition / CurrentChunk.Map.Height);
 
                 Stat monsterStat = new Stat()
                 {
@@ -187,10 +191,12 @@ namespace MagiRogue.System
                     new ItemTemplate("Debug Remains", Color.Red, Color.Black, '%', 1.5f, 35, "DebugRotten", "flesh")));
                 debugMonster.Anatomy.Limbs = LimbTemplate.BasicHumanoidBody(debugMonster);
 
-                CurrentMap.Add(debugMonster);
+                CurrentChunk.Map.Add(debugMonster);
+                EntityTimeNode entityNode = new EntityTimeNode(debugMonster.ID, Time.TimePassed.Ticks + 100);
+                Time.RegisterEntity(entityNode);
             }
 
-            CurrentMap.Add(DataManager.ListOfActors[0]);
+            CurrentChunk.Map.Add(DataManager.ListOfActors[0]);
         }
 
         private void CreateLoot()
@@ -205,18 +211,18 @@ namespace MagiRogue.System
                 int lootPosition = 0;
 
                 // Try placing the Item at lootPosition; if this fails, try random positions on the map's tile array
-                while (CurrentMap.Tiles[lootPosition].IsBlockingMove)
+                while (CurrentChunk.Map.Tiles[lootPosition].IsBlockingMove)
                 {
                     // pick a random spot on the map
-                    lootPosition = rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);
-                    if (CurrentMap.Tiles[lootPosition] is NodeTile)
+                    lootPosition = rndNum.Next(0, CurrentChunk.Map.Width * CurrentChunk.Map.Height);
+                    if (CurrentChunk.Map.Tiles[lootPosition] is NodeTile)
                     {
-                        lootPosition = rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);
+                        lootPosition = rndNum.Next(0, CurrentChunk.Map.Width * CurrentChunk.Map.Height);
                     }
                 }
 
                 // set the loot's new position
-                Point posNew = new Point(lootPosition % CurrentMap.Width, lootPosition / CurrentMap.Height);
+                Point posNew = new Point(lootPosition % CurrentChunk.Map.Width, lootPosition / CurrentChunk.Map.Height);
 
                 Item newLoot = EntityFactory.ItemCreator(posNew,
                     new ItemTemplate("Gold Bar", "Gold", "White", '=', 12.5f, 15, "Here is a gold bar, pretty heavy", "gold"));
@@ -224,14 +230,14 @@ namespace MagiRogue.System
                 string oj = Newtonsoft.Json.JsonConvert.SerializeObject(newLoot);
 
                 // add the Item to the MultiSpatialMap
-                CurrentMap.Add(newLoot);
+                CurrentChunk.Map.Add(newLoot);
             }
 #if DEBUG
             Item test =
                 EntityFactory.ItemCreator(new Point(10, 10), DataManager.ListOfItems.FirstOrDefault
                 (i => i.Id == "test"));
 
-            CurrentMap.Add(test);
+            CurrentChunk.Map.Add(test);
 #endif
         }
 
@@ -241,68 +247,135 @@ namespace MagiRogue.System
             {
                 if (Player.Stats.Health <= 0)
                 {
-                    CurrentMap.RemoveAllEntities();
-                    CurrentMap.RemoveAllTiles();
-                    CurrentMap = null;
+                    CurrentChunk.Map.RemoveAllEntities();
+                    CurrentChunk.Map.RemoveAllTiles();
+                    chunks = null;
                     Player = null;
 
                     GameLoop.UIManager.MainMenu.RestartGame();
                     return;
                 }
 
-                PlayerTimeNode playerTurn = new PlayerTimeNode(GetTime.TimePassed.Ticks + playerTime);
-                GetTime.RegisterEntity(playerTurn);
+                PlayerTimeNode playerTurn = new PlayerTimeNode(Time.TimePassed.Ticks + playerTime);
+                Time.RegisterEntity(playerTurn);
 
                 Player.Stats.ApplyHpRegen();
                 Player.Stats.ApplyManaRegen();
-                CurrentMap.PlayerFOV.Calculate(Player.Position, Player.Stats.ViewRadius);
+                CurrentChunk.Map.PlayerFOV.Calculate(Player.Position, Player.Stats.ViewRadius);
 
-                var node = GetTime.NextNode();
+                var node = Time.NextNode();
 
                 while (node is not PlayerTimeNode)
                 {
                     switch (node)
                     {
                         case EntityTimeNode entityTurn:
-                            ProcessAiTurn(entityTurn.EntityId, GetTime.TimePassed.Ticks);
+                            ProcessAiTurn(entityTurn.EntityId, Time.TimePassed.Ticks);
                             break;
 
                         default:
                             throw new NotSupportedException($"Unhandled time master node type: {node.GetType()}");
                     }
 
-                    node = GetTime.NextNode();
+                    node = Time.NextNode();
                 }
 
                 GameLoop.UIManager.MapWindow.MapConsole.IsDirty = true;
 
 #if DEBUG
-                GameLoop.UIManager.MessageLog.Add($"Turns: {GetTime.Turns}, Tick: {GetTime.TimePassed.Ticks}");
+                GameLoop.UIManager.MessageLog.Add($"Turns: {Time.Turns}, Tick: {Time.TimePassed.Ticks}");
 #endif
             }
         }
 
         private void ProcessAiTurn(uint entityId, long time)
         {
-            Actor entity = (Actor)CurrentMap.GetEntityById(entityId);
+            Actor entity = (Actor)CurrentChunk.Map.GetEntityById(entityId);
 
             if (entity != null)
             {
                 IAiComponent ai = entity.GoRogueComponents.GetFirstOrDefault<IAiComponent>();
-                (bool sucess, long tick) = ai?.RunAi(CurrentMap, GameLoop.UIManager.MessageLog) ?? (false, -1);
+                (bool sucess, long tick) = ai?.RunAi(CurrentChunk.Map, GameLoop.UIManager.MessageLog) ?? (false, -1);
                 entity.Stats.ApplyAllRegen();
 
                 if (!sucess || tick < -1)
                     return;
 
                 EntityTimeNode nextTurnNode = new EntityTimeNode(entityId, time + tick);
-                GetTime.RegisterEntity(nextTurnNode);
+                Time.RegisterEntity(nextTurnNode);
             }
         }
 
         public void ChangeControlledEntity(Entity entity)
         {
-            CurrentMap.ControlledEntitiy = entity;
+            CurrentChunk.Map.ControlledEntitiy = entity;
+        }
+
+        /// <summary>
+        /// Gets the grid chunk coordinate that contains the specified position.
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
+        public Point ChunkPositionFor(Point pos) => new Point(pos.X / CHUNK_SIZE, pos.Y / CHUNK_SIZE);
+
+        /// <summary>
+        /// If the given chunk is loaded
+        /// </summary>
+        /// <param name="chunkLocation"></param>
+        /// <returns></returns>
+        public bool IsChunkLoaded(Point chunkLocation) => chunks.ContainsKey(chunkLocation);
+
+        /// <summary>
+        /// Whether or not the chunk containing the specified position is loaded.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsLoaded(Point position) => chunks.ContainsKey(ChunkPositionFor(position));
+
+        /// <summary>
+        /// Whether a chunk for the given chunk grid position has ever been generated.
+        /// </summary>
+        /// <param name="chunkPosition"></param>
+        /// <returns></returns>
+        public bool ChunkExists(Point chunkPosition) => existingChunckPositions.Contains(chunkPosition);
+
+        // Whether a chunk containing data for the given position has ever been generated.
+        public bool Exists(Point position) => existingChunckPositions.Contains(ChunkPositionFor(position));
+
+        private void AddChunkToDictionary(Map map)
+        {
+            List<Point> keys = new List<Point>();
+            if (chunks.Keys.Count > 0)
+            {
+                foreach (Point key in chunks.Keys)
+                {
+                    keys.Add(key);
+                }
+            }
+            else
+            {
+                var p0 = new Point(0, 0);
+                chunks.Add(p0, new MapChunk(p0.X, p0.Y, map));
+            }
+        }
+    }
+
+    public class RegionChunk
+    {
+        /// <summary>
+        /// The max amount of local chuncks the region chunks hold, should be 16*16 = 256 regions.
+        /// </summary>
+        private const int MAX_LOCAL_CHUNCKS = 16 * 16;
+
+        public int X { get; }
+        public int Y { get; }
+        public Dictionary<Point, MapChunk> LocalChunks { get; set; }
+
+        public RegionChunk(int x, int y)
+        {
+            X = x;
+            Y = y;
+
+            LocalChunks = new Dictionary<Point, MapChunk>(MAX_LOCAL_CHUNCKS);
         }
     }
 }

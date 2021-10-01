@@ -21,7 +21,7 @@ namespace MagiRogue.Utils
         /// <returns></returns>
         public static Shape Cone(Point originCoordinate, double radius, Target target)
         {
-            var map = GameLoop.World.CurrentMap;
+            var map = GameLoop.World.CurrentChunk.Map;
             Point[] points;
             double angle = 0;
             if (target.TravelPath.Length > 0)

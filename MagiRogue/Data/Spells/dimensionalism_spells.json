@@ -14,7 +14,7 @@
     "SpellName": "Teleport",
     "Description": null,
     "SpellSchool": "Dimensionalism",
-    "SpellRange": 4,
+    "SpellRange": 15,
     "ManaCost": 1.0,
     "SpellId": "teleport"
   },
