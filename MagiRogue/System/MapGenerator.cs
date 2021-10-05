@@ -1,4 +1,5 @@
-﻿using MagiRogue.System.Tiles;
+﻿using MagiRogue.Data;
+using MagiRogue.System.Tiles;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 using System;
@@ -102,11 +103,20 @@ namespace MagiRogue.System
             return _map;
         }
 
-        public Map GenerateTownMap(int maxRooms, int minRoomSize, int maxRoomSize)
+        public Map GenerateStoneFloorMap()
         {
             _map = new Map();
 
             PrepareForFloors();
+
+            return _map;
+        }
+
+        public Map GenerateTownMap(int maxRooms, int minRoomSize, int maxRoomSize)
+        {
+            _map = new Map();
+
+            PrepareForFloorsWithGrass();
 
             List<Room> rooms = new List<Room>();
 
@@ -146,6 +156,27 @@ namespace MagiRogue.System
             }
         }
 
+        private void PrepareForFloorsWithGrass()
+        {
+            foreach (var pos in _map.Positions())
+            {
+                _map.SetTerrain(TileEncyclopedia.ShortGrass(pos));
+            }
+        }
+
+        private void PrepareForAnyFloor(TileFloor floor)
+        {
+            foreach (var pos in _map.Positions())
+            {
+                floor.Position = pos;
+                _map.SetTerrain(floor);
+            }
+        }
+
+        private void ConnectWithRoads()
+        {
+        }
+
         private void PrepareForOuterWalls()
         {
             foreach (var pos in _map.Positions())
@@ -168,7 +199,7 @@ namespace MagiRogue.System
             {
                 for (int y = room.ToMonoRectangle().Top + 1; y < room.ToMonoRectangle().Bottom; y++)
                 {
-                    CreateFloor(new Point(x, y));
+                    CreateStoneFloor(new Point(x, y));
                 }
             }
 
@@ -177,25 +208,32 @@ namespace MagiRogue.System
 
             foreach (Point location in perimeter)
             {
-                CreateWall(location);
+                CreateStoneWall(location);
             }
         }
 
         // Creates a Floor tile at the specified X/Y location
-        private void CreateFloor(Point location)
+        private void CreateStoneFloor(Point location)
         {
-            TileFloor floor = new TileFloor(location, "stone");
+            TileFloor floor = new TileFloor(location);
 
             // a simple setterrain already does it for me
             _map.SetTerrain(floor);
         }
 
+        // Creates a Floor tile at the specified X/Y location
+        private void CreateAnyFloor(TileFloor floor) =>
+            // a simple setterrain already does it for me
+            _map.SetTerrain(floor);
+
         // Creates a Wall tile at the specified X/Y location
-        private void CreateWall(Point location)
+        private void CreateStoneWall(Point location)
         {
-            TileWall wall = new TileWall(location, "stone");
+            TileWall wall = new TileWall(location);
             _map.SetTerrain(wall);
         }
+
+        private void CreateAnyWall(TileWall wall) => _map.SetTerrain(wall);
 
         // Fills the map with walls
         private void FloodWalls()
@@ -317,7 +355,7 @@ namespace MagiRogue.System
         {
             for (int x = Math.Min(xStart, xEnd); x <= Math.Max(xStart, xEnd); x++)
             {
-                CreateFloor(new Point(x, yPosition));
+                CreateStoneFloor(new Point(x, yPosition));
             }
         }
 
@@ -326,7 +364,7 @@ namespace MagiRogue.System
         {
             for (int y = Math.Min(yStart, yEnd); y <= Math.Max(yStart, yEnd); y++)
             {
-                CreateFloor(new Point(xPosition, y));
+                CreateStoneFloor(new Point(xPosition, y));
             }
         }
 

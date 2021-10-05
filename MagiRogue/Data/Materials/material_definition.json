@@ -62,6 +62,15 @@
     "Density": 0.9
   },
   {
+    "Id": "grass",
+    "Name": "Grass",
+    "Flamability": false,
+    "Hardness": 1,
+    "MPInfusionLimit": 0,
+    "CanRegen": true,
+    "Density": 1.4
+  },
+  {
     "Id": "h20",
     "Name": "Water",
     "Flamability": false,

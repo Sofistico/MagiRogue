@@ -28,7 +28,7 @@ namespace MagiRogue.System
         /*private const int _zMaxUpLevel = 10;
         private const int _zMaxLowLevel = -10;*/
         private HashSet<Point> existingChunckPositions;
-        private Dictionary<Point, MapChunk> chunks;
+        private Dictionary<Point, MapChunk> localChunks;
         private Dictionary<Point, RegionChunk> worldChunks;
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace MagiRogue.System
         /// </summary>
         public World(Player player, bool testGame = false)
         {
-            chunks = new();
+            localChunks = new();
             worldChunks = new();
             existingChunckPositions = new HashSet<Point>();
             Time = new TimeSystem();
@@ -59,6 +59,8 @@ namespace MagiRogue.System
             {
                 // Build a map
                 CreateMap();
+
+                CreateAnotherChunkTest();
 
                 // spawn a bunch of monsters
                 /*CreateMonster();
@@ -78,6 +80,13 @@ namespace MagiRogue.System
 
                 PlacePlayer(player);
             }
+        }
+
+        private void CreateAnotherChunkTest()
+        {
+            var map = new MapGenerator().GenerateStoneFloorMap();
+
+            AddChunkToDictionary(map);
         }
 
         /// <summary>
@@ -249,7 +258,7 @@ namespace MagiRogue.System
                 {
                     CurrentChunk.Map.RemoveAllEntities();
                     CurrentChunk.Map.RemoveAllTiles();
-                    chunks = null;
+                    localChunks = null;
                     Player = null;
 
                     GameLoop.UIManager.MainMenu.RestartGame();
@@ -323,13 +332,13 @@ namespace MagiRogue.System
         /// </summary>
         /// <param name="chunkLocation"></param>
         /// <returns></returns>
-        public bool IsChunkLoaded(Point chunkLocation) => chunks.ContainsKey(chunkLocation);
+        public bool IsChunkLoaded(Point chunkLocation) => localChunks.ContainsKey(chunkLocation);
 
         /// <summary>
         /// Whether or not the chunk containing the specified position is loaded.
         /// </summary>
         /// <returns></returns>
-        public bool IsLoaded(Point position) => chunks.ContainsKey(ChunkPositionFor(position));
+        public bool IsLoaded(Point position) => localChunks.ContainsKey(ChunkPositionFor(position));
 
         /// <summary>
         /// Whether a chunk for the given chunk grid position has ever been generated.
@@ -344,18 +353,52 @@ namespace MagiRogue.System
         private void AddChunkToDictionary(Map map)
         {
             List<Point> keys = new List<Point>();
-            if (chunks.Keys.Count > 0)
+            if (localChunks.Keys.Count > 0)
             {
-                foreach (Point key in chunks.Keys)
+                foreach (Point key in localChunks.Keys)
                 {
                     keys.Add(key);
                 }
+
+                Point newKey = PointInGrid(10, 10, keys.Last());
+
+                if (newKey != Point.None)
+                    localChunks.Add(newKey, new MapChunk(newKey.X, newKey.Y, map));
+                else
+                    throw new ApplicationException("Tried to add a chunk in a non-existant position");
             }
             else
             {
                 var p0 = new Point(0, 0);
-                chunks.Add(p0, new MapChunk(p0.X, p0.Y, map));
+                localChunks.Add(p0, new MapChunk(p0.X, p0.Y, map));
+                CurrentChunk = localChunks[p0];
             }
+        }
+
+        /// <summary>
+        /// if the values of the grid size,the only thing that will need to be done is to change the x and y
+        /// max value size. \nStarts counting from zero and disregards negative numbers.
+        /// </summary>
+        /// <param name="maxX"></param>
+        /// <param name="maxY"></param>
+        /// <param name="point"></param>
+        private Point PointInGrid(int maxX, int maxY, Point point)
+        {
+            Point newKey;
+            int x = point.X;
+            int y = point.Y;
+
+            if (x < maxX && y < 1)
+                newKey = new(x + 1, 0);
+            else if (x >= maxX && y < maxY)
+                newKey = new(0, y + 1);
+            else if (x < maxX && y > 0 && y < maxY)
+                newKey = new(x + 1, y);
+            else
+                //TODO: add a logging system to capture these events
+                return Point.None;
+
+            return newKey;
         }
     }
 

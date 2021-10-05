@@ -307,19 +307,15 @@ namespace MagiRogue.System
         /// and there is already an entity there, so it picks another random location.
         /// </summary>
         /// <returns>Returns an Point to a tile that is walkable and there is no actor there</returns>
-        private Point GetRandomWalkableTile()
+        public Point GetRandomWalkableTile()
         {
-            foreach (var terrain in Tiles)
-            {
-                Actor entityThere = GetEntityAt<Actor>(terrain.Position);
-                if (terrain.IsWalkable && entityThere is null && terrain is not NodeTile)
-                {
-                    return terrain.Position;
-                }
-            }
+            var rng = GoRogue.Random.GlobalRandom.DefaultRNG;
+            Point rngPoint = new Point(rng.Next(Width - 1), rng.Next(Height - 1));
 
-            // should never go to this
-            return Point.None;
+            while (IsTileWalkable(rngPoint))
+                rngPoint = new Point(rng.Next(Width - 1), rng.Next(Height - 1));
+
+            return rngPoint;
         }
 
         /// <summary>
