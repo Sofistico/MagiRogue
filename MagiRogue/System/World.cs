@@ -27,9 +27,9 @@ namespace MagiRogue.System
         private readonly int _maxRoomSize = 10;
         /*private const int _zMaxUpLevel = 10;
         private const int _zMaxLowLevel = -10;*/
-        private HashSet<Point> existingChunckPositions;
+        private readonly HashSet<Point> existingChunckPositions;
         private Dictionary<Point, MapChunk> localChunks;
-        private Dictionary<Point, RegionChunk> worldChunks;
+        private readonly Dictionary<Point, RegionChunk> worldChunks;
 
         /// <summary>
         /// Stores the current map
@@ -95,7 +95,7 @@ namespace MagiRogue.System
         /// </summary>
         private void SetUpStuff()
         {
-            foreach (NodeTile node in CurrentChunk.Map.Tiles.Where(t => t is NodeTile))
+            foreach (NodeTile node in CurrentChunk.Map.Tiles.OfType<NodeTile>())
             {
                 node.SetUpNodeTurn(this);
             }
@@ -235,8 +235,6 @@ namespace MagiRogue.System
 
                 Item newLoot = EntityFactory.ItemCreator(posNew,
                     new ItemTemplate("Gold Bar", "Gold", "White", '=', 12.5f, 15, "Here is a gold bar, pretty heavy", "gold"));
-
-                string oj = Newtonsoft.Json.JsonConvert.SerializeObject(newLoot);
 
                 // add the Item to the MultiSpatialMap
                 CurrentChunk.Map.Add(newLoot);
