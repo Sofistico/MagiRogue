@@ -65,25 +65,25 @@ namespace MagiRogue.UI
                     Direction moveDirection = MovementDirectionMapping[key];
                     Point coorToMove = new(moveDirection.DeltaX, moveDirection.DeltaY);
 
-                    if (world.CurrentChunk.Map.ControlledEntitiy is not Player)
+                    if (world.CurrentMap.ControlledEntitiy is not Player)
                     {
                         int distance = (int)Distance.Chebyshev.Calculate(targetCursor.OriginCoord,
-                            world.CurrentChunk.Map.ControlledEntitiy.Position + coorToMove);
+                            world.CurrentMap.ControlledEntitiy.Position + coorToMove);
 
                         // If there is a need to roll back, the code here was taking the CurrentFov and Contains(pos + posMove)
-                        if (world.CurrentChunk.Map.PlayerExplored
-                            [world.CurrentChunk.Map.ControlledEntitiy.Position + coorToMove]
+                        if (world.CurrentMap.PlayerExplored
+                            [world.CurrentMap.ControlledEntitiy.Position + coorToMove]
                             && distance <= targetCursor.MaxDistance)
                         {
                             return CommandManager.MoveActorBy
-                                ((Actor)world.CurrentChunk.Map.ControlledEntitiy, coorToMove);
+                                ((Actor)world.CurrentMap.ControlledEntitiy, coorToMove);
                         }
                         else
                             return false;
                     }
 
                     bool sucess =
-                        CommandManager.MoveActorBy((Actor)world.CurrentChunk.Map.ControlledEntitiy, coorToMove);
+                        CommandManager.MoveActorBy((Actor)world.CurrentMap.ControlledEntitiy, coorToMove);
                     return sucess;
                 }
             }
@@ -95,9 +95,9 @@ namespace MagiRogue.UI
         {
             if (HandleMove(info, world))
             {
-                if (!GetPlayer.Bumped && world.CurrentChunk.Map.ControlledEntitiy is Player)
+                if (!GetPlayer.Bumped && world.CurrentMap.ControlledEntitiy is Player)
                     world.ProcessTurn(TimeHelper.GetWalkTime(GetPlayer), true);
-                else if (world.CurrentChunk.Map.ControlledEntitiy is Player)
+                else if (world.CurrentMap.ControlledEntitiy is Player)
                     world.ProcessTurn(TimeHelper.GetAttackTime(GetPlayer), true);
 
                 return true;
@@ -122,7 +122,7 @@ namespace MagiRogue.UI
             }
             if (info.IsKeyPressed(Keys.G))
             {
-                Item item = world.CurrentChunk.Map.GetEntityAt<Item>(world.Player.Position);
+                Item item = world.CurrentMap.GetEntityAt<Item>(world.Player.Position);
                 bool sucess = CommandManager.PickUp(world.Player, item);
                 ui.InventoryScreen.ShowItems(world.Player);
                 world.ProcessTurn(TimeHelper.Interact, sucess);
@@ -156,7 +156,7 @@ namespace MagiRogue.UI
                 if (targetCursor is null)
                     targetCursor = new Target(GetPlayer.Position);
 
-                if (world.CurrentChunk.Map.ControlledEntitiy is not Player
+                if (world.CurrentMap.ControlledEntitiy is not Player
                     && !targetCursor.EntityInTarget())
                 {
                     targetCursor.EndTargetting();
@@ -177,7 +177,7 @@ namespace MagiRogue.UI
 
                 spell.Show(GetPlayer.Magic.KnowSpells,
                     selectedSpell => targetCursor.OnSelectSpell(selectedSpell,
-                    (Actor)world.CurrentChunk.Map.ControlledEntitiy),
+                    (Actor)world.CurrentMap.ControlledEntitiy),
                     GetPlayer.Stats.PersonalMana);
 
                 return true;
@@ -238,7 +238,7 @@ namespace MagiRogue.UI
 
             if (info.IsKeyPressed(Keys.T))
             {
-                foreach (NodeTile node in world.CurrentChunk.Map.Tiles.OfType<NodeTile>())
+                foreach (NodeTile node in world.CurrentMap.Tiles.OfType<NodeTile>())
                 {
                     if (node.TrueAppearence.Matches(node))
                     {

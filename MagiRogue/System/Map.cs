@@ -70,10 +70,11 @@ namespace MagiRogue.System
             entityLayersSupportingMultipleItems: LayerMasker.DEFAULT.Mask
             ((int)MapLayer.ITEMS, (int)MapLayer.GHOSTS, (int)MapLayer.PLAYER))
         {
-            Tiles = ((ArrayView<TileBase>)((LambdaSettableTranslationGridView<TileBase, IGameObject>)Terrain).BaseGrid);
+            Tiles = (ArrayView<TileBase>)((LambdaSettableTranslationGridView<TileBase, IGameObject>)Terrain).BaseGrid;
 
             // Treat the fov as a component.
-            GoRogueComponents.Add(new MagiRogueFOVVisibilityHandler(this, Color.DarkSlateGray, (int)MapLayer.GHOSTS));
+            GoRogueComponents.Add
+                (new MagiRogueFOVVisibilityHandler(this, Color.DarkSlateGray, (int)MapLayer.GHOSTS));
 
             _entityRender = new SadConsole.Entities.Renderer();
         }
@@ -171,6 +172,8 @@ namespace MagiRogue.System
         /// <param name="entity"></param>
         public void Add(Entity entity)
         {
+            if (entity.CurrentMap is not null)
+                Remove(entity);
             // Initilizes the field of view of the player, will do different for monsters
             if (entity is Player player)
             {
@@ -364,20 +367,6 @@ namespace MagiRogue.System
         }
 
         #endregion Desconstructor
-    }
-
-    public class MapChunk
-    {
-        public int X { get; set; }
-        public int Y { get; set; }
-        public Map Map { get; private set; }
-
-        public MapChunk(int x, int y, Map map)
-        {
-            X = x;
-            Y = y;
-            Map = map;
-        }
     }
 
     // enum for defining maplayer for things, so that a monster and a player can occupy the same tile as an item for example.

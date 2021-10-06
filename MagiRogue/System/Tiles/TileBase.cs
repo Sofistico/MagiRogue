@@ -117,12 +117,18 @@ namespace MagiRogue.System.Tiles
         public virtual void DestroyTile(TileBase changeTile, Entities.Item? itemDropped = null)
 #nullable disable
         {
-            GameLoop.World.CurrentChunk.Map.SetTerrain(changeTile);
+            GameLoop.World.CurrentMap.SetTerrain(changeTile);
             LastSeenAppereance = changeTile;
             if (itemDropped is not null)
             {
-                GameLoop.World.CurrentChunk.Map.Add(itemDropped);
+                GameLoop.World.CurrentMap.Add(itemDropped);
             }
+        }
+
+        public void TransverseTile(Point transversePoint, Map mapDestination, Entities.Entity entity)
+        {
+            mapDestination.Add(entity);
+            entity.Position = transversePoint;
         }
 
         #region IGameObject Interface

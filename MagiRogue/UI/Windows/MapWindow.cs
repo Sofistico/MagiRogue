@@ -45,7 +45,10 @@ namespace MagiRogue.UI.Windows
             map.ConfigureRender(MapConsole);
         }
 
-        // Loads a Map into the MapConsole
+        /// <summary>
+        /// Loads a Map into the MapConsole
+        /// </summary>
+        /// <param name="map"></param>
         public void LoadMap(Map map)
         {
             //make console short enough to show the window title
@@ -57,9 +60,9 @@ namespace MagiRogue.UI.Windows
                 new BoundedRectangle((0, 0, mapConsoleWidth, mapConsoleHeight), (0, 0, map.Width, map.Height)).Area;
 
             // First load the map's tiles into the console
-            MapConsole = new Console(GameLoop.World.CurrentChunk.Map.Width,
-                GameLoop.World.CurrentChunk.Map.Height, GameLoop.World.CurrentChunk.Map.Width,
-                GameLoop.World.CurrentChunk.Map.Width, map.Tiles)
+            MapConsole = new Console(GameLoop.World.CurrentMap.Width,
+                GameLoop.World.CurrentMap.Height, GameLoop.World.CurrentMap.Width,
+                GameLoop.World.CurrentMap.Width, map.Tiles)
             {
                 View = rec,
 

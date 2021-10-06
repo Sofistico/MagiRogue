@@ -145,7 +145,13 @@ namespace MagiRogue.System
                 room.LockDoorsRng();
             }
 
+            InsertStairs();
+
             return _map;
+        }
+
+        private void InsertStairs()
+        {
         }
 
         private void PrepareForFloors()

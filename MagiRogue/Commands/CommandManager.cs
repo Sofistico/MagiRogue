@@ -205,7 +205,7 @@ namespace MagiRogue.Commands
                     item.Position = defender.Position;
 
                     // Now let the MultiSpatialMap know that the Item is visible
-                    GameLoop.World.CurrentChunk.Map.Add(item);
+                    GameLoop.World.CurrentMap.Add(item);
 
                     // Append the item to the deathMessage
                     deathMessage.Append(", " + item.Name);
@@ -222,7 +222,7 @@ namespace MagiRogue.Commands
             }
 
             // actor goes bye-bye
-            GameLoop.World.CurrentChunk.Map.Remove(defender);
+            GameLoop.World.CurrentMap.Remove(defender);
 
             if (defender is Player)
             {
@@ -248,7 +248,7 @@ namespace MagiRogue.Commands
 
             foreach (Point direction in directions)
             {
-                Actor monsterLocation = GameLoop.World.CurrentChunk.Map.GetEntityAt<Actor>(direction);
+                Actor monsterLocation = GameLoop.World.CurrentMap.GetEntityAt<Actor>(direction);
 
                 if (monsterLocation != null && monsterLocation != attacker)
                 {
@@ -310,7 +310,7 @@ namespace MagiRogue.Commands
             {
                 door.Open();
                 GameLoop.UIManager.MessageLog.Add($"{actor.Name} opened a {door.Name}");
-                GameLoop.World.CurrentChunk.Map.ForceFovCalculation();
+                GameLoop.World.CurrentMap.ForceFovCalculation();
                 return true;
             }
             return false;
@@ -326,14 +326,14 @@ namespace MagiRogue.Commands
             Point[] allDirections = SadConsole.PointExtensions.GetDirectionPoints(actor.Position);
             foreach (Point points in allDirections)
             {
-                TileDoor possibleDoor = GameLoop.World.CurrentChunk.Map.GetTileAt<TileDoor>(points);
+                TileDoor possibleDoor = GameLoop.World.CurrentMap.GetTileAt<TileDoor>(points);
                 if (possibleDoor != null)
                 {
                     if (possibleDoor.IsOpen)
                     {
                         possibleDoor.Close();
                         GameLoop.UIManager.MessageLog.Add($"{actor.Name} closed a {possibleDoor.Name}");
-                        GameLoop.World.CurrentChunk.Map.ForceFovCalculation();
+                        GameLoop.World.CurrentMap.ForceFovCalculation();
                         return true;
                     }
                 }
@@ -353,7 +353,7 @@ namespace MagiRogue.Commands
                 Item item = inv.Inventory.First();
                 inv.Inventory.Remove(item);
                 item.Position = inv.Position;
-                GameLoop.World.CurrentChunk.Map.Add(item);
+                GameLoop.World.CurrentMap.Add(item);
                 GameLoop.UIManager.MessageLog.Add($"{inv.Name} dropped {item.Name}");
                 return true;
             }
@@ -365,7 +365,7 @@ namespace MagiRogue.Commands
 
             foreach (Point item in direction)
             {
-                if (GameLoop.World.CurrentChunk.Map.Tiles[item.ToIndex(GameLoop.World.CurrentChunk.Map.Width)] is NodeTile node)
+                if (GameLoop.World.CurrentMap.Tiles[item.ToIndex(GameLoop.World.CurrentMap.Width)] is NodeTile node)
                 {
                     node.DrainNode(actor);
                     return true;
@@ -379,12 +379,12 @@ namespace MagiRogue.Commands
 
         public static void ToggleFOV()
         {
-            if (GameLoop.World.CurrentChunk.Map.GoRogueComponents.GetFirstOrDefault<FOVHandler>().IsEnabled)
+            if (GameLoop.World.CurrentMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().IsEnabled)
             {
-                GameLoop.World.CurrentChunk.Map.GoRogueComponents.GetFirstOrDefault<FOVHandler>().Disable(false);
+                GameLoop.World.CurrentMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().Disable(false);
             }
             else
-                GameLoop.World.CurrentChunk.Map.GoRogueComponents.GetFirstOrDefault<FOVHandler>().Enable();
+                GameLoop.World.CurrentMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().Enable();
         }
 
 #endif
@@ -423,9 +423,9 @@ namespace MagiRogue.Commands
 
                 for (int i = 0; i < totalTurnsWait + 1; i++)
                 {
-                    foreach (Point p in GameLoop.World.CurrentChunk.Map.PlayerFOV.CurrentFOV)
+                    foreach (Point p in GameLoop.World.CurrentMap.PlayerFOV.CurrentFOV)
                     {
-                        Actor possibleActor = GameLoop.World.CurrentChunk.Map.GetEntityAt<Actor>(p);
+                        Actor possibleActor = GameLoop.World.CurrentMap.GetEntityAt<Actor>(p);
                         if (possibleActor is not null && !possibleActor.Equals(actor))
                         {
                             GameLoop.UIManager.MessageLog.Add("There is an enemy in view, stop resting!");

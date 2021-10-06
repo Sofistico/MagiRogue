@@ -54,9 +54,9 @@ namespace MagiRogue.System.Magic.Effects
         {
             BaseDamage = Magic.CalculateSpellDamage(caster.Stats, spellCasted);
 
-            Entity poorGuy = GameLoop.World.CurrentChunk.Map.GetEntityAt<Entity>(target);
+            Entity poorGuy = GameLoop.World.CurrentMap.GetEntityAt<Entity>(target);
 
-            if ((poorGuy == GameLoop.World.CurrentChunk.Map.ControlledEntitiy || poorGuy is Player)
+            if ((poorGuy == GameLoop.World.CurrentMap.ControlledEntitiy || poorGuy is Player)
                 && AreaOfEffect is not SpellAreaEffect.Ball)
             {
                 poorGuy = null;
@@ -80,7 +80,7 @@ namespace MagiRogue.System.Magic.Effects
                 CombatUtils.ApplyHealing(BaseDamage, casterStats, SpellDamageType);
             else
             {
-                Actor happyGuy = GameLoop.World.CurrentChunk.Map.GetEntityAt<Actor>(target);
+                Actor happyGuy = GameLoop.World.CurrentMap.GetEntityAt<Actor>(target);
 
                 if (happyGuy == null)
                 {

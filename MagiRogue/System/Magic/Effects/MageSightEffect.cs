@@ -38,7 +38,7 @@ namespace MagiRogue.System.Magic.Effects
 
             TurnApplied = GameLoop.World.Time.Turns;
 
-            foreach (Tiles.NodeTile node in GameLoop.World.CurrentChunk.Map.Tiles.Where(t => t is Tiles.NodeTile))
+            foreach (Tiles.NodeTile node in GameLoop.World.CurrentMap.Tiles.Where(t => t is Tiles.NodeTile))
             {
                 node.RestoreOriginalAppearence();
             }
@@ -55,7 +55,7 @@ namespace MagiRogue.System.Magic.Effects
         {
             if (e.Seconds >= turnToRemove)
             {
-                foreach (Tiles.NodeTile node in GameLoop.World.CurrentChunk.Map.Tiles.Where(t => t is Tiles.NodeTile))
+                foreach (Tiles.NodeTile node in GameLoop.World.CurrentMap.Tiles.Where(t => t is Tiles.NodeTile))
                 {
                     node.RestoreIllusionComponent();
                 }

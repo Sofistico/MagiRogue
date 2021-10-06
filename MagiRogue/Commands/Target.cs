@@ -69,7 +69,7 @@ namespace MagiRogue.Commands
 
         public bool TileInTarget()
         {
-            TileBase tile = GameLoop.World.CurrentChunk.Map.GetTileAt<TileBase>(Cursor.Position);
+            TileBase tile = GameLoop.World.CurrentMap.GetTileAt<TileBase>(Cursor.Position);
 
             if (tile is not null)
             {
@@ -81,7 +81,7 @@ namespace MagiRogue.Commands
 
         public bool EntityInTarget()
         {
-            if (GameLoop.World.CurrentChunk.Map.GetEntitiesAt<Entity>(Cursor.Position).Any(e => e.ID != Cursor.ID))
+            if (GameLoop.World.CurrentMap.GetEntitiesAt<Entity>(Cursor.Position).Any(e => e.ID != Cursor.ID))
             //&& GameLoop.World.CurrentMap.GetEntityAt<Entity>(Cursor.Position) is not Player)
             {
                 State = TargetState.Targeting;
@@ -109,7 +109,7 @@ namespace MagiRogue.Commands
         public void StartTargetting()
         {
             GameLoop.World.ChangeControlledEntity(Cursor);
-            GameLoop.World.CurrentChunk.Map.Add(Cursor);
+            GameLoop.World.CurrentMap.Add(Cursor);
             Cursor.Moved += Cursor_Moved;
 
             State = TargetState.Targeting;
@@ -173,7 +173,7 @@ namespace MagiRogue.Commands
                     // if there is anything in the path, clear it
                     foreach (Point point in tileDictionary.Keys)
                     {
-                        TileBase tile = GameLoop.World.CurrentChunk.Map.GetTileAt<TileBase>(point);
+                        TileBase tile = GameLoop.World.CurrentMap.GetTileAt<TileBase>(point);
                         if (tile is not null)
                             tile.CopyAppearanceFrom(tile.LastSeenAppereance);
                     }
@@ -182,7 +182,7 @@ namespace MagiRogue.Commands
                 }
 
                 GameLoop.World.ChangeControlledEntity(GameLoop.World.Player);
-                GameLoop.World.CurrentChunk.Map.Remove(Cursor);
+                GameLoop.World.CurrentMap.Remove(Cursor);
             }
         }
 
@@ -232,11 +232,11 @@ namespace MagiRogue.Commands
         private void Cursor_Moved(object sender, GoRogue.GameFramework.GameObjectPropertyChanged<Point> e)
         {
             TargetList.Clear();
-            TravelPath = GameLoop.World.CurrentChunk.Map.AStar.ShortestPath(OriginCoord, e.NewValue);
+            TravelPath = GameLoop.World.CurrentMap.AStar.ShortestPath(OriginCoord, e.NewValue);
             foreach (Point pos in TravelPath.Steps)
             {
                 // gets each point in the travel path steps and change the background of the wall
-                var halp = GameLoop.World.CurrentChunk.Map.GetTileAt<TileBase>(pos);
+                var halp = GameLoop.World.CurrentMap.GetTileAt<TileBase>(pos);
                 halp.Background = Color.Yellow;
                 tileDictionary.TryAdd(pos, halp);
             }
@@ -246,7 +246,7 @@ namespace MagiRogue.Commands
             {
                 if (!TravelPath.Steps.Contains(item))
                 {
-                    TileBase llop = GameLoop.World.CurrentChunk.Map.GetTileAt<TileBase>(item);
+                    TileBase llop = GameLoop.World.CurrentMap.GetTileAt<TileBase>(item);
                     if (llop is not null)
                         llop.Background = llop.LastSeenAppereance.Background;
                 }
@@ -290,7 +290,7 @@ namespace MagiRogue.Commands
         /// <param name="point"></param>
         private void AddTileToDictionary(Point point)
         {
-            var halp = GameLoop.World.CurrentChunk.Map.GetTileAt<TileBase>(point);
+            var halp = GameLoop.World.CurrentMap.GetTileAt<TileBase>(point);
             if (halp is not null)
             {
                 halp.Background = Color.Yellow;
@@ -316,9 +316,9 @@ namespace MagiRogue.Commands
         /// <param name="point"></param>
         private void AddEntityToList(Point point)
         {
-            var entity = GameLoop.World.CurrentChunk.Map.GetEntityAt<Entity>(point);
+            var entity = GameLoop.World.CurrentMap.GetEntityAt<Entity>(point);
             if (entity is not null && !TargetList.Contains(entity))
-                TargetList.Add(GameLoop.World.CurrentChunk.Map.GetEntityAt<Entity>(point));
+                TargetList.Add(GameLoop.World.CurrentMap.GetEntityAt<Entity>(point));
         }
 
         private ISpellEffect GetSpellAreaEffect(SpellAreaEffect areaEffect) =>
@@ -330,7 +330,7 @@ namespace MagiRogue.Commands
             w.Show();
         }
 
-        private Entity TargetEntity() => GameLoop.World.CurrentChunk.Map.GetEntityAt<Entity>(Cursor.Position);
+        private Entity TargetEntity() => GameLoop.World.CurrentMap.GetEntityAt<Entity>(Cursor.Position);
 
         public enum TargetState
         {

@@ -99,7 +99,8 @@ namespace MagiRogue.UI
             CreateMapWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight, "Game Map");
 
             // Then load the map into the MapConsole
-            MapWindow.LoadMap(GameLoop.World.CurrentChunk.Map);
+            MapWindow.LoadMap(GameLoop.World.CurrentMap);
+            //MapWindow.LoadAllChunks(GameLoop.World.LocalChunks);
 
             // Start the game with the camera focused on the player
             MapWindow.CenterOnActor(GameLoop.World.Player);
