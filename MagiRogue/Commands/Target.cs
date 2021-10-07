@@ -175,7 +175,7 @@ namespace MagiRogue.Commands
                     {
                         TileBase tile = GameLoop.World.CurrentMap.GetTileAt<TileBase>(point);
                         if (tile is not null)
-                            tile.CopyAppearanceFrom(tile.LastSeenAppereance);
+                            tile.Background = tile.LastSeenAppereance.Background;
                     }
                     Cursor.Moved -= Cursor_Moved;
                     TravelPath = null;
@@ -248,7 +248,9 @@ namespace MagiRogue.Commands
                 {
                     TileBase llop = GameLoop.World.CurrentMap.GetTileAt<TileBase>(item);
                     if (llop is not null)
+                    {
                         llop.Background = llop.LastSeenAppereance.Background;
+                    }
                 }
             }
 

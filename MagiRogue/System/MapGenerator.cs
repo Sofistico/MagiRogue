@@ -26,7 +26,7 @@ namespace MagiRogue.System
         public Map GenerateMazeMap(int maxRooms, int minRoomSize, int maxRoomSize)
         {
             // Create an empty map of size (mapWidht * mapHeight)
-            _map = new Map();
+            _map = new Map("Maze");
 
             // store a list of the rooms created so far
             List<Room> Rooms = new();
@@ -96,7 +96,7 @@ namespace MagiRogue.System
 
         public Map GenerateTestMap()
         {
-            _map = new Map();
+            _map = new Map("Test Map");
 
             PrepareForFloors();
             PrepareForOuterWalls();
@@ -106,7 +106,7 @@ namespace MagiRogue.System
 
         public Map GenerateStoneFloorMap()
         {
-            _map = new Map();
+            _map = new Map("Test Stone Map");
 
             PrepareForFloors();
 
@@ -115,7 +115,7 @@ namespace MagiRogue.System
 
         public Map GenerateTownMap(int maxRooms, int minRoomSize, int maxRoomSize)
         {
-            _map = new Map();
+            _map = new Map("Town of Salazar");
 
             PrepareForFloorsWithGrass();
 

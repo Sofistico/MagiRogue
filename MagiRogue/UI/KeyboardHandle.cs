@@ -67,10 +67,16 @@ namespace MagiRogue.UI
 
                     if (world.CurrentMap.ControlledEntitiy is not Player)
                     {
-                        int distance = (int)Distance.Chebyshev.Calculate(targetCursor.OriginCoord,
-                            world.CurrentMap.ControlledEntitiy.Position + coorToMove);
+                        int distance = 0;
+                        if (targetCursor.TravelPath is not null)
+                            distance = targetCursor.TravelPath.LengthWithStart;
 
-                        // If there is a need to roll back, the code here was taking the CurrentFov and Contains(pos + posMove)
+                        if (world.CurrentMap.CheckForIndexOutOfBounds
+                            (world.CurrentMap.ControlledEntitiy.Position + coorToMove))
+                            return false;
+
+                        // If there is a need to roll back,
+                        // the code here was taking the CurrentFov and Contains(pos + posMove)
                         if (world.CurrentMap.PlayerExplored
                             [world.CurrentMap.ControlledEntitiy.Position + coorToMove]
                             && distance <= targetCursor.MaxDistance)
@@ -169,6 +175,7 @@ namespace MagiRogue.UI
                 }
 
                 targetCursor.StartTargetting();
+                targetCursor.Cursor.IgnoresWalls = true;
 
                 return true;
             }
@@ -223,7 +230,6 @@ namespace MagiRogue.UI
                 return true;
             }
 
-          
 #if DEBUG
             if (info.IsKeyPressed(Keys.F10))
             {

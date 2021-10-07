@@ -53,6 +53,8 @@ namespace MagiRogue.System
             }
         }
 
+        public string MapName { get; }
+
         #endregion Properties
 
         #region Constructor
@@ -64,7 +66,7 @@ namespace MagiRogue.System
         /// </summary>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public Map(int width = 50, int height = 50) :
+        public Map(string mapName, int width = 50, int height = 50) :
             base(CreateTerrain(width, height), Enum.GetNames(typeof(MapLayer)).Length - 1,
             Distance.Euclidean,
             entityLayersSupportingMultipleItems: LayerMasker.DEFAULT.Mask
@@ -77,6 +79,7 @@ namespace MagiRogue.System
                 (new MagiRogueFOVVisibilityHandler(this, Color.DarkSlateGray, (int)MapLayer.GHOSTS));
 
             _entityRender = new SadConsole.Entities.Renderer();
+            MapName = mapName;
         }
 
         public void RemoveAllEntities()
@@ -112,6 +115,28 @@ namespace MagiRogue.System
             // off the limits of the map
             if (CheckForIndexOutOfBounds(location))
                 return false;
+
+            // then return whether the tile is walkable
+            return !_tiles[location.Y * Width + location.X].IsBlockingMove;
+        }
+
+        /// <summary>
+        /// IsTileWalkable checks
+        /// to see if the actor has tried
+        /// to walk off the map or into a non-walkable tile
+        /// Returns true if the tile location is walkable
+        /// false if tile location is not walkable or is off-map
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        public bool IsTileWalkable(Point location, Actor actor)
+        {
+            // first make sure that actor isn't trying to move
+            // off the limits of the map
+            if (CheckForIndexOutOfBounds(location))
+                return false;
+            if (actor.IgnoresWalls)
+                return true;
 
             // then return whether the tile is walkable
             return !_tiles[location.Y * Width + location.X].IsBlockingMove;

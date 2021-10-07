@@ -62,6 +62,11 @@ namespace MagiRogue.Entities
         /// </summary>
         public bool CanInteract { get; set; } = true;
 
+        /// <summary>
+        /// Defines if the entity ignores wall and can phase though
+        /// </summary>
+        public bool IgnoresWalls { get; set; }
+
         #region BackingField fields
 
         public Map CurrentMap => backingField.CurrentMap;

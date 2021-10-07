@@ -82,6 +82,8 @@ namespace MagiRogue.UI.Windows
             IsDirty = true;
 
             _mapDisplayer = map;
+
+            Title = map.MapName;
         }
     }
 }
