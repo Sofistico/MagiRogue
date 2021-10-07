@@ -16,7 +16,7 @@ namespace MagiRogue.Data
                            "Grass",
                             point,
                             "grass",
-                            (int)',',
+                            ',',
                             Color.Green,
                             Color.Black);
         }
