@@ -10,8 +10,6 @@ namespace MagiRogue.Data
     {
         public static Actor ActorCreator(Point position, ActorTemplate actorTemplate)
         {
-           
-
             Actor actor =
                 new(
                 actorTemplate.Name,
