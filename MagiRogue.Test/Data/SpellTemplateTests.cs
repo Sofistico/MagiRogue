@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using MagiRogue.System.Magic;
 using Newtonsoft.Json;
 
-namespace MagiRogue.Data.Tests
+namespace MagiRogue.Test.Data
 {
     public class SpellTemplateTests
     {

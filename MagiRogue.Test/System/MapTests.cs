@@ -1,9 +1,10 @@
 ﻿using MagiRogue.Entities;
+using MagiRogue.System;
 using SadConsole;
 using SadRogue.Primitives;
 using Xunit;
 
-namespace MagiRogue.System.Tests
+namespace MagiRogue.Test.System
 {
     public class MapTests
     {
