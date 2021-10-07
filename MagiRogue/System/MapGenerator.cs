@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Data;
+using MagiRogue.Entities;
 using MagiRogue.System.Tiles;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
@@ -145,13 +146,19 @@ namespace MagiRogue.System
                 room.LockDoorsRng();
             }
 
-            InsertStairs();
+            InsertStairs(rooms[0]);
 
             return _map;
         }
 
-        private void InsertStairs()
+        private void InsertStairs(Room room)
         {
+            Furniture stairsDown = new Furniture(Color.White, Color.Black, '>', room.RoomRectangle.Center,
+                (int)MapLayer.FURNITURE, FurnitureType.StairsDown);
+
+            room.ForceUnlock();
+
+            _map.Add(stairsDown);
         }
 
         private void PrepareForFloors()
@@ -492,6 +499,14 @@ namespace MagiRogue.System
                 int indexDoor = GoRogue.Random.GlobalRandom.DefaultRNG.Next(Doors.Count);
 
                 Doors[indexDoor].Locked = true;
+            }
+        }
+
+        internal void ForceUnlock()
+        {
+            foreach (var door in Doors)
+            {
+                door.Locked = false;
             }
         }
     }

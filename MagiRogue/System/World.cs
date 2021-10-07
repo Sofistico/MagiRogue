@@ -54,7 +54,7 @@ namespace MagiRogue.System
                 // Build a map
                 CreateMap();
 
-                CreateAnotherChunkTest();
+                CreateStoneFloorMap();
 
                 // spawn a bunch of monsters
                 /*CreateMonster();
@@ -76,7 +76,7 @@ namespace MagiRogue.System
             }
         }
 
-        private void CreateAnotherChunkTest()
+        private void CreateStoneFloorMap()
         {
             var map = new MapGenerator().GenerateStoneFloorMap();
 
@@ -86,6 +86,19 @@ namespace MagiRogue.System
         private void AddMapToList(Map map)
         {
             AllMaps.Add(map);
+        }
+
+        public void ChangeActorMap(Entity entity, Map mapToGo, Point pos)
+        {
+            mapToGo.Add(entity);
+            entity.Position = pos;
+            CurrentMap = mapToGo;
+            if (!AllMaps.Contains(mapToGo))
+            {
+                AllMaps.Add(mapToGo);
+            }
+
+            GameLoop.UIManager.MapWindow.LoadMap(CurrentMap);
         }
 
         /// <summary>
@@ -107,6 +120,7 @@ namespace MagiRogue.System
         {
             MapGenerator mapGen = new();
             var map = mapGen.GenerateTownMap(_maxRooms, _minRoomSize, _maxRoomSize);
+            CurrentMap = map;
             AddMapToList(map);
         }
 

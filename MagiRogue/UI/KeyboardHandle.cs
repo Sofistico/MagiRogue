@@ -93,6 +93,11 @@ namespace MagiRogue.UI
 
         private static bool HandleActions(Keyboard info, World world, UIManager ui)
         {
+            // Work around for a > symbol, must be top to not make the char wait
+            if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.OemPeriod))
+            {
+                CommandManager.MoveDownStairs(GetPlayer);
+            }
             if (HandleMove(info, world))
             {
                 if (!GetPlayer.Bumped && world.CurrentMap.ControlledEntitiy is Player)
@@ -218,6 +223,7 @@ namespace MagiRogue.UI
                 return true;
             }
 
+          
 #if DEBUG
             if (info.IsKeyPressed(Keys.F10))
             {

@@ -11,6 +11,7 @@ namespace MagiRogue.Entities
     /// Item: Describes things that can be picked up or used
     /// by actors, or destroyed on the map.
     /// </summary>
+    // TODO: Remove inherting from entity and add as a component.
     [JsonConverter(typeof(ItemJsonConverter))]
     public class Item : Entity
     {

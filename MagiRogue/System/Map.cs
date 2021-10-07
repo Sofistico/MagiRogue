@@ -173,7 +173,11 @@ namespace MagiRogue.System
         public void Add(Entity entity)
         {
             if (entity.CurrentMap is not null)
-                Remove(entity);
+            {
+                Map map = (Map)entity.CurrentMap;
+                map.ControlledEntitiy = null;
+                map.Remove(entity);
+            }
             // Initilizes the field of view of the player, will do different for monsters
             if (entity is Player player)
             {
@@ -315,7 +319,7 @@ namespace MagiRogue.System
             var rng = GoRogue.Random.GlobalRandom.DefaultRNG;
             Point rngPoint = new Point(rng.Next(Width - 1), rng.Next(Height - 1));
 
-            while (IsTileWalkable(rngPoint))
+            while (!IsTileWalkable(rngPoint))
                 rngPoint = new Point(rng.Next(Width - 1), rng.Next(Height - 1));
 
             return rngPoint;
@@ -377,6 +381,7 @@ namespace MagiRogue.System
         GHOSTS,
         ITEMS,
         ACTORS,
+        FURNITURE,
         PLAYER
     }
 

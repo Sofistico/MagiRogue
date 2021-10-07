@@ -125,12 +125,6 @@ namespace MagiRogue.System.Tiles
             }
         }
 
-        public void TransverseTile(Point transversePoint, Map mapDestination, Entities.Entity entity)
-        {
-            mapDestination.Add(entity);
-            entity.Position = transversePoint;
-        }
-
         #region IGameObject Interface
 
         public event EventHandler<GameObjectPropertyChanged<bool>> TransparencyChanged

@@ -475,5 +475,24 @@ namespace MagiRogue.Commands
             else
                 return false;
         }
+
+        public static bool MoveDownStairs(Actor actor)
+        {
+            var point = actor.Position;
+            Furniture possibleStairs = GameLoop.World.CurrentMap.GetEntityAt<Furniture>(point);
+            if (possibleStairs is not null && possibleStairs.FurnitureType == FurnitureType.StairsDown)
+            {
+                var map = GameLoop.World.AllMaps[1];
+                // TODO: For now it's just a test, need to work out a better way to do it.
+                GameLoop.World.ChangeActorMap(actor, map, map.GetRandomWalkableTile());
+
+                return true;
+            }
+            else
+            {
+                GameLoop.UIManager.MessageLog.Add("There is no way to go down here!");
+                return false;
+            }
+        }
     }
 }
