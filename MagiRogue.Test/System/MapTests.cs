@@ -7,7 +7,7 @@ namespace MagiRogue.System.Tests
 {
     public class MapTests
     {
-        private readonly Map map = new (20, 20);
+        private readonly Map map = new("Test", 20, 20);
 
         public MapTests()
         {
