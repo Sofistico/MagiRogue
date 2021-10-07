@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Entities;
+using MagiRogue.System.Magic;
 using System;
 using System.Text;
 
@@ -117,6 +118,39 @@ namespace MagiRogue.Utils
 
                 default:
                     break;
+            }
+        }
+
+        private static void ResolveResist(Entity poorGuy, Actor caster, SpellBase spellCasted, ISpellEffect effect)
+        {
+            int luck = Mrn.ExplodingD6Dice;
+            if (Magic.PenetrateResistance(spellCasted, caster, poorGuy, luck))
+            {
+                DealDamage(effect.BaseDamage, poorGuy, effect.SpellDamageType);
+            }
+            else
+                GameLoop.UIManager.MessageLog.Add($"{poorGuy.Name} resisted the effects of {spellCasted.SpellName}");
+        }
+
+        public static void ResolveSpellHit(Entity poorGuy, Actor caster, SpellBase spellCasted, IDamageSpellEffect effect)
+        {
+            if (!effect.CanMiss)
+            {
+                ResolveResist(poorGuy, caster, spellCasted, effect);
+            }
+            else
+            {
+                int diceRoll = Mrn.ExplodingD6Dice + caster.Stats.Precision;
+                // the actor + exploding dice is the dice that the target will throw for either defense or blocking the projectile
+                // TODO: When shield is done, needs to add the shield or any protection against the spell
+                if (poorGuy is Actor actor && diceRoll >= actor.Stats.Defense + Mrn.ExplodingD6Dice)
+                {
+                    ResolveResist(poorGuy, caster, spellCasted, effect);
+                }
+                else
+                {
+                    GameLoop.UIManager.MessageLog.Add($"{caster.Name} missed {poorGuy.Name}!");
+                }
             }
         }
     }

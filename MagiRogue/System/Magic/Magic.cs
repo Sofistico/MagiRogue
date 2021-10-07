@@ -40,6 +40,11 @@ namespace MagiRogue.System.Magic
         public int MagicPenetration { get; set; } = 1;
 
         /// <summary>
+        /// The amount of research, enchanting and lab work you can do in a session.
+        /// </summary>
+        public int LabTotal { get; set; }
+
+        /// <summary>
         /// Any enchantment that affects something
         /// </summary>
         public List<ISpellEffect> Enchantments { get; set; } = new List<ISpellEffect>();

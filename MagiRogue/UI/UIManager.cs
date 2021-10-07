@@ -100,6 +100,7 @@ namespace MagiRogue.UI
 
             // Then load the map into the MapConsole
             MapWindow.LoadMap(GameLoop.World.CurrentMap);
+            //MapWindow.LoadAllChunks(GameLoop.World.LocalChunks);
 
             // Start the game with the camera focused on the player
             MapWindow.CenterOnActor(GameLoop.World.Player);
@@ -133,35 +134,17 @@ namespace MagiRogue.UI
         {
             if (GameLoop.World != null)
             {
-                if (MapWindow.HandleMapInteraction(info, this, GameLoop.World))
+                if (KeyboardHandle.HandleMapKeys(info, this, GameLoop.World))
                 {
                     return true;
                 }
-                if (HandleUiKeys(info))
+                if (KeyboardHandle.HandleUiKeys(info, this))
                 {
                     return true;
                 }
             }
 
             return base.ProcessKeyboard(info);
-        }
-
-        private bool HandleUiKeys(Keyboard info)
-        {
-            if (info.IsKeyPressed(Keys.I))
-            {
-                InventoryScreen.Show();
-                return true;
-            }
-
-            if (info.IsKeyPressed(Keys.Escape) && NoPopWindow)
-            {
-                MainMenu.Show();
-                MainMenu.IsFocused = true;
-                return true;
-            }
-
-            return false;
         }
 
         #endregion Input

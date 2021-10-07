@@ -71,7 +71,7 @@ namespace MagiRogue.System
         /// <param name="entity">Entity to modify.</param>
         protected override void UpdateEntityUnseen(Entity entity)
         {
-            if (entity.Layer == _ghostLayer)
+            if (entity.Layer == _ghostLayer || entity.AlwaySeen == true)
                 return;
 
             if (entity.Layer != _ghostLayer && Map.PlayerExplored[entity.Position] && entity.LeavesGhost)

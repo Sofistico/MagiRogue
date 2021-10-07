@@ -19,24 +19,25 @@ namespace MagiRogue.System
     public class World
     {
         // map creation and storage data
-
-        private readonly int _mapWidth = 50;
-        private readonly int _mapHeight = 50;
+        private const int _mapWidth = 50;
+        //private const int _mapHeight = 50;
         private readonly int _maxRooms = 20;
         private readonly int _minRoomSize = 4;
         private readonly int _maxRoomSize = 10;
-        private const int _zMaxUpLevel = 10;
-        private const int _zMaxLowLevel = -10;
+        /*private const int _zMaxUpLevel = 10;
+        private const int _zMaxLowLevel = -10;*/
 
         /// <summary>
         /// Stores the current map
         /// </summary>
         public Map CurrentMap { get; set; }
 
+        public List<Map> AllMaps { get; set; }
+
         // Player data
         public Player Player { get; set; }
 
-        public TimeSystem GetTime => CurrentMap.Time;
+        public TimeSystem Time { get; private set; }
 
         private readonly Random rndNum = new Random();
 
@@ -46,16 +47,20 @@ namespace MagiRogue.System
         /// </summary>
         public World(Player player, bool testGame = false)
         {
+            AllMaps = new();
+            Time = new TimeSystem();
             if (!testGame)
             {
                 // Build a map
                 CreateMap();
 
+                CreateStoneFloorMap();
+
                 // spawn a bunch of monsters
-                CreateMonster();
+                /*CreateMonster();
 
                 // Spawn a bunch of loot
-                CreateLoot();
+                CreateLoot();*/
 
                 // create an instance of player
                 PlacePlayer(player);
@@ -71,13 +76,38 @@ namespace MagiRogue.System
             }
         }
 
+        private void CreateStoneFloorMap()
+        {
+            var map = new MapGenerator().GenerateStoneFloorMap();
+
+            AddMapToList(map);
+        }
+
+        private void AddMapToList(Map map)
+        {
+            AllMaps.Add(map);
+        }
+
+        public void ChangeActorMap(Entity entity, Map mapToGo, Point pos)
+        {
+            mapToGo.Add(entity);
+            entity.Position = pos;
+            CurrentMap = mapToGo;
+            if (!AllMaps.Contains(mapToGo))
+            {
+                AllMaps.Add(mapToGo);
+            }
+
+            GameLoop.UIManager.MapWindow.LoadMap(CurrentMap);
+        }
+
         /// <summary>
         /// Sets up anything that needs to be set up after map gen and after placing entities, like the nodes turn
         /// system
         /// </summary>
         private void SetUpStuff()
         {
-            foreach (NodeTile node in CurrentMap.Tiles.Where(t => t is NodeTile))
+            foreach (NodeTile node in CurrentMap.Tiles.OfType<NodeTile>())
             {
                 node.SetUpNodeTurn(this);
             }
@@ -88,16 +118,17 @@ namespace MagiRogue.System
         // parameters to determine geometry
         private void CreateMap()
         {
-            CurrentMap = new Map(_mapWidth, _mapHeight);
-            MapGenerator mapGen = new MapGenerator();
-            CurrentMap = mapGen.GenerateMap(_mapWidth, _mapHeight, _maxRooms, _minRoomSize, _maxRoomSize);
+            MapGenerator mapGen = new();
+            var map = mapGen.GenerateTownMap(_maxRooms, _minRoomSize, _maxRoomSize);
+            CurrentMap = map;
+            AddMapToList(map);
         }
 
         private void CreateTestMap()
         {
-            CurrentMap = new Map(_mapWidth, _mapHeight);
-            MapGenerator mapGen = new MapGenerator();
-            CurrentMap = mapGen.GenerateTestMap(_mapWidth, _mapHeight);
+            MapGenerator mapGen = new();
+            var map = mapGen.GenerateTestMap();
+            AddMapToList(map);
         }
 
         // Create a player using the Player class
@@ -157,10 +188,10 @@ namespace MagiRogue.System
 
                 Stat monsterStat = new Stat()
                 {
-                    Protection = rndNum.Next(0, 10),
-                    Defense = rndNum.Next(0, 50),
-                    Strength = rndNum.Next(0, 10),
-                    BaseAttack = rndNum.Next(0, 50),
+                    Protection = rndNum.Next(0, 5),
+                    Defense = rndNum.Next(7, 12),
+                    Strength = rndNum.Next(3, 10),
+                    BaseAttack = rndNum.Next(3, 12),
                     Speed = 1,
                     ViewRadius = 7,
                     Health = 10,
@@ -169,7 +200,7 @@ namespace MagiRogue.System
 
                 // Need to refactor this so that it's simpler to create a monster, propably gonna use the example
                 // of moving castle to make a static class containing blueprints on how to create the actors and items.
-                Anatomy monsterAnatomy = new Anatomy();
+                Anatomy monsterAnatomy = new();
                 monsterAnatomy.SetRace(new Race("Debug Race"));
 
                 Actor debugMonster = EntityFactory.ActorCreator(
@@ -179,11 +210,15 @@ namespace MagiRogue.System
 
                 debugMonster.AddComponent(new MoveAndAttackAI(debugMonster.Stats.ViewRadius));
                 debugMonster.Inventory.Add(EntityFactory.ItemCreator(debugMonster.Position,
-                    new ItemTemplate("Debug Remains", Color.Red, Color.Black, '%', 1.5f, 35, "DebugRotten")));
+                    new ItemTemplate("Debug Remains", Color.Red, Color.Black, '%', 1.5f, 35, "DebugRotten", "flesh")));
                 debugMonster.Anatomy.Limbs = LimbTemplate.BasicHumanoidBody(debugMonster);
 
                 CurrentMap.Add(debugMonster);
+                EntityTimeNode entityNode = new EntityTimeNode(debugMonster.ID, Time.TimePassed.Ticks + 100);
+                Time.RegisterEntity(entityNode);
             }
+
+            CurrentMap.Add(DataManager.ListOfActors[0]);
         }
 
         private void CreateLoot()
@@ -212,17 +247,18 @@ namespace MagiRogue.System
                 Point posNew = new Point(lootPosition % CurrentMap.Width, lootPosition / CurrentMap.Height);
 
                 Item newLoot = EntityFactory.ItemCreator(posNew,
-                    new ItemTemplate("Gold Bar", Color.Gold, Color.White, '=', 12.5f, 15, "Here is a gold bar, pretty heavy"));
+                    new ItemTemplate("Gold Bar", "Gold", "White", '=', 12.5f, 15, "Here is a gold bar, pretty heavy", "gold"));
 
                 // add the Item to the MultiSpatialMap
                 CurrentMap.Add(newLoot);
             }
-
+#if DEBUG
             Item test =
                 EntityFactory.ItemCreator(new Point(10, 10), DataManager.ListOfItems.FirstOrDefault
                 (i => i.Id == "test"));
 
             CurrentMap.Add(test);
+#endif
         }
 
         public void ProcessTurn(long playerTime, bool sucess)
@@ -240,34 +276,34 @@ namespace MagiRogue.System
                     return;
                 }
 
-                PlayerTimeNode playerTurn = new PlayerTimeNode(GetTime.TimePassed.Ticks + playerTime);
-                GetTime.RegisterEntity(playerTurn);
+                PlayerTimeNode playerTurn = new PlayerTimeNode(Time.TimePassed.Ticks + playerTime);
+                Time.RegisterEntity(playerTurn);
 
                 Player.Stats.ApplyHpRegen();
                 Player.Stats.ApplyManaRegen();
                 CurrentMap.PlayerFOV.Calculate(Player.Position, Player.Stats.ViewRadius);
 
-                var node = GetTime.NextNode();
+                var node = Time.NextNode();
 
                 while (node is not PlayerTimeNode)
                 {
                     switch (node)
                     {
                         case EntityTimeNode entityTurn:
-                            ProcessAiTurn(entityTurn.EntityId, GetTime.TimePassed.Ticks);
+                            ProcessAiTurn(entityTurn.EntityId, Time.TimePassed.Ticks);
                             break;
 
                         default:
                             throw new NotSupportedException($"Unhandled time master node type: {node.GetType()}");
                     }
 
-                    node = GetTime.NextNode();
+                    node = Time.NextNode();
                 }
 
                 GameLoop.UIManager.MapWindow.MapConsole.IsDirty = true;
 
 #if DEBUG
-                GameLoop.UIManager.MessageLog.Add($"Turns: {GetTime.Turns}, Tick: {GetTime.TimePassed.Ticks}");
+                GameLoop.UIManager.MessageLog.Add($"Turns: {Time.Turns}, Tick: {Time.TimePassed.Ticks}");
 #endif
             }
         }
@@ -286,13 +322,34 @@ namespace MagiRogue.System
                     return;
 
                 EntityTimeNode nextTurnNode = new EntityTimeNode(entityId, time + tick);
-                GetTime.RegisterEntity(nextTurnNode);
+                Time.RegisterEntity(nextTurnNode);
             }
         }
 
         public void ChangeControlledEntity(Entity entity)
         {
             CurrentMap.ControlledEntitiy = entity;
+        }
+    }
+
+    // For a future world update.
+    public class RegionChunk
+    {
+        /// <summary>
+        /// The max amount of local chuncks the region chunks hold, should be 16*16 = 256 regions.
+        /// </summary>
+        private const int MAX_LOCAL_CHUNCKS = 16 * 16;
+
+        public int X { get; }
+        public int Y { get; }
+        public Dictionary<Point, Map> LocalChunks { get; set; }
+
+        public RegionChunk(int x, int y)
+        {
+            X = x;
+            Y = y;
+
+            LocalChunks = new Dictionary<Point, Map>(MAX_LOCAL_CHUNCKS);
         }
     }
 }

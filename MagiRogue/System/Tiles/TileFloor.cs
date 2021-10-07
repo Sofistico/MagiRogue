@@ -9,7 +9,7 @@ namespace MagiRogue.System.Tiles
     public class TileFloor : TileBase
     {
         /// <summary>
-        /// Default constructor
+        /// Default constructor or a stone tile.
         /// \nFloors are set to allow movement and line of sight by default
         /// and have a dark gray foreground and a transparent background
         /// represented by the . symbol
@@ -17,9 +17,27 @@ namespace MagiRogue.System.Tiles
         /// <param name="position"></param>
         /// <param name="blocksMove"></param>
         /// <param name="tileIsTransparent"></param>
-        public TileFloor(Point position, string idMaterial, bool blocksMove = false, bool tileIsTransparent = true) : base(Color.DarkGray, Color.Transparent, '.', (int)MapLayer.TERRAIN, position, idMaterial, blocksMove, tileIsTransparent)
+        public TileFloor(Point position, string idMaterial = "stone", bool blocksMove = false, bool tileIsTransparent = true) : base(Color.DarkGray, Color.Transparent, '.', (int)MapLayer.TERRAIN, position, idMaterial, blocksMove, tileIsTransparent)
         {
-            Name = "Floor";
+            Name = "Stone Floor";
+        }
+
+        /// <summary>
+        /// Constructor for any kind of floor.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="position"></param>
+        /// <param name="idMaterial"></param>
+        /// <param name="glyph"></param>
+        /// <param name="foreground"></param>
+        /// <param name="background"></param>
+        /// <param name="blocksMove"></param>
+        /// <param name="tileIsTransparent"></param>
+        public TileFloor(string name, Point position, string idMaterial, int glyph, Color foreground, Color background,
+            bool blocksMove = false, bool tileIsTransparent = true)
+            : base(foreground, background, glyph, (int)MapLayer.TERRAIN, position, idMaterial, blocksMove,
+                  tileIsTransparent, name)
+        {
         }
     }
 }

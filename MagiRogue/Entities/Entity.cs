@@ -123,6 +123,8 @@ namespace MagiRogue.Entities
             }
         }
 
+        public bool AlwaySeen { get; internal set; }
+
         #endregion Helper Methods
 
         #region IGameObject Interface

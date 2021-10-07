@@ -1,4 +1,6 @@
-﻿using MagiRogue.System.Tiles;
+﻿using MagiRogue.Data;
+using MagiRogue.Entities;
+using MagiRogue.System.Tiles;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 using System;
@@ -12,7 +14,7 @@ namespace MagiRogue.System
     // https://roguesharp.wordpress.com/2016/03/26/roguesharp-v3-tutorial-simple-room-generation/
     public class MapGenerator
     {
-        private readonly Random randNum = new Random();
+        private readonly Random randNum = new();
 
         // Empty constructor
         public MapGenerator()
@@ -21,13 +23,13 @@ namespace MagiRogue.System
 
         private Map _map; // Temporarily store the map currently worked on
 
-        public Map GenerateMap(int mapWidth, int mapHeight, int maxRooms, int minRoomSize, int maxRoomSize)
+        public Map GenerateMazeMap(int maxRooms, int minRoomSize, int maxRoomSize)
         {
             // Create an empty map of size (mapWidht * mapHeight)
-            _map = new Map(mapWidth, mapHeight);
+            _map = new Map();
 
             // store a list of the rooms created so far
-            List<Rectangle> Rooms = new List<Rectangle>();
+            List<Room> Rooms = new();
 
             // create up to (maxRooms) rooms on the map
             // and make sure the rooms do not overlap with each other
@@ -38,14 +40,15 @@ namespace MagiRogue.System
                 int newRoomHeigth = randNum.Next(minRoomSize, maxRoomSize);
 
                 // sets the room's X/Y Position at a random point between the edges of the map
-                int newRoomX = randNum.Next(0, mapWidth - newRoomWidth - 1);
-                int newRoomY = randNum.Next(0, mapHeight - newRoomHeigth - 1);
+                int newRoomX = randNum.Next(0, _map.Width - newRoomWidth - 1);
+                int newRoomY = randNum.Next(0, _map.Height - newRoomHeigth - 1);
 
                 // create a Rectangle representing the room's perimeter
-                Rectangle newRoom = new Rectangle(newRoomX, newRoomY, newRoomWidth, newRoomHeigth);
+                Rectangle roomRectangle = new Rectangle(newRoomX, newRoomY, newRoomWidth, newRoomHeigth);
+                Room newRoom = new(roomRectangle);
 
                 // Does the new room intersect with other rooms already generated?
-                bool doesRoomIntersect = Rooms.Any(room => newRoom.Intersects(room));
+                bool doesRoomIntersect = Rooms.Any(room => newRoom.RoomRectangle.Intersects(room.RoomRectangle));
 
                 if (!doesRoomIntersect)
                     Rooms.Add(newRoom);
@@ -55,9 +58,9 @@ namespace MagiRogue.System
             FloodWalls();
 
             // carve out rooms for every room in the Rooms list
-            foreach (Rectangle room in Rooms)
+            foreach (var room in Rooms)
             {
-                CreateRoom(room);
+                CreateRoom(room.RoomRectangle);
             }
 
             // carve out tunnels between all rooms
@@ -65,8 +68,8 @@ namespace MagiRogue.System
             for (int r = 1; r < Rooms.Count; r++)
             {
                 //for all remaining rooms get the center of the room and the previous room
-                Point previousRoomCenter = Rooms[r - 1].Center;
-                Point currentRoomCenter = Rooms[r].Center;
+                Point previousRoomCenter = Rooms[r - 1].RoomRectangle.Center;
+                Point currentRoomCenter = Rooms[r].RoomRectangle.Center;
 
                 // give a 50/50 chance of which 'L' shaped connecting hallway to tunnel out
                 if (randNum.Next(1, 2) == 1)
@@ -82,7 +85,7 @@ namespace MagiRogue.System
             }
 
             // Create doors now that the tunnels have been carved out
-            foreach (Rectangle room in Rooms)
+            foreach (var room in Rooms)
                 CreateDoor(room);
 
             PlaceNodes(10);
@@ -91,14 +94,71 @@ namespace MagiRogue.System
             return _map;
         }
 
-        public Map GenerateTestMap(int mapWidth, int mapHeight)
+        public Map GenerateTestMap()
         {
-            _map = new Map(mapWidth, mapHeight);
+            _map = new Map();
 
             PrepareForFloors();
             PrepareForOuterWalls();
 
             return _map;
+        }
+
+        public Map GenerateStoneFloorMap()
+        {
+            _map = new Map();
+
+            PrepareForFloors();
+
+            return _map;
+        }
+
+        public Map GenerateTownMap(int maxRooms, int minRoomSize, int maxRoomSize)
+        {
+            _map = new Map();
+
+            PrepareForFloorsWithGrass();
+
+            List<Room> rooms = new List<Room>();
+
+            for (int i = 0; i < maxRooms; i++)
+            {
+                int newRoomWidht = randNum.Next(minRoomSize, maxRoomSize);
+                int newRoomHeight = randNum.Next(minRoomSize, maxRoomSize);
+
+                // sets the room's X/Y Position at a random point between the edges of the map
+                int newRoomX = randNum.Next(0, _map.Width - newRoomWidht - 1);
+                int newRoomY = randNum.Next(0, _map.Height - newRoomHeight - 1);
+
+                Rectangle rectangle = new Rectangle(newRoomX, newRoomY, newRoomWidht, newRoomHeight);
+                Room newRoom = new Room(rectangle);
+
+                bool doesRoomIntersect = rooms.Any(room => newRoom.RoomRectangle.Intersects(room.RoomRectangle));
+
+                if (!doesRoomIntersect)
+                    rooms.Add(newRoom);
+            }
+
+            foreach (var room in rooms)
+            {
+                CreateRoom(room.RoomRectangle);
+                CreateDoor(room);
+                room.LockDoorsRng();
+            }
+
+            InsertStairs(rooms[0]);
+
+            return _map;
+        }
+
+        private void InsertStairs(Room room)
+        {
+            Furniture stairsDown = new Furniture(Color.White, Color.Black, '>', room.RoomRectangle.Center,
+                (int)MapLayer.FURNITURE, FurnitureType.StairsDown);
+
+            room.ForceUnlock();
+
+            _map.Add(stairsDown);
         }
 
         private void PrepareForFloors()
@@ -107,6 +167,27 @@ namespace MagiRogue.System
             {
                 _map.SetTerrain(new TileFloor(pos, "stone"));
             }
+        }
+
+        private void PrepareForFloorsWithGrass()
+        {
+            foreach (var pos in _map.Positions())
+            {
+                _map.SetTerrain(TileEncyclopedia.ShortGrass(pos));
+            }
+        }
+
+        private void PrepareForAnyFloor(TileFloor floor)
+        {
+            foreach (var pos in _map.Positions())
+            {
+                floor.Position = pos;
+                _map.SetTerrain(floor);
+            }
+        }
+
+        private void ConnectWithRoads()
+        {
         }
 
         private void PrepareForOuterWalls()
@@ -131,7 +212,7 @@ namespace MagiRogue.System
             {
                 for (int y = room.ToMonoRectangle().Top + 1; y < room.ToMonoRectangle().Bottom; y++)
                 {
-                    CreateFloor(new Point(x, y));
+                    CreateStoneFloor(new Point(x, y));
                 }
             }
 
@@ -140,25 +221,32 @@ namespace MagiRogue.System
 
             foreach (Point location in perimeter)
             {
-                CreateWall(location);
+                CreateStoneWall(location);
             }
         }
 
         // Creates a Floor tile at the specified X/Y location
-        private void CreateFloor(Point location)
+        private void CreateStoneFloor(Point location)
         {
-            TileFloor floor = new TileFloor(location, "stone");
+            TileFloor floor = new TileFloor(location);
 
             // a simple setterrain already does it for me
             _map.SetTerrain(floor);
         }
 
+        // Creates a Floor tile at the specified X/Y location
+        private void CreateAnyFloor(TileFloor floor) =>
+            // a simple setterrain already does it for me
+            _map.SetTerrain(floor);
+
         // Creates a Wall tile at the specified X/Y location
-        private void CreateWall(Point location)
+        private void CreateStoneWall(Point location)
         {
-            TileWall wall = new TileWall(location, "stone");
+            TileWall wall = new TileWall(location);
             _map.SetTerrain(wall);
         }
+
+        private void CreateAnyWall(TileWall wall) => _map.SetTerrain(wall);
 
         // Fills the map with walls
         private void FloodWalls()
@@ -212,7 +300,8 @@ namespace MagiRogue.System
 
         // returns a collection of Points which represent
         // locations along a line
-        public IEnumerable<Point> GetTileLocationsAlongLine(int xOrigin, int yOrigin, int xDestination, int yDestination)
+        public IEnumerable<Point> GetTileLocationsAlongLine
+            (int xOrigin, int yOrigin, int xDestination, int yDestination)
         {
             // prevent line from overflowing
             // boundaries of the map
@@ -279,7 +368,7 @@ namespace MagiRogue.System
         {
             for (int x = Math.Min(xStart, xEnd); x <= Math.Max(xStart, xEnd); x++)
             {
-                CreateFloor(new Point(x, yPosition));
+                CreateStoneFloor(new Point(x, yPosition));
             }
         }
 
@@ -288,7 +377,7 @@ namespace MagiRogue.System
         {
             for (int y = Math.Min(yStart, yEnd); y <= Math.Max(yStart, yEnd); y++)
             {
-                CreateFloor(new Point(xPosition, y));
+                CreateStoneFloor(new Point(xPosition, y));
             }
         }
 
@@ -301,17 +390,27 @@ namespace MagiRogue.System
         {
             //if the target location is not walkable
             //then it's a wall and not a good place for a door
-            int locationIndex = location.ToIndex(_map.Width);
-            if (_map.Tiles[locationIndex] != null && _map.Tiles[locationIndex] is TileWall)
+            //int locationIndex = location.ToIndex(_map.Width);
+            /*if (_map.Tiles[locationIndex] is null)
+                && _map.Tiles[locationIndex] is TileWall)
             {
                 return false;
-            }
+            }*/
+
+            // first make sure that isn't trying to take a door
+            // off the limits of the map
+            if (_map.CheckForIndexOutOfBounds(location))
+                return false;
 
             //store references to all neighbouring cells
             Point right = new Point(location.X + 1, location.Y);
             Point left = new Point(location.X - 1, location.Y);
             Point top = new Point(location.X, location.Y - 1);
             Point bottom = new Point(location.X, location.Y + 1);
+
+            if (_map.CheckForIndexOutOfBounds(top) || _map.CheckForIndexOutOfBounds(bottom)
+                || _map.CheckForIndexOutOfBounds(left) || _map.CheckForIndexOutOfBounds(right))
+                return false;
 
             // check to see if there is a door already in the target
             // location, or above/below/right/left of the target location
@@ -351,21 +450,69 @@ namespace MagiRogue.System
         //candidate for a door.
         //When it finds a potential position, creates a closed and
         //unlocked door.
-        private void CreateDoor(Rectangle room)
+        private void CreateDoor(Room room, bool acceptsMoreThanOneDoor = false)
         {
-            List<Point> borderCells = GetBorderCellLocations(room);
+            List<Point> borderCells = GetBorderCellLocations(room.RoomRectangle);
+            bool alreadyHasDoor = false;
 
             //go through every border cell and look for potential door candidates
             foreach (Point location in borderCells)
             {
                 //int locationIndex = location.ToIndex(_map.Width);
-                if (IsPotentialDoor(location))
+                if (IsPotentialDoor(location) && !alreadyHasDoor)
                 {
                     // Create a new door that is closed and unlocked.
-                    TileDoor newDoor = new TileDoor(false, false, location, "stone");
+                    TileDoor newDoor = new(false, false, location, "stone");
                     _map.SetTerrain(newDoor);
+                    if (!acceptsMoreThanOneDoor)
+                        alreadyHasDoor = true;
+                    room.Doors.Add(newDoor);
                 }
             }
         }
+    }
+
+    public class Room
+    {
+        public Rectangle RoomRectangle { get; set; }
+        public RoomTag Tag { get; set; }
+        public List<TileDoor> Doors { get; set; } = new List<TileDoor>();
+
+        public Room(Rectangle roomRectangle, RoomTag tag)
+        {
+            RoomRectangle = roomRectangle;
+            Tag = tag;
+        }
+
+        public Room(Rectangle roomRectangle)
+        {
+            RoomRectangle = roomRectangle;
+            Tag = RoomTag.Generic;
+        }
+
+        public void LockDoorsRng()
+        {
+            int half = GoRogue.DiceNotation.Dice.Roll("1d2");
+
+            if (half == 1)
+            {
+                int indexDoor = GoRogue.Random.GlobalRandom.DefaultRNG.Next(Doors.Count);
+
+                Doors[indexDoor].Locked = true;
+            }
+        }
+
+        internal void ForceUnlock()
+        {
+            foreach (var door in Doors)
+            {
+                door.Locked = false;
+            }
+        }
+    }
+
+    public enum RoomTag
+    {
+        Generic, Inn, Temple, Blacksmith, Clothier, Alchemist, PlayerHouse, Hovel, Abandoned
     }
 }

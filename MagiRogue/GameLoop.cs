@@ -8,15 +8,10 @@ namespace MagiRogue
         public const int GameWidth = 120;
         public const int GameHeight = 30;
 
-        // Fields for the managers
-        private static UIManager uIManager;
-
-        private static World world;
-
         // Managers
-        public static UIManager UIManager { get => uIManager; set => uIManager = value; }
+        public static UIManager UIManager { get; set; }
 
-        public static World World { get => world; set => world = value; }
+        public static World World { get; set; }
 
         private static void Main()
         {

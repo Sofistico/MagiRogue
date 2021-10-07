@@ -33,8 +33,6 @@ namespace MagiRogue.System
         /// </summary>
         public event EventHandler FOVRecalculated;
 
-        public TimeSystem Time { get; private set; }
-
         /// <summary>
         /// Fires whenever the value of <see cref="ControlledEntitiy"/> is changed.
         /// </summary>
@@ -61,24 +59,24 @@ namespace MagiRogue.System
 
         /// <summary>
         /// Build a new map with a specified width and height, has entity layers,
-        /// they being 0-Furniture, 1-ghosts, 2-Items, 3-Actors, 4-Player
+        /// they being 0-Furniture, 1-ghosts, 2-Items, 3-Actors, 4-Player.
+        /// \nAll Maps must have 50x50 size, for a total of 2500 tiles inside of it, for chunck loading.
         /// </summary>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public Map(int width, int height) :
+        public Map(int width = 50, int height = 50) :
             base(CreateTerrain(width, height), Enum.GetNames(typeof(MapLayer)).Length - 1,
             Distance.Euclidean,
             entityLayersSupportingMultipleItems: LayerMasker.DEFAULT.Mask
             ((int)MapLayer.ITEMS, (int)MapLayer.GHOSTS, (int)MapLayer.PLAYER))
         {
-            Tiles = ((ArrayView<TileBase>)((LambdaSettableTranslationGridView<TileBase, IGameObject>)Terrain).BaseGrid);
+            Tiles = (ArrayView<TileBase>)((LambdaSettableTranslationGridView<TileBase, IGameObject>)Terrain).BaseGrid;
 
             // Treat the fov as a component.
-            GoRogueComponents.Add(new MagiRogueFOVVisibilityHandler(this, Color.DarkSlateGray, (int)MapLayer.GHOSTS));
+            GoRogueComponents.Add
+                (new MagiRogueFOVVisibilityHandler(this, Color.DarkSlateGray, (int)MapLayer.GHOSTS));
 
             _entityRender = new SadConsole.Entities.Renderer();
-
-            Time = new TimeSystem();
         }
 
         public void RemoveAllEntities()
@@ -112,7 +110,7 @@ namespace MagiRogue.System
         {
             // first make sure that actor isn't trying to move
             // off the limits of the map
-            if (location.X < 0 || location.Y < 0 || location.X >= Width || location.Y >= Height)
+            if (CheckForIndexOutOfBounds(location))
                 return false;
 
             // then return whether the tile is walkable
@@ -166,8 +164,6 @@ namespace MagiRogue.System
 
             // Link up the entity's Moved event to a new handler
             entity.Moved -= OnEntityMoved;
-
-            entity = null;
         }
 
         /// <summary>
@@ -176,6 +172,12 @@ namespace MagiRogue.System
         /// <param name="entity"></param>
         public void Add(Entity entity)
         {
+            if (entity.CurrentMap is not null)
+            {
+                Map map = (Map)entity.CurrentMap;
+                map.ControlledEntitiy = null;
+                map.Remove(entity);
+            }
             // Initilizes the field of view of the player, will do different for monsters
             if (entity is Player player)
             {
@@ -197,12 +199,6 @@ namespace MagiRogue.System
             }
 
             _entityRender.Add(entity);
-
-            if (entity is Actor monster)
-            {
-                EntityTimeNode entityNode = new EntityTimeNode(monster.ID, Time.TimePassed.Ticks + 100);
-                Time.RegisterEntity(entityNode);
-            }
 
             // Link up the entity's Moved event to a new handler
             entity.Moved += OnEntityMoved;
@@ -305,6 +301,9 @@ namespace MagiRogue.System
             FOVRecalculated?.Invoke(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// Fix for the FOV problem that sometimes don't work
+        /// </summary>
         public void ForceFovCalculation()
         {
             FovCalculate((Actor)ControlledEntitiy);
@@ -315,19 +314,31 @@ namespace MagiRogue.System
         /// and there is already an entity there, so it picks another random location.
         /// </summary>
         /// <returns>Returns an Point to a tile that is walkable and there is no actor there</returns>
-        private Point GetRandomWalkableTile()
+        public Point GetRandomWalkableTile()
         {
-            foreach (var terrain in Tiles)
+            var rng = GoRogue.Random.GlobalRandom.DefaultRNG;
+            Point rngPoint = new Point(rng.Next(Width - 1), rng.Next(Height - 1));
+
+            while (!IsTileWalkable(rngPoint))
+                rngPoint = new Point(rng.Next(Width - 1), rng.Next(Height - 1));
+
+            return rngPoint;
+        }
+
+        /// <summary>
+        /// Returns if the Point is inside the index of the map, makes sure that nothing tries to go outside the map.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public bool CheckForIndexOutOfBounds(Point point)
+        {
+            if (point.X < 0 || point.Y < 0
+                || point.X >= Width || point.Y >= Height)
             {
-                Actor entityThere = GetEntityAt<Actor>(terrain.Position);
-                if (terrain.IsWalkable && entityThere is null && terrain is not NodeTile)
-                {
-                    return terrain.Position;
-                }
+                return true;
             }
 
-            // should never go to this
-            return Point.None;
+            return false;
         }
 
         #endregion HelperMethods
@@ -350,7 +361,6 @@ namespace MagiRogue.System
             }
             Tiles = null;
             this.ControlledEntitiy = null;
-            this.Time = null;
             GoRogueComponents.Clear();
 
 #if DEBUG
@@ -371,6 +381,7 @@ namespace MagiRogue.System
         GHOSTS,
         ITEMS,
         ACTORS,
+        FURNITURE,
         PLAYER
     }
 

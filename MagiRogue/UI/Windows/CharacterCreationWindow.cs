@@ -129,6 +129,11 @@ namespace MagiRogue.UI.Windows
                 player = new Player(charName.Text, Color.White, Color.Black, Point.None);
             else
             {
+                /*#if DEBUG
+                                player = Player.TestPlayer();
+                                return player;
+                #endif*/
+
                 PopWindow error = new PopWindow("Error");
                 error.Surface.Clear();
                 error.Surface.Print(1, 1, "You need to insert a name!");
@@ -159,6 +164,8 @@ namespace MagiRogue.UI.Windows
             // to work,
             // but if the player doens't have enough shaping skills for the spell, the player would play as an failed mage.
             player.Magic.KnowSpells.Add(DataManager.QuerySpellInData("magic_missile"));
+            player.Size = TRandom.New().Next(160, 200);
+            player.Weight = TRandom.New().Next(50, 90);
 
             return player;
         }

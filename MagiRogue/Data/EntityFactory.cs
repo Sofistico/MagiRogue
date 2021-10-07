@@ -10,11 +10,13 @@ namespace MagiRogue.Data
     {
         public static Actor ActorCreator(Point position, ActorTemplate actorTemplate)
         {
+           
+
             Actor actor =
-                new Actor(
+                new(
                 actorTemplate.Name,
-                actorTemplate.Foreground,
-                actorTemplate.Background,
+                actorTemplate.ForegroundBackingField.Color,
+                actorTemplate.BackgroundBackingField.Color,
                 actorTemplate.Glyph,
                 position
                 )
@@ -29,11 +31,12 @@ namespace MagiRogue.Data
 
         public static Item ItemCreator(Point position, ItemTemplate itemTemplate)
         {
+           
             Item item =
-                new Item
+                new
                 (
-                    itemTemplate.Foreground,
-                    itemTemplate.Background,
+                    itemTemplate.ForegroundBackingField.Color,
+                    itemTemplate.BackgroundBackingField.Color,
                     itemTemplate.Name,
                     itemTemplate.Glyph,
                     position,
@@ -43,7 +46,7 @@ namespace MagiRogue.Data
                 )
                 {
                     Description = itemTemplate.Description,
-                    Material = System.Physics.PhysicsManager.SetMaterial(itemTemplate.MaterialId)
+                    Material = itemTemplate.Material
                 };
 
             return item;

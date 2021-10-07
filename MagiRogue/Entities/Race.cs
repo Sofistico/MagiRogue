@@ -8,7 +8,7 @@ namespace MagiRogue.Entities
     public struct Race
     {
         [DataMember]
-        public string RaceName { get; set; }
+        public readonly string RaceName { get; }
 
         public Race(string raceName)
         {

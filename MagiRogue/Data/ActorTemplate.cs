@@ -58,17 +58,49 @@ namespace MagiRogue.Data
         [DataMember(EmitDefaultValue = false, IsRequired = false)]
         public int Layer { get; set; }
 
-        //[DataMember]
-        public Color Foreground { get; set; }
+        [JsonIgnore]
+        public MagiColorSerialization ForegroundBackingField { get; internal set; }
 
-        //[DataMember]
-        public Color Background { get; set; }
+        [JsonIgnore]
+        public MagiColorSerialization BackgroundBackingField { get; internal set; }
 
-        [DataMember]
-        public ColoredGlyphSerialized ColoredGlyphSerialized { get; set; }
+        public string Foreground { get; internal set; }
 
+        public string Background { get; internal set; }
+
+        /// <summary>
+        /// Is used in the serialization of the actor.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="foreground"></param>
+        /// <param name="background"></param>
+        /// <param name="glyph"></param>
+        /// <param name="layer"></param>
+        /// <param name="stats"></param>
+        /// <param name="anatomy"></param>
+        /// <param name="description"></param>
+        /// <param name="size"></param>
+        /// <param name="weight"></param>
+        /// <param name="materialId"></param>
         public ActorTemplate(string name, Color foreground, Color background, int glyph,
             int layer, Stat stats, Anatomy anatomy, string description, int size, float weight, string materialId)
+        {
+            Name = name;
+            Glyph = (char)glyph;
+            Stats = stats;
+            Anatomy = anatomy;
+            Description = description;
+            Layer = layer;
+            Size = size;
+            Weight = weight;
+            MaterialId = materialId;
+
+            ForegroundBackingField = new MagiColorSerialization(foreground);
+            BackgroundBackingField = new MagiColorSerialization(background);
+        }
+
+        public ActorTemplate(string name, string foreground, string background, int glyph,
+           int layer, Stat stats, Anatomy anatomy, string description, int size, float weight, string materialId)
         {
             Name = name;
             Foreground = foreground;
@@ -81,19 +113,16 @@ namespace MagiRogue.Data
             Size = size;
             Weight = weight;
             MaterialId = materialId;
-            ColoredGlyphSerialized = new ColoredGlyphSerialized()
-            {
-                Background = background,
-                Foreground = foreground,
-                Glyph = glyph
-            };
+
+            ForegroundBackingField = new MagiColorSerialization(foreground);
+            BackgroundBackingField = new MagiColorSerialization(background);
         }
 
         public ActorTemplate(Actor actor)
         {
             Name = actor.Name;
-            Foreground = actor.Appearance.Foreground;
-            Background = actor.Appearance.Background;
+            ForegroundBackingField = new MagiColorSerialization(actor.Appearance.Foreground);
+            BackgroundBackingField = new MagiColorSerialization(actor.Appearance.Background);
             Glyph = (char)actor.Appearance.Glyph;
             Stats = actor.Stats;
             Anatomy = actor.Anatomy;
@@ -102,7 +131,6 @@ namespace MagiRogue.Data
             Size = actor.Size;
             Weight = actor.Weight;
             MaterialId = actor.Material.Id;
-            ColoredGlyphSerialized = actor.Appearance;
         }
 
         public ActorTemplate()
@@ -112,8 +140,8 @@ namespace MagiRogue.Data
         public static implicit operator Actor(ActorTemplate actorTemplate)
         {
             Actor actor =
-                new Actor(actorTemplate.Name, actorTemplate.Foreground,
-                actorTemplate.Background,
+                new Actor(actorTemplate.Name, actorTemplate.ForegroundBackingField.Color,
+                actorTemplate.BackgroundBackingField.Color,
                 actorTemplate.Glyph,
                 Point.None)
                 {

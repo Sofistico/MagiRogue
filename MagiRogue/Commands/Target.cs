@@ -31,7 +31,7 @@ namespace MagiRogue.Commands
 
         public Path TravelPath { get; set; }
 
-        public int MaxDistance => SpellSelected is not null ? SpellSelected.SpellRange : 500;
+        public int MaxDistance => SpellSelected is not null ? SpellSelected.SpellRange : 999;
 
         public SpellBase SpellSelected { get; set; }
 
@@ -48,7 +48,8 @@ namespace MagiRogue.Commands
                 CanBeKilled = false,
                 CanBeAttacked = false,
                 CanInteract = false,
-                LeavesGhost = false
+                LeavesGhost = false,
+                AlwaySeen = true
             };
 
             SadConsole.Effects.Blink blink = new SadConsole.Effects.Blink()
@@ -80,8 +81,8 @@ namespace MagiRogue.Commands
 
         public bool EntityInTarget()
         {
-            if (GameLoop.World.CurrentMap.GetEntitiesAt<Entity>(Cursor.Position).Any(e => e.ID != Cursor.ID)
-                && GameLoop.World.CurrentMap.GetEntityAt<Entity>(Cursor.Position) is not Player)
+            if (GameLoop.World.CurrentMap.GetEntitiesAt<Entity>(Cursor.Position).Any(e => e.ID != Cursor.ID))
+            //&& GameLoop.World.CurrentMap.GetEntityAt<Entity>(Cursor.Position) is not Player)
             {
                 State = TargetState.Targeting;
                 return true;
@@ -102,7 +103,6 @@ namespace MagiRogue.Commands
                 return;
             }
 
-            Cursor.Moved += Cursor_Moved;
             StartTargetting();
         }
 
@@ -110,6 +110,8 @@ namespace MagiRogue.Commands
         {
             GameLoop.World.ChangeControlledEntity(Cursor);
             GameLoop.World.CurrentMap.Add(Cursor);
+            Cursor.Moved += Cursor_Moved;
+
             State = TargetState.Targeting;
         }
 
@@ -142,11 +144,15 @@ namespace MagiRogue.Commands
             bool casted;
             if (TargetList.Count > 0)
                 casted = SpellSelected.CastSpell(TargetList[0].Position, _caster);
-            else
+            else if (TravelPath is not null)
             {
                 casted = SpellSelected.CastSpell(TravelPath.End, _caster);
             }
-
+            else
+            {
+                casted = false;
+                GameLoop.UIManager.MessageLog.Add("An error ocurred, cound't find a target!");
+            }
             var spellCasted = SpellSelected;
             EndTargetting();
             return (casted, spellCasted);
@@ -182,7 +188,7 @@ namespace MagiRogue.Commands
 
         private (bool, SpellBase) AffectPath()
         {
-            if (TravelPath.Length >= 1)
+            if (TravelPath is not null && TravelPath.Length >= 1)
             {
                 bool sucess = SpellSelected.CastSpell(TravelPath.Steps.ToList(), _caster);
 
@@ -246,26 +252,34 @@ namespace MagiRogue.Commands
                 }
             }
 
-            if (SpellSelected.Effects.Any(a => a.AreaOfEffect is SpellAreaEffect.Ball))
-            {
-                RadiusLocationContext radiusLocation =
-                   new RadiusLocationContext(Cursor.Position, SpellSelected.Effects.FirstOrDefault().Radius);
+            SpellAreaHelper();
+        }
 
-                foreach (Point point in radius.PositionsInRadius(radiusLocation))
+        private void SpellAreaHelper()
+        {
+            if (SpellSelected is not null)
+            {
+                if (SpellSelected.Effects.Any(a => a.AreaOfEffect is SpellAreaEffect.Ball))
                 {
-                    AddTileToDictionary(point);
-                    AddEntityToList(point);
+                    RadiusLocationContext radiusLocation =
+                       new RadiusLocationContext(Cursor.Position, SpellSelected.Effects.FirstOrDefault().Radius);
+
+                    foreach (Point point in radius.PositionsInRadius(radiusLocation))
+                    {
+                        AddTileToDictionary(point);
+                        AddEntityToList(point);
+                    }
                 }
-            }
 
-            if (SpellSelected.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Cone))
-            {
-                ISpellEffect effect = GetSpellAreaEffect(SpellAreaEffect.Cone);
-                foreach (Point point in
-                    GeometryUtils.Cone(OriginCoord, effect.Radius, this).Points)
+                if (SpellSelected.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Cone))
                 {
-                    AddTileToDictionary(point);
-                    AddEntityToList(point);
+                    ISpellEffect effect = GetSpellAreaEffect(SpellAreaEffect.Cone);
+                    foreach (Point point in
+                        GeometryUtils.Cone(OriginCoord, effect.Radius, this).Points)
+                    {
+                        AddTileToDictionary(point);
+                        AddEntityToList(point);
+                    }
                 }
             }
         }
@@ -286,6 +300,16 @@ namespace MagiRogue.Commands
             // sanity check
         }
 
+        public bool SpellTargetsTile()
+        {
+            if (SpellSelected is not null && (SpellSelected.Effects.Any(a => a.TargetsTile)
+                || SpellSelected.Effects.Any(a => a.AreaOfEffect is not SpellAreaEffect.Target)))
+            {
+                return true;
+            }
+            return false;
+        }
+
         /// <summary>
         /// Adds an entity to the <see cref="TargetList"/>.
         /// </summary>
@@ -302,9 +326,11 @@ namespace MagiRogue.Commands
 
         public void LookTarget()
         {
-            LookWindow w = new(TargetList[0]);
+            LookWindow w = new(TargetEntity());
             w.Show();
         }
+
+        private Entity TargetEntity() => GameLoop.World.CurrentMap.GetEntityAt<Entity>(Cursor.Position);
 
         public enum TargetState
         {
