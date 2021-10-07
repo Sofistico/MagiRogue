@@ -30,7 +30,7 @@ namespace MagiRogue.System
         /// <summary>
         /// Stores the current map
         /// </summary>
-        public Map CurrentMap { get; set; }
+        public Map CurrentMap { get; private set; }
 
         public List<Map> AllMaps { get; set; }
 
@@ -52,21 +52,14 @@ namespace MagiRogue.System
             if (!testGame)
             {
                 // Build a map
-                CreateMap();
+                CreateTownMap();
 
                 CreateStoneFloorMap();
 
-                // spawn a bunch of monsters
-                /*CreateMonster();
-
-                // Spawn a bunch of loot
-                CreateLoot();*/
+                CreateStoneMazeMap();
 
                 // create an instance of player
                 PlacePlayer(player);
-
-                // Set up anything that needs to be set up for the world to work
-                SetUpStuff();
             }
             else
             {
@@ -74,6 +67,20 @@ namespace MagiRogue.System
 
                 PlacePlayer(player);
             }
+        }
+
+        private void CreateStoneMazeMap()
+        {
+            Map map = new MapGenerator().GenerateMazeMap(_maxRooms, _minRoomSize, _maxRoomSize);
+
+            // spawn a bunch of monsters
+            CreateMonster(map, 10);
+
+            // Spawn a bunch of loot
+            CreateLoot(map, 20);
+
+            // Set up anything that needs to be set up for the world to work
+            SetUpStuff(map);
         }
 
         private void CreateStoneFloorMap()
@@ -105,9 +112,9 @@ namespace MagiRogue.System
         /// Sets up anything that needs to be set up after map gen and after placing entities, like the nodes turn
         /// system
         /// </summary>
-        private void SetUpStuff()
+        private void SetUpStuff(Map map)
         {
-            foreach (NodeTile node in CurrentMap.Tiles.OfType<NodeTile>())
+            foreach (NodeTile node in map.Tiles.OfType<NodeTile>())
             {
                 node.SetUpNodeTurn(this);
             }
@@ -116,7 +123,7 @@ namespace MagiRogue.System
         // Create a new map using the Map class
         // and a map generator. Uses several
         // parameters to determine geometry
-        private void CreateMap()
+        private void CreateTownMap()
         {
             MapGenerator mapGen = new();
             var map = mapGen.GenerateTownMap(_maxRooms, _minRoomSize, _maxRoomSize);
@@ -128,6 +135,7 @@ namespace MagiRogue.System
         {
             MapGenerator mapGen = new();
             var map = mapGen.GenerateTestMap();
+            CurrentMap = map;
             AddMapToList(map);
         }
 
@@ -159,11 +167,8 @@ namespace MagiRogue.System
         // Create some random monsters with random attack and defense values
         // and drop them all over the map in
         // random places.
-        private void CreateMonster()
+        private void CreateMonster(Map map, int numMonster)
         {
-            // number of monsters to create
-            int numMonster = 10;
-
             // Create several monsters and
             // pick a random position on the map to place them.
             // check if the placement spot is blocking (e.g. a wall)
@@ -171,20 +176,20 @@ namespace MagiRogue.System
             for (int i = 0; i < numMonster; i++)
             {
                 int monsterPosition = 0;
-                while (CurrentMap.Tiles[monsterPosition].IsBlockingMove)
+                while (map.Tiles[monsterPosition].IsBlockingMove)
                 {
                     // pick a random spot on the map
-                    monsterPosition = rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);
-                    if (CurrentMap.Tiles[monsterPosition] is NodeTile)
+                    monsterPosition = rndNum.Next(0, map.Width * map.Height);
+                    if (map.Tiles[monsterPosition] is NodeTile)
                     {
-                        monsterPosition = rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);
+                        monsterPosition = rndNum.Next(0, map.Width * map.Height);
                     }
                 }
 
                 // Set the monster's new position
                 // Note: this fancy math will be replaced by a new helper method
                 // in the next revision of SadConsole
-                var pos = new Point(monsterPosition % CurrentMap.Width, monsterPosition / CurrentMap.Height);
+                var pos = new Point(monsterPosition % map.Width, monsterPosition / map.Height);
 
                 Stat monsterStat = new Stat()
                 {
@@ -213,19 +218,16 @@ namespace MagiRogue.System
                     new ItemTemplate("Debug Remains", Color.Red, Color.Black, '%', 1.5f, 35, "DebugRotten", "flesh")));
                 debugMonster.Anatomy.Limbs = LimbTemplate.BasicHumanoidBody(debugMonster);
 
-                CurrentMap.Add(debugMonster);
+                map.Add(debugMonster);
                 EntityTimeNode entityNode = new EntityTimeNode(debugMonster.ID, Time.TimePassed.Ticks + 100);
                 Time.RegisterEntity(entityNode);
             }
 
-            CurrentMap.Add(DataManager.ListOfActors[0]);
+            map.Add(DataManager.ListOfActors[0]);
         }
 
-        private void CreateLoot()
+        private void CreateLoot(Map map, int numLoot)
         {
-            // number of treasure drops to create
-            int numLoot = 20;
-
             // Produce loot up to a max of numLoot
             for (int i = 0; i < numLoot; i++)
             {
@@ -233,24 +235,24 @@ namespace MagiRogue.System
                 int lootPosition = 0;
 
                 // Try placing the Item at lootPosition; if this fails, try random positions on the map's tile array
-                while (CurrentMap.Tiles[lootPosition].IsBlockingMove)
+                while (map.Tiles[lootPosition].IsBlockingMove)
                 {
                     // pick a random spot on the map
-                    lootPosition = rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);
-                    if (CurrentMap.Tiles[lootPosition] is NodeTile)
+                    lootPosition = rndNum.Next(0, map.Width * map.Height);
+                    if (map.Tiles[lootPosition] is NodeTile)
                     {
-                        lootPosition = rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);
+                        lootPosition = rndNum.Next(0, map.Width * map.Height);
                     }
                 }
 
                 // set the loot's new position
-                Point posNew = new Point(lootPosition % CurrentMap.Width, lootPosition / CurrentMap.Height);
+                Point posNew = new Point(lootPosition % map.Width, lootPosition / map.Height);
 
                 Item newLoot = EntityFactory.ItemCreator(posNew,
                     new ItemTemplate("Gold Bar", "Gold", "White", '=', 12.5f, 15, "Here is a gold bar, pretty heavy", "gold"));
 
                 // add the Item to the MultiSpatialMap
-                CurrentMap.Add(newLoot);
+                map.Add(newLoot);
             }
 #if DEBUG
             Item test =
