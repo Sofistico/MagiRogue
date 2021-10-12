@@ -19,7 +19,8 @@ namespace MagiRogue.System.Physics
         private static readonly Color GrassColor = new(50 / 255f, 220 / 255f, 20 / 255f, 1);
         private static readonly Color ForestColor = new(16 / 255f, 160 / 255f, 0, 1);
         private static readonly Color RockColor = new(0.5f, 0.5f, 0.5f, 1);
-        private static readonly Color SnowColor = new(1, 1, 1, 1);
+        private static readonly Color SnowColor = Color.White;
+        private static readonly Color MagicColor = Color.Purple;
 
         public static void SetTile(int width, int height, ref WorldTile[,] tiles)
         {
@@ -66,17 +67,23 @@ namespace MagiRogue.System.Physics
                             break;
 
                         case HeightType.Rock:
-                            worldTile = new(ForestColor, Color.Black, '^',
+                            worldTile = new(RockColor, Color.Black, '^',
                                                             new Point(x, y));
                             tiles[x, y] = worldTile;
 
                             break;
 
                         case HeightType.Snow:
-                            worldTile = new(SnowColor, Color.Transparent, '~',
+                            worldTile = new(SnowColor, Color.Black, '~',
                                 new Point(x, y));
                             tiles[x, y] = worldTile;
 
+                            break;
+
+                        case HeightType.MagicLand:
+                            worldTile = new(MagicColor, Color.Black, 'i',
+                                new Point(x, y));
+                            tiles[x, y] = worldTile;
                             break;
                     }
                 }

@@ -12,18 +12,21 @@ namespace MagiRogue.System.Physics
 {
     public class PlanetGenerator
     {
-        private int width = GameLoop.GameWidth;
-        private int height = GameLoop.GameHeight;
-        private float deepWater = 0.2f;
-        private float shallowWater = 0.4f;
-        private float sand = 0.5f;
-        private float grass = 0.7f;
-        private float forest = 0.8f;
-        private float rock = 0.9f;
-        private float snow = 1;
+        private readonly int width = GameLoop.GameWidth;
+        private readonly int height = GameLoop.GameHeight * 2;
+        private readonly float deepWater = 0.2f;
+        private readonly float shallowWater = 0.4f;
+        private readonly float sand = 0.5f;
+        private readonly float grass = 0.7f;
+        private readonly float forest = 0.8f;
+        private readonly float rock = 0.9f;
+        private readonly float snow = 1;
+        private readonly float magicLand = 1.2f;
 
-        private int terrainOctaves = 6;
-        private float terrainFrequency = 1.25f;
+        private readonly int terrainOctaves = 6;
+        private readonly float terrainFrequency = 1.5f;
+        private readonly float terrainLacunarity = 2f;
+        private readonly float terrainGain = 0.5f;
 
         // noise generator
         private FastNoiseLite heightMap;
@@ -48,12 +51,12 @@ namespace MagiRogue.System.Physics
             LoadTiles();
 
             // Here will take care of the visualization
-            CreateConsole(mapRenderer, tiles);
+            CreateConsole(tiles);
 
             return planetData;
         }
 
-        private void CreateConsole(Console mapRenderer, WorldTile[,] tiles)
+        private void CreateConsole(WorldTile[,] tiles)
         {
             PlanetGlyphGenerator.SetTile(width, height, ref tiles);
             WorldTile[] coloredTiles = new WorldTile[width * height];
@@ -69,6 +72,7 @@ namespace MagiRogue.System.Physics
             GameLoop.UIManager.Children.Clear();
             GameLoop.UIManager.Children.Add(mapRenderer);
             mapRenderer.Position = new SadRogue.Primitives.Point(0, 0);
+            mapRenderer.Font = SadConsole.Game.Instance.LoadFont("cp437_12x12.font");
         }
 
         // Build a Tile array from our data
@@ -115,9 +119,13 @@ namespace MagiRogue.System.Physics
                     {
                         t.HeightType = HeightType.Rock;
                     }
-                    else
+                    else if (value < snow)
                     {
                         t.HeightType = HeightType.Snow;
+                    }
+                    else if (value < magicLand)
+                    {
+                        t.HeightType = HeightType.MagicLand;
                     }
 
                     tiles[x, y] = t;
@@ -149,11 +157,14 @@ namespace MagiRogue.System.Physics
 
         private void Initialize()
         {
-            heightMap = new FastNoiseLite(DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second);
-            heightMap.SetNoiseType(FastNoiseLite.NoiseType.OpenSimplex2);
+            heightMap = new FastNoiseLite(GoRogue.Random.GlobalRandom.DefaultRNG.Next(0, int.MaxValue));
+            heightMap.SetNoiseType(FastNoiseLite.NoiseType.Value);
 
             heightMap.SetFractalOctaves(terrainOctaves);
             heightMap.SetFrequency(terrainFrequency);
+            heightMap.SetFractalLacunarity(terrainLacunarity);
+            heightMap.SetFractalGain(terrainGain);
+            heightMap.SetFractalType(FastNoiseLite.FractalType.PingPong);
         }
     }
 }

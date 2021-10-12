@@ -17,7 +17,8 @@ namespace MagiRogue.System.Tiles
         Grass = 5,
         Forest = 6,
         Rock = 7,
-        Snow = 8
+        Snow = 8,
+        MagicLand = 9
     }
 
     [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
