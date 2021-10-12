@@ -78,7 +78,7 @@ namespace MagiRogue.UI
             GameLoop.World = new World(player, testGame);
 
             //Message Log initialization
-            MessageLog = new MessageLogWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Message Log");
+            /*MessageLog = new MessageLogWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Message Log");
             Children.Add(MessageLog);
             MessageLog.Show();
             MessageLog.Position = new Point(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2);
@@ -103,7 +103,7 @@ namespace MagiRogue.UI
             //MapWindow.LoadAllChunks(GameLoop.World.LocalChunks);
 
             // Start the game with the camera focused on the player
-            MapWindow.CenterOnActor(GameLoop.World.Player);
+            MapWindow.CenterOnActor(GameLoop.World.Player);*/
         }
 
         /// <summary>

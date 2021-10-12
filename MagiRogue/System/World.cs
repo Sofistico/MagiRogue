@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using MagiRogue.System.Physics;
 
 namespace MagiRogue.System
 {
@@ -24,8 +25,11 @@ namespace MagiRogue.System
         private readonly int _maxRooms = 20;
         private readonly int _minRoomSize = 4;
         private readonly int _maxRoomSize = 10;
+        private readonly Random rndNum = new Random();
         /*private const int _zMaxUpLevel = 10;
         private const int _zMaxLowLevel = -10;*/
+
+        public PlanetMap PlanetMap { get; }
 
         /// <summary>
         /// Stores the current map
@@ -39,8 +43,6 @@ namespace MagiRogue.System
 
         public TimeSystem Time { get; private set; }
 
-        private readonly Random rndNum = new Random();
-
         /// <summary>
         /// Creates a new game world and stores it in a
         /// publicly accessible constructor.
@@ -49,7 +51,8 @@ namespace MagiRogue.System
         {
             AllMaps = new();
             Time = new TimeSystem();
-            if (!testGame)
+            PlanetMap = new PlanetGenerator().CreatePlanet();
+            /*if (!testGame)
             {
                 // Build a map
                 CreateTownMap();
@@ -66,7 +69,7 @@ namespace MagiRogue.System
                 CreateTestMap();
 
                 PlacePlayer(player);
-            }
+            }*/
         }
 
         private void CreateStoneMazeMap()
