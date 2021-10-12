@@ -73,7 +73,7 @@ namespace MagiRogue.System.Physics
                             break;
 
                         case HeightType.Snow:
-                            worldTile = new(SnowColor, Color.Black, '~',
+                            worldTile = new(SnowColor, Color.Transparent, '~',
                                 new Point(x, y));
                             tiles[x, y] = worldTile;
 

@@ -60,7 +60,7 @@ namespace MagiRogue.UI
         {
             foreach (Keys key in MovementDirectionMapping.Keys)
             {
-                if (info.IsKeyPressed(key))
+                if (info.IsKeyPressed(key) && world.CurrentMap is not null)
                 {
                     Direction moveDirection = MovementDirectionMapping[key];
                     Point coorToMove = new(moveDirection.DeltaX, moveDirection.DeltaY);

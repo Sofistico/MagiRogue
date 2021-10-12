@@ -12,8 +12,8 @@ namespace MagiRogue.System.Physics
 {
     public class PlanetGenerator
     {
-        private int width = 256;
-        private int height = 256;
+        private int width = GameLoop.GameWidth;
+        private int height = GameLoop.GameHeight;
         private float deepWater = 0.2f;
         private float shallowWater = 0.4f;
         private float sand = 0.5f;
@@ -66,7 +66,6 @@ namespace MagiRogue.System.Physics
             }
 
             mapRenderer = new Console(width, height, coloredTiles);
-
             GameLoop.UIManager.Children.Clear();
             GameLoop.UIManager.Children.Add(mapRenderer);
             mapRenderer.Position = new SadRogue.Primitives.Point(0, 0);
