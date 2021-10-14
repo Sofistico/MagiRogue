@@ -24,7 +24,7 @@ namespace MagiRogue.System.Physics
 
         public static void SetTile(int width, int height, ref WorldTile[,] tiles)
         {
-            WorldTile worldTile;
+            ColoredGlyph tempTile;
 
             for (int x = 0; x < width; x++)
             {
@@ -33,58 +33,55 @@ namespace MagiRogue.System.Physics
                     switch (tiles[x, y].HeightType)
                     {
                         case HeightType.DeepWater:
-                            worldTile = new(DeepColor, Color.Black, '~',
-                                new Point(x, y));
-                            tiles[x, y] = worldTile;
+                            tempTile = new(DeepColor, Color.Black, '~');
+                            tiles[x, y].CopyAppearanceFrom(tempTile);
                             break;
 
                         case HeightType.ShallowWater:
-                            worldTile = new(ShallowColor, Color.Black, '~',
-                                new Point(x, y));
-                            tiles[x, y] = worldTile;
+                            tempTile = new(ShallowColor, Color.Black, '~');
+                            tiles[x, y].CopyAppearanceFrom(tempTile);
 
                             break;
 
                         case HeightType.Sand:
-                            worldTile = new(SandColor, Color.Black, '~',
-                                new Point(x, y));
-                            tiles[x, y] = worldTile;
+                            tempTile = new(SandColor, Color.Black, '~');
+                            tiles[x, y].CopyAppearanceFrom(tempTile);
 
                             break;
 
                         case HeightType.Grass:
-                            worldTile = new(GrassColor, Color.Black, ',',
-                            new Point(x, y));
-                            tiles[x, y] = worldTile;
+                            tempTile = new(GrassColor, Color.Black, ',');
+                            tiles[x, y].CopyAppearanceFrom(tempTile);
 
                             break;
 
                         case HeightType.Forest:
-                            worldTile = new(ForestColor, Color.Black, 'T',
-                                new Point(x, y));
-                            tiles[x, y] = worldTile;
+                            tempTile = new(ForestColor, Color.Black, 'T');
+                            tiles[x, y].CopyAppearanceFrom(tempTile);
 
                             break;
 
                         case HeightType.Rock:
-                            worldTile = new(RockColor, Color.Black, '^',
-                                                            new Point(x, y));
-                            tiles[x, y] = worldTile;
+                            tempTile = new(RockColor, Color.Black, '^');
+                            tiles[x, y].CopyAppearanceFrom(tempTile);
 
                             break;
 
                         case HeightType.Snow:
-                            worldTile = new(SnowColor, Color.Black, '~',
-                                new Point(x, y));
-                            tiles[x, y] = worldTile;
+                            tempTile = new(SnowColor, Color.Black, '~');
+                            tiles[x, y].CopyAppearanceFrom(tempTile);
 
                             break;
 
                         case HeightType.MagicLand:
-                            worldTile = new(MagicColor, Color.Black, 'i',
-                                new Point(x, y));
-                            tiles[x, y] = worldTile;
+                            tempTile = new(MagicColor, Color.Black, 'i');
+                            tiles[x, y].CopyAppearanceFrom(tempTile);
                             break;
+                    }
+
+                    if (tiles[x, y].Bitmask != 15)
+                    {
+                        tiles[x, y].Foreground = Color.Lerp(tiles[x, y].Foreground, Color.Black, 0.2f);
                     }
                 }
             }

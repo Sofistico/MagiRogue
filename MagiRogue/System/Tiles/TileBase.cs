@@ -110,6 +110,21 @@ namespace MagiRogue.System.Tiles
             CalculateTileHealth();
         }
 
+        protected TileBase(Color foregroud, Color background, int glyph, int layer,
+            Point position, bool blocksMove = true,
+            bool isTransparent = true, string name = "ForgotToChangeName")
+            : base(foregroud, background, glyph)
+        {
+            IsBlockingMove = blocksMove;
+            Name = name;
+            Layer = layer;
+            backingField = new GameObject(position, layer, !blocksMove, isTransparent);
+            LastSeenAppereance = new ColoredGlyph(Foreground, Background, Glyph)
+            {
+                IsVisible = false
+            };
+        }
+
         protected void CalculateTileHealth() => _tileHealth = (int)MaterialOfTile.Density * MaterialOfTile.Hardness;
 
 #nullable enable

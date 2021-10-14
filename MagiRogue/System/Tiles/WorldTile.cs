@@ -28,11 +28,28 @@ namespace MagiRogue.System.Tiles
 
         public HeightType HeightType { get; set; }
 
+        public WorldTile Left { get; set; }
+        public WorldTile Right { get; set; }
+        public WorldTile Top { get; set; }
+        public WorldTile Bottom { get; set; }
+        public int Bitmask { get; private set; }
+
+        /// <summary>
+        /// The FloodFilled variable will be used to keep
+        /// track of which tiles have already been processed by the flood filling algorithm
+        /// </summary>
+        public bool FloodFilled { get; set; }
+
+        /// <summary>
+        /// Anything that isn't water will be collidable
+        /// </summary>
+        public bool Collidable { get; set; }
+
         public WorldTile(Color foregroud, Color background,
             int glyph, Point position,
             bool blocksMove = false, bool isTransparent = true,
             string name = "World Tile")
-            : base(foregroud, background, glyph, (int)MapLayer.TERRAIN, position, "null", blocksMove, isTransparent, name)
+            : base(foregroud, background, glyph, (int)MapLayer.TERRAIN, position, blocksMove, isTransparent, name)
         {
         }
 
@@ -41,6 +58,22 @@ namespace MagiRogue.System.Tiles
         /// </summary>
         public WorldTile() : base(Color.Black, Color.Black, '2', 0, Point.None, "null")
         {
+        }
+
+        public void UpdateBitmask()
+        {
+            int count = 0;
+
+            if (Top.HeightType == HeightType)
+                count += 1;
+            if (Right.HeightType == HeightType)
+                count += 2;
+            if (Left.HeightType == HeightType)
+                count += 4;
+            if (Bottom.HeightType == HeightType)
+                count += 8;
+
+            Bitmask = count;
         }
 
         private string GetDebuggerDisplay()

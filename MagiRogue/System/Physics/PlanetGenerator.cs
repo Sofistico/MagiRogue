@@ -21,17 +21,21 @@ namespace MagiRogue.System.Physics
         private readonly float forest = 0.8f;
         private readonly float rock = 0.9f;
         private readonly float snow = 1;
-        private readonly float magicLand = 1.2f;
+        //private readonly float magicLand = 1.2f;
 
-        private readonly int terrainOctaves = 6;
+        private readonly int terrainOctaves = 8;
         private readonly float terrainFrequency = 1.5f;
         private readonly float terrainLacunarity = 2f;
         private readonly float terrainGain = 0.5f;
 
+        private readonly List<WorldTileGroup> waters = new();
+        private readonly List<WorldTileGroup> lands = new();
+
         // noise generator
         private FastNoiseLite heightMap;
+        private FastNoiseLite heatMap;
 
-        // height map data
+        // Planet data
         private PlanetMap planetData;
 
         // final object
@@ -49,6 +53,10 @@ namespace MagiRogue.System.Physics
 
             // Build our final objects based on our data
             LoadTiles();
+
+            UpdateNeighbors();
+            UpdateBitmasks();
+            FloodFill();
 
             // Here will take care of the visualization
             CreateConsole(tiles);
@@ -87,10 +95,10 @@ namespace MagiRogue.System.Physics
                     WorldTile t = new WorldTile();
                     t.Position = new SadRogue.Primitives.Point(x, y);
 
-                    float value = planetData.Data[x, y];
+                    float value = planetData.HeightData[x, y];
 
                     // normalize value between 0 and 1
-                    value = MathMagi.ReturnPositive((float)Math.Round(value, 1));
+                    value = MathMagi.ReturnPositive(value);
 
                     t.HeightValue = value;
 
@@ -98,34 +106,42 @@ namespace MagiRogue.System.Physics
                     if (value < deepWater)
                     {
                         t.HeightType = HeightType.DeepWater;
+                        t.Collidable = false;
                     }
                     else if (value < shallowWater)
                     {
                         t.HeightType = HeightType.ShallowWater;
+                        t.Collidable = false;
                     }
                     else if (value < sand)
                     {
                         t.HeightType = HeightType.Sand;
+                        t.Collidable = true;
                     }
                     else if (value < grass)
                     {
                         t.HeightType = HeightType.Grass;
+                        t.Collidable = true;
                     }
                     else if (value < forest)
                     {
                         t.HeightType = HeightType.Forest;
+                        t.Collidable = true;
                     }
                     else if (value < rock)
                     {
                         t.HeightType = HeightType.Rock;
+                        t.Collidable = true;
                     }
                     else if (value < snow)
                     {
                         t.HeightType = HeightType.Snow;
+                        t.Collidable = true;
                     }
-                    else if (value < magicLand)
+                    else
                     {
                         t.HeightType = HeightType.MagicLand;
+                        t.Collidable = true;
                     }
 
                     tiles[x, y] = t;
@@ -150,7 +166,7 @@ namespace MagiRogue.System.Physics
                     if (value > planetData.Max) planetData.Max = value;
                     if (value < planetData.Min) planetData.Min = value;
 
-                    planetData.Data[x, y] = value;
+                    planetData.HeightData[x, y] = value;
                 }
             }
         }
@@ -165,6 +181,137 @@ namespace MagiRogue.System.Physics
             heightMap.SetFractalLacunarity(terrainLacunarity);
             heightMap.SetFractalGain(terrainGain);
             heightMap.SetFractalType(FastNoiseLite.FractalType.PingPong);
+        }
+
+        private WorldTile GetTop(WorldTile center)
+        {
+            return tiles[center.Position.X, MathMagi.Mod(center.Position.Y - 1, height)];
+        }
+
+        private WorldTile GetBottom(WorldTile t)
+        {
+            return tiles[t.Position.X, MathMagi.Mod(t.Position.Y + 1, height)];
+        }
+
+        private WorldTile GetLeft(WorldTile t)
+        {
+            return tiles[MathMagi.Mod(t.Position.X - 1, width), t.Position.Y];
+        }
+
+        private WorldTile GetRight(WorldTile t)
+        {
+            return tiles[MathMagi.Mod(t.Position.X + 1, width), t.Position.Y];
+        }
+
+        private void UpdateNeighbors()
+        {
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    WorldTile tile = tiles[x, y];
+
+                    tile.Top = GetTop(tile);
+                    tile.Bottom = GetBottom(tile);
+                    tile.Left = GetLeft(tile);
+                    tile.Right = GetRight(tile);
+                }
+            }
+        }
+
+        private void UpdateBitmasks()
+        {
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    tiles[x, y].UpdateBitmask();
+                }
+            }
+        }
+
+        private void FloodFill()
+        {
+            Stack<WorldTile> stack = new();
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    WorldTile t = tiles[x, y];
+
+                    //Tile already flood filled, skip
+                    if (t.FloodFilled)
+                        continue;
+
+                    // Land
+                    if (t.Collidable)
+                    {
+                        WorldTileGroup landGroup = new();
+                        landGroup.Type = TileGroupType.Land;
+
+                        stack.Push(t);
+
+                        while (stack.Count > 0)
+                        {
+                            FloodFill(stack.Pop(), ref landGroup, ref stack);
+                        }
+
+                        if (landGroup.WorldTiles.Count > 0)
+                        {
+                            lands.Add(landGroup);
+                        }
+                    }
+                    else
+                    {
+                        WorldTileGroup waterGroup = new();
+
+                        waterGroup.Type = TileGroupType.Water;
+                        stack.Push(t);
+
+                        while (stack.Count > 0)
+                        {
+                            FloodFill(stack.Pop(), ref waterGroup, ref stack);
+                        }
+
+                        if (waterGroup.WorldTiles.Count > 0)
+                        {
+                            waters.Add(waterGroup);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void FloodFill(WorldTile worldTile,
+            ref WorldTileGroup group,
+            ref Stack<WorldTile> stack)
+        {
+            if (worldTile.FloodFilled)
+                return;
+            if (group.Type == TileGroupType.Land && !worldTile.Collidable)
+                return;
+            if (group.Type == TileGroupType.Water && worldTile.Collidable)
+                return;
+
+            // Add to TileGroup
+            group.WorldTiles.Add(worldTile);
+            worldTile.FloodFilled = true;
+
+            WorldTile t = GetTop(worldTile);
+
+            // floodfill into neighbors
+            if (!t.FloodFilled && worldTile.Collidable == t.Collidable)
+                stack.Push(t);
+            t = GetBottom(worldTile);
+            if (!t.FloodFilled && worldTile.Collidable == t.Collidable)
+                stack.Push(t);
+            t = GetLeft(worldTile);
+            if (!t.FloodFilled && worldTile.Collidable == t.Collidable)
+                stack.Push(t);
+            t = GetRight(worldTile);
+            if (!t.FloodFilled && worldTile.Collidable == t.Collidable)
+                stack.Push(t);
         }
     }
 }
