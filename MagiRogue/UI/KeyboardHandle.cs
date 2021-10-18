@@ -102,7 +102,7 @@ namespace MagiRogue.UI
             // Work around for a > symbol, must be top to not make the char wait
             if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.OemPeriod))
             {
-                CommandManager.MoveDownStairs(GetPlayer);
+                CommandManager.MoveDownStairsPlayer(GetPlayer.Position);
             }
             if (HandleMove(info, world))
             {

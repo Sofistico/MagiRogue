@@ -29,7 +29,7 @@ namespace MagiRogue.System
         /*private const int _zMaxUpLevel = 10;
         private const int _zMaxLowLevel = -10;*/
 
-        public PlanetMap PlanetMap { get; }
+        public PlanetMap PlanetMap { get; private set; }
 
         /// <summary>
         /// Stores the current map
@@ -98,17 +98,19 @@ namespace MagiRogue.System
             AllMaps.Add(map);
         }
 
+        public void ChangePlayerMap(Map mapToGo, Point pos)
+        {
+            ChangeActorMap(Player, mapToGo, pos);
+            CurrentMap = mapToGo;
+            GameLoop.UIManager.MapWindow.LoadMap(CurrentMap);
+        }
+
         public void ChangeActorMap(Entity entity, Map mapToGo, Point pos)
         {
             mapToGo.Add(entity);
             entity.Position = pos;
-            CurrentMap = mapToGo;
             if (!AllMaps.Contains(mapToGo))
-            {
                 AllMaps.Add(mapToGo);
-            }
-
-            GameLoop.UIManager.MapWindow.LoadMap(CurrentMap);
         }
 
         /// <summary>
@@ -341,20 +343,19 @@ namespace MagiRogue.System
     public class RegionChunk
     {
         /// <summary>
-        /// The max amount of local chuncks the region chunks hold, should be 16*16 = 256 regions.
+        /// The max amount of local maps the region chunks hold, should be 3*3 = 9 maps.
         /// </summary>
-        private const int MAX_LOCAL_CHUNCKS = 16 * 16;
+        private const int MAX_LOCAL_CHUNCKS = 3 * 3;
 
         public int X { get; }
         public int Y { get; }
-        public Dictionary<Point, Map> LocalChunks { get; set; }
+        public Map[] LocalMaps { get; set; }
 
         public RegionChunk(int x, int y)
         {
             X = x;
             Y = y;
-
-            LocalChunks = new Dictionary<Point, Map>(MAX_LOCAL_CHUNCKS);
+            LocalMaps = new Map[MAX_LOCAL_CHUNCKS];
         }
     }
 }

@@ -82,10 +82,6 @@ namespace MagiRogue.System.Tiles
 
         public uint ID => backingField.ID;
 
-        int IHasLayer.Layer => backingField.Layer;
-
-        //public ITaggableComponentCollection GoRogueComponents => backingField.GoRogueComponents;
-
         public IComponentCollection GoRogueComponents => backingField.GoRogueComponents;
 
         #endregion backingField Data
@@ -204,6 +200,32 @@ namespace MagiRogue.System.Tiles
             remove
             {
                 backingField.RemovedFromMap -= value;
+            }
+        }
+
+        public event EventHandler<GameObjectPropertyChanged<bool>> TransparencyChanging
+        {
+            add
+            {
+                backingField.TransparencyChanging += value;
+            }
+
+            remove
+            {
+                backingField.TransparencyChanging -= value;
+            }
+        }
+
+        public event EventHandler<GameObjectPropertyChanged<bool>> WalkabilityChanging
+        {
+            add
+            {
+                backingField.WalkabilityChanging += value;
+            }
+
+            remove
+            {
+                backingField.WalkabilityChanging -= value;
             }
         }
 

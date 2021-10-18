@@ -14,6 +14,7 @@ namespace MagiRogue.System
     /// <summary>
     /// Stores, manipulates and queries Tile data, uses GoRogue Map class
     /// </summary>
+    [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
     public class Map : GoRogue.GameFramework.Map
     {
         #region Properties
@@ -219,7 +220,7 @@ namespace MagiRogue.System
                 entity.Position = GetRandomWalkableTile();
                 AddEntity(entity);
 #if DEBUG
-                Debug.Print("An entity tried to telefrag another");
+                Debug.Print("An entity tried to telefrag in a place where it couldn't");
 #endif
             }
 
@@ -322,7 +323,8 @@ namespace MagiRogue.System
 
         private void FovCalculate(Actor actor)
         {
-            PlayerFOV.Calculate(actor.Position, actor.Stats.ViewRadius, Radius.Circle);
+            if (PlayerFOV.CurrentFOV.Count() >= actor.Stats.ViewRadius)
+                PlayerFOV.Calculate(actor.Position, actor.Stats.ViewRadius, Radius.Circle);
             FOVRecalculated?.Invoke(this, EventArgs.Empty);
         }
 
@@ -364,6 +366,11 @@ namespace MagiRogue.System
             }
 
             return false;
+        }
+
+        private string GetDebuggerDisplay()
+        {
+            return MapName;
         }
 
         #endregion HelperMethods

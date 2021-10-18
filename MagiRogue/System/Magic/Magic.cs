@@ -66,7 +66,8 @@ namespace MagiRogue.System.Magic
             return damageAfterModifiers;
         }
 
-        public static bool PenetrateResistance(SpellBase spellCasted, Entity caster, Entity defender, int bonusLuck) =>
+        public static bool PenetrateResistance(SpellBase spellCasted, Entity caster, Entity defender,
+            int bonusLuck) =>
             (int)((0.3 * spellCasted.Proficiency) + (caster.Magic.ShapingSkill * 0.5)
             + caster.Magic.MagicPenetration) + bonusLuck >= defender.Magic.InnateResistance * 2;
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -76,11 +77,18 @@ namespace MagiRogue.System.Physics
                 }
             }
 
-            mapRenderer = new Console(width, height, coloredTiles);
-            GameLoop.UIManager.Children.Clear();
-            GameLoop.UIManager.Children.Add(mapRenderer);
-            mapRenderer.Position = new SadRogue.Primitives.Point(0, 0);
-            mapRenderer.Font = SadConsole.Game.Instance.LoadFont("cp437_12x12.font");
+            if (mapRenderer is not null)
+            {
+                mapRenderer = new Console(width, height, coloredTiles);
+                GameLoop.UIManager.Children.Clear();
+                GameLoop.UIManager.Children.Add(mapRenderer);
+                mapRenderer.Position = new SadRogue.Primitives.Point(0, 0);
+                mapRenderer.Font = SadConsole.Game.Instance.LoadFont("cp437_12x12.font");
+            }
+            else
+            {
+                Debug.Print("The console wasn't created!");
+            }
         }
 
         // Build a Tile array from our data
@@ -92,7 +100,7 @@ namespace MagiRogue.System.Physics
             {
                 for (int y = 0; y < height; y++)
                 {
-                    WorldTile t = new WorldTile();
+                    WorldTile t = new();
                     t.Position = new SadRogue.Primitives.Point(x, y);
 
                     float value = planetData.HeightData[x, y];

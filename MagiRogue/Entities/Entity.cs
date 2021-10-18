@@ -73,7 +73,6 @@ namespace MagiRogue.Entities
 
         public bool IsTransparent { get => backingField.IsTransparent; set => backingField.IsTransparent = value; }
         public bool IsWalkable { get => backingField.IsWalkable; set => backingField.IsWalkable = value; }
-        Point IGameObject.Position { get => Position; set => Position = value; }
         public IComponentCollection GoRogueComponents => backingField.GoRogueComponents;
 
         #endregion BackingField fields
@@ -134,32 +133,6 @@ namespace MagiRogue.Entities
 
         #region IGameObject Interface
 
-        public event EventHandler<GameObjectPropertyChanged<bool>> TransparencyChanged
-        {
-            add
-            {
-                backingField.TransparencyChanged += value;
-            }
-
-            remove
-            {
-                backingField.TransparencyChanged -= value;
-            }
-        }
-
-        public event EventHandler<GameObjectPropertyChanged<bool>> WalkabilityChanged
-        {
-            add
-            {
-                backingField.WalkabilityChanged += value;
-            }
-
-            remove
-            {
-                backingField.WalkabilityChanged -= value;
-            }
-        }
-
 #nullable enable
 
         public event EventHandler<GameObjectPropertyChanged<Point>>? Moved;
@@ -189,6 +162,58 @@ namespace MagiRogue.Entities
             remove
             {
                 backingField.RemovedFromMap -= value;
+            }
+        }
+
+        public event EventHandler<GameObjectPropertyChanged<bool>> TransparencyChanging
+        {
+            add
+            {
+                backingField.TransparencyChanging += value;
+            }
+
+            remove
+            {
+                backingField.TransparencyChanging -= value;
+            }
+        }
+
+        public event EventHandler<GameObjectPropertyChanged<bool>> TransparencyChanged
+        {
+            add
+            {
+                backingField.TransparencyChanged += value;
+            }
+
+            remove
+            {
+                backingField.TransparencyChanged -= value;
+            }
+        }
+
+        public event EventHandler<GameObjectPropertyChanged<bool>> WalkabilityChanging
+        {
+            add
+            {
+                backingField.WalkabilityChanging += value;
+            }
+
+            remove
+            {
+                backingField.WalkabilityChanging -= value;
+            }
+        }
+
+        public event EventHandler<GameObjectPropertyChanged<bool>> WalkabilityChanged
+        {
+            add
+            {
+                backingField.WalkabilityChanged += value;
+            }
+
+            remove
+            {
+                backingField.WalkabilityChanged -= value;
             }
         }
 

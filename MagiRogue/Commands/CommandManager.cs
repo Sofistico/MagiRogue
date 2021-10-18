@@ -476,15 +476,14 @@ namespace MagiRogue.Commands
                 return false;
         }
 
-        public static bool MoveDownStairs(Actor actor)
+        public static bool MoveDownStairsPlayer(Point playerPoint)
         {
-            var point = actor.Position;
-            Furniture possibleStairs = GameLoop.World.CurrentMap.GetEntityAt<Furniture>(point);
+            Furniture possibleStairs = GameLoop.World.CurrentMap.GetEntityAt<Furniture>(playerPoint);
             if (possibleStairs is not null && possibleStairs.FurnitureType == FurnitureType.StairsDown)
             {
                 var map = GameLoop.World.AllMaps[1];
                 // TODO: For now it's just a test, need to work out a better way to do it.
-                GameLoop.World.ChangeActorMap(actor, map, map.GetRandomWalkableTile());
+                GameLoop.World.ChangePlayerMap(map, map.GetRandomWalkableTile());
 
                 return true;
             }
