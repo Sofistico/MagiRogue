@@ -391,7 +391,7 @@ namespace MagiRogue.Commands
         public static void CreateNewMapForTesting()
         {
             // it's just plain wrong, need to fix later.
-            GameLoop.World.CurrentMap.RemoveAllEntities();
+            /*GameLoop.World.CurrentMap.RemoveAllEntities();
             GameLoop.World.CurrentMap.RemoveAllTiles();
             GameLoop.World.CurrentMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
             for (int i = 0; i < GameLoop.World.AllMaps.Count; i++)
@@ -402,7 +402,7 @@ namespace MagiRogue.Commands
             }
             GameLoop.World.Player = null;
             GameLoop.World.AllMaps.Clear();
-            GameLoop.World.AllMaps = null;
+            GameLoop.World.AllMaps = null;*/
             GameLoop.World.PlanetMap = new PlanetGenerator().CreatePlanet();
         }
 

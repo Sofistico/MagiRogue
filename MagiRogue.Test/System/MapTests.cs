@@ -38,13 +38,13 @@ namespace MagiRogue.Test.System
             world.ChangeActorMap(actor, newMap, new Point(0, 0));
             Assert.True(actor.CurrentMap.Equals(newMap));
         }
-
+        /*
         [Fact]
         public void CheckIfCanGoBeyondBoundsEntity()
         {
             var actor = new Actor("Name", Color.Black, Color.Black, '@', new Point(21, 21));
             Action testCode = delegate () { map.Add(actor); };
             Assert.Throws<NullReferenceException>(testCode);
-        }
+        }*/
     }
 }
