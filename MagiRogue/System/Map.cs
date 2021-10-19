@@ -21,7 +21,7 @@ namespace MagiRogue.System
 
         private TileBase[] _tiles; // Contains all tiles objects
         private Entity _gameObjectControlled;
-        private readonly SadConsole.Entities.Renderer _entityRender;
+        private SadConsole.Entities.Renderer _entityRender;
 
         /// <summary>
         /// All cell tiles of the map, it's a TileBase array, should never be directly declared to create new tiles, rather
@@ -392,9 +392,11 @@ namespace MagiRogue.System
                 Remove(item);
             }
             Tiles = null;
+            ControlledGameObjectChanged = null;
             this.ControlledEntitiy = null;
+            _entityRender = null;
+            GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
             GoRogueComponents.Clear();
-
 #if DEBUG
             //GC.Collect();
             //GC.WaitForPendingFinalizers();
@@ -405,7 +407,8 @@ namespace MagiRogue.System
         #endregion Desconstructor
     }
 
-    // enum for defining maplayer for things, so that a monster and a player can occupy the same tile as an item for example.
+    // enum for defining maplayer for things, so that a monster and a player can occupy the same tile as
+    // an item for example.
     // If it stops working, add back the player map layer
     public enum MapLayer
     {

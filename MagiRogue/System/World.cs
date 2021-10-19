@@ -52,6 +52,7 @@ namespace MagiRogue.System
             AllMaps = new();
             Time = new TimeSystem();
             PlanetMap = new PlanetGenerator().CreatePlanet();
+            CurrentMap = PlanetMap.AssocietatedMap;
             /*if (!testGame)
             {
                 // Build a map
@@ -274,12 +275,7 @@ namespace MagiRogue.System
             {
                 if (Player.Stats.Health <= 0)
                 {
-                    CurrentMap.RemoveAllEntities();
-                    CurrentMap.RemoveAllTiles();
-                    CurrentMap = null;
-                    Player = null;
-
-                    GameLoop.UIManager.MainMenu.RestartGame();
+                    RestartGame();
                     return;
                 }
 
@@ -313,6 +309,25 @@ namespace MagiRogue.System
                 GameLoop.UIManager.MessageLog.Add($"Turns: {Time.Turns}, Tick: {Time.TimePassed.Ticks}");
 #endif
             }
+        }
+
+        private void RestartGame()
+        {
+            CurrentMap.RemoveAllEntities();
+            CurrentMap.RemoveAllTiles();
+            CurrentMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
+            for (int i = 0; i < AllMaps.Count; i++)
+            {
+                AllMaps[i].RemoveAllEntities();
+                AllMaps[i].RemoveAllTiles();
+                AllMaps[i].GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
+            }
+            CurrentMap = null;
+            Player = null;
+            AllMaps.Clear();
+            AllMaps = null;
+
+            GameLoop.UIManager.MainMenu.RestartGame();
         }
 
         private void ProcessAiTurn(uint entityId, long time)
@@ -357,5 +372,12 @@ namespace MagiRogue.System
             Y = y;
             LocalMaps = new Map[MAX_LOCAL_CHUNCKS];
         }
+    }
+
+    public class AddMapEventArgs : EventArgs
+    {
+        public Map NewMap { get; }
+
+        public AddMapEventArgs(Map newMap) => NewMap = newMap;
     }
 }

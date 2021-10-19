@@ -32,6 +32,8 @@ namespace MagiRogue.System.Physics
 
         public void SetWorldTiles(WorldTile[,] tiles)
         {
+            AssocietatedMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().Disable();
+
             for (int x = 0; x < _width; x++)
             {
                 for (int y = 0; y < _height; y++)
@@ -39,8 +41,6 @@ namespace MagiRogue.System.Physics
                     AssocietatedMap.SetTerrain(tiles[x, y]);
                 }
             }
-
-            AssocietatedMap.GoRogueComponents.GetFirstOrDefault<MagiRogueFOVVisibilityHandler>().Disable(false);
         }
     }
 }

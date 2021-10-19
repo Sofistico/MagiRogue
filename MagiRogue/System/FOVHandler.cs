@@ -75,7 +75,7 @@ namespace MagiRogue.System
         /// <summary>
         /// The map that this handler manages visibility of objects for.
         /// </summary>
-        public Map Map { get; }
+        public Map Map { get; protected set; }
 
         /// <summary>
         /// Creates a FOVVisibilityHandler that will manage visibility of objects for the given map.
@@ -241,6 +241,24 @@ namespace MagiRogue.System
                 foreach (Entity entity in Map.GetEntitiesAt<Entity>(position))
                     UpdateEntityUnseen(entity);
             }
+        }
+
+        public void DisposeMap()
+        {
+            // TODO: Test if this is the reason of the memory leak of the Map class.
+            Map.ObjectAdded -= Map_ObjectAdded;
+            Map.ObjectMoved -= Map_ObjectMoved;
+            Map.FOVRecalculated -= Map_FOVRecalculated;
+            Map = null;
+        }
+
+        ~FOVHandler()
+        {
+            // dangling events of the map.
+            // Could be the origin of the memory leak of the map object
+            Map.ObjectAdded -= Map_ObjectAdded;
+            Map.ObjectMoved -= Map_ObjectMoved;
+            Map.FOVRecalculated -= Map_FOVRecalculated;
         }
     }
 }
