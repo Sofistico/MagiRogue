@@ -84,26 +84,28 @@ namespace MagiRogue.UI
             MessageLog.Position = new Point(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2);
 #if DEBUG
             MessageLog.Add("Test message log works");
-#endif
+#endif*/
             // Inventory initialization
-            InventoryScreen = new InventoryWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2);
+            /*InventoryScreen = new InventoryWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2);
             Children.Add(InventoryScreen);
             InventoryScreen.Hide();
 
             StatusConsole = new StatusWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Status Window");
             Children.Add(StatusConsole);
             StatusConsole.Position = new Point(GameLoop.GameWidth / 2, 0);
-            StatusConsole.Show();
+            StatusConsole.Show();*/
 
             // Build the Window
-            CreateMapWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight, "Game Map");
+            /*CreateMapWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight, "Game Map");
 
             // Then load the map into the MapConsole
-            MapWindow.LoadMap(GameLoop.World.CurrentMap);
+            //MapWindow.LoadMap(GameLoop.World.CurrentMap);
             //MapWindow.LoadAllChunks(GameLoop.World.LocalChunks);
 
             // Start the game with the camera focused on the player
-            MapWindow.CenterOnActor(GameLoop.World.Player);*/
+            MapWindow.CenterOnActor(GameLoop.World.Player);
+
+            MapWindow.LoadMap(GameLoop.World.PlanetMap.AssocietatedMap);*/
         }
 
         /// <summary>
@@ -132,7 +134,7 @@ namespace MagiRogue.UI
         /// <returns></returns>
         public override bool ProcessKeyboard(Keyboard info)
         {
-            if (GameLoop.World != null)
+            if (GameLoop.World != null && GameLoop.World.CurrentMap != null)
             {
                 if (KeyboardHandle.HandleMapKeys(info, this, GameLoop.World))
                 {

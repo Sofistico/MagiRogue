@@ -83,6 +83,7 @@ namespace MagiRogue.System.Physics
                     {
                         tiles[x, y].Foreground = Color.Lerp(tiles[x, y].Foreground, Color.Black, 0.2f);
                     }
+                    tiles[x, y].Position = new Point(x, y);
                 }
             }
         }

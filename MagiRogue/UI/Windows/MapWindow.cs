@@ -61,9 +61,9 @@ namespace MagiRogue.UI.Windows
                 new BoundedRectangle((0, 0, mapConsoleWidth, mapConsoleHeight), (0, 0, map.Width, map.Height)).Area;
 
             // First load the map's tiles into the console
-            MapConsole = new Console(GameLoop.World.CurrentMap.Width,
-                GameLoop.World.CurrentMap.Height, GameLoop.World.CurrentMap.Width,
-                GameLoop.World.CurrentMap.Width, map.Tiles)
+            MapConsole = new Console(map.Width,
+                map.Height, map.Width,
+                map.Height, map.Tiles)
             {
                 View = rec,
 

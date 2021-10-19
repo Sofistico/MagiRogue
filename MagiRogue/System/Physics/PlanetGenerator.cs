@@ -76,8 +76,8 @@ namespace MagiRogue.System.Physics
                     coloredTiles[x + y * width] = tiles[x, y];
                 }
             }
-
-            if (mapRenderer is not null)
+            //planetData.SetWorldTiles(tiles);
+            try
             {
                 mapRenderer = new Console(width, height, coloredTiles);
                 GameLoop.UIManager.Children.Clear();
@@ -85,9 +85,9 @@ namespace MagiRogue.System.Physics
                 mapRenderer.Position = new SadRogue.Primitives.Point(0, 0);
                 mapRenderer.Font = SadConsole.Game.Instance.LoadFont("cp437_12x12.font");
             }
-            else
+            catch (Exception)
             {
-                Debug.Print("The console wasn't created!");
+                Debug.Print("Console generation went wrong");
             }
         }
 
