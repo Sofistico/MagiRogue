@@ -23,8 +23,6 @@ namespace MagiRogue.Entities
         public static Player TestPlayer()
         {
             Player player = new Player("Magus", Color.White, Color.Black, Point.None);
-            // sets the most fundamental stats, needs to set the godly flag up top, because it superseeds GodPower if it is
-            // below.
             player.Stats.SetAttributes(
                 viewRadius: 7,
                 health: 10,

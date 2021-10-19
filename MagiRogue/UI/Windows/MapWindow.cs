@@ -16,7 +16,7 @@ namespace MagiRogue.UI.Windows
 {
     public class MapWindow : MagiBaseWindow
     {
-        private Map _mapDisplayer;
+        private Map _mapDisplayed;
         public Console MapConsole { get; set; }
 
         public MapWindow(int width, int height, string title) : base(width, height, title)
@@ -81,7 +81,7 @@ namespace MagiRogue.UI.Windows
 
             IsDirty = true;
 
-            _mapDisplayer = map;
+            _mapDisplayed = map;
 
             Title = map.MapName;
         }

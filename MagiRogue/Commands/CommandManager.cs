@@ -1,6 +1,7 @@
 ﻿using GoRogue.DiceNotation;
 using MagiRogue.Entities;
 using MagiRogue.System;
+using MagiRogue.System.Physics;
 using MagiRogue.System.Tiles;
 using MagiRogue.System.Time;
 using MagiRogue.Utils;
@@ -385,6 +386,24 @@ namespace MagiRogue.Commands
             }
             else
                 GameLoop.World.CurrentMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().Enable();
+        }
+
+        public static void CreateNewMapForTesting()
+        {
+            // it's just plain wrong, need to fix later.
+            GameLoop.World.CurrentMap.RemoveAllEntities();
+            GameLoop.World.CurrentMap.RemoveAllTiles();
+            GameLoop.World.CurrentMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
+            for (int i = 0; i < GameLoop.World.AllMaps.Count; i++)
+            {
+                GameLoop.World.AllMaps[i].RemoveAllEntities();
+                GameLoop.World.AllMaps[i].RemoveAllTiles();
+                GameLoop.World.AllMaps[i].GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
+            }
+            GameLoop.World.Player = null;
+            GameLoop.World.AllMaps.Clear();
+            GameLoop.World.AllMaps = null;
+            GameLoop.World.PlanetMap = new PlanetGenerator().CreatePlanet();
         }
 
 #endif

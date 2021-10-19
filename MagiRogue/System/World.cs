@@ -25,11 +25,11 @@ namespace MagiRogue.System
         private readonly int _maxRooms = 20;
         private readonly int _minRoomSize = 4;
         private readonly int _maxRoomSize = 10;
-        private readonly Random rndNum = new Random();
+        private readonly Random rndNum = new();
         /*private const int _zMaxUpLevel = 10;
         private const int _zMaxLowLevel = -10;*/
 
-        public PlanetMap PlanetMap { get; private set; }
+        public PlanetMap PlanetMap { get; set; }
 
         /// <summary>
         /// Stores the current map
@@ -94,10 +94,7 @@ namespace MagiRogue.System
             AddMapToList(map);
         }
 
-        private void AddMapToList(Map map)
-        {
-            AllMaps.Add(map);
-        }
+        private void AddMapToList(Map map) => AllMaps.Add(map);
 
         public void ChangePlayerMap(Map mapToGo, Point pos)
         {
@@ -111,7 +108,7 @@ namespace MagiRogue.System
             mapToGo.Add(entity);
             entity.Position = pos;
             if (!AllMaps.Contains(mapToGo))
-                AllMaps.Add(mapToGo);
+                AddMapToList(mapToGo);
         }
 
         /// <summary>
@@ -265,7 +262,7 @@ namespace MagiRogue.System
                 EntityFactory.ItemCreator(new Point(10, 10), DataManager.ListOfItems.FirstOrDefault
                 (i => i.Id == "test"));
 
-            CurrentMap.Add(test);
+            map.Add(test);
 #endif
         }
 

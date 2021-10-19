@@ -75,7 +75,7 @@ namespace MagiRogue.System
         /// <summary>
         /// The map that this handler manages visibility of objects for.
         /// </summary>
-        public Map Map { get; protected set; }
+        public Map Map { get; protected private set; }
 
         /// <summary>
         /// Creates a FOVVisibilityHandler that will manage visibility of objects for the given map.
