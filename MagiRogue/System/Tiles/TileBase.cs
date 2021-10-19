@@ -103,7 +103,8 @@ namespace MagiRogue.System.Tiles
             {
                 IsVisible = false
             };
-            CalculateTileHealth();
+            if (MaterialOfTile is not null)
+                CalculateTileHealth();
         }
 
         protected TileBase(Color foregroud, Color background, int glyph, int layer,
