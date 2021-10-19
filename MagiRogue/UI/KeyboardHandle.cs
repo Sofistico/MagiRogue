@@ -260,6 +260,11 @@ namespace MagiRogue.UI
                 }
             }
 
+            if (info.IsKeyPressed(Keys.Tab))
+            {
+                CommandManager.CreateNewMapForTesting();
+            }
+
 #endif
 
             return false;

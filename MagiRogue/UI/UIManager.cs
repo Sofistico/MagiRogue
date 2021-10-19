@@ -146,11 +146,6 @@ namespace MagiRogue.UI
                 }
             }
 
-            if (info.IsKeyPressed(Keys.Tab))
-            {
-                Commands.CommandManager.CreateNewMapForTesting();
-            }
-
             return base.ProcessKeyboard(info);
         }
 
