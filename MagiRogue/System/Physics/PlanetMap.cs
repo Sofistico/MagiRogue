@@ -39,6 +39,8 @@ namespace MagiRogue.System.Physics
                     AssocietatedMap.SetTerrain(tiles[x, y]);
                 }
             }
+
+            AssocietatedMap.GoRogueComponents.GetFirstOrDefault<MagiRogueFOVVisibilityHandler>().Disable(false);
         }
     }
 }

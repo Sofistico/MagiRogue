@@ -29,8 +29,8 @@ namespace MagiRogue.Test.System
         [Fact]
         public void ChangeEntityCurrentMap()
         {
-            var actor = new Player("Test", Color.Black, Color.Black, new Point(1, 1));
-            World world = new(actor);
+            var actor = new Actor("Test", Color.Black, Color.Black, '@', new Point(1, 1));
+            World world = new(null);
             world.AllMaps.Add(map);
             map.Add(actor);
             var newMap = new Map("MapTest", 1, 1);
@@ -42,7 +42,7 @@ namespace MagiRogue.Test.System
         [Fact]
         public void CheckIfCanGoBeyondBoundsEntity()
         {
-            var actor = new Player("Name", Color.Black, Color.Black, new Point(21, 21));
+            var actor = new Actor("Name", Color.Black, Color.Black, '@', new Point(21, 21));
             Action testCode = delegate () { map.Add(actor); };
             Assert.Throws<NullReferenceException>(testCode);
         }

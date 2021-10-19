@@ -83,14 +83,6 @@ namespace MagiRogue.System
             MapName = mapName;
         }
 
-        public void RemoveAllEntities()
-        {
-            foreach (Entity item in Entities.Items)
-            {
-                Remove(item);
-            }
-        }
-
         #endregion Constructor
 
         #region HelperMethods
@@ -99,6 +91,14 @@ namespace MagiRogue.System
         {
             var goRogueTerrain = new ArrayView<TileBase>(width, heigth);
             return new LambdaSettableTranslationGridView<TileBase, IGameObject>(goRogueTerrain, t => t, g => g as TileBase);
+        }
+
+        public void RemoveAllEntities()
+        {
+            foreach (Entity item in Entities.Items)
+            {
+                Remove(item);
+            }
         }
 
         /// <summary>

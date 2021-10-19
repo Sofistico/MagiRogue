@@ -96,7 +96,7 @@ namespace MagiRogue.UI
             StatusConsole.Show();*/
 
             // Build the Window
-            /*CreateMapWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight, "Game Map");
+            CreateMapWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight, "Game Map");
 
             // Then load the map into the MapConsole
             //MapWindow.LoadMap(GameLoop.World.CurrentMap);
@@ -105,7 +105,7 @@ namespace MagiRogue.UI
             // Start the game with the camera focused on the player
             MapWindow.CenterOnActor(GameLoop.World.Player);
 
-            MapWindow.LoadMap(GameLoop.World.PlanetMap.AssocietatedMap);*/
+            MapWindow.LoadMap(GameLoop.World.PlanetMap.AssocietatedMap);
         }
 
         /// <summary>

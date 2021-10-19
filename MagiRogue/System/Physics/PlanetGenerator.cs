@@ -76,8 +76,8 @@ namespace MagiRogue.System.Physics
                     coloredTiles[x + y * width] = tiles[x, y];
                 }
             }
-            //planetData.SetWorldTiles(tiles);
-            try
+            planetData.SetWorldTiles(tiles);
+            /*try
             {
                 mapRenderer = new Console(width, height, coloredTiles);
                 GameLoop.UIManager.Children.Clear();
@@ -88,7 +88,7 @@ namespace MagiRogue.System.Physics
             catch (Exception)
             {
                 Debug.Print("Console generation went wrong");
-            }
+            }*/
         }
 
         // Build a Tile array from our data
