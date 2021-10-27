@@ -21,12 +21,24 @@ namespace MagiRogue.System.Tiles
         MagicLand = 9
     }
 
+    public enum HeatType
+    {
+        Coldest,
+        Colder,
+        Cold,
+        Warm,
+        Warmer,
+        Warmest
+    }
+
     [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
     public class WorldTile : TileBase
     {
         public float HeightValue { get; set; }
+        public float HeatValue { get; set; }
 
         public HeightType HeightType { get; set; }
+        public HeatType HeatType { get; set; }
 
         public WorldTile Left { get; set; }
         public WorldTile Right { get; set; }

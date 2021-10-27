@@ -134,7 +134,8 @@ namespace MagiRogue.UI
         /// <returns></returns>
         public override bool ProcessKeyboard(Keyboard info)
         {
-            if (GameLoop.World != null && GameLoop.World.CurrentMap != null)
+            if (GameLoop.World != null && GameLoop.World.CurrentMap != null
+                && GameLoop.World.CurrentMap.ControlledEntitiy != null)
             {
                 if (KeyboardHandle.HandleMapKeys(info, this, GameLoop.World))
                 {
@@ -144,6 +145,28 @@ namespace MagiRogue.UI
                 {
                     return true;
                 }
+            }
+
+            var console = MapWindow.MapConsole;
+
+            if (info.IsKeyDown(Keys.Left))
+            {
+                console.ViewPosition = console.ViewPosition.Translate((-1, 0));
+            }
+
+            if (info.IsKeyDown(Keys.Right))
+            {
+                console.ViewPosition = console.ViewPosition.Translate((1, 0));
+            }
+
+            if (info.IsKeyDown(Keys.Up))
+            {
+                console.ViewPosition = console.ViewPosition.Translate((0, -1));
+            }
+
+            if (info.IsKeyDown(Keys.Down))
+            {
+                console.ViewPosition = console.ViewPosition.Translate((0, +1));
             }
 
             return base.ProcessKeyboard(info);

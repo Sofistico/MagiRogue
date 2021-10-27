@@ -80,7 +80,7 @@ namespace MagiRogue.System.Magic
     [JsonConverter(typeof(StringEnumConverter))]
     public enum MagicSchool
     {
-        Projection, // Test
+        Projection,
         Negation,
         Animation,
         Divination,

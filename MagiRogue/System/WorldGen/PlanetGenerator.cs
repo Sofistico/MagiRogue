@@ -6,10 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using MagiRogue.System.Tiles;
 using MagiRogue.Utils;
+using MagiRogue.Utils.Noise;
 using SadConsole;
 using Console = SadConsole.Console;
 
-namespace MagiRogue.System.Physics
+namespace MagiRogue.System.WorldGen
 {
     public class PlanetGenerator
     {
@@ -24,6 +25,12 @@ namespace MagiRogue.System.Physics
         private readonly float snow = 1;
         //private readonly float magicLand = 1.2f;
 
+        private float coldestValue = 0.05f;
+        private float colderValue = 0.18f;
+        private float coldValue = 0.4f;
+        private float warmValue = 0.6f;
+        private float warmerValue = 0.8f;
+
         private readonly int terrainOctaves = 8;
         private readonly float terrainFrequency = 1.5f;
         private readonly float terrainLacunarity = 2f;
@@ -31,10 +38,11 @@ namespace MagiRogue.System.Physics
 
         private readonly List<WorldTileGroup> waters = new();
         private readonly List<WorldTileGroup> lands = new();
+        private int seed;
 
         // noise generator
         private FastNoiseLite heightMap;
-        private FastNoiseLite heatMap;
+        private ImplicitGradient heatMap;
 
         // Planet data
         private PlanetMap planetData;
@@ -50,7 +58,7 @@ namespace MagiRogue.System.Physics
             Initialize();
 
             // Build the height map
-            GetData(heightMap, ref planetData);
+            GetData(ref planetData);
 
             // Build our final objects based on our data
             LoadTiles();
@@ -68,6 +76,7 @@ namespace MagiRogue.System.Physics
         private void CreateConsole(WorldTile[,] tiles)
         {
             PlanetGlyphGenerator.SetTile(width, height, ref tiles);
+            PlanetGlyphGenerator.GetHeatMap(width, height, tiles);
             WorldTile[] coloredTiles = new WorldTile[width * height];
             for (int x = 0; x < width; x++)
             {
@@ -152,13 +161,28 @@ namespace MagiRogue.System.Physics
                         t.Collidable = true;
                     }
 
+                    float heatValue = planetData.HeatData[x, y];
+
+                    if (heatValue < coldestValue)
+                        t.HeatType = HeatType.Coldest;
+                    else if (heatValue < colderValue)
+                        t.HeatType = HeatType.Colder;
+                    else if (heatValue < coldValue)
+                        t.HeatType = HeatType.Cold;
+                    else if (heatValue < warmValue)
+                        t.HeatType = HeatType.Warm;
+                    else if (heatValue < warmerValue)
+                        t.HeatType = HeatType.Warmer;
+                    else
+                        t.HeatType = HeatType.Warmest;
+
                     tiles[x, y] = t;
                 }
             }
         }
 
         // Extract data from a noise module
-        private void GetData(FastNoiseLite heightMap, ref PlanetMap planetData)
+        private void GetData(ref PlanetMap planetData)
         {
             planetData = new PlanetMap(width, height);
 
@@ -169,19 +193,24 @@ namespace MagiRogue.System.Physics
                     float x1 = x / (float)width;
                     float y1 = y / (float)height;
 
-                    float value = heightMap.GetNoise(x1, y1);
+                    float heightValue = heightMap.GetNoise(x1, y1);
+                    float heatValue = (float)heatMap.Get(x1, y1);
 
-                    if (value > planetData.Max) planetData.Max = value;
-                    if (value < planetData.Min) planetData.Min = value;
+                    if (heightValue > planetData.Max) planetData.Max = heightValue;
+                    if (heightValue < planetData.Min) planetData.Min = heightValue;
+                    if (heatValue > planetData.Max) planetData.Max = heatValue;
+                    if (heatValue < planetData.Min) planetData.Min = heatValue;
 
-                    planetData.HeightData[x, y] = value;
+                    planetData.HeightData[x, y] = heightValue;
+                    planetData.HeatData[x, y] = heatValue;
                 }
             }
         }
 
         private void Initialize()
         {
-            heightMap = new FastNoiseLite(GoRogue.Random.GlobalRandom.DefaultRNG.Next(0, int.MaxValue));
+            seed = GoRogue.Random.GlobalRandom.DefaultRNG.Next(0, int.MaxValue);
+            heightMap = new FastNoiseLite(seed);
             heightMap.SetNoiseType(FastNoiseLite.NoiseType.Value);
 
             heightMap.SetFractalOctaves(terrainOctaves);
@@ -189,6 +218,8 @@ namespace MagiRogue.System.Physics
             heightMap.SetFractalLacunarity(terrainLacunarity);
             heightMap.SetFractalGain(terrainGain);
             heightMap.SetFractalType(FastNoiseLite.FractalType.PingPong);
+
+            heatMap = new(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1);
         }
 
         private WorldTile GetTop(WorldTile center)

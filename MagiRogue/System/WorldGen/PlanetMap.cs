@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagiRogue.System.Physics
+namespace MagiRogue.System.WorldGen
 {
     // made with http://www.jgallant.com/procedurally-generating-wrapping-world-maps-in-unity-csharp-part-1/#intro
     public class PlanetMap
     {
-        private int _height;
-        private int _width;
+        private readonly int _height;
+        private readonly int _width;
 
         public float[,] HeightData { get; }
         public float[,] HeatData { get; }
