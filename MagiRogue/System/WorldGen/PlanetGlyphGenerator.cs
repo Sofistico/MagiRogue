@@ -23,12 +23,12 @@ namespace MagiRogue.System.WorldGen
         private static readonly Color MagicColor = Color.Purple;
 
         // Heat Map Colors
-        private static Color Coldest = new Color(0, 1, 1, 1);
-        private static Color Colder = new Color(170 / 255f, 1, 1, 1);
-        private static Color Cold = new Color(0, 229 / 255f, 133 / 255f, 1);
-        private static Color Warm = new Color(1, 1, 100 / 255f, 1);
-        private static Color Warmer = new Color(1, 100 / 255f, 0, 1);
-        private static Color Warmest = new Color(241 / 255f, 12 / 255f, 0, 1);
+        private static readonly Color Coldest = new Color(0, 1, 1, 1);
+        private static readonly Color Colder = new Color(170 / 255f, 1, 1, 1);
+        private static readonly Color Cold = new Color(0, 229 / 255f, 133 / 255f, 1);
+        private static readonly Color Warm = new Color(1, 1, 100 / 255f, 1);
+        private static readonly Color Warmer = new Color(1, 100 / 255f, 0, 1);
+        private static readonly Color Warmest = new Color(241 / 255f, 12 / 255f, 0, 1);
 
         public static void SetTile(int width, int height, ref WorldTile[,] tiles)
         {
@@ -105,36 +105,36 @@ namespace MagiRogue.System.WorldGen
                     switch (tiles[x, y].HeatType)
                     {
                         case HeatType.Coldest:
-                            tiles[x, y].Foreground = Coldest;
+                            tiles[x, y].Background = Coldest;
 
                             break;
 
                         case HeatType.Colder:
-                            tiles[x, y].Foreground = Colder;
+                            tiles[x, y].Background = Colder;
 
                             break;
 
                         case HeatType.Cold:
-                            tiles[x, y].Foreground = Cold;
+                            tiles[x, y].Background = Cold;
                             break;
 
                         case HeatType.Warm:
-                            tiles[x, y].Foreground = Warm;
+                            tiles[x, y].Background = Warm;
                             break;
 
                         case HeatType.Warmer:
-                            tiles[x, y].Foreground = Warmer;
+                            tiles[x, y].Background = Warmer;
                             break;
 
                         case HeatType.Warmest:
-                            tiles[x, y].Foreground = Warmest;
+                            tiles[x, y].Background = Warmest;
                             break;
                     }
 
                     // Darkens color if is a edge tile
                     if (tiles[x, y].Bitmask != 15)
                     {
-                        tiles[x, y].Foreground = Color.Lerp(tiles[x, y].Foreground, Color.Black, 0.4f);
+                        tiles[x, y].Background = Color.Lerp(tiles[x, y].Foreground, Color.Black, 0.4f);
                     }
                 }
             }

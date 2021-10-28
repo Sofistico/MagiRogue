@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace MagiRogue.Utils.Noise
+namespace TinkerWorX.AccidentalNoiseLibrary
 {
-    // Noise generator
-    public sealed class ImplicitGradient
+    public sealed class ImplicitGradient : ImplicitModuleBase
     {
         private Double gradientX0;
 
@@ -38,7 +37,7 @@ namespace MagiRogue.Utils.Noise
         private Double length6;
 
         public ImplicitGradient(
-            Double x0 = 0.00, Double x1 = 1.00, Double y0 = 0.00, Double y1 = 1.00, Double z0 = 0.00, Double z1 = 1.00,
+            Double x0 = 0.00, Double x1 = 1.00, Double y0 = 0.00, Double y1 = 1.00, Double z0 = 0.00, Double z1 = 1.00, 
             Double w0 = 0.00, Double w1 = 1.00, Double u0 = 0.00, Double u1 = 1.00, Double v0 = 0.00, Double v1 = 1.00)
         {
             this.SetGradient(x0, x1, y0, y1, z0, z1, w0, w1, u0, u1, v0, v1);
@@ -81,7 +80,7 @@ namespace MagiRogue.Utils.Noise
             this.length6 = (this.gradientX1 * this.gradientX1 + this.gradientY1 * this.gradientY1 + this.gradientZ1 * this.gradientZ1 + this.gradientW1 * this.gradientW1 + this.gradientU1 * this.gradientU1 + this.gradientV1 * this.gradientV1);
         }
 
-        public Double Get(Double x, Double y)
+        public override Double Get(Double x, Double y)
         {
             var dx = x - this.gradientX0;
             var dy = y - this.gradientY0;
@@ -90,7 +89,7 @@ namespace MagiRogue.Utils.Noise
             return dp;
         }
 
-        public Double Get(Double x, Double y, Double z)
+        public override Double Get(Double x, Double y, Double z)
         {
             var dx = x - this.gradientX0;
             var dy = y - this.gradientY0;
@@ -100,7 +99,7 @@ namespace MagiRogue.Utils.Noise
             return dp;
         }
 
-        public Double Get(Double x, Double y, Double z, Double w)
+        public override Double Get(Double x, Double y, Double z, Double w)
         {
             var dx = x - this.gradientX0;
             var dy = y - this.gradientY0;
@@ -111,7 +110,7 @@ namespace MagiRogue.Utils.Noise
             return dp;
         }
 
-        public Double Get(Double x, Double y, Double z, Double w, Double u, Double v)
+        public override Double Get(Double x, Double y, Double z, Double w, Double u, Double v)
         {
             var dx = x - this.gradientX0;
             var dy = y - this.gradientY0;

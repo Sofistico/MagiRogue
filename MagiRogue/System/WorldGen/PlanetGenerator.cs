@@ -8,6 +8,7 @@ using MagiRogue.System.Tiles;
 using MagiRogue.Utils;
 using MagiRogue.Utils.Noise;
 using SadConsole;
+using TinkerWorX.AccidentalNoiseLibrary;
 using Console = SadConsole.Console;
 
 namespace MagiRogue.System.WorldGen
@@ -35,6 +36,8 @@ namespace MagiRogue.System.WorldGen
         private readonly float terrainFrequency = 1.5f;
         private readonly float terrainLacunarity = 2f;
         private readonly float terrainGain = 0.5f;
+        private float heatFrequency = 3.0f;
+        private int heatOctaves = 4;
 
         private readonly List<WorldTileGroup> waters = new();
         private readonly List<WorldTileGroup> lands = new();
@@ -42,7 +45,7 @@ namespace MagiRogue.System.WorldGen
 
         // noise generator
         private FastNoiseLite heightMap;
-        private ImplicitGradient heatMap;
+        private ImplicitCombiner heatMap;
 
         // Planet data
         private PlanetMap planetData;
@@ -219,7 +222,19 @@ namespace MagiRogue.System.WorldGen
             heightMap.SetFractalGain(terrainGain);
             heightMap.SetFractalType(FastNoiseLite.FractalType.PingPong);
 
-            heatMap = new(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1);
+            var gradient = new ImplicitGradient(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1);
+            var heatFractal = new ImplicitFractal(
+                FractalType.Multi,
+                BasisType.Simplex,
+                InterpolationType.Quintic,
+                heatOctaves,
+                heatFrequency,
+                seed
+                );
+
+            heatMap = new(CombinerType.Multiply);
+            heatMap.AddSource(gradient);
+            heatMap.AddSource(heatFractal);
         }
 
         private WorldTile GetTop(WorldTile center)
