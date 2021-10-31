@@ -30,6 +30,14 @@ namespace MagiRogue.System.WorldGen
         private static readonly Color Warmer = new Color(1, 100 / 255f, 0, 1);
         private static readonly Color Warmest = new Color(241 / 255f, 12 / 255f, 0, 1);
 
+        //Moisture map
+        private static Color Dryest = new Color(255 / 255f, 139 / 255f, 17 / 255f, 1);
+        private static Color Dryer = new Color(245 / 255f, 245 / 255f, 23 / 255f, 1);
+        private static Color Dry = new Color(80 / 255f, 255 / 255f, 0 / 255f, 1);
+        private static Color Wet = new Color(85 / 255f, 255 / 255f, 255 / 255f, 1);
+        private static Color Wetter = new Color(20 / 255f, 70 / 255f, 255 / 255f, 1);
+        private static Color Wettest = new Color(0 / 255f, 0 / 255f, 100 / 255f, 1);
+
         public static void SetTile(int width, int height, ref WorldTile[,] tiles)
         {
             ColoredGlyph tempTile;
@@ -105,36 +113,77 @@ namespace MagiRogue.System.WorldGen
                     switch (tiles[x, y].HeatType)
                     {
                         case HeatType.Coldest:
-                            tiles[x, y].Background = Coldest;
+                            tiles[x, y].Foreground = Coldest;
 
                             break;
 
                         case HeatType.Colder:
-                            tiles[x, y].Background = Colder;
+                            tiles[x, y].Foreground = Colder;
 
                             break;
 
                         case HeatType.Cold:
-                            tiles[x, y].Background = Cold;
+                            tiles[x, y].Foreground = Cold;
                             break;
 
                         case HeatType.Warm:
-                            tiles[x, y].Background = Warm;
+                            tiles[x, y].Foreground = Warm;
                             break;
 
                         case HeatType.Warmer:
-                            tiles[x, y].Background = Warmer;
+                            tiles[x, y].Foreground = Warmer;
                             break;
 
                         case HeatType.Warmest:
-                            tiles[x, y].Background = Warmest;
+                            tiles[x, y].Foreground = Warmest;
                             break;
                     }
 
                     // Darkens color if is a edge tile
                     if (tiles[x, y].Bitmask != 15)
                     {
-                        tiles[x, y].Background = Color.Lerp(tiles[x, y].Foreground, Color.Black, 0.4f);
+                        tiles[x, y].Foreground = Color.Lerp(tiles[x, y].Foreground, Color.Black, 0.4f);
+                    }
+                }
+            }
+        }
+
+        public static void GetMoistureMap(int width, int height, WorldTile[,] tiles)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    WorldTile tile = tiles[x, y];
+
+                    switch (tile.MoistureType)
+                    {
+                        case MoistureType.Wettest:
+                            tile.Foreground = Wettest;
+                            break;
+
+                        case MoistureType.Wetter:
+                            tile.Foreground = Wetter;
+                            break;
+
+                        case MoistureType.Wet:
+                            tile.Foreground = Wet;
+                            break;
+
+                        case MoistureType.Dry:
+                            tile.Foreground = Dry;
+                            break;
+
+                        case MoistureType.Dryer:
+                            tile.Foreground = Dryer;
+                            break;
+
+                        case MoistureType.Dryest:
+                            tile.Foreground = Dryest;
+                            break;
+
+                        default:
+                            break;
                     }
                 }
             }

@@ -31,14 +31,26 @@ namespace MagiRogue.System.Tiles
         Warmest
     }
 
+    public enum MoistureType
+    {
+        Wettest,
+        Wetter,
+        Wet,
+        Dry,
+        Dryer,
+        Dryest
+    }
+
     [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
     public class WorldTile : TileBase
     {
         public float HeightValue { get; set; }
         public float HeatValue { get; set; }
+        public float MoistureValue { get; set; }
 
         public HeightType HeightType { get; set; }
         public HeatType HeatType { get; set; }
+        public MoistureType MoistureType { get; set; }
 
         public WorldTile Left { get; set; }
         public WorldTile Right { get; set; }

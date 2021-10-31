@@ -26,18 +26,26 @@ namespace MagiRogue.System.WorldGen
         private readonly float snow = 1;
         //private readonly float magicLand = 1.2f;
 
-        private float coldestValue = 0.05f;
-        private float colderValue = 0.18f;
-        private float coldValue = 0.4f;
-        private float warmValue = 0.6f;
-        private float warmerValue = 0.8f;
+        private readonly float coldestValue = 0.05f;
+        private readonly float colderValue = 0.18f;
+        private readonly float coldValue = 0.4f;
+        private readonly float warmValue = 0.6f;
+        private readonly float warmerValue = 0.8f;
 
         private readonly int terrainOctaves = 8;
         private readonly float terrainFrequency = 1.5f;
         private readonly float terrainLacunarity = 2f;
         private readonly float terrainGain = 0.5f;
-        private float heatFrequency = 3.0f;
-        private int heatOctaves = 4;
+        private readonly float heatFrequency = 3.0f;
+        private readonly int heatOctaves = 4;
+
+        private readonly int moistureOctaves = 4;
+        private readonly float moistureFrequency = 3.0f;
+        private readonly float dryerValue = 0.27f;
+        private readonly float dryValue = 0.4f;
+        private readonly float wetValue = 0.6f;
+        private readonly float wetterValue = 0.8f;
+        private readonly float wettestValue = 0.9f;
 
         private readonly List<WorldTileGroup> waters = new();
         private readonly List<WorldTileGroup> lands = new();
@@ -46,6 +54,7 @@ namespace MagiRogue.System.WorldGen
         // noise generator
         private FastNoiseLite heightMap;
         private ImplicitCombiner heatMap;
+        private ImplicitFractal moistureMap;
 
         // Planet data
         private PlanetMap planetData;
@@ -79,7 +88,8 @@ namespace MagiRogue.System.WorldGen
         private void CreateConsole(WorldTile[,] tiles)
         {
             PlanetGlyphGenerator.SetTile(width, height, ref tiles);
-            PlanetGlyphGenerator.GetHeatMap(width, height, tiles);
+            //PlanetGlyphGenerator.GetHeatMap(width, height, tiles);
+            PlanetGlyphGenerator.GetMoistureMap(width, height, tiles);
             WorldTile[] coloredTiles = new WorldTile[width * height];
             for (int x = 0; x < width; x++)
             {
@@ -164,7 +174,7 @@ namespace MagiRogue.System.WorldGen
                         t.Collidable = true;
                     }
 
-                    float heatValue = planetData.HeatData[x, y];
+                    float heatValue = MathMagi.ReturnPositive(planetData.HeatData[x, y]);
 
                     if (heatValue < coldestValue)
                         t.HeatType = HeatType.Coldest;
@@ -178,6 +188,36 @@ namespace MagiRogue.System.WorldGen
                         t.HeatType = HeatType.Warmer;
                     else
                         t.HeatType = HeatType.Warmest;
+
+                    //Moisture Map Analyze
+                    float moistureValue = MathMagi.ReturnPositive(planetData.MoistureData[x, y]);
+                    t.MoistureValue = moistureValue;
+
+                    //adjust moisture based on height
+                    if (t.HeightType == HeightType.DeepWater)
+                    {
+                        planetData.MoistureData[t.Position.X, t.Position.Y] += 8f * t.HeightValue;
+                    }
+                    else if (t.HeightType == HeightType.ShallowWater)
+                    {
+                        planetData.MoistureData[t.Position.X, t.Position.Y] += 3f * t.HeightValue;
+                    }
+                    else if (t.HeightType == HeightType.Shore)
+                    {
+                        planetData.MoistureData[t.Position.X, t.Position.Y] += 1f * t.HeightValue;
+                    }
+                    else if (t.HeightType == HeightType.Sand)
+                    {
+                        planetData.MoistureData[t.Position.X, t.Position.Y] += 0.25f * t.HeightValue;
+                    }
+
+                    //set moisture type
+                    if (moistureValue < dryerValue) t.MoistureType = MoistureType.Dryest;
+                    else if (moistureValue < dryValue) t.MoistureType = MoistureType.Dryer;
+                    else if (moistureValue < wetValue) t.MoistureType = MoistureType.Dry;
+                    else if (moistureValue < wetterValue) t.MoistureType = MoistureType.Wet;
+                    else if (moistureValue < wettestValue) t.MoistureType = MoistureType.Wetter;
+                    else t.MoistureType = MoistureType.Wettest;
 
                     tiles[x, y] = t;
                 }
@@ -198,6 +238,7 @@ namespace MagiRogue.System.WorldGen
 
                     float heightValue = heightMap.GetNoise(x1, y1);
                     float heatValue = (float)heatMap.Get(x1, y1);
+                    float moistureValue = (float)moistureMap.Get(x1, y);
 
                     if (heightValue > planetData.Max) planetData.Max = heightValue;
                     if (heightValue < planetData.Min) planetData.Min = heightValue;
@@ -206,6 +247,7 @@ namespace MagiRogue.System.WorldGen
 
                     planetData.HeightData[x, y] = heightValue;
                     planetData.HeatData[x, y] = heatValue;
+                    planetData.MoistureData[x, y] = moistureValue;
                 }
             }
         }
@@ -235,6 +277,9 @@ namespace MagiRogue.System.WorldGen
             heatMap = new(CombinerType.Multiply);
             heatMap.AddSource(gradient);
             heatMap.AddSource(heatFractal);
+
+            moistureMap = new(FractalType.Multi, BasisType.Simplex, InterpolationType.Quintic,
+                moistureOctaves, moistureFrequency, seed);
         }
 
         private WorldTile GetTop(WorldTile center)

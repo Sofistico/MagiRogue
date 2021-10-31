@@ -15,6 +15,7 @@ namespace MagiRogue.System.WorldGen
 
         public float[,] HeightData { get; }
         public float[,] HeatData { get; }
+        public float[,] MoistureData { get; }
         public float Min { get; set; }
         public float Max { get; set; }
         public Map AssocietatedMap { get; }
@@ -25,6 +26,7 @@ namespace MagiRogue.System.WorldGen
             _width = width;
             HeightData = new float[width, height];
             HeatData = new float[width, height];
+            MoistureData = new float[width, height];
             Min = float.MinValue;
             Max = float.MaxValue;
             AssocietatedMap = new("Planet", width, height);
