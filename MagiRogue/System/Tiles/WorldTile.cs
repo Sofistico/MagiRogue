@@ -1,4 +1,5 @@
-﻿using SadRogue.Primitives;
+﻿using MagiRogue.System.WorldGen;
+using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -18,7 +19,8 @@ namespace MagiRogue.System.Tiles
         Forest = 6,
         Rock = 7,
         Snow = 8,
-        MagicLand = 9
+        MagicLand = 9,
+        River = 10
     }
 
     public enum HeatType
@@ -69,6 +71,10 @@ namespace MagiRogue.System.Tiles
         /// </summary>
         public bool Collidable { get; set; }
 
+        public List<River> Rivers { get; set; } = new();
+
+        public int RiverSize { get; set; }
+
         public WorldTile(Color foregroud, Color background,
             int glyph, Point position,
             bool blocksMove = false, bool isTransparent = true,
@@ -103,6 +109,126 @@ namespace MagiRogue.System.Tiles
         private string GetDebuggerDisplay()
         {
             return HeightType.ToString();
+        }
+
+        public int GetRiverNeighborCount(River river)
+        {
+            int count = 0;
+            if (Left.Rivers.Count > 0 && Left.Rivers.Contains(river))
+                count++;
+            if (Right.Rivers.Count > 0 && Right.Rivers.Contains(river))
+                count++;
+            if (Top.Rivers.Count > 0 && Top.Rivers.Contains(river))
+                count++;
+            if (Bottom.Rivers.Count > 0 && Bottom.Rivers.Contains(river))
+                count++;
+            return count;
+        }
+
+        public RiverDirection GetLowestNeighbor()
+        {
+            if (Left.HeightValue < Right.HeightValue
+                && Left.HeightValue < Top.HeightValue
+                && Left.HeightValue < Bottom.HeightValue)
+                return RiverDirection.Left;
+            else if (Right.HeightValue < Left.HeightValue
+                && Right.HeightValue < Top.HeightValue
+                && Right.HeightValue < Bottom.HeightValue)
+                return RiverDirection.Right;
+            else if (Top.HeightValue < Left.HeightValue
+                && Top.HeightValue < Right.HeightValue
+                && Top.HeightValue < Bottom.HeightValue)
+                return RiverDirection.Right;
+            else if (Bottom.HeightValue < Left.HeightValue
+                && Bottom.HeightValue < Top.HeightValue
+                && Bottom.HeightValue < Right.HeightValue)
+                return RiverDirection.Right;
+            else
+                return RiverDirection.Bottom;
+        }
+
+        public void SetRiverPath(River river)
+        {
+            if (!Collidable)
+                return;
+
+            if (!Rivers.Contains(river))
+            {
+                Rivers.Add(river);
+            }
+        }
+
+        private void SetRiverTile(River river)
+        {
+            SetRiverPath(river);
+            HeightType = HeightType.River;
+            HeightValue = 0;
+            Collidable = false;
+        }
+
+        public void DigRiver(River river, int size)
+        {
+            SetRiverTile(river);
+            RiverSize = size;
+
+            if (size == 1)
+            {
+                Bottom.SetRiverTile(river);
+                Right.SetRiverTile(river);
+                Bottom.Right.SetRiverTile(river);
+            }
+
+            if (size == 2)
+            {
+                Bottom.SetRiverTile(river);
+                Right.SetRiverTile(river);
+                Bottom.Right.SetRiverTile(river);
+                Top.SetRiverTile(river);
+                Top.Left.SetRiverTile(river);
+                Top.Right.SetRiverTile(river);
+                Left.SetRiverTile(river);
+                Left.Bottom.SetRiverTile(river);
+            }
+
+            if (size == 3)
+            {
+                Bottom.SetRiverTile(river);
+                Right.SetRiverTile(river);
+                Bottom.Right.SetRiverTile(river);
+                Top.SetRiverTile(river);
+                Top.Left.SetRiverTile(river);
+                Top.Right.SetRiverTile(river);
+                Left.SetRiverTile(river);
+                Left.Bottom.SetRiverTile(river);
+                Right.Right.SetRiverTile(river);
+                Right.Right.Bottom.SetRiverTile(river);
+                Bottom.Bottom.SetRiverTile(river);
+                Bottom.Bottom.Right.SetRiverTile(river);
+            }
+
+            if (size == 4)
+            {
+                Bottom.SetRiverTile(river);
+                Right.SetRiverTile(river);
+                Bottom.Right.SetRiverTile(river);
+                Top.SetRiverTile(river);
+                Top.Right.SetRiverTile(river);
+                Left.SetRiverTile(river);
+                Left.Bottom.SetRiverTile(river);
+                Right.Right.SetRiverTile(river);
+                Right.Right.Bottom.SetRiverTile(river);
+                Bottom.Bottom.SetRiverTile(river);
+                Bottom.Bottom.Right.SetRiverTile(river);
+                Left.Bottom.Bottom.SetRiverTile(river);
+                Left.Left.Bottom.SetRiverTile(river);
+                Left.Left.SetRiverTile(river);
+                Left.Left.Top.SetRiverTile(river);
+                Left.Top.SetRiverTile(river);
+                Left.Top.Top.SetRiverTile(river);
+                Top.Top.SetRiverTile(river);
+                Top.Top.Right.SetRiverTile(river);
+                Top.Right.Right.SetRiverTile(river);
+            }
         }
     }
 }

@@ -15,6 +15,7 @@ namespace MagiRogue.System.WorldGen
         // Height Map Colors
         private static readonly Color DeepColor = new(0, 0, 0.5f, 1);
         private static readonly Color ShallowColor = new(25 / 255f, 25 / 255f, 150 / 255f, 1);
+        private static readonly Color RiverColor = new Color(30 / 255f, 120 / 255f, 200 / 255f, 1);
         private static readonly Color SandColor = new(240 / 255f, 240 / 255f, 64 / 255f, 1);
         private static readonly Color GrassColor = new(50 / 255f, 220 / 255f, 20 / 255f, 1);
         private static readonly Color ForestColor = new(16 / 255f, 160 / 255f, 0, 1);
@@ -31,12 +32,16 @@ namespace MagiRogue.System.WorldGen
         private static readonly Color Warmest = new Color(241 / 255f, 12 / 255f, 0, 1);
 
         //Moisture map
-        private static Color Dryest = new Color(255 / 255f, 139 / 255f, 17 / 255f, 1);
-        private static Color Dryer = new Color(245 / 255f, 245 / 255f, 23 / 255f, 1);
-        private static Color Dry = new Color(80 / 255f, 255 / 255f, 0 / 255f, 1);
-        private static Color Wet = new Color(85 / 255f, 255 / 255f, 255 / 255f, 1);
-        private static Color Wetter = new Color(20 / 255f, 70 / 255f, 255 / 255f, 1);
-        private static Color Wettest = new Color(0 / 255f, 0 / 255f, 100 / 255f, 1);
+        private static readonly Color Dryest = new Color(255 / 255f, 139 / 255f, 17 / 255f, 1);
+        private static readonly Color Dryer = new Color(245 / 255f, 245 / 255f, 23 / 255f, 1);
+        private static readonly Color Dry = new Color(80 / 255f, 255 / 255f, 0 / 255f, 1);
+        private static readonly Color Wet = new Color(85 / 255f, 255 / 255f, 255 / 255f, 1);
+        private static readonly Color Wetter = new Color(20 / 255f, 70 / 255f, 255 / 255f, 1);
+        private static readonly Color Wettest = new Color(0 / 255f, 0 / 255f, 100 / 255f, 1);
+
+        private static readonly Color IceWater = new Color(210 / 255f, 255 / 255f, 252 / 255f, 1);
+        private static readonly Color ColdWater = new Color(119 / 255f, 156 / 255f, 213 / 255f, 1);
+        private static readonly Color RiverWater = new Color(65 / 255f, 110 / 255f, 179 / 255f, 1);
 
         public static void SetTile(int width, int height, ref WorldTile[,] tiles)
         {
@@ -91,6 +96,11 @@ namespace MagiRogue.System.WorldGen
 
                         case HeightType.MagicLand:
                             tempTile = new(MagicColor, Color.Black, 'i');
+                            tiles[x, y].CopyAppearanceFrom(tempTile);
+                            break;
+
+                        case HeightType.River:
+                            tempTile = new(RiverColor, Color.Black, '~');
                             tiles[x, y].CopyAppearanceFrom(tempTile);
                             break;
                     }
