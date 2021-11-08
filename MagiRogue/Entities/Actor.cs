@@ -48,6 +48,12 @@ namespace MagiRogue.Entities
         [JsonIgnore]
         public int XP { get; set; }
 
+        /// <summary>
+        /// Dictionary of the Abilities of an actor.
+        /// Never add directly to the dictionary, use the method AddAbilityToDictionary to add new abilities
+        /// </summary>
+        public Dictionary<int, Ability> Abilities { get; set; }
+
         #endregion Properties
 
         #region Constructor
@@ -68,6 +74,7 @@ namespace MagiRogue.Entities
             Anatomy = new Anatomy(this);
             Inventory = new List<Item>();
             Equipment = new Dictionary<Limb, Item>();
+            Abilities = new();
             Name = name;
         }
 
@@ -159,6 +166,11 @@ namespace MagiRogue.Entities
         public Item WieldedItem()
         {
             return Equipment.GetValueOrDefault(Anatomy.Limbs.Find(l => l.TypeLimb == TypeOfLimb.Hand));
+        }
+
+        public void AddAbilityToDictionary(Ability ability)
+        {
+            Abilities.Add(ability.Id, ability);
         }
 
         #endregion HelpCode

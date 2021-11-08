@@ -23,13 +23,20 @@ namespace MagiRogue.Data
                 };
             actor.Description = actorTemplate.Description;
             actor.Material = System.Physics.PhysicsManager.SetMaterial(actorTemplate.MaterialId);
+            if (actorTemplate.Abilities is not null && actorTemplate.Abilities.Count > 0)
+            {
+                for (int i = 0; i < actorTemplate.Abilities.Count; i++)
+                {
+                    var ability = actorTemplate.Abilities[i];
+                    actor.AddAbilityToDictionary(ability);
+                }
+            }
 
             return actor;
         }
 
         public static Item ItemCreator(Point position, ItemTemplate itemTemplate)
         {
-           
             Item item =
                 new
                 (

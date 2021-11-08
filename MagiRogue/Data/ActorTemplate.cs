@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using SadConsole.SerializedTypes;
 using SadRogue.Primitives;
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace MagiRogue.Data
@@ -68,6 +69,8 @@ namespace MagiRogue.Data
 
         public string Background { get; internal set; }
 
+        public List<AbilityTemplate> Abilities { get; set; }
+
         /// <summary>
         /// Is used in the serialization of the actor.
         /// </summary>
@@ -82,6 +85,26 @@ namespace MagiRogue.Data
         /// <param name="size"></param>
         /// <param name="weight"></param>
         /// <param name="materialId"></param>
+        public ActorTemplate(string name, Color foreground, Color background, int glyph,
+            int layer, Stat stats, Anatomy anatomy, string description, int size, float weight, string materialId,
+            List<AbilityTemplate> abilities)
+        {
+            Name = name;
+            Glyph = (char)glyph;
+            Stats = stats;
+            Anatomy = anatomy;
+            Description = description;
+            Layer = layer;
+            Size = size;
+            Weight = weight;
+            MaterialId = materialId;
+
+            ForegroundBackingField = new MagiColorSerialization(foreground);
+            BackgroundBackingField = new MagiColorSerialization(background);
+
+            Abilities = abilities;
+        }
+
         public ActorTemplate(string name, Color foreground, Color background, int glyph,
             int layer, Stat stats, Anatomy anatomy, string description, int size, float weight, string materialId)
         {
@@ -100,7 +123,8 @@ namespace MagiRogue.Data
         }
 
         public ActorTemplate(string name, string foreground, string background, int glyph,
-           int layer, Stat stats, Anatomy anatomy, string description, int size, float weight, string materialId)
+           int layer, Stat stats, Anatomy anatomy, string description, int size, float weight, string materialId
+            , List<AbilityTemplate> abilities)
         {
             Name = name;
             Foreground = foreground;
@@ -116,6 +140,8 @@ namespace MagiRogue.Data
 
             ForegroundBackingField = new MagiColorSerialization(foreground);
             BackgroundBackingField = new MagiColorSerialization(background);
+
+            Abilities = abilities;
         }
 
         public ActorTemplate(Actor actor)
@@ -131,6 +157,23 @@ namespace MagiRogue.Data
             Size = actor.Size;
             Weight = actor.Weight;
             MaterialId = actor.Material.Id;
+            Abilities = new();
+            AddToAbilities(actor);
+        }
+
+        private void AddToAbilities(Actor actor)
+        {
+            for (int i = 0; i < actor.Abilities.Count; i++)
+            {
+                var actorAbility = actor.Abilities[i];
+                var abilityTemplaye = new AbilityTemplate()
+                {
+                    Name = actorAbility.Name,
+                    Score = actorAbility.Score,
+                    Speciality = actorAbility.Speciality
+                };
+                Abilities.Add(abilityTemplaye);
+            }
         }
 
         public ActorTemplate()
@@ -152,12 +195,30 @@ namespace MagiRogue.Data
                     Weight = actorTemplate.Weight,
                     Material = System.Physics.PhysicsManager.SetMaterial(actorTemplate.MaterialId)
                 };
+            if (actorTemplate.Abilities is not null && actorTemplate.Abilities.Count > 0)
+            {
+                for (int i = 0; i < actorTemplate.Abilities.Count; i++)
+                {
+                    var abilityTemplate = actorTemplate.Abilities[i];
+                    actor.AddAbilityToDictionary(abilityTemplate);
+                }
+            }
 
             return actor;
         }
 
         public static implicit operator ActorTemplate(Actor actor)
         {
+            var abilitylist = new List<AbilityTemplate>();
+
+            if (actor.Abilities is not null && actor.Abilities.Count > 0)
+            {
+                for (int i = 0; i < actor.Abilities.Count; i++)
+                {
+                    var ability = actor.Abilities[i];
+                    abilitylist.Add(ability);
+                }
+            }
             ActorTemplate actorTemplate = new ActorTemplate(actor.Name, actor.Appearance.Foreground,
                actor.Appearance.Background,
                actor.Appearance.Glyph,
@@ -167,7 +228,8 @@ namespace MagiRogue.Data
                actor.Description,
                actor.Size,
                actor.Weight,
-               actor.Material.Id);
+               actor.Material.Id,
+               abilitylist);
 
             return actorTemplate;
         }
