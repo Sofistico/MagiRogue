@@ -1,22 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MagiRogue.System.Tiles;
+﻿using MagiRogue.System.Tiles;
 using MagiRogue.Utils;
-using MagiRogue.Utils.Noise;
-using SadConsole;
+using System;
+using System.Collections.Generic;
 using TinkerWorX.AccidentalNoiseLibrary;
 using Console = SadConsole.Console;
 
 namespace MagiRogue.System.WorldGen
 {
+    /// <summary>
+    /// Generates a brand new planet
+    /// </summary>
     public class PlanetGenerator
     {
         private int _width;
         private int _height;
+        private Civilization[] _civilizations;
         private readonly float deepWater = 0.2f;
         private readonly float shallowWater = 0.4f;
         private readonly float sand = 0.5f;
@@ -55,8 +53,8 @@ namespace MagiRogue.System.WorldGen
         private List<River> rivers;
         private List<RiverGroup> riverGroups;
 
-        private List<WorldTileGroup> waters = new();
-        private List<WorldTileGroup> lands = new();
+        private readonly List<WorldTileGroup> waters = new();
+        private readonly List<WorldTileGroup> lands = new();
 
         private int seed;
 
@@ -71,12 +69,29 @@ namespace MagiRogue.System.WorldGen
         // final object
         private WorldTile[,] tiles;
 
-        private Console mapRenderer;
+        private readonly Console mapRenderer;
 
-        public PlanetMap CreatePlanet(int width, int height)
+        private readonly BiomeType[,] biomeTable = new BiomeType[6, 6] {
+            //COLDEST        //COLDER          //COLD                  //HOT                          //HOTTER                       //HOTTEST
+            { BiomeType.Ice, BiomeType.Tundra, BiomeType.Grassland,    BiomeType.Desert,              BiomeType.Desert,              BiomeType.Desert },              //DRYEST
+            { BiomeType.Ice, BiomeType.Tundra, BiomeType.Grassland,    BiomeType.Desert,              BiomeType.Desert,              BiomeType.Desert },              //DRYER
+            { BiomeType.Ice, BiomeType.Tundra, BiomeType.Woodland,     BiomeType.Woodland,            BiomeType.Savanna,             BiomeType.Savanna },             //DRY
+            { BiomeType.Ice, BiomeType.Tundra, BiomeType.BorealForest, BiomeType.Woodland,            BiomeType.Savanna,             BiomeType.Savanna },             //WET
+            { BiomeType.Ice, BiomeType.Tundra, BiomeType.BorealForest, BiomeType.SeasonalForest,      BiomeType.TropicalRainforest,  BiomeType.TropicalRainforest },  //WETTER
+            { BiomeType.Ice, BiomeType.Tundra, BiomeType.BorealForest, BiomeType.TemperateRainforest, BiomeType.TropicalRainforest,  BiomeType.TropicalRainforest }   //WETTEST
+            };
+
+        /// <summary>
+        /// Creates a brand new planet!
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <returns></returns>
+        public PlanetMap CreatePlanet(int width, int height, int nmbCivilizations = 30)
         {
             _width = width;
             _height = height;
+            _civilizations = new Civilization[30];
 
             // Initialize the generator
             Initialize();
@@ -97,17 +112,31 @@ namespace MagiRogue.System.WorldGen
             UpdateBitmasks();
             FloodFill();
 
+            GenerateBiomeMap();
+            UpdateBiomeBitmask();
+
+            SeedCivilizations();
+
+            BasicHistory();
+
             // Here will take care of the visualization
             CreateConsole(tiles);
 
             return planetData;
         }
 
+        private void SeedCivilizations()
+        {
+            throw new NotImplementedException();
+        }
+
         private void CreateConsole(WorldTile[,] tiles)
         {
             PlanetGlyphGenerator.SetTile(_width, _height, ref tiles);
+            // Test only!
             //PlanetGlyphGenerator.GetHeatMap(width, height, tiles);
             //PlanetGlyphGenerator.GetMoistureMap(width, height, tiles);
+            PlanetGlyphGenerator.GetBiomeMapTexture(_width, _height, tiles);
             WorldTile[] coloredTiles = new WorldTile[_width * _height];
             for (int x = 0; x < _width; x++)
             {
@@ -625,7 +654,7 @@ namespace MagiRogue.System.WorldGen
                     if (t.Rivers.Count > 1)
                     {
                         // multiple rivers == intersection
-                        RiverGroup group = null;
+                        RiverGroup? group = null;
 
                         // Does a rivergroup already exist for this group?
                         for (int n = 0; n < t.Rivers.Count; n++)
@@ -675,7 +704,7 @@ namespace MagiRogue.System.WorldGen
             for (int i = 0; i < riverGroups.Count; i++)
             {
                 RiverGroup group = riverGroups[i];
-                River longest = null;
+                River? longest = null;
 
                 //Find longest river in this group
                 for (int j = 0; j < group.Rivers.Count; j++)
@@ -803,7 +832,7 @@ namespace MagiRogue.System.WorldGen
 
         private void AddMoisture(WorldTile t, int radius)
         {
-            SadRogue.Primitives.Point center = new SadRogue.Primitives.Point(t.Position.X, t.Position.Y);
+            SadRogue.Primitives.Point center = new(t.Position.X, t.Position.Y);
             int curr = radius;
 
             while (curr > 0)
@@ -963,6 +992,36 @@ namespace MagiRogue.System.WorldGen
                     t.DigRiver(river, 0);
                 }
                 counter++;
+            }
+        }
+
+        public BiomeType GetBiomeType(WorldTile tile)
+        {
+            return biomeTable[(int)tile.MoistureType, (int)tile.HeatType];
+        }
+
+        private void GenerateBiomeMap()
+        {
+            for (var x = 0; x < _width; x++)
+            {
+                for (var y = 0; y < _height; y++)
+                {
+                    if (!tiles[x, y].Collidable) continue;
+
+                    WorldTile t = tiles[x, y];
+                    t.BiomeType = GetBiomeType(t);
+                }
+            }
+        }
+
+        private void UpdateBiomeBitmask()
+        {
+            for (var x = 0; x < _width; x++)
+            {
+                for (var y = 0; y < _height; y++)
+                {
+                    tiles[x, y].UpdateBiomeBitmask();
+                }
             }
         }
     }

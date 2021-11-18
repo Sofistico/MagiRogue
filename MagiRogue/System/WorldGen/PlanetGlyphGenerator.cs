@@ -43,6 +43,18 @@ namespace MagiRogue.System.WorldGen
         private static readonly Color ColdWater = new Color(119 / 255f, 156 / 255f, 213 / 255f, 1);
         private static readonly Color RiverWater = new Color(65 / 255f, 110 / 255f, 179 / 255f, 1);
 
+        //biome map
+        private static readonly Color Ice = Color.White;
+        private static readonly Color Desert = new Color(238 / 255f, 218 / 255f, 130 / 255f, 1);
+        private static readonly Color Savanna = new Color(177 / 255f, 209 / 255f, 110 / 255f, 1);
+        private static readonly Color TropicalRainforest = new Color(66 / 255f, 123 / 255f, 25 / 255f, 1);
+        private static readonly Color Tundra = new Color(96 / 255f, 131 / 255f, 112 / 255f, 1);
+        private static readonly Color TemperateRainforest = new Color(29 / 255f, 73 / 255f, 40 / 255f, 1);
+        private static readonly Color Grassland = new Color(164 / 255f, 225 / 255f, 99 / 255f, 1);
+        private static readonly Color SeasonalForest = new Color(73 / 255f, 100 / 255f, 35 / 255f, 1);
+        private static readonly Color BorealForest = new Color(95 / 255f, 115 / 255f, 62 / 255f, 1);
+        private static readonly Color Woodland = new Color(139 / 255f, 175 / 255f, 90 / 255f, 1);
+
         public static void SetTile(int width, int height, ref WorldTile[,] tiles)
         {
             ColoredGlyph tempTile;
@@ -194,6 +206,93 @@ namespace MagiRogue.System.WorldGen
 
                         default:
                             break;
+                    }
+                }
+            }
+        }
+
+        public static void GetBiomeMapTexture(int width, int height, WorldTile[,] tiles)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                for (var y = 0; y < height; y++)
+                {
+                    BiomeType value = tiles[x, y].BiomeType;
+                    var tile = tiles[x, y];
+
+                    switch (value)
+                    {
+                        case BiomeType.Ice:
+                            tile.Foreground = Ice;
+                            break;
+
+                        case BiomeType.BorealForest:
+                            tile.Foreground = BorealForest;
+                            break;
+
+                        case BiomeType.Desert:
+                            tile.Foreground = Desert;
+                            break;
+
+                        case BiomeType.Grassland:
+                            tile.Foreground = Grassland;
+                            break;
+
+                        case BiomeType.SeasonalForest:
+                            tile.Foreground = SeasonalForest;
+                            break;
+
+                        case BiomeType.Tundra:
+                            tile.Foreground = Tundra;
+                            break;
+
+                        case BiomeType.Savanna:
+                            tile.Foreground = Savanna;
+                            break;
+
+                        case BiomeType.TemperateRainforest:
+                            tile.Foreground = TemperateRainforest;
+                            break;
+
+                        case BiomeType.TropicalRainforest:
+                            tile.Foreground = TropicalRainforest;
+                            break;
+
+                        case BiomeType.Woodland:
+                            tile.Foreground = Woodland;
+                            break;
+                    }
+
+                    // Water tiles
+                    if (tiles[x, y].HeightType == HeightType.DeepWater)
+                    {
+                        tile.Foreground = DeepColor;
+                    }
+                    else if (tiles[x, y].HeightType == HeightType.ShallowWater)
+                    {
+                        tile.Foreground = ShallowColor;
+                    }
+
+                    // draw rivers
+                    if (tiles[x, y].HeightType == HeightType.River)
+                    {
+                        float heatValue = tiles[x, y].HeatValue;
+
+                        if (tiles[x, y].HeatType == HeatType.Coldest)
+                            tile.Foreground = Color.Lerp(IceWater, ColdWater, (heatValue) / (Coldest.B));
+                        else if (tiles[x, y].HeatType == HeatType.Colder)
+                            tile.Foreground = Color.Lerp(ColdWater, RiverWater, (heatValue - Coldest.B) / (Colder.B - Coldest.G));
+                        else if (tiles[x, y].HeatType == HeatType.Cold)
+                            tile.Foreground = Color.Lerp(RiverWater, ShallowColor, (heatValue - Colder.G) / (Cold.R - Colder.B));
+                        else
+                            tile.Foreground = ShallowColor;
+                    }
+
+                    // add a outline
+                    if (tiles[x, y].HeightType >= HeightType.Shore && tiles[x, y].HeightType != HeightType.River)
+                    {
+                        if (tiles[x, y].BiomeBitmask != 15)
+                            tile.Foreground = Color.Lerp(tile.Foreground, Color.Black, 0.35f);
                     }
                 }
             }

@@ -2,13 +2,14 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <StartupObject>MagiRogue.GameLoop</StartupObject>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Authors>Sofistico</Authors>
     <Company>Sofistico</Company>
     <Description>A roguelike created with SadConsole 9.x and GoRogue 3.x</Description>
     <ApplicationIcon>Young-Wizard.ico</ApplicationIcon>
+    <Nullable>enable</Nullable>
     <Win32Resource />
   </PropertyGroup>
 

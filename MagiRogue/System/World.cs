@@ -50,7 +50,7 @@ namespace MagiRogue.System
         {
             AllMaps = new();
             Time = new TimeSystem();
-            PlanetMap = new PlanetGenerator().CreatePlanet(500, 500);
+            PlanetMap = new PlanetGenerator().CreatePlanet(150, 150);
             CurrentMap = PlanetMap.AssocietatedMap;
             /*if (!testGame)
             {

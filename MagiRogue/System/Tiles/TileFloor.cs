@@ -6,7 +6,7 @@ namespace MagiRogue.System.Tiles
     /// TileFloor is based on TileBase
     /// Floor tiles to be used in maps.
     /// </summary>
-    public class TileFloor : TileBase
+    public sealed class TileFloor : TileBase
     {
         /// <summary>
         /// Default constructor or a stone tile.

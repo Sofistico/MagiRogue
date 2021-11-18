@@ -5,7 +5,7 @@ using System;
 
 namespace MagiRogue.System.Tiles
 {
-    public class NodeTile : TileBase
+    public sealed class NodeTile : TileBase
     {
         private float _mpRecovering;
         private Components.IllusionComponent illusion;
@@ -113,6 +113,8 @@ namespace MagiRogue.System.Tiles
 
         public void SetUpNodeTurn(World world) => world.Time.TurnPassed += GetTime_NodeTurnPassed;
 
+        private void DestroyNodeTurn(World world) => world.Time.TurnPassed -= GetTime_NodeTurnPassed;
+
         private void GetTime_NodeTurnPassed(object sender, Time.TimeDefSpan e)
         {
             if ((e.Minutes + 1) % 5 == 0 && e.Seconds % 60 == 0)
@@ -125,8 +127,11 @@ namespace MagiRogue.System.Tiles
         {
             DestroyTile(BecomeNextTile());
 
-            return new Item(Foreground, Background, Name, Glyph, Position, NodeStrength,
-                (float)MaterialOfTile.Density);
+            DestroyNodeTurn(GameLoop.World);
+
+            return Data.EntityFactory.ItemCreator(Position,
+                new Item(Foreground, Background, Name, Glyph, Position, NodeStrength,
+                (float)MaterialOfTile.Density));
         }
 
         private TileBase BecomeNextTile()

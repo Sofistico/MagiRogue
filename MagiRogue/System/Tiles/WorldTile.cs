@@ -43,16 +43,32 @@ namespace MagiRogue.System.Tiles
         Dryest
     }
 
+    public enum BiomeType
+    {
+        Desert,
+        Savanna,
+        TropicalRainforest,
+        Grassland,
+        Woodland,
+        SeasonalForest,
+        TemperateRainforest,
+        BorealForest,
+        Tundra,
+        Ice
+    }
+
     [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
-    public class WorldTile : TileBase
+    public sealed class WorldTile : TileBase
     {
         public float HeightValue { get; set; }
         public float HeatValue { get; set; }
         public float MoistureValue { get; set; }
+        public float MineralValue { get; set; }
 
         public HeightType HeightType { get; set; }
         public HeatType HeatType { get; set; }
         public MoistureType MoistureType { get; set; }
+        public BiomeType BiomeType { get; set; }
 
         public WorldTile Left { get; set; }
         public WorldTile Right { get; set; }
@@ -74,6 +90,7 @@ namespace MagiRogue.System.Tiles
         public List<River> Rivers { get; set; } = new();
 
         public int RiverSize { get; set; }
+        public int BiomeBitmask { get; set; }
 
         public WorldTile(Color foregroud, Color background,
             int glyph, Point position,
@@ -88,6 +105,22 @@ namespace MagiRogue.System.Tiles
         /// </summary>
         public WorldTile() : base(Color.Black, Color.Black, '2', 0, Point.None, "null")
         {
+        }
+
+        public void UpdateBiomeBitmask()
+        {
+            int count = 0;
+
+            if (Collidable && Top != null && Top.BiomeType == BiomeType)
+                count += 1;
+            if (Collidable && Bottom != null && Bottom.BiomeType == BiomeType)
+                count += 4;
+            if (Collidable && Left != null && Left.BiomeType == BiomeType)
+                count += 8;
+            if (Collidable && Right != null && Right.BiomeType == BiomeType)
+                count += 2;
+
+            BiomeBitmask = count;
         }
 
         public void UpdateBitmask()

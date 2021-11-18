@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 namespace MagiRogue.System.WorldGen
 {
     // made with http://www.jgallant.com/procedurally-generating-wrapping-world-maps-in-unity-csharp-part-1/#intro
-    public class PlanetMap
+
+    public sealed class PlanetMap
     {
         private readonly int _height;
         private readonly int _width;
