@@ -73,7 +73,7 @@ namespace MagiRogue.System.Magic
 
         public SpellBase QuerySpell(string spellId)
         {
-            return KnowSpells.Where(i => i.SpellId.Equals(spellId)).FirstOrDefault();
+            return KnowSpells.FirstOrDefault(i => i.SpellId.Equals(spellId));
         }
     }
 

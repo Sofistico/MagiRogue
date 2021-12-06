@@ -55,6 +55,8 @@ namespace MagiRogue.System.WorldGen
         private static readonly Color BorealForest = new Color(95 / 255f, 115 / 255f, 62 / 255f, 1);
         private static readonly Color Woodland = new Color(139 / 255f, 175 / 255f, 90 / 255f, 1);
 
+        private static readonly Color DirtRoad = Color.Brown;
+
         public static void SetTile(int width, int height, ref WorldTile[,] tiles)
         {
             ColoredGlyph tempTile;
@@ -170,6 +172,29 @@ namespace MagiRogue.System.WorldGen
             }
         }
 
+        public static void SetCityTiles(int width, int height, WorldTile[,] tiles)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    WorldTile tile = tiles[x, y];
+
+                    if (tile.CivInfluence is not null)
+                    {
+                        tile.Glyph = '#';
+                        tile.Foreground = Color.White;
+                    }
+                    if (tile.Road != null)
+                    {
+                        if (tile.Road.RoadDirection is WorldDirection.Bottom)
+                        {
+                        }
+                    }
+                }
+            }
+        }
+
         public static void GetMoistureMap(int width, int height, WorldTile[,] tiles)
         {
             for (int x = 0; x < width; x++)
@@ -220,49 +245,51 @@ namespace MagiRogue.System.WorldGen
                     BiomeType value = tiles[x, y].BiomeType;
                     var tile = tiles[x, y];
 
-                    switch (value)
+                    if (tile.HeightType != HeightType.Rock && tile.HeightType != HeightType.MagicLand)
                     {
-                        case BiomeType.Ice:
-                            tile.Foreground = Ice;
-                            break;
+                        switch (value)
+                        {
+                            case BiomeType.Ice:
+                                tile.Foreground = Ice;
+                                break;
 
-                        case BiomeType.BorealForest:
-                            tile.Foreground = BorealForest;
-                            break;
+                            case BiomeType.BorealForest:
+                                tile.Foreground = BorealForest;
+                                break;
 
-                        case BiomeType.Desert:
-                            tile.Foreground = Desert;
-                            break;
+                            case BiomeType.Desert:
+                                tile.Foreground = Desert;
+                                break;
 
-                        case BiomeType.Grassland:
-                            tile.Foreground = Grassland;
-                            break;
+                            case BiomeType.Grassland:
+                                tile.Foreground = Grassland;
+                                break;
 
-                        case BiomeType.SeasonalForest:
-                            tile.Foreground = SeasonalForest;
-                            break;
+                            case BiomeType.SeasonalForest:
+                                tile.Foreground = SeasonalForest;
+                                break;
 
-                        case BiomeType.Tundra:
-                            tile.Foreground = Tundra;
-                            break;
+                            case BiomeType.Tundra:
+                                tile.Foreground = Tundra;
+                                break;
 
-                        case BiomeType.Savanna:
-                            tile.Foreground = Savanna;
-                            break;
+                            case BiomeType.Savanna:
+                                tile.Foreground = Savanna;
+                                break;
 
-                        case BiomeType.TemperateRainforest:
-                            tile.Foreground = TemperateRainforest;
-                            break;
+                            case BiomeType.TemperateRainforest:
+                                tile.Foreground = TemperateRainforest;
+                                break;
 
-                        case BiomeType.TropicalRainforest:
-                            tile.Foreground = TropicalRainforest;
-                            break;
+                            case BiomeType.TropicalRainforest:
+                                tile.Foreground = TropicalRainforest;
+                                break;
 
-                        case BiomeType.Woodland:
-                            tile.Foreground = Woodland;
-                            break;
+                            case BiomeType.Woodland:
+                                tile.Foreground = Woodland;
+                                break;
+                        }
                     }
-
                     // Water tiles
                     if (tiles[x, y].HeightType == HeightType.DeepWater)
                     {

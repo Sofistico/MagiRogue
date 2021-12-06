@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MagiRogue.System.WorldGen
 {
-    public enum RiverDirection
+    public enum WorldDirection
     {
         Left,
         Right,
@@ -19,7 +19,7 @@ namespace MagiRogue.System.WorldGen
         public List<WorldTile> Tiles { get; set; }
         public int Intersections { get; set; }
         public float TurnCount { get; set; }
-        public RiverDirection CurrentDirection { get; set; }
+        public WorldDirection CurrentDirection { get; set; }
 
         public River(int id)
         {

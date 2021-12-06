@@ -112,7 +112,7 @@ namespace MagiRogue.Commands
                 //Resolve the dicing outcome and register a hit, governed by the
                 //attacker's BaseAttack value.
                 //TODO: Adds the fatigue atribute and any penalties.
-                if (attacker.Stats.BaseAttack + Mrn.ExplodingD6Dice > defender.Stats.Defense + Mrn.ExplodingD6Dice)
+                if (attacker.Stats.BaseAttack + Mrn.Exploding2D6Dice > defender.Stats.Defense + Mrn.Exploding2D6Dice)
                     hits++;
             }
 
@@ -146,11 +146,11 @@ namespace MagiRogue.Commands
                     Item wieldedItem = attacker.WieldedItem();
                     // TODO: adds a way to get the attack of the weapon or fist or something else
                     if (wieldedItem is null)
-                        loopDamage = attacker.Stats.Strength + Mrn.ExplodingD6Dice;
+                        loopDamage = attacker.Stats.Strength + Mrn.Exploding2D6Dice;
                     else
-                        loopDamage = attacker.Stats.Strength + wieldedItem.BaseDmg + Mrn.ExplodingD6Dice;
+                        loopDamage = attacker.Stats.Strength + wieldedItem.BaseDmg + Mrn.Exploding2D6Dice;
 
-                    loopDamage -= defender.Stats.Protection + Mrn.ExplodingD6Dice;
+                    loopDamage -= defender.Stats.Protection + Mrn.Exploding2D6Dice;
 
                     defenseMessage.AppendFormat("   Hit {0}: {1} was hit for {2} damage", hits, defender.Name, loopDamage);
                     totalDamage += loopDamage;

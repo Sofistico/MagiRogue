@@ -123,7 +123,7 @@ namespace MagiRogue.Utils
 
         private static void ResolveResist(Entity poorGuy, Actor caster, SpellBase spellCasted, ISpellEffect effect)
         {
-            int luck = Mrn.ExplodingD6Dice;
+            int luck = Mrn.Exploding2D6Dice;
             if (Magic.PenetrateResistance(spellCasted, caster, poorGuy, luck))
             {
                 DealDamage(effect.BaseDamage, poorGuy, effect.SpellDamageType);
@@ -140,10 +140,10 @@ namespace MagiRogue.Utils
             }
             else
             {
-                int diceRoll = Mrn.ExplodingD6Dice + caster.Stats.Precision;
+                int diceRoll = Mrn.Exploding2D6Dice + caster.Stats.Precision;
                 // the actor + exploding dice is the dice that the target will throw for either defense or blocking the projectile
                 // TODO: When shield is done, needs to add the shield or any protection against the spell
-                if (poorGuy is Actor actor && diceRoll >= actor.Stats.Defense + Mrn.ExplodingD6Dice)
+                if (poorGuy is Actor actor && diceRoll >= actor.Stats.Defense + Mrn.Exploding2D6Dice)
                 {
                     ResolveResist(poorGuy, caster, spellCasted, effect);
                 }

@@ -1,5 +1,6 @@
 ﻿using MagiRogue.System.Tiles;
 using MagiRogue.Utils;
+using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using TinkerWorX.AccidentalNoiseLibrary;
@@ -15,6 +16,8 @@ namespace MagiRogue.System.WorldGen
         private int _width;
         private int _height;
         private Civilization[] _civilizations;
+        private int maxCivsWorld;
+
         private readonly float deepWater = 0.2f;
         private readonly float shallowWater = 0.4f;
         private readonly float sand = 0.5f;
@@ -68,7 +71,6 @@ namespace MagiRogue.System.WorldGen
 
         // final object
         private WorldTile[,] tiles;
-
         private readonly Console mapRenderer;
 
         private readonly BiomeType[,] biomeTable = new BiomeType[6, 6] {
@@ -91,7 +93,8 @@ namespace MagiRogue.System.WorldGen
         {
             _width = width;
             _height = height;
-            _civilizations = new Civilization[30];
+            maxCivsWorld = nmbCivilizations;
+            _civilizations = new Civilization[maxCivsWorld];
 
             // Initialize the generator
             Initialize();
@@ -116,7 +119,6 @@ namespace MagiRogue.System.WorldGen
             UpdateBiomeBitmask();
 
             SeedCivilizations();
-
             BasicHistory();
 
             // Here will take care of the visualization
@@ -125,9 +127,84 @@ namespace MagiRogue.System.WorldGen
             return planetData;
         }
 
+        private void BasicHistory()
+        {
+            for (int i = 0; i < _civilizations.Length; i++)
+            {
+                var civ = _civilizations[i];
+
+                if (i < 30 && civ.Tendency == _civilizations[i + 1].Tendency)
+                {
+                    BuildRoadsToFriends(civ, _civilizations[i + 1]);
+                }
+            }
+        }
+
+        private void BuildRoadsToFriends(Civilization civ, Civilization friend)
+        {
+            var tile = civ.Territory.OwnedLand.WorldTiles[0];
+            var closestCityTile = friend.Territory.OwnedLand.WorldTiles[0];
+
+            FindPathToCity(tile, closestCityTile);
+        }
+
+        private void FindPathToCity(WorldTile tile, WorldTile closestCityTile)
+        {
+            if (!tile.Collidable)
+                return;
+        }
+
         private void SeedCivilizations()
         {
-            throw new NotImplementedException();
+            int tries = 0;
+            int maxTries = 300;
+            int currentCivCount = 0;
+
+            while (currentCivCount < maxCivsWorld && tries < maxTries)
+            {
+                tries++;
+
+                int x = GoRogue.Random.GlobalRandom.DefaultRNG.Next(0, _width);
+                int y = GoRogue.Random.GlobalRandom.DefaultRNG.Next(0, _height);
+                WorldTile tile = tiles[x, y];
+
+                if (tile.HeightType == HeightType.DeepWater
+                || tile.HeightType == HeightType.ShallowWater
+                || tile.HeightType == HeightType.River)
+                    continue;
+                if (tile.CivInfluence != null)
+                    continue;
+
+                int rng = GoRogue.Random.GlobalRandom.DefaultRNG.Next(100, 5000);
+
+                int pop = (int)(rng * ((int)tile.HeightType * tile.MoistureValue + 1));
+
+                Civilization civ = new($"Random Name Here {currentCivCount}",
+                    new Entities.Race("Human"), pop, RandomCivTendency());
+
+                civ.MundaneResources = tile.MineralValue;
+                tile.CivInfluence = civ;
+                civ.Territory.AddLand(tile);
+
+                if (currentCivCount < maxCivsWorld)
+                {
+                    _civilizations[currentCivCount] = civ;
+                }
+
+                currentCivCount++;
+            }
+        }
+
+        private static CivilizationTendency RandomCivTendency()
+        {
+            int rng = GoRogue.Random.GlobalRandom.DefaultRNG.Next(0, 2 + 1);
+            return rng switch
+            {
+                0 => CivilizationTendency.Normal,
+                1 => CivilizationTendency.Aggresive,
+                2 => CivilizationTendency.Studious,
+                _ => throw new ArgumentOutOfRangeException(),
+            };
         }
 
         private void CreateConsole(WorldTile[,] tiles)
@@ -137,6 +214,7 @@ namespace MagiRogue.System.WorldGen
             //PlanetGlyphGenerator.GetHeatMap(width, height, tiles);
             //PlanetGlyphGenerator.GetMoistureMap(width, height, tiles);
             PlanetGlyphGenerator.GetBiomeMapTexture(_width, _height, tiles);
+            PlanetGlyphGenerator.SetCityTiles(_width, _height, tiles);
             WorldTile[] coloredTiles = new WorldTile[_width * _height];
             for (int x = 0; x < _width; x++)
             {
@@ -173,6 +251,8 @@ namespace MagiRogue.System.WorldGen
                     t.Position = new SadRogue.Primitives.Point(x, y);
 
                     float value = planetData.HeightData[x, y];
+                    t.MineralValue = MathMagi.ReturnPositive(MathF.Round
+                        ((planetData.HeightData[x, y] + planetData.HeatData[x, y]) * 200));
 
                     // normalize value between 0 and 1
                     value = MathMagi.ReturnPositive(value);
@@ -184,36 +264,43 @@ namespace MagiRogue.System.WorldGen
                     {
                         t.HeightType = HeightType.DeepWater;
                         t.Collidable = false;
+                        t.MineralValue *= 1.5f;
                     }
                     else if (value < shallowWater)
                     {
                         t.HeightType = HeightType.ShallowWater;
                         t.Collidable = false;
+                        t.MineralValue *= 0.5f;
                     }
                     else if (value < sand)
                     {
                         t.HeightType = HeightType.Sand;
                         t.Collidable = true;
+                        t.MineralValue *= 0.7f;
                     }
                     else if (value < grass)
                     {
                         t.HeightType = HeightType.Grass;
                         t.Collidable = true;
+                        t.MineralValue *= 0.7f;
                     }
                     else if (value < magicLand)
                     {
                         t.HeightType = HeightType.MagicLand;
                         t.Collidable = true;
+                        t.MineralValue *= 1.3f;
                     }
                     else if (value < forest)
                     {
                         t.HeightType = HeightType.Forest;
                         t.Collidable = true;
+                        t.MineralValue *= 1.2f;
                     }
                     else if (value < rock)
                     {
                         t.HeightType = HeightType.Rock;
                         t.Collidable = true;
+                        t.MineralValue *= 2.0f;
                     }
                     else if (value < snow)
                     {
@@ -529,7 +616,7 @@ namespace MagiRogue.System.WorldGen
             }
         }
 
-        private void FindPathToWater(WorldTile tile, RiverDirection currentDirection, ref River river)
+        private void FindPathToWater(WorldTile tile, WorldDirection currentDirection, ref River river)
         {
             if (tile.Rivers.Contains(river))
                 return;
@@ -570,16 +657,16 @@ namespace MagiRogue.System.WorldGen
                 leftValue = 0;
 
             // override flow direction if a tile is significantly lower
-            if (currentDirection == RiverDirection.Left)
+            if (currentDirection == WorldDirection.Left)
                 if (MathF.Abs(rigthValue - leftValue) < 0.1f)
                     rigthValue = int.MaxValue;
-            if (currentDirection == RiverDirection.Right)
+            if (currentDirection == WorldDirection.Right)
                 if (MathF.Abs(rigthValue - leftValue) < 0.1f)
                     leftValue = int.MaxValue;
-            if (currentDirection == RiverDirection.Top)
+            if (currentDirection == WorldDirection.Top)
                 if (MathF.Abs(topValue - bottomValue) < 0.1f)
                     topValue = int.MaxValue;
-            if (currentDirection == RiverDirection.Bottom)
+            if (currentDirection == WorldDirection.Bottom)
                 if (MathF.Abs(topValue - bottomValue) < 0.1f)
                     bottomValue = int.MaxValue;
 
@@ -596,10 +683,10 @@ namespace MagiRogue.System.WorldGen
             {
                 if (left.Collidable)
                 {
-                    if (river.CurrentDirection != RiverDirection.Left)
+                    if (river.CurrentDirection != WorldDirection.Left)
                     {
                         river.TurnCount++;
-                        river.CurrentDirection = RiverDirection.Left;
+                        river.CurrentDirection = WorldDirection.Left;
                     }
                     FindPathToWater(left, currentDirection, ref river);
                 }
@@ -608,10 +695,10 @@ namespace MagiRogue.System.WorldGen
             {
                 if (right.Collidable)
                 {
-                    if (river.CurrentDirection != RiverDirection.Right)
+                    if (river.CurrentDirection != WorldDirection.Right)
                     {
                         river.TurnCount++;
-                        river.CurrentDirection = RiverDirection.Right;
+                        river.CurrentDirection = WorldDirection.Right;
                     }
                     FindPathToWater(right, currentDirection, ref river);
                 }
@@ -620,10 +707,10 @@ namespace MagiRogue.System.WorldGen
             {
                 if (bottom.Collidable)
                 {
-                    if (river.CurrentDirection != RiverDirection.Bottom)
+                    if (river.CurrentDirection != WorldDirection.Bottom)
                     {
                         river.TurnCount++;
-                        river.CurrentDirection = RiverDirection.Bottom;
+                        river.CurrentDirection = WorldDirection.Bottom;
                     }
                     FindPathToWater(bottom, currentDirection, ref river);
                 }
@@ -632,10 +719,10 @@ namespace MagiRogue.System.WorldGen
             {
                 if (top.Collidable)
                 {
-                    if (river.CurrentDirection != RiverDirection.Top)
+                    if (river.CurrentDirection != WorldDirection.Top)
                     {
                         river.TurnCount++;
-                        river.CurrentDirection = RiverDirection.Top;
+                        river.CurrentDirection = WorldDirection.Top;
                     }
                     FindPathToWater(top, currentDirection, ref river);
                 }
@@ -832,7 +919,7 @@ namespace MagiRogue.System.WorldGen
 
         private void AddMoisture(WorldTile t, int radius)
         {
-            SadRogue.Primitives.Point center = new(t.Position.X, t.Position.Y);
+            Point center = new(t.Position.X, t.Position.Y);
             int curr = radius;
 
             while (curr > 0)

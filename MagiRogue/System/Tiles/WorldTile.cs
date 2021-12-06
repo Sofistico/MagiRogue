@@ -83,7 +83,7 @@ namespace MagiRogue.System.Tiles
         public bool FloodFilled { get; set; }
 
         /// <summary>
-        /// Anything that isn't water will be collidable
+        /// Anything that isn't water will be collidable, so false means water
         /// </summary>
         public bool Collidable { get; set; }
 
@@ -91,6 +91,9 @@ namespace MagiRogue.System.Tiles
 
         public int RiverSize { get; set; }
         public int BiomeBitmask { get; set; }
+
+        public Civilization? CivInfluence { get; set; }
+        public Road? Road { get; internal set; }
 
         public WorldTile(Color foregroud, Color background,
             int glyph, Point position,
@@ -158,26 +161,26 @@ namespace MagiRogue.System.Tiles
             return count;
         }
 
-        public RiverDirection GetLowestNeighbor()
+        public WorldDirection GetLowestNeighbor()
         {
             if (Left.HeightValue < Right.HeightValue
                 && Left.HeightValue < Top.HeightValue
                 && Left.HeightValue < Bottom.HeightValue)
-                return RiverDirection.Left;
+                return WorldDirection.Left;
             else if (Right.HeightValue < Left.HeightValue
                 && Right.HeightValue < Top.HeightValue
                 && Right.HeightValue < Bottom.HeightValue)
-                return RiverDirection.Right;
+                return WorldDirection.Right;
             else if (Top.HeightValue < Left.HeightValue
                 && Top.HeightValue < Right.HeightValue
                 && Top.HeightValue < Bottom.HeightValue)
-                return RiverDirection.Right;
+                return WorldDirection.Right;
             else if (Bottom.HeightValue < Left.HeightValue
                 && Bottom.HeightValue < Top.HeightValue
                 && Bottom.HeightValue < Right.HeightValue)
-                return RiverDirection.Right;
+                return WorldDirection.Right;
             else
-                return RiverDirection.Bottom;
+                return WorldDirection.Bottom;
         }
 
         public void SetRiverPath(River river)

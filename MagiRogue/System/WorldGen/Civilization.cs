@@ -23,9 +23,10 @@ namespace MagiRogue.System.WorldGen
         public int MagicStrenght { get; set; }
         public int Population { get; set; }
         public CivilizationTendency Tendency { get; set; }
-        public int MundaneResources { get; set; }
-        public int MagicalResources { get; set; }
+        public float MundaneResources { get; set; }
+        public float MagicalResources { get; set; }
         public List<ItemTemplate> Nodes { get; set; }
+        public Territory Territory { get; set; }
 
         public Civilization(string name, Race primaryRace, int population, CivilizationTendency tendency)
         {
@@ -34,6 +35,7 @@ namespace MagiRogue.System.WorldGen
             Population = population;
             Tendency = tendency;
             Nodes = new();
+            Territory = new();
         }
     }
 }
