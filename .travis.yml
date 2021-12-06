@@ -1,7 +1,7 @@
 language: csharp
 solution: MagiRogue.sln
 mono: none
-dotnet: 5.0.100
+dotnet: 6.0.100
 script:
  - dotnet restore
  - dotnet build --configuration Release --no-restore
