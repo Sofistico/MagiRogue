@@ -14,8 +14,9 @@ namespace MagiRogue.Entities
         private float _baseHpRegen;
         private float _baseManaRegen; // Must take into account the ambient mana
                                       // from the enviroment and inside the body of the caster
-        private float personalMana; // Wil be measured in magnitude, in how many magic missile you can cast
+        private float personalMana; // Will be measured in magnitude, in how many magic missile you can cast
         private float _maxPersonalMana;
+        private float originalMana;
         private int ambientMana; // This will be here to model a new MOL like magic system
         private int baseStrength;
         private int baseAttack;
@@ -30,9 +31,6 @@ namespace MagiRogue.Entities
         #region StatsProperties
 
         [DataMember]
-        /// <summary>
-        /// current health
-        /// </summary>
         public float Health
         {
             get
@@ -47,9 +45,6 @@ namespace MagiRogue.Entities
         }
 
         [DataMember(EmitDefaultValue = false, IsRequired = false)]
-        /// <summary>
-        /// maximum health
-        /// </summary>
         public float MaxHealth
         {
             get
@@ -107,10 +102,6 @@ namespace MagiRogue.Entities
         }
 
         [DataMember]
-        /// <summary>
-        /// The size of the mana pool, represents how many times someone can cast magic missile, going normally
-        /// anywhere from 8 to 25.
-        /// </summary>
         public float PersonalMana
         {
             get

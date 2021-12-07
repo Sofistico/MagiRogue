@@ -144,7 +144,7 @@ namespace MagiRogue.System.Tiles
 
         private string GetDebuggerDisplay()
         {
-            return HeightType.ToString();
+            return BiomeType.ToString();
         }
 
         public int GetRiverNeighborCount(River river)

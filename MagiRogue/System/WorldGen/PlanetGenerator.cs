@@ -23,9 +23,9 @@ namespace MagiRogue.System.WorldGen
         private readonly float sand = 0.5f;
         private readonly float grass = 0.7f;
         private readonly float magicLand = 0.75f;
+        private readonly float snow = 0.6f;
         private readonly float forest = 0.8f;
         private readonly float rock = 0.9f;
-        private readonly float snow = 1f;
 
         private readonly float coldestValue = 0.05f;
         private readonly float colderValue = 0.18f;
@@ -133,9 +133,14 @@ namespace MagiRogue.System.WorldGen
             {
                 var civ = _civilizations[i];
 
-                if (i < 30 && civ.Tendency == _civilizations[i + 1].Tendency)
+                if (i < _civilizations.Length - 1)
                 {
-                    BuildRoadsToFriends(civ, _civilizations[i + 1]);
+                    var nextCiv = _civilizations[i + 1];
+
+                    if (civ.Tendency == nextCiv.Tendency)
+                    {
+                        BuildRoadsToFriends(civ, nextCiv);
+                    }
                 }
             }
         }
@@ -215,14 +220,14 @@ namespace MagiRogue.System.WorldGen
             //PlanetGlyphGenerator.GetMoistureMap(width, height, tiles);
             PlanetGlyphGenerator.GetBiomeMapTexture(_width, _height, tiles);
             PlanetGlyphGenerator.SetCityTiles(_width, _height, tiles);
-            WorldTile[] coloredTiles = new WorldTile[_width * _height];
+            /*WorldTile[] coloredTiles = new WorldTile[_width * _height];
             for (int x = 0; x < _width; x++)
             {
                 for (int y = 0; y < _height; y++)
                 {
                     coloredTiles[x + y * _width] = tiles[x, y];
                 }
-            }
+            }*/
             planetData.SetWorldTiles(tiles);
             /*try
             {
@@ -250,62 +255,62 @@ namespace MagiRogue.System.WorldGen
                     WorldTile t = new();
                     t.Position = new SadRogue.Primitives.Point(x, y);
 
-                    float value = planetData.HeightData[x, y];
+                    float heightValue = planetData.HeightData[x, y];
                     t.MineralValue = MathMagi.ReturnPositive(MathF.Round
                         ((planetData.HeightData[x, y] + planetData.HeatData[x, y]) * 200));
 
                     // normalize value between 0 and 1
-                    value = MathMagi.ReturnPositive(value);
+                    heightValue = MathMagi.ReturnPositive(heightValue);
 
-                    t.HeightValue = value;
+                    t.HeightValue = heightValue;
 
                     //HeightMap Analyze
-                    if (value < deepWater)
+                    if (heightValue < deepWater)
                     {
                         t.HeightType = HeightType.DeepWater;
                         t.Collidable = false;
                         t.MineralValue *= 1.5f;
                     }
-                    else if (value < shallowWater)
+                    else if (heightValue < shallowWater)
                     {
                         t.HeightType = HeightType.ShallowWater;
                         t.Collidable = false;
                         t.MineralValue *= 0.5f;
                     }
-                    else if (value < sand)
+                    else if (heightValue < sand)
                     {
                         t.HeightType = HeightType.Sand;
                         t.Collidable = true;
                         t.MineralValue *= 0.7f;
                     }
-                    else if (value < grass)
+                    else if (heightValue < grass)
                     {
                         t.HeightType = HeightType.Grass;
                         t.Collidable = true;
                         t.MineralValue *= 0.7f;
                     }
-                    else if (value < magicLand)
+                    else if (heightValue < magicLand)
                     {
                         t.HeightType = HeightType.MagicLand;
                         t.Collidable = true;
                         t.MineralValue *= 1.3f;
                     }
-                    else if (value < forest)
+                    else if (heightValue < forest)
                     {
                         t.HeightType = HeightType.Forest;
                         t.Collidable = true;
                         t.MineralValue *= 1.2f;
                     }
-                    else if (value < rock)
+                    else if (heightValue < snow)
+                    {
+                        t.HeightType = HeightType.Snow;
+                        t.Collidable = true;
+                    }
+                    else
                     {
                         t.HeightType = HeightType.Rock;
                         t.Collidable = true;
                         t.MineralValue *= 2.0f;
-                    }
-                    else if (value < snow)
-                    {
-                        t.HeightType = HeightType.Snow;
-                        t.Collidable = true;
                     }
 
                     //Moisture Map Analyze

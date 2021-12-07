@@ -55,7 +55,7 @@ namespace MagiRogue.System.WorldGen
         private static readonly Color BorealForest = new Color(95 / 255f, 115 / 255f, 62 / 255f, 1);
         private static readonly Color Woodland = new Color(139 / 255f, 175 / 255f, 90 / 255f, 1);
 
-        private static readonly Color DirtRoad = Color.Brown;
+        private static readonly Color DirtRoad = new Color(165, 103, 42);
 
         public static void SetTile(int width, int height, ref WorldTile[,] tiles)
         {
@@ -185,10 +185,21 @@ namespace MagiRogue.System.WorldGen
                         tile.Glyph = '#';
                         tile.Foreground = Color.White;
                     }
-                    if (tile.Road != null)
+                    if (tile.Road != null &&
+                        tile.HeightType != HeightType.DeepWater &&
+                        tile.HeightType != HeightType.ShallowWater)
                     {
-                        if (tile.Road.RoadDirection is WorldDirection.Bottom)
+                        if (tile.Road.RoadDirection == WorldDirection.Bottom
+                            || tile.Road.RoadDirection == WorldDirection.Top)
                         {
+                            tile.Glyph = '|';
+                            tile.Foreground = DirtRoad;
+                        }
+                        if (tile.Road.RoadDirection == WorldDirection.Right
+                            || tile.Road.RoadDirection == WorldDirection.Left)
+                        {
+                            tile.Glyph = '-';
+                            tile.Foreground = DirtRoad;
                         }
                     }
                 }
@@ -295,7 +306,8 @@ namespace MagiRogue.System.WorldGen
                     {
                         tile.Foreground = DeepColor;
                     }
-                    else if (tiles[x, y].HeightType == HeightType.ShallowWater)
+                    else if (tiles[x, y].HeightType == HeightType.ShallowWater
+                        && tile.BiomeType != BiomeType.Desert)
                     {
                         tile.Foreground = ShallowColor;
                     }
