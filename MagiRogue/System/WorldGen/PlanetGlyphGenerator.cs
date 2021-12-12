@@ -262,42 +262,61 @@ namespace MagiRogue.System.WorldGen
                         {
                             case BiomeType.Ice:
                                 tile.Foreground = Ice;
+                                tile.Collidable = true;
                                 break;
 
                             case BiomeType.BorealForest:
                                 tile.Foreground = BorealForest;
+                                tile.Collidable = true;
+
                                 break;
 
                             case BiomeType.Desert:
                                 tile.Foreground = Desert;
+                                tile.Collidable = true;
+
                                 break;
 
                             case BiomeType.Grassland:
                                 tile.Foreground = Grassland;
+                                tile.Collidable = true;
+
                                 break;
 
                             case BiomeType.SeasonalForest:
                                 tile.Foreground = SeasonalForest;
+                                tile.Collidable = true;
+
                                 break;
 
                             case BiomeType.Tundra:
                                 tile.Foreground = Tundra;
+                                tile.Collidable = true;
+
                                 break;
 
                             case BiomeType.Savanna:
                                 tile.Foreground = Savanna;
+                                tile.Collidable = true;
+
                                 break;
 
                             case BiomeType.TemperateRainforest:
                                 tile.Foreground = TemperateRainforest;
+                                tile.Collidable = true;
+
                                 break;
 
                             case BiomeType.TropicalRainforest:
                                 tile.Foreground = TropicalRainforest;
+                                tile.Collidable = true;
+
                                 break;
 
                             case BiomeType.Woodland:
                                 tile.Foreground = Woodland;
+                                tile.Collidable = true;
+
                                 break;
                         }
                     }

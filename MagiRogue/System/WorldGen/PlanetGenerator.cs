@@ -71,6 +71,8 @@ namespace MagiRogue.System.WorldGen
 
         // final object
         private WorldTile[,] tiles;
+        private int roadTries = 0;
+        private int roadMaxTries = 500;
         private readonly Console mapRenderer;
 
         private readonly BiomeType[,] biomeTable = new BiomeType[6, 6] {
@@ -150,12 +152,19 @@ namespace MagiRogue.System.WorldGen
             var tile = civ.Territory.OwnedLand.WorldTiles[0];
             var closestCityTile = friend.Territory.OwnedLand.WorldTiles[0];
 
-            FindPathToCity(tile, closestCityTile, 0);
+            FindPathToCity(tile, closestCityTile);
         }
+        private bool loading = false;
 
-        private void FindPathToCity(WorldTile tile, WorldTile closestCityTile, int loop)
+        private void FindPathToCity(WorldTile tile, WorldTile closestCityTile)
         {
             if (!tile.Collidable)
+                return;
+
+            if (roadTries >= roadMaxTries)
+                return;
+
+            if (tile.Road != null)
                 return;
 
             // Found the city
@@ -167,27 +176,43 @@ namespace MagiRogue.System.WorldGen
                 return;
             Point cityPoint = closestCityTile.Position;
             Point roadPoint = tile.Position;
-            var direction = Direction.GetDirection(roadPoint, cityPoint);
-            WorldTile world = new();
-            // go to the same x of the city
-            if (cityPoint.X != roadPoint.X)
+            var direction = Direction.GetCardinalDirection(roadPoint, cityPoint);
+
+            if (direction == Direction.Up)
             {
-                world = tiles[roadPoint.X + direction.DeltaX, roadPoint.Y];
+                WorldTile worldTile = tile.Top;
+                worldTile.Road = new();
+                worldTile.Road.AddTileToList(worldTile);
+                roadTries++;
+
+                FindPathToCity(worldTile, closestCityTile);
             }
-            else if (cityPoint.Y != roadPoint.Y)
+            if (direction == Direction.Down)
             {
-                world = tiles[roadPoint.X, roadPoint.Y + direction.DeltaY];
+                WorldTile worldTile = tile.Bottom;
+                worldTile.Road = new();
+                worldTile.Road.AddTileToList(worldTile);
+                roadTries++;
+
+                FindPathToCity(worldTile, closestCityTile);
             }
-            if (world != null)
+            if (direction != Direction.Left)
             {
-                world.Road = new();
-                world.Road.AddTileToList(world);
-                loop++;
-                FindPathToCity(world, closestCityTile, loop);
+                WorldTile worldTile = tile.Left;
+                worldTile.Road = new();
+                worldTile.Road.AddTileToList(worldTile);
+                roadTries++;
+
+                FindPathToCity(worldTile, closestCityTile);
             }
-            else
+            if (direction != Direction.Right)
             {
-                return;
+                WorldTile worldTile = tile.Top;
+                worldTile.Road = new();
+                worldTile.Road.AddTileToList(worldTile);
+                roadTries++;
+
+                FindPathToCity(worldTile, closestCityTile);
             }
         }
 
