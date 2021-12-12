@@ -150,13 +150,45 @@ namespace MagiRogue.System.WorldGen
             var tile = civ.Territory.OwnedLand.WorldTiles[0];
             var closestCityTile = friend.Territory.OwnedLand.WorldTiles[0];
 
-            FindPathToCity(tile, closestCityTile);
+            FindPathToCity(tile, closestCityTile, 0);
         }
 
-        private void FindPathToCity(WorldTile tile, WorldTile closestCityTile)
+        private void FindPathToCity(WorldTile tile, WorldTile closestCityTile, int loop)
         {
             if (!tile.Collidable)
                 return;
+
+            // Found the city
+            if (tile == closestCityTile)
+                return;
+
+            // Shouldn't appear, but who knows
+            if (tile.HeightType == HeightType.River)
+                return;
+            Point cityPoint = closestCityTile.Position;
+            Point roadPoint = tile.Position;
+            var direction = Direction.GetDirection(roadPoint, cityPoint);
+            WorldTile world = new();
+            // go to the same x of the city
+            if (cityPoint.X != roadPoint.X)
+            {
+                world = tiles[roadPoint.X + direction.DeltaX, roadPoint.Y];
+            }
+            else if (cityPoint.Y != roadPoint.Y)
+            {
+                world = tiles[roadPoint.X, roadPoint.Y + direction.DeltaY];
+            }
+            if (world != null)
+            {
+                world.Road = new();
+                world.Road.AddTileToList(world);
+                loop++;
+                FindPathToCity(world, closestCityTile, loop);
+            }
+            else
+            {
+                return;
+            }
         }
 
         private void SeedCivilizations()

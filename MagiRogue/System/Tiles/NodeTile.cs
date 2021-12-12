@@ -130,7 +130,7 @@ namespace MagiRogue.System.Tiles
             DestroyNodeTurn(GameLoop.World);
 
             return Data.EntityFactory.ItemCreator(Position,
-                new Item(Foreground, Background, Name, Glyph, Position, NodeStrength,
+                new Item(Foreground, Background, "Node Vis", Glyph, Position, NodeStrength,
                 (float)MaterialOfTile.Density));
         }
 
