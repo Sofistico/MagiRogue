@@ -13,15 +13,18 @@ namespace MagiRogue.System.WorldGen
         Normal,
         Abandoned
     }
+
     public class Road
     {
-        public WorldDirection RoadDirection { get; set; }
+        public Dictionary<Point, WorldDirection> RoadDirectionInPos { get; set; }
+
         public List<WorldTile> RoadTiles { get; set; }
         public RoadStatus Status { get; set; }
 
         public Road()
         {
             RoadTiles = new List<WorldTile>();
+            RoadDirectionInPos = new();
         }
 
         public void AddTileToList(WorldTile tile) => RoadTiles.Add(tile);

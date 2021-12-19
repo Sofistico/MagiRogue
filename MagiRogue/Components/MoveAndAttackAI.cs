@@ -31,10 +31,9 @@ namespace MagiRogue.Components
 
             Actor actor = (Actor)GameLoop.World.CurrentMap.GetEntityById(parent.ID);
 
-            int walkSpeed = TimeHelper.GetWalkTime(actor);
-
             if (TryGetDirectionMove(map, actor))
             {
+                int walkSpeed = TimeHelper.GetWalkTime(actor, actor.Position);
                 return (true, walkSpeed);
             }
             else

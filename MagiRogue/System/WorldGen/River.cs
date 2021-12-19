@@ -3,14 +3,6 @@ using System.Collections.Generic;
 
 namespace MagiRogue.System.WorldGen
 {
-    public enum WorldDirection
-    {
-        Left,
-        Right,
-        Top,
-        Bottom
-    }
-
     public class River
     {
         public int RiverCount { get; }

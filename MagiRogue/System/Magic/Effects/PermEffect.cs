@@ -13,7 +13,8 @@ namespace MagiRogue.System.Magic.Effects
     public class PermEffect : IPermEffect
     {
         // Will be here for remembering, do not know how it will proced
-        private const int _totalTime = Time.TimeHelper.Year;
+        // 18/12/2021 - I don't really remember why i made it
+        // private const int _totalTime = Time.TimeHelper.Year;
 
         public int NodeCost { get; set; }
         public EffectTypes EffectType { get; set; }

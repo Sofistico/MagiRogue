@@ -84,6 +84,13 @@ namespace MagiRogue.System.Tiles
 
         public IComponentCollection GoRogueComponents => backingField.GoRogueComponents;
 
+        /// <summary>
+        /// How much Move it costs to transverse this tile.\n
+        /// 100 is the norm, it means it takes exactly 100 ticks to go to this tile.\n
+        /// Note that the calculation on how many time it takes is usually MoveTime / Speed.
+        /// </summary>
+        public int MoveTimeCost { get; set; } = 100;
+
         #endregion backingField Data
 
         // TileBase is an abstract base class

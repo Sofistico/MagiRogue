@@ -73,7 +73,11 @@ namespace MagiRogue.System.Tiles
         public WorldTile Left { get; set; }
         public WorldTile Right { get; set; }
         public WorldTile Top { get; set; }
+        public WorldTile TopRight { get; set; }
+        public WorldTile TopLeft { get; set; }
         public WorldTile Bottom { get; set; }
+        public WorldTile BottomRight { get; set; }
+        public WorldTile BottomLeft { get; set; }
         public int Bitmask { get; private set; }
 
         /// <summary>

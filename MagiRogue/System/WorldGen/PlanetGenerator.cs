@@ -154,10 +154,11 @@ namespace MagiRogue.System.WorldGen
 
             FindPathToCity(tile, closestCityTile);
         }
-        private bool loading = false;
 
         private void FindPathToCity(WorldTile tile, WorldTile closestCityTile)
         {
+            Road road = new();
+
             if (!tile.Collidable)
                 return;
 
@@ -165,24 +166,26 @@ namespace MagiRogue.System.WorldGen
                 return;
 
             if (tile.Road != null)
-                return;
+                road = tile.Road;
 
             // Found the city
             if (tile == closestCityTile)
                 return;
 
             // Shouldn't appear, but who knows
-            if (tile.HeightType == HeightType.River)
-                return;
+            /*if (tile.HeightType == HeightType.River)
+                return;*/
+
             Point cityPoint = closestCityTile.Position;
             Point roadPoint = tile.Position;
-            var direction = Direction.GetCardinalDirection(roadPoint, cityPoint);
+            var direction = Direction.GetDirection(roadPoint, cityPoint);
 
             if (direction == Direction.Up)
             {
                 WorldTile worldTile = tile.Top;
-                worldTile.Road = new();
+                worldTile.Road = road;
                 worldTile.Road.AddTileToList(worldTile);
+                worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.Top);
                 roadTries++;
 
                 FindPathToCity(worldTile, closestCityTile);
@@ -190,29 +193,77 @@ namespace MagiRogue.System.WorldGen
             if (direction == Direction.Down)
             {
                 WorldTile worldTile = tile.Bottom;
-                worldTile.Road = new();
+                worldTile.Road = road;
                 worldTile.Road.AddTileToList(worldTile);
+                worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.Bottom);
                 roadTries++;
 
                 FindPathToCity(worldTile, closestCityTile);
             }
-            if (direction != Direction.Left)
+            if (direction == Direction.Left)
             {
                 WorldTile worldTile = tile.Left;
-                worldTile.Road = new();
+                worldTile.Road = road;
                 worldTile.Road.AddTileToList(worldTile);
+                worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.Left);
                 roadTries++;
 
                 FindPathToCity(worldTile, closestCityTile);
             }
-            if (direction != Direction.Right)
+            if (direction == Direction.Right)
             {
-                WorldTile worldTile = tile.Top;
-                worldTile.Road = new();
+                WorldTile worldTile = tile.Right;
+                worldTile.Road = road;
                 worldTile.Road.AddTileToList(worldTile);
+                worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.Right);
                 roadTries++;
 
                 FindPathToCity(worldTile, closestCityTile);
+            }
+            if (direction == Direction.UpLeft)
+            {
+                WorldTile worldTile = tile.TopLeft;
+                worldTile.Road = road;
+                worldTile.Road.AddTileToList(worldTile);
+                worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.BottomLeft);
+                roadTries++;
+
+                FindPathToCity(worldTile, closestCityTile);
+            }
+            if (direction == Direction.UpRight)
+            {
+                WorldTile worldTile = tile.TopRight;
+                worldTile.Road = road;
+                worldTile.Road.AddTileToList(worldTile);
+                worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.TopRight);
+                roadTries++;
+
+                FindPathToCity(worldTile, closestCityTile);
+            }
+            if (direction == Direction.DownLeft)
+            {
+                WorldTile worldTile = tile.BottomLeft;
+                worldTile.Road = road;
+                worldTile.Road.AddTileToList(worldTile);
+                worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.BottomLeft);
+                roadTries++;
+
+                FindPathToCity(worldTile, closestCityTile);
+            }
+            if (direction == Direction.DownRight)
+            {
+                WorldTile worldTile = tile.BottomRight;
+                worldTile.Road = road;
+                worldTile.Road.AddTileToList(worldTile);
+                worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.BottomRight);
+                roadTries++;
+
+                FindPathToCity(worldTile, closestCityTile);
+            }
+            if (direction == Direction.None)
+            {
+                // Should theoritically never happen, but who knows!
+                return;
             }
         }
 
@@ -495,6 +546,7 @@ namespace MagiRogue.System.WorldGen
             rivers = new();
         }
 
+        // need to get the mod so that it doesn't pick up a tile outside of the map.
         private WorldTile GetTop(WorldTile center)
         {
             return tiles[center.Position.X, MathMagi.Mod(center.Position.Y - 1, _height)];
@@ -515,6 +567,26 @@ namespace MagiRogue.System.WorldGen
             return tiles[MathMagi.Mod(t.Position.X + 1, _width), t.Position.Y];
         }
 
+        private WorldTile GetTopRight(WorldTile t)
+        {
+            return tiles[MathMagi.Mod(t.Position.X + 1, _width), MathMagi.Mod(t.Position.Y - 1, _width)];
+        }
+
+        private WorldTile GetBottomRight(WorldTile t)
+        {
+            return tiles[MathMagi.Mod(t.Position.X + 1, _width), MathMagi.Mod(t.Position.Y + 1, _width)];
+        }
+
+        private WorldTile GetTopLeft(WorldTile t)
+        {
+            return tiles[MathMagi.Mod(t.Position.X + -1, _width), MathMagi.Mod(t.Position.Y + 1, _width)];
+        }
+
+        private WorldTile GetBottomLeft(WorldTile t)
+        {
+            return tiles[MathMagi.Mod(t.Position.X - 1, _width), MathMagi.Mod(t.Position.Y - 1, _width)];
+        }
+
         private void UpdateNeighbors()
         {
             for (int x = 0; x < _width; x++)
@@ -527,6 +599,10 @@ namespace MagiRogue.System.WorldGen
                     tile.Bottom = GetBottom(tile);
                     tile.Left = GetLeft(tile);
                     tile.Right = GetRight(tile);
+                    tile.TopRight = GetTopLeft(tile);
+                    tile.TopLeft = GetTopLeft(tile);
+                    tile.BottomRight = GetBottomRight(tile);
+                    tile.BottomLeft = GetBottomLeft(tile);
                 }
             }
         }

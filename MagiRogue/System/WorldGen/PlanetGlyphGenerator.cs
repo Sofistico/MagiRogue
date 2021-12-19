@@ -99,6 +99,7 @@ namespace MagiRogue.System.WorldGen
                         case HeightType.Rock:
                             tempTile = new(RockColor, Color.Black, '^');
                             tiles[x, y].CopyAppearanceFrom(tempTile);
+                            tiles[x, y].MoveTimeCost = 500;
 
                             break;
 
@@ -127,6 +128,8 @@ namespace MagiRogue.System.WorldGen
                 }
             }
         }
+
+        #region Debug Code
 
         public static void GetHeatMap(int width, int height, WorldTile[,] tiles)
         {
@@ -167,40 +170,6 @@ namespace MagiRogue.System.WorldGen
                     if (tiles[x, y].Bitmask != 15)
                     {
                         tiles[x, y].Foreground = Color.Lerp(tiles[x, y].Foreground, Color.Black, 0.4f);
-                    }
-                }
-            }
-        }
-
-        public static void SetCityTiles(int width, int height, WorldTile[,] tiles)
-        {
-            for (int x = 0; x < width; x++)
-            {
-                for (int y = 0; y < height; y++)
-                {
-                    WorldTile tile = tiles[x, y];
-
-                    if (tile.CivInfluence is not null)
-                    {
-                        tile.Glyph = '#';
-                        tile.Foreground = Color.White;
-                    }
-                    if (tile.Road != null &&
-                        tile.HeightType != HeightType.DeepWater &&
-                        tile.HeightType != HeightType.ShallowWater)
-                    {
-                        if (tile.Road.RoadDirection == WorldDirection.Bottom
-                            || tile.Road.RoadDirection == WorldDirection.Top)
-                        {
-                            tile.Glyph = '|';
-                            tile.Foreground = DirtRoad;
-                        }
-                        if (tile.Road.RoadDirection == WorldDirection.Right
-                            || tile.Road.RoadDirection == WorldDirection.Left)
-                        {
-                            tile.Glyph = '-';
-                            tile.Foreground = DirtRoad;
-                        }
                     }
                 }
             }
@@ -247,6 +216,8 @@ namespace MagiRogue.System.WorldGen
             }
         }
 
+        #endregion Debug Code
+
         public static void GetBiomeMapTexture(int width, int height, WorldTile[,] tiles)
         {
             for (int x = 0; x < width; x++)
@@ -267,12 +238,14 @@ namespace MagiRogue.System.WorldGen
 
                             case BiomeType.BorealForest:
                                 tile.Foreground = BorealForest;
+                                tile.MoveTimeCost = 275;
                                 tile.Collidable = true;
 
                                 break;
 
                             case BiomeType.Desert:
                                 tile.Foreground = Desert;
+                                tile.MoveTimeCost = 350;
                                 tile.Collidable = true;
 
                                 break;
@@ -285,36 +258,45 @@ namespace MagiRogue.System.WorldGen
 
                             case BiomeType.SeasonalForest:
                                 tile.Foreground = SeasonalForest;
+                                tile.MoveTimeCost = 275;
                                 tile.Collidable = true;
 
                                 break;
 
                             case BiomeType.Tundra:
                                 tile.Foreground = Tundra;
+                                tile.MoveTimeCost = 300;
                                 tile.Collidable = true;
 
                                 break;
 
                             case BiomeType.Savanna:
                                 tile.Foreground = Savanna;
+                                tile.MoveTimeCost = 300;
                                 tile.Collidable = true;
 
                                 break;
 
                             case BiomeType.TemperateRainforest:
                                 tile.Foreground = TemperateRainforest;
+                                tile.MoveTimeCost = 310;
+
                                 tile.Collidable = true;
 
                                 break;
 
                             case BiomeType.TropicalRainforest:
                                 tile.Foreground = TropicalRainforest;
+                                tile.MoveTimeCost = 315;
+
                                 tile.Collidable = true;
 
                                 break;
 
                             case BiomeType.Woodland:
                                 tile.Foreground = Woodland;
+                                tile.MoveTimeCost = 250;
+
                                 tile.Collidable = true;
 
                                 break;
@@ -351,6 +333,54 @@ namespace MagiRogue.System.WorldGen
                     {
                         if (tiles[x, y].BiomeBitmask != 15)
                             tile.Foreground = Color.Lerp(tile.Foreground, Color.Black, 0.35f);
+                    }
+                }
+            }
+        }
+
+        public static void SetCityTiles(int width, int height, WorldTile[,] tiles)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    WorldTile tile = tiles[x, y];
+
+                    if (tile.CivInfluence is not null)
+                    {
+                        tile.Glyph = '#';
+                        tile.Foreground = Color.White;
+                    }
+                    if (tile.Road != null &&
+                        tile.HeightType != HeightType.DeepWater &&
+                        tile.HeightType != HeightType.ShallowWater)
+                    {
+                        if (tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.Bottom
+                            || tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.Top)
+                        {
+                            tile.Glyph = '|';
+                            tile.Foreground = DirtRoad;
+                        }
+                        if (tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.Right
+                            || tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.Left)
+                        {
+                            tile.Glyph = '-';
+                            tile.Foreground = DirtRoad;
+                        }
+                        if (tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.TopLeft
+                            || tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.BottomRight)
+                        {
+                            tile.Foreground = DirtRoad;
+                            tile.Glyph = '\\';
+                        }
+                        if (tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.TopRight
+                            || tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.BottomLeft)
+                        {
+                            tile.Foreground = DirtRoad;
+                            tile.Glyph = '/';
+                        }
+
+                        tile.MoveTimeCost = 100;
                     }
                 }
             }

@@ -18,6 +18,12 @@ namespace MagiRogue.Utils
             return positive;
         }
 
+        /// <summary>
+        /// Method to return only the positive module.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="m"></param>
+        /// <returns></returns>
         public static int Mod(int x, int m)
         {
             int r = x % m;

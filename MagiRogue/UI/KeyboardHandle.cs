@@ -107,7 +107,8 @@ namespace MagiRogue.UI
             if (HandleMove(info, world))
             {
                 if (!GetPlayer.Bumped && world.CurrentMap.ControlledEntitiy is Player)
-                    world.ProcessTurn(TimeHelper.GetWalkTime(GetPlayer), true);
+                    world.ProcessTurn(TimeHelper.GetWalkTime(GetPlayer,
+                        world.CurrentMap.GetTileAt<TileBase>(GetPlayer.Position)), true);
                 else if (world.CurrentMap.ControlledEntitiy is Player)
                     world.ProcessTurn(TimeHelper.GetAttackTime(GetPlayer), true);
 
