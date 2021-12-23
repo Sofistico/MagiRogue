@@ -109,10 +109,10 @@ namespace MagiRogue.System.WorldGen
 
                             break;
 
-                        case HeightType.MagicLand:
+                        /*case HeightType.MagicLand:
                             tempTile = new(MagicColor, Color.Black, 'i');
                             tiles[x, y].CopyAppearanceFrom(tempTile);
-                            break;
+                            break;*/
 
                         case HeightType.River:
                             tempTile = new(RiverColor, Color.Black, '~');
@@ -227,7 +227,7 @@ namespace MagiRogue.System.WorldGen
                     BiomeType value = tiles[x, y].BiomeType;
                     var tile = tiles[x, y];
 
-                    if (tile.HeightType != HeightType.Rock && tile.HeightType != HeightType.MagicLand)
+                    if (tile.HeightType != HeightType.Rock)
                     {
                         switch (value)
                         {
@@ -329,7 +329,8 @@ namespace MagiRogue.System.WorldGen
                     }
 
                     // add a outline
-                    if (tiles[x, y].HeightType >= HeightType.Shore && tiles[x, y].HeightType != HeightType.River)
+                    if (tiles[x, y].HeightType >= HeightType.Shore
+                        && tiles[x, y].HeightType != HeightType.River)
                     {
                         if (tiles[x, y].BiomeBitmask != 15)
                             tile.Foreground = Color.Lerp(tile.Foreground, Color.Black, 0.35f);
@@ -381,6 +382,33 @@ namespace MagiRogue.System.WorldGen
                         }
 
                         tile.MoveTimeCost = 100;
+                    }
+                }
+            }
+        }
+
+        public static void SetSpecialTiles(int width, int height, WorldTile[,] tiles)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    WorldTile tile = tiles[x, y];
+
+                    if (tile.SpecialLandType != SpecialLandType.None)
+                    {
+                        switch (tile.SpecialLandType)
+                        {
+                            case SpecialLandType.None:
+                                throw new Exception("An error occured! the game tried to add an special land type to a land that has nothing special.");
+
+                            case SpecialLandType.MagicLand:
+                                tile.Foreground = MagicColor;
+                                break;
+
+                            default:
+                                break;
+                        }
                     }
                 }
             }

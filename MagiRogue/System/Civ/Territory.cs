@@ -1,6 +1,7 @@
 ﻿using MagiRogue.System.Tiles;
+using MagiRogue.System.WorldGen;
 
-namespace MagiRogue.System.WorldGen
+namespace MagiRogue.System.Civ
 {
     public class Territory
     {

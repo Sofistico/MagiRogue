@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagiRogue.System.WorldGen
+namespace MagiRogue.System.Civ
 {
     public enum CivilizationTendency
     {

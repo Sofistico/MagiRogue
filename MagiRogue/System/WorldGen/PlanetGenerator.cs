@@ -1,4 +1,5 @@
-﻿using MagiRogue.System.Tiles;
+﻿using MagiRogue.System.Civ;
+using MagiRogue.System.Tiles;
 using MagiRogue.Utils;
 using SadRogue.Primitives;
 using System;
@@ -22,7 +23,7 @@ namespace MagiRogue.System.WorldGen
         private readonly float shallowWater = 0.4f;
         private readonly float sand = 0.5f;
         private readonly float grass = 0.7f;
-        private readonly float magicLand = 0.75f;
+        //private readonly float magicLand = 0.75f;
         private readonly float snow = 0.6f;
         private readonly float forest = 0.8f;
         private readonly float rock = 0.9f;
@@ -71,8 +72,6 @@ namespace MagiRogue.System.WorldGen
 
         // final object
         private WorldTile[,] tiles;
-        private int roadTries = 0;
-        private int roadMaxTries = 500;
         private readonly Console mapRenderer;
 
         private readonly BiomeType[,] biomeTable = new BiomeType[6, 6] {
@@ -162,8 +161,8 @@ namespace MagiRogue.System.WorldGen
             if (!tile.Collidable)
                 return;
 
-            if (roadTries >= roadMaxTries)
-                return;
+            /*if (roadTries >= roadMaxTries)
+                return;*/
 
             if (tile.Road != null)
                 road = tile.Road;
@@ -186,7 +185,6 @@ namespace MagiRogue.System.WorldGen
                 worldTile.Road = road;
                 worldTile.Road.AddTileToList(worldTile);
                 worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.Top);
-                roadTries++;
 
                 FindPathToCity(worldTile, closestCityTile);
             }
@@ -196,7 +194,6 @@ namespace MagiRogue.System.WorldGen
                 worldTile.Road = road;
                 worldTile.Road.AddTileToList(worldTile);
                 worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.Bottom);
-                roadTries++;
 
                 FindPathToCity(worldTile, closestCityTile);
             }
@@ -206,7 +203,6 @@ namespace MagiRogue.System.WorldGen
                 worldTile.Road = road;
                 worldTile.Road.AddTileToList(worldTile);
                 worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.Left);
-                roadTries++;
 
                 FindPathToCity(worldTile, closestCityTile);
             }
@@ -216,7 +212,6 @@ namespace MagiRogue.System.WorldGen
                 worldTile.Road = road;
                 worldTile.Road.AddTileToList(worldTile);
                 worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.Right);
-                roadTries++;
 
                 FindPathToCity(worldTile, closestCityTile);
             }
@@ -226,7 +221,6 @@ namespace MagiRogue.System.WorldGen
                 worldTile.Road = road;
                 worldTile.Road.AddTileToList(worldTile);
                 worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.BottomLeft);
-                roadTries++;
 
                 FindPathToCity(worldTile, closestCityTile);
             }
@@ -236,7 +230,6 @@ namespace MagiRogue.System.WorldGen
                 worldTile.Road = road;
                 worldTile.Road.AddTileToList(worldTile);
                 worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.TopRight);
-                roadTries++;
 
                 FindPathToCity(worldTile, closestCityTile);
             }
@@ -246,7 +239,6 @@ namespace MagiRogue.System.WorldGen
                 worldTile.Road = road;
                 worldTile.Road.AddTileToList(worldTile);
                 worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.BottomLeft);
-                roadTries++;
 
                 FindPathToCity(worldTile, closestCityTile);
             }
@@ -256,7 +248,6 @@ namespace MagiRogue.System.WorldGen
                 worldTile.Road = road;
                 worldTile.Road.AddTileToList(worldTile);
                 worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.BottomRight);
-                roadTries++;
 
                 FindPathToCity(worldTile, closestCityTile);
             }
@@ -397,12 +388,12 @@ namespace MagiRogue.System.WorldGen
                         t.Collidable = true;
                         t.MineralValue *= 0.7f;
                     }
-                    else if (heightValue < magicLand)
+                    /*else if (heightValue < magicLand)
                     {
                         t.HeightType = HeightType.MagicLand;
                         t.Collidable = true;
                         t.MineralValue *= 1.3f;
-                    }
+                    }*/
                     else if (heightValue < forest)
                     {
                         t.HeightType = HeightType.Forest;

@@ -1,4 +1,5 @@
-﻿using MagiRogue.System.WorldGen;
+﻿using MagiRogue.System.Civ;
+using MagiRogue.System.WorldGen;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
@@ -57,6 +58,12 @@ namespace MagiRogue.System.Tiles
         Ice
     }
 
+    public enum SpecialLandType
+    {
+        None,
+        MagicLand,
+    }
+
     [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
     public sealed class WorldTile : TileBase
     {
@@ -69,6 +76,7 @@ namespace MagiRogue.System.Tiles
         public HeatType HeatType { get; set; }
         public MoistureType MoistureType { get; set; }
         public BiomeType BiomeType { get; set; }
+        public SpecialLandType SpecialLandType { get; set; }
 
         public WorldTile Left { get; set; }
         public WorldTile Right { get; set; }
