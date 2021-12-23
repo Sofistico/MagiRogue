@@ -71,6 +71,7 @@ namespace MagiRogue.System.Tiles
         public float HeatValue { get; set; }
         public float MoistureValue { get; set; }
         public float MineralValue { get; set; }
+        public int MagicalAuraStrength { get; set; }
 
         public HeightType HeightType { get; set; }
         public HeatType HeatType { get; set; }

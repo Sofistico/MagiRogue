@@ -147,6 +147,7 @@ namespace MagiRogue.UI
                 }
             }
 
+            // debug code
             var console = MapWindow.MapConsole;
 
             if (info.IsKeyDown(Keys.Left))

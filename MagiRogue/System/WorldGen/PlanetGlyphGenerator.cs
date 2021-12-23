@@ -404,6 +404,10 @@ namespace MagiRogue.System.WorldGen
 
                             case SpecialLandType.MagicLand:
                                 tile.Foreground = MagicColor;
+#if DEBUG
+                                tile.Background = MagicColor;
+#endif
+
                                 break;
 
                             default:

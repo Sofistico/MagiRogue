@@ -1,4 +1,5 @@
-﻿using MagiRogue.System.Civ;
+﻿using GoRogue.DiceNotation;
+using MagiRogue.System.Civ;
 using MagiRogue.System.Tiles;
 using MagiRogue.Utils;
 using SadRogue.Primitives;
@@ -14,6 +15,8 @@ namespace MagiRogue.System.WorldGen
     /// </summary>
     public class PlanetGenerator
     {
+        #region Fields
+
         private int _width;
         private int _height;
         private Civilization[] _civilizations;
@@ -23,7 +26,6 @@ namespace MagiRogue.System.WorldGen
         private readonly float shallowWater = 0.4f;
         private readonly float sand = 0.5f;
         private readonly float grass = 0.7f;
-        //private readonly float magicLand = 0.75f;
         private readonly float snow = 0.6f;
         private readonly float forest = 0.8f;
         private readonly float rock = 0.9f;
@@ -84,6 +86,8 @@ namespace MagiRogue.System.WorldGen
             { BiomeType.Ice, BiomeType.Tundra, BiomeType.BorealForest, BiomeType.TemperateRainforest, BiomeType.TropicalRainforest,  BiomeType.TropicalRainforest }   //WETTEST
             };
 
+        #endregion Fields
+
         /// <summary>
         /// Creates a brand new planet!
         /// </summary>
@@ -128,6 +132,8 @@ namespace MagiRogue.System.WorldGen
             return planetData;
         }
 
+        #region Civ
+
         private void BasicHistory()
         {
             for (int i = 0; i < _civilizations.Length; i++)
@@ -161,9 +167,6 @@ namespace MagiRogue.System.WorldGen
             if (!tile.Collidable)
                 return;
 
-            /*if (roadTries >= roadMaxTries)
-                return;*/
-
             if (tile.Road != null)
                 road = tile.Road;
 
@@ -172,6 +175,7 @@ namespace MagiRogue.System.WorldGen
                 return;
 
             // Shouldn't appear, but who knows
+            // Still need to know what i will do with it
             /*if (tile.HeightType == HeightType.River)
                 return;*/
 
@@ -311,14 +315,19 @@ namespace MagiRogue.System.WorldGen
             };
         }
 
+        #endregion Civ
+
+        #region Tiles
+
         private void CreateConsole(WorldTile[,] tiles)
         {
             PlanetGlyphGenerator.SetTile(_width, _height, ref tiles);
-            // Test only!
+            // For Test only!
             //PlanetGlyphGenerator.GetHeatMap(width, height, tiles);
             //PlanetGlyphGenerator.GetMoistureMap(width, height, tiles);
             PlanetGlyphGenerator.GetBiomeMapTexture(_width, _height, tiles);
             PlanetGlyphGenerator.SetCityTiles(_width, _height, tiles);
+            PlanetGlyphGenerator.SetSpecialTiles(_width, _height, tiles);
             /*WorldTile[] coloredTiles = new WorldTile[_width * _height];
             for (int x = 0; x < _width; x++)
             {
@@ -388,12 +397,6 @@ namespace MagiRogue.System.WorldGen
                         t.Collidable = true;
                         t.MineralValue *= 0.7f;
                     }
-                    /*else if (heightValue < magicLand)
-                    {
-                        t.HeightType = HeightType.MagicLand;
-                        t.Collidable = true;
-                        t.MineralValue *= 1.3f;
-                    }*/
                     else if (heightValue < forest)
                     {
                         t.HeightType = HeightType.Forest;
@@ -471,10 +474,19 @@ namespace MagiRogue.System.WorldGen
                     else if (heatModValue < warmerValue) t.HeatType = HeatType.Warmer;
                     else t.HeatType = HeatType.Warmest;
 
+                    t.MagicalAuraStrength = Dice.Roll("2d50 / 10");
+
+                    if (t.MagicalAuraStrength >= 10)
+                        t.SpecialLandType = SpecialLandType.MagicLand;
+
                     tiles[x, y] = t;
                 }
             }
         }
+
+        #endregion Tiles
+
+        #region HelpMethods
 
         // Extract data from a noise module
         private void GetData(ref PlanetMap planetData)
@@ -590,7 +602,7 @@ namespace MagiRogue.System.WorldGen
                     tile.Bottom = GetBottom(tile);
                     tile.Left = GetLeft(tile);
                     tile.Right = GetRight(tile);
-                    tile.TopRight = GetTopLeft(tile);
+                    tile.TopRight = GetTopRight(tile);
                     tile.TopLeft = GetTopLeft(tile);
                     tile.BottomRight = GetBottomRight(tile);
                     tile.BottomLeft = GetBottomLeft(tile);
@@ -1240,5 +1252,7 @@ namespace MagiRogue.System.WorldGen
                 }
             }
         }
+
+        #endregion HelpMethods
     }
 }
