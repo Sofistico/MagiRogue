@@ -27,7 +27,8 @@ namespace MagiRogue.System
         /// All cell tiles of the map, it's a TileBase array, should never be directly declared to create new tiles, rather
         /// it must use <see cref="Map.SetTerrain(IGameObject)"/>.
         /// </summary>
-        public TileBase[] Tiles { get { return _tiles; } set { _tiles = value; } }
+        public TileBase[] Tiles
+        { get { return _tiles; } set { _tiles = value; } }
 
         /// <summary>
         /// Fires whenever FOV is recalculated.
@@ -268,6 +269,11 @@ namespace MagiRogue.System
             else return null;
         }
 
+        public TileBase GetTileAt(int x, int y)
+        {
+            return GetTileAt<TileBase>(x, y);
+        }
+
         /// <summary>
         /// Checks if a specific type of tile at a specified location
         /// is on the map. If it exists, returns that Tile
@@ -279,6 +285,11 @@ namespace MagiRogue.System
         public T GetTileAt<T>(Point location) where T : TileBase
         {
             return GetTileAt<T>(location.X, location.Y);
+        }
+
+        public TileBase GetTileAt(Point location)
+        {
+            return GetTileAt<TileBase>(location);
         }
 
         public void RemoveAllTiles()
