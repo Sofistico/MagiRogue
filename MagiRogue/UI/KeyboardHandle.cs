@@ -58,6 +58,37 @@ namespace MagiRogue.UI
 
         private static bool HandleMove(Keyboard info, World world)
         {
+            #region WorldMovement
+
+            if (CurrentMapIsPlanetView(world))
+            {
+                var console = GameLoop.UIManager.MapWindow.MapConsole;
+
+                if (info.IsKeyDown(Keys.Left))
+                {
+                    console.ViewPosition = console.ViewPosition.Translate((-1, 0));
+                }
+
+                if (info.IsKeyDown(Keys.Right))
+                {
+                    console.ViewPosition = console.ViewPosition.Translate((1, 0));
+                }
+
+                if (info.IsKeyDown(Keys.Up))
+                {
+                    console.ViewPosition = console.ViewPosition.Translate((0, -1));
+                }
+
+                if (info.IsKeyDown(Keys.Down))
+                {
+                    console.ViewPosition = console.ViewPosition.Translate((0, +1));
+                }
+                // Must return false, because there isn't any movement of the actor
+                return false;
+            }
+
+            #endregion WorldMovement
+
             foreach (Keys key in MovementDirectionMapping.Keys)
             {
                 if (info.IsKeyPressed(key) && world.CurrentMap is not null)
@@ -102,7 +133,7 @@ namespace MagiRogue.UI
             // Work around for a > symbol, must be top to not make the char wait
             if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.OemPeriod))
             {
-                CommandManager.MoveDownStairsPlayer(GetPlayer.Position);
+                return CommandManager.MoveDownStairsPlayer(GetPlayer.Position);
             }
             if (HandleMove(info, world))
             {
@@ -269,6 +300,15 @@ namespace MagiRogue.UI
 #endif
 
             return false;
+        }
+
+        private static bool CurrentMapIsPlanetView(World world)
+        {
+            if (world.PlanetMap != null
+                && world.PlanetMap.AssocietatedMap == world.CurrentMap)
+                return true;
+            else
+                return false;
         }
     }
 }

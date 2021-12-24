@@ -156,7 +156,8 @@ namespace MagiRogue.System
             Furniture stairsDown = new Furniture(Color.White, Color.Black, '>', room.RoomRectangle.Center,
                 (int)MapLayer.FURNITURE, FurnitureType.StairsDown);
 
-            room.ForceUnlock();
+            // debug to unlock the room
+            //room.ForceUnlock();
 
             _map.Add(stairsDown);
         }

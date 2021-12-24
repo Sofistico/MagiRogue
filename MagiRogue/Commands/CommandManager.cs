@@ -501,7 +501,7 @@ namespace MagiRogue.Commands
             Furniture possibleStairs = GameLoop.World.CurrentMap.GetEntityAt<Furniture>(playerPoint);
             if (possibleStairs is not null && possibleStairs.FurnitureType == FurnitureType.StairsDown)
             {
-                var map = GameLoop.World.AllMaps[1];
+                Map map = GameLoop.World.AllMaps.FirstOrDefault(m => m == possibleStairs.MapConnection);
                 // TODO: For now it's just a test, need to work out a better way to do it.
                 GameLoop.World.ChangePlayerMap(map, map.GetRandomWalkableTile());
 

@@ -50,11 +50,14 @@ namespace MagiRogue.System
         {
             AllMaps = new();
             Time = new TimeSystem();
-            PlanetMap = new PlanetGenerator().CreatePlanet(150, 150);
-            CurrentMap = PlanetMap.AssocietatedMap;
-            /*if (!testGame)
+
+            if (!testGame)
             {
-                // Build a map
+                PlanetMap = new PlanetGenerator().CreatePlanet(150, 150);
+                CurrentMap = PlanetMap.AssocietatedMap;
+                //PlacePlayerOnWorld(player);
+
+                /*// Build a map
                 CreateTownMap();
 
                 CreateStoneFloorMap();
@@ -62,14 +65,20 @@ namespace MagiRogue.System
                 CreateStoneMazeMap();
 
                 // create an instance of player
-                PlacePlayer(player);
+                PlacePlayer(player);*/
+
+                //PlacePlayer(player);
             }
             else
             {
                 CreateTestMap();
 
                 PlacePlayer(player);
-            }*/
+            }
+        }
+
+        private void PlacePlayerOnWorld(Player player)
+        {
         }
 
         private void CreateStoneMazeMap()
@@ -157,7 +166,6 @@ namespace MagiRogue.System
                     Player = player;
                     Player.Position = pos;
                     Player.Description = "Here is you, you are beautiful";
-
                     break;
                 }
             }
@@ -370,6 +378,7 @@ namespace MagiRogue.System
         }
     }
 
+    // Maybe i will do something with it, but only time will tell
     public class AddMapEventArgs : EventArgs
     {
         public Map NewMap { get; }

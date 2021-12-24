@@ -299,6 +299,8 @@ namespace MagiRogue.System.WorldGen
                     _civilizations[currentCivCount] = civ;
                 }
 
+                planetData.Civilizations.Add(civ);
+
                 currentCivCount++;
             }
         }

@@ -69,6 +69,7 @@ namespace MagiRogue.UI
         {
             IsFocused = true;
             MainMenu.GameStarted = true;
+            MainMenu.Hide();
 
             if (!testGame)
             {
@@ -78,34 +79,31 @@ namespace MagiRogue.UI
             GameLoop.World = new World(player, testGame);
 
             //Message Log initialization
-            /*MessageLog = new MessageLogWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Message Log");
+            MessageLog = new MessageLogWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Message Log");
             Children.Add(MessageLog);
             MessageLog.Show();
             MessageLog.Position = new Point(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2);
 #if DEBUG
             MessageLog.Add("Test message log works");
-#endif*/
+#endif
             // Inventory initialization
-            /*InventoryScreen = new InventoryWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2);
+            InventoryScreen = new InventoryWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2);
             Children.Add(InventoryScreen);
             InventoryScreen.Hide();
 
             StatusConsole = new StatusWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Status Window");
             Children.Add(StatusConsole);
             StatusConsole.Position = new Point(GameLoop.GameWidth / 2, 0);
-            StatusConsole.Show();*/
+            StatusConsole.Show();
 
             // Build the Window
             CreateMapWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight, "Game Map");
 
             // Then load the map into the MapConsole
-            //MapWindow.LoadMap(GameLoop.World.CurrentMap);
-            //MapWindow.LoadAllChunks(GameLoop.World.LocalChunks);
+            MapWindow.LoadMap(GameLoop.World.CurrentMap);
 
             // Start the game with the camera focused on the player
             MapWindow.CenterOnActor(GameLoop.World.Player);
-
-            MapWindow.LoadMap(GameLoop.World.PlanetMap.AssocietatedMap);
         }
 
         /// <summary>
@@ -124,6 +122,8 @@ namespace MagiRogue.UI
 
         #endregion ConstructorAndInitCode
 
+        #region Overrides
+
         #region Input
 
         /// <summary>
@@ -135,7 +135,8 @@ namespace MagiRogue.UI
         public override bool ProcessKeyboard(Keyboard info)
         {
             if (GameLoop.World != null && GameLoop.World.CurrentMap != null
-                && GameLoop.World.CurrentMap.ControlledEntitiy != null)
+                && (GameLoop.World.CurrentMap.ControlledEntitiy != null
+                || GameLoop.World.PlanetMap.AssocietatedMap == GameLoop.World.CurrentMap))
             {
                 if (KeyboardHandle.HandleMapKeys(info, this, GameLoop.World))
                 {
@@ -146,34 +147,12 @@ namespace MagiRogue.UI
                     return true;
                 }
             }
-
-            // debug code
-            var console = MapWindow.MapConsole;
-
-            if (info.IsKeyDown(Keys.Left))
-            {
-                console.ViewPosition = console.ViewPosition.Translate((-1, 0));
-            }
-
-            if (info.IsKeyDown(Keys.Right))
-            {
-                console.ViewPosition = console.ViewPosition.Translate((1, 0));
-            }
-
-            if (info.IsKeyDown(Keys.Up))
-            {
-                console.ViewPosition = console.ViewPosition.Translate((0, -1));
-            }
-
-            if (info.IsKeyDown(Keys.Down))
-            {
-                console.ViewPosition = console.ViewPosition.Translate((0, +1));
-            }
-
             return base.ProcessKeyboard(info);
         }
 
         #endregion Input
+
+        #endregion Overrides
 
         #region HelperMethods
 

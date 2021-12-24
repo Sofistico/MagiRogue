@@ -210,6 +210,7 @@ namespace MagiRogue.System
             {
                 FovCalculate(player);
                 ControlledEntitiy = player;
+                ForceFovCalculation();
             }
 
             try

@@ -1,4 +1,5 @@
-﻿using MagiRogue.System.Tiles;
+﻿using MagiRogue.System.Civ;
+using MagiRogue.System.Tiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace MagiRogue.System.WorldGen
         public float[,] MoistureData { get; }
         public float Min { get; set; }
         public float Max { get; set; }
+        public List<Civilization> Civilizations { get; set; }
         public Map AssocietatedMap { get; }
 
         public PlanetMap(int width, int height)
@@ -31,6 +33,7 @@ namespace MagiRogue.System.WorldGen
             Min = float.MinValue;
             Max = float.MaxValue;
             AssocietatedMap = new("Planet", width, height);
+            Civilizations = new List<Civilization>();
         }
 
         public void SetWorldTiles(WorldTile[,] tiles)
