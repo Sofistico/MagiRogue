@@ -80,13 +80,16 @@ namespace MagiRogue.System
 
         private void PlacePlayerOnWorld(Player player)
         {
-            Civilization startTown = PlanetMap.Civilizations
-                .FirstOrDefault(a => a.Tendency == Civ.CivilizationTendency.Normal);
-            player.Position = startTown.Territory.OwnedLand.WorldTiles[0].Position;
-            player.Description = "Here is you, you are beautiful";
-            Player = player;
+            if (player != null)
+            {
+                Civilization startTown = PlanetMap.Civilizations
+                    .FirstOrDefault(a => a.Tendency == Civ.CivilizationTendency.Normal);
+                player.Position = startTown.Territory.OwnedLand.WorldTiles[0].Position;
+                player.Description = "Here is you, you are beautiful";
+                Player = player;
 
-            CurrentMap.Add(Player);
+                CurrentMap.Add(Player);
+            }
         }
 
         private void CreateStoneMazeMap()
