@@ -18,7 +18,7 @@ namespace MagiRogue.UI
 {
     public static class KeyboardHandle
     {
-        private static Player GetPlayer => GameLoop.World.Player;
+        private static Player GetPlayer => GameLoop.Universe.Player;
 
         private static Target targetCursor;
 
@@ -133,7 +133,7 @@ namespace MagiRogue.UI
             // Work around for a > symbol, must be top to not make the char wait
             if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.OemPeriod))
             {
-                return CommandManager.MoveDownStairsPlayer(GetPlayer.Position);
+                return CommandManager.EnterDownMovement(GetPlayer.Position);
             }
             if (HandleMove(info, world))
             {

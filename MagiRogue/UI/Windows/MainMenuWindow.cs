@@ -107,7 +107,7 @@ namespace MagiRogue.UI.Windows
         public void RestartGame()
         {
             GameStarted = false;
-            GameLoop.World = null;
+            GameLoop.Universe = null;
             RefreshButtons();
 
             foreach (SadConsole.Console item in GameLoop.UIManager.Children)

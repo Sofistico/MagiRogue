@@ -22,10 +22,15 @@ namespace MagiRogue.System
         // map creation and storage data
         private const int _mapWidth = 50;
         //private const int _mapHeight = 50;
+        private int maxChunks;
+        private int planetWidth = 150;
+        private int planetHeight = 150;
+        private int planetMaxCivs = 30;
         private readonly int _maxRooms = 20;
         private readonly int _minRoomSize = 4;
         private readonly int _maxRoomSize = 10;
         private readonly Random rndNum = new();
+        private RegionChunk[] allChunks;
         /*private const int _zMaxUpLevel = 10;
         private const int _zMaxLowLevel = -10;*/
 
@@ -54,7 +59,12 @@ namespace MagiRogue.System
 
             if (!testGame)
             {
-                PlanetMap = new PlanetGenerator().CreatePlanet(150, 150);
+                PlanetMap = new PlanetGenerator().CreatePlanet(planetWidth,
+                    planetHeight,
+                    planetMaxCivs);
+                maxChunks = planetWidth * planetHeight;
+                allChunks = new RegionChunk[maxChunks];
+
                 CurrentMap = PlanetMap.AssocietatedMap;
                 PlacePlayerOnWorld(player);
 
@@ -114,6 +124,16 @@ namespace MagiRogue.System
         }
 
         private void AddMapToList(Map map) => AllMaps.Add(map);
+
+        private void AddMapsToList(List<Map> map)
+        {
+            for (int i = 0; i < map.Count; i++)
+            {
+                Map mip = map[i];
+
+                AllMaps.Add(mip);
+            }
+        }
 
         public void ChangePlayerMap(Map mapToGo, Point pos)
         {
@@ -367,9 +387,25 @@ namespace MagiRogue.System
         {
             CurrentMap.ControlledEntitiy = entity;
         }
+
+        public RegionChunk GenerateChunck(Point posGenerated)
+        {
+            RegionChunk newChunck = new RegionChunk(posGenerated);
+
+            allChunks[Point.ToIndex(posGenerated.X, posGenerated.Y, planetWidth)]
+                = newChunck;
+
+            return newChunck;
+        }
+
+        public RegionChunk GetChunckByPos(Point playerPoint) =>
+            allChunks[Point.ToIndex(playerPoint.X, playerPoint.Y, planetWidth)];
     }
 
-    // For a future world update.
+    /// <summary>
+    /// Region chunks for the world map, each chunk contains 3 * 3 maps, in a grid like manner where the
+    /// edges connect the map to each other.
+    /// </summary>
     public class RegionChunk
     {
         /// <summary>
@@ -387,6 +423,15 @@ namespace MagiRogue.System
             Y = y;
             LocalMaps = new Map[MAX_LOCAL_CHUNCKS];
         }
+
+        public RegionChunk(Point point)
+        {
+            X = point.X;
+            Y = point.Y;
+            LocalMaps = new Map[MAX_LOCAL_CHUNCKS];
+        }
+
+        public Point ChunckPos() => new Point(X, Y);
     }
 
     // Maybe i will do something with it, but only time will tell

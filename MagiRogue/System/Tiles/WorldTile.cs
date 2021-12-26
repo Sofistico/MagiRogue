@@ -107,6 +107,8 @@ namespace MagiRogue.System.Tiles
 
         public Civilization? CivInfluence { get; set; }
         public Road? Road { get; internal set; }
+        public RegionChunk? MapChunk { get; set; }
+        public bool Visited { get; internal set; }
 
         public WorldTile(Color foregroud, Color background,
             int glyph, Point position,
@@ -119,7 +121,7 @@ namespace MagiRogue.System.Tiles
         /// <summary>
         /// Empty constructor, for use to put new data inside
         /// </summary>
-        public WorldTile() : base(Color.Black, Color.Black, '2', 0, Point.None, "null")
+        public WorldTile() : base(Color.Black, Color.Black, '2', 0, Point.None, "null", false, true)
         {
         }
 

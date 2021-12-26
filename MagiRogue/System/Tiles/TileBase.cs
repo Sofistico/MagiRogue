@@ -77,7 +77,7 @@ namespace MagiRogue.System.Tiles
         public GoRogue.GameFramework.Map CurrentMap => backingField.CurrentMap;
 
         public bool IsTransparent { get => backingField.IsTransparent; set => backingField.IsTransparent = value; }
-        public bool IsWalkable { get => !IsBlockingMove; set => backingField.IsWalkable = !IsBlockingMove; }
+        public bool IsWalkable { get => !IsBlockingMove; set => IsBlockingMove = !value; }
         public Point Position { get => backingField.Position; set => backingField.Position = value; }
 
         public uint ID => backingField.ID;
@@ -136,11 +136,11 @@ namespace MagiRogue.System.Tiles
         public virtual void DestroyTile(TileBase changeTile, Entities.Item? itemDropped = null)
 #nullable disable
         {
-            GameLoop.World.CurrentMap.SetTerrain(changeTile);
+            GameLoop.Universe.CurrentMap.SetTerrain(changeTile);
             LastSeenAppereance = changeTile;
             if (itemDropped is not null)
             {
-                GameLoop.World.CurrentMap.Add(itemDropped);
+                GameLoop.Universe.CurrentMap.Add(itemDropped);
             }
         }
 

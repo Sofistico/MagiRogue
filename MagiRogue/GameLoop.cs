@@ -11,7 +11,7 @@ namespace MagiRogue
         // Managers
         public static UIManager UIManager { get; set; }
 
-        public static Universe World { get; set; }
+        public static Universe Universe { get; set; }
 
         private static void Main()
         {

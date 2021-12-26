@@ -36,9 +36,9 @@ namespace MagiRogue.System.Magic.Effects
                 return;
             }
 
-            TurnApplied = GameLoop.World.Time.Turns;
+            TurnApplied = GameLoop.Universe.Time.Turns;
 
-            foreach (Tiles.NodeTile node in GameLoop.World.CurrentMap.Tiles.Where(t => t is Tiles.NodeTile))
+            foreach (Tiles.NodeTile node in GameLoop.Universe.CurrentMap.Tiles.Where(t => t is Tiles.NodeTile))
             {
                 node.RestoreOriginalAppearence();
             }
@@ -46,7 +46,7 @@ namespace MagiRogue.System.Magic.Effects
             turnToRemove = TurnApplied + Duration;
 
             hasMageSight = true;
-            GameLoop.World.Time.TurnPassed += GetTime_TurnPassed;
+            GameLoop.Universe.Time.TurnPassed += GetTime_TurnPassed;
 
             GameLoop.UIManager.MessageLog.Add("You can see the unseen now");
         }
@@ -55,7 +55,7 @@ namespace MagiRogue.System.Magic.Effects
         {
             if (e.Seconds >= turnToRemove)
             {
-                foreach (Tiles.NodeTile node in GameLoop.World.CurrentMap.Tiles.Where(t => t is Tiles.NodeTile))
+                foreach (Tiles.NodeTile node in GameLoop.Universe.CurrentMap.Tiles.Where(t => t is Tiles.NodeTile))
                 {
                     node.RestoreIllusionComponent();
                 }
@@ -63,7 +63,7 @@ namespace MagiRogue.System.Magic.Effects
                 hasMageSight = false;
 
                 GameLoop.UIManager.MessageLog.Add("Your eyes sees normally now");
-                GameLoop.World.Time.TurnPassed -= GetTime_TurnPassed;
+                GameLoop.Universe.Time.TurnPassed -= GetTime_TurnPassed;
             }
         }
     }

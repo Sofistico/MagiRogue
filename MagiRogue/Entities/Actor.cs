@@ -90,7 +90,7 @@ namespace MagiRogue.Entities
         public bool MoveBy(Point positionChange)
         {
             // Check the current map if we can move to this new position
-            if (GameLoop.World.CurrentMap.IsTileWalkable(Position + positionChange, this))
+            if (GameLoop.Universe.CurrentMap.IsTileWalkable(Position + positionChange, this))
             {
                 bool attacked = CheckIfCanAttack(positionChange);
 
@@ -118,7 +118,7 @@ namespace MagiRogue.Entities
         {
             // if there's a monster here,
             // do a bump attack
-            Actor actor = GameLoop.World.CurrentMap.GetEntityAt<Actor>(Position + positionChange);
+            Actor actor = GameLoop.Universe.CurrentMap.GetEntityAt<Actor>(Position + positionChange);
 
             if (actor != null && CanBeAttacked)
             {
@@ -134,7 +134,7 @@ namespace MagiRogue.Entities
         private bool CheckIfThereIsDoor(Point positionChange)
         {
             // Check for the presence of a door
-            TileDoor door = GameLoop.World.CurrentMap.GetTileAt<TileDoor>(Position + positionChange);
+            TileDoor door = GameLoop.Universe.CurrentMap.GetTileAt<TileDoor>(Position + positionChange);
 
             // if there's a door here,
             // try to use it
@@ -152,7 +152,7 @@ namespace MagiRogue.Entities
         // returns true if actor was able to move, false if failed to move
         public bool MoveTo(Point newPosition)
         {
-            if (GameLoop.World.CurrentMap.IsTileWalkable(newPosition))
+            if (GameLoop.Universe.CurrentMap.IsTileWalkable(newPosition))
             {
                 Position = newPosition;
                 return true;

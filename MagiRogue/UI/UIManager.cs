@@ -76,7 +76,7 @@ namespace MagiRogue.UI
                 CharCreationWindow.Hide();
             }
 
-            GameLoop.World = new Universe(player, testGame);
+            GameLoop.Universe = new Universe(player, testGame);
 
             //Message Log initialization
             MessageLog = new MessageLogWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Message Log");
@@ -100,10 +100,10 @@ namespace MagiRogue.UI
             CreateMapWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight, "Game Map");
 
             // Then load the map into the MapConsole
-            MapWindow.LoadMap(GameLoop.World.CurrentMap);
+            MapWindow.LoadMap(GameLoop.Universe.CurrentMap);
 
             // Start the game with the camera focused on the player
-            MapWindow.CenterOnActor(GameLoop.World.Player);
+            MapWindow.CenterOnActor(GameLoop.Universe.Player);
         }
 
         /// <summary>
@@ -134,11 +134,11 @@ namespace MagiRogue.UI
         /// <returns></returns>
         public override bool ProcessKeyboard(Keyboard info)
         {
-            if (GameLoop.World != null && GameLoop.World.CurrentMap != null
-                && (GameLoop.World.CurrentMap.ControlledEntitiy != null
-                || GameLoop.World.PlanetMap.AssocietatedMap == GameLoop.World.CurrentMap))
+            if (GameLoop.Universe != null && GameLoop.Universe.CurrentMap != null
+                && (GameLoop.Universe.CurrentMap.ControlledEntitiy != null
+                || GameLoop.Universe.PlanetMap.AssocietatedMap == GameLoop.Universe.CurrentMap))
             {
-                if (KeyboardHandle.HandleMapKeys(info, this, GameLoop.World))
+                if (KeyboardHandle.HandleMapKeys(info, this, GameLoop.Universe))
                 {
                     return true;
                 }

@@ -48,10 +48,10 @@ namespace MagiRogue.System.Magic.Effects
 
         private void Haste(Point target, SpellBase spellCasted)
         {
-            Stat targetStats = GameLoop.World.CurrentMap.GetEntityAt<Actor>(target).Stats;
+            Stat targetStats = GameLoop.Universe.CurrentMap.GetEntityAt<Actor>(target).Stats;
 
             if (turnToRemove == 0)
-                GameLoop.World.Time.TurnPassed -= GetTime_TurnPassed;
+                GameLoop.Universe.Time.TurnPassed -= GetTime_TurnPassed;
             if (isHasted)
             {
                 GameLoop.UIManager.MessageLog.Add("Can only have one haste effect per time");
@@ -60,11 +60,11 @@ namespace MagiRogue.System.Magic.Effects
             currentStats = targetStats;
             previousSpeed = targetStats.Speed;
             targetStats.Speed += HastePower;
-            TurnApplied = GameLoop.World.Time.Turns;
+            TurnApplied = GameLoop.Universe.Time.Turns;
             turnToRemove = TurnApplied + Duration;
             isHasted = true;
 
-            GameLoop.World.Time.TurnPassed += GetTime_TurnPassed;
+            GameLoop.Universe.Time.TurnPassed += GetTime_TurnPassed;
         }
 
         private void GetTime_TurnPassed(object sender, Time.TimeDefSpan e)
@@ -76,7 +76,7 @@ namespace MagiRogue.System.Magic.Effects
                 isHasted = false;
 
                 GameLoop.UIManager.MessageLog.Add("You feel yourself slowing down");
-                GameLoop.World.Time.TurnPassed -= GetTime_TurnPassed;
+                GameLoop.Universe.Time.TurnPassed -= GetTime_TurnPassed;
             }
         }
     }
