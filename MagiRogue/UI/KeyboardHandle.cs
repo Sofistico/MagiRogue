@@ -30,7 +30,7 @@ namespace MagiRogue.UI
             { Keys.Up, Direction.Up }, { Keys.Down, Direction.Down }, { Keys.Left, Direction.Left }, { Keys.Right, Direction.Right }
         };
 
-        public static bool HandleMapKeys(Keyboard input, UIManager ui, World world)
+        public static bool HandleMapKeys(Keyboard input, UIManager ui, Universe world)
         {
             if (HandleActions(input, world, ui))
                 return true;
@@ -56,7 +56,7 @@ namespace MagiRogue.UI
             return false;
         }
 
-        private static bool HandleMove(Keyboard info, World world)
+        private static bool HandleMove(Keyboard info, Universe world)
         {
             #region WorldMovement
 
@@ -128,7 +128,7 @@ namespace MagiRogue.UI
             return false;
         }
 
-        private static bool HandleActions(Keyboard info, World world, UIManager ui)
+        private static bool HandleActions(Keyboard info, Universe world, UIManager ui)
         {
             // Work around for a > symbol, must be top to not make the char wait
             if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.OemPeriod))
@@ -302,10 +302,10 @@ namespace MagiRogue.UI
             return false;
         }
 
-        private static bool CurrentMapIsPlanetView(World world)
+        private static bool CurrentMapIsPlanetView(Universe world)
         {
             if (world.PlanetMap != null
-                && world.PlanetMap.AssocietatedMap == world.CurrentMap)
+                && world.PlanetMap.AssocietatedMap == world.CurrentMap && world.Player == null)
                 return true;
             else
                 return false;

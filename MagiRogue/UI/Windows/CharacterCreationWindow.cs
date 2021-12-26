@@ -129,10 +129,10 @@ namespace MagiRogue.UI.Windows
                 player = new Player(charName.Text, Color.White, Color.Black, Point.None);
             else
             {
-/*#if DEBUG
-                player = Player.TestPlayer();
-                return player;
-#endif*/
+                /*#if DEBUG
+                                player = Player.TestPlayer();
+                                return player;
+                #endif*/
 
                 PopWindow error = new PopWindow("Error");
                 error.Surface.Clear();
@@ -349,7 +349,8 @@ namespace MagiRogue.UI.Windows
             Pre,
             ShapSkill,
             Attack,
-            Defense
+            Defense,
+            Age
         }
 
         public override void Update(TimeSpan time)

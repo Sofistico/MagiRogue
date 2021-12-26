@@ -1,6 +1,7 @@
 ﻿using MagiRogue.Components;
 using MagiRogue.Data;
 using MagiRogue.Entities;
+using MagiRogue.System.Civ;
 using MagiRogue.System.Tiles;
 using MagiRogue.System.Time;
 using MagiRogue.System.WorldGen;
@@ -12,11 +13,11 @@ using System.Linq;
 namespace MagiRogue.System
 {
     /// <summary>
-    /// All game state data is stored in World
+    /// All game state data is stored in the Universe
     /// also creates and processes generators
     /// for map creation
     /// </summary>
-    public class World
+    public class Universe
     {
         // map creation and storage data
         private const int _mapWidth = 50;
@@ -46,7 +47,7 @@ namespace MagiRogue.System
         /// Creates a new game world and stores it in a
         /// publicly accessible constructor.
         /// </summary>
-        public World(Player player, bool testGame = false)
+        public Universe(Player player, bool testGame = false)
         {
             AllMaps = new();
             Time = new TimeSystem();
@@ -55,7 +56,7 @@ namespace MagiRogue.System
             {
                 PlanetMap = new PlanetGenerator().CreatePlanet(150, 150);
                 CurrentMap = PlanetMap.AssocietatedMap;
-                //PlacePlayerOnWorld(player);
+                PlacePlayerOnWorld(player);
 
                 /*// Build a map
                 CreateTownMap();
@@ -79,6 +80,13 @@ namespace MagiRogue.System
 
         private void PlacePlayerOnWorld(Player player)
         {
+            Civilization startTown = PlanetMap.Civilizations
+                .FirstOrDefault(a => a.Tendency == Civ.CivilizationTendency.Normal);
+            player.Position = startTown.Territory.OwnedLand.WorldTiles[0].Position;
+            player.Description = "Here is you, you are beautiful";
+            Player = player;
+
+            CurrentMap.Add(Player);
         }
 
         private void CreateStoneMazeMap()

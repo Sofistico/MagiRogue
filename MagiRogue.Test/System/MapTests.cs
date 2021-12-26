@@ -30,7 +30,7 @@ namespace MagiRogue.Test.System
         public void ChangeEntityCurrentMap()
         {
             var actor = new Actor("Test", Color.Black, Color.Black, '@', new Point(1, 1));
-            World world = new(null);
+            Universe world = new(null);
             world.AllMaps.Add(map);
             map.Add(actor);
             var newMap = new Map("MapTest", 1, 1);

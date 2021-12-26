@@ -111,9 +111,9 @@ namespace MagiRogue.System.Tiles
             base.DestroyTile(changeTile, itemDropped);
         }
 
-        public void SetUpNodeTurn(World world) => world.Time.TurnPassed += GetTime_NodeTurnPassed;
+        public void SetUpNodeTurn(Universe world) => world.Time.TurnPassed += GetTime_NodeTurnPassed;
 
-        private void DestroyNodeTurn(World world) => world.Time.TurnPassed -= GetTime_NodeTurnPassed;
+        private void DestroyNodeTurn(Universe world) => world.Time.TurnPassed -= GetTime_NodeTurnPassed;
 
         private void GetTime_NodeTurnPassed(object sender, Time.TimeDefSpan e)
         {

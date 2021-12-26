@@ -70,29 +70,34 @@ namespace MagiRogue.System.WorldGen
                         case HeightType.DeepWater:
                             tempTile = new(DeepColor, Color.Black, '~');
                             tiles[x, y].CopyAppearanceFrom(tempTile);
+                            tiles[x, y].IsBlockingMove = true;
                             break;
 
                         case HeightType.ShallowWater:
                             tempTile = new(ShallowColor, Color.Black, '~');
                             tiles[x, y].CopyAppearanceFrom(tempTile);
+                            tiles[x, y].IsBlockingMove = true;
 
                             break;
 
                         case HeightType.Sand:
                             tempTile = new(SandColor, Color.Black, '~');
                             tiles[x, y].CopyAppearanceFrom(tempTile);
+                            tiles[x, y].IsBlockingMove = false;
 
                             break;
 
                         case HeightType.Grass:
                             tempTile = new(GrassColor, Color.Black, ',');
                             tiles[x, y].CopyAppearanceFrom(tempTile);
+                            tiles[x, y].IsBlockingMove = false;
 
                             break;
 
                         case HeightType.Forest:
                             tempTile = new(ForestColor, Color.Black, 'T');
                             tiles[x, y].CopyAppearanceFrom(tempTile);
+                            tiles[x, y].IsBlockingMove = false;
 
                             break;
 
@@ -100,12 +105,14 @@ namespace MagiRogue.System.WorldGen
                             tempTile = new(RockColor, Color.Black, '^');
                             tiles[x, y].CopyAppearanceFrom(tempTile);
                             tiles[x, y].MoveTimeCost = 500;
+                            tiles[x, y].IsBlockingMove = false;
 
                             break;
 
                         case HeightType.Snow:
                             tempTile = new(SnowColor, Color.Black, '~');
                             tiles[x, y].CopyAppearanceFrom(tempTile);
+                            tiles[x, y].IsBlockingMove = false;
 
                             break;
 
@@ -117,6 +124,8 @@ namespace MagiRogue.System.WorldGen
                         case HeightType.River:
                             tempTile = new(RiverColor, Color.Black, '~');
                             tiles[x, y].CopyAppearanceFrom(tempTile);
+                            tiles[x, y].IsBlockingMove = false;
+
                             break;
                     }
 
@@ -234,12 +243,14 @@ namespace MagiRogue.System.WorldGen
                             case BiomeType.Ice:
                                 tile.Foreground = Ice;
                                 tile.Collidable = true;
+                                tile.IsBlockingMove = false;
                                 break;
 
                             case BiomeType.BorealForest:
                                 tile.Foreground = BorealForest;
                                 tile.MoveTimeCost = 275;
                                 tile.Collidable = true;
+                                tile.IsBlockingMove = false;
 
                                 break;
 
@@ -247,12 +258,14 @@ namespace MagiRogue.System.WorldGen
                                 tile.Foreground = Desert;
                                 tile.MoveTimeCost = 350;
                                 tile.Collidable = true;
+                                tile.IsBlockingMove = false;
 
                                 break;
 
                             case BiomeType.Grassland:
                                 tile.Foreground = Grassland;
                                 tile.Collidable = true;
+                                tile.IsBlockingMove = false;
 
                                 break;
 
@@ -260,13 +273,14 @@ namespace MagiRogue.System.WorldGen
                                 tile.Foreground = SeasonalForest;
                                 tile.MoveTimeCost = 275;
                                 tile.Collidable = true;
-
+                                tile.IsBlockingMove = false;
                                 break;
 
                             case BiomeType.Tundra:
                                 tile.Foreground = Tundra;
                                 tile.MoveTimeCost = 300;
                                 tile.Collidable = true;
+                                tile.IsBlockingMove = false;
 
                                 break;
 
@@ -274,13 +288,14 @@ namespace MagiRogue.System.WorldGen
                                 tile.Foreground = Savanna;
                                 tile.MoveTimeCost = 300;
                                 tile.Collidable = true;
+                                tile.IsBlockingMove = false;
 
                                 break;
 
                             case BiomeType.TemperateRainforest:
                                 tile.Foreground = TemperateRainforest;
                                 tile.MoveTimeCost = 310;
-
+                                tile.IsBlockingMove = false;
                                 tile.Collidable = true;
 
                                 break;
@@ -288,7 +303,7 @@ namespace MagiRogue.System.WorldGen
                             case BiomeType.TropicalRainforest:
                                 tile.Foreground = TropicalRainforest;
                                 tile.MoveTimeCost = 315;
-
+                                tile.IsBlockingMove = false;
                                 tile.Collidable = true;
 
                                 break;
@@ -296,7 +311,7 @@ namespace MagiRogue.System.WorldGen
                             case BiomeType.Woodland:
                                 tile.Foreground = Woodland;
                                 tile.MoveTimeCost = 250;
-
+                                tile.IsBlockingMove = false;
                                 tile.Collidable = true;
 
                                 break;
@@ -306,11 +321,13 @@ namespace MagiRogue.System.WorldGen
                     if (tiles[x, y].HeightType == HeightType.DeepWater)
                     {
                         tile.Foreground = DeepColor;
+                        tile.IsBlockingMove = true;
                     }
                     else if (tiles[x, y].HeightType == HeightType.ShallowWater
                         && tile.BiomeType != BiomeType.Desert)
                     {
                         tile.Foreground = ShallowColor;
+                        tile.IsBlockingMove = true;
                     }
 
                     // draw rivers

@@ -76,7 +76,7 @@ namespace MagiRogue.UI
                 CharCreationWindow.Hide();
             }
 
-            GameLoop.World = new World(player, testGame);
+            GameLoop.World = new Universe(player, testGame);
 
             //Message Log initialization
             MessageLog = new MessageLogWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Message Log");
