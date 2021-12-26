@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 // Used in flood fill algorithm
-namespace MagiRogue.System.WorldGen
+namespace MagiRogue.System.Planet
 {
     public enum TileGroupType
     {

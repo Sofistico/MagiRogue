@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using TinkerWorX.AccidentalNoiseLibrary;
 using Console = SadConsole.Console;
 
-namespace MagiRogue.System.WorldGen
+namespace MagiRogue.System.Planet
 {
     /// <summary>
     /// Generates a brand new planet

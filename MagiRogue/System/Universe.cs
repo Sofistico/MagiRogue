@@ -4,7 +4,7 @@ using MagiRogue.Entities;
 using MagiRogue.System.Civ;
 using MagiRogue.System.Tiles;
 using MagiRogue.System.Time;
-using MagiRogue.System.WorldGen;
+using MagiRogue.System.Planet;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
@@ -83,7 +83,7 @@ namespace MagiRogue.System
             if (player != null)
             {
                 Civilization startTown = PlanetMap.Civilizations
-                    .FirstOrDefault(a => a.Tendency == Civ.CivilizationTendency.Normal);
+                    .FirstOrDefault(a => a.Tendency == CivilizationTendency.Normal);
                 player.Position = startTown.Territory.OwnedLand.WorldTiles[0].Position;
                 player.Description = "Here is you, you are beautiful";
                 Player = player;

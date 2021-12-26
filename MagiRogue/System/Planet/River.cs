@@ -1,7 +1,7 @@
 ﻿using MagiRogue.System.Tiles;
 using System.Collections.Generic;
 
-namespace MagiRogue.System.WorldGen
+namespace MagiRogue.System.Planet
 {
     public class River
     {

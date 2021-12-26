@@ -1,5 +1,5 @@
 ﻿using MagiRogue.System.Tiles;
-using MagiRogue.System.WorldGen;
+using MagiRogue.System.Planet;
 
 namespace MagiRogue.System.Civ
 {

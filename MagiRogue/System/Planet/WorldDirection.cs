@@ -1,4 +1,4 @@
-﻿namespace MagiRogue.System.WorldGen
+﻿namespace MagiRogue.System.Planet
 {
     public enum WorldDirection
     {

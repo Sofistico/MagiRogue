@@ -1,5 +1,5 @@
 ﻿using MagiRogue.System.Civ;
-using MagiRogue.System.WorldGen;
+using MagiRogue.System.Planet;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
