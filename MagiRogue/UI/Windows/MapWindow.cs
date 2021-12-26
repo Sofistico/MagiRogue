@@ -33,6 +33,7 @@ namespace MagiRogue.UI.Windows
         public void CreateMapConsole()
         {
             MapConsole = new Console(Width, Height);
+            MapConsole.Font = SadConsole.Game.Instance.LoadFont("cp437_12x12.font");
         }
 
         // Adds the entire list of entities found in the

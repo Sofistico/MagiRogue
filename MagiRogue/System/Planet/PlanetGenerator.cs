@@ -330,27 +330,8 @@ namespace MagiRogue.System.Planet
             PlanetGlyphGenerator.GetBiomeMapTexture(_width, _height, tiles);
             PlanetGlyphGenerator.SetCityTiles(_width, _height, tiles);
             PlanetGlyphGenerator.SetSpecialTiles(_width, _height, tiles);
-            /*WorldTile[] coloredTiles = new WorldTile[_width * _height];
-            for (int x = 0; x < _width; x++)
-            {
-                for (int y = 0; y < _height; y++)
-                {
-                    coloredTiles[x + y * _width] = tiles[x, y];
-                }
-            }*/
+
             planetData.SetWorldTiles(tiles);
-            /*try
-            {
-                mapRenderer = new Console(width, height, coloredTiles);
-                GameLoop.UIManager.Children.Clear();
-                GameLoop.UIManager.Children.Add(mapRenderer);
-                mapRenderer.Position = new SadRogue.Primitives.Point(0, 0);
-                mapRenderer.Font = SadConsole.Game.Instance.LoadFont("cp437_12x12.font");
-            }
-            catch (Exception)
-            {
-                Debug.Print("Console generation went wrong");
-            }*/
         }
 
         // Build a Tile array from our data
