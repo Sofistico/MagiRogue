@@ -23,8 +23,8 @@ namespace MagiRogue.System
         private const int _mapWidth = 50;
         //private const int _mapHeight = 50;
         private int maxChunks;
-        private int planetWidth = 150;
-        private int planetHeight = 150;
+        private int planetWidth = 257;
+        private int planetHeight = 257;
         private int planetMaxCivs = 30;
         private readonly int _maxRooms = 20;
         private readonly int _minRoomSize = 4;

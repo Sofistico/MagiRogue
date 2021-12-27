@@ -23,12 +23,12 @@ namespace MagiRogue.System.Planet
         private int maxCivsWorld;
 
         private readonly float deepWater = 0.2f;
-        private readonly float shallowWater = 0.4f;
-        private readonly float sand = 0.5f;
+        private readonly float shallowWater = 0.3f;
+        private readonly float sand = 0.6f;
         private readonly float grass = 0.7f;
-        private readonly float snow = 0.6f;
         private readonly float forest = 0.8f;
         private readonly float rock = 0.9f;
+        private readonly float snow = 1.0f;
 
         private readonly float coldestValue = 0.05f;
         private readonly float colderValue = 0.18f;
@@ -74,7 +74,6 @@ namespace MagiRogue.System.Planet
 
         // final object
         private WorldTile[,] tiles;
-        private readonly Console mapRenderer;
 
         private readonly BiomeType[,] biomeTable = new BiomeType[6, 6] {
             //COLDEST        //COLDER          //COLD                  //HOT                          //HOTTER                       //HOTTEST
@@ -391,11 +390,17 @@ namespace MagiRogue.System.Planet
                         t.HeightType = HeightType.Snow;
                         t.Collidable = true;
                     }
-                    else
+                    else if (heightValue > rock)
                     {
                         t.HeightType = HeightType.Rock;
                         t.Collidable = true;
                         t.MineralValue *= 2.0f;
+                    }
+                    else
+                    {
+                        t.HeightType = HeightType.HighMountain;
+                        t.Collidable = true;
+                        t.MineralValue *= 3.0f;
                     }
 
                     //Moisture Map Analyze
@@ -418,6 +423,10 @@ namespace MagiRogue.System.Planet
                     else if (t.HeightType == HeightType.Sand)
                     {
                         planetData.MoistureData[t.Position.X, t.Position.Y] += 0.25f * t.HeightValue;
+                    }
+                    else if (t.HeightType == HeightType.Snow)
+                    {
+                        planetData.MoistureData[t.Position.X, t.Position.Y] += 1f * t.HeightValue;
                     }
 
                     //set moisture type
@@ -480,12 +489,23 @@ namespace MagiRogue.System.Planet
             {
                 for (int y = 0; y < _height; y++)
                 {
-                    float x1 = x / (float)_width;
-                    float y1 = y / (float)_height;
+                    //Noise range
+                    float x1 = 0, x2 = 2;
+                    float y1 = 0, y2 = 2;
+                    float dx = x2 - x1;
+                    float dy = y2 - y1;
 
-                    float heightValue = (float)heightMap.Get(x1, y1);
-                    float heatValue = (float)heatMap.Get(x1, y1);
-                    float moistureValue = (float)moistureMap.Get(x1, y);
+                    //Sample noise at smaller intervals
+                    float s = x / (float)_width;
+                    float t = y / (float)_height;
+
+                    // Calculate our 2D coordinates
+                    float nx = x1 + MathF.Cos(s * 2 * MathF.PI) * dx / (2 * MathF.PI);
+                    float ny = y1 + MathF.Cos(t * 2 * MathF.PI) * dy / (2 * MathF.PI);
+
+                    float heightValue = (float)heightMap.Get(nx, ny);
+                    float heatValue = (float)heatMap.Get(nx, ny);
+                    float moistureValue = (float)moistureMap.Get(nx, ny);
 
                     if (heightValue > planetData.Max) planetData.Max = heightValue;
                     if (heightValue < planetData.Min) planetData.Min = heightValue;

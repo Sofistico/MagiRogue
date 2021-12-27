@@ -20,8 +20,8 @@ namespace MagiRogue.System.Tiles
         Forest = 6,
         Rock = 7,
         Snow = 8,
-        MagicLand = 9,
-        River = 10
+        River = 9,
+        HighMountain = 10
     }
 
     public enum HeatType

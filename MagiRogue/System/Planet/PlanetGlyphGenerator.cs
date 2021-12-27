@@ -20,6 +20,7 @@ namespace MagiRogue.System.Planet
         private static readonly Color GrassColor = new(50 / 255f, 220 / 255f, 20 / 255f, 1);
         private static readonly Color ForestColor = new(16 / 255f, 160 / 255f, 0, 1);
         private static readonly Color RockColor = new(0.5f, 0.5f, 0.5f, 1);
+        private static readonly Color HighMountainColor = Color.AnsiWhiteBright;
         private static readonly Color SnowColor = Color.White;
         private static readonly Color MagicColor = Color.Purple;
 
@@ -116,16 +117,17 @@ namespace MagiRogue.System.Planet
 
                             break;
 
-                        /*case HeightType.MagicLand:
-                            tempTile = new(MagicColor, Color.Black, 'i');
-                            tiles[x, y].CopyAppearanceFrom(tempTile);
-                            break;*/
-
                         case HeightType.River:
                             tempTile = new(RiverColor, Color.Black, '~');
                             tiles[x, y].CopyAppearanceFrom(tempTile);
                             tiles[x, y].IsBlockingMove = false;
 
+                            break;
+
+                        case HeightType.HighMountain:
+                            tempTile = new(HighMountainColor, Color.Black, '^');
+                            tiles[x, y].CopyAppearanceFrom(tempTile);
+                            tiles[x, y].IsBlockingMove = false;
                             break;
                     }
 
