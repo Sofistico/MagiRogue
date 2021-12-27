@@ -28,7 +28,7 @@ namespace MagiRogue.System.Planet
         private readonly float grass = 0.7f;
         private readonly float forest = 0.8f;
         private readonly float rock = 0.9f;
-        private readonly float snow = 1.0f;
+        private readonly float snow = 0.95f;
 
         private readonly float coldestValue = 0.1f;
         private readonly float colderValue = 0.18f;
@@ -39,9 +39,9 @@ namespace MagiRogue.System.Planet
         private readonly int terrainOctaves = 8;
         private readonly float terrainFrequency = 1.2f;
         private readonly float heatFrequency = 3.0f;
-        private readonly int heatOctaves = 4;
+        private readonly int heatOctaves = 6;
 
-        private readonly int moistureOctaves = 4;
+        private readonly int moistureOctaves = 7;
         private readonly float moistureFrequency = 4.0f;
 
         private readonly float dryerValue = 0.27f;
@@ -427,7 +427,7 @@ namespace MagiRogue.System.Planet
                     }
                     else if (t.HeightType == HeightType.Snow)
                     {
-                        planetData.MoistureData[t.Position.X, t.Position.Y] += 1f * t.HeightValue;
+                        planetData.MoistureData[t.Position.X, t.Position.Y] += 2f * t.HeightValue;
                     }
 
                     //set moisture type
@@ -452,7 +452,7 @@ namespace MagiRogue.System.Planet
                     }
                     else if (t.HeightType == HeightType.Snow)
                     {
-                        planetData.HeatData[t.Position.X, t.Position.Y] -= 0.4f * t.HeightValue;
+                        planetData.HeatData[t.Position.X, t.Position.Y] -= 0.7f * t.HeightValue;
                     }
                     else
                     {
@@ -506,7 +506,7 @@ namespace MagiRogue.System.Planet
 
                     // Calculate our 2D coordinates
                     float nx = x1 + MathF.Cos(s * 2) * dx;
-                    float ny = y1 + MathF.Cos(t * 2) * dy;
+                    float ny = y1 + MathF.Sin(t * 2) * dy;
 
                     float heightValue = (float)heightMap.Get(nx, ny);
                     float heatValue = (float)heatMap.Get(nx, ny);
