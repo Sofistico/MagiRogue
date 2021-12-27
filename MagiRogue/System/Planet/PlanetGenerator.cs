@@ -411,15 +411,11 @@ namespace MagiRogue.System.Planet
                     //adjust moisture based on height
                     if (t.HeightType == HeightType.DeepWater)
                     {
-                        var moist = 8f * t.HeightValue;
                         planetData.MoistureData[t.Position.X, t.Position.Y] += 8f * t.HeightValue;
-                        moist = planetData.MoistureData[t.Position.X, t.Position.Y];
                     }
                     else if (t.HeightType == HeightType.ShallowWater)
                     {
-                        var moist = 3f * t.HeightValue;
                         planetData.MoistureData[t.Position.X, t.Position.Y] += 3f * t.HeightValue;
-                        moist = planetData.MoistureData[t.Position.X, t.Position.Y];
                     }
                     else if (t.HeightType == HeightType.Shore)
                     {
@@ -449,6 +445,10 @@ namespace MagiRogue.System.Planet
                     else if (t.HeightType == HeightType.Rock)
                     {
                         planetData.HeatData[t.Position.X, t.Position.Y] -= 0.25f * t.HeightValue;
+                    }
+                    else if (t.HeightType == HeightType.HighMountain)
+                    {
+                        planetData.HeatData[t.Position.X, t.Position.Y] -= 0.5f * t.HeightValue;
                     }
                     else if (t.HeightType == HeightType.Snow)
                     {
@@ -505,8 +505,8 @@ namespace MagiRogue.System.Planet
                     float t = y / (float)_height;
 
                     // Calculate our 2D coordinates
-                    float nx = x1 + MathF.Cos(s * 2 * MathF.PI) * dx / (2 * MathF.PI);
-                    float ny = y1 + MathF.Cos(t * 2 * MathF.PI) * dy / (2 * MathF.PI);
+                    float nx = x1 + MathF.Cos(s * 2) * dx;
+                    float ny = y1 + MathF.Cos(t * 2) * dy;
 
                     float heightValue = (float)heightMap.Get(nx, ny);
                     float heatValue = (float)heatMap.Get(nx, ny);
