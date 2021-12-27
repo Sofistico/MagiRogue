@@ -46,6 +46,7 @@ namespace MagiRogue.System.Tiles
 
     public enum BiomeType
     {
+        Sea,
         Desert,
         Savanna,
         TropicalRainforest,

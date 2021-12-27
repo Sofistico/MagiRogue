@@ -22,27 +22,28 @@ namespace MagiRogue.System.Planet
         private Civilization[] _civilizations;
         private int maxCivsWorld;
 
-        private readonly float deepWater = 0.2f;
-        private readonly float shallowWater = 0.3f;
+        private readonly float deepWater = 0.3f;
+        private readonly float shallowWater = 0.5f;
         private readonly float sand = 0.6f;
         private readonly float grass = 0.7f;
         private readonly float forest = 0.8f;
         private readonly float rock = 0.9f;
         private readonly float snow = 1.0f;
 
-        private readonly float coldestValue = 0.05f;
+        private readonly float coldestValue = 0.1f;
         private readonly float colderValue = 0.18f;
         private readonly float coldValue = 0.4f;
         private readonly float warmValue = 0.6f;
         private readonly float warmerValue = 0.8f;
 
         private readonly int terrainOctaves = 8;
-        private readonly float terrainFrequency = 1.5f;
+        private readonly float terrainFrequency = 1.2f;
         private readonly float heatFrequency = 3.0f;
         private readonly int heatOctaves = 4;
 
         private readonly int moistureOctaves = 4;
-        private readonly float moistureFrequency = 3.0f;
+        private readonly float moistureFrequency = 4.0f;
+
         private readonly float dryerValue = 0.27f;
         private readonly float dryValue = 0.4f;
         private readonly float wetValue = 0.6f;
@@ -385,16 +386,16 @@ namespace MagiRogue.System.Planet
                         t.Collidable = true;
                         t.MineralValue *= 1.2f;
                     }
-                    else if (heightValue < snow)
-                    {
-                        t.HeightType = HeightType.Snow;
-                        t.Collidable = true;
-                    }
-                    else if (heightValue > rock)
+                    else if (heightValue < rock)
                     {
                         t.HeightType = HeightType.Rock;
                         t.Collidable = true;
                         t.MineralValue *= 2.0f;
+                    }
+                    else if (heightValue < snow)
+                    {
+                        t.HeightType = HeightType.Snow;
+                        t.Collidable = true;
                     }
                     else
                     {
@@ -410,11 +411,15 @@ namespace MagiRogue.System.Planet
                     //adjust moisture based on height
                     if (t.HeightType == HeightType.DeepWater)
                     {
+                        var moist = 8f * t.HeightValue;
                         planetData.MoistureData[t.Position.X, t.Position.Y] += 8f * t.HeightValue;
+                        moist = planetData.MoistureData[t.Position.X, t.Position.Y];
                     }
                     else if (t.HeightType == HeightType.ShallowWater)
                     {
+                        var moist = 3f * t.HeightValue;
                         planetData.MoistureData[t.Position.X, t.Position.Y] += 3f * t.HeightValue;
+                        moist = planetData.MoistureData[t.Position.X, t.Position.Y];
                     }
                     else if (t.HeightType == HeightType.Shore)
                     {

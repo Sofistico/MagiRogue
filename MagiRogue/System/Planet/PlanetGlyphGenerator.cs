@@ -238,7 +238,7 @@ namespace MagiRogue.System.Planet
                     BiomeType value = tiles[x, y].BiomeType;
                     var tile = tiles[x, y];
 
-                    if (tile.HeightType != HeightType.Rock)
+                    if (tile.HeightType != HeightType.HighMountain)
                     {
                         switch (value)
                         {
@@ -324,12 +324,13 @@ namespace MagiRogue.System.Planet
                     {
                         tile.Foreground = DeepColor;
                         tile.IsBlockingMove = true;
+                        tile.BiomeType = BiomeType.Sea;
                     }
-                    else if (tiles[x, y].HeightType == HeightType.ShallowWater
-                        && tile.BiomeType != BiomeType.Desert)
+                    else if (tiles[x, y].HeightType == HeightType.ShallowWater)
                     {
                         tile.Foreground = ShallowColor;
                         tile.IsBlockingMove = true;
+                        tile.BiomeType = BiomeType.Sea;
                     }
 
                     // draw rivers
@@ -354,6 +355,10 @@ namespace MagiRogue.System.Planet
                         if (tiles[x, y].BiomeBitmask != 15)
                             tile.Foreground = Color.Lerp(tile.Foreground, Color.Black, 0.35f);
                     }
+                    tile.Name = tile.BiomeType.ToString();
+
+                    if (tile.HeightType == HeightType.ShallowWater && tile.BiomeType != BiomeType.Sea)
+                        throw new Exception("Tried to add a biome to the ShallowWater other than Sea!");
                 }
             }
         }
