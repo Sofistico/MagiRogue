@@ -8,13 +8,13 @@ using System.Collections.Generic;
 using TinkerWorX.AccidentalNoiseLibrary;
 using Console = SadConsole.Console;
 
-namespace MagiRogue.System.Planet {
-
+namespace MagiRogue.System.Planet
+{
     /// <summary>
     /// Generates a brand new planet
     /// </summary>
-    public class PlanetGenerator {
-
+    public class PlanetGenerator
+    {
         #region Fields
 
         private int _width;
@@ -94,7 +94,8 @@ namespace MagiRogue.System.Planet {
         /// <param name="width"></param>
         /// <param name="height"></param>
         /// <returns></returns>
-        public PlanetMap CreatePlanet(int width, int height, int nmbCivilizations = 30) {
+        public PlanetMap CreatePlanet(int width, int height, int nmbCivilizations = 30)
+        {
             _width = width;
             _height = height;
             maxCivsWorld = nmbCivilizations;
@@ -133,28 +134,34 @@ namespace MagiRogue.System.Planet {
 
         #region Civ
 
-        private void BasicHistory() {
-            for (int i = 0; i < _civilizations.Length; i++) {
+        private void BasicHistory()
+        {
+            for (int i = 0; i < _civilizations.Length; i++)
+            {
                 var civ = _civilizations[i];
 
-                if (i < _civilizations.Length - 1) {
+                if (i < _civilizations.Length - 1)
+                {
                     var nextCiv = _civilizations[i + 1];
 
-                    if (civ.Tendency == nextCiv.Tendency) {
+                    if (civ.Tendency == nextCiv.Tendency)
+                    {
                         BuildRoadsToFriends(civ, nextCiv);
                     }
                 }
             }
         }
 
-        private void BuildRoadsToFriends(Civilization civ, Civilization friend) {
+        private void BuildRoadsToFriends(Civilization civ, Civilization friend)
+        {
             var tile = civ.Territory.OwnedLand.WorldTiles[0];
             var closestCityTile = friend.Territory.OwnedLand.WorldTiles[0];
 
             FindPathToCity(tile, closestCityTile);
         }
 
-        private void FindPathToCity(WorldTile tile, WorldTile closestCityTile) {
+        private void FindPathToCity(WorldTile tile, WorldTile closestCityTile)
+        {
             Road road = new();
 
             if (!tile.Collidable)
@@ -176,7 +183,8 @@ namespace MagiRogue.System.Planet {
             Point roadPoint = tile.Position;
             var direction = Direction.GetDirection(roadPoint, cityPoint);
 
-            if (direction == Direction.Up) {
+            if (direction == Direction.Up)
+            {
                 WorldTile worldTile = tile.Top;
                 worldTile.Road = road;
                 worldTile.Road.AddTileToList(worldTile);
@@ -184,7 +192,8 @@ namespace MagiRogue.System.Planet {
 
                 FindPathToCity(worldTile, closestCityTile);
             }
-            if (direction == Direction.Down) {
+            if (direction == Direction.Down)
+            {
                 WorldTile worldTile = tile.Bottom;
                 worldTile.Road = road;
                 worldTile.Road.AddTileToList(worldTile);
@@ -192,7 +201,8 @@ namespace MagiRogue.System.Planet {
 
                 FindPathToCity(worldTile, closestCityTile);
             }
-            if (direction == Direction.Left) {
+            if (direction == Direction.Left)
+            {
                 WorldTile worldTile = tile.Left;
                 worldTile.Road = road;
                 worldTile.Road.AddTileToList(worldTile);
@@ -200,7 +210,8 @@ namespace MagiRogue.System.Planet {
 
                 FindPathToCity(worldTile, closestCityTile);
             }
-            if (direction == Direction.Right) {
+            if (direction == Direction.Right)
+            {
                 WorldTile worldTile = tile.Right;
                 worldTile.Road = road;
                 worldTile.Road.AddTileToList(worldTile);
@@ -208,7 +219,8 @@ namespace MagiRogue.System.Planet {
 
                 FindPathToCity(worldTile, closestCityTile);
             }
-            if (direction == Direction.UpLeft) {
+            if (direction == Direction.UpLeft)
+            {
                 WorldTile worldTile = tile.TopLeft;
                 worldTile.Road = road;
                 worldTile.Road.AddTileToList(worldTile);
@@ -216,7 +228,8 @@ namespace MagiRogue.System.Planet {
 
                 FindPathToCity(worldTile, closestCityTile);
             }
-            if (direction == Direction.UpRight) {
+            if (direction == Direction.UpRight)
+            {
                 WorldTile worldTile = tile.TopRight;
                 worldTile.Road = road;
                 worldTile.Road.AddTileToList(worldTile);
@@ -224,7 +237,8 @@ namespace MagiRogue.System.Planet {
 
                 FindPathToCity(worldTile, closestCityTile);
             }
-            if (direction == Direction.DownLeft) {
+            if (direction == Direction.DownLeft)
+            {
                 WorldTile worldTile = tile.BottomLeft;
                 worldTile.Road = road;
                 worldTile.Road.AddTileToList(worldTile);
@@ -232,7 +246,8 @@ namespace MagiRogue.System.Planet {
 
                 FindPathToCity(worldTile, closestCityTile);
             }
-            if (direction == Direction.DownRight) {
+            if (direction == Direction.DownRight)
+            {
                 WorldTile worldTile = tile.BottomRight;
                 worldTile.Road = road;
                 worldTile.Road.AddTileToList(worldTile);
@@ -240,18 +255,21 @@ namespace MagiRogue.System.Planet {
 
                 FindPathToCity(worldTile, closestCityTile);
             }
-            if (direction == Direction.None) {
+            if (direction == Direction.None)
+            {
                 // Should theoritically never happen, but who knows!
                 return;
             }
         }
 
-        private void SeedCivilizations() {
+        private void SeedCivilizations()
+        {
             int tries = 0;
             int maxTries = 300;
             int currentCivCount = 0;
 
-            while (currentCivCount < maxCivsWorld && tries < maxTries) {
+            while (currentCivCount < maxCivsWorld && tries < maxTries)
+            {
                 tries++;
 
                 int x = GoRogue.Random.GlobalRandom.DefaultRNG.Next(0, _width);
@@ -276,7 +294,8 @@ namespace MagiRogue.System.Planet {
                 tile.CivInfluence = civ;
                 civ.Territory.AddLand(tile);
 
-                if (currentCivCount < maxCivsWorld) {
+                if (currentCivCount < maxCivsWorld)
+                {
                     _civilizations[currentCivCount] = civ;
                 }
 
@@ -286,9 +305,11 @@ namespace MagiRogue.System.Planet {
             }
         }
 
-        private static CivilizationTendency RandomCivTendency() {
+        private static CivilizationTendency RandomCivTendency()
+        {
             int rng = GoRogue.Random.GlobalRandom.DefaultRNG.Next(0, 2 + 1);
-            return rng switch {
+            return rng switch
+            {
                 0 => CivilizationTendency.Normal,
                 1 => CivilizationTendency.Aggresive,
                 2 => CivilizationTendency.Studious,
@@ -300,7 +321,8 @@ namespace MagiRogue.System.Planet {
 
         #region Tiles
 
-        private void CreateConsole(WorldTile[,] tiles) {
+        private void CreateConsole(WorldTile[,] tiles)
+        {
             PlanetGlyphGenerator.SetTile(_width, _height, ref tiles);
             // For Test only!
             //PlanetGlyphGenerator.GetHeatMap(width, height, tiles);
@@ -313,11 +335,14 @@ namespace MagiRogue.System.Planet {
         }
 
         // Build a Tile array from our data
-        private void LoadTiles() {
+        private void LoadTiles()
+        {
             tiles = new WorldTile[_width, _height];
 
-            for (int x = 0; x < _width; x++) {
-                for (int y = 0; y < _height; y++) {
+            for (int x = 0; x < _width; x++)
+            {
+                for (int y = 0; y < _height; y++)
+                {
                     WorldTile t = new();
                     t.Position = new SadRogue.Primitives.Point(x, y);
 
@@ -331,34 +356,49 @@ namespace MagiRogue.System.Planet {
                     t.HeightValue = heightValue;
 
                     //HeightMap Analyze
-                    if (heightValue < deepWater) {
+                    if (heightValue < deepWater)
+                    {
                         t.HeightType = HeightType.DeepWater;
                         t.Collidable = false;
                         t.MineralValue *= 1.5f;
-                    } else if (heightValue < shallowWater) {
+                    }
+                    else if (heightValue < shallowWater)
+                    {
                         t.HeightType = HeightType.ShallowWater;
                         t.Collidable = false;
                         t.MineralValue *= 0.5f;
-                    } else if (heightValue < sand) {
+                    }
+                    else if (heightValue < sand)
+                    {
                         t.HeightType = HeightType.Sand;
                         t.Collidable = true;
                         t.MineralValue *= 0.7f;
-                    } else if (heightValue < grass) {
+                    }
+                    else if (heightValue < grass)
+                    {
                         t.HeightType = HeightType.Grass;
                         t.Collidable = true;
                         t.MineralValue *= 0.7f;
-                    } else if (heightValue < forest) {
+                    }
+                    else if (heightValue < forest)
+                    {
                         t.HeightType = HeightType.Forest;
                         t.Collidable = true;
                         t.MineralValue *= 1.2f;
-                    } else if (heightValue < rock) {
+                    }
+                    else if (heightValue < rock)
+                    {
                         t.HeightType = HeightType.Rock;
                         t.Collidable = true;
                         t.MineralValue *= 2.0f;
-                    } else if (heightValue < snow) {
+                    }
+                    else if (heightValue < snow)
+                    {
                         t.HeightType = HeightType.Snow;
                         t.Collidable = true;
-                    } else {
+                    }
+                    else
+                    {
                         t.HeightType = HeightType.HighMountain;
                         t.Collidable = true;
                         t.MineralValue *= 3.0f;
@@ -369,15 +409,24 @@ namespace MagiRogue.System.Planet {
                     t.MoistureValue = MathF.Round(moistureValue, 1);
 
                     //adjust moisture based on height
-                    if (t.HeightType == HeightType.DeepWater) {
+                    if (t.HeightType == HeightType.DeepWater)
+                    {
                         planetData.MoistureData[t.Position.X, t.Position.Y] += 8f * t.HeightValue;
-                    } else if (t.HeightType == HeightType.ShallowWater) {
+                    }
+                    else if (t.HeightType == HeightType.ShallowWater)
+                    {
                         planetData.MoistureData[t.Position.X, t.Position.Y] += 3f * t.HeightValue;
-                    } else if (t.HeightType == HeightType.Shore) {
+                    }
+                    else if (t.HeightType == HeightType.Shore)
+                    {
                         planetData.MoistureData[t.Position.X, t.Position.Y] += 1f * t.HeightValue;
-                    } else if (t.HeightType == HeightType.Sand) {
+                    }
+                    else if (t.HeightType == HeightType.Sand)
+                    {
                         planetData.MoistureData[t.Position.X, t.Position.Y] += 0.25f * t.HeightValue;
-                    } else if (t.HeightType == HeightType.Snow) {
+                    }
+                    else if (t.HeightType == HeightType.Snow)
+                    {
                         planetData.MoistureData[t.Position.X, t.Position.Y] += 2f * t.HeightValue;
                     }
 
@@ -389,15 +438,24 @@ namespace MagiRogue.System.Planet {
                     else if (moistureValue < wettestValue) t.MoistureType = MoistureType.Wetter;
                     else t.MoistureType = MoistureType.Wettest;
 
-                    if (t.HeightType == HeightType.Forest) {
+                    if (t.HeightType == HeightType.Forest)
+                    {
                         planetData.HeatData[t.Position.X, t.Position.Y] -= 0.1f * t.HeightValue;
-                    } else if (t.HeightType == HeightType.Rock) {
+                    }
+                    else if (t.HeightType == HeightType.Rock)
+                    {
                         planetData.HeatData[t.Position.X, t.Position.Y] -= 0.25f * t.HeightValue;
-                    } else if (t.HeightType == HeightType.HighMountain) {
+                    }
+                    else if (t.HeightType == HeightType.HighMountain)
+                    {
                         planetData.HeatData[t.Position.X, t.Position.Y] -= 0.5f * t.HeightValue;
-                    } else if (t.HeightType == HeightType.Snow) {
+                    }
+                    else if (t.HeightType == HeightType.Snow)
+                    {
                         planetData.HeatData[t.Position.X, t.Position.Y] -= 0.7f * t.HeightValue;
-                    } else {
+                    }
+                    else
+                    {
                         planetData.HeatData[t.Position.X, t.Position.Y] += 0.01f * t.HeightValue;
                     }
 
@@ -428,11 +486,14 @@ namespace MagiRogue.System.Planet {
         #region HelpMethods
 
         // Extract data from a noise module
-        private void GetData(ref PlanetMap planetData) {
+        private void GetData(ref PlanetMap planetData)
+        {
             planetData = new PlanetMap(_width, _height);
 
-            for (int x = 0; x < _width; x++) {
-                for (int y = 0; y < _height; y++) {
+            for (int x = 0; x < _width; x++)
+            {
+                for (int y = 0; y < _height; y++)
+                {
                     //Noise range
                     float x1 = 1, x2 = 2;
                     float y1 = 1, y2 = 2;
@@ -465,7 +526,8 @@ namespace MagiRogue.System.Planet {
             }
         }
 
-        private void Initialize() {
+        private void Initialize()
+        {
             seed = GoRogue.Random.GlobalRandom.DefaultRNG.Next(0, int.MaxValue);
             heightMap = new(FractalType.Multi,
                                        BasisType.Simplex,
@@ -496,41 +558,52 @@ namespace MagiRogue.System.Planet {
         }
 
         // need to get the mod so that it doesn't pick up a tile outside of the map.
-        private WorldTile GetTop(WorldTile center) {
+        private WorldTile GetTop(WorldTile center)
+        {
             return tiles[center.Position.X, MathMagi.Mod(center.Position.Y - 1, _height)];
         }
 
-        private WorldTile GetBottom(WorldTile t) {
+        private WorldTile GetBottom(WorldTile t)
+        {
             return tiles[t.Position.X, MathMagi.Mod(t.Position.Y + 1, _height)];
         }
 
-        private WorldTile GetLeft(WorldTile t) {
+        private WorldTile GetLeft(WorldTile t)
+        {
             return tiles[MathMagi.Mod(t.Position.X - 1, _width), t.Position.Y];
         }
 
-        private WorldTile GetRight(WorldTile t) {
+        private WorldTile GetRight(WorldTile t)
+        {
             return tiles[MathMagi.Mod(t.Position.X + 1, _width), t.Position.Y];
         }
 
-        private WorldTile GetTopRight(WorldTile t) {
+        private WorldTile GetTopRight(WorldTile t)
+        {
             return tiles[MathMagi.Mod(t.Position.X + 1, _width), MathMagi.Mod(t.Position.Y - 1, _width)];
         }
 
-        private WorldTile GetBottomRight(WorldTile t) {
+        private WorldTile GetBottomRight(WorldTile t)
+        {
             return tiles[MathMagi.Mod(t.Position.X + 1, _width), MathMagi.Mod(t.Position.Y + 1, _width)];
         }
 
-        private WorldTile GetTopLeft(WorldTile t) {
+        private WorldTile GetTopLeft(WorldTile t)
+        {
             return tiles[MathMagi.Mod(t.Position.X + -1, _width), MathMagi.Mod(t.Position.Y + 1, _width)];
         }
 
-        private WorldTile GetBottomLeft(WorldTile t) {
+        private WorldTile GetBottomLeft(WorldTile t)
+        {
             return tiles[MathMagi.Mod(t.Position.X - 1, _width), MathMagi.Mod(t.Position.Y - 1, _width)];
         }
 
-        private void UpdateNeighbors() {
-            for (int x = 0; x < _width; x++) {
-                for (int y = 0; y < _height; y++) {
+        private void UpdateNeighbors()
+        {
+            for (int x = 0; x < _width; x++)
+            {
+                for (int y = 0; y < _height; y++)
+                {
                     WorldTile tile = tiles[x, y];
 
                     tile.Top = GetTop(tile);
@@ -545,19 +618,25 @@ namespace MagiRogue.System.Planet {
             }
         }
 
-        private void UpdateBitmasks() {
-            for (int x = 0; x < _width; x++) {
-                for (int y = 0; y < _height; y++) {
+        private void UpdateBitmasks()
+        {
+            for (int x = 0; x < _width; x++)
+            {
+                for (int y = 0; y < _height; y++)
+                {
                     tiles[x, y].UpdateBitmask();
                 }
             }
         }
 
-        private void FloodFill() {
+        private void FloodFill()
+        {
             Stack<WorldTile> stack = new();
 
-            for (int x = 0; x < _width; x++) {
-                for (int y = 0; y < _height; y++) {
+            for (int x = 0; x < _width; x++)
+            {
+                for (int y = 0; y < _height; y++)
+                {
                     WorldTile t = tiles[x, y];
 
                     //Tile already flood filled, skip
@@ -565,30 +644,37 @@ namespace MagiRogue.System.Planet {
                         continue;
 
                     // Land
-                    if (t.Collidable) {
+                    if (t.Collidable)
+                    {
                         WorldTileGroup landGroup = new();
                         landGroup.Type = TileGroupType.Land;
 
                         stack.Push(t);
 
-                        while (stack.Count > 0) {
+                        while (stack.Count > 0)
+                        {
                             FloodFill(stack.Pop(), ref landGroup, ref stack);
                         }
 
-                        if (landGroup.WorldTiles.Count > 0) {
+                        if (landGroup.WorldTiles.Count > 0)
+                        {
                             lands.Add(landGroup);
                         }
-                    } else {
+                    }
+                    else
+                    {
                         WorldTileGroup waterGroup = new();
 
                         waterGroup.Type = TileGroupType.Water;
                         stack.Push(t);
 
-                        while (stack.Count > 0) {
+                        while (stack.Count > 0)
+                        {
                             FloodFill(stack.Pop(), ref waterGroup, ref stack);
                         }
 
-                        if (waterGroup.WorldTiles.Count > 0) {
+                        if (waterGroup.WorldTiles.Count > 0)
+                        {
                             waters.Add(waterGroup);
                         }
                     }
@@ -598,7 +684,8 @@ namespace MagiRogue.System.Planet {
 
         private void FloodFill(WorldTile worldTile,
             ref WorldTileGroup group,
-            ref Stack<WorldTile> stack) {
+            ref Stack<WorldTile> stack)
+        {
             if (worldTile.FloodFilled)
                 return;
             if (group.Type == TileGroupType.Land && !worldTile.Collidable)
@@ -626,12 +713,14 @@ namespace MagiRogue.System.Planet {
                 stack.Push(t);
         }
 
-        private void GenerateRivers() {
+        private void GenerateRivers()
+        {
             int attempts = 0;
             int count = riverCount;
 
             // generate some rivers
-            while (count > 0 && attempts < maxRiverAttempts) {
+            while (count > 0 && attempts < maxRiverAttempts)
+            {
                 // get random tiles
                 int x = GoRogue.Random.GlobalRandom.DefaultRNG.Next(0, _width);
                 int y = GoRogue.Random.GlobalRandom.DefaultRNG.Next(0, _height);
@@ -641,7 +730,8 @@ namespace MagiRogue.System.Planet {
                 if (!tile.Collidable) continue;
                 if (tile.Rivers.Count > 0) continue;
 
-                if (tile.HeightValue > minRiverHeight) {
+                if (tile.HeightValue > minRiverHeight)
+                {
                     // tile is good to start river from
                     River river = new(riverCount);
 
@@ -654,13 +744,17 @@ namespace MagiRogue.System.Planet {
                     // Validate the generated river
                     if (river.TurnCount < minRiverTurns
                         || river.Tiles.Count < _minRiverLength
-                        || river.Intersections > maxRiverIntersections) {
+                        || river.Intersections > maxRiverIntersections)
+                    {
                         //Validation failed - remove this river
-                        for (int i = 0; i < river.Tiles.Count; i++) {
+                        for (int i = 0; i < river.Tiles.Count; i++)
+                        {
                             WorldTile t = river.Tiles[i];
                             t.Rivers.Remove(river);
                         }
-                    } else if (river.Tiles.Count >= _minRiverLength) {
+                    }
+                    else if (river.Tiles.Count >= _minRiverLength)
+                    {
                         //Validation passed - Add river to list
                         rivers.Add(river);
                         tile.Rivers.Add(river);
@@ -671,7 +765,8 @@ namespace MagiRogue.System.Planet {
             }
         }
 
-        private void FindPathToWater(WorldTile tile, WorldDirection currentDirection, ref River river) {
+        private void FindPathToWater(WorldTile tile, WorldDirection currentDirection, ref River river)
+        {
             if (tile.Rivers.Contains(river))
                 return;
 
@@ -733,36 +828,48 @@ namespace MagiRogue.System.Planet {
                 return;
 
             //Move to next neighbor
-            if (min == leftValue) {
-                if (left.Collidable) {
-                    if (river.CurrentDirection != WorldDirection.Left) {
+            if (min == leftValue)
+            {
+                if (left.Collidable)
+                {
+                    if (river.CurrentDirection != WorldDirection.Left)
+                    {
                         river.TurnCount++;
                         river.CurrentDirection = WorldDirection.Left;
                     }
                     FindPathToWater(left, currentDirection, ref river);
                 }
             }
-            if (min == rigthValue) {
-                if (right.Collidable) {
-                    if (river.CurrentDirection != WorldDirection.Right) {
+            if (min == rigthValue)
+            {
+                if (right.Collidable)
+                {
+                    if (river.CurrentDirection != WorldDirection.Right)
+                    {
                         river.TurnCount++;
                         river.CurrentDirection = WorldDirection.Right;
                     }
                     FindPathToWater(right, currentDirection, ref river);
                 }
             }
-            if (min == bottomValue) {
-                if (bottom.Collidable) {
-                    if (river.CurrentDirection != WorldDirection.Bottom) {
+            if (min == bottomValue)
+            {
+                if (bottom.Collidable)
+                {
+                    if (river.CurrentDirection != WorldDirection.Bottom)
+                    {
                         river.TurnCount++;
                         river.CurrentDirection = WorldDirection.Bottom;
                     }
                     FindPathToWater(bottom, currentDirection, ref river);
                 }
             }
-            if (min == topValue) {
-                if (top.Collidable) {
-                    if (river.CurrentDirection != WorldDirection.Top) {
+            if (min == topValue)
+            {
+                if (top.Collidable)
+                {
+                    if (river.CurrentDirection != WorldDirection.Top)
+                    {
                         river.TurnCount++;
                         river.CurrentDirection = WorldDirection.Top;
                     }
@@ -771,23 +878,31 @@ namespace MagiRogue.System.Planet {
             }
         }
 
-        private void BuildRiverGroups() {
+        private void BuildRiverGroups()
+        {
             //loop each tile, checking if it belongs to multiple rivers
-            for (var x = 0; x < _width; x++) {
-                for (var y = 0; y < _height; y++) {
+            for (var x = 0; x < _width; x++)
+            {
+                for (var y = 0; y < _height; y++)
+                {
                     WorldTile t = tiles[x, y];
 
-                    if (t.Rivers.Count > 1) {
+                    if (t.Rivers.Count > 1)
+                    {
                         // multiple rivers == intersection
                         RiverGroup? group = null;
 
                         // Does a rivergroup already exist for this group?
-                        for (int n = 0; n < t.Rivers.Count; n++) {
+                        for (int n = 0; n < t.Rivers.Count; n++)
+                        {
                             River tileriver = t.Rivers[n];
-                            for (int i = 0; i < riverGroups.Count; i++) {
-                                for (int j = 0; j < riverGroups[i].Rivers.Count; j++) {
+                            for (int i = 0; i < riverGroups.Count; i++)
+                            {
+                                for (int j = 0; j < riverGroups[i].Rivers.Count; j++)
+                                {
                                     River river = riverGroups[i].Rivers[j];
-                                    if (river.Id == tileriver.Id) {
+                                    if (river.Id == tileriver.Id)
+                                    {
                                         group = riverGroups[i];
                                     }
                                     if (group != null) break;
@@ -798,15 +913,19 @@ namespace MagiRogue.System.Planet {
                         }
 
                         // existing group found -- add to it
-                        if (group != null) {
-                            for (int n = 0; n < t.Rivers.Count; n++) {
+                        if (group != null)
+                        {
+                            for (int n = 0; n < t.Rivers.Count; n++)
+                            {
                                 if (!group.Rivers.Contains(t.Rivers[n]))
                                     group.Rivers.Add(t.Rivers[n]);
                             }
-                        } else   //No existing group found - create a new one
-                          {
+                        }
+                        else   //No existing group found - create a new one
+                        {
                             group = new RiverGroup();
-                            for (int n = 0; n < t.Rivers.Count; n++) {
+                            for (int n = 0; n < t.Rivers.Count; n++)
+                            {
                                 group.Rivers.Add(t.Rivers[n]);
                             }
                             riverGroups.Add(group);
@@ -816,13 +935,16 @@ namespace MagiRogue.System.Planet {
             }
         }
 
-        private void DigRiverGroups() {
-            for (int i = 0; i < riverGroups.Count; i++) {
+        private void DigRiverGroups()
+        {
+            for (int i = 0; i < riverGroups.Count; i++)
+            {
                 RiverGroup group = riverGroups[i];
                 River? longest = null;
 
                 //Find longest river in this group
-                for (int j = 0; j < group.Rivers.Count; j++) {
+                for (int j = 0; j < group.Rivers.Count; j++)
+                {
                     River river = group.Rivers[j];
                     if (longest == null)
                         longest = river;
@@ -830,13 +952,16 @@ namespace MagiRogue.System.Planet {
                         longest = river;
                 }
 
-                if (longest != null) {
+                if (longest != null)
+                {
                     //Dig out longest path first
                     DigRiver(longest);
 
-                    for (int j = 0; j < group.Rivers.Count; j++) {
+                    for (int j = 0; j < group.Rivers.Count; j++)
+                    {
                         River river = group.Rivers[j];
-                        if (river != longest) {
+                        if (river != longest)
+                        {
                             DigRiver(river, longest);
                         }
                     }
@@ -844,7 +969,8 @@ namespace MagiRogue.System.Planet {
             }
         }
 
-        private static void DigRiver(River river) {
+        private static void DigRiver(River river)
+        {
             int counter = 0;
 
             // How wide are we digging this river?
@@ -864,16 +990,19 @@ namespace MagiRogue.System.Planet {
 
             // randomize lenght of each size
             int count1 = GoRogue.Random.GlobalRandom.DefaultRNG.Next(fivemin, five);
-            if (size < 4) {
+            if (size < 4)
+            {
                 count1 = 0;
             }
             int count2 = count1 + GoRogue.Random.GlobalRandom.DefaultRNG.Next(fourmin, four);
-            if (size < 3) {
+            if (size < 3)
+            {
                 count2 = 0;
                 count1 = 0;
             }
             int count3 = count2 + GoRogue.Random.GlobalRandom.DefaultRNG.Next(threemin, three);
-            if (size < 2) {
+            if (size < 2)
+            {
                 count3 = 0;
                 count2 = 0;
                 count1 = 0;
@@ -881,48 +1010,66 @@ namespace MagiRogue.System.Planet {
             int count4 = count3 + GoRogue.Random.GlobalRandom.DefaultRNG.Next(twomin, two);
 
             // Make sure we are not digging past the river path
-            if (count4 > river.Length) {
+            if (count4 > river.Length)
+            {
                 int extra = count4 - river.Length;
-                while (extra > 0) {
+                while (extra > 0)
+                {
                     if (count1 > 0) { count1--; count2--; count3--; count4--; extra--; } else if (count2 > 0) { count2--; count3--; count4--; extra--; } else if (count3 > 0) { count3--; count4--; extra--; } else if (count4 > 0) { count4--; extra--; }
                 }
             }
 
             // Dig it out
-            for (int i = river.Tiles.Count - 1; i >= 0; i--) {
+            for (int i = river.Tiles.Count - 1; i >= 0; i--)
+            {
                 WorldTile t = river.Tiles[i];
 
-                if (counter < count1) {
+                if (counter < count1)
+                {
                     t.DigRiver(river, 4);
-                } else if (counter < count2) {
+                }
+                else if (counter < count2)
+                {
                     t.DigRiver(river, 3);
-                } else if (counter < count3) {
+                }
+                else if (counter < count3)
+                {
                     t.DigRiver(river, 2);
-                } else if (counter < count4) {
+                }
+                else if (counter < count4)
+                {
                     t.DigRiver(river, 1);
-                } else {
+                }
+                else
+                {
                     t.DigRiver(river, 0);
                 }
                 counter++;
             }
         }
 
-        private void AdjustMoistureMap() {
-            for (var x = 0; x < _width; x++) {
-                for (var y = 0; y < _height; y++) {
+        private void AdjustMoistureMap()
+        {
+            for (var x = 0; x < _width; x++)
+            {
+                for (var y = 0; y < _height; y++)
+                {
                     WorldTile t = tiles[x, y];
-                    if (t.HeightType == HeightType.River) {
+                    if (t.HeightType == HeightType.River)
+                    {
                         AddMoisture(t, (int)60);
                     }
                 }
             }
         }
 
-        private void AddMoisture(WorldTile t, int radius) {
+        private void AddMoisture(WorldTile t, int radius)
+        {
             Point center = new(t.Position.X, t.Position.Y);
             int curr = radius;
 
-            while (curr > 0) {
+            while (curr > 0)
+            {
                 int x1 = MathMagi.Mod(t.Position.X - curr, _width);
                 int x2 = MathMagi.Mod(t.Position.X + curr, _width);
                 int y = t.Position.Y;
@@ -930,7 +1077,8 @@ namespace MagiRogue.System.Planet {
                 AddMoisture(tiles[x1, y],
                     (int)(0.025f / (center - new SadRogue.Primitives.Point(x1, y)).PointMagnitude()));
 
-                for (int i = 0; i < curr; i++) {
+                for (int i = 0; i < curr; i++)
+                {
                     AddMoisture(tiles[x1, MathMagi.Mod(y + i + 1, _height)],
                         (int)(0.025f / (center - new SadRogue.Primitives.Point(x1,
                         MathMagi.Mod(y + i + 1, _height))).PointMagnitude()));
@@ -950,16 +1098,20 @@ namespace MagiRogue.System.Planet {
         }
 
         // Dig river based on a parent river vein
-        private static void DigRiver(River river, River parent) {
+        private static void DigRiver(River river, River parent)
+        {
             int intersectionID = 0;
             int intersectionSize = 0;
 
             // determine point of intersection
-            for (int i = 0; i < river.Tiles.Count; i++) {
+            for (int i = 0; i < river.Tiles.Count; i++)
+            {
                 WorldTile t1 = river.Tiles[i];
-                for (int j = 0; j < parent.Tiles.Count; j++) {
+                for (int j = 0; j < parent.Tiles.Count; j++)
+                {
                     WorldTile t2 = parent.Tiles[j];
-                    if (t1 == t2) {
+                    if (t1 == t2)
+                    {
                         intersectionID = i;
                         intersectionSize = t2.RiverSize;
                     }
@@ -984,16 +1136,19 @@ namespace MagiRogue.System.Planet {
 
             // randomize length of each size
             int count1 = GoRogue.Random.GlobalRandom.DefaultRNG.Next(fivemin, five);
-            if (size < 4) {
+            if (size < 4)
+            {
                 count1 = 0;
             }
             int count2 = count1 + GoRogue.Random.GlobalRandom.DefaultRNG.Next(fourmin, four);
-            if (size < 3) {
+            if (size < 3)
+            {
                 count2 = 0;
                 count1 = 0;
             }
             int count3 = count2 + GoRogue.Random.GlobalRandom.DefaultRNG.Next(threemin, three);
-            if (size < 2) {
+            if (size < 2)
+            {
                 count3 = 0;
                 count2 = 0;
                 count1 = 0;
@@ -1001,29 +1156,40 @@ namespace MagiRogue.System.Planet {
             int count4 = count3 + GoRogue.Random.GlobalRandom.DefaultRNG.Next(twomin, two);
 
             // Make sure we are not digging past the river path
-            if (count4 > river.Length) {
+            if (count4 > river.Length)
+            {
                 int extra = count4 - river.Length;
-                while (extra > 0) {
+                while (extra > 0)
+                {
                     if (count1 > 0) { count1--; count2--; count3--; count4--; extra--; } else if (count2 > 0) { count2--; count3--; count4--; extra--; } else if (count3 > 0) { count3--; count4--; extra--; } else if (count4 > 0) { count4--; extra--; }
                 }
             }
 
             // adjust size of river at intersection point
-            if (intersectionSize == 1) {
+            if (intersectionSize == 1)
+            {
                 count4 = intersectionCount;
                 count1 = 0;
                 count2 = 0;
                 count3 = 0;
-            } else if (intersectionSize == 2) {
+            }
+            else if (intersectionSize == 2)
+            {
                 count3 = intersectionCount;
                 count1 = 0;
                 count2 = 0;
-            } else if (intersectionSize == 3) {
+            }
+            else if (intersectionSize == 3)
+            {
                 count2 = intersectionCount;
                 count1 = 0;
-            } else if (intersectionSize == 4) {
+            }
+            else if (intersectionSize == 4)
+            {
                 count1 = intersectionCount;
-            } else {
+            }
+            else
+            {
                 count1 = 0;
                 count2 = 0;
                 count3 = 0;
@@ -1031,31 +1197,45 @@ namespace MagiRogue.System.Planet {
             }
 
             // dig out the river
-            for (int i = river.Tiles.Count - 1; i >= 0; i--) {
+            for (int i = river.Tiles.Count - 1; i >= 0; i--)
+            {
                 WorldTile t = river.Tiles[i];
 
-                if (counter < count1) {
+                if (counter < count1)
+                {
                     t.DigRiver(river, 4);
-                } else if (counter < count2) {
+                }
+                else if (counter < count2)
+                {
                     t.DigRiver(river, 3);
-                } else if (counter < count3) {
+                }
+                else if (counter < count3)
+                {
                     t.DigRiver(river, 2);
-                } else if (counter < count4) {
+                }
+                else if (counter < count4)
+                {
                     t.DigRiver(river, 1);
-                } else {
+                }
+                else
+                {
                     t.DigRiver(river, 0);
                 }
                 counter++;
             }
         }
 
-        public BiomeType GetBiomeType(WorldTile tile) {
+        public BiomeType GetBiomeType(WorldTile tile)
+        {
             return biomeTable[(int)tile.MoistureType, (int)tile.HeatType];
         }
 
-        private void GenerateBiomeMap() {
-            for (var x = 0; x < _width; x++) {
-                for (var y = 0; y < _height; y++) {
+        private void GenerateBiomeMap()
+        {
+            for (var x = 0; x < _width; x++)
+            {
+                for (var y = 0; y < _height; y++)
+                {
                     if (!tiles[x, y].Collidable) continue;
 
                     WorldTile t = tiles[x, y];
@@ -1064,9 +1244,12 @@ namespace MagiRogue.System.Planet {
             }
         }
 
-        private void UpdateBiomeBitmask() {
-            for (var x = 0; x < _width; x++) {
-                for (var y = 0; y < _height; y++) {
+        private void UpdateBiomeBitmask()
+        {
+            for (var x = 0; x < _width; x++)
+            {
+                for (var y = 0; y < _height; y++)
+                {
                     tiles[x, y].UpdateBiomeBitmask();
                 }
             }
