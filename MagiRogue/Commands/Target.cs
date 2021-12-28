@@ -233,28 +233,35 @@ namespace MagiRogue.Commands
         {
             TargetList.Clear();
             TravelPath = GameLoop.Universe.CurrentMap.AStar.ShortestPath(OriginCoord, e.NewValue);
-            foreach (Point pos in TravelPath.Steps)
+            try
             {
-                // gets each point in the travel path steps and change the background of the wall
-                var halp = GameLoop.Universe.CurrentMap.GetTileAt<TileBase>(pos);
-                halp.Background = Color.Yellow;
-                tileDictionary.TryAdd(pos, halp);
-            }
-
-            // This loops makes sure that all the pos that aren't in the TravelPath gets it's proper appearence
-            foreach (Point item in tileDictionary.Keys)
-            {
-                if (!TravelPath.Steps.Contains(item))
+                foreach (Point pos in TravelPath.Steps)
                 {
-                    TileBase llop = GameLoop.Universe.CurrentMap.GetTileAt<TileBase>(item);
-                    if (llop is not null)
+                    // gets each point in the travel path steps and change the background of the wall
+                    var halp = GameLoop.Universe.CurrentMap.GetTileAt<TileBase>(pos);
+                    halp.Background = Color.Yellow;
+                    tileDictionary.TryAdd(pos, halp);
+                }
+
+                // This loops makes sure that all the pos that aren't in the TravelPath gets it's proper appearence
+                foreach (Point item in tileDictionary.Keys)
+                {
+                    if (!TravelPath.Steps.Contains(item))
                     {
-                        llop.Background = llop.LastSeenAppereance.Background;
+                        TileBase llop = GameLoop.Universe.CurrentMap.GetTileAt<TileBase>(item);
+                        if (llop is not null)
+                        {
+                            llop.Background = llop.LastSeenAppereance.Background;
+                        }
                     }
                 }
-            }
 
-            SpellAreaHelper();
+                SpellAreaHelper();
+            }
+            catch (Exception)
+            {
+                throw new Exception("An error occured in the Cursor targetting!");
+            }
         }
 
         private void SpellAreaHelper()
