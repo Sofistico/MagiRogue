@@ -47,6 +47,7 @@ namespace MagiRogue.System
         public Player Player { get; set; }
 
         public TimeSystem Time { get; private set; }
+        public bool PossibleChangeMap { get; internal set; } = true;
 
         /// <summary>
         /// Creates a new game world and stores it in a
@@ -64,6 +65,7 @@ namespace MagiRogue.System
                     planetMaxCivs);
                 maxChunks = planetWidth * planetHeight;
                 allChunks = new RegionChunk[maxChunks];
+                AllMaps.Add(WorldMap.AssocietatedMap);
 
                 CurrentMap = WorldMap.AssocietatedMap;
                 PlacePlayerOnWorld(player);
@@ -137,6 +139,7 @@ namespace MagiRogue.System
 
         public void ChangePlayerMap(Map mapToGo, Point pos)
         {
+            CurrentMap.LastPlayerPosition =  new Point(Player.Position.X, Player.Position.Y);
             ChangeActorMap(Player, mapToGo, pos);
             CurrentMap = mapToGo;
             GameLoop.UIManager.MapWindow.LoadMap(CurrentMap);
@@ -145,8 +148,8 @@ namespace MagiRogue.System
 
         public void ChangeActorMap(Entity entity, Map mapToGo, Point pos)
         {
-            mapToGo.Add(entity);
             entity.Position = pos;
+            mapToGo.Add(entity);
             if (!AllMaps.Contains(mapToGo))
                 AddMapToList(mapToGo);
         }
@@ -405,6 +408,14 @@ namespace MagiRogue.System
 
         public RegionChunk GetChunckByPos(Point playerPoint) =>
             allChunks[Point.ToIndex(playerPoint.X, playerPoint.Y, planetWidth)];
+
+        public bool MapIsWorld()
+        {
+            if (CurrentMap == WorldMap.AssocietatedMap)
+                return true;
+            else
+                return false;
+        }
     }
 
     /// <summary>

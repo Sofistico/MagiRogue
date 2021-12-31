@@ -135,6 +135,11 @@ namespace MagiRogue.UI
             {
                 return CommandManager.EnterDownMovement(GetPlayer.Position);
             }
+            // Work around for a < symbol, must be top to not make the char wait
+            if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.OemComma))
+            {
+                return CommandManager.EnterUpMovement(GetPlayer.Position);
+            }
             if (HandleMove(info, world))
             {
                 if (!GetPlayer.Bumped && world.CurrentMap.ControlledEntitiy is Player)

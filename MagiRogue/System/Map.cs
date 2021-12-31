@@ -55,6 +55,8 @@ namespace MagiRogue.System
             }
         }
 
+        public Point LastPlayerPosition { get; set; }
+
         public string MapName { get; }
 
         #endregion Properties
@@ -64,11 +66,11 @@ namespace MagiRogue.System
         /// <summary>
         /// Build a new map with a specified width and height, has entity layers,
         /// they being 0-Furniture, 1-ghosts, 2-Items, 3-Actors, 4-Player.
-        /// \nAll Maps must have 50x50 size, for a total of 2500 tiles inside of it, for chunck loading.
+        /// \nAll Maps must have 60x60 size, for a total of 3600 tiles inside of it, for chunck loading.
         /// </summary>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public Map(string mapName, int width = 50, int height = 50) :
+        public Map(string mapName, int width = 60, int height = 60) :
             base(CreateTerrain(width, height), Enum.GetNames(typeof(MapLayer)).Length - 1,
             Distance.Euclidean,
             entityLayersSupportingMultipleItems: LayerMasker.DEFAULT.Mask
@@ -323,6 +325,11 @@ namespace MagiRogue.System
 
         public void ConfigureRender(SadConsole.Console renderer)
         {
+            if (renderer.SadComponents.Contains(_entityRender))
+            {
+                return;
+            }
+            _entityRender = new();
             renderer.SadComponents.Add(_entityRender);
             _entityRender.DoEntityUpdate = true;
 
@@ -347,7 +354,6 @@ namespace MagiRogue.System
         {
             Actor actor = (Actor)ControlledEntitiy;
             FovCalculate(actor);
-            PlayerFOV.Calculate(actor.Position, actor.Stats.ViewRadius, Radius.Circle);
         }
 
         /// <summary>

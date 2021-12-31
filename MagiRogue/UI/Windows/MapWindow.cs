@@ -56,6 +56,7 @@ namespace MagiRogue.UI.Windows
             //and borders, and position it away from borders
             int mapConsoleWidth = Width - 2;
             int mapConsoleHeight = Height - 2;
+            Children.Remove(MapConsole);
             MapConsole.Dispose();
 
             Rectangle rec =

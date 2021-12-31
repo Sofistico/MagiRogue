@@ -499,7 +499,8 @@ namespace MagiRogue.Commands
         public static bool EnterDownMovement(Point playerPoint)
         {
             Furniture possibleStairs = GameLoop.Universe.CurrentMap.GetEntityAt<Furniture>(playerPoint);
-            WorldTile? possibleWorldTileHere = GameLoop.Universe.CurrentMap.GetTileAt<WorldTile>(playerPoint);
+            WorldTile? possibleWorldTileHere =
+                GameLoop.Universe.CurrentMap.GetTileAt<WorldTile>(playerPoint);
             if (possibleStairs is not null && possibleStairs.FurnitureType == FurnitureType.StairsDown)
             {
                 Map map =
@@ -528,12 +529,59 @@ namespace MagiRogue.Commands
             {
                 RegionChunk chunk = GameLoop.Universe.GetChunckByPos(playerPoint);
                 GameLoop.Universe.ChangePlayerMap(chunk.LocalMaps[0],
-                    chunk.LocalMaps[0].GetRandomWalkableTile());
+                    chunk.LocalMaps[0].LastPlayerPosition);
                 return true;
             }
             else
             {
                 GameLoop.UIManager.MessageLog.Add("There is nowhere to go!");
+                return false;
+            }
+        }
+
+        public static bool EnterUpMovement(Point playerPoint)
+        {
+            bool possibleChangeMap = GameLoop.Universe.PossibleChangeMap;
+            Furniture possibleStairs =
+                GameLoop.Universe.CurrentMap.GetEntityAt<Furniture>(playerPoint);
+
+            if (possibleChangeMap)
+            {
+                if (possibleStairs is not null && !GameLoop.Universe.MapIsWorld())
+                {
+                    Map map = GameLoop.Universe.AllMaps.FirstOrDefault
+                        (m => m == possibleStairs.MapConnection);
+                    // TODO: For now it's just a test, need to work out a better way to do it.
+                    GameLoop.Universe.ChangePlayerMap(map, map.GetRandomWalkableTile());
+
+                    return true;
+                }
+                else if (!GameLoop.Universe.MapIsWorld())
+                {
+                    Map map = GameLoop.Universe.WorldMap.AssocietatedMap;
+                    Point playerLastPos = GameLoop.Universe.WorldMap.AssocietatedMap.LastPlayerPosition;
+                    GameLoop.Universe.ChangePlayerMap(map, playerLastPos);
+                    return true;
+                }
+                else if (GameLoop.Universe.MapIsWorld())
+                {
+                    GameLoop.UIManager.MessageLog.Add("Can't go to the overworld since you are there!");
+                    return false;
+                }
+                else if (possibleStairs is null && !GameLoop.Universe.MapIsWorld())
+                {
+                    GameLoop.UIManager.MessageLog.Add("Can't go up here!");
+                    return false;
+                }
+                else
+                {
+                    GameLoop.UIManager.MessageLog.Add("Can't exit the map!");
+                    return false;
+                }
+            }
+            else
+            {
+                GameLoop.UIManager.MessageLog.Add("You can't change the map right now!");
                 return false;
             }
         }
