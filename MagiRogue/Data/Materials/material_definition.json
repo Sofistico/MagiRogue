@@ -74,7 +74,7 @@
     "Id": "h20",
     "Name": "Water",
     "Flamability": false,
-    "Hardness": 3,
+    "Hardness": 0,
     "MPInfusionLimit": 1,
     "CanRegen": true,
     "Density": 1.1,
@@ -101,5 +101,13 @@
   {
     "Id": "null",
     "Name": "Null"
+  },
+  {
+    "Id": "ice",
+    "Name": "Ice",
+    "Hardness": 1,
+    "MPInfusionLimit": 5,
+    "Density": 0.917,
+    "MeltingPoint": 0
   }
 ]

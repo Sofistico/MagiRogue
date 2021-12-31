@@ -205,13 +205,6 @@ namespace MagiRogue.System
                 map.ControlledEntitiy = null;
                 map.Remove(entity);
             }
-            // Initilizes the field of view of the player, will do different for monsters
-            if (entity is Player player)
-            {
-                FovCalculate(player);
-                ControlledEntitiy = player;
-                ForceFovCalculation();
-            }
 
             try
             {
@@ -224,6 +217,13 @@ namespace MagiRogue.System
 #if DEBUG
                 Debug.Print("An entity tried to telefrag in a place where it couldn't");
 #endif
+            }
+            // Initilizes the field of view of the player, will do different for monsters
+            if (entity is Player player)
+            {
+                FovCalculate(player);
+                ControlledEntitiy = player;
+                ForceFovCalculation();
             }
 
             _entityRender.Add(entity);
@@ -345,7 +345,9 @@ namespace MagiRogue.System
         /// </summary>
         public void ForceFovCalculation()
         {
-            FovCalculate((Actor)ControlledEntitiy);
+            Actor actor = (Actor)ControlledEntitiy;
+            FovCalculate(actor);
+            PlayerFOV.Calculate(actor.Position, actor.Stats.ViewRadius, Radius.Circle);
         }
 
         /// <summary>

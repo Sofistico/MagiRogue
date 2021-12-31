@@ -404,7 +404,7 @@ namespace MagiRogue.Commands
             GameLoop.World.AllMaps.Clear();
             GameLoop.World.AllMaps = null;*/
 
-            GameLoop.Universe.PlanetMap = new PlanetGenerator().CreatePlanet(500, 500);
+            GameLoop.Universe.WorldMap = new PlanetGenerator().CreatePlanet(500, 500);
         }
 
 #endif

@@ -1,5 +1,6 @@
 ﻿using MagiRogue.Data;
 using MagiRogue.Entities;
+using MagiRogue.System.Planet;
 using MagiRogue.System.Tiles;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
@@ -187,7 +188,7 @@ namespace MagiRogue.System
             }
         }
 
-        private void ConnectWithRoads()
+        private void ConnectWithRoads(Point start, Point end)
         {
         }
 
@@ -443,6 +444,189 @@ namespace MagiRogue.System
                 return true;
             }
             return false;
+        }
+
+        public Map[] GenerateMapWithWorldParam(PlanetMap worldMap, Point posGenerated)
+        {
+            Map[] map = new Map[RegionChunk.MAX_LOCAL_MAPS];
+            WorldTile worldTile = worldMap.AssocietatedMap.GetTileAt<WorldTile>(posGenerated);
+
+            for (int i = 0; i < map.Length; i++)
+            {
+                Map completeMap = DetermineBiomeLookForTile(worldTile);
+                if (completeMap is not null)
+                {
+                    ApplyModifierToTheMap(completeMap, worldTile);
+                    FinishingTouches(completeMap, worldTile);
+                    map[i] = completeMap;
+                }
+                else
+                {
+                    throw new Exception("Map was null when generating for the chunck!");
+                }
+            }
+
+            return map;
+        }
+
+        /// <summary>
+        /// Tweking the final result to be "better"
+        /// </summary>
+        /// <param name="completeMap"></param>
+        /// <param name="worldTile"></param>
+        private void FinishingTouches(Map completeMap, WorldTile worldTile)
+        {
+        }
+
+        /// <summary>
+        /// If the map has any modifer, like strong magic aura, cities, roads and particulaly civs
+        /// \nAnything that changes the composition of the World Tile map.
+        /// Trees also spawn here
+        /// </summary>
+        /// <param name="completeMap"></param>
+        /// <param name="worldTile"></param>
+        private void ApplyModifierToTheMap(Map completeMap, WorldTile worldTile)
+        {
+        }
+
+        private Map DetermineBiomeLookForTile(WorldTile worldTile)
+        {
+            Map map = null;
+            switch (worldTile.BiomeType)
+            {
+                case BiomeType.Sea:
+                    map = GenericSeaMap(worldTile);
+                    break;
+
+                case BiomeType.Desert:
+                    map = GenericDesertMap(worldTile);
+                    break;
+
+                case BiomeType.Savanna:
+                    map = GenericSavannaMap(worldTile);
+                    break;
+
+                case BiomeType.TropicalRainforest:
+                    map = GenericTropicalRainforest(worldTile);
+                    break;
+
+                case BiomeType.Grassland:
+                    map = GenericGrassland(worldTile);
+                    break;
+
+                case BiomeType.Woodland:
+                    map = GenericWoodLands(worldTile);
+                    break;
+
+                case BiomeType.SeasonalForest:
+                    map = GenericSeasonalForests(worldTile);
+                    break;
+
+                case BiomeType.TemperateRainforest:
+                    map = GenericTemperateRainForest(worldTile);
+                    break;
+
+                case BiomeType.BorealForest:
+                    map = GenericBorealForest(worldTile);
+                    break;
+
+                case BiomeType.Tundra:
+                    map = GenericTundra(worldTile);
+                    break;
+
+                case BiomeType.Ice:
+                    map = GenericIceMap(worldTile);
+                    break;
+
+                default:
+                    throw new Exception("Cound't find the biome to generate a map!");
+            }
+            return map;
+        }
+
+        private Map GenericIceMap(WorldTile worldTile)
+        {
+            Map map = new Map($"{worldTile.BiomeType}");
+            for (int i = 0; i < map.Tiles.Length; i++)
+            {
+                Point pos = Point.FromIndex(i, map.Width);
+                TileBase tile = new TileFloor("Ice", pos, "ice", worldTile.Glyph,
+                    worldTile.Foreground,
+                    Color.Transparent);
+                map.SetTerrain(tile);
+            }
+
+            return map;
+        }
+
+        private Map GenericTundra(WorldTile worldTile)
+        {
+            Map map = new Map($"{worldTile.BiomeType}");
+
+            return map;
+        }
+
+        private Map GenericBorealForest(WorldTile worldTile)
+        {
+            Map map = new Map($"{worldTile.BiomeType}");
+
+            return map;
+        }
+
+        private Map GenericTemperateRainForest(WorldTile worldTile)
+        {
+            Map map = new Map($"{worldTile.BiomeType}");
+
+            return map;
+        }
+
+        private Map GenericSeasonalForests(WorldTile worldTile)
+        {
+            Map map = new Map($"{worldTile.BiomeType}");
+
+            return map;
+        }
+
+        private Map GenericWoodLands(WorldTile worldTile)
+        {
+            Map map = new Map($"{worldTile.BiomeType}");
+
+            return map;
+        }
+
+        private Map GenericGrassland(WorldTile worldTile)
+        {
+            Map map = new Map($"{worldTile.BiomeType}");
+
+            return map;
+        }
+
+        private Map GenericTropicalRainforest(WorldTile worldTile)
+        {
+            Map map = new Map($"{worldTile.BiomeType}");
+
+            return map;
+        }
+
+        private Map GenericSavannaMap(WorldTile worldTile)
+        {
+            Map map = new Map($"{worldTile.BiomeType}");
+
+            return map;
+        }
+
+        private Map GenericDesertMap(WorldTile worldTile)
+        {
+            Map map = new Map($"{worldTile.BiomeType}");
+
+            return map;
+        }
+
+        private Map GenericSeaMap(WorldTile worldTile)
+        {
+            Map map = new Map($"{worldTile.BiomeType}");
+
+            return map;
         }
 
         //Tries to create a TileDoor object in a specified Rectangle

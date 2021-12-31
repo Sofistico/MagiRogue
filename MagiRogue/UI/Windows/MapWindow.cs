@@ -33,7 +33,6 @@ namespace MagiRogue.UI.Windows
         public void CreateMapConsole()
         {
             MapConsole = new Console(Width, Height);
-            MapConsole.Font = SadConsole.Game.Instance.LoadFont("cp437_12x12.font");
         }
 
         // Adds the entire list of entities found in the
@@ -57,6 +56,7 @@ namespace MagiRogue.UI.Windows
             //and borders, and position it away from borders
             int mapConsoleWidth = Width - 2;
             int mapConsoleHeight = Height - 2;
+            MapConsole.Dispose();
 
             Rectangle rec =
                 new BoundedRectangle((0, 0, mapConsoleWidth, mapConsoleHeight), (0, 0, map.Width, map.Height)).Area;

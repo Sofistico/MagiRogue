@@ -42,6 +42,7 @@ namespace MagiRogue.Entities
             return name switch
             {
                 "Magic Lore" => AbilityName.MagicLore,
+                "Swin" => AbilityName.Swin,
                 _ => throw new AbilityNotFoundExepction("Cound't find the ability in the enum class"),
             };
         }
@@ -51,11 +52,13 @@ namespace MagiRogue.Entities
     {
         General,
         MagicLore,
+        Swin
     }
 
     public enum SpecialityType
     {
-        Combat
+        Combat,
+        Water,
     }
 
     public class AbilityNotFoundExepction : ApplicationException

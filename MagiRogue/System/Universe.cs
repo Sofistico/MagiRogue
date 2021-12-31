@@ -34,7 +34,7 @@ namespace MagiRogue.System
         /*private const int _zMaxUpLevel = 10;
         private const int _zMaxLowLevel = -10;*/
 
-        public PlanetMap PlanetMap { get; set; }
+        public PlanetMap WorldMap { get; set; }
 
         /// <summary>
         /// Stores the current map
@@ -59,13 +59,13 @@ namespace MagiRogue.System
 
             if (!testGame)
             {
-                PlanetMap = new PlanetGenerator().CreatePlanet(planetWidth,
+                WorldMap = new PlanetGenerator().CreatePlanet(planetWidth,
                     planetHeight,
                     planetMaxCivs);
                 maxChunks = planetWidth * planetHeight;
                 allChunks = new RegionChunk[maxChunks];
 
-                CurrentMap = PlanetMap.AssocietatedMap;
+                CurrentMap = WorldMap.AssocietatedMap;
                 PlacePlayerOnWorld(player);
 
                 /*// Build a map
@@ -92,7 +92,7 @@ namespace MagiRogue.System
         {
             if (player != null)
             {
-                Civilization startTown = PlanetMap.Civilizations
+                Civilization startTown = WorldMap.Civilizations
                     .FirstOrDefault(a => a.Tendency == CivilizationTendency.Normal);
                 player.Position = startTown.Territory.OwnedLand.WorldTiles[0].Position;
                 player.Description = "Here is you, you are beautiful";
@@ -140,6 +140,7 @@ namespace MagiRogue.System
             ChangeActorMap(Player, mapToGo, pos);
             CurrentMap = mapToGo;
             GameLoop.UIManager.MapWindow.LoadMap(CurrentMap);
+            GameLoop.UIManager.MapWindow.CenterOnActor(Player);
         }
 
         public void ChangeActorMap(Entity entity, Map mapToGo, Point pos)
@@ -361,6 +362,8 @@ namespace MagiRogue.System
             Player = null;
             AllMaps.Clear();
             AllMaps = null;
+            allChunks = null;
+            WorldMap = null;
 
             GameLoop.UIManager.MainMenu.RestartGame();
         }
@@ -392,8 +395,10 @@ namespace MagiRogue.System
         {
             RegionChunk newChunck = new RegionChunk(posGenerated);
 
-            allChunks[Point.ToIndex(posGenerated.X, posGenerated.Y, planetWidth)]
-                = newChunck;
+            MapGenerator genMap = new MapGenerator();
+            newChunck.LocalMaps = genMap.GenerateMapWithWorldParam(WorldMap, posGenerated);
+
+            allChunks[Point.ToIndex(posGenerated.X, posGenerated.Y, planetWidth)] = newChunck;
 
             return newChunck;
         }
@@ -411,7 +416,7 @@ namespace MagiRogue.System
         /// <summary>
         /// The max amount of local maps the region chunks hold, should be 3*3 = 9 maps.
         /// </summary>
-        private const int MAX_LOCAL_CHUNCKS = 3 * 3;
+        public const int MAX_LOCAL_MAPS = 3 * 3;
 
         public int X { get; }
         public int Y { get; }
@@ -421,14 +426,14 @@ namespace MagiRogue.System
         {
             X = x;
             Y = y;
-            LocalMaps = new Map[MAX_LOCAL_CHUNCKS];
+            LocalMaps = new Map[MAX_LOCAL_MAPS];
         }
 
         public RegionChunk(Point point)
         {
             X = point.X;
             Y = point.Y;
-            LocalMaps = new Map[MAX_LOCAL_CHUNCKS];
+            LocalMaps = new Map[MAX_LOCAL_MAPS];
         }
 
         public Point ChunckPos() => new Point(X, Y);

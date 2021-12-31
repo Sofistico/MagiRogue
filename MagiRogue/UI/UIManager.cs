@@ -136,7 +136,7 @@ namespace MagiRogue.UI
         {
             if (GameLoop.Universe != null && GameLoop.Universe.CurrentMap != null
                 && (GameLoop.Universe.CurrentMap.ControlledEntitiy != null
-                || GameLoop.Universe.PlanetMap.AssocietatedMap == GameLoop.Universe.CurrentMap))
+                || GameLoop.Universe.WorldMap.AssocietatedMap == GameLoop.Universe.CurrentMap))
             {
                 if (KeyboardHandle.HandleMapKeys(info, this, GameLoop.Universe))
                 {

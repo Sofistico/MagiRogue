@@ -304,8 +304,8 @@ namespace MagiRogue.UI
 
         private static bool CurrentMapIsPlanetView(Universe world)
         {
-            if (world.PlanetMap != null
-                && world.PlanetMap.AssocietatedMap == world.CurrentMap && world.Player == null)
+            if (world.WorldMap != null
+                && world.WorldMap.AssocietatedMap == world.CurrentMap && world.Player == null)
                 return true;
             else
                 return false;
