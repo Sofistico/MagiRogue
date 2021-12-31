@@ -55,7 +55,7 @@ namespace MagiRogue.Commands
             SadConsole.Effects.Blink blink = new SadConsole.Effects.Blink()
             {
                 BlinkCount = -1,
-                BlinkSpeed = 1.3,
+                BlinkSpeed = TimeSpan.FromSeconds(1.3),
                 UseCellBackgroundColor = true
             };
             Cursor.Effect = blink;
