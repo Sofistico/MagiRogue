@@ -1,14 +1,14 @@
-﻿using MagiRogue.Entities;
+﻿using GoRogue.Pathing;
+using MagiRogue.Entities;
 using MagiRogue.System;
 using MagiRogue.System.Magic;
 using MagiRogue.System.Tiles;
+using MagiRogue.UI.Windows;
+using MagiRogue.Utils;
 using SadRogue.Primitives;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using GoRogue.Pathing;
-using MagiRogue.UI.Windows;
-using System;
-using MagiRogue.Utils;
 
 namespace MagiRogue.Commands
 {

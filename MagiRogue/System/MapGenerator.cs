@@ -13,16 +13,20 @@ namespace MagiRogue.System
     // based on tunnelling room generation algorithm
     // from RogueSharp tutorial
     // https://roguesharp.wordpress.com/2016/03/26/roguesharp-v3-tutorial-simple-room-generation/
+    // TODO: Refactor this whole class
     public class MapGenerator
     {
-        private readonly Random randNum = new();
+        protected readonly Random randNum = new();
+        protected Map _map; // Temporarily store the map currently worked on
 
         // Empty constructor
         public MapGenerator()
         {
         }
 
-        private Map _map; // Temporarily store the map currently worked on
+        public MapGenerator(Map map) => _map = map;
+
+        #region GeneralMapGen
 
         public Map GenerateMazeMap(int maxRooms, int minRoomSize, int maxRoomSize)
         {
@@ -114,45 +118,7 @@ namespace MagiRogue.System
             return _map;
         }
 
-        public Map GenerateTownMap(int maxRooms, int minRoomSize, int maxRoomSize)
-        {
-            _map = new Map("Town of Salazar");
-
-            PrepareForFloorsWithGrass();
-
-            List<Room> rooms = new List<Room>();
-
-            for (int i = 0; i < maxRooms; i++)
-            {
-                int newRoomWidht = randNum.Next(minRoomSize, maxRoomSize);
-                int newRoomHeight = randNum.Next(minRoomSize, maxRoomSize);
-
-                // sets the room's X/Y Position at a random point between the edges of the map
-                int newRoomX = randNum.Next(0, _map.Width - newRoomWidht - 1);
-                int newRoomY = randNum.Next(0, _map.Height - newRoomHeight - 1);
-
-                Rectangle rectangle = new Rectangle(newRoomX, newRoomY, newRoomWidht, newRoomHeight);
-                Room newRoom = new Room(rectangle);
-
-                bool doesRoomIntersect = rooms.Any(room => newRoom.RoomRectangle.Intersects(room.RoomRectangle));
-
-                if (!doesRoomIntersect)
-                    rooms.Add(newRoom);
-            }
-
-            foreach (var room in rooms)
-            {
-                CreateRoom(room.RoomRectangle);
-                CreateDoor(room);
-                room.LockDoorsRng();
-            }
-
-            InsertStairs(rooms[0]);
-
-            return _map;
-        }
-
-        private void InsertStairs(Room room)
+        protected void InsertStairs(Room room)
         {
             Furniture stairsDown = new Furniture(Color.White, Color.Black, '>', room.RoomRectangle.Center,
                 (int)MapLayer.FURNITURE, FurnitureType.StairsDown);
@@ -163,7 +129,7 @@ namespace MagiRogue.System
             _map.Add(stairsDown);
         }
 
-        private void PrepareForFloors()
+        protected void PrepareForFloors()
         {
             foreach (var pos in _map.Positions())
             {
@@ -171,7 +137,7 @@ namespace MagiRogue.System
             }
         }
 
-        private void PrepareForFloorsWithGrass()
+        protected void PrepareForFloorsWithGrass()
         {
             foreach (var pos in _map.Positions())
             {
@@ -179,7 +145,7 @@ namespace MagiRogue.System
             }
         }
 
-        private void PrepareForAnyFloor(TileFloor floor)
+        protected void PrepareForAnyFloor(TileFloor floor)
         {
             foreach (var pos in _map.Positions())
             {
@@ -188,11 +154,21 @@ namespace MagiRogue.System
             }
         }
 
-        private void ConnectWithRoads(Point start, Point end)
+        protected void PrepareForAnyFloor(TileFloor floor, Map map)
+        {
+            for (int i = 0; i < map.Tiles.Length; i++)
+            {
+                Point pos = Point.FromIndex(i, map.Width);
+                floor.Position = pos;
+                map.SetTerrain(floor);
+            }
+        }
+
+        protected void ConnectWithRoads(Point start, Point end)
         {
         }
 
-        private void PrepareForOuterWalls()
+        protected void PrepareForOuterWalls()
         {
             foreach (var pos in _map.Positions())
             {
@@ -207,7 +183,7 @@ namespace MagiRogue.System
         // which determines its size and position on the map
         // Walls are placed at the perimeter of the room
         // Floors are placed in the interior area of the room
-        private void CreateRoom(Rectangle room)
+        protected void CreateRoom(Rectangle room)
         {
             // Place floors in interior area
             for (int x = room.ToMonoRectangle().Left + 1; x < room.ToMonoRectangle().Right; x++)
@@ -228,7 +204,7 @@ namespace MagiRogue.System
         }
 
         // Creates a Floor tile at the specified X/Y location
-        private void CreateStoneFloor(Point location)
+        protected void CreateStoneFloor(Point location)
         {
             TileFloor floor = new TileFloor(location);
 
@@ -236,22 +212,22 @@ namespace MagiRogue.System
             _map.SetTerrain(floor);
         }
 
-        // Creates a Floor tile at the specified X/Y location
-        private void CreateAnyFloor(TileFloor floor) =>
-            // a simple setterrain already does it for me
-            _map.SetTerrain(floor);
-
         // Creates a Wall tile at the specified X/Y location
-        private void CreateStoneWall(Point location)
+        protected void CreateStoneWall(Point location)
         {
             TileWall wall = new TileWall(location);
             _map.SetTerrain(wall);
         }
 
-        private void CreateAnyWall(TileWall wall) => _map.SetTerrain(wall);
+        protected void CreateAnyWall(TileWall wall) => _map.SetTerrain(wall);
+
+        protected void CreateAnyWall(TileWall wall, Map map)
+        {
+            map.SetTerrain(wall);
+        }
 
         // Fills the map with walls
-        private void FloodWalls()
+        protected void FloodWalls()
         {
             for (int i = 0; i < _map.Tiles.Length; i++)
             {
@@ -261,7 +237,7 @@ namespace MagiRogue.System
         }
 
         // Returns a list of points expressing the perimeter of a rectangle
-        private List<Point> GetBorderCellLocations(Rectangle room)
+        protected List<Point> GetBorderCellLocations(Rectangle room)
         {
             //establish room boundaries
             int xMin = room.ToMonoRectangle().Left;
@@ -279,7 +255,7 @@ namespace MagiRogue.System
             return borderCells;
         }
 
-        private void PlaceNodes(int nodes)
+        protected void PlaceNodes(int nodes)
         {
             for (int i = 0; i < nodes; i++)
             {
@@ -341,7 +317,7 @@ namespace MagiRogue.System
 
         // sets X coordinate between right and left edges of map
         // to prevent any out-of-bounds errors
-        private int ClampX(int x)
+        protected int ClampX(int x)
         {
             if (x < 0)
                 x = 0;
@@ -354,7 +330,7 @@ namespace MagiRogue.System
 
         // sets Y coordinate between top and bottom edges of map
         // to prevent any out-of-bounds errors
-        private int ClampY(int y)
+        protected int ClampY(int y)
         {
             if (y < 0)
                 y = 0;
@@ -366,7 +342,7 @@ namespace MagiRogue.System
         }
 
         // carve a tunnel out of the map parallel to the x-axis
-        private void CreateHorizontalTunnel(int xStart, int xEnd, int yPosition)
+        protected void CreateHorizontalTunnel(int xStart, int xEnd, int yPosition)
         {
             for (int x = Math.Min(xStart, xEnd); x <= Math.Max(xStart, xEnd); x++)
             {
@@ -375,7 +351,7 @@ namespace MagiRogue.System
         }
 
         // carve a tunnel using the y-axis
-        private void CreateVerticalTunnel(int yStart, int yEnd, int xPosition)
+        protected void CreateVerticalTunnel(int yStart, int yEnd, int xPosition)
         {
             for (int y = Math.Min(yStart, yEnd); y <= Math.Max(yStart, yEnd); y++)
             {
@@ -388,7 +364,7 @@ namespace MagiRogue.System
         // Returns true if it's a good spot for a door
         // Returns false if there is a Tile that IsBlockingMove=true
         // at that location
-        private bool IsPotentialDoor(Point location)
+        protected bool IsPotentialDoor(Point location)
         {
             //if the target location is not walkable
             //then it's a wall and not a good place for a door
@@ -444,6 +420,130 @@ namespace MagiRogue.System
                 return true;
             }
             return false;
+        }
+
+        //Tries to create a TileDoor object in a specified Rectangle
+        //perimeter. Reads through the entire list of tiles comprising
+        //the perimeter, and determines if each position is a viable
+        //candidate for a door.
+        //When it finds a potential position, creates a closed and
+        //unlocked door.
+        protected void CreateDoor(Room room, bool acceptsMoreThanOneDoor = false)
+        {
+            List<Point> borderCells = GetBorderCellLocations(room.RoomRectangle);
+            bool alreadyHasDoor = false;
+
+            //go through every border cell and look for potential door candidates
+            foreach (Point location in borderCells)
+            {
+                //int locationIndex = location.ToIndex(_map.Width);
+                if (IsPotentialDoor(location) && !alreadyHasDoor)
+                {
+                    // Create a new door that is closed and unlocked.
+                    TileDoor newDoor = new(false, false, location, "stone");
+                    _map.SetTerrain(newDoor);
+                    if (!acceptsMoreThanOneDoor)
+                        alreadyHasDoor = true;
+                    room.Doors.Add(newDoor);
+                }
+            }
+        }
+
+        #endregion GeneralMapGen
+    }
+
+    public class Room
+    {
+        public Rectangle RoomRectangle { get; set; }
+        public RoomTag Tag { get; set; }
+        public List<TileDoor> Doors { get; set; } = new List<TileDoor>();
+
+        public Room(Rectangle roomRectangle, RoomTag tag)
+        {
+            RoomRectangle = roomRectangle;
+            Tag = tag;
+        }
+
+        public Room(Rectangle roomRectangle)
+        {
+            RoomRectangle = roomRectangle;
+            Tag = RoomTag.Generic;
+        }
+
+        public void LockDoorsRng()
+        {
+            int half = GoRogue.DiceNotation.Dice.Roll("1d2");
+
+            if (half == 1)
+            {
+                int indexDoor = GoRogue.Random.GlobalRandom.DefaultRNG.Next(Doors.Count);
+
+                Doors[indexDoor].Locked = true;
+            }
+        }
+
+        internal void ForceUnlock()
+        {
+            foreach (var door in Doors)
+            {
+                door.Locked = false;
+            }
+        }
+    }
+
+    public class CityGenerator : MapGenerator
+    {
+        public CityGenerator() : base()
+        {
+            // empty one
+        }
+
+        public Map GenerateTownMap(int maxRooms, int minRoomSize, int maxRoomSize)
+        {
+            _map = new Map("Town of Salazar");
+
+            PrepareForFloorsWithGrass();
+
+            List<Room> rooms = new List<Room>();
+
+            for (int i = 0; i < maxRooms; i++)
+            {
+                int newRoomWidht = randNum.Next(minRoomSize, maxRoomSize);
+                int newRoomHeight = randNum.Next(minRoomSize, maxRoomSize);
+
+                // sets the room's X/Y Position at a random point between the edges of the map
+                int newRoomX = randNum.Next(0, _map.Width - newRoomWidht - 1);
+                int newRoomY = randNum.Next(0, _map.Height - newRoomHeight - 1);
+
+                Rectangle rectangle = new Rectangle(newRoomX, newRoomY, newRoomWidht, newRoomHeight);
+                Room newRoom = new Room(rectangle);
+
+                bool doesRoomIntersect = rooms.Any(room => newRoom.RoomRectangle.Intersects(room.RoomRectangle));
+
+                if (!doesRoomIntersect)
+                    rooms.Add(newRoom);
+            }
+
+            foreach (var room in rooms)
+            {
+                CreateRoom(room.RoomRectangle);
+                CreateDoor(room);
+                room.LockDoorsRng();
+            }
+
+            InsertStairs(rooms[0]);
+
+            return _map;
+        }
+    }
+
+    public class WildernessGenerator : MapGenerator
+    {
+        #region PlanetMapGenStuff
+
+        public WildernessGenerator()
+        {
+            //Empty const
         }
 
         public Map[] GenerateMapWithWorldParam(PlanetMap worldMap, Point posGenerated)
@@ -550,10 +650,10 @@ namespace MagiRogue.System
             for (int i = 0; i < map.Tiles.Length; i++)
             {
                 Point pos = Point.FromIndex(i, map.Width);
-                TileBase tile = new TileFloor("Ice", pos, "ice", worldTile.Glyph,
+                TileFloor tile = new TileFloor("Ice", pos, "ice", worldTile.Glyph,
                     worldTile.Foreground,
                     Color.Transparent);
-                map.SetTerrain(tile);
+                PrepareForAnyFloor(tile, map);
             }
 
             return map;
@@ -629,71 +729,7 @@ namespace MagiRogue.System
             return map;
         }
 
-        //Tries to create a TileDoor object in a specified Rectangle
-        //perimeter. Reads through the entire list of tiles comprising
-        //the perimeter, and determines if each position is a viable
-        //candidate for a door.
-        //When it finds a potential position, creates a closed and
-        //unlocked door.
-        private void CreateDoor(Room room, bool acceptsMoreThanOneDoor = false)
-        {
-            List<Point> borderCells = GetBorderCellLocations(room.RoomRectangle);
-            bool alreadyHasDoor = false;
-
-            //go through every border cell and look for potential door candidates
-            foreach (Point location in borderCells)
-            {
-                //int locationIndex = location.ToIndex(_map.Width);
-                if (IsPotentialDoor(location) && !alreadyHasDoor)
-                {
-                    // Create a new door that is closed and unlocked.
-                    TileDoor newDoor = new(false, false, location, "stone");
-                    _map.SetTerrain(newDoor);
-                    if (!acceptsMoreThanOneDoor)
-                        alreadyHasDoor = true;
-                    room.Doors.Add(newDoor);
-                }
-            }
-        }
-    }
-
-    public class Room
-    {
-        public Rectangle RoomRectangle { get; set; }
-        public RoomTag Tag { get; set; }
-        public List<TileDoor> Doors { get; set; } = new List<TileDoor>();
-
-        public Room(Rectangle roomRectangle, RoomTag tag)
-        {
-            RoomRectangle = roomRectangle;
-            Tag = tag;
-        }
-
-        public Room(Rectangle roomRectangle)
-        {
-            RoomRectangle = roomRectangle;
-            Tag = RoomTag.Generic;
-        }
-
-        public void LockDoorsRng()
-        {
-            int half = GoRogue.DiceNotation.Dice.Roll("1d2");
-
-            if (half == 1)
-            {
-                int indexDoor = GoRogue.Random.GlobalRandom.DefaultRNG.Next(Doors.Count);
-
-                Doors[indexDoor].Locked = true;
-            }
-        }
-
-        internal void ForceUnlock()
-        {
-            foreach (var door in Doors)
-            {
-                door.Locked = false;
-            }
-        }
+        #endregion PlanetMapGenStuff
     }
 
     public enum RoomTag

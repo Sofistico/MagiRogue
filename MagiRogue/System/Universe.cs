@@ -139,7 +139,7 @@ namespace MagiRogue.System
 
         public void ChangePlayerMap(Map mapToGo, Point pos)
         {
-            CurrentMap.LastPlayerPosition =  new Point(Player.Position.X, Player.Position.Y);
+            CurrentMap.LastPlayerPosition = new Point(Player.Position.X, Player.Position.Y);
             ChangeActorMap(Player, mapToGo, pos);
             CurrentMap = mapToGo;
             GameLoop.UIManager.MapWindow.LoadMap(CurrentMap);
@@ -171,7 +171,7 @@ namespace MagiRogue.System
         // parameters to determine geometry
         private void CreateTownMap()
         {
-            MapGenerator mapGen = new();
+            CityGenerator mapGen = new();
             var map = mapGen.GenerateTownMap(_maxRooms, _minRoomSize, _maxRoomSize);
             CurrentMap = map;
             AddMapToList(map);
@@ -398,7 +398,7 @@ namespace MagiRogue.System
         {
             RegionChunk newChunck = new RegionChunk(posGenerated);
 
-            MapGenerator genMap = new MapGenerator();
+            WildernessGenerator genMap = new WildernessGenerator();
             newChunck.LocalMaps = genMap.GenerateMapWithWorldParam(WorldMap, posGenerated);
 
             allChunks[Point.ToIndex(posGenerated.X, posGenerated.Y, planetWidth)] = newChunck;
