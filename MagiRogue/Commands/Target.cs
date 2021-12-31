@@ -67,7 +67,8 @@ namespace MagiRogue.Commands
             tileDictionary = new Dictionary<Point, TileBase>();
         }
 
-        public bool TileInTarget()
+        // Need to see if it's worth to maintain this code
+        /*public bool TileInTarget()
         {
             TileBase tile = GameLoop.Universe.CurrentMap.GetTileAt<TileBase>(Cursor.Position);
 
@@ -77,7 +78,7 @@ namespace MagiRogue.Commands
             }
 
             return false;
-        }
+        }*/
 
         public bool EntityInTarget()
         {
@@ -108,6 +109,12 @@ namespace MagiRogue.Commands
 
         public void StartTargetting()
         {
+            OriginCoord = new Point(
+                GameLoop.Universe.CurrentMap.ControlledEntitiy.Position.X,
+                GameLoop.Universe.CurrentMap.ControlledEntitiy.Position.Y);
+            Cursor.Position = new Point(
+                 GameLoop.Universe.CurrentMap.ControlledEntitiy.Position.X,
+                 GameLoop.Universe.CurrentMap.ControlledEntitiy.Position.Y);
             GameLoop.Universe.ChangeControlledEntity(Cursor);
             GameLoop.Universe.CurrentMap.Add(Cursor);
             Cursor.Moved += Cursor_Moved;

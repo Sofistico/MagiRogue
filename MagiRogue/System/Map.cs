@@ -193,6 +193,8 @@ namespace MagiRogue.System
 
             // Link up the entity's Moved event to a new handler
             entity.Moved -= OnEntityMoved;
+
+            _entityRender.IsDirty = true;
         }
 
         /// <summary>
