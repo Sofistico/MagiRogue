@@ -89,7 +89,7 @@ namespace MagiRogue.System.Planet
                             break;
 
                         case HeightType.Grass:
-                            tempTile = new(GrassColor, Color.Black, ',');
+                            tempTile = new(GrassColor, Color.Black, 39);
                             tiles[x, y].CopyAppearanceFrom(tempTile);
                             tiles[x, y].IsBlockingMove = false;
 
@@ -102,8 +102,8 @@ namespace MagiRogue.System.Planet
 
                             break;
 
-                        case HeightType.Rock:
-                            tempTile = new(RockColor, Color.Black, '^');
+                        case HeightType.Mountain:
+                            tempTile = new(RockColor, Color.Black, 127);
                             tiles[x, y].CopyAppearanceFrom(tempTile);
                             tiles[x, y].MoveTimeCost = 500;
                             tiles[x, y].IsBlockingMove = false;
@@ -125,7 +125,7 @@ namespace MagiRogue.System.Planet
                             break;
 
                         case HeightType.HighMountain:
-                            tempTile = new(HighMountainColor, Color.Black, '^');
+                            tempTile = new(HighMountainColor, Color.Black, 30);
                             tiles[x, y].CopyAppearanceFrom(tempTile);
                             tiles[x, y].IsBlockingMove = false;
                             break;
@@ -238,7 +238,7 @@ namespace MagiRogue.System.Planet
                     BiomeType value = tiles[x, y].BiomeType;
                     var tile = tiles[x, y];
 
-                    if (tile.HeightType != HeightType.HighMountain)
+                    if (tile.HeightType != HeightType.HighMountain && tile.HeightType != HeightType.Mountain)
                     {
                         switch (value)
                         {
@@ -246,6 +246,7 @@ namespace MagiRogue.System.Planet
                                 tile.Foreground = Ice;
                                 tile.Collidable = true;
                                 tile.IsBlockingMove = false;
+                                tile.Glyph = 176;
                                 break;
 
                             case BiomeType.BorealForest:
@@ -253,6 +254,7 @@ namespace MagiRogue.System.Planet
                                 tile.MoveTimeCost = 275;
                                 tile.Collidable = true;
                                 tile.IsBlockingMove = false;
+                                tile.Glyph = 20;
 
                                 break;
 
@@ -261,6 +263,7 @@ namespace MagiRogue.System.Planet
                                 tile.MoveTimeCost = 350;
                                 tile.Collidable = true;
                                 tile.IsBlockingMove = false;
+                                tile.Glyph = 247;
 
                                 break;
 
@@ -268,6 +271,7 @@ namespace MagiRogue.System.Planet
                                 tile.Foreground = Grassland;
                                 tile.Collidable = true;
                                 tile.IsBlockingMove = false;
+                                tile.Glyph = 'n';
 
                                 break;
 
@@ -276,6 +280,7 @@ namespace MagiRogue.System.Planet
                                 tile.MoveTimeCost = 275;
                                 tile.Collidable = true;
                                 tile.IsBlockingMove = false;
+                                tile.Glyph = 6;
                                 break;
 
                             case BiomeType.Tundra:
@@ -283,6 +288,7 @@ namespace MagiRogue.System.Planet
                                 tile.MoveTimeCost = 300;
                                 tile.Collidable = true;
                                 tile.IsBlockingMove = false;
+                                tile.Glyph = 226;
 
                                 break;
 
@@ -291,6 +297,7 @@ namespace MagiRogue.System.Planet
                                 tile.MoveTimeCost = 300;
                                 tile.Collidable = true;
                                 tile.IsBlockingMove = false;
+                                tile.Glyph = 5;
 
                                 break;
 
@@ -299,6 +306,7 @@ namespace MagiRogue.System.Planet
                                 tile.MoveTimeCost = 310;
                                 tile.IsBlockingMove = false;
                                 tile.Collidable = true;
+                                tile.Glyph = 6;
 
                                 break;
 
@@ -307,6 +315,7 @@ namespace MagiRogue.System.Planet
                                 tile.MoveTimeCost = 315;
                                 tile.IsBlockingMove = false;
                                 tile.Collidable = true;
+                                tile.Glyph = 6;
 
                                 break;
 
@@ -315,6 +324,7 @@ namespace MagiRogue.System.Planet
                                 tile.MoveTimeCost = 250;
                                 tile.IsBlockingMove = false;
                                 tile.Collidable = true;
+                                tile.Glyph = 5;
 
                                 break;
                         }
@@ -383,23 +393,32 @@ namespace MagiRogue.System.Planet
                         if (tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.Bottom
                             || tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.Top)
                         {
-                            tile.Glyph = '|';
+                            tile.Glyph = 179;
                             tile.Foreground = DirtRoad;
                         }
                         if (tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.Right
                             || tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.Left)
                         {
-                            tile.Glyph = '-';
+                            tile.Glyph = 196;
                             tile.Foreground = DirtRoad;
                         }
-                        if (tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.TopLeft
-                            || tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.BottomRight)
+                        // Need to make it better!
+                        if (tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.TopLeft)
                         {
                             tile.Foreground = DirtRoad;
                             tile.Glyph = '\\';
                         }
-                        if (tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.TopRight
-                            || tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.BottomLeft)
+                        if (tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.BottomRight)
+                        {
+                            tile.Foreground = DirtRoad;
+                            tile.Glyph = '\\';
+                        }
+                        if (tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.TopRight)
+                        {
+                            tile.Foreground = DirtRoad;
+                            tile.Glyph = '/';
+                        }
+                        if (tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.BottomLeft)
                         {
                             tile.Foreground = DirtRoad;
                             tile.Glyph = '/';

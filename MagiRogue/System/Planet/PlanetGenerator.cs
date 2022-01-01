@@ -388,7 +388,7 @@ namespace MagiRogue.System.Planet
                     }
                     else if (heightValue < rock)
                     {
-                        t.HeightType = HeightType.Rock;
+                        t.HeightType = HeightType.Mountain;
                         t.Collidable = true;
                         t.MineralValue *= 2.0f;
                     }
@@ -442,7 +442,7 @@ namespace MagiRogue.System.Planet
                     {
                         planetData.HeatData[t.Position.X, t.Position.Y] -= 0.1f * t.HeightValue;
                     }
-                    else if (t.HeightType == HeightType.Rock)
+                    else if (t.HeightType == HeightType.Mountain)
                     {
                         planetData.HeatData[t.Position.X, t.Position.Y] -= 0.25f * t.HeightValue;
                     }
@@ -784,98 +784,105 @@ namespace MagiRogue.System.Planet
             float rigthValue = int.MaxValue;
             float topValue = int.MaxValue;
             float bottomValue = int.MaxValue;
-
-            // query height values of neighbors
-            if (left.GetRiverNeighborCount(river) < 2 && !river.Tiles.Contains(left))
-                leftValue = left.HeightValue;
-            if (right.GetRiverNeighborCount(river) <= 2 && !river.Tiles.Contains(right))
-                rigthValue = right.HeightValue;
-            if (top.GetRiverNeighborCount(river) <= 2 && !river.Tiles.Contains(top))
-                topValue = top.HeightValue;
-            if (bottom.GetRiverNeighborCount(river) <= 2 && !river.Tiles.Contains(bottom))
-                bottomValue = bottom.HeightValue;
-
-            // if neighbor is existing river that is not this one, flow into it
-            if (bottom.Rivers.Count == 0 && !bottom.Collidable)
-                bottomValue = 0;
-            if (top.Rivers.Count == 0 && !top.Collidable)
-                topValue = 0;
-            if (right.Rivers.Count == 0 && !right.Collidable)
-                rigthValue = 0;
-            if (left.Rivers.Count == 0 && !left.Collidable)
-                leftValue = 0;
-
-            // override flow direction if a tile is significantly lower
-            if (currentDirection == WorldDirection.Left)
-                if (MathF.Abs(rigthValue - leftValue) < 0.1f)
-                    rigthValue = int.MaxValue;
-            if (currentDirection == WorldDirection.Right)
-                if (MathF.Abs(rigthValue - leftValue) < 0.1f)
-                    leftValue = int.MaxValue;
-            if (currentDirection == WorldDirection.Top)
-                if (MathF.Abs(topValue - bottomValue) < 0.1f)
-                    topValue = int.MaxValue;
-            if (currentDirection == WorldDirection.Bottom)
-                if (MathF.Abs(topValue - bottomValue) < 0.1f)
-                    bottomValue = int.MaxValue;
-
-            // find mininum
-            // has god forsaken us?
-            float min = MathF.Min(MathF.Min(MathF.Min(leftValue, rigthValue), topValue), bottomValue);
-
-            // if no minimum found - exit
-            if (min == int.MaxValue)
-                return;
-
-            //Move to next neighbor
-            if (min == leftValue)
+            try
             {
-                if (left.Collidable)
+                // query height values of neighbors
+                if (left.GetRiverNeighborCount(river) < 2 && !river.Tiles.Contains(left))
+                    leftValue = left.HeightValue;
+                if (right.GetRiverNeighborCount(river) <= 2 && !river.Tiles.Contains(right))
+                    rigthValue = right.HeightValue;
+                if (top.GetRiverNeighborCount(river) <= 2 && !river.Tiles.Contains(top))
+                    topValue = top.HeightValue;
+                if (bottom.GetRiverNeighborCount(river) <= 2 && !river.Tiles.Contains(bottom))
+                    bottomValue = bottom.HeightValue;
+
+                // if neighbor is existing river that is not this one, flow into it
+                if (bottom.Rivers.Count == 0 && !bottom.Collidable)
+                    bottomValue = 0;
+                if (top.Rivers.Count == 0 && !top.Collidable)
+                    topValue = 0;
+                if (right.Rivers.Count == 0 && !right.Collidable)
+                    rigthValue = 0;
+                if (left.Rivers.Count == 0 && !left.Collidable)
+                    leftValue = 0;
+
+                // override flow direction if a tile is significantly lower
+                if (currentDirection == WorldDirection.Left)
+                    if (MathF.Abs(rigthValue - leftValue) < 0.1f)
+                        rigthValue = int.MaxValue;
+                if (currentDirection == WorldDirection.Right)
+                    if (MathF.Abs(rigthValue - leftValue) < 0.1f)
+                        leftValue = int.MaxValue;
+                if (currentDirection == WorldDirection.Top)
+                    if (MathF.Abs(topValue - bottomValue) < 0.1f)
+                        topValue = int.MaxValue;
+                if (currentDirection == WorldDirection.Bottom)
+                    if (MathF.Abs(topValue - bottomValue) < 0.1f)
+                        bottomValue = int.MaxValue;
+
+                // find mininum
+                // has god forsaken us?
+                float min = MathF.Min(MathF.Min(MathF.Min(leftValue, rigthValue), topValue), bottomValue);
+
+                // if no minimum found - exit
+                if (min == int.MaxValue)
+                    return;
+
+                //Move to next neighbor
+                if (min == leftValue)
                 {
-                    if (river.CurrentDirection != WorldDirection.Left)
+                    if (left.Collidable)
                     {
-                        river.TurnCount++;
-                        river.CurrentDirection = WorldDirection.Left;
+                        if (river.CurrentDirection != WorldDirection.Left)
+                        {
+                            river.TurnCount++;
+                            river.CurrentDirection = WorldDirection.Left;
+                        }
+                        FindPathToWater(left, currentDirection, ref river);
                     }
-                    FindPathToWater(left, currentDirection, ref river);
+                }
+                if (min == rigthValue)
+                {
+                    if (right.Collidable)
+                    {
+                        if (river.CurrentDirection != WorldDirection.Right)
+                        {
+                            river.TurnCount++;
+                            river.CurrentDirection = WorldDirection.Right;
+                        }
+                        FindPathToWater(right, currentDirection, ref river);
+                    }
+                }
+                if (min == bottomValue)
+                {
+                    if (bottom.Collidable)
+                    {
+                        if (river.CurrentDirection != WorldDirection.Bottom)
+                        {
+                            river.TurnCount++;
+                            river.CurrentDirection = WorldDirection.Bottom;
+                        }
+                        FindPathToWater(bottom, currentDirection, ref river);
+                    }
+                }
+                if (min == topValue)
+                {
+                    if (top.Collidable)
+                    {
+                        if (river.CurrentDirection != WorldDirection.Top)
+                        {
+                            river.TurnCount++;
+                            river.CurrentDirection = WorldDirection.Top;
+                        }
+                        FindPathToWater(top, currentDirection, ref river);
+                    }
                 }
             }
-            if (min == rigthValue)
+            catch
             {
-                if (right.Collidable)
-                {
-                    if (river.CurrentDirection != WorldDirection.Right)
-                    {
-                        river.TurnCount++;
-                        river.CurrentDirection = WorldDirection.Right;
-                    }
-                    FindPathToWater(right, currentDirection, ref river);
-                }
+                throw new Exception("The recursive method to find the river path failed!");
             }
-            if (min == bottomValue)
-            {
-                if (bottom.Collidable)
-                {
-                    if (river.CurrentDirection != WorldDirection.Bottom)
-                    {
-                        river.TurnCount++;
-                        river.CurrentDirection = WorldDirection.Bottom;
-                    }
-                    FindPathToWater(bottom, currentDirection, ref river);
-                }
-            }
-            if (min == topValue)
-            {
-                if (top.Collidable)
-                {
-                    if (river.CurrentDirection != WorldDirection.Top)
-                    {
-                        river.TurnCount++;
-                        river.CurrentDirection = WorldDirection.Top;
-                    }
-                    FindPathToWater(top, currentDirection, ref river);
-                }
-            }
+            
         }
 
         private void BuildRiverGroups()

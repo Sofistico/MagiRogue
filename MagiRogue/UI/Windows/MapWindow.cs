@@ -3,6 +3,7 @@ using MagiRogue.Entities;
 using MagiRogue.System;
 using MagiRogue.System.Tiles;
 using MagiRogue.System.Time;
+using SadConsole;
 using SadConsole.Input;
 using SadRogue.Primitives;
 using System;

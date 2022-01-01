@@ -156,12 +156,7 @@ namespace MagiRogue.System
 
         protected void PrepareForAnyFloor(TileFloor floor, Map map)
         {
-            for (int i = 0; i < map.Tiles.Length; i++)
-            {
-                Point pos = Point.FromIndex(i, map.Width);
-                floor.Position = pos;
-                map.SetTerrain(floor);
-            }
+            map.SetTerrain(floor);
         }
 
         protected void ConnectWithRoads(Point start, Point end)
