@@ -61,7 +61,7 @@ namespace MagiRogue.System.Tiles
 
             set
             {
-                if (MaterialOfTile.MPInfusionLimit is object && MaterialOfTile.MPInfusionLimit > 0)
+                if (MaterialOfTile.MPInfusionLimit is not null && MaterialOfTile.MPInfusionLimit > 0)
                 {
                     _infusedMp = value;
                 }

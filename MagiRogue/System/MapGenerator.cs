@@ -64,12 +64,12 @@ namespace MagiRogue.System
             }
         }
 
-        protected void PrepareForAnyFloor(TileFloor floor, Map map)
+        protected static void PrepareForAnyFloor(TileFloor floor, Map map)
         {
             map.SetTerrain(floor);
         }
 
-        protected void ConnectWithRoads(Point start, Point end)
+        protected static void ConnectWithRoads(Point start, Point end)
         {
         }
 
@@ -126,7 +126,7 @@ namespace MagiRogue.System
 
         protected void CreateAnyWall(TileWall wall) => _map.SetTerrain(wall);
 
-        protected void CreateAnyWall(TileWall wall, Map map)
+        protected static void CreateAnyWall(TileWall wall, Map map)
         {
             map.SetTerrain(wall);
         }
@@ -481,7 +481,7 @@ namespace MagiRogue.System
             }
         }
 
-        protected void FloodWithWaterMap(WaterTile tile, Map map)
+        protected static void FloodWithWaterMap(WaterTile tile, Map map)
         {
             map.SetTerrain(tile);
         }
@@ -611,7 +611,7 @@ namespace MagiRogue.System
         /// </summary>
         /// <param name="completeMap"></param>
         /// <param name="worldTile"></param>
-        private void FinishingTouches(Map completeMap, WorldTile worldTile)
+        private static void FinishingTouches(Map completeMap, WorldTile worldTile)
         {
             //throw new NotImplementedException();
         }
@@ -698,64 +698,26 @@ namespace MagiRogue.System
 
         private Map DetermineBiomeLookForTile(WorldTile worldTile)
         {
-            Map map = null;
-            switch (worldTile.BiomeType)
+            Map map = worldTile.BiomeType switch
             {
-                case BiomeType.Sea:
-                    map = GenericSeaMap(worldTile);
-                    break;
-
-                case BiomeType.Desert:
-                    map = GenericDesertMap(worldTile);
-                    break;
-
-                case BiomeType.Savanna:
-                    map = GenericSavannaMap(worldTile);
-                    break;
-
-                case BiomeType.TropicalRainforest:
-                    map = GenericTropicalRainforest(worldTile);
-                    break;
-
-                case BiomeType.Grassland:
-                    map = GenericGrassland(worldTile);
-                    break;
-
-                case BiomeType.Woodland:
-                    map = GenericWoodLands(worldTile);
-                    break;
-
-                case BiomeType.SeasonalForest:
-                    map = GenericSeasonalForests(worldTile);
-                    break;
-
-                case BiomeType.TemperateRainforest:
-                    map = GenericTemperateRainForest(worldTile);
-                    break;
-
-                case BiomeType.BorealForest:
-                    map = GenericBorealForest(worldTile);
-                    break;
-
-                case BiomeType.Tundra:
-                    map = GenericTundra(worldTile);
-                    break;
-
-                case BiomeType.Ice:
-                    map = GenericIceMap(worldTile);
-                    break;
-
-                case BiomeType.Mountain:
-                    map = GenericMountainMap(worldTile);
-                    break;
-
-                default:
-                    throw new Exception("Cound't find the biome to generate a map!");
-            }
+                BiomeType.Sea => GenericSeaMap(worldTile),
+                BiomeType.Desert => GenericDesertMap(worldTile),
+                BiomeType.Savanna => GenericSavannaMap(worldTile),
+                BiomeType.TropicalRainforest => GenericTropicalRainforest(worldTile),
+                BiomeType.Grassland => GenericGrassland(worldTile),
+                BiomeType.Woodland => GenericWoodLands(worldTile),
+                BiomeType.SeasonalForest => GenericSeasonalForests(worldTile),
+                BiomeType.TemperateRainforest => GenericTemperateRainForest(worldTile),
+                BiomeType.BorealForest => GenericBorealForest(worldTile),
+                BiomeType.Tundra => GenericTundra(worldTile),
+                BiomeType.Ice => GenericIceMap(worldTile),
+                BiomeType.Mountain => GenericMountainMap(worldTile),
+                _ => throw new Exception("Cound't find the biome to generate a map!"),
+            };
             return map;
         }
 
-        private Map GenericMountainMap(WorldTile worldTile)
+        private static Map GenericMountainMap(WorldTile worldTile)
         {
             Map map = new Map($"{worldTile.BiomeType}");
 
@@ -768,7 +730,7 @@ namespace MagiRogue.System
             return map;
         }
 
-        private Map GenericIceMap(WorldTile worldTile)
+        private static Map GenericIceMap(WorldTile worldTile)
         {
             Map map = new Map($"{worldTile.BiomeType}");
             for (int i = 0; i < map.Tiles.Length; i++)
@@ -783,7 +745,7 @@ namespace MagiRogue.System
             return map;
         }
 
-        private Map GenericTundra(WorldTile worldTile)
+        private static Map GenericTundra(WorldTile worldTile)
         {
             Map map = new Map($"{worldTile.RegionName}");
             for (int i = 0; i < map.Tiles.Length; i++)
@@ -798,7 +760,7 @@ namespace MagiRogue.System
             return map;
         }
 
-        private Map GenericBorealForest(WorldTile worldTile)
+        private static Map GenericBorealForest(WorldTile worldTile)
         {
             Map map = new Map($"{worldTile.BiomeType}");
 
@@ -812,7 +774,7 @@ namespace MagiRogue.System
             return map;
         }
 
-        private Map GenericTemperateRainForest(WorldTile worldTile)
+        private static Map GenericTemperateRainForest(WorldTile worldTile)
         {
             Map map = new Map($"{worldTile.BiomeType}");
 
@@ -826,7 +788,7 @@ namespace MagiRogue.System
             return map;
         }
 
-        private Map GenericSeasonalForests(WorldTile worldTile)
+        private static Map GenericSeasonalForests(WorldTile worldTile)
         {
             Map map = new Map($"{worldTile.BiomeType}");
 
@@ -840,7 +802,7 @@ namespace MagiRogue.System
             return map;
         }
 
-        private Map GenericWoodLands(WorldTile worldTile)
+        private static Map GenericWoodLands(WorldTile worldTile)
         {
             Map map = new Map($"{worldTile.BiomeType}");
 
@@ -854,7 +816,7 @@ namespace MagiRogue.System
             return map;
         }
 
-        private Map GenericGrassland(WorldTile worldTile)
+        private static Map GenericGrassland(WorldTile worldTile)
         {
             Map map = new Map($"{worldTile.BiomeType}");
 
@@ -868,7 +830,7 @@ namespace MagiRogue.System
             return map;
         }
 
-        private Map GenericTropicalRainforest(WorldTile worldTile)
+        private static Map GenericTropicalRainforest(WorldTile worldTile)
         {
             Map map = new Map($"{worldTile.BiomeType}");
 
@@ -882,7 +844,7 @@ namespace MagiRogue.System
             return map;
         }
 
-        private Map GenericSavannaMap(WorldTile worldTile)
+        private static Map GenericSavannaMap(WorldTile worldTile)
         {
             Map map = new Map($"{worldTile.BiomeType}");
 
@@ -896,7 +858,7 @@ namespace MagiRogue.System
             return map;
         }
 
-        private Map GenericDesertMap(WorldTile worldTile)
+        private static Map GenericDesertMap(WorldTile worldTile)
         {
             Map map = new Map($"{worldTile.BiomeType}");
 
@@ -911,7 +873,7 @@ namespace MagiRogue.System
             return map;
         }
 
-        private Map GenericSeaMap(WorldTile worldTile)
+        private static Map GenericSeaMap(WorldTile worldTile)
         {
             Map map = new Map($"{worldTile.BiomeType}");
 

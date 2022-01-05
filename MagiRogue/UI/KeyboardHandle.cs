@@ -258,7 +258,7 @@ namespace MagiRogue.UI
                 }
             }
 
-            if (info.IsKeyPressed(Keys.Escape) && (targetCursor is object))
+            if (info.IsKeyPressed(Keys.Escape) && (targetCursor is not null))
             {
                 targetCursor.EndTargetting();
 

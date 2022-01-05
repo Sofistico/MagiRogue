@@ -27,7 +27,7 @@ namespace MagiRogue.Data
             string originalWildCard = wildCard;
 
             string pattern = Path.GetFileName(originalWildCard);
-            string realDir = originalWildCard.Substring(0, originalWildCard.Length - pattern.Length);
+            string realDir = originalWildCard[..^pattern.Length];
 
             // Get absolutepath
             string absPath = Path.GetFullPath(Path.Combine(_appDomain, realDir));
