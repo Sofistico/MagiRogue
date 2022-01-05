@@ -58,6 +58,7 @@ namespace MagiRogue.System
         public Point LastPlayerPosition { get; set; }
 
         public string MapName { get; }
+        public bool NeedsUpdate { get; internal set; }
 
         #endregion Properties
 

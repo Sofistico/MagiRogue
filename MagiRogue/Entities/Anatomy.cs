@@ -18,8 +18,11 @@ namespace MagiRogue.Entities
 
         #region Properties
 
-        [DataMember]
+        [JsonIgnore]
         public List<Limb> Limbs { get; set; }
+
+        [JsonIgnore]
+        public List<Organs> Organs { get; set; }
 
         [DataMember]
         public Race Race
@@ -31,6 +34,8 @@ namespace MagiRogue.Entities
                 race = value;
             }
         }
+
+        public bool IsVegetation { get; set; }
 
         /// <summary>
         /// It uses an aproximation of blood count equal to 75 ml/kg for an adult male

@@ -12,52 +12,6 @@ namespace MagiRogue.System.Planet
 {
     public static class PlanetGlyphGenerator
     {
-        // Height Map Colors
-        private static readonly Color DeepColor = new(0, 0, 0.5f, 1);
-        private static readonly Color ShallowColor = new(25 / 255f, 25 / 255f, 150 / 255f, 1);
-        private static readonly Color RiverColor = new Color(30 / 255f, 120 / 255f, 200 / 255f, 1);
-        private static readonly Color SandColor = new(240 / 255f, 240 / 255f, 64 / 255f, 1);
-        private static readonly Color GrassColor = new(50 / 255f, 220 / 255f, 20 / 255f, 1);
-        private static readonly Color ForestColor = new(16 / 255f, 160 / 255f, 0, 1);
-        private static readonly Color RockColor = new(0.5f, 0.5f, 0.5f, 1);
-        private static readonly Color HighMountainColor = Color.AnsiWhiteBright;
-        private static readonly Color SnowColor = Color.White;
-        private static readonly Color MagicColor = Color.Purple;
-
-        // Heat Map Colors
-        private static readonly Color Coldest = new Color(0, 1, 1, 1);
-        private static readonly Color Colder = new Color(170 / 255f, 1, 1, 1);
-        private static readonly Color Cold = new Color(0, 229 / 255f, 133 / 255f, 1);
-        private static readonly Color Warm = new Color(1, 1, 100 / 255f, 1);
-        private static readonly Color Warmer = new Color(1, 100 / 255f, 0, 1);
-        private static readonly Color Warmest = new Color(241 / 255f, 12 / 255f, 0, 1);
-
-        //Moisture map
-        private static readonly Color Dryest = new Color(255 / 255f, 139 / 255f, 17 / 255f, 1);
-        private static readonly Color Dryer = new Color(245 / 255f, 245 / 255f, 23 / 255f, 1);
-        private static readonly Color Dry = new Color(80 / 255f, 255 / 255f, 0 / 255f, 1);
-        private static readonly Color Wet = new Color(85 / 255f, 255 / 255f, 255 / 255f, 1);
-        private static readonly Color Wetter = new Color(20 / 255f, 70 / 255f, 255 / 255f, 1);
-        private static readonly Color Wettest = new Color(0 / 255f, 0 / 255f, 100 / 255f, 1);
-
-        private static readonly Color IceWater = new Color(210 / 255f, 255 / 255f, 252 / 255f, 1);
-        private static readonly Color ColdWater = new Color(119 / 255f, 156 / 255f, 213 / 255f, 1);
-        private static readonly Color RiverWater = new Color(65 / 255f, 110 / 255f, 179 / 255f, 1);
-
-        //biome map
-        private static readonly Color Ice = Color.White;
-        private static readonly Color Desert = new Color(238 / 255f, 218 / 255f, 130 / 255f, 1);
-        private static readonly Color Savanna = new Color(177 / 255f, 209 / 255f, 110 / 255f, 1);
-        private static readonly Color TropicalRainforest = new Color(66 / 255f, 123 / 255f, 25 / 255f, 1);
-        private static readonly Color Tundra = new Color(96 / 255f, 131 / 255f, 112 / 255f, 1);
-        private static readonly Color TemperateRainforest = new Color(29 / 255f, 73 / 255f, 40 / 255f, 1);
-        private static readonly Color Grassland = new Color(164 / 255f, 225 / 255f, 99 / 255f, 1);
-        private static readonly Color SeasonalForest = new Color(73 / 255f, 100 / 255f, 35 / 255f, 1);
-        private static readonly Color BorealForest = new Color(95 / 255f, 115 / 255f, 62 / 255f, 1);
-        private static readonly Color Woodland = new Color(139 / 255f, 175 / 255f, 90 / 255f, 1);
-
-        private static readonly Color DirtRoad = new Color(165, 103, 42);
-
         public static void SetTile(int width, int height, ref WorldTile[,] tiles)
         {
             ColoredGlyph tempTile;
@@ -69,41 +23,41 @@ namespace MagiRogue.System.Planet
                     switch (tiles[x, y].HeightType)
                     {
                         case HeightType.DeepWater:
-                            tempTile = new(DeepColor, Color.Black, '~');
+                            tempTile = new(Palette.DeepWaterColor, Color.Black, '~');
                             tiles[x, y].CopyAppearanceFrom(tempTile);
                             tiles[x, y].IsBlockingMove = true;
                             break;
 
                         case HeightType.ShallowWater:
-                            tempTile = new(ShallowColor, Color.Black, '~');
+                            tempTile = new(Palette.ShallowWaterColor, Color.Black, '~');
                             tiles[x, y].CopyAppearanceFrom(tempTile);
                             tiles[x, y].IsBlockingMove = true;
 
                             break;
 
                         case HeightType.Sand:
-                            tempTile = new(SandColor, Color.Black, '~');
+                            tempTile = new(Palette.SandColor, Color.Black, '~');
                             tiles[x, y].CopyAppearanceFrom(tempTile);
                             tiles[x, y].IsBlockingMove = false;
 
                             break;
 
                         case HeightType.Grass:
-                            tempTile = new(GrassColor, Color.Black, 39);
+                            tempTile = new(Palette.GrassColor, Color.Black, 39);
                             tiles[x, y].CopyAppearanceFrom(tempTile);
                             tiles[x, y].IsBlockingMove = false;
 
                             break;
 
                         case HeightType.Forest:
-                            tempTile = new(ForestColor, Color.Black, 'T');
+                            tempTile = new(Palette.ForestColor, Color.Black, 'T');
                             tiles[x, y].CopyAppearanceFrom(tempTile);
                             tiles[x, y].IsBlockingMove = false;
 
                             break;
 
                         case HeightType.Mountain:
-                            tempTile = new(RockColor, Color.Black, 127);
+                            tempTile = new(Palette.RockColor, Color.Black, 127);
                             tiles[x, y].CopyAppearanceFrom(tempTile);
                             tiles[x, y].MoveTimeCost = 500;
                             tiles[x, y].IsBlockingMove = false;
@@ -111,21 +65,21 @@ namespace MagiRogue.System.Planet
                             break;
 
                         case HeightType.Snow:
-                            tempTile = new(SnowColor, Color.Black, '~');
+                            tempTile = new(Palette.SnowColor, Color.Black, '~');
                             tiles[x, y].CopyAppearanceFrom(tempTile);
                             tiles[x, y].IsBlockingMove = false;
 
                             break;
 
                         case HeightType.River:
-                            tempTile = new(RiverColor, Color.Black, '~');
+                            tempTile = new(Palette.RiverColor, Color.Black, '~');
                             tiles[x, y].CopyAppearanceFrom(tempTile);
                             tiles[x, y].IsBlockingMove = false;
 
                             break;
 
                         case HeightType.HighMountain:
-                            tempTile = new(HighMountainColor, Color.Black, 30);
+                            tempTile = new(Palette.HighMountainColor, Color.Black, 30);
                             tiles[x, y].CopyAppearanceFrom(tempTile);
                             tiles[x, y].IsBlockingMove = false;
                             break;
@@ -151,29 +105,29 @@ namespace MagiRogue.System.Planet
                     switch (tiles[x, y].HeatType)
                     {
                         case HeatType.Coldest:
-                            tiles[x, y].Foreground = Coldest;
+                            tiles[x, y].Foreground = Palette.Coldest;
 
                             break;
 
                         case HeatType.Colder:
-                            tiles[x, y].Foreground = Colder;
+                            tiles[x, y].Foreground = Palette.Colder;
 
                             break;
 
                         case HeatType.Cold:
-                            tiles[x, y].Foreground = Cold;
+                            tiles[x, y].Foreground = Palette.Cold;
                             break;
 
                         case HeatType.Warm:
-                            tiles[x, y].Foreground = Warm;
+                            tiles[x, y].Foreground = Palette.Warm;
                             break;
 
                         case HeatType.Warmer:
-                            tiles[x, y].Foreground = Warmer;
+                            tiles[x, y].Foreground = Palette.Warmer;
                             break;
 
                         case HeatType.Warmest:
-                            tiles[x, y].Foreground = Warmest;
+                            tiles[x, y].Foreground = Palette.Warmest;
                             break;
                     }
 
@@ -197,27 +151,27 @@ namespace MagiRogue.System.Planet
                     switch (tile.MoistureType)
                     {
                         case MoistureType.Wettest:
-                            tile.Foreground = Wettest;
+                            tile.Foreground = Palette.Wettest;
                             break;
 
                         case MoistureType.Wetter:
-                            tile.Foreground = Wetter;
+                            tile.Foreground = Palette.Wetter;
                             break;
 
                         case MoistureType.Wet:
-                            tile.Foreground = Wet;
+                            tile.Foreground = Palette.Wet;
                             break;
 
                         case MoistureType.Dry:
-                            tile.Foreground = Dry;
+                            tile.Foreground = Palette.Dry;
                             break;
 
                         case MoistureType.Dryer:
-                            tile.Foreground = Dryer;
+                            tile.Foreground = Palette.Dryer;
                             break;
 
                         case MoistureType.Dryest:
-                            tile.Foreground = Dryest;
+                            tile.Foreground = Palette.Dryest;
                             break;
 
                         default:
@@ -243,14 +197,14 @@ namespace MagiRogue.System.Planet
                         switch (value)
                         {
                             case BiomeType.Ice:
-                                tile.Foreground = Ice;
+                                tile.Foreground = Palette.Ice;
                                 tile.Collidable = true;
                                 tile.IsBlockingMove = false;
                                 tile.Glyph = 176;
                                 break;
 
                             case BiomeType.BorealForest:
-                                tile.Foreground = BorealForest;
+                                tile.Foreground = Palette.BorealForest;
                                 tile.MoveTimeCost = 275;
                                 tile.Collidable = true;
                                 tile.IsBlockingMove = false;
@@ -259,7 +213,7 @@ namespace MagiRogue.System.Planet
                                 break;
 
                             case BiomeType.Desert:
-                                tile.Foreground = Desert;
+                                tile.Foreground = Palette.Desert;
                                 tile.MoveTimeCost = 350;
                                 tile.Collidable = true;
                                 tile.IsBlockingMove = false;
@@ -268,7 +222,7 @@ namespace MagiRogue.System.Planet
                                 break;
 
                             case BiomeType.Grassland:
-                                tile.Foreground = Grassland;
+                                tile.Foreground = Palette.Grassland;
                                 tile.Collidable = true;
                                 tile.IsBlockingMove = false;
                                 tile.Glyph = 'n';
@@ -276,7 +230,7 @@ namespace MagiRogue.System.Planet
                                 break;
 
                             case BiomeType.SeasonalForest:
-                                tile.Foreground = SeasonalForest;
+                                tile.Foreground = Palette.SeasonalForest;
                                 tile.MoveTimeCost = 275;
                                 tile.Collidable = true;
                                 tile.IsBlockingMove = false;
@@ -284,7 +238,7 @@ namespace MagiRogue.System.Planet
                                 break;
 
                             case BiomeType.Tundra:
-                                tile.Foreground = Tundra;
+                                tile.Foreground = Palette.Tundra;
                                 tile.MoveTimeCost = 300;
                                 tile.Collidable = true;
                                 tile.IsBlockingMove = false;
@@ -293,7 +247,7 @@ namespace MagiRogue.System.Planet
                                 break;
 
                             case BiomeType.Savanna:
-                                tile.Foreground = Savanna;
+                                tile.Foreground = Palette.Savanna;
                                 tile.MoveTimeCost = 300;
                                 tile.Collidable = true;
                                 tile.IsBlockingMove = false;
@@ -302,7 +256,7 @@ namespace MagiRogue.System.Planet
                                 break;
 
                             case BiomeType.TemperateRainforest:
-                                tile.Foreground = TemperateRainforest;
+                                tile.Foreground = Palette.TemperateRainforest;
                                 tile.MoveTimeCost = 310;
                                 tile.IsBlockingMove = false;
                                 tile.Collidable = true;
@@ -311,7 +265,7 @@ namespace MagiRogue.System.Planet
                                 break;
 
                             case BiomeType.TropicalRainforest:
-                                tile.Foreground = TropicalRainforest;
+                                tile.Foreground = Palette.TropicalRainforest;
                                 tile.MoveTimeCost = 315;
                                 tile.IsBlockingMove = false;
                                 tile.Collidable = true;
@@ -320,7 +274,7 @@ namespace MagiRogue.System.Planet
                                 break;
 
                             case BiomeType.Woodland:
-                                tile.Foreground = Woodland;
+                                tile.Foreground = Palette.Woodland;
                                 tile.MoveTimeCost = 250;
                                 tile.IsBlockingMove = false;
                                 tile.Collidable = true;
@@ -332,13 +286,13 @@ namespace MagiRogue.System.Planet
                     // Water tiles
                     if (tiles[x, y].HeightType == HeightType.DeepWater)
                     {
-                        tile.Foreground = DeepColor;
+                        tile.Foreground = Palette.DeepWaterColor;
                         tile.IsBlockingMove = true;
                         tile.BiomeType = BiomeType.Sea;
                     }
                     else if (tiles[x, y].HeightType == HeightType.ShallowWater)
                     {
-                        tile.Foreground = ShallowColor;
+                        tile.Foreground = Palette.ShallowWaterColor;
                         tile.IsBlockingMove = true;
                         tile.BiomeType = BiomeType.Sea;
                     }
@@ -349,13 +303,18 @@ namespace MagiRogue.System.Planet
                         float heatValue = tiles[x, y].HeatValue;
 
                         if (tiles[x, y].HeatType == HeatType.Coldest)
-                            tile.Foreground = Color.Lerp(IceWater, ColdWater, (heatValue) / (Coldest.B));
+                            tile.Foreground = Color.Lerp(Palette.IceWater, Palette.ColdWater, (heatValue) / (Palette.Coldest.B));
                         else if (tiles[x, y].HeatType == HeatType.Colder)
-                            tile.Foreground = Color.Lerp(ColdWater, RiverWater, (heatValue - Coldest.B) / (Colder.B - Coldest.G));
+                            tile.Foreground = Color.Lerp(Palette.ColdWater, Palette.RiverWater, (heatValue - Palette.Coldest.B) / (Palette.Colder.B - Palette.Coldest.G));
                         else if (tiles[x, y].HeatType == HeatType.Cold)
-                            tile.Foreground = Color.Lerp(RiverWater, ShallowColor, (heatValue - Colder.G) / (Cold.R - Colder.B));
+                            tile.Foreground = Color.Lerp(Palette.RiverWater, Palette.ShallowWaterColor, (heatValue - Palette.Colder.G) / (Palette.Cold.R - Palette.Colder.B));
                         else
-                            tile.Foreground = ShallowColor;
+                            tile.Foreground = Palette.ShallowWaterColor;
+                    }
+
+                    if (tile.HeightType == HeightType.HighMountain || tile.HeightType == HeightType.Mountain)
+                    {
+                        tile.BiomeType = BiomeType.Mountain;
                     }
 
                     // add a outline
@@ -394,33 +353,33 @@ namespace MagiRogue.System.Planet
                             || tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.Top)
                         {
                             tile.Glyph = 179;
-                            tile.Foreground = DirtRoad;
+                            tile.Foreground = Palette.DirtRoad;
                         }
                         if (tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.Right
                             || tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.Left)
                         {
                             tile.Glyph = 196;
-                            tile.Foreground = DirtRoad;
+                            tile.Foreground = Palette.DirtRoad;
                         }
                         // Need to make it better!
                         if (tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.TopLeft)
                         {
-                            tile.Foreground = DirtRoad;
+                            tile.Foreground = Palette.DirtRoad;
                             tile.Glyph = '\\';
                         }
                         if (tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.BottomRight)
                         {
-                            tile.Foreground = DirtRoad;
+                            tile.Foreground = Palette.DirtRoad;
                             tile.Glyph = '\\';
                         }
                         if (tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.TopRight)
                         {
-                            tile.Foreground = DirtRoad;
+                            tile.Foreground = Palette.DirtRoad;
                             tile.Glyph = '/';
                         }
                         if (tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.BottomLeft)
                         {
-                            tile.Foreground = DirtRoad;
+                            tile.Foreground = Palette.DirtRoad;
                             tile.Glyph = '/';
                         }
 
@@ -446,9 +405,9 @@ namespace MagiRogue.System.Planet
                                 throw new Exception("An error occured! the game tried to add an special land type to a land that has nothing special.");
 
                             case SpecialLandType.MagicLand:
-                                tile.Foreground = MagicColor;
+                                tile.Foreground = Palette.MagicColor;
 #if DEBUG
-                                tile.Background = MagicColor;
+                                tile.Background = Palette.MagicColor;
 #endif
 
                                 break;

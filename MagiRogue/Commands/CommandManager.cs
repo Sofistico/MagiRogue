@@ -60,7 +60,7 @@ namespace MagiRogue.Commands
         /// <param name="defender"></param>
         public static void Attack(Actor attacker, Actor defender)
         {
-            if (!defender.CanBeAttacked)
+            if (!defender.CanBeAttacked || defender.Anatomy.IsVegetation)
                 return;
 
             if (!attacker.Anatomy.HasEnoughArms)

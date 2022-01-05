@@ -49,6 +49,8 @@ namespace MagiRogue.System
         public TimeSystem Time { get; private set; }
         public bool PossibleChangeMap { get; internal set; } = true;
 
+        public SeasonType CurrentSeason { get; set; }
+
         /// <summary>
         /// Creates a new game world and stores it in a
         /// publicly accessible constructor.
@@ -57,6 +59,7 @@ namespace MagiRogue.System
         {
             AllMaps = new();
             Time = new TimeSystem();
+            CurrentSeason = SeasonType.Spring;
 
             if (!testGame)
             {
@@ -106,7 +109,7 @@ namespace MagiRogue.System
 
         private void CreateStoneMazeMap()
         {
-            Map map = new MapGenerator().GenerateMazeMap(_maxRooms, _minRoomSize, _maxRoomSize);
+            Map map = new DungeonGenerator().GenerateMazeMap(_maxRooms, _minRoomSize, _maxRoomSize);
 
             // spawn a bunch of monsters
             CreateMonster(map, 10);
@@ -120,7 +123,7 @@ namespace MagiRogue.System
 
         private void CreateStoneFloorMap()
         {
-            var map = new MapGenerator().GenerateStoneFloorMap();
+            var map = new GeneralMapGenerator().GenerateStoneFloorMap();
 
             AddMapToList(map);
         }
@@ -141,9 +144,20 @@ namespace MagiRogue.System
         {
             CurrentMap.LastPlayerPosition = new Point(Player.Position.X, Player.Position.Y);
             ChangeActorMap(Player, mapToGo, pos);
+            UpdateIfNeedTheMap(mapToGo);
             CurrentMap = mapToGo;
             GameLoop.UIManager.MapWindow.LoadMap(CurrentMap);
             GameLoop.UIManager.MapWindow.CenterOnActor(Player);
+        }
+
+        private void UpdateIfNeedTheMap(Map mapToGo)
+        {
+            if (mapToGo.NeedsUpdate)
+            {
+                // do something
+            }
+            else
+                return; // Do nothing
         }
 
         public void ChangeActorMap(Entity entity, Map mapToGo, Point pos)
@@ -179,8 +193,8 @@ namespace MagiRogue.System
 
         private void CreateTestMap()
         {
-            MapGenerator mapGen = new();
-            var map = mapGen.GenerateTestMap();
+            GeneralMapGenerator generalMapGenerator = new();
+            Map map = generalMapGenerator.GenerateTestMap();
             CurrentMap = map;
             AddMapToList(map);
         }

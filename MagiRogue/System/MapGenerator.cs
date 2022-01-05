@@ -14,7 +14,7 @@ namespace MagiRogue.System
     // from RogueSharp tutorial
     // https://roguesharp.wordpress.com/2016/03/26/roguesharp-v3-tutorial-simple-room-generation/
     // TODO: Refactor this whole class
-    public class MapGenerator
+    public abstract class MapGenerator
     {
         protected readonly Random randNum = new();
         protected Map _map; // Temporarily store the map currently worked on
@@ -27,96 +27,6 @@ namespace MagiRogue.System
         public MapGenerator(Map map) => _map = map;
 
         #region GeneralMapGen
-
-        public Map GenerateMazeMap(int maxRooms, int minRoomSize, int maxRoomSize)
-        {
-            // Create an empty map of size (mapWidht * mapHeight)
-            _map = new Map("Maze");
-
-            // store a list of the rooms created so far
-            List<Room> Rooms = new();
-
-            // create up to (maxRooms) rooms on the map
-            // and make sure the rooms do not overlap with each other
-            for (int i = 0; i < maxRooms; i++)
-            {
-                // set the room's (width, height) as a random size between (minRoomSize, maxRoomSize)
-                int newRoomWidth = randNum.Next(minRoomSize, maxRoomSize);
-                int newRoomHeigth = randNum.Next(minRoomSize, maxRoomSize);
-
-                // sets the room's X/Y Position at a random point between the edges of the map
-                int newRoomX = randNum.Next(0, _map.Width - newRoomWidth - 1);
-                int newRoomY = randNum.Next(0, _map.Height - newRoomHeigth - 1);
-
-                // create a Rectangle representing the room's perimeter
-                Rectangle roomRectangle = new Rectangle(newRoomX, newRoomY, newRoomWidth, newRoomHeigth);
-                Room newRoom = new(roomRectangle);
-
-                // Does the new room intersect with other rooms already generated?
-                bool doesRoomIntersect = Rooms.Any(room => newRoom.RoomRectangle.Intersects(room.RoomRectangle));
-
-                if (!doesRoomIntersect)
-                    Rooms.Add(newRoom);
-            }
-
-            // This is a dungeon, so begin by flooding the map with walls.
-            FloodWalls();
-
-            // carve out rooms for every room in the Rooms list
-            foreach (var room in Rooms)
-            {
-                CreateRoom(room.RoomRectangle);
-            }
-
-            // carve out tunnels between all rooms
-            // based on the Positions of their centers
-            for (int r = 1; r < Rooms.Count; r++)
-            {
-                //for all remaining rooms get the center of the room and the previous room
-                Point previousRoomCenter = Rooms[r - 1].RoomRectangle.Center;
-                Point currentRoomCenter = Rooms[r].RoomRectangle.Center;
-
-                // give a 50/50 chance of which 'L' shaped connecting hallway to tunnel out
-                if (randNum.Next(1, 2) == 1)
-                {
-                    CreateHorizontalTunnel(previousRoomCenter.X, currentRoomCenter.X, previousRoomCenter.Y);
-                    CreateVerticalTunnel(previousRoomCenter.Y, currentRoomCenter.Y, previousRoomCenter.X);
-                }
-                else
-                {
-                    CreateVerticalTunnel(previousRoomCenter.Y, currentRoomCenter.Y, previousRoomCenter.X);
-                    CreateHorizontalTunnel(previousRoomCenter.X, currentRoomCenter.X, previousRoomCenter.Y);
-                }
-            }
-
-            // Create doors now that the tunnels have been carved out
-            foreach (var room in Rooms)
-                CreateDoor(room);
-
-            PlaceNodes(10);
-
-            // spit out the final map
-            return _map;
-        }
-
-        public Map GenerateTestMap()
-        {
-            _map = new Map("Test Map");
-
-            PrepareForFloors();
-            PrepareForOuterWalls();
-
-            return _map;
-        }
-
-        public Map GenerateStoneFloorMap()
-        {
-            _map = new Map("Test Stone Map");
-
-            PrepareForFloors();
-
-            return _map;
-        }
 
         protected void InsertStairs(Room room)
         {
@@ -444,6 +354,138 @@ namespace MagiRogue.System
             }
         }
 
+        /// <summary>
+        /// Places trees inside the map, in a random like manner
+        /// Sadly only places one type of tree
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="treeToPlace"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        protected void PlaceTrees(Map map, ActorTemplate treeToPlace)
+        {
+            //first make sure that the vegetation won't be attackable and it's a vegetation
+            treeToPlace.Anatomy.IsVegetation = true;
+            treeToPlace.Size = 4000;
+            for (int i = 0; i < map.Tiles.Length; i++)
+            {
+                Actor tree = treeToPlace;
+                Point pos = Point.FromIndex(i, map.Width);
+                int rng = randNum.Next(0, 15);
+                // provisional
+                // TODO: Create a better way to randomly create trees and etc
+                if (rng == 13)
+                {
+                    tree.Position = pos;
+                    map.Add(tree);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Places a list of trees inside the map, varying randomly
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="treesToPlace"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        protected void PlaceTrees(Map map, List<ActorTemplate> treesToPlace)
+        {
+            //first make sure that the vegetation won't be attackable and it's a vegetation
+            for (int i = 0; i < map.Tiles.Length; i++)
+            {
+                Actor tree = treesToPlace[randNum.Next(treesToPlace.Count)];
+                Point pos = Point.FromIndex(i, map.Width);
+                tree.Anatomy.IsVegetation = true;
+                int rng = randNum.Next(0, 15);
+                // provisional
+                if (rng == 13)
+                {
+                    tree.Position = pos;
+                    map.Add(tree);
+                }
+                if (rng == 14)
+                {
+                    Actor otherVegetal = treesToPlace[randNum.Next(treesToPlace.Count)];
+                    otherVegetal.Position = pos;
+                    otherVegetal.Anatomy.IsVegetation = true;
+                    map.Add(otherVegetal);
+                }
+                else if (rng == 5)
+                {
+                    Actor otherVegetal = treesToPlace[randNum.Next(treesToPlace.Count)];
+                    otherVegetal.Position = pos;
+                    otherVegetal.Anatomy.IsVegetation = true;
+                    map.Add(otherVegetal);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Places vegetation along the floor of the map
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="vegetationToPlace"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        protected void PlaceVegetations(Map map, ActorTemplate vegetationToPlace)
+        {
+            //first make sure that the vegetation won't be attackable and it's a vegetation
+            vegetationToPlace.Anatomy.IsVegetation = true;
+            for (int i = 0; i < map.Tiles.Length; i++)
+            {
+                Actor vegetal = vegetationToPlace;
+                Point pos = Point.FromIndex(i, map.Width);
+                int rng = randNum.Next(0, 15);
+                // provisional
+                if (rng == 13)
+                {
+                    vegetal.Position = pos;
+                    map.Add(vegetal);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Places a list of vegetation along the floor of the map
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="vegetationsToPlace"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        protected void PlaceVegetations(Map map, List<ActorTemplate> vegetationsToPlace)
+        {
+            //first make sure that the vegetation won't be attackable and it's a vegetation
+            for (int i = 0; i < map.Tiles.Length; i++)
+            {
+                Actor vegetal = vegetationsToPlace[randNum.Next(vegetationsToPlace.Count)];
+                Point pos = Point.FromIndex(i, map.Width);
+                vegetal.Anatomy.IsVegetation = true;
+                int rng = randNum.Next(0, 15);
+                // provisional
+                if (rng == 13)
+                {
+                    vegetal.Position = pos;
+                    map.Add(vegetal);
+                }
+                if (rng == 14)
+                {
+                    Actor otherVegetal = vegetationsToPlace[randNum.Next(vegetationsToPlace.Count)];
+                    otherVegetal.Position = pos;
+                    otherVegetal.Anatomy.IsVegetation = true;
+                    map.Add(otherVegetal);
+                }
+                else if (rng == 5)
+                {
+                    Actor otherVegetal = vegetationsToPlace[randNum.Next(vegetationsToPlace.Count)];
+                    otherVegetal.Position = pos;
+                    otherVegetal.Anatomy.IsVegetation = true;
+                    map.Add(otherVegetal);
+                }
+            }
+        }
+
+        protected void FloodWithWaterMap(WaterTile tile, Map map)
+        {
+            map.SetTerrain(tile);
+        }
+
         #endregion GeneralMapGen
     }
 
@@ -571,6 +613,7 @@ namespace MagiRogue.System
         /// <param name="worldTile"></param>
         private void FinishingTouches(Map completeMap, WorldTile worldTile)
         {
+            //throw new NotImplementedException();
         }
 
         /// <summary>
@@ -582,6 +625,75 @@ namespace MagiRogue.System
         /// <param name="worldTile"></param>
         private void ApplyModifierToTheMap(Map completeMap, WorldTile worldTile)
         {
+            switch (worldTile.BiomeType)
+            {
+                case BiomeType.Sea:
+                    return; // No modifer to apply here
+
+                case BiomeType.Desert:
+                    PlaceVegetations(completeMap,
+                        new ActorTemplate(new Actor("Cactus", Color.Green, Color.Black, 198, Point.None)));
+                    break;
+
+                case BiomeType.Savanna:
+                    break;
+
+                case BiomeType.TropicalRainforest:
+                    break;
+
+                case BiomeType.Grassland:
+                    break;
+
+                case BiomeType.Woodland:
+                    break;
+
+                case BiomeType.SeasonalForest:
+                    break;
+
+                case BiomeType.TemperateRainforest:
+                    break;
+
+                case BiomeType.BorealForest:
+                    break;
+
+                case BiomeType.Tundra:
+                    break;
+
+                case BiomeType.Ice:
+                    break; // null as well
+
+                case BiomeType.Mountain:
+                    break;
+
+                default:
+                    break;
+            }
+            if (worldTile.CivInfluence is not null)
+            {
+                // do something
+            }
+            if (worldTile.Rivers.Count > 0)
+            {
+            }
+            if (worldTile.Road is not null)
+            {
+            }
+            if (worldTile.MagicalAuraStrength > 7)
+            {
+            }
+            switch (worldTile.SpecialLandType)
+            {
+                case SpecialLandType.None:
+                    // nothing here
+                    break;
+
+                case SpecialLandType.MagicLand:
+                    // funky shit full of interisting stuff
+                    break;
+
+                default:
+                    break;
+            }
         }
 
         private Map DetermineBiomeLookForTile(WorldTile worldTile)
@@ -633,8 +745,25 @@ namespace MagiRogue.System
                     map = GenericIceMap(worldTile);
                     break;
 
+                case BiomeType.Mountain:
+                    map = GenericMountainMap(worldTile);
+                    break;
+
                 default:
                     throw new Exception("Cound't find the biome to generate a map!");
+            }
+            return map;
+        }
+
+        private Map GenericMountainMap(WorldTile worldTile)
+        {
+            Map map = new Map($"{worldTile.BiomeType}");
+
+            for (int i = 0; i < map.Tiles.Length; i++)
+            {
+                Point pos = Point.FromIndex(i, map.Width);
+                TileFloor tile = new TileFloor(pos);
+                PrepareForAnyFloor(tile, map);
             }
             return map;
         }
@@ -656,7 +785,15 @@ namespace MagiRogue.System
 
         private Map GenericTundra(WorldTile worldTile)
         {
-            Map map = new Map($"{worldTile.BiomeType}");
+            Map map = new Map($"{worldTile.RegionName}");
+            for (int i = 0; i < map.Tiles.Length; i++)
+            {
+                Point pos = Point.FromIndex(i, map.Width);
+                TileFloor tile = new TileFloor("Ice", pos, "ice", worldTile.Glyph,
+                    worldTile.Foreground,
+                    Color.Transparent);
+                PrepareForAnyFloor(tile, map);
+            }
 
             return map;
         }
@@ -665,12 +802,26 @@ namespace MagiRogue.System
         {
             Map map = new Map($"{worldTile.BiomeType}");
 
+            for (int i = 0; i < map.Tiles.Length; i++)
+            {
+                Point pos = Point.FromIndex(i, map.Width);
+                TileFloor tile = TileFloor.GenericDirt(pos);
+                PrepareForAnyFloor(tile, map);
+            }
+
             return map;
         }
 
         private Map GenericTemperateRainForest(WorldTile worldTile)
         {
             Map map = new Map($"{worldTile.BiomeType}");
+
+            for (int i = 0; i < map.Tiles.Length; i++)
+            {
+                Point pos = Point.FromIndex(i, map.Width);
+                TileFloor tile = TileFloor.GenericDirt(pos);
+                PrepareForAnyFloor(tile, map);
+            }
 
             return map;
         }
@@ -679,12 +830,26 @@ namespace MagiRogue.System
         {
             Map map = new Map($"{worldTile.BiomeType}");
 
+            for (int i = 0; i < map.Tiles.Length; i++)
+            {
+                Point pos = Point.FromIndex(i, map.Width);
+                TileFloor tile = TileFloor.GenericDirt(pos);
+                PrepareForAnyFloor(tile, map);
+            }
+
             return map;
         }
 
         private Map GenericWoodLands(WorldTile worldTile)
         {
             Map map = new Map($"{worldTile.BiomeType}");
+
+            for (int i = 0; i < map.Tiles.Length; i++)
+            {
+                Point pos = Point.FromIndex(i, map.Width);
+                TileFloor tile = TileFloor.GenericDirt(pos);
+                PrepareForAnyFloor(tile, map);
+            }
 
             return map;
         }
@@ -693,12 +858,26 @@ namespace MagiRogue.System
         {
             Map map = new Map($"{worldTile.BiomeType}");
 
+            for (int i = 0; i < map.Tiles.Length; i++)
+            {
+                Point pos = Point.FromIndex(i, map.Width);
+                TileFloor tile = TileFloor.GenericDirt(pos);
+                PrepareForAnyFloor(tile, map);
+            }
+
             return map;
         }
 
         private Map GenericTropicalRainforest(WorldTile worldTile)
         {
             Map map = new Map($"{worldTile.BiomeType}");
+
+            for (int i = 0; i < map.Tiles.Length; i++)
+            {
+                Point pos = Point.FromIndex(i, map.Width);
+                TileFloor tile = TileFloor.GenericDirt(pos);
+                PrepareForAnyFloor(tile, map);
+            }
 
             return map;
         }
@@ -707,12 +886,27 @@ namespace MagiRogue.System
         {
             Map map = new Map($"{worldTile.BiomeType}");
 
+            for (int i = 0; i < map.Tiles.Length; i++)
+            {
+                Point pos = Point.FromIndex(i, map.Width);
+                TileFloor tile = TileFloor.GenericDirt(pos);
+                PrepareForAnyFloor(tile, map);
+            }
+
             return map;
         }
 
         private Map GenericDesertMap(WorldTile worldTile)
         {
             Map map = new Map($"{worldTile.BiomeType}");
+
+            for (int i = 0; i < map.Tiles.Length; i++)
+            {
+                Point pos = Point.FromIndex(i, map.Width);
+                TileFloor tile = new TileFloor("Sand", pos, "sand", worldTile.Glyph,
+                    worldTile.Foreground, Color.Transparent);
+                PrepareForAnyFloor(tile, map);
+            }
 
             return map;
         }
@@ -721,10 +915,123 @@ namespace MagiRogue.System
         {
             Map map = new Map($"{worldTile.BiomeType}");
 
+            for (int i = 0; i < map.Tiles.Length; i++)
+            {
+                Point pos = Point.FromIndex(i, map.Width);
+                WaterTile tile = WaterTile.NormalSeaWater(pos);
+                FloodWithWaterMap(tile, map);
+            }
+
             return map;
         }
 
         #endregion PlanetMapGenStuff
+    }
+
+    public class DungeonGenerator : MapGenerator
+    {
+        public DungeonGenerator()
+        {
+            // empty
+        }
+
+        public Map GenerateMazeMap(int maxRooms, int minRoomSize, int maxRoomSize)
+        {
+            // Create an empty map of size (mapWidht * mapHeight)
+            _map = new Map("Maze");
+
+            // store a list of the rooms created so far
+            List<Room> Rooms = new();
+
+            // create up to (maxRooms) rooms on the map
+            // and make sure the rooms do not overlap with each other
+            for (int i = 0; i < maxRooms; i++)
+            {
+                // set the room's (width, height) as a random size between (minRoomSize, maxRoomSize)
+                int newRoomWidth = randNum.Next(minRoomSize, maxRoomSize);
+                int newRoomHeigth = randNum.Next(minRoomSize, maxRoomSize);
+
+                // sets the room's X/Y Position at a random point between the edges of the map
+                int newRoomX = randNum.Next(0, _map.Width - newRoomWidth - 1);
+                int newRoomY = randNum.Next(0, _map.Height - newRoomHeigth - 1);
+
+                // create a Rectangle representing the room's perimeter
+                Rectangle roomRectangle = new Rectangle(newRoomX, newRoomY, newRoomWidth, newRoomHeigth);
+                Room newRoom = new(roomRectangle);
+
+                // Does the new room intersect with other rooms already generated?
+                bool doesRoomIntersect = Rooms.Any(room => newRoom.RoomRectangle.Intersects(room.RoomRectangle));
+
+                if (!doesRoomIntersect)
+                    Rooms.Add(newRoom);
+            }
+
+            // This is a dungeon, so begin by flooding the map with walls.
+            FloodWalls();
+
+            // carve out rooms for every room in the Rooms list
+            foreach (var room in Rooms)
+            {
+                CreateRoom(room.RoomRectangle);
+            }
+
+            // carve out tunnels between all rooms
+            // based on the Positions of their centers
+            for (int r = 1; r < Rooms.Count; r++)
+            {
+                //for all remaining rooms get the center of the room and the previous room
+                Point previousRoomCenter = Rooms[r - 1].RoomRectangle.Center;
+                Point currentRoomCenter = Rooms[r].RoomRectangle.Center;
+
+                // give a 50/50 chance of which 'L' shaped connecting hallway to tunnel out
+                if (randNum.Next(1, 2) == 1)
+                {
+                    CreateHorizontalTunnel(previousRoomCenter.X, currentRoomCenter.X, previousRoomCenter.Y);
+                    CreateVerticalTunnel(previousRoomCenter.Y, currentRoomCenter.Y, previousRoomCenter.X);
+                }
+                else
+                {
+                    CreateVerticalTunnel(previousRoomCenter.Y, currentRoomCenter.Y, previousRoomCenter.X);
+                    CreateHorizontalTunnel(previousRoomCenter.X, currentRoomCenter.X, previousRoomCenter.Y);
+                }
+            }
+
+            // Create doors now that the tunnels have been carved out
+            foreach (var room in Rooms)
+                CreateDoor(room);
+
+            PlaceNodes(10);
+
+            // spit out the final map
+            return _map;
+        }
+    }
+
+    public class GeneralMapGenerator : MapGenerator
+    {
+        public GeneralMapGenerator()
+        {
+            // empty
+        }
+
+        public Map GenerateTestMap()
+        {
+            _map = new Map("Test Map");
+
+            PrepareForFloors();
+            PrepareForOuterWalls();
+
+            return _map;
+        }
+
+        public Map GenerateStoneFloorMap()
+        {
+            _map = new Map("Test Stone Map");
+
+            PrepareForFloors();
+
+            return _map;
+        }
     }
 
     public enum RoomTag

@@ -41,6 +41,9 @@ namespace MagiRogue.Data
         [DataMember]
         public char Glyph { get; set; }
 
+        /// <summary>
+        /// <inheritdoc cref="Entity.Size"/>
+        /// </summary>
         [DataMember]
         public int Size { get; set; }
 

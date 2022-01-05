@@ -109,5 +109,21 @@
     "MPInfusionLimit": 5,
     "Density": 0.917,
     "MeltingPoint": 0
+  },
+  {
+    "Id": "dirt",
+    "Name": "Dirt",
+    "Hardness": 1,
+    "MPInfusionLimit": 1,
+    "Density": 1.22,
+    "MeltingPoint": 1196
+  },
+  {
+    "Id": "sand",
+    "Name": "Sand",
+    "Hardeness": 1,
+    "MPInfusionLimit": 2,
+    "Density": 1.6,
+    "MeltingPoint": 1700
   }
 ]

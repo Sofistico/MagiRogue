@@ -56,7 +56,8 @@ namespace MagiRogue.System.Tiles
         TemperateRainforest,
         BorealForest,
         Tundra,
-        Ice
+        Ice,
+        Mountain
     }
 
     public enum SpecialLandType
@@ -110,6 +111,12 @@ namespace MagiRogue.System.Tiles
         public Road? Road { get; internal set; }
         public RegionChunk? MapChunk { get; set; }
         public bool Visited { get; internal set; }
+
+        /// <summary>
+        /// The name of the 9x9 region of the local map
+        /// Randomly generated
+        /// </summary>
+        public string RegionName { get; internal set; }
 
         public WorldTile(Color foregroud, Color background,
             int glyph, Point position,
