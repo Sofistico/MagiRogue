@@ -109,7 +109,6 @@ namespace MagiRogue.System.Tiles
 
         public Civilization? CivInfluence { get; set; }
         public Road? Road { get; internal set; }
-        public RegionChunk? MapChunk { get; set; }
         public bool Visited { get; internal set; }
 
         /// <summary>
@@ -172,16 +171,23 @@ namespace MagiRogue.System.Tiles
 
         public int GetRiverNeighborCount(River river)
         {
-            int count = 0;
-            if (Left.Rivers.Count > 0 && Left.Rivers.Contains(river))
-                count++;
-            if (Right.Rivers.Count > 0 && Right.Rivers.Contains(river))
-                count++;
-            if (Top.Rivers.Count > 0 && Top.Rivers.Contains(river))
-                count++;
-            if (Bottom.Rivers.Count > 0 && Bottom.Rivers.Contains(river))
-                count++;
-            return count;
+            try
+            {
+                int count = 0;
+                if (Left.Rivers.Count > 0 && Left.Rivers.Contains(river))
+                    count++;
+                if (Right.Rivers.Count > 0 && Right.Rivers.Contains(river))
+                    count++;
+                if (Top.Rivers.Count > 0 && Top.Rivers.Contains(river))
+                    count++;
+                if (Bottom.Rivers.Count > 0 && Bottom.Rivers.Contains(river))
+                    count++;
+                return count;
+            }
+            catch (Exception)
+            {
+                throw new Exception("An error occured in the river count method!");
+            }
         }
 
         public WorldDirection GetLowestNeighbor()
@@ -208,12 +214,19 @@ namespace MagiRogue.System.Tiles
 
         public void SetRiverPath(River river)
         {
-            if (!Collidable)
-                return;
-
-            if (!Rivers.Contains(river))
+            try
             {
-                Rivers.Add(river);
+                if (!Collidable)
+                    return;
+
+                if (!Rivers.Contains(river))
+                {
+                    Rivers.Add(river);
+                }
+            }
+            catch (Exception)
+            {
+                throw new Exception($"Recursive river generation failed!");
             }
         }
 

@@ -54,5 +54,6 @@ namespace MagiRogue
         public static readonly Color Woodland = new Color(139 / 255f, 175 / 255f, 90 / 255f, 1);
 
         public static readonly Color DirtRoad = new Color(165, 103, 42);
+        public static readonly Color Wood = new Color(186, 140, 99);
     }
 }

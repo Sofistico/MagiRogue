@@ -1,4 +1,5 @@
 ﻿using GoRogue.DiceNotation;
+using GoRogue.Pathing;
 using MagiRogue.System.Civ;
 using MagiRogue.System.Tiles;
 using MagiRogue.Utils;
@@ -144,7 +145,12 @@ namespace MagiRogue.System.Planet
                 {
                     var nextCiv = _civilizations[i + 1];
 
-                    if (civ.Tendency == nextCiv.Tendency)
+                    Path path = planetData.AssocietatedMap.
+                        AStar.ShortestPath(civ.Territory.OwnedLand.WorldTiles[0].Position,
+                        nextCiv.Territory.OwnedLand.WorldTiles[0].Position);
+
+                    //TODO: Make sure that the roads don't colide with water and/or go away from water
+                    if (civ.Tendency == nextCiv.Tendency && path.Length <= 50)
                     {
                         BuildRoadsToFriends(civ, nextCiv);
                     }
@@ -164,7 +170,7 @@ namespace MagiRogue.System.Planet
         {
             Road road = new();
 
-            if (!tile.Collidable)
+            if (tile.HeightType == HeightType.DeepWater || tile.HeightType == HeightType.ShallowWater)
                 return;
 
             if (tile.Road != null)
@@ -186,6 +192,10 @@ namespace MagiRogue.System.Planet
             if (direction == Direction.Up)
             {
                 WorldTile worldTile = tile.Top;
+                if (worldTile.CivInfluence is not null)
+                {
+                    return;
+                }
                 worldTile.Road = road;
                 worldTile.Road.AddTileToList(worldTile);
                 worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.Top);
@@ -195,6 +205,10 @@ namespace MagiRogue.System.Planet
             if (direction == Direction.Down)
             {
                 WorldTile worldTile = tile.Bottom;
+                if (worldTile.CivInfluence is not null)
+                {
+                    return;
+                }
                 worldTile.Road = road;
                 worldTile.Road.AddTileToList(worldTile);
                 worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.Bottom);
@@ -204,6 +218,11 @@ namespace MagiRogue.System.Planet
             if (direction == Direction.Left)
             {
                 WorldTile worldTile = tile.Left;
+                if (worldTile.CivInfluence is not null)
+                {
+                    return;
+                }
+
                 worldTile.Road = road;
                 worldTile.Road.AddTileToList(worldTile);
                 worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.Left);
@@ -213,6 +232,11 @@ namespace MagiRogue.System.Planet
             if (direction == Direction.Right)
             {
                 WorldTile worldTile = tile.Right;
+                if (worldTile.CivInfluence is not null)
+                {
+                    return;
+                }
+
                 worldTile.Road = road;
                 worldTile.Road.AddTileToList(worldTile);
                 worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.Right);
@@ -222,6 +246,11 @@ namespace MagiRogue.System.Planet
             if (direction == Direction.UpLeft)
             {
                 WorldTile worldTile = tile.TopLeft;
+                if (worldTile.CivInfluence is not null)
+                {
+                    return;
+                }
+
                 worldTile.Road = road;
                 worldTile.Road.AddTileToList(worldTile);
                 worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.BottomLeft);
@@ -231,6 +260,11 @@ namespace MagiRogue.System.Planet
             if (direction == Direction.UpRight)
             {
                 WorldTile worldTile = tile.TopRight;
+                if (worldTile.CivInfluence is not null)
+                {
+                    return;
+                }
+
                 worldTile.Road = road;
                 worldTile.Road.AddTileToList(worldTile);
                 worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.TopRight);
@@ -240,6 +274,11 @@ namespace MagiRogue.System.Planet
             if (direction == Direction.DownLeft)
             {
                 WorldTile worldTile = tile.BottomLeft;
+                if (worldTile.CivInfluence is not null)
+                {
+                    return;
+                }
+
                 worldTile.Road = road;
                 worldTile.Road.AddTileToList(worldTile);
                 worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.BottomLeft);
@@ -249,6 +288,11 @@ namespace MagiRogue.System.Planet
             if (direction == Direction.DownRight)
             {
                 WorldTile worldTile = tile.BottomRight;
+                if (worldTile.CivInfluence is not null)
+                {
+                    return;
+                }
+
                 worldTile.Road = road;
                 worldTile.Road.AddTileToList(worldTile);
                 worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.BottomRight);
@@ -765,6 +809,7 @@ namespace MagiRogue.System.Planet
             }
         }
 
+        // Worried with this method, the recursion is throwing too many errors
         private void FindPathToWater(WorldTile tile, WorldDirection currentDirection, ref River river)
         {
             if (tile.Rivers.Contains(river))
@@ -882,7 +927,6 @@ namespace MagiRogue.System.Planet
             {
                 throw new Exception("The recursive method to find the river path failed!");
             }
-            
         }
 
         private void BuildRiverGroups()

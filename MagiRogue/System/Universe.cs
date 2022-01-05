@@ -140,10 +140,10 @@ namespace MagiRogue.System
             }
         }
 
-        public void ChangePlayerMap(Map mapToGo, Point pos)
+        public void ChangePlayerMap(Map mapToGo, Point pos, Map previousMap)
         {
             CurrentMap.LastPlayerPosition = new Point(Player.Position.X, Player.Position.Y);
-            ChangeActorMap(Player, mapToGo, pos);
+            ChangeActorMap(Player, mapToGo, pos, previousMap);
             UpdateIfNeedTheMap(mapToGo);
             CurrentMap = mapToGo;
             GameLoop.UIManager.MapWindow.LoadMap(CurrentMap);
@@ -160,8 +160,9 @@ namespace MagiRogue.System
                 return; // Do nothing
         }
 
-        public void ChangeActorMap(Entity entity, Map mapToGo, Point pos)
+        public void ChangeActorMap(Entity entity, Map mapToGo, Point pos, Map previousMap)
         {
+            previousMap.Remove(entity);
             entity.Position = pos;
             mapToGo.Add(entity);
             if (!AllMaps.Contains(mapToGo))
@@ -178,17 +179,6 @@ namespace MagiRogue.System
             {
                 node.SetUpNodeTurn(this);
             }
-        }
-
-        // Create a new map using the Map class
-        // and a map generator. Uses several
-        // parameters to determine geometry
-        private void CreateTownMap()
-        {
-            CityGenerator mapGen = new();
-            var map = mapGen.GenerateTownMap(_maxRooms, _minRoomSize, _maxRoomSize);
-            CurrentMap = map;
-            AddMapToList(map);
         }
 
         private void CreateTestMap()

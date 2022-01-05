@@ -51,7 +51,7 @@ namespace MagiRogue.System
         {
             foreach (var pos in _map.Positions())
             {
-                _map.SetTerrain(TileEncyclopedia.ShortGrass(pos));
+                _map.SetTerrain(TileEncyclopedia.GenericGrass(pos));
             }
         }
 
@@ -141,7 +141,11 @@ namespace MagiRogue.System
             }
         }
 
-        // Returns a list of points expressing the perimeter of a rectangle
+        /// <summary>
+        /// Returns a list of points expressing the perimeter of a rectangle
+        /// </summary>
+        /// <param name="room"></param>
+        /// <returns></returns>
         protected List<Point> GetBorderCellLocations(Rectangle room)
         {
             //establish room boundaries
@@ -361,14 +365,11 @@ namespace MagiRogue.System
         /// <param name="map"></param>
         /// <param name="treeToPlace"></param>
         /// <exception cref="NotImplementedException"></exception>
-        protected void PlaceTrees(Map map, ActorTemplate treeToPlace)
+        protected void PlaceTrees(Map map, TileWall treeToPlace)
         {
-            //first make sure that the vegetation won't be attackable and it's a vegetation
-            treeToPlace.Anatomy.IsVegetation = true;
-            treeToPlace.Size = 4000;
             for (int i = 0; i < map.Tiles.Length; i++)
             {
-                Actor tree = treeToPlace;
+                TileWall tree = TileEncyclopedia.GenericTree();
                 Point pos = Point.FromIndex(i, map.Width);
                 int rng = randNum.Next(0, 15);
                 // provisional
@@ -376,9 +377,14 @@ namespace MagiRogue.System
                 if (rng == 13)
                 {
                     tree.Position = pos;
-                    map.Add(tree);
+                    map.SetTerrain(tree);
                 }
             }
+        }
+
+        protected void PlaceGenericTrees(Map map)
+        {
+            PlaceTrees(map, TileEncyclopedia.GenericTree());
         }
 
         /// <summary>
@@ -387,58 +393,34 @@ namespace MagiRogue.System
         /// <param name="map"></param>
         /// <param name="treesToPlace"></param>
         /// <exception cref="NotImplementedException"></exception>
-        protected void PlaceTrees(Map map, List<ActorTemplate> treesToPlace)
+        protected void PlaceTrees(Map map, List<TileWall> treesToPlace)
         {
-            //first make sure that the vegetation won't be attackable and it's a vegetation
-            for (int i = 0; i < map.Tiles.Length; i++)
-            {
-                Actor tree = treesToPlace[randNum.Next(treesToPlace.Count)];
-                Point pos = Point.FromIndex(i, map.Width);
-                tree.Anatomy.IsVegetation = true;
-                int rng = randNum.Next(0, 15);
-                // provisional
-                if (rng == 13)
-                {
-                    tree.Position = pos;
-                    map.Add(tree);
-                }
-                if (rng == 14)
-                {
-                    Actor otherVegetal = treesToPlace[randNum.Next(treesToPlace.Count)];
-                    otherVegetal.Position = pos;
-                    otherVegetal.Anatomy.IsVegetation = true;
-                    map.Add(otherVegetal);
-                }
-                else if (rng == 5)
-                {
-                    Actor otherVegetal = treesToPlace[randNum.Next(treesToPlace.Count)];
-                    otherVegetal.Position = pos;
-                    otherVegetal.Anatomy.IsVegetation = true;
-                    map.Add(otherVegetal);
-                }
-            }
+            // need to remake
+            throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Places vegetation along the floor of the map
+        /// Places vegetation along the floor of the map, normamilly walkable
         /// </summary>
         /// <param name="map"></param>
         /// <param name="vegetationToPlace"></param>
         /// <exception cref="NotImplementedException"></exception>
-        protected void PlaceVegetations(Map map, ActorTemplate vegetationToPlace)
+        protected void PlaceVegetations(Map map, TileFloor vegetationToPlace)
         {
             //first make sure that the vegetation won't be attackable and it's a vegetation
-            vegetationToPlace.Anatomy.IsVegetation = true;
             for (int i = 0; i < map.Tiles.Length; i++)
             {
-                Actor vegetal = vegetationToPlace;
+                TileFloor vegetal = new
+                    TileFloor(vegetationToPlace.Name, vegetationToPlace.Position,
+                    vegetationToPlace.MaterialOfTile.Id, vegetationToPlace.Glyph,
+                    vegetationToPlace.Foreground, vegetationToPlace.Background);
                 Point pos = Point.FromIndex(i, map.Width);
                 int rng = randNum.Next(0, 15);
                 // provisional
                 if (rng == 13)
                 {
                     vegetal.Position = pos;
-                    map.Add(vegetal);
+                    map.SetTerrain(vegetal);
                 }
             }
         }
@@ -449,41 +431,36 @@ namespace MagiRogue.System
         /// <param name="map"></param>
         /// <param name="vegetationsToPlace"></param>
         /// <exception cref="NotImplementedException"></exception>
-        protected void PlaceVegetations(Map map, List<ActorTemplate> vegetationsToPlace)
+        protected void PlaceVegetations(Map map, List<TileFloor> vegetationsToPlace)
         {
             //first make sure that the vegetation won't be attackable and it's a vegetation
-            for (int i = 0; i < map.Tiles.Length; i++)
+            for (int i = 0; i < vegetationsToPlace.Count; i++)
             {
-                Actor vegetal = vegetationsToPlace[randNum.Next(vegetationsToPlace.Count)];
-                Point pos = Point.FromIndex(i, map.Width);
-                vegetal.Anatomy.IsVegetation = true;
-                int rng = randNum.Next(0, 15);
-                // provisional
-                if (rng == 13)
-                {
-                    vegetal.Position = pos;
-                    map.Add(vegetal);
-                }
-                if (rng == 14)
-                {
-                    Actor otherVegetal = vegetationsToPlace[randNum.Next(vegetationsToPlace.Count)];
-                    otherVegetal.Position = pos;
-                    otherVegetal.Anatomy.IsVegetation = true;
-                    map.Add(otherVegetal);
-                }
-                else if (rng == 5)
-                {
-                    Actor otherVegetal = vegetationsToPlace[randNum.Next(vegetationsToPlace.Count)];
-                    otherVegetal.Position = pos;
-                    otherVegetal.Anatomy.IsVegetation = true;
-                    map.Add(otherVegetal);
-                }
+                TileFloor vegetal = vegetationsToPlace[randNum.Next(vegetationsToPlace.Count + 1)];
+
+                PlaceVegetations(map, vegetal);
             }
         }
 
         protected static void FloodWithWaterMap(WaterTile tile, Map map)
         {
             map.SetTerrain(tile);
+        }
+
+        protected void PutRngFloorTileThere(Map map, TileFloor template)
+        {
+            for (int i = 0; i < map.Tiles.Length; i++)
+            {
+                int rng = randNum.Next(0, 15);
+                Point pos = map.Tiles[i].Position;
+                if (rng == 13)
+                {
+                    TileFloor newTile = new TileFloor(template.Name, pos,
+                        template.MaterialOfTile.Id, template.Glyph,
+                        template.Foreground, template.Background);
+                    map.SetTerrain(newTile);
+                }
+            }
         }
 
         #endregion GeneralMapGen
@@ -632,37 +609,51 @@ namespace MagiRogue.System
 
                 case BiomeType.Desert:
                     PlaceVegetations(completeMap,
-                        new ActorTemplate(new Actor("Cactus", Color.Green, Color.Black, 198, Point.None)));
+                        new TileFloor("Cactus", Point.None,
+                        "grass", 198, Color.Green, Color.Black));
                     break;
 
                 case BiomeType.Savanna:
+                    PlaceGenericTrees(completeMap);
                     break;
 
                 case BiomeType.TropicalRainforest:
+                    PlaceGenericTrees(completeMap);
                     break;
 
                 case BiomeType.Grassland:
+                    PlaceVegetations(completeMap,
+                        new TileFloor("Shrub", Point.None,
+                            "grass", '"', Color.Green, Color.Black));
                     break;
 
                 case BiomeType.Woodland:
+                    PlaceGenericTrees(completeMap);
                     break;
 
                 case BiomeType.SeasonalForest:
+                    PlaceGenericTrees(completeMap);
+
                     break;
 
                 case BiomeType.TemperateRainforest:
+                    PlaceGenericTrees(completeMap);
+
                     break;
 
                 case BiomeType.BorealForest:
+                    PlaceGenericTrees(completeMap);
                     break;
 
                 case BiomeType.Tundra:
+                    PlaceGenericTrees(completeMap);
                     break;
 
                 case BiomeType.Ice:
                     break; // null as well
 
                 case BiomeType.Mountain:
+                    PutRngFloorTileThere(completeMap, TileEncyclopedia.GenericGrass(Point.None));
                     break;
 
                 default:
@@ -717,6 +708,8 @@ namespace MagiRogue.System
             return map;
         }
 
+        #region BiomeMaps
+
         private static Map GenericMountainMap(WorldTile worldTile)
         {
             Map map = new Map($"{worldTile.BiomeType}");
@@ -751,9 +744,7 @@ namespace MagiRogue.System
             for (int i = 0; i < map.Tiles.Length; i++)
             {
                 Point pos = Point.FromIndex(i, map.Width);
-                TileFloor tile = new TileFloor("Ice", pos, "ice", worldTile.Glyph,
-                    worldTile.Foreground,
-                    Color.Transparent);
+                TileFloor tile = TileEncyclopedia.GenericGrass(pos);
                 PrepareForAnyFloor(tile, map);
             }
 
@@ -767,7 +758,7 @@ namespace MagiRogue.System
             for (int i = 0; i < map.Tiles.Length; i++)
             {
                 Point pos = Point.FromIndex(i, map.Width);
-                TileFloor tile = TileFloor.GenericDirt(pos);
+                TileFloor tile = TileEncyclopedia.GenericGrass(pos);
                 PrepareForAnyFloor(tile, map);
             }
 
@@ -781,7 +772,7 @@ namespace MagiRogue.System
             for (int i = 0; i < map.Tiles.Length; i++)
             {
                 Point pos = Point.FromIndex(i, map.Width);
-                TileFloor tile = TileFloor.GenericDirt(pos);
+                TileFloor tile = TileEncyclopedia.GenericGrass(pos);
                 PrepareForAnyFloor(tile, map);
             }
 
@@ -795,7 +786,7 @@ namespace MagiRogue.System
             for (int i = 0; i < map.Tiles.Length; i++)
             {
                 Point pos = Point.FromIndex(i, map.Width);
-                TileFloor tile = TileFloor.GenericDirt(pos);
+                TileFloor tile = TileEncyclopedia.GenericGrass(pos);
                 PrepareForAnyFloor(tile, map);
             }
 
@@ -809,7 +800,7 @@ namespace MagiRogue.System
             for (int i = 0; i < map.Tiles.Length; i++)
             {
                 Point pos = Point.FromIndex(i, map.Width);
-                TileFloor tile = TileFloor.GenericDirt(pos);
+                TileFloor tile = TileEncyclopedia.GenericGrass(pos);
                 PrepareForAnyFloor(tile, map);
             }
 
@@ -823,7 +814,7 @@ namespace MagiRogue.System
             for (int i = 0; i < map.Tiles.Length; i++)
             {
                 Point pos = Point.FromIndex(i, map.Width);
-                TileFloor tile = TileFloor.GenericDirt(pos);
+                TileFloor tile = TileEncyclopedia.GenericGrass(pos);
                 PrepareForAnyFloor(tile, map);
             }
 
@@ -837,7 +828,7 @@ namespace MagiRogue.System
             for (int i = 0; i < map.Tiles.Length; i++)
             {
                 Point pos = Point.FromIndex(i, map.Width);
-                TileFloor tile = TileFloor.GenericDirt(pos);
+                TileFloor tile = TileEncyclopedia.GenericGrass(pos);
                 PrepareForAnyFloor(tile, map);
             }
 
@@ -851,7 +842,7 @@ namespace MagiRogue.System
             for (int i = 0; i < map.Tiles.Length; i++)
             {
                 Point pos = Point.FromIndex(i, map.Width);
-                TileFloor tile = TileFloor.GenericDirt(pos);
+                TileFloor tile = TileEncyclopedia.GenericGrass(pos);
                 PrepareForAnyFloor(tile, map);
             }
 
@@ -886,6 +877,8 @@ namespace MagiRogue.System
 
             return map;
         }
+
+        #endregion BiomeMaps
 
         #endregion PlanetMapGenStuff
     }
