@@ -8,6 +8,7 @@ using System;
 
 namespace MagiRogue.System.Tiles
 {
+    // need to separate the TileBase from the ColoredGlyph object
     public abstract class TileBase : ColoredGlyph, IGameObject
     {
         private int _tileHealth;
@@ -72,6 +73,10 @@ namespace MagiRogue.System.Tiles
             }
         }
 
+        // TODO: For some future fun stuff!
+        // like continious wall and determining what there is next to it
+        public int BitMask { get; set; }
+
         #region backingField Data
 
         public GoRogue.GameFramework.Map CurrentMap => backingField.CurrentMap;
@@ -90,6 +95,7 @@ namespace MagiRogue.System.Tiles
         /// Note that the calculation on how many time it takes is usually MoveTime / Speed.
         /// </summary>
         public int MoveTimeCost { get; set; } = 100;
+        public string Description { get; internal set; }
 
         #endregion backingField Data
 
@@ -99,7 +105,8 @@ namespace MagiRogue.System.Tiles
         // isBlockingMove and isBlockingSight are optional parameters, set to false by default
         protected TileBase(Color foregroud, Color background, int glyph, int layer,
             Point position, string idOfMaterial, bool blocksMove = true,
-            bool isTransparent = true, string name = "ForgotToChangeName") : base(foregroud, background, glyph)
+            bool isTransparent = true, string name = "ForgotToChangeName") :
+            base(foregroud, background, glyph)
         {
             IsBlockingMove = blocksMove;
             Name = name;

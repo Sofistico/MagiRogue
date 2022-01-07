@@ -1,4 +1,5 @@
-﻿using MagiRogue.System;
+﻿global using Point = SadRogue.Primitives.Point;
+using MagiRogue.System;
 using MagiRogue.UI;
 
 namespace MagiRogue

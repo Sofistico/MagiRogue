@@ -9,6 +9,7 @@ using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GoRogue;
 
 namespace MagiRogue.System
 {
@@ -30,10 +31,13 @@ namespace MagiRogue.System
         private readonly int _minRoomSize = 4;
         private readonly int _maxRoomSize = 10;
         private readonly Random rndNum = new();
-        private RegionChunk[] allChunks;
+        private readonly IDGenerator idGen = new();
         /*private const int _zMaxUpLevel = 10;
         private const int _zMaxLowLevel = -10;*/
 
+        /// <summary>
+        /// The World map, contains the map data and the Planet data
+        /// </summary>
         public PlanetMap WorldMap { get; set; }
 
         /// <summary>
@@ -41,9 +45,9 @@ namespace MagiRogue.System
         /// </summary>
         public Map CurrentMap { get; private set; }
 
-        public List<Map> AllMaps { get; set; }
-
-        // Player data
+        /// <summary>
+        /// Player data
+        /// </summary>
         public Player Player { get; set; }
 
         public TimeSystem Time { get; private set; }
@@ -52,12 +56,16 @@ namespace MagiRogue.System
         public SeasonType CurrentSeason { get; set; }
 
         /// <summary>
+        /// All the maps and chunks of the game
+        /// </summary>
+        public RegionChunk[] AllChunks { get; set; }
+
+        /// <summary>
         /// Creates a new game world and stores it in a
         /// publicly accessible constructor.
         /// </summary>
         public Universe(Player player, bool testGame = false)
         {
-            AllMaps = new();
             Time = new TimeSystem();
             CurrentSeason = SeasonType.Spring;
 
@@ -66,24 +74,11 @@ namespace MagiRogue.System
                 WorldMap = new PlanetGenerator().CreatePlanet(planetWidth,
                     planetHeight,
                     planetMaxCivs);
+                WorldMap.AssocietatedMap.IsActive = true;
                 maxChunks = planetWidth * planetHeight;
-                allChunks = new RegionChunk[maxChunks];
-                AllMaps.Add(WorldMap.AssocietatedMap);
-
+                AllChunks = new RegionChunk[maxChunks];
                 CurrentMap = WorldMap.AssocietatedMap;
                 PlacePlayerOnWorld(player);
-
-                /*// Build a map
-                CreateTownMap();
-
-                CreateStoneFloorMap();
-
-                CreateStoneMazeMap();
-
-                // create an instance of player
-                PlacePlayer(player);*/
-
-                //PlacePlayer(player);
             }
             else
             {
@@ -121,31 +116,14 @@ namespace MagiRogue.System
             SetUpStuff(map);
         }
 
-        private void CreateStoneFloorMap()
-        {
-            var map = new GeneralMapGenerator().GenerateStoneFloorMap();
-
-            AddMapToList(map);
-        }
-
-        private void AddMapToList(Map map) => AllMaps.Add(map);
-
-        private void AddMapsToList(List<Map> map)
-        {
-            for (int i = 0; i < map.Count; i++)
-            {
-                Map mip = map[i];
-
-                AllMaps.Add(mip);
-            }
-        }
-
         public void ChangePlayerMap(Map mapToGo, Point pos, Map previousMap)
         {
             CurrentMap.LastPlayerPosition = new Point(Player.Position.X, Player.Position.Y);
+            CurrentMap.UnloadFromMemory();
             ChangeActorMap(Player, mapToGo, pos, previousMap);
             UpdateIfNeedTheMap(mapToGo);
             CurrentMap = mapToGo;
+            mapToGo.LoadToMemory();
             GameLoop.UIManager.MapWindow.LoadMap(CurrentMap);
             GameLoop.UIManager.MapWindow.CenterOnActor(Player);
         }
@@ -165,8 +143,6 @@ namespace MagiRogue.System
             previousMap.Remove(entity);
             entity.Position = pos;
             mapToGo.Add(entity);
-            if (!AllMaps.Contains(mapToGo))
-                AddMapToList(mapToGo);
         }
 
         /// <summary>
@@ -186,7 +162,6 @@ namespace MagiRogue.System
             GeneralMapGenerator generalMapGenerator = new();
             Map map = generalMapGenerator.GenerateTestMap();
             CurrentMap = map;
-            AddMapToList(map);
         }
 
         // Create a player using the Player class
@@ -359,17 +334,20 @@ namespace MagiRogue.System
             CurrentMap.RemoveAllEntities();
             CurrentMap.RemoveAllTiles();
             CurrentMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
-            for (int i = 0; i < AllMaps.Count; i++)
+            for (int i = 0; i < AllChunks.Length; i++)
             {
-                AllMaps[i].RemoveAllEntities();
-                AllMaps[i].RemoveAllTiles();
-                AllMaps[i].GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
+                Map[] maps = AllChunks[i].LocalMaps;
+                for (int z = 0; z < maps.Length; z++)
+                {
+                    maps[i].RemoveAllEntities();
+                    maps[i].RemoveAllTiles();
+                    maps[i].GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
+                }
             }
             CurrentMap = null;
             Player = null;
-            AllMaps.Clear();
-            AllMaps = null;
-            allChunks = null;
+            AllChunks = null;
+            AllChunks = null;
             WorldMap = null;
 
             GameLoop.UIManager.MainMenu.RestartGame();
@@ -405,13 +383,18 @@ namespace MagiRogue.System
             WildernessGenerator genMap = new WildernessGenerator();
             newChunck.LocalMaps = genMap.GenerateMapWithWorldParam(WorldMap, posGenerated);
 
-            allChunks[Point.ToIndex(posGenerated.X, posGenerated.Y, planetWidth)] = newChunck;
+            for (int i = 0; i < newChunck.LocalMaps.Length; i++)
+            {
+                newChunck.LocalMaps[i].SetId(idGen.UseID());
+            }
+
+            AllChunks[Point.ToIndex(posGenerated.X, posGenerated.Y, planetWidth)] = newChunck;
 
             return newChunck;
         }
 
         public RegionChunk GetChunckByPos(Point playerPoint) =>
-            allChunks[Point.ToIndex(playerPoint.X, playerPoint.Y, planetWidth)];
+            AllChunks[Point.ToIndex(playerPoint.X, playerPoint.Y, planetWidth)];
 
         public bool MapIsWorld()
         {
@@ -452,13 +435,13 @@ namespace MagiRogue.System
         }
 
         public Point ChunckPos() => new Point(X, Y);
-    }
 
-    // Maybe i will do something with it, but only time will tell
-    public class AddMapEventArgs : EventArgs
-    {
-        public Map NewMap { get; }
-
-        public AddMapEventArgs(Map newMap) => NewMap = newMap;
+        public void ActivateAllMaps()
+        {
+            for (int i = 0; i < LocalMaps.Length; i++)
+            {
+                LocalMaps[i].LoadToMemory();
+            }
+        }
     }
 }

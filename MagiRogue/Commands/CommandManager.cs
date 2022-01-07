@@ -504,8 +504,7 @@ namespace MagiRogue.Commands
             Map currentMap = GameLoop.Universe.CurrentMap;
             if (possibleStairs is not null && possibleStairs.FurnitureType == FurnitureType.StairsDown)
             {
-                Map map =
-                    GameLoop.Universe.AllMaps.FirstOrDefault(m => m == possibleStairs.MapConnection);
+                Map map = possibleStairs.MapConnection;
                 // TODO: For now it's just a test, need to work out a better way to do it.
                 GameLoop.Universe.ChangePlayerMap(map, map.GetRandomWalkableTile(), currentMap);
 
@@ -531,6 +530,7 @@ namespace MagiRogue.Commands
                 RegionChunk chunk = GameLoop.Universe.GetChunckByPos(playerPoint);
                 GameLoop.Universe.ChangePlayerMap(chunk.LocalMaps[0],
                     chunk.LocalMaps[0].LastPlayerPosition, currentMap);
+
                 return true;
             }
             else
@@ -551,8 +551,7 @@ namespace MagiRogue.Commands
             {
                 if (possibleStairs is not null && !GameLoop.Universe.MapIsWorld())
                 {
-                    Map map = GameLoop.Universe.AllMaps.FirstOrDefault
-                        (m => m == possibleStairs.MapConnection);
+                    Map map = possibleStairs.MapConnection;
                     // TODO: For now it's just a test, need to work out a better way to do it.
                     GameLoop.Universe.ChangePlayerMap(map, map.GetRandomWalkableTile(), currentMap);
 

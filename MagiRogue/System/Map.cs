@@ -1,4 +1,5 @@
-﻿using GoRogue.GameFramework;
+﻿using GoRogue;
+using GoRogue.GameFramework;
 using GoRogue.SpatialMaps;
 using MagiRogue.Entities;
 using MagiRogue.System.Tiles;
@@ -55,10 +56,12 @@ namespace MagiRogue.System
             }
         }
 
-        public Point LastPlayerPosition { get; set; }
+        public Point? LastPlayerPosition { get; set; }
 
         public string MapName { get; }
         public bool NeedsUpdate { get; internal set; }
+        public bool IsActive { get; set; }
+        public uint MapId { get; private set; }
 
         #endregion Properties
 
@@ -103,6 +106,16 @@ namespace MagiRogue.System
             {
                 Remove(item);
             }
+        }
+
+        public void UnloadFromMemory()
+        {
+            IsActive = false;
+        }
+
+        public void LoadToMemory()
+        {
+            IsActive = true;
         }
 
         /// <summary>
@@ -395,6 +408,8 @@ namespace MagiRogue.System
         {
             return MapName;
         }
+
+        public void SetId(uint id) => MapId = id;
 
         #endregion HelperMethods
 
