@@ -2,6 +2,7 @@
 using MagiRogue.System;
 using MagiRogue.System.Tiles;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,11 @@ namespace MagiRogue.Data
     {
         public override Map ReadJson(JsonReader reader,
             Type objectType, Map? existingValue, bool hasExistingValue,
-            JsonSerializer serializer) => serializer.Deserialize<MapTemplate>(reader);
+            JsonSerializer serializer)
+        {
+            JObject futureMap = JObject.Load(reader);
+            return serializer.Deserialize<MapTemplate>(reader);
+        }
 
         public override void WriteJson(JsonWriter writer, Map? value, JsonSerializer serializer)
             => serializer.Serialize(writer, (MapTemplate)value);
@@ -26,7 +31,7 @@ namespace MagiRogue.Data
         public BasicTile[] Tiles { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
-        public Point? LastPlayerPosition { get; set; }
+        public Point LastPlayerPosition { get; set; }
         public uint MapId { get; private set; }
         public IList<Entity> Entities;
 
@@ -34,7 +39,7 @@ namespace MagiRogue.Data
             BasicTile[] tiles,
             int width,
             int height,
-            Point? lastPlayerPosition,
+            Point lastPlayerPosition,
             uint mapId)
         {
             MapName = mapName;
@@ -63,7 +68,14 @@ namespace MagiRogue.Data
             MapTemplate template = new MapTemplate(map.MapName, tiles, map.Width,
                 map.Height, map.LastPlayerPosition, map.MapId);
 
-            template.Entities = (IList<Entity>)map.Entities.Items;
+            List<Entity> entities = new List<Entity>();
+
+            foreach (Entity item in map.Entities.Items)
+            {
+                entities.Add(item);
+            }
+
+            template.Entities = entities;
 
             return template;
         }

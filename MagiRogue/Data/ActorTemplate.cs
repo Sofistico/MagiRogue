@@ -30,7 +30,7 @@ namespace MagiRogue.Data
         /// each actor and human redable.
         /// </summary>
         [DataMember]
-        public string Id { get; set; }
+        public string ID { get; set; }
 
         [DataMember]
         public string Name { get; set; }
@@ -233,6 +233,8 @@ namespace MagiRogue.Data
                actor.Weight,
                actor.Material.Id,
                abilitylist);
+
+            actorTemplate.ID = actor.ID.ToString();
 
             return actorTemplate;
         }

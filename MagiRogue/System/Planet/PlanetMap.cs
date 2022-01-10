@@ -36,6 +36,21 @@ namespace MagiRogue.System.Planet
             Civilizations = new List<Civilization>();
         }
 
+        public PlanetMap(float[,] heightData, float[,] heatData,
+            float[,] moistureData, float min, float max,
+            List<Civilization> civilizations, Map associetatedMap)
+        {
+            HeightData = heightData;
+            HeatData = heatData;
+            MoistureData = moistureData;
+            Min = min;
+            Max = max;
+            Civilizations = civilizations;
+            AssocietatedMap = associetatedMap;
+            _height = associetatedMap.Height;
+            _width = associetatedMap.Width;
+        }
+
         public void SetWorldTiles(WorldTile[,] tiles)
         {
             AssocietatedMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().Disable();

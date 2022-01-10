@@ -1,6 +1,6 @@
 ﻿[
   {
-    "Id": "test_troll",
+    "ID": "test_troll",
     "Name": "Test Troll",
     "Description": "A test entitiy, if you see it's either a bug or a test",
     "Glyph": "T",
@@ -34,7 +34,7 @@
     "Background": "Black"
   },
   {
-    "Id": "normal_human",
+    "ID": "normal_human",
     "Name": "Human",
     "Description": "A normal human you can see everywhere",
     "Glyph": "h",

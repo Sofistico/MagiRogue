@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Console = SadConsole.Console;
-using Point = SadRogue.Primitives.Point;
 using Rectangle = SadRogue.Primitives.Rectangle;
 
 namespace MagiRogue.UI.Windows

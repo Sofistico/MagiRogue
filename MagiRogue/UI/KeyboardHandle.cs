@@ -13,6 +13,8 @@ using SadRogue.Primitives;
 using MagiRogue.System.Time;
 using MagiRogue.UI.Windows;
 using MagiRogue.System.Tiles;
+using Newtonsoft.Json;
+using MagiRogue.Data;
 
 namespace MagiRogue.UI
 {
@@ -300,6 +302,14 @@ namespace MagiRogue.UI
             if (info.IsKeyPressed(Keys.Tab))
             {
                 CommandManager.CreateNewMapForTesting();
+            }
+            if (info.IsKeyPressed(Keys.OemPlus))
+            {
+                // the map is being saved, but it isn't being properly deserialized
+                var json = JsonConvert.SerializeObject((MapTemplate)GetPlayer.CurrentMap);
+                // The universe class also isn't being serialized properly, crashing newtonsoft
+                var gameState = JsonConvert.SerializeObject(new GameState().Universe);
+                MapTemplate mapDeJsonified = JsonConvert.DeserializeObject<Map>(json);
             }
 
 #endif

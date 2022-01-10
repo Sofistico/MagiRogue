@@ -88,6 +88,23 @@ namespace MagiRogue.System
             }
         }
 
+        public Universe(PlanetMap worldMap,
+            Map currentMap,
+            Player player,
+            TimeSystem time,
+            bool possibleChangeMap,
+            SeasonType currentSeason,
+            RegionChunk[] allChunks)
+        {
+            WorldMap = worldMap;
+            CurrentMap = currentMap;
+            Player = player;
+            Time = time;
+            PossibleChangeMap = possibleChangeMap;
+            CurrentSeason = currentSeason;
+            AllChunks = allChunks;
+        }
+
         private void PlacePlayerOnWorld(Player player)
         {
             if (player != null)
