@@ -256,9 +256,12 @@ namespace MagiRogue.System
         {
             // dangling events of the map.
             // Could be the origin of the memory leak of the map object
-            Map.ObjectAdded -= Map_ObjectAdded;
-            Map.ObjectMoved -= Map_ObjectMoved;
-            Map.FOVRecalculated -= Map_FOVRecalculated;
+            if (Map is not null)
+            {
+                Map.ObjectAdded -= Map_ObjectAdded;
+                Map.ObjectMoved -= Map_ObjectMoved;
+                Map.FOVRecalculated -= Map_FOVRecalculated;
+            }
         }
     }
 }

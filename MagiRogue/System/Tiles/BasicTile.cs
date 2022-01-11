@@ -109,6 +109,8 @@ namespace MagiRogue.System.Tiles
         public static explicit operator TileBase(BasicTile basicTile)
         {
             TileBase tile;
+            if (basicTile == null)
+                return null;
             switch (basicTile.TileType)
             {
                 case TileType.Null:

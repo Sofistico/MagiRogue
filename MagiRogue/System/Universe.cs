@@ -423,5 +423,7 @@ namespace MagiRogue.System
             else
                 return false;
         }
+
+        public void ForceChangeCurrentMap(Map map) => CurrentMap = map;
     }
 }

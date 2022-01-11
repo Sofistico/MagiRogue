@@ -186,6 +186,9 @@ namespace MagiRogue.Data.Serialization
 
         public static implicit operator Actor(ActorTemplate actorTemplate)
         {
+            if(actorTemplate is null)
+                return null;
+
             Actor actor =
                 new Actor(actorTemplate.Name, actorTemplate.ForegroundBackingField.Color,
                 actorTemplate.BackgroundBackingField.Color,

@@ -66,6 +66,8 @@ namespace MagiRogue.Data.Serialization
 
         public static implicit operator MapTemplate(Map map)
         {
+            if (map == null)
+                return null;
             BasicTile[] tiles = new BasicTile[map.Tiles.Length];
             for (int i = 0; i < map.Tiles.Length; i++)
             {
@@ -93,6 +95,8 @@ namespace MagiRogue.Data.Serialization
 
             for (int i = 0; i < map.Tiles.Length; i++)
             {
+                if (objMap.Tiles[i] == null)
+                    continue;
                 objMap.SetTerrain((TileBase)map.Tiles[i]);
             }
             for (int x = 0; x < map.Entities.Count; x++)
