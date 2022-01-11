@@ -1,7 +1,8 @@
 ﻿using GoRogue;
 using GoRogue.Components;
 using GoRogue.GameFramework;
-using MagiRogue.Data.Materials;
+using MagiRogue.Data.Serialization;
+using Newtonsoft.Json;
 using SadConsole;
 using SadRogue.Primitives;
 using System;

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagiRogue.Data
+namespace MagiRogue.Data.Serialization
 {
     public class AbilityTemplate
     {

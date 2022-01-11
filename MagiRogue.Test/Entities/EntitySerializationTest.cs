@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Xunit;
+using MagiRogue.Data.Serialization;
 
 namespace MagiRogue.Test.Entities
 {

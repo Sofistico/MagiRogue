@@ -1,5 +1,7 @@
-﻿using MagiRogue.System.Civ;
+﻿using MagiRogue.Data.Serialization;
+using MagiRogue.System.Civ;
 using MagiRogue.System.Tiles;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +11,7 @@ using System.Threading.Tasks;
 namespace MagiRogue.System.Planet
 {
     // made with http://www.jgallant.com/procedurally-generating-wrapping-world-maps-in-unity-csharp-part-1/#intro
-
+    [JsonConverter(typeof(PlanetMapJsonConverter))]
     public sealed class PlanetMap
     {
         private readonly int _height;

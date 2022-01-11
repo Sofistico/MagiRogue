@@ -15,6 +15,7 @@ using MagiRogue.UI.Windows;
 using MagiRogue.System.Tiles;
 using Newtonsoft.Json;
 using MagiRogue.Data;
+using MagiRogue.Data.Serialization;
 
 namespace MagiRogue.UI
 {

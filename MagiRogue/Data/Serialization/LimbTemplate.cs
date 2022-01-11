@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace MagiRogue.Data
+namespace MagiRogue.Data.Serialization
 {
     [DataContract]
     [Serializable]

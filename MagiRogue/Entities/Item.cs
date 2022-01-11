@@ -4,6 +4,7 @@ using MagiRogue.Utils;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System;
+using MagiRogue.Data.Serialization;
 
 namespace MagiRogue.Entities
 {

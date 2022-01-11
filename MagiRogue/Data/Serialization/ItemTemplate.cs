@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using System.Runtime.Serialization;
 
-namespace MagiRogue.Data
+namespace MagiRogue.Data.Serialization
 {
     public class ItemJsonConverter : JsonConverter<Item>
     {
@@ -116,7 +116,7 @@ namespace MagiRogue.Data
         [DataMember]
         public string MaterialId { get; set; }
 
-        public Materials.MaterialTemplate Material { get; set; }
+        public MaterialTemplate Material { get; set; }
 
         // Will need to see if it works, but so far the logic seems to check
         public static implicit operator ItemTemplate(Item item)

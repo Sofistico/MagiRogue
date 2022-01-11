@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System.Linq;
 using System.Collections.Generic;
+using MagiRogue.Data.Serialization;
 
 namespace MagiRogue.Entities
 {

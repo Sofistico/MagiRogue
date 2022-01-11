@@ -1,4 +1,4 @@
-﻿using MagiRogue.Data.Materials;
+﻿using MagiRogue.Data.Serialization;
 using MagiRogue.System.Magic;
 using MagiRogue.Utils;
 using System;

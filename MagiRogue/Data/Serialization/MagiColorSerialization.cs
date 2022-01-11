@@ -6,7 +6,7 @@ using SadRogue.Primitives;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace MagiRogue.Data
+namespace MagiRogue.Data.Serialization
 {
     public struct MagiColorSerialization
     {

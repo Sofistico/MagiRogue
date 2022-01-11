@@ -1,6 +1,6 @@
 ﻿using GoRogue.Components;
 using GoRogue.GameFramework;
-using MagiRogue.Data.Materials;
+using MagiRogue.Data.Serialization;
 using MagiRogue.System.Magic;
 using SadConsole;
 using SadRogue.Primitives;
@@ -21,20 +21,12 @@ namespace MagiRogue.Entities
         public int Layer { get; set; } // stores and sets the layer that the entity is rendered
 
         [DataMember]
-
-        /// <summary>
-        /// The weight of the entity in kg
-        /// </summary>
         public float Weight { get; set; }
 
         [DataMember]
         public MaterialTemplate Material { get; set; }
 
         [DataMember]
-
-        /// <summary>
-        /// The size of the entity in meters
-        /// </summary>
         public int Size { get; set; }
 
         /// <summary>

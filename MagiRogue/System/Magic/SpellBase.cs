@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
 using MagiRogue.Data;
+using MagiRogue.Data.Serialization;
 
 namespace MagiRogue.System.Magic
 {

@@ -1,6 +1,9 @@
-﻿using MagiRogue.Entities;
+﻿using MagiRogue.Data;
+using MagiRogue.Data.Serialization;
+using MagiRogue.Entities;
 using MagiRogue.System;
 using MagiRogue.System.Tiles;
+using Newtonsoft.Json;
 using SadConsole;
 using SadRogue.Primitives;
 using System;
@@ -45,5 +48,25 @@ namespace MagiRogue.Test.System
             Action testCode = delegate () { map.Add(actor); };
             Assert.Throws<NullReferenceException>(testCode);
         }*/
+
+        [Fact]
+        public void MapSerialization()
+        {
+            map.SetTerrain(new TileFloor(new Point(0, 0)));
+            Actor actor = new Actor("Test", Color.Black, Color.Black, '@', new Point(0, 0));
+            map.Add(actor);
+            var json = JsonConvert.SerializeObject((MapTemplate)map);
+
+            Assert.Contains(actor.Name, json);
+        }
+
+        [Fact]
+        public void MapDeserialization()
+        {
+            var json = JsonConvert.SerializeObject((MapTemplate)map);
+            MapTemplate mapDeJsonified = JsonConvert.DeserializeObject<Map>(json);
+
+            Assert.True(mapDeJsonified.MapName == map.MapName);
+        }
     }
 }

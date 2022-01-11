@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagiRogue.Data
+namespace MagiRogue.Data.Serialization
 {
     public class MapJsonConverter : JsonConverter<Map>
     {
@@ -18,7 +18,9 @@ namespace MagiRogue.Data
             JsonSerializer serializer)
         {
             JObject futureMap = JObject.Load(reader);
-            return serializer.Deserialize<MapTemplate>(reader);
+            Map map = new Map(futureMap["MapName"].ToString(),
+                (int)futureMap["Width"], (int)futureMap["Height"]);
+            return map;
         }
 
         public override void WriteJson(JsonWriter writer, Map? value, JsonSerializer serializer)
@@ -55,6 +57,11 @@ namespace MagiRogue.Data
             MapName = mapName;
             Width = width;
             Height = height;
+        }
+
+        public MapTemplate()
+        {
+            // empty
         }
 
         public static implicit operator MapTemplate(Map map)

@@ -1,4 +1,4 @@
-﻿using MagiRogue.Data.Materials;
+﻿using MagiRogue.Data.Serialization;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 
@@ -71,7 +71,8 @@ namespace MagiRogue.Entities
         /// Marks if the limb is right, left, or center.
         /// </summary>
         [DataContract]
-        public enum LimbOrientation { Right, Left, Center }
+        public enum LimbOrientation
+        { Right, Left, Center }
 
         /// <summary>
         /// Marks if the limb is right, left, or center, this is the property.
@@ -89,7 +90,6 @@ namespace MagiRogue.Entities
         public MaterialTemplate LimbMaterial { get; set; }
 
         [DataMember]
-#nullable enable
         public Limb? ConnectedTo
 #nullable disable
         {

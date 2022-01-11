@@ -65,6 +65,9 @@ namespace MagiRogue.System.Tiles
         {
             TileType type;
             bool isSea = false;
+            if (tile is null)
+                return null;
+
             BasicTile basic = new BasicTile(tile.Position, tile.Foreground.PackedValue,
                 tile.Background.PackedValue, tile.Glyph, tile.IsWalkable,
                 tile.IsTransparent, tile.MaterialOfTile.Id, tile.Name, tile.Description, TileType.Null,

@@ -1,9 +1,12 @@
-﻿using Priority_Queue;
+﻿using MagiRogue.Data.Serialization;
+using Priority_Queue;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace MagiRogue.System.Time
 {
+    [JsonConverter(typeof(TimeJsonConverter))]
     public class TimeSystem : ITimeSystem
     {
         public event EventHandler<TimeDefSpan> TurnPassed;

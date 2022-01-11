@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
-namespace MagiRogue.Data
+namespace MagiRogue.Data.Serialization
 {
     public class PlanetMapJsonConverter : JsonConverter<PlanetMap>
     {

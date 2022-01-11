@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Data;
+using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
 using System;
 using System.Collections.Generic;

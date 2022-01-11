@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace MagiRogue.Entities
 {
-    [JsonConverter(typeof(Data.ActorJsonConverter))]
+    [JsonConverter(typeof(Data.Serialization.ActorJsonConverter))]
     public class Actor : Entity
     {
         #region Fields

@@ -4,6 +4,7 @@ using SadRogue.Primitives;
 using MagiRogue.Data;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using MagiRogue.Data.Serialization;
 
 namespace MagiRogue.System.Magic
 {

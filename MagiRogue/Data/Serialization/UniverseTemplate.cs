@@ -5,7 +5,7 @@ using MagiRogue.System.Time;
 using Newtonsoft.Json;
 using System;
 
-namespace MagiRogue.Data
+namespace MagiRogue.Data.Serialization
 {
     public class UniverseJsonConverter : JsonConverter<Universe>
     {

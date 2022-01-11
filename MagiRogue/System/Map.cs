@@ -1,9 +1,11 @@
 ﻿using GoRogue;
 using GoRogue.GameFramework;
 using GoRogue.SpatialMaps;
+using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
 using MagiRogue.System.Tiles;
 using MagiRogue.System.Time;
+using Newtonsoft.Json;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 using System;
@@ -16,6 +18,7 @@ namespace MagiRogue.System
     /// Stores, manipulates and queries Tile data, uses GoRogue Map class
     /// </summary>
     [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
+    [JsonConverter(typeof(MapJsonConverter))]
     public class Map : GoRogue.GameFramework.Map
     {
         #region Properties

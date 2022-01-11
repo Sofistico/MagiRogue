@@ -1,5 +1,6 @@
 ﻿using MagiRogue.Entities;
 using SadRogue.Primitives;
+using MagiRogue.Data.Serialization;
 
 namespace MagiRogue.Data
 {
