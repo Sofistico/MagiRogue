@@ -305,11 +305,19 @@ namespace MagiRogue.UI
             }
             if (info.IsKeyPressed(Keys.OemPlus))
             {
-                // the map is being saved, but it isn't being properly deserialized
-                var json = JsonConvert.SerializeObject((MapTemplate)GetPlayer.CurrentMap);
-                // The universe class also isn't being serialized properly, crashing newtonsoft
-                var gameState = JsonConvert.SerializeObject(new GameState().Universe);
-                MapTemplate mapDeJsonified = JsonConvert.DeserializeObject<Map>(json);
+                try
+                {
+                    // the map is being saved, but it isn't being properly deserialized
+                    var json = JsonConvert.SerializeObject((MapTemplate)GetPlayer.CurrentMap);
+                    // The universe class also isn't being serialized properly, crashing newtonsoft
+                    // TODO: Revise this line of code when the time comes to work on the save system.
+                    //var gameState = JsonConvert.SerializeObject(new GameState().Universe);
+                    MapTemplate mapDeJsonified = JsonConvert.DeserializeObject<Map>(json);
+                }
+                catch (Newtonsoft.Json.JsonSerializationException)
+                {
+                    throw;
+                }
             }
 
 #endif

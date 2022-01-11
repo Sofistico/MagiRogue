@@ -39,7 +39,7 @@ namespace MagiRogue.Data
         /// </summary>
         public Player Player { get; set; }
 
-        public TimeSystem Time { get; private set; }
+        public TimeTemplate Time { get; private set; }
         public bool PossibleChangeMap { get; internal set; } = true;
 
         public SeasonType CurrentSeason { get; set; }
@@ -52,7 +52,7 @@ namespace MagiRogue.Data
         public UniverseTemplate(PlanetMap worldMap,
             Map currentMap,
             Player player,
-            TimeSystem time,
+            TimeTemplate time,
             bool possibleChangeMap,
             SeasonType currentSeason,
             RegionChunk[] allChunks)

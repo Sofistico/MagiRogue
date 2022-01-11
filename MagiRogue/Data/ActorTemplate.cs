@@ -31,6 +31,7 @@ namespace MagiRogue.Data
         /// </summary>
         [DataMember]
         public string ID { get; set; }
+        public int NumericID { get; set; }
 
         [DataMember]
         public string Name { get; set; }
@@ -234,7 +235,7 @@ namespace MagiRogue.Data
                actor.Material.Id,
                abilitylist);
 
-            actorTemplate.ID = actor.ID.ToString();
+            actorTemplate.NumericID = (int)actor.ID;
 
             return actorTemplate;
         }
