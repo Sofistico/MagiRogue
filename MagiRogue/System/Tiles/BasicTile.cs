@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Converters;
 
 namespace MagiRogue.System.Tiles
 {
@@ -19,11 +20,13 @@ namespace MagiRogue.System.Tiles
         public bool IsTransparent { get; set; }
         public string IdMaterial { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; set; }
         public int Layer { get => 0; }
         public TileType TileType { get; set; }
         public int MoveCost { get; set; }
-        public bool? IsSea { get; private set; }
+
+        [JsonIgnore]
+        public bool? IsSea { get; set; }
 
         /// <summary>
         /// The maximum amount of mp the node can have
@@ -42,10 +45,8 @@ namespace MagiRogue.System.Tiles
             bool isTransparent,
             string idMaterial,
             string name,
-            string description,
             TileType tileType,
-            int moveCost,
-            bool? isSea = null)
+            int moveCost)
         {
             Position = position;
             Foreground = foreground;
@@ -55,23 +56,29 @@ namespace MagiRogue.System.Tiles
             IsTransparent = isTransparent;
             IdMaterial = idMaterial;
             Name = name;
-            Description = description;
             TileType = tileType;
             MoveCost = moveCost;
-            IsSea = isSea;
+        }
+
+        public BasicTile()
+        {
+            //Empty ctor
         }
 
         public static implicit operator BasicTile(TileBase tile)
         {
             TileType type;
-            bool isSea = false;
+            bool? isSea = null;
             if (tile is null)
                 return null;
 
             BasicTile basic = new BasicTile(tile.Position, tile.Foreground.PackedValue,
                 tile.Background.PackedValue, tile.Glyph, tile.IsWalkable,
-                tile.IsTransparent, tile.MaterialOfTile.Id, tile.Name, tile.Description, TileType.Null,
+                tile.IsTransparent, tile.MaterialOfTile.Id, tile.Name, TileType.Null,
                 tile.MoveTimeCost);
+
+            if (!string.IsNullOrWhiteSpace(tile.Description))
+                basic.Description = tile.Description;
 
             if (tile is TileWall)
                 type = TileType.Wall;
@@ -100,8 +107,8 @@ namespace MagiRogue.System.Tiles
                 type = TileType.Null;
 
             basic.TileType = type;
-            basic.IsSea = isSea;
             basic.InfusedMp = tile.InfusedMp;
+            basic.IsSea = isSea;
 
             return basic;
         }
@@ -177,6 +184,7 @@ namespace MagiRogue.System.Tiles
         }
     }
 
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum TileType
     {
         Null,

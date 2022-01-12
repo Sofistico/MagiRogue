@@ -118,6 +118,9 @@ namespace MagiRogue.Data.Serialization
 
         public MaterialTemplate Material { get; set; }
 
+        [DataMember]
+        public const string EntityType = "Item";
+
         // Will need to see if it works, but so far the logic seems to check
         public static implicit operator ItemTemplate(Item item)
         {

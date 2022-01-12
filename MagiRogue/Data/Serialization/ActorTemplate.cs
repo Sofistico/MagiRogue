@@ -31,7 +31,6 @@ namespace MagiRogue.Data.Serialization
         /// </summary>
         [DataMember]
         public string ID { get; set; }
-        public int NumericID { get; set; }
 
         [DataMember]
         public string Name { get; set; }
@@ -74,6 +73,9 @@ namespace MagiRogue.Data.Serialization
         public string Background { get; internal set; }
 
         public List<AbilityTemplate> Abilities { get; set; }
+
+        [DataMember]
+        public const string EntityType = "Actor";
 
         /// <summary>
         /// Is used in the serialization of the actor.
@@ -186,7 +188,7 @@ namespace MagiRogue.Data.Serialization
 
         public static implicit operator Actor(ActorTemplate actorTemplate)
         {
-            if(actorTemplate is null)
+            if (actorTemplate is null)
                 return null;
 
             Actor actor =
@@ -237,8 +239,6 @@ namespace MagiRogue.Data.Serialization
                actor.Weight,
                actor.Material.Id,
                abilitylist);
-
-            actorTemplate.NumericID = (int)actor.ID;
 
             return actorTemplate;
         }

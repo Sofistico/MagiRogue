@@ -63,7 +63,21 @@ namespace MagiRogue.Test.System
         [Fact]
         public void MapDeserialization()
         {
-            var json = JsonConvert.SerializeObject((MapTemplate)map);
+            for (int i = 0; i < map.Tiles.Length; i++)
+            {
+                map.SetTerrain(new TileFloor(Point.FromIndex(i, map.Width)));
+            }
+            ActorTemplate actor = new Actor("Test", Color.Black, Color.Black, '@', new Point(0, 0));
+            actor.Description = "Test Desc";
+            ItemTemplate item = new Item(Color.Black, Color.Black,
+                "Test Item", '@', Point.None, 100);
+            map.Add(actor);
+            map.Add(item);
+            var json = JsonConvert.SerializeObject((MapTemplate)map, Formatting.Indented,
+                new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore
+                });
             MapTemplate mapDeJsonified = JsonConvert.DeserializeObject<Map>(json);
 
             Assert.True(mapDeJsonified.MapName == map.MapName);

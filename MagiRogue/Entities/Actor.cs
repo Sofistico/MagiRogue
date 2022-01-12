@@ -76,6 +76,8 @@ namespace MagiRogue.Entities
             Equipment = new Dictionary<Limb, Item>();
             Abilities = new();
             Name = name;
+            // by default the material of the actor will be mostly flesh
+            Material = System.Physics.PhysicsManager.SetMaterial("flesh");
         }
 
         #endregion Constructor
