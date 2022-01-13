@@ -61,12 +61,14 @@ namespace MagiRogue.Data.Serialization
         /// <param name="glyph"></param>
         /// <param name="weight"></param>
         /// <param name="condition">Defaults to 100%</param>
-        public ItemTemplate(string name, Color foreground, Color background, int glyph,
+        public ItemTemplate(string name, uint foreground, uint background, int glyph,
             float weight, int size, string description, string materialId, int condition = 100)
         {
             Name = name;
             ForegroundBackingField = new MagiColorSerialization(foreground);
             BackgroundBackingField = new MagiColorSerialization(background);
+            ForegroundPackedValue = foreground;
+            BackgroundPackedValue = background;
             Glyph = (char)glyph;
             Weight = weight;
             Condition = condition;
@@ -121,12 +123,18 @@ namespace MagiRogue.Data.Serialization
         [DataMember]
         public const string EntityType = "Item";
 
+        [DataMember]
+        public uint ForegroundPackedValue { get; internal set; }
+
+        [DataMember]
+        public uint BackgroundPackedValue { get; internal set; }
+
         // Will need to see if it works, but so far the logic seems to check
         public static implicit operator ItemTemplate(Item item)
         {
             ItemTemplate itemSerialized = new(item.Name,
-                item.Appearance.Foreground,
-                item.Appearance.Background,
+                item.Appearance.Foreground.PackedValue,
+                item.Appearance.Background.PackedValue,
                 item.Appearance.Glyph,
                 item.Weight,
                 item.Size,

@@ -62,19 +62,42 @@ namespace MagiRogue.Data.Serialization
                     Stat stats = JsonConvert.DeserializeObject<Stat>(entity["Stats"].ToString());
                     Anatomy anatomy =
                         JsonConvert.DeserializeObject<Anatomy>(entity["Anatomy"].ToString());
-                    /*Actor actor = new ActorTemplate(
-                        entity["name"].ToString(),
-                        entity["Foreground"],
-                        entity["Background"],
+                    List<AbilityTemplate> abilities = new List<AbilityTemplate>();
+                    JToken[] jAbi = entity["Abilities"].ToArray();
+                    for (int z = 0; z < jAbi.Length; z++)
+                    {
+                        if (jAbi[i] is not null)
+                            abilities.Add
+                                (JsonConvert.DeserializeObject<AbilityTemplate>(jAbi[z].ToString()));
+                    }
+
+                    Actor actor = new ActorTemplate(
+                        entity["Name"].ToString(),
+                        (uint)entity["ForegroundPackedValue"],
+                        (uint)entity["BackgroundPackedValue"],
                         (int)entity["Glyph"],
                         (int)entity["Layer"],
                         stats,
                         anatomy,
-                        entity["Description"].ToString(),
                         (int)entity["Size"],
                         (float)entity["Weight"],
-                        entity["MaterialId"].ToString()
-                        );*/
+                        entity["MaterialId"].ToString(),
+                        abilities
+                        );
+                    if (entity.Contains("Description"))
+                    {
+                        actor.Description = entity["Description"].ToString();
+                    }
+                    if (entity.Contains("Position"))
+                        actor.Position =
+                            new Point((int)entity["Position"]["X"], (int)entity["Position"]["Y"]);
+                    /*Actor actor = new ActorTemplate()
+                    {
+                        Name = entity["name"].ToString(),
+                        Foreground = entity["Foreground"].ToString(),
+                    };*/
+
+                    map.Add(actor);
                 }
                 if (entity["EntityType"].ToString().Equals("Item"))
                 {

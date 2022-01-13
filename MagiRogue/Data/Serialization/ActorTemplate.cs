@@ -68,14 +68,26 @@ namespace MagiRogue.Data.Serialization
         [JsonIgnore]
         public MagiColorSerialization BackgroundBackingField { get; internal set; }
 
+        [DataMember]
         public string Foreground { get; internal set; }
 
+        [DataMember]
+        public uint ForegroundPackedValue { get; internal set; }
+
+        [DataMember]
         public string Background { get; internal set; }
 
+        [DataMember]
+        public uint BackgroundPackedValue { get; internal set; }
+
+        [DataMember]
         public List<AbilityTemplate> Abilities { get; set; }
 
         [DataMember]
         public const string EntityType = "Actor";
+
+        [DataMember]
+        public Point? Position { get; set; }
 
         /// <summary>
         /// Is used in the serialization of the actor.
@@ -91,15 +103,14 @@ namespace MagiRogue.Data.Serialization
         /// <param name="size"></param>
         /// <param name="weight"></param>
         /// <param name="materialId"></param>
-        public ActorTemplate(string name, Color foreground, Color background, int glyph,
-            int layer, Stat stats, Anatomy anatomy, string description, int size, float weight, string materialId,
+        public ActorTemplate(string name, uint foreground, uint background, int glyph,
+            int layer, Stat stats, Anatomy anatomy, int size, float weight, string materialId,
             List<AbilityTemplate> abilities)
         {
             Name = name;
             Glyph = (char)glyph;
             Stats = stats;
             Anatomy = anatomy;
-            Description = description;
             Layer = layer;
             Size = size;
             Weight = weight;
@@ -107,12 +118,15 @@ namespace MagiRogue.Data.Serialization
 
             ForegroundBackingField = new MagiColorSerialization(foreground);
             BackgroundBackingField = new MagiColorSerialization(background);
+            ForegroundPackedValue = foreground;
+            BackgroundPackedValue = background;
 
             Abilities = abilities;
         }
 
         public ActorTemplate(string name, Color foreground, Color background, int glyph,
-            int layer, Stat stats, Anatomy anatomy, string description, int size, float weight, string materialId)
+            int layer, Stat stats, Anatomy anatomy, string description, int size, float weight,
+            string materialId)
         {
             Name = name;
             Glyph = (char)glyph;
@@ -228,17 +242,22 @@ namespace MagiRogue.Data.Serialization
                     abilitylist.Add(ability);
                 }
             }
-            ActorTemplate actorTemplate = new ActorTemplate(actor.Name, actor.Appearance.Foreground,
-               actor.Appearance.Background,
+            ActorTemplate actorTemplate = new ActorTemplate(actor.Name,
+                actor.Appearance.Foreground.PackedValue,
+               actor.Appearance.Background.PackedValue,
                actor.Appearance.Glyph,
                actor.Layer,
                actor.Stats,
                actor.Anatomy,
-               actor.Description,
                actor.Size,
                actor.Weight,
                actor.Material.Id,
                abilitylist);
+            if (!string.IsNullOrWhiteSpace(actor.Description))
+                actorTemplate.Description = actor.Description;
+
+            if (actorTemplate.Position is not null)
+                actorTemplate.Position = actor.Position;
 
             return actorTemplate;
         }

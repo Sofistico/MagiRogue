@@ -259,7 +259,9 @@ namespace MagiRogue.System
 
                 debugMonster.AddComponent(new MoveAndAttackAI(debugMonster.Stats.ViewRadius));
                 debugMonster.Inventory.Add(EntityFactory.ItemCreator(debugMonster.Position,
-                    new ItemTemplate("Debug Remains", Color.Red, Color.Black, '%', 1.5f, 35, "DebugRotten", "flesh")));
+                    new ItemTemplate("Debug Remains",
+                    Color.Red.PackedValue,
+                    Color.Black.PackedValue, '%', 1.5f, 35, "DebugRotten", "flesh")));
                 debugMonster.Anatomy.Limbs = LimbTemplate.BasicHumanoidBody(debugMonster);
 
                 map.Add(debugMonster);

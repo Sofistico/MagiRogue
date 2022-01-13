@@ -20,10 +20,16 @@ namespace MagiRogue.Data.Serialization
             ColorName = colorName;
         }
 
+        public MagiColorSerialization(uint packedValue)
+        {
+            Color = new Color(packedValue);
+            ColorName = "Packed Color";
+        }
+
         public MagiColorSerialization(Color color)
         {
             Color = color;
-            ColorName = "";
+            ColorName = "Empty Color";
         }
     }
 }
