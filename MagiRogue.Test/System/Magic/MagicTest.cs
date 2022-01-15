@@ -10,9 +10,9 @@ namespace MagiRogue.Test.System.Magic
 {
     public class MagicTest
     {
-        private MagiRogue.System.Magic.Magic weakMagic;
-        private MagiRogue.System.Magic.Magic mediumMagic;
-        private MagiRogue.System.Magic.Magic strongMagic;
+        private MagiRogue.System.Magic.MagicManager weakMagic;
+        private MagiRogue.System.Magic.MagicManager mediumMagic;
+        private MagiRogue.System.Magic.MagicManager strongMagic;
         private readonly Stat testStats;
 
         public MagicTest()
@@ -42,19 +42,19 @@ namespace MagiRogue.Test.System.Magic
         {
             List<SpellBase> spellBase = new List<SpellBase>(TestSpellsNoEffect());
 
-            weakMagic = new MagiRogue.System.Magic.Magic()
+            weakMagic = new MagiRogue.System.Magic.MagicManager()
             {
                 ShapingSkill = 5,
                 KnowSpells = spellBase
             };
 
-            mediumMagic = new MagiRogue.System.Magic.Magic()
+            mediumMagic = new MagiRogue.System.Magic.MagicManager()
             {
                 ShapingSkill = 15,
                 KnowSpells = spellBase
             };
 
-            strongMagic = new MagiRogue.System.Magic.Magic()
+            strongMagic = new MagiRogue.System.Magic.MagicManager()
             {
                 ShapingSkill = 30,
                 KnowSpells = spellBase

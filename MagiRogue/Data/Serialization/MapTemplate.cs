@@ -1,5 +1,6 @@
 ﻿using MagiRogue.Entities;
 using MagiRogue.System;
+using MagiRogue.System.Magic;
 using MagiRogue.System.Tiles;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -57,6 +58,20 @@ namespace MagiRogue.Data.Serialization
             for (int i = 0; i < entities.Length; i++)
             {
                 JToken entity = entities[i];
+
+                var name = entity["Name"].ToString();
+                var foreground = (uint)entity["ForegroundPackedValue"];
+                var background = (uint)entity["BackgroundPackedValue"];
+                var glyph = (char)entity["Glyph"];
+                var size = (int)entity["Size"];
+                var weight = (float)entity["Weight"];
+                var materialId = entity["MaterialId"].ToString();
+                MagicManager magic;
+                if (entity.SelectToken("MagicStuff") is not null)
+                    magic = JsonConvert.DeserializeObject<MagicManager>(entity["MagicStuff"].ToString());
+                else
+                    magic = new();
+
                 if (entity["EntityType"].ToString().Equals("Actor"))
                 {
                     Stat stats = JsonConvert.DeserializeObject<Stat>(entity["Stats"].ToString());
@@ -70,42 +85,61 @@ namespace MagiRogue.Data.Serialization
                             abilities.Add
                                 (JsonConvert.DeserializeObject<AbilityTemplate>(jAbi[z].ToString()));
                     }
+                    var layer = (int)entity["Layer"];
 
                     Actor actor = new ActorTemplate(
-                        entity["Name"].ToString(),
-                        (uint)entity["ForegroundPackedValue"],
-                        (uint)entity["BackgroundPackedValue"],
-                        (int)entity["Glyph"],
-                        (int)entity["Layer"],
+                        name,
+                        foreground,
+                        background,
+                        glyph,
+                        layer,
                         stats,
                         anatomy,
-                        (int)entity["Size"],
-                        (float)entity["Weight"],
-                        entity["MaterialId"].ToString(),
-                        abilities
+                        size,
+                        weight,
+                        materialId,
+                        abilities,
+                        magic
                         );
-                    if (entity.Contains("Description"))
+
+                    if (entity.SelectToken("Description") is not null)
                     {
                         actor.Description = entity["Description"].ToString();
                     }
-                    if (entity.Contains("Position"))
+                    if (entity.SelectToken("Position") is not null)
                         actor.Position =
                             new Point((int)entity["Position"]["X"], (int)entity["Position"]["Y"]);
-                    /*Actor actor = new ActorTemplate()
+                    if (entity.SelectToken("IsPlayer") is not null && (bool)entity["IsPlayer"])
                     {
-                        Name = entity["name"].ToString(),
-                        Foreground = entity["Foreground"].ToString(),
-                    };*/
-
-                    map.Add(actor);
+                        Player player = Player.ReturnPlayerFromActor(actor);
+                        map.Add(player);
+                    }
+                    else
+                        map.Add(actor);
                 }
                 if (entity["EntityType"].ToString().Equals("Item"))
                 {
-                    Item item = new ItemTemplate();
-                }
-                if (entity["EntityType"].ToString().Equals("Player"))
-                {
-                    // Special stuff
+                    var condition = (int)entity["Condition"];
+
+                    Item item = new ItemTemplate(
+                        name,
+                        foreground,
+                        background,
+                        glyph,
+                        weight,
+                        size,
+                        materialId,
+                        magic,
+                        condition);
+
+                    if (entity.SelectToken("Description") is not null)
+                    {
+                        item.Description = entity["Description"].ToString();
+                    }
+
+                    if (entity.SelectToken("Position") is not null)
+                        item.Position =
+                            new Point((int)entity["Position"]["X"], (int)entity["Position"]["Y"]);
                 }
             }
 

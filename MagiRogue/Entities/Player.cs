@@ -91,5 +91,27 @@ namespace MagiRogue.Entities
 
             return player;
         }
+
+        public static Player ReturnPlayerFromActor(Actor actor)
+        {
+            Player player = new Player(actor.Name,
+                actor.Appearance.Foreground,
+                actor.Appearance.Background,
+                actor.Position)
+            {
+                Inventory = actor.Inventory,
+                Magic = actor.Magic,
+                Stats = actor.Stats,
+                Size = actor.Size,
+                Weight = actor.Weight,
+                Abilities = actor.Abilities,
+                Anatomy = actor.Anatomy,
+                Equipment = actor.Equipment,
+                Material = actor.Material,
+                XP = actor.XP
+            };
+
+            return player;
+        }
     }
 }

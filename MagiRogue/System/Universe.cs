@@ -7,7 +7,7 @@ using MagiRogue.System.Time;
 using MagiRogue.System.Planet;
 using SadRogue.Primitives;
 using System;
-using System.Collections.Generic;
+using MagiRogue.System.Magic;
 using System.Linq;
 using GoRogue;
 using MagiRogue.Data.Serialization;
@@ -261,7 +261,10 @@ namespace MagiRogue.System
                 debugMonster.Inventory.Add(EntityFactory.ItemCreator(debugMonster.Position,
                     new ItemTemplate("Debug Remains",
                     Color.Red.PackedValue,
-                    Color.Black.PackedValue, '%', 1.5f, 35, "DebugRotten", "flesh")));
+                    Color.Black.PackedValue, '%', 1.5f, 35, "flesh", new MagicManager())
+                    {
+                        Description = "DebugRotten"
+                    }));
                 debugMonster.Anatomy.Limbs = LimbTemplate.BasicHumanoidBody(debugMonster);
 
                 map.Add(debugMonster);

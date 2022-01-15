@@ -79,7 +79,7 @@ namespace MagiRogue.System.Magic
         /// <summary>
         /// The total proficiency, goes up slowly as you use the spell or train with it in your downtime, makes
         /// it more effective and cost less, goes from 0.0(not learned) to 2.0(double effectiviness),
-        /// for newly trained spell shoud be 0.5, see <see cref="Magic.ShapingSkill"/> for more details about
+        /// for newly trained spell shoud be 0.5, see <see cref="MagicManager.ShapingSkill"/> for more details about
         /// the shaping of mana
         /// </summary>
         public double Proficiency
@@ -143,7 +143,7 @@ namespace MagiRogue.System.Magic
             Effects = new List<ISpellEffect>();
         }
 
-        public bool CanCast(Magic magicSkills, Stat stats)
+        public bool CanCast(MagicManager magicSkills, Stat stats)
         {
             if (magicSkills.KnowSpells.Contains(this))
             {

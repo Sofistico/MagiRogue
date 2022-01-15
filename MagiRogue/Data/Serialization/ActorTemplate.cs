@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Entities;
+using MagiRogue.System.Magic;
 using Newtonsoft.Json;
 using SadConsole.SerializedTypes;
 using SadRogue.Primitives;
@@ -81,13 +82,22 @@ namespace MagiRogue.Data.Serialization
         public uint BackgroundPackedValue { get; internal set; }
 
         [DataMember]
-        public List<AbilityTemplate> Abilities { get; set; }
+        public List<AbilityTemplate> Abilities { get; set; } = new();
+
+        [DataMember]
+        public List<ItemTemplate> Inventory { get; set; } = new();
 
         [DataMember]
         public const string EntityType = "Actor";
 
         [DataMember]
-        public Point? Position { get; set; }
+        public Point Position { get; set; }
+
+        [DataMember]
+        public bool? IsPlayer { get; set; }
+
+        [DataMember]
+        public MagicManager MagicStuff { get; set; }
 
         /// <summary>
         /// Is used in the serialization of the actor.
@@ -105,7 +115,7 @@ namespace MagiRogue.Data.Serialization
         /// <param name="materialId"></param>
         public ActorTemplate(string name, uint foreground, uint background, int glyph,
             int layer, Stat stats, Anatomy anatomy, int size, float weight, string materialId,
-            List<AbilityTemplate> abilities)
+            List<AbilityTemplate> abilities, MagicManager magic)
         {
             Name = name;
             Glyph = (char)glyph;
@@ -115,6 +125,7 @@ namespace MagiRogue.Data.Serialization
             Size = size;
             Weight = weight;
             MaterialId = materialId;
+            MagicStuff = magic;
 
             ForegroundBackingField = new MagiColorSerialization(foreground);
             BackgroundBackingField = new MagiColorSerialization(background);
@@ -226,6 +237,17 @@ namespace MagiRogue.Data.Serialization
                     actor.AddAbilityToDictionary(abilityTemplate);
                 }
             }
+            if (!actorTemplate.Position.Equals(Point.None))
+                actor.Position = actorTemplate.Position;
+            if (actorTemplate.Inventory is not null)
+            {
+                for (int i = 0; i < actorTemplate.Inventory.Count; i++)
+                {
+                    actor.Inventory.Add(actorTemplate.Inventory[i]);
+                }
+            }
+            // needs to add the equiped itens.
+            actor.Magic = actorTemplate.MagicStuff;
 
             return actor;
         }
@@ -242,6 +264,7 @@ namespace MagiRogue.Data.Serialization
                     abilitylist.Add(ability);
                 }
             }
+
             ActorTemplate actorTemplate = new ActorTemplate(actor.Name,
                 actor.Appearance.Foreground.PackedValue,
                actor.Appearance.Background.PackedValue,
@@ -252,12 +275,23 @@ namespace MagiRogue.Data.Serialization
                actor.Size,
                actor.Weight,
                actor.Material.Id,
-               abilitylist);
+               abilitylist,
+               actor.Magic);
             if (!string.IsNullOrWhiteSpace(actor.Description))
                 actorTemplate.Description = actor.Description;
 
-            if (actorTemplate.Position is not null)
-                actorTemplate.Position = actor.Position;
+            if (actor is Player)
+            {
+                actorTemplate.IsPlayer = true;
+            }
+            else
+                actorTemplate.IsPlayer = null;
+
+            actorTemplate.Position = actor.Position;
+            for (int a = 0; a < actor.Inventory.Count; a++)
+            {
+                actorTemplate.Inventory.Add(actor.Inventory[a]);
+            }
 
             return actorTemplate;
         }

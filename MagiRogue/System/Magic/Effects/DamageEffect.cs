@@ -53,7 +53,7 @@ namespace MagiRogue.System.Magic.Effects
 
         private void DmgEff(Point target, Actor caster, SpellBase spellCasted)
         {
-            BaseDamage = Magic.CalculateSpellDamage(caster.Stats, spellCasted);
+            BaseDamage = MagicManager.CalculateSpellDamage(caster.Stats, spellCasted);
 
             Entity poorGuy = GameLoop.Universe.CurrentMap.GetEntityAt<Entity>(target);
 
@@ -75,7 +75,7 @@ namespace MagiRogue.System.Magic.Effects
         {
             Stat casterStats = caster.Stats;
 
-            BaseDamage = Magic.CalculateSpellDamage(casterStats, spellCasted);
+            BaseDamage = MagicManager.CalculateSpellDamage(casterStats, spellCasted);
 
             if (AreaOfEffect is SpellAreaEffect.Self)
                 CombatUtils.ApplyHealing(BaseDamage, casterStats, SpellDamageType);

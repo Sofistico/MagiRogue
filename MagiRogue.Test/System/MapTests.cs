@@ -71,8 +71,10 @@ namespace MagiRogue.Test.System
             actor.Description = "Test Desc";
             ItemTemplate item = new Item(Color.Black, Color.Black,
                 "Test Item", '@', Point.None, 100);
+            Player player = new Player("Test", Color.Black, Color.Black, new Point(0, 0));
             map.Add(actor);
             map.Add(item);
+            map.Add(player);
             var json = JsonConvert.SerializeObject((MapTemplate)map, Formatting.Indented,
                 new JsonSerializerSettings
                 {

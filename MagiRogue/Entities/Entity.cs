@@ -37,7 +37,7 @@ namespace MagiRogue.Entities
         [DataMember]
         public string Description { get; set; }
 
-        public Magic Magic { get; set; }
+        public MagicManager Magic { get; set; }
 
         /// <summary>
         /// Defines if this entity can be killed
@@ -98,7 +98,7 @@ namespace MagiRogue.Entities
 
             PositionChanged += Position_Changed;
 
-            Magic = new Magic();
+            Magic = new MagicManager();
             Material = new MaterialTemplate();
 
             //IsWalkable = false;

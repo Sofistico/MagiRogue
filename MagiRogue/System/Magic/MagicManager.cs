@@ -10,7 +10,7 @@ namespace MagiRogue.System.Magic
     /// <summary>
     /// The class that is the manager of the magic system to an entity
     /// </summary>
-    public class Magic
+    public class MagicManager
     {
         // Create a magic inspired by Mother of learning
         public List<SpellBase> KnowSpells { get; set; }
@@ -49,7 +49,7 @@ namespace MagiRogue.System.Magic
         /// </summary>
         public List<ISpellEffect> Enchantments { get; set; } = new List<ISpellEffect>();
 
-        public Magic()
+        public MagicManager()
         {
             KnowSpells = new List<SpellBase>();
         }

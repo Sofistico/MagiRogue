@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Entities;
+using MagiRogue.System.Magic;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System;
@@ -62,7 +63,7 @@ namespace MagiRogue.Data.Serialization
         /// <param name="weight"></param>
         /// <param name="condition">Defaults to 100%</param>
         public ItemTemplate(string name, uint foreground, uint background, int glyph,
-            float weight, int size, string description, string materialId, int condition = 100)
+            float weight, int size, string materialId, MagicManager magic, int condition = 100)
         {
             Name = name;
             ForegroundBackingField = new MagiColorSerialization(foreground);
@@ -72,10 +73,10 @@ namespace MagiRogue.Data.Serialization
             Glyph = (char)glyph;
             Weight = weight;
             Condition = condition;
-            Description = description;
             Size = size;
             MaterialId = materialId;
             Material = System.Physics.PhysicsManager.SetMaterial(materialId);
+            MagicStuff = magic;
         }
 
         public ItemTemplate()
@@ -119,6 +120,7 @@ namespace MagiRogue.Data.Serialization
         public string MaterialId { get; set; }
 
         public MaterialTemplate Material { get; set; }
+        public MagicManager MagicStuff { get; set; }
 
         [DataMember]
         public const string EntityType = "Item";
@@ -129,6 +131,9 @@ namespace MagiRogue.Data.Serialization
         [DataMember]
         public uint BackgroundPackedValue { get; internal set; }
 
+        [DataMember]
+        public Point Position { get; set; }
+
         // Will need to see if it works, but so far the logic seems to check
         public static implicit operator ItemTemplate(Item item)
         {
@@ -138,8 +143,8 @@ namespace MagiRogue.Data.Serialization
                 item.Appearance.Glyph,
                 item.Weight,
                 item.Size,
-                item.Description,
                 item.Material.Id,
+                item.Magic,
                 item.Condition
                 );
 
@@ -157,6 +162,7 @@ namespace MagiRogue.Data.Serialization
                 itemTemplate.Weight,
                 itemTemplate.Condition);
             item.Material = System.Physics.PhysicsManager.SetMaterial(itemTemplate.MaterialId);
+            item.Description = itemTemplate.Description;
 
             return item;
         }

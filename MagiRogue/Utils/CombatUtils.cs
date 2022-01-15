@@ -124,7 +124,7 @@ namespace MagiRogue.Utils
         private static void ResolveResist(Entity poorGuy, Actor caster, SpellBase spellCasted, ISpellEffect effect)
         {
             int luck = Mrn.Exploding2D6Dice;
-            if (Magic.PenetrateResistance(spellCasted, caster, poorGuy, luck))
+            if (MagicManager.PenetrateResistance(spellCasted, caster, poorGuy, luck))
             {
                 DealDamage(effect.BaseDamage, poorGuy, effect.SpellDamageType);
             }
