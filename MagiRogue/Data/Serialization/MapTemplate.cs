@@ -79,11 +79,21 @@ namespace MagiRogue.Data.Serialization
                         JsonConvert.DeserializeObject<Anatomy>(entity["Anatomy"].ToString());
                     List<AbilityTemplate> abilities = new List<AbilityTemplate>();
                     JToken[] jAbi = entity["Abilities"].ToArray();
+                    Dictionary<Limb, Item> equips = new();
+                    JToken[] jEquip = entity["Equip"].ToArray();
                     for (int z = 0; z < jAbi.Length; z++)
                     {
-                        if (jAbi[i] is not null)
+                        if (jAbi[z] is not null)
                             abilities.Add
                                 (JsonConvert.DeserializeObject<AbilityTemplate>(jAbi[z].ToString()));
+                    }
+                    for (int u = 0; u < jEquip.Length; u++)
+                    {
+                        Limb limb = 
+                            JsonConvert.DeserializeObject<LimbTemplate>(jEquip[u]["LimbEquipped"].ToString());
+                        Item item = 
+                            JsonConvert.DeserializeObject<ItemTemplate>(jEquip[u]["ItemEquipped"].ToString());
+                        equips.TryAdd(limb, item);
                     }
                     var layer = (int)entity["Layer"];
 
@@ -102,6 +112,8 @@ namespace MagiRogue.Data.Serialization
                         magic
                         );
 
+                    actor.Equipment = equips;
+
                     if (entity.SelectToken("Description") is not null)
                     {
                         actor.Description = entity["Description"].ToString();
@@ -109,6 +121,7 @@ namespace MagiRogue.Data.Serialization
                     if (entity.SelectToken("Position") is not null)
                         actor.Position =
                             new Point((int)entity["Position"]["X"], (int)entity["Position"]["Y"]);
+                    
                     if (entity.SelectToken("IsPlayer") is not null && (bool)entity["IsPlayer"])
                     {
                         Player player = Player.ReturnPlayerFromActor(actor);

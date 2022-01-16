@@ -1,4 +1,5 @@
 ﻿global using Point = SadRogue.Primitives.Point;
+using GoRogue;
 using MagiRogue.System;
 using MagiRogue.UI;
 
@@ -13,6 +14,8 @@ namespace MagiRogue
         public static UIManager UIManager { get; set; }
 
         public static Universe Universe { get; set; }
+
+        public static IDGenerator IdGen { get; } = new();
 
         private static void Main()
         {

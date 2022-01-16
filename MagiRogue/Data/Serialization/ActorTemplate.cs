@@ -12,7 +12,12 @@ namespace MagiRogue.Data.Serialization
     public class ActorJsonConverter : JsonConverter<Actor>
     {
         public override void WriteJson(JsonWriter writer, Actor value, JsonSerializer serializer)
-            => serializer.Serialize(writer, (ActorTemplate)value);
+        {
+            ActorTemplate actor = (ActorTemplate)value;
+            serializer.NullValueHandling = NullValueHandling.Ignore;
+            //actor.SerialId = (int)GameLoop.IdGen.UseID();
+            serializer.Serialize(writer, actor);
+        }
 
         public override Actor ReadJson(JsonReader reader,
             Type objectType,
@@ -32,6 +37,9 @@ namespace MagiRogue.Data.Serialization
         /// </summary>
         [DataMember]
         public string ID { get; set; }
+
+        [DataMember]
+        public uint SerialId { get; set; }
 
         [DataMember]
         public string Name { get; set; }
@@ -99,6 +107,9 @@ namespace MagiRogue.Data.Serialization
         [DataMember]
         public MagicManager MagicStuff { get; set; }
 
+        [DataMember]
+        public List<EquipTemplate> Equip { get; set; }
+
         /// <summary>
         /// Is used in the serialization of the actor.
         /// </summary>
@@ -133,6 +144,7 @@ namespace MagiRogue.Data.Serialization
             BackgroundPackedValue = background;
 
             Abilities = abilities;
+            Equip = new();
         }
 
         public ActorTemplate(string name, Color foreground, Color background, int glyph,
@@ -151,6 +163,8 @@ namespace MagiRogue.Data.Serialization
 
             ForegroundBackingField = new MagiColorSerialization(foreground);
             BackgroundBackingField = new MagiColorSerialization(background);
+
+            Equip = new();
         }
 
         public ActorTemplate(string name, string foreground, string background, int glyph,
@@ -173,6 +187,7 @@ namespace MagiRogue.Data.Serialization
             BackgroundBackingField = new MagiColorSerialization(background);
 
             Abilities = abilities;
+            Equip = new();
         }
 
         public ActorTemplate(Actor actor)
@@ -190,6 +205,7 @@ namespace MagiRogue.Data.Serialization
             MaterialId = actor.Material.Id;
             Abilities = new();
             AddToAbilities(actor);
+            Equip = new();
         }
 
         private void AddToAbilities(Actor actor)
@@ -249,6 +265,12 @@ namespace MagiRogue.Data.Serialization
             // needs to add the equiped itens.
             actor.Magic = actorTemplate.MagicStuff;
 
+            for (int i = 0; i < actorTemplate.Equip.Count; i++)
+            {
+                actor.Equipment.TryAdd(actorTemplate.Equip[i].LimbEquipped,
+                    actorTemplate.Equip[i].ItemEquipped);
+            }
+
             return actor;
         }
 
@@ -291,6 +313,12 @@ namespace MagiRogue.Data.Serialization
             for (int a = 0; a < actor.Inventory.Count; a++)
             {
                 actorTemplate.Inventory.Add(actor.Inventory[a]);
+            }
+            actorTemplate.SerialId = actor.ID;
+
+            foreach (Limb limb in actor.Equipment.Keys)
+            {
+                actorTemplate.Equip.Add(new EquipTemplate(actor.Equipment[limb], limb));
             }
 
             return actorTemplate;

@@ -72,6 +72,7 @@ namespace MagiRogue.Test.System
             ItemTemplate item = new Item(Color.Black, Color.Black,
                 "Test Item", '@', Point.None, 100);
             Player player = new Player("Test", Color.Black, Color.Black, new Point(0, 0));
+            player.Equipment.Add(LimbTemplate.BasicHumanoidBody(player)[0], item);
             map.Add(actor);
             map.Add(item);
             map.Add(player);

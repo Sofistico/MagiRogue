@@ -34,7 +34,6 @@ namespace MagiRogue.System
         private readonly int _minRoomSize = 4;
         private readonly int _maxRoomSize = 10;
         private readonly Random rndNum = new();
-        private readonly IDGenerator idGen = new();
         /*private const int _zMaxUpLevel = 10;
         private const int _zMaxLowLevel = -10;*/
 
@@ -410,7 +409,7 @@ namespace MagiRogue.System
 
             for (int i = 0; i < newChunck.LocalMaps.Length; i++)
             {
-                newChunck.LocalMaps[i].SetId(idGen.UseID());
+                newChunck.LocalMaps[i].SetId(GameLoop.IdGen.UseID());
             }
 
             AllChunks[Point.ToIndex(posGenerated.X, posGenerated.Y, planetWidth)] = newChunck;

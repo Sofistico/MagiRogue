@@ -17,7 +17,11 @@ namespace MagiRogue.Data.Serialization
             JsonSerializer serializer) => serializer.Deserialize<ItemTemplate>(reader);
 
         public override void WriteJson(JsonWriter writer, Item value, JsonSerializer serializer)
-            => serializer.Serialize(writer, (ItemTemplate)value);
+        {
+            var item = (ItemTemplate)value;
+            //item.SerialId = (int)GameLoop.IdGen.UseID();
+            serializer.Serialize(writer, item);
+        }
     }
 
     [DataContract]
@@ -87,6 +91,9 @@ namespace MagiRogue.Data.Serialization
         public string Id { get; set; }
 
         [DataMember]
+        public uint SerialId { get; set; }
+
+        [DataMember]
         public string Name { get; internal set; }
 
         [JsonIgnore]
@@ -120,6 +127,8 @@ namespace MagiRogue.Data.Serialization
         public string MaterialId { get; set; }
 
         public MaterialTemplate Material { get; set; }
+
+        [DataMember]
         public MagicManager MagicStuff { get; set; }
 
         [DataMember]
@@ -147,6 +156,7 @@ namespace MagiRogue.Data.Serialization
                 item.Magic,
                 item.Condition
                 );
+            itemSerialized.SerialId = item.ID;
 
             return itemSerialized;
         }
