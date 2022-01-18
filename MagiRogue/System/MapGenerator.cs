@@ -672,7 +672,7 @@ namespace MagiRogue.System
             if (worldTile.MagicalAuraStrength > 7)
             {
             }
-            switch (worldTile.SpecialLandType)
+            /*switch (worldTile.SpecialLandType)
             {
                 case SpecialLandType.None:
                     // nothing here
@@ -684,7 +684,7 @@ namespace MagiRogue.System
 
                 default:
                     break;
-            }
+            }*/
         }
 
         private Map DetermineBiomeLookForTile(WorldTile worldTile)

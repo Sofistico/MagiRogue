@@ -230,91 +230,91 @@ namespace MagiRogue.Data.Serialization
         public override void WriteJson(JsonWriter writer, Map? value, JsonSerializer serializer)
             => serializer.Serialize(writer, (MapTemplate)value);
     }
-}
 
-public class MapTemplate
-{
-    public string MapName { get; set; }
-    public BasicTile[] Tiles { get; set; }
-    public int Width { get; set; }
-    public int Height { get; set; }
-    public Point LastPlayerPosition { get; set; }
-    public uint MapId { get; private set; }
-    public IList<Entity> Entities;
-    public bool[] Explored;
-
-    public MapTemplate(string mapName,
-        BasicTile[] tiles,
-        int width,
-        int height,
-        Point lastPlayerPosition,
-        uint mapId, bool[] explored)
+    public class MapTemplate
     {
-        MapName = mapName;
-        Tiles = tiles;
-        Width = width;
-        Height = height;
-        LastPlayerPosition = lastPlayerPosition;
-        MapId = mapId;
-        Explored = explored;
-    }
+        public string MapName { get; set; }
+        public BasicTile[] Tiles { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
+        public Point LastPlayerPosition { get; set; }
+        public uint MapId { get; private set; }
+        public IList<Entity> Entities;
+        public bool[] Explored;
 
-    public MapTemplate(string mapName, int width, int height)
-    {
-        MapName = mapName;
-        Width = width;
-        Height = height;
-    }
-
-    public MapTemplate()
-    {
-        // empty
-    }
-
-    public static implicit operator MapTemplate(Map map)
-    {
-        if (map == null)
-            return null;
-        BasicTile[] tiles = new BasicTile[map.Tiles.Length];
-        for (int i = 0; i < map.Tiles.Length; i++)
+        public MapTemplate(string mapName,
+            BasicTile[] tiles,
+            int width,
+            int height,
+            Point lastPlayerPosition,
+            uint mapId, bool[] explored)
         {
-            tiles[i] = map.Tiles[i];
+            MapName = mapName;
+            Tiles = tiles;
+            Width = width;
+            Height = height;
+            LastPlayerPosition = lastPlayerPosition;
+            MapId = mapId;
+            Explored = explored;
         }
 
-        MapTemplate template = new MapTemplate(map.MapName, tiles, map.Width,
-            map.Height, map.LastPlayerPosition, map.MapId, map.PlayerExplored.ToArray());
-
-        List<Entity> entities = new List<Entity>();
-
-        foreach (Entity item in map.Entities.Items)
+        public MapTemplate(string mapName, int width, int height)
         {
-            entities.Add(item);
+            MapName = mapName;
+            Width = width;
+            Height = height;
         }
 
-        template.Entities = entities;
-
-        return template;
-    }
-
-    public static implicit operator Map(MapTemplate map)
-    {
-        var objMap = new Map(map.MapName, map.Width, map.Height);
-
-        for (int i = 0; i < map.Tiles.Length; i++)
+        public MapTemplate()
         {
-            if (objMap.Tiles[i] == null)
-                continue;
-            objMap.SetTerrain((TileBase)map.Tiles[i]);
+            // empty
         }
-        for (int x = 0; x < map.Entities.Count; x++)
-        {
-            objMap.Add(map.Entities[x]);
-        }
-        objMap.SetId(map.MapId);
-        objMap.LastPlayerPosition = map.LastPlayerPosition;
-        objMap.PlayerExplored = new SadRogue.Primitives.GridViews.ArrayView<bool>(
-            map.Explored, map.Width);
 
-        return objMap;
+        public static implicit operator MapTemplate(Map map)
+        {
+            if (map == null)
+                return null;
+            BasicTile[] tiles = new BasicTile[map.Tiles.Length];
+            for (int i = 0; i < map.Tiles.Length; i++)
+            {
+                tiles[i] = map.Tiles[i];
+            }
+
+            MapTemplate template = new MapTemplate(map.MapName, tiles, map.Width,
+                map.Height, map.LastPlayerPosition, map.MapId, map.PlayerExplored.ToArray());
+
+            List<Entity> entities = new List<Entity>();
+
+            foreach (Entity item in map.Entities.Items)
+            {
+                entities.Add(item);
+            }
+
+            template.Entities = entities;
+
+            return template;
+        }
+
+        public static implicit operator Map(MapTemplate map)
+        {
+            var objMap = new Map(map.MapName, map.Width, map.Height);
+
+            for (int i = 0; i < map.Tiles.Length; i++)
+            {
+                if (objMap.Tiles[i] == null)
+                    continue;
+                objMap.SetTerrain((TileBase)map.Tiles[i]);
+            }
+            for (int x = 0; x < map.Entities.Count; x++)
+            {
+                objMap.Add(map.Entities[x]);
+            }
+            objMap.SetId(map.MapId);
+            objMap.LastPlayerPosition = map.LastPlayerPosition;
+            objMap.PlayerExplored = new SadRogue.Primitives.GridViews.ArrayView<bool>(
+                map.Explored, map.Width);
+
+            return objMap;
+        }
     }
 }
