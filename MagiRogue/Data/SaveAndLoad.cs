@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using Newtonsoft.Json;
+using MagiRogue.Data.Serialization;
 
 namespace MagiRogue.Data
 {
