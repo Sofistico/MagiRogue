@@ -13,7 +13,11 @@ namespace MagiRogue.Data.Serialization
             JsonSerializer serializer) => serializer.Deserialize<PlanetMapTemplate>(reader);
 
         public override void WriteJson(JsonWriter writer, PlanetMap? value, JsonSerializer serializer)
-            => serializer.Serialize(writer, (PlanetMapTemplate)value);
+        {
+            serializer.Formatting = Formatting.Indented;
+            serializer.NullValueHandling = NullValueHandling.Ignore;
+            serializer.Serialize(writer, (PlanetMapTemplate)value);
+        }
     }
 
     public class PlanetMapTemplate
@@ -23,8 +27,11 @@ namespace MagiRogue.Data.Serialization
         public float[,] MoistureData { get; }
         public float Min { get; set; }
         public float Max { get; set; }
-        public List<Civilization> Civilizations { get; set; }
-        public MapTemplate AssocietatedMap { get; }
+        public List<CivilizationTemplate> Civilizations { get; set; }
+        public uint AssocietatedMapId { get; }
+
+        [JsonIgnore]
+        public MapTemplate AssocietatedMap { get; set; }
 
         public PlanetMapTemplate(float[,] heightData,
             float[,] heatData,
@@ -32,29 +39,45 @@ namespace MagiRogue.Data.Serialization
             float min,
             float max,
             List<Civilization> civilizations,
-            MapTemplate associetatedMap)
+            uint associetatedMap)
         {
             HeightData = heightData;
             HeatData = heatData;
             MoistureData = moistureData;
             Min = min;
             Max = max;
-            Civilizations = civilizations;
-            AssocietatedMap = associetatedMap;
+            Civilizations = new();
+            for (int i = 0; i < civilizations.Count; i++)
+            {
+                Civilizations.Add(civilizations[i]);
+            }
+            AssocietatedMapId = associetatedMap;
         }
 
         public static implicit operator PlanetMapTemplate(PlanetMap map)
         {
-            return new PlanetMapTemplate(map.HeightData, map.HeatData,
+            var template = new PlanetMapTemplate(map.HeightData, map.HeatData,
                 map.MoistureData, map.Min, map.Max,
-                map.Civilizations, map.AssocietatedMap);
+                map.Civilizations, map.AssocietatedMap.MapId)
+            {
+                AssocietatedMap = map.AssocietatedMap
+            };
+            return template;
         }
 
         public static implicit operator PlanetMap(PlanetMapTemplate map)
         {
+            var civs = new List<Civilization>();
+            for (int i = 0; i < map.Civilizations.Count; i++)
+            {
+                civs.Add(map.Civilizations[i]);
+            }
+
             PlanetMap mio = new PlanetMap(map.HeightData, map.HeatData,
                 map.MoistureData, map.Min, map.Max,
-                map.Civilizations, map.AssocietatedMap);
+                civs, (MapTemplate)map.AssocietatedMap);
+            /*PlanetMap mio = new PlanetMap(map.Min, map.Max,
+                civs, (MapTemplate)map.AssocietatedMap);*/
 
             return mio;
         }

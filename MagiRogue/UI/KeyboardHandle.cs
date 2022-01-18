@@ -309,15 +309,24 @@ namespace MagiRogue.UI
                 try
                 {
                     // the map is being saved, but it isn't being properly deserialized
-                    var json = JsonConvert.SerializeObject((MapTemplate)GetPlayer.CurrentMap);
-                    // The universe class also isn't being serialized properly, crashing newtonsoft
-                    // TODO: Revise this line of code when the time comes to work on the save system.
-                    //var gameState = JsonConvert.SerializeObject(new GameState().Universe);
-                    MapTemplate mapDeJsonified = JsonConvert.DeserializeObject<Map>(json);
+                    Map map = (Map)GetPlayer.CurrentMap;
+                    map.LastPlayerPosition = GetPlayer.Position;
+                    if (GameLoop.Universe.MapIsWorld(map))
+                    {
+                        string json = JsonConvert.SerializeObject(GameLoop.Universe.WorldMap);
+                    }
+                    else
+                    {
+                        string json = map.SaveMapToJson(GetPlayer);
+                        // The universe class also isn't being serialized properly, crashing newtonsoft
+                        // TODO: Revise this line of code when the time comes to work on the save system.
+                        //var gameState = JsonConvert.SerializeObject(new GameState().Universe);
+                        MapTemplate mapDeJsonified = JsonConvert.DeserializeObject<Map>(json);
+                    }
                 }
-                catch (Newtonsoft.Json.JsonSerializationException)
+                catch (Newtonsoft.Json.JsonSerializationException e)
                 {
-                    throw;
+                    throw e;
                 }
             }
 

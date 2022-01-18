@@ -60,6 +60,7 @@ namespace MagiRogue.Entities
 
         /// <summary>
         /// This here defines an actor, must be used with the <see cref= "Data.EntityFactory">
+        /// Normally, use the ActorCreator method!
         /// </summary>
         /// <param name="foreground"></param>
         /// <param name="background"></param>

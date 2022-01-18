@@ -1,6 +1,8 @@
 ﻿using MagiRogue.Entities;
 using MagiRogue.System;
+using MagiRogue.System.Civ;
 using MagiRogue.System.Magic;
+using MagiRogue.System.Planet;
 using MagiRogue.System.Tiles;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -30,9 +32,13 @@ namespace MagiRogue.Data.Serialization
             map.SetId(id);
             for (int i = 0; i < tiles.Length; i++)
             {
+                Point pos = Point.None;
                 // tile handling
-                Point pos = new Point((int)tiles[i]["Position"]["X"],
-                    (int)tiles[i]["Position"]["Y"]);
+                if (tiles[i].SelectToken("Position") is not null)
+                {
+                    pos = new Point((int)tiles[i]["Position"]["X"],
+                        (int)tiles[i]["Position"]["Y"]);
+                }
                 BasicTile tile = new
                     BasicTile(pos,
                     (uint)tiles[i]["Foreground"],
@@ -89,9 +95,9 @@ namespace MagiRogue.Data.Serialization
                     }
                     for (int u = 0; u < jEquip.Length; u++)
                     {
-                        Limb limb = 
+                        Limb limb =
                             JsonConvert.DeserializeObject<LimbTemplate>(jEquip[u]["LimbEquipped"].ToString());
-                        Item item = 
+                        Item item =
                             JsonConvert.DeserializeObject<ItemTemplate>(jEquip[u]["ItemEquipped"].ToString());
                         equips.TryAdd(limb, item);
                     }
@@ -121,7 +127,7 @@ namespace MagiRogue.Data.Serialization
                     if (entity.SelectToken("Position") is not null)
                         actor.Position =
                             new Point((int)entity["Position"]["X"], (int)entity["Position"]["Y"]);
-                    
+
                     if (entity.SelectToken("IsPlayer") is not null && (bool)entity["IsPlayer"])
                     {
                         Player player = Player.ReturnPlayerFromActor(actor);
@@ -179,6 +185,21 @@ namespace MagiRogue.Data.Serialization
 
                 case TileType.WorldTile:
                     // belive i will need this, let's see.
+                    tile.BiomeType =
+                        JsonConvert.DeserializeObject<BiomeType>(jToken["Biome"].ToString());
+                    tile.BitMask = (int)jToken["BitMask"];
+                    tile.MagicalAura = (int)jToken["MagicalAura"];
+                    tile.BiomeBitMask = (int)jToken["BiomeBitMask"];
+                    //tile.Civ = jToken[];
+                    var riverjTok = jToken["Rivers"].ToArray();
+
+                    for (int i = 0; i < riverjTok.Length; i++)
+                    {
+                        tile.Rivers.Add(
+                            JsonConvert.DeserializeObject<River>(riverjTok[i].ToString()));
+                    }
+
+                    //tile.Civ = JsonConvert.DeserializeObject<Civilization>(jToken["Civ"].ToString());
                     break;
 
                 case TileType.Door:
@@ -187,7 +208,7 @@ namespace MagiRogue.Data.Serialization
                     break;
 
                 default:
-                    break;
+                    return;
             }
         }
 
@@ -295,29 +316,5 @@ public class MapTemplate
             map.Explored, map.Width);
 
         return objMap;
-    }
-}
-
-public class RegionChunkTemplate
-{
-    public int X { get; }
-    public int Y { get; }
-    public MapTemplate[] LocalMaps { get; set; }
-
-    public RegionChunkTemplate(int x, int y, MapTemplate[] localMaps)
-    {
-        X = x;
-        Y = y;
-        LocalMaps = localMaps;
-    }
-
-    public static implicit operator RegionChunkTemplate(RegionChunk region)
-    {
-        MapTemplate[] maps = new MapTemplate[region.LocalMaps.Length];
-        for (int i = 0; i < region.LocalMaps.Length; i++)
-        {
-            maps[i] = region.LocalMaps[i];
-        }
-        return new(region.X, region.Y, maps);
     }
 }

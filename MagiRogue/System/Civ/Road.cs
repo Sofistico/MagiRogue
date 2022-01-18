@@ -6,15 +6,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using MagiRogue.Data.Serialization;
 
 namespace MagiRogue.System.Civ
 {
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum RoadStatus
     {
         Normal,
         Abandoned
     }
 
+    [JsonConverter(typeof(RoadJsonConverter))]
     public class Road
     {
         public Dictionary<Point, WorldDirection> RoadDirectionInPos { get; set; }

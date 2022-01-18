@@ -1,5 +1,7 @@
 ﻿using MagiRogue.System.Civ;
 using MagiRogue.System.Planet;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
@@ -10,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace MagiRogue.System.Tiles
 {
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum HeightType
     {
         DeepWater = 1,
@@ -23,7 +26,7 @@ namespace MagiRogue.System.Tiles
         River = 9,
         HighMountain = 10
     }
-
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum HeatType
     {
         Coldest,
@@ -33,7 +36,7 @@ namespace MagiRogue.System.Tiles
         Warmer,
         Warmest
     }
-
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum MoistureType
     {
         Wettest,
@@ -43,7 +46,7 @@ namespace MagiRogue.System.Tiles
         Dryer,
         Dryest
     }
-
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum BiomeType
     {
         Sea,
@@ -59,7 +62,7 @@ namespace MagiRogue.System.Tiles
         Ice,
         Mountain
     }
-
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum SpecialLandType
     {
         None,

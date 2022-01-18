@@ -53,6 +53,17 @@ namespace MagiRogue.System.Planet
             _width = associetatedMap.Width;
         }
 
+        public PlanetMap(float min, float max,
+            List<Civilization> civilizations, Map associetatedMap)
+        {
+            _height = associetatedMap.Height;
+            _width = associetatedMap.Width;
+            Min = min;
+            Max = max;
+            Civilizations = civilizations;
+            AssocietatedMap = associetatedMap;
+        }
+
         public void SetWorldTiles(WorldTile[,] tiles)
         {
             AssocietatedMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().Disable();

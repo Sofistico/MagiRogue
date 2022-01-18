@@ -2,6 +2,7 @@
 using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
 using MagiRogue.System;
+using MagiRogue.System.Planet;
 using MagiRogue.System.Tiles;
 using Newtonsoft.Json;
 using SadConsole;
@@ -58,6 +59,25 @@ namespace MagiRogue.Test.System
             var json = JsonConvert.SerializeObject((MapTemplate)map);
 
             Assert.Contains(actor.Name, json);
+        }
+
+        [Fact]
+        public void WorldSerialization()
+        {
+            PlanetMap planet = new PlanetGenerator().CreatePlanet(150, 150, 30);
+
+            planet.AssocietatedMap.Add(new Player("pla", Color.Black,
+                Color.White, new Point(0, 0)));
+
+            PlanetMapTemplate planetMapTemplate = planet;
+
+            string json = JsonConvert.SerializeObject(planetMapTemplate, Formatting.Indented, 
+                new JsonSerializerSettings()
+            {
+                NullValueHandling = NullValueHandling.Ignore
+            });
+
+            Assert.True(json.StartsWith('{'));
         }
 
         [Fact]

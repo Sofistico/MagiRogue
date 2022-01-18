@@ -23,6 +23,7 @@ namespace MagiRogue.Entities
 
     [DataContract]
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
+    [JsonConverter(typeof(Data.Serialization.LimbJsonConverter))]
     public class Limb
     {
         private int limbHp;

@@ -17,7 +17,7 @@ namespace MagiRogue.Entities
 
         private string DebggerDisplay()
         {
-            return string.Format($"{nameof(Race)}: {RaceName}");
+            return string.Format($"{RaceName}");
         }
     }
 }

@@ -7,6 +7,7 @@ using SadRogue.Primitives;
 using System.Linq;
 using System.Collections.Generic;
 using MagiRogue.Data.Serialization;
+using GoRogue.DiceNotation;
 
 namespace MagiRogue.Entities
 {
@@ -19,6 +20,10 @@ namespace MagiRogue.Entities
             base(name, foreground, background, '@', position, layer)
         {
             Anatomy.Limbs = LimbTemplate.BasicHumanoidBody(this);
+            Weight = GoRogue.Random.GlobalRandom.DefaultRNG.Next(50, 95);
+            Size = GoRogue.Random.GlobalRandom.DefaultRNG.Next(155, 200);
+            Anatomy.Update(this);
+            Anatomy.Lifespan = GoRogue.Random.GlobalRandom.DefaultRNG.Next(75, 125);
         }
 
         public static Player TestPlayer()

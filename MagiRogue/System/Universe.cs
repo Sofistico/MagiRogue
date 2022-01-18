@@ -12,6 +12,7 @@ using System.Linq;
 using GoRogue;
 using MagiRogue.Data.Serialization;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace MagiRogue.System
 {
@@ -60,7 +61,9 @@ namespace MagiRogue.System
         /// <summary>
         /// All the maps and chunks of the game
         /// </summary>
-        public RegionChunk[] AllChunks { get; set; }
+        public RegionChunkTemplate[] AllChunks { get; set; }
+
+        public SaveAndLoad SaveAndLoad { get; set; }
 
         /// <summary>
         /// Creates a new game world and stores it in a
@@ -78,9 +81,10 @@ namespace MagiRogue.System
                     planetMaxCivs);
                 WorldMap.AssocietatedMap.IsActive = true;
                 maxChunks = planetWidth * planetHeight;
-                AllChunks = new RegionChunk[maxChunks];
+                AllChunks = new RegionChunkTemplate[maxChunks];
                 CurrentMap = WorldMap.AssocietatedMap;
                 PlacePlayerOnWorld(player);
+                SaveAndLoad = new();
             }
             else
             {
@@ -96,7 +100,7 @@ namespace MagiRogue.System
             TimeSystem time,
             bool possibleChangeMap,
             SeasonType currentSeason,
-            RegionChunk[] allChunks)
+            RegionChunkTemplate[] allChunks)
         {
             WorldMap = worldMap;
             CurrentMap = currentMap;
@@ -105,6 +109,7 @@ namespace MagiRogue.System
             PossibleChangeMap = possibleChangeMap;
             CurrentSeason = currentSeason;
             AllChunks = allChunks;
+            SaveAndLoad = new();
         }
 
         private void PlacePlayerOnWorld(Player player)
@@ -138,8 +143,13 @@ namespace MagiRogue.System
         public void ChangePlayerMap(Map mapToGo, Point pos, Map previousMap)
         {
             CurrentMap.LastPlayerPosition = new Point(Player.Position.X, Player.Position.Y);
-            CurrentMap.UnloadFromMemory();
             ChangeActorMap(Player, mapToGo, pos, previousMap);
+            if (MapIsWorld(previousMap))
+            {
+                // do somehting
+            }
+            else
+                previousMap.SaveMapToJson(Player);
             UpdateIfNeedTheMap(mapToGo);
             CurrentMap = mapToGo;
             mapToGo.LoadToMemory();
@@ -360,7 +370,7 @@ namespace MagiRogue.System
             CurrentMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
             for (int i = 0; i < AllChunks.Length; i++)
             {
-                Map[] maps = AllChunks[i].LocalMaps;
+                Map[] maps = AllChunks[i].ReturnAsMap();
                 for (int z = 0; z < maps.Length; z++)
                 {
                     maps[i].RemoveAllEntities();
@@ -423,6 +433,14 @@ namespace MagiRogue.System
         public bool MapIsWorld()
         {
             if (CurrentMap == WorldMap.AssocietatedMap)
+                return true;
+            else
+                return false;
+        }
+
+        public bool MapIsWorld(Map map)
+        {
+            if (map == WorldMap.AssocietatedMap)
                 return true;
             else
                 return false;

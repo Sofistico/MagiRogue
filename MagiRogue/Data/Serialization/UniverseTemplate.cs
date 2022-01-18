@@ -47,7 +47,7 @@ namespace MagiRogue.Data.Serialization
         /// <summary>
         /// All the maps and chunks of the game
         /// </summary>
-        public RegionChunk[] AllChunks { get; set; }
+        public RegionChunkTemplate[] AllChunks { get; set; }
 
         public UniverseTemplate(PlanetMap worldMap,
             Map currentMap,
@@ -55,7 +55,7 @@ namespace MagiRogue.Data.Serialization
             TimeTemplate time,
             bool possibleChangeMap,
             SeasonType currentSeason,
-            RegionChunk[] allChunks)
+            RegionChunkTemplate[] allChunks)
         {
             WorldMap = worldMap;
             CurrentMap = currentMap;

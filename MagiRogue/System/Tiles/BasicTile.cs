@@ -6,6 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
+using MagiRogue.System.Planet;
+using MagiRogue.System.Civ;
+using MagiRogue.Data.Serialization;
 
 namespace MagiRogue.System.Tiles
 {
@@ -25,7 +29,6 @@ namespace MagiRogue.System.Tiles
         public TileType TileType { get; set; }
         public int MoveCost { get; set; }
 
-        [JsonIgnore]
         public bool? IsSea { get; set; }
 
         /// <summary>
@@ -36,6 +39,24 @@ namespace MagiRogue.System.Tiles
         public bool Locked { get; set; }
         public bool IsOpen { get; set; }
         public int InfusedMp { get; set; }
+        public BiomeType BiomeType { get; set; }
+        public int MagicalAura { get; set; }
+        public int BiomeBitMask { get; set; }
+        public List<RiverTemplate> Rivers { get; set; } = new();
+        public int BitMask { get; set; }
+        public int RiverSize { get; private set; }
+        public string RegionName { get; private set; }
+        public RoadTemplate? Road { get; private set; }
+        public SpecialLandType SpecialLandType { get; private set; }
+        public HeatType HeatType { get; private set; }
+        public float HeatValue { get; private set; }
+        public HeightType HeightType { get; private set; }
+        public float HeightValue { get; private set; }
+        public float MineralValue { get; private set; }
+        public bool Visited { get; private set; }
+        public MoistureType MoistureType { get; private set; }
+        public float MoistureValue { get; private set; }
+        public int TileHealth { get; private set; }
 
         public BasicTile(Point position,
             uint foreground,
@@ -95,8 +116,30 @@ namespace MagiRogue.System.Tiles
                 type = TileType.Water;
                 isSea = seaTile.IsSea;
             }
-            else if (tile is WorldTile)
+            else if (tile is WorldTile worldTile)
+            {
+                for (int i = 0; i < worldTile.Rivers.Count; i++)
+                {
+                    basic.Rivers.Add(worldTile.Rivers[i]);
+                }
                 type = TileType.WorldTile;
+                basic.BiomeType = worldTile.BiomeType;
+                basic.BiomeBitMask = worldTile.BiomeBitmask;
+                //basic.Rivers = worldTile.Rivers;
+                //basic.Civ = worldTile.CivInfluence;
+                basic.RiverSize = worldTile.RiverSize;
+                basic.Road = worldTile.Road;
+                basic.SpecialLandType = worldTile.SpecialLandType;
+                basic.RegionName = worldTile.RegionName;
+                basic.HeatType = worldTile.HeatType;
+                basic.HeatValue = worldTile.HeatValue;
+                basic.HeightType = worldTile.HeightType;
+                basic.HeightValue = worldTile.HeightValue;
+                basic.Visited = worldTile.Visited;
+                basic.MoistureType = worldTile.MoistureType;
+                basic.MoistureValue = worldTile.MoistureValue;
+                basic.MineralValue = worldTile.MineralValue;
+            }
             else if (tile is TileDoor door)
             {
                 type = TileType.Door;
@@ -109,6 +152,8 @@ namespace MagiRogue.System.Tiles
             basic.TileType = type;
             basic.InfusedMp = tile.InfusedMp;
             basic.IsSea = isSea;
+            basic.TileHealth = tile.TileHealth;
+            basic.BitMask = tile.BitMask;
 
             return basic;
         }
@@ -164,7 +209,28 @@ namespace MagiRogue.System.Tiles
                         new Color(basicTile.Background),
                         basicTile.Glyph,
                         basicTile.Position,
-                        name: basicTile.Name);
+                        name: basicTile.Name)
+                    {
+                        BitMask = basicTile.BitMask,
+                        BiomeBitmask = basicTile.BiomeBitMask,
+                        BiomeType = basicTile.BiomeType,
+                        //CivInfluence = basicTile.Civ,
+                        //Rivers = basicTile.Rivers,
+                        RiverSize = basicTile.RiverSize,
+                        RegionName = basicTile.RegionName,
+                        Road = basicTile.Road,
+                        SpecialLandType = basicTile.SpecialLandType,
+                        MagicalAuraStrength = basicTile.MagicalAura,
+                        HeatType = basicTile.HeatType,
+                        HeatValue = basicTile.HeatValue,
+                        HeightType = basicTile.HeightType,
+                        HeightValue = basicTile.HeightValue,
+                        MineralValue = basicTile.MineralValue,
+                        Visited = basicTile.Visited,
+                        MoistureType = basicTile.MoistureType,
+                        MoistureValue = basicTile.MoistureValue,
+                    };
+                    tile.BitMask = basicTile.BitMask;
                     break;
 
                 case TileType.Door:
@@ -179,6 +245,7 @@ namespace MagiRogue.System.Tiles
 
             tile.Description = basicTile.Description;
             tile.InfusedMp = basicTile.InfusedMp;
+            tile.TileHealth = basicTile.TileHealth;
 
             return tile;
         }

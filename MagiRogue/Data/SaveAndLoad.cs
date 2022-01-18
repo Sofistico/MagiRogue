@@ -11,14 +11,14 @@ namespace MagiRogue.Data
     public class SaveAndLoad
     {
         private const string _folderName = "Saves";
-        private string dir = AppDomain.CurrentDomain.BaseDirectory;
+        private readonly string dir = AppDomain.CurrentDomain.BaseDirectory;
 
         public SaveAndLoad()
         {
-            // empty
+            CreateNewSaveFolder();
         }
 
-        public void CreateNewSaveFolder()
+        private void CreateNewSaveFolder()
         {
             if (!Directory.Exists(dir + $@"\{_folderName}"))
             {
@@ -34,6 +34,10 @@ namespace MagiRogue.Data
             {
                 Directory.CreateDirectory(path);
             }
+        }
+
+        public void SaveMapToSaveFolder(MapTemplate map)
+        {
         }
     }
 }

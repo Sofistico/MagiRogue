@@ -1,8 +1,11 @@
-﻿using MagiRogue.System.Tiles;
+﻿using MagiRogue.Data.Serialization;
+using MagiRogue.System.Tiles;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace MagiRogue.System.Planet
 {
+    [JsonConverter(typeof(RiverJsonConverter))]
     public class River
     {
         public int RiverCount { get; }

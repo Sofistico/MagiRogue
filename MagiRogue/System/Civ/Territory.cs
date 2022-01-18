@@ -19,5 +19,7 @@ namespace MagiRogue.System.Civ
         public void AddLand(WorldTile tile) => OwnedLand.WorldTiles.Add(tile);
 
         public void AddWaterLand(WorldTile tile) => OwnedWater.WorldTiles.Add(tile);
+
+        public int Count() => OwnedLand.WorldTiles.Count + OwnedWater.WorldTiles.Count;
     }
 }

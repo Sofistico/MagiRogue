@@ -6,9 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace MagiRogue.System.Civ
 {
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum CivilizationTendency
     {
         Normal,
@@ -16,6 +19,7 @@ namespace MagiRogue.System.Civ
         Studious,
     }
 
+    [JsonConverter(typeof(CivilizationJsonConverter))]
     public class Civilization
     {
         public string Name { get; set; }
@@ -29,7 +33,8 @@ namespace MagiRogue.System.Civ
         public List<ItemTemplate> Nodes { get; set; }
         public Territory Territory { get; set; }
 
-        public Civilization(string name, Race primaryRace, int population, CivilizationTendency tendency)
+        public Civilization(string name, Race primaryRace, int population,
+            CivilizationTendency tendency)
         {
             Name = name;
             PrimaryRace = primaryRace;

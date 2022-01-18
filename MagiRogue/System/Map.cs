@@ -59,7 +59,7 @@ namespace MagiRogue.System
             }
         }
 
-        public Point LastPlayerPosition { get; set; }
+        public Point LastPlayerPosition { get; set; } = Point.None;
 
         public string MapName { get; }
         public bool NeedsUpdate { get; internal set; }
@@ -109,11 +109,6 @@ namespace MagiRogue.System
             {
                 Remove(item);
             }
-        }
-
-        public void UnloadFromMemory()
-        {
-            IsActive = false;
         }
 
         public void LoadToMemory()
@@ -357,6 +352,20 @@ namespace MagiRogue.System
                 _entityRender.Add(item);
             }
             renderer.IsDirty = true;
+        }
+
+        public string SaveMapToJson(Player player)
+        {
+            if (LastPlayerPosition == Point.None && player.CurrentMap == this)
+                LastPlayerPosition = player.Position;
+            var json = JsonConvert.SerializeObject(
+                this,
+                Formatting.Indented,
+                new JsonSerializerSettings()
+                {
+                    NullValueHandling = NullValueHandling.Ignore
+                });
+            return json;
         }
 
         private void FovCalculate(Actor actor)
