@@ -1,13 +1,15 @@
 ﻿using GoRogue;
 using GoRogue.Components;
 using GoRogue.GameFramework;
-using MagiRogue.Data.Materials;
+using MagiRogue.Data.Serialization;
+using Newtonsoft.Json;
 using SadConsole;
 using SadRogue.Primitives;
 using System;
 
 namespace MagiRogue.System.Tiles
 {
+    // need to separate the TileBase from the ColoredGlyph object
     public abstract class TileBase : ColoredGlyph, IGameObject
     {
         private int _tileHealth;
@@ -61,7 +63,9 @@ namespace MagiRogue.System.Tiles
 
             set
             {
-                if (MaterialOfTile.MPInfusionLimit is object && MaterialOfTile.MPInfusionLimit > 0)
+                if (MaterialOfTile is not null 
+                    && MaterialOfTile.MPInfusionLimit is not null 
+                    && MaterialOfTile.MPInfusionLimit > 0)
                 {
                     _infusedMp = value;
                 }
@@ -72,21 +76,29 @@ namespace MagiRogue.System.Tiles
             }
         }
 
+        // TODO: For some future fun stuff!
+        // like continious wall and determining what there is next to it
+        public int BitMask { get; set; }
+
         #region backingField Data
 
         public GoRogue.GameFramework.Map CurrentMap => backingField.CurrentMap;
 
         public bool IsTransparent { get => backingField.IsTransparent; set => backingField.IsTransparent = value; }
-        public bool IsWalkable { get => !IsBlockingMove; set => backingField.IsWalkable = !IsBlockingMove; }
+        public bool IsWalkable { get => !IsBlockingMove; set => IsBlockingMove = !value; }
         public Point Position { get => backingField.Position; set => backingField.Position = value; }
 
         public uint ID => backingField.ID;
 
-        int IHasLayer.Layer => backingField.Layer;
-
-        //public ITaggableComponentCollection GoRogueComponents => backingField.GoRogueComponents;
-
         public IComponentCollection GoRogueComponents => backingField.GoRogueComponents;
+
+        /// <summary>
+        /// How much Move it costs to transverse this tile.\n
+        /// 100 is the norm, it means it takes exactly 100 ticks to go to this tile.\n
+        /// Note that the calculation on how many time it takes is usually MoveTime / Speed.
+        /// </summary>
+        public int MoveTimeCost { get; set; } = 100;
+        public string Description { get; internal set; }
 
         #endregion backingField Data
 
@@ -96,7 +108,8 @@ namespace MagiRogue.System.Tiles
         // isBlockingMove and isBlockingSight are optional parameters, set to false by default
         protected TileBase(Color foregroud, Color background, int glyph, int layer,
             Point position, string idOfMaterial, bool blocksMove = true,
-            bool isTransparent = true, string name = "ForgotToChangeName") : base(foregroud, background, glyph)
+            bool isTransparent = true, string name = "ForgotToChangeName") :
+            base(foregroud, background, glyph)
         {
             IsBlockingMove = blocksMove;
             Name = name;
@@ -107,7 +120,23 @@ namespace MagiRogue.System.Tiles
             {
                 IsVisible = false
             };
-            CalculateTileHealth();
+            if (MaterialOfTile is not null)
+                CalculateTileHealth();
+        }
+
+        protected TileBase(Color foregroud, Color background, int glyph, int layer,
+            Point position, bool blocksMove = true,
+            bool isTransparent = true, string name = "ForgotToChangeName")
+            : base(foregroud, background, glyph)
+        {
+            IsBlockingMove = blocksMove;
+            Name = name;
+            Layer = layer;
+            backingField = new GameObject(position, layer, !blocksMove, isTransparent);
+            LastSeenAppereance = new ColoredGlyph(Foreground, Background, Glyph)
+            {
+                IsVisible = false
+            };
         }
 
         protected void CalculateTileHealth() => _tileHealth = (int)MaterialOfTile.Density * MaterialOfTile.Hardness;
@@ -117,11 +146,11 @@ namespace MagiRogue.System.Tiles
         public virtual void DestroyTile(TileBase changeTile, Entities.Item? itemDropped = null)
 #nullable disable
         {
-            GameLoop.World.CurrentMap.SetTerrain(changeTile);
+            GameLoop.Universe.CurrentMap.SetTerrain(changeTile);
             LastSeenAppereance = changeTile;
             if (itemDropped is not null)
             {
-                GameLoop.World.CurrentMap.Add(itemDropped);
+                GameLoop.Universe.CurrentMap.Add(itemDropped);
             }
         }
 
@@ -189,6 +218,32 @@ namespace MagiRogue.System.Tiles
             remove
             {
                 backingField.RemovedFromMap -= value;
+            }
+        }
+
+        public event EventHandler<GameObjectPropertyChanged<bool>> TransparencyChanging
+        {
+            add
+            {
+                backingField.TransparencyChanging += value;
+            }
+
+            remove
+            {
+                backingField.TransparencyChanging -= value;
+            }
+        }
+
+        public event EventHandler<GameObjectPropertyChanged<bool>> WalkabilityChanging
+        {
+            add
+            {
+                backingField.WalkabilityChanging += value;
+            }
+
+            remove
+            {
+                backingField.WalkabilityChanging -= value;
             }
         }
 

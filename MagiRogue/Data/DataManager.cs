@@ -1,6 +1,8 @@
-﻿using MagiRogue.Data.Materials;
+﻿using MagiRogue.Data.Serialization;
 using MagiRogue.System.Magic;
 using MagiRogue.Utils;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,24 +12,24 @@ namespace MagiRogue.Data
 {
     public static class DataManager
     {
-        private readonly static string _appDomain = AppDomain.CurrentDomain.BaseDirectory;
+        private static readonly string _appDomain = AppDomain.CurrentDomain.BaseDirectory;
 
-        public readonly static IReadOnlyList<ItemTemplate> ListOfItems =
+        public static readonly IReadOnlyList<ItemTemplate> ListOfItems =
             GetSourceTree<ItemTemplate>(@".\Data\Items\*.json");
 
-        public readonly static IReadOnlyList<MaterialTemplate> ListOfMaterials =
+        public static readonly IReadOnlyList<MaterialTemplate> ListOfMaterials =
            GetSourceTree<MaterialTemplate>(@".\Data\Materials\*.json");
 
-        public readonly static IReadOnlyList<SpellBase> ListOfSpells = GetSourceTree<SpellBase>(@".\Data\Spells\*.json");
+        public static readonly IReadOnlyList<SpellBase> ListOfSpells = GetSourceTree<SpellBase>(@".\Data\Spells\*.json");
 
-        public readonly static IReadOnlyList<ActorTemplate> ListOfActors = GetSourceTree<ActorTemplate>(@".\Data\Actors\*.json");
+        public static readonly IReadOnlyList<ActorTemplate> ListOfActors = GetSourceTree<ActorTemplate>(@".\Data\Actors\*.json");
 
         private static IReadOnlyList<T> GetSourceTree<T>(string wildCard)
         {
             string originalWildCard = wildCard;
 
             string pattern = Path.GetFileName(originalWildCard);
-            string realDir = originalWildCard.Substring(0, originalWildCard.Length - pattern.Length);
+            string realDir = originalWildCard[..^pattern.Length];
 
             // Get absolutepath
             string absPath = Path.GetFullPath(Path.Combine(_appDomain, realDir));
@@ -57,5 +59,10 @@ namespace MagiRogue.Data
 
         public static SpellBase QuerySpellInData(string spellId) => ListOfSpells.FirstOrDefault
                 (m => m.SpellId.Equals(spellId));
+
+        /*public static MapTemplate QueryMapInData(JObject json, string idLookingFor)
+        {
+            //return JsonConvert.DeserializeObject<MapTemplate>(json["MapId"]);
+        }*/
     }
 }

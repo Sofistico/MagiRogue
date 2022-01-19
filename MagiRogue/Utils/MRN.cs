@@ -7,7 +7,7 @@ namespace MagiRogue.Utils
     /// </summary>
     public struct Mrn
     {
-        public static int ExplodingD6Dice => ExplodingDice();
+        public static int Exploding2D6Dice => ExplodingDice();
 
         /// <summary>
         /// This uses a similar number

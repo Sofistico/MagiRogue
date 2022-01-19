@@ -2,20 +2,49 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <StartupObject>MagiRogue.GameLoop</StartupObject>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Authors>Sofistico</Authors>
+    <Company>Sofistico</Company>
+    <Description>A roguelike created with SadConsole 9.x and GoRogue 3.x</Description>
+    <ApplicationIcon>Young-Wizard.ico</ApplicationIcon>
+    <Nullable>enable</Nullable>
+    <Win32Resource />
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Copyright>Sofistico</Copyright>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseFile>C:\Users\joaorodrigues\source\repos\MagiRogue\LICENSE</PackageLicenseFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;8765;8618;8604;8602;8600;8603</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;8765;8618;8604;8602;8600;8603</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GoRogue" Version="3.0.0-alpha05" />
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GoRogue" Version="3.0.0-alpha09" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="SadConsole" Version="9.1.1" />
-    <PackageReference Include="SadConsole.Host.MonoGame" Version="9.1.1" />
+    <PackageReference Include="SadConsole" Version="9.2.1" />
+    <PackageReference Include="SadConsole.Host.MonoGame" Version="9.2.1" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="Data\Actors\humanoids.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\Actors\vegetation.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Data\Items\bars.json">

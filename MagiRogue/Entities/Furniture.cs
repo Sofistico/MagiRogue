@@ -1,4 +1,5 @@
-﻿using SadRogue.Primitives;
+﻿using MagiRogue.System;
+using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,10 @@ namespace MagiRogue.Entities
     {
         public List<IActivable> FurnitureEffects { get; set; }
         public FurnitureType FurnitureType { get; }
+        public Map MapConnection { get; internal set; }
 
-        public Furniture(Color foreground, Color background, int glyph, Point coord, int layer, FurnitureType type)
+        public Furniture(Color foreground, Color background, int glyph, Point coord, int layer,
+            FurnitureType type)
             : base(foreground, background, glyph, coord, layer)
         {
             FurnitureEffects = new();

@@ -13,12 +13,15 @@ using SadRogue.Primitives;
 using MagiRogue.System.Time;
 using MagiRogue.UI.Windows;
 using MagiRogue.System.Tiles;
+using Newtonsoft.Json;
+using MagiRogue.Data;
+using MagiRogue.Data.Serialization;
 
 namespace MagiRogue.UI
 {
     public static class KeyboardHandle
     {
-        private static Player GetPlayer => GameLoop.World.Player;
+        private static Player GetPlayer => GameLoop.Universe.Player;
 
         private static Target targetCursor;
 
@@ -30,7 +33,7 @@ namespace MagiRogue.UI
             { Keys.Up, Direction.Up }, { Keys.Down, Direction.Down }, { Keys.Left, Direction.Left }, { Keys.Right, Direction.Right }
         };
 
-        public static bool HandleMapKeys(Keyboard input, UIManager ui, World world)
+        public static bool HandleMapKeys(Keyboard input, UIManager ui, Universe world)
         {
             if (HandleActions(input, world, ui))
                 return true;
@@ -56,11 +59,42 @@ namespace MagiRogue.UI
             return false;
         }
 
-        private static bool HandleMove(Keyboard info, World world)
+        private static bool HandleMove(Keyboard info, Universe world)
         {
+            #region WorldMovement
+
+            if (CurrentMapIsPlanetView(world))
+            {
+                var console = GameLoop.UIManager.MapWindow.MapConsole;
+
+                if (info.IsKeyDown(Keys.Left))
+                {
+                    console.ViewPosition = console.ViewPosition.Translate((-1, 0));
+                }
+
+                if (info.IsKeyDown(Keys.Right))
+                {
+                    console.ViewPosition = console.ViewPosition.Translate((1, 0));
+                }
+
+                if (info.IsKeyDown(Keys.Up))
+                {
+                    console.ViewPosition = console.ViewPosition.Translate((0, -1));
+                }
+
+                if (info.IsKeyDown(Keys.Down))
+                {
+                    console.ViewPosition = console.ViewPosition.Translate((0, +1));
+                }
+                // Must return false, because there isn't any movement of the actor
+                return false;
+            }
+
+            #endregion WorldMovement
+
             foreach (Keys key in MovementDirectionMapping.Keys)
             {
-                if (info.IsKeyPressed(key))
+                if (info.IsKeyPressed(key) && world.CurrentMap is not null)
                 {
                     Direction moveDirection = MovementDirectionMapping[key];
                     Point coorToMove = new(moveDirection.DeltaX, moveDirection.DeltaY);
@@ -97,17 +131,23 @@ namespace MagiRogue.UI
             return false;
         }
 
-        private static bool HandleActions(Keyboard info, World world, UIManager ui)
+        private static bool HandleActions(Keyboard info, Universe world, UIManager ui)
         {
             // Work around for a > symbol, must be top to not make the char wait
             if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.OemPeriod))
             {
-                CommandManager.MoveDownStairs(GetPlayer);
+                return CommandManager.EnterDownMovement(GetPlayer.Position);
+            }
+            // Work around for a < symbol, must be top to not make the char wait
+            if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.OemComma))
+            {
+                return CommandManager.EnterUpMovement(GetPlayer.Position);
             }
             if (HandleMove(info, world))
             {
                 if (!GetPlayer.Bumped && world.CurrentMap.ControlledEntitiy is Player)
-                    world.ProcessTurn(TimeHelper.GetWalkTime(GetPlayer), true);
+                    world.ProcessTurn(TimeHelper.GetWalkTime(GetPlayer,
+                        world.CurrentMap.GetTileAt<TileBase>(GetPlayer.Position)), true);
                 else if (world.CurrentMap.ControlledEntitiy is Player)
                     world.ProcessTurn(TimeHelper.GetAttackTime(GetPlayer), true);
 
@@ -221,7 +261,7 @@ namespace MagiRogue.UI
                 }
             }
 
-            if (info.IsKeyPressed(Keys.Escape) && (targetCursor is object))
+            if (info.IsKeyPressed(Keys.Escape) && (targetCursor is not null))
             {
                 targetCursor.EndTargetting();
 
@@ -260,9 +300,48 @@ namespace MagiRogue.UI
                 }
             }
 
+            if (info.IsKeyPressed(Keys.Tab))
+            {
+                CommandManager.CreateNewMapForTesting();
+            }
+            if (info.IsKeyPressed(Keys.OemPlus))
+            {
+                try
+                {
+                    // the map is being saved, but it isn't being properly deserialized
+                    Map map = (Map)GetPlayer.CurrentMap;
+                    map.LastPlayerPosition = GetPlayer.Position;
+                    if (GameLoop.Universe.MapIsWorld(map))
+                    {
+                        string json = JsonConvert.SerializeObject(GameLoop.Universe.WorldMap);
+                    }
+                    else
+                    {
+                        string json = map.SaveMapToJson(GetPlayer);
+                        // The universe class also isn't being serialized properly, crashing newtonsoft
+                        // TODO: Revise this line of code when the time comes to work on the save system.
+                        //var gameState = JsonConvert.SerializeObject(new GameState().Universe);
+                        MapTemplate mapDeJsonified = JsonConvert.DeserializeObject<Map>(json);
+                    }
+                }
+                catch (Newtonsoft.Json.JsonSerializationException e)
+                {
+                    throw e;
+                }
+            }
+
 #endif
 
             return false;
+        }
+
+        private static bool CurrentMapIsPlanetView(Universe world)
+        {
+            if (world.WorldMap != null
+                && world.WorldMap.AssocietatedMap == world.CurrentMap && world.Player == null)
+                return true;
+            else
+                return false;
         }
     }
 }

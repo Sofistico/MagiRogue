@@ -5,7 +5,7 @@ using System;
 
 namespace MagiRogue.System.Tiles
 {
-    public class NodeTile : TileBase
+    public sealed class NodeTile : TileBase
     {
         private float _mpRecovering;
         private Components.IllusionComponent illusion;
@@ -106,12 +106,14 @@ namespace MagiRogue.System.Tiles
 
         public override void DestroyTile(TileBase changeTile, Item itemDropped = null)
         {
-            GameLoop.World.Time.TurnPassed -= GetTime_NodeTurnPassed;
+            GameLoop.Universe.Time.TurnPassed -= GetTime_NodeTurnPassed;
 
             base.DestroyTile(changeTile, itemDropped);
         }
 
-        public void SetUpNodeTurn(World world) => world.Time.TurnPassed += GetTime_NodeTurnPassed;
+        public void SetUpNodeTurn(Universe world) => world.Time.TurnPassed += GetTime_NodeTurnPassed;
+
+        private void DestroyNodeTurn(Universe world) => world.Time.TurnPassed -= GetTime_NodeTurnPassed;
 
         private void GetTime_NodeTurnPassed(object sender, Time.TimeDefSpan e)
         {
@@ -125,15 +127,18 @@ namespace MagiRogue.System.Tiles
         {
             DestroyTile(BecomeNextTile());
 
-            return new Item(Foreground, Background, Name, Glyph, Position, NodeStrength,
-                (float)MaterialOfTile.Density);
+            DestroyNodeTurn(GameLoop.Universe);
+
+            return Data.EntityFactory.ItemCreator(Position,
+                new Item(Foreground, Background, "Node Vis", Glyph, Position, NodeStrength,
+                (float)MaterialOfTile.Density));
         }
 
         private TileBase BecomeNextTile()
         {
             foreach (Point point in Position.GetDirectionPoints())
             {
-                TileBase tile = GameLoop.World.CurrentMap.GetTileAt<TileBase>(point);
+                TileBase tile = GameLoop.Universe.CurrentMap.GetTileAt<TileBase>(point);
                 if (LastSeenAppereance.Matches(tile))
                 {
                     return tile;

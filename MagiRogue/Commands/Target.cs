@@ -1,14 +1,14 @@
-﻿using MagiRogue.Entities;
+﻿using GoRogue.Pathing;
+using MagiRogue.Entities;
 using MagiRogue.System;
 using MagiRogue.System.Magic;
 using MagiRogue.System.Tiles;
+using MagiRogue.UI.Windows;
+using MagiRogue.Utils;
 using SadRogue.Primitives;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using GoRogue.Pathing;
-using MagiRogue.UI.Windows;
-using System;
-using MagiRogue.Utils;
 
 namespace MagiRogue.Commands
 {
@@ -55,7 +55,7 @@ namespace MagiRogue.Commands
             SadConsole.Effects.Blink blink = new SadConsole.Effects.Blink()
             {
                 BlinkCount = -1,
-                BlinkSpeed = 1.3,
+                BlinkSpeed = TimeSpan.FromSeconds(1.3),
                 UseCellBackgroundColor = true
             };
             Cursor.Effect = blink;
@@ -67,9 +67,10 @@ namespace MagiRogue.Commands
             tileDictionary = new Dictionary<Point, TileBase>();
         }
 
-        public bool TileInTarget()
+        // Need to see if it's worth to maintain this code
+        /*public bool TileInTarget()
         {
-            TileBase tile = GameLoop.World.CurrentMap.GetTileAt<TileBase>(Cursor.Position);
+            TileBase tile = GameLoop.Universe.CurrentMap.GetTileAt<TileBase>(Cursor.Position);
 
             if (tile is not null)
             {
@@ -77,11 +78,11 @@ namespace MagiRogue.Commands
             }
 
             return false;
-        }
+        }*/
 
         public bool EntityInTarget()
         {
-            if (GameLoop.World.CurrentMap.GetEntitiesAt<Entity>(Cursor.Position).Any(e => e.ID != Cursor.ID))
+            if (GameLoop.Universe.CurrentMap.GetEntitiesAt<Entity>(Cursor.Position).Any(e => e.ID != Cursor.ID))
             //&& GameLoop.World.CurrentMap.GetEntityAt<Entity>(Cursor.Position) is not Player)
             {
                 State = TargetState.Targeting;
@@ -98,8 +99,8 @@ namespace MagiRogue.Commands
             {
                 TargetList.Add(_caster);
                 var (sucess, s) = EndSpellTargetting();
-                GameLoop.World.ProcessTurn
-                    (System.Time.TimeHelper.GetCastingTime(GameLoop.World.Player, s), sucess);
+                GameLoop.Universe.ProcessTurn
+                    (System.Time.TimeHelper.GetCastingTime(GameLoop.Universe.Player, s), sucess);
                 return;
             }
 
@@ -108,8 +109,14 @@ namespace MagiRogue.Commands
 
         public void StartTargetting()
         {
-            GameLoop.World.ChangeControlledEntity(Cursor);
-            GameLoop.World.CurrentMap.Add(Cursor);
+            OriginCoord = new Point(
+                GameLoop.Universe.CurrentMap.ControlledEntitiy.Position.X,
+                GameLoop.Universe.CurrentMap.ControlledEntitiy.Position.Y);
+            Cursor.Position = new Point(
+                 GameLoop.Universe.CurrentMap.ControlledEntitiy.Position.X,
+                 GameLoop.Universe.CurrentMap.ControlledEntitiy.Position.Y);
+            GameLoop.Universe.ChangeControlledEntity(Cursor);
+            GameLoop.Universe.CurrentMap.Add(Cursor);
             Cursor.Moved += Cursor_Moved;
 
             State = TargetState.Targeting;
@@ -173,7 +180,7 @@ namespace MagiRogue.Commands
                     // if there is anything in the path, clear it
                     foreach (Point point in tileDictionary.Keys)
                     {
-                        TileBase tile = GameLoop.World.CurrentMap.GetTileAt<TileBase>(point);
+                        TileBase tile = GameLoop.Universe.CurrentMap.GetTileAt<TileBase>(point);
                         if (tile is not null)
                             tile.Background = tile.LastSeenAppereance.Background;
                     }
@@ -181,8 +188,8 @@ namespace MagiRogue.Commands
                     TravelPath = null;
                 }
 
-                GameLoop.World.ChangeControlledEntity(GameLoop.World.Player);
-                GameLoop.World.CurrentMap.Remove(Cursor);
+                GameLoop.Universe.ChangeControlledEntity(GameLoop.Universe.Player);
+                GameLoop.Universe.CurrentMap.Remove(Cursor);
             }
         }
 
@@ -232,29 +239,36 @@ namespace MagiRogue.Commands
         private void Cursor_Moved(object sender, GoRogue.GameFramework.GameObjectPropertyChanged<Point> e)
         {
             TargetList.Clear();
-            TravelPath = GameLoop.World.CurrentMap.AStar.ShortestPath(OriginCoord, e.NewValue);
-            foreach (Point pos in TravelPath.Steps)
+            TravelPath = GameLoop.Universe.CurrentMap.AStar.ShortestPath(OriginCoord, e.NewValue);
+            try
             {
-                // gets each point in the travel path steps and change the background of the wall
-                var halp = GameLoop.World.CurrentMap.GetTileAt<TileBase>(pos);
-                halp.Background = Color.Yellow;
-                tileDictionary.TryAdd(pos, halp);
-            }
-
-            // This loops makes sure that all the pos that aren't in the TravelPath gets it's proper appearence
-            foreach (Point item in tileDictionary.Keys)
-            {
-                if (!TravelPath.Steps.Contains(item))
+                foreach (Point pos in TravelPath.Steps)
                 {
-                    TileBase llop = GameLoop.World.CurrentMap.GetTileAt<TileBase>(item);
-                    if (llop is not null)
+                    // gets each point in the travel path steps and change the background of the wall
+                    var halp = GameLoop.Universe.CurrentMap.GetTileAt<TileBase>(pos);
+                    halp.Background = Color.Yellow;
+                    tileDictionary.TryAdd(pos, halp);
+                }
+
+                // This loops makes sure that all the pos that aren't in the TravelPath gets it's proper appearence
+                foreach (Point item in tileDictionary.Keys)
+                {
+                    if (!TravelPath.Steps.Contains(item))
                     {
-                        llop.Background = llop.LastSeenAppereance.Background;
+                        TileBase llop = GameLoop.Universe.CurrentMap.GetTileAt<TileBase>(item);
+                        if (llop is not null)
+                        {
+                            llop.Background = llop.LastSeenAppereance.Background;
+                        }
                     }
                 }
-            }
 
-            SpellAreaHelper();
+                SpellAreaHelper();
+            }
+            catch (Exception)
+            {
+                throw new Exception("An error occured in the Cursor targetting!");
+            }
         }
 
         private void SpellAreaHelper()
@@ -292,7 +306,7 @@ namespace MagiRogue.Commands
         /// <param name="point"></param>
         private void AddTileToDictionary(Point point)
         {
-            var halp = GameLoop.World.CurrentMap.GetTileAt<TileBase>(point);
+            var halp = GameLoop.Universe.CurrentMap.GetTileAt<TileBase>(point);
             if (halp is not null)
             {
                 halp.Background = Color.Yellow;
@@ -318,9 +332,9 @@ namespace MagiRogue.Commands
         /// <param name="point"></param>
         private void AddEntityToList(Point point)
         {
-            var entity = GameLoop.World.CurrentMap.GetEntityAt<Entity>(point);
+            var entity = GameLoop.Universe.CurrentMap.GetEntityAt<Entity>(point);
             if (entity is not null && !TargetList.Contains(entity))
-                TargetList.Add(GameLoop.World.CurrentMap.GetEntityAt<Entity>(point));
+                TargetList.Add(GameLoop.Universe.CurrentMap.GetEntityAt<Entity>(point));
         }
 
         private ISpellEffect GetSpellAreaEffect(SpellAreaEffect areaEffect) =>
@@ -332,7 +346,7 @@ namespace MagiRogue.Commands
             w.Show();
         }
 
-        private Entity TargetEntity() => GameLoop.World.CurrentMap.GetEntityAt<Entity>(Cursor.Position);
+        private Entity TargetEntity() => GameLoop.Universe.CurrentMap.GetEntityAt<Entity>(Cursor.Position);
 
         public enum TargetState
         {

@@ -69,13 +69,14 @@ namespace MagiRogue.UI
         {
             IsFocused = true;
             MainMenu.GameStarted = true;
+            MainMenu.Hide();
 
             if (!testGame)
             {
                 CharCreationWindow.Hide();
             }
 
-            GameLoop.World = new World(player, testGame);
+            GameLoop.Universe = new Universe(player, testGame);
 
             //Message Log initialization
             MessageLog = new MessageLogWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Message Log");
@@ -99,11 +100,10 @@ namespace MagiRogue.UI
             CreateMapWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight, "Game Map");
 
             // Then load the map into the MapConsole
-            MapWindow.LoadMap(GameLoop.World.CurrentMap);
-            //MapWindow.LoadAllChunks(GameLoop.World.LocalChunks);
+            MapWindow.LoadMap(GameLoop.Universe.CurrentMap);
 
             // Start the game with the camera focused on the player
-            MapWindow.CenterOnActor(GameLoop.World.Player);
+            MapWindow.CenterOnActor(GameLoop.Universe.Player);
         }
 
         /// <summary>
@@ -122,6 +122,8 @@ namespace MagiRogue.UI
 
         #endregion ConstructorAndInitCode
 
+        #region Overrides
+
         #region Input
 
         /// <summary>
@@ -132,9 +134,11 @@ namespace MagiRogue.UI
         /// <returns></returns>
         public override bool ProcessKeyboard(Keyboard info)
         {
-            if (GameLoop.World != null)
+            if (GameLoop.Universe != null && GameLoop.Universe.CurrentMap != null
+                && (GameLoop.Universe.CurrentMap.ControlledEntitiy != null
+                || GameLoop.Universe.WorldMap.AssocietatedMap == GameLoop.Universe.CurrentMap))
             {
-                if (KeyboardHandle.HandleMapKeys(info, this, GameLoop.World))
+                if (KeyboardHandle.HandleMapKeys(info, this, GameLoop.Universe))
                 {
                     return true;
                 }
@@ -143,11 +147,12 @@ namespace MagiRogue.UI
                     return true;
                 }
             }
-
             return base.ProcessKeyboard(info);
         }
 
         #endregion Input
+
+        #endregion Overrides
 
         #region HelperMethods
 

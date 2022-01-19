@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MagiRogue.Data;
 using MagiRogue.Entities;
-using MagiRogue.Data;
-using SadConsole;
-using SadConsole.Components;
-using SadConsole.Input;
 using MagiRogue.UI.Controls;
-using SadRogue.Primitives;
+using SadConsole;
 using SadConsole.Instructions;
 using SadConsole.UI.Controls;
+using SadRogue.Primitives;
+using System;
 using Troschuetz.Random;
 using Console = SadConsole.Console;
 
@@ -77,7 +71,7 @@ namespace MagiRogue.UI.Windows
                 pop.Cursor.IsEnabled = false;
                 pop.Cursor.IsVisible = false;
                 pop.Cursor.UseLinuxLineEndings = true;
-                var typingInstruction = new DrawString(ColoredString.Parse(helpText))
+                var typingInstruction = new DrawString(ColoredString.Parser.Parse(helpText))
                 {
                     TotalTimeToPrint = 5, // 0.5 seconds per line of text
                     RemoveOnFinished = true
@@ -129,10 +123,10 @@ namespace MagiRogue.UI.Windows
                 player = new Player(charName.Text, Color.White, Color.Black, Point.None);
             else
             {
-/*#if DEBUG
-                player = Player.TestPlayer();
-                return player;
-#endif*/
+                /*#if DEBUG
+                                player = Player.TestPlayer();
+                                return player;
+                #endif*/
 
                 PopWindow error = new PopWindow("Error");
                 error.Surface.Clear();
@@ -349,7 +343,8 @@ namespace MagiRogue.UI.Windows
             Pre,
             ShapSkill,
             Attack,
-            Defense
+            Defense,
+            Age
         }
 
         public override void Update(TimeSpan time)

@@ -10,7 +10,7 @@ namespace MagiRogue.System.Magic
     /// <summary>
     /// The class that is the manager of the magic system to an entity
     /// </summary>
-    public class Magic
+    public class MagicManager
     {
         // Create a magic inspired by Mother of learning
         public List<SpellBase> KnowSpells { get; set; }
@@ -49,7 +49,7 @@ namespace MagiRogue.System.Magic
         /// </summary>
         public List<ISpellEffect> Enchantments { get; set; } = new List<ISpellEffect>();
 
-        public Magic()
+        public MagicManager()
         {
             KnowSpells = new List<SpellBase>();
         }
@@ -66,20 +66,21 @@ namespace MagiRogue.System.Magic
             return damageAfterModifiers;
         }
 
-        public static bool PenetrateResistance(SpellBase spellCasted, Entity caster, Entity defender, int bonusLuck) =>
+        public static bool PenetrateResistance(SpellBase spellCasted, Entity caster, Entity defender,
+            int bonusLuck) =>
             (int)((0.3 * spellCasted.Proficiency) + (caster.Magic.ShapingSkill * 0.5)
             + caster.Magic.MagicPenetration) + bonusLuck >= defender.Magic.InnateResistance * 2;
 
         public SpellBase QuerySpell(string spellId)
         {
-            return KnowSpells.Where(i => i.SpellId.Equals(spellId)).FirstOrDefault();
+            return KnowSpells.FirstOrDefault(i => i.SpellId.Equals(spellId));
         }
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
     public enum MagicSchool
     {
-        Projection, // Test
+        Projection,
         Negation,
         Animation,
         Divination,

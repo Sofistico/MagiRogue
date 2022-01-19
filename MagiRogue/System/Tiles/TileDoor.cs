@@ -2,7 +2,7 @@
 
 namespace MagiRogue.System.Tiles
 {
-    public class TileDoor : TileBase
+    public sealed class TileDoor : TileBase
     {
         public bool Locked; // Locked door = 1, Unlocked = 0
         public bool IsOpen; // Open door = 1, closed = 0

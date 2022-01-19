@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -22,6 +23,9 @@ namespace MagiRogue.Entities
         public List<Limb> Limbs { get; set; }
 
         [DataMember]
+        public List<Organs> Organs { get; set; }
+
+        [DataMember]
         public Race Race
         {
             get => race;
@@ -32,13 +36,18 @@ namespace MagiRogue.Entities
             }
         }
 
+        public bool IsVegetation { get; set; }
+
+        
+
         /// <summary>
         /// It uses an aproximation of blood count equal to 75 ml/kg for an adult male
         /// </summary>
+        [DataMember]
         public float BloodCount { get; set; }  // the amount of blood inside the actor, its in ml, to facilitate the calculus of blood volume, the formula is ml/kg
 
         [DataMember]
-        public bool HasBlood { get; set; }
+        public bool HasBlood { get; set; } = true;
 
         [JsonIgnore]
         public bool HasEnoughArms => Limbs.FindAll(l => l.TypeLimb is TypeOfLimb.Arm).Count >= 1;
@@ -52,6 +61,7 @@ namespace MagiRogue.Entities
         /// <summary>
         /// The total lifespan of a character
         /// </summary>
+        [DataMember]
         public int Lifespan { get; set; }
 
         #endregion Properties
@@ -193,9 +203,15 @@ namespace MagiRogue.Entities
                 GameLoop.UIManager.MessageLog.Add($"and took {totalDmg} damage!");
         }
 
+        internal void Update(Actor actor)
+        {
+            CalculateBlood(actor.Weight);
+        }
+
         #endregion Methods
     }
 
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum InjurySeverity
     {
         Scratch,

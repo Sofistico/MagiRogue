@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Data;
+using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
 using MagiRogue.Utils;
 using SadRogue.Primitives;
@@ -52,11 +53,11 @@ namespace MagiRogue.System.Magic.Effects
 
         private void DmgEff(Point target, Actor caster, SpellBase spellCasted)
         {
-            BaseDamage = Magic.CalculateSpellDamage(caster.Stats, spellCasted);
+            BaseDamage = MagicManager.CalculateSpellDamage(caster.Stats, spellCasted);
 
-            Entity poorGuy = GameLoop.World.CurrentMap.GetEntityAt<Entity>(target);
+            Entity poorGuy = GameLoop.Universe.CurrentMap.GetEntityAt<Entity>(target);
 
-            if ((poorGuy == GameLoop.World.CurrentMap.ControlledEntitiy || poorGuy is Player)
+            if ((poorGuy == GameLoop.Universe.CurrentMap.ControlledEntitiy || poorGuy is Player)
                 && AreaOfEffect is not SpellAreaEffect.Ball)
             {
                 poorGuy = null;
@@ -74,13 +75,13 @@ namespace MagiRogue.System.Magic.Effects
         {
             Stat casterStats = caster.Stats;
 
-            BaseDamage = Magic.CalculateSpellDamage(casterStats, spellCasted);
+            BaseDamage = MagicManager.CalculateSpellDamage(casterStats, spellCasted);
 
             if (AreaOfEffect is SpellAreaEffect.Self)
                 CombatUtils.ApplyHealing(BaseDamage, casterStats, SpellDamageType);
             else
             {
-                Actor happyGuy = GameLoop.World.CurrentMap.GetEntityAt<Actor>(target);
+                Actor happyGuy = GameLoop.Universe.CurrentMap.GetEntityAt<Actor>(target);
 
                 if (happyGuy == null)
                 {

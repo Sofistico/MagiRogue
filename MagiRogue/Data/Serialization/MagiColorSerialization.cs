@@ -6,7 +6,7 @@ using SadRogue.Primitives;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace MagiRogue.Data
+namespace MagiRogue.Data.Serialization
 {
     public struct MagiColorSerialization
     {
@@ -20,10 +20,16 @@ namespace MagiRogue.Data
             ColorName = colorName;
         }
 
+        public MagiColorSerialization(uint packedValue)
+        {
+            Color = new Color(packedValue);
+            ColorName = "Packed Color";
+        }
+
         public MagiColorSerialization(Color color)
         {
             Color = color;
-            ColorName = "";
+            ColorName = "Empty Color";
         }
     }
 }

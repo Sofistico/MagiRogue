@@ -1,6 +1,6 @@
 ﻿using GoRogue.Components;
 using GoRogue.GameFramework;
-using MagiRogue.Data.Materials;
+using MagiRogue.Data.Serialization;
 using MagiRogue.System.Magic;
 using SadConsole;
 using SadRogue.Primitives;
@@ -21,20 +21,12 @@ namespace MagiRogue.Entities
         public int Layer { get; set; } // stores and sets the layer that the entity is rendered
 
         [DataMember]
-
-        /// <summary>
-        /// The weight of the entity in kg
-        /// </summary>
         public float Weight { get; set; }
 
         [DataMember]
         public MaterialTemplate Material { get; set; }
 
         [DataMember]
-
-        /// <summary>
-        /// The size of the entity in meters
-        /// </summary>
         public int Size { get; set; }
 
         /// <summary>
@@ -45,7 +37,7 @@ namespace MagiRogue.Entities
         [DataMember]
         public string Description { get; set; }
 
-        public Magic Magic { get; set; }
+        public MagicManager Magic { get; set; }
 
         /// <summary>
         /// Defines if this entity can be killed
@@ -73,7 +65,6 @@ namespace MagiRogue.Entities
 
         public bool IsTransparent { get => backingField.IsTransparent; set => backingField.IsTransparent = value; }
         public bool IsWalkable { get => backingField.IsWalkable; set => backingField.IsWalkable = value; }
-        Point IGameObject.Position { get => Position; set => Position = value; }
         public IComponentCollection GoRogueComponents => backingField.GoRogueComponents;
 
         #endregion BackingField fields
@@ -107,7 +98,7 @@ namespace MagiRogue.Entities
 
             PositionChanged += Position_Changed;
 
-            Magic = new Magic();
+            Magic = new MagicManager();
             Material = new MaterialTemplate();
 
             //IsWalkable = false;
@@ -133,32 +124,6 @@ namespace MagiRogue.Entities
         #endregion Helper Methods
 
         #region IGameObject Interface
-
-        public event EventHandler<GameObjectPropertyChanged<bool>> TransparencyChanged
-        {
-            add
-            {
-                backingField.TransparencyChanged += value;
-            }
-
-            remove
-            {
-                backingField.TransparencyChanged -= value;
-            }
-        }
-
-        public event EventHandler<GameObjectPropertyChanged<bool>> WalkabilityChanged
-        {
-            add
-            {
-                backingField.WalkabilityChanged += value;
-            }
-
-            remove
-            {
-                backingField.WalkabilityChanged -= value;
-            }
-        }
 
 #nullable enable
 
@@ -189,6 +154,58 @@ namespace MagiRogue.Entities
             remove
             {
                 backingField.RemovedFromMap -= value;
+            }
+        }
+
+        public event EventHandler<GameObjectPropertyChanged<bool>> TransparencyChanging
+        {
+            add
+            {
+                backingField.TransparencyChanging += value;
+            }
+
+            remove
+            {
+                backingField.TransparencyChanging -= value;
+            }
+        }
+
+        public event EventHandler<GameObjectPropertyChanged<bool>> TransparencyChanged
+        {
+            add
+            {
+                backingField.TransparencyChanged += value;
+            }
+
+            remove
+            {
+                backingField.TransparencyChanged -= value;
+            }
+        }
+
+        public event EventHandler<GameObjectPropertyChanged<bool>> WalkabilityChanging
+        {
+            add
+            {
+                backingField.WalkabilityChanging += value;
+            }
+
+            remove
+            {
+                backingField.WalkabilityChanging -= value;
+            }
+        }
+
+        public event EventHandler<GameObjectPropertyChanged<bool>> WalkabilityChanged
+        {
+            add
+            {
+                backingField.WalkabilityChanged += value;
+            }
+
+            remove
+            {
+                backingField.WalkabilityChanged -= value;
             }
         }
 

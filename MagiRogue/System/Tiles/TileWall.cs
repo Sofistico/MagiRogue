@@ -3,7 +3,7 @@
 namespace MagiRogue.System.Tiles
 {
     // TileWall is based on TileBase
-    public class TileWall : TileBase
+    public sealed class TileWall : TileBase
     {
         // Default constructor
         // Walls are set to block movement and line of sight by default

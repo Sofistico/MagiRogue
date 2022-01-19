@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Data;
+using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
 using MagiRogue.Utils;
 using SadRogue.Primitives;
@@ -39,11 +40,11 @@ namespace MagiRogue.System.Magic.Effects
         private void CutLimb(Point target, Actor caster, SpellBase spellCasted)
         {
             // Actor because only actor have an anatomy
-            Actor poorGuy = GameLoop.World.CurrentMap.GetEntityAt<Actor>(target);
+            Actor poorGuy = GameLoop.Universe.CurrentMap.GetEntityAt<Actor>(target);
             int luck = GoRogue.DiceNotation.Dice.Roll($"{spellCasted.SpellLevel}d{spellCasted.Power}");
 
             if (poorGuy is not null && poorGuy.Anatomy.Limbs.Count > 0
-                && Magic.PenetrateResistance(spellCasted, caster, poorGuy, luck))
+                && MagicManager.PenetrateResistance(spellCasted, caster, poorGuy, luck))
             {
                 var rng = GoRogue.Random.GlobalRandom.DefaultRNG;
                 int i = rng.Next(poorGuy.Anatomy.Limbs.Count);

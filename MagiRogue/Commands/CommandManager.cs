@@ -1,6 +1,7 @@
 ﻿using GoRogue.DiceNotation;
 using MagiRogue.Entities;
 using MagiRogue.System;
+using MagiRogue.System.Planet;
 using MagiRogue.System.Tiles;
 using MagiRogue.System.Time;
 using MagiRogue.Utils;
@@ -59,7 +60,7 @@ namespace MagiRogue.Commands
         /// <param name="defender"></param>
         public static void Attack(Actor attacker, Actor defender)
         {
-            if (!defender.CanBeAttacked)
+            if (!defender.CanBeAttacked || defender.Anatomy.IsVegetation)
                 return;
 
             if (!attacker.Anatomy.HasEnoughArms)
@@ -111,7 +112,7 @@ namespace MagiRogue.Commands
                 //Resolve the dicing outcome and register a hit, governed by the
                 //attacker's BaseAttack value.
                 //TODO: Adds the fatigue atribute and any penalties.
-                if (attacker.Stats.BaseAttack + Mrn.ExplodingD6Dice > defender.Stats.Defense + Mrn.ExplodingD6Dice)
+                if (attacker.Stats.BaseAttack + Mrn.Exploding2D6Dice > defender.Stats.Defense + Mrn.Exploding2D6Dice)
                     hits++;
             }
 
@@ -145,11 +146,11 @@ namespace MagiRogue.Commands
                     Item wieldedItem = attacker.WieldedItem();
                     // TODO: adds a way to get the attack of the weapon or fist or something else
                     if (wieldedItem is null)
-                        loopDamage = attacker.Stats.Strength + Mrn.ExplodingD6Dice;
+                        loopDamage = attacker.Stats.Strength + Mrn.Exploding2D6Dice;
                     else
-                        loopDamage = attacker.Stats.Strength + wieldedItem.BaseDmg + Mrn.ExplodingD6Dice;
+                        loopDamage = attacker.Stats.Strength + wieldedItem.BaseDmg + Mrn.Exploding2D6Dice;
 
-                    loopDamage -= defender.Stats.Protection + Mrn.ExplodingD6Dice;
+                    loopDamage -= defender.Stats.Protection + Mrn.Exploding2D6Dice;
 
                     defenseMessage.AppendFormat("   Hit {0}: {1} was hit for {2} damage", hits, defender.Name, loopDamage);
                     totalDamage += loopDamage;
@@ -205,7 +206,7 @@ namespace MagiRogue.Commands
                     item.Position = defender.Position;
 
                     // Now let the MultiSpatialMap know that the Item is visible
-                    GameLoop.World.CurrentMap.Add(item);
+                    GameLoop.Universe.CurrentMap.Add(item);
 
                     // Append the item to the deathMessage
                     deathMessage.Append(", " + item.Name);
@@ -222,7 +223,7 @@ namespace MagiRogue.Commands
             }
 
             // actor goes bye-bye
-            GameLoop.World.CurrentMap.Remove(defender);
+            GameLoop.Universe.CurrentMap.Remove(defender);
 
             if (defender is Player)
             {
@@ -248,7 +249,7 @@ namespace MagiRogue.Commands
 
             foreach (Point direction in directions)
             {
-                Actor monsterLocation = GameLoop.World.CurrentMap.GetEntityAt<Actor>(direction);
+                Actor monsterLocation = GameLoop.Universe.CurrentMap.GetEntityAt<Actor>(direction);
 
                 if (monsterLocation != null && monsterLocation != attacker)
                 {
@@ -310,7 +311,7 @@ namespace MagiRogue.Commands
             {
                 door.Open();
                 GameLoop.UIManager.MessageLog.Add($"{actor.Name} opened a {door.Name}");
-                GameLoop.World.CurrentMap.ForceFovCalculation();
+                GameLoop.Universe.CurrentMap.ForceFovCalculation();
                 return true;
             }
             return false;
@@ -326,14 +327,14 @@ namespace MagiRogue.Commands
             Point[] allDirections = SadConsole.PointExtensions.GetDirectionPoints(actor.Position);
             foreach (Point points in allDirections)
             {
-                TileDoor possibleDoor = GameLoop.World.CurrentMap.GetTileAt<TileDoor>(points);
+                TileDoor possibleDoor = GameLoop.Universe.CurrentMap.GetTileAt<TileDoor>(points);
                 if (possibleDoor != null)
                 {
                     if (possibleDoor.IsOpen)
                     {
                         possibleDoor.Close();
                         GameLoop.UIManager.MessageLog.Add($"{actor.Name} closed a {possibleDoor.Name}");
-                        GameLoop.World.CurrentMap.ForceFovCalculation();
+                        GameLoop.Universe.CurrentMap.ForceFovCalculation();
                         return true;
                     }
                 }
@@ -353,7 +354,7 @@ namespace MagiRogue.Commands
                 Item item = inv.Inventory.First();
                 inv.Inventory.Remove(item);
                 item.Position = inv.Position;
-                GameLoop.World.CurrentMap.Add(item);
+                GameLoop.Universe.CurrentMap.Add(item);
                 GameLoop.UIManager.MessageLog.Add($"{inv.Name} dropped {item.Name}");
                 return true;
             }
@@ -365,7 +366,7 @@ namespace MagiRogue.Commands
 
             foreach (Point item in direction)
             {
-                if (GameLoop.World.CurrentMap.Tiles[item.ToIndex(GameLoop.World.CurrentMap.Width)] is NodeTile node)
+                if (GameLoop.Universe.CurrentMap.Tiles[item.ToIndex(GameLoop.Universe.CurrentMap.Width)] is NodeTile node)
                 {
                     node.DrainNode(actor);
                     return true;
@@ -379,12 +380,31 @@ namespace MagiRogue.Commands
 
         public static void ToggleFOV()
         {
-            if (GameLoop.World.CurrentMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().IsEnabled)
+            if (GameLoop.Universe.CurrentMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().IsEnabled)
             {
-                GameLoop.World.CurrentMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().Disable(false);
+                GameLoop.Universe.CurrentMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().Disable(false);
             }
             else
-                GameLoop.World.CurrentMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().Enable();
+                GameLoop.Universe.CurrentMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().Enable();
+        }
+
+        public static void CreateNewMapForTesting()
+        {
+            // it's just plain wrong, need to fix later.
+            /*GameLoop.World.CurrentMap.RemoveAllEntities();
+            GameLoop.World.CurrentMap.RemoveAllTiles();
+            GameLoop.World.CurrentMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
+            for (int i = 0; i < GameLoop.World.AllMaps.Count; i++)
+            {
+                GameLoop.World.AllMaps[i].RemoveAllEntities();
+                GameLoop.World.AllMaps[i].RemoveAllTiles();
+                GameLoop.World.AllMaps[i].GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
+            }
+            GameLoop.World.Player = null;
+            GameLoop.World.AllMaps.Clear();
+            GameLoop.World.AllMaps = null;*/
+
+            GameLoop.Universe.WorldMap = new PlanetGenerator().CreatePlanet(500, 500);
         }
 
 #endif
@@ -423,9 +443,9 @@ namespace MagiRogue.Commands
 
                 for (int i = 0; i < totalTurnsWait + 1; i++)
                 {
-                    foreach (Point p in GameLoop.World.CurrentMap.PlayerFOV.CurrentFOV)
+                    foreach (Point p in GameLoop.Universe.CurrentMap.PlayerFOV.CurrentFOV)
                     {
-                        Actor possibleActor = GameLoop.World.CurrentMap.GetEntityAt<Actor>(p);
+                        Actor possibleActor = GameLoop.Universe.CurrentMap.GetEntityAt<Actor>(p);
                         if (possibleActor is not null && !possibleActor.Equals(actor))
                         {
                             GameLoop.UIManager.MessageLog.Add("There is an enemy in view, stop resting!");
@@ -433,7 +453,7 @@ namespace MagiRogue.Commands
                         }
                     }
 
-                    GameLoop.World.ProcessTurn(TimeHelper.Wait, true);
+                    GameLoop.Universe.ProcessTurn(TimeHelper.Wait, true);
                 }
 
                 GameLoop.UIManager.MessageLog.Add($"You have rested for {totalTurnsWait} turns");
@@ -476,21 +496,93 @@ namespace MagiRogue.Commands
                 return false;
         }
 
-        public static bool MoveDownStairs(Actor actor)
+        public static bool EnterDownMovement(Point playerPoint)
         {
-            var point = actor.Position;
-            Furniture possibleStairs = GameLoop.World.CurrentMap.GetEntityAt<Furniture>(point);
+            Furniture possibleStairs = GameLoop.Universe.CurrentMap.GetEntityAt<Furniture>(playerPoint);
+            WorldTile? possibleWorldTileHere =
+                GameLoop.Universe.CurrentMap.GetTileAt<WorldTile>(playerPoint);
+            Map currentMap = GameLoop.Universe.CurrentMap;
             if (possibleStairs is not null && possibleStairs.FurnitureType == FurnitureType.StairsDown)
             {
-                var map = GameLoop.World.AllMaps[1];
+                Map map = possibleStairs.MapConnection;
                 // TODO: For now it's just a test, need to work out a better way to do it.
-                GameLoop.World.ChangeActorMap(actor, map, map.GetRandomWalkableTile());
+                GameLoop.Universe.ChangePlayerMap(map, map.GetRandomWalkableTile(), currentMap);
+
+                return true;
+            }
+            else if (possibleStairs is null && possibleWorldTileHere is null)
+            {
+                GameLoop.UIManager.MessageLog.Add("There is no way to go down here!");
+                return false;
+            }
+
+            if (possibleWorldTileHere is not null && !possibleWorldTileHere.Visited)
+            {
+                possibleWorldTileHere.Visited = true;
+
+                RegionChunk chunk = GameLoop.Universe.GenerateChunck(playerPoint);
+                GameLoop.Universe.ChangePlayerMap(chunk.LocalMaps[0],
+                    chunk.LocalMaps[0].GetRandomWalkableTile(), currentMap);
+                return true;
+            }
+            else if (possibleWorldTileHere.Visited)
+            {
+                RegionChunk chunk = GameLoop.Universe.GetChunckByPos(playerPoint);
+                GameLoop.Universe.ChangePlayerMap(chunk.LocalMaps[0],
+                    chunk.LocalMaps[0].LastPlayerPosition, currentMap);
 
                 return true;
             }
             else
             {
-                GameLoop.UIManager.MessageLog.Add("There is no way to go down here!");
+                GameLoop.UIManager.MessageLog.Add("There is nowhere to go!");
+                return false;
+            }
+        }
+
+        public static bool EnterUpMovement(Point playerPoint)
+        {
+            bool possibleChangeMap = GameLoop.Universe.PossibleChangeMap;
+            Furniture possibleStairs =
+                GameLoop.Universe.CurrentMap.GetEntityAt<Furniture>(playerPoint);
+            Map currentMap = GameLoop.Universe.CurrentMap;
+
+            if (possibleChangeMap)
+            {
+                if (possibleStairs is not null && !GameLoop.Universe.MapIsWorld())
+                {
+                    Map map = possibleStairs.MapConnection;
+                    // TODO: For now it's just a test, need to work out a better way to do it.
+                    GameLoop.Universe.ChangePlayerMap(map, map.GetRandomWalkableTile(), currentMap);
+
+                    return true;
+                }
+                else if (!GameLoop.Universe.MapIsWorld())
+                {
+                    Map map = GameLoop.Universe.WorldMap.AssocietatedMap;
+                    Point playerLastPos = GameLoop.Universe.WorldMap.AssocietatedMap.LastPlayerPosition;
+                    GameLoop.Universe.ChangePlayerMap(map, playerLastPos, currentMap);
+                    return true;
+                }
+                else if (GameLoop.Universe.MapIsWorld())
+                {
+                    GameLoop.UIManager.MessageLog.Add("Can't go to the overworld since you are there!");
+                    return false;
+                }
+                else if (possibleStairs is null && !GameLoop.Universe.MapIsWorld())
+                {
+                    GameLoop.UIManager.MessageLog.Add("Can't go up here!");
+                    return false;
+                }
+                else
+                {
+                    GameLoop.UIManager.MessageLog.Add("Can't exit the map!");
+                    return false;
+                }
+            }
+            else
+            {
+                GameLoop.UIManager.MessageLog.Add("You can't change the map right now!");
                 return false;
             }
         }

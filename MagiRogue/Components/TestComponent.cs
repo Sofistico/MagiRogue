@@ -8,7 +8,7 @@ namespace MagiRogue.Components
 
         public TestComponent(IObjectWithComponents parent)
         {
-            GameLoop.UIManager.MessageLog.Add($"It worked, here are your x and y value: {GameLoop.World.Player.Position.X} {GameLoop.World.Player.Position.Y}");
+            GameLoop.UIManager.MessageLog.Add($"It worked, here are your x and y value: {GameLoop.Universe.Player.Position.X} {GameLoop.Universe.Player.Position.Y}");
         }
     }
 }

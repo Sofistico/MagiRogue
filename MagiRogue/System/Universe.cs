@@ -1,65 +1,90 @@
 ﻿using MagiRogue.Components;
-using MagiRogue.Entities;
 using MagiRogue.Data;
+using MagiRogue.Entities;
+using MagiRogue.System.Civ;
 using MagiRogue.System.Tiles;
 using MagiRogue.System.Time;
+using MagiRogue.System.Planet;
 using SadRogue.Primitives;
 using System;
-using System.Collections.Generic;
-using System.IO;
+using MagiRogue.System.Magic;
 using System.Linq;
+using GoRogue;
+using MagiRogue.Data.Serialization;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace MagiRogue.System
 {
     /// <summary>
-    /// All game state data is stored in World
+    /// All game state data is stored in the Universe
     /// also creates and processes generators
     /// for map creation
     /// </summary>
-    public class World
+    [JsonConverter(typeof(UniverseJsonConverter))]
+    public class Universe
     {
         // map creation and storage data
         private const int _mapWidth = 50;
         //private const int _mapHeight = 50;
+        private readonly int maxChunks;
+        private readonly int planetWidth = 257;
+        private readonly int planetHeight = 257;
+        private readonly int planetMaxCivs = 30;
         private readonly int _maxRooms = 20;
         private readonly int _minRoomSize = 4;
         private readonly int _maxRoomSize = 10;
+        private readonly Random rndNum = new();
         /*private const int _zMaxUpLevel = 10;
         private const int _zMaxLowLevel = -10;*/
+
+        /// <summary>
+        /// The World map, contains the map data and the Planet data
+        /// </summary>
+        public PlanetMap WorldMap { get; set; }
 
         /// <summary>
         /// Stores the current map
         /// </summary>
         public Map CurrentMap { get; private set; }
 
-        public List<Map> AllMaps { get; set; }
-
-        // Player data
+        /// <summary>
+        /// Player data
+        /// </summary>
         public Player Player { get; set; }
 
         public TimeSystem Time { get; private set; }
+        public bool PossibleChangeMap { get; internal set; } = true;
 
-        private readonly Random rndNum = new Random();
+        public SeasonType CurrentSeason { get; set; }
+
+        /// <summary>
+        /// All the maps and chunks of the game
+        /// </summary>
+        public RegionChunkTemplate[] AllChunks { get; set; }
+
+        public SaveAndLoad SaveAndLoad { get; set; }
 
         /// <summary>
         /// Creates a new game world and stores it in a
         /// publicly accessible constructor.
         /// </summary>
-        public World(Player player, bool testGame = false)
+        public Universe(Player player, bool testGame = false)
         {
-            AllMaps = new();
             Time = new TimeSystem();
+            CurrentSeason = SeasonType.Spring;
+
             if (!testGame)
             {
-                // Build a map
-                CreateTownMap();
-
-                CreateStoneFloorMap();
-
-                CreateStoneMazeMap();
-
-                // create an instance of player
-                PlacePlayer(player);
+                WorldMap = new PlanetGenerator().CreatePlanet(planetWidth,
+                    planetHeight,
+                    planetMaxCivs);
+                WorldMap.AssocietatedMap.IsActive = true;
+                maxChunks = planetWidth * planetHeight;
+                AllChunks = new RegionChunkTemplate[maxChunks];
+                CurrentMap = WorldMap.AssocietatedMap;
+                PlacePlayerOnWorld(player);
+                SaveAndLoad = new();
             }
             else
             {
@@ -69,9 +94,41 @@ namespace MagiRogue.System
             }
         }
 
+        public Universe(PlanetMap worldMap,
+            Map currentMap,
+            Player player,
+            TimeSystem time,
+            bool possibleChangeMap,
+            SeasonType currentSeason,
+            RegionChunkTemplate[] allChunks)
+        {
+            WorldMap = worldMap;
+            CurrentMap = currentMap;
+            Player = player;
+            Time = time;
+            PossibleChangeMap = possibleChangeMap;
+            CurrentSeason = currentSeason;
+            AllChunks = allChunks;
+            SaveAndLoad = new();
+        }
+
+        private void PlacePlayerOnWorld(Player player)
+        {
+            if (player != null)
+            {
+                Civilization startTown = WorldMap.Civilizations
+                    .FirstOrDefault(a => a.Tendency == CivilizationTendency.Normal);
+                player.Position = startTown.Territory.OwnedLand.WorldTiles[0].Position;
+                player.Description = "Here is you, you are beautiful";
+                Player = player;
+
+                CurrentMap.Add(Player);
+            }
+        }
+
         private void CreateStoneMazeMap()
         {
-            Map map = new MapGenerator().GenerateMazeMap(_maxRooms, _minRoomSize, _maxRoomSize);
+            Map map = new DungeonGenerator().GenerateMazeMap(_maxRooms, _minRoomSize, _maxRoomSize);
 
             // spawn a bunch of monsters
             CreateMonster(map, 10);
@@ -83,29 +140,38 @@ namespace MagiRogue.System
             SetUpStuff(map);
         }
 
-        private void CreateStoneFloorMap()
+        public void ChangePlayerMap(Map mapToGo, Point pos, Map previousMap)
         {
-            var map = new MapGenerator().GenerateStoneFloorMap();
-
-            AddMapToList(map);
-        }
-
-        private void AddMapToList(Map map)
-        {
-            AllMaps.Add(map);
-        }
-
-        public void ChangeActorMap(Entity entity, Map mapToGo, Point pos)
-        {
-            mapToGo.Add(entity);
-            entity.Position = pos;
-            CurrentMap = mapToGo;
-            if (!AllMaps.Contains(mapToGo))
+            CurrentMap.LastPlayerPosition = new Point(Player.Position.X, Player.Position.Y);
+            ChangeActorMap(Player, mapToGo, pos, previousMap);
+            if (MapIsWorld(previousMap))
             {
-                AllMaps.Add(mapToGo);
+                // do somehting
             }
-
+            else
+                previousMap.SaveMapToJson(Player);
+            UpdateIfNeedTheMap(mapToGo);
+            CurrentMap = mapToGo;
+            mapToGo.LoadToMemory();
             GameLoop.UIManager.MapWindow.LoadMap(CurrentMap);
+            GameLoop.UIManager.MapWindow.CenterOnActor(Player);
+        }
+
+        private void UpdateIfNeedTheMap(Map mapToGo)
+        {
+            if (mapToGo.NeedsUpdate)
+            {
+                // do something
+            }
+            else
+                return; // Do nothing
+        }
+
+        public void ChangeActorMap(Entity entity, Map mapToGo, Point pos, Map previousMap)
+        {
+            previousMap.Remove(entity);
+            entity.Position = pos;
+            mapToGo.Add(entity);
         }
 
         /// <summary>
@@ -120,23 +186,11 @@ namespace MagiRogue.System
             }
         }
 
-        // Create a new map using the Map class
-        // and a map generator. Uses several
-        // parameters to determine geometry
-        private void CreateTownMap()
-        {
-            MapGenerator mapGen = new();
-            var map = mapGen.GenerateTownMap(_maxRooms, _minRoomSize, _maxRoomSize);
-            CurrentMap = map;
-            AddMapToList(map);
-        }
-
         private void CreateTestMap()
         {
-            MapGenerator mapGen = new();
-            var map = mapGen.GenerateTestMap();
+            GeneralMapGenerator generalMapGenerator = new();
+            Map map = generalMapGenerator.GenerateTestMap();
             CurrentMap = map;
-            AddMapToList(map);
         }
 
         // Create a player using the Player class
@@ -155,7 +209,6 @@ namespace MagiRogue.System
                     Player = player;
                     Player.Position = pos;
                     Player.Description = "Here is you, you are beautiful";
-
                     break;
                 }
             }
@@ -215,7 +268,12 @@ namespace MagiRogue.System
 
                 debugMonster.AddComponent(new MoveAndAttackAI(debugMonster.Stats.ViewRadius));
                 debugMonster.Inventory.Add(EntityFactory.ItemCreator(debugMonster.Position,
-                    new ItemTemplate("Debug Remains", Color.Red, Color.Black, '%', 1.5f, 35, "DebugRotten", "flesh")));
+                    new ItemTemplate("Debug Remains",
+                    Color.Red.PackedValue,
+                    Color.Black.PackedValue, '%', 1.5f, 35, "flesh", new MagicManager())
+                    {
+                        Description = "DebugRotten"
+                    }));
                 debugMonster.Anatomy.Limbs = LimbTemplate.BasicHumanoidBody(debugMonster);
 
                 map.Add(debugMonster);
@@ -259,7 +317,7 @@ namespace MagiRogue.System
                 EntityFactory.ItemCreator(new Point(10, 10), DataManager.ListOfItems.FirstOrDefault
                 (i => i.Id == "test"));
 
-            CurrentMap.Add(test);
+            map.Add(test);
 #endif
         }
 
@@ -269,12 +327,7 @@ namespace MagiRogue.System
             {
                 if (Player.Stats.Health <= 0)
                 {
-                    CurrentMap.RemoveAllEntities();
-                    CurrentMap.RemoveAllTiles();
-                    CurrentMap = null;
-                    Player = null;
-
-                    GameLoop.UIManager.MainMenu.RestartGame();
+                    RestartGame();
                     return;
                 }
 
@@ -310,6 +363,30 @@ namespace MagiRogue.System
             }
         }
 
+        private void RestartGame()
+        {
+            CurrentMap.RemoveAllEntities();
+            CurrentMap.RemoveAllTiles();
+            CurrentMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
+            for (int i = 0; i < AllChunks.Length; i++)
+            {
+                Map[] maps = AllChunks[i].ReturnAsMap();
+                for (int z = 0; z < maps.Length; z++)
+                {
+                    maps[i].RemoveAllEntities();
+                    maps[i].RemoveAllTiles();
+                    maps[i].GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
+                }
+            }
+            CurrentMap = null;
+            Player = null;
+            AllChunks = null;
+            AllChunks = null;
+            WorldMap = null;
+
+            GameLoop.UIManager.MainMenu.RestartGame();
+        }
+
         private void ProcessAiTurn(uint entityId, long time)
         {
             Actor entity = (Actor)CurrentMap.GetEntityById(entityId);
@@ -332,26 +409,43 @@ namespace MagiRogue.System
         {
             CurrentMap.ControlledEntitiy = entity;
         }
-    }
 
-    // For a future world update.
-    public class RegionChunk
-    {
-        /// <summary>
-        /// The max amount of local chuncks the region chunks hold, should be 16*16 = 256 regions.
-        /// </summary>
-        private const int MAX_LOCAL_CHUNCKS = 16 * 16;
-
-        public int X { get; }
-        public int Y { get; }
-        public Dictionary<Point, Map> LocalChunks { get; set; }
-
-        public RegionChunk(int x, int y)
+        public RegionChunk GenerateChunck(Point posGenerated)
         {
-            X = x;
-            Y = y;
+            RegionChunk newChunck = new RegionChunk(posGenerated);
 
-            LocalChunks = new Dictionary<Point, Map>(MAX_LOCAL_CHUNCKS);
+            WildernessGenerator genMap = new WildernessGenerator();
+            newChunck.LocalMaps = genMap.GenerateMapWithWorldParam(WorldMap, posGenerated);
+
+            for (int i = 0; i < newChunck.LocalMaps.Length; i++)
+            {
+                newChunck.LocalMaps[i].SetId(GameLoop.IdGen.UseID());
+            }
+
+            AllChunks[Point.ToIndex(posGenerated.X, posGenerated.Y, planetWidth)] = newChunck;
+
+            return newChunck;
         }
+
+        public RegionChunk GetChunckByPos(Point playerPoint) =>
+            AllChunks[Point.ToIndex(playerPoint.X, playerPoint.Y, planetWidth)];
+
+        public bool MapIsWorld()
+        {
+            if (CurrentMap == WorldMap.AssocietatedMap)
+                return true;
+            else
+                return false;
+        }
+
+        public bool MapIsWorld(Map map)
+        {
+            if (map == WorldMap.AssocietatedMap)
+                return true;
+            else
+                return false;
+        }
+
+        public void ForceChangeCurrentMap(Map map) => CurrentMap = map;
     }
 }

@@ -38,7 +38,7 @@ namespace MagiRogue.UI.Windows
 
             CanDrag = false;
 
-            Title = title.Align(HorizontalAlignment.Center, width);
+            Title = title;
         }
 
         public void AddToDictionary(MagiButton[] buttons)

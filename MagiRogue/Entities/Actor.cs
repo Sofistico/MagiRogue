@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace MagiRogue.Entities
 {
-    [JsonConverter(typeof(Data.ActorJsonConverter))]
+    [JsonConverter(typeof(Data.Serialization.ActorJsonConverter))]
     public class Actor : Entity
     {
         #region Fields
@@ -48,12 +48,19 @@ namespace MagiRogue.Entities
         [JsonIgnore]
         public int XP { get; set; }
 
+        /// <summary>
+        /// Dictionary of the Abilities of an actor.
+        /// Never add directly to the dictionary, use the method AddAbilityToDictionary to add new abilities
+        /// </summary>
+        public Dictionary<int, Ability> Abilities { get; set; }
+
         #endregion Properties
 
         #region Constructor
 
         /// <summary>
         /// This here defines an actor, must be used with the <see cref= "Data.EntityFactory">
+        /// Normally, use the ActorCreator method!
         /// </summary>
         /// <param name="foreground"></param>
         /// <param name="background"></param>
@@ -68,7 +75,10 @@ namespace MagiRogue.Entities
             Anatomy = new Anatomy(this);
             Inventory = new List<Item>();
             Equipment = new Dictionary<Limb, Item>();
+            Abilities = new();
             Name = name;
+            // by default the material of the actor will be mostly flesh
+            Material = System.Physics.PhysicsManager.SetMaterial("flesh");
         }
 
         #endregion Constructor
@@ -83,7 +93,7 @@ namespace MagiRogue.Entities
         public bool MoveBy(Point positionChange)
         {
             // Check the current map if we can move to this new position
-            if (GameLoop.World.CurrentMap.IsTileWalkable(Position + positionChange, this))
+            if (GameLoop.Universe.CurrentMap.IsTileWalkable(Position + positionChange, this))
             {
                 bool attacked = CheckIfCanAttack(positionChange);
 
@@ -111,7 +121,7 @@ namespace MagiRogue.Entities
         {
             // if there's a monster here,
             // do a bump attack
-            Actor actor = GameLoop.World.CurrentMap.GetEntityAt<Actor>(Position + positionChange);
+            Actor actor = GameLoop.Universe.CurrentMap.GetEntityAt<Actor>(Position + positionChange);
 
             if (actor != null && CanBeAttacked)
             {
@@ -127,7 +137,7 @@ namespace MagiRogue.Entities
         private bool CheckIfThereIsDoor(Point positionChange)
         {
             // Check for the presence of a door
-            TileDoor door = GameLoop.World.CurrentMap.GetTileAt<TileDoor>(Position + positionChange);
+            TileDoor door = GameLoop.Universe.CurrentMap.GetTileAt<TileDoor>(Position + positionChange);
 
             // if there's a door here,
             // try to use it
@@ -145,7 +155,7 @@ namespace MagiRogue.Entities
         // returns true if actor was able to move, false if failed to move
         public bool MoveTo(Point newPosition)
         {
-            if (GameLoop.World.CurrentMap.IsTileWalkable(newPosition))
+            if (GameLoop.Universe.CurrentMap.IsTileWalkable(newPosition))
             {
                 Position = newPosition;
                 return true;
@@ -159,6 +169,11 @@ namespace MagiRogue.Entities
         public Item WieldedItem()
         {
             return Equipment.GetValueOrDefault(Anatomy.Limbs.Find(l => l.TypeLimb == TypeOfLimb.Hand));
+        }
+
+        public void AddAbilityToDictionary(Ability ability)
+        {
+            Abilities.Add(ability.Id, ability);
         }
 
         #endregion HelpCode

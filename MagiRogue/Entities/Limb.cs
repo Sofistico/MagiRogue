@@ -1,10 +1,13 @@
-﻿using MagiRogue.Data.Materials;
+﻿using MagiRogue.Data.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 
 namespace MagiRogue.Entities
 {
     [DataContract]
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum TypeOfLimb
     {
         Head,
@@ -20,6 +23,7 @@ namespace MagiRogue.Entities
 
     [DataContract]
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
+    [JsonConverter(typeof(Data.Serialization.LimbJsonConverter))]
     public class Limb
     {
         private int limbHp;
@@ -71,7 +75,9 @@ namespace MagiRogue.Entities
         /// Marks if the limb is right, left, or center.
         /// </summary>
         [DataContract]
-        public enum LimbOrientation { Right, Left, Center }
+        [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
+        public enum LimbOrientation
+        { Right, Left, Center }
 
         /// <summary>
         /// Marks if the limb is right, left, or center, this is the property.
@@ -89,7 +95,6 @@ namespace MagiRogue.Entities
         public MaterialTemplate LimbMaterial { get; set; }
 
         [DataMember]
-#nullable enable
         public Limb? ConnectedTo
 #nullable disable
         {

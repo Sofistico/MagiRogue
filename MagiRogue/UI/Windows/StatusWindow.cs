@@ -17,7 +17,7 @@ namespace MagiRogue.UI.Windows
 
         public StatusWindow(int width, int heigth, string title) : base(width, heigth, title)
         {
-            player = GameLoop.World.Player;
+            player = GameLoop.Universe.Player;
 
             statsConsole = new Console(width - windowBorderThickness, heigth - windowBorderThickness)
             {

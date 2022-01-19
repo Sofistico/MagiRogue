@@ -1,21 +1,36 @@
 ﻿using MagiRogue.Entities;
 using MagiRogue.System.Magic;
+using MagiRogue.System.Tiles;
+using SadRogue.Primitives;
 
 namespace MagiRogue.System.Time
 {
     public static class TimeHelper
     {
-        public const int WalkTime = 100;
+        //public const int WalkTime = 100;
         public const int AttackTime = 150;
         public const int Wait = 100;
         public const int Interact = 50;
         public const int Wear = 200;
-        public const int MagicalThings = 400;
-        public const int Year = 31536000;
+        public const int MagicalThings = 250;
+        //public const int Year = 31536000;
 
-        public static int GetWalkTime(Actor actor)
+        public static int GetWalkTime(Actor actor, TileBase tileToMove)
         {
-            return (int)(WalkTime / actor.Stats.Speed);
+            return (int)(tileToMove.MoveTimeCost / actor.Stats.Speed);
+        }
+
+        public static int GetWalkTime(Actor actor, Point pos)
+        {
+            var tile = GameLoop.Universe.CurrentMap.GetTileAt<TileBase>(pos);
+            return GetWalkTime(actor, tile);
+        }
+
+        public static int GetWorldWalkTime(Actor actor, WorldTile tile)
+        {
+            // TODO: Need to fix this time to represent how slow it is to move on the overmap based
+            // on the size of a overmap tile, which is to be defined.
+            return (int)((tile.MoveTimeCost * 100) / actor.Stats.Speed);
         }
 
         public static int GetAttackTime(Actor actor)

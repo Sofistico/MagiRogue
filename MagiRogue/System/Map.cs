@@ -1,8 +1,11 @@
-﻿using GoRogue.GameFramework;
+﻿using GoRogue;
+using GoRogue.GameFramework;
 using GoRogue.SpatialMaps;
+using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
 using MagiRogue.System.Tiles;
 using MagiRogue.System.Time;
+using Newtonsoft.Json;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 using System;
@@ -14,19 +17,22 @@ namespace MagiRogue.System
     /// <summary>
     /// Stores, manipulates and queries Tile data, uses GoRogue Map class
     /// </summary>
+    [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
+    [JsonConverter(typeof(MapJsonConverter))]
     public class Map : GoRogue.GameFramework.Map
     {
         #region Properties
 
         private TileBase[] _tiles; // Contains all tiles objects
         private Entity _gameObjectControlled;
-        private readonly SadConsole.Entities.Renderer _entityRender;
+        private SadConsole.Entities.Renderer _entityRender;
 
         /// <summary>
         /// All cell tiles of the map, it's a TileBase array, should never be directly declared to create new tiles, rather
         /// it must use <see cref="Map.SetTerrain(IGameObject)"/>.
         /// </summary>
-        public TileBase[] Tiles { get { return _tiles; } set { _tiles = value; } }
+        public TileBase[] Tiles
+        { get { return _tiles; } set { _tiles = value; } }
 
         /// <summary>
         /// Fires whenever FOV is recalculated.
@@ -53,7 +59,12 @@ namespace MagiRogue.System
             }
         }
 
+        public Point LastPlayerPosition { get; set; } = Point.None;
+
         public string MapName { get; }
+        public bool NeedsUpdate { get; internal set; }
+        public bool IsActive { get; set; }
+        public uint MapId { get; private set; }
 
         #endregion Properties
 
@@ -62,11 +73,11 @@ namespace MagiRogue.System
         /// <summary>
         /// Build a new map with a specified width and height, has entity layers,
         /// they being 0-Furniture, 1-ghosts, 2-Items, 3-Actors, 4-Player.
-        /// \nAll Maps must have 50x50 size, for a total of 2500 tiles inside of it, for chunck loading.
+        /// \nAll Maps must have 60x60 size, for a total of 3600 tiles inside of it, for chunck loading.
         /// </summary>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public Map(string mapName, int width = 50, int height = 50) :
+        public Map(string mapName, int width = 60, int height = 60) :
             base(CreateTerrain(width, height), Enum.GetNames(typeof(MapLayer)).Length - 1,
             Distance.Euclidean,
             entityLayersSupportingMultipleItems: LayerMasker.DEFAULT.Mask
@@ -82,14 +93,6 @@ namespace MagiRogue.System
             MapName = mapName;
         }
 
-        public void RemoveAllEntities()
-        {
-            foreach (Entity item in Entities.Items)
-            {
-                Remove(item);
-            }
-        }
-
         #endregion Constructor
 
         #region HelperMethods
@@ -98,6 +101,19 @@ namespace MagiRogue.System
         {
             var goRogueTerrain = new ArrayView<TileBase>(width, heigth);
             return new LambdaSettableTranslationGridView<TileBase, IGameObject>(goRogueTerrain, t => t, g => g as TileBase);
+        }
+
+        public void RemoveAllEntities()
+        {
+            foreach (Entity item in Entities.Items)
+            {
+                Remove(item);
+            }
+        }
+
+        public void LoadToMemory()
+        {
+            IsActive = true;
         }
 
         /// <summary>
@@ -189,6 +205,8 @@ namespace MagiRogue.System
 
             // Link up the entity's Moved event to a new handler
             entity.Moved -= OnEntityMoved;
+
+            _entityRender.IsDirty = true;
         }
 
         /// <summary>
@@ -203,12 +221,6 @@ namespace MagiRogue.System
                 map.ControlledEntitiy = null;
                 map.Remove(entity);
             }
-            // Initilizes the field of view of the player, will do different for monsters
-            if (entity is Player player)
-            {
-                FovCalculate(player);
-                ControlledEntitiy = player;
-            }
 
             try
             {
@@ -219,8 +231,15 @@ namespace MagiRogue.System
                 entity.Position = GetRandomWalkableTile();
                 AddEntity(entity);
 #if DEBUG
-                Debug.Print("An entity tried to telefrag another");
+                Debug.Print("An entity tried to telefrag in a place where it couldn't");
 #endif
+            }
+            // Initilizes the field of view of the player, will do different for monsters
+            if (entity is Player player)
+            {
+                FovCalculate(player);
+                ControlledEntitiy = player;
+                ForceFovCalculation();
             }
 
             _entityRender.Add(entity);
@@ -267,6 +286,11 @@ namespace MagiRogue.System
             else return null;
         }
 
+        public TileBase GetTileAt(int x, int y)
+        {
+            return GetTileAt<TileBase>(x, y);
+        }
+
         /// <summary>
         /// Checks if a specific type of tile at a specified location
         /// is on the map. If it exists, returns that Tile
@@ -278,6 +302,11 @@ namespace MagiRogue.System
         public T GetTileAt<T>(Point location) where T : TileBase
         {
             return GetTileAt<T>(location.X, location.Y);
+        }
+
+        public TileBase GetTileAt(Point location)
+        {
+            return GetTileAt<TileBase>(location);
         }
 
         public void RemoveAllTiles()
@@ -310,6 +339,11 @@ namespace MagiRogue.System
 
         public void ConfigureRender(SadConsole.Console renderer)
         {
+            if (renderer.SadComponents.Contains(_entityRender))
+            {
+                return;
+            }
+            _entityRender = new();
             renderer.SadComponents.Add(_entityRender);
             _entityRender.DoEntityUpdate = true;
 
@@ -320,8 +354,23 @@ namespace MagiRogue.System
             renderer.IsDirty = true;
         }
 
+        public string SaveMapToJson(Player player)
+        {
+            if (LastPlayerPosition == Point.None && player.CurrentMap == this)
+                LastPlayerPosition = player.Position;
+            var json = JsonConvert.SerializeObject(
+                this,
+                Formatting.Indented,
+                new JsonSerializerSettings()
+                {
+                    NullValueHandling = NullValueHandling.Ignore
+                });
+            return json;
+        }
+
         private void FovCalculate(Actor actor)
         {
+            /*if (PlayerFOV.CurrentFOV.Count() >= actor.Stats.ViewRadius)*/
             PlayerFOV.Calculate(actor.Position, actor.Stats.ViewRadius, Radius.Circle);
             FOVRecalculated?.Invoke(this, EventArgs.Empty);
         }
@@ -331,7 +380,8 @@ namespace MagiRogue.System
         /// </summary>
         public void ForceFovCalculation()
         {
-            FovCalculate((Actor)ControlledEntitiy);
+            Actor actor = (Actor)ControlledEntitiy;
+            FovCalculate(actor);
         }
 
         /// <summary>
@@ -366,6 +416,13 @@ namespace MagiRogue.System
             return false;
         }
 
+        private string GetDebuggerDisplay()
+        {
+            return MapName;
+        }
+
+        public void SetId(uint id) => MapId = id;
+
         #endregion HelperMethods
 
         #region Desconstructor
@@ -385,9 +442,11 @@ namespace MagiRogue.System
                 Remove(item);
             }
             Tiles = null;
+            ControlledGameObjectChanged = null;
             this.ControlledEntitiy = null;
+            _entityRender = null;
+            GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
             GoRogueComponents.Clear();
-
 #if DEBUG
             //GC.Collect();
             //GC.WaitForPendingFinalizers();
@@ -398,7 +457,8 @@ namespace MagiRogue.System
         #endregion Desconstructor
     }
 
-    // enum for defining maplayer for things, so that a monster and a player can occupy the same tile as an item for example.
+    // enum for defining maplayer for things, so that a monster and a player can occupy the same tile as
+    // an item for example.
     // If it stops working, add back the player map layer
     public enum MapLayer
     {

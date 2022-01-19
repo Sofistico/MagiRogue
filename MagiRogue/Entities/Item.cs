@@ -4,6 +4,8 @@ using MagiRogue.Utils;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System;
+using MagiRogue.Data.Serialization;
+using System.Linq;
 
 namespace MagiRogue.Entities
 {
@@ -50,13 +52,15 @@ namespace MagiRogue.Entities
 
         // By default, a new Item is sized 1x1, with a weight of 1, and at 100% condition
         public Item(Color foreground, Color background, string name, int glyph, Point coord, int size,
-            float weight = 1, int condition = 100, int layer = (int)MapLayer.ITEMS) :
+            float weight = 1, int condition = 100, int layer = (int)MapLayer.ITEMS,
+            string materialId = "null") :
             base(foreground, background, glyph, coord, layer)
         {
             Size = size;
             Weight = weight;
             Condition = condition;
             Name = name;
+            Material = System.Physics.PhysicsManager.SetMaterial(materialId);
         }
 
         // Destroy this object by removing it from
@@ -65,7 +69,7 @@ namespace MagiRogue.Entities
         // out of memory automatically.
         public void Destroy()
         {
-            GameLoop.World.CurrentMap.Remove(this);
+            GameLoop.Universe.CurrentMap.Remove(this);
         }
 
         public void Equip(Actor actor)

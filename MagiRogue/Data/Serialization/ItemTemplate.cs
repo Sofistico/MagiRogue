@@ -1,11 +1,12 @@
 ﻿using MagiRogue.Entities;
+using MagiRogue.System.Magic;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System;
 using System.Linq;
 using System.Runtime.Serialization;
 
-namespace MagiRogue.Data
+namespace MagiRogue.Data.Serialization
 {
     public class ItemJsonConverter : JsonConverter<Item>
     {
@@ -16,7 +17,11 @@ namespace MagiRogue.Data
             JsonSerializer serializer) => serializer.Deserialize<ItemTemplate>(reader);
 
         public override void WriteJson(JsonWriter writer, Item value, JsonSerializer serializer)
-            => serializer.Serialize(writer, (ItemTemplate)value);
+        {
+            var item = (ItemTemplate)value;
+            //item.SerialId = (int)GameLoop.IdGen.UseID();
+            serializer.Serialize(writer, item);
+        }
     }
 
     [DataContract]
@@ -61,19 +66,21 @@ namespace MagiRogue.Data
         /// <param name="glyph"></param>
         /// <param name="weight"></param>
         /// <param name="condition">Defaults to 100%</param>
-        public ItemTemplate(string name, Color foreground, Color background, int glyph,
-            float weight, int size, string description, string materialId, int condition = 100)
+        public ItemTemplate(string name, uint foreground, uint background, int glyph,
+            float weight, int size, string materialId, MagicManager magic, int condition = 100)
         {
             Name = name;
             ForegroundBackingField = new MagiColorSerialization(foreground);
             BackgroundBackingField = new MagiColorSerialization(background);
+            ForegroundPackedValue = foreground;
+            BackgroundPackedValue = background;
             Glyph = (char)glyph;
             Weight = weight;
             Condition = condition;
-            Description = description;
             Size = size;
             MaterialId = materialId;
             Material = System.Physics.PhysicsManager.SetMaterial(materialId);
+            MagicStuff = magic;
         }
 
         public ItemTemplate()
@@ -82,6 +89,9 @@ namespace MagiRogue.Data
 
         [DataMember]
         public string Id { get; set; }
+
+        [DataMember]
+        public uint SerialId { get; set; }
 
         [DataMember]
         public string Name { get; internal set; }
@@ -116,21 +126,37 @@ namespace MagiRogue.Data
         [DataMember]
         public string MaterialId { get; set; }
 
-        public Materials.MaterialTemplate Material { get; set; }
+        public MaterialTemplate Material { get; set; }
+
+        [DataMember]
+        public MagicManager MagicStuff { get; set; }
+
+        [DataMember]
+        public const string EntityType = "Item";
+
+        [DataMember]
+        public uint ForegroundPackedValue { get; internal set; }
+
+        [DataMember]
+        public uint BackgroundPackedValue { get; internal set; }
+
+        [DataMember]
+        public Point Position { get; set; }
 
         // Will need to see if it works, but so far the logic seems to check
         public static implicit operator ItemTemplate(Item item)
         {
             ItemTemplate itemSerialized = new(item.Name,
-                item.Appearance.Foreground,
-                item.Appearance.Background,
+                item.Appearance.Foreground.PackedValue,
+                item.Appearance.Background.PackedValue,
                 item.Appearance.Glyph,
                 item.Weight,
                 item.Size,
-                item.Description,
                 item.Material.Id,
+                item.Magic,
                 item.Condition
                 );
+            itemSerialized.SerialId = item.ID;
 
             return itemSerialized;
         }
@@ -146,6 +172,7 @@ namespace MagiRogue.Data
                 itemTemplate.Weight,
                 itemTemplate.Condition);
             item.Material = System.Physics.PhysicsManager.SetMaterial(itemTemplate.MaterialId);
+            item.Description = itemTemplate.Description;
 
             return item;
         }

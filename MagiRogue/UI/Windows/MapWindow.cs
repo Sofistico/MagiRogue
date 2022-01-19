@@ -3,20 +3,20 @@ using MagiRogue.Entities;
 using MagiRogue.System;
 using MagiRogue.System.Tiles;
 using MagiRogue.System.Time;
+using SadConsole;
 using SadConsole.Input;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Console = SadConsole.Console;
-using Point = SadRogue.Primitives.Point;
 using Rectangle = SadRogue.Primitives.Rectangle;
 
 namespace MagiRogue.UI.Windows
 {
     public class MapWindow : MagiBaseWindow
     {
-        private Map _mapDisplayer;
+        private Map _mapDisplayed;
         public Console MapConsole { get; set; }
 
         public MapWindow(int width, int height, string title) : base(width, height, title)
@@ -56,14 +56,16 @@ namespace MagiRogue.UI.Windows
             //and borders, and position it away from borders
             int mapConsoleWidth = Width - 2;
             int mapConsoleHeight = Height - 2;
+            Children.Remove(MapConsole);
+            MapConsole.Dispose();
 
             Rectangle rec =
                 new BoundedRectangle((0, 0, mapConsoleWidth, mapConsoleHeight), (0, 0, map.Width, map.Height)).Area;
 
             // First load the map's tiles into the console
-            MapConsole = new Console(GameLoop.World.CurrentMap.Width,
-                GameLoop.World.CurrentMap.Height, GameLoop.World.CurrentMap.Width,
-                GameLoop.World.CurrentMap.Width, map.Tiles)
+            MapConsole = new Console(map.Width,
+                map.Height, map.Width,
+                map.Height, map.Tiles)
             {
                 View = rec,
 
@@ -81,7 +83,7 @@ namespace MagiRogue.UI.Windows
 
             IsDirty = true;
 
-            _mapDisplayer = map;
+            _mapDisplayed = map;
 
             Title = map.MapName;
         }

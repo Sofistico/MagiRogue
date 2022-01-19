@@ -1,5 +1,5 @@
 ﻿using MagiRogue.Data;
-using MagiRogue.Data.Materials;
+using MagiRogue.Data.Serialization;
 using System.Linq;
 
 namespace MagiRogue.System.Physics

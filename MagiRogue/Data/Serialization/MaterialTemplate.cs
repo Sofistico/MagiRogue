@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace MagiRogue.Data.Materials
+namespace MagiRogue.Data.Serialization
 {
     [DataContract]
     public class MaterialTemplate

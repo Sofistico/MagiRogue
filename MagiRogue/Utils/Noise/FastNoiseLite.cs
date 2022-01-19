@@ -54,7 +54,7 @@ using System.Runtime.CompilerServices;
 using FNLfloat = System.Single;
 
 //using FNLfloat = System.Double;
-namespace MagiRogue.Utils
+namespace MagiRogue.Utils.Noise
 {
     public class FastNoiseLite
     {

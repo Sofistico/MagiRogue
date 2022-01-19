@@ -6,6 +6,8 @@ using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System.Linq;
 using System.Collections.Generic;
+using MagiRogue.Data.Serialization;
+using GoRogue.DiceNotation;
 
 namespace MagiRogue.Entities
 {
@@ -18,13 +20,15 @@ namespace MagiRogue.Entities
             base(name, foreground, background, '@', position, layer)
         {
             Anatomy.Limbs = LimbTemplate.BasicHumanoidBody(this);
+            Weight = GoRogue.Random.GlobalRandom.DefaultRNG.Next(50, 95);
+            Size = GoRogue.Random.GlobalRandom.DefaultRNG.Next(155, 200);
+            Anatomy.Update(this);
+            Anatomy.Lifespan = GoRogue.Random.GlobalRandom.DefaultRNG.Next(75, 125);
         }
 
         public static Player TestPlayer()
         {
             Player player = new Player("Magus", Color.White, Color.Black, Point.None);
-            // sets the most fundamental stats, needs to set the godly flag up top, because it superseeds GodPower if it is
-            // below.
             player.Stats.SetAttributes(
                 viewRadius: 7,
                 health: 10,
@@ -89,6 +93,28 @@ namespace MagiRogue.Entities
             };
 
             player.Magic.KnowSpells.AddRange(testSpells);
+
+            return player;
+        }
+
+        public static Player ReturnPlayerFromActor(Actor actor)
+        {
+            Player player = new Player(actor.Name,
+                actor.Appearance.Foreground,
+                actor.Appearance.Background,
+                actor.Position)
+            {
+                Inventory = actor.Inventory,
+                Magic = actor.Magic,
+                Stats = actor.Stats,
+                Size = actor.Size,
+                Weight = actor.Weight,
+                Abilities = actor.Abilities,
+                Anatomy = actor.Anatomy,
+                Equipment = actor.Equipment,
+                Material = actor.Material,
+                XP = actor.XP
+            };
 
             return player;
         }
