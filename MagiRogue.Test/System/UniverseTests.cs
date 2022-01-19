@@ -31,14 +31,19 @@ namespace MagiRogue.Test.System
             Assert.Contains(uni.Time.TimePassed.Ticks.ToString(), json);
         }
 
-        [Fact]
+        /*[Fact]
         public void DeserializeUniverse()
         {
             uni.ForceChangeCurrentMap(new Map("Test"));
-            var json = JsonConvert.SerializeObject(uni);
+            var json = JsonConvert.SerializeObject(uni, Formatting.Indented,
+                new JsonSerializerSettings()
+                {
+                    NullValueHandling = NullValueHandling.Ignore
+                });
+            // make it so that the object only reference other files
             var obj = JsonConvert.DeserializeObject<UniverseTemplate>(json);
 
             Assert.True(obj.PossibleChangeMap);
-        }
+        }*/
     }
 }

@@ -14,10 +14,15 @@ namespace MagiRogue.Data.Serialization
             Universe? existingValue,
             bool hasExistingValue,
             JsonSerializer serializer)
-                => serializer.Deserialize<UniverseTemplate>(reader);
+        {
+            return serializer.Deserialize<UniverseTemplate>(reader);
+        }
 
         public override void WriteJson(JsonWriter writer, Universe value, JsonSerializer serializer)
         {
+            // Make it only referrence other maps, like all chunks containing only the id to a map
+            serializer.NullValueHandling = NullValueHandling.Ignore;
+            serializer.Formatting = Formatting.Indented;
             serializer.Serialize(writer, (UniverseTemplate)value);
         }
     }
@@ -27,6 +32,7 @@ namespace MagiRogue.Data.Serialization
         /// <summary>
         /// The World map, contains the map data and the Planet data
         /// </summary>
+        // TODO: Separate it so that it searchs for the world map in another file
         public PlanetMapTemplate WorldMap { get; set; }
 
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using MagiRogue.System.Civ;
 using MagiRogue.System.Planet;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 
@@ -10,7 +11,13 @@ namespace MagiRogue.Data.Serialization
     {
         public override PlanetMap? ReadJson(JsonReader reader, Type objectType,
             PlanetMap? existingValue, bool hasExistingValue,
-            JsonSerializer serializer) => serializer.Deserialize<PlanetMapTemplate>(reader);
+            JsonSerializer serializer)
+        {
+            // put here the method to find and link the map to the id
+            PlanetMapTemplate template = serializer.Deserialize<PlanetMapTemplate>(reader);
+
+            return template;
+        }
 
         public override void WriteJson(JsonWriter writer, PlanetMap? value, JsonSerializer serializer)
         {
@@ -28,9 +35,8 @@ namespace MagiRogue.Data.Serialization
         public float Min { get; set; }
         public float Max { get; set; }
         public List<CivilizationTemplate> Civilizations { get; set; }
-        public uint AssocietatedMapId { get; }
 
-        [JsonIgnore]
+        //public uint AssocietatedMapId { get; }
         public MapTemplate AssocietatedMap { get; set; }
 
         public PlanetMapTemplate(float[,] heightData,
@@ -51,7 +57,7 @@ namespace MagiRogue.Data.Serialization
             {
                 Civilizations.Add(civilizations[i]);
             }
-            AssocietatedMapId = associetatedMap;
+            //AssocietatedMapId = associetatedMap;
         }
 
         public static implicit operator PlanetMapTemplate(PlanetMap map)

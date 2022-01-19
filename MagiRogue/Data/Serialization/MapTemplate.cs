@@ -228,7 +228,12 @@ namespace MagiRogue.Data.Serialization
         }
 
         public override void WriteJson(JsonWriter writer, Map? value, JsonSerializer serializer)
-            => serializer.Serialize(writer, (MapTemplate)value);
+        {
+            var template = (MapTemplate)value;
+            if (template.Entities.Count == 0)
+                template.Entities = null;
+            serializer.Serialize(writer, template);
+        }
     }
 
     public class MapTemplate
@@ -239,7 +244,7 @@ namespace MagiRogue.Data.Serialization
         public int Height { get; set; }
         public Point LastPlayerPosition { get; set; }
         public uint MapId { get; private set; }
-        public IList<Entity> Entities;
+        public IList<Entity> Entities { get; set; }
         public bool[] Explored;
 
         public MapTemplate(string mapName,
@@ -297,6 +302,8 @@ namespace MagiRogue.Data.Serialization
 
         public static implicit operator Map(MapTemplate map)
         {
+            if (map is null)
+                return null;
             var objMap = new Map(map.MapName, map.Width, map.Height);
 
             for (int i = 0; i < map.Tiles.Length; i++)

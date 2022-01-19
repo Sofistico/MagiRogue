@@ -1,6 +1,8 @@
 ﻿using MagiRogue.Data.Serialization;
 using MagiRogue.System.Magic;
 using MagiRogue.Utils;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -57,5 +59,10 @@ namespace MagiRogue.Data
 
         public static SpellBase QuerySpellInData(string spellId) => ListOfSpells.FirstOrDefault
                 (m => m.SpellId.Equals(spellId));
+
+        /*public static MapTemplate QueryMapInData(JObject json, string idLookingFor)
+        {
+            //return JsonConvert.DeserializeObject<MapTemplate>(json["MapId"]);
+        }*/
     }
 }
