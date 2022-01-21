@@ -20,9 +20,11 @@ namespace MagiRogue.Data
         public static readonly IReadOnlyList<MaterialTemplate> ListOfMaterials =
            GetSourceTree<MaterialTemplate>(@".\Data\Materials\*.json");
 
-        public static readonly IReadOnlyList<SpellBase> ListOfSpells = GetSourceTree<SpellBase>(@".\Data\Spells\*.json");
+        public static readonly IReadOnlyList<SpellBase> ListOfSpells =
+            GetSourceTree<SpellBase>(@".\Data\Spells\*.json");
 
-        public static readonly IReadOnlyList<ActorTemplate> ListOfActors = GetSourceTree<ActorTemplate>(@".\Data\Actors\*.json");
+        public static readonly IReadOnlyList<ActorTemplate> ListOfActors =
+            GetSourceTree<ActorTemplate>(@".\Data\Actors\*.json");
 
         private static IReadOnlyList<T> GetSourceTree<T>(string wildCard)
         {

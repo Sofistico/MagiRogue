@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SadConsole;
-using GoRogue;
-using SadConsole.Input;
-using MagiRogue.System;
+﻿using MagiRogue.Commands;
+using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
-using MagiRogue.Commands;
-using SadRogue.Primitives;
+using MagiRogue.System;
+using MagiRogue.System.Tiles;
 using MagiRogue.System.Time;
 using MagiRogue.UI.Windows;
-using MagiRogue.System.Tiles;
 using Newtonsoft.Json;
-using MagiRogue.Data;
-using MagiRogue.Data.Serialization;
+using SadConsole.Input;
+using SadRogue.Primitives;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MagiRogue.UI
 {
@@ -328,6 +322,11 @@ namespace MagiRogue.UI
                 {
                     throw e;
                 }
+            }
+
+            if (info.IsKeyPressed(Keys.OemMinus))
+            {
+                GameLoop.Universe.SaveAndLoad.SaveGameToFolder(new Data.GameState(), "TestFile");
             }
 
 #endif
