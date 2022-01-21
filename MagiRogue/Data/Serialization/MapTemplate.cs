@@ -20,6 +20,7 @@ namespace MagiRogue.Data.Serialization
             Type objectType, Map? existingValue, bool hasExistingValue,
             JsonSerializer serializer)
         {
+            reader.SupportMultipleContent = true;
             JObject futureMap = JObject.Load(reader);
             Map map = new Map(futureMap["MapName"].ToString(),
                 (int)futureMap["Width"], (int)futureMap["Height"]);
@@ -164,6 +165,8 @@ namespace MagiRogue.Data.Serialization
 
             map.LastPlayerPosition = lastPlayerPosition;
 
+            reader.CloseInput = true;
+
             return map;
         }
 
@@ -185,8 +188,8 @@ namespace MagiRogue.Data.Serialization
 
                 case TileType.WorldTile:
                     // belive i will need this, let's see.
-                    tile.BiomeType =
-                        JsonConvert.DeserializeObject<BiomeType>(jToken["Biome"].ToString());
+
+                    tile.BiomeType = BiomeToString(jToken["BiomeType"].ToString());
                     tile.BitMask = (int)jToken["BitMask"];
                     tile.MagicalAura = (int)jToken["MagicalAura"];
                     tile.BiomeBitMask = (int)jToken["BiomeBitMask"];
@@ -198,8 +201,8 @@ namespace MagiRogue.Data.Serialization
                         tile.Rivers.Add(
                             JsonConvert.DeserializeObject<River>(riverjTok[i].ToString()));
                     }
-
                     //tile.Civ = JsonConvert.DeserializeObject<Civilization>(jToken["Civ"].ToString());
+
                     break;
 
                 case TileType.Door:
@@ -212,7 +215,7 @@ namespace MagiRogue.Data.Serialization
             }
         }
 
-        private TileType EnumToString(string tileType)
+        private static TileType EnumToString(string tileType)
         {
             return tileType switch
             {
@@ -227,12 +230,33 @@ namespace MagiRogue.Data.Serialization
             };
         }
 
+        private static BiomeType BiomeToString(string biome)
+        {
+            return biome switch
+            {
+                "Sea" => BiomeType.Sea,
+                "Desert" => BiomeType.Desert,
+                "Savanna" => BiomeType.Savanna,
+                "TropicalRainforest" => BiomeType.TropicalRainforest,
+                "Grassland" => BiomeType.Grassland,
+                "Woodland" => BiomeType.Woodland,
+                "SeasonalForest" => BiomeType.SeasonalForest,
+                "TemperateRainforest" => BiomeType.TemperateRainforest,
+                "BorealForest" => BiomeType.BorealForest,
+                "Tundra" => BiomeType.Tundra,
+                "Ice" => BiomeType.Ice,
+                "Mountain" => BiomeType.Mountain,
+                _ => BiomeType.Null,
+            };
+        }
+
         public override void WriteJson(JsonWriter writer, Map? value, JsonSerializer serializer)
         {
             var template = (MapTemplate)value;
             if (template.Entities.Count == 0)
                 template.Entities = null;
             serializer.Serialize(writer, template);
+            writer.Flush();
         }
     }
 

@@ -21,5 +21,7 @@ namespace MagiRogue.Data
         {
             Universe = GameLoop.Universe;
         }
+
+        public GameState(Universe universe) => Universe = universe;
     }
 }

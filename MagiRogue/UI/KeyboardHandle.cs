@@ -308,10 +308,13 @@ namespace MagiRogue.UI
                     if (GameLoop.Universe.MapIsWorld(map))
                     {
                         string json = JsonConvert.SerializeObject(GameLoop.Universe.WorldMap);
+
+                        GameLoop.Universe.SaveAndLoad.SaveJsonToSaveFolder(json);
                     }
                     else
                     {
                         string json = map.SaveMapToJson(GetPlayer);
+
                         // The universe class also isn't being serialized properly, crashing newtonsoft
                         // TODO: Revise this line of code when the time comes to work on the save system.
                         //var gameState = JsonConvert.SerializeObject(new GameState().Universe);

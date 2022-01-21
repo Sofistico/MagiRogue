@@ -93,6 +93,9 @@ namespace MagiRogue.System.Tiles
             if (tile is null)
                 return null;
 
+            if (tile.MaterialOfTile is null)
+                tile.MaterialOfTile = Physics.PhysicsManager.SetMaterial("null");
+
             BasicTile basic = new BasicTile(tile.Position, tile.Foreground.PackedValue,
                 tile.Background.PackedValue, tile.Glyph, tile.IsWalkable,
                 tile.IsTransparent, tile.MaterialOfTile.Id, tile.Name, TileType.Null,

@@ -7,13 +7,14 @@ using System.Threading.Tasks;
 using System.IO;
 using Newtonsoft.Json;
 using MagiRogue.Data.Serialization;
+using MagiRogue.System;
 
 namespace MagiRogue.Data
 {
     public class SaveAndLoad
     {
         private const string _folderName = "Saves";
-        private readonly string dir = AppDomain.CurrentDomain.BaseDirectory;
+        private static readonly string dir = AppDomain.CurrentDomain.BaseDirectory;
         private string saveDir;
         private string savePathName;
 
@@ -37,16 +38,17 @@ namespace MagiRogue.Data
 
         public void SaveGameToFolder(GameState gameState, string saveName)
         {
-            string path = dir + $@"\{_folderName}\{saveName}";
+            savePathName = saveName;
+            string path = dir + $@"{_folderName}\{saveName}";
 
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
             }
             saveDir = path;
-            savePathName = saveName;
 
             SaveMapToSaveFolder(gameState.Universe.WorldMap.AssocietatedMap, "WorldMap");
+            // Map load = LoadMapFile("WorldMap");
             for (int i = 0; i < gameState.Universe.AllChunks.Length; i++)
             {
                 var chunk = gameState.Universe.AllChunks[i];
@@ -63,15 +65,39 @@ namespace MagiRogue.Data
             }
         }
 
+        public static bool CheckIfThereIsSaveFile()
+        {
+            string[] files = Directory.GetDirectories (Path.Combine(dir, _folderName));
+
+            return files.Length > 0 ? true : false;
+        }
+
         public void SaveMapToSaveFolder(MapTemplate map, string fileName)
         {
-            Serializer.Save(map, $@"Saves\TestFile\{fileName}", true);
-            //Serializer.Save(new SadConsole.Console(10, 10), @"Saves\TestConsole", true);
+            Serializer.Save(map, $@"{saveDir}\{fileName}", true);
+        }
+
+        public bool FindAnySaveFile()
+        {
+            var files = Directory.GetFiles(Path.Combine(dir, _folderName));
+
+            return Directory.Exists(saveDir);
         }
 
         public void SaveMapToSaveFolder(MapTemplate map)
         {
-            Serializer.Save(map, $"{map.MapId}", true);
+            Serializer.Save(map, $@"{saveDir}\{map.MapId}", true);
+        }
+
+        public void SaveJsonToSaveFolder(string json)
+        {
+            Serializer.Save(json, $@"{saveDir}\Test", true);
+        }
+
+        public MapTemplate LoadMapFile(string fileName)
+        {
+            string path = $@"Saves\{savePathName}\{fileName}";
+            return Serializer.Load<Map>(path, true);
         }
     }
 }

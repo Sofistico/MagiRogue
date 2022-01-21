@@ -60,7 +60,8 @@ namespace MagiRogue.System.Tiles
         BorealForest,
         Tundra,
         Ice,
-        Mountain
+        Mountain,
+        Null
     }
     [JsonConverter(typeof(StringEnumConverter))]
     public enum SpecialLandType

@@ -54,6 +54,8 @@ namespace MagiRogue.Data.Serialization
         public static implicit operator Road(RoadTemplate template)
         {
             var tiles = new List<WorldTile>();
+            if (template is null)
+                return null;
             for (int i = 0; i < template.RoadTiles.Count; i++)
             {
                 // TODO: Need to find a better way
