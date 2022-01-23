@@ -28,7 +28,7 @@ namespace MagiRogue.Data
             };
         }
 
-        private void CreateNewSaveFolder()
+        private static void CreateNewSaveFolder()
         {
             if (!Directory.Exists(dir + $@"\{_folderName}"))
             {
@@ -36,7 +36,7 @@ namespace MagiRogue.Data
             }
         }
 
-        public void SaveGameToFolder(GameState gameState, string saveName)
+        public void SaveGameToFolder(Universe gameState, string saveName)
         {
             savePathName = saveName;
             string path = dir + $@"{_folderName}\{saveName}";
@@ -47,9 +47,9 @@ namespace MagiRogue.Data
             }
             saveDir = path;
 
-            SaveMapToSaveFolder(gameState.Universe.WorldMap.AssocietatedMap, "WorldMap");
-            // Map load = LoadMapFile("WorldMap");
-            for (int i = 0; i < gameState.Universe.AllChunks.Length; i++)
+            // TODO: see if there is a need for this code vs just loading it in one big file!
+            //SaveMapToSaveFolder(gameState.Universe.WorldMap.AssocietatedMap, "WorldMap");
+            /*for (int i = 0; i < gameState.Universe.AllChunks.Length; i++)
             {
                 var chunk = gameState.Universe.AllChunks[i];
                 if (chunk is null)
@@ -62,26 +62,22 @@ namespace MagiRogue.Data
                         SaveMapToSaveFolder(map);
                     }
                 }
-            }
+            }*/
+            Serializer.Save(gameState, @$"{_folderName}\{saveName}\GameState", true);
+
+            var map = LoadGameState("GameState");
         }
 
         public static bool CheckIfThereIsSaveFile()
         {
-            string[] files = Directory.GetDirectories (Path.Combine(dir, _folderName));
+            string[] files = Directory.GetDirectories(Path.Combine(dir, _folderName));
 
-            return files.Length > 0 ? true : false;
+            return files.Length > 0;
         }
 
         public void SaveMapToSaveFolder(MapTemplate map, string fileName)
         {
             Serializer.Save(map, $@"{saveDir}\{fileName}", true);
-        }
-
-        public bool FindAnySaveFile()
-        {
-            var files = Directory.GetFiles(Path.Combine(dir, _folderName));
-
-            return Directory.Exists(saveDir);
         }
 
         public void SaveMapToSaveFolder(MapTemplate map)
@@ -98,6 +94,12 @@ namespace MagiRogue.Data
         {
             string path = $@"Saves\{savePathName}\{fileName}";
             return Serializer.Load<Map>(path, true);
+        }
+
+        public Universe LoadGameState(string fileName)
+        {
+            string path = $@"Saves\{savePathName}\{fileName}";
+            return Serializer.Load<UniverseTemplate>(path, true);
         }
     }
 }

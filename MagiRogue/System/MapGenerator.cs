@@ -16,15 +16,23 @@ namespace MagiRogue.System
     // TODO: Refactor this whole class
     public abstract class MapGenerator
     {
-        protected readonly Random randNum = new();
+        protected readonly Random randNum;
+        protected int seed;
         protected Map _map; // Temporarily store the map currently worked on
 
         // Empty constructor
         public MapGenerator()
         {
+            seed = GoRogue.Random.GlobalRandom.DefaultRNG.Next();
+            randNum = new Random(seed);
         }
 
-        public MapGenerator(Map map) => _map = map;
+        public MapGenerator(Map map)
+        {
+            _map = map;
+            seed = GoRogue.Random.GlobalRandom.DefaultRNG.Next();
+            randNum = new Random(seed);
+        }
 
         #region GeneralMapGen
 

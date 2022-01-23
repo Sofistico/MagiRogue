@@ -1,6 +1,8 @@
 ﻿using MagiRogue.Data.Serialization;
+using MagiRogue.Entities;
 using MagiRogue.System;
 using MagiRogue.System.Planet;
+using MagiRogue.System.Tiles;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -31,19 +33,25 @@ namespace MagiRogue.Test.System
             Assert.Contains(uni.Time.TimePassed.Ticks.ToString(), json);
         }
 
-        /*[Fact]
+        [Fact]
         public void DeserializeUniverse()
         {
             uni.ForceChangeCurrentMap(new Map("Test"));
+            uni.WorldMap.AssocietatedMap.SetTerrain
+                (new TileFloor(new SadRogue.Primitives.Point(0, 0)));
+            Player player = Player.TestPlayer();
+            player.Position = new SadRogue.Primitives.Point(0, 0);
+            uni.WorldMap.AssocietatedMap.Add(player);
+            uni.Player = player;
             var json = JsonConvert.SerializeObject(uni, Formatting.Indented,
                 new JsonSerializerSettings()
                 {
                     NullValueHandling = NullValueHandling.Ignore
                 });
             // make it so that the object only reference other files
-            var obj = JsonConvert.DeserializeObject<UniverseTemplate>(json);
+            UniverseTemplate obj = JsonConvert.DeserializeObject<Universe>(json);
 
             Assert.True(obj.PossibleChangeMap);
-        }*/
+        }
     }
 }

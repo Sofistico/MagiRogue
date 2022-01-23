@@ -20,7 +20,7 @@ namespace MagiRogue.Data.Serialization
             Type objectType, Map? existingValue, bool hasExistingValue,
             JsonSerializer serializer)
         {
-            reader.SupportMultipleContent = true;
+            //reader.SupportMultipleContent = true;
             JObject futureMap = JObject.Load(reader);
             Map map = new Map(futureMap["MapName"].ToString(),
                 (int)futureMap["Width"], (int)futureMap["Height"]);
@@ -40,6 +40,8 @@ namespace MagiRogue.Data.Serialization
                     pos = new Point((int)tiles[i]["Position"]["X"],
                         (int)tiles[i]["Position"]["Y"]);
                 }
+                if (tiles[i].SelectToken("Glyph") is null)
+                    continue;
                 BasicTile tile = new
                     BasicTile(pos,
                     (uint)tiles[i]["Foreground"],

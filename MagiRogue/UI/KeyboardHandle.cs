@@ -329,7 +329,7 @@ namespace MagiRogue.UI
 
             if (info.IsKeyPressed(Keys.OemMinus))
             {
-                GameLoop.Universe.SaveAndLoad.SaveGameToFolder(new Data.GameState(), "TestFile");
+                GameLoop.Universe.SaveAndLoad.SaveGameToFolder(GameLoop.Universe, "TestFile");
             }
 
 #endif

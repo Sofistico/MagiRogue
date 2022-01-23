@@ -63,16 +63,6 @@ namespace MagiRogue.System
         /// </summary>
         public RegionChunkTemplate[] AllChunks { get; set; }
 
-        public bool CheckIfThereIsSaveFile()
-        {
-            if (SaveAndLoad.FindAnySaveFile())
-            {
-                return true;
-            }
-            else
-                return false;
-        }
-
         public SaveAndLoad SaveAndLoad { get; set; }
 
         /// <summary>
@@ -106,7 +96,7 @@ namespace MagiRogue.System
 
         public void SaveGame(string saveName)
         {
-            SaveAndLoad.SaveGameToFolder(new GameState(this), saveName);
+            SaveAndLoad.SaveGameToFolder(this, saveName);
         }
 
         public Universe(PlanetMap worldMap,

@@ -127,6 +127,7 @@ namespace MagiRogue.System.Tiles
             string name = "World Tile")
             : base(foregroud, background, glyph, (int)MapLayer.TERRAIN, position, blocksMove, isTransparent, name)
         {
+            TileHealth = 999;
         }
 
         /// <summary>

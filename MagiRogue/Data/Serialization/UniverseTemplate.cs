@@ -3,7 +3,9 @@ using MagiRogue.System;
 using MagiRogue.System.Planet;
 using MagiRogue.System.Time;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Linq;
 
 namespace MagiRogue.Data.Serialization
 {
@@ -15,7 +17,60 @@ namespace MagiRogue.Data.Serialization
             bool hasExistingValue,
             JsonSerializer serializer)
         {
-            return serializer.Deserialize<UniverseTemplate>(reader);
+            JObject universe = JObject.Load(reader);
+            UniverseTemplate objUni;
+            MapTemplate currentMap;
+
+            PlanetMapTemplate planet = JsonConvert.DeserializeObject<PlanetMap>
+                (universe["WorldMap"].ToString());
+            int id = (int)universe["CurrentMap"]["MapId"];
+            if (id == planet.AssocietatedMap.MapId)
+            {
+                currentMap = planet.AssocietatedMap;
+            }
+            else
+            {
+                 currentMap = JsonConvert.DeserializeObject<Map>
+                    (universe["CurrentMap"].ToString());
+            }
+
+
+            Player player = Player.ReturnPlayerFromActor
+                (JsonConvert.DeserializeObject<ActorTemplate>(universe["Player"].ToString()));
+
+            TimeTemplate time =
+                JsonConvert.DeserializeObject<TimeSystem>(universe["Time"].ToString());
+            bool changeMap = (bool)universe["PossibleChangeMap"];
+            SeasonType season = SeasonEnumToString(universe["CurrentSeason"].ToString());
+            JToken[] chunks = universe["AllChunks"].ToArray();
+            RegionChunkTemplate[] regionChunk = new RegionChunkTemplate[chunks.Length];
+
+            for (int i = 0; i < chunks.Length; i++)
+            {
+                if (!string.IsNullOrWhiteSpace(chunks[i].ToString()))
+                {
+                    RegionChunkTemplate region =
+                        JsonConvert.DeserializeObject<RegionChunk>(chunks[i].ToString());
+                    regionChunk[i] = region;
+                }
+            }
+
+            objUni = new UniverseTemplate(planet, currentMap,
+                player, time, changeMap, season, regionChunk);
+
+            return objUni;
+        }
+
+        private static SeasonType SeasonEnumToString(string v)
+        {
+            return v switch
+            {
+                "Spring" => SeasonType.Spring,
+                "Summer" => SeasonType.Summer,
+                "Autumn" => SeasonType.Autumn,
+                "Winter" => SeasonType.Winter,
+                _ => throw new Exception($"Tried to deseralize an invalid Season! Data {v}")
+            };
         }
 
         public override void WriteJson(JsonWriter writer, Universe value, JsonSerializer serializer)
@@ -64,12 +119,21 @@ namespace MagiRogue.Data.Serialization
             RegionChunkTemplate[] allChunks)
         {
             WorldMap = worldMap;
-            CurrentMap = currentMap;
+            if (worldMap.AssocietatedMap.MapId == currentMap.MapId)
+                CurrentMap = worldMap.AssocietatedMap;
+            else
+                CurrentMap = currentMap;
+
             Player = player;
             Time = time;
             PossibleChangeMap = possibleChangeMap;
             CurrentSeason = currentSeason;
             AllChunks = allChunks;
+        }
+
+        public UniverseTemplate()
+        {
+            // empty one
         }
 
         public static implicit operator UniverseTemplate(Universe uni)

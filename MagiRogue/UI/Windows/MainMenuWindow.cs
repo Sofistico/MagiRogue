@@ -20,6 +20,8 @@ namespace MagiRogue.UI.Windows
         private readonly MagiButton saveGame;
         private TextBox saveName;
         private PopWindow savePop;
+        private PopWindow loadWindow;
+        private ListBox savesBox;
 
         public MainMenuWindow(int width, int height, string title = "Main Menu") : base(width, height, title)
         {
@@ -55,6 +57,9 @@ namespace MagiRogue.UI.Windows
             PositionButtons();
 
             IsFocused = true;
+
+            loadWindow = new PopWindow("Load Game");
+            savesBox = new ListBox(loadWindow.Width, loadWindow.Height);
         }
 
         private void ContinueGame_Click(object sender, EventArgs e)
@@ -144,7 +149,10 @@ namespace MagiRogue.UI.Windows
         private void SaveAndClose_Click(object? sender, EventArgs e)
         {
             if (!string.IsNullOrWhiteSpace(saveName.Text) && GameStarted)
+            {
                 GameLoop.Universe.SaveGame(saveName.Text);
+                savePop.Hide();
+            }
         }
 
         private void RefreshButtons()

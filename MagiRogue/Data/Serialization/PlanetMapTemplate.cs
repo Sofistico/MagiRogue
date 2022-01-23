@@ -1,9 +1,11 @@
-﻿using MagiRogue.System.Civ;
+﻿using MagiRogue.System;
+using MagiRogue.System.Civ;
 using MagiRogue.System.Planet;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MagiRogue.Data.Serialization
 {
@@ -14,7 +16,31 @@ namespace MagiRogue.Data.Serialization
             JsonSerializer serializer)
         {
             // put here the method to find and link the map to the id
-            PlanetMapTemplate template = serializer.Deserialize<PlanetMapTemplate>(reader);
+            JObject jObject = JObject.Load(reader);
+            float[,] heightData =
+                JsonConvert.DeserializeObject<float[,]>(jObject["HeightData"].ToString());
+            float[,] heattData =
+                JsonConvert.DeserializeObject<float[,]>(jObject["HeatData"].ToString());
+            float[,] moistureData =
+                JsonConvert.DeserializeObject<float[,]>(jObject["MoistureData"].ToString());
+
+            int min = int.MinValue;
+            int max = int.MaxValue;
+
+            List<Civilization> civs = JsonConvert
+                .DeserializeObject<List<Civilization>>
+                (jObject["Civilizations"].ToString());
+
+            MapTemplate map =
+                JsonConvert.DeserializeObject<Map>(jObject["AssocietatedMap"].ToString());
+
+            PlanetMapTemplate template = new PlanetMapTemplate(heightData,
+                heattData,
+                moistureData,
+                min,
+                max,
+                civs,
+                map);
 
             return template;
         }
@@ -32,7 +58,11 @@ namespace MagiRogue.Data.Serialization
         public float[,] HeightData { get; }
         public float[,] HeatData { get; }
         public float[,] MoistureData { get; }
+
+        [JsonIgnore]
         public float Min { get; set; }
+
+        [JsonIgnore]
         public float Max { get; set; }
         public List<CivilizationTemplate> Civilizations { get; set; }
 
@@ -44,8 +74,7 @@ namespace MagiRogue.Data.Serialization
             float[,] moistureData,
             float min,
             float max,
-            List<Civilization> civilizations,
-            uint associetatedMap)
+            List<Civilization> civilizations)
         {
             HeightData = heightData;
             HeatData = heatData;
@@ -60,11 +89,28 @@ namespace MagiRogue.Data.Serialization
             //AssocietatedMapId = associetatedMap;
         }
 
+        public PlanetMapTemplate()
+        {
+        }
+
+        public PlanetMapTemplate(float[,] heightData,
+            float[,] heatData,
+            float[,] moistureData,
+            float min,
+            float max,
+            List<Civilization> civilizations,
+            MapTemplate associetatedMap) : this(heightData,
+                heatData,
+                moistureData, min, max, civilizations)
+        {
+            AssocietatedMap = associetatedMap;
+        }
+
         public static implicit operator PlanetMapTemplate(PlanetMap map)
         {
             var template = new PlanetMapTemplate(map.HeightData, map.HeatData,
                 map.MoistureData, map.Min, map.Max,
-                map.Civilizations, map.AssocietatedMap.MapId)
+                map.Civilizations)
             {
                 AssocietatedMap = map.AssocietatedMap
             };
