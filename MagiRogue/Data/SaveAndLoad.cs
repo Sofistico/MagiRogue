@@ -17,11 +17,12 @@ namespace MagiRogue.Data
         private static readonly string dir = AppDomain.CurrentDomain.BaseDirectory;
         private string saveDir;
         private string savePathName;
+        private JsonSerializerSettings settings;
 
         public SaveAndLoad()
         {
             CreateNewSaveFolder();
-            Serializer.Settings = new JsonSerializerSettings()
+            settings = new JsonSerializerSettings()
             {
                 NullValueHandling = NullValueHandling.Ignore,
                 Formatting = Formatting.Indented,
@@ -63,9 +64,10 @@ namespace MagiRogue.Data
                     }
                 }
             }*/
+            //Write(gameState);
             Serializer.Save(gameState, @$"{_folderName}\{saveName}\GameState", true);
 
-            var map = LoadGameState("GameState");
+            //var map = LoadGameState("GameState");
         }
 
         public static bool CheckIfThereIsSaveFile()
@@ -76,6 +78,11 @@ namespace MagiRogue.Data
         }
 
         public void SaveMapToSaveFolder(MapTemplate map, string fileName)
+        {
+            Serializer.Save(map, $@"{saveDir}\{fileName}", true);
+        }
+
+        public void SaveMapToSaveFolder(string map, string fileName)
         {
             Serializer.Save(map, $@"{saveDir}\{fileName}", true);
         }
@@ -99,7 +106,7 @@ namespace MagiRogue.Data
         public Universe LoadGameState(string fileName)
         {
             string path = $@"Saves\{savePathName}\{fileName}";
-            return Serializer.Load<UniverseTemplate>(path, true);
+            return Serializer.Load<Universe>(path, true);
         }
     }
 }

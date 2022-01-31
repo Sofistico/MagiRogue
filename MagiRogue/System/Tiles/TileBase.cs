@@ -154,6 +154,8 @@ namespace MagiRogue.System.Tiles
             }
         }
 
+        public virtual TileBase Copy() => Copy();
+
         #region IGameObject Interface
 
         public event EventHandler<GameObjectPropertyChanged<bool>> TransparencyChanged

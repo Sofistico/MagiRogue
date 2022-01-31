@@ -49,6 +49,11 @@ namespace MagiRogue.System
         public Map CurrentMap { get; private set; }
 
         /// <summary>
+        /// Stores the current chunk that is loaded
+        /// </summary>
+        public RegionChunk CurrentChunk { get; private set; }
+
+        /// <summary>
         /// Player data
         /// </summary>
         public Player Player { get; set; }
@@ -153,8 +158,11 @@ namespace MagiRogue.System
             {
                 // do somehting
             }
-            else
-                previousMap.SaveMapToJson(Player);
+            /*else
+            {
+                string map = previousMap.SaveMapToJson(Player);
+                SaveAndLoad.SaveMapToSaveFolder(map, previousMap.MapId.ToString());
+            }*/
             UpdateIfNeedTheMap(mapToGo);
             CurrentMap = mapToGo;
             mapToGo.LoadToMemory();

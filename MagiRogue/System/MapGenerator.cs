@@ -7,6 +7,7 @@ using SadRogue.Primitives.GridViews;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Troschuetz.Random;
 
 namespace MagiRogue.System
 {
@@ -16,7 +17,7 @@ namespace MagiRogue.System
     // TODO: Refactor this whole class
     public abstract class MapGenerator
     {
-        protected readonly Random randNum;
+        protected readonly TRandom randNum;
         protected int seed;
         protected Map _map; // Temporarily store the map currently worked on
 
@@ -24,18 +25,20 @@ namespace MagiRogue.System
         public MapGenerator()
         {
             seed = GoRogue.Random.GlobalRandom.DefaultRNG.Next();
-            randNum = new Random(seed);
+            randNum = new TRandom(seed);
         }
 
-        public MapGenerator(Map map)
+        public MapGenerator(Map map) : this()
         {
             _map = map;
-            seed = GoRogue.Random.GlobalRandom.DefaultRNG.Next();
-            randNum = new Random(seed);
         }
 
         #region GeneralMapGen
 
+        /// <summary>
+        /// Inserts an stair at the center of a room
+        /// </summary>
+        /// <param name="room"></param>
         protected void InsertStairs(Room room)
         {
             Furniture stairsDown = new Furniture(Color.White, Color.Black, '>', room.RoomRectangle.Center,
@@ -47,6 +50,9 @@ namespace MagiRogue.System
             _map.Add(stairsDown);
         }
 
+        /// <summary>
+        /// Prepares the map with all tiles being stone floor
+        /// </summary>
         protected void PrepareForFloors()
         {
             foreach (var pos in _map.Positions())
@@ -55,6 +61,9 @@ namespace MagiRogue.System
             }
         }
 
+        /// <summary>
+        /// Makes all tiles become grass tiles
+        /// </summary>
         protected void PrepareForFloorsWithGrass()
         {
             foreach (var pos in _map.Positions())
@@ -63,6 +72,10 @@ namespace MagiRogue.System
             }
         }
 
+        /// <summary>
+        /// Makes all tiles become the specifed TileFloor
+        /// </summary>
+        /// <param name="floor"></param>
         protected void PrepareForAnyFloor(TileFloor floor)
         {
             foreach (var pos in _map.Positions())
@@ -72,15 +85,28 @@ namespace MagiRogue.System
             }
         }
 
+        /// <summary>
+        /// Makes the specified map tiles become the specifed TileFloor
+        /// </summary>
+        /// <param name="floor"></param>
+        /// <param name="map"></param>
         protected static void PrepareForAnyFloor(TileFloor floor, Map map)
         {
             map.SetTerrain(floor);
         }
 
+        /// <summary>
+        /// Connects 2 points with an road.
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
         protected static void ConnectWithRoads(Point start, Point end)
         {
         }
 
+        /// <summary>
+        /// Makes the perimeter of a map filled with walls
+        /// </summary>
         protected void PrepareForOuterWalls()
         {
             foreach (var pos in _map.Positions())
@@ -92,10 +118,13 @@ namespace MagiRogue.System
             }
         }
 
-        // Builds a room composed of walls and floors using the supplied Rectangle
-        // which determines its size and position on the map
-        // Walls are placed at the perimeter of the room
-        // Floors are placed in the interior area of the room
+        /// <summary>
+        /// Builds a room composed of walls and floors using the supplied Rectangle
+        /// which determines its size and position on the map
+        /// Walls are placed at the perimeter of the room
+        /// Floors are placed in the interior area of the room
+        /// </summary>
+        /// <param name="room"></param>
         protected void CreateRoom(Rectangle room)
         {
             // Place floors in interior area
@@ -116,7 +145,10 @@ namespace MagiRogue.System
             }
         }
 
-        // Creates a Floor tile at the specified X/Y location
+        /// <summary>
+        /// Creates a Floor tile at the specified X/Y location
+        /// </summary>
+        /// <param name="location"></param>
         protected void CreateStoneFloor(Point location)
         {
             TileFloor floor = new TileFloor(location);
@@ -125,21 +157,35 @@ namespace MagiRogue.System
             _map.SetTerrain(floor);
         }
 
-        // Creates a Wall tile at the specified X/Y location
+        /// <summary>
+        /// Creates a Wall tile at the specified X/Y location
+        /// </summary>
+        /// <param name="location"></param>
         protected void CreateStoneWall(Point location)
         {
             TileWall wall = new TileWall(location);
             _map.SetTerrain(wall);
         }
 
+        /// <summary>
+        /// Create any type of wall
+        /// </summary>
+        /// <param name="wall"></param>
         protected void CreateAnyWall(TileWall wall) => _map.SetTerrain(wall);
 
+        /// <summary>
+        /// Create any type of wall at the specifed map
+        /// </summary>
+        /// <param name="wall"></param>
+        /// <param name="map"></param>
         protected static void CreateAnyWall(TileWall wall, Map map)
         {
             map.SetTerrain(wall);
         }
 
-        // Fills the map with walls
+        /// <summary>
+        /// Fills the map with walls
+        /// </summary>
         protected void FloodWalls()
         {
             for (int i = 0; i < _map.Tiles.Length; i++)
@@ -172,6 +218,10 @@ namespace MagiRogue.System
             return borderCells;
         }
 
+        /// <summary>
+        /// Place magic nodes at random location of the map
+        /// </summary>
+        /// <param name="nodes"></param>
         protected void PlaceNodes(int nodes)
         {
             for (int i = 0; i < nodes; i++)
@@ -193,8 +243,15 @@ namespace MagiRogue.System
             }
         }
 
-        // returns a collection of Points which represent
-        // locations along a line
+        /// <summary>
+        /// returns a collection of Points which represent
+        /// locations along a line
+        /// </summary>
+        /// <param name="xOrigin"></param>
+        /// <param name="yOrigin"></param>
+        /// <param name="xDestination"></param>
+        /// <param name="yDestination"></param>
+        /// <returns></returns>
         public IEnumerable<Point> GetTileLocationsAlongLine
             (int xOrigin, int yOrigin, int xDestination, int yDestination)
         {
@@ -232,8 +289,12 @@ namespace MagiRogue.System
             }
         }
 
-        // sets X coordinate between right and left edges of map
-        // to prevent any out-of-bounds errors
+        /// <summary>
+        /// sets X coordinate between right and left edges of map
+        /// to prevent any out-of-bounds errors
+        /// </summary>
+        /// <param name="x"></param>
+        /// <returns></returns>
         protected int ClampX(int x)
         {
             if (x < 0)
@@ -245,8 +306,12 @@ namespace MagiRogue.System
             // OR using ternary conditional operators: return (x < 0) ? 0 : (x > _map.Width - 1) ? _map.Width - 1 : x;
         }
 
-        // sets Y coordinate between top and bottom edges of map
-        // to prevent any out-of-bounds errors
+        /// <summary>
+        /// sets Y coordinate between top and bottom edges of map
+        /// to prevent any out-of-bounds errors
+        /// </summary>
+        /// <param name="y"></param>
+        /// <returns></returns>
         protected int ClampY(int y)
         {
             if (y < 0)
@@ -258,7 +323,12 @@ namespace MagiRogue.System
             // OR using ternary conditional operators: return (y < 0) ? 0 : (y > _map.Height - 1) ? _map.Height - 1 : y;
         }
 
-        // carve a tunnel out of the map parallel to the x-axis
+        /// <summary>
+        /// carve a tunnel out of the map parallel to the x-axis
+        /// </summary>
+        /// <param name="xStart"></param>
+        /// <param name="xEnd"></param>
+        /// <param name="yPosition"></param>
         protected void CreateHorizontalTunnel(int xStart, int xEnd, int yPosition)
         {
             for (int x = Math.Min(xStart, xEnd); x <= Math.Max(xStart, xEnd); x++)
@@ -267,7 +337,12 @@ namespace MagiRogue.System
             }
         }
 
-        // carve a tunnel using the y-axis
+        /// <summary>
+        /// carve a tunnel using the y-axis
+        /// </summary>
+        /// <param name="yStart"></param>
+        /// <param name="yEnd"></param>
+        /// <param name="xPosition"></param>
         protected void CreateVerticalTunnel(int yStart, int yEnd, int xPosition)
         {
             for (int y = Math.Min(yStart, yEnd); y <= Math.Max(yStart, yEnd); y++)
@@ -276,11 +351,15 @@ namespace MagiRogue.System
             }
         }
 
-        // Determines if a Point on the map is a good
-        // candidate for a door.
-        // Returns true if it's a good spot for a door
-        // Returns false if there is a Tile that IsBlockingMove=true
-        // at that location
+        /// <summary>
+        /// Determines if a Point on the map is a good
+        /// candidate for a door.
+        /// Returns true if it's a good spot for a door
+        /// Returns false if there is a Tile that IsBlockingMove=true
+        /// at that location
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
         protected bool IsPotentialDoor(Point location)
         {
             //if the target location is not walkable
@@ -339,12 +418,16 @@ namespace MagiRogue.System
             return false;
         }
 
-        //Tries to create a TileDoor object in a specified Rectangle
-        //perimeter. Reads through the entire list of tiles comprising
-        //the perimeter, and determines if each position is a viable
-        //candidate for a door.
-        //When it finds a potential position, creates a closed and
-        //unlocked door.
+        /// <summary>
+        /// Tries to create a TileDoor object in a specified Rectangle
+        /// perimeter. Reads through the entire list of tiles comprising
+        /// the perimeter, and determines if each position is a viable
+        /// candidate for a door.
+        /// When it finds a potential position, creates a closed and
+        /// unlocked door.
+        /// </summary>
+        /// <param name="room"></param>
+        /// <param name="acceptsMoreThanOneDoor"></param>
         protected void CreateDoor(Room room, bool acceptsMoreThanOneDoor = false)
         {
             List<Point> borderCells = GetBorderCellLocations(room.RoomRectangle);
@@ -377,11 +460,9 @@ namespace MagiRogue.System
         {
             for (int i = 0; i < map.Tiles.Length; i++)
             {
-                TileWall tree = TileEncyclopedia.GenericTree();
+                TileWall tree = treeToPlace.Copy();
                 Point pos = Point.FromIndex(i, map.Width);
                 int rng = randNum.Next(0, 15);
-                // provisional
-                // TODO: Create a better way to randomly create trees and etc
                 if (rng == 13)
                 {
                     tree.Position = pos;
@@ -390,9 +471,22 @@ namespace MagiRogue.System
             }
         }
 
+        /// <summary>
+        /// Place generic trees over the specified map
+        /// </summary>
+        /// <param name="map"></param>
         protected void PlaceGenericTrees(Map map)
         {
             PlaceTrees(map, TileEncyclopedia.GenericTree());
+        }
+
+        /// <summary>
+        /// Place generic trees over the map
+        /// </summary>
+        /// <param name="map"></param>
+        protected void PlaceGenericTrees()
+        {
+            PlaceTrees(_map, TileEncyclopedia.GenericTree());
         }
 
         /// <summary>
@@ -418,13 +512,13 @@ namespace MagiRogue.System
             //first make sure that the vegetation won't be attackable and it's a vegetation
             for (int i = 0; i < map.Tiles.Length; i++)
             {
-                TileFloor vegetal = new
+                /*TileFloor vegetal = new
                     TileFloor(vegetationToPlace.Name, vegetationToPlace.Position,
                     vegetationToPlace.MaterialOfTile.Id, vegetationToPlace.Glyph,
-                    vegetationToPlace.Foreground, vegetationToPlace.Background);
+                    vegetationToPlace.Foreground, vegetationToPlace.Background);*/
+                TileFloor vegetal = vegetationToPlace.Copy();
                 Point pos = Point.FromIndex(i, map.Width);
                 int rng = randNum.Next(0, 15);
-                // provisional
                 if (rng == 13)
                 {
                     vegetal.Position = pos;
@@ -450,11 +544,26 @@ namespace MagiRogue.System
             }
         }
 
+        /// <summary>
+        /// Flood the specifide map with water
+        /// </summary>
+        /// <param name="tile"></param>
+        /// <param name="map"></param>
         protected static void FloodWithWaterMap(WaterTile tile, Map map)
         {
             map.SetTerrain(tile);
         }
 
+        protected void FloodWithWaterMap(WaterTile tile)
+        {
+            _map.SetTerrain(tile);
+        }
+
+        /// <summary>
+        /// Puts a tile in a random mode in the specified map
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="template"></param>
         protected void PutRngFloorTileThere(Map map, TileFloor template)
         {
             for (int i = 0; i < map.Tiles.Length; i++)
@@ -471,46 +580,27 @@ namespace MagiRogue.System
             }
         }
 
+        /// <summary>
+        /// Puts a tile in a random mode in the map
+        /// </summary>
+        /// <param name="template"></param>
+        protected void PutRngFloorTileThere(TileFloor template)
+        {
+            for (int i = 0; i < _map.Tiles.Length; i++)
+            {
+                int rng = randNum.Next(0, 15);
+                Point pos = _map.Tiles[i].Position;
+                if (rng == 13)
+                {
+                    TileFloor newTile = new TileFloor(template.Name, pos,
+                        template.MaterialOfTile.Id, template.Glyph,
+                        template.Foreground, template.Background);
+                    _map.SetTerrain(newTile);
+                }
+            }
+        }
+
         #endregion GeneralMapGen
-    }
-
-    public class Room
-    {
-        public Rectangle RoomRectangle { get; set; }
-        public RoomTag Tag { get; set; }
-        public List<TileDoor> Doors { get; set; } = new List<TileDoor>();
-
-        public Room(Rectangle roomRectangle, RoomTag tag)
-        {
-            RoomRectangle = roomRectangle;
-            Tag = tag;
-        }
-
-        public Room(Rectangle roomRectangle)
-        {
-            RoomRectangle = roomRectangle;
-            Tag = RoomTag.Generic;
-        }
-
-        public void LockDoorsRng()
-        {
-            int half = GoRogue.DiceNotation.Dice.Roll("1d2");
-
-            if (half == 1)
-            {
-                int indexDoor = GoRogue.Random.GlobalRandom.DefaultRNG.Next(Doors.Count);
-
-                Doors[indexDoor].Locked = true;
-            }
-        }
-
-        internal void ForceUnlock()
-        {
-            foreach (var door in Doors)
-            {
-                door.Locked = false;
-            }
-        }
     }
 
     public class CityGenerator : MapGenerator
@@ -995,10 +1085,5 @@ namespace MagiRogue.System
 
             return _map;
         }
-    }
-
-    public enum RoomTag
-    {
-        Generic, Inn, Temple, Blacksmith, Clothier, Alchemist, PlayerHouse, Hovel, Abandoned
     }
 }

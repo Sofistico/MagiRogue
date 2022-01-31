@@ -39,5 +39,23 @@ namespace MagiRogue.System.Tiles
                   tileIsTransparent, name)
         {
         }
+
+        public override TileWall Copy()
+        {
+            TileWall copy = new TileWall(Foreground, Background, Glyph, Name, Position,
+                MaterialOfTile.Id, IsBlockingMove, IsTransparent)
+            {
+                MoveTimeCost = MoveTimeCost,
+                LastSeenAppereance = LastSeenAppereance,
+                BitMask = BitMask,
+                Description = Description,
+                Decorators = Decorators,
+                IsDirty = IsDirty,
+                InfusedMp = InfusedMp,
+                IsVisible = IsVisible,
+                TileHealth = TileHealth
+            };
+            return copy;
+        }
     }
 }

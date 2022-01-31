@@ -114,6 +114,7 @@ namespace MagiRogue.System
         public void LoadToMemory()
         {
             IsActive = true;
+            GameLoop.Universe.SaveAndLoad.LoadMapFile(MapId.ToString());
         }
 
         /// <summary>
@@ -365,6 +366,8 @@ namespace MagiRogue.System
                 {
                     NullValueHandling = NullValueHandling.Ignore
                 });
+            IsActive = false;
+
             return json;
         }
 
