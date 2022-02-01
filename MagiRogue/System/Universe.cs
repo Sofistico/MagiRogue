@@ -13,6 +13,7 @@ using GoRogue;
 using MagiRogue.Data.Serialization;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using MagiRogue.Utils;
 
 namespace MagiRogue.System
 {
@@ -70,6 +71,8 @@ namespace MagiRogue.System
 
         public SaveAndLoad SaveAndLoad { get; set; }
 
+        public MagiGlobalRandom MagiRandom { get; }
+
         /// <summary>
         /// Creates a new game world and stores it in a
         /// publicly accessible constructor.
@@ -78,6 +81,7 @@ namespace MagiRogue.System
         {
             Time = new TimeSystem();
             CurrentSeason = SeasonType.Spring;
+            MagiRandom = new MagiGlobalRandom();
 
             if (!testGame)
             {
@@ -99,18 +103,14 @@ namespace MagiRogue.System
             }
         }
 
-        public void SaveGame(string saveName)
-        {
-            SaveAndLoad.SaveGameToFolder(this, saveName);
-        }
-
         public Universe(PlanetMap worldMap,
             Map currentMap,
             Player player,
             TimeSystem time,
             bool possibleChangeMap,
             SeasonType currentSeason,
-            RegionChunkTemplate[] allChunks)
+            RegionChunkTemplate[] allChunks,
+            MagiGlobalRandom rng)
         {
             WorldMap = worldMap;
             CurrentMap = currentMap;
@@ -120,6 +120,7 @@ namespace MagiRogue.System
             CurrentSeason = currentSeason;
             AllChunks = allChunks;
             SaveAndLoad = new();
+            MagiRandom = rng;
         }
 
         private void PlacePlayerOnWorld(Player player)
@@ -185,6 +186,11 @@ namespace MagiRogue.System
             previousMap.Remove(entity);
             entity.Position = pos;
             mapToGo.Add(entity);
+        }
+
+        public void SaveGame(string saveName)
+        {
+            SaveAndLoad.SaveGameToFolder(this, saveName);
         }
 
         /// <summary>

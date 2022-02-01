@@ -2,6 +2,7 @@
 using MagiRogue.System;
 using MagiRogue.System.Planet;
 using MagiRogue.System.Time;
+using MagiRogue.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -30,10 +31,9 @@ namespace MagiRogue.Data.Serialization
             }
             else
             {
-                 currentMap = JsonConvert.DeserializeObject<Map>
-                    (universe["CurrentMap"].ToString());
+                currentMap = JsonConvert.DeserializeObject<Map>
+                   (universe["CurrentMap"].ToString());
             }
-
 
             Player player = Player.ReturnPlayerFromActor
                 (JsonConvert.DeserializeObject<ActorTemplate>(universe["Player"].ToString()));
@@ -44,6 +44,8 @@ namespace MagiRogue.Data.Serialization
             SeasonType season = SeasonEnumToString(universe["CurrentSeason"].ToString());
             JToken[] chunks = universe["AllChunks"].ToArray();
             RegionChunkTemplate[] regionChunk = new RegionChunkTemplate[chunks.Length];
+            MagiGlobalRandom rng =
+                JsonConvert.DeserializeObject<MagiGlobalRandom>(universe["MagiRandom"].ToString());
 
             for (int i = 0; i < chunks.Length; i++)
             {
@@ -56,7 +58,7 @@ namespace MagiRogue.Data.Serialization
             }
 
             objUni = new UniverseTemplate(planet, currentMap,
-                player, time, changeMap, season, regionChunk);
+                player, time, changeMap, season, regionChunk, rng);
 
             return objUni;
         }
@@ -110,13 +112,16 @@ namespace MagiRogue.Data.Serialization
         /// </summary>
         public RegionChunkTemplate[] AllChunks { get; set; }
 
+        public MagiGlobalRandom MagiRandom { get; set; }
+
         public UniverseTemplate(PlanetMap worldMap,
             Map currentMap,
             Player player,
             TimeTemplate time,
             bool possibleChangeMap,
             SeasonType currentSeason,
-            RegionChunkTemplate[] allChunks)
+            RegionChunkTemplate[] allChunks,
+            MagiGlobalRandom rng)
         {
             WorldMap = worldMap;
             if (currentMap is not null && worldMap.AssocietatedMap.MapId == currentMap.MapId)
@@ -129,6 +134,7 @@ namespace MagiRogue.Data.Serialization
             PossibleChangeMap = possibleChangeMap;
             CurrentSeason = currentSeason;
             AllChunks = allChunks;
+            MagiRandom = rng;
         }
 
         public UniverseTemplate()
@@ -141,7 +147,7 @@ namespace MagiRogue.Data.Serialization
             UniverseTemplate universe = new UniverseTemplate(
                 uni.WorldMap, uni.CurrentMap, uni.Player,
                 uni.Time, uni.PossibleChangeMap,
-                uni.CurrentSeason, uni.AllChunks);
+                uni.CurrentSeason, uni.AllChunks, uni.MagiRandom);
             return universe;
         }
 
@@ -149,7 +155,7 @@ namespace MagiRogue.Data.Serialization
         {
             Universe universe = new Universe(uni.WorldMap, uni.CurrentMap, uni.Player,
                 uni.Time, uni.PossibleChangeMap,
-                uni.CurrentSeason, uni.AllChunks);
+                uni.CurrentSeason, uni.AllChunks, uni.MagiRandom);
 
             return universe;
         }

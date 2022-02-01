@@ -24,8 +24,7 @@ namespace MagiRogue.System
         // Empty constructor
         public MapGenerator()
         {
-            seed = GoRogue.Random.GlobalRandom.DefaultRNG.Next();
-            randNum = new TRandom(seed);
+            randNum = GameLoop.Universe.MagiRandom.Random();
         }
 
         public MapGenerator(Map map) : this()

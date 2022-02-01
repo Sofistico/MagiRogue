@@ -22,13 +22,13 @@ namespace MagiRogue.Test.System
             var chunck = new RegionChunkTemplate[50 * 50];
             uni = new(new PlanetMap(50, 50), null, null,
                 new MagiRogue.System.Time.TimeSystem(500), true,
-                MagiRogue.System.Time.SeasonType.Spring, chunck);
+                MagiRogue.System.Time.SeasonType.Spring, chunck, new());
         }
 
         [Fact]
         public void SerializeUniverse()
         {
-            var json = JsonConvert.SerializeObject(uni);
+            var json = JsonConvert.SerializeObject(uni, Formatting.Indented);
 
             Assert.Contains(uni.Time.TimePassed.Ticks.ToString(), json);
         }
