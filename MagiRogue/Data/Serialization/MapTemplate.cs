@@ -166,6 +166,7 @@ namespace MagiRogue.Data.Serialization
             }
 
             map.LastPlayerPosition = lastPlayerPosition;
+            map.SetSeed((int)futureMap["Seed"]);
 
             reader.CloseInput = true;
 
@@ -272,6 +273,7 @@ namespace MagiRogue.Data.Serialization
         public uint MapId { get; private set; }
         public IList<Entity> Entities { get; set; }
         public bool[] Explored;
+        public int Seed { get; set; }
 
         public MapTemplate(string mapName,
             BasicTile[] tiles,
@@ -322,6 +324,7 @@ namespace MagiRogue.Data.Serialization
             }
 
             template.Entities = entities;
+            template.Seed = map.Seed;
 
             return template;
         }
@@ -346,6 +349,7 @@ namespace MagiRogue.Data.Serialization
             objMap.LastPlayerPosition = map.LastPlayerPosition;
             objMap.PlayerExplored = new SadRogue.Primitives.GridViews.ArrayView<bool>(
                 map.Explored, map.Width);
+            objMap.SetSeed(map.Seed);
 
             return objMap;
         }

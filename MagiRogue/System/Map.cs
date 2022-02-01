@@ -112,6 +112,11 @@ namespace MagiRogue.System
             }
         }
 
+        public void SetSeed(int seed, int x, int y, int i)
+        {
+            Seed = seed + x + y + (x * x) + (y * y) + (x * y) - (x + y + i);
+        }
+
         public void LoadToMemory()
         {
             IsActive = true;
@@ -377,6 +382,16 @@ namespace MagiRogue.System
             /*if (PlayerFOV.CurrentFOV.Count() >= actor.Stats.ViewRadius)*/
             PlayerFOV.Calculate(actor.Position, actor.Stats.ViewRadius, Radius.Circle);
             FOVRecalculated?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Forcefully sets a seed to a map, if you want to generate a new seed for the map,
+        /// use <see cref="SetSeed(int, int, int)"/>
+        /// </summary>
+        /// <param name="seed">The seed to replace</param>
+        internal void SetSeed(int seed)
+        {
+            Seed = seed;
         }
 
         /// <summary>

@@ -98,6 +98,13 @@ namespace MagiRogue.UI
                         int distance = 0;
                         if (targetCursor.TravelPath is not null)
                             distance = targetCursor.TravelPath.LengthWithStart;
+                        if (targetCursor.TravelPath is not null
+                            && targetCursor.TravelPath.LengthWithStart >= targetCursor.MaxDistance)
+                        {
+                            distance = world.CurrentMap.AStar.ShortestPath(targetCursor.OriginCoord,
+                                world.CurrentMap.ControlledEntitiy.Position + coorToMove)
+                                .LengthWithStart;
+                        }
 
                         if (world.CurrentMap.CheckForIndexOutOfBounds
                             (world.CurrentMap.ControlledEntitiy.Position + coorToMove))

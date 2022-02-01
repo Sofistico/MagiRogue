@@ -17,14 +17,15 @@ namespace MagiRogue.System
     // TODO: Refactor this whole class
     public abstract class MapGenerator
     {
-        protected readonly TRandom randNum;
+        protected TRandom randNum;
         protected int seed;
         protected Map _map; // Temporarily store the map currently worked on
 
         // Empty constructor
         public MapGenerator()
         {
-            randNum = GameLoop.Universe.MagiRandom.Random();
+            randNum = new TRandom(GameLoop.Universe.MagiRandom.Random());
+            seed = (int)randNum.Seed;
         }
 
         public MapGenerator(Map map) : this()
@@ -667,7 +668,7 @@ namespace MagiRogue.System
                 Map completeMap = DetermineBiomeLookForTile(worldTile);
                 if (completeMap is not null)
                 {
-                    ApplyModifierToTheMap(completeMap, worldTile);
+                    ApplyModifierToTheMap(completeMap, worldTile, i);
                     FinishingTouches(completeMap, worldTile);
                     map[i] = completeMap;
                 }
@@ -697,8 +698,13 @@ namespace MagiRogue.System
         /// </summary>
         /// <param name="completeMap"></param>
         /// <param name="worldTile"></param>
-        private void ApplyModifierToTheMap(Map completeMap, WorldTile worldTile)
+        /// <param name="magicI">Serves to add unique seeds to the map</param>
+        private void ApplyModifierToTheMap(Map completeMap, WorldTile worldTile, int magicI)
         {
+            completeMap.SetSeed(seed, worldTile.Position.X, worldTile.Position.Y, magicI);
+            // investigate later if it's making it possible to properly reproduce a map
+            randNum = new TRandom(completeMap.Seed);
+
             switch (worldTile.BiomeType)
             {
                 case BiomeType.Sea:
@@ -837,7 +843,7 @@ namespace MagiRogue.System
 
         private static Map GenericTundra(WorldTile worldTile)
         {
-            Map map = new Map($"{worldTile.RegionName}");
+            Map map = new Map($"{worldTile.BiomeType}");
             for (int i = 0; i < map.Tiles.Length; i++)
             {
                 Point pos = Point.FromIndex(i, map.Width);
