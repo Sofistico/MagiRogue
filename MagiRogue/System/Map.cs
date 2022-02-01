@@ -65,6 +65,7 @@ namespace MagiRogue.System
         public bool NeedsUpdate { get; internal set; }
         public bool IsActive { get; set; }
         public uint MapId { get; private set; }
+        public int Seed { get; set; }
 
         #endregion Properties
 
@@ -114,7 +115,7 @@ namespace MagiRogue.System
         public void LoadToMemory()
         {
             IsActive = true;
-            GameLoop.Universe.SaveAndLoad.LoadMapFile(MapId.ToString());
+            //GameLoop.Universe.SaveAndLoad.LoadMapFile(MapId.ToString());
         }
 
         /// <summary>

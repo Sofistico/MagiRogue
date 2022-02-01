@@ -52,7 +52,7 @@ namespace MagiRogue.UI.Windows
             quitGame.Click += QuitGameClick;
             saveGame.Click += SaveGameClick;
 
-            SetupSelectionButtons(startGame, saveGame, continueGame, testMap, quitGame);
+            SetupSelectionButtons(startGame, continueGame, saveGame, testMap, quitGame);
 
             PositionButtons();
 
@@ -73,6 +73,14 @@ namespace MagiRogue.UI.Windows
             {
                 if (SaveAndLoad.CheckIfThereIsSaveFile())
                 {
+                    PopWindow pop = new PopWindow(30, 15, "Load Game");
+                    MagiButton loadGame = new MagiButton(15)
+                    {
+                        Text = "Test!"
+                    };
+                    pop.Controls.Add(loadGame);
+                    Children.Add(pop);
+                    pop.Show();
                 }
             }
         }

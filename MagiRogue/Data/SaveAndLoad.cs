@@ -77,6 +77,8 @@ namespace MagiRogue.Data
             return files.Length > 0;
         }
 
+        public static string[] ReturnAllSaveFiles() => Directory.GetDirectories(Path.Combine(dir, _folderName));
+
         public void SaveMapToSaveFolder(MapTemplate map, string fileName)
         {
             Serializer.Save(map, $@"{saveDir}\{fileName}", true);
