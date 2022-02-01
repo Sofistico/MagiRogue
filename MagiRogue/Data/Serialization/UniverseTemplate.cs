@@ -119,7 +119,7 @@ namespace MagiRogue.Data.Serialization
             RegionChunkTemplate[] allChunks)
         {
             WorldMap = worldMap;
-            if (worldMap.AssocietatedMap.MapId == currentMap.MapId)
+            if (currentMap is not null && worldMap.AssocietatedMap.MapId == currentMap.MapId)
                 CurrentMap = worldMap.AssocietatedMap;
             else
                 CurrentMap = currentMap;
