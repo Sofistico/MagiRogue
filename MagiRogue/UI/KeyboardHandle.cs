@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SadConsole;
-using GoRogue;
-using SadConsole.Input;
-using MagiRogue.System;
+﻿using MagiRogue.Commands;
+using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
-using MagiRogue.Commands;
-using SadRogue.Primitives;
+using MagiRogue.System;
+using MagiRogue.System.Tiles;
 using MagiRogue.System.Time;
 using MagiRogue.UI.Windows;
-using MagiRogue.System.Tiles;
 using Newtonsoft.Json;
-using MagiRogue.Data;
-using MagiRogue.Data.Serialization;
+using SadConsole.Input;
+using SadRogue.Primitives;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MagiRogue.UI
 {
@@ -104,6 +98,13 @@ namespace MagiRogue.UI
                         int distance = 0;
                         if (targetCursor.TravelPath is not null)
                             distance = targetCursor.TravelPath.LengthWithStart;
+                        if (targetCursor.TravelPath is not null
+                            && targetCursor.TravelPath.LengthWithStart >= targetCursor.MaxDistance)
+                        {
+                            distance = world.CurrentMap.AStar.ShortestPath(targetCursor.OriginCoord,
+                                world.CurrentMap.ControlledEntitiy.Position + coorToMove)
+                                .LengthWithStart;
+                        }
 
                         if (world.CurrentMap.CheckForIndexOutOfBounds
                             (world.CurrentMap.ControlledEntitiy.Position + coorToMove))
@@ -314,10 +315,13 @@ namespace MagiRogue.UI
                     if (GameLoop.Universe.MapIsWorld(map))
                     {
                         string json = JsonConvert.SerializeObject(GameLoop.Universe.WorldMap);
+
+                        GameLoop.Universe.SaveAndLoad.SaveJsonToSaveFolder(json);
                     }
                     else
                     {
                         string json = map.SaveMapToJson(GetPlayer);
+
                         // The universe class also isn't being serialized properly, crashing newtonsoft
                         // TODO: Revise this line of code when the time comes to work on the save system.
                         //var gameState = JsonConvert.SerializeObject(new GameState().Universe);
@@ -328,6 +332,11 @@ namespace MagiRogue.UI
                 {
                     throw e;
                 }
+            }
+
+            if (info.IsKeyPressed(Keys.OemMinus))
+            {
+                GameLoop.Universe.SaveAndLoad.SaveGameToFolder(GameLoop.Universe, "TestFile");
             }
 
 #endif

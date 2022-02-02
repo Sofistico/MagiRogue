@@ -54,6 +54,8 @@ namespace MagiRogue.System.Planet
         // Rivers
         private readonly int riverCount = 40;
         private readonly int maxRiverAttempts = 1000;
+        private readonly int maxRecursiveRiverAttemepts = 750;
+        private int currentRecursiveRiverAttempt = 0;
         private readonly float minRiverHeight = 0.6f;
         private readonly int minRiverTurns = 18;
         private readonly int _minRiverLength = 20;
@@ -812,6 +814,10 @@ namespace MagiRogue.System.Planet
         // Worried with this method, the recursion is throwing too many errors
         private void FindPathToWater(WorldTile tile, WorldDirection currentDirection, ref River river)
         {
+            currentRecursiveRiverAttempt++;
+            if (currentRecursiveRiverAttempt >= maxRecursiveRiverAttemepts)
+                return;
+
             if (tile.Rivers.Contains(river))
                 return;
 

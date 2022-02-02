@@ -67,6 +67,11 @@ namespace MagiRogue.Data.Serialization
             CurrentDirection = currentDirection;
         }
 
+        public RiverTemplate()
+        {
+            //empty one
+        }
+
         public static implicit operator River(RiverTemplate template)
         {
             List<WorldTile> tiles = new List<WorldTile>();

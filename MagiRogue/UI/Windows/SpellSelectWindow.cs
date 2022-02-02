@@ -119,7 +119,7 @@ namespace MagiRogue.UI.Windows
             DescriptionArea.Cursor.Position = new Point(0, 1);
             DescriptionArea.Cursor.Print(_selectedSpell.ToString());
             DescriptionArea.Cursor.Position = new Point(0, 5);
-            if (_selectedSpell.Description is object)
+            if (_selectedSpell.Description is not null)
                 DescriptionArea.Cursor.Print(_selectedSpell.Description);
             _castButton.IsEnabled = true;
         }

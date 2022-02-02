@@ -116,7 +116,10 @@ namespace MagiRogue.UI.Windows
             }
 
             lastFocusedButton = focusedButton;
-            _selectionButtons[focusedButton]();
+            if(_selectionButtons is not null)
+            {
+                _selectionButtons[focusedButton]();
+            }
 
             base.Update(time);
         }

@@ -19,7 +19,7 @@ namespace MagiRogue.Commands
     /// Contains all generic actions performed on entities and tiles
     /// including combat, movement, and so on.
     /// </summary>
-    public class CommandManager
+    public sealed class CommandManager
     {
         protected CommandManager()
         {

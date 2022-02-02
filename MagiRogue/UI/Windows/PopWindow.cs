@@ -49,7 +49,41 @@ namespace MagiRogue.UI.Windows
             {
                 Position = new Point(ButtonWidth + 2, 1)
             };
+            DescriptionArea.FillWithRandomGarbage(10);
 
+            Children.Add(DescriptionArea);
+        }
+
+        public PopWindow(int width, int height, string title) : base(width, height, title)
+        {
+            GameLoop.UIManager.NoPopWindow = false;
+
+            IsFocused = true;
+
+            CloseOnEscKey = true;
+
+            Center();
+
+            const string cancelButtonText = "Close(Esc)";
+
+            int cancelButtonWidth = cancelButtonText.Length + 4;
+
+            _cancelButton = new Button(cancelButtonWidth)
+            {
+                Text = cancelButtonText,
+                Position = new Point(Width / 2, Height - 2)
+            };
+
+            _cancelButton.Click += (_, __) => Hide();
+
+            Controls.Add(_cancelButton);
+
+            DescriptionArea = new Console(Width - 3, Height - 4)
+            {
+                Position = new Point(Width / 2, 1)
+            };
+            DescriptionArea.IsVisible = true;
+            DescriptionArea.FillWithRandomGarbage(10);
             Children.Add(DescriptionArea);
         }
 
@@ -70,5 +104,9 @@ namespace MagiRogue.UI.Windows
 
             base.Show(modal);
         }
+
+        public void PrintConsole(Point pos, string text) => DescriptionArea.Print(pos.X, pos.Y, text);
+
+        public void PrintConsole(int x, int y, string text) => DescriptionArea.Print(x, y, text);
     }
 }

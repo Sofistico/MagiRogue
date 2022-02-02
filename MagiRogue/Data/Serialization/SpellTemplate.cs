@@ -32,6 +32,10 @@ namespace MagiRogue.Data.Serialization
                 (double)spell["ManaCost"]);
             createdSpell.SetDescription((string)spell["Description"]);
             createdSpell.Effects = effectsList;
+            if (spell.ContainsKey("Proficiency"))
+            {
+                createdSpell.Proficiency = (double)spell["Proficiency"];
+            }
 
             return createdSpell;
         }
@@ -39,6 +43,7 @@ namespace MagiRogue.Data.Serialization
         public override void WriteJson(JsonWriter writer, SpellBase value, JsonSerializer serializer)
         {
             serializer.Formatting = Formatting.Indented;
+            serializer.NullValueHandling = NullValueHandling.Ignore;
             serializer.Serialize(writer, (SpellTemplate)value);
         }
 
@@ -170,6 +175,8 @@ namespace MagiRogue.Data.Serialization
 
         public List<ISpellEffect> Effects { get; set; }
 
+        public double? Proficiency { get; set; }
+
         public string SpellName { get; set; }
 
         public string Description { get; set; }
@@ -198,7 +205,11 @@ namespace MagiRogue.Data.Serialization
         {
             SpellBase spell = new SpellBase(spellTemplate.SpellId, spellTemplate.SpellName,
                 spellTemplate.SpellSchool, spellTemplate.SpellRange, spellTemplate.SpellLevel,
-                spellTemplate.ManaCost);
+                spellTemplate.ManaCost)
+            {
+                Proficiency =
+                spellTemplate.Proficiency is null ? 0 : (double)spellTemplate.Proficiency
+            };
             foreach (var item in spellTemplate.Effects)
             {
                 spell.Effects.Add(item);
@@ -211,7 +222,10 @@ namespace MagiRogue.Data.Serialization
         {
             SpellTemplate template =
                 new SpellTemplate(spell.SpellLevel, spell.Effects, spell.SpellName,
-                spell.Description, spell.SpellSchool, spell.SpellRange, spell.ManaCost, spell.SpellId);
+                spell.Description, spell.SpellSchool, spell.SpellRange, spell.ManaCost, spell.SpellId)
+                {
+                    Proficiency = spell.Proficiency
+                };
 
             return template;
         }

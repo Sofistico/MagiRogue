@@ -13,6 +13,7 @@ using GoRogue;
 using MagiRogue.Data.Serialization;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using MagiRogue.Utils;
 
 namespace MagiRogue.System
 {
@@ -49,6 +50,11 @@ namespace MagiRogue.System
         public Map CurrentMap { get; private set; }
 
         /// <summary>
+        /// Stores the current chunk that is loaded
+        /// </summary>
+        public RegionChunk CurrentChunk { get; private set; }
+
+        /// <summary>
         /// Player data
         /// </summary>
         public Player Player { get; set; }
@@ -65,6 +71,8 @@ namespace MagiRogue.System
 
         public SaveAndLoad SaveAndLoad { get; set; }
 
+        public MagiGlobalRandom MagiRandom { get; }
+
         /// <summary>
         /// Creates a new game world and stores it in a
         /// publicly accessible constructor.
@@ -73,6 +81,7 @@ namespace MagiRogue.System
         {
             Time = new TimeSystem();
             CurrentSeason = SeasonType.Spring;
+            MagiRandom = new MagiGlobalRandom();
 
             if (!testGame)
             {
@@ -100,7 +109,8 @@ namespace MagiRogue.System
             TimeSystem time,
             bool possibleChangeMap,
             SeasonType currentSeason,
-            RegionChunkTemplate[] allChunks)
+            RegionChunkTemplate[] allChunks,
+            MagiGlobalRandom rng)
         {
             WorldMap = worldMap;
             CurrentMap = currentMap;
@@ -110,6 +120,7 @@ namespace MagiRogue.System
             CurrentSeason = currentSeason;
             AllChunks = allChunks;
             SaveAndLoad = new();
+            MagiRandom = rng;
         }
 
         private void PlacePlayerOnWorld(Player player)
@@ -148,8 +159,11 @@ namespace MagiRogue.System
             {
                 // do somehting
             }
-            else
-                previousMap.SaveMapToJson(Player);
+            /*else
+            {
+                string map = previousMap.SaveMapToJson(Player);
+                SaveAndLoad.SaveMapToSaveFolder(map, previousMap.MapId.ToString());
+            }*/
             UpdateIfNeedTheMap(mapToGo);
             CurrentMap = mapToGo;
             mapToGo.LoadToMemory();
@@ -172,6 +186,11 @@ namespace MagiRogue.System
             previousMap.Remove(entity);
             entity.Position = pos;
             mapToGo.Add(entity);
+        }
+
+        public void SaveGame(string saveName)
+        {
+            SaveAndLoad.SaveGameToFolder(this, saveName);
         }
 
         /// <summary>
@@ -274,7 +293,7 @@ namespace MagiRogue.System
                     {
                         Description = "DebugRotten"
                     }));
-                debugMonster.Anatomy.Limbs = LimbTemplate.BasicHumanoidBody(debugMonster);
+                debugMonster.Anatomy.Limbs = EntityFactory.BasicHumanoidBody(debugMonster);
 
                 map.Add(debugMonster);
                 EntityTimeNode entityNode = new EntityTimeNode(debugMonster.ID, Time.TimePassed.Ticks + 100);

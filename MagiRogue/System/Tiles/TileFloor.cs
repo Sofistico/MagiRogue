@@ -19,7 +19,8 @@ namespace MagiRogue.System.Tiles
         /// <param name="background"></param>
         /// <param name="blocksMove"></param>
         /// <param name="tileIsTransparent"></param>
-        public TileFloor(string name, Point position, string idMaterial, int glyph, Color foreground, Color background,
+        public TileFloor(string name, Point position, string idMaterial, int glyph, 
+            Color foreground, Color background,
             bool blocksMove = false, bool tileIsTransparent = true)
             : base(foreground, background, glyph, (int)MapLayer.TERRAIN, position, idMaterial, blocksMove,
                   tileIsTransparent, name)
@@ -40,5 +41,24 @@ namespace MagiRogue.System.Tiles
         {
             Name = "Stone Floor";
         }
+
+        public override TileFloor Copy()
+        {
+            TileFloor copy = new TileFloor(Name, Position, MaterialOfTile.Id, Glyph, Foreground,
+                Background, IsBlockingMove, IsTransparent)
+            {
+                MoveTimeCost = MoveTimeCost,
+                LastSeenAppereance = LastSeenAppereance,
+                BitMask = BitMask,
+                Description = Description,
+                Decorators = Decorators,
+                IsDirty = IsDirty,
+                InfusedMp = InfusedMp,
+                IsVisible = IsVisible,
+                TileHealth = TileHealth
+            };
+            return copy;
+        }
+
     }
 }

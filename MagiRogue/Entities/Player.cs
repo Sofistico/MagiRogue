@@ -19,7 +19,7 @@ namespace MagiRogue.Entities
              int layer = (int)MapLayer.PLAYER) :
             base(name, foreground, background, '@', position, layer)
         {
-            Anatomy.Limbs = LimbTemplate.BasicHumanoidBody(this);
+            Anatomy.Limbs = EntityFactory.BasicHumanoidBody(this);
             Weight = GoRogue.Random.GlobalRandom.DefaultRNG.Next(50, 95);
             Size = GoRogue.Random.GlobalRandom.DefaultRNG.Next(155, 200);
             Anatomy.Update(this);
@@ -46,7 +46,7 @@ namespace MagiRogue.Entities
                 );
             player.Stats.Precision = 3;
 
-            player.Anatomy.Limbs = LimbTemplate.BasicHumanoidBody(player);
+            player.Anatomy.Limbs = EntityFactory.BasicHumanoidBody(player);
 
             player.Magic.ShapingSkill = 9;
 
