@@ -6,6 +6,8 @@ using MagiRogue.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -64,26 +66,21 @@ namespace MagiRogue.Data.Serialization
             return objUni;*/
             Universe objUni;
 
-            return serializer.Deserialize<UniverseTemplate>(reader);
-        }
-
-        private static SeasonType SeasonEnumToString(string v)
-        {
-            return v switch
+            while (reader.Read())
             {
-                "Spring" => SeasonType.Spring,
-                "Summer" => SeasonType.Summer,
-                "Autumn" => SeasonType.Autumn,
-                "Winter" => SeasonType.Winter,
-                _ => throw new Exception($"Tried to deseralize an invalid Season! Data {v}")
-            };
+                // i think i found a way here
+                if (reader.TokenType == JsonToken.StartObject)
+                {
+                    var c = serializer.Deserialize<PlanetMap>(reader);
+                }
+            }
+            return serializer.Deserialize<UniverseTemplate>(reader);
         }
 
         public override void WriteJson(JsonWriter writer, Universe value, JsonSerializer serializer)
         {
             // Make it only referrence other maps, like all chunks containing only the id to a map
             serializer.NullValueHandling = NullValueHandling.Ignore;
-            serializer.Formatting = Formatting.Indented;
             serializer.Serialize(writer, (UniverseTemplate)value);
         }
     }
@@ -117,7 +114,7 @@ namespace MagiRogue.Data.Serialization
         public bool PossibleChangeMap { get; internal set; } = true;
 
         [DataMember]
-        public SeasonType CurrentSeason { get; set; }
+        public string CurrentSeason { get; set; }
 
         /// <summary>
         /// All the maps and chunks of the game
@@ -146,7 +143,7 @@ namespace MagiRogue.Data.Serialization
             Player = player;
             Time = time;
             PossibleChangeMap = possibleChangeMap;
-            CurrentSeason = currentSeason;
+            CurrentSeason = currentSeason.ToString();
             AllChunks = allChunks;
             MagiRandom = rng;
         }
@@ -154,6 +151,18 @@ namespace MagiRogue.Data.Serialization
         public UniverseTemplate()
         {
             // empty one
+        }
+
+        private static SeasonType SeasonEnumToString(string v)
+        {
+            return v switch
+            {
+                "Spring" => SeasonType.Spring,
+                "Summer" => SeasonType.Summer,
+                "Autumn" => SeasonType.Autumn,
+                "Winter" => SeasonType.Winter,
+                _ => throw new Exception($"Tried to deseralize an invalid Season! Data {v}")
+            };
         }
 
         public static implicit operator UniverseTemplate(Universe uni)
@@ -169,7 +178,7 @@ namespace MagiRogue.Data.Serialization
         {
             Universe universe = new Universe(uni.WorldMap, uni.CurrentMap, uni.Player,
                 uni.Time, uni.PossibleChangeMap,
-                uni.CurrentSeason, uni.AllChunks, uni.MagiRandom);
+                SeasonEnumToString(uni.CurrentSeason), uni.AllChunks, uni.MagiRandom);
 
             return universe;
         }

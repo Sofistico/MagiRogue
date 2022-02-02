@@ -20,7 +20,6 @@ namespace MagiRogue.Data.Serialization
             Type objectType, Map? existingValue, bool hasExistingValue,
             JsonSerializer serializer)
         {
-            reader.SupportMultipleContent = true;
             JObject futureMap = JObject.Load(reader);
             Map map = new Map(futureMap["MapName"].ToString(),
                 (int)futureMap["Width"], (int)futureMap["Height"]);
