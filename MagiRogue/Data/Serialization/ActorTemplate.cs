@@ -50,6 +50,9 @@ namespace MagiRogue.Data.Serialization
         [DataMember]
         public char Glyph { get; set; }
 
+        [DataMember]
+        public int GlyphInt { get; set; }
+
         /// <summary>
         /// <inheritdoc cref="Entity.Size"/>
         /// </summary>

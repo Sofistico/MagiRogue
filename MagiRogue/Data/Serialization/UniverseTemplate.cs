@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
+using System.Runtime.Serialization;
 
 namespace MagiRogue.Data.Serialization
 {
@@ -18,7 +19,7 @@ namespace MagiRogue.Data.Serialization
             bool hasExistingValue,
             JsonSerializer serializer)
         {
-            JObject universe = JObject.Load(reader);
+            /*JObject universe = JObject.Load(reader);
             UniverseTemplate objUni;
             MapTemplate currentMap;
 
@@ -60,7 +61,10 @@ namespace MagiRogue.Data.Serialization
             objUni = new UniverseTemplate(planet, currentMap,
                 player, time, changeMap, season, regionChunk, rng);
 
-            return objUni;
+            return objUni;*/
+            Universe objUni;
+
+            return serializer.Deserialize<UniverseTemplate>(reader);
         }
 
         private static SeasonType SeasonEnumToString(string v)
@@ -84,34 +88,44 @@ namespace MagiRogue.Data.Serialization
         }
     }
 
+    [DataContract]
     public class UniverseTemplate
     {
         /// <summary>
         /// The World map, contains the map data and the Planet data
         /// </summary>
         // TODO: Separate it so that it searchs for the world map in another file
+        [DataMember]
         public PlanetMapTemplate WorldMap { get; set; }
 
         /// <summary>
         /// Stores the current map
         /// </summary>
+        [DataMember]
         public MapTemplate CurrentMap { get; private set; }
 
         /// <summary>
         /// Player data
         /// </summary>
+        [DataMember]
         public Player Player { get; set; }
 
+        [DataMember]
         public TimeTemplate Time { get; private set; }
+
+        [DataMember]
         public bool PossibleChangeMap { get; internal set; } = true;
 
+        [DataMember]
         public SeasonType CurrentSeason { get; set; }
 
         /// <summary>
         /// All the maps and chunks of the game
         /// </summary>
+        [DataMember]
         public RegionChunkTemplate[] AllChunks { get; set; }
 
+        [DataMember]
         public MagiGlobalRandom MagiRandom { get; set; }
 
         public UniverseTemplate(PlanetMap worldMap,

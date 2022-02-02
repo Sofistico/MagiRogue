@@ -72,36 +72,9 @@ namespace MagiRogue.Data
             //var map = LoadGameState("GameState");
         }
 
-        public void SaveMapToSaveFolder(MapTemplate map, string fileName)
-        {
-            Serializer.Save(map, $@"{saveDir}\{fileName}", true);
-        }
-
-        public void SaveMapToSaveFolder(string map, string fileName)
-        {
-            Serializer.Save(map, $@"{saveDir}\{fileName}", true);
-        }
-
-        public void SaveMapToSaveFolder(MapTemplate map)
-        {
-            Serializer.Save(map, $@"{saveDir}\{map.MapId}", true);
-        }
-
         public void SaveJsonToSaveFolder(string json)
         {
             Serializer.Save(json, $@"{saveDir}\Test", true);
-        }
-
-        public MapTemplate LoadMapFile(string fileName)
-        {
-            string path = $@"Saves\{savePathName}\{fileName}";
-            return Serializer.Load<Map>(path, true);
-        }
-
-        public Universe LoadGameState(string fileName)
-        {
-            string path = $@"Saves\{savePathName}\{fileName}";
-            return Serializer.Load<Universe>(path, true);
         }
 
         public static Universe LoadGame(string saveName)
