@@ -65,18 +65,25 @@ namespace MagiRogue.UI
             MainMenu.Position = new Point(0, 0);
         }
 
-        public void StartGame(Player player, bool testGame = false)
+        public void StartGame(Player player, Universe? uni = null, bool testGame = false)
         {
             IsFocused = true;
             MainMenu.GameStarted = true;
             MainMenu.Hide();
 
-            if (!testGame)
+            if (!testGame && uni is null)
             {
                 CharCreationWindow.Hide();
             }
 
-            GameLoop.Universe = new Universe(player, testGame);
+            if (uni is not null)
+            {
+                GameLoop.Universe = uni;
+            }
+            else
+            {
+                GameLoop.Universe = new Universe(player, testGame);
+            }
 
             //Message Log initialization
             MessageLog = new MessageLogWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Message Log");

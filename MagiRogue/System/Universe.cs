@@ -293,7 +293,7 @@ namespace MagiRogue.System
                     {
                         Description = "DebugRotten"
                     }));
-                debugMonster.Anatomy.Limbs = LimbTemplate.BasicHumanoidBody(debugMonster);
+                debugMonster.Anatomy.Limbs = EntityFactory.BasicHumanoidBody(debugMonster);
 
                 map.Add(debugMonster);
                 EntityTimeNode entityNode = new EntityTimeNode(debugMonster.ID, Time.TimePassed.Ticks + 100);

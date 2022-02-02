@@ -8,6 +8,7 @@ using System.IO;
 using Newtonsoft.Json;
 using MagiRogue.Data.Serialization;
 using MagiRogue.System;
+using MagiRogue.Utils;
 
 namespace MagiRogue.Data
 {
@@ -25,8 +26,9 @@ namespace MagiRogue.Data
             settings = new JsonSerializerSettings()
             {
                 NullValueHandling = NullValueHandling.Ignore,
-                Formatting = Formatting.Indented,
+                TypeNameHandling = TypeNameHandling.None,
             };
+            Serializer.Settings = settings;
         }
 
         private static void CreateNewSaveFolder()
@@ -70,15 +72,6 @@ namespace MagiRogue.Data
             //var map = LoadGameState("GameState");
         }
 
-        public static bool CheckIfThereIsSaveFile()
-        {
-            string[] files = Directory.GetDirectories(Path.Combine(dir, _folderName));
-
-            return files.Length > 0;
-        }
-
-        public static string[] ReturnAllSaveFiles() => Directory.GetDirectories(Path.Combine(dir, _folderName));
-
         public void SaveMapToSaveFolder(MapTemplate map, string fileName)
         {
             Serializer.Save(map, $@"{saveDir}\{fileName}", true);
@@ -109,6 +102,24 @@ namespace MagiRogue.Data
         {
             string path = $@"Saves\{savePathName}\{fileName}";
             return Serializer.Load<Universe>(path, true);
+        }
+
+        public static Universe LoadGame(string saveName)
+        {
+            string path = $@"Saves\{saveName}\GameState";
+            return Serializer.Load<Universe>(path, true);
+        }
+
+        public static bool CheckIfStringIsValidSave(string saveName)
+        {
+            if (!string.IsNullOrEmpty(saveName))
+            {
+                string[] files = SaveUtils.GetSaveNameArray(SaveUtils.ReturnAllSaveFiles());
+
+                return files.Any(s => saveName.Equals(s));
+            }
+            else
+                return false;
         }
     }
 }

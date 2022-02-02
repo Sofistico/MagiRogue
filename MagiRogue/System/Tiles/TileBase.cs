@@ -63,8 +63,8 @@ namespace MagiRogue.System.Tiles
 
             set
             {
-                if (MaterialOfTile is not null 
-                    && MaterialOfTile.MPInfusionLimit is not null 
+                if (MaterialOfTile is not null
+                    && MaterialOfTile.MPInfusionLimit is not null
                     && MaterialOfTile.MPInfusionLimit > 0)
                 {
                     _infusedMp = value;
@@ -139,6 +139,18 @@ namespace MagiRogue.System.Tiles
             };
         }
 
+        private TileBase(TileBase tile) : this(tile.Foreground,
+            tile.Background,
+            tile.Glyph,
+            tile.Layer,
+            tile.Position,
+            tile.MaterialOfTile.Id,
+            tile.IsBlockingMove,
+            tile.IsTransparent,
+            tile.Name)
+        {
+        }
+
         protected void CalculateTileHealth() => _tileHealth = (int)MaterialOfTile.Density * MaterialOfTile.Hardness;
 
 #nullable enable
@@ -154,7 +166,11 @@ namespace MagiRogue.System.Tiles
             }
         }
 
-        public virtual TileBase Copy() => Copy();
+        public virtual TileBase Copy()
+        {
+            // error
+            return null;
+        }
 
         #region IGameObject Interface
 

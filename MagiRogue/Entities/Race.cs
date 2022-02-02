@@ -15,7 +15,7 @@ namespace MagiRogue.Entities
             RaceName = raceName;
         }
 
-        private string DebggerDisplay()
+        private string DebuggerDisplay()
         {
             return string.Format($"{RaceName}");
         }
