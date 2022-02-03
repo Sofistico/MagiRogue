@@ -8,7 +8,7 @@
     <Authors>Sofistico</Authors>
     <Company>Sofistico</Company>
     <Description>A roguelike created with SadConsole 9.x and GoRogue 3.x</Description>
-    <ApplicationIcon>Young-Wizard.ico</ApplicationIcon>
+    <ApplicationIcon>Wizard.ico</ApplicationIcon>
     <Nullable>enable</Nullable>
     <Win32Resource />
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
@@ -26,6 +26,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="Wizard.ico" />
+  </ItemGroup>
+    <ItemGroup>
+		<EmbeddedResource Include="Icon.bmp" />
+	</ItemGroup>
+
+
+	<ItemGroup>
     <None Include="..\README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>

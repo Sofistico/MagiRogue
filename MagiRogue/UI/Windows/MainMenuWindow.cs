@@ -166,13 +166,14 @@ namespace MagiRogue.UI.Windows
 
         private void SaveGameClick(object sender, EventArgs e)
         {
-            if (GameStarted && GameLoop.UIManager.NoPopWindow)
+            if (GameStarted)
             {
-                OpenSavePop();
+                // makes so that there can only be one save per player name!
+                GameLoop.Universe.SaveGame(GameLoop.Universe.Player.Name);
             }
         }
 
-        private void OpenSavePop()
+        /*private void OpenSavePop()
         {
             savePop = new PopWindow(30, 15, "Save test");
             saveName = new TextBox(10)
@@ -191,7 +192,7 @@ namespace MagiRogue.UI.Windows
             savePop.Surface.Print(saveName.Position.X - 2, saveName.Position.Y - 2, "Save name here:");
             Children.Add(savePop);
             savePop.Show();
-        }
+        }*/
 
         private void SaveAndClose_Click(object? sender, EventArgs e)
         {

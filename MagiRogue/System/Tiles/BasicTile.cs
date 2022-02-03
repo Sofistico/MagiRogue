@@ -13,6 +13,21 @@ using MagiRogue.Data.Serialization;
 
 namespace MagiRogue.System.Tiles
 {
+    public class TileJsonConverter : JsonConverter<TileBase>
+    {
+        public override TileBase ReadJson(JsonReader reader,
+            Type objectType, TileBase? existingValue,
+            bool hasExistingValue, JsonSerializer serializer)
+        {
+            return (TileBase)serializer.Deserialize<BasicTile>(reader);
+        }
+
+        public override void WriteJson(JsonWriter writer, TileBase? value, JsonSerializer serializer)
+        {
+            serializer.Serialize(writer, (BasicTile)value);
+        }
+    }
+
     public class BasicTile
     {
         [JsonProperty(Required = Required.AllowNull)]
@@ -44,19 +59,19 @@ namespace MagiRogue.System.Tiles
         public int BiomeBitMask { get; set; }
         public List<River> Rivers { get; set; } = new();
         public int BitMask { get; set; }
-        public int RiverSize { get; private set; }
-        public string RegionName { get; private set; }
-        public Road? Road { get; private set; }
-        public SpecialLandType SpecialLandType { get; private set; }
-        public HeatType HeatType { get; private set; }
-        public float HeatValue { get; private set; }
-        public HeightType HeightType { get; private set; }
-        public float HeightValue { get; private set; }
-        public float MineralValue { get; private set; }
-        public bool Visited { get; private set; }
-        public MoistureType MoistureType { get; private set; }
-        public float MoistureValue { get; private set; }
-        public int TileHealth { get; private set; }
+        public int RiverSize { get; set; }
+        public string RegionName { get; set; }
+        public Road? Road { get; set; }
+        public SpecialLandType SpecialLandType { get; set; }
+        public HeatType HeatType { get; set; }
+        public float HeatValue { get; set; }
+        public HeightType HeightType { get; set; }
+        public float HeightValue { get; set; }
+        public float MineralValue { get; set; }
+        public bool Visited { get; set; }
+        public MoistureType MoistureType { get; set; }
+        public float MoistureValue { get; set; }
+        public int TileHealth { get; set; }
 
         public BasicTile(Point position,
             uint foreground,
@@ -128,7 +143,7 @@ namespace MagiRogue.System.Tiles
                 type = TileType.WorldTile;
                 basic.BiomeType = worldTile.BiomeType;
                 basic.BiomeBitMask = worldTile.BiomeBitmask;
-                basic.Rivers = worldTile.Rivers;
+                //basic.Rivers = worldTile.Rivers;
                 //basic.Civ = worldTile.CivInfluence;
                 basic.RiverSize = worldTile.RiverSize;
                 basic.Road = worldTile.Road;
@@ -218,7 +233,7 @@ namespace MagiRogue.System.Tiles
                         BiomeBitmask = basicTile.BiomeBitMask,
                         BiomeType = basicTile.BiomeType,
                         //CivInfluence = basicTile.Civ,
-                        //Rivers = basicTile.Rivers,
+                        Rivers = basicTile.Rivers,
                         RiverSize = basicTile.RiverSize,
                         RegionName = basicTile.RegionName,
                         Road = basicTile.Road,
