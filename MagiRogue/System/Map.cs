@@ -247,6 +247,7 @@ namespace MagiRogue.System
                 FovCalculate(player);
                 ControlledEntitiy = player;
                 ForceFovCalculation();
+                LastPlayerPosition = player.Position;
             }
 
             _entityRender.Add(entity);
@@ -266,6 +267,7 @@ namespace MagiRogue.System
             if (args.Item is Player player)
             {
                 FovCalculate(player);
+                LastPlayerPosition = player.Position;
             }
 
             _entityRender.IsDirty = true;
@@ -353,7 +355,6 @@ namespace MagiRogue.System
             _entityRender = new();
             renderer.SadComponents.Add(_entityRender);
             _entityRender.DoEntityUpdate = true;
-
             foreach (Entity item in Entities.Items)
             {
                 _entityRender.Add(item);

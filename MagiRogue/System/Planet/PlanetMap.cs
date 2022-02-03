@@ -65,6 +65,8 @@ namespace MagiRogue.System.Planet
             AssocietatedMap = associetatedMap;
             _height = associetatedMap.Height;
             _width = associetatedMap.Width;
+            AssocietatedMap.
+                GoRogueComponents.GetFirstOrDefault<FOVHandler>().Disable();
         }
 
         public PlanetMap(float min, float max,

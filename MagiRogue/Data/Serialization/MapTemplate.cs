@@ -331,6 +331,7 @@ namespace MagiRogue.Data.Serialization
             template.Actors = actors;
             template.Items = items;
             template.Seed = map.Seed;
+            template.LastPlayerPosition = map.LastPlayerPosition;
 
             return template;
         }
@@ -341,6 +342,9 @@ namespace MagiRogue.Data.Serialization
                 return null;
             var objMap = new Map(map.MapName, map.Width, map.Height);
 
+            if (objMap.MapId == 0)
+                objMap.GoRogueComponents.GetFirstOrDefault<MagiRogueFOVVisibilityHandler>().Disable();
+
             for (int i = 0; i < map.Tiles.Length; i++)
             {
                 if (map.Tiles[i] == null)
@@ -349,7 +353,11 @@ namespace MagiRogue.Data.Serialization
             }
             for (int x = 0; x < map.Actors.Count; x++)
             {
-                objMap.Add(map.Actors[x]);
+                if (!map.Actors[x].IsPlayer)
+                {
+                    //objMap.Add(Player.ReturnPlayerFromActor(map.Actors[x]));
+                    objMap.Add(map.Actors[x]);
+                }
             }
             for (int x = 0; x < map.Items.Count; x++)
             {

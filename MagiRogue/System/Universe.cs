@@ -114,6 +114,7 @@ namespace MagiRogue.System
         {
             WorldMap = worldMap;
             CurrentMap = currentMap;
+            CurrentMap.IsActive = true;
             Player = player;
             Time = time;
             PossibleChangeMap = possibleChangeMap;
@@ -134,6 +135,19 @@ namespace MagiRogue.System
                 Player = player;
 
                 CurrentMap.Add(Player);
+            }
+        }
+
+        public void PlacePlayerOnLoad()
+        {
+            if (Player != null)
+            {
+                Player.Position = CurrentMap.LastPlayerPosition;
+                CurrentMap.Add(Player);
+            }
+            else
+            {
+                throw new Exception("Coudn't load the player, it was null!");
             }
         }
 

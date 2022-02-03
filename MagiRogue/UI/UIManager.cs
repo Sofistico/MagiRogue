@@ -79,6 +79,9 @@ namespace MagiRogue.UI
             if (uni is not null)
             {
                 GameLoop.Universe = uni;
+                if (GameLoop.Universe.CurrentMap.LastPlayerPosition == Point.None)
+                    throw new Exception("The player position was invalid, an error occured!");
+                GameLoop.Universe.PlacePlayerOnLoad();
             }
             else
             {
