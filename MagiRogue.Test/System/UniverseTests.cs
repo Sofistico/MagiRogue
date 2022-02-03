@@ -19,7 +19,7 @@ namespace MagiRogue.Test.System
 
         public UniverseTests()
         {
-            var chunck = new RegionChunkTemplate[50 * 50];
+            var chunck = new RegionChunk[50 * 50];
             uni = new(new PlanetMap(50, 50), null, null,
                 new MagiRogue.System.Time.TimeSystem(500), true,
                 MagiRogue.System.Time.SeasonType.Spring, chunck, new());

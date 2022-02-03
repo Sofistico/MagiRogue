@@ -22,6 +22,7 @@ namespace MagiRogue.UI.Windows
         private TextBox saveName;
         private PopWindow savePop;
         private ListBox savesBox;
+        private PopWindow loadPop;
 
         public MainMenuWindow(int width, int height, string title = "Main Menu") : base(width, height, title)
         {
@@ -72,31 +73,31 @@ namespace MagiRogue.UI.Windows
                 if (Utils.SaveUtils.CheckIfThereIsSaveFile())
                 {
                     // creates a new pop window
-                    PopWindow pop = new PopWindow(30, 15, "Load Game");
+                    loadPop = new PopWindow(30, 15, "Load Game");
                     const string text = "Load!";
                     // The load button
                     MagiButton loadGame = new MagiButton(text.Length + 2)
                     {
                         Text = text,
-                        Position = new Point(3, pop.Height - 2)
+                        Position = new Point(3, loadPop.Height - 2)
                     };
                     // the event handler of the click
                     loadGame.Click += LoadGame_Click;
                     // TODO: make this into a method for pop window, since the ratio of the controls
                     // are amazing
-                    savesBox = new ListBox(pop.Width / 2 + 5, 10)
+                    savesBox = new ListBox(loadPop.Width / 2 + 5, 10)
                     {
-                        Position = new Point((pop.Width / 2) - 10, (pop.Height / 2) - 5)
+                        Position = new Point((loadPop.Width / 2) - 10, (loadPop.Height / 2) - 5)
                     };
 
                     // populate the list with the save names
                     PopulateListWithSaves();
 
                     // and the set up with SadConsole
-                    pop.Controls.Add(loadGame);
-                    pop.Controls.Add(savesBox);
-                    Children.Add(pop);
-                    pop.Show();
+                    loadPop.Controls.Add(loadGame);
+                    loadPop.Controls.Add(savesBox);
+                    Children.Add(loadPop);
+                    loadPop.Show();
                 }
             }
         }
@@ -107,6 +108,7 @@ namespace MagiRogue.UI.Windows
             {
                 if (SaveAndLoad.CheckIfStringIsValidSave(savesBox.SelectedItem.ToString()))
                 {
+                    loadPop.Hide();
                     Universe uni = SaveAndLoad.LoadGame(savesBox.SelectedItem.ToString());
                     GameLoop.UIManager.StartGame(uni.Player, uni: uni);
                 }

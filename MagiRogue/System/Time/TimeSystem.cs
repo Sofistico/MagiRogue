@@ -11,7 +11,10 @@ namespace MagiRogue.System.Time
     {
         public event EventHandler<TimeDefSpan> TurnPassed;
 
+        [JsonIgnore]
         public TimeDefSpan TimePassed => new TimeDefSpan(timeSpan.Ticks);
+
+        [JsonIgnore]
         public int Turns => (int)timeSpan.Seconds;
 
         // Add a priority queue to represent the queue that an actor will act, or a linked dictionary, or whatever

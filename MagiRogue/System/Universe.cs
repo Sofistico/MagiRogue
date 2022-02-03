@@ -67,7 +67,7 @@ namespace MagiRogue.System
         /// <summary>
         /// All the maps and chunks of the game
         /// </summary>
-        public RegionChunkTemplate[] AllChunks { get; set; }
+        public RegionChunk[] AllChunks { get; set; }
 
         public SaveAndLoad SaveAndLoad { get; set; }
 
@@ -90,7 +90,7 @@ namespace MagiRogue.System
                     planetMaxCivs);
                 WorldMap.AssocietatedMap.IsActive = true;
                 maxChunks = planetWidth * planetHeight;
-                AllChunks = new RegionChunkTemplate[maxChunks];
+                AllChunks = new RegionChunk[maxChunks];
                 CurrentMap = WorldMap.AssocietatedMap;
                 PlacePlayerOnWorld(player);
                 SaveAndLoad = new();
@@ -109,7 +109,7 @@ namespace MagiRogue.System
             TimeSystem time,
             bool possibleChangeMap,
             SeasonType currentSeason,
-            RegionChunkTemplate[] allChunks,
+            RegionChunk[] allChunks,
             MagiGlobalRandom rng)
         {
             WorldMap = worldMap;
@@ -389,7 +389,7 @@ namespace MagiRogue.System
             CurrentMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
             for (int i = 0; i < AllChunks.Length; i++)
             {
-                Map[] maps = AllChunks[i].ReturnAsMap();
+                Map[] maps = AllChunks[i].LocalMaps;
                 for (int z = 0; z < maps.Length; z++)
                 {
                     maps[i].RemoveAllEntities();

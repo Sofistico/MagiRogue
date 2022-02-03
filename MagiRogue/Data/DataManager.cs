@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Data.Serialization;
+using MagiRogue.Entities;
 using MagiRogue.System.Magic;
 using MagiRogue.Utils;
 using Newtonsoft.Json;

@@ -323,6 +323,7 @@ namespace MagiRogue.Data.Serialization
             {
                 actorTemplate.Equip.Add(new EquipTemplate(actor.Equipment[limb], limb));
             }
+            actorTemplate.GlyphInt = actor.Appearance.Glyph;
 
             return actorTemplate;
         }

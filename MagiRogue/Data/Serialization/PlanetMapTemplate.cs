@@ -6,6 +6,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 
 namespace MagiRogue.Data.Serialization
 {
@@ -16,7 +17,7 @@ namespace MagiRogue.Data.Serialization
             JsonSerializer serializer)
         {
             // put here the method to find and link the map to the id
-            JObject jObject = JObject.Load(reader);
+            /*JObject jObject = JObject.Load(reader);
             float[,] heightData =
                 JsonConvert.DeserializeObject<float[,]>(jObject["HeightData"].ToString());
             float[,] heattData =
@@ -42,7 +43,8 @@ namespace MagiRogue.Data.Serialization
                 civs,
                 map);
 
-            return template;
+            return template;*/
+            return serializer.Deserialize<PlanetMapTemplate>(reader);
         }
 
         public override void WriteJson(JsonWriter writer, PlanetMap? value, JsonSerializer serializer)
@@ -55,8 +57,13 @@ namespace MagiRogue.Data.Serialization
 
     public class PlanetMapTemplate
     {
+        [DataMember]
         public float[,] HeightData { get; }
+
+        [DataMember]
         public float[,] HeatData { get; }
+
+        [DataMember]
         public float[,] MoistureData { get; }
 
         [JsonIgnore]
@@ -64,10 +71,13 @@ namespace MagiRogue.Data.Serialization
 
         [JsonIgnore]
         public float Max { get; set; }
-        public List<CivilizationTemplate> Civilizations { get; set; }
+
+        [DataMember]
+        public List<Civilization> Civilizations { get; set; }
 
         //public uint AssocietatedMapId { get; }
-        public MapTemplate AssocietatedMap { get; set; }
+        [DataMember]
+        public Map AssocietatedMap { get; set; }
 
         public PlanetMapTemplate(float[,] heightData,
             float[,] heatData,
@@ -124,6 +134,8 @@ namespace MagiRogue.Data.Serialization
             {
                 civs.Add(map.Civilizations[i]);
             }
+            map.Max = int.MaxValue;
+            map.Min = int.MinValue;
 
             PlanetMap mio = new PlanetMap(map.HeightData, map.HeatData,
                 map.MoistureData, map.Min, map.Max,

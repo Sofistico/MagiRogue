@@ -67,7 +67,15 @@ namespace MagiRogue.Data
                 }
             }*/
             //Write(gameState);
-            Serializer.Save(gameState, @$"{_folderName}\{saveName}\GameState", true);
+            try
+            {
+                Serializer.Save(gameState, @$"{_folderName}\{saveName}\GameState", true);
+            }
+            catch (Exception)
+            {
+                Directory.Delete(Path.Combine(dir, _folderName, saveName), true);
+                throw;
+            }
 
             //var map = LoadGameState("GameState");
         }

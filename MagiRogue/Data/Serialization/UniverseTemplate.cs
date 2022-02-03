@@ -66,14 +66,14 @@ namespace MagiRogue.Data.Serialization
             return objUni;*/
             Universe objUni;
 
-            while (reader.Read())
+            /*while (reader.Read())
             {
                 // i think i found a way here
                 if (reader.TokenType == JsonToken.StartObject)
                 {
                     var c = serializer.Deserialize<PlanetMap>(reader);
                 }
-            }
+            }*/
             return serializer.Deserialize<UniverseTemplate>(reader);
         }
 
@@ -93,19 +93,21 @@ namespace MagiRogue.Data.Serialization
         /// </summary>
         // TODO: Separate it so that it searchs for the world map in another file
         [DataMember]
-        public PlanetMapTemplate WorldMap { get; set; }
+        [JsonProperty(ItemConverterType = typeof(PlanetMapJsonConverter))]
+        public PlanetMap WorldMap { get; set; }
 
         /// <summary>
         /// Stores the current map
         /// </summary>
         [DataMember]
-        public MapTemplate CurrentMap { get; private set; }
+        [JsonProperty(ItemConverterType = typeof(MapJsonConverter))]
+        public Map CurrentMap { get; private set; }
 
         /// <summary>
         /// Player data
         /// </summary>
         [DataMember]
-        public Player Player { get; set; }
+        public Actor Player { get; set; }
 
         [DataMember]
         public TimeTemplate Time { get; private set; }
@@ -120,7 +122,7 @@ namespace MagiRogue.Data.Serialization
         /// All the maps and chunks of the game
         /// </summary>
         [DataMember]
-        public RegionChunkTemplate[] AllChunks { get; set; }
+        public RegionChunk[] AllChunks { get; set; }
 
         [DataMember]
         public MagiGlobalRandom MagiRandom { get; set; }
@@ -131,7 +133,7 @@ namespace MagiRogue.Data.Serialization
             TimeTemplate time,
             bool possibleChangeMap,
             SeasonType currentSeason,
-            RegionChunkTemplate[] allChunks,
+            RegionChunk[] allChunks,
             MagiGlobalRandom rng)
         {
             WorldMap = worldMap;
@@ -176,7 +178,8 @@ namespace MagiRogue.Data.Serialization
 
         public static implicit operator Universe(UniverseTemplate uni)
         {
-            Universe universe = new Universe(uni.WorldMap, uni.CurrentMap, uni.Player,
+            Universe universe = new Universe(uni.WorldMap, uni.CurrentMap,
+                Entities.Player.ReturnPlayerFromActor(uni.Player),
                 uni.Time, uni.PossibleChangeMap,
                 SeasonEnumToString(uni.CurrentSeason), uni.AllChunks, uni.MagiRandom);
 

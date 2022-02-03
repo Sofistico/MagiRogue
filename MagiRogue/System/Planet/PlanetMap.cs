@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,12 +18,25 @@ namespace MagiRogue.System.Planet
         private readonly int _height;
         private readonly int _width;
 
+        [DataMember]
         public float[,] HeightData { get; }
+
+        [DataMember]
         public float[,] HeatData { get; }
+
+        [DataMember]
         public float[,] MoistureData { get; }
+
+        [DataMember]
         public float Min { get; set; }
+
+        [DataMember]
         public float Max { get; set; }
+
+        [DataMember]
         public List<Civilization> Civilizations { get; set; }
+
+        [DataMember]
         public Map AssocietatedMap { get; }
 
         public PlanetMap(int width, int height)

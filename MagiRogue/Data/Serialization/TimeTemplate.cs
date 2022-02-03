@@ -22,18 +22,18 @@ namespace MagiRogue.Data.Serialization
     public class TimeTemplate
     {
         [DataMember] public long Ticks;
-        [DataMember] public PlayerTimeNode PlayerNode;
-        [DataMember] public List<EntityTimeNode> EntityNodes;
+        /*[DataMember] public PlayerTimeNode PlayerNode;
+        [DataMember] public List<EntityTimeNode> EntityNodes;*/
 
         public static implicit operator TimeTemplate(TimeSystem timeMaster)
         {
             var serialized = new TimeTemplate()
             {
                 Ticks = timeMaster.TimePassed.Ticks,
-                EntityNodes = new List<EntityTimeNode>(),
+                //EntityNodes = new List<EntityTimeNode>(),
             };
 
-            foreach (var node in timeMaster.Nodes)
+            /*foreach (var node in timeMaster.Nodes)
             {
                 switch (node)
                 {
@@ -49,7 +49,7 @@ namespace MagiRogue.Data.Serialization
                         throw new NotSupportedException
                             ($"Unsupported time master node type: {node.GetType()}");
                 }
-            }
+            }*/
 
             return serialized;
         }
@@ -57,15 +57,18 @@ namespace MagiRogue.Data.Serialization
         public static implicit operator TimeSystem(TimeTemplate serialized)
         {
             var timeMaster = new TimeSystem(serialized.Ticks);
-            if (serialized.PlayerNode != null)
+            /*if (serialized.PlayerNode != null)
             {
                 timeMaster.RegisterEntity(serialized.PlayerNode);
             }
 
-            foreach (var node in serialized.EntityNodes)
+            if (serialized.EntityNodes != null)
             {
-                timeMaster.RegisterEntity(node);
-            }
+                foreach (var node in serialized.EntityNodes)
+                {
+                    timeMaster.RegisterEntity(node);
+                }
+            }*/
 
             return timeMaster;
         }
