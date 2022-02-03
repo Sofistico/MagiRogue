@@ -1,18 +1,34 @@
 ﻿using MagiRogue.System;
 using Newtonsoft.Json;
+using System;
 
 namespace MagiRogue.Data.Serialization
 {
+    public class RegionChunkJsonConverter : JsonConverter<RegionChunk>
+    {
+        public override RegionChunk? ReadJson(JsonReader reader,
+            Type objectType, RegionChunk? existingValue,
+            bool hasExistingValue, JsonSerializer serializer)
+        {
+            return serializer.Deserialize<RegionChunkTemplate>(reader);
+        }
+
+        public override void WriteJson(JsonWriter writer,
+            RegionChunk? value, JsonSerializer serializer)
+        {
+            serializer.Serialize(writer, (RegionChunkTemplate)value);
+            writer.Flush();
+        }
+    }
+
     public class RegionChunkTemplate
     {
         public int X { get; }
         public int Y { get; }
-
-        [JsonIgnore]
-        public MapTemplate[] LocalMaps { get; set; }
+        public Map[] LocalMaps { get; set; }
         public uint[] LocalMapsIds { get; set; }
 
-        public RegionChunkTemplate(int x, int y, MapTemplate[] localMaps)
+        public RegionChunkTemplate(int x, int y, Map[] localMaps)
         {
             X = x;
             Y = y;
@@ -37,16 +53,20 @@ namespace MagiRogue.Data.Serialization
 
         public static implicit operator RegionChunkTemplate(RegionChunk region)
         {
-            MapTemplate[] maps = new MapTemplate[region.LocalMaps.Length];
+            Map[] maps = new Map[region.LocalMaps.Length];
             for (int i = 0; i < region.LocalMaps.Length; i++)
             {
                 maps[i] = region.LocalMaps[i];
             }
-            return new(region.X, region.Y, maps);
+            var chunk = new RegionChunkTemplate(region.X, region.Y, maps);
+
+            return chunk;
         }
 
         public static implicit operator RegionChunk(RegionChunkTemplate template)
         {
+            if (template is null)
+                return null;
             var regio = new RegionChunk(template.X, template.Y)
             {
                 LocalMaps = template.ReturnAsMap()

@@ -498,11 +498,13 @@ namespace MagiRogue.Commands
 
         public static bool EnterDownMovement(Point playerPoint)
         {
-            Furniture possibleStairs = GameLoop.Universe.CurrentMap.GetEntityAt<Furniture>(playerPoint);
+            Furniture possibleStairs =
+                GameLoop.Universe.CurrentMap.GetEntityAt<Furniture>(playerPoint);
             WorldTile? possibleWorldTileHere =
                 GameLoop.Universe.CurrentMap.GetTileAt<WorldTile>(playerPoint);
             Map currentMap = GameLoop.Universe.CurrentMap;
-            if (possibleStairs is not null && possibleStairs.FurnitureType == FurnitureType.StairsDown)
+            if (possibleStairs is not null
+                && possibleStairs.FurnitureType == FurnitureType.StairsDown)
             {
                 Map map = possibleStairs.MapConnection;
                 // TODO: For now it's just a test, need to work out a better way to do it.

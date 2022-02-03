@@ -173,7 +173,7 @@ namespace MagiRogue.Data.Serialization
             return serializer.Deserialize<MapTemplate>(reader);
         }
 
-        private void ParametizeTile(BasicTile tile, JToken jToken)
+        /*private void ParametizeTile(BasicTile tile, JToken jToken)
         {
             switch (tile.TileType)
             {
@@ -233,6 +233,7 @@ namespace MagiRogue.Data.Serialization
             };
         }
 
+
         private static BiomeType BiomeToString(string biome)
         {
             return biome switch
@@ -251,7 +252,7 @@ namespace MagiRogue.Data.Serialization
                 "Mountain" => BiomeType.Mountain,
                 _ => BiomeType.Null,
             };
-        }
+        }*/
 
         public override void WriteJson(JsonWriter writer, Map? value, JsonSerializer serializer)
         {

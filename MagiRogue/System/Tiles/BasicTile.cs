@@ -42,11 +42,11 @@ namespace MagiRogue.System.Tiles
         public BiomeType BiomeType { get; set; }
         public int MagicalAura { get; set; }
         public int BiomeBitMask { get; set; }
-        public List<RiverTemplate> Rivers { get; set; } = new();
+        public List<River> Rivers { get; set; } = new();
         public int BitMask { get; set; }
         public int RiverSize { get; private set; }
         public string RegionName { get; private set; }
-        public RoadTemplate? Road { get; private set; }
+        public Road? Road { get; private set; }
         public SpecialLandType SpecialLandType { get; private set; }
         public HeatType HeatType { get; private set; }
         public float HeatValue { get; private set; }
@@ -128,7 +128,7 @@ namespace MagiRogue.System.Tiles
                 type = TileType.WorldTile;
                 basic.BiomeType = worldTile.BiomeType;
                 basic.BiomeBitMask = worldTile.BiomeBitmask;
-                //basic.Rivers = worldTile.Rivers;
+                basic.Rivers = worldTile.Rivers;
                 //basic.Civ = worldTile.CivInfluence;
                 basic.RiverSize = worldTile.RiverSize;
                 basic.Road = worldTile.Road;

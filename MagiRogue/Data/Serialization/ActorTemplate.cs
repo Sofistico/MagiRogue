@@ -280,6 +280,7 @@ namespace MagiRogue.Data.Serialization
                 new MagiColorSerialization(actorTemplate.ForegroundPackedValue).Color;
             actor.Appearance.Background =
                 new MagiColorSerialization(actorTemplate.BackgroundPackedValue).Color;
+            //actor.Description = actorTemplate.Description;
 
             return actor;
         }
