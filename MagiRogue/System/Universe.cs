@@ -114,7 +114,8 @@ namespace MagiRogue.System
         {
             WorldMap = worldMap;
             CurrentMap = currentMap;
-            CurrentMap.IsActive = true;
+            if(CurrentMap is not null)
+                CurrentMap.IsActive = true;
             Player = player;
             Time = time;
             PossibleChangeMap = possibleChangeMap;
