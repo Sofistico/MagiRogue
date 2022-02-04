@@ -23,7 +23,7 @@ namespace MagiRogue.Entities
         public List<Limb> Limbs { get; set; }
 
         [DataMember]
-        public List<Organs> Organs { get; set; }
+        public List<Organ> Organs { get; set; }
 
         [DataMember]
         public Race Race
@@ -37,8 +37,6 @@ namespace MagiRogue.Entities
         }
 
         public bool IsVegetation { get; set; }
-
-        
 
         /// <summary>
         /// It uses an aproximation of blood count equal to 75 ml/kg for an adult male
@@ -172,7 +170,7 @@ namespace MagiRogue.Entities
             bodyPartIndex = random.Next(bodyParts.Count);
             bodyPart = bodyParts[bodyPartIndex];
 
-            List<Limb> connectedParts = Limbs.FindAll(c => c.ConnectedTo == bodyPart);
+            List<Limb> connectedParts = Limbs.FindAll(c => c.ConnectedTo == bodyPart.Id);
             int totalHpLost = 0;
             if (connectedParts.Count > 0)
             {

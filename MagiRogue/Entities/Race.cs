@@ -3,12 +3,12 @@ using System.Runtime.Serialization;
 
 namespace MagiRogue.Entities
 {
-    [DebuggerDisplay("{DebuggerDisplay, nq}")]
     [DataContract]
-    public struct Race
+    [DebuggerDisplay("{DebuggerDisplay, nq}")]
+    public class Race
     {
         [DataMember]
-        public readonly string RaceName { get; }
+        public string RaceName { get; set; }
 
         public Race(string raceName)
         {

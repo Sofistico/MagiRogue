@@ -1,0 +1,12 @@
+﻿[
+  {
+    "Id": "brain",
+    "Name": "Brain",
+    "MaterialId": "flesh",
+    "OrganHp": 10,
+    "OrganWeight": 0.5,
+    "ConnectTo": "torso",
+    "Orientation": "Center",
+    "OrganType": "Brain"
+  }
+]

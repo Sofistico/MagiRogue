@@ -2,6 +2,7 @@
 using SadRogue.Primitives;
 using MagiRogue.Data.Serialization;
 using System.Collections.Generic;
+using System;
 
 namespace MagiRogue.Data
 {
@@ -61,7 +62,7 @@ namespace MagiRogue.Data
 
         public static List<Limb> BasicHumanoidBody(Actor actor)
         {
-            var torso = new Limb(
+            /*var torso = new Limb(
                 TypeOfLimb.Torso, 15, 15, 8.47, $"{actor.Name}'s Torso", Limb.LimbOrientation.Center, null);
             var neck = new
                 Limb(TypeOfLimb.Neck, 5, 5, 5, $"{actor.Name}'s Neck", Limb.LimbOrientation.Center, torso);
@@ -99,7 +100,8 @@ namespace MagiRogue.Data
                 lFoot
             };
 
-            return limbs;
+            return limbs;*/
+            throw new NotImplementedException("WORK HARD SLAVE!");
         }
     }
 }

@@ -19,8 +19,6 @@ namespace MagiRogue.UI.Windows
         private readonly MagiButton testMap;
         private readonly MagiButton continueGame;
         private readonly MagiButton saveGame;
-        private TextBox saveName;
-        private PopWindow savePop;
         private ListBox savesBox;
         private PopWindow loadPop;
 
@@ -170,36 +168,10 @@ namespace MagiRogue.UI.Windows
             {
                 // makes so that there can only be one save per player name!
                 GameLoop.Universe.SaveGame(GameLoop.Universe.Player.Name);
-            }
-        }
-
-        /*private void OpenSavePop()
-        {
-            savePop = new PopWindow(30, 15, "Save test");
-            saveName = new TextBox(10)
-            {
-                Position = new SadRogue.Primitives.Point(5, savePop.Height / 2)
-            };
-            string save = "Save";
-            MagiButton saveAndClose = new MagiButton(save.Length + 2)
-            {
-                Text = save,
-                Position = new Point(2, 13)
-            };
-            saveAndClose.Click += SaveAndClose_Click;
-            savePop.Controls.Add(saveName);
-            savePop.Controls.Add(saveAndClose);
-            savePop.Surface.Print(saveName.Position.X - 2, saveName.Position.Y - 2, "Save name here:");
-            Children.Add(savePop);
-            savePop.Show();
-        }*/
-
-        private void SaveAndClose_Click(object? sender, EventArgs e)
-        {
-            if (!string.IsNullOrWhiteSpace(saveName.Text) && GameStarted)
-            {
-                GameLoop.Universe.SaveGame(saveName.Text);
-                savePop.Hide();
+                PopWindow alert = new PopWindow(30, 10, "Save Done!");
+                alert.Print(5, 5, "Save Sucessful!");
+                Children.Add(alert);
+                alert.Show();
             }
         }
 

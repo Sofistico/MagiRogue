@@ -18,7 +18,10 @@ namespace MagiRogue.Entities
         Hand,
         Tail,
         Wing,
-        Neck
+        Neck,
+        Finger,
+        Toe,
+        Misc
     }
 
     [DataContract]
@@ -28,7 +31,10 @@ namespace MagiRogue.Entities
     {
         private int limbHp;
         private double weight;
-        private Limb _connectedLimb;
+        private string _connectedLimb;
+
+        [DataMember]
+        public string Id { get; set; }
 
         [DataMember]
         public int LimbHp
@@ -95,7 +101,7 @@ namespace MagiRogue.Entities
         public MaterialTemplate LimbMaterial { get; set; }
 
         [DataMember]
-        public Limb? ConnectedTo
+        public string? ConnectedTo
 #nullable disable
         {
             get
@@ -112,6 +118,8 @@ namespace MagiRogue.Entities
             }
         }
 
+        public bool Broken { get; set; } = false;
+
         /// <summary>
         /// This class creates a limb for a body.
         /// </summary>
@@ -123,13 +131,28 @@ namespace MagiRogue.Entities
         /// <param name="orientation">If it's in the center, left or right of the body</param>
         /// <param name="materialID">The id to define the material, if needeed look at the material definition json\n
         /// Defaults to "flesh"</param>
-#nullable enable
 
         public Limb(TypeOfLimb limbType, int limbHp, int maxLimbHp,
-            double limbWeight, string limbName, LimbOrientation orientation, Limb? connectedTo,
+            double limbWeight, string limbName, LimbOrientation orientation, string? connectedTo,
             string materialID = "flesh")
-#nullable disable
         {
+            LimbMaterial = System.Physics.PhysicsManager.SetMaterial(materialID);
+            TypeLimb = limbType;
+            MaxLimbHp = maxLimbHp;
+            LimbHp = limbHp;
+            LimbWeight = limbWeight;
+            // Defaults to true
+            Attached = true;
+            LimbName = limbName;
+            Orientation = orientation;
+            ConnectedTo = connectedTo;
+        }
+
+        public Limb(string id, TypeOfLimb limbType, int limbHp, int maxLimbHp,
+           double limbWeight, string limbName, LimbOrientation orientation, string? connectedTo,
+           string materialID = "flesh")
+        {
+            Id = id;
             LimbMaterial = System.Physics.PhysicsManager.SetMaterial(materialID);
             TypeLimb = limbType;
             MaxLimbHp = maxLimbHp;
