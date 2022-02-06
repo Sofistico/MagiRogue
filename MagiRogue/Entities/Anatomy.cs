@@ -36,8 +36,6 @@ namespace MagiRogue.Entities
             }
         }
 
-        public bool IsVegetation { get; set; }
-
         /// <summary>
         /// It uses an aproximation of blood count equal to 75 ml/kg for an adult male
         /// </summary>
@@ -56,11 +54,21 @@ namespace MagiRogue.Entities
         [JsonIgnore]
         public bool HasEnoughWings => Limbs.FindAll(l => l.TypeLimb is TypeOfLimb.Wing).Count >= 2;
 
+        [JsonIgnore]
+        public bool CanSee => Organs.Exists(o => o.OrganType is OrganType.Visual
+                 && (!o.Destroyed || o.Attached));
+
         /// <summary>
         /// The total lifespan of a character
         /// </summary>
         [DataMember]
         public int Lifespan { get; set; }
+
+        /// <summary>
+        /// The current age of a character
+        /// </summary>
+        [DataMember]
+        public int CurrentAge { get; set; }
 
         #endregion Properties
 
@@ -199,6 +207,8 @@ namespace MagiRogue.Entities
             GameLoop.UIManager.MessageLog.Add(dismemberMessage.ToString());
             if (totalDmg > 0)
                 GameLoop.UIManager.MessageLog.Add($"and took {totalDmg} damage!");
+
+            GameLoop.Universe.CurrentMap.Add(limb.ReturnLimbAsItem(actor));
         }
 
         internal void Update(Actor actor)

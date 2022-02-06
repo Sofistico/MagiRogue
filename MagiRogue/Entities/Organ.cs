@@ -14,7 +14,7 @@ namespace MagiRogue.Entities
         public string Name { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string? ConnectedTo { get; set; }
+        public string? InsideOf { get; set; }
 
         [DataMember]
         public Limb.LimbOrientation Orientation { get; set; }
@@ -52,7 +52,7 @@ namespace MagiRogue.Entities
             float organWeight)
         {
             Name = name;
-            ConnectedTo = connectedTo;
+            InsideOf = connectedTo;
             Orientation = orientation;
             OrganType = organType;
             OrganHp = organHp;
@@ -74,7 +74,7 @@ namespace MagiRogue.Entities
         {
             Id = id;
             Name = name;
-            ConnectedTo = connectedTo;
+            InsideOf = connectedTo;
             Orientation = orientation;
             OrganType = organType;
             OrganHp = organHp;
@@ -96,8 +96,8 @@ namespace MagiRogue.Entities
         Heart,
         Brain,
         Digestive,
+        Filtering,
         Breather,
-        Circulatory,
         Protective,
         Visual,
         Auditory,

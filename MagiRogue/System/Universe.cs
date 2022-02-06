@@ -114,7 +114,7 @@ namespace MagiRogue.System
         {
             WorldMap = worldMap;
             CurrentMap = currentMap;
-            if(CurrentMap is not null)
+            if (CurrentMap is not null)
                 CurrentMap.IsActive = true;
             Player = player;
             Time = time;
@@ -308,7 +308,7 @@ namespace MagiRogue.System
                     {
                         Description = "DebugRotten"
                     }));
-                debugMonster.Anatomy.Limbs = EntityFactory.BasicHumanoidBody(debugMonster);
+                debugMonster.Anatomy.Limbs = EntityFactory.BasicHumanoidBody();
 
                 map.Add(debugMonster);
                 EntityTimeNode entityNode = new EntityTimeNode(debugMonster.ID, Time.TimePassed.Ticks + 100);

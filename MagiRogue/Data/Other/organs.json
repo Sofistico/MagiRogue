@@ -5,8 +5,108 @@
     "MaterialId": "flesh",
     "OrganHp": 10,
     "OrganWeight": 0.5,
-    "ConnectTo": "torso",
+    "InsideOf": "humanoid_head",
     "Orientation": "Center",
     "OrganType": "Brain"
+  },
+  {
+    "Id": "humanoid_heart",
+    "Name": "Heart",
+    "MaterialId": "flesh",
+    "OrganHp": 10,
+    "OrganWeight": 1,
+    "InsideOf": "humanoid_torso",
+    "Orientation": "Center",
+    "OrganType": "Heart"
+  },
+  {
+    "Id": "humanoid_spine",
+    "Name": "Spine",
+    "MaterialId": "flesh",
+    "OrganHp": 20,
+    "OrganWeight": 10,
+    "InsideOf": "humanoid_torso",
+    "Orientation": "Center",
+    "OrganType": "Nerve"
+  },
+  {
+    "Id": "humanoid_stomach",
+    "Name": "Stomach",
+    "MaterialId": "flesh",
+    "OrganHp": 25,
+    "OrganWeight": 5,
+    "InsideOf": "humanoid_torso",
+    "Orientation": "Center",
+    "OrganType": "Digestive"
+  },
+  {
+    "Id": "humanoid_intestine",
+    "Name": "Guts",
+    "MaterialId": "flesh",
+    "OrganHp": 15,
+    "OrganWeight": 5,
+    "InsideOf": "humanoid_torso",
+    "Orientation": "Center",
+    "OrganType": "Digestive"
+  },
+  {
+    "Id": "humanoid_r_lung",
+    "Name": "Right Lung",
+    "MaterialId": "flesh",
+    "OrganHp": 15,
+    "OrganWeight": 3,
+    "InsideOf": "humanoid_torso",
+    "Orientation": "Right",
+    "OrganType": "Breather"
+  },
+  {
+    "Id": "humanoid_l_lung",
+    "Name": "Left Lung",
+    "MaterialId": "flesh",
+    "OrganHp": 15,
+    "OrganWeight": 3,
+    "InsideOf": "humanoid_torso",
+    "Orientation": "Left",
+    "OrganType": "Breather"
+  },
+  {
+    "Id": "humanoid_r_kidney",
+    "Name": "Right Kidney",
+    "MaterialId": "flesh",
+    "OrganHp": 7,
+    "OrganWeight": 0.8,
+    "InsideOf": "humanoid_torso",
+    "Orientation": "Right",
+    "OrganType": "Filtering"
+  },
+  {
+    "Id": "humanoid_l_kidney",
+    "Name": "Left Kidney",
+    "MaterialId": "flesh",
+    "OrganHp": 7,
+    "OrganWeight": 0.8,
+    "InsideOf": "humanoid_torso",
+    "Orientation": "Left",
+    "OrganType": "Filtering"
+  },
+  {
+    "Id": "humanoid_r_eye",
+    "Name": "Right Eye",
+    "MaterialId": "flesh",
+    "OrganHp": 5,
+    "OrganWeight": 0.5,
+    "InsideOf": "humanoid_head",
+    "Orientation": "Right",
+    "OrganType": "Visual"
+  },
+  {
+    "Id": "humanoid_l_eye",
+    "Name": "Left Eye",
+    "MaterialId": "flesh",
+    "OrganHp": 5,
+    "OrganWeight": 0.5,
+    "InsideOf": "humanoid_head",
+    "Orientation": "Left",
+    "OrganType": "Visual"
   }
 ]

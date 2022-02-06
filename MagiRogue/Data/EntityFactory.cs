@@ -60,30 +60,19 @@ namespace MagiRogue.Data
             return item;
         }
 
-        public static List<Limb> BasicHumanoidBody(Actor actor)
+        public static List<Limb> BasicHumanoidBody()
         {
-            /*var torso = new Limb(
-                TypeOfLimb.Torso, 15, 15, 8.47, $"{actor.Name}'s Torso", Limb.LimbOrientation.Center, null);
-            var neck = new
-                Limb(TypeOfLimb.Neck, 5, 5, 5, $"{actor.Name}'s Neck", Limb.LimbOrientation.Center, torso);
-            var head = new
-                Limb(TypeOfLimb.Head, 10, 10, 6, $"{actor.Name}'s Head", Limb.LimbOrientation.Center, neck);
-            var lArm = new
-                Limb(TypeOfLimb.Arm, 7, 7, 4, $"{actor.Name}'s Left Arm", Limb.LimbOrientation.Left, torso);
-            var rArm = new
-                Limb(TypeOfLimb.Arm, 7, 7, 4, $"{actor.Name}'s Right Arm", Limb.LimbOrientation.Right, torso);
-            var rLeg =
-                new Limb(TypeOfLimb.Leg, 7, 7, 6, $"{actor.Name}'s Right Leg", Limb.LimbOrientation.Right, torso);
-            var lLeg =
-                new Limb(TypeOfLimb.Leg, 7, 7, 6, $"{actor.Name}'s Left Leg", Limb.LimbOrientation.Left, torso);
-            var lHand =
-                new Limb(TypeOfLimb.Hand, 4, 7, 6, $"{actor.Name}'s Left Hand", Limb.LimbOrientation.Left, lArm);
-            var rHand = new
-                Limb(TypeOfLimb.Hand, 4, 7, 6, $"{actor.Name}'s Right Hand", Limb.LimbOrientation.Right, rArm);
-            var rFoot = new
-                Limb(TypeOfLimb.Foot, 4, 7, 6, $"{actor.Name}'s Right Foot", Limb.LimbOrientation.Right, rLeg);
-            var lFoot = new
-                Limb(TypeOfLimb.Foot, 4, 7, 6, $"{actor.Name}'s Left Foot", Limb.LimbOrientation.Left, lLeg);
+            Limb torso = DataManager.QueryLimbInData("humanoid_torso");
+            Limb neck = DataManager.QueryLimbInData("humanoid_neck");
+            Limb head = DataManager.QueryLimbInData("humanoid_head");
+            Limb lArm = DataManager.QueryLimbInData("humanoid_l_arm");
+            Limb rArm = DataManager.QueryLimbInData("humanoid_r_arm");
+            Limb rLeg = DataManager.QueryLimbInData("humanoid_r_leg");
+            Limb lLeg = DataManager.QueryLimbInData("humanoid_l_leg");
+            Limb lHand = DataManager.QueryLimbInData("humanoid_l_hand");
+            Limb rHand = DataManager.QueryLimbInData("humanoid_r_hand");
+            Limb rFoot = DataManager.QueryLimbInData("humanoid_r_foot");
+            Limb lFoot = DataManager.QueryLimbInData("humanoid_l_foot");
 
             List<Limb> limbs = new()
             {
@@ -100,8 +89,39 @@ namespace MagiRogue.Data
                 lFoot
             };
 
-            return limbs;*/
-            throw new NotImplementedException("WORK HARD SLAVE!");
+            return limbs;
+        }
+
+        public static List<Organ> BasicHumanoidOrgans()
+        {
+            Organ brain = DataManager.QueryOrganInData("brain");
+            Organ heart = DataManager.QueryOrganInData("humanoid_heart");
+            Organ spine = DataManager.QueryOrganInData("humanoid_spine");
+            Organ stomach = DataManager.QueryOrganInData("humanoid_stomach");
+            Organ intestine = DataManager.QueryOrganInData("humanoid_intestine");
+            Organ r_lung = DataManager.QueryOrganInData("humanoid_r_lung");
+            Organ l_lung = DataManager.QueryOrganInData("humanoid_l_lung");
+            Organ r_kidney = DataManager.QueryOrganInData("humanoid_r_kidney");
+            Organ l_kidney = DataManager.QueryOrganInData("humanoid_l_kidney");
+            Organ r_eye = DataManager.QueryOrganInData("humanoid_r_eye");
+            Organ l_eye = DataManager.QueryOrganInData("humanoid_l_eye");
+
+            List<Organ> list = new()
+            {
+                brain,
+                heart,
+                spine,
+                stomach,
+                intestine,
+                r_lung,
+                l_lung,
+                r_kidney,
+                l_kidney,
+                r_eye,
+                l_eye
+            };
+
+            return list;
         }
     }
 }

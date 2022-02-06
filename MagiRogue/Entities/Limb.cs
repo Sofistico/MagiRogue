@@ -165,6 +165,23 @@ namespace MagiRogue.Entities
             ConnectedTo = connectedTo;
         }
 
+        public Item ReturnLimbAsItem(Actor actor)
+        {
+            string limbName = actor.Name + "'s " + LimbName;
+            int size = (int)(actor.Size / LimbWeight);
+            Attached = false;
+
+            return new Item(actor.Appearance.Foreground,
+                actor.Appearance.Background,
+                limbName,
+                253,
+                actor.Position,
+                size,
+                (float)LimbWeight,
+                materialId: LimbMaterial.Id
+                );
+        }
+
         private string DebuggerDisplay
         {
             get
