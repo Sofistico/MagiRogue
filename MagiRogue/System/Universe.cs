@@ -170,17 +170,9 @@ namespace MagiRogue.System
         {
             CurrentMap.LastPlayerPosition = new Point(Player.Position.X, Player.Position.Y);
             ChangeActorMap(Player, mapToGo, pos, previousMap);
-            if (MapIsWorld(previousMap))
-            {
-                // do somehting
-            }
-            /*else
-            {
-                string map = previousMap.SaveMapToJson(Player);
-                SaveAndLoad.SaveMapToSaveFolder(map, previousMap.MapId.ToString());
-            }*/
             UpdateIfNeedTheMap(mapToGo);
             CurrentMap = mapToGo;
+            previousMap.ControlledEntitiy = null;
             mapToGo.LoadToMemory();
             GameLoop.UIManager.MapWindow.LoadMap(CurrentMap);
             GameLoop.UIManager.MapWindow.CenterOnActor(Player);

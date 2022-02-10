@@ -36,6 +36,8 @@ namespace MagiRogue.System
         /// </summary>
         public void RefreshExploredTerrain()
         {
+            if (!IsEnabled) return;
+
             for (int x = 0; x < Map.Width; x++)
             {
                 for (int y = 0; y < Map.Height; y++)

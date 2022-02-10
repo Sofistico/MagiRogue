@@ -15,7 +15,7 @@ namespace MagiRogue
 
         public static Universe Universe { get; set; }
 
-        public static IDGenerator IdGen { get; } = new();
+        public static IDGenerator IdGen { get; } = new(1);
 
         private static void Main()
         {

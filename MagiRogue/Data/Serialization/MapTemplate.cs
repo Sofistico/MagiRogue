@@ -233,7 +233,6 @@ namespace MagiRogue.Data.Serialization
             };
         }
 
-
         private static BiomeType BiomeToString(string biome)
         {
             return biome switch
@@ -256,7 +255,7 @@ namespace MagiRogue.Data.Serialization
 
         public override void WriteJson(JsonWriter writer, Map? value, JsonSerializer serializer)
         {
-            var template = (MapTemplate)value;
+            MapTemplate template = (MapTemplate)value;
             /*if (template.Entities.Count == 0)
                 template.Entities = null;*/
             serializer.NullValueHandling = NullValueHandling.Ignore;
@@ -327,6 +326,7 @@ namespace MagiRogue.Data.Serialization
                 Entity entity = (Entity)map.Entities.Items.ToArray()[i];
                 if (entity is Actor actor) { actors.Add(actor); }
                 if (entity is Item item) { items.Add(item); }
+                if (entity is Player player) { map.LastPlayerPosition = player.Position; }
             }
 
             template.Actors = actors;
@@ -343,14 +343,15 @@ namespace MagiRogue.Data.Serialization
                 return null;
             var objMap = new Map(map.MapName, map.Width, map.Height);
 
-            if (objMap.MapId == 0)
+            if (objMap.MapName.Equals("Planet"))
                 objMap.GoRogueComponents.GetFirstOrDefault<MagiRogueFOVVisibilityHandler>().Disable();
 
             for (int i = 0; i < map.Tiles.Length; i++)
             {
                 if (map.Tiles[i] == null)
                     continue;
-                objMap.SetTerrain((TileBase)map.Tiles[i]);
+                var tile = (TileBase)map.Tiles[i];
+                objMap.SetTerrain(tile);
             }
             for (int x = 0; x < map.Actors.Count; x++)
             {
@@ -369,6 +370,7 @@ namespace MagiRogue.Data.Serialization
             objMap.PlayerExplored = new SadRogue.Primitives.GridViews.ArrayView<bool>(
                 map.Explored, map.Width);
             objMap.SetSeed(map.Seed);
+            objMap.GoRogueComponents.GetFirstOrDefault<MagiRogueFOVVisibilityHandler>().RefreshExploredTerrain();
 
             return objMap;
         }

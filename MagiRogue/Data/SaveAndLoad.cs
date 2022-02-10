@@ -102,5 +102,18 @@ namespace MagiRogue.Data
             else
                 return false;
         }
+
+        public static void DeleteSave(string saveName)
+        {
+            try
+            {
+                Directory.Delete(Path.Combine(dir, _folderName, saveName), true);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }

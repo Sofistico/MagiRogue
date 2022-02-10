@@ -87,16 +87,35 @@ namespace MagiRogue.UI.Windows
                     {
                         Position = new Point((loadPop.Width / 2) - 10, (loadPop.Height / 2) - 5)
                     };
+                    string delete = "Delete";
+                    MagiButton deleteSaveBtn = new MagiButton(delete.Length + 2)
+                    {
+                        Text = delete,
+                        Position = new Point(loadPop.Width / 2 - 5, loadPop.Height - 3)
+                    };
+
+                    deleteSaveBtn.Click += DeleteSaveBtn_Click;
 
                     // populate the list with the save names
                     PopulateListWithSaves();
 
                     // and the set up with SadConsole
                     loadPop.Controls.Add(loadGame);
+                    loadPop.Controls.Add(deleteSaveBtn);
                     loadPop.Controls.Add(savesBox);
                     Children.Add(loadPop);
                     loadPop.Show();
                 }
+            }
+        }
+
+        private void DeleteSaveBtn_Click(object? sender, EventArgs e)
+        {
+            if (savesBox.SelectedItem != null)
+            {
+                SaveAndLoad.DeleteSave(savesBox.SelectedItem.ToString());
+                savesBox.Items.Remove(savesBox.SelectedItem);
+                savesBox.IsDirty = true;
             }
         }
 
@@ -169,7 +188,9 @@ namespace MagiRogue.UI.Windows
                 // makes so that there can only be one save per player name!
                 GameLoop.Universe.SaveGame(GameLoop.Universe.Player.Name);
                 PopWindow alert = new PopWindow(30, 10, "Save Done!");
-                alert.Print(5, 5, "Save Sucessful!");
+                // makes it a variable so that it can be properly accounted for in the print command
+                string text = "Save Sucessful!";
+                alert.Print((alert.Width - text.Length) / 2, 3, text);
                 Children.Add(alert);
                 alert.Show();
             }

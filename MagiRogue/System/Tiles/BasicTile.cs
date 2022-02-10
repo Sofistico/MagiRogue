@@ -72,6 +72,9 @@ namespace MagiRogue.System.Tiles
         public MoistureType MoistureType { get; set; }
         public float MoistureValue { get; set; }
         public int TileHealth { get; set; }
+        public uint ForegroundLastSeen { get; set; }
+        public uint BackgroundLastSeen { get; set; }
+        public char GlyphLastSeen { get; set; }
 
         public BasicTile(Point position,
             uint foreground,
@@ -115,6 +118,11 @@ namespace MagiRogue.System.Tiles
                 tile.Background.PackedValue, tile.Glyph, tile.IsWalkable,
                 tile.IsTransparent, tile.MaterialOfTile.Id, tile.Name, TileType.Null,
                 tile.MoveTimeCost);
+            if (tile is not WorldTile && !tile.Matches(tile.LastSeenAppereance))
+            {
+                basic.Foreground = tile.LastSeenAppereance.Foreground.PackedValue;
+                basic.Background = tile.LastSeenAppereance.Background.PackedValue;
+            }
 
             if (!string.IsNullOrWhiteSpace(tile.Description))
                 basic.Description = tile.Description;
