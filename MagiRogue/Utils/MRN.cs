@@ -1,5 +1,6 @@
 ﻿using GoRogue.DiceNotation;
-using Troschuetz.Random;
+using ShaiRandom.Distributions.Continuous;
+using ShaiRandom.Generators;
 
 namespace MagiRogue.Utils
 {
@@ -47,21 +48,21 @@ namespace MagiRogue.Utils
 
     public class MagiGlobalRandom
     {
-        private TRandom rng;
+        private DistinctRandom rng;
         public int Seed { get; }
 
         public MagiGlobalRandom(int seed)
         {
-            rng = new TRandom(seed);
+            rng = new((uint)seed);
             Seed = seed;
         }
 
         public MagiGlobalRandom()
         {
-            Seed = GoRogue.Random.GlobalRandom.DefaultRNG.Next();
-            rng = new TRandom(Seed);
+            Seed = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt();
+            rng = new((uint)Seed);
         }
 
-        public TRandom Random() => rng;
+        public DistinctRandom Random() => rng;
     }
 }

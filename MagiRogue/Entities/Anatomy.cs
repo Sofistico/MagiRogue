@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
-using Troschuetz.Random;
+using ShaiRandom.Distributions.Continuous;
 
 namespace MagiRogue.Entities
 {
@@ -13,7 +13,6 @@ namespace MagiRogue.Entities
         #region Fields
 
         private Race race;
-        private readonly TRandom random = new TRandom();
 
         #endregion Fields
 
@@ -56,7 +55,7 @@ namespace MagiRogue.Entities
 
         [JsonIgnore]
         public bool CanSee => Organs.Exists(o => o.OrganType is OrganType.Visual
-                 && (!o.Destroyed || o.Attached));
+                                                     && (!o.Destroyed || o.Attached));
 
         /// <summary>
         /// The total lifespan of a character
@@ -153,7 +152,7 @@ namespace MagiRogue.Entities
                 }
                 else
                 {
-                    bodyPartIndex = random.Next(bodyParts.Count);
+                    bodyPartIndex = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(bodyParts.Count);
                     bodyPart = bodyParts[bodyPartIndex];
                     bodyPart.Attached = false;
                     DismemberMessage(actor, bodyPart);
@@ -175,7 +174,7 @@ namespace MagiRogue.Entities
                 GameLoop.UIManager.MessageLog.Add("Fix the game!");
             }
 
-            bodyPartIndex = random.Next(bodyParts.Count);
+            bodyPartIndex = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(bodyParts.Count);
             bodyPart = bodyParts[bodyPartIndex];
 
             List<Limb> connectedParts = Limbs.FindAll(c => c.ConnectedTo == bodyPart.Id);

@@ -64,7 +64,6 @@ namespace MagiRogue.Data.Serialization
                 player, time, changeMap, season, regionChunk, rng);
 
             return objUni;*/
-            Universe objUni;
 
             /*while (reader.Read())
             {

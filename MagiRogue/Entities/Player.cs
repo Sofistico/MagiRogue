@@ -21,11 +21,11 @@ namespace MagiRogue.Entities
         {
             Anatomy.Limbs = EntityFactory.BasicHumanoidBody();
             Anatomy.Organs = EntityFactory.BasicHumanoidOrgans();
-            Weight = GoRogue.Random.GlobalRandom.DefaultRNG.Next(50, 95);
-            Size = GoRogue.Random.GlobalRandom.DefaultRNG.Next(155, 200);
+            Weight = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(50, 95);
+            Size = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(155, 200);
             Anatomy.Update(this);
-            Anatomy.Lifespan = GoRogue.Random.GlobalRandom.DefaultRNG.Next(75, 125);
-            Anatomy.CurrentAge = GoRogue.Random.GlobalRandom.DefaultRNG.Next(18, 21);
+            Anatomy.Lifespan = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(75, 125);
+            Anatomy.CurrentAge = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(18, 21);
         }
 
         public static Player TestPlayer()

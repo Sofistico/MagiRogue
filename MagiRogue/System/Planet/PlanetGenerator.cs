@@ -318,8 +318,8 @@ namespace MagiRogue.System.Planet
             {
                 tries++;
 
-                int x = GoRogue.Random.GlobalRandom.DefaultRNG.Next(0, _width);
-                int y = GoRogue.Random.GlobalRandom.DefaultRNG.Next(0, _height);
+                int x = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, _width);
+                int y = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, _height);
                 WorldTile tile = tiles[x, y];
 
                 if (tile.HeightType == HeightType.DeepWater
@@ -329,7 +329,7 @@ namespace MagiRogue.System.Planet
                 if (tile.CivInfluence != null)
                     continue;
 
-                int rng = GoRogue.Random.GlobalRandom.DefaultRNG.Next(100, 5000);
+                int rng = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(100, 5000);
 
                 int pop = (int)(rng * ((int)tile.HeightType * tile.MoistureValue + 1));
 
@@ -353,7 +353,7 @@ namespace MagiRogue.System.Planet
 
         private static CivilizationTendency RandomCivTendency()
         {
-            int rng = GoRogue.Random.GlobalRandom.DefaultRNG.Next(0, 2 + 1);
+            int rng = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, 2 + 1);
             return rng switch
             {
                 0 => CivilizationTendency.Normal,
@@ -574,7 +574,7 @@ namespace MagiRogue.System.Planet
 
         private void Initialize()
         {
-            seed = GoRogue.Random.GlobalRandom.DefaultRNG.Next(0, int.MaxValue);
+            seed = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, int.MaxValue);
             heightMap = new(FractalType.Multi,
                                        BasisType.Simplex,
                                        InterpolationType.Quintic,
@@ -768,8 +768,8 @@ namespace MagiRogue.System.Planet
             while (count > 0 && attempts < maxRiverAttempts)
             {
                 // get random tiles
-                int x = GoRogue.Random.GlobalRandom.DefaultRNG.Next(0, _width);
-                int y = GoRogue.Random.GlobalRandom.DefaultRNG.Next(0, _height);
+                int x = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, _width);
+                int y = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, _height);
                 WorldTile tile = tiles[x, y];
 
                 // validate the tile
@@ -1031,7 +1031,7 @@ namespace MagiRogue.System.Planet
             int counter = 0;
 
             // How wide are we digging this river?
-            int size = GoRogue.Random.GlobalRandom.DefaultRNG.Next(1, 5);
+            int size = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(1, 5);
             river.Length = river.Tiles.Count;
 
             // randomize size change
@@ -1046,25 +1046,25 @@ namespace MagiRogue.System.Planet
             int fivemin = five / 3;
 
             // randomize lenght of each size
-            int count1 = GoRogue.Random.GlobalRandom.DefaultRNG.Next(fivemin, five);
+            int count1 = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(fivemin, five);
             if (size < 4)
             {
                 count1 = 0;
             }
-            int count2 = count1 + GoRogue.Random.GlobalRandom.DefaultRNG.Next(fourmin, four);
+            int count2 = count1 + GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(fourmin, four);
             if (size < 3)
             {
                 count2 = 0;
                 count1 = 0;
             }
-            int count3 = count2 + GoRogue.Random.GlobalRandom.DefaultRNG.Next(threemin, three);
+            int count3 = count2 + GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(threemin, three);
             if (size < 2)
             {
                 count3 = 0;
                 count2 = 0;
                 count1 = 0;
             }
-            int count4 = count3 + GoRogue.Random.GlobalRandom.DefaultRNG.Next(twomin, two);
+            int count4 = count3 + GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(twomin, two);
 
             // Make sure we are not digging past the river path
             if (count4 > river.Length)
@@ -1177,7 +1177,7 @@ namespace MagiRogue.System.Planet
 
             int counter = 0;
             int intersectionCount = river.Tiles.Count - intersectionID;
-            int size = GoRogue.Random.GlobalRandom.DefaultRNG.Next(intersectionSize, 5);
+            int size = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(intersectionSize, 5);
             river.Length = river.Tiles.Count;
 
             // randomize size change
@@ -1192,25 +1192,25 @@ namespace MagiRogue.System.Planet
             int fivemin = five / 3;
 
             // randomize length of each size
-            int count1 = GoRogue.Random.GlobalRandom.DefaultRNG.Next(fivemin, five);
+            int count1 = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(fivemin, five);
             if (size < 4)
             {
                 count1 = 0;
             }
-            int count2 = count1 + GoRogue.Random.GlobalRandom.DefaultRNG.Next(fourmin, four);
+            int count2 = count1 + GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(fourmin, four);
             if (size < 3)
             {
                 count2 = 0;
                 count1 = 0;
             }
-            int count3 = count2 + GoRogue.Random.GlobalRandom.DefaultRNG.Next(threemin, three);
+            int count3 = count2 + GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(threemin, three);
             if (size < 2)
             {
                 count3 = 0;
                 count2 = 0;
                 count1 = 0;
             }
-            int count4 = count3 + GoRogue.Random.GlobalRandom.DefaultRNG.Next(twomin, two);
+            int count4 = count3 + GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(twomin, two);
 
             // Make sure we are not digging past the river path
             if (count4 > river.Length)

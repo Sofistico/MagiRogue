@@ -12,7 +12,7 @@ namespace MagiRogue.Data
     {
         public static TileFloor GenericGrass(Point pos)
         {
-            int rng = GoRogue.Random.GlobalRandom.DefaultRNG.Next(1, 3 + 1);
+            int rng = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(1, 3 + 1);
 
 #pragma warning disable CS8603 // Possível retorno de referência nula.
             return rng switch

@@ -82,7 +82,7 @@ namespace MagiRogue.System.Tiles
         {
             if (!IsDepleted)
             {
-                int rndDrain = GoRogue.Random.GlobalRandom.DefaultRNG.Next(actor.Magic.ShapingSkill);
+                int rndDrain = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(actor.Magic.ShapingSkill);
 
                 MpPoints -= rndDrain;
 

@@ -415,10 +415,10 @@ namespace MagiRogue.System
         public Point GetRandomWalkableTile()
         {
             var rng = GoRogue.Random.GlobalRandom.DefaultRNG;
-            Point rngPoint = new Point(rng.Next(Width - 1), rng.Next(Height - 1));
+            Point rngPoint = new Point(rng.NextInt(Width - 1), rng.NextInt(Height - 1));
 
             while (!IsTileWalkable(rngPoint))
-                rngPoint = new Point(rng.Next(Width - 1), rng.Next(Height - 1));
+                rngPoint = new Point(rng.NextInt(Width - 1), rng.NextInt(Height - 1));
 
             return rngPoint;
         }
