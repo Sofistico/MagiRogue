@@ -16,7 +16,7 @@ namespace MagiRogue.Utils
         public static string GetSaveName(string savePath)
         {
             string[] arrayString = savePath.Split('\\');
-            return arrayString[arrayString.Length - 1];
+            return arrayString[^1];
         }
 
         public static string[] GetSaveNameArray(string[] saves)

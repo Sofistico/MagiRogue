@@ -45,24 +45,4 @@ namespace MagiRogue.Utils
             return total;
         }
     }
-
-    public class MagiGlobalRandom
-    {
-        private DistinctRandom rng;
-        public int Seed { get; }
-
-        public MagiGlobalRandom(int seed)
-        {
-            rng = new((uint)seed);
-            Seed = seed;
-        }
-
-        public MagiGlobalRandom()
-        {
-            Seed = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt();
-            rng = new((uint)Seed);
-        }
-
-        public DistinctRandom Random() => rng;
-    }
 }

@@ -59,6 +59,10 @@ namespace MagiRogue.Data.Serialization
                 maps[i] = region.LocalMaps[i];
             }
             var chunk = new RegionChunkTemplate(region.X, region.Y, maps);
+            for (int i = 0; i < maps.Length; i++)
+            {
+                chunk.LocalMapsIds[i] = maps[i].MapId;
+            }
 
             return chunk;
         }

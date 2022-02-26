@@ -9,11 +9,8 @@ using SadRogue.Primitives;
 using System;
 using MagiRogue.System.Magic;
 using System.Linq;
-using GoRogue;
 using MagiRogue.Data.Serialization;
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using MagiRogue.Utils;
 
 namespace MagiRogue.System
 {
@@ -52,7 +49,7 @@ namespace MagiRogue.System
         /// <summary>
         /// Stores the current chunk that is loaded
         /// </summary>
-        public RegionChunk CurrentChunk { get; private set; }
+        public RegionChunk CurrentChunk { get; set; }
 
         /// <summary>
         /// Player data
@@ -71,8 +68,6 @@ namespace MagiRogue.System
 
         public SaveAndLoad SaveAndLoad { get; set; }
 
-        public MagiGlobalRandom MagiRandom { get; }
-
         /// <summary>
         /// Creates a new game world and stores it in a
         /// publicly accessible constructor.
@@ -81,7 +76,6 @@ namespace MagiRogue.System
         {
             Time = new TimeSystem();
             CurrentSeason = SeasonType.Spring;
-            MagiRandom = new MagiGlobalRandom();
 
             if (!testGame)
             {
@@ -94,6 +88,7 @@ namespace MagiRogue.System
                 CurrentMap = WorldMap.AssocietatedMap;
                 PlacePlayerOnWorld(player);
                 SaveAndLoad = new();
+                SaveGame(player.Name);
             }
             else
             {
@@ -109,8 +104,7 @@ namespace MagiRogue.System
             TimeSystem time,
             bool possibleChangeMap,
             SeasonType currentSeason,
-            RegionChunk[] allChunks,
-            MagiGlobalRandom rng)
+            RegionChunk[] allChunks)
         {
             WorldMap = worldMap;
             CurrentMap = currentMap;
@@ -122,7 +116,6 @@ namespace MagiRogue.System
             CurrentSeason = currentSeason;
             AllChunks = allChunks;
             SaveAndLoad = new();
-            MagiRandom = rng;
         }
 
         private void PlacePlayerOnWorld(Player player)
@@ -173,7 +166,6 @@ namespace MagiRogue.System
             UpdateIfNeedTheMap(mapToGo);
             CurrentMap = mapToGo;
             previousMap.ControlledEntitiy = null;
-            mapToGo.LoadToMemory();
             GameLoop.UIManager.MapWindow.LoadMap(CurrentMap);
             GameLoop.UIManager.MapWindow.CenterOnActor(Player);
         }
@@ -453,8 +445,12 @@ namespace MagiRogue.System
             return newChunck;
         }
 
-        public RegionChunk GetChunckByPos(Point playerPoint) =>
-            AllChunks[Point.ToIndex(playerPoint.X, playerPoint.Y, planetWidth)];
+        public RegionChunk GetChunckByPos(Point playerPoint)
+        {
+            var sss = AllChunks[Point.ToIndex(playerPoint.X, playerPoint.Y, planetWidth)];
+
+            return sss;
+        }
 
         public bool MapIsWorld()
         {

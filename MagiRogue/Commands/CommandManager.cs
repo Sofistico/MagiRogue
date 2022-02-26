@@ -525,6 +525,7 @@ namespace MagiRogue.Commands
                 RegionChunk chunk = GameLoop.Universe.GenerateChunck(playerPoint);
                 GameLoop.Universe.ChangePlayerMap(chunk.LocalMaps[0],
                     chunk.LocalMaps[0].GetRandomWalkableTile(), currentMap);
+                GameLoop.Universe.CurrentChunk = chunk;
                 return true;
             }
             else if (possibleWorldTileHere.Visited)
@@ -532,6 +533,7 @@ namespace MagiRogue.Commands
                 RegionChunk chunk = GameLoop.Universe.GetChunckByPos(playerPoint);
                 GameLoop.Universe.ChangePlayerMap(chunk.LocalMaps[0],
                     chunk.LocalMaps[0].LastPlayerPosition, currentMap);
+                GameLoop.Universe.CurrentChunk = chunk;
 
                 return true;
             }
@@ -564,6 +566,9 @@ namespace MagiRogue.Commands
                     Map map = GameLoop.Universe.WorldMap.AssocietatedMap;
                     Point playerLastPos = GameLoop.Universe.WorldMap.AssocietatedMap.LastPlayerPosition;
                     GameLoop.Universe.ChangePlayerMap(map, playerLastPos, currentMap);
+                    GameLoop.Universe.SaveAndLoad.SaveChunkInPos(GameLoop.Universe.CurrentChunk,
+                        GameLoop.Universe.CurrentChunk.ToIndex(map.Width));
+                    GameLoop.Universe.CurrentChunk = null;
                     return true;
                 }
                 else if (GameLoop.Universe.MapIsWorld())

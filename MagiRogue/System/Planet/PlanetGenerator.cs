@@ -79,6 +79,12 @@ namespace MagiRogue.System.Planet
         // final object
         private WorldTile[,] tiles;
 
+        private float[,] HeightData;
+
+        private float[,] HeatData;
+
+        private float[,] MoistureData;
+
         private readonly BiomeType[,] biomeTable = new BiomeType[6, 6] {
             //COLDEST        //COLDER          //COLD                  //HOT                          //HOTTER                       //HOTTEST
             { BiomeType.Ice, BiomeType.Tundra, BiomeType.Grassland,    BiomeType.Desert,              BiomeType.Desert,              BiomeType.Desert },              //DRYEST
@@ -103,6 +109,9 @@ namespace MagiRogue.System.Planet
             _height = height;
             maxCivsWorld = nmbCivilizations;
             _civilizations = new Civilization[maxCivsWorld];
+            HeightData = new float[width, height];
+            HeatData = new float[width, height];
+            MoistureData = new float[width, height];
 
             // Initialize the generator
             Initialize();
@@ -392,9 +401,9 @@ namespace MagiRogue.System.Planet
                     WorldTile t = new();
                     t.Position = new SadRogue.Primitives.Point(x, y);
 
-                    float heightValue = planetData.HeightData[x, y];
+                    float heightValue = HeightData[x, y];
                     t.MineralValue = MathMagi.ReturnPositive(MathF.Round
-                        ((planetData.HeightData[x, y] + planetData.HeatData[x, y]) * 200));
+                        ((HeightData[x, y] + HeatData[x, y]) * 200));
 
                     // normalize value between 0 and 1
                     heightValue = MathMagi.ReturnPositive(heightValue);
@@ -451,29 +460,29 @@ namespace MagiRogue.System.Planet
                     }
 
                     //Moisture Map Analyze
-                    float moistureValue = MathMagi.ReturnPositive(planetData.MoistureData[x, y]);
+                    float moistureValue = MathMagi.ReturnPositive(MoistureData[x, y]);
                     t.MoistureValue = MathF.Round(moistureValue, 1);
 
                     //adjust moisture based on height
                     if (t.HeightType == HeightType.DeepWater)
                     {
-                        planetData.MoistureData[t.Position.X, t.Position.Y] += 8f * t.HeightValue;
+                        MoistureData[t.Position.X, t.Position.Y] += 8f * t.HeightValue;
                     }
                     else if (t.HeightType == HeightType.ShallowWater)
                     {
-                        planetData.MoistureData[t.Position.X, t.Position.Y] += 3f * t.HeightValue;
+                        MoistureData[t.Position.X, t.Position.Y] += 3f * t.HeightValue;
                     }
                     else if (t.HeightType == HeightType.Shore)
                     {
-                        planetData.MoistureData[t.Position.X, t.Position.Y] += 1f * t.HeightValue;
+                        MoistureData[t.Position.X, t.Position.Y] += 1f * t.HeightValue;
                     }
                     else if (t.HeightType == HeightType.Sand)
                     {
-                        planetData.MoistureData[t.Position.X, t.Position.Y] += 0.25f * t.HeightValue;
+                        MoistureData[t.Position.X, t.Position.Y] += 0.25f * t.HeightValue;
                     }
                     else if (t.HeightType == HeightType.Snow)
                     {
-                        planetData.MoistureData[t.Position.X, t.Position.Y] += 2f * t.HeightValue;
+                        MoistureData[t.Position.X, t.Position.Y] += 2f * t.HeightValue;
                     }
 
                     //set moisture type
@@ -486,27 +495,27 @@ namespace MagiRogue.System.Planet
 
                     if (t.HeightType == HeightType.Forest)
                     {
-                        planetData.HeatData[t.Position.X, t.Position.Y] -= 0.1f * t.HeightValue;
+                        HeatData[t.Position.X, t.Position.Y] -= 0.1f * t.HeightValue;
                     }
                     else if (t.HeightType == HeightType.Mountain)
                     {
-                        planetData.HeatData[t.Position.X, t.Position.Y] -= 0.25f * t.HeightValue;
+                        HeatData[t.Position.X, t.Position.Y] -= 0.25f * t.HeightValue;
                     }
                     else if (t.HeightType == HeightType.HighMountain)
                     {
-                        planetData.HeatData[t.Position.X, t.Position.Y] -= 0.5f * t.HeightValue;
+                        HeatData[t.Position.X, t.Position.Y] -= 0.5f * t.HeightValue;
                     }
                     else if (t.HeightType == HeightType.Snow)
                     {
-                        planetData.HeatData[t.Position.X, t.Position.Y] -= 0.7f * t.HeightValue;
+                        HeatData[t.Position.X, t.Position.Y] -= 0.7f * t.HeightValue;
                     }
                     else
                     {
-                        planetData.HeatData[t.Position.X, t.Position.Y] += 0.01f * t.HeightValue;
+                        HeatData[t.Position.X, t.Position.Y] += 0.01f * t.HeightValue;
                     }
 
                     // Set heat value
-                    float heatModValue = MathMagi.ReturnPositive(planetData.HeatData[t.Position.X, t.Position.Y]);
+                    float heatModValue = MathMagi.ReturnPositive(HeatData[t.Position.X, t.Position.Y]);
                     t.HeatValue = heatModValue;
 
                     // set heat type
@@ -565,9 +574,9 @@ namespace MagiRogue.System.Planet
                     if (moistureValue > planetData.Max) planetData.Max = moistureValue;
                     if (moistureValue < planetData.Min) planetData.Min = moistureValue;
 
-                    planetData.HeightData[x, y] = heightValue;
-                    planetData.HeatData[x, y] = heatValue;
-                    planetData.MoistureData[x, y] = moistureValue;
+                    HeightData[x, y] = heightValue;
+                    HeatData[x, y] = heatValue;
+                    MoistureData[x, y] = moistureValue;
                 }
             }
         }

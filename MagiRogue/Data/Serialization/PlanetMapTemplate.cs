@@ -57,15 +57,6 @@ namespace MagiRogue.Data.Serialization
 
     public class PlanetMapTemplate
     {
-        [DataMember]
-        public float[,] HeightData { get; }
-
-        [DataMember]
-        public float[,] HeatData { get; }
-
-        [DataMember]
-        public float[,] MoistureData { get; }
-
         [JsonIgnore]
         public float Min { get; set; }
 
@@ -79,16 +70,10 @@ namespace MagiRogue.Data.Serialization
         [DataMember]
         public Map AssocietatedMap { get; set; }
 
-        public PlanetMapTemplate(float[,] heightData,
-            float[,] heatData,
-            float[,] moistureData,
-            float min,
+        public PlanetMapTemplate(float min,
             float max,
             List<Civilization> civilizations)
         {
-            HeightData = heightData;
-            HeatData = heatData;
-            MoistureData = moistureData;
             Min = min;
             Max = max;
             Civilizations = new();
@@ -103,23 +88,17 @@ namespace MagiRogue.Data.Serialization
         {
         }
 
-        public PlanetMapTemplate(float[,] heightData,
-            float[,] heatData,
-            float[,] moistureData,
-            float min,
+        public PlanetMapTemplate(float min,
             float max,
             List<Civilization> civilizations,
-            MapTemplate associetatedMap) : this(heightData,
-                heatData,
-                moistureData, min, max, civilizations)
+            MapTemplate associetatedMap) : this(min, max, civilizations)
         {
             AssocietatedMap = associetatedMap;
         }
 
         public static implicit operator PlanetMapTemplate(PlanetMap map)
         {
-            var template = new PlanetMapTemplate(map.HeightData, map.HeatData,
-                map.MoistureData, map.Min, map.Max,
+            var template = new PlanetMapTemplate(map.Min, map.Max,
                 map.Civilizations)
             {
                 AssocietatedMap = map.AssocietatedMap
@@ -137,8 +116,7 @@ namespace MagiRogue.Data.Serialization
             map.Max = int.MaxValue;
             map.Min = int.MinValue;
 
-            PlanetMap mio = new PlanetMap(map.HeightData, map.HeatData,
-                map.MoistureData, map.Min, map.Max,
+            PlanetMap mio = new PlanetMap(map.Min, map.Max,
                 civs, (MapTemplate)map.AssocietatedMap);
             /*PlanetMap mio = new PlanetMap(map.Min, map.Max,
                 civs, (MapTemplate)map.AssocietatedMap);*/

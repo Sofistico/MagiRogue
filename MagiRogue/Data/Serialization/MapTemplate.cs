@@ -275,7 +275,9 @@ namespace MagiRogue.Data.Serialization
         public IList<Actor> Actors { get; set; }
         public IList<Item> Items { get; set; }
         public bool[] Explored;
-        public int Seed { get; set; }
+        public ulong Seed { get; set; }
+        public bool? HasFOV { get; set; }
+        public int[]? ZLevels { get; set; }
 
         public MapTemplate(string mapName,
             BasicTile[] tiles,
@@ -334,6 +336,12 @@ namespace MagiRogue.Data.Serialization
             template.Seed = map.Seed;
             template.LastPlayerPosition = map.LastPlayerPosition;
 
+            if (!map.MapName.Equals("Planet"))
+                template.HasFOV = true;
+
+            if (map.ZLevels is not null)
+                template.ZLevels = map.ZLevels;
+
             return template;
         }
 
@@ -343,7 +351,7 @@ namespace MagiRogue.Data.Serialization
                 return null;
             var objMap = new Map(map.MapName, map.Width, map.Height);
 
-            if (objMap.MapName.Equals("Planet"))
+            if (map.HasFOV is not null && (bool)!map.HasFOV)
                 objMap.GoRogueComponents.GetFirstOrDefault<MagiRogueFOVVisibilityHandler>().Disable();
 
             for (int i = 0; i < map.Tiles.Length; i++)
@@ -371,6 +379,8 @@ namespace MagiRogue.Data.Serialization
                 map.Explored, map.Width);
             objMap.SetSeed(map.Seed);
             objMap.GoRogueComponents.GetFirstOrDefault<MagiRogueFOVVisibilityHandler>().RefreshExploredTerrain();
+            if (map.ZLevels is not null)
+                objMap.ZLevels = map.ZLevels;
 
             return objMap;
         }

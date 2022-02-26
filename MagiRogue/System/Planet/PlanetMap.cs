@@ -19,15 +19,6 @@ namespace MagiRogue.System.Planet
         private readonly int _width;
 
         [DataMember]
-        public float[,] HeightData { get; }
-
-        [DataMember]
-        public float[,] HeatData { get; }
-
-        [DataMember]
-        public float[,] MoistureData { get; }
-
-        [DataMember]
         public float Min { get; set; }
 
         [DataMember]
@@ -43,22 +34,15 @@ namespace MagiRogue.System.Planet
         {
             _height = height;
             _width = width;
-            HeightData = new float[width, height];
-            HeatData = new float[width, height];
-            MoistureData = new float[width, height];
             Min = float.MinValue;
             Max = float.MaxValue;
             AssocietatedMap = new("Planet", width, height);
             Civilizations = new List<Civilization>();
         }
 
-        public PlanetMap(float[,] heightData, float[,] heatData,
-            float[,] moistureData, float min, float max,
+        public PlanetMap(float min, float max,
             List<Civilization> civilizations, Map associetatedMap)
         {
-            HeightData = heightData;
-            HeatData = heatData;
-            MoistureData = moistureData;
             Min = min;
             Max = max;
             Civilizations = civilizations;
@@ -67,17 +51,6 @@ namespace MagiRogue.System.Planet
             _width = associetatedMap.Width;
             AssocietatedMap.
                 GoRogueComponents.GetFirstOrDefault<FOVHandler>().Disable();
-        }
-
-        public PlanetMap(float min, float max,
-            List<Civilization> civilizations, Map associetatedMap)
-        {
-            _height = associetatedMap.Height;
-            _width = associetatedMap.Width;
-            Min = min;
-            Max = max;
-            Civilizations = civilizations;
-            AssocietatedMap = associetatedMap;
         }
 
         public void SetWorldTiles(WorldTile[,] tiles)

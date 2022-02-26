@@ -24,7 +24,7 @@ namespace MagiRogue.System
         // Empty constructor
         public MapGenerator()
         {
-            ulong rand = GameLoop.Universe.MagiRandom.Random().NextULong();
+            ulong rand = GoRogue.Random.GlobalRandom.DefaultRNG.NextULong();
             randNum = new(rand);
             seed = rand;
         }
@@ -669,7 +669,7 @@ namespace MagiRogue.System
                 Map completeMap = DetermineBiomeLookForTile(worldTile);
                 if (completeMap is not null)
                 {
-                    ApplyModifierToTheMap(completeMap, worldTile, i);
+                    ApplyModifierToTheMap(completeMap, worldTile, (uint)i);
                     FinishingTouches(completeMap, worldTile);
                     map[i] = completeMap;
                 }
@@ -700,9 +700,10 @@ namespace MagiRogue.System
         /// <param name="completeMap"></param>
         /// <param name="worldTile"></param>
         /// <param name="magicI">Serves to add unique seeds to the map</param>
-        private void ApplyModifierToTheMap(Map completeMap, WorldTile worldTile, int magicI)
+        private void ApplyModifierToTheMap(Map completeMap, WorldTile worldTile, ulong magicI)
         {
-            completeMap.SetSeed((int)seed, worldTile.Position.X, worldTile.Position.Y, magicI);
+            completeMap.SetSeed((uint)seed, (uint)worldTile.Position.X,
+                (uint)worldTile.Position.Y, (uint)magicI);
             // investigate later if it's making it possible to properly reproduce a map
             randNum = new((ulong)completeMap.Seed);
 

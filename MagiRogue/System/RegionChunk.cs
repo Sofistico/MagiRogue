@@ -35,12 +35,6 @@ namespace MagiRogue.System
 
         public Point ChunckPos() => new Point(X, Y);
 
-        public void ActivateAllMaps()
-        {
-            for (int i = 0; i < LocalMaps.Length; i++)
-            {
-                LocalMaps[i].LoadToMemory();
-            }
-        }
+        public int ToIndex(int width) => Point.ToIndex(X, Y, width);
     }
 }

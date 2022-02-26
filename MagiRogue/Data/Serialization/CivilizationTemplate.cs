@@ -72,12 +72,15 @@ namespace MagiRogue.Data.Serialization
         {
             var territory = new Territory();
 
-            foreach (WorldTile tile in template.Territory)
+            if (template.Territory.Any(e => e is not null))
             {
-                if (!tile.Collidable)
-                    territory.AddWaterLand(tile);
-                else
-                    territory.AddLand(tile);
+                foreach (WorldTile tile in template.Territory)
+                {
+                    if (!tile.Collidable)
+                        territory.AddWaterLand(tile);
+                    else
+                        territory.AddLand(tile);
+                }
             }
 
             Civilization civ = new Civilization(template.Name,
