@@ -29,7 +29,7 @@ namespace MagiRogue.Test.System
             var chunck = new RegionChunk[50 * 50];
             uni = new(new PlanetMap(50, 50), null, null,
                 new MagiRogue.System.Time.TimeSystem(500), true,
-                MagiRogue.System.Time.SeasonType.Spring, chunck);
+                MagiRogue.System.Time.SeasonType.Spring, chunck, new());
             //var summary = BenchmarkRunner.Run<UniverseTests>();
         }
 
