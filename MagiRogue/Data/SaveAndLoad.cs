@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using MagiRogue.Data.Serialization;
 using MagiRogue.System;
 using MagiRogue.Utils;
+using System.Runtime.Serialization;
 
 namespace MagiRogue.Data
 {
@@ -19,10 +20,15 @@ namespace MagiRogue.Data
     {
         private const string _folderName = "Saves";
         private static readonly string dir = AppDomain.CurrentDomain.BaseDirectory;
-        private string saveDir;
-        private string savePathName;
+
+        [DataMember]
+        public string SaveDir { get; set; }
+
+        [DataMember]
+        public string SavePathName { get; set; }
         private JsonSerializerSettings settings;
 
+        [JsonConstructor]
         public SaveAndLoad()
         {
             CreateNewSaveFolder();
@@ -73,15 +79,15 @@ namespace MagiRogue.Data
         /// <param name="saveName"></param>
         private void CreateSaveNameFolder(string saveName)
         {
-            if (savePathName.Equals(saveName)) return;
-            savePathName = saveName;
+            if (SavePathName is not null && SavePathName.Equals(saveName)) return;
+            SavePathName = saveName;
             string path = dir + $@"{_folderName}\{saveName}";
 
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
             }
-            saveDir = path;
+            SaveDir = path;
         }
 
         /// <summary>
@@ -89,26 +95,28 @@ namespace MagiRogue.Data
         /// </summary>
         /// <param name="chunks"></param>
         /// <exception cref="Exception"></exception>
-        private void SaveChuncksToFile(RegionChunk[] chunks)
+        private void SaveChuncksToFile(RegionChunk[] chunks, int indexToStart = 0)
         {
             try
             {
                 List<RegionChunk> newChunks = new List<RegionChunk>();
-                int count = chunks.Length;
-                for (int i = 0; i < count; i++)
+                int countArray = chunks.Length;
+                for (int i = 0; i < countArray; i++)
                 {
-                    if (i % 1000 == 0 && (i != 0 || i == chunks.Length))
+                    if (chunks[i] is not null)
+                        newChunks.Add(chunks[i]);
+                }
+                int countList = newChunks.Count;
+
+                for (int i = 0; i < countList; i++)
+                {
+                    if (i % 1000 == 0 || (i != 0 || i == chunks.Length))
                     {
-                        if (newChunks.Count != 0)
-                        {
-                            Serializer.Save(newChunks, @$"{_folderName}\{savePathName}\Chunks_{i / 1000}.mr", true);
-                            newChunks.Clear();
-                        }
-                    }
-                    else
-                    {
-                        if (chunks[i] is not null)
-                            newChunks.Add(chunks[i]);
+                        if (indexToStart == 0)
+                            Serializer.Save(newChunks, @$"{_folderName}\{SavePathName}\Chunks_{i / 1000}.mr", true);
+                        else
+                            Serializer.Save(newChunks, @$"{_folderName}\{SavePathName}\Chunks_{indexToStart / 1000}.mr", true);
+                        break;
                     }
                 }
             }
@@ -124,7 +132,7 @@ namespace MagiRogue.Data
         /// <param name="json"></param>
         public void SaveJsonToSaveFolder(string json)
         {
-            Serializer.Save(json, $@"{saveDir}\Test", true);
+            Serializer.Save(json, $@"{SaveDir}\Test", true);
         }
 
         /// <summary>
@@ -134,7 +142,7 @@ namespace MagiRogue.Data
         /// <returns></returns>
         public static Universe LoadGame(string saveName)
         {
-            string path = $@"Saves\{saveName}\GameState.mr";
+            string path = $@"{_folderName}\{saveName}\GameState.mr";
             Universe uni = Serializer.Load<Universe>(path, true);
             if (uni.CurrentChunk != null)
             {
@@ -143,9 +151,9 @@ namespace MagiRogue.Data
             }
             else
             {
-                LoadChunks(saveName, Point.ToIndex(uni.Player.Position.X,
+                /*LoadChunks(saveName, Point.ToIndex(uni.Player.Position.X,
                     uni.Player.Position.Y,
-                    uni.WorldMap.AssocietatedMap.Width));
+                    uni.WorldMap.AssocietatedMap.Width));*/
             }
             return uni;
         }
@@ -164,6 +172,16 @@ namespace MagiRogue.Data
         }
 
         /// <summary>
+        /// Load all chunks directly from a file.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        private static RegionChunk[] LoadChunks(string file)
+        {
+            return Serializer.Load<RegionChunk[]>(file, true);
+        }
+
+        /// <summary>
         /// Saves the chunk at a position
         /// </summary>
         /// <param name="chunk"></param>
@@ -171,16 +189,18 @@ namespace MagiRogue.Data
         public void SaveChunkInPos(RegionChunk chunk, int index)
         {
             string file = GetChunckFile(index);
-            if (!string.IsNullOrWhiteSpace(file))
+            if (string.IsNullOrWhiteSpace(file))
             {
-                SaveChunckToFile(chunk);
+                SaveChunckToFile(chunk, index);
             }
             else
             {
-                List<RegionChunk> chunks = LoadChunks(savePathName,
+                List<RegionChunk> chunks = LoadChunks(SavePathName,
                     chunk.ToIndex(GameLoop.Universe.WorldMap.AssocietatedMap.Width)).ToList();
+                chunks.RemoveAll(c => c.ChunckPos() == chunk.ChunckPos());
                 chunks.Add(chunk);
-                SaveChuncksToFile(chunks.ToArray());
+
+                SaveChuncksToFile(chunks.ToArray(), index);
             }
         }
 
@@ -192,13 +212,19 @@ namespace MagiRogue.Data
         private string GetChunckFile(int index)
         {
             // need to remake, so that it will only load the relevant chunk
-            string path = $@"Saves\{saveDir}\Chunks_{index / 1000}.mr";
+            string path = $@"{SaveDir}\Chunks_{index / 1000}.mr";
             string pattern = Path.GetFileName(path);
             string realDir = path[..^pattern.Length];
             string fullPath = Path.Combine(dir, realDir);
             string file =
                 Directory.GetFiles(fullPath, pattern, SearchOption.TopDirectoryOnly).FirstOrDefault();
             return file;
+        }
+
+        private string GetChunckRelativeFile(int index)
+        {
+            string path = $@"{_folderName}\{SavePathName}\Chunks_{index / 1000}.mr";
+            return path;
         }
 
         /// <summary>
@@ -210,12 +236,12 @@ namespace MagiRogue.Data
         private static string GetChunckFileStatic(string saveName, int currentChunkIndex)
         {
             // need to remake, so that it will only load the relevant chunk
-            string path = $@"Saves\{saveName}\Chunks_{currentChunkIndex / 1000}.mr";
-            string pattern = Path.GetFileName(path);
+            string file = $@"Saves\{saveName}\Chunks_{currentChunkIndex / 1000}.mr";
+            /*string pattern = Path.GetFileName(path);
             string realDir = path[..^pattern.Length];
             string fullPath = Path.Combine(dir, realDir);
             string file =
-                Directory.GetFiles(fullPath, pattern, SearchOption.TopDirectoryOnly).FirstOrDefault();
+                Directory.GetFiles(fullPath, pattern, SearchOption.TopDirectoryOnly).FirstOrDefault();*/
             return file;
         }
 
@@ -223,9 +249,9 @@ namespace MagiRogue.Data
         /// Saves a single chunck to a file
         /// </summary>
         /// <param name="chunk"></param>
-        private void SaveChunckToFile(RegionChunk chunk)
+        private void SaveChunckToFile(RegionChunk chunk, int index)
         {
-            SaveChuncksToFile(new RegionChunk[] { chunk });
+            SaveChuncksToFile(new RegionChunk[] { chunk }, index);
         }
 
         /// <summary>
@@ -259,6 +285,15 @@ namespace MagiRogue.Data
             {
                 throw;
             }
+        }
+
+        public RegionChunk GetChunkAtIndex(int index, int mapWidth)
+        {
+            string file = GetChunckRelativeFile(index);
+
+            var regions = LoadChunks(file);
+
+            return regions.FirstOrDefault(i => i.ToIndex(mapWidth) == index);
         }
     }
 }

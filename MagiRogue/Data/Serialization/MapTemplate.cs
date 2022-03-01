@@ -338,6 +338,8 @@ namespace MagiRogue.Data.Serialization
 
             if (!map.MapName.Equals("Planet"))
                 template.HasFOV = true;
+            else
+                template.HasFOV = false;
 
             if (map.ZLevels is not null)
                 template.ZLevels = map.ZLevels;

@@ -63,6 +63,8 @@ namespace MagiRogue.System
 
         /// <summary>
         /// All the maps and chunks of the game
+        /// NOTE WILL BE SLOWLEY REMOVED FROM CODE!!
+        /// TO BE REPLACED WITH AN ARRAY THAT CONTAINS FEWR CHUNKS!
         /// </summary>
         public RegionChunk[] AllChunks { get; set; }
 
@@ -88,7 +90,8 @@ namespace MagiRogue.System
                 CurrentMap = WorldMap.AssocietatedMap;
                 PlacePlayerOnWorld(player);
                 SaveAndLoad = new();
-                SaveGame(player.Name);
+                if (player is not null)
+                    SaveGame(player.Name);
             }
             else
             {
@@ -104,10 +107,16 @@ namespace MagiRogue.System
             TimeSystem time,
             bool possibleChangeMap,
             SeasonType currentSeason,
-            RegionChunk[] allChunks)
+            RegionChunk[] allChunks,
+            SaveAndLoad loadSave)
         {
             WorldMap = worldMap;
-            CurrentMap = currentMap;
+
+            if (currentMap is not null && worldMap.AssocietatedMap.MapName.Equals(currentMap.MapName))
+                CurrentMap = worldMap.AssocietatedMap;
+            else
+                CurrentMap = currentMap;
+
             if (CurrentMap is not null)
                 CurrentMap.IsActive = true;
             Player = player;
@@ -115,7 +124,7 @@ namespace MagiRogue.System
             PossibleChangeMap = possibleChangeMap;
             CurrentSeason = currentSeason;
             AllChunks = allChunks;
-            SaveAndLoad = new();
+            SaveAndLoad = loadSave;
         }
 
         private void PlacePlayerOnWorld(Player player)
@@ -170,7 +179,7 @@ namespace MagiRogue.System
             GameLoop.UIManager.MapWindow.CenterOnActor(Player);
         }
 
-        private void UpdateIfNeedTheMap(Map mapToGo)
+        private static void UpdateIfNeedTheMap(Map mapToGo)
         {
             if (mapToGo.NeedsUpdate)
             {
@@ -193,7 +202,8 @@ namespace MagiRogue.System
         }
 
         /// <summary>
-        /// Sets up anything that needs to be set up after map gen and after placing entities, like the nodes turn
+        /// Sets up anything that needs to be set up after map gen
+        /// and after placing entities, like the nodes turn
         /// system
         /// </summary>
         private void SetUpStuff(Map map)
@@ -345,6 +355,7 @@ namespace MagiRogue.System
             {
                 if (Player.Stats.Health <= 0)
                 {
+                    DeleteSave();
                     RestartGame();
                     return;
                 }
@@ -357,6 +368,8 @@ namespace MagiRogue.System
                 CurrentMap.PlayerFOV.Calculate(Player.Position, Player.Stats.ViewRadius);
 
                 var node = Time.NextNode();
+
+                // put here terrrain effect
 
                 while (node is not PlayerTimeNode)
                 {
@@ -381,25 +394,32 @@ namespace MagiRogue.System
             }
         }
 
+        private void DeleteSave()
+        {
+            SaveAndLoad.DeleteSave(Player.Name);
+        }
+
         private void RestartGame()
         {
             CurrentMap.RemoveAllEntities();
             CurrentMap.RemoveAllTiles();
             CurrentMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
-            for (int i = 0; i < AllChunks.Length; i++)
+            int chunckLenght = AllChunks.Length;
+            for (int i = 0; i < chunckLenght; i++)
             {
                 Map[] maps = AllChunks[i].LocalMaps;
-                for (int z = 0; z < maps.Length; z++)
+                int mapsLenght = maps.Length;
+                for (int z = 0; z < mapsLenght; z++)
                 {
-                    maps[i].RemoveAllEntities();
-                    maps[i].RemoveAllTiles();
-                    maps[i].GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
+                    maps[z].RemoveAllEntities();
+                    maps[z].RemoveAllTiles();
+                    maps[z].GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
                 }
             }
             CurrentMap = null;
             Player = null;
             AllChunks = null;
-            AllChunks = null;
+            CurrentChunk = null;
             WorldMap = null;
 
             GameLoop.UIManager.MainMenu.RestartGame();
@@ -440,16 +460,16 @@ namespace MagiRogue.System
                 newChunck.LocalMaps[i].SetId(GameLoop.IdGen.UseID());
             }
 
-            AllChunks[Point.ToIndex(posGenerated.X, posGenerated.Y, planetWidth)] = newChunck;
+            //AllChunks[Point.ToIndex(posGenerated.X, posGenerated.Y, planetWidth)] = newChunck;
 
             return newChunck;
         }
 
         public RegionChunk GetChunckByPos(Point playerPoint)
         {
-            var sss = AllChunks[Point.ToIndex(playerPoint.X, playerPoint.Y, planetWidth)];
+            var chunk = SaveAndLoad.GetChunkAtIndex(Point.ToIndex(playerPoint.X, playerPoint.Y, planetWidth), planetWidth);
 
-            return sss;
+            return chunk;
         }
 
         public bool MapIsWorld()

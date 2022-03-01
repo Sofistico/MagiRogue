@@ -131,7 +131,7 @@ namespace MagiRogue.Data.Serialization
         public RegionChunk[] AllChunks { get; set; }
 
         [DataMember]
-        public int[] AllChunksIds { get; set; }
+        public SaveAndLoad SaveAndLoad { get; set; }
 
         public UniverseTemplate(PlanetMap worldMap,
             Map currentMap,
@@ -152,14 +152,6 @@ namespace MagiRogue.Data.Serialization
             PossibleChangeMap = possibleChangeMap;
             CurrentSeason = currentSeason.ToString();
             AllChunks = allChunks;
-            if (AllChunks is not null)
-            {
-                AllChunksIds = new int[allChunks.Length];
-                for (int i = 0; i < AllChunks.Length; i++)
-                {
-                    AllChunksIds[i] = i;
-                }
-            }
         }
 
         public UniverseTemplate()
@@ -186,7 +178,8 @@ namespace MagiRogue.Data.Serialization
                 uni.Time, uni.PossibleChangeMap,
                 uni.CurrentSeason, uni.AllChunks)
             {
-                CurrentChunk = uni.CurrentChunk
+                CurrentChunk = uni.CurrentChunk,
+                SaveAndLoad = uni.SaveAndLoad
             };
             return universe;
         }
@@ -196,7 +189,7 @@ namespace MagiRogue.Data.Serialization
             Universe universe = new Universe(uni.WorldMap, uni.CurrentMap,
                 Entities.Player.ReturnPlayerFromActor(uni.Player),
                 uni.Time, uni.PossibleChangeMap,
-                SeasonEnumToString(uni.CurrentSeason), uni.AllChunks);
+                SeasonEnumToString(uni.CurrentSeason), uni.AllChunks, uni.SaveAndLoad);
 
             return universe;
         }
