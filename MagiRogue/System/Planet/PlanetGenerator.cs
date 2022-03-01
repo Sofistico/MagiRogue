@@ -79,6 +79,12 @@ namespace MagiRogue.System.Planet
         // final object
         private WorldTile[,] tiles;
 
+        private float[,] HeightData;
+
+        private float[,] HeatData;
+
+        private float[,] MoistureData;
+
         private readonly BiomeType[,] biomeTable = new BiomeType[6, 6] {
             //COLDEST        //COLDER          //COLD                  //HOT                          //HOTTER                       //HOTTEST
             { BiomeType.Ice, BiomeType.Tundra, BiomeType.Grassland,    BiomeType.Desert,              BiomeType.Desert,              BiomeType.Desert },              //DRYEST
@@ -103,6 +109,9 @@ namespace MagiRogue.System.Planet
             _height = height;
             maxCivsWorld = nmbCivilizations;
             _civilizations = new Civilization[maxCivsWorld];
+            HeightData = new float[width, height];
+            HeatData = new float[width, height];
+            MoistureData = new float[width, height];
 
             // Initialize the generator
             Initialize();
@@ -318,8 +327,8 @@ namespace MagiRogue.System.Planet
             {
                 tries++;
 
-                int x = GoRogue.Random.GlobalRandom.DefaultRNG.Next(0, _width);
-                int y = GoRogue.Random.GlobalRandom.DefaultRNG.Next(0, _height);
+                int x = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, _width);
+                int y = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, _height);
                 WorldTile tile = tiles[x, y];
 
                 if (tile.HeightType == HeightType.DeepWater
@@ -329,7 +338,7 @@ namespace MagiRogue.System.Planet
                 if (tile.CivInfluence != null)
                     continue;
 
-                int rng = GoRogue.Random.GlobalRandom.DefaultRNG.Next(100, 5000);
+                int rng = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(100, 5000);
 
                 int pop = (int)(rng * ((int)tile.HeightType * tile.MoistureValue + 1));
 
@@ -353,7 +362,7 @@ namespace MagiRogue.System.Planet
 
         private static CivilizationTendency RandomCivTendency()
         {
-            int rng = GoRogue.Random.GlobalRandom.DefaultRNG.Next(0, 2 + 1);
+            int rng = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, 2 + 1);
             return rng switch
             {
                 0 => CivilizationTendency.Normal,
@@ -392,9 +401,9 @@ namespace MagiRogue.System.Planet
                     WorldTile t = new();
                     t.Position = new SadRogue.Primitives.Point(x, y);
 
-                    float heightValue = planetData.HeightData[x, y];
+                    float heightValue = HeightData[x, y];
                     t.MineralValue = MathMagi.ReturnPositive(MathF.Round
-                        ((planetData.HeightData[x, y] + planetData.HeatData[x, y]) * 200));
+                        ((HeightData[x, y] + HeatData[x, y]) * 200));
 
                     // normalize value between 0 and 1
                     heightValue = MathMagi.ReturnPositive(heightValue);
@@ -451,29 +460,29 @@ namespace MagiRogue.System.Planet
                     }
 
                     //Moisture Map Analyze
-                    float moistureValue = MathMagi.ReturnPositive(planetData.MoistureData[x, y]);
+                    float moistureValue = MathMagi.ReturnPositive(MoistureData[x, y]);
                     t.MoistureValue = MathF.Round(moistureValue, 1);
 
                     //adjust moisture based on height
                     if (t.HeightType == HeightType.DeepWater)
                     {
-                        planetData.MoistureData[t.Position.X, t.Position.Y] += 8f * t.HeightValue;
+                        MoistureData[t.Position.X, t.Position.Y] += 8f * t.HeightValue;
                     }
                     else if (t.HeightType == HeightType.ShallowWater)
                     {
-                        planetData.MoistureData[t.Position.X, t.Position.Y] += 3f * t.HeightValue;
+                        MoistureData[t.Position.X, t.Position.Y] += 3f * t.HeightValue;
                     }
                     else if (t.HeightType == HeightType.Shore)
                     {
-                        planetData.MoistureData[t.Position.X, t.Position.Y] += 1f * t.HeightValue;
+                        MoistureData[t.Position.X, t.Position.Y] += 1f * t.HeightValue;
                     }
                     else if (t.HeightType == HeightType.Sand)
                     {
-                        planetData.MoistureData[t.Position.X, t.Position.Y] += 0.25f * t.HeightValue;
+                        MoistureData[t.Position.X, t.Position.Y] += 0.25f * t.HeightValue;
                     }
                     else if (t.HeightType == HeightType.Snow)
                     {
-                        planetData.MoistureData[t.Position.X, t.Position.Y] += 2f * t.HeightValue;
+                        MoistureData[t.Position.X, t.Position.Y] += 2f * t.HeightValue;
                     }
 
                     //set moisture type
@@ -486,27 +495,27 @@ namespace MagiRogue.System.Planet
 
                     if (t.HeightType == HeightType.Forest)
                     {
-                        planetData.HeatData[t.Position.X, t.Position.Y] -= 0.1f * t.HeightValue;
+                        HeatData[t.Position.X, t.Position.Y] -= 0.1f * t.HeightValue;
                     }
                     else if (t.HeightType == HeightType.Mountain)
                     {
-                        planetData.HeatData[t.Position.X, t.Position.Y] -= 0.25f * t.HeightValue;
+                        HeatData[t.Position.X, t.Position.Y] -= 0.25f * t.HeightValue;
                     }
                     else if (t.HeightType == HeightType.HighMountain)
                     {
-                        planetData.HeatData[t.Position.X, t.Position.Y] -= 0.5f * t.HeightValue;
+                        HeatData[t.Position.X, t.Position.Y] -= 0.5f * t.HeightValue;
                     }
                     else if (t.HeightType == HeightType.Snow)
                     {
-                        planetData.HeatData[t.Position.X, t.Position.Y] -= 0.7f * t.HeightValue;
+                        HeatData[t.Position.X, t.Position.Y] -= 0.7f * t.HeightValue;
                     }
                     else
                     {
-                        planetData.HeatData[t.Position.X, t.Position.Y] += 0.01f * t.HeightValue;
+                        HeatData[t.Position.X, t.Position.Y] += 0.01f * t.HeightValue;
                     }
 
                     // Set heat value
-                    float heatModValue = MathMagi.ReturnPositive(planetData.HeatData[t.Position.X, t.Position.Y]);
+                    float heatModValue = MathMagi.ReturnPositive(HeatData[t.Position.X, t.Position.Y]);
                     t.HeatValue = heatModValue;
 
                     // set heat type
@@ -565,16 +574,16 @@ namespace MagiRogue.System.Planet
                     if (moistureValue > planetData.Max) planetData.Max = moistureValue;
                     if (moistureValue < planetData.Min) planetData.Min = moistureValue;
 
-                    planetData.HeightData[x, y] = heightValue;
-                    planetData.HeatData[x, y] = heatValue;
-                    planetData.MoistureData[x, y] = moistureValue;
+                    HeightData[x, y] = heightValue;
+                    HeatData[x, y] = heatValue;
+                    MoistureData[x, y] = moistureValue;
                 }
             }
         }
 
         private void Initialize()
         {
-            seed = GoRogue.Random.GlobalRandom.DefaultRNG.Next(0, int.MaxValue);
+            seed = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, int.MaxValue);
             heightMap = new(FractalType.Multi,
                                        BasisType.Simplex,
                                        InterpolationType.Quintic,
@@ -768,8 +777,8 @@ namespace MagiRogue.System.Planet
             while (count > 0 && attempts < maxRiverAttempts)
             {
                 // get random tiles
-                int x = GoRogue.Random.GlobalRandom.DefaultRNG.Next(0, _width);
-                int y = GoRogue.Random.GlobalRandom.DefaultRNG.Next(0, _height);
+                int x = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, _width);
+                int y = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, _height);
                 WorldTile tile = tiles[x, y];
 
                 // validate the tile
@@ -1031,7 +1040,7 @@ namespace MagiRogue.System.Planet
             int counter = 0;
 
             // How wide are we digging this river?
-            int size = GoRogue.Random.GlobalRandom.DefaultRNG.Next(1, 5);
+            int size = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(1, 5);
             river.Length = river.Tiles.Count;
 
             // randomize size change
@@ -1046,25 +1055,25 @@ namespace MagiRogue.System.Planet
             int fivemin = five / 3;
 
             // randomize lenght of each size
-            int count1 = GoRogue.Random.GlobalRandom.DefaultRNG.Next(fivemin, five);
+            int count1 = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(fivemin, five);
             if (size < 4)
             {
                 count1 = 0;
             }
-            int count2 = count1 + GoRogue.Random.GlobalRandom.DefaultRNG.Next(fourmin, four);
+            int count2 = count1 + GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(fourmin, four);
             if (size < 3)
             {
                 count2 = 0;
                 count1 = 0;
             }
-            int count3 = count2 + GoRogue.Random.GlobalRandom.DefaultRNG.Next(threemin, three);
+            int count3 = count2 + GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(threemin, three);
             if (size < 2)
             {
                 count3 = 0;
                 count2 = 0;
                 count1 = 0;
             }
-            int count4 = count3 + GoRogue.Random.GlobalRandom.DefaultRNG.Next(twomin, two);
+            int count4 = count3 + GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(twomin, two);
 
             // Make sure we are not digging past the river path
             if (count4 > river.Length)
@@ -1177,7 +1186,7 @@ namespace MagiRogue.System.Planet
 
             int counter = 0;
             int intersectionCount = river.Tiles.Count - intersectionID;
-            int size = GoRogue.Random.GlobalRandom.DefaultRNG.Next(intersectionSize, 5);
+            int size = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(intersectionSize, 5);
             river.Length = river.Tiles.Count;
 
             // randomize size change
@@ -1192,25 +1201,25 @@ namespace MagiRogue.System.Planet
             int fivemin = five / 3;
 
             // randomize length of each size
-            int count1 = GoRogue.Random.GlobalRandom.DefaultRNG.Next(fivemin, five);
+            int count1 = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(fivemin, five);
             if (size < 4)
             {
                 count1 = 0;
             }
-            int count2 = count1 + GoRogue.Random.GlobalRandom.DefaultRNG.Next(fourmin, four);
+            int count2 = count1 + GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(fourmin, four);
             if (size < 3)
             {
                 count2 = 0;
                 count1 = 0;
             }
-            int count3 = count2 + GoRogue.Random.GlobalRandom.DefaultRNG.Next(threemin, three);
+            int count3 = count2 + GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(threemin, three);
             if (size < 2)
             {
                 count3 = 0;
                 count2 = 0;
                 count1 = 0;
             }
-            int count4 = count3 + GoRogue.Random.GlobalRandom.DefaultRNG.Next(twomin, two);
+            int count4 = count3 + GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(twomin, two);
 
             // Make sure we are not digging past the river path
             if (count4 > river.Length)

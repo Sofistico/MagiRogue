@@ -20,8 +20,7 @@ namespace MagiRogue.Data.Serialization
             Type objectType, Map? existingValue, bool hasExistingValue,
             JsonSerializer serializer)
         {
-            reader.SupportMultipleContent = true;
-            JObject futureMap = JObject.Load(reader);
+            /*JObject futureMap = JObject.Load(reader);
             Map map = new Map(futureMap["MapName"].ToString(),
                 (int)futureMap["Width"], (int)futureMap["Height"]);
             JToken[] tiles = futureMap["Tiles"].ToArray();
@@ -170,10 +169,11 @@ namespace MagiRogue.Data.Serialization
 
             reader.CloseInput = true;
 
-            return map;
+            return map;*/
+            return serializer.Deserialize<MapTemplate>(reader);
         }
 
-        private void ParametizeTile(BasicTile tile, JToken jToken)
+        /*private void ParametizeTile(BasicTile tile, JToken jToken)
         {
             switch (tile.TileType)
             {
@@ -251,13 +251,14 @@ namespace MagiRogue.Data.Serialization
                 "Mountain" => BiomeType.Mountain,
                 _ => BiomeType.Null,
             };
-        }
+        }*/
 
         public override void WriteJson(JsonWriter writer, Map? value, JsonSerializer serializer)
         {
-            var template = (MapTemplate)value;
-            if (template.Entities.Count == 0)
-                template.Entities = null;
+            MapTemplate template = (MapTemplate)value;
+            /*if (template.Entities.Count == 0)
+                template.Entities = null;*/
+            serializer.NullValueHandling = NullValueHandling.Ignore;
             serializer.Serialize(writer, template);
             writer.Flush();
         }
@@ -271,9 +272,12 @@ namespace MagiRogue.Data.Serialization
         public int Height { get; set; }
         public Point LastPlayerPosition { get; set; }
         public uint MapId { get; private set; }
-        public IList<Entity> Entities { get; set; }
+        public IList<Actor> Actors { get; set; }
+        public IList<Item> Items { get; set; }
         public bool[] Explored;
-        public int Seed { get; set; }
+        public ulong Seed { get; set; }
+        public bool? HasFOV { get; set; }
+        public int[]? ZLevels { get; set; }
 
         public MapTemplate(string mapName,
             BasicTile[] tiles,
@@ -316,15 +320,29 @@ namespace MagiRogue.Data.Serialization
             MapTemplate template = new MapTemplate(map.MapName, tiles, map.Width,
                 map.Height, map.LastPlayerPosition, map.MapId, map.PlayerExplored.ToArray());
 
-            List<Entity> entities = new List<Entity>();
+            List<Item> items = new List<Item>();
+            List<Actor> actors = new List<Actor>();
 
-            foreach (Entity item in map.Entities.Items)
+            for (int i = 0; i < map.Entities.Count; i++)
             {
-                entities.Add(item);
+                Entity entity = (Entity)map.Entities.Items.ToArray()[i];
+                if (entity is Actor actor) { actors.Add(actor); }
+                if (entity is Item item) { items.Add(item); }
+                if (entity is Player player) { map.LastPlayerPosition = player.Position; }
             }
 
-            template.Entities = entities;
+            template.Actors = actors;
+            template.Items = items;
             template.Seed = map.Seed;
+            template.LastPlayerPosition = map.LastPlayerPosition;
+
+            if (!map.MapName.Equals("Planet"))
+                template.HasFOV = true;
+            else
+                template.HasFOV = false;
+
+            if (map.ZLevels is not null)
+                template.ZLevels = map.ZLevels;
 
             return template;
         }
@@ -335,21 +353,36 @@ namespace MagiRogue.Data.Serialization
                 return null;
             var objMap = new Map(map.MapName, map.Width, map.Height);
 
+            if (map.HasFOV is not null && (bool)!map.HasFOV)
+                objMap.GoRogueComponents.GetFirstOrDefault<MagiRogueFOVVisibilityHandler>().Disable();
+
             for (int i = 0; i < map.Tiles.Length; i++)
             {
-                if (objMap.Tiles[i] == null)
+                if (map.Tiles[i] == null)
                     continue;
-                objMap.SetTerrain((TileBase)map.Tiles[i]);
+                var tile = (TileBase)map.Tiles[i];
+                objMap.SetTerrain(tile);
             }
-            for (int x = 0; x < map.Entities.Count; x++)
+            for (int x = 0; x < map.Actors.Count; x++)
             {
-                objMap.Add(map.Entities[x]);
+                if (!map.Actors[x].IsPlayer)
+                {
+                    //objMap.Add(Player.ReturnPlayerFromActor(map.Actors[x]));
+                    objMap.Add(map.Actors[x]);
+                }
+            }
+            for (int x = 0; x < map.Items.Count; x++)
+            {
+                objMap.Add(map.Items[x]);
             }
             objMap.SetId(map.MapId);
             objMap.LastPlayerPosition = map.LastPlayerPosition;
             objMap.PlayerExplored = new SadRogue.Primitives.GridViews.ArrayView<bool>(
                 map.Explored, map.Width);
             objMap.SetSeed(map.Seed);
+            objMap.GoRogueComponents.GetFirstOrDefault<MagiRogueFOVVisibilityHandler>().RefreshExploredTerrain();
+            if (map.ZLevels is not null)
+                objMap.ZLevels = map.ZLevels;
 
             return objMap;
         }

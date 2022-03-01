@@ -9,11 +9,8 @@ using SadRogue.Primitives;
 using System;
 using MagiRogue.System.Magic;
 using System.Linq;
-using GoRogue;
 using MagiRogue.Data.Serialization;
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using MagiRogue.Utils;
 
 namespace MagiRogue.System
 {
@@ -52,7 +49,7 @@ namespace MagiRogue.System
         /// <summary>
         /// Stores the current chunk that is loaded
         /// </summary>
-        public RegionChunk CurrentChunk { get; private set; }
+        public RegionChunk CurrentChunk { get; set; }
 
         /// <summary>
         /// Player data
@@ -66,12 +63,12 @@ namespace MagiRogue.System
 
         /// <summary>
         /// All the maps and chunks of the game
+        /// NOTE WILL BE SLOWLEY REMOVED FROM CODE!!
+        /// TO BE REPLACED WITH AN ARRAY THAT CONTAINS FEWR CHUNKS!
         /// </summary>
-        public RegionChunkTemplate[] AllChunks { get; set; }
+        public RegionChunk[] AllChunks { get; set; }
 
         public SaveAndLoad SaveAndLoad { get; set; }
-
-        public MagiGlobalRandom MagiRandom { get; }
 
         /// <summary>
         /// Creates a new game world and stores it in a
@@ -81,7 +78,6 @@ namespace MagiRogue.System
         {
             Time = new TimeSystem();
             CurrentSeason = SeasonType.Spring;
-            MagiRandom = new MagiGlobalRandom();
 
             if (!testGame)
             {
@@ -90,10 +86,12 @@ namespace MagiRogue.System
                     planetMaxCivs);
                 WorldMap.AssocietatedMap.IsActive = true;
                 maxChunks = planetWidth * planetHeight;
-                AllChunks = new RegionChunkTemplate[maxChunks];
+                AllChunks = new RegionChunk[maxChunks];
                 CurrentMap = WorldMap.AssocietatedMap;
                 PlacePlayerOnWorld(player);
                 SaveAndLoad = new();
+                if (player is not null)
+                    SaveGame(player.Name);
             }
             else
             {
@@ -109,18 +107,24 @@ namespace MagiRogue.System
             TimeSystem time,
             bool possibleChangeMap,
             SeasonType currentSeason,
-            RegionChunkTemplate[] allChunks,
-            MagiGlobalRandom rng)
+            RegionChunk[] allChunks,
+            SaveAndLoad loadSave)
         {
             WorldMap = worldMap;
-            CurrentMap = currentMap;
+
+            if (currentMap is not null && worldMap.AssocietatedMap.MapName.Equals(currentMap.MapName))
+                CurrentMap = worldMap.AssocietatedMap;
+            else
+                CurrentMap = currentMap;
+
+            if (CurrentMap is not null)
+                CurrentMap.IsActive = true;
             Player = player;
             Time = time;
             PossibleChangeMap = possibleChangeMap;
             CurrentSeason = currentSeason;
             AllChunks = allChunks;
-            SaveAndLoad = new();
-            MagiRandom = rng;
+            SaveAndLoad = loadSave;
         }
 
         private void PlacePlayerOnWorld(Player player)
@@ -134,6 +138,19 @@ namespace MagiRogue.System
                 Player = player;
 
                 CurrentMap.Add(Player);
+            }
+        }
+
+        public void PlacePlayerOnLoad()
+        {
+            if (Player != null)
+            {
+                Player.Position = CurrentMap.LastPlayerPosition;
+                CurrentMap.Add(Player);
+            }
+            else
+            {
+                throw new Exception("Coudn't load the player, it was null!");
             }
         }
 
@@ -155,23 +172,14 @@ namespace MagiRogue.System
         {
             CurrentMap.LastPlayerPosition = new Point(Player.Position.X, Player.Position.Y);
             ChangeActorMap(Player, mapToGo, pos, previousMap);
-            if (MapIsWorld(previousMap))
-            {
-                // do somehting
-            }
-            /*else
-            {
-                string map = previousMap.SaveMapToJson(Player);
-                SaveAndLoad.SaveMapToSaveFolder(map, previousMap.MapId.ToString());
-            }*/
             UpdateIfNeedTheMap(mapToGo);
             CurrentMap = mapToGo;
-            mapToGo.LoadToMemory();
+            previousMap.ControlledEntitiy = null;
             GameLoop.UIManager.MapWindow.LoadMap(CurrentMap);
             GameLoop.UIManager.MapWindow.CenterOnActor(Player);
         }
 
-        private void UpdateIfNeedTheMap(Map mapToGo)
+        private static void UpdateIfNeedTheMap(Map mapToGo)
         {
             if (mapToGo.NeedsUpdate)
             {
@@ -194,7 +202,8 @@ namespace MagiRogue.System
         }
 
         /// <summary>
-        /// Sets up anything that needs to be set up after map gen and after placing entities, like the nodes turn
+        /// Sets up anything that needs to be set up after map gen
+        /// and after placing entities, like the nodes turn
         /// system
         /// </summary>
         private void SetUpStuff(Map map)
@@ -293,7 +302,7 @@ namespace MagiRogue.System
                     {
                         Description = "DebugRotten"
                     }));
-                debugMonster.Anatomy.Limbs = EntityFactory.BasicHumanoidBody(debugMonster);
+                debugMonster.Anatomy.Limbs = EntityFactory.BasicHumanoidBody();
 
                 map.Add(debugMonster);
                 EntityTimeNode entityNode = new EntityTimeNode(debugMonster.ID, Time.TimePassed.Ticks + 100);
@@ -346,6 +355,7 @@ namespace MagiRogue.System
             {
                 if (Player.Stats.Health <= 0)
                 {
+                    DeleteSave();
                     RestartGame();
                     return;
                 }
@@ -358,6 +368,8 @@ namespace MagiRogue.System
                 CurrentMap.PlayerFOV.Calculate(Player.Position, Player.Stats.ViewRadius);
 
                 var node = Time.NextNode();
+
+                // put here terrrain effect
 
                 while (node is not PlayerTimeNode)
                 {
@@ -382,25 +394,32 @@ namespace MagiRogue.System
             }
         }
 
+        private void DeleteSave()
+        {
+            SaveAndLoad.DeleteSave(Player.Name);
+        }
+
         private void RestartGame()
         {
             CurrentMap.RemoveAllEntities();
             CurrentMap.RemoveAllTiles();
             CurrentMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
-            for (int i = 0; i < AllChunks.Length; i++)
+            int chunckLenght = AllChunks.Length;
+            for (int i = 0; i < chunckLenght; i++)
             {
-                Map[] maps = AllChunks[i].ReturnAsMap();
-                for (int z = 0; z < maps.Length; z++)
+                Map[] maps = AllChunks[i].LocalMaps;
+                int mapsLenght = maps.Length;
+                for (int z = 0; z < mapsLenght; z++)
                 {
-                    maps[i].RemoveAllEntities();
-                    maps[i].RemoveAllTiles();
-                    maps[i].GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
+                    maps[z].RemoveAllEntities();
+                    maps[z].RemoveAllTiles();
+                    maps[z].GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
                 }
             }
             CurrentMap = null;
             Player = null;
             AllChunks = null;
-            AllChunks = null;
+            CurrentChunk = null;
             WorldMap = null;
 
             GameLoop.UIManager.MainMenu.RestartGame();
@@ -441,13 +460,17 @@ namespace MagiRogue.System
                 newChunck.LocalMaps[i].SetId(GameLoop.IdGen.UseID());
             }
 
-            AllChunks[Point.ToIndex(posGenerated.X, posGenerated.Y, planetWidth)] = newChunck;
+            //AllChunks[Point.ToIndex(posGenerated.X, posGenerated.Y, planetWidth)] = newChunck;
 
             return newChunck;
         }
 
-        public RegionChunk GetChunckByPos(Point playerPoint) =>
-            AllChunks[Point.ToIndex(playerPoint.X, playerPoint.Y, planetWidth)];
+        public RegionChunk GetChunckByPos(Point playerPoint)
+        {
+            var chunk = SaveAndLoad.GetChunkAtIndex(Point.ToIndex(playerPoint.X, playerPoint.Y, planetWidth), planetWidth);
+
+            return chunk;
+        }
 
         public bool MapIsWorld()
         {

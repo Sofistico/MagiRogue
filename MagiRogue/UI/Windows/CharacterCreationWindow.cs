@@ -6,7 +6,6 @@ using SadConsole.Instructions;
 using SadConsole.UI.Controls;
 using SadRogue.Primitives;
 using System;
-using Troschuetz.Random;
 using Console = SadConsole.Console;
 
 namespace MagiRogue.UI.Windows
@@ -134,9 +133,10 @@ namespace MagiRogue.UI.Windows
                 error.Show(true);
                 return null;
             }
-            int health = TRandom.New().Next(5, bodyStat + 10) + 3;
-            int mana = TRandom.New().Next(8, soulStat + 10);
-            float speed = (float)Math.Round(TRandom.New().NextDouble(0.9, 1.1), 1);
+            int health = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(5, bodyStat + 10) + 3;
+            int mana = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(8, soulStat + 10);
+            float speed = (float)Math.Round(GoRogue.Random.GlobalRandom
+                .DefaultRNG.NextDouble(0.9, 1.1), 1);
             player.Stats = new Stat()
             {
                 BodyStat = bodyStat,
@@ -158,8 +158,8 @@ namespace MagiRogue.UI.Windows
             // to work,
             // but if the player doens't have enough shaping skills for the spell, the player would play as an failed mage.
             player.Magic.KnowSpells.Add(DataManager.QuerySpellInData("magic_missile"));
-            player.Size = TRandom.New().Next(160, 200);
-            player.Weight = TRandom.New().Next(50, 90);
+            player.Size = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(160, 200);
+            player.Weight = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(50, 90);
 
             return player;
         }

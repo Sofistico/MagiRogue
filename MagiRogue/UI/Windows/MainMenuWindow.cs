@@ -19,9 +19,8 @@ namespace MagiRogue.UI.Windows
         private readonly MagiButton testMap;
         private readonly MagiButton continueGame;
         private readonly MagiButton saveGame;
-        private TextBox saveName;
-        private PopWindow savePop;
         private ListBox savesBox;
+        private PopWindow loadPop;
 
         public MainMenuWindow(int width, int height, string title = "Main Menu") : base(width, height, title)
         {
@@ -72,32 +71,51 @@ namespace MagiRogue.UI.Windows
                 if (Utils.SaveUtils.CheckIfThereIsSaveFile())
                 {
                     // creates a new pop window
-                    PopWindow pop = new PopWindow(30, 15, "Load Game");
+                    loadPop = new PopWindow(30, 15, "Load Game");
                     const string text = "Load!";
                     // The load button
                     MagiButton loadGame = new MagiButton(text.Length + 2)
                     {
                         Text = text,
-                        Position = new Point(3, pop.Height - 2)
+                        Position = new Point(3, loadPop.Height - 2)
                     };
                     // the event handler of the click
                     loadGame.Click += LoadGame_Click;
                     // TODO: make this into a method for pop window, since the ratio of the controls
                     // are amazing
-                    savesBox = new ListBox(pop.Width / 2 + 5, 10)
+                    savesBox = new ListBox(loadPop.Width / 2 + 5, 10)
                     {
-                        Position = new Point((pop.Width / 2) - 10, (pop.Height / 2) - 5)
+                        Position = new Point((loadPop.Width / 2) - 10, (loadPop.Height / 2) - 5)
                     };
+                    string delete = "Delete";
+                    MagiButton deleteSaveBtn = new MagiButton(delete.Length + 2)
+                    {
+                        Text = delete,
+                        Position = new Point(loadPop.Width / 2 - 5, loadPop.Height - 3)
+                    };
+
+                    deleteSaveBtn.Click += DeleteSaveBtn_Click;
 
                     // populate the list with the save names
                     PopulateListWithSaves();
 
                     // and the set up with SadConsole
-                    pop.Controls.Add(loadGame);
-                    pop.Controls.Add(savesBox);
-                    Children.Add(pop);
-                    pop.Show();
+                    loadPop.Controls.Add(loadGame);
+                    loadPop.Controls.Add(deleteSaveBtn);
+                    loadPop.Controls.Add(savesBox);
+                    Children.Add(loadPop);
+                    loadPop.Show();
                 }
+            }
+        }
+
+        private void DeleteSaveBtn_Click(object? sender, EventArgs e)
+        {
+            if (savesBox.SelectedItem != null)
+            {
+                SaveAndLoad.DeleteSave(savesBox.SelectedItem.ToString());
+                savesBox.Items.Remove(savesBox.SelectedItem);
+                savesBox.IsDirty = true;
             }
         }
 
@@ -107,6 +125,7 @@ namespace MagiRogue.UI.Windows
             {
                 if (SaveAndLoad.CheckIfStringIsValidSave(savesBox.SelectedItem.ToString()))
                 {
+                    loadPop.Hide();
                     Universe uni = SaveAndLoad.LoadGame(savesBox.SelectedItem.ToString());
                     GameLoop.UIManager.StartGame(uni.Player, uni: uni);
                 }
@@ -164,39 +183,16 @@ namespace MagiRogue.UI.Windows
 
         private void SaveGameClick(object sender, EventArgs e)
         {
-            if (GameStarted && GameLoop.UIManager.NoPopWindow)
+            if (GameStarted)
             {
-                OpenSavePop();
-            }
-        }
-
-        private void OpenSavePop()
-        {
-            savePop = new PopWindow(30, 15, "Save test");
-            saveName = new TextBox(10)
-            {
-                Position = new SadRogue.Primitives.Point(5, savePop.Height / 2)
-            };
-            string save = "Save";
-            MagiButton saveAndClose = new MagiButton(save.Length + 2)
-            {
-                Text = save,
-                Position = new Point(2, 13)
-            };
-            saveAndClose.Click += SaveAndClose_Click;
-            savePop.Controls.Add(saveName);
-            savePop.Controls.Add(saveAndClose);
-            savePop.Surface.Print(saveName.Position.X - 2, saveName.Position.Y - 2, "Save name here:");
-            Children.Add(savePop);
-            savePop.Show();
-        }
-
-        private void SaveAndClose_Click(object? sender, EventArgs e)
-        {
-            if (!string.IsNullOrWhiteSpace(saveName.Text) && GameStarted)
-            {
-                GameLoop.Universe.SaveGame(saveName.Text);
-                savePop.Hide();
+                // makes so that there can only be one save per player name!
+                GameLoop.Universe.SaveGame(GameLoop.Universe.Player.Name);
+                PopWindow alert = new PopWindow(30, 10, "Save Done!");
+                // makes it a variable so that it can be properly accounted for in the print command
+                string text = "Save Sucessful!";
+                alert.Print((alert.Width - text.Length) / 2, 3, text);
+                Children.Add(alert);
+                alert.Show();
             }
         }
 
@@ -230,6 +226,7 @@ namespace MagiRogue.UI.Windows
             GameLoop.UIManager.MapWindow = null;
             GameLoop.UIManager.StatusConsole = null;
             GameLoop.UIManager.InventoryScreen = null;
+            GameLoop.UIManager.CharCreationWindow = null;
             GameLoop.UIManager.Children.Clear();
             GameLoop.UIManager.Children.Add(this);
 

@@ -22,7 +22,6 @@ namespace MagiRogue.Data.Serialization
             serializer.NullValueHandling = NullValueHandling.Ignore;
 
             LimbTemplate template = (LimbTemplate)value;
-            template.SerialId = GameLoop.IdGen.UseID();
             serializer.Serialize(writer, template);
         }
     }
@@ -56,10 +55,13 @@ namespace MagiRogue.Data.Serialization
         public bool Attached { get; private set; }
 
         [DataMember]
-        public Limb? ConnectedTo { get; private set; }
+        public string? ConnectedToId { get; private set; }
 
         [DataMember]
-        public uint SerialId { get; set; }
+        public string Id { get; set; }
+
+        [DataMember]
+        public bool Broken { get; set; } = false;
 
         // Here will be a class designed to reliable build different types of anatomys, for use in a future dictionary
         // static class for anatomies
@@ -68,6 +70,7 @@ namespace MagiRogue.Data.Serialization
         {
         }
 
+        [JsonConstructor()]
         public LimbTemplate(TypeOfLimb limbType,
             int maxLimbHp,
             int limbHp,
@@ -76,7 +79,7 @@ namespace MagiRogue.Data.Serialization
             Limb.LimbOrientation limbOrientation,
             string limbMaterialId,
             bool attached,
-            Limb? connectsTo)
+            string? connectsTo)
         {
             LimbType = limbType;
             MaxLimbHp = maxLimbHp;
@@ -86,7 +89,7 @@ namespace MagiRogue.Data.Serialization
             LimbOrientation = limbOrientation;
             LimbMaterialId = limbMaterialId;
             Attached = attached;
-            ConnectedTo = connectsTo;
+            ConnectedToId = connectsTo;
         }
 
         public static implicit operator Limb(LimbTemplate template)
@@ -97,9 +100,11 @@ namespace MagiRogue.Data.Serialization
                 template.LimbWeight,
                 template.LimbName,
                 template.LimbOrientation,
-                template.ConnectedTo,
+                template.ConnectedToId,
                 template.LimbMaterialId
                 );
+            limb.Id = template.Id;
+            limb.Broken = template.Broken;
 
             return limb;
         }
@@ -115,6 +120,8 @@ namespace MagiRogue.Data.Serialization
                 limb.LimbMaterial.Id,
                 limb.Attached,
                 limb.ConnectedTo);
+            template.Id = limb.Id;
+            template.Broken = limb.Broken;
 
             return template;
         }

@@ -65,7 +65,8 @@ namespace MagiRogue.System
         public bool NeedsUpdate { get; internal set; }
         public bool IsActive { get; set; }
         public uint MapId { get; private set; }
-        public int Seed { get; set; }
+        public ulong Seed { get; set; }
+        public int[]? ZLevels { get; set; }
 
         #endregion Properties
 
@@ -112,15 +113,9 @@ namespace MagiRogue.System
             }
         }
 
-        public void SetSeed(int seed, int x, int y, int i)
+        public void SetSeed(ulong seed, uint x, uint y, uint i)
         {
             Seed = seed + x + y + (x * x) + (y * y) + (x * y) - (x + y + i);
-        }
-
-        public void LoadToMemory()
-        {
-            IsActive = true;
-            //GameLoop.Universe.SaveAndLoad.LoadMapFile(MapId.ToString());
         }
 
         /// <summary>
@@ -247,6 +242,7 @@ namespace MagiRogue.System
                 FovCalculate(player);
                 ControlledEntitiy = player;
                 ForceFovCalculation();
+                LastPlayerPosition = player.Position;
             }
 
             _entityRender.Add(entity);
@@ -266,6 +262,7 @@ namespace MagiRogue.System
             if (args.Item is Player player)
             {
                 FovCalculate(player);
+                LastPlayerPosition = player.Position;
             }
 
             _entityRender.IsDirty = true;
@@ -353,7 +350,6 @@ namespace MagiRogue.System
             _entityRender = new();
             renderer.SadComponents.Add(_entityRender);
             _entityRender.DoEntityUpdate = true;
-
             foreach (Entity item in Entities.Items)
             {
                 _entityRender.Add(item);
@@ -380,8 +376,11 @@ namespace MagiRogue.System
         private void FovCalculate(Actor actor)
         {
             /*if (PlayerFOV.CurrentFOV.Count() >= actor.Stats.ViewRadius)*/
-            PlayerFOV.Calculate(actor.Position, actor.Stats.ViewRadius, Radius.Circle);
-            FOVRecalculated?.Invoke(this, EventArgs.Empty);
+            if (actor.Anatomy.CanSee)
+            {
+                PlayerFOV.Calculate(actor.Position, actor.Stats.ViewRadius, Radius.Circle);
+                FOVRecalculated?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         /// <summary>
@@ -389,7 +388,7 @@ namespace MagiRogue.System
         /// use <see cref="SetSeed(int, int, int)"/>
         /// </summary>
         /// <param name="seed">The seed to replace</param>
-        internal void SetSeed(int seed)
+        internal void SetSeed(ulong seed)
         {
             Seed = seed;
         }
@@ -411,10 +410,10 @@ namespace MagiRogue.System
         public Point GetRandomWalkableTile()
         {
             var rng = GoRogue.Random.GlobalRandom.DefaultRNG;
-            Point rngPoint = new Point(rng.Next(Width - 1), rng.Next(Height - 1));
+            Point rngPoint = new Point(rng.NextInt(Width - 1), rng.NextInt(Height - 1));
 
             while (!IsTileWalkable(rngPoint))
-                rngPoint = new Point(rng.Next(Width - 1), rng.Next(Height - 1));
+                rngPoint = new Point(rng.NextInt(Width - 1), rng.NextInt(Height - 1));
 
             return rngPoint;
         }

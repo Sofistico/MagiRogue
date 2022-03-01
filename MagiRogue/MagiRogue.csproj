@@ -8,7 +8,7 @@
     <Authors>Sofistico</Authors>
     <Company>Sofistico</Company>
     <Description>A roguelike created with SadConsole 9.x and GoRogue 3.x</Description>
-    <ApplicationIcon>Young-Wizard.ico</ApplicationIcon>
+    <ApplicationIcon>Wizard.ico</ApplicationIcon>
     <Nullable>enable</Nullable>
     <Win32Resource />
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
@@ -26,6 +26,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="Wizard.ico" />
+  </ItemGroup>
+    <ItemGroup>
+		<EmbeddedResource Include="Icon.bmp" />
+	</ItemGroup>
+
+
+	<ItemGroup>
     <None Include="..\README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
@@ -33,8 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="GoRogue" Version="3.0.0-alpha09" />
-    <PackageReference Include="JsonSubTypes" Version="1.8.0" />
+    <PackageReference Include="GoRogue" Version="3.0.0-alpha10" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="SadConsole" Version="9.2.2" />
@@ -51,7 +58,16 @@
     <None Update="Data\Items\bars.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Data\Items\weapons.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Data\Materials\material_definition.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\Other\body_parts.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\Other\organs.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Data\Spells\divination_spells.json">

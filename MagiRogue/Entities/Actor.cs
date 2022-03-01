@@ -54,6 +54,8 @@ namespace MagiRogue.Entities
         /// </summary>
         public Dictionary<int, Ability> Abilities { get; set; }
 
+        public bool IsPlayer { get; set; }
+
         #endregion Properties
 
         #region Constructor

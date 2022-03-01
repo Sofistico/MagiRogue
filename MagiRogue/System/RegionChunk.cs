@@ -7,6 +7,7 @@ namespace MagiRogue.System
     /// Region chunks for the world map, each chunk contains 3 * 3 maps, in a grid like manner where the
     /// edges connect the map to each other.
     /// </summary>
+    [JsonConverter(typeof(RegionChunkJsonConverter))]
     public class RegionChunk
     {
         /// <summary>
@@ -34,12 +35,6 @@ namespace MagiRogue.System
 
         public Point ChunckPos() => new Point(X, Y);
 
-        public void ActivateAllMaps()
-        {
-            for (int i = 0; i < LocalMaps.Length; i++)
-            {
-                LocalMaps[i].LoadToMemory();
-            }
-        }
+        public int ToIndex(int width) => Point.ToIndex(X, Y, width);
     }
 }

@@ -28,7 +28,7 @@ namespace MagiRogue.System
 
             if (half == 1)
             {
-                int indexDoor = GoRogue.Random.GlobalRandom.DefaultRNG.Next(Doors.Count);
+                int indexDoor = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(Doors.Count);
 
                 Doors[indexDoor].Locked = true;
             }

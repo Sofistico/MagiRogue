@@ -1,5 +1,6 @@
 ﻿using GoRogue.DiceNotation;
-using Troschuetz.Random;
+using ShaiRandom.Distributions.Continuous;
+using ShaiRandom.Generators;
 
 namespace MagiRogue.Utils
 {
@@ -43,25 +44,5 @@ namespace MagiRogue.Utils
 
             return total;
         }
-    }
-
-    public class MagiGlobalRandom
-    {
-        private TRandom rng;
-        public int Seed { get; }
-
-        public MagiGlobalRandom(int seed)
-        {
-            rng = new TRandom(seed);
-            Seed = seed;
-        }
-
-        public MagiGlobalRandom()
-        {
-            Seed = GoRogue.Random.GlobalRandom.DefaultRNG.Next();
-            rng = new TRandom(Seed);
-        }
-
-        public TRandom Random() => rng;
     }
 }

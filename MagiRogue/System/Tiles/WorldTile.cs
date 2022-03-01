@@ -15,16 +15,17 @@ namespace MagiRogue.System.Tiles
     [JsonConverter(typeof(StringEnumConverter))]
     public enum HeightType
     {
-        DeepWater = 1,
-        ShallowWater = 2,
-        Shore = 3,
-        Sand = 4,
-        Grass = 5,
-        Forest = 6,
-        Mountain = 7,
-        Snow = 8,
-        River = 9,
-        HighMountain = 10
+        Error,
+        DeepWater,
+        ShallowWater,
+        Shore,
+        Sand,
+        Grass,
+        Forest,
+        Mountain,
+        Snow,
+        River,
+        HighMountain
     }
     [JsonConverter(typeof(StringEnumConverter))]
     public enum HeatType

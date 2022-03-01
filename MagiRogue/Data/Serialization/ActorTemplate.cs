@@ -273,6 +273,14 @@ namespace MagiRogue.Data.Serialization
                 actor.Equipment.TryAdd(actorTemplate.Equip[i].LimbEquipped,
                     actorTemplate.Equip[i].ItemEquipped);
             }
+            if (actorTemplate.IsPlayer == true)
+                actor.IsPlayer = true;
+
+            actor.Appearance.Foreground =
+                new MagiColorSerialization(actorTemplate.ForegroundPackedValue).Color;
+            actor.Appearance.Background =
+                new MagiColorSerialization(actorTemplate.BackgroundPackedValue).Color;
+            //actor.Description = actorTemplate.Description;
 
             return actor;
         }
@@ -323,6 +331,7 @@ namespace MagiRogue.Data.Serialization
             {
                 actorTemplate.Equip.Add(new EquipTemplate(actor.Equipment[limb], limb));
             }
+            actorTemplate.GlyphInt = actor.Appearance.Glyph;
 
             return actorTemplate;
         }

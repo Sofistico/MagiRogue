@@ -47,7 +47,7 @@ namespace MagiRogue.System.Magic.Effects
                 && MagicManager.PenetrateResistance(spellCasted, caster, poorGuy, luck))
             {
                 var rng = GoRogue.Random.GlobalRandom.DefaultRNG;
-                int i = rng.Next(poorGuy.Anatomy.Limbs.Count);
+                int i = rng.NextInt(poorGuy.Anatomy.Limbs.Count);
 
                 TypeOfLimb limbToLose = poorGuy.Anatomy.Limbs[i].TypeLimb;
 

@@ -7,7 +7,7 @@ using SadRogue.Primitives.GridViews;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Troschuetz.Random;
+using ShaiRandom.Generators;
 
 namespace MagiRogue.System
 {
@@ -17,15 +17,16 @@ namespace MagiRogue.System
     // TODO: Refactor this whole class
     public abstract class MapGenerator
     {
-        protected TRandom randNum;
-        protected int seed;
+        protected DistinctRandom randNum;
+        protected ulong seed;
         protected Map _map; // Temporarily store the map currently worked on
 
         // Empty constructor
         public MapGenerator()
         {
-            randNum = new TRandom(GameLoop.Universe.MagiRandom.Random());
-            seed = (int)randNum.Seed;
+            ulong rand = GoRogue.Random.GlobalRandom.DefaultRNG.NextULong();
+            randNum = new(rand);
+            seed = rand;
         }
 
         public MapGenerator(Map map) : this()
@@ -226,11 +227,11 @@ namespace MagiRogue.System
         {
             for (int i = 0; i < nodes; i++)
             {
-                int rnd = randNum.Next(_map.Tiles.Length);
+                int rnd = randNum.NextInt(_map.Tiles.Length);
 
                 TileBase rndTile = _map.GetTerrainAt<TileBase>(Point.FromIndex(rnd, _map.Width));
 
-                int rndMp = randNum.Next(1, 15);
+                int rndMp = randNum.NextInt(1, 15);
 
                 TileBase nodeTile = new NodeTile
                     (Color.Purple, Color.Transparent, Point.FromIndex(rnd, _map.Width), rndMp,
@@ -462,7 +463,7 @@ namespace MagiRogue.System
             {
                 TileWall tree = treeToPlace.Copy();
                 Point pos = Point.FromIndex(i, map.Width);
-                int rng = randNum.Next(0, 15);
+                int rng = randNum.NextInt(0, 15);
                 if (rng == 13)
                 {
                     tree.Position = pos;
@@ -518,7 +519,7 @@ namespace MagiRogue.System
                     vegetationToPlace.Foreground, vegetationToPlace.Background);*/
                 TileFloor vegetal = vegetationToPlace.Copy();
                 Point pos = Point.FromIndex(i, map.Width);
-                int rng = randNum.Next(0, 15);
+                int rng = randNum.NextInt(0, 15);
                 if (rng == 13)
                 {
                     vegetal.Position = pos;
@@ -538,7 +539,7 @@ namespace MagiRogue.System
             //first make sure that the vegetation won't be attackable and it's a vegetation
             for (int i = 0; i < vegetationsToPlace.Count; i++)
             {
-                TileFloor vegetal = vegetationsToPlace[randNum.Next(vegetationsToPlace.Count + 1)];
+                TileFloor vegetal = vegetationsToPlace[randNum.NextInt(vegetationsToPlace.Count + 1)];
 
                 PlaceVegetations(map, vegetal);
             }
@@ -568,7 +569,7 @@ namespace MagiRogue.System
         {
             for (int i = 0; i < map.Tiles.Length; i++)
             {
-                int rng = randNum.Next(0, 15);
+                int rng = randNum.NextInt(0, 15);
                 Point pos = map.Tiles[i].Position;
                 if (rng == 13)
                 {
@@ -588,7 +589,7 @@ namespace MagiRogue.System
         {
             for (int i = 0; i < _map.Tiles.Length; i++)
             {
-                int rng = randNum.Next(0, 15);
+                int rng = randNum.NextInt(0, 15);
                 Point pos = _map.Tiles[i].Position;
                 if (rng == 13)
                 {
@@ -620,12 +621,12 @@ namespace MagiRogue.System
 
             for (int i = 0; i < maxRooms; i++)
             {
-                int newRoomWidht = randNum.Next(minRoomSize, maxRoomSize);
-                int newRoomHeight = randNum.Next(minRoomSize, maxRoomSize);
+                int newRoomWidht = randNum.NextInt(minRoomSize, maxRoomSize);
+                int newRoomHeight = randNum.NextInt(minRoomSize, maxRoomSize);
 
                 // sets the room's X/Y Position at a random point between the edges of the map
-                int newRoomX = randNum.Next(0, _map.Width - newRoomWidht - 1);
-                int newRoomY = randNum.Next(0, _map.Height - newRoomHeight - 1);
+                int newRoomX = randNum.NextInt(0, _map.Width - newRoomWidht - 1);
+                int newRoomY = randNum.NextInt(0, _map.Height - newRoomHeight - 1);
 
                 Rectangle rectangle = new Rectangle(newRoomX, newRoomY, newRoomWidht, newRoomHeight);
                 Room newRoom = new Room(rectangle);
@@ -668,7 +669,7 @@ namespace MagiRogue.System
                 Map completeMap = DetermineBiomeLookForTile(worldTile);
                 if (completeMap is not null)
                 {
-                    ApplyModifierToTheMap(completeMap, worldTile, i);
+                    ApplyModifierToTheMap(completeMap, worldTile, (uint)i);
                     FinishingTouches(completeMap, worldTile);
                     map[i] = completeMap;
                 }
@@ -699,11 +700,12 @@ namespace MagiRogue.System
         /// <param name="completeMap"></param>
         /// <param name="worldTile"></param>
         /// <param name="magicI">Serves to add unique seeds to the map</param>
-        private void ApplyModifierToTheMap(Map completeMap, WorldTile worldTile, int magicI)
+        private void ApplyModifierToTheMap(Map completeMap, WorldTile worldTile, ulong magicI)
         {
-            completeMap.SetSeed(seed, worldTile.Position.X, worldTile.Position.Y, magicI);
+            completeMap.SetSeed((uint)seed, (uint)worldTile.Position.X,
+                (uint)worldTile.Position.Y, (uint)magicI);
             // investigate later if it's making it possible to properly reproduce a map
-            randNum = new TRandom(completeMap.Seed);
+            randNum = new((ulong)completeMap.Seed);
 
             switch (worldTile.BiomeType)
             {
@@ -1006,12 +1008,12 @@ namespace MagiRogue.System
             for (int i = 0; i < maxRooms; i++)
             {
                 // set the room's (width, height) as a random size between (minRoomSize, maxRoomSize)
-                int newRoomWidth = randNum.Next(minRoomSize, maxRoomSize);
-                int newRoomHeigth = randNum.Next(minRoomSize, maxRoomSize);
+                int newRoomWidth = randNum.NextInt(minRoomSize, maxRoomSize);
+                int newRoomHeigth = randNum.NextInt(minRoomSize, maxRoomSize);
 
                 // sets the room's X/Y Position at a random point between the edges of the map
-                int newRoomX = randNum.Next(0, _map.Width - newRoomWidth - 1);
-                int newRoomY = randNum.Next(0, _map.Height - newRoomHeigth - 1);
+                int newRoomX = randNum.NextInt(0, _map.Width - newRoomWidth - 1);
+                int newRoomY = randNum.NextInt(0, _map.Height - newRoomHeigth - 1);
 
                 // create a Rectangle representing the room's perimeter
                 Rectangle roomRectangle = new Rectangle(newRoomX, newRoomY, newRoomWidth, newRoomHeigth);
@@ -1042,7 +1044,7 @@ namespace MagiRogue.System
                 Point currentRoomCenter = Rooms[r].RoomRectangle.Center;
 
                 // give a 50/50 chance of which 'L' shaped connecting hallway to tunnel out
-                if (randNum.Next(1, 2) == 1)
+                if (randNum.NextInt(1, 2) == 1)
                 {
                     CreateHorizontalTunnel(previousRoomCenter.X, currentRoomCenter.X, previousRoomCenter.Y);
                     CreateVerticalTunnel(previousRoomCenter.Y, currentRoomCenter.Y, previousRoomCenter.X);

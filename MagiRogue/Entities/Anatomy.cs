@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
-using Troschuetz.Random;
+using ShaiRandom.Distributions.Continuous;
 
 namespace MagiRogue.Entities
 {
@@ -13,7 +13,6 @@ namespace MagiRogue.Entities
         #region Fields
 
         private Race race;
-        private readonly TRandom random = new TRandom();
 
         #endregion Fields
 
@@ -23,7 +22,7 @@ namespace MagiRogue.Entities
         public List<Limb> Limbs { get; set; }
 
         [DataMember]
-        public List<Organs> Organs { get; set; }
+        public List<Organ> Organs { get; set; }
 
         [DataMember]
         public Race Race
@@ -35,10 +34,6 @@ namespace MagiRogue.Entities
                 race = value;
             }
         }
-
-        public bool IsVegetation { get; set; }
-
-        
 
         /// <summary>
         /// It uses an aproximation of blood count equal to 75 ml/kg for an adult male
@@ -58,11 +53,21 @@ namespace MagiRogue.Entities
         [JsonIgnore]
         public bool HasEnoughWings => Limbs.FindAll(l => l.TypeLimb is TypeOfLimb.Wing).Count >= 2;
 
+        [JsonIgnore]
+        public bool CanSee => Organs.Exists(o => o.OrganType is OrganType.Visual
+                                                     && (!o.Destroyed || o.Attached));
+
         /// <summary>
         /// The total lifespan of a character
         /// </summary>
         [DataMember]
         public int Lifespan { get; set; }
+
+        /// <summary>
+        /// The current age of a character
+        /// </summary>
+        [DataMember]
+        public int CurrentAge { get; set; }
 
         #endregion Properties
 
@@ -147,7 +152,7 @@ namespace MagiRogue.Entities
                 }
                 else
                 {
-                    bodyPartIndex = random.Next(bodyParts.Count);
+                    bodyPartIndex = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(bodyParts.Count);
                     bodyPart = bodyParts[bodyPartIndex];
                     bodyPart.Attached = false;
                     DismemberMessage(actor, bodyPart);
@@ -169,10 +174,10 @@ namespace MagiRogue.Entities
                 GameLoop.UIManager.MessageLog.Add("Fix the game!");
             }
 
-            bodyPartIndex = random.Next(bodyParts.Count);
+            bodyPartIndex = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(bodyParts.Count);
             bodyPart = bodyParts[bodyPartIndex];
 
-            List<Limb> connectedParts = Limbs.FindAll(c => c.ConnectedTo == bodyPart);
+            List<Limb> connectedParts = Limbs.FindAll(c => c.ConnectedTo == bodyPart.Id);
             int totalHpLost = 0;
             if (connectedParts.Count > 0)
             {
@@ -201,6 +206,8 @@ namespace MagiRogue.Entities
             GameLoop.UIManager.MessageLog.Add(dismemberMessage.ToString());
             if (totalDmg > 0)
                 GameLoop.UIManager.MessageLog.Add($"and took {totalDmg} damage!");
+
+            GameLoop.Universe.CurrentMap.Add(limb.ReturnLimbAsItem(actor));
         }
 
         internal void Update(Actor actor)

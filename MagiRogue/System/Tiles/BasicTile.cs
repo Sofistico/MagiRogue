@@ -13,6 +13,21 @@ using MagiRogue.Data.Serialization;
 
 namespace MagiRogue.System.Tiles
 {
+    public class TileJsonConverter : JsonConverter<TileBase>
+    {
+        public override TileBase ReadJson(JsonReader reader,
+            Type objectType, TileBase? existingValue,
+            bool hasExistingValue, JsonSerializer serializer)
+        {
+            return (TileBase)serializer.Deserialize<BasicTile>(reader);
+        }
+
+        public override void WriteJson(JsonWriter writer, TileBase? value, JsonSerializer serializer)
+        {
+            serializer.Serialize(writer, (BasicTile)value);
+        }
+    }
+
     public class BasicTile
     {
         [JsonProperty(Required = Required.AllowNull)]
@@ -25,7 +40,9 @@ namespace MagiRogue.System.Tiles
         public string IdMaterial { get; set; }
         public string Name { get; set; }
         public string? Description { get; set; }
-        public int Layer { get => 0; }
+
+        [JsonIgnore]
+        public static int Layer { get => 0; }
         public TileType TileType { get; set; }
         public int MoveCost { get; set; }
 
@@ -34,29 +51,32 @@ namespace MagiRogue.System.Tiles
         /// <summary>
         /// The maximum amount of mp the node can have
         /// </summary>
-        public int MpPower { get; set; }
-        public int NodeStrenght { get; set; }
-        public bool Locked { get; set; }
-        public bool IsOpen { get; set; }
+        public int? MpPower { get; set; }
+        public int? NodeStrenght { get; set; }
+        public bool? Locked { get; set; }
+        public bool? IsOpen { get; set; }
         public int InfusedMp { get; set; }
-        public BiomeType BiomeType { get; set; }
-        public int MagicalAura { get; set; }
-        public int BiomeBitMask { get; set; }
-        public List<RiverTemplate> Rivers { get; set; } = new();
+        public BiomeType? BiomeType { get; set; }
+        public int? MagicalAura { get; set; }
+        public int? BiomeBitMask { get; set; }
+        public List<River> Rivers { get; set; }
         public int BitMask { get; set; }
-        public int RiverSize { get; private set; }
-        public string RegionName { get; private set; }
-        public RoadTemplate? Road { get; private set; }
-        public SpecialLandType SpecialLandType { get; private set; }
-        public HeatType HeatType { get; private set; }
-        public float HeatValue { get; private set; }
-        public HeightType HeightType { get; private set; }
-        public float HeightValue { get; private set; }
-        public float MineralValue { get; private set; }
-        public bool Visited { get; private set; }
-        public MoistureType MoistureType { get; private set; }
-        public float MoistureValue { get; private set; }
-        public int TileHealth { get; private set; }
+        public int? RiverSize { get; set; }
+        public string? RegionName { get; set; }
+        public Road? Road { get; set; }
+        public SpecialLandType? SpecialLandType { get; set; }
+        public HeatType? HeatType { get; set; }
+        public float? HeatValue { get; set; }
+        public HeightType? HeightType { get; set; }
+        public float? HeightValue { get; set; }
+        public float? MineralValue { get; set; }
+        public bool? Visited { get; set; }
+        public MoistureType? MoistureType { get; set; }
+        public float? MoistureValue { get; set; }
+        public int TileHealth { get; set; }
+        public uint ForegroundLastSeen { get; set; }
+        public uint BackgroundLastSeen { get; set; }
+        public char GlyphLastSeen { get; set; }
 
         public BasicTile(Point position,
             uint foreground,
@@ -100,6 +120,11 @@ namespace MagiRogue.System.Tiles
                 tile.Background.PackedValue, tile.Glyph, tile.IsWalkable,
                 tile.IsTransparent, tile.MaterialOfTile.Id, tile.Name, TileType.Null,
                 tile.MoveTimeCost);
+            if (tile is not WorldTile && !tile.Matches(tile.LastSeenAppereance))
+            {
+                basic.Foreground = tile.LastSeenAppereance.Foreground.PackedValue;
+                basic.Background = tile.LastSeenAppereance.Background.PackedValue;
+            }
 
             if (!string.IsNullOrWhiteSpace(tile.Description))
                 basic.Description = tile.Description;
@@ -121,6 +146,7 @@ namespace MagiRogue.System.Tiles
             }
             else if (tile is WorldTile worldTile)
             {
+                basic.Rivers = new();
                 for (int i = 0; i < worldTile.Rivers.Count; i++)
                 {
                     basic.Rivers.Add(worldTile.Rivers[i]);
@@ -142,6 +168,7 @@ namespace MagiRogue.System.Tiles
                 basic.MoistureType = worldTile.MoistureType;
                 basic.MoistureValue = worldTile.MoistureValue;
                 basic.MineralValue = worldTile.MineralValue;
+                basic.MagicalAura = worldTile.MagicalAuraStrength;
             }
             else if (tile is TileDoor door)
             {
@@ -203,8 +230,8 @@ namespace MagiRogue.System.Tiles
                     tile = new NodeTile(new Color(basicTile.Foreground),
                         new Color(basicTile.Background),
                         basicTile.Position,
-                        basicTile.MpPower,
-                        basicTile.NodeStrenght);
+                        (int)basicTile.MpPower,
+                        (int)basicTile.NodeStrenght);
                     break;
 
                 case TileType.WorldTile:
@@ -215,30 +242,30 @@ namespace MagiRogue.System.Tiles
                         name: basicTile.Name)
                     {
                         BitMask = basicTile.BitMask,
-                        BiomeBitmask = basicTile.BiomeBitMask,
-                        BiomeType = basicTile.BiomeType,
+                        BiomeBitmask = (int)basicTile.BiomeBitMask,
+                        BiomeType = (BiomeType)basicTile.BiomeType,
                         //CivInfluence = basicTile.Civ,
-                        //Rivers = basicTile.Rivers,
-                        RiverSize = basicTile.RiverSize,
+                        Rivers = basicTile.Rivers,
+                        RiverSize = (int)basicTile.RiverSize,
                         RegionName = basicTile.RegionName,
                         Road = basicTile.Road,
-                        SpecialLandType = basicTile.SpecialLandType,
-                        MagicalAuraStrength = basicTile.MagicalAura,
-                        HeatType = basicTile.HeatType,
-                        HeatValue = basicTile.HeatValue,
-                        HeightType = basicTile.HeightType,
-                        HeightValue = basicTile.HeightValue,
-                        MineralValue = basicTile.MineralValue,
-                        Visited = basicTile.Visited,
-                        MoistureType = basicTile.MoistureType,
-                        MoistureValue = basicTile.MoistureValue,
+                        SpecialLandType = (SpecialLandType)basicTile.SpecialLandType,
+                        MagicalAuraStrength = (int)basicTile.MagicalAura,
+                        HeatType = (HeatType)basicTile.HeatType,
+                        HeatValue = (float)basicTile.HeatValue,
+                        HeightType = (HeightType)basicTile.HeightType,
+                        HeightValue = (float)basicTile.HeightValue,
+                        MineralValue = (float)basicTile.MineralValue,
+                        Visited = (bool)basicTile.Visited,
+                        MoistureType = (MoistureType)basicTile.MoistureType,
+                        MoistureValue = (float)basicTile.MoistureValue,
                     };
                     tile.BitMask = basicTile.BitMask;
                     break;
 
                 case TileType.Door:
-                    tile = new TileDoor(basicTile.Locked,
-                        basicTile.IsOpen, basicTile.Position,
+                    tile = new TileDoor((bool)basicTile.Locked,
+                        (bool)basicTile.IsOpen, basicTile.Position,
                         basicTile.IdMaterial);
                     break;
 

@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Data.Serialization;
+using MagiRogue.Entities;
 using MagiRogue.System.Magic;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
@@ -25,6 +26,12 @@ namespace MagiRogue.Data
 
         public static readonly IReadOnlyList<ActorTemplate> ListOfActors =
             GetSourceTree<ActorTemplate>(@".\Data\Actors\*.json");
+
+        public static readonly IReadOnlyList<Organ> ListOfOrgans =
+            GetSourceTree<Organ>(@".\Data\Other\organs.json");
+
+        public static readonly IReadOnlyList<LimbTemplate> ListOfLimbs =
+            GetSourceTree<LimbTemplate>(@".\Data\Other\body_parts.json");
 
         private static IReadOnlyList<T> GetSourceTree<T>(string wildCard)
         {
@@ -61,6 +68,12 @@ namespace MagiRogue.Data
 
         public static SpellBase QuerySpellInData(string spellId) => ListOfSpells.FirstOrDefault
                 (m => m.SpellId.Equals(spellId));
+
+        public static LimbTemplate QueryLimbInData(string limbId) =>
+            ListOfLimbs.FirstOrDefault(l => l.Id.Equals(limbId));
+
+        public static Organ QueryOrganInData(string organId)
+            => ListOfOrgans.FirstOrDefault(o => o.Id.Equals(organId));
 
         /*public static MapTemplate QueryMapInData(JObject json, string idLookingFor)
         {
