@@ -19,6 +19,7 @@ namespace MagiRogue.Data
     public class SaveAndLoad
     {
         private const string _folderName = "Saves";
+        private const int chunkPartition = 500;
         private static readonly string dir = AppDomain.CurrentDomain.BaseDirectory;
 
         [DataMember]
@@ -110,12 +111,12 @@ namespace MagiRogue.Data
 
                 for (int i = 0; i < countList; i++)
                 {
-                    if (i % 1000 == 0 || (i != 0 || i == chunks.Length))
+                    if (i % chunkPartition == 0 || (i != 0 || i == chunks.Length))
                     {
                         if (indexToStart == 0)
-                            Serializer.Save(newChunks, @$"{_folderName}\{SavePathName}\Chunks_{i / 1000}.mr", true);
+                            Serializer.Save(newChunks, @$"{_folderName}\{SavePathName}\Chunks_{i / chunkPartition}.mr", true);
                         else
-                            Serializer.Save(newChunks, @$"{_folderName}\{SavePathName}\Chunks_{indexToStart / 1000}.mr", true);
+                            Serializer.Save(newChunks, @$"{_folderName}\{SavePathName}\Chunks_{indexToStart / chunkPartition}.mr", true);
                         break;
                     }
                 }
@@ -159,7 +160,7 @@ namespace MagiRogue.Data
         }
 
         /// <summary>
-        /// Load all chunks in the file, should be between 1000 chunks per file
+        /// Load all chunks in the file, should be between <see cref="chunkPartition"/> chunks per file
         /// </summary>
         /// <param name="saveName"></param>
         /// <param name="currentChunkIndex"></param>
@@ -212,7 +213,7 @@ namespace MagiRogue.Data
         private string GetChunckFile(int index)
         {
             // need to remake, so that it will only load the relevant chunk
-            string path = $@"{SaveDir}\Chunks_{index / 1000}.mr";
+            string path = $@"{SaveDir}\Chunks_{index / chunkPartition}.mr";
             string pattern = Path.GetFileName(path);
             string realDir = path[..^pattern.Length];
             string fullPath = Path.Combine(dir, realDir);
@@ -223,7 +224,7 @@ namespace MagiRogue.Data
 
         private string GetChunckRelativeFile(int index)
         {
-            string path = $@"{_folderName}\{SavePathName}\Chunks_{index / 1000}.mr";
+            string path = $@"{_folderName}\{SavePathName}\Chunks_{index / chunkPartition}.mr";
             return path;
         }
 
@@ -236,7 +237,7 @@ namespace MagiRogue.Data
         private static string GetChunckFileStatic(string saveName, int currentChunkIndex)
         {
             // need to remake, so that it will only load the relevant chunk
-            string file = $@"Saves\{saveName}\Chunks_{currentChunkIndex / 1000}.mr";
+            string file = $@"Saves\{saveName}\Chunks_{currentChunkIndex / chunkPartition}.mr";
             /*string pattern = Path.GetFileName(path);
             string realDir = path[..^pattern.Length];
             string fullPath = Path.Combine(dir, realDir);
