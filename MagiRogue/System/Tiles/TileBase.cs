@@ -158,11 +158,11 @@ namespace MagiRogue.System.Tiles
         public virtual void DestroyTile(TileBase changeTile, Entities.Item? itemDropped = null)
 #nullable disable
         {
-            GameLoop.Universe.CurrentMap.SetTerrain(changeTile);
+            GameLoop.GetCurrentMap().SetTerrain(changeTile);
             LastSeenAppereance = changeTile;
             if (itemDropped is not null)
             {
-                GameLoop.Universe.CurrentMap.Add(itemDropped);
+                GameLoop.GetCurrentMap().Add(itemDropped);
             }
         }
 

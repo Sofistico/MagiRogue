@@ -64,6 +64,7 @@ namespace MagiRogue.System.Tiles
         public int? RiverSize { get; set; }
         public string? RegionName { get; set; }
         public Road? Road { get; set; }
+        public Civilization? Civ { get; set; }
         public SpecialLandType? SpecialLandType { get; set; }
         public HeatType? HeatType { get; set; }
         public float? HeatValue { get; set; }
@@ -155,7 +156,7 @@ namespace MagiRogue.System.Tiles
                 basic.BiomeType = worldTile.BiomeType;
                 basic.BiomeBitMask = worldTile.BiomeBitmask;
                 //basic.Rivers = worldTile.Rivers;
-                //basic.Civ = worldTile.CivInfluence;
+                basic.Civ = worldTile.CivInfluence;
                 basic.RiverSize = worldTile.RiverSize;
                 basic.Road = worldTile.Road;
                 basic.SpecialLandType = worldTile.SpecialLandType;
@@ -244,7 +245,7 @@ namespace MagiRogue.System.Tiles
                         BitMask = basicTile.BitMask,
                         BiomeBitmask = (int)basicTile.BiomeBitMask,
                         BiomeType = (BiomeType)basicTile.BiomeType,
-                        //CivInfluence = basicTile.Civ,
+                        CivInfluence = basicTile.Civ,
                         Rivers = basicTile.Rivers,
                         RiverSize = (int)basicTile.RiverSize,
                         RegionName = basicTile.RegionName,

@@ -17,17 +17,31 @@ namespace MagiRogue.UI.Windows
     public class MapWindow : MagiBaseWindow
     {
         private Map _mapDisplayed;
+        private SadConsole.Components.SurfaceComponentFollowTarget followComponent;
         public Console MapConsole { get; set; }
 
         public MapWindow(int width, int height, string title) : base(width, height, title)
         {
+            followComponent = new SadConsole.Components.SurfaceComponentFollowTarget();
         }
 
-        // centers the viewport camera on an Actor
+        //
+        /// <summary>
+        /// centers the viewport camera on an Actor
+        /// </summary>
+        /// <param name="actor"></param>
         public void CenterOnActor(Actor actor)
         {
-            MapConsole.SadComponents.Add
-                (new SadConsole.Components.SurfaceComponentFollowTarget() { Target = actor });
+            followComponent.Target = actor;
+        }
+
+        /// <summary>
+        /// centers the viewport camera on an Entity
+        /// </summary>
+        /// <param name="entity"></param>
+        public void CenterOnActor(Entity entity)
+        {
+            followComponent.Target = entity;
         }
 
         public void CreateMapConsole()
@@ -86,6 +100,8 @@ namespace MagiRogue.UI.Windows
             _mapDisplayed = map;
 
             Title = map.MapName;
+
+            MapConsole.SadComponents.Add(followComponent);
         }
     }
 }

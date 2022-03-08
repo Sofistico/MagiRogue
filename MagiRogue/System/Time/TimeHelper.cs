@@ -22,7 +22,7 @@ namespace MagiRogue.System.Time
 
         public static int GetWalkTime(Actor actor, Point pos)
         {
-            var tile = GameLoop.Universe.CurrentMap.GetTileAt<TileBase>(pos);
+            var tile = GameLoop.GetCurrentMap().GetTileAt<TileBase>(pos);
             return GetWalkTime(actor, tile);
         }
 

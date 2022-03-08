@@ -11,9 +11,6 @@ using ShaiRandom.Generators;
 
 namespace MagiRogue.System
 {
-    // based on tunnelling room generation algorithm
-    // from RogueSharp tutorial
-    // https://roguesharp.wordpress.com/2016/03/26/roguesharp-v3-tutorial-simple-room-generation/
     // TODO: Refactor this whole class
     public abstract class MapGenerator
     {
@@ -602,6 +599,104 @@ namespace MagiRogue.System
         }
 
         #endregion GeneralMapGen
+
+        #region MapGenAlgorithms
+
+        protected List<Room> BspMapFunction(Map map, int roomMaxSize, int roomMinSize, int maxRooms)
+        {
+            List<Room> rooms = new List<Room>();
+
+            Rectangle rec = new Rectangle(map.Positions().First(), map.Positions().Last());
+
+            List<Rectangle> mapPartitions =
+                BisectRecursiveRandom(rec, roomMaxSize).ToList();
+
+            for (int i = 0; i <= maxRooms; i++)
+            {
+                if (mapPartitions.Count <= 0) break;
+                Rectangle area = mapPartitions[randNum.NextInt(mapPartitions.Count)];
+                mapPartitions.Remove(area);
+
+                if (area.Width <= roomMinSize && area.Height <= roomMinSize)
+                    continue;
+
+                int newRoomWidht = randNum.NextInt(roomMinSize, area.Width);
+                int newRoomHeight = randNum.NextInt(roomMinSize, area.Height);
+
+                int newRoomX = randNum.NextInt(1, map.Width - newRoomWidht);
+                int newRoomY = randNum.NextInt(1, map.Height - newRoomHeight);
+
+                Rectangle rectangle = new Rectangle(newRoomX, newRoomY, newRoomWidht, newRoomHeight);
+                //Rectangle rectangle = new Rectangle(area.X, area.Y, area.Width, area.Height);
+                Room room = new Room(rectangle);
+
+                if (!rooms.Any(r => r.RoomRectangle.Intersects(room.RoomRectangle)))
+                {
+                    rooms.Add(room);
+                }
+            }
+
+            return rooms;
+        }
+
+        /// <summary>
+        /// Bisects the rectangle in position
+        /// </summary>
+        /// <returns>An IEnumerable with Top and Bottom Rectangles in indexes 0 and 1, respectively</returns>
+        protected IEnumerable<Rectangle> BisectRandomHorizontal(Rectangle toBisect)
+        {
+            int startX = toBisect.MinExtentX;
+            int stopY = toBisect.MaxExtentY;
+            int startY = toBisect.MinExtentY;
+            int stopX = toBisect.MaxExtentX;
+            int bisection = randNum.NextInt(startY, stopY);
+
+            yield return new Rectangle(new Point(startX, startY), new Point(stopX, bisection));
+            yield return new Rectangle(new Point(startX, bisection + 1), new Point(stopX, stopY));
+        }
+
+        /// <summary>
+        /// Bisects the rectangle into top and bottom halves
+        /// </summary>
+        /// <returns>An IEnumerable with Top and Bottom Rectangles in indexes 0 and 1, respectively</returns>
+        protected IEnumerable<Rectangle> BisectRandomVertical(Rectangle toBisect)
+        {
+            int startX = toBisect.MinExtentX;
+            int stopY = toBisect.MaxExtentY;
+            int startY = toBisect.MinExtentY;
+            int stopX = toBisect.MaxExtentX;
+            int bisection = randNum.NextInt(startX, stopX);
+
+            yield return new Rectangle(new Point(startX, startY), new Point(bisection, stopY));
+            yield return new Rectangle(new Point(bisection + 1, startY), new Point(stopX, stopY));
+        }
+
+        protected IEnumerable<Rectangle> BisectRec(Rectangle bisectRec)
+        {
+            if (bisectRec.Width > bisectRec.Height)
+                return BisectRandomVertical(bisectRec);
+            else
+                return BisectRandomHorizontal(bisectRec);
+        }
+
+        protected IEnumerable<Rectangle> BisectRecursiveRandom(Rectangle bisectRec,
+            int minimumDimension)
+        {
+            foreach (Rectangle child in BisectRec(bisectRec))
+            {
+                if (child.Height < minimumDimension * 2
+                    && child.Width < minimumDimension * 2)
+                    yield return child;
+                else
+                    foreach (var grandChild in
+                        BisectRecursiveRandom(child, minimumDimension))
+                    {
+                        yield return grandChild;
+                    }
+            }
+        }
+
+        #endregion MapGenAlgorithms
     }
 
     public class CityGenerator : MapGenerator
@@ -611,7 +706,7 @@ namespace MagiRogue.System
             // empty one
         }
 
-        public Map GenerateTownMap(int maxRooms, int minRoomSize, int maxRoomSize)
+        public Map GenerateSimpleTownMap(int maxRooms, int minRoomSize, int maxRoomSize)
         {
             _map = new Map("Town of Salazar");
 
@@ -641,12 +736,72 @@ namespace MagiRogue.System
             {
                 CreateRoom(room.RoomRectangle);
                 CreateDoor(room);
-                room.LockDoorsRng();
+                room.LockedDoorsRng();
             }
 
             InsertStairs(rooms[0]);
 
             return _map;
+        }
+
+        public void GenerateSimpleTownMapFromExistingMap(Map map, int maxRooms,
+            int minRoomSize, int maxRoomSize, string townName)
+        {
+            _map = map;
+            map.MapName = townName;
+
+            List<Room> rooms = new();
+
+            for (int i = 0; i < maxRooms; i++)
+            {
+                int newRoomWidht = randNum.NextInt(minRoomSize, maxRoomSize);
+                int newRoomHeight = randNum.NextInt(minRoomSize, maxRoomSize);
+
+                // sets the room's X/Y Position at a random point between the edges of the map
+                int newRoomX = randNum.NextInt(0, map.Width - newRoomWidht - 1);
+                int newRoomY = randNum.NextInt(0, map.Height - newRoomHeight - 1);
+
+                Rectangle rectangle = new Rectangle(newRoomX, newRoomY, newRoomWidht, newRoomHeight);
+                Room newRoom = new Room(rectangle);
+
+                bool doesRoomIntersect =
+                    rooms.Any(room => newRoom.RoomRectangle.Intersects(room.RoomRectangle));
+
+                if (!doesRoomIntersect)
+                    rooms.Add(newRoom);
+            }
+
+            foreach (var room in rooms)
+            {
+                CreateRoom(room.RoomRectangle);
+                CreateDoor(room);
+                room.LockedDoorsRng();
+            }
+
+            ApplyRoads();
+        }
+
+        public void GenerateTownFromMapBSP(Map map, int maxRooms,
+            int minRoomSize, int maxRoomSize, string townName)
+        {
+            _map = map;
+
+            List<Room> rooms = BspMapFunction(map, maxRoomSize, minRoomSize, maxRooms);
+
+            map.MapName = townName;
+
+            foreach (var room in rooms)
+            {
+                CreateRoom(room.RoomRectangle);
+                CreateDoor(room);
+                room.LockedDoorsRng();
+            }
+
+            ApplyRoads();
+        }
+
+        private void ApplyRoads()
+        {
         }
     }
 
@@ -661,17 +816,17 @@ namespace MagiRogue.System
 
         public Map[] GenerateMapWithWorldParam(PlanetMap worldMap, Point posGenerated)
         {
-            Map[] map = new Map[RegionChunk.MAX_LOCAL_MAPS];
+            Map[] maps = new Map[RegionChunk.MAX_LOCAL_MAPS];
             WorldTile worldTile = worldMap.AssocietatedMap.GetTileAt<WorldTile>(posGenerated);
 
-            for (int i = 0; i < map.Length; i++)
+            for (int i = 0; i < maps.Length; i++)
             {
                 Map completeMap = DetermineBiomeLookForTile(worldTile);
                 if (completeMap is not null)
                 {
                     ApplyModifierToTheMap(completeMap, worldTile, (uint)i);
                     FinishingTouches(completeMap, worldTile);
-                    map[i] = completeMap;
+                    maps[i] = completeMap;
                 }
                 else
                 {
@@ -679,7 +834,18 @@ namespace MagiRogue.System
                 }
             }
 
-            return map;
+            ConnectMapEdges(maps);
+
+            return maps;
+        }
+
+        private void ConnectMapEdges(Map[] maps)
+        {
+            for (int i = 0; i < maps.Length; i++)
+            {
+                Map map = maps[i];
+                Rectangle edges = map.MapBounds();
+            }
         }
 
         /// <summary>
@@ -689,7 +855,6 @@ namespace MagiRogue.System
         /// <param name="worldTile"></param>
         private static void FinishingTouches(Map completeMap, WorldTile worldTile)
         {
-            //throw new NotImplementedException();
         }
 
         /// <summary>
@@ -766,7 +931,9 @@ namespace MagiRogue.System
             }
             if (worldTile.CivInfluence is not null)
             {
-                // do something
+                CityGenerator city = new();
+                city.GenerateTownFromMapBSP(completeMap,
+                    randNum.NextInt(6, 23), randNum.NextInt(4, 7), randNum.NextInt(8, 12), "Test Town");
             }
             if (worldTile.Rivers.Count > 0)
             {
@@ -988,6 +1155,9 @@ namespace MagiRogue.System
         #endregion PlanetMapGenStuff
     }
 
+    // based on tunnelling room generation algorithm
+    // from RogueSharp tutorial
+    // https://roguesharp.wordpress.com/2016/03/26/roguesharp-v3-tutorial-simple-room-generation/
     public class DungeonGenerator : MapGenerator
     {
         public DungeonGenerator()

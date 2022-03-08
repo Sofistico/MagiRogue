@@ -38,7 +38,7 @@ namespace MagiRogue.Data.Serialization
         public float MundaneResources { get; set; }
         public float MagicalResources { get; set; }
         public List<ItemTemplate> Nodes { get; set; }
-        public List<BasicTile> Territory { get; set; }
+        public List<Point> Territory { get; set; }
 
         public CivilizationTemplate(string name,
             Race primaryRace,
@@ -49,7 +49,7 @@ namespace MagiRogue.Data.Serialization
             float mundaneResources,
             float magicalResources,
             List<ItemTemplate> nodes,
-            List<BasicTile> territory)
+            List<Point> territory)
         {
             Name = name;
             PrimaryRace = primaryRace;
@@ -70,17 +70,11 @@ namespace MagiRogue.Data.Serialization
 
         public static implicit operator Civilization(CivilizationTemplate template)
         {
-            var territory = new Territory();
+            List<Point> territory = new List<SadRogue.Primitives.Point>();
 
-            if (template.Territory.Any(e => e is not null))
+            foreach (Point tile in template.Territory)
             {
-                foreach (WorldTile tile in template.Territory)
-                {
-                    if (!tile.Collidable)
-                        territory.AddWaterLand(tile);
-                    else
-                        territory.AddLand(tile);
-                }
+                territory.Add(tile);
             }
 
             Civilization civ = new Civilization(template.Name,
@@ -99,15 +93,11 @@ namespace MagiRogue.Data.Serialization
 
         public static implicit operator CivilizationTemplate(Civilization civ)
         {
-            List<BasicTile> basicTiles = new List<BasicTile>();
+            List<Point> basicTiles = new List<Point>();
 
-            for (int i = 0; i < civ.Territory.OwnedWater.WorldTiles.Count; i++)
+            for (int i = 0; i < civ.Territory.Count; i++)
             {
-                basicTiles.Add(civ.Territory.OwnedWater.WorldTiles[i]);
-            }
-            for (int i = 0; i < civ.Territory.OwnedLand.WorldTiles.Count; i++)
-            {
-                basicTiles.Add(civ.Territory.OwnedLand.WorldTiles[i]);
+                basicTiles.Add(civ.Territory[i]);
             }
 
             CivilizationTemplate template = new CivilizationTemplate(civ.Name,

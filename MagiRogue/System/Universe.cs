@@ -133,7 +133,7 @@ namespace MagiRogue.System
             {
                 Civilization startTown = WorldMap.Civilizations
                     .FirstOrDefault(a => a.Tendency == CivilizationTendency.Normal);
-                player.Position = startTown.Territory.OwnedLand.WorldTiles[0].Position;
+                player.Position = startTown.ReturnAllLandTerritory(WorldMap.AssocietatedMap)[0].Position;
                 player.Description = "Here is you, you are beautiful";
                 Player = player;
 
@@ -446,6 +446,7 @@ namespace MagiRogue.System
         public void ChangeControlledEntity(Entity entity)
         {
             CurrentMap.ControlledEntitiy = entity;
+            GameLoop.UIManager.MapWindow.CenterOnActor(entity);
         }
 
         public RegionChunk GenerateChunck(Point posGenerated)

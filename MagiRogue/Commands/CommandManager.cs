@@ -206,7 +206,7 @@ namespace MagiRogue.Commands
                     item.Position = defender.Position;
 
                     // Now let the MultiSpatialMap know that the Item is visible
-                    GameLoop.Universe.CurrentMap.Add(item);
+                    GameLoop.GetCurrentMap().Add(item);
 
                     // Append the item to the deathMessage
                     deathMessage.Append(", " + item.Name);
@@ -223,7 +223,7 @@ namespace MagiRogue.Commands
             }
 
             // actor goes bye-bye
-            GameLoop.Universe.CurrentMap.Remove(defender);
+            GameLoop.GetCurrentMap().Remove(defender);
 
             if (defender is Player)
             {
@@ -249,7 +249,7 @@ namespace MagiRogue.Commands
 
             foreach (Point direction in directions)
             {
-                Actor monsterLocation = GameLoop.Universe.CurrentMap.GetEntityAt<Actor>(direction);
+                Actor monsterLocation = GameLoop.GetCurrentMap().GetEntityAt<Actor>(direction);
 
                 if (monsterLocation != null && monsterLocation != attacker)
                 {
@@ -311,7 +311,7 @@ namespace MagiRogue.Commands
             {
                 door.Open();
                 GameLoop.UIManager.MessageLog.Add($"{actor.Name} opened a {door.Name}");
-                GameLoop.Universe.CurrentMap.ForceFovCalculation();
+                GameLoop.GetCurrentMap().ForceFovCalculation();
                 return true;
             }
             return false;
@@ -327,14 +327,14 @@ namespace MagiRogue.Commands
             Point[] allDirections = SadConsole.PointExtensions.GetDirectionPoints(actor.Position);
             foreach (Point points in allDirections)
             {
-                TileDoor possibleDoor = GameLoop.Universe.CurrentMap.GetTileAt<TileDoor>(points);
+                TileDoor possibleDoor = GameLoop.GetCurrentMap().GetTileAt<TileDoor>(points);
                 if (possibleDoor != null)
                 {
                     if (possibleDoor.IsOpen)
                     {
                         possibleDoor.Close();
                         GameLoop.UIManager.MessageLog.Add($"{actor.Name} closed a {possibleDoor.Name}");
-                        GameLoop.Universe.CurrentMap.ForceFovCalculation();
+                        GameLoop.GetCurrentMap().ForceFovCalculation();
                         return true;
                     }
                 }
@@ -354,7 +354,7 @@ namespace MagiRogue.Commands
                 Item item = inv.Inventory.First();
                 inv.Inventory.Remove(item);
                 item.Position = inv.Position;
-                GameLoop.Universe.CurrentMap.Add(item);
+                GameLoop.GetCurrentMap().Add(item);
                 GameLoop.UIManager.MessageLog.Add($"{inv.Name} dropped {item.Name}");
                 return true;
             }
@@ -366,7 +366,7 @@ namespace MagiRogue.Commands
 
             foreach (Point item in direction)
             {
-                if (GameLoop.Universe.CurrentMap.Tiles[item.ToIndex(GameLoop.Universe.CurrentMap.Width)] is NodeTile node)
+                if (GameLoop.GetCurrentMap().Tiles[item.ToIndex(GameLoop.GetCurrentMap().Width)] is NodeTile node)
                 {
                     node.DrainNode(actor);
                     return true;
@@ -380,12 +380,12 @@ namespace MagiRogue.Commands
 
         public static void ToggleFOV()
         {
-            if (GameLoop.Universe.CurrentMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().IsEnabled)
+            if (GameLoop.GetCurrentMap().GoRogueComponents.GetFirstOrDefault<FOVHandler>().IsEnabled)
             {
-                GameLoop.Universe.CurrentMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().Disable(false);
+                GameLoop.GetCurrentMap().GoRogueComponents.GetFirstOrDefault<FOVHandler>().Disable(false);
             }
             else
-                GameLoop.Universe.CurrentMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().Enable();
+                GameLoop.GetCurrentMap().GoRogueComponents.GetFirstOrDefault<FOVHandler>().Enable();
         }
 
         public static void CreateNewMapForTesting()
@@ -443,9 +443,9 @@ namespace MagiRogue.Commands
 
                 for (int i = 0; i < totalTurnsWait + 1; i++)
                 {
-                    foreach (Point p in GameLoop.Universe.CurrentMap.PlayerFOV.CurrentFOV)
+                    foreach (Point p in GameLoop.GetCurrentMap().PlayerFOV.CurrentFOV)
                     {
-                        Actor possibleActor = GameLoop.Universe.CurrentMap.GetEntityAt<Actor>(p);
+                        Actor possibleActor = GameLoop.GetCurrentMap().GetEntityAt<Actor>(p);
                         if (possibleActor is not null && !possibleActor.Equals(actor))
                         {
                             GameLoop.UIManager.MessageLog.Add("There is an enemy in view, stop resting!");
@@ -499,10 +499,10 @@ namespace MagiRogue.Commands
         public static bool EnterDownMovement(Point playerPoint)
         {
             Furniture possibleStairs =
-                GameLoop.Universe.CurrentMap.GetEntityAt<Furniture>(playerPoint);
+                GameLoop.GetCurrentMap().GetEntityAt<Furniture>(playerPoint);
             WorldTile? possibleWorldTileHere =
-                GameLoop.Universe.CurrentMap.GetTileAt<WorldTile>(playerPoint);
-            Map currentMap = GameLoop.Universe.CurrentMap;
+                GameLoop.GetCurrentMap().GetTileAt<WorldTile>(playerPoint);
+            Map currentMap = GameLoop.GetCurrentMap();
             if (possibleStairs is not null
                 && possibleStairs.FurnitureType == FurnitureType.StairsDown)
             {
@@ -548,8 +548,8 @@ namespace MagiRogue.Commands
         {
             bool possibleChangeMap = GameLoop.Universe.PossibleChangeMap;
             Furniture possibleStairs =
-                GameLoop.Universe.CurrentMap.GetEntityAt<Furniture>(playerPoint);
-            Map currentMap = GameLoop.Universe.CurrentMap;
+                GameLoop.GetCurrentMap().GetEntityAt<Furniture>(playerPoint);
+            Map currentMap = GameLoop.GetCurrentMap();
 
             if (possibleChangeMap)
             {

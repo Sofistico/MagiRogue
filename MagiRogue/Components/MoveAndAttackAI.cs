@@ -29,7 +29,7 @@ namespace MagiRogue.Components
                 return (false, -1);
             }
 
-            Actor actor = (Actor)GameLoop.Universe.CurrentMap.GetEntityById(parent.ID);
+            Actor actor = (Actor)GameLoop.GetCurrentMap().GetEntityById(parent.ID);
 
             if (TryGetDirectionMove(map, actor))
             {
@@ -47,7 +47,7 @@ namespace MagiRogue.Components
             Path shortPath = map.AStar.ShortestPath(actor.Position, GameLoop.Universe.Player.Position);
 
             GoRogue.GameFramework.IGameObject iGame = (GoRogue.GameFramework.IGameObject)Parent;
-            var parent = GameLoop.Universe.CurrentMap.GetEntityById(iGame.ID);
+            var parent = GameLoop.GetCurrentMap().GetEntityById(iGame.ID);
 
             Direction direction;
 

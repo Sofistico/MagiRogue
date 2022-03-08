@@ -35,6 +35,8 @@ namespace MagiRogue.Commands
 
         public SpellBase SpellSelected { get; set; }
 
+        public bool LookMode { get; set; }
+
         public Target(Point spawnCoord)
         {
             Color targetColor = new Color(255, 0, 0);
@@ -55,7 +57,7 @@ namespace MagiRogue.Commands
             SadConsole.Effects.Blink blink = new SadConsole.Effects.Blink()
             {
                 BlinkCount = -1,
-                BlinkSpeed = TimeSpan.FromSeconds(1.3),
+                BlinkSpeed = TimeSpan.FromSeconds(1.5),
                 UseCellBackgroundColor = true
             };
             Cursor.Effect = blink;
@@ -67,22 +69,10 @@ namespace MagiRogue.Commands
             tileDictionary = new Dictionary<Point, TileBase>();
         }
 
-        // Need to see if it's worth to maintain this code
-        /*public bool TileInTarget()
-        {
-            TileBase tile = GameLoop.Universe.CurrentMap.GetTileAt<TileBase>(Cursor.Position);
-
-            if (tile is not null)
-            {
-                return true;
-            }
-
-            return false;
-        }*/
-
         public bool EntityInTarget()
         {
-            if (GameLoop.Universe.CurrentMap.GetEntitiesAt<Entity>(Cursor.Position).Any(e => e.ID != Cursor.ID))
+            if (GameLoop.GetCurrentMap().GetEntitiesAt
+                <Entity>(Cursor.Position).Any(e => e.ID != Cursor.ID))
             //&& GameLoop.World.CurrentMap.GetEntityAt<Entity>(Cursor.Position) is not Player)
             {
                 State = TargetState.Targeting;
@@ -110,13 +100,13 @@ namespace MagiRogue.Commands
         public void StartTargetting()
         {
             OriginCoord = new Point(
-                GameLoop.Universe.CurrentMap.ControlledEntitiy.Position.X,
-                GameLoop.Universe.CurrentMap.ControlledEntitiy.Position.Y);
+                GameLoop.GetCurrentMap().ControlledEntitiy.Position.X,
+                GameLoop.GetCurrentMap().ControlledEntitiy.Position.Y);
             Cursor.Position = new Point(
-                 GameLoop.Universe.CurrentMap.ControlledEntitiy.Position.X,
-                 GameLoop.Universe.CurrentMap.ControlledEntitiy.Position.Y);
+                 GameLoop.GetCurrentMap().ControlledEntitiy.Position.X,
+                 GameLoop.GetCurrentMap().ControlledEntitiy.Position.Y);
             GameLoop.Universe.ChangeControlledEntity(Cursor);
-            GameLoop.Universe.CurrentMap.Add(Cursor);
+            GameLoop.GetCurrentMap().Add(Cursor);
             Cursor.Moved += Cursor_Moved;
 
             State = TargetState.Targeting;
@@ -177,20 +167,27 @@ namespace MagiRogue.Commands
 
                 if (TravelPath is not null)
                 {
-                    // if there is anything in the path, clear it
-                    foreach (Point point in tileDictionary.Keys)
-                    {
-                        TileBase tile = GameLoop.Universe.CurrentMap.GetTileAt<TileBase>(point);
-                        if (tile is not null)
-                            tile.Background = tile.LastSeenAppereance.Background;
-                    }
+                    ClearTileDictionary();
                     Cursor.Moved -= Cursor_Moved;
                     TravelPath = null;
                 }
 
                 GameLoop.Universe.ChangeControlledEntity(GameLoop.Universe.Player);
-                GameLoop.Universe.CurrentMap.Remove(Cursor);
+                GameLoop.GetCurrentMap().Remove(Cursor);
             }
+        }
+
+        private void ClearTileDictionary()
+        {
+            if (tileDictionary.Count <= 0) return;
+            // if there is anything in the path, clear it
+            foreach (Point point in tileDictionary.Keys)
+            {
+                TileBase tile = GameLoop.GetCurrentMap().GetTileAt<TileBase>(point);
+                if (tile is not null)
+                    tile.Background = tile.LastSeenAppereance.Background;
+            }
+            tileDictionary.Clear();
         }
 
         private (bool, SpellBase) AffectPath()
@@ -239,13 +236,20 @@ namespace MagiRogue.Commands
         private void Cursor_Moved(object sender, GoRogue.GameFramework.GameObjectPropertyChanged<Point> e)
         {
             TargetList.Clear();
-            TravelPath = GameLoop.Universe.CurrentMap.AStar.ShortestPath(OriginCoord, e.NewValue);
+            TravelPath = GameLoop.GetCurrentMap().AStar.ShortestPath(OriginCoord, e.NewValue);
+            if (LookMode || TravelPath is null)
+            {
+                TravelPath = GameLoop.GetCurrentMap()
+                    .AStarWithAllWalkable().ShortestPath(OriginCoord, e.NewValue);
+                ClearTileDictionary();
+                return;
+            }
             try
             {
                 foreach (Point pos in TravelPath.Steps)
                 {
                     // gets each point in the travel path steps and change the background of the wall
-                    var halp = GameLoop.Universe.CurrentMap.GetTileAt<TileBase>(pos);
+                    var halp = GameLoop.GetCurrentMap().GetTileAt<TileBase>(pos);
                     halp.Background = Color.Yellow;
                     tileDictionary.TryAdd(pos, halp);
                 }
@@ -255,7 +259,7 @@ namespace MagiRogue.Commands
                 {
                     if (!TravelPath.Steps.Contains(item))
                     {
-                        TileBase llop = GameLoop.Universe.CurrentMap.GetTileAt<TileBase>(item);
+                        TileBase llop = GameLoop.GetCurrentMap().GetTileAt<TileBase>(item);
                         if (llop is not null)
                         {
                             llop.Background = llop.LastSeenAppereance.Background;
@@ -300,13 +304,24 @@ namespace MagiRogue.Commands
             }
         }
 
+        public bool TileInTarget()
+        {
+            if (!EntityInTarget()
+                && GameLoop.GetCurrentMap().GetTileAt<TileBase>(Cursor.Position) != null)
+            {
+                State = TargetState.Targeting;
+                return true;
+            }
+            return false;
+        }
+
         /// <summary>
         /// Adds the tile to the <see cref="tileDictionary"/>.
         /// </summary>
         /// <param name="point"></param>
         private void AddTileToDictionary(Point point)
         {
-            var halp = GameLoop.Universe.CurrentMap.GetTileAt<TileBase>(point);
+            var halp = GameLoop.GetCurrentMap().GetTileAt<TileBase>(point);
             if (halp is not null)
             {
                 halp.Background = Color.Yellow;
@@ -332,9 +347,9 @@ namespace MagiRogue.Commands
         /// <param name="point"></param>
         private void AddEntityToList(Point point)
         {
-            var entity = GameLoop.Universe.CurrentMap.GetEntityAt<Entity>(point);
+            var entity = GameLoop.GetCurrentMap().GetEntityAt<Entity>(point);
             if (entity is not null && !TargetList.Contains(entity))
-                TargetList.Add(GameLoop.Universe.CurrentMap.GetEntityAt<Entity>(point));
+                TargetList.Add(GameLoop.GetCurrentMap().GetEntityAt<Entity>(point));
         }
 
         private ISpellEffect GetSpellAreaEffect(SpellAreaEffect areaEffect) =>
@@ -342,11 +357,29 @@ namespace MagiRogue.Commands
 
         public void LookTarget()
         {
-            LookWindow w = new(TargetEntity());
+            LookWindow w = new(DetermineWhatToLook());
             w.Show();
         }
 
-        private Entity TargetEntity() => GameLoop.Universe.CurrentMap.GetEntityAt<Entity>(Cursor.Position);
+        private Entity TargetEntity() => GameLoop.GetCurrentMap().GetEntityAt<Entity>(Cursor.Position);
+
+        private TileBase LookAtTile() => GameLoop.GetCurrentMap().GetTileAt<TileBase>(Cursor.Position);
+
+        private dynamic DetermineWhatToLook()
+        {
+            if (EntityInTarget())
+            {
+                return TargetEntity();
+            }
+            else if (TileInTarget())
+            {
+                return LookAtTile();
+            }
+            else
+            {
+                throw new("Cound't find what to target!");
+            }
+        }
 
         public enum TargetState
         {

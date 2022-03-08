@@ -1,5 +1,6 @@
 ﻿using GoRogue;
 using GoRogue.GameFramework;
+using GoRogue.Pathing;
 using GoRogue.SpatialMaps;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
@@ -61,7 +62,7 @@ namespace MagiRogue.System
 
         public Point LastPlayerPosition { get; set; } = Point.None;
 
-        public string MapName { get; }
+        public string MapName { get; set; }
         public bool NeedsUpdate { get; internal set; }
         public bool IsActive { get; set; }
         public uint MapId { get; private set; }
@@ -75,7 +76,7 @@ namespace MagiRogue.System
         /// <summary>
         /// Build a new map with a specified width and height, has entity layers,
         /// they being 0-Furniture, 1-ghosts, 2-Items, 3-Actors, 4-Player.
-        /// \nAll Maps must have 60x60 size, for a total of 3600 tiles inside of it, for chunck loading.
+        /// \nMaps can have any size, but the default is 60x60, for a nice 3600 tiles per map
         /// </summary>
         /// <param name="width"></param>
         /// <param name="height"></param>
@@ -440,6 +441,21 @@ namespace MagiRogue.System
         }
 
         public void SetId(uint id) => MapId = id;
+
+        public FastAStar AStarWithAllWalkable()
+        {
+            int count = Tiles.Length;
+            ArrayView<bool> mapView = new ArrayView<bool>(Width, Height);
+            for (int i = 0; i < count; i++)
+            {
+                mapView[i] = true;
+            }
+            FastAStar astar = new FastAStar(mapView, DistanceMeasurement);
+
+            return astar;
+        }
+
+        public Rectangle MapBounds() => Terrain.Bounds();
 
         #endregion HelperMethods
 
