@@ -523,9 +523,9 @@ namespace MagiRogue.Commands
                 possibleWorldTileHere.Visited = true;
 
                 RegionChunk chunk = GameLoop.Universe.GenerateChunck(playerPoint);
+                GameLoop.Universe.CurrentChunk = chunk;
                 GameLoop.Universe.ChangePlayerMap(chunk.LocalMaps[0],
                     chunk.LocalMaps[0].GetRandomWalkableTile(), currentMap);
-                GameLoop.Universe.CurrentChunk = chunk;
                 return true;
             }
             else if (possibleWorldTileHere.Visited)

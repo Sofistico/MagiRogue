@@ -154,7 +154,7 @@ namespace MagiRogue.System
             }
         }
 
-        private void CreateStoneMazeMap()
+        /*private void CreateStoneMazeMap()
         {
             Map map = new DungeonGenerator().GenerateMazeMap(_maxRooms, _minRoomSize, _maxRoomSize);
 
@@ -166,7 +166,7 @@ namespace MagiRogue.System
 
             // Set up anything that needs to be set up for the world to work
             SetUpStuff(map);
-        }
+        }*/
 
         public void ChangePlayerMap(Map mapToGo, Point pos, Map previousMap)
         {
@@ -179,17 +179,18 @@ namespace MagiRogue.System
             GameLoop.UIManager.MapWindow.CenterOnActor(Player);
         }
 
-        private static void UpdateIfNeedTheMap(Map mapToGo)
+        private void UpdateIfNeedTheMap(Map mapToGo)
         {
+            if (!CurrentChunk.MapsAreConnected())
+                MapGenerator.ConnectMapsInsideChunk(CurrentChunk.LocalMaps);
             if (mapToGo.NeedsUpdate)
             {
-                // do something
             }
             else
                 return; // Do nothing
         }
 
-        public void ChangeActorMap(Entity entity, Map mapToGo, Point pos, Map previousMap)
+        public static void ChangeActorMap(Entity entity, Map mapToGo, Point pos, Map previousMap)
         {
             previousMap.Remove(entity);
             entity.Position = pos;
@@ -216,7 +217,7 @@ namespace MagiRogue.System
 
         private void CreateTestMap()
         {
-            GeneralMapGenerator generalMapGenerator = new();
+            MiscMapGen generalMapGenerator = new();
             Map map = generalMapGenerator.GenerateTestMap();
             CurrentMap = map;
         }
@@ -248,7 +249,7 @@ namespace MagiRogue.System
         // Create some random monsters with random attack and defense values
         // and drop them all over the map in
         // random places.
-        private void CreateMonster(Map map, int numMonster)
+        /*private void CreateMonster(Map map, int numMonster)
         {
             // Create several monsters and
             // pick a random position on the map to place them.
@@ -347,43 +348,34 @@ namespace MagiRogue.System
 
             map.Add(test);
 #endif
-        }
+        }*/
 
         public void ProcessTurn(long playerTime, bool sucess)
         {
             if (sucess)
             {
-                if (Player.Stats.Health <= 0)
-                {
-                    DeleteSave();
-                    RestartGame();
+                bool playerActionWorked = ProcessPlayerTurn(playerTime);
+
+                if (!playerActionWorked)
                     return;
-                }
 
-                PlayerTimeNode playerTurn = new PlayerTimeNode(Time.TimePassed.Ticks + playerTime);
-                Time.RegisterEntity(playerTurn);
-
-                Player.Stats.ApplyHpRegen();
-                Player.Stats.ApplyManaRegen();
-                CurrentMap.PlayerFOV.Calculate(Player.Position, Player.Stats.ViewRadius);
-
-                var node = Time.NextNode();
+                var turnNode = Time.NextNode();
 
                 // put here terrrain effect
 
-                while (node is not PlayerTimeNode)
+                while (turnNode is not PlayerTimeNode)
                 {
-                    switch (node)
+                    switch (turnNode)
                     {
                         case EntityTimeNode entityTurn:
                             ProcessAiTurn(entityTurn.EntityId, Time.TimePassed.Ticks);
                             break;
 
                         default:
-                            throw new NotSupportedException($"Unhandled time master node type: {node.GetType()}");
+                            throw new NotSupportedException($"Unhandled time node type: {turnNode.GetType()}");
                     }
 
-                    node = Time.NextNode();
+                    turnNode = Time.NextNode();
                 }
 
                 GameLoop.UIManager.MapWindow.MapConsole.IsDirty = true;
@@ -394,6 +386,30 @@ namespace MagiRogue.System
             }
         }
 
+        /// <summary>
+        /// The player turn handler
+        /// </summary>
+        /// <param name="playerTime"></param>
+        /// <returns>returns true if the player made it's action sucessfully, false if otherwise</returns>
+        private bool ProcessPlayerTurn(long playerTime)
+        {
+            if (Player.Stats.Health <= 0)
+            {
+                DeleteSave();
+                RestartGame();
+                return false;
+            }
+
+            PlayerTimeNode playerTurn = new PlayerTimeNode(Time.TimePassed.Ticks + playerTime);
+            Time.RegisterEntity(playerTurn);
+
+            Player.Stats.ApplyHpRegen();
+            Player.Stats.ApplyManaRegen();
+            CurrentMap.PlayerFOV.Calculate(Player.Position, Player.Stats.ViewRadius);
+
+            return true;
+        }
+
         private void DeleteSave()
         {
             SaveAndLoad.DeleteSave(Player.Name);
@@ -401,9 +417,7 @@ namespace MagiRogue.System
 
         private void RestartGame()
         {
-            CurrentMap.RemoveAllEntities();
-            CurrentMap.RemoveAllTiles();
-            CurrentMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
+            CurrentMap.DestroyMap();
             int chunckLenght = AllChunks.Length;
             for (int i = 0; i < chunckLenght; i++)
             {
@@ -411,9 +425,7 @@ namespace MagiRogue.System
                 int mapsLenght = maps.Length;
                 for (int z = 0; z < mapsLenght; z++)
                 {
-                    maps[z].RemoveAllEntities();
-                    maps[z].RemoveAllTiles();
-                    maps[z].GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
+                    maps[z].DestroyMap();
                 }
             }
             CurrentMap = null;
@@ -432,7 +444,8 @@ namespace MagiRogue.System
             if (entity != null)
             {
                 IAiComponent ai = entity.GoRogueComponents.GetFirstOrDefault<IAiComponent>();
-                (bool sucess, long tick) = ai?.RunAi(CurrentMap, GameLoop.UIManager.MessageLog) ?? (false, -1);
+                (bool sucess, long tick) = ai?.RunAi(CurrentMap, GameLoop.UIManager.MessageLog)
+                    ?? (false, -1);
                 entity.Stats.ApplyAllRegen();
 
                 if (!sucess || tick < -1)

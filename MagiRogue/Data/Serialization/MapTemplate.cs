@@ -6,6 +6,7 @@ using MagiRogue.System.Planet;
 using MagiRogue.System.Tiles;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;

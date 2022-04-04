@@ -109,57 +109,45 @@ namespace MagiRogue.Data.Serialization
         /// <returns></returns>
         private static ISpellEffect EnumToEffect(EffectTypes effect, JToken jToken)
         {
-            switch (effect)
+            return effect switch
             {
-                case EffectTypes.DAMAGE:
-                    return new DamageEffect
-                        ((int)jToken["BaseDamage"], StringToAreaEffect((string)jToken["AreaOfEffect"]),
-                        StringToDamageType((string)jToken["SpellDamageType"]),
-                        (bool)jToken["CanMiss"], (bool)jToken["IsHealing"], (int)jToken["Radius"],
-                        isResistable: (bool)jToken["IsResistable"]);
-
-                case EffectTypes.HASTE:
-                    return new HasteEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]),
-                        (int)jToken["HastePower"],
-                        (int)jToken["Duration"],
-                        StringToDamageType((string)jToken["SpellDamageType"]));
-
-                case EffectTypes.MAGESIGHT:
-                    return new MageSightEffect((int)jToken["Duration"]);
-
-                case EffectTypes.SEVER:
-                    return new SeverEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]),
-                        StringToDamageType((string)jToken["SpellDamageType"]),
-                        (int)jToken["Radius"], (int)jToken["BaseDamage"]);
-
-                case EffectTypes.TELEPORT:
-                    return new TeleportEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]),
-                        StringToDamageType((string)jToken["SpellDamageType"]),
-                        (int)jToken["Radius"]);
-
-                default:
-                    return null;
-            }
+                EffectTypes.DAMAGE => new DamageEffect
+                    ((int)jToken["BaseDamage"], StringToAreaEffect((string)jToken["AreaOfEffect"]),
+                    StringToDamageType((string)jToken["SpellDamageType"]),
+                    (bool)jToken["CanMiss"], (bool)jToken["IsHealing"], (int)jToken["Radius"],
+                    isResistable: (bool)jToken["IsResistable"]),
+                EffectTypes.HASTE => new HasteEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]),
+                    (int)jToken["HastePower"],
+                    (int)jToken["Duration"],
+                    StringToDamageType((string)jToken["SpellDamageType"])),
+                EffectTypes.MAGESIGHT => new MageSightEffect((int)jToken["Duration"]),
+                EffectTypes.SEVER => new SeverEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]),
+                    StringToDamageType((string)jToken["SpellDamageType"]),
+                    (int)jToken["Radius"], (int)jToken["BaseDamage"]),
+                EffectTypes.TELEPORT => new TeleportEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]),
+                    StringToDamageType((string)jToken["SpellDamageType"]),
+                    (int)jToken["Radius"]),
+                _ => null,
+            };
         }
 
         private static MagicSchool StringToSchool(string st)
         {
             return st switch
             {
-                "Projection" => MagicSchool.Projection,
-                "Negation" => MagicSchool.Negation,
-                "Animation" => MagicSchool.Animation,
-                "Divination" => MagicSchool.Divination,
-                "Alteration" => MagicSchool.Alteration,
-                "Wards" => MagicSchool.Wards,
-                "Dimensionalism" => MagicSchool.Dimensionalism,
-                "Conjuration" => MagicSchool.Conjuration,
-                "Transformation" => MagicSchool.Transformation,
-                "Illuminism" => MagicSchool.Illuminism,
-                "MedicalMagic" => MagicSchool.MedicalMagic,
-                "MindMagic" => MagicSchool.MindMagic,
-                "SoulMagic" => MagicSchool.SoulMagic,
-                "BloodMagic" => MagicSchool.BloodMagic,
+                "Projection" => MagicSchool.Projection, // 1
+                "Negation" => MagicSchool.Negation, // 2
+                "Animation" => MagicSchool.Animation, // 3
+                "Divination" => MagicSchool.Divination, // 4
+                "Alteration" => MagicSchool.Alteration, // 5
+                "Wards" => MagicSchool.Wards, // 6
+                "Dimensionalism" => MagicSchool.Dimensionalism, // 7
+                "Conjuration" => MagicSchool.Conjuration, // 8
+                "Illuminism" => MagicSchool.Illuminism, // 9
+                "MedicalMagic" => MagicSchool.MedicalMagic, // 10
+                "MindMagic" => MagicSchool.MindMagic, // 11
+                "SoulMagic" => MagicSchool.SoulMagic, // 12
+                "BloodMagic" => MagicSchool.BloodMagic, // 13
                 _ => throw new Exception($"Are you sure the school is correct? it must be a valid one./n School used: {st}")
             };
         }

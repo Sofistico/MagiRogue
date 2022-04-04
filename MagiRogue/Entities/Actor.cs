@@ -3,6 +3,7 @@ using MagiRogue.System;
 using MagiRogue.System.Tiles;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
+using System;
 using System.Collections.Generic;
 
 namespace MagiRogue.Entities
@@ -114,9 +115,34 @@ namespace MagiRogue.Entities
 
                 if (doorThere)
                     return doorThere;
+                if (CheckForChangeMapChunk(Position, positionChange))
+                {
+                }
 
                 return false;
             }
+        }
+
+        private bool CheckForChangeMapChunk(Point pos, Point positionChange)
+        {
+            Direction dir = Direction.GetCardinalDirection(positionChange);
+            if (GameLoop.GetCurrentMap().MapZoneConnections.ContainsKey(dir) &&
+                GameLoop.GetCurrentMap().CheckForIndexOutOfBounds(pos + positionChange))
+            {
+                Map mapToGo = GameLoop.GetCurrentMap().MapZoneConnections[dir];
+                Point actorPosInChunk = GetNextMapPos(mapToGo, pos + positionChange);
+                GameLoop.Universe.ChangePlayerMap(mapToGo, actorPosInChunk, GameLoop.GetCurrentMap());
+                return true;
+            }
+            else
+                return false;
+        }
+
+        private Point GetNextMapPos(Map map, Point pos)
+        {
+            int x = pos.X % map.Width < 0 ? map.Width + (pos.X % map.Width) : pos.X % map.Width;
+            int y = pos.Y % map.Height < 0 ? map.Height + (pos.Y % map.Height) : pos.Y % map.Height;
+            return new SadRogue.Primitives.Point(x, y);
         }
 
         private bool CheckIfCanAttack(Point positionChange)

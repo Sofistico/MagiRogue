@@ -25,7 +25,12 @@ namespace MagiRogue.System.Magic
         /// <summary>
         /// The innate resistance to magic from a being, how hard it is to harm another with pure magic
         /// </summary>
-        public int InnateResistance { get; set; } = 1;
+        public int InnateMagicResistance { get; set; } = 0;
+
+        /// <summary>
+        /// The resistance to magic from other stuff add to a being
+        /// </summary>
+        public int MagicResistance { get; set; } = 0;
 
         /// <summary>
         /// The research skill, how long it takes to properly research something, there is no upper limit.
@@ -33,9 +38,11 @@ namespace MagiRogue.System.Magic
         public int ResearchSkill { get; set; }
 
         /// <summary>
-        /// How likely it is to penetrate the resistance of another being, the formula should be to win against
+        /// How likely it is to penetrate the resistance of another being,
+        /// the formula should be to win against
         /// the resistance
-        /// ((0.3 * Proficiency) + (ShapingSkill * 0.5) + MagicPenetration) + bonusLuck >= InnateResistance * 2
+        /// ((0.3 * Proficiency) + (ShapingSkill * 0.5) + MagicPenetration)
+        /// + bonusLuck >= (InnateResistance + MagicResistance) * 2
         /// </summary>
         public int MagicPenetration { get; set; } = 1;
 
@@ -69,7 +76,8 @@ namespace MagiRogue.System.Magic
         public static bool PenetrateResistance(SpellBase spellCasted, Entity caster, Entity defender,
             int bonusLuck) =>
             (int)((0.3 * spellCasted.Proficiency) + (caster.Magic.ShapingSkill * 0.5)
-            + caster.Magic.MagicPenetration) + bonusLuck >= defender.Magic.InnateResistance * 2;
+            + caster.Magic.MagicPenetration) + bonusLuck >= (defender.Magic.InnateMagicResistance
+            + defender.Magic.MagicResistance) * 2;
 
         public SpellBase QuerySpell(string spellId)
         {
@@ -77,22 +85,38 @@ namespace MagiRogue.System.Magic
         }
     }
 
+    /// <summary>
+    /// Scholls of magic
+    /// </summary>
     [JsonConverter(typeof(StringEnumConverter))]
     public enum MagicSchool
     {
+        ///<summary>projects mana into different forms, mainly made for combat magic</summary>
         Projection,
+        ///<summary>The art of unmaking spells, of dispelling and countering magic</summary>
         Negation,
+        ///<summary>The art of animating something with magic, making it do someting autonomosly</summary>
         Animation,
+        ///<summary>The art of knowing things with magic</summary>
         Divination,
-        Alteration,
+        ///<summary>The art of natural and unnatural trasformation of things with magic</summary>
+        Alteration, // takes care of the old Transformation as well.
+        ///<summary>The art of protecting something with magic, ex. Ward against fire or metal</summary>
         Wards,
+        ///<summary>The art of alterating dimensions with magic, like pocket dimensions and bags of holding</summary>
         Dimensionalism,
+        ///<summary>The art of conjuring things with magic</summary>
         Conjuration,
-        Transformation,
+        ///<summary>The art of ilusion, of creating light, of affecting the senses</summary>
         Illuminism,
+        ///<summary>The art of healing, is limited by the caster own medical knowlodge</summary>
         MedicalMagic,
+        ///<summary>The art of mind reading, of implating thought and deleting memories</summary>
         MindMagic,
+        ///<summary>The art of the soul, of splicing souls, creating undead and becoming more</summary>
         SoulMagic,
+        ///<summary>The art of the body,
+        ///of making permanent arcane alterations to the body and sacrificial power</summary>
         BloodMagic
     }
 }

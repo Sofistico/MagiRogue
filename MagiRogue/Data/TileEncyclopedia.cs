@@ -27,12 +27,22 @@ namespace MagiRogue.Data
 
         public static TileFloor GenericDirt(Point pos)
         {
-            return new TileFloor("Dirt", pos, "dirt", '.', Color.SandyBrown, Color.Transparent);
+            return new TileFloor("Dirt", pos, "dirt", '.', Color.Brown, Color.Transparent);
         }
 
         internal static TileWall GenericTree()
         {
             return new TileWall(Palette.Wood, Color.Black, 'O', "Tree", Point.None, "wood");
+        }
+
+        internal static TileWall GenericStoneWall()
+        {
+            return new TileWall(Point.None);
+        }
+
+        internal static TileFloor GenericStoneFloor()
+        {
+            return new TileFloor(Point.None);
         }
     }
 }

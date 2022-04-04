@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using MagiRogue.Data.Serialization;
+using System;
 
 namespace MagiRogue.System
 {
@@ -36,5 +37,16 @@ namespace MagiRogue.System
         public Point ChunckPos() => new Point(X, Y);
 
         public int ToIndex(int width) => Point.ToIndex(X, Y, width);
+
+        public bool MapsAreConnected()
+        {
+            for (int i = 0; i < MAX_LOCAL_MAPS; i++)
+            {
+                Map map = LocalMaps[i];
+                if (map.MapZoneConnections.Count <= 0)
+                    return false;
+            }
+            return true;
+        }
     }
 }
