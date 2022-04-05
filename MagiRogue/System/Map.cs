@@ -1,5 +1,6 @@
 ﻿using GoRogue;
 using GoRogue.GameFramework;
+using GoRogue.Pathing;
 using GoRogue.SpatialMaps;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
@@ -9,7 +10,9 @@ using Newtonsoft.Json;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 
 namespace MagiRogue.System
@@ -60,13 +63,13 @@ namespace MagiRogue.System
         }
 
         public Point LastPlayerPosition { get; set; } = Point.None;
-
-        public string MapName { get; }
+        public string MapName { get; set; }
         public bool NeedsUpdate { get; internal set; }
         public bool IsActive { get; set; }
         public uint MapId { get; private set; }
         public ulong Seed { get; set; }
         public int[]? ZLevels { get; set; }
+        public Dictionary<Direction, Map> MapZoneConnections { get; set; }
 
         #endregion Properties
 
@@ -75,14 +78,14 @@ namespace MagiRogue.System
         /// <summary>
         /// Build a new map with a specified width and height, has entity layers,
         /// they being 0-Furniture, 1-ghosts, 2-Items, 3-Actors, 4-Player.
-        /// \nAll Maps must have 60x60 size, for a total of 3600 tiles inside of it, for chunck loading.
+        /// \nMaps can have any size, but the default is 60x60, for a nice 3600 tiles per map
         /// </summary>
         /// <param name="width"></param>
         /// <param name="height"></param>
         public Map(string mapName, int width = 60, int height = 60) :
             base(CreateTerrain(width, height), Enum.GetNames(typeof(MapLayer)).Length - 1,
             Distance.Euclidean,
-            entityLayersSupportingMultipleItems: LayerMasker.DEFAULT.Mask
+            entityLayersSupportingMultipleItems: LayerMasker.Default.Mask
             ((int)MapLayer.ITEMS, (int)MapLayer.GHOSTS, (int)MapLayer.PLAYER))
         {
             Tiles = (ArrayView<TileBase>)((LambdaSettableTranslationGridView<TileBase, IGameObject>)Terrain).BaseGrid;
@@ -93,6 +96,7 @@ namespace MagiRogue.System
 
             _entityRender = new SadConsole.Entities.Renderer();
             MapName = mapName;
+            MapZoneConnections = new();
         }
 
         #endregion Constructor
@@ -201,14 +205,17 @@ namespace MagiRogue.System
         /// <param name="entity"></param>
         public void Remove(Entity entity)
         {
-            RemoveEntity(entity);
+            if (Entities.Contains(entity))
+            {
+                RemoveEntity(entity);
 
-            _entityRender.Remove(entity);
+                _entityRender.Remove(entity);
 
-            // Link up the entity's Moved event to a new handler
-            entity.Moved -= OnEntityMoved;
+                // Link up the entity's Moved event to a new handler
+                entity.Moved -= OnEntityMoved;
 
-            _entityRender.IsDirty = true;
+                _entityRender.IsDirty = true;
+            }
         }
 
         /// <summary>
@@ -441,38 +448,73 @@ namespace MagiRogue.System
 
         public void SetId(uint id) => MapId = id;
 
-        #endregion HelperMethods
-
-        #region Desconstructor
-
-        ~Map()
+        public FastAStar AStarWithAllWalkable()
         {
-#if DEBUG
-            // This is here because i suspect there is a minor memory leak in the map class, with this here
-            // at the very least it seems that the memory is not that great
-            //GC.Collect();
-            //GC.WaitForPendingFinalizers();
-            //GC.Collect();
-#endif
-
-            foreach (Entity item in Entities.Items)
+            int count = Tiles.Length;
+            ArrayView<bool> mapView = new ArrayView<bool>(Width, Height);
+            for (int i = 0; i < count; i++)
             {
-                Remove(item);
+                mapView[i] = true;
             }
+            FastAStar astar = new FastAStar(mapView, DistanceMeasurement);
+
+            return astar;
+        }
+
+        /// <summary>
+        /// Returns the rectangle containing the bounds of the map
+        /// </summary>
+        /// <returns></returns>
+        public Rectangle MapBounds() => Terrain.Bounds();
+
+        public void DestroyMap()
+        {
+            RemoveAllEntities();
+            RemoveAllTiles();
+            GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
             Tiles = null;
             ControlledGameObjectChanged = null;
             this.ControlledEntitiy = null;
             _entityRender = null;
-            GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
             GoRogueComponents.Clear();
-#if DEBUG
-            //GC.Collect();
-            //GC.WaitForPendingFinalizers();
-            //GC.Collect();
-#endif
         }
 
-        #endregion Desconstructor
+        #endregion HelperMethods
+
+        /*
+
+                #region Desconstructor
+
+                ~Map()
+                {
+        #if DEBUG
+                    // This is here because i suspect there is a minor memory leak in the map class, with this here
+                    // at the very least it seems that the memory is not that great
+                    //GC.Collect();
+                    //GC.WaitForPendingFinalizers();
+                    //GC.Collect();
+        #endif
+
+                    foreach (Entity item in Entities.Items)
+                    {
+                        Remove(item);
+                    }
+                    Tiles = null;
+                    ControlledGameObjectChanged = null;
+                    this.ControlledEntitiy = null;
+                    _entityRender = null;
+                    GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
+                    GoRogueComponents.Clear();
+        #if DEBUG
+                    //GC.Collect();
+                    //GC.WaitForPendingFinalizers();
+                    //GC.Collect();
+        #endif
+                }
+
+                #endregion Desconstructor
+
+        */
     }
 
     // enum for defining maplayer for things, so that a monster and a player can occupy the same tile as

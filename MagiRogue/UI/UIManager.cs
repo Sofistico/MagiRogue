@@ -79,7 +79,7 @@ namespace MagiRogue.UI
             if (uni is not null)
             {
                 GameLoop.Universe = uni;
-                if (GameLoop.Universe.CurrentMap.LastPlayerPosition == Point.None)
+                if (GameLoop.GetCurrentMap().LastPlayerPosition == Point.None)
                     throw new Exception("The player position was invalid, an error occured!");
                 GameLoop.Universe.PlacePlayerOnLoad();
             }
@@ -110,7 +110,7 @@ namespace MagiRogue.UI
             CreateMapWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight, "Game Map");
 
             // Then load the map into the MapConsole
-            MapWindow.LoadMap(GameLoop.Universe.CurrentMap);
+            MapWindow.LoadMap(GameLoop.GetCurrentMap());
 
             // Start the game with the camera focused on the player
             MapWindow.CenterOnActor(GameLoop.Universe.Player);
@@ -144,9 +144,9 @@ namespace MagiRogue.UI
         /// <returns></returns>
         public override bool ProcessKeyboard(Keyboard info)
         {
-            if (GameLoop.Universe != null && GameLoop.Universe.CurrentMap != null
-                && (GameLoop.Universe.CurrentMap.ControlledEntitiy != null
-                || GameLoop.Universe.WorldMap.AssocietatedMap == GameLoop.Universe.CurrentMap))
+            if (GameLoop.Universe != null && GameLoop.GetCurrentMap() != null
+                && (GameLoop.GetCurrentMap().ControlledEntitiy != null
+                || GameLoop.Universe.WorldMap.AssocietatedMap == GameLoop.GetCurrentMap()))
             {
                 if (KeyboardHandle.HandleMapKeys(info, this, GameLoop.Universe))
                 {

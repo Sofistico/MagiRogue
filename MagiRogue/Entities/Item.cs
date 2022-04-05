@@ -69,7 +69,7 @@ namespace MagiRogue.Entities
         // out of memory automatically.
         public void Destroy()
         {
-            GameLoop.Universe.CurrentMap.Remove(this);
+            GameLoop.GetCurrentMap().Remove(this);
         }
 
         public void Equip(Actor actor)

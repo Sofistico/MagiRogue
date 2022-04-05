@@ -40,7 +40,7 @@ namespace MagiRogue.System.Magic.Effects
         private void CutLimb(Point target, Actor caster, SpellBase spellCasted)
         {
             // Actor because only actor have an anatomy
-            Actor poorGuy = GameLoop.Universe.CurrentMap.GetEntityAt<Actor>(target);
+            Actor poorGuy = GameLoop.GetCurrentMap().GetEntityAt<Actor>(target);
             int luck = GoRogue.DiceNotation.Dice.Roll($"{spellCasted.SpellLevel}d{spellCasted.Power}");
 
             if (poorGuy is not null && poorGuy.Anatomy.Limbs.Count > 0

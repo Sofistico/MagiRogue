@@ -49,7 +49,7 @@ namespace MagiRogue.System.Magic.Effects
 
         private void Haste(Point target, SpellBase spellCasted)
         {
-            Stat targetStats = GameLoop.Universe.CurrentMap.GetEntityAt<Actor>(target).Stats;
+            Stat targetStats = GameLoop.GetCurrentMap().GetEntityAt<Actor>(target).Stats;
 
             if (turnToRemove == 0)
                 GameLoop.Universe.Time.TurnPassed -= GetTime_TurnPassed;

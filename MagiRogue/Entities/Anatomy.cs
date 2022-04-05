@@ -55,7 +55,7 @@ namespace MagiRogue.Entities
 
         [JsonIgnore]
         public bool CanSee => Organs.Exists(o => o.OrganType is OrganType.Visual
-                                                     && (!o.Destroyed || o.Attached));
+                                                              && (!o.Destroyed || o.Attached));
 
         /// <summary>
         /// The total lifespan of a character
@@ -207,7 +207,7 @@ namespace MagiRogue.Entities
             if (totalDmg > 0)
                 GameLoop.UIManager.MessageLog.Add($"and took {totalDmg} damage!");
 
-            GameLoop.Universe.CurrentMap.Add(limb.ReturnLimbAsItem(actor));
+            GameLoop.GetCurrentMap().Add(limb.ReturnLimbAsItem(actor));
         }
 
         internal void Update(Actor actor)

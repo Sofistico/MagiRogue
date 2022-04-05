@@ -53,5 +53,11 @@ namespace MagiRogue
             // so they can use the World data
             UIManager.InitMainMenu();
         }
+
+        /// <summary>
+        /// Gets the current map, a shorthand for GameLoop.Universe.CurrentMap
+        /// </summary>
+        /// <returns></returns>
+        public static Map GetCurrentMap() => Universe.CurrentMap;
     }
 }

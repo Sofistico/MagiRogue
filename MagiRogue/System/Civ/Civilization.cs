@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using MagiRogue.System.Tiles;
 
 namespace MagiRogue.System.Civ
 {
@@ -31,7 +32,7 @@ namespace MagiRogue.System.Civ
         public float MundaneResources { get; set; }
         public float MagicalResources { get; set; }
         public List<ItemTemplate> Nodes { get; set; }
-        public Territory Territory { get; set; }
+        public List<Point> Territory { get; set; }
 
         public Civilization(string name, Race primaryRace, int population,
             CivilizationTendency tendency)
@@ -42,6 +43,47 @@ namespace MagiRogue.System.Civ
             Tendency = tendency;
             Nodes = new();
             Territory = new();
+        }
+
+        public List<WorldTile> ReturnAllTerritories(Map map)
+        {
+            List<WorldTile> tiles = new();
+            int count = Territory.Count;
+
+            for (int i = 0; i < count; i++)
+            {
+                tiles.Add(map.GetTileAt<WorldTile>(Territory[i]));
+            }
+
+            return tiles;
+        }
+
+        public List<WorldTile> ReturnAllLandTerritory(Map map)
+        {
+            var list = ReturnAllTerritories(map);
+            var landList = new List<WorldTile>();
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i].Collidable)
+                    landList.Add(list[i]);
+            }
+
+            return landList;
+        }
+
+        public List<WorldTile> ReturnAllWaterTerritoey(Map map)
+        {
+            var list = ReturnAllTerritories(map);
+            var waterList = new List<WorldTile>();
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (!list[i].Collidable)
+                    waterList.Add(list[i]);
+            }
+
+            return waterList;
         }
     }
 }

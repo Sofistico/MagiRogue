@@ -22,15 +22,15 @@ namespace MagiRogue.System
             Tag = RoomTag.Generic;
         }
 
-        public void LockDoorsRng()
+        public void LockedDoorsRng()
         {
             int half = GoRogue.DiceNotation.Dice.Roll("1d2");
 
             if (half == 1)
             {
                 int indexDoor = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(Doors.Count);
-
-                Doors[indexDoor].Locked = true;
+                if(Doors.Count > 0)
+                    Doors[indexDoor].Locked = true;
             }
         }
 

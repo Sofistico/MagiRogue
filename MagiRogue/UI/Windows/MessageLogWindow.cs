@@ -71,6 +71,18 @@ namespace MagiRogue.UI.Windows
 
             // This here says that there will be a new line, so i don't need position the cursor:
             messageConsole.Cursor.Print(message).NewLine();
+
+            // unashamed code stealing to make the same message collapsible
+            /*if (newMessage == _lastMessage)
+            {
+                this.Print(lastMessage.Length + offset, _yPos, $"x{++_messageCounter}");
+            }
+            else
+            {
+                this.Print(++_yPos, newMessage);
+                _lastMessage = newMessage;
+                _messageCounter = 1;
+            }*/
         }
 
         // Controls the position of the messagelog viewport

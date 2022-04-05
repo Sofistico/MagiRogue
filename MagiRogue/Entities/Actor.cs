@@ -3,6 +3,7 @@ using MagiRogue.System;
 using MagiRogue.System.Tiles;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
+using System;
 using System.Collections.Generic;
 
 namespace MagiRogue.Entities
@@ -95,7 +96,7 @@ namespace MagiRogue.Entities
         public bool MoveBy(Point positionChange)
         {
             // Check the current map if we can move to this new position
-            if (GameLoop.Universe.CurrentMap.IsTileWalkable(Position + positionChange, this))
+            if (GameLoop.GetCurrentMap().IsTileWalkable(Position + positionChange, this))
             {
                 bool attacked = CheckIfCanAttack(positionChange);
 
@@ -114,16 +115,41 @@ namespace MagiRogue.Entities
 
                 if (doorThere)
                     return doorThere;
+                if (CheckForChangeMapChunk(Position, positionChange))
+                {
+                }
 
                 return false;
             }
+        }
+
+        private bool CheckForChangeMapChunk(Point pos, Point positionChange)
+        {
+            Direction dir = Direction.GetCardinalDirection(positionChange);
+            if (GameLoop.GetCurrentMap().MapZoneConnections.ContainsKey(dir) &&
+                GameLoop.GetCurrentMap().CheckForIndexOutOfBounds(pos + positionChange))
+            {
+                Map mapToGo = GameLoop.GetCurrentMap().MapZoneConnections[dir];
+                Point actorPosInChunk = GetNextMapPos(mapToGo, pos + positionChange);
+                GameLoop.Universe.ChangePlayerMap(mapToGo, actorPosInChunk, GameLoop.GetCurrentMap());
+                return true;
+            }
+            else
+                return false;
+        }
+
+        private Point GetNextMapPos(Map map, Point pos)
+        {
+            int x = pos.X % map.Width < 0 ? map.Width + (pos.X % map.Width) : pos.X % map.Width;
+            int y = pos.Y % map.Height < 0 ? map.Height + (pos.Y % map.Height) : pos.Y % map.Height;
+            return new SadRogue.Primitives.Point(x, y);
         }
 
         private bool CheckIfCanAttack(Point positionChange)
         {
             // if there's a monster here,
             // do a bump attack
-            Actor actor = GameLoop.Universe.CurrentMap.GetEntityAt<Actor>(Position + positionChange);
+            Actor actor = GameLoop.GetCurrentMap().GetEntityAt<Actor>(Position + positionChange);
 
             if (actor != null && CanBeAttacked)
             {
@@ -139,7 +165,7 @@ namespace MagiRogue.Entities
         private bool CheckIfThereIsDoor(Point positionChange)
         {
             // Check for the presence of a door
-            TileDoor door = GameLoop.Universe.CurrentMap.GetTileAt<TileDoor>(Position + positionChange);
+            TileDoor door = GameLoop.GetCurrentMap().GetTileAt<TileDoor>(Position + positionChange);
 
             // if there's a door here,
             // try to use it
@@ -157,7 +183,7 @@ namespace MagiRogue.Entities
         // returns true if actor was able to move, false if failed to move
         public bool MoveTo(Point newPosition)
         {
-            if (GameLoop.Universe.CurrentMap.IsTileWalkable(newPosition))
+            if (GameLoop.GetCurrentMap().IsTileWalkable(newPosition))
             {
                 Position = newPosition;
                 return true;
@@ -168,9 +194,10 @@ namespace MagiRogue.Entities
             }
         }
 
-        public Item WieldedItem()
+        public Item? WieldedItem()
         {
-            return Equipment.GetValueOrDefault(Anatomy.Limbs.Find(l => l.TypeLimb == TypeOfLimb.Hand));
+            return Equipment.GetValueOrDefault(Anatomy.Limbs.Find(l =>
+            l.TypeLimb == TypeOfLimb.Hand));
         }
 
         public void AddAbilityToDictionary(Ability ability)

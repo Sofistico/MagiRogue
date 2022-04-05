@@ -21,7 +21,7 @@ namespace MagiRogue.Utils
         /// <returns></returns>
         public static Shape Cone(Point originCoordinate, double radius, Target target)
         {
-            var map = GameLoop.Universe.CurrentMap;
+            var map = GameLoop.GetCurrentMap();
             Point[] points;
             double angle = 0;
             if (target.TravelPath.Length > 0)
@@ -55,6 +55,38 @@ namespace MagiRogue.Utils
         {
             Points = points;
             Radius = radius;
+        }
+    }
+
+    /// <summary>
+    /// Represents a simple 2d grid, does not hold any kind of objects and is there just to represent
+    /// the space
+    /// </summary>
+    public struct Simple2DGrid
+    {
+        /// <summary>
+        /// Also know as the rows
+        /// </summary>
+        public int Width { get; set; }
+
+        /// <summary>
+        /// Also know as the columns
+        /// </summary>
+        public int Height { get; set; }
+
+        /// <summary>
+        /// The total size of the grid
+        /// </summary>
+        public int Size { get; set; }
+
+        public List<Point> Points { get; set; }
+
+        public Simple2DGrid(int width, int height, List<Point> points)
+        {
+            Width = width;
+            Height = height;
+            Size = width * height;
+            Points = points;
         }
     }
 }

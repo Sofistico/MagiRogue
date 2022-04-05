@@ -157,8 +157,8 @@ namespace MagiRogue.System.Planet
                     var nextCiv = _civilizations[i + 1];
 
                     Path path = planetData.AssocietatedMap.
-                        AStar.ShortestPath(civ.Territory.OwnedLand.WorldTiles[0].Position,
-                        nextCiv.Territory.OwnedLand.WorldTiles[0].Position);
+                        AStar.ShortestPath(civ.Territory[0],
+                        nextCiv.Territory[0]);
 
                     //TODO: Make sure that the roads don't colide with water and/or go away from water
                     if (civ.Tendency == nextCiv.Tendency && path.Length <= 50)
@@ -171,8 +171,8 @@ namespace MagiRogue.System.Planet
 
         private void BuildRoadsToFriends(Civilization civ, Civilization friend)
         {
-            var tile = civ.Territory.OwnedLand.WorldTiles[0];
-            var closestCityTile = friend.Territory.OwnedLand.WorldTiles[0];
+            var tile = tiles[civ.Territory[0].X, civ.Territory[0].Y];
+            var closestCityTile = tiles[friend.Territory[0].X, friend.Territory[0].Y];
 
             FindPathToCity(tile, closestCityTile);
         }
@@ -347,7 +347,7 @@ namespace MagiRogue.System.Planet
 
                 civ.MundaneResources = tile.MineralValue;
                 tile.CivInfluence = civ;
-                civ.Territory.AddLand(tile);
+                civ.Territory.Add(tile.Position);
 
                 if (currentCivCount < maxCivsWorld)
                 {

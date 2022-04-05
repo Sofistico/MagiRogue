@@ -138,7 +138,7 @@ namespace MagiRogue.System.Tiles
         {
             foreach (Point point in Position.GetDirectionPoints())
             {
-                TileBase tile = GameLoop.Universe.CurrentMap.GetTileAt<TileBase>(point);
+                TileBase tile = GameLoop.GetCurrentMap().GetTileAt<TileBase>(point);
                 if (LastSeenAppereance.Matches(tile))
                 {
                     return tile;
