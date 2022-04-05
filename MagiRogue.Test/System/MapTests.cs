@@ -38,7 +38,7 @@ namespace MagiRogue.Test.System
             map.Add(actor);
             var newMap = new Map("MapTest", 1, 1);
             newMap.Tiles[0] = new TileFloor(new Point(0, 0));
-            world.ChangeActorMap(actor, newMap, new Point(0, 0), map);
+            Universe.ChangeActorMap(actor, newMap, new Point(0, 0), map);
             Assert.True(actor.CurrentMap.Equals(newMap));
         }
 
