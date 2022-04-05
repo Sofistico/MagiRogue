@@ -22,8 +22,9 @@ namespace MagiRogue.Test.Data
         [Fact]
         public void DeserializeOrgans()
         {
+            var path = AppDomain.CurrentDomain.BaseDirectory;
             List<Organ> organs = JsonUtils.JsonDeseralize<List<Organ>>
-                (@"C:\Users\joaorodrigues\source\repos\MagiRogue\MagiRogue\Data\Other\organs.json");
+                (path + @"\Data\Other\organs.json");
 
             var otg = DataManager.QueryOrganInData("brain");
 
@@ -33,8 +34,10 @@ namespace MagiRogue.Test.Data
         [Fact]
         public void DeserializeLimbs()
         {
+            var path = AppDomain.CurrentDomain.BaseDirectory;
+
             List<LimbTemplate> limb = MagiRogue.Utils.JsonUtils.JsonDeseralize<List<LimbTemplate>>
-                (@"C:\Users\joaorodrigues\source\repos\MagiRogue\MagiRogue\Data\Other\body_parts.json");
+                (path + @"\Data\Other\body_parts.json");
 
             var otherLimb = DataManager.QueryLimbInData("humanoid_torso");
 
@@ -60,7 +63,7 @@ namespace MagiRogue.Test.Data
         [Fact]
         public void SerializeLimbs()
         {
-            Limb limb = new Limb("head_test",TypeOfLimb.Head,
+            Limb limb = new Limb("head_test", TypeOfLimb.Head,
                 12,
                 12,
                 2.5,
