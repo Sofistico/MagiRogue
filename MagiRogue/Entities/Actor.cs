@@ -115,15 +115,14 @@ namespace MagiRogue.Entities
 
                 if (doorThere)
                     return doorThere;
-                if (CheckForChangeMapChunk(Position, positionChange))
-                {
-                }
 
-                return false;
+                // true means that he entered inside a map,
+                // and thus the turn moved, a false means that there wasn't anything there
+                return CheckForChangeMapChunk(Position, positionChange);
             }
         }
 
-        private bool CheckForChangeMapChunk(Point pos, Point positionChange)
+        private static bool CheckForChangeMapChunk(Point pos, Point positionChange)
         {
             Direction dir = Direction.GetCardinalDirection(positionChange);
             if (GameLoop.GetCurrentMap().MapZoneConnections.ContainsKey(dir) &&
@@ -138,7 +137,7 @@ namespace MagiRogue.Entities
                 return false;
         }
 
-        private Point GetNextMapPos(Map map, Point pos)
+        private static Point GetNextMapPos(Map map, Point pos)
         {
             int x = pos.X % map.Width < 0 ? map.Width + (pos.X % map.Width) : pos.X % map.Width;
             int y = pos.Y % map.Height < 0 ? map.Height + (pos.Y % map.Height) : pos.Y % map.Height;
