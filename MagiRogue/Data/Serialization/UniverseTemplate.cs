@@ -189,7 +189,10 @@ namespace MagiRogue.Data.Serialization
             Universe universe = new Universe(uni.WorldMap, uni.CurrentMap,
                 Entities.Player.ReturnPlayerFromActor(uni.Player),
                 uni.Time, uni.PossibleChangeMap,
-                SeasonEnumToString(uni.CurrentSeason), uni.AllChunks, uni.SaveAndLoad);
+                SeasonEnumToString(uni.CurrentSeason), uni.AllChunks, uni.SaveAndLoad)
+            {
+                CurrentChunk = uni.CurrentChunk,
+            };
 
             return universe;
         }

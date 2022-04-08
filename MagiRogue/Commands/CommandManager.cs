@@ -531,9 +531,9 @@ namespace MagiRogue.Commands
             else if (possibleWorldTileHere.Visited)
             {
                 RegionChunk chunk = GameLoop.Universe.GetChunckByPos(playerPoint);
+                GameLoop.Universe.CurrentChunk = chunk;
                 GameLoop.Universe.ChangePlayerMap(chunk.LocalMaps[0],
                     chunk.LocalMaps[0].LastPlayerPosition, currentMap);
-                GameLoop.Universe.CurrentChunk = chunk;
 
                 return true;
             }

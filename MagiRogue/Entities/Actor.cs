@@ -122,7 +122,7 @@ namespace MagiRogue.Entities
             }
         }
 
-        private static bool CheckForChangeMapChunk(Point pos, Point positionChange)
+        private bool CheckForChangeMapChunk(Point pos, Point positionChange)
         {
             Direction dir = Direction.GetCardinalDirection(positionChange);
             if (GameLoop.GetCurrentMap().MapZoneConnections.ContainsKey(dir) &&
@@ -130,6 +130,9 @@ namespace MagiRogue.Entities
             {
                 Map mapToGo = GameLoop.GetCurrentMap().MapZoneConnections[dir];
                 Point actorPosInChunk = GetNextMapPos(mapToGo, pos + positionChange);
+                // if tile in the other map isn't walkable, then it should't be possible to go there!
+                if (!mapToGo.IsTileWalkable(actorPosInChunk, this))
+                    return false;
                 GameLoop.Universe.ChangePlayerMap(mapToGo, actorPosInChunk, GameLoop.GetCurrentMap());
                 return true;
             }

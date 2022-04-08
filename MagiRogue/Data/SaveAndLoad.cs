@@ -62,7 +62,8 @@ namespace MagiRogue.Data
             CreateSaveNameFolder(saveName);
 
             SaveChuncksToFile(gameState.AllChunks);
-
+            SaveChunkInPos(gameState.CurrentChunk, gameState.CurrentChunk.ToIndex(
+                gameState.GetWorldMap().Width));
             try
             {
                 Serializer.Save(gameState, @$"{_folderName}\{saveName}\GameState.mr", true);
@@ -101,6 +102,7 @@ namespace MagiRogue.Data
             try
             {
                 List<RegionChunk> newChunks = new List<RegionChunk>();
+                if (chunks is null) return;
                 int countArray = chunks.Length;
                 for (int i = 0; i < countArray; i++)
                 {
@@ -121,9 +123,9 @@ namespace MagiRogue.Data
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new Exception("Failed to save chunk to a file!");
+                throw new Exception("Failed to save chunk to a file! \nMessage: " + ex.Message);
             }
         }
 

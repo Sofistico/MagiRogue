@@ -101,8 +101,33 @@ namespace MagiRogue.System
         /// </summary>
         /// <param name="start"></param>
         /// <param name="end"></param>
-        protected static void ConnectWithRoads(Point start, Point end, TileFloor tileToUse)
+        protected void CarveRoad(Point endCoord, Point originCoord, TileFloor roadTile)
         {
+            var path = _map.AStar.ShortestPath(originCoord, endCoord, Distance.Manhattan, true);
+            if (path is null)
+                return;
+            for (int i = 0; i < path.Length; i++)
+            {
+                if (i == path.Length - 1)
+                    break;
+                var step = path.GetStep(i);
+                var tile = roadTile.Copy();
+                tile.Position = step;
+                _map.SetTerrain(tile);
+            }
+        }
+
+        protected void ApplyRoads(List<Room> roomsInMap, TileFloor tileToUse)
+        {
+            for (int i = 1; i < roomsInMap.Count; i++)
+            {
+                if (roomsInMap[i - 1].Doors.Count <= 0 || roomsInMap[i].Doors.Count <= 0)
+                    continue;
+                Point previousRoomDoor = roomsInMap[i - 1].Doors.First().Position;
+                Point currentRoomDoor = roomsInMap[i].Doors.First().Position;
+
+                CarveRoad(previousRoomDoor, currentRoomDoor, tileToUse);
+            }
         }
 
         /// <summary>
@@ -820,51 +845,7 @@ namespace MagiRogue.System
                 _rooms.Add(room);
             }
 
-            ApplyRoads(rooms);
-        }
-
-        private void ApplyRoads(List<Room> roomsInMap)
-        {
-            for (int i = 1; i < roomsInMap.Count; i++)
-            {
-                if (roomsInMap[i - 1].Doors.Count <= 0 || roomsInMap[i].Doors.Count <= 0)
-                    continue;
-                Point previousRoomDoor = roomsInMap[i - 1].Doors.First().Position;
-                Point currentRoomDoor = roomsInMap[i].Doors.First().Position;
-
-                CarveRoad(previousRoomDoor, currentRoomDoor, TileEncyclopedia.GenericDirt(Point.None));
-            }
-        }
-
-        // ugly!
-        private void CarveRoad(Point endCoord, Point originCoord, TileFloor roadTile)
-        {
-            /*for (int x = Math.Min(originCoord.X, endCoord.X); x <= Math.Max(originCoord.X, endCoord.X); x++)
-            {
-                for (int y = Math.Min(originCoord.Y, endCoord.Y); y <= Math.Max(originCoord.Y, endCoord.Y); y++)
-                {
-                    Point point = new(x, y);
-                    if (!_map.IsTileWalkable(point)) continue;
-                    if (_rooms.Any(a => a.RoomRectangle.Positions().Contains(point)))
-                        continue;
-                    var tile = roadTile.Copy();
-                    tile.Position = point;
-                    _map.SetTerrain(tile);
-                }
-            }*/
-
-            var path = _map.AStar.ShortestPath(originCoord, endCoord, Distance.Manhattan, true);
-            if (path is null)
-                return;
-            for (int i = 0; i < path.Length; i++)
-            {
-                if (i == path.Length - 1)
-                    break;
-                var step = path.GetStep(i);
-                var tile = roadTile.Copy();
-                tile.Position = step;
-                _map.SetTerrain(tile);
-            }
+            ApplyRoads(rooms, TileEncyclopedia.GenericDirtRoad(Point.None));
         }
     }
 

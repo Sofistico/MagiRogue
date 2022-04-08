@@ -60,7 +60,6 @@ namespace MagiRogue.System.Planet
         private readonly int minRiverTurns = 18;
         private readonly int _minRiverLength = 20;
         private readonly int maxRiverIntersections = 2;
-        private List<River> rivers;
         private List<RiverGroup> riverGroups;
 
         private readonly List<WorldTileGroup> waters = new();
@@ -609,7 +608,6 @@ namespace MagiRogue.System.Planet
                 moistureOctaves, moistureFrequency, seed);
 
             riverGroups = new();
-            rivers = new();
         }
 
         // need to get the mod so that it doesn't pick up a tile outside of the map.
@@ -811,7 +809,6 @@ namespace MagiRogue.System.Planet
                     else if (river.Tiles.Count >= _minRiverLength)
                     {
                         //Validation passed - Add river to list
-                        rivers.Add(river);
                         tile.Rivers.Add(river);
                         count--;
                     }

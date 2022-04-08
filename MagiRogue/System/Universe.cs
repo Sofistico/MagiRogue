@@ -61,6 +61,11 @@ namespace MagiRogue.System
 
         public SeasonType CurrentSeason { get; set; }
 
+        public Map GetWorldMap()
+        {
+            return WorldMap.AssocietatedMap;
+        }
+
         /// <summary>
         /// All the maps and chunks of the game
         /// NOTE WILL BE SLOWLEY REMOVED FROM CODE!!
@@ -181,7 +186,7 @@ namespace MagiRogue.System
 
         private void UpdateIfNeedTheMap(Map mapToGo)
         {
-            if (!CurrentChunk.MapsAreConnected())
+            if (mapToGo != WorldMap.AssocietatedMap && !CurrentChunk.MapsAreConnected())
                 MapGenerator.ConnectMapsInsideChunk(CurrentChunk.LocalMaps);
             if (mapToGo.NeedsUpdate)
             {
