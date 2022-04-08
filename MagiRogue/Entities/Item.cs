@@ -111,6 +111,11 @@ namespace MagiRogue.Entities
             throw new NotImplementedException();
         }
 
+        public int DamageWhenItemStrikes(int itemAceleration)
+        {
+            return System.Physics.PhysicsManager.CalculateStrikeForce(Weight, itemAceleration) + BaseDmg;
+        }
+
         public override string ToString()
         {
             return $"{Name} : Equip {EquipType}";

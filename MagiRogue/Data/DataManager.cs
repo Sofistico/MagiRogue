@@ -1,6 +1,7 @@
 ﻿using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
 using MagiRogue.System.Magic;
+using MagiRogue.System.Tiles;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -32,6 +33,9 @@ namespace MagiRogue.Data
 
         public static readonly IReadOnlyList<LimbTemplate> ListOfLimbs =
             GetSourceTree<LimbTemplate>(@".\Data\Other\body_parts.json");
+
+        public static readonly IReadOnlyList<TileBase> ListOfTiles =
+            GetSourceTree<TileBase>(@".\Data\Tiles\*.json");
 
         private static IReadOnlyList<T> GetSourceTree<T>(string wildCard)
         {
@@ -67,17 +71,21 @@ namespace MagiRogue.Data
         }
 
         public static SpellBase QuerySpellInData(string spellId) => ListOfSpells.FirstOrDefault
-                (m => m.SpellId.Equals(spellId));
+                (m => m.SpellId.Equals(spellId)).Copy();
 
         public static LimbTemplate QueryLimbInData(string limbId) =>
-            ListOfLimbs.FirstOrDefault(l => l.Id.Equals(limbId));
+            ListOfLimbs.FirstOrDefault(l => l.Id.Equals(limbId)).Copy();
 
         public static Organ QueryOrganInData(string organId)
-            => ListOfOrgans.FirstOrDefault(o => o.Id.Equals(organId));
+            => ListOfOrgans.FirstOrDefault(o => o.Id.Equals(organId)).Copy();
 
-        /*public static MapTemplate QueryMapInData(JObject json, string idLookingFor)
-        {
-            //return JsonConvert.DeserializeObject<MapTemplate>(json["MapId"]);
-        }*/
+        public static TileBase QueryTileInData(string tileName)
+            => ListOfTiles.FirstOrDefault(t => t.Name.Equals(tileName)).Copy();
+
+        public static Actor QueryActorInData(string actorId)
+            => ListOfActors.FirstOrDefault(a => a.ID.Equals(actorId));
+
+        public static Item QueryItemInData(string itemId)
+            => ListOfItems.FirstOrDefault(i => i.Id.Equals(itemId));
     }
 }

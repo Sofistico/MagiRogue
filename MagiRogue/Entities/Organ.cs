@@ -1,6 +1,8 @@
 ﻿using MagiRogue.Data.Serialization;
 using MagiRogue.System.Physics;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
 using System.Runtime.Serialization;
 
 namespace MagiRogue.Entities
@@ -88,8 +90,29 @@ namespace MagiRogue.Entities
         {
             // Empty!
         }
+
+        public Organ Copy()
+        {
+            Organ copy = new Organ()
+            {
+                Attached = this.Attached,
+                Id = this.Id,
+                Name = this.Name,
+                InsideOf = this.InsideOf,
+                Orientation = this.Orientation,
+                OrganHp = this.OrganHp,
+                MaterialId = this.MaterialId,
+                Material = this.Material,
+                MaxOrganHp = this.MaxOrganHp,
+                OrganWeight = this.OrganWeight,
+                OrganType = this.OrganType
+            };
+
+            return copy;
+        }
     }
 
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum OrganType
     {
         Misc,

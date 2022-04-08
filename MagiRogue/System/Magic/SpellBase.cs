@@ -242,6 +242,24 @@ namespace MagiRogue.System.Magic
             Description = description;
         }
 
+        public SpellBase Copy()
+        {
+            SpellBase copy = new SpellBase()
+            {
+                Description = this.Description,
+                Effects = this.Effects,
+                ManaCost = this.ManaCost,
+                Proficiency = this.Proficiency,
+                SpellId = this.SpellId,
+                SpellLevel = this.SpellLevel,
+                SpellName = this.SpellName,
+                SpellRange = this.SpellRange,
+                SpellSchool = this.SpellSchool
+            };
+
+            return copy;
+        }
+
         private void TickProfiency() => Proficiency = Math.Round(Proficiency + 0.01, 2);
 
         public override string ToString()

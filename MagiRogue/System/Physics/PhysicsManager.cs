@@ -1,5 +1,6 @@
 ﻿using MagiRogue.Data;
 using MagiRogue.Data.Serialization;
+using System;
 using System.Linq;
 
 namespace MagiRogue.System.Physics
@@ -17,6 +18,11 @@ namespace MagiRogue.System.Physics
         /// <param name="id">Id of the material you want, must consult the json file</param>
         /// <returns></returns>
         public static MaterialTemplate SetMaterial(string id) =>
-            DataManager.ListOfMaterials.FirstOrDefault(a => a.Id == id);
+            DataManager.ListOfMaterials.FirstOrDefault(a => a.Id == id).Copy();
+
+        public static int CalculateStrikeForce(float weight, int actorStrikeForce)
+        {
+            return (int)MathF.Round(weight * actorStrikeForce);
+        }
     }
 }

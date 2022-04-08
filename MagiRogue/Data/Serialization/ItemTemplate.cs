@@ -1,5 +1,6 @@
 ﻿using MagiRogue.Entities;
 using MagiRogue.System.Magic;
+using MagiRogue.Utils;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System;
@@ -143,6 +144,18 @@ namespace MagiRogue.Data.Serialization
         [DataMember]
         public Point Position { get; set; }
 
+        [DataMember]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public int BaseDamage { get; private set; }
+
+        [DataMember]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public bool CanInteract { get; private set; }
+
+        [DataMember]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public DamageType DamageType { get; private set; }
+
         // Will need to see if it works, but so far the logic seems to check
         public static implicit operator ItemTemplate(Item item)
         {
@@ -155,7 +168,12 @@ namespace MagiRogue.Data.Serialization
                 item.Material.Id,
                 item.Magic,
                 item.Condition
-                );
+                )
+            {
+                CanInteract = item.CanInteract,
+                BaseDamage = item.BaseDmg,
+                DamageType = item.ItemDamageType
+            };
             itemSerialized.SerialId = item.ID;
 
             return itemSerialized;
@@ -170,7 +188,13 @@ namespace MagiRogue.Data.Serialization
                 Point.None,
                 itemTemplate.Size,
                 itemTemplate.Weight,
-                itemTemplate.Condition);
+                itemTemplate.Condition)
+            {
+                BaseDmg = itemTemplate.BaseDamage,
+                CanInteract = itemTemplate.CanInteract,
+                ItemDamageType = itemTemplate.DamageType
+            };
+
             item.Material = System.Physics.PhysicsManager.SetMaterial(itemTemplate.MaterialId);
             item.Description = itemTemplate.Description;
 

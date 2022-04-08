@@ -230,6 +230,13 @@ namespace MagiRogue.Data.Serialization
         {
         }
 
+        public Actor Copy()
+        {
+            Actor actor = this;
+
+            return actor;
+        }
+
         public static implicit operator Actor(ActorTemplate actorTemplate)
         {
             if (actorTemplate is null)

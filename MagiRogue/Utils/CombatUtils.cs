@@ -1,5 +1,7 @@
 ﻿using MagiRogue.Entities;
 using MagiRogue.System.Magic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Text;
 
@@ -156,6 +158,7 @@ namespace MagiRogue.Utils
     }
 
     [Flags]
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum DamageType
     {
         None = 0,
