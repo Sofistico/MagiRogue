@@ -1036,9 +1036,8 @@ namespace MagiRogue.System
             for (int i = 0; i < map.Tiles.Length; i++)
             {
                 Point pos = Point.FromIndex(i, map.Width);
-                TileFloor tile = new TileFloor("Ice", pos, "ice", worldTile.Glyph,
-                    worldTile.Foreground,
-                    Color.Transparent);
+                TileFloor tile = (TileFloor)DataManager.QueryTileInData("Snow");
+                tile.Position = pos;
                 PrepareForAnyFloor(tile, map);
             }
 

@@ -34,8 +34,8 @@ namespace MagiRogue.Data
         public static readonly IReadOnlyList<LimbTemplate> ListOfLimbs =
             GetSourceTree<LimbTemplate>(@".\Data\Other\body_parts.json");
 
-        public static readonly IReadOnlyList<TileBase> ListOfTiles =
-            GetSourceTree<TileBase>(@".\Data\Tiles\*.json");
+        public static readonly IReadOnlyList<BasicTile> ListOfTiles =
+            GetSourceTree<BasicTile>(@".\Data\Tiles\*.json");
 
         private static IReadOnlyList<T> GetSourceTree<T>(string wildCard)
         {

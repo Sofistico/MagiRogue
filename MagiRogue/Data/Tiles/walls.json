@@ -1,0 +1,10 @@
+﻿[
+  {
+    "Name": "Stone wall",
+    "IdMaterial": "Stone",
+    "GlyphChar": "#",
+    "ForegroundStr": "White",
+    "BackgroundStr": "Transparent",
+    "TileType": "Wall"
+  }
+]

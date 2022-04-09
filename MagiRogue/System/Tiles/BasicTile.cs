@@ -13,6 +13,8 @@ using MagiRogue.Data.Serialization;
 
 namespace MagiRogue.System.Tiles
 {
+    #region Tile Serializer
+
     public class TileJsonConverter : JsonConverter<TileBase>
     {
         public override TileBase ReadJson(JsonReader reader,
@@ -28,13 +30,25 @@ namespace MagiRogue.System.Tiles
         }
     }
 
+    #endregion Tile Serializer
+
     public class BasicTile
     {
-        [JsonProperty(Required = Required.AllowNull)]
+        #region TileBase Properties
+
         public Point Position { get; set; }
         public uint Foreground { get; set; }
+        public string? ForegroundStr { get; set; }
         public uint Background { get; set; }
+        public string? BackgroundStr { get; set; }
+
+        [JsonIgnore]
+        public MagiColorSerialization ForegroundBackingField { get; internal set; }
+
+        [JsonIgnore]
+        public MagiColorSerialization BackgroundBackingField { get; internal set; }
         public int Glyph { get; set; }
+        public char? GlyphChar { get; set; }
         public bool IsWalkable { get; set; }
         public bool IsTransparent { get; set; }
         public string IdMaterial { get; set; }
@@ -45,22 +59,35 @@ namespace MagiRogue.System.Tiles
         public static int Layer { get => 0; }
         public TileType TileType { get; set; }
         public int MoveCost { get; set; }
+        public int TileHealth { get; set; }
+        public uint ForegroundLastSeen { get; set; }
+        public uint BackgroundLastSeen { get; set; }
+        public char GlyphLastSeen { get; set; }
+        public int InfusedMp { get; set; }
+        public int BitMask { get; set; }
+
+        #endregion TileBase Properties
+
+        #region NodeTile properties
+
+        public int? MpPower { get; set; }
+        public int? NodeStrenght { get; set; }
+
+        #endregion NodeTile properties
+
+        #region WorldTile properties
 
         public bool? IsSea { get; set; }
 
         /// <summary>
         /// The maximum amount of mp the node can have
         /// </summary>
-        public int? MpPower { get; set; }
-        public int? NodeStrenght { get; set; }
         public bool? Locked { get; set; }
         public bool? IsOpen { get; set; }
-        public int InfusedMp { get; set; }
         public BiomeType? BiomeType { get; set; }
         public int? MagicalAura { get; set; }
         public int? BiomeBitMask { get; set; }
         public List<River> Rivers { get; set; }
-        public int BitMask { get; set; }
         public int? RiverSize { get; set; }
         public string? RegionName { get; set; }
         public Road? Road { get; set; }
@@ -74,10 +101,10 @@ namespace MagiRogue.System.Tiles
         public bool? Visited { get; set; }
         public MoistureType? MoistureType { get; set; }
         public float? MoistureValue { get; set; }
-        public int TileHealth { get; set; }
-        public uint ForegroundLastSeen { get; set; }
-        public uint BackgroundLastSeen { get; set; }
-        public char GlyphLastSeen { get; set; }
+
+        #endregion WorldTile properties
+
+        #region Ctor
 
         public BasicTile(Point position,
             uint foreground,
@@ -106,6 +133,21 @@ namespace MagiRogue.System.Tiles
         {
             //Empty ctor
         }
+
+        #endregion Ctor
+
+        #region Methods
+
+        internal TileBase Copy()
+        {
+            TileBase tile = (TileBase)this;
+
+            return tile;
+        }
+
+        #endregion Methods
+
+        #region operator overload
 
         public static implicit operator BasicTile(TileBase tile)
         {
@@ -192,6 +234,19 @@ namespace MagiRogue.System.Tiles
         public static explicit operator TileBase(BasicTile basicTile)
         {
             TileBase tile;
+            dynamic charToUse = basicTile.GlyphChar is null ? basicTile.Glyph : basicTile.GlyphChar;
+            Color foreground;
+            Color background;
+            if (!string.IsNullOrEmpty(basicTile.BackgroundStr) && !string.IsNullOrEmpty(basicTile.ForegroundStr))
+            {
+                foreground = new MagiColorSerialization(basicTile.ForegroundStr).Color;
+                background = new MagiColorSerialization(basicTile.BackgroundStr).Color;
+            }
+            else
+            {
+                foreground = new Color(basicTile.Foreground);
+                background = new Color(basicTile.Background);
+            }
             if (basicTile == null)
                 return null;
             switch (basicTile.TileType)
@@ -204,23 +259,23 @@ namespace MagiRogue.System.Tiles
                     tile = new TileFloor(basicTile.Name,
                         basicTile.Position,
                         basicTile.IdMaterial,
-                        basicTile.Glyph,
-                        new Color(basicTile.Foreground),
-                        new Color(basicTile.Background));
+                        charToUse,
+                        foreground,
+                        background);
                     break;
 
                 case TileType.Wall:
-                    tile = new TileWall(new Color(basicTile.Foreground),
-                        new Color(basicTile.Background),
-                        basicTile.Glyph, basicTile.Name,
+                    tile = new TileWall(foreground,
+                        background,
+                        charToUse, basicTile.Name,
                         basicTile.Position,
                         basicTile.IdMaterial);
                     break;
 
                 case TileType.Water:
-                    tile = new WaterTile(new Color(basicTile.Foreground),
-                        new Color(basicTile.Background),
-                        basicTile.Glyph,
+                    tile = new WaterTile(foreground,
+                        background,
+                        charToUse,
                         basicTile.Position,
 #pragma warning disable CS8629 // O tipo de valor de nulidade pode ser nulo.
                         (bool)basicTile.IsSea);
@@ -228,17 +283,17 @@ namespace MagiRogue.System.Tiles
                     break;
 
                 case TileType.Node:
-                    tile = new NodeTile(new Color(basicTile.Foreground),
-                        new Color(basicTile.Background),
+                    tile = new NodeTile(foreground,
+                        background,
                         basicTile.Position,
                         (int)basicTile.MpPower,
                         (int)basicTile.NodeStrenght);
                     break;
 
                 case TileType.WorldTile:
-                    tile = new WorldTile(new Color(basicTile.Foreground),
-                        new Color(basicTile.Background),
-                        basicTile.Glyph,
+                    tile = new WorldTile(foreground,
+                        background,
+                        charToUse,
                         basicTile.Position,
                         name: basicTile.Name)
                     {
@@ -276,10 +331,13 @@ namespace MagiRogue.System.Tiles
 
             tile.Description = basicTile.Description;
             tile.InfusedMp = basicTile.InfusedMp;
-            tile.TileHealth = basicTile.TileHealth;
+            if(basicTile.TileHealth > 0)
+                tile.TileHealth = basicTile.TileHealth;
 
             return tile;
         }
+
+        #endregion operator overload
     }
 
     [JsonConverter(typeof(StringEnumConverter))]

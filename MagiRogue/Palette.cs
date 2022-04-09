@@ -56,5 +56,58 @@ namespace MagiRogue
         public static readonly Color Dirt = new Color(165, 103, 42);
         public static readonly Color DirtRoad = Color.Brown;
         public static readonly Color Wood = new Color(186, 140, 99);
+
+        public static void AddToColorDictionary()
+        {
+            // height map color
+            ColorExtensions2.ColorMappings.Add("DeepWaterColor".ToLower(), DeepWaterColor);
+            ColorExtensions2.ColorMappings.Add("ShallowWaterColor".ToLower(), ShallowWaterColor);
+            ColorExtensions2.ColorMappings.Add("RiverColor".ToLower(), RiverColor);
+            ColorExtensions2.ColorMappings.Add("SandColor".ToLower(), SandColor);
+            ColorExtensions2.ColorMappings.Add("GrassColor".ToLower(), GrassColor);
+            ColorExtensions2.ColorMappings.Add("ForestColor".ToLower(), ForestColor);
+            ColorExtensions2.ColorMappings.Add("RockColor".ToLower(), RockColor);
+            ColorExtensions2.ColorMappings.Add("HighMountainColor".ToLower(), HighMountainColor);
+            ColorExtensions2.ColorMappings.Add("SnowColor".ToLower(), SnowColor);
+            ColorExtensions2.ColorMappings.Add("MagicColor".ToLower(), MagicColor);
+
+            // temperature map color
+            ColorExtensions2.ColorMappings.Add("Coldest".ToLower(), Coldest);
+            ColorExtensions2.ColorMappings.Add("Colder".ToLower(), Colder);
+            ColorExtensions2.ColorMappings.Add("Cold".ToLower(), Cold);
+            ColorExtensions2.ColorMappings.Add("Warm".ToLower(), Warm);
+            ColorExtensions2.ColorMappings.Add("Warmer".ToLower(), Warmer);
+            ColorExtensions2.ColorMappings.Add("Warmest".ToLower(), Warmest);
+
+            // hydro map color
+            ColorExtensions2.ColorMappings.Add("Dryest".ToLower(), Dryest);
+            ColorExtensions2.ColorMappings.Add("Dryer".ToLower(), Dryer);
+            ColorExtensions2.ColorMappings.Add("Dry".ToLower(), Dry);
+            ColorExtensions2.ColorMappings.Add("Wet".ToLower(), Wet);
+            ColorExtensions2.ColorMappings.Add("Wetter".ToLower(), Wetter);
+            ColorExtensions2.ColorMappings.Add("Wettest".ToLower(), Wettest);
+
+            // river map colors
+            ColorExtensions2.ColorMappings.Add("IceWater".ToLower(), IceWater);
+            ColorExtensions2.ColorMappings.Add("ColdWater".ToLower(), ColdWater);
+            ColorExtensions2.ColorMappings.Add("RiverWater".ToLower(), RiverWater);
+
+            // biomes map colors
+            ColorExtensions2.ColorMappings.Add("Ice".ToLower(), Ice);
+            ColorExtensions2.ColorMappings.Add("Desert".ToLower(), Desert);
+            ColorExtensions2.ColorMappings.Add("Savanna".ToLower(), Savanna);
+            ColorExtensions2.ColorMappings.Add("TropicalRainforest".ToLower(), TropicalRainforest);
+            ColorExtensions2.ColorMappings.Add("Tundra".ToLower(), Tundra);
+            ColorExtensions2.ColorMappings.Add("TemperateRainforest".ToLower(), TemperateRainforest);
+            ColorExtensions2.ColorMappings.Add("Grassland".ToLower(), Grassland);
+            ColorExtensions2.ColorMappings.Add("SeasonalForest".ToLower(), SeasonalForest);
+            ColorExtensions2.ColorMappings.Add("BorealForest".ToLower(), BorealForest);
+            ColorExtensions2.ColorMappings.Add("Woodland".ToLower(), Woodland);
+
+            // normal tile map colors
+            ColorExtensions2.ColorMappings.Add("Dirt".ToLower(), Dirt);
+            ColorExtensions2.ColorMappings.Add("DirtRoad".ToLower(), DirtRoad);
+            ColorExtensions2.ColorMappings.Add("Wood".ToLower(), Wood);
+        }
     }
 }

@@ -1,5 +1,18 @@
 ﻿[
   {
-    "Name"
+    "Name": "Dirt road",
+    "IdMaterial": "dirt",
+    "GlyphChar": ".",
+    "ForegroundStr": "DirtRoad",
+    "BackgroundStr": "Transparent",
+    "TileType": "Floor"
+  },
+  {
+    "Name": "Snow",
+    "IdMaterial": "h2o",
+    "GlyphChar": ".",
+    "ForegroundStr": "SnowColor",
+    "BackgroundStr": "Transparent",
+    "TileType": "Floor"
   }
 ]
