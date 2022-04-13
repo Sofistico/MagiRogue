@@ -13,7 +13,7 @@ using MagiRogue.Utils;
 namespace MagiRogue.System
 {
     // TODO: Refactor this whole class
-    public abstract class MapGenerator
+    public class MapGenerator
     {
         protected DistinctRandom randNum;
         protected ulong seed;
@@ -240,7 +240,7 @@ namespace MagiRogue.System
         /// </summary>
         /// <param name="room"></param>
         /// <returns></returns>
-        protected List<Point> GetBorderCellLocations(Rectangle room)
+        public List<Point> GetBorderCellLocations(Rectangle room)
         {
             //establish room boundaries
             int xMin = room.ToMonoRectangle().Left;
@@ -721,8 +721,17 @@ namespace MagiRogue.System
 
         #region BSPGen
 
+        /// <summary>
+        /// Generates a bsp map
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="roomMaxSize"></param>
+        /// <param name="roomMinSize"></param>
+        /// <param name="maxRooms"></param>
+        /// <returns></returns>
         protected List<Room> BspMapFunction(Map map, int roomMaxSize, int roomMinSize, int maxRooms)
         {
+            _map = map;
             List<Room> rooms = new List<Room>();
 
             Rectangle rec = new Rectangle(map.Positions().First(), map.Positions().Last());
@@ -752,6 +761,26 @@ namespace MagiRogue.System
                 if (!rooms.Any(r => r.RoomRectangle.Intersects(room.RoomRectangle)))
                 {
                     rooms.Add(room);
+                }
+            }
+            _rooms = rooms;
+
+            // MEMORY LEAK!!
+            int roomsCount = rooms.Count;
+            for (int i = 0; i < roomsCount; i++)
+            {
+                int roomPosCount = rooms[i].ReturnRecPerimiter().Count;
+                Point[] roomPos = rooms[i].ReturnRecPerimiter().ToArray();
+                Room currentRoom = rooms[i];
+                for (int p = 0; p < roomPosCount; p++)
+                {
+                    if (rooms.Any(r => r.ReturnRecPerimiter().Contains(roomPos[p]) && r != currentRoom))
+                    {
+                        _map.SetTerrain(new TileFloor(roomPos[p])
+                        {
+                            Glyph = 'C'
+                        });
+                    }
                 }
             }
 
@@ -836,16 +865,23 @@ namespace MagiRogue.System
 
             map.MapName = townName;
 
-            foreach (var room in rooms)
+            PopulateMapWithRooms(rooms, (TileFloor)DataManager.QueryTileInData("stone_floor"),
+                (TileWall)DataManager.QueryTileInData("stone_wall"));
+
+            ApplyRoads(rooms, TileEncyclopedia.GenericDirtRoad(Point.None));
+        }
+
+        private void PopulateMapWithRooms(List<Room> rooms, TileFloor f, TileWall w)
+        {
+            for (int i = 0; i < rooms.Count; i++)
             {
+                Room? room = rooms[i];
                 CreateRoom(room.RoomRectangle,
-                    TileEncyclopedia.GenericStoneWall(), TileEncyclopedia.GenericStoneFloor());
+                    w, f);
                 CreateDoor(room);
                 room.LockedDoorsRng();
                 _rooms.Add(room);
             }
-
-            ApplyRoads(rooms, TileEncyclopedia.GenericDirtRoad(Point.None));
         }
     }
 
@@ -1036,7 +1072,7 @@ namespace MagiRogue.System
             for (int i = 0; i < map.Tiles.Length; i++)
             {
                 Point pos = Point.FromIndex(i, map.Width);
-                TileFloor tile = (TileFloor)DataManager.QueryTileInData("Snow");
+                TileFloor tile = (TileFloor)DataManager.QueryTileInData("snow_floor");
                 tile.Position = pos;
                 PrepareForAnyFloor(tile, map);
             }

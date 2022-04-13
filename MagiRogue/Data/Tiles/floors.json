@@ -1,5 +1,6 @@
 ﻿[
   {
+    "TileId": "dirt_road",
     "Name": "Dirt road",
     "IdMaterial": "dirt",
     "GlyphChar": ".",
@@ -8,10 +9,20 @@
     "TileType": "Floor"
   },
   {
+    "TileId": "snow_floor",
     "Name": "Snow",
     "IdMaterial": "h2o",
     "GlyphChar": ".",
     "ForegroundStr": "SnowColor",
+    "BackgroundStr": "Transparent",
+    "TileType": "Floor"
+  },
+  {
+    "TileId": "stone_floor",
+    "Name": "Stone floor",
+    "IdMaterial": "stone",
+    "GlyphChar": ".",
+    "ForegroundStr": "DarkGray",
     "BackgroundStr": "Transparent",
     "TileType": "Floor"
   }

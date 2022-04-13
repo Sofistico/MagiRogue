@@ -36,6 +36,7 @@ namespace MagiRogue.System.Tiles
     {
         #region TileBase Properties
 
+        public string? TileId { get; set; }
         public Point Position { get; set; }
         public uint Foreground { get; set; }
         public string? ForegroundStr { get; set; }
@@ -331,7 +332,7 @@ namespace MagiRogue.System.Tiles
 
             tile.Description = basicTile.Description;
             tile.InfusedMp = basicTile.InfusedMp;
-            if(basicTile.TileHealth > 0)
+            if (basicTile.TileHealth > 0)
                 tile.TileHealth = basicTile.TileHealth;
 
             return tile;

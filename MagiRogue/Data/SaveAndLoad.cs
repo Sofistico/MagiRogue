@@ -61,9 +61,10 @@ namespace MagiRogue.Data
         {
             CreateSaveNameFolder(saveName);
 
-            SaveChuncksToFile(gameState.AllChunks);
-            SaveChunkInPos(gameState.CurrentChunk, gameState.CurrentChunk.ToIndex(
-                gameState.GetWorldMap().Width));
+            //SaveChuncksToFile(gameState.AllChunks);
+            if (gameState.CurrentChunk is not null)
+                SaveChunkInPos(gameState.CurrentChunk, gameState.CurrentChunk.ToIndex(
+                   gameState.GetWorldMap().Width));
             try
             {
                 Serializer.Save(gameState, @$"{_folderName}\{saveName}\GameState.mr", true);

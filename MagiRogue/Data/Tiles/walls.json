@@ -1,9 +1,10 @@
 ﻿[
   {
-    "Name": "Stone wall",
-    "IdMaterial": "Stone",
+    "TileId": "stone_wall",
+    "Name": "Stone Wall",
+    "IdMaterial": "stone",
     "GlyphChar": "#",
-    "ForegroundStr": "White",
+    "ForegroundStr": "LightGray",
     "BackgroundStr": "Transparent",
     "TileType": "Wall"
   }

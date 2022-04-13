@@ -79,8 +79,8 @@ namespace MagiRogue.Data
         public static Organ QueryOrganInData(string organId)
             => ListOfOrgans.FirstOrDefault(o => o.Id.Equals(organId)).Copy();
 
-        public static TileBase QueryTileInData(string tileName)
-            => ListOfTiles.FirstOrDefault(t => t.Name.Equals(tileName)).Copy();
+        public static TileBase QueryTileInData(string tileId)
+            => ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId)).Copy();
 
         public static Actor QueryActorInData(string actorId)
             => ListOfActors.FirstOrDefault(a => a.ID.Equals(actorId));
