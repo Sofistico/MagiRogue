@@ -8,6 +8,7 @@ using MagiRogue.System.Planet;
 using SadRogue.Primitives;
 using System;
 using MagiRogue.System.Magic;
+using MagiRogue.System.MapGen;
 using System.Linq;
 using MagiRogue.Data.Serialization;
 using Newtonsoft.Json;
