@@ -1,4 +1,6 @@
 ﻿using MagiRogue.System.Tiles;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
@@ -67,7 +69,7 @@ namespace MagiRogue.System
             return borderCells;
         }
 
-        private IEnumerable<Point> GetTileLocationsAlongLine(
+        private static IEnumerable<Point> GetTileLocationsAlongLine(
             int xOrigin, int yOrigin, int xDestination, int yDestination)
         {
             int dx = Math.Abs(xDestination - xOrigin);
@@ -98,6 +100,7 @@ namespace MagiRogue.System
         }
     }
 
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum RoomTag
     {
         Generic, Inn, Temple, Blacksmith, Clothier, Alchemist, PlayerHouse, Hovel, Abandoned

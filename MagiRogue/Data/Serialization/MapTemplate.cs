@@ -1,20 +1,15 @@
 ﻿using MagiRogue.Entities;
 using MagiRogue.System;
-using MagiRogue.System.Civ;
-using MagiRogue.System.Magic;
-using MagiRogue.System.Planet;
 using MagiRogue.System.Tiles;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MagiRogue.Data.Serialization
 {
+    #region Serialization
+
     public class MapJsonConverter : JsonConverter<Map>
     {
         public override Map ReadJson(JsonReader reader,
@@ -265,6 +260,8 @@ namespace MagiRogue.Data.Serialization
         }
     }
 
+    #endregion Serialization
+
     public class MapTemplate
     {
         public string MapName { get; set; }
@@ -279,6 +276,7 @@ namespace MagiRogue.Data.Serialization
         public ulong Seed { get; set; }
         public bool? HasFOV { get; set; }
         public int[]? ZLevels { get; set; }
+        public List<Room> Rooms { get; set; }
 
         public MapTemplate(string mapName,
             BasicTile[] tiles,
@@ -344,7 +342,7 @@ namespace MagiRogue.Data.Serialization
 
             if (map.ZLevels is not null)
                 template.ZLevels = map.ZLevels;
-
+           template.Rooms = map.Rooms;
             return template;
         }
 
@@ -384,7 +382,7 @@ namespace MagiRogue.Data.Serialization
             objMap.GoRogueComponents.GetFirstOrDefault<MagiRogueFOVVisibilityHandler>().RefreshExploredTerrain();
             if (map.ZLevels is not null)
                 objMap.ZLevels = map.ZLevels;
-
+            objMap.Rooms = map.Rooms;
             return objMap;
         }
     }

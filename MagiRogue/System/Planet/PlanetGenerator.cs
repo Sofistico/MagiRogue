@@ -549,6 +549,10 @@ namespace MagiRogue.System.Planet
                 for (int y = 0; y < _height; y++)
                 {
                     //Noise range
+                    // 1 to 2 makes the poles straight
+                    // -1 to 1 makes extreme straigh lines
+                    // -1 to 2 makes circular world
+                    // -1 to 3 makes lots of archipelagos
                     float x1 = 1, x2 = 2;
                     float y1 = 1, y2 = 2;
                     float dx = x2 - x1;

@@ -70,6 +70,7 @@ namespace MagiRogue.System
         public ulong Seed { get; set; }
         public int[]? ZLevels { get; set; }
         public Dictionary<Direction, Map> MapZoneConnections { get; set; }
+        public List<Room> Rooms { get; set; }
 
         #endregion Properties
 

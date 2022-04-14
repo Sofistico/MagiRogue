@@ -296,6 +296,8 @@ namespace MagiRogue.System.Tiles
                         background,
                         charToUse,
                         basicTile.Position,
+                        !basicTile.IsWalkable,
+                        basicTile.IsTransparent,
                         name: basicTile.Name)
                     {
                         BitMask = basicTile.BitMask,
@@ -318,6 +320,7 @@ namespace MagiRogue.System.Tiles
                         MoistureValue = (float)basicTile.MoistureValue,
                     };
                     tile.BitMask = basicTile.BitMask;
+                    tile.IsBlockingMove = !basicTile.IsWalkable;
                     break;
 
                 case TileType.Door:
