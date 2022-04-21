@@ -146,20 +146,16 @@ namespace MagiRogue.Data
         /// <returns></returns>
         public static Universe LoadGame(string saveName)
         {
-            string path = $@"{_folderName}\{saveName}\GameState.mr";
-            Universe uni = Serializer.Load<Universe>(path, true);
-            if (uni.CurrentChunk != null)
+            try
             {
-                uni.AllChunks = LoadChunks(saveName,
-                    uni.CurrentChunk.ToIndex(uni.WorldMap.AssocietatedMap.Width));
+                string path = $@"{_folderName}\{saveName}\GameState.mr";
+                Universe uni = Serializer.Load<Universe>(path, true);
+                return uni;
             }
-            else
+            catch (Exception ex)
             {
-                /*LoadChunks(saveName, Point.ToIndex(uni.Player.Position.X,
-                    uni.Player.Position.Y,
-                    uni.WorldMap.AssocietatedMap.Width));*/
+                throw new Exception("The game failed to load! here is the error message: " + ex.Message);
             }
-            return uni;
         }
 
         /// <summary>

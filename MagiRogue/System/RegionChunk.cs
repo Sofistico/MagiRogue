@@ -48,5 +48,13 @@ namespace MagiRogue.System
             }
             return true;
         }
+
+        internal void SetMapsToUpdate()
+        {
+            for (int i = 0; i < MAX_LOCAL_MAPS; i++)
+            {
+                LocalMaps[i].NeedsUpdate = true;
+            }
+        }
     }
 }

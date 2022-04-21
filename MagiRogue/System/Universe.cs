@@ -57,6 +57,11 @@ namespace MagiRogue.System
         /// </summary>
         public Player Player { get; set; }
 
+        /// <summary>
+        /// Keeps track of where the player goes, even if it's inside of a chunk inside a map!
+        /// </summary>
+        public Point AbsolutePlayerPos { get; set; }
+
         public TimeSystem Time { get; private set; }
         public bool PossibleChangeMap { get; internal set; } = true;
 
@@ -67,12 +72,12 @@ namespace MagiRogue.System
             return WorldMap.AssocietatedMap;
         }
 
-        /// <summary>
+        /*/// <summary>
         /// All the maps and chunks of the game
         /// NOTE WILL BE SLOWLEY REMOVED FROM CODE!!
         /// TO BE REPLACED WITH AN ARRAY THAT CONTAINS FEWR CHUNKS!
         /// </summary>
-        public RegionChunk[] AllChunks { get; set; }
+        public RegionChunk[] AllChunks { get; set; }*/
 
         public SaveAndLoad SaveAndLoad { get; set; }
 
@@ -91,8 +96,8 @@ namespace MagiRogue.System
                     planetHeight,
                     planetMaxCivs);
                 WorldMap.AssocietatedMap.IsActive = true;
-                maxChunks = planetWidth * planetHeight;
-                AllChunks = new RegionChunk[maxChunks];
+                //maxChunks = planetWidth * planetHeight;
+                //AllChunks = new RegionChunk[maxChunks];
                 CurrentMap = WorldMap.AssocietatedMap;
                 PlacePlayerOnWorld(player);
                 SaveAndLoad = new();
@@ -113,7 +118,6 @@ namespace MagiRogue.System
             TimeSystem time,
             bool possibleChangeMap,
             SeasonType currentSeason,
-            RegionChunk[] allChunks,
             SaveAndLoad loadSave)
         {
             WorldMap = worldMap;
@@ -129,7 +133,6 @@ namespace MagiRogue.System
             Time = time;
             PossibleChangeMap = possibleChangeMap;
             CurrentSeason = currentSeason;
-            AllChunks = allChunks;
             SaveAndLoad = loadSave;
         }
 
@@ -151,7 +154,10 @@ namespace MagiRogue.System
         {
             if (Player != null)
             {
+                // since we are just loading from memory, better make sure!
+                CurrentMap.NeedsUpdate = true;
                 Player.Position = CurrentMap.LastPlayerPosition;
+                UpdateIfNeedTheMap(CurrentMap);
                 CurrentMap.Add(Player);
             }
             else
@@ -159,20 +165,6 @@ namespace MagiRogue.System
                 throw new Exception("Coudn't load the player, it was null!");
             }
         }
-
-        /*private void CreateStoneMazeMap()
-        {
-            Map map = new DungeonGenerator().GenerateMazeMap(_maxRooms, _minRoomSize, _maxRoomSize);
-
-            // spawn a bunch of monsters
-            CreateMonster(map, 10);
-
-            // Spawn a bunch of loot
-            CreateLoot(map, 20);
-
-            // Set up anything that needs to be set up for the world to work
-            SetUpStuff(map);
-        }*/
 
         public void ChangePlayerMap(Map mapToGo, Point pos, Map previousMap)
         {
@@ -189,8 +181,11 @@ namespace MagiRogue.System
         {
             if (mapToGo != WorldMap.AssocietatedMap && !CurrentChunk.MapsAreConnected())
                 MapGenerator.ConnectMapsInsideChunk(CurrentChunk.LocalMaps);
-            if (mapToGo.NeedsUpdate)
+            if (mapToGo.NeedsUpdate && mapToGo != WorldMap.AssocietatedMap)
             {
+                // if the map is now updated, then no need to change anything!
+                mapToGo.NeedsUpdate = false;
+                mapToGo.UpdateRooms();
             }
             else
                 return; // Do nothing
@@ -424,19 +419,14 @@ namespace MagiRogue.System
         private void RestartGame()
         {
             CurrentMap.DestroyMap();
-            int chunckLenght = AllChunks.Length;
+            int chunckLenght = CurrentChunk.LocalMaps.Length;
             for (int i = 0; i < chunckLenght; i++)
             {
-                Map[] maps = AllChunks[i].LocalMaps;
-                int mapsLenght = maps.Length;
-                for (int z = 0; z < mapsLenght; z++)
-                {
-                    maps[z].DestroyMap();
-                }
+                Map maps = CurrentChunk.LocalMaps[i];
+                maps.DestroyMap();
             }
             CurrentMap = null;
             Player = null;
-            AllChunks = null;
             CurrentChunk = null;
             WorldMap = null;
 

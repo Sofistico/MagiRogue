@@ -12,7 +12,10 @@ namespace MagiRogue.System
     {
         public Rectangle RoomRectangle { get; set; }
         public RoomTag Tag { get; set; }
+
+        [JsonIgnore]
         public List<TileDoor> Doors { get; set; } = new List<TileDoor>();
+        public List<Point> DoorsPoint { get; set; } = new List<Point>();
 
         public Room(Rectangle roomRectangle, RoomTag tag)
         {
@@ -24,6 +27,34 @@ namespace MagiRogue.System
         {
             RoomRectangle = roomRectangle;
             Tag = RoomTag.Generic;
+        }
+
+        public Room()
+        {
+        }
+
+        public List<TileDoor> GetAllDoorsInRoom()
+        {
+            List<TileDoor> doors = new List<TileDoor>();
+
+            for (int i = 0; i < DoorsPoint.Count; i++)
+            {
+                Point point = DoorsPoint[i];
+                TileDoor door = GameLoop.GetCurrentMap().GetTileAt<TileDoor>(point);
+                doors.Add(door);
+            }
+
+            return doors;
+        }
+
+        public void UpdateListOfDoorPoints()
+        {
+            for (int i = 0; i < Doors.Count; i++)
+            {
+                Point point = Doors[i].Position;
+                //TileDoor door = GameLoop.GetCurrentMap().GetTileAt<TileDoor>(point);
+                DoorsPoint.Add(point);
+            }
         }
 
         public void LockedDoorsRng()

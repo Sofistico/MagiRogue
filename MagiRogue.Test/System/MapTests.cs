@@ -105,5 +105,15 @@ namespace MagiRogue.Test.System
 
             Assert.True(mapDeJsonified.MapName == map.MapName);
         }
+
+        [Fact]
+        public void TestIdSerializationMap()
+        {
+            map.SetId(2);
+            string json = JsonConvert.SerializeObject(map);
+            Map newMap = JsonConvert.DeserializeObject<Map>(json);
+
+            Assert.Equal(map.MapId, newMap.MapId);
+        }
     }
 }

@@ -65,6 +65,7 @@ namespace MagiRogue.System
         public Point LastPlayerPosition { get; set; } = Point.None;
         public string MapName { get; set; }
         public bool NeedsUpdate { get; internal set; }
+        public bool IsCurrentMap { get; set; }
         public bool IsActive { get; set; }
         public uint MapId { get; private set; }
         public ulong Seed { get; set; }
@@ -163,6 +164,22 @@ namespace MagiRogue.System
 
             // then return whether the tile is walkable
             return !_tiles[location.Y * Width + location.X].IsBlockingMove;
+        }
+
+        /// <summary>
+        /// this method will make sure that each room has it's properties all connected up!
+        /// </summary>
+        public void UpdateRooms()
+        {
+            for (int i = 0; i < Rooms.Count; i++)
+            {
+                var room = Rooms[i];
+                for (int t = 0; t < room.DoorsPoint.Count; t++)
+                {
+                    TileDoor door = GetTileAt<TileDoor>(room.DoorsPoint[t]);
+                    room.Doors.Add(door);
+                }
+            }
         }
 
         /// <summary>

@@ -16,6 +16,8 @@ namespace MagiRogue.Data.Serialization
             Type objectType, Map? existingValue, bool hasExistingValue,
             JsonSerializer serializer)
         {
+            #region Old Code
+
             /*JObject futureMap = JObject.Load(reader);
             Map map = new Map(futureMap["MapName"].ToString(),
                 (int)futureMap["Width"], (int)futureMap["Height"]);
@@ -166,6 +168,9 @@ namespace MagiRogue.Data.Serialization
             reader.CloseInput = true;
 
             return map;*/
+
+            #endregion Old Code
+
             return serializer.Deserialize<MapTemplate>(reader);
         }
 
@@ -272,12 +277,13 @@ namespace MagiRogue.Data.Serialization
         public uint MapId { get; private set; }
         public IList<Actor> Actors { get; set; }
         public IList<Item> Items { get; set; }
-        public bool[] Explored;
+        public bool[] Explored { get; set; }
         public ulong Seed { get; set; }
         public bool? HasFOV { get; set; }
         public int[]? ZLevels { get; set; }
         public List<Room> Rooms { get; set; }
 
+        [JsonConstructor]
         public MapTemplate(string mapName,
             BasicTile[] tiles,
             int width,
@@ -299,11 +305,6 @@ namespace MagiRogue.Data.Serialization
             MapName = mapName;
             Width = width;
             Height = height;
-        }
-
-        public MapTemplate()
-        {
-            // empty
         }
 
         public static implicit operator MapTemplate(Map map)
@@ -342,7 +343,7 @@ namespace MagiRogue.Data.Serialization
 
             if (map.ZLevels is not null)
                 template.ZLevels = map.ZLevels;
-           template.Rooms = map.Rooms;
+            template.Rooms = map.Rooms;
             return template;
         }
 

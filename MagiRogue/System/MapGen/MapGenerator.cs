@@ -502,6 +502,7 @@ namespace MagiRogue.System.MapGen
                     if (!acceptsMoreThanOneDoor)
                         alreadyHasDoor = true;
                     room.Doors.Add(newDoor);
+                    room.DoorsPoint.Add(newDoor.Position);
                 }
             }
         }
@@ -765,7 +766,7 @@ namespace MagiRogue.System.MapGen
                     rooms.Add(room);
                 }
             }
-            /*// MEMORY LEAK!!
+            // MEMORY LEAK!!
             int roomsCount = rooms.Count;
             for (int i = 0; i < roomsCount; i++)
             {
@@ -782,8 +783,8 @@ namespace MagiRogue.System.MapGen
                         });
                     }
                 }
-            }*/
-            
+            }
+
             return rooms;
         }
 

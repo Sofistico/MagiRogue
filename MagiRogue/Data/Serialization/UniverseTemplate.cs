@@ -124,12 +124,6 @@ namespace MagiRogue.Data.Serialization
         [DataMember]
         public string CurrentSeason { get; set; }
 
-        /// <summary>
-        /// All the maps and chunks of the game
-        /// </summary>
-        [JsonIgnore]
-        public RegionChunk[] AllChunks { get; set; }
-
         [DataMember]
         public SaveAndLoad SaveAndLoad { get; set; }
 
@@ -138,8 +132,7 @@ namespace MagiRogue.Data.Serialization
             Player player,
             TimeTemplate time,
             bool possibleChangeMap,
-            SeasonType currentSeason,
-            RegionChunk[] allChunks)
+            SeasonType currentSeason)
         {
             WorldMap = worldMap;
             if (currentMap is not null && worldMap.AssocietatedMap.MapId == currentMap.MapId)
@@ -151,7 +144,6 @@ namespace MagiRogue.Data.Serialization
             Time = time;
             PossibleChangeMap = possibleChangeMap;
             CurrentSeason = currentSeason.ToString();
-            AllChunks = allChunks;
         }
 
         public UniverseTemplate()
@@ -176,7 +168,7 @@ namespace MagiRogue.Data.Serialization
             UniverseTemplate universe = new UniverseTemplate(
                 uni.WorldMap, uni.CurrentMap, uni.Player,
                 uni.Time, uni.PossibleChangeMap,
-                uni.CurrentSeason, uni.AllChunks)
+                uni.CurrentSeason)
             {
                 CurrentChunk = uni.CurrentChunk,
                 SaveAndLoad = uni.SaveAndLoad
@@ -189,7 +181,7 @@ namespace MagiRogue.Data.Serialization
             Universe universe = new Universe(uni.WorldMap, uni.CurrentMap,
                 Entities.Player.ReturnPlayerFromActor(uni.Player),
                 uni.Time, uni.PossibleChangeMap,
-                SeasonEnumToString(uni.CurrentSeason), uni.AllChunks, uni.SaveAndLoad)
+                SeasonEnumToString(uni.CurrentSeason), uni.SaveAndLoad)
             {
                 CurrentChunk = uni.CurrentChunk,
             };

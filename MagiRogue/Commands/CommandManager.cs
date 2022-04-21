@@ -532,6 +532,8 @@ namespace MagiRogue.Commands
             {
                 RegionChunk chunk = GameLoop.Universe.GetChunckByPos(playerPoint);
                 GameLoop.Universe.CurrentChunk = chunk;
+                // if entering the map again, set to update
+                chunk.SetMapsToUpdate();
                 GameLoop.Universe.ChangePlayerMap(chunk.LocalMaps[0],
                     chunk.LocalMaps[0].LastPlayerPosition, currentMap);
 
