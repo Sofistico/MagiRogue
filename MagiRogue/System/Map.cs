@@ -171,6 +171,8 @@ namespace MagiRogue.System
         /// </summary>
         public void UpdateRooms()
         {
+            if (Rooms is null)
+                return;
             for (int i = 0; i < Rooms.Count; i++)
             {
                 var room = Rooms[i];

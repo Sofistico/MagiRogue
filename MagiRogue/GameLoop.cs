@@ -15,7 +15,7 @@ namespace MagiRogue
 
         public static Universe Universe { get; set; }
 
-        public static IDGenerator IdGen { get; } = new(1);
+        public static IDGenerator IdGen { get; private set; } = new(1);
 
         private static void Main()
         {
@@ -60,5 +60,7 @@ namespace MagiRogue
         /// </summary>
         /// <returns></returns>
         public static Map GetCurrentMap() => Universe.CurrentMap;
+
+        public static void SetIdGen(uint lastId) => IdGen = new IDGenerator(lastId + 1);
     }
 }

@@ -118,14 +118,20 @@ namespace MagiRogue.System
             TimeSystem time,
             bool possibleChangeMap,
             SeasonType currentSeason,
-            SaveAndLoad loadSave)
+            SaveAndLoad loadSave,
+            RegionChunk currentChunk)
         {
             WorldMap = worldMap;
+            CurrentChunk = currentChunk;
 
             if (currentMap is not null && worldMap.AssocietatedMap.MapName.Equals(currentMap.MapName))
                 CurrentMap = worldMap.AssocietatedMap;
+            else if (currentChunk.LocalMaps.Any(i => i.MapId == currentMap.MapId))
+                CurrentMap = currentChunk.LocalMaps.FirstOrDefault(i => i.MapId == currentMap.MapId);
             else
+            {
                 CurrentMap = currentMap;
+            }
 
             if (CurrentMap is not null)
                 CurrentMap.IsActive = true;
