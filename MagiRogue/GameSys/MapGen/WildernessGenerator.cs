@@ -153,6 +153,8 @@ namespace MagiRogue.GameSys.MapGen
 
         private static Map DetermineBiomeLookForTile(WorldTile worldTile)
         {
+            if (worldTile is null)
+                return null;
             Map map = worldTile.BiomeType switch
             {
                 BiomeType.Sea => GenericSeaMap(worldTile),

@@ -102,6 +102,9 @@ namespace MagiRogue.Entities
 
         public static Player ReturnPlayerFromActor(Actor actor)
         {
+            if(actor is null)
+                return null;
+
             Player player = new Player(actor.Name,
                 actor.Appearance.Foreground,
                 actor.Appearance.Background,

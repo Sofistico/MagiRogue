@@ -5,6 +5,7 @@ using System.Text;
 using SadRogue.Primitives;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace MagiRogue.Data.Serialization
 {
@@ -16,7 +17,16 @@ namespace MagiRogue.Data.Serialization
 
         public MagiColorSerialization(string colorName)
         {
-            Color = ColorExtensions2.FromName(colorName);
+            if (!ColorExtensions2.ColorMappings.ContainsKey(colorName))
+            {
+                //Debug.WriteLine("Cound't find the color in the ColorMappings!");
+                Color = Color.PaleVioletRed;
+            }
+            else
+            {
+                Color = ColorExtensions2.FromName(colorName);
+            }
+
             ColorName = colorName;
         }
 

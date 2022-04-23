@@ -126,7 +126,8 @@ namespace MagiRogue.GameSys
 
             if (currentMap is not null && worldMap.AssocietatedMap.MapName.Equals(currentMap.MapName))
                 CurrentMap = worldMap.AssocietatedMap;
-            else if (currentChunk.LocalMaps.Any(i => i.MapId == currentMap.MapId))
+            else if (currentMap is not null && currentChunk.LocalMaps.All(i => i is not null)
+                && currentChunk.LocalMaps.Any(i => i.MapId == currentMap.MapId))
                 CurrentMap = currentChunk.LocalMaps.FirstOrDefault(i => i.MapId == currentMap.MapId);
             else
             {

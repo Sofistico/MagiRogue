@@ -236,11 +236,11 @@ namespace MagiRogue.GameSys.Tiles
         public static explicit operator TileBase(BasicTile basicTile)
         {
             if (basicTile is null)
-                return null;
-            else
             {
-                Debug.WriteLine("Basic tile was null!");
+                //Debug.WriteLine("Basic tile was null!");
+                return null;
             }
+
             TileBase tile;
             dynamic charToUse = basicTile.GlyphChar is null ? basicTile.Glyph : basicTile.GlyphChar;
             Color foreground;

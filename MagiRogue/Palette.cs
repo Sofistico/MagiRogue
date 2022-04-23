@@ -59,6 +59,8 @@ namespace MagiRogue
 
         public static void AddToColorDictionary()
         {
+            if (ColorExtensions2.ColorMappings.ContainsKey("DeepWaterColor".ToLower()))
+                return;
             // height map color
             ColorExtensions2.ColorMappings.Add("DeepWaterColor".ToLower(), DeepWaterColor);
             ColorExtensions2.ColorMappings.Add("ShallowWaterColor".ToLower(), ShallowWaterColor);

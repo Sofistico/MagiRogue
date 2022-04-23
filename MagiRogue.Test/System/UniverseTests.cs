@@ -26,11 +26,12 @@ namespace MagiRogue.Test.System
 
         public UniverseTests()
         {
+            Palette.AddToColorDictionary();
             var chunck = new RegionChunk(new Point(0, 0));
             uni = new(new PlanetMap(50, 50), null, null,
                 new MagiRogue.GameSys.Time.TimeSystem(500), true,
                 MagiRogue.GameSys.Time.SeasonType.Spring, new(), chunck);
-            Palette.AddToColorDictionary();
+            PrepareForChunkTest();
         }
 
         [Fact]
@@ -135,7 +136,7 @@ namespace MagiRogue.Test.System
             Assert.True(uni.CurrentChunk.LocalMaps[0].MapId == chunks.LocalMaps[0].MapId);
         }
 
-        [Fact]
+        /*[Fact]
         public void DeserializeSpecificChunck()
         {
             PrepareForChunkTest();
@@ -147,7 +148,7 @@ namespace MagiRogue.Test.System
             var chunck = jObj[0].ToObject<RegionChunk>();
 
             Assert.True(chunck.X == 0 && chunck.Y == 0);
-        }
+        }*/
 
         [Fact]
         public void TestIdSerializationUniverse()
