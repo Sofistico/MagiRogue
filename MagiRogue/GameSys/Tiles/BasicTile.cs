@@ -248,7 +248,7 @@ namespace MagiRogue.GameSys.Tiles
                 foreground = new Color(basicTile.Foreground);
                 background = new Color(basicTile.Background);
             }
-            if (basicTile == null)
+            if (basicTile is null)
                 return null;
             switch (basicTile.TileType)
             {
