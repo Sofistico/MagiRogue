@@ -1,4 +1,4 @@
-﻿using MagiRogue.System.Magic;
+﻿using MagiRogue.GameSys.Magic;
 using MagiRogue.UI.Controls;
 using SadConsole;
 using SadConsole.Input;

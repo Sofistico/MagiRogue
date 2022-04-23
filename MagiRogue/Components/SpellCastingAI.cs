@@ -1,6 +1,6 @@
 ﻿using GoRogue.Components.ParentAware;
-using MagiRogue.System;
-using MagiRogue.System.Magic;
+using MagiRogue.GameSys;
+using MagiRogue.GameSys.Magic;
 using MagiRogue.UI.Windows;
 using System;
 

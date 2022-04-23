@@ -1,5 +1,5 @@
 ﻿using MagiRogue.Entities;
-using MagiRogue.System.Magic;
+using MagiRogue.GameSys.Magic;
 using SadConsole;
 using SadRogue.Primitives;
 using System.Collections.Generic;
@@ -10,9 +10,9 @@ namespace MagiRogue.Test.System.Magic
 {
     public class MagicTest
     {
-        private MagiRogue.System.Magic.MagicManager weakMagic;
-        private MagiRogue.System.Magic.MagicManager mediumMagic;
-        private MagiRogue.System.Magic.MagicManager strongMagic;
+        private MagiRogue.GameSys.Magic.MagicManager weakMagic;
+        private MagiRogue.GameSys.Magic.MagicManager mediumMagic;
+        private MagiRogue.GameSys.Magic.MagicManager strongMagic;
         private readonly Stat testStats;
 
         public MagicTest()
@@ -42,19 +42,19 @@ namespace MagiRogue.Test.System.Magic
         {
             List<SpellBase> spellBase = new List<SpellBase>(TestSpellsNoEffect());
 
-            weakMagic = new MagiRogue.System.Magic.MagicManager()
+            weakMagic = new MagiRogue.GameSys.Magic.MagicManager()
             {
                 ShapingSkill = 5,
                 KnowSpells = spellBase
             };
 
-            mediumMagic = new MagiRogue.System.Magic.MagicManager()
+            mediumMagic = new MagiRogue.GameSys.Magic.MagicManager()
             {
                 ShapingSkill = 15,
                 KnowSpells = spellBase
             };
 
-            strongMagic = new MagiRogue.System.Magic.MagicManager()
+            strongMagic = new MagiRogue.GameSys.Magic.MagicManager()
             {
                 ShapingSkill = 30,
                 KnowSpells = spellBase

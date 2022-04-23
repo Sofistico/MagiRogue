@@ -1,4 +1,4 @@
-﻿using MagiRogue.System.Tiles;
+﻿using MagiRogue.GameSys.Tiles;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;

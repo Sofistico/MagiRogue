@@ -1,7 +1,7 @@
 ﻿using MagiRogue.Data;
-using MagiRogue.System;
-using MagiRogue.System.Magic;
-using MagiRogue.System.Magic.Effects;
+using MagiRogue.GameSys;
+using MagiRogue.GameSys.Magic;
+using MagiRogue.GameSys.Magic.Effects;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System.Linq;

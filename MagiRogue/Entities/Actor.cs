@@ -1,6 +1,6 @@
 ﻿using MagiRogue.Commands;
-using MagiRogue.System;
-using MagiRogue.System.Tiles;
+using MagiRogue.GameSys;
+using MagiRogue.GameSys.Tiles;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System;
@@ -81,7 +81,7 @@ namespace MagiRogue.Entities
             Abilities = new();
             Name = name;
             // by default the material of the actor will be mostly flesh
-            Material = System.Physics.PhysicsManager.SetMaterial("flesh");
+            Material = GameSys.Physics.PhysicsManager.SetMaterial("flesh");
         }
 
         #endregion Constructor

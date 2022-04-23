@@ -1,7 +1,7 @@
 ﻿using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
-using MagiRogue.System.Magic;
-using MagiRogue.System.Tiles;
+using MagiRogue.GameSys.Magic;
+using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

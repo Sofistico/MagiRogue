@@ -1,5 +1,5 @@
 ﻿using MagiRogue.Entities;
-using MagiRogue.System.Magic;
+using MagiRogue.GameSys.Magic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;

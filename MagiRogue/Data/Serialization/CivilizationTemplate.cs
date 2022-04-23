@@ -1,6 +1,6 @@
 ﻿using MagiRogue.Entities;
-using MagiRogue.System.Civ;
-using MagiRogue.System.Tiles;
+using MagiRogue.GameSys.Civ;
+using MagiRogue.GameSys.Tiles;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

@@ -1,6 +1,6 @@
-﻿using MagiRogue.System;
-using MagiRogue.System.Civ;
-using MagiRogue.System.Planet;
+﻿using MagiRogue.GameSys;
+using MagiRogue.GameSys.Civ;
+using MagiRogue.GameSys.Planet;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;

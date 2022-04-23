@@ -1,4 +1,4 @@
-﻿using MagiRogue.System;
+﻿using MagiRogue.GameSys;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;

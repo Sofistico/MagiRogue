@@ -1,8 +1,8 @@
 ﻿using GoRogue.Pathing;
 using MagiRogue.Entities;
-using MagiRogue.System;
-using MagiRogue.System.Magic;
-using MagiRogue.System.Tiles;
+using MagiRogue.GameSys;
+using MagiRogue.GameSys.Magic;
+using MagiRogue.GameSys.Tiles;
 using MagiRogue.UI.Windows;
 using MagiRogue.Utils;
 using SadRogue.Primitives;
@@ -90,7 +90,7 @@ namespace MagiRogue.Commands
                 TargetList.Add(_caster);
                 var (sucess, s) = EndSpellTargetting();
                 GameLoop.Universe.ProcessTurn
-                    (System.Time.TimeHelper.GetCastingTime(GameLoop.Universe.Player, s), sucess);
+                    (GameSys.Time.TimeHelper.GetCastingTime(GameLoop.Universe.Player, s), sucess);
                 return;
             }
 

@@ -1,9 +1,9 @@
 ﻿using MagiRogue.Data;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
-using MagiRogue.System;
-using MagiRogue.System.Planet;
-using MagiRogue.System.Tiles;
+using MagiRogue.GameSys;
+using MagiRogue.GameSys.Planet;
+using MagiRogue.GameSys.Tiles;
 using Newtonsoft.Json;
 using SadConsole;
 using SadRogue.Primitives;

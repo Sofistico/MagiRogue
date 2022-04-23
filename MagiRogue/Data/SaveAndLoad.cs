@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Newtonsoft.Json;
 using MagiRogue.Data.Serialization;
-using MagiRogue.System;
+using MagiRogue.GameSys;
 using MagiRogue.Utils;
 using System.Runtime.Serialization;
 

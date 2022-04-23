@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MagiRogue.System.Magic;
+using MagiRogue.GameSys.Magic;
 using Newtonsoft.Json;
 
 namespace MagiRogue.Test.Data

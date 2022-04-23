@@ -1,5 +1,5 @@
-﻿using MagiRogue.System.Magic;
-using MagiRogue.System.Magic.Effects;
+﻿using MagiRogue.GameSys.Magic;
+using MagiRogue.GameSys.Magic.Effects;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

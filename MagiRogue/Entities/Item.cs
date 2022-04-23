@@ -1,5 +1,5 @@
 ﻿using MagiRogue.Data;
-using MagiRogue.System;
+using MagiRogue.GameSys;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
@@ -60,7 +60,7 @@ namespace MagiRogue.Entities
             Weight = weight;
             Condition = condition;
             Name = name;
-            Material = System.Physics.PhysicsManager.SetMaterial(materialId);
+            Material = GameSys.Physics.PhysicsManager.SetMaterial(materialId);
         }
 
         // Destroy this object by removing it from
@@ -113,7 +113,7 @@ namespace MagiRogue.Entities
 
         public int DamageWhenItemStrikes(int itemAceleration)
         {
-            return System.Physics.PhysicsManager.CalculateStrikeForce(Weight, itemAceleration) + BaseDmg;
+            return GameSys.Physics.PhysicsManager.CalculateStrikeForce(Weight, itemAceleration) + BaseDmg;
         }
 
         public override string ToString()

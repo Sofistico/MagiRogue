@@ -1,5 +1,5 @@
 ﻿using MagiRogue.Entities;
-using MagiRogue.System.Magic;
+using MagiRogue.GameSys.Magic;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
@@ -51,7 +51,7 @@ namespace MagiRogue.Data.Serialization
             Description = description;
             Size = size;
             MaterialId = materialId;
-            Material = System.Physics.PhysicsManager.SetMaterial(materialId);
+            Material = GameSys.Physics.PhysicsManager.SetMaterial(materialId);
 
             ForegroundBackingField = new MagiColorSerialization(foreground);
             BackgroundBackingField = new MagiColorSerialization(background);
@@ -80,7 +80,7 @@ namespace MagiRogue.Data.Serialization
             Condition = condition;
             Size = size;
             MaterialId = materialId;
-            Material = System.Physics.PhysicsManager.SetMaterial(materialId);
+            Material = GameSys.Physics.PhysicsManager.SetMaterial(materialId);
             MagicStuff = magic;
         }
 
@@ -195,7 +195,7 @@ namespace MagiRogue.Data.Serialization
                 ItemDamageType = itemTemplate.DamageType
             };
 
-            item.Material = System.Physics.PhysicsManager.SetMaterial(itemTemplate.MaterialId);
+            item.Material = GameSys.Physics.PhysicsManager.SetMaterial(itemTemplate.MaterialId);
             item.Description = itemTemplate.Description;
 
             return item;

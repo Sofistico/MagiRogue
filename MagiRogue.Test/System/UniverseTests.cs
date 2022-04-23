@@ -1,8 +1,8 @@
 ﻿using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
-using MagiRogue.System;
-using MagiRogue.System.Planet;
-using MagiRogue.System.Tiles;
+using MagiRogue.GameSys;
+using MagiRogue.GameSys.Planet;
+using MagiRogue.GameSys.Tiles;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System;
@@ -28,8 +28,8 @@ namespace MagiRogue.Test.System
         {
             var chunck = new RegionChunk(new Point(0, 0));
             uni = new(new PlanetMap(50, 50), null, null,
-                new MagiRogue.System.Time.TimeSystem(500), true,
-                MagiRogue.System.Time.SeasonType.Spring, new(), chunck);
+                new MagiRogue.GameSys.Time.TimeSystem(500), true,
+                MagiRogue.GameSys.Time.SeasonType.Spring, new(), chunck);
             Palette.AddToColorDictionary();
         }
 

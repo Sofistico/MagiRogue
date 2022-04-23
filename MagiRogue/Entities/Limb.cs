@@ -136,7 +136,7 @@ namespace MagiRogue.Entities
             double limbWeight, string limbName, LimbOrientation orientation, string? connectedTo,
             string materialID = "flesh")
         {
-            LimbMaterial = System.Physics.PhysicsManager.SetMaterial(materialID);
+            LimbMaterial = GameSys.Physics.PhysicsManager.SetMaterial(materialID);
             TypeLimb = limbType;
             MaxLimbHp = maxLimbHp;
             LimbHp = limbHp;
@@ -153,7 +153,7 @@ namespace MagiRogue.Entities
            string materialID = "flesh")
         {
             Id = id;
-            LimbMaterial = System.Physics.PhysicsManager.SetMaterial(materialID);
+            LimbMaterial = GameSys.Physics.PhysicsManager.SetMaterial(materialID);
             TypeLimb = limbType;
             MaxLimbHp = maxLimbHp;
             LimbHp = limbHp;

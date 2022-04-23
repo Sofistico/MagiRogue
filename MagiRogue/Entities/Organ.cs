@@ -1,5 +1,5 @@
 ﻿using MagiRogue.Data.Serialization;
-using MagiRogue.System.Physics;
+using MagiRogue.GameSys.Physics;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;

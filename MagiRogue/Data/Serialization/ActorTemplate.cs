@@ -1,5 +1,5 @@
 ﻿using MagiRogue.Entities;
-using MagiRogue.System.Magic;
+using MagiRogue.GameSys.Magic;
 using Newtonsoft.Json;
 using SadConsole.SerializedTypes;
 using SadRogue.Primitives;
@@ -253,7 +253,7 @@ namespace MagiRogue.Data.Serialization
                     Anatomy = actorTemplate.Anatomy,
                     Size = actorTemplate.Size,
                     Weight = actorTemplate.Weight,
-                    Material = System.Physics.PhysicsManager.SetMaterial(actorTemplate.MaterialId)
+                    Material = GameSys.Physics.PhysicsManager.SetMaterial(actorTemplate.MaterialId)
                 };
             if (actorTemplate.Abilities is not null && actorTemplate.Abilities.Count > 0)
             {
