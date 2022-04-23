@@ -10,6 +10,7 @@ using Newtonsoft.Json.Linq;
 using MagiRogue.GameSys.Planet;
 using MagiRogue.GameSys.Civ;
 using MagiRogue.Data.Serialization;
+using System.Diagnostics;
 
 namespace MagiRogue.GameSys.Tiles
 {
@@ -234,6 +235,12 @@ namespace MagiRogue.GameSys.Tiles
 
         public static explicit operator TileBase(BasicTile basicTile)
         {
+            if (basicTile is null)
+                return null;
+            else
+            {
+                Debug.WriteLine("Basic tile was null!");
+            }
             TileBase tile;
             dynamic charToUse = basicTile.GlyphChar is null ? basicTile.Glyph : basicTile.GlyphChar;
             Color foreground;
@@ -248,8 +255,6 @@ namespace MagiRogue.GameSys.Tiles
                 foreground = new Color(basicTile.Foreground);
                 background = new Color(basicTile.Background);
             }
-            if (basicTile is null)
-                return null;
             switch (basicTile.TileType)
             {
                 case TileType.Null:
