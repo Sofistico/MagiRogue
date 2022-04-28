@@ -1,9 +1,9 @@
 ﻿[
   {
-    "SpellLevel": 1,
+    "SpellLevel": 3,
     "Effects": [
       {
-        "AreaOfEffect": "Self",
+        "AreaOfEffect": "Target",
         "SpellDamageType": "Force",
         "BaseDamage": 2,
         "Radius": 0,
@@ -15,10 +15,10 @@
       }
     ],
     "SpellName": "Minor Cure",
-    "Description": null,
+    "Description": "The caster focus mana on his fingertips and cure some scratches from the target.\r\nThe first thing any aspiring mage healer learns, the spell is notouriosly difficult to get right.",
     "SpellSchool": "MedicalMagic",
-    "SpellRange": 0,
-    "ManaCost": 1.0,
+    "SpellRange": 1,
+    "ManaCost": 3.5,
     "SpellId": "minor_cure"
   }
 ]

@@ -21,6 +21,8 @@ namespace MagiRogue.GameSys.Magic
         public int MpNodeCost { get; set; }
         public string RitualId { get; set; }
         public MagicSchool RitualSchool { get; set; }
+        public int DurationOfRitual { get; set; }
+        public int RitualRange { get; set; }
 
         public Rituals(int baseDifficulty,
             List<ISpellEffect> ritualEffect,
@@ -28,7 +30,9 @@ namespace MagiRogue.GameSys.Magic
             string ritualDescription,
             int mpNodeCost,
             string ritualId,
-            MagicSchool ritualSchool)
+            MagicSchool ritualSchool,
+            int durationRitual,
+            int ritualRange)
         {
             BaseDifficulty = baseDifficulty;
             RitualEffect = ritualEffect;
@@ -37,6 +41,8 @@ namespace MagiRogue.GameSys.Magic
             MpNodeCost = mpNodeCost;
             RitualId = ritualId;
             RitualSchool = ritualSchool;
+            DurationOfRitual = durationRitual;
+            RitualRange = ritualRange;
         }
 
         public void PerformRitual(NodeTile node, Actor caster, Point target)
@@ -47,7 +53,7 @@ namespace MagiRogue.GameSys.Magic
                 foreach (var effect in RitualEffect)
                 {
                     effect.ApplyEffect(target, caster, new SpellBase(RitualId, RitualName,
-                        RitualSchool, 0, BaseDifficulty, MpNodeCost));
+                        RitualSchool, RitualRange, BaseDifficulty, MpNodeCost));
                 }
 
                 GameLoop.UIManager.MessageLog.Add($"{caster.Name} performed the {RitualName}!");

@@ -17,14 +17,13 @@ namespace MagiRogue.Data.Serialization
 
         public MagiColorSerialization(string colorName)
         {
-            if (!ColorExtensions2.ColorMappings.ContainsKey(colorName))
+            if (ColorExtensions2.ColorMappings.ContainsKey(colorName.ToLower()))
             {
-                //Debug.WriteLine("Cound't find the color in the ColorMappings!");
-                Color = Color.PaleVioletRed;
+                Color = ColorExtensions2.FromName(colorName);
             }
             else
             {
-                Color = ColorExtensions2.FromName(colorName);
+                Color = Color.PaleVioletRed;
             }
 
             ColorName = colorName;

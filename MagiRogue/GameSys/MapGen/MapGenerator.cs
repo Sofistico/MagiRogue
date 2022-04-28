@@ -767,6 +767,7 @@ namespace MagiRogue.GameSys.MapGen
                 }
             }
             // MEMORY LEAK!!
+            // Actually wasn't there!
             int roomsCount = rooms.Count;
             for (int i = 0; i < roomsCount; i++)
             {
@@ -777,10 +778,7 @@ namespace MagiRogue.GameSys.MapGen
                 {
                     if (rooms.Any(r => r.ReturnRecPerimiter().Contains(roomPos[p]) && r != currentRoom))
                     {
-                        _map.SetTerrain(new TileFloor(roomPos[p])
-                        {
-                            Glyph = 'C'
-                        });
+                        _map.GetTileAt(roomPos[p]).Background = Color.AnsiRedBright;
                     }
                 }
             }

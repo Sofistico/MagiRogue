@@ -1,6 +1,6 @@
 ﻿[
   {
-    "SpellLevel": 1,
+    "SpellLevel": 4,
     "Effects": [
       {
         "AreaOfEffect": "Target",
@@ -11,15 +11,15 @@
         "BaseDamage": 0
       }
     ],
-    "SpellName": "Teleport",
-    "Description": null,
+    "SpellName": "Blink",
+    "Description": "The major first spell taught to any Dimensionalism student, also the one that causes most students death on it's first try.\r\nIt's said that the Berjoar method of teaching created a variant of this that weaponizes it's teleportation.",
     "SpellSchool": "Dimensionalism",
-    "SpellRange": 15,
-    "ManaCost": 1.0,
+    "SpellRange": 5,
+    "ManaCost": 8.0,
     "SpellId": "teleport"
   },
   {
-    "SpellLevel": 1,
+    "SpellLevel": 5,
     "Effects": [
       {
         "AreaOfEffect": "Self",
@@ -34,10 +34,10 @@
       }
     ],
     "SpellName": "Haste",
-    "Description": null,
+    "Description": "A powerful spell, speeds up the caster local time.\r\nAs many other spells of the Dimensionalism school of magic, has extreme high mana cost and needs great shaping skills to be able to pull of on the battle.",
     "SpellSchool": "Dimensionalism",
     "SpellRange": 0,
-    "ManaCost": 1.0,
+    "ManaCost": 10.0,
     "SpellId": "haste_self"
   }
 ]
