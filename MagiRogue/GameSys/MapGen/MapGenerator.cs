@@ -748,7 +748,7 @@ namespace MagiRogue.GameSys.MapGen
                 Rectangle area = mapPartitions[randNum.NextInt(mapPartitions.Count)];
                 mapPartitions.Remove(area);
 
-                if (area.Width <= roomMinSize && area.Height <= roomMinSize)
+                if (area.Width <= roomMinSize || area.Height <= roomMinSize)
                     continue;
 
                 int newRoomWidht = randNum.NextInt(roomMinSize, area.Width - 1);
@@ -764,22 +764,6 @@ namespace MagiRogue.GameSys.MapGen
                 if (!rooms.Any(r => r.RoomRectangle.Intersects(room.RoomRectangle)))
                 {
                     rooms.Add(room);
-                }
-            }
-            // MEMORY LEAK!!
-            // Actually wasn't there!
-            int roomsCount = rooms.Count;
-            for (int i = 0; i < roomsCount; i++)
-            {
-                int roomPosCount = rooms[i].ReturnRecPerimiter().Count;
-                Point[] roomPos = rooms[i].ReturnRecPerimiter().ToArray();
-                Room currentRoom = rooms[i];
-                for (int p = 0; p < roomPosCount; p++)
-                {
-                    if (rooms.Any(r => r.ReturnRecPerimiter().Contains(roomPos[p]) && r != currentRoom))
-                    {
-                        _map.GetTileAt(roomPos[p]).Background = Color.AnsiRedBright;
-                    }
                 }
             }
 

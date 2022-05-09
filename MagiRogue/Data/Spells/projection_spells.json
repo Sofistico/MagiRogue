@@ -22,6 +22,7 @@
     ]
   },
   {
+    "/": "In the future should have here an effect to represent the increasing of temperature!",
     "SpellLevel": 2,
     "Effects": [
       {
@@ -44,6 +45,7 @@
     "SpellId": "fire_ray"
   },
   {
+    "/": "In the future should have here an effect to represent the increasing of temperature!",
     "SpellLevel": 3,
     "Effects": [
       {
@@ -85,6 +87,7 @@
     "SpellId": "sever_whip"
   },
   {
+    "/": "In the future should have here an effect to represent the lowering of temperature!",
     "SpellLevel": 5,
     "Effects": [
       {
