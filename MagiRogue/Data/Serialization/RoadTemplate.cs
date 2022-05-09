@@ -1,6 +1,6 @@
-﻿using MagiRogue.System.Civ;
-using MagiRogue.System.Planet;
-using MagiRogue.System.Tiles;
+﻿using MagiRogue.GameSys.Civ;
+using MagiRogue.GameSys.Planet;
+using MagiRogue.GameSys.Tiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;

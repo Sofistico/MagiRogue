@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Newtonsoft.Json;
 using MagiRogue.Data.Serialization;
-using MagiRogue.System;
+using MagiRogue.GameSys;
 using MagiRogue.Utils;
 using System.Runtime.Serialization;
 
@@ -61,8 +61,10 @@ namespace MagiRogue.Data
         {
             CreateSaveNameFolder(saveName);
 
-            SaveChuncksToFile(gameState.AllChunks);
-
+            //SaveChuncksToFile(gameState.AllChunks);
+            if (gameState.CurrentChunk is not null)
+                SaveChunkInPos(gameState.CurrentChunk, gameState.CurrentChunk.ToIndex(
+                   gameState.GetWorldMap().Width));
             try
             {
                 Serializer.Save(gameState, @$"{_folderName}\{saveName}\GameState.mr", true);
@@ -101,6 +103,7 @@ namespace MagiRogue.Data
             try
             {
                 List<RegionChunk> newChunks = new List<RegionChunk>();
+                if (chunks is null) return;
                 int countArray = chunks.Length;
                 for (int i = 0; i < countArray; i++)
                 {
@@ -121,9 +124,9 @@ namespace MagiRogue.Data
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new Exception("Failed to save chunk to a file!");
+                throw new Exception("Failed to save chunk to a file! \nMessage: " + ex.Message);
             }
         }
 
@@ -143,20 +146,16 @@ namespace MagiRogue.Data
         /// <returns></returns>
         public static Universe LoadGame(string saveName)
         {
-            string path = $@"{_folderName}\{saveName}\GameState.mr";
-            Universe uni = Serializer.Load<Universe>(path, true);
-            if (uni.CurrentChunk != null)
+            try
             {
-                uni.AllChunks = LoadChunks(saveName,
-                    uni.CurrentChunk.ToIndex(uni.WorldMap.AssocietatedMap.Width));
+                string path = $@"{_folderName}\{saveName}\GameState.mr";
+                Universe uni = Serializer.Load<Universe>(path, true);
+                return uni;
             }
-            else
+            catch (Exception ex)
             {
-                /*LoadChunks(saveName, Point.ToIndex(uni.Player.Position.X,
-                    uni.Player.Position.Y,
-                    uni.WorldMap.AssocietatedMap.Width));*/
+                throw new Exception("The game failed to load! here is the error message: " + ex.Message);
             }
-            return uni;
         }
 
         /// <summary>

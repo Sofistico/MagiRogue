@@ -1,4 +1,4 @@
-﻿using MagiRogue.System;
+﻿using MagiRogue.GameSys;
 using Newtonsoft.Json;
 using System;
 

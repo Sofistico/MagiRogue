@@ -1,6 +1,6 @@
 ﻿global using Point = SadRogue.Primitives.Point;
 using GoRogue;
-using MagiRogue.System;
+using MagiRogue.GameSys;
 using MagiRogue.UI;
 
 namespace MagiRogue
@@ -15,7 +15,7 @@ namespace MagiRogue
 
         public static Universe Universe { get; set; }
 
-        public static IDGenerator IdGen { get; } = new(1);
+        public static IDGenerator IdGen { get; private set; } = new(1);
 
         private static void Main()
         {
@@ -42,6 +42,7 @@ namespace MagiRogue
 
         private static void Init()
         {
+            Palette.AddToColorDictionary();
             // Makes so that no excpetion happens for a custom control
             SadConsole.UI.Themes.Library.Default.SetControlTheme(typeof(UI.Controls.MagiButton),
                 new SadConsole.UI.Themes.ButtonTheme());
@@ -59,5 +60,7 @@ namespace MagiRogue
         /// </summary>
         /// <returns></returns>
         public static Map GetCurrentMap() => Universe.CurrentMap;
+
+        public static void SetIdGen(uint lastId) => IdGen = new IDGenerator(lastId + 1);
     }
 }

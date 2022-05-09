@@ -1,7 +1,7 @@
 ﻿using MagiRogue.Entities;
-using MagiRogue.System;
-using MagiRogue.System.Planet;
-using MagiRogue.System.Time;
+using MagiRogue.GameSys;
+using MagiRogue.GameSys.Planet;
+using MagiRogue.GameSys.Time;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -124,22 +124,18 @@ namespace MagiRogue.Data.Serialization
         [DataMember]
         public string CurrentSeason { get; set; }
 
-        /// <summary>
-        /// All the maps and chunks of the game
-        /// </summary>
-        [JsonIgnore]
-        public RegionChunk[] AllChunks { get; set; }
-
         [DataMember]
         public SaveAndLoad SaveAndLoad { get; set; }
+
+        [DataMember]
+        public uint LastIdAssigned { get; set; }
 
         public UniverseTemplate(PlanetMap worldMap,
             Map currentMap,
             Player player,
             TimeTemplate time,
             bool possibleChangeMap,
-            SeasonType currentSeason,
-            RegionChunk[] allChunks)
+            SeasonType currentSeason)
         {
             WorldMap = worldMap;
             if (currentMap is not null && worldMap.AssocietatedMap.MapId == currentMap.MapId)
@@ -151,7 +147,6 @@ namespace MagiRogue.Data.Serialization
             Time = time;
             PossibleChangeMap = possibleChangeMap;
             CurrentSeason = currentSeason.ToString();
-            AllChunks = allChunks;
         }
 
         public UniverseTemplate()
@@ -176,10 +171,11 @@ namespace MagiRogue.Data.Serialization
             UniverseTemplate universe = new UniverseTemplate(
                 uni.WorldMap, uni.CurrentMap, uni.Player,
                 uni.Time, uni.PossibleChangeMap,
-                uni.CurrentSeason, uni.AllChunks)
+                uni.CurrentSeason)
             {
                 CurrentChunk = uni.CurrentChunk,
-                SaveAndLoad = uni.SaveAndLoad
+                SaveAndLoad = uni.SaveAndLoad,
+                LastIdAssigned = GameLoop.IdGen.CurrentInteger,
             };
             return universe;
         }
@@ -189,7 +185,8 @@ namespace MagiRogue.Data.Serialization
             Universe universe = new Universe(uni.WorldMap, uni.CurrentMap,
                 Entities.Player.ReturnPlayerFromActor(uni.Player),
                 uni.Time, uni.PossibleChangeMap,
-                SeasonEnumToString(uni.CurrentSeason), uni.AllChunks, uni.SaveAndLoad);
+                SeasonEnumToString(uni.CurrentSeason), uni.SaveAndLoad, uni.CurrentChunk);
+            GameLoop.SetIdGen(uni.LastIdAssigned);
 
             return universe;
         }

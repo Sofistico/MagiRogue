@@ -1,9 +1,9 @@
 ﻿using MagiRogue.Data;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
-using MagiRogue.System;
-using MagiRogue.System.Planet;
-using MagiRogue.System.Tiles;
+using MagiRogue.GameSys;
+using MagiRogue.GameSys.Planet;
+using MagiRogue.GameSys.Tiles;
 using Newtonsoft.Json;
 using SadConsole;
 using SadRogue.Primitives;
@@ -104,6 +104,16 @@ namespace MagiRogue.Test.System
             MapTemplate mapDeJsonified = JsonConvert.DeserializeObject<Map>(json);
 
             Assert.True(mapDeJsonified.MapName == map.MapName);
+        }
+
+        [Fact]
+        public void TestIdSerializationMap()
+        {
+            map.SetId(2);
+            string json = JsonConvert.SerializeObject(map);
+            Map newMap = JsonConvert.DeserializeObject<Map>(json);
+
+            Assert.Equal(map.MapId, newMap.MapId);
         }
     }
 }

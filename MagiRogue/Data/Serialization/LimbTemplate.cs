@@ -92,6 +92,26 @@ namespace MagiRogue.Data.Serialization
             ConnectedToId = connectsTo;
         }
 
+        public LimbTemplate Copy()
+        {
+            LimbTemplate copy = new LimbTemplate()
+            {
+                Attached = this.Attached,
+                Broken = this.Broken,
+                ConnectedToId = this.ConnectedToId,
+                Id = this.Id,
+                LimbHp = this.LimbHp,
+                LimbMaterialId = this.LimbMaterialId,
+                LimbName = this.LimbName,
+                LimbOrientation = this.LimbOrientation,
+                LimbType = this.LimbType,
+                LimbWeight = this.LimbWeight,
+                MaxLimbHp = this.MaxLimbHp,
+            };
+
+            return copy;
+        }
+
         public static implicit operator Limb(LimbTemplate template)
         {
             Limb limb = new Limb(template.LimbType,

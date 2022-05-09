@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MagiRogue.System.Planet;
-using MagiRogue.System.Tiles;
+using MagiRogue.GameSys.Planet;
+using MagiRogue.GameSys.Tiles;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 

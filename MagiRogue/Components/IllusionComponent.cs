@@ -1,5 +1,5 @@
 ﻿using GoRogue.Components.ParentAware;
-using MagiRogue.System.Tiles;
+using MagiRogue.GameSys.Tiles;
 using SadConsole;
 
 namespace MagiRogue.Components

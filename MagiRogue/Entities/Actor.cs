@@ -1,6 +1,6 @@
 ﻿using MagiRogue.Commands;
-using MagiRogue.System;
-using MagiRogue.System.Tiles;
+using MagiRogue.GameSys;
+using MagiRogue.GameSys.Tiles;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System;
@@ -81,7 +81,7 @@ namespace MagiRogue.Entities
             Abilities = new();
             Name = name;
             // by default the material of the actor will be mostly flesh
-            Material = System.Physics.PhysicsManager.SetMaterial("flesh");
+            Material = GameSys.Physics.PhysicsManager.SetMaterial("flesh");
         }
 
         #endregion Constructor
@@ -115,11 +115,10 @@ namespace MagiRogue.Entities
 
                 if (doorThere)
                     return doorThere;
-                if (CheckForChangeMapChunk(Position, positionChange))
-                {
-                }
 
-                return false;
+                // true means that he entered inside a map,
+                // and thus the turn moved, a false means that there wasn't anything there
+                return CheckForChangeMapChunk(Position, positionChange);
             }
         }
 
@@ -131,6 +130,9 @@ namespace MagiRogue.Entities
             {
                 Map mapToGo = GameLoop.GetCurrentMap().MapZoneConnections[dir];
                 Point actorPosInChunk = GetNextMapPos(mapToGo, pos + positionChange);
+                // if tile in the other map isn't walkable, then it should't be possible to go there!
+                if (!mapToGo.IsTileWalkable(actorPosInChunk, this))
+                    return false;
                 GameLoop.Universe.ChangePlayerMap(mapToGo, actorPosInChunk, GameLoop.GetCurrentMap());
                 return true;
             }
@@ -138,7 +140,7 @@ namespace MagiRogue.Entities
                 return false;
         }
 
-        private Point GetNextMapPos(Map map, Point pos)
+        private static Point GetNextMapPos(Map map, Point pos)
         {
             int x = pos.X % map.Width < 0 ? map.Width + (pos.X % map.Width) : pos.X % map.Width;
             int y = pos.Y % map.Height < 0 ? map.Height + (pos.Y % map.Height) : pos.Y % map.Height;

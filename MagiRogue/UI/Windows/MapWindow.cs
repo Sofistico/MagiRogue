@@ -1,8 +1,8 @@
 ﻿using MagiRogue.Commands;
 using MagiRogue.Entities;
-using MagiRogue.System;
-using MagiRogue.System.Tiles;
-using MagiRogue.System.Time;
+using MagiRogue.GameSys;
+using MagiRogue.GameSys.Tiles;
+using MagiRogue.GameSys.Time;
 using SadConsole;
 using SadConsole.Input;
 using SadRogue.Primitives;

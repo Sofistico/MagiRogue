@@ -1,9 +1,9 @@
 ﻿using MagiRogue.Commands;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
-using MagiRogue.System;
-using MagiRogue.System.Tiles;
-using MagiRogue.System.Time;
+using MagiRogue.GameSys;
+using MagiRogue.GameSys.Tiles;
+using MagiRogue.GameSys.Time;
 using MagiRogue.UI.Windows;
 using Newtonsoft.Json;
 using SadConsole.Input;

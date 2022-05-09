@@ -1,4 +1,4 @@
-﻿using MagiRogue.System;
+﻿using MagiRogue.GameSys;
 using SadRogue.Primitives;
 
 namespace MagiRogue.Entities

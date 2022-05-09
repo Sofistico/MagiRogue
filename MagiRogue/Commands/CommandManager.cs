@@ -1,9 +1,9 @@
 ﻿using GoRogue.DiceNotation;
 using MagiRogue.Entities;
-using MagiRogue.System;
-using MagiRogue.System.Planet;
-using MagiRogue.System.Tiles;
-using MagiRogue.System.Time;
+using MagiRogue.GameSys;
+using MagiRogue.GameSys.Planet;
+using MagiRogue.GameSys.Tiles;
+using MagiRogue.GameSys.Time;
 using MagiRogue.Utils;
 using SadConsole;
 using SadRogue.Primitives;
@@ -531,9 +531,11 @@ namespace MagiRogue.Commands
             else if (possibleWorldTileHere.Visited)
             {
                 RegionChunk chunk = GameLoop.Universe.GetChunckByPos(playerPoint);
+                GameLoop.Universe.CurrentChunk = chunk;
+                // if entering the map again, set to update
+                chunk.SetMapsToUpdate();
                 GameLoop.Universe.ChangePlayerMap(chunk.LocalMaps[0],
                     chunk.LocalMaps[0].LastPlayerPosition, currentMap);
-                GameLoop.Universe.CurrentChunk = chunk;
 
                 return true;
             }

@@ -1,7 +1,7 @@
 ﻿using GoRogue.Components;
 using GoRogue.GameFramework;
 using MagiRogue.Data.Serialization;
-using MagiRogue.System.Magic;
+using MagiRogue.GameSys.Magic;
 using SadConsole;
 using SadRogue.Primitives;
 using System;

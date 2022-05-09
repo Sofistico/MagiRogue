@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace MagiRogue.Data.Serialization
 {
@@ -35,5 +36,21 @@ namespace MagiRogue.Data.Serialization
 
         [DataMember]
         public int? BoilingPoint { get; set; }
+
+        public MaterialTemplate Copy()
+        {
+            return new MaterialTemplate()
+            {
+                BoilingPoint = this.BoilingPoint,
+                Density = this.Density,
+                CanRegen = this.CanRegen,
+                Flamability = this.Flamability,
+                Hardness = this.Hardness,
+                Id = this.Id,
+                MeltingPoint = this.MeltingPoint,
+                MPInfusionLimit = this.MPInfusionLimit,
+                Name = this.Name,
+            };
+        }
     }
 }

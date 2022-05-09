@@ -1,8 +1,8 @@
 ﻿using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
-using MagiRogue.System;
-using MagiRogue.System.Planet;
-using MagiRogue.System.Tiles;
+using MagiRogue.GameSys;
+using MagiRogue.GameSys.Planet;
+using MagiRogue.GameSys.Tiles;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System;
@@ -26,18 +26,17 @@ namespace MagiRogue.Test.System
 
         public UniverseTests()
         {
-            var chunck = new RegionChunk[50 * 50];
+            Palette.AddToColorDictionary();
+            var chunck = new RegionChunk(new Point(0, 0));
             uni = new(new PlanetMap(50, 50), null, null,
-                new MagiRogue.System.Time.TimeSystem(500), true,
-                MagiRogue.System.Time.SeasonType.Spring, chunck, new());
-            //var summary = BenchmarkRunner.Run<UniverseTests>();
+                new MagiRogue.GameSys.Time.TimeSystem(500), true,
+                MagiRogue.GameSys.Time.SeasonType.Spring, new(), chunck);
+            PrepareForChunkTest();
         }
 
         [Fact]
         public void SerializeUniverse()
         {
-            int count = 1;
-
             PrepareForChunkTest();
 
             var json = JsonConvert.SerializeObject(uni, Formatting.Indented);
@@ -90,14 +89,8 @@ namespace MagiRogue.Test.System
             using StreamWriter wr = new StreamWriter(ms);
             using JsonTextWriter jw = new JsonTextWriter(wr);
             jw.WriteStartArray();
-            for (int i = 0; i < uni.AllChunks.Length; i++)
-            {
-                if (uni.AllChunks[i] is not null)
-                {
-                    var json = JsonConvert.SerializeObject(uni.AllChunks[i]);
-                    jw.WriteValue(json);
-                }
-            }
+            var json = JsonConvert.SerializeObject(uni.CurrentChunk);
+            jw.WriteValue(json);
             jw.WriteEndArray();
             /*JsonTextReader reader = new JsonTextReader(new StreamReader(ms));
             Newtonsoft.Json.Linq.JObject j = Newtonsoft.Json.Linq.JObject.Load(reader);*/
@@ -107,25 +100,18 @@ namespace MagiRogue.Test.System
 
         private void PrepareForChunkTest()
         {
-            int count = 1;
+            uni.WorldMap = new PlanetGenerator().CreatePlanet(20,
+                    20,
+                    3);
 
-            for (int i = 0; i < 5; i++)
-            {
-                Point p = Point.FromIndex(i, uni.WorldMap.AssocietatedMap.Width);
-                RegionChunk chunk = new RegionChunk(p);
-                uni.AllChunks[i] = chunk;
-            }
+            RegionChunk chunk = uni.GenerateChunck(new Point(0, 0));
+            //uni.AllChunks[i] = chunk;
+            uni.CurrentChunk = chunk;
 
-            foreach (var item in uni.AllChunks)
+            foreach (var map in uni.CurrentChunk.LocalMaps)
             {
-                if (item is null) continue;
-                for (int i = 0; i < item.LocalMaps.Length; i++)
-                {
-                    var map = new Map($"TestMap {count}");
-                    FillTilesWithRandomShit(map);
-                    count++;
-                    item.LocalMaps[i] = map;
-                }
+                if (map is null) continue;
+                FillTilesWithRandomShit(map);
             }
         }
 
@@ -134,17 +120,9 @@ namespace MagiRogue.Test.System
         {
             PrepareForChunkTest();
 
-            var json = JsonConvert.SerializeObject(uni.AllChunks);
+            var json = JsonConvert.SerializeObject(uni.CurrentChunk);
 
             Assert.Contains("X", json);
-        }
-
-        [Fact]
-        public void SerializeChunkOnlyAtSpecificPosTest()
-        {
-            PrepareForChunkTest();
-
-            var json = JsonConvert.SerializeObject(uni.AllChunks);
         }
 
         [Fact]
@@ -152,27 +130,34 @@ namespace MagiRogue.Test.System
         {
             PrepareForChunkTest();
 
-            var json = JsonConvert.SerializeObject(uni.AllChunks);
-            RegionChunk[] chunks = JsonConvert.DeserializeObject<RegionChunk[]>(json);
+            var json = JsonConvert.SerializeObject(uni.CurrentChunk);
+            RegionChunk chunks = JsonConvert.DeserializeObject<RegionChunk>(json);
 
-            Assert.True(uni.AllChunks[0].LocalMaps[0].MapId == chunks[0].LocalMaps[0].MapId);
+            Assert.True(uni.CurrentChunk.LocalMaps[0].MapId == chunks.LocalMaps[0].MapId);
         }
 
-        [Fact]
+        /*[Fact]
         public void DeserializeSpecificChunck()
         {
             PrepareForChunkTest();
 
-            var json = JsonConvert.SerializeObject(uni.AllChunks);
+            var json = JsonConvert.SerializeObject(uni.CurrentChunk);
 
             JArray jObj = JArray.Parse(json);
 
             var chunck = jObj[0].ToObject<RegionChunk>();
 
-            /*var chunk = from c in jObj
-                        where */
-
             Assert.True(chunck.X == 0 && chunck.Y == 0);
+        }*/
+
+        [Fact]
+        public void TestIdSerializationUniverse()
+        {
+            PrepareForChunkTest();
+            string json = JsonConvert.SerializeObject(uni);
+            Universe newUni = JsonConvert.DeserializeObject<Universe>(json);
+
+            Assert.Equal(uni.CurrentChunk.LocalMaps[0].MapId, newUni.CurrentChunk.LocalMaps[0].MapId);
         }
     }
 }

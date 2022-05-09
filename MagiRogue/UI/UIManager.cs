@@ -1,5 +1,5 @@
 ﻿using MagiRogue.Entities;
-using MagiRogue.System;
+using MagiRogue.GameSys;
 using MagiRogue.UI.Windows;
 using SadConsole;
 using SadConsole.Input;

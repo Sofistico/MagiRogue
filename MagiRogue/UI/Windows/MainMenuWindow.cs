@@ -7,7 +7,7 @@ using SadConsole;
 using Console = SadConsole.Console;
 using SadConsole.UI;
 using MagiRogue.Data;
-using MagiRogue.System;
+using MagiRogue.GameSys;
 
 namespace MagiRogue.UI.Windows
 {
@@ -160,7 +160,7 @@ namespace MagiRogue.UI.Windows
 
         private void QuitGameClick(object sender, EventArgs e)
         {
-            SadConsole.GameHost.Instance.Dispose();
+            Game.Instance.MonoGameInstance.Exit();
         }
 
         private void PositionButtons()

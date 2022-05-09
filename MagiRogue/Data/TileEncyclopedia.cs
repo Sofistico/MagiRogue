@@ -1,4 +1,4 @@
-﻿using MagiRogue.System.Tiles;
+﻿using MagiRogue.GameSys.Tiles;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
@@ -27,7 +27,12 @@ namespace MagiRogue.Data
 
         public static TileFloor GenericDirt(Point pos)
         {
-            return new TileFloor("Dirt", pos, "dirt", '.', Color.Brown, Color.Transparent);
+            return new TileFloor("Dirt", pos, "dirt", '.', Palette.Dirt, Color.Transparent);
+        }
+
+        public static TileFloor GenericDirtRoad(Point pos)
+        {
+            return new TileFloor("Dirt road", pos, "dirt", '.', Palette.DirtRoad, Color.Transparent);
         }
 
         internal static TileWall GenericTree()
