@@ -3,6 +3,7 @@ using MagiRogue.GameSys.Planet;
 using MagiRogue.GameSys.Tiles;
 using SadRogue.Primitives;
 using System;
+using System.Collections.Generic;
 
 namespace MagiRogue.GameSys.MapGen
 {
@@ -47,6 +48,39 @@ namespace MagiRogue.GameSys.MapGen
         /// <param name="worldTile"></param>
         private static void FinishingTouches(Map completeMap, WorldTile worldTile)
         {
+            // here prune trees
+            if (worldTile.CivInfluence is not null)
+            {
+                PruneTrees(completeMap, worldTile);
+                MakeRoomUseful(completeMap, worldTile);
+            }
+        }
+
+        private static void MakeRoomUseful(Map completeMap, WorldTile worldTile)
+        {
+            List<Room> mapRooms = completeMap.Rooms;
+
+            foreach (Room room in mapRooms)
+            {
+            }
+        }
+
+        private static void PruneTrees(Map completeMap, WorldTile worldTile)
+        {
+            List<TileBase> trees = completeMap.ReturnAllTrees();
+
+            int chanceToRemoveTree = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt
+                ((worldTile.CivInfluence.Population)) / 100;
+            for (int i = 0; i < trees.Count; i++)
+            {
+                int rng = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, 101);
+                if (rng <= chanceToRemoveTree)
+                {
+                    Point pos = trees[i].Position;
+                    var floor = TileEncyclopedia.GenericTreeTrunk(pos);
+                    completeMap.SetTerrain(floor);
+                }
+            }
         }
 
         /// <summary>

@@ -25,5 +25,14 @@
     "ForegroundStr": "DarkGray",
     "BackgroundStr": "Transparent",
     "TileType": "Floor"
+  },
+  {
+    "TileId": "tree_trunk",
+    "Name": "Tree Trunk",
+    "IdMaterial": "wood",
+    "GlyphChar": ".",
+    "ForegroundStr": "Wood",
+    "BackgroundStr": "Transparent",
+    "TileType": "Floor"
   }
 ]

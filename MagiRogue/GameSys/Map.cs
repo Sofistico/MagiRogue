@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MagiRogue.GameSys
 {
@@ -72,6 +73,7 @@ namespace MagiRogue.GameSys
         public int[]? ZLevels { get; set; }
         public Dictionary<Direction, Map> MapZoneConnections { get; set; }
         public List<Room> Rooms { get; set; }
+        //public Light[] Ilumination { get; set; }
 
         #endregion Properties
 
@@ -99,6 +101,7 @@ namespace MagiRogue.GameSys
             _entityRender = new SadConsole.Entities.Renderer();
             MapName = mapName;
             MapZoneConnections = new();
+            //Ilumination = new Light[Width * Height];
         }
 
         #endregion Constructor
@@ -486,6 +489,20 @@ namespace MagiRogue.GameSys
         /// </summary>
         /// <returns></returns>
         public Rectangle MapBounds() => Terrain.Bounds();
+
+        public List<TileBase> ReturnAllTrees()
+        {
+            List<TileBase> result = new List<TileBase>();
+            foreach (TileBase tree in Tiles)
+            {
+                if (tree.Name.Equals("Tree"))
+                {
+                    result.Add(tree);
+                }
+            }
+
+            return result;
+        }
 
         public void DestroyMap()
         {

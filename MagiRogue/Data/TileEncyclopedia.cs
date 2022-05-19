@@ -49,5 +49,12 @@ namespace MagiRogue.Data
         {
             return new TileFloor(Point.None);
         }
+
+        public static TileFloor GenericTreeTrunk(Point pos)
+        {
+            TileFloor tile = (TileFloor)DataManager.QueryTileInData("tree_trunk");
+            tile.Position = pos;
+            return tile;
+        }
     }
 }

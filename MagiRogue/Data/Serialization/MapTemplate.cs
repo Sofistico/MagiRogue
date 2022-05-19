@@ -282,6 +282,7 @@ namespace MagiRogue.Data.Serialization
         public bool? HasFOV { get; set; }
         public int[]? ZLevels { get; set; }
         public List<Room> Rooms { get; set; }
+        //public Light[] Ilumination { get; set; }
 
         [JsonConstructor]
         public MapTemplate(string mapName,
@@ -290,6 +291,7 @@ namespace MagiRogue.Data.Serialization
             int height,
             Point lastPlayerPosition,
             uint mapId, bool[] explored)
+        //Light[] ilumination)
         {
             MapName = mapName;
             Tiles = tiles;
@@ -298,6 +300,7 @@ namespace MagiRogue.Data.Serialization
             LastPlayerPosition = lastPlayerPosition;
             MapId = mapId;
             Explored = explored;
+            //Ilumination = ilumination;
         }
 
         public MapTemplate(string mapName, int width, int height)
