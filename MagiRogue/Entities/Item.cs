@@ -6,6 +6,7 @@ using SadRogue.Primitives;
 using System;
 using MagiRogue.Data.Serialization;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace MagiRogue.Entities
 {
@@ -50,6 +51,11 @@ namespace MagiRogue.Entities
         /// </summary>
         public DamageType ItemDamageType { get; set; } = DamageType.Blunt;
 
+        /// <summary>
+        /// Actives that the item can do.
+        /// </summary>
+        public List<IActivable> Actives { get; set; }
+
         // By default, a new Item is sized 1x1, with a weight of 1, and at 100% condition
         public Item(Color foreground, Color background, string name, int glyph, Point coord, int size,
             float weight = 1, int condition = 100, int layer = (int)MapLayer.ITEMS,
@@ -61,6 +67,7 @@ namespace MagiRogue.Entities
             Condition = condition;
             Name = name;
             Material = GameSys.Physics.PhysicsManager.SetMaterial(materialId);
+            Actives = new();
         }
 
         // Destroy this object by removing it from

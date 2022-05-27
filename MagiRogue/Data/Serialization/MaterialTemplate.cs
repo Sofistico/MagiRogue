@@ -37,6 +37,9 @@ namespace MagiRogue.Data.Serialization
         [DataMember]
         public int? BoilingPoint { get; set; }
 
+        [DataMember]
+        public string Color { get; set; }
+
         public MaterialTemplate Copy()
         {
             return new MaterialTemplate()
@@ -50,7 +53,13 @@ namespace MagiRogue.Data.Serialization
                 MeltingPoint = this.MeltingPoint,
                 MPInfusionLimit = this.MPInfusionLimit,
                 Name = this.Name,
+                Color = this.Color,
             };
+        }
+
+        internal MagiColorSerialization ReturnMagiColor()
+        {
+            return new MagiColorSerialization(Color);
         }
     }
 }

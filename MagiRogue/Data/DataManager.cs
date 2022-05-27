@@ -14,8 +14,6 @@ namespace MagiRogue.Data
 {
     public static class DataManager
     {
-        private static readonly string _appDomain = AppDomain.CurrentDomain.BaseDirectory;
-
         public static readonly IReadOnlyList<ItemTemplate> ListOfItems =
             GetSourceTree<ItemTemplate>(@".\Data\Items\*.json");
 
@@ -37,17 +35,12 @@ namespace MagiRogue.Data
         public static readonly IReadOnlyList<BasicTile> ListOfTiles =
             GetSourceTree<BasicTile>(@".\Data\Tiles\*.json");
 
-        private static IReadOnlyList<T> GetSourceTree<T>(string wildCard)
+        public static readonly IReadOnlyList<Furniture> ListOfFurnitures =
+            GetSourceTree<Furniture>(@".\Data\Furniture\*.json");
+
+        public static IReadOnlyList<T> GetSourceTree<T>(string wildCard)
         {
-            string originalWildCard = wildCard;
-
-            string pattern = Path.GetFileName(originalWildCard);
-            string realDir = originalWildCard[..^pattern.Length];
-
-            // Get absolutepath
-            string absPath = Path.GetFullPath(Path.Combine(_appDomain, realDir));
-
-            string[] files = Directory.GetFiles(absPath, pattern, SearchOption.TopDirectoryOnly);
+            string[] files = FileUtils.GetFiles(wildCard);
 
             List<List<T>> listTList = new();
 
@@ -87,5 +80,8 @@ namespace MagiRogue.Data
 
         public static Item QueryItemInData(string itemId)
             => ListOfItems.FirstOrDefault(i => i.Id.Equals(itemId));
+
+        public static Furniture QueryFurnitureInData(string furnitureId)
+            => ListOfFurnitures.FirstOrDefault(i => i.FurId.Equals(furnitureId));
     }
 }

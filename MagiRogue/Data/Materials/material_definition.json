@@ -19,7 +19,8 @@
     "MPInfusionLimit": 0,
     "CanRegen": true,
     "Density": 0,
-    "MeltingPoint": 999
+    "MeltingPoint": 999,
+    "Color": "White"
   },
   {
     "Id": "flesh",
@@ -29,7 +30,8 @@
     "MPInfusionLimit": 1,
     "CanRegen": true,
     "Density": 1.1,
-    "MeltingPoint": 41
+    "MeltingPoint": 41,
+    "Color": "Red"
   },
   {
     "Id": "stone",
@@ -39,7 +41,8 @@
     "MPInfusionLimit": 1,
     "CanRegen": false,
     "Density": 1.6,
-    "MeltingPoint": 1200
+    "MeltingPoint": 1200,
+    "Color": "DarkGray"
   },
   {
     "Id": "iron",
@@ -50,7 +53,8 @@
     "CanRegen": false,
     "Density": 7.8,
     "MeltingPoint": 1538,
-    "BoilingPoint": 2862
+    "BoilingPoint": 2862,
+    "Color": "Gray"
   },
   {
     "Id": "wood",
@@ -59,7 +63,8 @@
     "Hardness": 5,
     "MPInfusionLimit": 3,
     "CanRegen": false,
-    "Density": 0.9
+    "Density": 0.9,
+    "Color": "Wood"
   },
   {
     "Id": "grass",
@@ -68,7 +73,8 @@
     "Hardness": 1,
     "MPInfusionLimit": 0,
     "CanRegen": true,
-    "Density": 1.4
+    "Density": 1.4,
+    "Color": "GrassColor"
   },
   {
     "Id": "h2o",
@@ -79,7 +85,8 @@
     "CanRegen": true,
     "Density": 1.1,
     "MeltingPoint": 0,
-    "BoilingPoint": 100
+    "BoilingPoint": 100,
+    "Color": "RiverWater"
   },
   {
     "Id": "pure_magic",
@@ -88,7 +95,8 @@
     "Hardness": 1,
     "MPInfusionLimit": 100,
     "CanRegen": true,
-    "Density": 3.5
+    "Density": 3.5,
+    "Color": "Blue"
   },
   {
     "Id": "gold",
@@ -96,7 +104,8 @@
     "Hardness": 2,
     "MPInfusionLimit": 10,
     "Density": 19.3,
-    "MeltingPoint": 1064
+    "MeltingPoint": 1064,
+    "Color": "Gold"
   },
   {
     "Id": "null",
@@ -108,7 +117,8 @@
     "Hardness": 1,
     "MPInfusionLimit": 5,
     "Density": 0.917,
-    "MeltingPoint": 0
+    "MeltingPoint": 0,
+    "Color": "Ice"
   },
   {
     "Id": "dirt",
@@ -116,7 +126,8 @@
     "Hardness": 1,
     "MPInfusionLimit": 1,
     "Density": 1.22,
-    "MeltingPoint": 1196
+    "MeltingPoint": 1196,
+    "Color": "Dirt"
   },
   {
     "Id": "sand",
@@ -124,6 +135,7 @@
     "Hardeness": 1,
     "MPInfusionLimit": 2,
     "Density": 1.6,
-    "MeltingPoint": 1700
+    "MeltingPoint": 1700,
+    "Color": "Desert"
   }
 ]

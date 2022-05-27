@@ -70,7 +70,7 @@ namespace MagiRogue.GameSys
         public bool IsActive { get; set; }
         public uint MapId { get; private set; }
         public ulong Seed { get; set; }
-        public int[]? ZLevels { get; set; }
+        public int ZAmount { get; set; }
         public Dictionary<Direction, Map> MapZoneConnections { get; set; }
         public List<Room> Rooms { get; set; }
         //public Light[] Ilumination { get; set; }
@@ -108,10 +108,10 @@ namespace MagiRogue.GameSys
 
         #region HelperMethods
 
-        private static ISettableGridView<IGameObject> CreateTerrain(int width, int heigth)
+        private static ISettableGridView<IGameObject?> CreateTerrain(int width, int heigth)
         {
             var goRogueTerrain = new ArrayView<TileBase>(width, heigth);
-            return new LambdaSettableTranslationGridView<TileBase, IGameObject>(goRogueTerrain, t => t, g => g as TileBase);
+            return new LambdaSettableTranslationGridView<TileBase, IGameObject?>(goRogueTerrain, t => t, g => g as TileBase);
         }
 
         public void RemoveAllEntities()
@@ -287,7 +287,7 @@ namespace MagiRogue.GameSys
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        private void OnEntityMoved(object sender, GameObjectPropertyChanged<Point> args)
+        private void OnEntityMoved(object? sender, GameObjectPropertyChanged<Point>? args)
         {
             if (args.Item is Player player)
             {

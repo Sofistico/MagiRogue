@@ -4,6 +4,7 @@ using MagiRogue.Utils;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -92,9 +93,6 @@ namespace MagiRogue.Data.Serialization
         public string Id { get; set; }
 
         [DataMember]
-        public uint SerialId { get; set; }
-
-        [DataMember]
         public string Name { get; internal set; }
 
         [JsonIgnore]
@@ -156,6 +154,9 @@ namespace MagiRogue.Data.Serialization
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public DamageType DamageType { get; private set; }
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<IActivable> Actives { get; set; }
+
         // Will need to see if it works, but so far the logic seems to check
         public static implicit operator ItemTemplate(Item item)
         {
@@ -172,9 +173,9 @@ namespace MagiRogue.Data.Serialization
             {
                 CanInteract = item.CanInteract,
                 BaseDamage = item.BaseDmg,
-                DamageType = item.ItemDamageType
+                DamageType = item.ItemDamageType,
+                Actives = item.Actives,
             };
-            itemSerialized.SerialId = item.ID;
 
             return itemSerialized;
         }
@@ -192,7 +193,8 @@ namespace MagiRogue.Data.Serialization
             {
                 BaseDmg = itemTemplate.BaseDamage,
                 CanInteract = itemTemplate.CanInteract,
-                ItemDamageType = itemTemplate.DamageType
+                ItemDamageType = itemTemplate.DamageType,
+                Actives = itemTemplate.Actives
             };
 
             item.Material = GameSys.Physics.PhysicsManager.SetMaterial(itemTemplate.MaterialId);

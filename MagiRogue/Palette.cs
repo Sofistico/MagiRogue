@@ -80,7 +80,6 @@ namespace MagiRogue
             ColorExtensions2.ColorMappings.Add("Warm".ToLower(), Warm);
             ColorExtensions2.ColorMappings.Add("Warmer".ToLower(), Warmer);
             ColorExtensions2.ColorMappings.Add("Warmest".ToLower(), Warmest);
-
             // hydro map color
             ColorExtensions2.ColorMappings.Add("Dryest".ToLower(), Dryest);
             ColorExtensions2.ColorMappings.Add("Dryer".ToLower(), Dryer);

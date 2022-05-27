@@ -295,5 +295,24 @@ namespace MagiRogue.Data
 
             return regions.FirstOrDefault(i => i.ToIndex(mapWidth) == index);
         }
+
+        public static Map LoadMapById(int id)
+        {
+            string pathWildcard = @$"SaveDir\Chunks_*.mr";
+            string[] list = FileUtils.GetFiles(pathWildcard);
+
+            for (int i = 0; i < list.Length; i++)
+            {
+                RegionChunk[] chunks = LoadChunks(list[i]);
+                for (int y = 0; y < chunks.Length; y++)
+                {
+                    var m = chunks[i].LocalMaps.FirstOrDefault(i => i.MapId == id);
+                    if (m != null)
+                        return m;
+                }
+            }
+
+            return null;
+        }
     }
 }

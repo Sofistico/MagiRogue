@@ -1,0 +1,13 @@
+﻿[
+  {
+    "Id": "chair",
+    "MaterialId": "wood",
+    "Name": "Wooden Chair",
+    "Glyph": "┬",
+    "Weight": "45",
+    "Size": "45",
+    "Durability": "2",
+    "FurnitureType": "Chair",
+    "FurnitureEffects": [ "Confortable", "Sit" ]
+  }
+]

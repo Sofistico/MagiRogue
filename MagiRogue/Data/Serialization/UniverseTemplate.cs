@@ -130,6 +130,9 @@ namespace MagiRogue.Data.Serialization
         [DataMember]
         public uint LastIdAssigned { get; set; }
 
+        [DataMember]
+        public int ZLevel { get; set; }
+
         public UniverseTemplate(PlanetMap worldMap,
             Map currentMap,
             Player player,
@@ -176,6 +179,7 @@ namespace MagiRogue.Data.Serialization
                 CurrentChunk = uni.CurrentChunk,
                 SaveAndLoad = uni.SaveAndLoad,
                 LastIdAssigned = GameLoop.IdGen.CurrentInteger,
+                ZLevel = uni.ZLevel,
             };
             return universe;
         }
@@ -185,7 +189,10 @@ namespace MagiRogue.Data.Serialization
             Universe universe = new Universe(uni.WorldMap, uni.CurrentMap,
                 Entities.Player.ReturnPlayerFromActor(uni.Player),
                 uni.Time, uni.PossibleChangeMap,
-                SeasonEnumToString(uni.CurrentSeason), uni.SaveAndLoad, uni.CurrentChunk);
+                SeasonEnumToString(uni.CurrentSeason), uni.SaveAndLoad, uni.CurrentChunk)
+            {
+                ZLevel = uni.ZLevel,
+            };
             GameLoop.SetIdGen(uni.LastIdAssigned);
 
             return universe;

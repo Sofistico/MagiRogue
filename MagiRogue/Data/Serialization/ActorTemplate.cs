@@ -39,9 +39,6 @@ namespace MagiRogue.Data.Serialization
         public string ID { get; set; }
 
         [DataMember]
-        public uint SerialId { get; set; }
-
-        [DataMember]
         public string Name { get; set; }
 
         [DataMember]
@@ -332,7 +329,6 @@ namespace MagiRogue.Data.Serialization
             {
                 actorTemplate.Inventory.Add(actor.Inventory[a]);
             }
-            actorTemplate.SerialId = actor.ID;
 
             foreach (Limb limb in actor.Equipment.Keys)
             {

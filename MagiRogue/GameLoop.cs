@@ -62,5 +62,7 @@ namespace MagiRogue
         public static Map GetCurrentMap() => Universe.CurrentMap;
 
         public static void SetIdGen(uint lastId) => IdGen = new IDGenerator(lastId + 1);
+
+        public static void AddMessageLog(string message) => UIManager.MessageLog.Add(message);
     }
 }

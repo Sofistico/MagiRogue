@@ -504,11 +504,12 @@ namespace MagiRogue.Commands
                 GameLoop.GetCurrentMap().GetTileAt<WorldTile>(playerPoint);
             Map currentMap = GameLoop.GetCurrentMap();
             if (possibleStairs is not null
-                && possibleStairs.FurnitureType == FurnitureType.StairsDown)
+                && possibleStairs.MapIdConnection.HasValue)
             {
-                Map map = possibleStairs.MapConnection;
+                Map map = Universe.GetMapById(possibleStairs.MapIdConnection.Value);
                 // TODO: For now it's just a test, need to work out a better way to do it.
                 GameLoop.Universe.ChangePlayerMap(map, map.GetRandomWalkableTile(), currentMap);
+                GameLoop.Universe.ZLevel -= map.ZAmount;
 
                 return true;
             }
@@ -555,11 +556,13 @@ namespace MagiRogue.Commands
 
             if (possibleChangeMap)
             {
-                if (possibleStairs is not null && !GameLoop.Universe.MapIsWorld())
+                if (possibleStairs is not null && !GameLoop.Universe.MapIsWorld()
+                    && possibleStairs.MapIdConnection.HasValue)
                 {
-                    Map map = possibleStairs.MapConnection;
+                    Map map = Universe.GetMapById(possibleStairs.MapIdConnection.Value);
                     // TODO: For now it's just a test, need to work out a better way to do it.
                     GameLoop.Universe.ChangePlayerMap(map, map.GetRandomWalkableTile(), currentMap);
+                    GameLoop.Universe.ZLevel += map.ZAmount;
 
                     return true;
                 }

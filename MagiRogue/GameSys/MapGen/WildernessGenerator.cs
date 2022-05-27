@@ -62,6 +62,64 @@ namespace MagiRogue.GameSys.MapGen
 
             foreach (Room room in mapRooms)
             {
+                if (room.RoomRectangle.Area >= 8)
+                {
+                    int rng = GoRogue.Random
+                        .GlobalRandom.DefaultRNG.NextInt(Enum.GetValues(typeof(RoomTag)).Length);
+                    room.Tag = (RoomTag)rng;
+                    GiveRoomFurniture(room);
+                }
+            }
+        }
+
+        private static void GiveRoomFurniture(Room room)
+        {
+            switch (room.Tag)
+            {
+                case RoomTag.Generic:
+                    break;
+
+                case RoomTag.Inn:
+                    break;
+
+                case RoomTag.Temple:
+                    break;
+
+                case RoomTag.Blacksmith:
+                    break;
+
+                case RoomTag.Clothier:
+                    break;
+
+                case RoomTag.Alchemist:
+                    break;
+
+                case RoomTag.Hovel:
+                    break;
+
+                case RoomTag.Abandoned:
+                    break;
+
+                case RoomTag.House:
+                    break;
+
+                case RoomTag.Throne:
+                    break;
+
+                case RoomTag.MeetingPlace:
+                    break;
+
+                case RoomTag.Kitchen:
+                    break;
+
+                case RoomTag.GenericWorkshop:
+                    break;
+
+                case RoomTag.Dinner:
+                    break;
+
+                default:
+                    break;
             }
         }
 

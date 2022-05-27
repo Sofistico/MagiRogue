@@ -80,6 +80,7 @@ namespace MagiRogue.GameSys
         public RegionChunk[] AllChunks { get; set; }*/
 
         public SaveAndLoad SaveAndLoad { get; set; }
+        public int ZLevel { get; set; }
 
         /// <summary>
         /// Creates a new game world and stores it in a
@@ -487,6 +488,11 @@ namespace MagiRogue.GameSys
             var chunk = SaveAndLoad.GetChunkAtIndex(Point.ToIndex(playerPoint.X, playerPoint.Y, planetWidth), planetWidth);
 
             return chunk;
+        }
+
+        public static Map GetMapById(int id)
+        {
+            return SaveAndLoad.LoadMapById(id);
         }
 
         public bool MapIsWorld()
