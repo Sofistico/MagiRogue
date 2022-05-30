@@ -12,6 +12,8 @@ namespace MagiRogue.Test.Data
 {
     public class FurnitureTests
     {
+        private const string materialWoodId = "wood";
+
         public FurnitureTests()
         {
         }
@@ -19,10 +21,8 @@ namespace MagiRogue.Test.Data
         [Fact]
         public void FurnitureSerializationTest()
         {
-            Furniture fur = new Furniture(Color.AliceBlue, Color.Black, ' ', Point.None, FurnitureType.General)
-            {
-                Name = "Fur"
-            };
+            Furniture fur = new Furniture(Color.AliceBlue, Color.Black, ' ', Point.None,
+                FurnitureType.General, materialWoodId, "Test Thingy");
             string json = JsonConvert.SerializeObject(fur);
             Assert.Contains("Fur", json);
         }
@@ -30,10 +30,8 @@ namespace MagiRogue.Test.Data
         [Fact]
         public void FurnitureDeserializationTest()
         {
-            Furniture fur = new Furniture(Color.AliceBlue, Color.Black, ' ', Point.None, FurnitureType.General)
-            {
-                Name = "Fur"
-            };
+            Furniture fur = new Furniture(Color.AliceBlue, Color.Black, ' ', Point.None, FurnitureType.General,
+                materialWoodId, "flehsy wood bits");
             string json = JsonConvert.SerializeObject(fur);
             Furniture newfur = JsonConvert.DeserializeObject<Furniture>(json);
             Assert.Equal(fur.Name, newfur.Name);
@@ -50,12 +48,13 @@ namespace MagiRogue.Test.Data
                     'Size': '45',
                     'Durability': '2',
                     'FurnitureType': 'Chair',
-                    'FurnitureEffects': [ 'Confortable', 'Sit']
+                    'UseActions': [ 'Sit' ],
+                    'Traits': ['Confortable']
                     }";
 
             var fur = JsonConvert.DeserializeObject<Furniture>(json);
 
-            Assert.Contains(fur.Name, json);
+            Assert.Contains(fur.FurId, json);
         }
     }
 }

@@ -32,7 +32,13 @@ namespace MagiRogue.Entities
             {
                 condition = value;
                 if (condition < 0)
-                    Destroy();
+                {
+                    if (CurrentMap is not null)
+                    {
+                        RemoveFromMap();
+                    }
+                    condition = 0;
+                }
             }
         }
 
@@ -55,6 +61,7 @@ namespace MagiRogue.Entities
         /// Actives that the item can do.
         /// </summary>
         public List<IActivable> Actives { get; set; }
+        public List<Trait> Traits { get; set; }
 
         // By default, a new Item is sized 1x1, with a weight of 1, and at 100% condition
         public Item(Color foreground, Color background, string name, int glyph, Point coord, int size,
@@ -65,16 +72,17 @@ namespace MagiRogue.Entities
             Size = size;
             Weight = weight;
             Condition = condition;
-            Name = name;
             Material = GameSys.Physics.PhysicsManager.SetMaterial(materialId);
+            Name = Material.ReturnNameFromMaterial(name);
             Actives = new();
+            Traits = new();
         }
 
-        // Destroy this object by removing it from
+        // removes this object from
         // the MultiSpatialMap's list of entities
         // and lets the garbage collector take it
         // out of memory automatically.
-        public void Destroy()
+        public void RemoveFromMap()
         {
             GameLoop.GetCurrentMap().Remove(this);
         }
@@ -139,6 +147,7 @@ namespace MagiRogue.Entities
         Leg,
         Foot,
         Hand,
+        Finger,
         Tail,
         Wing,
         Neck

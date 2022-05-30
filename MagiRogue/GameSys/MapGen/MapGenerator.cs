@@ -42,7 +42,7 @@ namespace MagiRogue.GameSys.MapGen
         protected void InsertStairs(Room room)
         {
             Furniture stairsDown = new Furniture(Color.White, Color.Black, '>', room.RoomRectangle.Center,
-                FurnitureType.StairsDown);
+                FurnitureType.StairsDown, "wood", "Stair");
 
             // debug to unlock the room
             //room.ForceUnlock();

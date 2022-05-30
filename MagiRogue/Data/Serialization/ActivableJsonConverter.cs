@@ -16,15 +16,11 @@ namespace MagiRogue.Data.Serialization
         {
             var jObj = JObject.ReadFrom(reader);
             var activable = default(IActivable);
-            ActivableType activableType = (ActivableType)Enum.Parse(typeof(ActivableType), jObj.ToString());
+            UseAction action = (UseAction)Enum.Parse(typeof(UseAction), jObj.ToString());
 
-            switch (activableType)
+            switch (action)
             {
-                case ActivableType.Confortable:
-                    activable = new Confortable();
-                    break;
-
-                case ActivableType.Sit:
+                case UseAction.Sit:
                     activable = new Sit();
                     break;
 

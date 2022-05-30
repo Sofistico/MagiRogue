@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.Serialization;
 
 namespace MagiRogue.Data.Serialization
 {
     [DataContract]
+    [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
     public class MaterialTemplate
     {
         // Only putting in here for the sake of future me, only need to use JsonProperty if the name will be diferrent
@@ -57,9 +59,29 @@ namespace MagiRogue.Data.Serialization
             };
         }
 
+        public static string ReturnNameFromMaterial(string materialName, string objectName)
+        {
+            if (objectName.Contains(materialName))
+            {
+                return objectName;
+            }
+            string v = $"{materialName} {objectName}";
+            return v;
+        }
+
+        public string ReturnNameFromMaterial(string objectName)
+        {
+            return ReturnNameFromMaterial(Name, objectName);
+        }
+
         internal MagiColorSerialization ReturnMagiColor()
         {
             return new MagiColorSerialization(Color);
+        }
+
+        private string GetDebuggerDisplay()
+        {
+            return $"{Name} - {Id}";
         }
     }
 }

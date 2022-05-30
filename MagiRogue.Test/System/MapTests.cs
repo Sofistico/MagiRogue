@@ -34,7 +34,6 @@ namespace MagiRogue.Test.System
         public void ChangeEntityCurrentMap()
         {
             var actor = new Actor("Test", Color.Black, Color.Black, '@', new Point(1, 1));
-            Universe world = new(null);
             map.Add(actor);
             var newMap = new Map("MapTest", 1, 1);
             newMap.Tiles[0] = new TileFloor(new Point(0, 0));

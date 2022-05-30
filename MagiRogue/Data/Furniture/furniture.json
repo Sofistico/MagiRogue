@@ -2,12 +2,14 @@
   {
     "Id": "chair",
     "MaterialId": "wood",
-    "Name": "Wooden Chair",
+    "Name": "Chair",
+    "Description": "This is a chair. \nYou can sit on it. \nIt looks pretty confortable.",
     "Glyph": "┬",
     "Weight": "45",
     "Size": "45",
     "Durability": "2",
     "FurnitureType": "Chair",
-    "FurnitureEffects": [ "Confortable", "Sit" ]
+    "UseActions": [ "Sit" ],
+    "Traits": [ "Confortable" ]
   }
 ]

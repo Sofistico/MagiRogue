@@ -1,6 +1,7 @@
 ﻿using MagiRogue.Data.Serialization;
 using MagiRogue.GameSys;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using SadRogue.Primitives;
 
 namespace MagiRogue.Entities
@@ -11,22 +12,15 @@ namespace MagiRogue.Entities
         public void Activate();
     }
 
-    public enum ActivableType
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum UseAction
     {
         None,
-        Confortable,
         Sit,
     }
 
+    // TODO: Take a look later of what will do with these activable types.
     public struct Sit : IActivable
-    {
-        public void Activate()
-        {
-            throw new System.NotImplementedException();
-        }
-    }
-
-    public struct Confortable : IActivable
     {
         public void Activate()
         {

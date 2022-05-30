@@ -280,7 +280,7 @@ namespace MagiRogue.Commands
             {
                 actor.Inventory.Add(item);
                 GameLoop.UIManager.MessageLog.Add($"{actor.Name} picked up {item.Name}");
-                item.Destroy();
+                item.RemoveFromMap();
                 return true;
             }
             else

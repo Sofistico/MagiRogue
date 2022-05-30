@@ -1,5 +1,6 @@
 ﻿using MagiRogue.Data.Serialization;
 using MagiRogue.GameSys;
+using MagiRogue.GameSys.Physics;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using SadRogue.Primitives;
@@ -8,28 +9,34 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MagiRogue.Utils;
 
 namespace MagiRogue.Entities
 {
     [JsonConverter(typeof(FurnitureJsonConverter))]
     public class Furniture : Entities.Entity
     {
-        public List<IActivable> FurnitureEffects { get; set; }
         public FurnitureType FurnitureType { get; }
         public int? MapIdConnection { get; set; }
         public string FurId { get; set; }
         public int Durability { get; set; }
+        public List<Trait> Traits { get; internal set; }
+        public List<IActivable> UseActions { get; internal set; }
 
         public Furniture(Color foreground, Color background, int glyph, Point coord,
-            FurnitureType type, string furId = null)
+            FurnitureType type, string materialId, string name, string furId = null,
+            float weight = 0, int durability = 0)
             : base(foreground, background, glyph, coord, (int)MapLayer.FURNITURE)
         {
-            FurnitureEffects = new();
+            Traits = new();
+            UseActions = new();
             FurnitureType = type;
-            Name = type.ToString();
-            Durability += (int)(Material.Hardness * Material.Density);
+            Material = PhysicsManager.SetMaterial(materialId);
+            // makes sure that the furniture is named by it's material
+            Name = Material.ReturnNameFromMaterial(name);
+            Durability = (int)(Material.Hardness * Material.Density) + durability;
             FurId = furId;
-            Weight *= (float)Material.Density;
+            Weight = MathF.Round((float)Material.Density * weight, 2);
         }
     }
 

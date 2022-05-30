@@ -63,7 +63,8 @@ namespace MagiRogue.Data.Serialization
         public uint BackgroundPackedValue { get; set; }
         public Point Position { get; set; }
         public FurnitureType FurnitureType { get; set; }
-        public List<IActivable> FurnitureEffects { get; set; }
+        public List<IActivable> UseActions { get; set; }
+        public List<Trait> Traits { get; set; }
         public int? MapIdConnection { get; set; }
 
         public FurnitureTemplate()
@@ -137,27 +138,26 @@ namespace MagiRogue.Data.Serialization
             {
                 throw new Exception($"Tried to create a furniture with no material! \nName: {template.Name} Type: {template.FurnitureType}");
             }
-            // TODO: will transplate to entity as a static method
-            var material = PhysicsManager.SetMaterial(template.MaterialId);
+
             if (template.Foreground == null && template.Background == null)
             {
+                // TODO: will transplate to entity as a static method
+                var material = PhysicsManager.SetMaterial(template.MaterialId);
                 template.BackgroundBackingField = material.ReturnMagiColor();
                 template.ForegroundBackingField = material.ReturnMagiColor();
             }
 
             var objFur = new Furniture(template.ForegroundBackingField.Color,
                 template.BackgroundBackingField.Color, template.Glyph, template.Position,
-                template.FurnitureType, template.Id)
+                template.FurnitureType, template.MaterialId, template.Name, template.Id,
+                template.Weight, template.Durability)
             {
-                Material = material,
-                FurnitureEffects = template.FurnitureEffects,
-                Durability = template.Durability,
+                UseActions = template.UseActions,
+                Traits = template.Traits,
                 Magic = template.MagicStuff,
                 MapIdConnection = template.MapIdConnection,
                 Size = template.Size,
-                Weight = template.Weight,
                 Description = template.Description,
-                Name = template.Name,
             };
 
             return objFur;
@@ -178,7 +178,8 @@ namespace MagiRogue.Data.Serialization
                 fur.FurnitureType)
             {
                 Durability = fur.Durability,
-                FurnitureEffects = fur.FurnitureEffects,
+                UseActions = fur.UseActions,
+                Traits = fur.Traits,
                 MapIdConnection = fur.MapIdConnection,
                 Id = fur.FurId
             };

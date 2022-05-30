@@ -157,6 +157,9 @@ namespace MagiRogue.Data.Serialization
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<IActivable> Actives { get; set; }
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<Trait> Traits { get; set; }
+
         // Will need to see if it works, but so far the logic seems to check
         public static implicit operator ItemTemplate(Item item)
         {
@@ -175,6 +178,8 @@ namespace MagiRogue.Data.Serialization
                 BaseDamage = item.BaseDmg,
                 DamageType = item.ItemDamageType,
                 Actives = item.Actives,
+                Description = item.Description,
+                Traits = item.Traits
             };
 
             return itemSerialized;
@@ -189,15 +194,20 @@ namespace MagiRogue.Data.Serialization
                 Point.None,
                 itemTemplate.Size,
                 itemTemplate.Weight,
-                itemTemplate.Condition)
+                itemTemplate.Condition,
+                materialId: itemTemplate.MaterialId)
             {
                 BaseDmg = itemTemplate.BaseDamage,
                 CanInteract = itemTemplate.CanInteract,
                 ItemDamageType = itemTemplate.DamageType,
-                Actives = itemTemplate.Actives
+                Actives = itemTemplate.Actives,
+                Description = itemTemplate.Description,
+                Traits= itemTemplate.Traits
             };
-
-            item.Material = GameSys.Physics.PhysicsManager.SetMaterial(itemTemplate.MaterialId);
+            if(itemTemplate.Condition != 100)
+            {
+                item.Condition = itemTemplate.Condition;
+            }
             item.Description = itemTemplate.Description;
 
             return item;
