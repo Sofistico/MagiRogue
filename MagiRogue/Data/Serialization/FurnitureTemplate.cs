@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MagiRogue.Utils;
 
 namespace MagiRogue.Data.Serialization
 {
@@ -65,6 +66,7 @@ namespace MagiRogue.Data.Serialization
         public FurnitureType FurnitureType { get; set; }
         public List<IActivable> UseActions { get; set; }
         public List<Trait> Traits { get; set; }
+        public List<List<string>> Qualities { get; set; }
         public int? MapIdConnection { get; set; }
 
         public FurnitureTemplate()
@@ -158,6 +160,7 @@ namespace MagiRogue.Data.Serialization
                 MapIdConnection = template.MapIdConnection,
                 Size = template.Size,
                 Description = template.Description,
+                Qualities = Quality.ReturnQualityList(template.Qualities),
             };
 
             return objFur;
@@ -181,7 +184,8 @@ namespace MagiRogue.Data.Serialization
                 UseActions = fur.UseActions,
                 Traits = fur.Traits,
                 MapIdConnection = fur.MapIdConnection,
-                Id = fur.FurId
+                Id = fur.FurId,
+                Qualities = Quality.ReturnQualityListAsString(fur.Qualities),
             };
 
             return template;

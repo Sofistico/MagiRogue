@@ -17,10 +17,42 @@ namespace MagiRogue.Entities
     {
         None,
         Sit,
+        Study,
+        Craft,
+        Enchant,
+        Rest,
+        VisExtract,
+        Hammer,
+        Lockpick,
+        Pry
     }
 
     // TODO: Take a look later of what will do with these activable types.
     public struct Sit : IActivable
+    {
+        public void Activate()
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
+    public struct Study : IActivable
+    {
+        public void Activate()
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
+    public struct Craft : IActivable
+    {
+        public void Activate()
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
+    public struct Enchant : IActivable
     {
         public void Activate()
         {

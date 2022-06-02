@@ -56,5 +56,44 @@ namespace MagiRogue.Test.Data
 
             Assert.Contains(fur.FurId, json);
         }
+
+        [Fact]
+        public void FurnitureWithUseAndQualityDeserializeTest()
+        {
+            string json = @"{'Id': 'stone_forge',
+                            'MaterialId': 'stone',
+                            'Name': 'Forge',
+                            'Description': 'This is a forge, you can forge metal items in it and also harden clay. /r/nMakes quite a nice cake, if you like yours a little burnt.',
+                            'Glyph': '▼',
+                            'Weight': 100,
+                            'Size': 50,
+                            'FurnitureType': 'Craft',
+                            'UseActions': [ 'Craft' ],
+                            'Qualities': [ [ 'Forge', 3 ] ],
+                            'Traits': [ 'Inspirational' ] }";
+            var fur = JsonConvert.DeserializeObject<Furniture>(json);
+
+            Assert.Contains(fur.Qualities.First().QualityType.ToString(), json);
+        }
+
+        [Fact]
+        public void FurnitureWithUseAndQualitySerializeTest()
+        {
+            string json = @"{'Id': 'stone_forge',
+                            'MaterialId': 'stone',
+                            'Name': 'Forge',
+                            'Description': 'This is a forge, you can forge metal items in it and also harden clay. /r/nMakes quite a nice cake, if you like yours a little burnt.',
+                            'Glyph': '▼',
+                            'Weight': 100,
+                            'Size': 50,
+                            'FurnitureType': 'Craft',
+                            'UseActions': [ 'Craft' ],
+                            'Qualities': [ [ 'Forge', 3 ] ],
+                            'Traits': [ 'Inspirational' ] }";
+            var fur = JsonConvert.DeserializeObject<Furniture>(json);
+            var newJson = JsonConvert.SerializeObject(fur);
+
+            Assert.Contains(fur.Qualities.First().QualityType.ToString(), newJson);
+        }
     }
 }

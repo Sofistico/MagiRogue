@@ -160,6 +160,9 @@ namespace MagiRogue.Data.Serialization
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<Trait> Traits { get; set; }
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<List<string>> Qualities { get; set; }
+
         // Will need to see if it works, but so far the logic seems to check
         public static implicit operator ItemTemplate(Item item)
         {
@@ -179,7 +182,8 @@ namespace MagiRogue.Data.Serialization
                 DamageType = item.ItemDamageType,
                 Actives = item.Actives,
                 Description = item.Description,
-                Traits = item.Traits
+                Traits = item.Traits,
+                Qualities = Quality.ReturnQualityListAsString(item.Qualities),
             };
 
             return itemSerialized;
@@ -202,9 +206,10 @@ namespace MagiRogue.Data.Serialization
                 ItemDamageType = itemTemplate.DamageType,
                 Actives = itemTemplate.Actives,
                 Description = itemTemplate.Description,
-                Traits= itemTemplate.Traits
+                Traits = itemTemplate.Traits,
+                Qualities = Quality.ReturnQualityList(itemTemplate.Qualities),
             };
-            if(itemTemplate.Condition != 100)
+            if (itemTemplate.Condition != 100)
             {
                 item.Condition = itemTemplate.Condition;
             }

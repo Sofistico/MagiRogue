@@ -62,6 +62,7 @@ namespace MagiRogue.Entities
         /// </summary>
         public List<IActivable> Actives { get; set; }
         public List<Trait> Traits { get; set; }
+        public List<Quality> Qualities { get; internal set; }
 
         // By default, a new Item is sized 1x1, with a weight of 1, and at 100% condition
         public Item(Color foreground, Color background, string name, int glyph, Point coord, int size,
@@ -76,6 +77,7 @@ namespace MagiRogue.Entities
             Name = Material.ReturnNameFromMaterial(name);
             Actives = new();
             Traits = new();
+            Qualities = new();
         }
 
         // removes this object from

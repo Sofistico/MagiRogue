@@ -17,7 +17,7 @@ namespace MagiRogue
 
         public static IDGenerator IdGen { get; private set; } = new(1);
 
-        private static void Main()
+        private static void Main(string[] args)
         {
             // Pre options before creating the game, defines the title and if can resize
             SadConsole.Settings.WindowTitle = "MagiRogue";

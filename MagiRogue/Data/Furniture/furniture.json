@@ -1,15 +1,40 @@
 ﻿[
   {
-    "Id": "chair",
+    "Id": "wood_chair",
     "MaterialId": "wood",
     "Name": "Chair",
     "Description": "This is a chair. \nYou can sit on it. \nIt looks pretty confortable.",
     "Glyph": "┬",
-    "Weight": "45",
-    "Size": "45",
-    "Durability": "2",
+    "Weight": 45,
+    "Size": 45,
+    "Durability": 2,
     "FurnitureType": "Chair",
     "UseActions": [ "Sit" ],
     "Traits": [ "Confortable" ]
+  },
+  {
+    "Id": "wood_table",
+    "MaterialId": "wood",
+    "Name": "Table",
+    "Description": "This is a table, you can eat food on it or study, the choice is yours.",
+    "Glyph": "╤",
+    "Weight": 50,
+    "Size": 65,
+    "FurnitureType": "Table",
+    "UseActions": [ "Study", "Enchant" ],
+    "Traits": [ "Confortable", "Research" ]
+  },
+  {
+    "Id": "stone_forge",
+    "MaterialId": "stone",
+    "Name": "Forge",
+    "Description": "This is a forge, you can forge metal items in it and also harden clay. /r/nMakes quite a nice cake, if you like yours a little burnt.",
+    "Glyph": "▼",
+    "Weight": 100,
+    "Size": 50,
+    "FurnitureType": "Craft",
+    "UseActions": [ "Craft" ],
+    "Qualities": [ [ "Forge", 3 ] ],
+    "Traits": [ "Inspirational" ]
   }
 ]

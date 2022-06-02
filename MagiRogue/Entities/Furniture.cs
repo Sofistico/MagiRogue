@@ -22,6 +22,7 @@ namespace MagiRogue.Entities
         public int Durability { get; set; }
         public List<Trait> Traits { get; internal set; }
         public List<IActivable> UseActions { get; internal set; }
+        public List<Quality> Qualities { get; internal set; }
 
         public Furniture(Color foreground, Color background, int glyph, Point coord,
             FurnitureType type, string materialId, string name, string furId = null,
@@ -30,6 +31,7 @@ namespace MagiRogue.Entities
         {
             Traits = new();
             UseActions = new();
+            Qualities = new();
             FurnitureType = type;
             Material = PhysicsManager.SetMaterial(materialId);
             // makes sure that the furniture is named by it's material
@@ -69,6 +71,10 @@ namespace MagiRogue.Entities
         /// <summary>
         /// To store books and dust
         /// </summary>
-        BookCase
+        BookCase,
+        /// <summary>
+        /// Can be used for crafting
+        /// </summary>
+        Craft
     }
 }
