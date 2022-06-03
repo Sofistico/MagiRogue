@@ -13,26 +13,18 @@ namespace MagiRogue.Data
         public static TileFloor GenericGrass(Point pos)
         {
             int rng = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(1, 3 + 1);
-
-#pragma warning disable CS8603 // Possível retorno de referência nula.
             return rng switch
             {
-                1 => new TileFloor("Long grass", pos, "grass", '\'', Palette.GrassColor, Color.Black),
-                2 => new TileFloor("Short grass", pos, "grass", '.', Palette.GrassColor, Color.Black),
-                3 => new TileFloor("Grass", pos, "grass", ',', Palette.GrassColor, Color.Black),
+                1 => DataManager.QueryTileInData<TileFloor>("t_grass"),
+                2 => DataManager.QueryTileInData<TileFloor>("t_grass_long"),
+                3 => DataManager.QueryTileInData<TileFloor>("t_grass_short"),
                 _ => null,
             };
-#pragma warning restore CS8603 // Possível retorno de referência nula.
-        }
-
-        public static TileFloor GenericDirt(Point pos)
-        {
-            return new TileFloor("Dirt", pos, "dirt", '.', Palette.Dirt, Color.Transparent);
         }
 
         public static TileFloor GenericDirtRoad(Point pos)
         {
-            return new TileFloor("Dirt road", pos, "dirt", '.', Palette.DirtRoad, Color.Transparent);
+            return DataManager.QueryTileInData<TileFloor>("dirt_road", pos);
         }
 
         internal static TileWall GenericTree()
@@ -42,17 +34,17 @@ namespace MagiRogue.Data
 
         internal static TileWall GenericStoneWall()
         {
-            return new TileWall(Point.None);
+            return DataManager.QueryTileInData<TileWall>("stone_wall");
         }
 
         internal static TileFloor GenericStoneFloor()
         {
-            return new TileFloor(Point.None);
+            return DataManager.QueryTileInData<TileFloor>("stone_floor");
         }
 
         public static TileFloor GenericTreeTrunk(Point pos)
         {
-            TileFloor tile = (TileFloor)DataManager.QueryTileInData("tree_trunk");
+            TileFloor tile = DataManager.QueryTileInData<TileFloor>("tree_trunk");
             tile.Position = pos;
             return tile;
         }

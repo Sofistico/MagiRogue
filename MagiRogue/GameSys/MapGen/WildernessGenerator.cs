@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Data;
+using MagiRogue.Entities;
 using MagiRogue.GameSys.Planet;
 using MagiRogue.GameSys.Tiles;
 using SadRogue.Primitives;
@@ -67,16 +68,18 @@ namespace MagiRogue.GameSys.MapGen
                     int rng = GoRogue.Random
                         .GlobalRandom.DefaultRNG.NextInt(Enum.GetValues(typeof(RoomTag)).Length);
                     room.Tag = (RoomTag)rng;
-                    GiveRoomFurniture(room);
+                    GiveRoomFurniture(room, completeMap);
                 }
             }
         }
 
-        private static void GiveRoomFurniture(Room room)
+        private static void GiveRoomFurniture(Room room, Map map)
         {
             switch (room.Tag)
             {
                 case RoomTag.Generic:
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("wood_table"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("wood_chair"), room, map);
                     break;
 
                 case RoomTag.Inn:
@@ -121,6 +124,13 @@ namespace MagiRogue.GameSys.MapGen
                 default:
                     break;
             }
+        }
+
+        private static void AddFurnitureAtRandomPos(Furniture furniture, Room room, Map map)
+        {
+            furniture.Position = room.ReturnRandomPosRoom();
+
+            map.Add(furniture);
         }
 
         private static void PruneTrees(Map completeMap, WorldTile worldTile)

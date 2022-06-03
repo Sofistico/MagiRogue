@@ -56,6 +56,7 @@ namespace MagiRogue
         public static readonly Color Dirt = new Color(165, 103, 42);
         public static readonly Color DirtRoad = Color.Brown;
         public static readonly Color Wood = new Color(186, 140, 99);
+        public static readonly Color DarkWood = new Color(87, 65, 46);
 
         public static void AddToColorDictionary()
         {
@@ -109,6 +110,7 @@ namespace MagiRogue
             ColorExtensions2.ColorMappings.Add("Dirt".ToLower(), Dirt);
             ColorExtensions2.ColorMappings.Add("DirtRoad".ToLower(), DirtRoad);
             ColorExtensions2.ColorMappings.Add("Wood".ToLower(), Wood);
+            ColorExtensions2.ColorMappings.Add("DarkWood".ToLower(), DarkWood);
         }
     }
 }

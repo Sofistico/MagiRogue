@@ -497,7 +497,7 @@ namespace MagiRogue.GameSys.MapGen
                 if (IsPotentialDoor(location) && !alreadyHasDoor)
                 {
                     // Create a new door that is closed and unlocked.
-                    TileDoor newDoor = new(false, false, location, "wood");
+                    TileDoor newDoor = DataManager.QueryTileInData<TileDoor>("wood_door");
                     _map.SetTerrain(newDoor);
                     if (!acceptsMoreThanOneDoor)
                         alreadyHasDoor = true;

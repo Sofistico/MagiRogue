@@ -1,4 +1,5 @@
-﻿using MagiRogue.GameSys.Tiles;
+﻿using MagiRogue.Entities;
+using MagiRogue.GameSys.Tiles;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using SadRogue.Primitives;
@@ -98,6 +99,15 @@ namespace MagiRogue.GameSys
             borderCells.AddRange(GetTileLocationsAlongLine(xMax, yMin, xMax, yMax));
 
             return borderCells;
+        }
+
+        internal Point ReturnRandomPosRoom()
+        {
+            int x = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(RoomRectangle.X);
+            int y = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(RoomRectangle.Y);
+
+            Point pos = new SadRogue.Primitives.Point(x, y);
+            return pos;
         }
 
         private static IEnumerable<Point> GetTileLocationsAlongLine(

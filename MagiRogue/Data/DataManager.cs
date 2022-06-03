@@ -75,6 +75,12 @@ namespace MagiRogue.Data
         public static TileBase QueryTileInData(string tileId)
             => ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId)).Copy();
 
+        public static T QueryTileInData<T>(string tileId) where T : TileBase
+            => (T)ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId)).Copy();
+
+        public static T QueryTileInData<T>(string tileId, Point pos) where T : TileBase
+            => (T)ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId)).Copy(pos);
+
         public static Actor QueryActorInData(string actorId)
             => ListOfActors.FirstOrDefault(a => a.ID.Equals(actorId));
 

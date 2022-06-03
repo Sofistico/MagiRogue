@@ -5,7 +5,21 @@
     "IdMaterial": "stone",
     "GlyphChar": "#",
     "ForegroundStr": "LightGray",
-    "BackgroundStr": "Transparent",
     "TileType": "Wall"
+  },
+  {
+    "TileId": "wood_wall",
+    "Name": "Wood Wall",
+    "IdMaterial": "wood",
+    "GlyphChar": "#",
+    "ForegroundStr": "Wood",
+    "TileType": "Wall"
+  },
+  {
+    "TileId": "wood_door",
+    "Name": "Wood Door",
+    "IdMaterial": "wood",
+    "ForegroundStr": "Wood",
+    "TileType": "Door"
   }
 ]

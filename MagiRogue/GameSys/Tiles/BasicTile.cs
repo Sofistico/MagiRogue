@@ -143,7 +143,13 @@ namespace MagiRogue.GameSys.Tiles
         internal TileBase Copy()
         {
             TileBase tile = (TileBase)this;
+            return tile;
+        }
 
+        internal TileBase Copy(Point pos)
+        {
+            TileBase tile = (TileBase)this;
+            tile.Position = pos;
             return tile;
         }
 
@@ -243,6 +249,7 @@ namespace MagiRogue.GameSys.Tiles
 
             TileBase tile;
             dynamic charToUse = basicTile.GlyphChar is null ? basicTile.Glyph : basicTile.GlyphChar;
+            basicTile.BackgroundStr = basicTile.BackgroundStr is null ? "Transparent" : basicTile.BackgroundStr;
             Color foreground;
             Color background;
             if (!string.IsNullOrEmpty(basicTile.BackgroundStr) && !string.IsNullOrEmpty(basicTile.ForegroundStr))
@@ -329,9 +336,12 @@ namespace MagiRogue.GameSys.Tiles
                     break;
 
                 case TileType.Door:
-                    tile = new TileDoor((bool)basicTile.Locked,
-                        (bool)basicTile.IsOpen, basicTile.Position,
-                        basicTile.IdMaterial);
+                    tile = new TileDoor(basicTile.Name, basicTile.Locked ?? false,
+                        basicTile.IsOpen ?? false, basicTile.Position,
+                        basicTile.IdMaterial)
+                    {
+                        Foreground = foreground
+                    };
                     break;
 
                 default:
