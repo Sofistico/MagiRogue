@@ -39,7 +39,7 @@ namespace MagiRogue.Entities
             Name = Material.ReturnNameFromMaterial(name);
             Durability = (int)(Material.Hardness * Material.Density) + durability;
             FurId = furId;
-            Weight = MathF.Round((float)Material.Density * weight, 2);
+            Weight = MathMagi.Round((float)Material.Density * weight);
         }
     }
 

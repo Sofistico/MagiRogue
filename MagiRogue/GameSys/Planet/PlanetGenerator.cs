@@ -401,7 +401,7 @@ namespace MagiRogue.GameSys.Planet
                     t.Position = new SadRogue.Primitives.Point(x, y);
 
                     float heightValue = HeightData[x, y];
-                    t.MineralValue = MathMagi.ReturnPositive(MathF.Round
+                    t.MineralValue = MathMagi.ReturnPositive(MathMagi.Round
                         ((HeightData[x, y] + HeatData[x, y]) * 200));
 
                     // normalize value between 0 and 1
@@ -460,7 +460,7 @@ namespace MagiRogue.GameSys.Planet
 
                     //Moisture Map Analyze
                     float moistureValue = MathMagi.ReturnPositive(MoistureData[x, y]);
-                    t.MoistureValue = MathF.Round(moistureValue, 1);
+                    t.MoistureValue = MathMagi.Round(moistureValue);
 
                     //adjust moisture based on height
                     if (t.HeightType == HeightType.DeepWater)

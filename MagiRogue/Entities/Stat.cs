@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MagiRogue.Utils;
+using System;
 using System.Runtime.Serialization;
 
 namespace MagiRogue.Entities
@@ -342,7 +343,7 @@ namespace MagiRogue.Entities
             if (Health < MaxHealth)
             {
                 float newHp = (BaseHpRegen + Health);
-                Health = (float)Math.Round(newHp, 1);
+                Health = MathMagi.Round(newHp);
             }
         }
 
@@ -351,7 +352,7 @@ namespace MagiRogue.Entities
             if (PersonalMana < MaxPersonalMana)
             {
                 float newMana = (BaseManaRegen + PersonalMana);
-                PersonalMana = (float)Math.Round(newMana, 1);
+                PersonalMana = MathMagi.Round(newMana);
             }
         }
 

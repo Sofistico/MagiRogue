@@ -21,8 +21,9 @@ namespace MagiRogue.Commands
     /// </summary>
     public sealed class CommandManager
     {
-        protected CommandManager()
+        private CommandManager()
         {
+            // makes sure that it's never instantiated
         }
 
         /// <summary>
@@ -418,7 +419,7 @@ namespace MagiRogue.Commands
                 actor.Anatomy.BloodCount -= 100f;
                 int roll = Dice.Roll("1d3");
                 float bloodyManaGained = float.Parse($"0.{roll}", CultureInfo.InvariantCulture.NumberFormat);
-                actor.Stats.PersonalMana = (float)Math.Round(actor.Stats.PersonalMana + bloodyManaGained, 1);
+                actor.Stats.PersonalMana = MathMagi.Round(actor.Stats.PersonalMana + bloodyManaGained);
                 GameLoop.UIManager.MessageLog.Add($"You ritually wound yourself, channeling your blood into mana, gaining {bloodyManaGained} blood mana");
                 return true;
             }
@@ -436,8 +437,8 @@ namespace MagiRogue.Commands
                 // calculate here the amount of time that it will take in turns to rest to full
                 float healDif, manaDif;
 
-                healDif = (float)Math.Round((stats.MaxHealth - stats.Health) / stats.BaseHpRegen);
-                manaDif = (float)Math.Round((stats.MaxPersonalMana - stats.PersonalMana) / stats.BaseManaRegen);
+                healDif = MathMagi.Round((stats.MaxHealth - stats.Health) / stats.BaseHpRegen);
+                manaDif = MathMagi.Round((stats.MaxPersonalMana - stats.PersonalMana) / stats.BaseManaRegen);
 
                 float totalTurnsWait = healDif + manaDif;
 

@@ -505,6 +505,18 @@ namespace MagiRogue.GameSys
             return result;
         }
 
+        /// <summary>
+        /// Adds the room to the map.
+        /// </summary>
+        /// <param name="r"></param>
+        public void AddRoom(Room r) => Rooms.Add(r);
+
+        /// <summary>
+        /// Adds a list of rooms to the map.
+        /// </summary>
+        /// <param name="r"></param>
+        public void AddRooms(List<Room> r) => Rooms.AddRange(r);
+
         public void DestroyMap()
         {
             RemoveAllEntities();

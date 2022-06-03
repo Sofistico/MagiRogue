@@ -17,11 +17,22 @@ namespace MagiRogue.GameSys
         [JsonIgnore]
         public List<TileDoor> Doors { get; set; } = new List<TileDoor>();
         public List<Point> DoorsPoint { get; set; } = new List<Point>();
+        public Dictionary<string, object> Furniture { get; set; } = new();
+        public Dictionary<string, object> Terrain { get; set; } = new();
 
         public Room(Rectangle roomRectangle, RoomTag tag)
         {
             RoomRectangle = roomRectangle;
             Tag = tag;
+        }
+
+        public Room(Rectangle roomRectangle,
+            RoomTag tag,
+            Dictionary<string, object> furniture,
+            Dictionary<string, object> terrain) : this(roomRectangle, tag)
+        {
+            Furniture = furniture;
+            Terrain = terrain;
         }
 
         public Room(Rectangle roomRectangle)

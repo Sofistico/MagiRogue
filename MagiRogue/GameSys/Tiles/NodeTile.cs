@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Entities;
+using MagiRogue.Utils;
 using SadConsole;
 using SadRogue.Primitives;
 using System;
@@ -72,7 +73,7 @@ namespace MagiRogue.GameSys.Tiles
         {
             if (!IsDepleted && MpPoints <= MaxMp)
             {
-                MpPoints = (float)Math.Round(MpPoints + MpRecovering, 1);
+                MpPoints = MathMagi.Round(MpPoints + MpRecovering);
             }
             else
                 DestroyTile(BecomeNextTile());

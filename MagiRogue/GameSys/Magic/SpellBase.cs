@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using MagiRogue.Data;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Data.Serialization.EntitySerialization;
+using MagiRogue.Utils;
 
 namespace MagiRogue.GameSys.Magic
 {
@@ -26,7 +27,7 @@ namespace MagiRogue.GameSys.Magic
         /// </summary>
         public int RequiredShapingSkill
         {
-            get => (int)Math.Round(Power * 2 / Proficiency);
+            get => (int)MathMagi.Round(Power * 2 / Proficiency);
         }
 
         /// <summary>
@@ -261,7 +262,7 @@ namespace MagiRogue.GameSys.Magic
             return copy;
         }
 
-        private void TickProfiency() => Proficiency = Math.Round(Proficiency + 0.01, 2);
+        private void TickProfiency() => Proficiency = MathMagi.Round(Proficiency + 0.01);
 
         public override string ToString()
         {

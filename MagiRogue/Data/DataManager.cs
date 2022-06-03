@@ -1,5 +1,6 @@
 ﻿using MagiRogue.Data.Serialization;
 using MagiRogue.Data.Serialization.EntitySerialization;
+using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Magic;
 using MagiRogue.GameSys.Tiles;
@@ -15,29 +16,32 @@ namespace MagiRogue.Data
 {
     public static class DataManager
     {
-        public static readonly IReadOnlyList<ItemTemplate> ListOfItems =
+        private static readonly IReadOnlyList<ItemTemplate> ListOfItems =
             GetSourceTree<ItemTemplate>(@".\Data\Items\*.json");
 
-        public static readonly IReadOnlyList<MaterialTemplate> ListOfMaterials =
+        private static readonly IReadOnlyList<MaterialTemplate> ListOfMaterials =
            GetSourceTree<MaterialTemplate>(@".\Data\Materials\*.json");
 
-        public static readonly IReadOnlyList<SpellBase> ListOfSpells =
+        private static readonly IReadOnlyList<SpellBase> ListOfSpells =
             GetSourceTree<SpellBase>(@".\Data\Spells\*.json");
 
-        public static readonly IReadOnlyList<ActorTemplate> ListOfActors =
+        private static readonly IReadOnlyList<ActorTemplate> ListOfActors =
             GetSourceTree<ActorTemplate>(@".\Data\Actors\*.json");
 
-        public static readonly IReadOnlyList<Organ> ListOfOrgans =
+        private static readonly IReadOnlyList<Organ> ListOfOrgans =
             GetSourceTree<Organ>(@".\Data\Other\organs.json");
 
-        public static readonly IReadOnlyList<LimbTemplate> ListOfLimbs =
+        private static readonly IReadOnlyList<LimbTemplate> ListOfLimbs =
             GetSourceTree<LimbTemplate>(@".\Data\Other\body_parts.json");
 
-        public static readonly IReadOnlyList<BasicTile> ListOfTiles =
+        private static readonly IReadOnlyList<BasicTile> ListOfTiles =
             GetSourceTree<BasicTile>(@".\Data\Tiles\*.json");
 
-        public static readonly IReadOnlyList<Furniture> ListOfFurnitures =
+        private static readonly IReadOnlyList<Furniture> ListOfFurnitures =
             GetSourceTree<Furniture>(@".\Data\Furniture\*.json");
+
+        private static readonly IReadOnlyList<RoomTemplate> ListOfRooms =
+            GetSourceTree<RoomTemplate>(@".\Data\Rooms\*.json");
 
         public static IReadOnlyList<T> GetSourceTree<T>(string wildCard)
         {
@@ -90,5 +94,11 @@ namespace MagiRogue.Data
 
         public static Furniture QueryFurnitureInData(string furnitureId)
             => ListOfFurnitures.FirstOrDefault(i => i.FurId.Equals(furnitureId));
+
+        public static RoomTemplate QueryRoomInData(string roomId)
+            => ListOfRooms.FirstOrDefault(i => i.Id.Equals(roomId));
+
+        public static MaterialTemplate QueryMaterials(string id)
+            => ListOfMaterials.FirstOrDefault(a => a.Id.Equals(id));
     }
 }

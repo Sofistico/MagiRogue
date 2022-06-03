@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 using ShaiRandom.Distributions.Continuous;
+using MagiRogue.Utils;
 
 namespace MagiRogue.Entities
 {
@@ -55,7 +56,7 @@ namespace MagiRogue.Entities
 
         [JsonIgnore]
         public bool CanSee => Organs.Exists(o => o.OrganType is OrganType.Visual
-                                                              && (!o.Destroyed || o.Attached));
+                                                                                && (!o.Destroyed || o.Attached));
 
         /// <summary>
         /// The total lifespan of a character
@@ -89,7 +90,7 @@ namespace MagiRogue.Entities
         protected void CalculateBlood(float weight)
         {
             if (HasBlood)
-                BloodCount = (float)Math.Round(weight * 75);
+                BloodCount = MathMagi.Round(weight * 75);
         }
 
         public void SetRace(Race race) => Race = race;
@@ -104,7 +105,7 @@ namespace MagiRogue.Entities
 
         public void ContinousBleed(float bleedAmount, InjurySeverity severity)
         {
-            BloodCount = (float)Math.Round(BloodCount - bleedAmount, 4);
+            BloodCount = MathMagi.Round(BloodCount - bleedAmount);
 
             /* switch (severity)
              {

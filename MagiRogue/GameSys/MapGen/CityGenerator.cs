@@ -37,7 +37,7 @@ namespace MagiRogue.GameSys.MapGen
                 room.LockedDoorsRng();
                 _rooms.Add(room);
             }
-            _map.Rooms = _rooms;
+            _map.AddRooms(_rooms);
         }
     }
 }
