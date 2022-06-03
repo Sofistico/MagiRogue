@@ -11,6 +11,7 @@ using MagiRogue.GameSys.Planet;
 using MagiRogue.GameSys.Civ;
 using MagiRogue.Data.Serialization;
 using System.Diagnostics;
+using MagiRogue.Entities;
 
 namespace MagiRogue.GameSys.Tiles
 {
@@ -67,6 +68,9 @@ namespace MagiRogue.GameSys.Tiles
         public char GlyphLastSeen { get; set; }
         public int InfusedMp { get; set; }
         public int BitMask { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<Trait> Traits { get; set; }
 
         #endregion TileBase Properties
 
@@ -235,6 +239,7 @@ namespace MagiRogue.GameSys.Tiles
             basic.IsSea = isSea;
             basic.TileHealth = tile.TileHealth;
             basic.BitMask = tile.BitMask;
+            basic.Traits = tile.Traits;
 
             return basic;
         }
@@ -352,6 +357,8 @@ namespace MagiRogue.GameSys.Tiles
             tile.InfusedMp = basicTile.InfusedMp;
             if (basicTile.TileHealth > 0)
                 tile.TileHealth = basicTile.TileHealth;
+
+            tile.Traits = basicTile.Traits;
 
             return tile;
         }

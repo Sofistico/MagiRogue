@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 
-namespace MagiRogue.Data.Serialization
+namespace MagiRogue.Data.Serialization.MapSerialization
 {
     public class PlanetMapJsonConverter : JsonConverter<PlanetMap>
     {

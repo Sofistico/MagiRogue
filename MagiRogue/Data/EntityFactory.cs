@@ -3,6 +3,7 @@ using SadRogue.Primitives;
 using MagiRogue.Data.Serialization;
 using System.Collections.Generic;
 using System;
+using MagiRogue.Data.Serialization.EntitySerialization;
 
 namespace MagiRogue.Data
 {

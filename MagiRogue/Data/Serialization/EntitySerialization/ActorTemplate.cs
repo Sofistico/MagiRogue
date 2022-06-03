@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace MagiRogue.Data.Serialization
+namespace MagiRogue.Data.Serialization.EntitySerialization
 {
     public class ActorJsonConverter : JsonConverter<Actor>
     {

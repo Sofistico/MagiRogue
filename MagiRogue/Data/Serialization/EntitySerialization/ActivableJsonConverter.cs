@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagiRogue.Data.Serialization
+namespace MagiRogue.Data.Serialization.EntitySerialization
 {
     public class ActivableJsonConverter : JsonConverter<IActivable>
     {
@@ -15,18 +15,23 @@ namespace MagiRogue.Data.Serialization
             Type objectType, IActivable? existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
             var jObj = JObject.ReadFrom(reader);
-            var activable = default(IActivable);
+            IActivable activable;
             UseAction action = (UseAction)Enum.Parse(typeof(UseAction), jObj.ToString());
 
-            switch (action)
+            activable = action switch
             {
-                case UseAction.Sit:
-                    activable = new Sit();
-                    break;
-
-                default:
-                    break;
-            }
+                UseAction.None => throw new NotSupportedException($"UseAction None in not supported!"),
+                UseAction.Sit => new Sit(),
+                UseAction.Study => new Study(),
+                UseAction.Craft => new Craft(),
+                UseAction.Enchant => new Enchant(),
+                UseAction.Rest => new Rest(),
+                UseAction.VisExtract => new VisExtract(),
+                UseAction.Hammer => new Hammer(),
+                UseAction.Lockpick => new Lockpick(),
+                UseAction.Pry => new Pry(),
+                _ => throw new NotSupportedException($"Tried to add an use action that doensn't exists! Action used: {action} "),
+            };
             return activable;
         }
 

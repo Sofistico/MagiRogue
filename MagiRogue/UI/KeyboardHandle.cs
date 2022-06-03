@@ -1,5 +1,6 @@
 ﻿using MagiRogue.Commands;
 using MagiRogue.Data.Serialization;
+using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys;
 using MagiRogue.GameSys.Tiles;

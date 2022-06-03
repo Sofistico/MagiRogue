@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MagiRogue.Utils;
 
-namespace MagiRogue.Data.Serialization
+namespace MagiRogue.Data.Serialization.EntitySerialization
 {
     public class FurnitureJsonConverter : JsonConverter<Furniture>
     {

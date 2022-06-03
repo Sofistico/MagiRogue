@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace MagiRogue.Data.Serialization
+namespace MagiRogue.Data.Serialization.MapSerialization
 {
     public class RoadJsonConverter : JsonConverter<Road>
     {

@@ -26,7 +26,7 @@ namespace MagiRogue.Entities
 
     [DataContract]
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    [JsonConverter(typeof(Data.Serialization.LimbJsonConverter))]
+    [JsonConverter(typeof(Data.Serialization.EntitySerialization.LimbJsonConverter))]
     public class Limb
     {
         private int limbHp;

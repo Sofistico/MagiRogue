@@ -1,5 +1,7 @@
 ﻿using MagiRogue.Data;
 using MagiRogue.Data.Serialization;
+using MagiRogue.Data.Serialization.EntitySerialization;
+using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys;
 using MagiRogue.GameSys.Planet;

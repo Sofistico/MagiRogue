@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using MagiRogue.GameSys.Tiles;
+using MagiRogue.Data.Serialization.EntitySerialization;
 
 namespace MagiRogue.GameSys.Civ
 {

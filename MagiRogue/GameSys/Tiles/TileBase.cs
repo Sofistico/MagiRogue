@@ -2,10 +2,12 @@
 using GoRogue.Components;
 using GoRogue.GameFramework;
 using MagiRogue.Data.Serialization;
+using MagiRogue.Entities;
 using Newtonsoft.Json;
 using SadConsole;
 using SadRogue.Primitives;
 using System;
+using System.Collections.Generic;
 
 namespace MagiRogue.GameSys.Tiles
 {
@@ -79,6 +81,8 @@ namespace MagiRogue.GameSys.Tiles
         // TODO: For some future fun stuff!
         // like continious wall and determining what there is next to it
         public int BitMask { get; set; }
+
+        public List<Trait> Traits { get; set; }
 
         #region backingField Data
 

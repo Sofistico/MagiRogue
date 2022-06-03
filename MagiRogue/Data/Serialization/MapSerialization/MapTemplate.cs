@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MagiRogue.Data.Serialization
+namespace MagiRogue.Data.Serialization.MapSerialization
 {
     #region Serialization
 

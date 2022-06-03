@@ -3,6 +3,7 @@ using GoRogue.GameFramework;
 using GoRogue.Pathing;
 using GoRogue.SpatialMaps;
 using MagiRogue.Data.Serialization;
+using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.GameSys.Time;

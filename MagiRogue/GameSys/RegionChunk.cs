@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using MagiRogue.Data.Serialization;
 using System;
+using MagiRogue.Data.Serialization.MapSerialization;
 
 namespace MagiRogue.GameSys
 {

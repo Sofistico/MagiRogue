@@ -22,7 +22,7 @@
     "Size": 65,
     "FurnitureType": "Table",
     "UseActions": [ "Study", "Enchant" ],
-    "Traits": [ "Confortable", "Research" ]
+    "Traits": [ "Confortable", "Research", "HoldItems" ]
   },
   {
     "Id": "stone_forge",

@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using System;
 
-namespace MagiRogue.Data.Serialization
+namespace MagiRogue.Data.Serialization.MapSerialization
 {
     public class RegionChunkJsonConverter : JsonConverter<RegionChunk>
     {

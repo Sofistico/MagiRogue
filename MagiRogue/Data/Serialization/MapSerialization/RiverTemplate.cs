@@ -8,7 +8,7 @@ using MagiRogue.GameSys.Tiles;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace MagiRogue.Data.Serialization
+namespace MagiRogue.Data.Serialization.MapSerialization
 {
     public class RiverJsonConverter : JsonConverter<River>
     {

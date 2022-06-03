@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using MagiRogue.Entities;
 using MagiRogue.Data.Serialization;
 using Newtonsoft.Json.Linq;
+using MagiRogue.Data.Serialization.EntitySerialization;
 
 namespace MagiRogue.Test.Data
 {

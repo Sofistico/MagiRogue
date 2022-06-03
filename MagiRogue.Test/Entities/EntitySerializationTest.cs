@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using Xunit;
 using MagiRogue.Data.Serialization;
+using MagiRogue.Data.Serialization.EntitySerialization;
 
 namespace MagiRogue.Test.Entities
 {

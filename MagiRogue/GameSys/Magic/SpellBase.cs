@@ -7,6 +7,7 @@ using System.Text;
 using Newtonsoft.Json;
 using MagiRogue.Data;
 using MagiRogue.Data.Serialization;
+using MagiRogue.Data.Serialization.EntitySerialization;
 
 namespace MagiRogue.GameSys.Magic
 {

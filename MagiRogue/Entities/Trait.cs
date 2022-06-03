@@ -15,6 +15,7 @@ namespace MagiRogue.Entities
         RitualFoci,
         SpellFoci,
         Inspirational,
+        HoldItems,
     }
 
     [JsonConverter(typeof(StringEnumConverter))]

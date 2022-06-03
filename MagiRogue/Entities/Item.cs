@@ -7,6 +7,7 @@ using System;
 using MagiRogue.Data.Serialization;
 using System.Linq;
 using System.Collections.Generic;
+using MagiRogue.Data.Serialization.EntitySerialization;
 
 namespace MagiRogue.Entities
 {
