@@ -22,9 +22,10 @@ namespace MagiRogue.Test.Data
         [Fact]
         public void RoomDeserializeAndGetToMap()
         {
-            Map map = new Map("Test_map");
-            Room r = room.ConfigureRoom();
+            Map map = new GameSys.MapGen.MiscMapGen().GenerateStoneFloorMap();
+            Room r = room.ConfigureRoom(map.GetRandomWalkableTile());
             map.AddRoom(r);
+            map.SpawnRoomThingsOnMap(r);
 
             Assert.Contains(r, map.Rooms);
         }

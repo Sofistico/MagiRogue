@@ -15,9 +15,10 @@ namespace MagiRogue.Data.Serialization.MapSerialization
         public string Id { get; set; }
         public PrefabRoom Obj { get; set; }
 
-        public Room ConfigureRoom()
+        public Room ConfigureRoom(Point positionToBegin)
         {
-            Rectangle rec = Obj.CreateRectangle();
+            Rectangle rec = Obj.CreateRectangle()
+                .WithPosition(positionToBegin);
             Room r = new Room(rec, Obj.Tag, Obj.Furniture, Obj.Terrain);
 
             return r;
@@ -34,17 +35,15 @@ namespace MagiRogue.Data.Serialization.MapSerialization
 
         public Rectangle CreateRectangle()
         {
-            int x = 0, y = 0;
-            foreach (string xIdx in Rows)
+            int width = 0;
+            int height = Rows.Length;
+            for (int i = 0; i < Rows.Length; i++)
             {
-                foreach (char c in xIdx)
-                {
-                    y++;
-                }
-                x++;
+                string currentRow = Rows[i];
+                width = currentRow.Length > width ? currentRow.Length : width;
             }
-
-            return Rectangle.WithExtents(new SadRogue.Primitives.Point(0, 0), new Point(x, y));
+            Rectangle rec = new Rectangle(0, 0, width, height);
+            return rec;
         }
     }
 }

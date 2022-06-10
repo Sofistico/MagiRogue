@@ -509,13 +509,61 @@ namespace MagiRogue.GameSys
         /// Adds the room to the map.
         /// </summary>
         /// <param name="r"></param>
-        public void AddRoom(Room r) => Rooms.Add(r);
+        public void AddRoom(Room r)
+        {
+            if (Rooms is null)
+                Rooms = new List<Room>();
+            if (!CheckIfRoomFitsInsideMap(r))
+            {
+                try
+                {
+                    FindOtherPlaceForRoom(r);
+                }
+                catch (ApplicationException ex)
+                {
+                    throw ex;
+                }
+            }
+            Rooms.Add(r);
+        }
+
+        public bool CheckIfRoomFitsInsideMap(Room r)
+        {
+            return r.RoomRectangle.Position.X <= Width || r.RoomRectangle.Position.Y <= Height;
+        }
+
+        private void FindOtherPlaceForRoom(Room r)
+        {
+            int newRoomX = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(1, Width - r.RoomRectangle.Width);
+            int newRoomY = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(1, Height - r.RoomRectangle.Height);
+
+            r.ChangeRoomPos(newRoomX, newRoomY);
+            if (!CheckIfRoomFitsInsideMap(r))
+            {
+                throw new ApplicationException("Tried to place a room inside a map that cound't fit it!");
+            }
+        }
 
         /// <summary>
         /// Adds a list of rooms to the map.
         /// </summary>
         /// <param name="r"></param>
-        public void AddRooms(List<Room> r) => Rooms.AddRange(r);
+        public void AddRooms(List<Room> r)
+        {
+            if (Rooms is null)
+                Rooms = new List<Room>();
+            Rooms.AddRange(r);
+        }
+
+        public void SpawnRoomThingsOnMap(Room r)
+        {
+            int fCount = r.Furniture.Count;
+
+            foreach (object terrain in r.Terrain.Values)
+            {
+                var str = terrain.ToString();
+            }
+        }
 
         public void DestroyMap()
         {

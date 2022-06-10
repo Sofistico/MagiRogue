@@ -253,7 +253,8 @@ namespace MagiRogue.GameSys.Tiles
             }
 
             TileBase tile;
-            dynamic charToUse = basicTile.GlyphChar is null ? basicTile.Glyph : basicTile.GlyphChar;
+            // Keep a lookout if this part of the code will stop working
+            int charToUse = basicTile.GlyphChar is null ? basicTile.Glyph : basicTile.GlyphChar.Value;
             basicTile.BackgroundStr = basicTile.BackgroundStr is null ? "Transparent" : basicTile.BackgroundStr;
             Color foreground;
             Color background;

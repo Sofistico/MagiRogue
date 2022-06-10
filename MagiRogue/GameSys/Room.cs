@@ -17,7 +17,11 @@ namespace MagiRogue.GameSys
         [JsonIgnore]
         public List<TileDoor> Doors { get; set; } = new List<TileDoor>();
         public List<Point> DoorsPoint { get; set; } = new List<Point>();
+
+        [JsonIgnore]
         public Dictionary<string, object> Furniture { get; set; } = new();
+
+        [JsonIgnore]
         public Dictionary<string, object> Terrain { get; set; } = new();
 
         public Room(Rectangle roomRectangle, RoomTag tag)
@@ -149,6 +153,16 @@ namespace MagiRogue.GameSys
                     yOrigin += sy;
                 }
             }
+        }
+
+        public void ChangeRoomPos(Point point)
+        {
+            RoomRectangle = RoomRectangle.WithPosition(point);
+        }
+
+        public void ChangeRoomPos(int newRoomX, int newRoomY)
+        {
+            ChangeRoomPos(new SadRogue.Primitives.Point(newRoomX, newRoomY));
         }
     }
 
