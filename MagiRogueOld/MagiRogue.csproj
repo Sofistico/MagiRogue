@@ -57,7 +57,7 @@
     <PackageReference Include="GoRogue" Version="2.6.4" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
     <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.0.1641" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="OptimizedPriorityQueue" Version="5.0.0" />
     <PackageReference Include="SadConsole" Version="8.99.3" />
     <PackageReference Include="SharpDX" Version="4.2.0" />
