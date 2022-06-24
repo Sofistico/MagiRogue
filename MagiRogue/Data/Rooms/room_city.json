@@ -25,7 +25,7 @@
         "2": "wood_table",
         "3": "wood_chair",
         "?": [
-          [ "wood_table", 1 ],
+          [ "wood_table", 3 ],
           "standing_light",
           [ "keg", 2 ]
         ]

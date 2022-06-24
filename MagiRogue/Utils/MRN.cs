@@ -1,6 +1,7 @@
 ﻿using GoRogue.DiceNotation;
 using ShaiRandom.Distributions.Continuous;
 using ShaiRandom.Generators;
+using System;
 
 namespace MagiRogue.Utils
 {
@@ -43,6 +44,11 @@ namespace MagiRogue.Utils
             } while (roll1 == 6 || roll2 == 6);
 
             return total;
+        }
+
+        public static bool OneIn(int chance)
+        {
+            return chance <= 1 || GameLoop.GlobalRand.NextInt(0, chance) == 0;
         }
     }
 }

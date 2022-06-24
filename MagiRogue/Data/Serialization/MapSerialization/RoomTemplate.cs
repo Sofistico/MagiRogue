@@ -19,21 +19,41 @@ namespace MagiRogue.Data.Serialization.MapSerialization
         {
             Rectangle rec = Obj.CreateRectangle()
                 .WithPosition(positionToBegin);
-            Room r = new Room(rec, Obj.Tag, Obj.Furniture, Obj.Terrain);
+            Room r = new Room(rec, Obj.Tag, Obj.Furniture, Obj.Terrain)
+            {
+                Template = this
+            };
+
+            CheckForEmptyTile();
 
             return r;
+        }
+
+        private void CheckForEmptyTile()
+        {
+            if (!string.IsNullOrEmpty(Obj.EmptyFill))
+            {
+            }
+            return;
         }
     }
 
     public class PrefabRoom
     {
-        public string EmptyFill { get; set; }
+        public string? EmptyFill { get; set; }
         public RoomTag Tag { get; set; }
         public string[] Rows { get; set; }
         public Dictionary<string, object> Terrain { get; set; }
         public Dictionary<string, object> Furniture { get; set; }
 
         public Rectangle CreateRectangle()
+        {
+            (int width, int height) = GetWidthAndHeight();
+            Rectangle rec = new Rectangle(0, 0, width, height);
+            return rec;
+        }
+
+        public (int, int) GetWidthAndHeight()
         {
             int width = 0;
             int height = Rows.Length;
@@ -42,8 +62,8 @@ namespace MagiRogue.Data.Serialization.MapSerialization
                 string currentRow = Rows[i];
                 width = currentRow.Length > width ? currentRow.Length : width;
             }
-            Rectangle rec = new Rectangle(0, 0, width, height);
-            return rec;
+
+            return (width, height);
         }
     }
 }

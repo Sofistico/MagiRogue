@@ -16,6 +16,7 @@ namespace MagiRogue
         public static Universe Universe { get; set; }
 
         public static IDGenerator IdGen { get; private set; } = new(1);
+        public static ShaiRandom.Generators.IEnhancedRandom GlobalRand { get; } = GoRogue.Random.GlobalRandom.DefaultRNG;
 
         private static void Main(string[] args)
         {

@@ -1,4 +1,5 @@
-﻿using MagiRogue.Entities;
+﻿using MagiRogue.Data.Serialization.MapSerialization;
+using MagiRogue.Entities;
 using MagiRogue.GameSys.Tiles;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -23,6 +24,9 @@ namespace MagiRogue.GameSys
 
         [JsonIgnore]
         public Dictionary<string, object> Terrain { get; set; } = new();
+
+        [JsonIgnore]
+        public RoomTemplate Template { get; set; }
 
         public Room(Rectangle roomRectangle, RoomTag tag)
         {
@@ -93,7 +97,7 @@ namespace MagiRogue.GameSys
             }
         }
 
-        public Point[] PositionInsideRoom()
+        public Point[] PositionsRoom()
         {
             return RoomRectangle.Positions().ToArray();
         }

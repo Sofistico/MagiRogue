@@ -1,13 +1,17 @@
 ﻿using GoRogue;
+using GoRogue.DiceNotation;
 using GoRogue.GameFramework;
 using GoRogue.Pathing;
 using GoRogue.SpatialMaps;
+using MagiRogue.Data;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.GameSys.Time;
+using MagiRogue.Utils;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 using System;
@@ -15,6 +19,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace MagiRogue.GameSys
@@ -37,7 +42,7 @@ namespace MagiRogue.GameSys
         /// it must use <see cref="Map.SetTerrain(IGameObject)"/>.
         /// </summary>
         public TileBase[] Tiles
-        { get { return _tiles; } set { _tiles = value; } }
+        { get { return _tiles; } private set { _tiles = value; } }
 
         /// <summary>
         /// Fires whenever FOV is recalculated.
@@ -557,12 +562,90 @@ namespace MagiRogue.GameSys
 
         public void SpawnRoomThingsOnMap(Room r)
         {
-            int fCount = r.Furniture.Count;
+            Point[] posRoom = r.PositionsRoom();
 
-            foreach (object terrain in r.Terrain.Values)
+            for (int x = 0; x < r.Template.Obj.Rows.Length; x++)
             {
-                var str = terrain.ToString();
+                string currentRow = r.Template.Obj.Rows[x];
+                for (int y = 0; y < currentRow.Length; y++)
+                {
+                    char c = currentRow[y];
+                    Point pos = posRoom[Point.ToIndex(x, y, r.Template.Obj.Rows.Length)];
+                    r.Terrain.TryGetValue(c.ToString(), out var ter);
+                    r.Furniture.TryGetValue(c.ToString(), out var fur);
+                    TryToPutTerrain(pos, ter);
+                    TryToPutFurniture(pos, fur);
+                }
             }
+        }
+
+        private void TryToPutFurniture(Point pos, object? fur)
+        {
+            if (fur is not null)
+            {
+                string str;
+                if (fur is JArray array)
+                {
+                    str = ParseRandomChance(array);
+                }
+                else
+                {
+                    str = fur.ToString();
+                }
+                Furniture furniture = DataManager.QueryFurnitureInData(str);
+                furniture.Position = pos;
+                Add(furniture);
+            }
+        }
+
+        private void TryToPutTerrain(Point pos, object? ter)
+        {
+            if (ter is not null)
+            {
+                string str;
+                if (ter is JArray array)
+                {
+                    str = ParseRandomChance(array);
+                }
+                else
+                {
+                    str = ter.ToString();
+                }
+                TileBase tile = DataManager.QueryTileInData(str);
+                tile.Position = pos;
+                SetTerrain(tile);
+            }
+        }
+
+        private static string ParseRandomChance(JArray array)
+        {
+            List<string> strs = new();
+            for (int i = 0; i < array.Count; i++)
+            {
+                var child = array[i];
+                var s = child.ToString();
+                strs.Add(s);
+            }
+            int nmbrOfObjects = strs.Count;
+            string obj = "";
+            while (string.IsNullOrEmpty(obj))
+            {
+                string s = strs[GameLoop.GlobalRand.NextInt(0, nmbrOfObjects)];
+                // one in ten
+                int mod = 10;
+                if (s.StartsWith('['))
+                {
+                    var test = s.Split("\r\n");
+                    mod -= int.Parse(test[2]);
+                }
+                bool gotIt = Mrn.OneIn(mod);
+                if (gotIt)
+                {
+                    obj = s.StartsWith('[') ? s.Split("\r\n")[1].Replace(',', ' ').Trim() : s;
+                }
+            }
+
+            return obj;
         }
 
         public void DestroyMap()
