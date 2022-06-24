@@ -547,6 +547,10 @@ namespace MagiRogue.GameSys
             {
                 throw new ApplicationException("Tried to place a room inside a map that cound't fit it!");
             }
+            if (r.PositionsRoom().Any(p => CheckForIndexOutOfBounds(p)))
+            {
+                throw new ApplicationException("Tried to place a room inside a map that cound't fit it!");
+            }
         }
 
         /// <summary>
@@ -571,6 +575,11 @@ namespace MagiRogue.GameSys
                 {
                     char c = currentRow[y];
                     Point pos = posRoom[Point.ToIndex(x, y, r.Template.Obj.Rows.Length)];
+                    if (CheckForIndexOutOfBounds(pos))
+                    {
+                        // skip over if not in the map
+                        continue;
+                    }
                     r.Terrain.TryGetValue(c.ToString(), out var ter);
                     r.Furniture.TryGetValue(c.ToString(), out var fur);
                     TryToPutTerrain(pos, ter);
@@ -657,7 +666,7 @@ namespace MagiRogue.GameSys
                 bool gotIt = Mrn.OneIn(mod);
                 if (gotIt)
                 {
-                    obj = s.StartsWith('[') ? s.Split("\r\n")[1].Replace(',', ' ').Trim() : s;
+                    obj = s.StartsWith('[') ? s.Split("\r\n")[1].Replace(',', ' ').Replace('\"', ' ').Trim() : s;
                 }
             }
 

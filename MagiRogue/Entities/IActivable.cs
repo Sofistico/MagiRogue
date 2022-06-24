@@ -31,7 +31,8 @@ namespace MagiRogue.Entities
         VisExtract,
         Hammer,
         Lockpick,
-        Pry
+        Pry,
+        Unlight
     }
 
     #endregion Enum

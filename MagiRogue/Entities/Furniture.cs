@@ -76,6 +76,10 @@ namespace MagiRogue.Entities
         /// <summary>
         /// Can be used for crafting
         /// </summary>
-        Craft
+        Craft,
+        /// <summary>
+        /// Furniture that emits light
+        /// </summary>
+        Light
     }
 }
