@@ -592,9 +592,17 @@ namespace MagiRogue.GameSys
                 {
                     str = fur.ToString();
                 }
-                Furniture furniture = DataManager.QueryFurnitureInData(str);
-                furniture.Position = pos;
-                Add(furniture);
+                try
+                {
+                    Furniture furniture = DataManager.QueryFurnitureInData(str);
+                    furniture.Position = pos;
+                    Add(furniture);
+                }
+                catch (NullReferenceException ex)
+                {
+                    throw new NullReferenceException($"Tried to create a room with a non existent furniture! \n" +
+                        $"Furniture: {str}, Exception: {ex}");
+                }
             }
         }
 
@@ -611,9 +619,17 @@ namespace MagiRogue.GameSys
                 {
                     str = ter.ToString();
                 }
-                TileBase tile = DataManager.QueryTileInData(str);
-                tile.Position = pos;
-                SetTerrain(tile);
+                try
+                {
+                    TileBase tile = DataManager.QueryTileInData(str);
+                    tile.Position = pos;
+                    SetTerrain(tile);
+                }
+                catch (NullReferenceException ex)
+                {
+                    throw new NullReferenceException($"Tried to create a room with a non existent tile! \n" +
+                        $"Tile: {str}, Exception: {ex}");
+                }
             }
         }
 
