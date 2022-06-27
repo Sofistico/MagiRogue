@@ -17,7 +17,7 @@ namespace MagiRogue.Entities
     [JsonConverter(typeof(FurnitureJsonConverter))]
     public class Furniture : Entities.Entity
     {
-        public FurnitureType FurnitureType { get; }
+        public FurnitureType FurnitureType { get; set; }
         public int? MapIdConnection { get; set; }
         public string FurId { get; set; }
         public int Durability { get; set; }
@@ -40,6 +40,23 @@ namespace MagiRogue.Entities
             Durability = (int)(Material.Hardness * Material.Density) + durability;
             FurId = furId;
             Weight = MathMagi.Round((float)Material.Density * weight);
+        }
+
+        public override Furniture Copy()
+        {
+            var baseEntity = base.Copy();
+            Furniture fur = new Furniture(baseEntity.Appearance.Foreground,
+                baseEntity.Appearance.Background, baseEntity.Appearance.Glyph,
+                baseEntity.Position,
+                FurnitureType, Material.Id, Name, FurId, Weight, Durability)
+            {
+                Traits = Traits,
+                UseActions = UseActions,
+                Qualities = Qualities,
+                Material = Material,
+                MapIdConnection = MapIdConnection,
+            };
+            return fur;
         }
     }
 

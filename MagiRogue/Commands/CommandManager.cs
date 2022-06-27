@@ -1,4 +1,5 @@
 ﻿using GoRogue.DiceNotation;
+using MagiRogue.Data;
 using MagiRogue.Entities;
 using MagiRogue.GameSys;
 using MagiRogue.GameSys.Planet;
@@ -406,6 +407,14 @@ namespace MagiRogue.Commands
             GameLoop.World.AllMaps = null;*/
 
             GameLoop.Universe.WorldMap = new PlanetGenerator().CreatePlanet(500, 500);
+        }
+
+        public static bool CreateTestEntity(Point pos, Map map)
+        {
+            Actor found = EntityFactory.ActorCreator(pos,
+                 DataManager.QueryActorInData("test_troll"));
+            map.Add(found);
+            return true;
         }
 
 #endif

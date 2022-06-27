@@ -307,6 +307,11 @@ namespace MagiRogue.UI
                 w.Show();
             }
 
+            if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.O) && targetCursor is not null)
+            {
+                CommandManager.CreateTestEntity(targetCursor.Cursor.Position, world.CurrentMap);
+            }
+
             if (info.IsKeyPressed(Keys.T))
             {
                 foreach (NodeTile node in world.CurrentMap.Tiles.OfType<NodeTile>())

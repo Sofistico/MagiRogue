@@ -154,5 +154,10 @@ namespace MagiRogue.Utils
 
             return symbol;
         }
+
+        public static bool GlyphExistInDictionary(char glyph)
+        {
+            return GlyphsMapping.ContainsKey(glyph);
+        }
     }
 }

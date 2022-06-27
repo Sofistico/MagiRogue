@@ -63,13 +63,13 @@ namespace MagiRogue.GameSys.MapGen
 
             foreach (Room room in mapRooms)
             {
-                if (room.RoomRectangle.Area >= 8)
-                {
-                    int rng = GoRogue.Random
-                        .GlobalRandom.DefaultRNG.NextInt(Enum.GetValues(typeof(RoomTag)).Length);
-                    room.Tag = (RoomTag)rng;
-                    GiveRoomFurniture(room, completeMap);
-                }
+                //if (room.RoomRectangle.Area >= 8)
+                //{
+                int rng = GoRogue.Random
+                    .GlobalRandom.DefaultRNG.NextInt(Enum.GetValues(typeof(RoomTag)).Length);
+                //room.Tag = (RoomTag)rng;
+                GiveRoomFurniture(room, completeMap);
+                //}
             }
         }
 

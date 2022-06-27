@@ -1,4 +1,5 @@
 ﻿using GoRogue.Components;
+using GoRogue.Components.ParentAware;
 using GoRogue.GameFramework;
 using MagiRogue.Data.Serialization;
 using MagiRogue.GameSys.Magic;
@@ -122,6 +123,37 @@ namespace MagiRogue.Entities
         public bool AlwaySeen { get; internal set; }
 
         #endregion Helper Methods
+
+        #region Overload Methods
+
+        public virtual Entity Copy()
+        {
+            var entity = new Entity(this.Appearance.Foreground,
+                Appearance.Background, Appearance.Glyph, Position, Layer)
+            {
+                Magic = this.Magic,
+                AlwaySeen = this.AlwaySeen,
+                CanBeAttacked = CanBeAttacked,
+                CanBeKilled = CanBeKilled,
+                CanInteract = CanInteract,
+                Description = Description,
+                IgnoresWalls = IgnoresWalls,
+                LeavesGhost = LeavesGhost,
+                Size = Size,
+                Weight = Weight,
+                ZIndex = ZIndex,
+                Name = Name,
+            };
+
+            foreach (var item in this.GoRogueComponents)
+            {
+                entity.GoRogueComponents.Add(item.Component, item.Tag);
+            }
+
+            return entity;
+        }
+
+        #endregion Overload Methods
 
         #region IGameObject Interface
 

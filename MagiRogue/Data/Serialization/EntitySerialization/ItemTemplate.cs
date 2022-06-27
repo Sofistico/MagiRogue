@@ -191,10 +191,13 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
         public static implicit operator Item(ItemTemplate itemTemplate)
         {
+            int glyph = GlyphHelper.GlyphExistInDictionary(itemTemplate.Glyph) ?
+                GlyphHelper.GetGlyph(itemTemplate.Glyph) : itemTemplate.Glyph;
+
             Item item = new(itemTemplate.ForegroundBackingField.Color,
                 itemTemplate.BackgroundBackingField.Color,
                 itemTemplate.Name,
-                itemTemplate.Glyph,
+                glyph,
                 Point.None,
                 itemTemplate.Size,
                 itemTemplate.Weight,

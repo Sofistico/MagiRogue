@@ -12,6 +12,7 @@ using MagiRogue.GameSys.Time;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SadConsole.Entities;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 using System;
@@ -21,6 +22,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Entity = MagiRogue.Entities.Entity;
 
 namespace MagiRogue.GameSys
 {
@@ -79,6 +81,8 @@ namespace MagiRogue.GameSys
         public int ZAmount { get; set; }
         public Dictionary<Direction, Map> MapZoneConnections { get; set; }
         public List<Room> Rooms { get; set; }
+
+        public Renderer EntityRender { get => _entityRender; }
         //public Light[] Ilumination { get; set; }
 
         #endregion Properties

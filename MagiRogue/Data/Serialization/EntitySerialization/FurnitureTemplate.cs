@@ -145,12 +145,15 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             {
                 // TODO: will transplate to entity as a static method
                 var material = PhysicsManager.SetMaterial(template.MaterialId);
-                template.BackgroundBackingField = new MagiColorSerialization(Color.Transparent);
+                template.BackgroundBackingField = new MagiColorSerialization(Color.Black);
                 template.ForegroundBackingField = material.ReturnMagiColor();
             }
 
+            int glpyh = GlyphHelper.GlyphExistInDictionary(template.Glyph) ? GlyphHelper.GetGlyph(template.Glyph)
+                : template.Glyph;
+
             var objFur = new Furniture(template.ForegroundBackingField.Color,
-                template.BackgroundBackingField.Color, template.Glyph, template.Position,
+                template.BackgroundBackingField.Color, glpyh, template.Position,
                 template.FurnitureType, template.MaterialId, template.Name, template.Id,
                 template.Weight, template.Durability)
             {

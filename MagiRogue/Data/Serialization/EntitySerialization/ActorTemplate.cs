@@ -1,5 +1,6 @@
 ﻿using MagiRogue.Entities;
 using MagiRogue.GameSys.Magic;
+using MagiRogue.Utils;
 using Newtonsoft.Json;
 using SadConsole.SerializedTypes;
 using SadRogue.Primitives;
@@ -238,11 +239,12 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         {
             if (actorTemplate is null)
                 return null;
+            int glyph = GlyphHelper.GlyphExistInDictionary(actorTemplate.Glyph) ?
+                GlyphHelper.GetGlyph(actorTemplate.Glyph) : actorTemplate.Glyph;
 
             Actor actor =
                 new Actor(actorTemplate.Name, actorTemplate.ForegroundBackingField.Color,
-                actorTemplate.BackgroundBackingField.Color,
-                actorTemplate.Glyph,
+                actorTemplate.BackgroundBackingField.Color, glyph,
                 Point.None)
                 {
                     Description = actorTemplate.Description,
@@ -271,12 +273,15 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             }
             // needs to add the equiped itens.
             actor.Magic = actorTemplate.MagicStuff;
-
-            for (int i = 0; i < actorTemplate.Equip.Count; i++)
+            if (actorTemplate.Equip is not null)
             {
-                actor.Equipment.TryAdd(actorTemplate.Equip[i].LimbEquipped,
-                    actorTemplate.Equip[i].ItemEquipped);
+                for (int i = 0; i < actorTemplate.Equip.Count; i++)
+                {
+                    actor.Equipment.TryAdd(actorTemplate.Equip[i].LimbEquipped,
+                        actorTemplate.Equip[i].ItemEquipped);
+                }
             }
+
             if (actorTemplate.IsPlayer == true)
                 actor.IsPlayer = true;
 

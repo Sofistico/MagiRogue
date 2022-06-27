@@ -93,7 +93,7 @@ namespace MagiRogue.Data
             => ListOfItems.FirstOrDefault(i => i.Id.Equals(itemId));
 
         public static Furniture QueryFurnitureInData(string furnitureId)
-            => ListOfFurnitures.FirstOrDefault(i => i.FurId.Equals(furnitureId));
+            => ListOfFurnitures.FirstOrDefault(i => i.FurId.Equals(furnitureId)).Copy();
 
         public static RoomTemplate QueryRoomInData(string roomId)
             => ListOfRooms.FirstOrDefault(i => i.Id.Equals(roomId));

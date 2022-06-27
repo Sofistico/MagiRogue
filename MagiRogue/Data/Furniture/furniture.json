@@ -4,7 +4,7 @@
     "MaterialId": "wood",
     "Name": "Chair",
     "Description": "This is a chair. \nYou can sit on it. \nIt looks pretty confortable.",
-    "Glyph": "┬",
+    "Glyph": "π",
     "Weight": 45,
     "Size": 45,
     "Durability": 2,
