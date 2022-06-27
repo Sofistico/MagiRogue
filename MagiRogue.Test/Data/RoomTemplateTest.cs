@@ -12,7 +12,7 @@ namespace MagiRogue.Test.Data
 {
     public class RoomTemplateTest
     {
-        private RoomTemplate room;
+        private readonly RoomTemplate room;
 
         public RoomTemplateTest()
         {

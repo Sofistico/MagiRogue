@@ -16,31 +16,31 @@ namespace MagiRogue.Data
 {
     public static class DataManager
     {
-        private static readonly IReadOnlyList<ItemTemplate> ListOfItems =
+        public static readonly IReadOnlyList<ItemTemplate> ListOfItems =
             GetSourceTree<ItemTemplate>(@".\Data\Items\*.json");
 
-        private static readonly IReadOnlyList<MaterialTemplate> ListOfMaterials =
+        public static readonly IReadOnlyList<MaterialTemplate> ListOfMaterials =
            GetSourceTree<MaterialTemplate>(@".\Data\Materials\*.json");
 
-        private static readonly IReadOnlyList<SpellBase> ListOfSpells =
+        public static readonly IReadOnlyList<SpellBase> ListOfSpells =
             GetSourceTree<SpellBase>(@".\Data\Spells\*.json");
 
-        private static readonly IReadOnlyList<ActorTemplate> ListOfActors =
+        public static readonly IReadOnlyList<ActorTemplate> ListOfActors =
             GetSourceTree<ActorTemplate>(@".\Data\Actors\*.json");
 
-        private static readonly IReadOnlyList<Organ> ListOfOrgans =
+        public static readonly IReadOnlyList<Organ> ListOfOrgans =
             GetSourceTree<Organ>(@".\Data\Other\organs.json");
 
-        private static readonly IReadOnlyList<LimbTemplate> ListOfLimbs =
+        public static readonly IReadOnlyList<LimbTemplate> ListOfLimbs =
             GetSourceTree<LimbTemplate>(@".\Data\Other\body_parts.json");
 
-        private static readonly IReadOnlyList<BasicTile> ListOfTiles =
+        public static readonly IReadOnlyList<BasicTile> ListOfTiles =
             GetSourceTree<BasicTile>(@".\Data\Tiles\*.json");
 
-        private static readonly IReadOnlyList<Furniture> ListOfFurnitures =
+        public static readonly IReadOnlyList<Furniture> ListOfFurnitures =
             GetSourceTree<Furniture>(@".\Data\Furniture\*.json");
 
-        private static readonly IReadOnlyList<RoomTemplate> ListOfRooms =
+        public static readonly IReadOnlyList<RoomTemplate> ListOfRooms =
             GetSourceTree<RoomTemplate>(@".\Data\Rooms\*.json");
 
         public static IReadOnlyList<T> GetSourceTree<T>(string wildCard)

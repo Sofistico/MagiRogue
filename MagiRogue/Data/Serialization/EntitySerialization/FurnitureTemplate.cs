@@ -145,7 +145,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             {
                 // TODO: will transplate to entity as a static method
                 var material = PhysicsManager.SetMaterial(template.MaterialId);
-                template.BackgroundBackingField = material.ReturnMagiColor();
+                template.BackgroundBackingField = new MagiColorSerialization(Color.Transparent);
                 template.ForegroundBackingField = material.ReturnMagiColor();
             }
 

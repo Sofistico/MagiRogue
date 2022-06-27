@@ -1,6 +1,9 @@
 ﻿using MagiRogue.Data;
+using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.GameSys.Tiles;
+using MagiRogue.Utils;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MagiRogue.GameSys.MapGen
 {
@@ -31,13 +34,27 @@ namespace MagiRogue.GameSys.MapGen
             for (int i = 0; i < rooms.Count; i++)
             {
                 Room? room = rooms[i];
-                CreateRoom(room.RoomRectangle,
+                if (Mrn.OneIn(10))
+                {
+                    if (DataManager.ListOfRooms.Any(r => r.CompareRectanglesSameSize(room.RoomRectangle)))
+                    {
+                        RoomTemplate tempRoom =
+                            DataManager.ListOfRooms.First(r => r.CompareRectanglesSameSize(room.RoomRectangle));
+                        room = tempRoom.ConfigureRoom(room.RoomRectangle.Position);
+                        _rooms.Add(room);
+                        _map.AddRoom(room);
+                        _map.SpawnRoomThingsOnMap(room);
+                        continue;
+                    }
+                }
+                CreateRoom(room,
                     w, f);
                 CreateDoor(room);
                 room.LockedDoorsRng();
                 _rooms.Add(room);
+                _map.AddRoom(room);
             }
-            _map.AddRooms(_rooms);
+            /*_map.AddRooms(_rooms);*/
         }
     }
 }

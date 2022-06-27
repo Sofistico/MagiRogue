@@ -29,6 +29,13 @@ namespace MagiRogue.Data.Serialization.MapSerialization
             return r;
         }
 
+        public bool CompareRectanglesSameSize(Rectangle toCompare)
+        {
+            Rectangle rec = Obj.CreateRectangle();
+
+            return toCompare.Size == rec.Size;
+        }
+
         private void CheckForEmptyTile()
         {
             if (!string.IsNullOrEmpty(Obj.EmptyFill))

@@ -666,7 +666,8 @@ namespace MagiRogue.GameSys
                 bool gotIt = Mrn.OneIn(mod);
                 if (gotIt)
                 {
-                    obj = s.StartsWith('[') ? s.Split("\r\n")[1].Replace(',', ' ').Replace('\"', ' ').Trim() : s;
+                    obj = s.StartsWith('[') ? s.Split("\r\n")[1].Replace(',', ' ').Replace('\"', ' ').Trim()
+                        : s;
                 }
             }
 
@@ -686,41 +687,6 @@ namespace MagiRogue.GameSys
         }
 
         #endregion HelperMethods
-
-        /*
-
-                #region Desconstructor
-
-                ~Map()
-                {
-        #if DEBUG
-                    // This is here because i suspect there is a minor memory leak in the map class, with this here
-                    // at the very least it seems that the memory is not that great
-                    //GC.Collect();
-                    //GC.WaitForPendingFinalizers();
-                    //GC.Collect();
-        #endif
-
-                    foreach (Entity item in Entities.Items)
-                    {
-                        Remove(item);
-                    }
-                    Tiles = null;
-                    ControlledGameObjectChanged = null;
-                    this.ControlledEntitiy = null;
-                    _entityRender = null;
-                    GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
-                    GoRogueComponents.Clear();
-        #if DEBUG
-                    //GC.Collect();
-                    //GC.WaitForPendingFinalizers();
-                    //GC.Collect();
-        #endif
-                }
-
-                #endregion Desconstructor
-
-        */
     }
 
     // enum for defining maplayer for things, so that a monster and a player can occupy the same tile as

@@ -153,19 +153,20 @@ namespace MagiRogue.GameSys.MapGen
         /// Floors are placed in the interior area of the room
         /// </summary>
         /// <param name="room"></param>
-        protected void CreateRoom(Rectangle room, TileWall wall, TileFloor floor)
+        protected void CreateRoom(Room room, TileWall wall, TileFloor floor)
         {
+            Rectangle rectangle = room.RoomRectangle;
             // Place floors in interior area
-            for (int x = room.ToMonoRectangle().Left + 1; x < room.ToMonoRectangle().Right; x++)
+            for (int x = rectangle.ToMonoRectangle().Left + 1; x < rectangle.ToMonoRectangle().Right; x++)
             {
-                for (int y = room.ToMonoRectangle().Top + 1; y < room.ToMonoRectangle().Bottom; y++)
+                for (int y = rectangle.ToMonoRectangle().Top + 1; y < rectangle.ToMonoRectangle().Bottom; y++)
                 {
                     CreateAnyFloor(new Point(x, y), floor);
                 }
             }
 
             // Place walls at perimeter
-            List<Point> perimeter = GetBorderCellLocations(room);
+            List<Point> perimeter = GetBorderCellLocations(rectangle);
 
             foreach (Point location in perimeter)
             {
@@ -493,11 +494,13 @@ namespace MagiRogue.GameSys.MapGen
             //go through every border cell and look for potential door candidates
             foreach (Point location in borderCells)
             {
+                if (alreadyHasDoor)
+                    break;
                 //int locationIndex = location.ToIndex(_map.Width);
                 if (IsPotentialDoor(location) && !alreadyHasDoor)
                 {
                     // Create a new door that is closed and unlocked.
-                    TileDoor newDoor = DataManager.QueryTileInData<TileDoor>("wood_door");
+                    TileDoor newDoor = DataManager.QueryTileInData<TileDoor>("wood_door", location);
                     _map.SetTerrain(newDoor);
                     if (!acceptsMoreThanOneDoor)
                         alreadyHasDoor = true;
