@@ -8,6 +8,7 @@ using System.Linq;
 using System.Collections.Generic;
 using MagiRogue.Data.Serialization;
 using GoRogue.DiceNotation;
+using MagiRogue.Data.Enumerators;
 
 namespace MagiRogue.Entities
 {
@@ -102,7 +103,7 @@ namespace MagiRogue.Entities
 
         public static Player ReturnPlayerFromActor(Actor actor)
         {
-            if(actor is null)
+            if (actor is null)
                 return null;
 
             Player player = new Player(actor.Name,

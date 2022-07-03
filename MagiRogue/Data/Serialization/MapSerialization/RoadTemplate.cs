@@ -1,5 +1,4 @@
 ﻿using MagiRogue.GameSys.Civ;
-using MagiRogue.GameSys.Planet;
 using MagiRogue.GameSys.Tiles;
 using System;
 using System.Collections.Generic;
@@ -8,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using MagiRogue.Data.Enumerators;
 
 namespace MagiRogue.Data.Serialization.MapSerialization
 {

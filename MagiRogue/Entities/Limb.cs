@@ -1,4 +1,5 @@
-﻿using MagiRogue.Data.Serialization;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Diagnostics;
@@ -6,24 +7,6 @@ using System.Runtime.Serialization;
 
 namespace MagiRogue.Entities
 {
-    [DataContract]
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum TypeOfLimb
-    {
-        Head,
-        Torso,
-        Arm,
-        Leg,
-        Foot,
-        Hand,
-        Tail,
-        Wing,
-        Neck,
-        Finger,
-        Toe,
-        Misc
-    }
-
     [DataContract]
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     [JsonConverter(typeof(Data.Serialization.EntitySerialization.LimbJsonConverter))]
@@ -76,14 +59,6 @@ namespace MagiRogue.Entities
 
         [DataMember]
         public bool Attached { get; set; }
-
-        /// <summary>
-        /// Marks if the limb is right, left, or center.
-        /// </summary>
-        [DataContract]
-        [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
-        public enum LimbOrientation
-        { Right, Left, Center }
 
         /// <summary>
         /// Marks if the limb is right, left, or center, this is the property.

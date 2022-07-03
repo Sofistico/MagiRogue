@@ -8,6 +8,7 @@ using MagiRogue.Data.Serialization;
 using System.Linq;
 using System.Collections.Generic;
 using MagiRogue.Data.Serialization.EntitySerialization;
+using MagiRogue.Data.Enumerators;
 
 namespace MagiRogue.Entities
 {
@@ -138,21 +139,5 @@ namespace MagiRogue.Entities
         {
             return $"{Name} : Equip {EquipType}";
         }
-    }
-
-    [JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-    public enum EquipType
-    {
-        None,
-        Head,
-        Torso,
-        Arm,
-        Leg,
-        Foot,
-        Hand,
-        Finger,
-        Tail,
-        Wing,
-        Neck
     }
 }

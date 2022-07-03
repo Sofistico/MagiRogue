@@ -10,17 +10,10 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Data.Serialization.EntitySerialization;
+using MagiRogue.Data.Enumerators;
 
 namespace MagiRogue.GameSys.Civ
 {
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum CivilizationTendency
-    {
-        Normal,
-        Aggresive,
-        Studious,
-    }
-
     [JsonConverter(typeof(CivilizationJsonConverter))]
     public class Civilization
     {

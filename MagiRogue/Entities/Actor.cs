@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Commands;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.GameSys;
 using MagiRogue.GameSys.Tiles;
 using Newtonsoft.Json;

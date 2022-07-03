@@ -12,6 +12,7 @@ using MagiRogue.GameSys.MapGen;
 using System.Linq;
 using MagiRogue.Data.Serialization;
 using Newtonsoft.Json;
+using MagiRogue.Data.Enumerators;
 
 namespace MagiRogue.GameSys
 {

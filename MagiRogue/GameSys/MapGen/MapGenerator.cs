@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ShaiRandom.Generators;
 using MagiRogue.Utils;
+using MagiRogue.Data.Enumerators;
 
 namespace MagiRogue.GameSys.MapGen
 {

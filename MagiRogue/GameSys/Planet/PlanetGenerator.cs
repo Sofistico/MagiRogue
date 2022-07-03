@@ -1,5 +1,6 @@
 ﻿using GoRogue.DiceNotation;
 using GoRogue.Pathing;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;

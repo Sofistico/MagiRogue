@@ -4,6 +4,7 @@ using GoRogue.GameFramework;
 using GoRogue.Pathing;
 using GoRogue.SpatialMaps;
 using MagiRogue.Data;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.Entities;
@@ -691,19 +692,6 @@ namespace MagiRogue.GameSys
         }
 
         #endregion HelperMethods
-    }
-
-    // enum for defining maplayer for things, so that a monster and a player can occupy the same tile as
-    // an item for example.
-    // If it stops working, add back the player map layer
-    public enum MapLayer
-    {
-        TERRAIN,
-        GHOSTS,
-        ITEMS,
-        ACTORS,
-        FURNITURE,
-        PLAYER
     }
 
     #region Event

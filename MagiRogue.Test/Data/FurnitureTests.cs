@@ -7,6 +7,7 @@ using Xunit;
 using Newtonsoft.Json;
 using MagiRogue.Entities;
 using SadRogue.Primitives;
+using MagiRogue.Data.Enumerators;
 
 namespace MagiRogue.Test.Data
 {

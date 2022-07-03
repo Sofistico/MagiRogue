@@ -1,4 +1,5 @@
-﻿using MagiRogue.Data.Serialization.EntitySerialization;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Tiles;

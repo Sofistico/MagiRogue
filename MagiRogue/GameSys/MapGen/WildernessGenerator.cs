@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Data;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Planet;
 using MagiRogue.GameSys.Tiles;
@@ -63,13 +64,13 @@ namespace MagiRogue.GameSys.MapGen
 
             foreach (Room room in mapRooms)
             {
-                //if (room.RoomRectangle.Area >= 8)
-                //{
-                int rng = GoRogue.Random
-                    .GlobalRandom.DefaultRNG.NextInt(Enum.GetValues(typeof(RoomTag)).Length);
-                //room.Tag = (RoomTag)rng;
-                GiveRoomFurniture(room, completeMap);
-                //}
+                if (room.RoomRectangle.Area >= 5)
+                {
+                    int rng = GoRogue.Random
+                        .GlobalRandom.DefaultRNG.NextInt(Enum.GetValues(typeof(RoomTag)).Length);
+                    room.Tag = (RoomTag)rng;
+                    GiveRoomFurniture(room, completeMap);
+                }
             }
         }
 
@@ -83,57 +84,99 @@ namespace MagiRogue.GameSys.MapGen
                     break;
 
                 case RoomTag.Inn:
+                    AddFurnituresAtRandomPos(DataManager.QueryFurnitureInData("wood_table"), room, map, 4);
+                    AddFurnituresAtRandomPos(DataManager.QueryFurnitureInData("wood_chair"), room, map, 3);
+                    AddFurnituresAtRandomPos(DataManager.QueryFurnitureInData("keg"), room, map, 3);
                     break;
 
                 case RoomTag.Temple:
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("altar"), room, map);
+                    AddFurnituresAtRandomPos(DataManager.QueryFurnitureInData("wood_chair"), room, map, 3);
+
                     break;
 
                 case RoomTag.Blacksmith:
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("forge"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("anvil"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("coal_sack"), room, map);
                     break;
 
                 case RoomTag.Clothier:
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("wood_loom"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("wood_chair"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("wood_table"), room, map);
                     break;
 
                 case RoomTag.Alchemist:
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("alembic"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("crucible"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("forge"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("distilator"), room, map);
                     break;
 
                 case RoomTag.Hovel:
+                    AddFurnituresAtRandomPos(DataManager.QueryFurnitureInData("wood_bed"), room, map, 5);
                     break;
 
                 case RoomTag.Abandoned:
+                    AddFurnituresAtRandomPos(DataManager.QueryFurnitureInData("broken_misc"), room, map, 5);
                     break;
 
                 case RoomTag.House:
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("wood_table"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("wood_chair"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("wood_chest"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("wood_bed"), room, map);
                     break;
 
                 case RoomTag.Throne:
-                    break;
-
-                case RoomTag.MeetingPlace:
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("wood_table"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("wood_chair"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("wood_chest"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("wood_throne"), room, map);
                     break;
 
                 case RoomTag.Kitchen:
+                    AddFurnituresAtRandomPos(DataManager.QueryFurnitureInData("wood_table"), room, map, 2);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("wood_chair"), room, map);
+                    AddFurnituresAtRandomPos(DataManager.QueryFurnitureInData("oven"), room, map, 2);
+
                     break;
 
                 case RoomTag.GenericWorkshop:
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("wood_chair"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("crafting_table"), room, map);
                     break;
 
                 case RoomTag.Dinner:
+                    AddFurnituresAtRandomPos(DataManager.QueryFurnitureInData("wood_table"), room, map, 2);
+                    AddFurnituresAtRandomPos(DataManager.QueryFurnitureInData("wood_chair"), room, map, 4);
+
                     break;
 
                 default:
-                    break;
+                    throw new ApplicationException("Type of room not defined!");
+            }
+        }
+
+        private static void AddFurnituresAtRandomPos(Furniture furniture, Room room, Map map, int quantity)
+        {
+            for (int i = 0; i < quantity; i++)
+            {
+                // TODO: Check if the furniture is being created occupyng the same space as another.
+                AddFurnitureAtRandomPos(furniture, room, map);
             }
         }
 
         private static void AddFurnitureAtRandomPos(Furniture furniture, Room room, Map map)
         {
-            var pos = room.ReturnRandomPosRoom();
-            if (map.IsTileWalkable(pos))
+            Point pos = Point.None;
+            while (!map.IsTileWalkable(pos))
             {
-                furniture.Position = pos;
-                map.Add(furniture);
+                pos = room.ReturnRandomPosRoom();
             }
+            furniture.Position = pos;
+            map.Add(furniture);
         }
 
         private static void PruneTrees(Map completeMap, WorldTile worldTile)

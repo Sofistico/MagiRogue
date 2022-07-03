@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MagiRogue.Utils;
 using MagiRogue.Data.Serialization.EntitySerialization;
+using MagiRogue.Data.Enumerators;
 
 namespace MagiRogue.Entities
 {
@@ -58,45 +59,5 @@ namespace MagiRogue.Entities
             };
             return fur;
         }
-    }
-
-    /// <summary>
-    /// What type of furniture is it?
-    /// </summary>
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum FurnitureType
-    {
-        /// <summary>
-        /// Any kind really, too generic to say
-        /// </summary>
-        General,
-        /// <summary>
-        /// Stairs down
-        /// </summary>
-        StairsDown,
-        /// <summary>
-        /// Stairs up
-        /// </summary>
-        StairsUp,
-        /// <summary>
-        /// chair
-        /// </summary>
-        Chair,
-        /// <summary>
-        /// Can be a eating table, a studying table, a hitting table
-        /// </summary>
-        Table,
-        /// <summary>
-        /// To store books and dust
-        /// </summary>
-        BookCase,
-        /// <summary>
-        /// Can be used for crafting
-        /// </summary>
-        Craft,
-        /// <summary>
-        /// Furniture that emits light
-        /// </summary>
-        Light
     }
 }

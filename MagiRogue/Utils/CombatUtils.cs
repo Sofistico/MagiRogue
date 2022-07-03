@@ -1,4 +1,5 @@
-﻿using MagiRogue.Entities;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Entities;
 using MagiRogue.GameSys.Magic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -155,23 +156,5 @@ namespace MagiRogue.Utils
                 }
             }
         }
-    }
-
-    [Flags]
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum DamageType
-    {
-        None = 0,
-        Blunt = 1,
-        Sharp = 2,
-        Point = 3,
-        Force = 4,
-        Fire = 5,
-        Cold = 6,
-        Poison = 7,
-        Acid = 8,
-        Shock = 9,
-        Soul = 10,
-        Mind = 11
     }
 }

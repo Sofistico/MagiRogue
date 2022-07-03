@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Data.Serialization.EntitySerialization;
+using MagiRogue.Data.Enumerators;
 
 namespace MagiRogue.GameSys.Magic
 {

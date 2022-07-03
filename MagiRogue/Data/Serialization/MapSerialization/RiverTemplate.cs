@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.GameSys.Planet;
 using MagiRogue.GameSys.Tiles;
 using Newtonsoft.Json;

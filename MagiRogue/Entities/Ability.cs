@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MagiRogue.Data.Enumerators;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -46,19 +47,6 @@ namespace MagiRogue.Entities
                 _ => throw new AbilityNotFoundExepction("Cound't find the ability in the enum class"),
             };
         }
-    }
-
-    public enum AbilityName
-    {
-        General,
-        MagicLore,
-        Swin
-    }
-
-    public enum SpecialityType
-    {
-        Combat,
-        Water,
     }
 
     public class AbilityNotFoundExepction : ApplicationException

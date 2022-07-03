@@ -1,4 +1,5 @@
-﻿using SadRogue.Primitives;
+﻿using MagiRogue.Data.Enumerators;
+using SadRogue.Primitives;
 
 namespace MagiRogue.GameSys.Tiles
 {
@@ -19,7 +20,7 @@ namespace MagiRogue.GameSys.Tiles
         /// <param name="background"></param>
         /// <param name="blocksMove"></param>
         /// <param name="tileIsTransparent"></param>
-        public TileFloor(string name, Point position, string idMaterial, int glyph, 
+        public TileFloor(string name, Point position, string idMaterial, int glyph,
             Color foreground, Color background,
             bool blocksMove = false, bool tileIsTransparent = true)
             : base(foreground, background, glyph, (int)MapLayer.TERRAIN, position, idMaterial, blocksMove,
@@ -59,6 +60,5 @@ namespace MagiRogue.GameSys.Tiles
             };
             return copy;
         }
-
     }
 }

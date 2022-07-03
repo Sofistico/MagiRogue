@@ -1,4 +1,5 @@
-﻿using MagiRogue.Entities;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Entities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;

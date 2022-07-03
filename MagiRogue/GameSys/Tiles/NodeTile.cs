@@ -1,4 +1,5 @@
-﻿using MagiRogue.Entities;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Entities;
 using MagiRogue.Utils;
 using SadConsole;
 using SadRogue.Primitives;
@@ -148,17 +149,5 @@ namespace MagiRogue.GameSys.Tiles
 
             return null;
         }
-    }
-
-    public enum NodeStrength
-    {
-        Fading = -3,
-        Feeble = 1,
-        Weak = 2,
-        Normal = 0,
-        Strong = 3,
-        Powerful = 4,
-        DemigodLike = 6,
-        Godlike = 10
     }
 }

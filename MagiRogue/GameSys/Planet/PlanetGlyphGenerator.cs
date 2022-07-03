@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Data;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.GameSys.Tiles;
 using SadConsole;
 using SadRogue.Primitives;

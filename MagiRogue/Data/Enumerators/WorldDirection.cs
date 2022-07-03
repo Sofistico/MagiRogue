@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace MagiRogue.GameSys.Planet
+namespace MagiRogue.Data.Enumerators
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum WorldDirection

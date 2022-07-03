@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using ShaiRandom.Distributions.Continuous;
 using MagiRogue.Utils;
+using MagiRogue.Data.Enumerators;
 
 namespace MagiRogue.Entities
 {
@@ -56,7 +57,7 @@ namespace MagiRogue.Entities
 
         [JsonIgnore]
         public bool CanSee => Organs.Exists(o => o.OrganType is OrganType.Visual
-                                                                                && (!o.Destroyed || o.Attached));
+                                                                                                && (!o.Destroyed || o.Attached));
 
         /// <summary>
         /// The total lifespan of a character
@@ -217,17 +218,5 @@ namespace MagiRogue.Entities
         }
 
         #endregion Methods
-    }
-
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum InjurySeverity
-    {
-        Scratch,
-        LigthInjury,
-        MediumInjury,
-        SeriousInjury,
-        Crippling,
-        Fatal,
-        LimbLoss
     }
 }

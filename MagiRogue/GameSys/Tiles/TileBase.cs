@@ -1,6 +1,7 @@
 ﻿using GoRogue;
 using GoRogue.Components;
 using GoRogue.GameFramework;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
 using Newtonsoft.Json;

@@ -1,0 +1,13 @@
+[
+  {
+    "Id": "broken_misc",
+    "MaterialId": "wood",
+    "Name": "Broken Furniture",
+    "Description": "A bunch of broken furniture lies in the floor, looks pretty much as garbage.",
+    "Glyph": "{",
+    "Weight": 4,
+    "Size": 60,
+    "Durability": 1,
+    "FurnitureType": "Generic"
+  }
+]

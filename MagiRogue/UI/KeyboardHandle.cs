@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Commands;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.Entities;
@@ -250,7 +251,7 @@ namespace MagiRogue.UI
             }
 
             if (info.IsKeyPressed(Keys.Enter) && targetCursor is not null
-                && targetCursor.State == Target.TargetState.Targeting)
+                && targetCursor.State == TargetState.Targeting)
             {
                 if ((targetCursor.EntityInTarget() || targetCursor.TileInTarget()) && targetCursor.SpellSelected is null)
                 {

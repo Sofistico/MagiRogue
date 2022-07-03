@@ -1,4 +1,5 @@
 ﻿using GoRogue.Pathing;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.GameSys;
 using MagiRogue.GameSys.Magic;
@@ -379,12 +380,6 @@ namespace MagiRogue.Commands
             {
                 throw new("Cound't find what to target!");
             }
-        }
-
-        public enum TargetState
-        {
-            Resting,
-            Targeting
         }
     }
 }

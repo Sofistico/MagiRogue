@@ -1,4 +1,5 @@
-﻿using MagiRogue.GameSys.Magic;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.GameSys.Magic;
 using MagiRogue.GameSys.Magic.Effects;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
@@ -217,14 +218,5 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
             return template;
         }
-    }
-
-    public enum EffectTypes
-    {
-        DAMAGE,
-        HASTE,
-        MAGESIGHT,
-        SEVER,
-        TELEPORT
     }
 }

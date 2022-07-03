@@ -1,5 +1,6 @@
 ﻿using GoRogue.DiceNotation;
 using MagiRogue.Data;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.GameSys;
 using MagiRogue.GameSys.Planet;

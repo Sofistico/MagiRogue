@@ -17,26 +17,6 @@ namespace MagiRogue.Entities
 
     #endregion Interface
 
-    #region Enum
-
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum UseAction
-    {
-        None,
-        Sit,
-        Study,
-        Craft,
-        Enchant,
-        Rest,
-        VisExtract,
-        Hammer,
-        Lockpick,
-        Pry,
-        Unlight
-    }
-
-    #endregion Enum
-
     #region StructRegion
 
     // TODO: Take a look later of what will do with these activable types.

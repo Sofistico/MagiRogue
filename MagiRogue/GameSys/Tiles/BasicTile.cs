@@ -12,6 +12,7 @@ using MagiRogue.GameSys.Civ;
 using MagiRogue.Data.Serialization;
 using System.Diagnostics;
 using MagiRogue.Entities;
+using MagiRogue.Data.Enumerators;
 
 namespace MagiRogue.GameSys.Tiles
 {
@@ -365,17 +366,5 @@ namespace MagiRogue.GameSys.Tiles
         }
 
         #endregion operator overload
-    }
-
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum TileType
-    {
-        Null,
-        Floor,
-        Wall,
-        Water,
-        Node,
-        WorldTile,
-        Door
     }
 }

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MagiRogue.Utils;
+using MagiRogue.Data.Enumerators;
 
 namespace MagiRogue.Data.Serialization.EntitySerialization
 {

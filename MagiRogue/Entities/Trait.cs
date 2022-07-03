@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using MagiRogue.Data.Enumerators;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using System;
@@ -6,34 +7,6 @@ using System.Collections.Generic;
 
 namespace MagiRogue.Entities
 {
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum Trait
-    {
-        None,
-        Confortable,
-        Research,
-        RitualFoci,
-        SpellFoci,
-        Inspirational,
-        HoldItems,
-    }
-
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum QualityType
-    {
-        None,
-        Forge,
-        Smelt,
-        WoodCraft,
-        Enchant,
-        VisExtract,
-        FineWorking,
-        Weaving,
-        Lockpick,
-        Hammer,
-        Pry,
-    }
-
     public struct Quality
     {
         public QualityType QualityType { get; set; }

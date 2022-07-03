@@ -1,4 +1,5 @@
-﻿using MagiRogue.Data.Serialization.MapSerialization;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Tiles;
 using Newtonsoft.Json;
@@ -122,8 +123,8 @@ namespace MagiRogue.GameSys
 
         internal Point ReturnRandomPosRoom()
         {
-            int x = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(RoomRectangle.X);
-            int y = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(RoomRectangle.Y);
+            int x = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(RoomRectangle.MinExtentX, RoomRectangle.MaxExtentX + 1);
+            int y = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(RoomRectangle.MinExtentY, RoomRectangle.MaxExtentY + 1);
 
             Point pos = new SadRogue.Primitives.Point(x, y);
             return pos;
@@ -168,24 +169,5 @@ namespace MagiRogue.GameSys
         {
             ChangeRoomPos(new SadRogue.Primitives.Point(newRoomX, newRoomY));
         }
-    }
-
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum RoomTag
-    {
-        Generic,
-        Inn,
-        Temple,
-        Blacksmith,
-        Clothier,
-        Alchemist,
-        Hovel,
-        Abandoned,
-        House,
-        Throne,
-        MeetingPlace,
-        Kitchen,
-        GenericWorkshop,
-        Dinner,
     }
 }

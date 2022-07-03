@@ -285,11 +285,19 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             if (actorTemplate.IsPlayer == true)
                 actor.IsPlayer = true;
 
-            actor.Appearance.Foreground =
-                new MagiColorSerialization(actorTemplate.ForegroundPackedValue).Color;
-            actor.Appearance.Background =
-                new MagiColorSerialization(actorTemplate.BackgroundPackedValue).Color;
-            //actor.Description = actorTemplate.Description;
+            if(actorTemplate.ForegroundPackedValue == 0 && !string.IsNullOrEmpty(actorTemplate.Foreground))
+            {
+                actor.Appearance.Foreground = new MagiColorSerialization(actorTemplate.Foreground).Color;
+                actor.Appearance.Background = new MagiColorSerialization(actorTemplate.Background).Color;
+            }
+            else
+            {
+                actor.Appearance.Foreground =
+                    new MagiColorSerialization(actorTemplate.ForegroundPackedValue).Color;
+                actor.Appearance.Background =
+                    new MagiColorSerialization(actorTemplate.BackgroundPackedValue).Color;
+            }
+            actor.Description = actorTemplate.Description;
 
             return actor;
         }
