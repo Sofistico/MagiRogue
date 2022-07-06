@@ -61,14 +61,26 @@ namespace MagiRogue.GameSys.MapGen
         private static void MakeRoomUseful(Map completeMap, WorldTile worldTile)
         {
             List<Room> mapRooms = completeMap.Rooms;
-
+            bool oneRulerOnly = false;
             foreach (Room room in mapRooms)
             {
-                if (room.RoomRectangle.Area >= 5)
+                if (room.RoomRectangle.Area >= 6)
                 {
                     int rng = GoRogue.Random
                         .GlobalRandom.DefaultRNG.NextInt(Enum.GetValues(typeof(RoomTag)).Length);
-                    room.Tag = (RoomTag)rng;
+                    var tag = (RoomTag)rng;
+                    if (tag != RoomTag.Throne)
+                    {
+                        room.Tag = tag;
+                    }
+                    else if (tag == RoomTag.Throne && !oneRulerOnly)
+                    {
+                        room.Tag = tag;
+                        oneRulerOnly = true;
+                    }
+                    else
+                        continue;
+
                     GiveRoomFurniture(room, completeMap);
                 }
             }
