@@ -1,0 +1,31 @@
+[
+  {
+    "Id": "stone_forge",
+    "MaterialId": "stone",
+    "Name": "Forge",
+    "Description": "This is a forge, you can forge metal items in it and also harden clay. /nYou can make quite a nice cake, if you like yours a little burnt.",
+    "Glyph": "▼",
+    "Weight": 100,
+    "Size": 50,
+    "FurnitureType": "Craft",
+    "UseActions": [ "Craft" ],
+    "Qualities": [
+      [ "Forge", 3 ],
+      [ "Smelt", 2 ]
+    ],
+    "Traits": [ "Inspirational" ]
+  },
+  {
+    "Id": "anvil",
+    "MaterialId": "iron",
+    "Name": "Forge",
+    "Description": "This is an anvil, you can hammer metal in it.",
+    "Glyph": "▼",
+    "Weight": 100,
+    "Size": 50,
+    "FurnitureType": "Craft",
+    "UseActions": [ "Craft" ],
+    "Qualities": [ [ "Anvil", 3 ] ],
+    "Traits": [ "Inspirational" ]
+  }
+]

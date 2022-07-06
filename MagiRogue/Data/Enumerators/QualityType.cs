@@ -14,6 +14,7 @@ namespace MagiRogue.Data.Enumerators
         None,
         Forge,
         Smelt,
+        Anvil,
         WoodCraft,
         Enchant,
         VisExtract,

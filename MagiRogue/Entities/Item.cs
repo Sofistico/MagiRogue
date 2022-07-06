@@ -65,6 +65,7 @@ namespace MagiRogue.Entities
         public List<IActivable> Actives { get; set; }
         public List<Trait> Traits { get; set; }
         public List<Quality> Qualities { get; internal set; }
+        public string ItemId { get; set; }
 
         // By default, a new Item is sized 1x1, with a weight of 1, and at 100% condition
         public Item(Color foreground, Color background, string name, int glyph, Point coord, int size,

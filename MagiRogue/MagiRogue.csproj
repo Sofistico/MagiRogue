@@ -55,7 +55,7 @@
     <None Update="Data\Actors\vegetation.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Data\Furniture\craftingfur.json">
+    <None Update="Data\Furniture\crafting_fur.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Data\Furniture\decor.json">

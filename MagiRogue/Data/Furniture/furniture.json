@@ -24,17 +24,4 @@
     "UseActions": [ "Study", "Enchant" ],
     "Traits": [ "Confortable", "Research", "HoldItems" ]
   },
-  {
-    "Id": "stone_forge",
-    "MaterialId": "stone",
-    "Name": "Forge",
-    "Description": "This is a forge, you can forge metal items in it and also harden clay. /r/nMakes quite a nice cake, if you like yours a little burnt.",
-    "Glyph": "▼",
-    "Weight": 100,
-    "Size": 50,
-    "FurnitureType": "Craft",
-    "UseActions": [ "Craft" ],
-    "Qualities": [ [ "Forge", 3 ] ],
-    "Traits": [ "Inspirational" ]
-  }
 ]

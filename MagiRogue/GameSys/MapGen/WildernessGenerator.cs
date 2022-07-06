@@ -90,13 +90,13 @@ namespace MagiRogue.GameSys.MapGen
                     break;
 
                 case RoomTag.Temple:
-                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("altar"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("religious_altar"), room, map);
                     AddFurnituresAtRandomPos(DataManager.QueryFurnitureInData("wood_chair"), room, map, 3);
 
                     break;
 
                 case RoomTag.Blacksmith:
-                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("forge"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("stone_forge"), room, map);
                     AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("anvil"), room, map);
                     AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("coal_sack"), room, map);
                     break;

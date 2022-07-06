@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MagiRogue.Utils;
 using MagiRogue.Data.Enumerators;
+using Newtonsoft.Json.Linq;
 
 namespace MagiRogue.Data.Serialization.EntitySerialization
 {
@@ -69,6 +70,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         public List<Trait> Traits { get; set; }
         public List<List<string>> Qualities { get; set; }
         public int? MapIdConnection { get; set; }
+        public List<object> Inventory { get; set; }
 
         public FurnitureTemplate()
         {
@@ -133,6 +135,50 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             FurnitureType = furnitureType;
         }
 
+        private static void DetermineInvFromJson(FurnitureTemplate template, Furniture objFur)
+        {
+            List<Item> inv = new();
+            for (int i = 0; i < template.Inventory.Count; i++)
+            {
+                var obj = template.Inventory[i];
+                if (obj is JArray array)
+                {
+                    for (int z = 0; z < ((int)array[1]); z++)
+                    {
+                        inv.Add(DataManager.QueryItemInData(array[0].ToString()));
+                    }
+                }
+                else
+                {
+                    inv.Add(DataManager.QueryItemInData(obj.ToString()));
+                }
+            }
+            objFur.Inventory = inv;
+        }
+
+        private static void DetermineInventoryFromItem(Furniture fur, FurnitureTemplate template)
+        {
+            List<object> invIds = new();
+            for (int i = 0; i < fur.Inventory.Count; i++)
+            {
+                var item = fur.Inventory[i];
+
+                if (invIds.Any(v => v.ToString().Contains(item.ItemId)))
+                    continue;
+                int invCount = fur.Inventory.Where(i => i.ItemId.Equals(item.ItemId)).Count();
+                if (invCount > 1)
+                {
+                    invIds.Add(new JArray(item.ItemId, invCount));
+                }
+                else
+                {
+                    invIds.Add(item.ItemId);
+                }
+            }
+
+            template.Inventory = invIds;
+        }
+
         public static implicit operator Furniture(FurnitureTemplate template)
         {
             if (template.Id == null && template.MagicStuff == null)
@@ -166,6 +212,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 Description = template.Description,
                 Qualities = Quality.ReturnQualityList(template.Qualities),
             };
+            DetermineInvFromJson(template, objFur);
 
             return objFur;
         }
@@ -191,6 +238,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 Id = fur.FurId,
                 Qualities = Quality.ReturnQualityListAsString(fur.Qualities),
             };
+            DetermineInventoryFromItem(fur, template);
 
             return template;
         }

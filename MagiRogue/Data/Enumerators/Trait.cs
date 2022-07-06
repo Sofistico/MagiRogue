@@ -18,5 +18,6 @@ namespace MagiRogue.Data.Enumerators
         SpellFoci,
         Inspirational,
         HoldItems,
+        Holy,
     }
 }

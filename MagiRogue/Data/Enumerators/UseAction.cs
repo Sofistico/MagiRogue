@@ -21,6 +21,7 @@ namespace MagiRogue.Data.Enumerators
         Hammer,
         Lockpick,
         Pry,
-        Unlight
+        Unlight,
+        Store
     }
 }

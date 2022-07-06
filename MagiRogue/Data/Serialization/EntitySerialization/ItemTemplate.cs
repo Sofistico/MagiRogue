@@ -212,6 +212,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 Description = itemTemplate.Description,
                 Traits = itemTemplate.Traits,
                 Qualities = Quality.ReturnQualityList(itemTemplate.Qualities),
+                ItemId = itemTemplate.Id,
             };
             if (itemTemplate.Condition != 100)
             {

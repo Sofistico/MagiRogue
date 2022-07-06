@@ -36,6 +36,7 @@ namespace MagiRogue.Entities
         /// </summary>
         public bool Bumped { get => bumped; set => bumped = value; }
 
+        // TODO: change inventory...
         /// <summary>
         /// Here we define were the inventory is
         /// </summary>
