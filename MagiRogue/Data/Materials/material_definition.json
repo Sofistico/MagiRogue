@@ -10,6 +10,8 @@
     "Density" : 0, // multiplies with gravity and mass for weight calculations, in g/c³
     "MeltingPoint": 0, // Melting point of something in C° if it can melt, normally something flamable isn't capable of melt
     "BoilingPoint": 0, // Boiling point of something in C° if it can boil, normally something flamable isn't capable of boil
+    "ConfersTraits": [], // confers traits to what it created, if applicable.
+    "LiquidTurnsInto": "idOfAnotherMaterial", // what this material can turn into, if heated and let to cool
   },*/
   {
     "Id": "memory_stuff",
@@ -42,6 +44,7 @@
     "CanRegen": false,
     "Density": 1.6,
     "MeltingPoint": 1200,
+    "ConfersTraits": [ "Durable", "MagicallyWeak" ],
     "Color": "DarkGray"
   },
   {
@@ -54,6 +57,7 @@
     "Density": 7.8,
     "MeltingPoint": 1538,
     "BoilingPoint": 2862,
+    "ConfersTraits": [ "Durable", "MagicallyWeak" ],
     "Color": "Gray"
   },
   {
@@ -96,15 +100,17 @@
     "MPInfusionLimit": 100,
     "CanRegen": true,
     "Density": 3.5,
+    "ConfersTraits": [ "Magical" ],
     "Color": "Blue"
   },
   {
     "Id": "gold",
     "Name": "Gold",
-    "Hardness": 2,
+    "Hardness": 1,
     "MPInfusionLimit": 10,
     "Density": 19.3,
     "MeltingPoint": 1064,
+    "ConfersTraits": [ "Magical", "MagicallyPotent" ],
     "Color": "Gold"
   },
   {
@@ -118,6 +124,7 @@
     "MPInfusionLimit": 5,
     "Density": 0.917,
     "MeltingPoint": 0,
+    "ConfersTraits": [ "Fragile" ],
     "Color": "Ice"
   },
   {
@@ -136,6 +143,7 @@
     "MPInfusionLimit": 2,
     "Density": 1.6,
     "MeltingPoint": 1700,
+    "LiquidTurnsInto": "glass",
     "Color": "Desert"
   },
   {
@@ -147,5 +155,16 @@
     "MeltingPoint": 1149,
     "Flamability": true,
     "Color": "DarkGray"
+  },
+  {
+    "Id": "glass",
+    "Name": "Glass",
+    "Hardness": 0,
+    "MPInfusionLimit": 6,
+    "Density": 2.7,
+    "MeltingPoint": 1500,
+    "BoilingPoint": 2230,
+    "ConfersTraits": [ "Fragile" ],
+    "Color": "UnclearGlass"
   }
 ]

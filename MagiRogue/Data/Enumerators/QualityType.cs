@@ -15,6 +15,7 @@ namespace MagiRogue.Data.Enumerators
         Forge,
         Smelt,
         Anvil,
+        GeneralCraft,
         WoodCraft,
         Enchant,
         VisExtract,
@@ -23,5 +24,13 @@ namespace MagiRogue.Data.Enumerators
         Lockpick,
         Hammer,
         Pry,
+        Art,
+        Bake,
+        Food,
+        Alchemy,
+        Distill,
+        Mix,
+        BatchPotion,
+        Potion
     }
 }

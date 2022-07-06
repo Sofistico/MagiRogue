@@ -4,16 +4,16 @@
     "MaterialId": "stone",
     "Name": "Forge",
     "Description": "This is a forge, you can forge metal items in it and also harden clay. /nYou can make quite a nice cake, if you like yours a little burnt.",
-    "Glyph": "▼",
+    "Glyph": "•",
     "Weight": 100,
     "Size": 50,
     "FurnitureType": "Craft",
     "UseActions": [ "Craft" ],
     "Qualities": [
       [ "Forge", 3 ],
-      [ "Smelt", 2 ]
+      [ "Smelt", 1 ]
     ],
-    "Traits": [ "Inspirational" ]
+    "Traits": [ "Inspirational", "WorkItem" ]
   },
   {
     "Id": "anvil",
@@ -26,6 +26,90 @@
     "FurnitureType": "Craft",
     "UseActions": [ "Craft" ],
     "Qualities": [ [ "Anvil", 3 ] ],
-    "Traits": [ "Inspirational" ]
+    "Traits": [ "Inspirational", "WorkItem" ]
+  },
+  {
+    "Id": "crafting_table",
+    "MaterialId": "wood",
+    "Name": "Crafting Table",
+    "Description": "This is a crafting table, you use it to craft stuff on it, there are a variety amount of tools on it.",
+    "Glyph": "╦",
+    "Weight": 200,
+    "Size": 120,
+    "FurnitureType": "Craft",
+    "UseActions": [ "Craft" ],
+    "Qualities": [
+      [ "FineWorking", 1 ],
+      [ "WoodCraft", 2 ],
+      [ "Art", 1 ],
+      [ "Enchant", 1 ],
+      [ "GeneralCraft", 3 ]
+    ],
+    "Traits": [ "Inspirational", "WorkItem" ]
+  },
+  {
+    "Id": "oven",
+    "MaterialId": "stone",
+    "Name": "Oven",
+    "Description": "Here is a big oven, you can bake bread on it and make food",
+    "Glyph": "░",
+    "Weight": 2500,
+    "Size": 200,
+    "FurnitureType": "Craft",
+    "UseActions": [ "Craft" ],
+    "Qualities": [
+      [ "Bake", 2 ],
+      [ "Food", 1 ]
+    ],
+    "Traits": [ "Inspirational", "WorkItem" ]
+  },
+  {
+    "Id": "magical_distilator",
+    "MaterialId": "glass",
+    "Name": "Magical Distilator",
+    "Description": "A distilator, distills items into it's base form, perfect for alchemy",
+    "Glyph": "&",
+    "Weight": 33,
+    "Size": 30,
+    "FurnitureType": "Craft",
+    "UseActions": [ "Craft", "Distill" ],
+    "Qualities": [
+      [ "Alchemy", 1 ],
+      [ "Distill", 3 ]
+    ],
+    "Traits": [ "Inspirational", "WorkItem", "Magical" ]
+  },
+  {
+    "Id": "crucible",
+    "MaterialId": "iron",
+    "Name": "Crucible",
+    "Description": "A crucible, mix up items in it to concentrate their magical potency and someties do batch alchemy",
+    "Glyph": "U",
+    "Weight": 333,
+    "Size": 70,
+    "FurnitureType": "Craft",
+    "UseActions": [ "Craft", "Alchemy" ],
+    "Qualities": [
+      [ "Alchemy", 3 ],
+      [ "Mix", 1 ],
+      [ "BatchPotion", 2 ]
+    ],
+    "Traits": [ "Inspirational", "WorkItem" ]
+  },
+  {
+    "Id": "alembic",
+    "MaterialId": "glass",
+    "Name": "Alembic",
+    "Description": "An alembic, some funny looking glass that you can make potion from, pretty much the ideal tool for any aspiring alchemist",
+    "Glyph": "ª",
+    "Weight": 22,
+    "Size": 41,
+    "FurnitureType": "Craft",
+    "Qualities": [
+      [ "Alchemy", 1 ],
+      [ "Mix", 3 ],
+      [ "FineWorking", 2 ]
+    ],
+    "Traits": [ "Inspirational", "WorkItem" ]
   }
 ]

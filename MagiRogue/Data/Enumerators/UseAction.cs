@@ -15,6 +15,8 @@ namespace MagiRogue.Data.Enumerators
         Sit,
         Study,
         Craft,
+        Alchemy,
+        Distill,
         Enchant,
         Rest,
         VisExtract,

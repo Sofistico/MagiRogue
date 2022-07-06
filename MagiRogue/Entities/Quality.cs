@@ -7,6 +7,9 @@ using System.Collections.Generic;
 
 namespace MagiRogue.Entities
 {
+    /// <summary>
+    /// Is anything that can be interacted with.
+    /// </summary>
     public struct Quality
     {
         public QualityType QualityType { get; set; }

@@ -2,7 +2,7 @@
   {
     "Id": "wood_chair",
     "MaterialId": "wood",
-    "Name": "Chair",
+    "Name": "Wood Chair",
     "Description": "This is a chair. \nYou can sit on it. \nIt looks pretty confortable.",
     "Glyph": "π",
     "Weight": 45,
@@ -15,13 +15,36 @@
   {
     "Id": "wood_table",
     "MaterialId": "wood",
-    "Name": "Table",
+    "Name": "Wood Table",
     "Description": "This is a table, you can eat food on it or study, the choice is yours.",
     "Glyph": "╤",
     "Weight": 50,
     "Size": 65,
     "FurnitureType": "Table",
-    "UseActions": [ "Study", "Enchant" ],
+    "UseActions": [ "Study" ],
     "Traits": [ "Confortable", "Research", "HoldItems" ]
   },
+  {
+    "Id": "wood_chest",
+    "MaterialId": "wood",
+    "Name": "Wood Chest",
+    "Description": "Here is a good chest, can hold itens for you.",
+    "Glyph": "Æ",
+    "Weight": 25,
+    "Size": 40,
+    "FurnitureType": "Generic",
+    "Traits": [ "Storage" ],
+    "UseAction": [ "Store" ]
+  },
+  {
+    "Id": "wood_throne",
+    "MaterialId": "wood",
+    "Name": "Wood Throne",
+    "Description": "Here is a good Throne, to sit like a king.",
+    "Glyph": "╥",
+    "Weight": 37,
+    "Size": 170,
+    "FurnitureType": "Generic",
+    "Traits": [ "Regal", "WorkItem", "Inspirational" ]
+  }
 ]

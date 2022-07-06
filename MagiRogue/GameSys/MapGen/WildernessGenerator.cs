@@ -110,8 +110,8 @@ namespace MagiRogue.GameSys.MapGen
                 case RoomTag.Alchemist:
                     AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("alembic"), room, map);
                     AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("crucible"), room, map);
-                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("forge"), room, map);
-                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("distilator"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("stone_forge"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("magical_distilator"), room, map);
                     break;
 
                 case RoomTag.Hovel:

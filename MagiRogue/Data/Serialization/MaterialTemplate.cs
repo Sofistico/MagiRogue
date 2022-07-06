@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MagiRogue.Data.Enumerators;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 
@@ -40,6 +42,12 @@ namespace MagiRogue.Data.Serialization
         public int? BoilingPoint { get; set; }
 
         [DataMember]
+        public string LiquidTurnsInto { get; set; }
+
+        [DataMember]
+        public List<Trait> ConfersTraits { get; set; }
+
+        [DataMember]
         public string Color { get; set; }
 
         public MaterialTemplate Copy()
@@ -77,6 +85,13 @@ namespace MagiRogue.Data.Serialization
         internal MagiColorSerialization ReturnMagiColor()
         {
             return new MagiColorSerialization(Color);
+        }
+
+        public MaterialTemplate GetMaterialThatLiquidTurns()
+        {
+            if (string.IsNullOrEmpty(LiquidTurnsInto))
+                return null;
+            return DataManager.QueryMaterials(LiquidTurnsInto);
         }
 
         private string GetDebuggerDisplay()
