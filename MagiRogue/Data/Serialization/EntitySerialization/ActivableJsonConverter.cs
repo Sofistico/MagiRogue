@@ -31,6 +31,10 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 UseAction.Hammer => new Hammer(),
                 UseAction.Lockpick => new Lockpick(),
                 UseAction.Pry => new Pry(),
+                UseAction.Distill => new Distill(),
+                UseAction.Alchemy => new Alchemy(),
+                UseAction.Unlight => new Unlight(),
+                UseAction.Store => new Store(),
                 _ => throw new NotSupportedException($"Tried to add an use action that doensn't exists! Action used: {action} "),
             };
             return activable;

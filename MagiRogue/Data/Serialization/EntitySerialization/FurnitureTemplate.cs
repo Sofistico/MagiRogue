@@ -138,6 +138,8 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         private static void DetermineInvFromJson(FurnitureTemplate template, Furniture objFur)
         {
             List<Item> inv = new();
+            if (template.Inventory is null)
+                return;
             for (int i = 0; i < template.Inventory.Count; i++)
             {
                 var obj = template.Inventory[i];

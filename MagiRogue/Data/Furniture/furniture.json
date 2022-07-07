@@ -32,7 +32,7 @@
     "Glyph": "Æ",
     "Weight": 25,
     "Size": 40,
-    "FurnitureType": "Generic",
+    "FurnitureType": "General",
     "Traits": [ "Storage" ],
     "UseAction": [ "Store" ]
   },
@@ -44,7 +44,7 @@
     "Glyph": "╥",
     "Weight": 37,
     "Size": 170,
-    "FurnitureType": "Generic",
+    "FurnitureType": "General",
     "Traits": [ "Regal", "WorkItem", "Inspirational" ]
   }
 ]

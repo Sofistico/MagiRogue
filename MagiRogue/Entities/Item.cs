@@ -62,7 +62,7 @@ namespace MagiRogue.Entities
         /// <summary>
         /// Actives that the item can do.
         /// </summary>
-        public List<IActivable> Actives { get; set; }
+        public List<IActivable> UseAction { get; set; }
         public List<Trait> Traits { get; set; }
         public List<Quality> Qualities { get; internal set; }
         public string ItemId { get; set; }
@@ -78,7 +78,7 @@ namespace MagiRogue.Entities
             Condition = condition;
             Material = GameSys.Physics.PhysicsManager.SetMaterial(materialId);
             Name = Material.ReturnNameFromMaterial(name);
-            Actives = new();
+            UseAction = new();
             Traits = new();
             Qualities = new();
         }

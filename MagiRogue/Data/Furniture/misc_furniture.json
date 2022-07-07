@@ -8,7 +8,7 @@
     "Weight": 40,
     "Size": 120,
     "Durability": 1,
-    "FurnitureType": "Generic"
+    "FurnitureType": "General"
   },
   {
     "Id": "religious_altar",
@@ -19,7 +19,7 @@
     "Weight": 100,
     "Size": 120,
     "Durability": 2,
-    "FurnitureType": "Generic",
+    "FurnitureType": "General",
     "Traits": [ "Holy", "WorkItem" ],
     "UseAction": [ "Pray" ]
   },
@@ -33,7 +33,7 @@
     "Weight": 51,
     "Size": 120,
     "Durability": 1,
-    "FurnitureType": "Generic",
+    "FurnitureType": "General",
     "Traits": [ "Storage" ],
     "UseAction": [ "Store" ],
     "Inventory": [ [ "coal_item", 10 ] ]

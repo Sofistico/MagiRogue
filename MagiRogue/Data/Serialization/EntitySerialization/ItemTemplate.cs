@@ -31,44 +31,6 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
     [Serializable]
     public class ItemTemplate
     {
-        /// <summary>
-        /// An item creator, defines the template in how it should be created, acess this to create new items.
-        /// This is used for the deserialization.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="foreground"></param>
-        /// <param name="background"></param>
-        /// <param name="glyph"></param>
-        /// <param name="weight"></param>
-        /// <param name="condition">Defaults to 100%</param>
-        public ItemTemplate(string name, string foreground, string background, int glyph,
-            float weight, int size, string description, string materialId, int condition = 100)
-        {
-            Name = name;
-            Foreground = foreground;
-            Background = background;
-            Glyph = (char)glyph;
-            Weight = weight;
-            Condition = condition;
-            Description = description;
-            Size = size;
-            MaterialId = materialId;
-            Material = GameSys.Physics.PhysicsManager.SetMaterial(materialId);
-
-            ForegroundBackingField = new MagiColorSerialization(foreground);
-            BackgroundBackingField = new MagiColorSerialization(background);
-        }
-
-        /// <summary>
-        /// An item creator, defines the template in how it should be created, acess this to create new items.
-        /// This is used in the serialization of the item.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="foreground"></param>
-        /// <param name="background"></param>
-        /// <param name="glyph"></param>
-        /// <param name="weight"></param>
-        /// <param name="condition">Defaults to 100%</param>
         public ItemTemplate(string name, uint foreground, uint background, int glyph,
             float weight, int size, string materialId, MagicManager magic, int condition = 100)
         {
@@ -156,13 +118,14 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         public DamageType DamageType { get; private set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<IActivable> Actives { get; set; }
+        public List<IActivable> UseAction { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<Trait> Traits { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<List<string>> Qualities { get; set; }
+        public EquipType EquipType { get; set; }
 
         // Will need to see if it works, but so far the logic seems to check
         public static implicit operator ItemTemplate(Item item)
@@ -181,10 +144,11 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 CanInteract = item.CanInteract,
                 BaseDamage = item.BaseDmg,
                 DamageType = item.ItemDamageType,
-                Actives = item.Actives,
+                UseAction = item.UseAction,
                 Description = item.Description,
                 Traits = item.Traits,
                 Qualities = Quality.ReturnQualityListAsString(item.Qualities),
+                EquipType = item.EquipType,
             };
 
             return itemSerialized;
@@ -194,9 +158,11 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         {
             int glyph = GlyphHelper.GlyphExistInDictionary(itemTemplate.Glyph) ?
                 GlyphHelper.GetGlyph(itemTemplate.Glyph) : itemTemplate.Glyph;
+            MagiColorSerialization foreground = new MagiColorSerialization(itemTemplate.Foreground);
+            Color background = !string.IsNullOrEmpty(itemTemplate.Background) ? itemTemplate.BackgroundBackingField.Color : Color.Transparent;
 
-            Item item = new(itemTemplate.ForegroundBackingField.Color,
-                itemTemplate.BackgroundBackingField.Color,
+            Item item = new(foreground.Color,
+                background,
                 itemTemplate.Name,
                 glyph,
                 Point.None,
@@ -208,11 +174,12 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 BaseDmg = itemTemplate.BaseDamage,
                 CanInteract = itemTemplate.CanInteract,
                 ItemDamageType = itemTemplate.DamageType,
-                Actives = itemTemplate.Actives,
+                UseAction = itemTemplate.UseAction,
                 Description = itemTemplate.Description,
                 Traits = itemTemplate.Traits,
                 Qualities = Quality.ReturnQualityList(itemTemplate.Qualities),
                 ItemId = itemTemplate.Id,
+                EquipType = itemTemplate.EquipType,
             };
             if (itemTemplate.Condition != 100)
             {

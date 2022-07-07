@@ -1,0 +1,12 @@
+﻿[
+  {
+    "Id": "coal_item",
+    "MaterialId": "carbon_coal",
+    "Name": "Coal",
+    "Description": "This is a piece of coal, it is flamable and quite a good fuel.",
+    "Foreground": "DarkGrey",
+    "Glyph": "*",
+    "Weight": 12,
+    "Size": 7
+  }
+]

@@ -92,5 +92,37 @@ namespace MagiRogue.Entities
         }
     }
 
+    public struct Distill : IActivable
+    {
+        public void Activate(Entity entity)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
+    public struct Alchemy : IActivable
+    {
+        public void Activate(Entity entity)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
+    public struct Store : IActivable
+    {
+        public void Activate(Entity entity)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
+    public struct Unlight : IActivable
+    {
+        public void Activate(Entity entity)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
     #endregion StructRegion
 }

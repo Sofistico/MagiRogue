@@ -75,5 +75,6 @@ namespace MagiRogue.Data.Enumerators
         /// halves the max mp to infuse an item
         /// </summary>
         MagicallyWeak,
+        Storage,
     }
 }
