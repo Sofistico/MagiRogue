@@ -23,6 +23,7 @@ namespace MagiRogue.Data.Enumerators
         /// Confers rest bonus to those who rest on it
         /// </summary>
         Confortable,
+        SuperConfortable,
         /// <summary>
         /// Is used to research
         /// </summary>

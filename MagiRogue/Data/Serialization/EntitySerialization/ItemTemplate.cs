@@ -186,6 +186,10 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 item.Condition = itemTemplate.Condition;
             }
             item.Description = itemTemplate.Description;
+            if (item.Material.ConfersTraits is not null && item.Material.ConfersTraits.Count > 0)
+            {
+                item.Traits.AddRange(item.Material.ConfersTraits);
+            }
 
             return item;
         }

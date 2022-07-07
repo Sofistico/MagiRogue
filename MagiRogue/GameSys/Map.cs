@@ -233,6 +233,15 @@ namespace MagiRogue.GameSys
             return closest;
         }
 
+        public bool EntityIsThere(Point pos)
+        {
+            Entity? entity = GetEntityAt<Entity>(pos);
+            if (entity is not null)
+                return true;
+            else
+                return false;
+        }
+
         /// <summary>
         /// Removes an Entity from the Entities Field
         /// </summary>

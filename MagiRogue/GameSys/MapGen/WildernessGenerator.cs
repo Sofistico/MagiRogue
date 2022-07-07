@@ -183,7 +183,8 @@ namespace MagiRogue.GameSys.MapGen
         private static void AddFurnitureAtRandomPos(Furniture furniture, Room room, Map map)
         {
             Point pos = Point.None;
-            while (!map.IsTileWalkable(pos))
+            int count = 0;
+            while (!map.IsTileWalkable(pos) || map.EntityIsThere(pos))
             {
                 pos = room.ReturnRandomPosRoom();
             }

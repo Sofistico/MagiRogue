@@ -46,5 +46,17 @@
     "Size": 170,
     "FurnitureType": "General",
     "Traits": [ "Regal", "WorkItem", "Inspirational" ]
+  },
+  {
+    "Id": "wood_bed",
+    "MaterialId": "wood",
+    "Name": "Wood Bed",
+    "Description": "Here is a good bed, to rest like a dirt poor peasant who can't afford better than wood.",
+    "Glyph": "8",
+    "Weight": 55,
+    "Size": 175,
+    "FurnitureType": "General",
+    "Traits": [ "SuperConfortable" ],
+    "UseAction": [ "Rest" ]
   }
 ]

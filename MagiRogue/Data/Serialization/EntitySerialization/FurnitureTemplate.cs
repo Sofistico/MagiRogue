@@ -215,6 +215,10 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 Qualities = Quality.ReturnQualityList(template.Qualities),
             };
             DetermineInvFromJson(template, objFur);
+            if (objFur.Material.ConfersTraits is not null && objFur.Material.ConfersTraits.Count > 0)
+            {
+                objFur.Traits.AddRange(objFur.Material.ConfersTraits);
+            }
 
             return objFur;
         }

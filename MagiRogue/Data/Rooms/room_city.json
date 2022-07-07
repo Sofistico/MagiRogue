@@ -3,7 +3,7 @@
     "Id": "room_city1",
     "Obj": {
       "EmptyFill": "t_grass",
-      "Tag": "MeetingPlace",
+      "Tag": "Dinner",
       "Rows": [
         "##########",
         "#?.3223.?#",
