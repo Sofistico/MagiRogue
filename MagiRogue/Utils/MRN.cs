@@ -1,7 +1,4 @@
 ﻿using GoRogue.DiceNotation;
-using ShaiRandom.Distributions.Continuous;
-using ShaiRandom.Generators;
-using System;
 
 namespace MagiRogue.Utils
 {

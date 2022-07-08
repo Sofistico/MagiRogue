@@ -1,14 +1,11 @@
-﻿using SadConsole;
+﻿using MagiRogue.GameSys;
+using MagiRogue.Utils;
+using Newtonsoft.Json;
+using SadConsole;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-using Newtonsoft.Json;
-using MagiRogue.Data.Serialization;
-using MagiRogue.GameSys;
-using MagiRogue.Utils;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace MagiRogue.Data

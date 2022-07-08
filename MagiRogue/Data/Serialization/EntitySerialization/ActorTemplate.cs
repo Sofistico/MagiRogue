@@ -2,7 +2,6 @@
 using MagiRogue.GameSys.Magic;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
-using SadConsole.SerializedTypes;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
@@ -285,7 +284,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             if (actorTemplate.IsPlayer == true)
                 actor.IsPlayer = true;
 
-            if(actorTemplate.ForegroundPackedValue == 0 && !string.IsNullOrEmpty(actorTemplate.Foreground))
+            if (actorTemplate.ForegroundPackedValue == 0 && !string.IsNullOrEmpty(actorTemplate.Foreground))
             {
                 actor.Appearance.Foreground = new MagiColorSerialization(actorTemplate.Foreground).Color;
                 actor.Appearance.Background = new MagiColorSerialization(actorTemplate.Background).Color;

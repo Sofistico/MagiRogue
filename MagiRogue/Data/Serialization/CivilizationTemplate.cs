@@ -2,13 +2,9 @@
 using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Civ;
-using MagiRogue.GameSys.Tiles;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MagiRogue.Data.Serialization
 {

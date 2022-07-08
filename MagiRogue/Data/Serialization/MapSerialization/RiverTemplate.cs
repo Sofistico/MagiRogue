@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MagiRogue.Data.Enumerators;
+﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.GameSys.Planet;
 using MagiRogue.GameSys.Tiles;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using System;
+using System.Collections.Generic;
 
 namespace MagiRogue.Data.Serialization.MapSerialization
 {

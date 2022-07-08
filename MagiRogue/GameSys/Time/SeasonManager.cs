@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using System.Threading.Tasks;
-using MagiRogue.Data.Enumerators;
+﻿using MagiRogue.Data.Enumerators;
+using System;
 
 namespace MagiRogue.GameSys.Time
 {

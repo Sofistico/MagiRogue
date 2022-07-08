@@ -1,14 +1,9 @@
-﻿using MagiRogue.Data;
-using MagiRogue.GameSys;
-using MagiRogue.Utils;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization.EntitySerialization;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System;
-using MagiRogue.Data.Serialization;
-using System.Linq;
 using System.Collections.Generic;
-using MagiRogue.Data.Serialization.EntitySerialization;
-using MagiRogue.Data.Enumerators;
 
 namespace MagiRogue.Entities
 {

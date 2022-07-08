@@ -1,12 +1,9 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization.MapSerialization;
-using MagiRogue.Entities;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using SadRogue.Primitives;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 

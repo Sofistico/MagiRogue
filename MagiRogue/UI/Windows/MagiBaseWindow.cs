@@ -1,5 +1,4 @@
 ﻿using MagiRogue.UI.Controls;
-using SadConsole;
 using SadConsole.UI;
 using System;
 using System.Collections.Generic;
@@ -116,7 +115,7 @@ namespace MagiRogue.UI.Windows
             }
 
             lastFocusedButton = focusedButton;
-            if(_selectionButtons is not null)
+            if (_selectionButtons is not null)
             {
                 _selectionButtons[focusedButton]();
             }

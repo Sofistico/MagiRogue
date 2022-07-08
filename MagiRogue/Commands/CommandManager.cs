@@ -8,8 +8,6 @@ using MagiRogue.GameSys.Tiles;
 using MagiRogue.GameSys.Time;
 using MagiRogue.Utils;
 using SadConsole;
-using SadRogue.Primitives;
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;

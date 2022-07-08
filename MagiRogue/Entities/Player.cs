@@ -1,14 +1,8 @@
 ﻿using MagiRogue.Data;
-using MagiRogue.GameSys;
-using MagiRogue.GameSys.Magic;
-using MagiRogue.GameSys.Magic.Effects;
-using Newtonsoft.Json;
-using SadRogue.Primitives;
-using System.Linq;
-using System.Collections.Generic;
-using MagiRogue.Data.Serialization;
-using GoRogue.DiceNotation;
 using MagiRogue.Data.Enumerators;
+using MagiRogue.GameSys.Magic;
+using SadRogue.Primitives;
+using System.Collections.Generic;
 
 namespace MagiRogue.Entities
 {

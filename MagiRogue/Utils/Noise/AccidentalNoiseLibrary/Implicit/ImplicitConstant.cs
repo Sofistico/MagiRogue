@@ -14,7 +14,7 @@ namespace TinkerWorX.AccidentalNoiseLibrary
             this.Value = value;
         }
 
-        public Double Value { get;  set; }
+        public Double Value { get; set; }
 
         public override Double Get(Double x, Double y)
         {

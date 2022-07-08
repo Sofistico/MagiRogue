@@ -3,7 +3,6 @@ using MagiRogue.Entities;
 using MagiRogue.Utils;
 using SadConsole;
 using SadRogue.Primitives;
-using System;
 
 namespace MagiRogue.GameSys.Tiles
 {

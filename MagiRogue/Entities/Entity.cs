@@ -1,5 +1,4 @@
 ﻿using GoRogue.Components;
-using GoRogue.Components.ParentAware;
 using GoRogue.GameFramework;
 using MagiRogue.Data.Serialization;
 using MagiRogue.GameSys.Magic;

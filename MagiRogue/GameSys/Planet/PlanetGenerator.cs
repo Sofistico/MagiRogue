@@ -8,7 +8,6 @@ using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using TinkerWorX.AccidentalNoiseLibrary;
-using Console = SadConsole.Console;
 
 namespace MagiRogue.GameSys.Planet
 {

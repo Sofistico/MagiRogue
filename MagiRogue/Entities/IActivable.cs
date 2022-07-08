@@ -1,9 +1,5 @@
-﻿using MagiRogue.Data.Serialization;
-using MagiRogue.Data.Serialization.EntitySerialization;
-using MagiRogue.GameSys;
+﻿using MagiRogue.Data.Serialization.EntitySerialization;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using SadRogue.Primitives;
 
 namespace MagiRogue.Entities
 {

@@ -140,7 +140,7 @@ namespace TinkerWorX.AccidentalNoiseLibrary
 
         private Double MultiplyGet(Double x, Double y, Double z, Double w)
         {
-            return this.sources.Aggregate(1.00, (current, source) => current * source.Get(x, y,z,w));
+            return this.sources.Aggregate(1.00, (current, source) => current * source.Get(x, y, z, w));
         }
 
         private Double MultiplyGet(Double x, Double y, Double z, Double w, Double u, Double v)

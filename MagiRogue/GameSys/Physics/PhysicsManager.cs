@@ -1,8 +1,6 @@
 ﻿using MagiRogue.Data;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Utils;
-using System;
-using System.Linq;
 
 namespace MagiRogue.GameSys.Physics
 {

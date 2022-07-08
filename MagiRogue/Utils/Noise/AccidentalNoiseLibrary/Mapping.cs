@@ -189,7 +189,7 @@ namespace TinkerWorX.AccidentalNoiseLibrary
             }
         }
 
-        public static void Map3D(MappingMode mappingMode, Double[, ,] array, ImplicitModuleBase module, MappingRanges ranges)
+        public static void Map3D(MappingMode mappingMode, Double[,,] array, ImplicitModuleBase module, MappingRanges ranges)
         {
             var width = array.GetLength(0);
             var height = array.GetLength(1);

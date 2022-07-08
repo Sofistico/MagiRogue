@@ -1,12 +1,9 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using System;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Utils;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
-using ShaiRandom.Distributions.Continuous;
-using MagiRogue.Utils;
-using MagiRogue.Data.Enumerators;
 
 namespace MagiRogue.Entities
 {

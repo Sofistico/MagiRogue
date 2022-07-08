@@ -289,6 +289,11 @@ namespace MagiRogue.GameSys.MapGen
             if (worldTile.CivInfluence is not null)
             {
                 CityGenerator city = new();
+                switch (worldTile.CivInfluence)
+                {
+                    default:
+                        break;
+                }
                 city.GenerateSmallVillageFromMapBSP(completeMap,
                     randNum.NextInt(6, 23), randNum.NextInt(4, 7), randNum.NextInt(8, 12), "Test Town");
             }

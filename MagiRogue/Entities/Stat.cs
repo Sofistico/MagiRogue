@@ -1,5 +1,4 @@
 ﻿using MagiRogue.Utils;
-using System;
 using System.Runtime.Serialization;
 
 namespace MagiRogue.Entities

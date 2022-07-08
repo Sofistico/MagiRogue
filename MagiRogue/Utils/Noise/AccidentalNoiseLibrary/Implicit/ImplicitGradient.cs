@@ -37,7 +37,7 @@ namespace TinkerWorX.AccidentalNoiseLibrary
         private Double length6;
 
         public ImplicitGradient(
-            Double x0 = 0.00, Double x1 = 1.00, Double y0 = 0.00, Double y1 = 1.00, Double z0 = 0.00, Double z1 = 1.00, 
+            Double x0 = 0.00, Double x1 = 1.00, Double y0 = 0.00, Double y1 = 1.00, Double z0 = 0.00, Double z1 = 1.00,
             Double w0 = 0.00, Double w1 = 1.00, Double u0 = 0.00, Double u1 = 1.00, Double v0 = 0.00, Double v1 = 1.00)
         {
             this.SetGradient(x0, x1, y0, y1, z0, z1, w0, w1, u0, u1, v0, v1);

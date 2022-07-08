@@ -1,9 +1,7 @@
 ﻿using GoRogue.DiceNotation;
 using MagiRogue.Entities;
-using Newtonsoft.Json.Converters;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
 
 namespace MagiRogue.GameSys.Magic
 {

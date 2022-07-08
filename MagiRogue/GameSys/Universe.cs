@@ -1,18 +1,16 @@
 ﻿using MagiRogue.Components;
 using MagiRogue.Data;
+using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Civ;
+using MagiRogue.GameSys.MapGen;
+using MagiRogue.GameSys.Planet;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.GameSys.Time;
-using MagiRogue.GameSys.Planet;
-using SadRogue.Primitives;
-using System;
-using MagiRogue.GameSys.Magic;
-using MagiRogue.GameSys.MapGen;
-using System.Linq;
-using MagiRogue.Data.Serialization;
 using Newtonsoft.Json;
-using MagiRogue.Data.Enumerators;
+using System;
+using System.Linq;
 
 namespace MagiRogue.GameSys
 {

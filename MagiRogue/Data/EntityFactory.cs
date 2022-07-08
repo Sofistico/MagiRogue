@@ -1,9 +1,6 @@
-﻿using MagiRogue.Entities;
-using SadRogue.Primitives;
-using MagiRogue.Data.Serialization;
+﻿using MagiRogue.Data.Serialization.EntitySerialization;
+using MagiRogue.Entities;
 using System.Collections.Generic;
-using System;
-using MagiRogue.Data.Serialization.EntitySerialization;
 
 namespace MagiRogue.Data
 {

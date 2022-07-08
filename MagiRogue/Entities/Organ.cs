@@ -2,8 +2,6 @@
 using MagiRogue.Data.Serialization;
 using MagiRogue.GameSys.Physics;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using System;
 using System.Runtime.Serialization;
 
 namespace MagiRogue.Entities

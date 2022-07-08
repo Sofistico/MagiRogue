@@ -1,14 +1,14 @@
 ﻿using MagiRogue.Data;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Tiles;
+using MagiRogue.Utils;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
+using ShaiRandom.Generators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ShaiRandom.Generators;
-using MagiRogue.Utils;
-using MagiRogue.Data.Enumerators;
 
 namespace MagiRogue.GameSys.MapGen
 {

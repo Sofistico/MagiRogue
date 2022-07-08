@@ -1,15 +1,11 @@
-﻿using GoRogue;
-using GoRogue.DiceNotation;
-using GoRogue.GameFramework;
+﻿using GoRogue.GameFramework;
 using GoRogue.Pathing;
 using GoRogue.SpatialMaps;
 using MagiRogue.Data;
 using MagiRogue.Data.Enumerators;
-using MagiRogue.Data.Serialization;
 using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Tiles;
-using MagiRogue.GameSys.Time;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -19,10 +15,7 @@ using SadRogue.Primitives.GridViews;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Entity = MagiRogue.Entities.Entity;
 
 namespace MagiRogue.GameSys

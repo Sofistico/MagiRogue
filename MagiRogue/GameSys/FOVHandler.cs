@@ -2,7 +2,6 @@
 using GoRogue.SpatialMaps;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Tiles;
-using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 using System;
 using System.Linq;

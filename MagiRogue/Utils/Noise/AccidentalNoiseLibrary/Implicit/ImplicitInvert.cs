@@ -8,7 +8,7 @@ namespace TinkerWorX.AccidentalNoiseLibrary
         {
             this.Source = source;
         }
-        
+
         public ImplicitModuleBase Source { set; get; }
 
         public override Double Get(Double x, Double y)

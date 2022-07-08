@@ -1,16 +1,10 @@
-﻿using MagiRogue.Data;
+﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
-using MagiRogue.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using MagiRogue.GameSys.Tiles;
 using MagiRogue.Data.Serialization.EntitySerialization;
-using MagiRogue.Data.Enumerators;
+using MagiRogue.Entities;
+using MagiRogue.GameSys.Tiles;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace MagiRogue.GameSys.Civ
 {
@@ -27,6 +21,7 @@ namespace MagiRogue.GameSys.Civ
         public float MagicalResources { get; set; }
         public List<ItemTemplate> Nodes { get; set; }
         public List<Point> Territory { get; set; }
+        public List<Settlement> Cities { get; set; }
 
         public Civilization(string name, Race primaryRace, int population,
             CivilizationTendency tendency)

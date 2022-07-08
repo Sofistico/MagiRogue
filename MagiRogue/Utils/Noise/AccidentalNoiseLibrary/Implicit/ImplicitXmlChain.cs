@@ -761,7 +761,7 @@ namespace TinkerWorX.AccidentalNoiseLibrary
 
         private ImplicitXmlChain() { }
 
-        public Dictionary<String, ImplicitModuleBase> Modules { get; private set; } 
+        public Dictionary<String, ImplicitModuleBase> Modules { get; private set; }
 
         public ImplicitModuleBase Source { get; private set; }
 

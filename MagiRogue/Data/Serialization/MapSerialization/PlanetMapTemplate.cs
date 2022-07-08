@@ -2,10 +2,8 @@
 using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Planet;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
 
 namespace MagiRogue.Data.Serialization.MapSerialization

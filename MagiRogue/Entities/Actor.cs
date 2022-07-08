@@ -4,7 +4,6 @@ using MagiRogue.GameSys;
 using MagiRogue.GameSys.Tiles;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
-using System;
 using System.Collections.Generic;
 
 namespace MagiRogue.Entities

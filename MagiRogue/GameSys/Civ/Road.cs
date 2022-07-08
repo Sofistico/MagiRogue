@@ -1,15 +1,8 @@
-﻿using MagiRogue.GameSys.Tiles;
-using SadRogue.Primitives;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using MagiRogue.Data.Serialization;
+﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization.MapSerialization;
-using MagiRogue.Data.Enumerators;
+using MagiRogue.GameSys.Tiles;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace MagiRogue.GameSys.Civ
 {

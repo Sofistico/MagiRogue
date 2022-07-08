@@ -3,9 +3,7 @@ using MagiRogue.GameSys;
 using MagiRogue.UI.Windows;
 using SadConsole;
 using SadConsole.Input;
-using SadRogue.Primitives;
 using System;
-using System.Collections.Generic;
 using Color = SadConsole.UI.AdjustableColor;
 
 namespace MagiRogue.UI

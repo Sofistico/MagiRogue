@@ -1,9 +1,6 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Magic;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using System;
 using System.Text;
 
 namespace MagiRogue.Utils

@@ -1,15 +1,10 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Planet;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MagiRogue.GameSys.Tiles
 {

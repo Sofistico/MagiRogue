@@ -1,7 +1,6 @@
 ﻿using MagiRogue.GameSys.Time;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace MagiRogue.Data.Serialization

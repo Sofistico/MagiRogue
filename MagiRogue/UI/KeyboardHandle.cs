@@ -1,6 +1,5 @@
 ﻿using MagiRogue.Commands;
 using MagiRogue.Data.Enumerators;
-using MagiRogue.Data.Serialization;
 using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys;
@@ -10,7 +9,6 @@ using MagiRogue.UI.Windows;
 using Newtonsoft.Json;
 using SadConsole.Input;
 using SadRogue.Primitives;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MagiRogue.Data.Enumerators
+﻿namespace MagiRogue.Data.Enumerators
 {
     // If it stops working, add back the player map layer
     /// <summary>
