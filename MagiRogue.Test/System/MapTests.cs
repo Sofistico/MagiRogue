@@ -120,9 +120,12 @@ namespace MagiRogue.Test.System
         [Fact]
         public void TestSpawnMultipleThingSamePos()
         {
-            //map.Add(DataManager.QueryItemInData("coal_item"));
-            map.Add(DataManager.QueryFurnitureInData("wood_table"));
-            Assert.True(map.CanAddEntity(DataManager.QueryItemInData("coal_item")));
+            var fur = DataManager.QueryFurnitureInData("wood_table");
+            fur.Position = new Point();
+            map.Add(fur);
+            var item = DataManager.QueryItemInData("coal_item");
+            item.Position = new Point();
+            Assert.True(map.CanAddEntity(item));
         }
     }
 }

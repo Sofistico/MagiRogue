@@ -167,7 +167,7 @@ namespace MagiRogue.GameSys.MapGen
             }
 
             // Place walls at perimeter
-            List<Point> perimeter = GetBorderCellLocations(rectangle);
+            List<Point> perimeter = PointUtils.GetBorderCellLocations(rectangle);
 
             foreach (Point location in perimeter)
             {
@@ -175,14 +175,14 @@ namespace MagiRogue.GameSys.MapGen
             }
         }
 
-        private void CreateAnyWall(Point location, TileWall wall)
+        protected void CreateAnyWall(Point location, TileWall wall)
         {
             var copyWall = wall.Copy();
             copyWall.Position = location;
             _map.SetTerrain(copyWall);
         }
 
-        private void CreateAnyFloor(Point point, TileFloor floor)
+        protected void CreateAnyFloor(Point point, TileFloor floor)
         {
             var copyFloor = floor.Copy();
             copyFloor.Position = point;
@@ -237,29 +237,6 @@ namespace MagiRogue.GameSys.MapGen
                 TileWall wall = new TileWall(Point.FromIndex(i, _map.Width), "stone");
                 _map.SetTerrain(wall);
             }
-        }
-
-        /// <summary>
-        /// Returns a list of points expressing the perimeter of a rectangle
-        /// </summary>
-        /// <param name="room"></param>
-        /// <returns></returns>
-        public List<Point> GetBorderCellLocations(Rectangle room)
-        {
-            //establish room boundaries
-            int xMin = room.ToMonoRectangle().Left;
-            int xMax = room.ToMonoRectangle().Right;
-            int yMin = room.ToMonoRectangle().Bottom;
-            int yMax = room.ToMonoRectangle().Top;
-
-            // build a list of room border cells using a series of
-            // straight lines
-            List<Point> borderCells = GetTileLocationsAlongLine(xMin, yMin, xMax, yMin).ToList();
-            borderCells.AddRange(GetTileLocationsAlongLine(xMin, yMin, xMin, yMax));
-            borderCells.AddRange(GetTileLocationsAlongLine(xMin, yMax, xMax, yMax));
-            borderCells.AddRange(GetTileLocationsAlongLine(xMax, yMin, xMax, yMax));
-
-            return borderCells;
         }
 
         /// <summary>
@@ -489,7 +466,7 @@ namespace MagiRogue.GameSys.MapGen
         /// <param name="acceptsMoreThanOneDoor"></param>
         protected void CreateDoor(Room room, bool acceptsMoreThanOneDoor = false)
         {
-            List<Point> borderCells = GetBorderCellLocations(room.RoomRectangle);
+            List<Point> borderCells = PointUtils.GetBorderCellLocations(room.RoomRectangle);
             bool alreadyHasDoor = false;
 
             //go through every border cell and look for potential door candidates

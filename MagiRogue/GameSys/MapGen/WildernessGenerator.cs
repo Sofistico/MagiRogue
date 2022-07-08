@@ -181,19 +181,19 @@ namespace MagiRogue.GameSys.MapGen
 
         private static void AddFurnitureAtRandomPos(Furniture furniture, Room room, Map map)
         {
-            Point pos = Point.None;
-            while (!map.IsTileWalkable(pos) || map.EntityIsThere(pos))
-            {
-                pos = room.ReturnRandomPosRoom();
-            }
-            furniture.Position = pos;
-            map.Add(furniture);
-            //furniture.Position = Point.None;
-
-            //while (!map.CanAddEntity(furniture))
-            //    furniture.Position = room.ReturnRandomPosRoom();
-
+            //Point pos = Point.None;
+            //while (!map.IsTileWalkable(pos) || map.EntityIsThere(pos))
+            //{
+            //    pos = room.ReturnRandomPosRoom();
+            //}
+            //furniture.Position = pos;
             //map.Add(furniture);
+            furniture.Position = Point.None;
+
+            while (!map.CanAddEntity(furniture))
+                furniture.Position = room.ReturnRandomPosRoom();
+
+            map.Add(furniture);
         }
 
         private static void PruneTrees(Map completeMap, WorldTile worldTile)

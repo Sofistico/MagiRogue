@@ -43,5 +43,28 @@ namespace MagiRogue.Utils
                 }
             }
         }
+
+        /// <summary>
+        /// Returns a list of points expressing the perimeter of a rectangle
+        /// </summary>
+        /// <param name="room"></param>
+        /// <returns></returns>
+        public static List<Point> GetBorderCellLocations(Rectangle room)
+        {
+            //establish room boundaries
+            int xMin = room.ToMonoRectangle().Left;
+            int xMax = room.ToMonoRectangle().Right;
+            int yMin = room.ToMonoRectangle().Bottom;
+            int yMax = room.ToMonoRectangle().Top;
+
+            // build a list of room border cells using a series of
+            // straight lines
+            List<Point> borderCells = GetTileLocationsAlongLine(xMin, yMin, xMax, yMin).ToList();
+            borderCells.AddRange(GetTileLocationsAlongLine(xMin, yMin, xMin, yMax));
+            borderCells.AddRange(GetTileLocationsAlongLine(xMin, yMax, xMax, yMax));
+            borderCells.AddRange(GetTileLocationsAlongLine(xMax, yMin, xMax, yMax));
+
+            return borderCells;
+        }
     }
 }
