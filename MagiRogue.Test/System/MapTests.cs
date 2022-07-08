@@ -116,5 +116,13 @@ namespace MagiRogue.Test.System
 
             Assert.Equal(map.MapId, newMap.MapId);
         }
+
+        [Fact]
+        public void TestSpawnMultipleThingSamePos()
+        {
+            //map.Add(DataManager.QueryItemInData("coal_item"));
+            map.Add(DataManager.QueryFurnitureInData("wood_table"));
+            Assert.True(map.CanAddEntity(DataManager.QueryItemInData("coal_item")));
+        }
     }
 }

@@ -267,12 +267,12 @@ namespace MagiRogue.GameSys
         /// <param name="entity"></param>
         public void Add(Entity entity)
         {
-            if (entity.CurrentMap is not null)
+            /*if (entity.CurrentMap is not null)
             {
                 Map map = (Map)entity.CurrentMap;
                 map.ControlledEntitiy = null;
                 map.Remove(entity);
-            }
+            }*/
 
             try
             {

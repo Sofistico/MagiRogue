@@ -175,21 +175,25 @@ namespace MagiRogue.GameSys.MapGen
         {
             for (int i = 0; i < quantity; i++)
             {
-                // TODO: Check if the furniture is being created occupyng the same space as another.
-                AddFurnitureAtRandomPos(furniture, room, map);
+                AddFurnitureAtRandomPos(furniture.Copy(), room, map);
             }
         }
 
         private static void AddFurnitureAtRandomPos(Furniture furniture, Room room, Map map)
         {
             Point pos = Point.None;
-            int count = 0;
             while (!map.IsTileWalkable(pos) || map.EntityIsThere(pos))
             {
                 pos = room.ReturnRandomPosRoom();
             }
             furniture.Position = pos;
             map.Add(furniture);
+            //furniture.Position = Point.None;
+
+            //while (!map.CanAddEntity(furniture))
+            //    furniture.Position = room.ReturnRandomPosRoom();
+
+            //map.Add(furniture);
         }
 
         private static void PruneTrees(Map completeMap, WorldTile worldTile)

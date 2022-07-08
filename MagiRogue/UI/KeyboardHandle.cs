@@ -302,6 +302,22 @@ namespace MagiRogue.UI
                 GetPlayer.AddComponent(new Components.TestComponent(GetPlayer));
             }
 
+            if (info.IsKeyPressed(Keys.F6))
+            {
+                if (world.CurrentMap.Rooms is not null && world.CurrentMap.Rooms.Count > 0)
+                {
+                    foreach (Room room in world.CurrentMap.Rooms)
+                    {
+                        var pos = room.PositionsRoom();
+                        foreach (Point point in pos)
+                        {
+                            world.CurrentMap.SetTerrain(new TileFloor("Test Room Tile", point,
+                                "stone", '$', Color.ForestGreen, Color.FloralWhite));
+                        }
+                    }
+                }
+            }
+
             if (info.IsKeyPressed(Keys.NumPad0))
             {
                 LookWindow w = new LookWindow(GetPlayer);

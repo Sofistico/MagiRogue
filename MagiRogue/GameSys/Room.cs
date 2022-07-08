@@ -2,6 +2,7 @@
 using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Tiles;
+using MagiRogue.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using SadRogue.Primitives;
@@ -100,7 +101,15 @@ namespace MagiRogue.GameSys
 
         public Point[] PositionsRoom()
         {
-            return RoomRectangle.Positions().ToArray();
+            var points = RoomRectangle.Positions().ToList();
+            foreach (var item in ReturnRecPerimiter())
+            {
+                if (!points.Contains(item))
+                {
+                    points.Add(item);
+                }
+            }
+            return points.ToArray();
         }
 
         public List<Point> ReturnRecPerimiter()
@@ -113,10 +122,10 @@ namespace MagiRogue.GameSys
 
             // build a list of room border cells using a series of
             // straight lines
-            List<Point> borderCells = GetTileLocationsAlongLine(xMin, yMin, xMax, yMin).ToList();
-            borderCells.AddRange(GetTileLocationsAlongLine(xMin, yMin, xMin, yMax));
-            borderCells.AddRange(GetTileLocationsAlongLine(xMin, yMax, xMax, yMax));
-            borderCells.AddRange(GetTileLocationsAlongLine(xMax, yMin, xMax, yMax));
+            List<Point> borderCells = PointUtils.GetTileLocationsAlongLine(xMin, yMin, xMax, yMin).ToList();
+            borderCells.AddRange(PointUtils.GetTileLocationsAlongLine(xMin, yMin, xMin, yMax));
+            borderCells.AddRange(PointUtils.GetTileLocationsAlongLine(xMin, yMax, xMax, yMax));
+            borderCells.AddRange(PointUtils.GetTileLocationsAlongLine(xMax, yMin, xMax, yMax));
 
             return borderCells;
         }
@@ -128,36 +137,6 @@ namespace MagiRogue.GameSys
 
             Point pos = new SadRogue.Primitives.Point(x, y);
             return pos;
-        }
-
-        private static IEnumerable<Point> GetTileLocationsAlongLine(
-            int xOrigin, int yOrigin, int xDestination, int yDestination)
-        {
-            int dx = Math.Abs(xDestination - xOrigin);
-            int dy = Math.Abs(yDestination - yOrigin);
-
-            int sx = xOrigin < xDestination ? 1 : -1;
-            int sy = yOrigin < yDestination ? 1 : -1;
-            int err = dx - dy;
-
-            while (true)
-            {
-                yield return new Point(xOrigin, yOrigin);
-                if (xOrigin == xDestination && yOrigin == yDestination)
-                    break;
-
-                int e2 = 2 * err;
-                if (e2 > -dy)
-                {
-                    err -= dy;
-                    xOrigin += sx;
-                }
-                if (e2 < dx)
-                {
-                    err += dx;
-                    yOrigin += sy;
-                }
-            }
         }
 
         public void ChangeRoomPos(Point point)
