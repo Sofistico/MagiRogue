@@ -30,15 +30,16 @@ namespace MagiRogue.GameSys.Civ
 
         public void DefineSettlementSize()
         {
-            if (MundaneResources > 100 && MundaneResources < 1000)
+            var usableResources = Population / MundaneResources;
+            if (usableResources > 100 && usableResources < 1000)
             {
                 Size = SettlementSize.Small;
             }
-            if (MundaneResources > 1000 && MundaneResources < 10000)
+            if (usableResources > 1000 && usableResources < 10000)
             {
                 Size = SettlementSize.Medium;
             }
-            if (MundaneResources > 10000)
+            if (usableResources > 10000)
             {
                 Size = SettlementSize.Large;
             }

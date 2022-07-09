@@ -289,13 +289,34 @@ namespace MagiRogue.GameSys.MapGen
             if (worldTile.CivInfluence is not null)
             {
                 CityGenerator city = new();
-                switch (worldTile.CivInfluence)
+                var settlement = worldTile.CivInfluence.GetSettlement(worldTile);
+                switch (settlement.Size)
                 {
-                    default:
+                    case SettlementSize.Default:
+                        throw new ApplicationException("Room generated was from the default error!");
+
+                    case SettlementSize.Small:
+                        city.GenerateSmallVillage(completeMap,
+                            randNum.NextInt(4, 7),
+                            randNum.NextInt(4, 7),
+                            randNum.NextInt(8, 12),
+                            settlement.Name);
                         break;
+
+                    case SettlementSize.Medium:
+                        break;
+
+                    case SettlementSize.Large:
+                        city.GenerateBigCityFromMapBSP(completeMap,
+                            randNum.NextInt(10, 25),
+                            randNum.NextInt(4, 7),
+                            randNum.NextInt(8, 12),
+                            settlement.Name);
+                        break;
+
+                    default:
+                        throw new ApplicationException("There was an error with the room generated!");
                 }
-                city.GenerateSmallVillageFromMapBSP(completeMap,
-                    randNum.NextInt(6, 23), randNum.NextInt(4, 7), randNum.NextInt(8, 12), "Test Town");
             }
             if (worldTile.Rivers.Count > 0)
             {

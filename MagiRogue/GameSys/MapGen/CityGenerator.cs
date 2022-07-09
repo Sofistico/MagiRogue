@@ -14,7 +14,7 @@ namespace MagiRogue.GameSys.MapGen
             // empty one
         }
 
-        public void GenerateSmallVillageFromMapBSP(Map map, int maxRooms,
+        public void GenerateBigCityFromMapBSP(Map map, int maxRooms,
             int minRoomSize, int maxRoomSize, string townName)
         {
             _map = map;
