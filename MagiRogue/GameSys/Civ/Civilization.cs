@@ -4,7 +4,9 @@ using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Tiles;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MagiRogue.GameSys.Civ
 {
@@ -13,26 +15,21 @@ namespace MagiRogue.GameSys.Civ
     {
         public string Name { get; set; }
         public Race PrimaryRace { get; set; }
-        public int MilitaryStrenght { get; set; }
-        public int MagicStrenght { get; set; }
-        public int Population { get; set; }
-        public CivilizationTendency Tendency { get; set; }
-        public float MundaneResources { get; set; }
-        public float MagicalResources { get; set; }
-        public List<ItemTemplate> Nodes { get; set; }
-        public List<Point> Territory { get; set; }
-        public List<Settlement> Cities { get; set; }
+        public int TotalPopulation { get; set; }
 
-        public Civilization(string name, Race primaryRace, int population,
-            CivilizationTendency tendency)
+        public CivilizationTendency Tendency { get; set; }
+        public List<Point> Territory { get; set; }
+        public List<Settlement> Settlements { get; set; }
+
+        public Civilization(string name, Race primaryRace, CivilizationTendency tendency)
         {
             Name = name;
             PrimaryRace = primaryRace;
-            Population = population;
             Tendency = tendency;
-            Nodes = new();
             Territory = new();
         }
+
+        public void AddSettlementToCiv(Settlement settlement) => Settlements.Add(settlement);
 
         public List<WorldTile> ReturnAllTerritories(Map map)
         {
@@ -73,6 +70,11 @@ namespace MagiRogue.GameSys.Civ
             }
 
             return waterList;
+        }
+
+        public Settlement GetSettlement(WorldTile worldTile)
+        {
+            return Settlements.FirstOrDefault(o => o.WorldPos == worldTile.Position);
         }
     }
 }

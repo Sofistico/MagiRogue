@@ -334,6 +334,7 @@ namespace MagiRogue.GameSys.Planet
                 || tile.HeightType == HeightType.ShallowWater
                 || tile.HeightType == HeightType.River)
                     continue;
+
                 if (tile.CivInfluence != null)
                     continue;
 
@@ -341,12 +342,18 @@ namespace MagiRogue.GameSys.Planet
 
                 int pop = (int)(rng * ((int)tile.HeightType * tile.MoistureValue + 1));
 
-                Civilization civ = new($"Random Name Here {currentCivCount}",
-                    new Entities.Race("Human"), pop, RandomCivTendency());
+                Settlement set = new Settlement(tile.Position, RandomNames.SettlementNameGen(), pop)
+                {
+                    MundaneResources = tile.MineralValue
+                };
+                set.DefineSettlementSize();
 
-                civ.MundaneResources = tile.MineralValue;
+                Civilization civ = new($"Random Name Here {currentCivCount}",
+                    new Entities.Race("Human"), RandomCivTendency());
+
                 tile.CivInfluence = civ;
                 civ.Territory.Add(tile.Position);
+                civ.AddSettlementToCiv(set);
 
                 if (currentCivCount < maxCivsWorld)
                 {

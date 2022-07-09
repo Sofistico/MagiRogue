@@ -201,7 +201,7 @@ namespace MagiRogue.GameSys.MapGen
             List<TileBase> trees = completeMap.ReturnAllTrees();
 
             int chanceToRemoveTree = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt
-                ((worldTile.CivInfluence.Population)) / 100;
+                ((worldTile.CivInfluence.GetSettlement(worldTile).Population)) / 100;
             for (int i = 0; i < trees.Count; i++)
             {
                 int rng = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, 101);
