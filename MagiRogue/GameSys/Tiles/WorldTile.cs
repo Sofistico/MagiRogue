@@ -173,6 +173,11 @@ namespace MagiRogue.GameSys.Tiles
             }
         }
 
+        public Settlement GetSettlement()
+        {
+            return CivInfluence is not null ? CivInfluence.GetSettlement(this) : null;
+        }
+
         private void SetRiverTile(River river)
         {
             SetRiverPath(river);

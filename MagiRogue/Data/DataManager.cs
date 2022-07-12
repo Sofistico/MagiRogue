@@ -100,8 +100,6 @@ namespace MagiRogue.Data
             => ListOfMaterials.FirstOrDefault(a => a.Id.Equals(id));
 
         public static List<BasicTile> QueryTilesInDataWithTrait(Trait trait)
-        {
-            return ListOfTiles.Where(i => i.Traits.Contains(trait)).ToList();
-        }
+            => ListOfTiles.Where(i => i.Traits.Contains(trait)).ToList();
     }
 }

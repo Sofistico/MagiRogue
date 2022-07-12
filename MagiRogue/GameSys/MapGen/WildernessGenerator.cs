@@ -22,13 +22,16 @@ namespace MagiRogue.GameSys.MapGen
         {
             Map[] maps = new Map[RegionChunk.MAX_LOCAL_MAPS];
             WorldTile worldTile = worldMap.AssocietatedMap.GetTileAt<WorldTile>(posGenerated);
-
+            int currentNmbSettlemnet = 0;
             for (int i = 0; i < maps.Length; i++)
             {
                 Map completeMap = DetermineBiomeLookForTile(worldTile);
                 if (completeMap is not null)
                 {
                     ApplyModifierToTheMap(completeMap, worldTile, (uint)i);
+                    // Revist when the mind is better working! i really need to sleep my little 🐴
+                    currentNmbSettlemnet = CreateSettlementsIfAny(completeMap,
+                        worldTile, currentNmbSettlemnet);
                     FinishingTouches(completeMap, worldTile);
                     maps[i] = completeMap;
                 }
@@ -216,7 +219,7 @@ namespace MagiRogue.GameSys.MapGen
 
         /// <summary>
         /// If the map has any modifer, like strong magic aura, cities, roads and particulaly civs
-        /// \nAnything that changes the composition of the World Tile map.
+        /// Anything that changes the composition of the World Tile map.
         /// Trees also spawn here
         /// </summary>
         /// <param name="completeMap"></param>
@@ -286,10 +289,47 @@ namespace MagiRogue.GameSys.MapGen
                 default:
                     break;
             }
+
+            if (worldTile.Rivers.Count > 0)
+            {
+            }
+            if (worldTile.Road is not null)
+            {
+            }
+            if (worldTile.MagicalAuraStrength > 7)
+            {
+            }
+            /*switch (worldTile.SpecialLandType)
+            {
+                case SpecialLandType.None:
+                    // nothing here
+                    break;
+
+                case SpecialLandType.MagicLand:
+                    // funky shit full of interisting stuff
+                    break;
+
+                default:
+                    break;
+            }*/
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="completeMap"></param>
+        /// <param name="worldTile"></param>
+        /// <param name="createdSettlements"></param>
+        /// <returns>Returns the number of settlement already created on the map</returns>
+        /// <exception cref="ApplicationException"></exception>
+        private int CreateSettlementsIfAny(Map completeMap, WorldTile worldTile, int createdSettlements)
+        {
             if (worldTile.CivInfluence is not null)
             {
                 CityGenerator city = new();
                 var settlement = worldTile.CivInfluence.GetSettlement(worldTile);
+                if ((int)settlement.Size == createdSettlements)
+                    return 0;
                 switch (settlement.Size)
                 {
                     case SettlementSize.Default:
@@ -317,29 +357,10 @@ namespace MagiRogue.GameSys.MapGen
                     default:
                         throw new ApplicationException("There was an error with the room generated!");
                 }
+                return createdSettlements++;
             }
-            if (worldTile.Rivers.Count > 0)
-            {
-            }
-            if (worldTile.Road is not null)
-            {
-            }
-            if (worldTile.MagicalAuraStrength > 7)
-            {
-            }
-            /*switch (worldTile.SpecialLandType)
-            {
-                case SpecialLandType.None:
-                    // nothing here
-                    break;
 
-                case SpecialLandType.MagicLand:
-                    // funky shit full of interisting stuff
-                    break;
-
-                default:
-                    break;
-            }*/
+            return 0;
         }
 
         private static Map DetermineBiomeLookForTile(WorldTile worldTile)
