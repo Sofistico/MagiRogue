@@ -1,7 +1,9 @@
 ﻿using MagiRogue.Data;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -55,6 +57,26 @@ namespace MagiRogue.GameSys.MapGen
                 _map.AddRoom(room);
             }
             /*_map.AddRooms(_rooms);*/
+        }
+
+        private void PopulateMapWithRoomsWithVariableMaterials(List<Room> rooms,
+            List<TileFloor> possibleFloors)
+        {
+            throw new NotImplementedException("GET TO WORK YOU LAZY HORSE 🐎!");
+        }
+
+        public void GenerateSmallVillage(Map map, int maxRooms,
+            int minRoomSize, int maxRoomSize, string townName)
+        {
+            _map = map;
+            _map.MapName = townName;
+
+            _rooms = BspMapFunction(map, maxRoomSize, minRoomSize, maxRooms);
+
+            PopulateMapWithRooms(_rooms, QueryTilesForTrait<TileFloor>(Trait.Inexpensive),
+                QueryTilesForTrait<TileWall>(Trait.Inexpensive));
+
+            ApplyRoads(_rooms, TileEncyclopedia.GenericDirtRoad(Point.None));
         }
     }
 }

@@ -1,10 +1,12 @@
-﻿using MagiRogue.Data.Serialization;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization;
 using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Magic;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -96,5 +98,10 @@ namespace MagiRogue.Data
 
         public static MaterialTemplate QueryMaterials(string id)
             => ListOfMaterials.FirstOrDefault(a => a.Id.Equals(id));
+
+        public static List<BasicTile> QueryTilesInDataWithTrait(Trait trait)
+        {
+            return ListOfTiles.Where(i => i.Traits.Contains(trait)).ToList();
+        }
     }
 }

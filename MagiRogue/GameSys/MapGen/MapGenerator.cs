@@ -811,5 +811,29 @@ namespace MagiRogue.GameSys.MapGen
         #endregion BSPGen
 
         #endregion MapGenAlgorithms
+
+        #region Utils
+
+        // quite clever 🐴
+        protected static T QueryTilesForTrait<T>(Trait trait) where T : TileBase
+        {
+            List<BasicTile> tiles = DataManager.QueryTilesInDataWithTrait(trait);
+            List<TileBase> possibleResults = new List<TileBase>();
+            TileBase result;
+            for (int i = 0; i < tiles.Count; i++)
+            {
+                BasicTile tile = tiles[i];
+                if (tile is T && tile.Traits.Contains(trait))
+                {
+                    possibleResults.Add((TileBase)tile);
+                }
+            }
+
+            result = possibleResults.GetRandomItemFromList();
+
+            return (T)result;
+        }
+
+        #endregion Utils
     }
 }

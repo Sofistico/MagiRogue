@@ -31,5 +31,11 @@ namespace MagiRogue.Utils
 
             return objList;
         }
+
+        public static T GetRandomItemFromList<T>(this List<T> list)
+        {
+            int rng = GameLoop.GlobalRand.NextInt(list.Count + 1);
+            return list[rng];
+        }
     }
 }
