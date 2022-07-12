@@ -344,11 +344,16 @@ namespace MagiRogue.GameSys.MapGen
                         break;
 
                     case SettlementSize.Medium:
+                        city.GenerateMediumTown(completeMap,
+                            randNum.NextInt(4, 7),
+                            randNum.NextInt(4, 7),
+                            randNum.NextInt(8, 12),
+                            settlement.Name);
                         break;
 
                     case SettlementSize.Large:
                         city.GenerateBigCityFromMapBSP(completeMap,
-                            randNum.NextInt(10, 25),
+                            randNum.NextInt(17, 30),
                             randNum.NextInt(4, 7),
                             randNum.NextInt(8, 12),
                             settlement.Name);
@@ -357,6 +362,7 @@ namespace MagiRogue.GameSys.MapGen
                     default:
                         throw new ApplicationException("There was an error with the room generated!");
                 }
+
                 return createdSettlements++;
             }
 

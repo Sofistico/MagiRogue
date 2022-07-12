@@ -78,5 +78,10 @@ namespace MagiRogue.GameSys.MapGen
 
             ApplyRoads(_rooms, TileEncyclopedia.GenericDirtRoad(Point.None));
         }
+
+        public void GenerateMediumTown(Map completeMap, int v1, int v2, int v3, string name)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
