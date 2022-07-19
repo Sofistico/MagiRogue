@@ -73,5 +73,7 @@ namespace MagiRogue.Data.Enumerators
         MagicallyWeak,
         Storage,
         Inexpensive,
+        Expensive,
+        Opulent,
     }
 }

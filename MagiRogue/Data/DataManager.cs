@@ -96,10 +96,11 @@ namespace MagiRogue.Data
         public static RoomTemplate QueryRoomInData(string roomId)
             => ListOfRooms.FirstOrDefault(i => i.Id.Equals(roomId));
 
-        public static MaterialTemplate QueryMaterials(string id)
+        public static MaterialTemplate QueryMaterial(string id)
             => ListOfMaterials.FirstOrDefault(a => a.Id.Equals(id));
 
         public static List<BasicTile> QueryTilesInDataWithTrait(Trait trait)
-            => ListOfTiles.Where(i => i.Traits.Contains(trait)).ToList();
+            => ListOfTiles.Where(i => i.HasAnyTrait()
+                && i.Traits.Contains(trait)).ToList();
     }
 }

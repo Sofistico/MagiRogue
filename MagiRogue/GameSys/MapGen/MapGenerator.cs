@@ -818,14 +818,18 @@ namespace MagiRogue.GameSys.MapGen
         protected static T QueryTilesForTrait<T>(Trait trait) where T : TileBase
         {
             List<BasicTile> tiles = DataManager.QueryTilesInDataWithTrait(trait);
+            if (tiles.Count < 1)
+            {
+                throw new ApplicationException($"There wasn't any tile with that material! \nMaterial: {trait}");
+            }
             List<TileBase> possibleResults = new List<TileBase>();
             TileBase result;
             for (int i = 0; i < tiles.Count; i++)
             {
-                BasicTile tile = tiles[i];
+                TileBase tile = (TileBase)tiles[i];
                 if (tile is T && tile.Traits.Contains(trait))
                 {
-                    possibleResults.Add((TileBase)tile);
+                    possibleResults.Add(tile);
                 }
             }
 

@@ -205,7 +205,6 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 template.Weight, template.Durability)
             {
                 UseActions = template.UseActions,
-                Traits = template.Traits,
                 Magic = template.MagicStuff,
                 MapIdConnection = template.MapIdConnection,
                 Size = template.Size,
@@ -213,6 +212,10 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 Qualities = Quality.ReturnQualityList(template.Qualities),
             };
             DetermineInvFromJson(template, objFur);
+            if (template.Traits is not null)
+            {
+                objFur.Traits.AddRange(template.Traits);
+            }
             if (objFur.Material.ConfersTraits is not null && objFur.Material.ConfersTraits.Count > 0)
             {
                 objFur.Traits.AddRange(objFur.Material.ConfersTraits);

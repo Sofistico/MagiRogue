@@ -68,6 +68,7 @@
     "MPInfusionLimit": 3,
     "CanRegen": false,
     "Density": 0.9,
+    "ConfersTraits": [ "Inexpensive" ],
     "Color": "Wood"
   },
   {
@@ -110,7 +111,7 @@
     "MPInfusionLimit": 10,
     "Density": 19.3,
     "MeltingPoint": 1064,
-    "ConfersTraits": [ "Magical", "MagicallyPotent" ],
+    "ConfersTraits": [ "Magical", "MagicallyPotent", "Opulent" ],
     "Color": "Gold"
   },
   {
@@ -134,6 +135,7 @@
     "MPInfusionLimit": 1,
     "Density": 1.22,
     "MeltingPoint": 1196,
+    "ConfersTraits": [ "Inexpensive" ],
     "Color": "Dirt"
   },
   {
@@ -166,5 +168,16 @@
     "BoilingPoint": 2230,
     "ConfersTraits": [ "Fragile" ],
     "Color": "UnclearGlass"
+  },
+  {
+    "Id": "mud",
+    "Name": "Mud",
+    "Hardness": 0,
+    "MPInfusionLimit": 1,
+    "Density": 1.9,
+    "MeltingPoint": 1250,
+    "BoilingPoint": 3000,
+    "ConfersTraits": [ "Inexpensive" ],
+    "Color": "Brown"
   }
 ]

@@ -67,7 +67,7 @@ namespace MagiRogue.Utils
                                     "Damerel",
                                     "Stathmore" };
 
-            return townNames[GameLoop.GlobalRand.NextInt(townNames.Length + 1)];
+            return townNames[GameLoop.GlobalRand.NextInt(townNames.Length)];
         }
 
         public static string GiberishName(int len)

@@ -21,5 +21,13 @@
     "IdMaterial": "wood",
     "ForegroundStr": "Wood",
     "TileType": "Door"
+  },
+  {
+    "TileId": "mud_wall",
+    "Name": "Mud Wall",
+    "IdMaterial": "mud",
+    "GlyphChar": "#",
+    "ForegroundStr": "Brown",
+    "TileType": "Wall"
   }
 ]

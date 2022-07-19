@@ -90,7 +90,7 @@ namespace MagiRogue.Data.Serialization
         {
             if (string.IsNullOrEmpty(LiquidTurnsInto))
                 return null;
-            return DataManager.QueryMaterials(LiquidTurnsInto);
+            return DataManager.QueryMaterial(LiquidTurnsInto);
         }
 
         private string GetDebuggerDisplay()

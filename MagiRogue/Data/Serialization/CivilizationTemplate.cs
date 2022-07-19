@@ -31,7 +31,7 @@ namespace MagiRogue.Data.Serialization
         public Race PrimaryRace { get; set; }
         public CivilizationTendency Tendency { get; set; }
         public List<Point> Territory { get; set; }
-        public List<Settlement> Settlements { get; private set; }
+        public List<Settlement> Settlements { get; set; }
 
         public CivilizationTemplate(string name,
             Race primaryRace,

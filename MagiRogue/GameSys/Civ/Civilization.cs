@@ -27,6 +27,7 @@ namespace MagiRogue.GameSys.Civ
             PrimaryRace = primaryRace;
             Tendency = tendency;
             Territory = new();
+            Settlements=new List<Settlement>();
         }
 
         public void AddSettlementToCiv(Settlement settlement) => Settlements.Add(settlement);

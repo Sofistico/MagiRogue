@@ -17,7 +17,7 @@ namespace MagiRogue.GameSys.Physics
         /// <param name="id">Id of the material you want, must consult the json file</param>
         /// <returns></returns>
         public static MaterialTemplate SetMaterial(string id) =>
-            DataManager.QueryMaterials(id);
+            DataManager.QueryMaterial(id);
 
         public static int CalculateStrikeForce(float weight, int actorStrikeForce)
         {

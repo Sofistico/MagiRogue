@@ -17,7 +17,8 @@ namespace MagiRogue.GameSys.Tiles
             Type objectType, TileBase? existingValue,
             bool hasExistingValue, JsonSerializer serializer)
         {
-            return (TileBase)serializer.Deserialize<BasicTile>(reader);
+            var value = (TileBase)serializer.Deserialize<BasicTile>(reader);
+            return value;
         }
 
         public override void WriteJson(JsonWriter writer, TileBase? value, JsonSerializer serializer)
@@ -138,17 +139,29 @@ namespace MagiRogue.GameSys.Tiles
 
         #region Methods
 
-        internal TileBase Copy()
+        public TileBase Copy()
         {
             TileBase tile = (TileBase)this;
             return tile;
         }
 
-        internal TileBase Copy(Point pos)
+        public TileBase Copy(Point pos)
         {
             TileBase tile = (TileBase)this;
             tile.Position = pos;
             return tile;
+        }
+
+        public bool HasAnyTrait()
+        {
+            Traits = Traits is null ? new List<Trait>() : Traits;
+            var material = Physics.PhysicsManager.SetMaterial(IdMaterial);
+            if (material.ConfersTraits is not null)
+            {
+                Traits.AddRange(material.ConfersTraits);
+                return true;
+            }
+            return false;
         }
 
         #endregion Methods
@@ -353,7 +366,7 @@ namespace MagiRogue.GameSys.Tiles
             if (basicTile.TileHealth > 0)
                 tile.TileHealth = basicTile.TileHealth;
 
-            tile.Traits = basicTile.Traits;
+            tile.Traits = basicTile.Traits is null ? new List<Trait>() : basicTile.Traits;
 
             return tile;
         }
