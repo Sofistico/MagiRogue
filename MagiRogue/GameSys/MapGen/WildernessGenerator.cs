@@ -22,7 +22,7 @@ namespace MagiRogue.GameSys.MapGen
         {
             Map[] maps = new Map[RegionChunk.MAX_LOCAL_MAPS];
             WorldTile worldTile = worldMap.AssocietatedMap.GetTileAt<WorldTile>(posGenerated);
-            int currentNmbSettlemnet = 0;
+            int settlmentCounter = 0;
             for (int i = 0; i < maps.Length; i++)
             {
                 Map completeMap = DetermineBiomeLookForTile(worldTile);
@@ -30,8 +30,8 @@ namespace MagiRogue.GameSys.MapGen
                 {
                     ApplyModifierToTheMap(completeMap, worldTile, (uint)i);
                     // Revist when the mind is better working! i really need to sleep my little 🐴
-                    currentNmbSettlemnet = CreateSettlementsIfAny(completeMap,
-                        worldTile, currentNmbSettlemnet);
+                    settlmentCounter = CreateSettlementsIfAny(completeMap,
+                        worldTile, settlmentCounter);
                     FinishingTouches(completeMap, worldTile);
                     maps[i] = completeMap;
                 }
@@ -65,6 +65,8 @@ namespace MagiRogue.GameSys.MapGen
         {
             List<Room> mapRooms = completeMap.Rooms;
             bool oneRulerOnly = false;
+            if (mapRooms is null)
+                return;
             foreach (Room room in mapRooms)
             {
                 if (room.RoomRectangle.Area >= 6)
@@ -329,7 +331,7 @@ namespace MagiRogue.GameSys.MapGen
                 CityGenerator city = new();
                 var settlement = worldTile.CivInfluence.GetSettlement(worldTile);
                 if ((int)settlement.Size == createdSettlements)
-                    return 0;
+                    return (int)settlement.Size;
                 switch (settlement.Size)
                 {
                     case SettlementSize.Default:
@@ -363,7 +365,7 @@ namespace MagiRogue.GameSys.MapGen
                         throw new ApplicationException("There was an error with the room generated!");
                 }
 
-                return createdSettlements++;
+                return ++createdSettlements;
             }
 
             return 0;

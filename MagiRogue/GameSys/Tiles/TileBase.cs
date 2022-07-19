@@ -134,13 +134,9 @@ namespace MagiRogue.GameSys.Tiles
             {
                 IsVisible = false
             };
-            Traits = new List<Trait>();
+            //Traits = new List<Trait>();
             if (MaterialOfTile is not null)
-            {
                 CalculateTileHealth();
-                //if (MaterialOfTile.ConfersTraits is not null)
-                //    Traits.AddRange(MaterialOfTile.ConfersTraits.Where(i => !Traits.Contains(i)));
-            }
         }
 
         /// <summary>
@@ -171,10 +167,7 @@ namespace MagiRogue.GameSys.Tiles
 
         protected void CalculateTileHealth() => _tileHealth = (int)MaterialOfTile.Density * MaterialOfTile.Hardness <= 0 ? 10 : _tileHealth = (int)MaterialOfTile.Density * MaterialOfTile.Hardness;
 
-#nullable enable
-
         public virtual void DestroyTile(TileBase changeTile, Entities.Item? itemDropped = null)
-#nullable disable
         {
             GameLoop.GetCurrentMap().SetTerrain(changeTile);
             LastSeenAppereance = changeTile;
@@ -187,6 +180,13 @@ namespace MagiRogue.GameSys.Tiles
         public virtual TileBase Copy()
         {
             // error
+            return null;
+        }
+
+        public List<Trait> GetMaterialTraits()
+        {
+            if (MaterialOfTile.ConfersTraits is not null)
+                return MaterialOfTile.ConfersTraits;
             return null;
         }
 

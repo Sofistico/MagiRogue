@@ -25,7 +25,7 @@ namespace MagiRogue.GameSys.MapGen
 
             map.MapName = townName;
 
-            PopulateMapWithRooms(_rooms, QueryTilesForTrait<TileFloor>(Trait.Durable),
+            PopulateMapWithRooms(rooms, QueryTilesForTrait<TileFloor>(Trait.Durable),
                 QueryTilesForTrait<TileWall>(Trait.Durable));
 
             ApplyRoads(rooms, TileEncyclopedia.GenericDirtRoad(Point.None));
@@ -71,9 +71,9 @@ namespace MagiRogue.GameSys.MapGen
             _map = map;
             _map.MapName = townName;
 
-            _rooms = BspMapFunction(map, maxRoomSize, minRoomSize, maxRooms);
+            var rooms = BspMapFunction(map, maxRoomSize, minRoomSize, maxRooms);
 
-            PopulateMapWithRooms(_rooms, QueryTilesForTrait<TileFloor>(Trait.Inexpensive),
+            PopulateMapWithRooms(rooms, QueryTilesForTrait<TileFloor>(Trait.Inexpensive),
                 QueryTilesForTrait<TileWall>(Trait.Inexpensive));
 
             ApplyRoads(_rooms, TileEncyclopedia.GenericDirtRoad(Point.None));
@@ -85,9 +85,9 @@ namespace MagiRogue.GameSys.MapGen
             _map = map;
             _map.MapName = townName;
 
-            _rooms = BspMapFunction(map, maxRoomSize, minRoomSize, maxRooms);
+            var rooms = BspMapFunction(map, maxRoomSize, minRoomSize, maxRooms);
 
-            PopulateMapWithRooms(_rooms, QueryTilesForTrait<TileFloor>(Trait.Durable),
+            PopulateMapWithRooms(rooms, QueryTilesForTrait<TileFloor>(Trait.Durable),
                 QueryTilesForTrait<TileWall>(Trait.Durable));
 
             ApplyRoads(_rooms, TileEncyclopedia.GenericDirtRoad(Point.None));
