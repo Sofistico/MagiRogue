@@ -1,7 +1,6 @@
 ﻿using MagiRogue.Entities;
 using MagiRogue.GameSys.Magic;
 using MagiRogue.GameSys.Tiles;
-using SadRogue.Primitives;
 
 namespace MagiRogue.GameSys.Time
 {

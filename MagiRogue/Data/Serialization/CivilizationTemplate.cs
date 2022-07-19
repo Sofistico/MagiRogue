@@ -1,12 +1,10 @@
-﻿using MagiRogue.Entities;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization.EntitySerialization;
+using MagiRogue.Entities;
 using MagiRogue.GameSys.Civ;
-using MagiRogue.GameSys.Tiles;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MagiRogue.Data.Serialization
 {
@@ -31,35 +29,18 @@ namespace MagiRogue.Data.Serialization
     {
         public string Name { get; set; }
         public Race PrimaryRace { get; set; }
-        public int MilitaryStrenght { get; set; }
-        public int MagicStrenght { get; set; }
-        public int Population { get; set; }
         public CivilizationTendency Tendency { get; set; }
-        public float MundaneResources { get; set; }
-        public float MagicalResources { get; set; }
-        public List<ItemTemplate> Nodes { get; set; }
         public List<Point> Territory { get; set; }
+        public List<Settlement> Settlements { get; set; }
 
         public CivilizationTemplate(string name,
             Race primaryRace,
-            int militaryStrenght,
-            int magicStrenght,
-            int population,
             CivilizationTendency tendency,
-            float mundaneResources,
-            float magicalResources,
-            List<ItemTemplate> nodes,
             List<Point> territory)
         {
             Name = name;
             PrimaryRace = primaryRace;
-            MilitaryStrenght = militaryStrenght;
-            MagicStrenght = magicStrenght;
-            Population = population;
             Tendency = tendency;
-            MundaneResources = mundaneResources;
-            MagicalResources = magicalResources;
-            Nodes = nodes;
             Territory = territory;
         }
 
@@ -78,14 +59,10 @@ namespace MagiRogue.Data.Serialization
             }
 
             Civilization civ = new Civilization(template.Name,
-                template.PrimaryRace, template.Population, template.Tendency)
+                template.PrimaryRace, template.Tendency)
             {
-                MagicalResources = template.MagicalResources,
-                MagicStrenght = template.MagicStrenght,
-                MilitaryStrenght = template.MilitaryStrenght,
-                MundaneResources = template.MundaneResources,
-                Nodes = template.Nodes,
-                Territory = territory
+                Territory = territory,
+                Settlements = template.Settlements,
             };
 
             return civ;
@@ -102,14 +79,11 @@ namespace MagiRogue.Data.Serialization
 
             CivilizationTemplate template = new CivilizationTemplate(civ.Name,
                 civ.PrimaryRace,
-                civ.MilitaryStrenght,
-                civ.MagicStrenght,
-                civ.Population,
                 civ.Tendency,
-                civ.MundaneResources,
-                civ.MagicalResources,
-                civ.Nodes,
-                basicTiles);
+                basicTiles)
+            {
+                Settlements = civ.Settlements,
+            };
 
             return template;
         }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MagiRogue.GameSys.Time
+﻿namespace MagiRogue.GameSys.Time
 {
     /// <summary>
     /// Definition of time, has converter to and from various dates and ticks.

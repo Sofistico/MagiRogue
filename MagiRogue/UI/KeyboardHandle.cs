@@ -1,5 +1,6 @@
 ﻿using MagiRogue.Commands;
-using MagiRogue.Data.Serialization;
+using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys;
 using MagiRogue.GameSys.Tiles;
@@ -8,7 +9,6 @@ using MagiRogue.UI.Windows;
 using Newtonsoft.Json;
 using SadConsole.Input;
 using SadRogue.Primitives;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -249,7 +249,7 @@ namespace MagiRogue.UI
             }
 
             if (info.IsKeyPressed(Keys.Enter) && targetCursor is not null
-                && targetCursor.State == Target.TargetState.Targeting)
+                && targetCursor.State == TargetState.Targeting)
             {
                 if ((targetCursor.EntityInTarget() || targetCursor.TileInTarget()) && targetCursor.SpellSelected is null)
                 {
@@ -300,10 +300,31 @@ namespace MagiRogue.UI
                 GetPlayer.AddComponent(new Components.TestComponent(GetPlayer));
             }
 
+            if (info.IsKeyPressed(Keys.F6))
+            {
+                if (world.CurrentMap.Rooms is not null && world.CurrentMap.Rooms.Count > 0)
+                {
+                    foreach (Room room in world.CurrentMap.Rooms)
+                    {
+                        var pos = room.PositionsRoom();
+                        foreach (Point point in pos)
+                        {
+                            world.CurrentMap.SetTerrain(new TileFloor("Test Room Tile", point,
+                                "stone", '$', Color.ForestGreen, Color.FloralWhite));
+                        }
+                    }
+                }
+            }
+
             if (info.IsKeyPressed(Keys.NumPad0))
             {
                 LookWindow w = new LookWindow(GetPlayer);
                 w.Show();
+            }
+
+            if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.O) && targetCursor is not null)
+            {
+                CommandManager.CreateTestEntity(targetCursor.Cursor.Position, world.CurrentMap);
             }
 
             if (info.IsKeyPressed(Keys.T))

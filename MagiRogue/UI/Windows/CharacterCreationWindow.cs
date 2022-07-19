@@ -1,6 +1,7 @@
 ﻿using MagiRogue.Data;
 using MagiRogue.Entities;
 using MagiRogue.UI.Controls;
+using MagiRogue.Utils;
 using SadConsole;
 using SadConsole.Instructions;
 using SadConsole.UI.Controls;
@@ -135,8 +136,8 @@ namespace MagiRogue.UI.Windows
             }
             int health = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(5, bodyStat + 10) + 3;
             int mana = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(8, soulStat + 10);
-            float speed = (float)Math.Round(GoRogue.Random.GlobalRandom
-                .DefaultRNG.NextDouble(0.9, 1.1), 1);
+            float speed = (float)MathMagi.Round(GoRogue.Random.GlobalRandom
+                .DefaultRNG.NextDouble(0.9, 1.1));
             player.Stats = new Stat()
             {
                 BodyStat = bodyStat,

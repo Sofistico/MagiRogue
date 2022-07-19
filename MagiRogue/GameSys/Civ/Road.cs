@@ -1,24 +1,11 @@
-﻿using MagiRogue.GameSys.Tiles;
-using MagiRogue.GameSys.Planet;
-using SadRogue.Primitives;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization.MapSerialization;
+using MagiRogue.GameSys.Tiles;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using MagiRogue.Data.Serialization;
+using System.Collections.Generic;
 
 namespace MagiRogue.GameSys.Civ
 {
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum RoadStatus
-    {
-        Normal,
-        Abandoned
-    }
-
     [JsonConverter(typeof(RoadJsonConverter))]
     public class Road
     {

@@ -1,4 +1,5 @@
-﻿using SadRogue.Primitives;
+﻿using MagiRogue.Data.Enumerators;
+using SadRogue.Primitives;
 
 namespace MagiRogue.GameSys.Tiles
 {
@@ -15,9 +16,10 @@ namespace MagiRogue.GameSys.Tiles
         /// <param name="open">If the door is open</param>
         /// <param name="position">The position in the map of the door</param>
         /// <param name="idMaterial">The id of the material that will be used to make the door</param>
-        public TileDoor(bool locked, bool open, Point position, string idMaterial) : base(Color.Gray, Color.Transparent, '+', (int)MapLayer.TERRAIN, position, isTransparent: false, idOfMaterial: idMaterial)
+        public TileDoor(string name, bool locked, bool open, Point position, string idMaterial)
+            : base(Color.Gray, Color.Transparent, '+', (int)MapLayer.TERRAIN, position, isTransparent: false, idOfMaterial: idMaterial)
         {
-            Name = "wooden door";
+            Name = name;
 
             //+ is the closed glyph
             //closed by default

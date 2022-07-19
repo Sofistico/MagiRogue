@@ -1,11 +1,12 @@
-﻿using GoRogue;
-using GoRogue.Components;
+﻿using GoRogue.Components;
 using GoRogue.GameFramework;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
-using Newtonsoft.Json;
 using SadConsole;
 using SadRogue.Primitives;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MagiRogue.GameSys.Tiles
 {
@@ -80,6 +81,8 @@ namespace MagiRogue.GameSys.Tiles
         // like continious wall and determining what there is next to it
         public int BitMask { get; set; }
 
+        public List<Trait> Traits { get; set; }
+
         #region backingField Data
 
         public GoRogue.GameFramework.Map CurrentMap => backingField.CurrentMap;
@@ -102,10 +105,21 @@ namespace MagiRogue.GameSys.Tiles
 
         #endregion backingField Data
 
-        // TileBase is an abstract base class
-        // representing the most basic form of of all Tiles used.
-        // Every TileBase has a Foreground Colour, Background Colour, and Glyph
-        // isBlockingMove and isBlockingSight are optional parameters, set to false by default
+        /// <summary>
+        /// TileBase is an abstract base class
+        /// representing the most basic form of of all Tiles used.
+        /// Every TileBase has a Foreground Colour, Background Colour, and Glyph
+        /// isBlockingMove and isBlockingSight are optional parameters, set to false by default
+        /// </summary>
+        /// <param name="foregroud"></param>
+        /// <param name="background"></param>
+        /// <param name="glyph"></param>
+        /// <param name="layer"></param>
+        /// <param name="position"></param>
+        /// <param name="idOfMaterial"></param>
+        /// <param name="blocksMove"></param>
+        /// <param name="isTransparent"></param>
+        /// <param name="name"></param>
         protected TileBase(Color foregroud, Color background, int glyph, int layer,
             Point position, string idOfMaterial, bool blocksMove = true,
             bool isTransparent = true, string name = "ForgotToChangeName") :
@@ -120,10 +134,22 @@ namespace MagiRogue.GameSys.Tiles
             {
                 IsVisible = false
             };
+            //Traits = new List<Trait>();
             if (MaterialOfTile is not null)
                 CalculateTileHealth();
         }
 
+        /// <summary>
+        /// World tile const
+        /// </summary>
+        /// <param name="foregroud"></param>
+        /// <param name="background"></param>
+        /// <param name="glyph"></param>
+        /// <param name="layer"></param>
+        /// <param name="position"></param>
+        /// <param name="blocksMove"></param>
+        /// <param name="isTransparent"></param>
+        /// <param name="name"></param>
         protected TileBase(Color foregroud, Color background, int glyph, int layer,
             Point position, bool blocksMove = true,
             bool isTransparent = true, string name = "ForgotToChangeName")
@@ -139,24 +165,9 @@ namespace MagiRogue.GameSys.Tiles
             };
         }
 
-        private TileBase(TileBase tile) : this(tile.Foreground,
-            tile.Background,
-            tile.Glyph,
-            tile.Layer,
-            tile.Position,
-            tile.MaterialOfTile.Id,
-            tile.IsBlockingMove,
-            tile.IsTransparent,
-            tile.Name)
-        {
-        }
-
         protected void CalculateTileHealth() => _tileHealth = (int)MaterialOfTile.Density * MaterialOfTile.Hardness <= 0 ? 10 : _tileHealth = (int)MaterialOfTile.Density * MaterialOfTile.Hardness;
 
-#nullable enable
-
         public virtual void DestroyTile(TileBase changeTile, Entities.Item? itemDropped = null)
-#nullable disable
         {
             GameLoop.GetCurrentMap().SetTerrain(changeTile);
             LastSeenAppereance = changeTile;
@@ -169,6 +180,13 @@ namespace MagiRogue.GameSys.Tiles
         public virtual TileBase Copy()
         {
             // error
+            return null;
+        }
+
+        public List<Trait> GetMaterialTraits()
+        {
+            if (MaterialOfTile.ConfersTraits is not null)
+                return MaterialOfTile.ConfersTraits;
             return null;
         }
 

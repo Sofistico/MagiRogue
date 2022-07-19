@@ -1,21 +1,19 @@
-﻿using MagiRogue.Data.Serialization;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization;
+using MagiRogue.Data.Serialization.EntitySerialization;
+using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Magic;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace MagiRogue.Data
 {
     public static class DataManager
     {
-        private static readonly string _appDomain = AppDomain.CurrentDomain.BaseDirectory;
-
         public static readonly IReadOnlyList<ItemTemplate> ListOfItems =
             GetSourceTree<ItemTemplate>(@".\Data\Items\*.json");
 
@@ -37,17 +35,15 @@ namespace MagiRogue.Data
         public static readonly IReadOnlyList<BasicTile> ListOfTiles =
             GetSourceTree<BasicTile>(@".\Data\Tiles\*.json");
 
-        private static IReadOnlyList<T> GetSourceTree<T>(string wildCard)
+        public static readonly IReadOnlyList<Furniture> ListOfFurnitures =
+            GetSourceTree<Furniture>(@".\Data\Furniture\*.json");
+
+        public static readonly IReadOnlyList<RoomTemplate> ListOfRooms =
+            GetSourceTree<RoomTemplate>(@".\Data\Rooms\*.json");
+
+        public static IReadOnlyList<T> GetSourceTree<T>(string wildCard)
         {
-            string originalWildCard = wildCard;
-
-            string pattern = Path.GetFileName(originalWildCard);
-            string realDir = originalWildCard[..^pattern.Length];
-
-            // Get absolutepath
-            string absPath = Path.GetFullPath(Path.Combine(_appDomain, realDir));
-
-            string[] files = Directory.GetFiles(absPath, pattern, SearchOption.TopDirectoryOnly);
+            string[] files = FileUtils.GetFiles(wildCard);
 
             List<List<T>> listTList = new();
 
@@ -82,10 +78,29 @@ namespace MagiRogue.Data
         public static TileBase QueryTileInData(string tileId)
             => ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId)).Copy();
 
+        public static T QueryTileInData<T>(string tileId) where T : TileBase
+            => (T)ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId)).Copy();
+
+        public static T QueryTileInData<T>(string tileId, Point pos) where T : TileBase
+            => (T)ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId)).Copy(pos);
+
         public static Actor QueryActorInData(string actorId)
             => ListOfActors.FirstOrDefault(a => a.ID.Equals(actorId));
 
         public static Item QueryItemInData(string itemId)
             => ListOfItems.FirstOrDefault(i => i.Id.Equals(itemId));
+
+        public static Furniture QueryFurnitureInData(string furnitureId)
+            => ListOfFurnitures.FirstOrDefault(i => i.FurId.Equals(furnitureId)).Copy();
+
+        public static RoomTemplate QueryRoomInData(string roomId)
+            => ListOfRooms.FirstOrDefault(i => i.Id.Equals(roomId));
+
+        public static MaterialTemplate QueryMaterial(string id)
+            => ListOfMaterials.FirstOrDefault(a => a.Id.Equals(id));
+
+        public static List<BasicTile> QueryTilesInDataWithTrait(Trait trait)
+            => ListOfTiles.Where(i => i.HasAnyTrait()
+                && i.Traits.Contains(trait)).ToList();
     }
 }

@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using Xunit;
 using MagiRogue.Data.Serialization;
+using MagiRogue.Data.Serialization.EntitySerialization;
 
 namespace MagiRogue.Test.Entities
 {
@@ -18,13 +19,14 @@ namespace MagiRogue.Test.Entities
         public void ItemSerializingTest()
         {
             const string name = "Serialization Test";
+            string expectedName = GameSys.Physics.PhysicsManager.SetMaterial("wood").ReturnNameFromMaterial(name);
 
-            Item item = new Item(Color.Red, Color.Transparent, name, 'T', Point.None, 100);
+            Item item = new Item(Color.Red, Color.Transparent, name, 'T', Point.None, 100, materialId: "wood");
 
             string serialized = JsonConvert.SerializeObject(item);
             Item deserialized = JsonConvert.DeserializeObject<Item>(serialized);
 
-            Assert.Equal(name, deserialized.Name);
+            Assert.Equal(expectedName, deserialized.Name);
         }
 
         [Fact]

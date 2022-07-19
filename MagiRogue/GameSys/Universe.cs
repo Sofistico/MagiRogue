@@ -1,17 +1,16 @@
 ﻿using MagiRogue.Components;
 using MagiRogue.Data;
+using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Civ;
+using MagiRogue.GameSys.MapGen;
+using MagiRogue.GameSys.Planet;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.GameSys.Time;
-using MagiRogue.GameSys.Planet;
-using SadRogue.Primitives;
-using System;
-using MagiRogue.GameSys.Magic;
-using MagiRogue.GameSys.MapGen;
-using System.Linq;
-using MagiRogue.Data.Serialization;
 using Newtonsoft.Json;
+using System;
+using System.Linq;
 
 namespace MagiRogue.GameSys
 {
@@ -80,6 +79,7 @@ namespace MagiRogue.GameSys
         public RegionChunk[] AllChunks { get; set; }*/
 
         public SaveAndLoad SaveAndLoad { get; set; }
+        public int ZLevel { get; set; }
 
         /// <summary>
         /// Creates a new game world and stores it in a
@@ -487,6 +487,11 @@ namespace MagiRogue.GameSys
             var chunk = SaveAndLoad.GetChunkAtIndex(Point.ToIndex(playerPoint.X, playerPoint.Y, planetWidth), planetWidth);
 
             return chunk;
+        }
+
+        public static Map GetMapById(int id)
+        {
+            return SaveAndLoad.LoadMapById(id);
         }
 
         public bool MapIsWorld()

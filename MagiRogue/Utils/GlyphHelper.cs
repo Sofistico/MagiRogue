@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace MagiRogue.Utils
 {
@@ -153,6 +149,11 @@ namespace MagiRogue.Utils
                 return GlyphsMapping[symbol];
 
             return symbol;
+        }
+
+        public static bool GlyphExistInDictionary(char glyph)
+        {
+            return GlyphsMapping.ContainsKey(glyph);
         }
     }
 }

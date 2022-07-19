@@ -1,19 +1,22 @@
-﻿using GoRogue;
-using GoRogue.GameFramework;
+﻿using GoRogue.GameFramework;
 using GoRogue.Pathing;
 using GoRogue.SpatialMaps;
-using MagiRogue.Data.Serialization;
+using MagiRogue.Data;
+using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Tiles;
-using MagiRogue.GameSys.Time;
+using MagiRogue.Utils;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using SadConsole.Entities;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
+using Entity = MagiRogue.Entities.Entity;
 
 namespace MagiRogue.GameSys
 {
@@ -35,7 +38,7 @@ namespace MagiRogue.GameSys
         /// it must use <see cref="Map.SetTerrain(IGameObject)"/>.
         /// </summary>
         public TileBase[] Tiles
-        { get { return _tiles; } set { _tiles = value; } }
+        { get { return _tiles; } private set { _tiles = value; } }
 
         /// <summary>
         /// Fires whenever FOV is recalculated.
@@ -69,9 +72,12 @@ namespace MagiRogue.GameSys
         public bool IsActive { get; set; }
         public uint MapId { get; private set; }
         public ulong Seed { get; set; }
-        public int[]? ZLevels { get; set; }
+        public int ZAmount { get; set; }
         public Dictionary<Direction, Map> MapZoneConnections { get; set; }
         public List<Room> Rooms { get; set; }
+
+        public Renderer EntityRender { get => _entityRender; }
+        //public Light[] Ilumination { get; set; }
 
         #endregion Properties
 
@@ -99,16 +105,17 @@ namespace MagiRogue.GameSys
             _entityRender = new SadConsole.Entities.Renderer();
             MapName = mapName;
             MapZoneConnections = new();
+            //Ilumination = new Light[Width * Height];
         }
 
         #endregion Constructor
 
         #region HelperMethods
 
-        private static ISettableGridView<IGameObject> CreateTerrain(int width, int heigth)
+        private static ISettableGridView<IGameObject?> CreateTerrain(int width, int heigth)
         {
             var goRogueTerrain = new ArrayView<TileBase>(width, heigth);
-            return new LambdaSettableTranslationGridView<TileBase, IGameObject>(goRogueTerrain, t => t, g => g as TileBase);
+            return new LambdaSettableTranslationGridView<TileBase, IGameObject?>(goRogueTerrain, t => t, g => g as TileBase);
         }
 
         public void RemoveAllEntities()
@@ -219,6 +226,15 @@ namespace MagiRogue.GameSys
             return closest;
         }
 
+        public bool EntityIsThere(Point pos)
+        {
+            Entity? entity = GetEntityAt<Entity>(pos);
+            if (entity is not null)
+                return true;
+            else
+                return false;
+        }
+
         /// <summary>
         /// Removes an Entity from the Entities Field
         /// </summary>
@@ -244,12 +260,12 @@ namespace MagiRogue.GameSys
         /// <param name="entity"></param>
         public void Add(Entity entity)
         {
-            if (entity.CurrentMap is not null)
+            /*if (entity.CurrentMap is not null)
             {
                 Map map = (Map)entity.CurrentMap;
                 map.ControlledEntitiy = null;
                 map.Remove(entity);
-            }
+            }*/
 
             try
             {
@@ -284,7 +300,7 @@ namespace MagiRogue.GameSys
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        private void OnEntityMoved(object sender, GameObjectPropertyChanged<Point> args)
+        private void OnEntityMoved(object? sender, GameObjectPropertyChanged<Point>? args)
         {
             if (args.Item is Player player)
             {
@@ -487,6 +503,184 @@ namespace MagiRogue.GameSys
         /// <returns></returns>
         public Rectangle MapBounds() => Terrain.Bounds();
 
+        public List<TileBase> ReturnAllTrees()
+        {
+            List<TileBase> result = new List<TileBase>();
+            foreach (TileBase tree in Tiles)
+            {
+                if (tree.Name.Equals("Tree"))
+                {
+                    result.Add(tree);
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Adds the room to the map.
+        /// </summary>
+        /// <param name="r"></param>
+        public void AddRoom(Room r)
+        {
+            if (Rooms is null)
+                Rooms = new List<Room>();
+            if (!CheckIfRoomFitsInsideMap(r))
+            {
+                try
+                {
+                    FindOtherPlaceForRoom(r);
+                }
+                catch (ApplicationException ex)
+                {
+                    throw ex;
+                }
+            }
+            Rooms.Add(r);
+        }
+
+        public bool CheckIfRoomFitsInsideMap(Room r)
+        {
+            return r.RoomRectangle.Position.X <= Width || r.RoomRectangle.Position.Y <= Height;
+        }
+
+        private void FindOtherPlaceForRoom(Room r)
+        {
+            int newRoomX = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(1, Width - r.RoomRectangle.Width);
+            int newRoomY = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(1, Height - r.RoomRectangle.Height);
+
+            r.ChangeRoomPos(newRoomX, newRoomY);
+            if (!CheckIfRoomFitsInsideMap(r))
+            {
+                throw new ApplicationException("Tried to place a room inside a map that cound't fit it!");
+            }
+            if (r.PositionsRoom().Any(p => CheckForIndexOutOfBounds(p)))
+            {
+                throw new ApplicationException("Tried to place a room inside a map that cound't fit it!");
+            }
+        }
+
+        /// <summary>
+        /// Adds a list of rooms to the map.
+        /// </summary>
+        /// <param name="r"></param>
+        public void AddRooms(List<Room> r)
+        {
+            if (Rooms is null)
+                Rooms = new List<Room>();
+            Rooms.AddRange(r);
+        }
+
+        public void SpawnRoomThingsOnMap(Room r)
+        {
+            Point[] posRoom = r.PositionsRoom();
+
+            for (int x = 0; x < r.Template.Obj.Rows.Length; x++)
+            {
+                string currentRow = r.Template.Obj.Rows[x];
+                for (int y = 0; y < currentRow.Length; y++)
+                {
+                    char c = currentRow[y];
+                    Point pos = posRoom[Point.ToIndex(x, y, r.Template.Obj.Rows.Length)];
+                    if (CheckForIndexOutOfBounds(pos))
+                    {
+                        // skip over if not in the map
+                        continue;
+                    }
+                    r.Terrain.TryGetValue(c.ToString(), out var ter);
+                    r.Furniture.TryGetValue(c.ToString(), out var fur);
+                    TryToPutTerrain(pos, ter);
+                    TryToPutFurniture(pos, fur);
+                }
+            }
+        }
+
+        private void TryToPutFurniture(Point pos, object? fur)
+        {
+            if (fur is not null)
+            {
+                string str;
+                if (fur is JArray array)
+                {
+                    str = ParseRandomChance(array);
+                }
+                else
+                {
+                    str = fur.ToString();
+                }
+                try
+                {
+                    Furniture furniture = DataManager.QueryFurnitureInData(str);
+                    furniture.Position = pos;
+                    Add(furniture);
+                }
+                catch (NullReferenceException ex)
+                {
+                    throw new NullReferenceException($"Tried to create a room with a non existent furniture! \n" +
+                        $"Furniture: {str}, Exception: {ex}");
+                }
+            }
+        }
+
+        private void TryToPutTerrain(Point pos, object? ter)
+        {
+            if (ter is not null)
+            {
+                string str;
+                if (ter is JArray array)
+                {
+                    str = ParseRandomChance(array);
+                }
+                else
+                {
+                    str = ter.ToString();
+                }
+                try
+                {
+                    TileBase tile = DataManager.QueryTileInData(str);
+                    tile.Position = pos;
+                    SetTerrain(tile);
+                }
+                catch (NullReferenceException ex)
+                {
+                    throw new NullReferenceException($"Tried to create a room with a non existent tile! \n" +
+                        $"Tile: {str}, Exception: {ex}");
+                }
+            }
+        }
+
+        private static string ParseRandomChance(JArray array)
+        {
+            List<string> strs = new();
+            for (int i = 0; i < array.Count; i++)
+            {
+                var child = array[i];
+                var s = child.ToString();
+                strs.Add(s);
+            }
+            int nmbrOfObjects = strs.Count;
+            string obj = "";
+            while (string.IsNullOrEmpty(obj))
+            {
+                string s = strs[GameLoop.GlobalRand.NextInt(0, nmbrOfObjects)];
+                // one in ten
+                int mod = 10;
+                if (s.StartsWith('['))
+                {
+                    var test = s.Split("\r\n");
+                    mod -= int.Parse(test[2]);
+                }
+                bool gotIt = Mrn.OneIn(mod);
+                if (gotIt)
+                {
+                    obj = s.StartsWith('[') ? s.Split("\r\n")[1].Replace(',', ' ').Replace('\"', ' ').Trim()
+                        : s;
+                }
+            }
+
+            return obj;
+        }
+
         public void DestroyMap()
         {
             RemoveAllEntities();
@@ -500,54 +694,6 @@ namespace MagiRogue.GameSys
         }
 
         #endregion HelperMethods
-
-        /*
-
-                #region Desconstructor
-
-                ~Map()
-                {
-        #if DEBUG
-                    // This is here because i suspect there is a minor memory leak in the map class, with this here
-                    // at the very least it seems that the memory is not that great
-                    //GC.Collect();
-                    //GC.WaitForPendingFinalizers();
-                    //GC.Collect();
-        #endif
-
-                    foreach (Entity item in Entities.Items)
-                    {
-                        Remove(item);
-                    }
-                    Tiles = null;
-                    ControlledGameObjectChanged = null;
-                    this.ControlledEntitiy = null;
-                    _entityRender = null;
-                    GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
-                    GoRogueComponents.Clear();
-        #if DEBUG
-                    //GC.Collect();
-                    //GC.WaitForPendingFinalizers();
-                    //GC.Collect();
-        #endif
-                }
-
-                #endregion Desconstructor
-
-        */
-    }
-
-    // enum for defining maplayer for things, so that a monster and a player can occupy the same tile as
-    // an item for example.
-    // If it stops working, add back the player map layer
-    public enum MapLayer
-    {
-        TERRAIN,
-        GHOSTS,
-        ITEMS,
-        ACTORS,
-        FURNITURE,
-        PLAYER
     }
 
     #region Event

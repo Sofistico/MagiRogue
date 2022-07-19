@@ -1,6 +1,5 @@
 ﻿using MagiRogue.Entities;
 using MagiRogue.GameSys.Tiles;
-using SadRogue.Primitives;
 using Console = SadConsole.Console;
 
 namespace MagiRogue.UI.Windows

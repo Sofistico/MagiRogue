@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MagiRogue.Utils
 {
@@ -28,6 +24,16 @@ namespace MagiRogue.Utils
         {
             int r = x % m;
             return r < 0 ? r + m : r;
+        }
+
+        public static double Round(double x)
+        {
+            return Math.Round(x, 2, MidpointRounding.AwayFromZero);
+        }
+
+        public static float Round(float x)
+        {
+            return MathF.Round(x, 2, MidpointRounding.AwayFromZero);
         }
     }
 }

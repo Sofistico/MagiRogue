@@ -1,4 +1,35 @@
 ﻿[
   {
+    "Id": "room_city1",
+    "Obj": {
+      "EmptyFill": "t_grass",
+      "Tag": "Dinner",
+      "Rows": [
+        "##########",
+        "#?.3223.?#",
+        "#?.3223.?#",
+        "#..3223..#",
+        "1..3223..#",
+        "1..3223..#",
+        "#..3223..#",
+        "#?.3223.?#",
+        "#?.3223.?#",
+        "##########"
+      ],
+      "Terrain": {
+        "#": "wood_wall",
+        ".": "wood_floor",
+        "1": "wood_door"
+      },
+      "Furniture": {
+        "2": "wood_table",
+        "3": "wood_chair",
+        "?": [
+          [ "wood_table", 3 ],
+          "standing_light",
+          [ "keg", 2 ]
+        ]
+      }
+    }
   }
 ]

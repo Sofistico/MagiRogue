@@ -1,8 +1,7 @@
-﻿using MagiRogue.Data.Serialization;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization;
 using MagiRogue.GameSys.Physics;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using System;
 using System.Runtime.Serialization;
 
 namespace MagiRogue.Entities
@@ -19,7 +18,7 @@ namespace MagiRogue.Entities
         public string? InsideOf { get; set; }
 
         [DataMember]
-        public Limb.LimbOrientation Orientation { get; set; }
+        public LimbOrientation Orientation { get; set; }
 
         [DataMember]
         public OrganType OrganType { get; set; }
@@ -47,7 +46,7 @@ namespace MagiRogue.Entities
 
         public Organ(string name,
             string? connectedTo,
-            Limb.LimbOrientation orientation,
+            LimbOrientation orientation,
             OrganType organType,
             int organHp,
             string materialId,
@@ -68,7 +67,7 @@ namespace MagiRogue.Entities
         public Organ(string id,
            string name,
            string? connectedTo,
-           Limb.LimbOrientation orientation,
+           LimbOrientation orientation,
            OrganType organType,
            int organHp,
            string materialId,
@@ -110,20 +109,5 @@ namespace MagiRogue.Entities
 
             return copy;
         }
-    }
-
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum OrganType
-    {
-        Misc,
-        Heart,
-        Brain,
-        Digestive,
-        Filtering,
-        Breather,
-        Protective,
-        Visual,
-        Auditory,
-        Nerve
     }
 }

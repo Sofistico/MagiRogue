@@ -1,4 +1,6 @@
 ﻿using GoRogue.DiceNotation;
+using MagiRogue.Data;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.GameSys;
 using MagiRogue.GameSys.Planet;
@@ -6,8 +8,6 @@ using MagiRogue.GameSys.Tiles;
 using MagiRogue.GameSys.Time;
 using MagiRogue.Utils;
 using SadConsole;
-using SadRogue.Primitives;
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -21,8 +21,9 @@ namespace MagiRogue.Commands
     /// </summary>
     public sealed class CommandManager
     {
-        protected CommandManager()
+        private CommandManager()
         {
+            // makes sure that it's never instantiated
         }
 
         /// <summary>
@@ -280,7 +281,7 @@ namespace MagiRogue.Commands
             {
                 actor.Inventory.Add(item);
                 GameLoop.UIManager.MessageLog.Add($"{actor.Name} picked up {item.Name}");
-                item.Destroy();
+                item.RemoveFromMap();
                 return true;
             }
             else
@@ -407,6 +408,14 @@ namespace MagiRogue.Commands
             GameLoop.Universe.WorldMap = new PlanetGenerator().CreatePlanet(500, 500);
         }
 
+        public static bool CreateTestEntity(Point pos, Map map)
+        {
+            Actor found = EntityFactory.ActorCreator(pos,
+                 DataManager.QueryActorInData("test_troll"));
+            map.Add(found);
+            return true;
+        }
+
 #endif
 
         public static bool SacrificeLifeEnergyToMana(Actor actor)
@@ -418,7 +427,7 @@ namespace MagiRogue.Commands
                 actor.Anatomy.BloodCount -= 100f;
                 int roll = Dice.Roll("1d3");
                 float bloodyManaGained = float.Parse($"0.{roll}", CultureInfo.InvariantCulture.NumberFormat);
-                actor.Stats.PersonalMana = (float)Math.Round(actor.Stats.PersonalMana + bloodyManaGained, 1);
+                actor.Stats.PersonalMana = MathMagi.Round(actor.Stats.PersonalMana + bloodyManaGained);
                 GameLoop.UIManager.MessageLog.Add($"You ritually wound yourself, channeling your blood into mana, gaining {bloodyManaGained} blood mana");
                 return true;
             }
@@ -436,8 +445,8 @@ namespace MagiRogue.Commands
                 // calculate here the amount of time that it will take in turns to rest to full
                 float healDif, manaDif;
 
-                healDif = (float)Math.Round((stats.MaxHealth - stats.Health) / stats.BaseHpRegen);
-                manaDif = (float)Math.Round((stats.MaxPersonalMana - stats.PersonalMana) / stats.BaseManaRegen);
+                healDif = MathMagi.Round((stats.MaxHealth - stats.Health) / stats.BaseHpRegen);
+                manaDif = MathMagi.Round((stats.MaxPersonalMana - stats.PersonalMana) / stats.BaseManaRegen);
 
                 float totalTurnsWait = healDif + manaDif;
 
@@ -504,11 +513,12 @@ namespace MagiRogue.Commands
                 GameLoop.GetCurrentMap().GetTileAt<WorldTile>(playerPoint);
             Map currentMap = GameLoop.GetCurrentMap();
             if (possibleStairs is not null
-                && possibleStairs.FurnitureType == FurnitureType.StairsDown)
+                && possibleStairs.MapIdConnection.HasValue)
             {
-                Map map = possibleStairs.MapConnection;
+                Map map = Universe.GetMapById(possibleStairs.MapIdConnection.Value);
                 // TODO: For now it's just a test, need to work out a better way to do it.
                 GameLoop.Universe.ChangePlayerMap(map, map.GetRandomWalkableTile(), currentMap);
+                GameLoop.Universe.ZLevel -= map.ZAmount;
 
                 return true;
             }
@@ -555,11 +565,13 @@ namespace MagiRogue.Commands
 
             if (possibleChangeMap)
             {
-                if (possibleStairs is not null && !GameLoop.Universe.MapIsWorld())
+                if (possibleStairs is not null && !GameLoop.Universe.MapIsWorld()
+                    && possibleStairs.MapIdConnection.HasValue)
                 {
-                    Map map = possibleStairs.MapConnection;
+                    Map map = Universe.GetMapById(possibleStairs.MapIdConnection.Value);
                     // TODO: For now it's just a test, need to work out a better way to do it.
                     GameLoop.Universe.ChangePlayerMap(map, map.GetRandomWalkableTile(), currentMap);
+                    GameLoop.Universe.ZLevel += map.ZAmount;
 
                     return true;
                 }

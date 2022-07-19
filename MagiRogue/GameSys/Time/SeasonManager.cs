@@ -1,22 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using System.Threading.Tasks;
+﻿using MagiRogue.Data.Enumerators;
+using System;
 
 namespace MagiRogue.GameSys.Time
 {
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum SeasonType
-    {
-        Spring = 1,
-        Summer = 2,
-        Autumn = 3,
-        Winter = 4
-    }
-
     public class SeasonManager
     {
         public int SeasonLenght { get; set; }

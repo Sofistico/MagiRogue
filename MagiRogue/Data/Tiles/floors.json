@@ -5,7 +5,6 @@
     "IdMaterial": "dirt",
     "GlyphChar": ".",
     "ForegroundStr": "DirtRoad",
-    "BackgroundStr": "Transparent",
     "TileType": "Floor"
   },
   {
@@ -14,7 +13,6 @@
     "IdMaterial": "h2o",
     "GlyphChar": ".",
     "ForegroundStr": "SnowColor",
-    "BackgroundStr": "Transparent",
     "TileType": "Floor"
   },
   {
@@ -23,7 +21,54 @@
     "IdMaterial": "stone",
     "GlyphChar": ".",
     "ForegroundStr": "DarkGray",
-    "BackgroundStr": "Transparent",
+    "TileType": "Floor"
+  },
+  {
+    "TileId": "tree_trunk",
+    "Name": "Tree Trunk",
+    "IdMaterial": "wood",
+    "GlyphChar": ".",
+    "ForegroundStr": "Wood",
+    "TileType": "Floor"
+  },
+  {
+    "TileId": "wood_floor",
+    "Name": "Wood floor",
+    "IdMaterial": "wood",
+    "GlyphChar": ".",
+    "ForegroundStr": "DarkWood",
+    "TileType": "Floor"
+  },
+  {
+    "TileId": "t_grass_short",
+    "Name": "Short Grass",
+    "IdMaterial": "grass",
+    "GlyphChar": ".",
+    "ForegroundStr": "GrassColor",
+    "TileType": "Floor"
+  },
+  {
+    "TileId": "t_grass",
+    "Name": "Grass",
+    "IdMaterial": "grass",
+    "GlyphChar": ",",
+    "ForegroundStr": "GrassColor",
+    "TileType": "Floor"
+  },
+  {
+    "TileId": "t_grass_long",
+    "Name": "Long Grass",
+    "IdMaterial": "grass",
+    "GlyphChar": "'",
+    "ForegroundStr": "GrassColor",
+    "TileType": "Floor"
+  },
+  {
+    "TileId": "t_sand",
+    "Name": "Sand",
+    "IdMaterial": "sand",
+    "GlyphChar": ".",
+    "ForegroundStr": "Desert",
     "TileType": "Floor"
   }
 ]

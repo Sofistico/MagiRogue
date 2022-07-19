@@ -52,7 +52,7 @@ namespace MagiRogue.GameSys.MapGen
             // carve out rooms for every room in the Rooms list
             foreach (var room in Rooms)
             {
-                CreateRoom(room.RoomRectangle,
+                CreateRoom(room,
                     TileEncyclopedia.GenericStoneWall(), TileEncyclopedia.GenericStoneFloor());
             }
 

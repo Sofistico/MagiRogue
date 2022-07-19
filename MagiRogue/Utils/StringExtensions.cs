@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
+using System.Text.RegularExpressions;
 
 namespace MagiRogue.Utils
 {
@@ -28,6 +25,11 @@ namespace MagiRogue.Utils
             }
 
             return result;
+        }
+
+        public static string SeparateByUpperLetter(this string text)
+        {
+            return Regex.Replace(text, @"(\p{Lu})(?<=\p{Ll}\1|(\p{Lu}|\p{Ll})\1(?=\p{Ll}))", " $1").Trim();
         }
     }
 }

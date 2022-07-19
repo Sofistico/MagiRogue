@@ -1,16 +1,11 @@
-﻿using SadRogue.Primitives;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization;
+using MagiRogue.GameSys.Civ;
+using MagiRogue.GameSys.Planet;
 using Newtonsoft.Json;
+using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using MagiRogue.GameSys.Planet;
-using MagiRogue.GameSys.Civ;
-using MagiRogue.Data.Serialization;
-using System.Diagnostics;
 
 namespace MagiRogue.GameSys.Tiles
 {
@@ -22,7 +17,8 @@ namespace MagiRogue.GameSys.Tiles
             Type objectType, TileBase? existingValue,
             bool hasExistingValue, JsonSerializer serializer)
         {
-            return (TileBase)serializer.Deserialize<BasicTile>(reader);
+            var value = (TileBase)serializer.Deserialize<BasicTile>(reader);
+            return value;
         }
 
         public override void WriteJson(JsonWriter writer, TileBase? value, JsonSerializer serializer)
@@ -67,6 +63,9 @@ namespace MagiRogue.GameSys.Tiles
         public char GlyphLastSeen { get; set; }
         public int InfusedMp { get; set; }
         public int BitMask { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<Trait> Traits { get; set; }
 
         #endregion TileBase Properties
 
@@ -140,11 +139,29 @@ namespace MagiRogue.GameSys.Tiles
 
         #region Methods
 
-        internal TileBase Copy()
+        public TileBase Copy()
         {
             TileBase tile = (TileBase)this;
-
             return tile;
+        }
+
+        public TileBase Copy(Point pos)
+        {
+            TileBase tile = (TileBase)this;
+            tile.Position = pos;
+            return tile;
+        }
+
+        public bool HasAnyTrait()
+        {
+            Traits = Traits is null ? new List<Trait>() : Traits;
+            var material = Physics.PhysicsManager.SetMaterial(IdMaterial);
+            if (material.ConfersTraits is not null)
+            {
+                Traits.AddRange(material.ConfersTraits);
+                return true;
+            }
+            return false;
         }
 
         #endregion Methods
@@ -229,6 +246,7 @@ namespace MagiRogue.GameSys.Tiles
             basic.IsSea = isSea;
             basic.TileHealth = tile.TileHealth;
             basic.BitMask = tile.BitMask;
+            basic.Traits = tile.Traits;
 
             return basic;
         }
@@ -242,7 +260,9 @@ namespace MagiRogue.GameSys.Tiles
             }
 
             TileBase tile;
-            dynamic charToUse = basicTile.GlyphChar is null ? basicTile.Glyph : basicTile.GlyphChar;
+            // Keep a lookout if this part of the code will stop working
+            int charToUse = basicTile.GlyphChar is null ? basicTile.Glyph : basicTile.GlyphChar.Value;
+            basicTile.BackgroundStr = basicTile.BackgroundStr is null ? "Transparent" : basicTile.BackgroundStr;
             Color foreground;
             Color background;
             if (!string.IsNullOrEmpty(basicTile.BackgroundStr) && !string.IsNullOrEmpty(basicTile.ForegroundStr))
@@ -329,9 +349,12 @@ namespace MagiRogue.GameSys.Tiles
                     break;
 
                 case TileType.Door:
-                    tile = new TileDoor((bool)basicTile.Locked,
-                        (bool)basicTile.IsOpen, basicTile.Position,
-                        basicTile.IdMaterial);
+                    tile = new TileDoor(basicTile.Name, basicTile.Locked ?? false,
+                        basicTile.IsOpen ?? false, basicTile.Position,
+                        basicTile.IdMaterial)
+                    {
+                        Foreground = foreground
+                    };
                     break;
 
                 default:
@@ -343,21 +366,11 @@ namespace MagiRogue.GameSys.Tiles
             if (basicTile.TileHealth > 0)
                 tile.TileHealth = basicTile.TileHealth;
 
+            tile.Traits = basicTile.Traits is null ? new List<Trait>() : basicTile.Traits;
+
             return tile;
         }
 
         #endregion operator overload
-    }
-
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum TileType
-    {
-        Null,
-        Floor,
-        Wall,
-        Water,
-        Node,
-        WorldTile,
-        Door
     }
 }

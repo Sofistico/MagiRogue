@@ -1,12 +1,12 @@
-﻿using MagiRogue.GameSys.Magic;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.GameSys.Magic;
 using MagiRogue.GameSys.Magic.Effects;
-using MagiRogue.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 
-namespace MagiRogue.Data.Serialization
+namespace MagiRogue.Data.Serialization.EntitySerialization
 {
     public class SpellJsonConverter : JsonConverter<SpellBase>
     {
@@ -217,14 +217,5 @@ namespace MagiRogue.Data.Serialization
 
             return template;
         }
-    }
-
-    public enum EffectTypes
-    {
-        DAMAGE,
-        HASTE,
-        MAGESIGHT,
-        SEVER,
-        TELEPORT
     }
 }

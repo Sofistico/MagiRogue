@@ -1,49 +1,36 @@
-﻿using MagiRogue.Data;
+﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
+using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Entities;
+using MagiRogue.GameSys.Tiles;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using MagiRogue.GameSys.Tiles;
 
 namespace MagiRogue.GameSys.Civ
 {
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum CivilizationTendency
-    {
-        Normal,
-        Aggresive,
-        Studious,
-    }
-
     [JsonConverter(typeof(CivilizationJsonConverter))]
     public class Civilization
     {
         public string Name { get; set; }
         public Race PrimaryRace { get; set; }
-        public int MilitaryStrenght { get; set; }
-        public int MagicStrenght { get; set; }
-        public int Population { get; set; }
-        public CivilizationTendency Tendency { get; set; }
-        public float MundaneResources { get; set; }
-        public float MagicalResources { get; set; }
-        public List<ItemTemplate> Nodes { get; set; }
-        public List<Point> Territory { get; set; }
+        public int TotalPopulation { get; set; }
 
-        public Civilization(string name, Race primaryRace, int population,
-            CivilizationTendency tendency)
+        public CivilizationTendency Tendency { get; set; }
+        public List<Point> Territory { get; set; }
+        public List<Settlement> Settlements { get; set; }
+
+        public Civilization(string name, Race primaryRace, CivilizationTendency tendency)
         {
             Name = name;
             PrimaryRace = primaryRace;
-            Population = population;
             Tendency = tendency;
-            Nodes = new();
             Territory = new();
+            Settlements=new List<Settlement>();
         }
+
+        public void AddSettlementToCiv(Settlement settlement) => Settlements.Add(settlement);
 
         public List<WorldTile> ReturnAllTerritories(Map map)
         {
@@ -84,6 +71,11 @@ namespace MagiRogue.GameSys.Civ
             }
 
             return waterList;
+        }
+
+        public Settlement GetSettlement(WorldTile worldTile)
+        {
+            return Settlements.FirstOrDefault(o => o.WorldPos == worldTile.Position);
         }
     }
 }

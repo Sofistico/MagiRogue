@@ -1,13 +1,10 @@
-﻿using MagiRogue.Entities;
-using MagiRogue.UI.Controls;
-using SadConsole.UI.Controls;
-using SadRogue.Primitives;
-using System;
-using SadConsole;
-using Console = SadConsole.Console;
-using SadConsole.UI;
-using MagiRogue.Data;
+﻿using MagiRogue.Data;
+using MagiRogue.Entities;
 using MagiRogue.GameSys;
+using MagiRogue.UI.Controls;
+using SadConsole;
+using SadConsole.UI.Controls;
+using System;
 
 namespace MagiRogue.UI.Windows
 {

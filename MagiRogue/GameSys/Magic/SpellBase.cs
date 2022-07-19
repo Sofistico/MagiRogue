@@ -1,12 +1,11 @@
-﻿using MagiRogue.Entities;
-using Newtonsoft.Json.Converters;
-using SadRogue.Primitives;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization.EntitySerialization;
+using MagiRogue.Entities;
+using MagiRogue.Utils;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Newtonsoft.Json;
-using MagiRogue.Data;
-using MagiRogue.Data.Serialization;
 
 namespace MagiRogue.GameSys.Magic
 {
@@ -25,7 +24,7 @@ namespace MagiRogue.GameSys.Magic
         /// </summary>
         public int RequiredShapingSkill
         {
-            get => (int)Math.Round(Power * 2 / Proficiency);
+            get => (int)MathMagi.Round(Power * 2 / Proficiency);
         }
 
         /// <summary>
@@ -147,7 +146,16 @@ namespace MagiRogue.GameSys.Magic
         {
             if (magicSkills.KnowSpells.Contains(this))
             {
-                int reqShapingWithDiscount = RequiredShapingSkill / stats.SoulStat;
+                int reqShapingWithDiscount;
+                try
+                {
+                    reqShapingWithDiscount = RequiredShapingSkill / stats.SoulStat;
+                }
+                catch (DivideByZeroException)
+                {
+                    GameLoop.AddMessageLog("Tried to divide your non existant soul by zero! The universe almost exploded because of you");
+                    return false;
+                }
 
                 bool canCast = reqShapingWithDiscount <= magicSkills.ShapingSkill;
 
@@ -260,7 +268,7 @@ namespace MagiRogue.GameSys.Magic
             return copy;
         }
 
-        private void TickProfiency() => Proficiency = Math.Round(Proficiency + 0.01, 2);
+        private void TickProfiency() => Proficiency = MathMagi.Round(Proficiency + 0.01);
 
         public override string ToString()
         {
@@ -272,17 +280,5 @@ namespace MagiRogue.GameSys.Magic
 
             return bobBuilder;
         }
-    }
-
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum SpellAreaEffect
-    {
-        Self,
-        Target,
-        Ball,
-        Beam,
-        Cone,
-        Level,
-        World
     }
 }

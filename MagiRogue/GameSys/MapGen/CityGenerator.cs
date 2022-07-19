@@ -1,6 +1,11 @@
 ﻿using MagiRogue.Data;
+using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.GameSys.Tiles;
+using MagiRogue.Utils;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MagiRogue.GameSys.MapGen
 {
@@ -11,7 +16,7 @@ namespace MagiRogue.GameSys.MapGen
             // empty one
         }
 
-        public void GenerateSmallVillageFromMapBSP(Map map, int maxRooms,
+        public void GenerateBigCityFromMapBSP(Map map, int maxRooms,
             int minRoomSize, int maxRoomSize, string townName)
         {
             _map = map;
@@ -20,8 +25,8 @@ namespace MagiRogue.GameSys.MapGen
 
             map.MapName = townName;
 
-            PopulateMapWithRooms(rooms, (TileFloor)DataManager.QueryTileInData("stone_floor"),
-                (TileWall)DataManager.QueryTileInData("stone_wall"));
+            PopulateMapWithRooms(rooms, QueryTilesForTrait<TileFloor>(Trait.Durable),
+                QueryTilesForTrait<TileWall>(Trait.Durable));
 
             ApplyRoads(rooms, TileEncyclopedia.GenericDirtRoad(Point.None));
         }
@@ -31,13 +36,61 @@ namespace MagiRogue.GameSys.MapGen
             for (int i = 0; i < rooms.Count; i++)
             {
                 Room? room = rooms[i];
-                CreateRoom(room.RoomRectangle,
+                if (Mrn.OneIn(10))
+                {
+                    if (DataManager.ListOfRooms.Any(r => r.CompareRectanglesSameSize(room.RoomRectangle)))
+                    {
+                        RoomTemplate tempRoom =
+                            DataManager.ListOfRooms.First(r => r.CompareRectanglesSameSize(room.RoomRectangle));
+                        room = tempRoom.ConfigureRoom(room.RoomRectangle.Position);
+                        _rooms.Add(room);
+                        _map.AddRoom(room);
+                        _map.SpawnRoomThingsOnMap(room);
+                        continue;
+                    }
+                }
+                CreateRoom(room,
                     w, f);
                 CreateDoor(room);
                 room.LockedDoorsRng();
                 _rooms.Add(room);
+                _map.AddRoom(room);
             }
-            _map.Rooms = _rooms;
+            /*_map.AddRooms(_rooms);*/
+        }
+
+        private void PopulateMapWithRoomsWithVariableMaterials(List<Room> rooms,
+            List<TileFloor> possibleFloors)
+        {
+            throw new NotImplementedException("GET TO WORK YOU LAZY HORSE 🐎!");
+        }
+
+        public void GenerateSmallVillage(Map map, int maxRooms,
+            int minRoomSize, int maxRoomSize, string townName)
+        {
+            _map = map;
+            _map.MapName = townName;
+
+            var rooms = BspMapFunction(map, maxRoomSize, minRoomSize, maxRooms);
+
+            PopulateMapWithRooms(rooms, QueryTilesForTrait<TileFloor>(Trait.Inexpensive),
+                QueryTilesForTrait<TileWall>(Trait.Inexpensive));
+
+            ApplyRoads(_rooms, TileEncyclopedia.GenericDirtRoad(Point.None));
+        }
+
+        public void GenerateMediumTown(Map map, int maxRooms,
+            int minRoomSize, int maxRoomSize, string townName)
+        {
+            _map = map;
+            _map.MapName = townName;
+
+            var rooms = BspMapFunction(map, maxRoomSize, minRoomSize, maxRooms);
+
+            PopulateMapWithRooms(rooms, QueryTilesForTrait<TileFloor>(Trait.Durable),
+                QueryTilesForTrait<TileWall>(Trait.Durable));
+
+            ApplyRoads(_rooms, TileEncyclopedia.GenericDirtRoad(Point.None));
         }
     }
 }

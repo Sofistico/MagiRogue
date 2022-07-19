@@ -1,8 +1,11 @@
 ﻿using MagiRogue.Data;
+using MagiRogue.Data.Enumerators;
+using MagiRogue.Entities;
 using MagiRogue.GameSys.Planet;
 using MagiRogue.GameSys.Tiles;
 using SadRogue.Primitives;
 using System;
+using System.Collections.Generic;
 
 namespace MagiRogue.GameSys.MapGen
 {
@@ -19,13 +22,16 @@ namespace MagiRogue.GameSys.MapGen
         {
             Map[] maps = new Map[RegionChunk.MAX_LOCAL_MAPS];
             WorldTile worldTile = worldMap.AssocietatedMap.GetTileAt<WorldTile>(posGenerated);
-
+            int settlmentCounter = 0;
             for (int i = 0; i < maps.Length; i++)
             {
                 Map completeMap = DetermineBiomeLookForTile(worldTile);
                 if (completeMap is not null)
                 {
                     ApplyModifierToTheMap(completeMap, worldTile, (uint)i);
+                    // Revist when the mind is better working! i really need to sleep my little 🐴
+                    settlmentCounter = CreateSettlementsIfAny(completeMap,
+                        worldTile, settlmentCounter);
                     FinishingTouches(completeMap, worldTile);
                     maps[i] = completeMap;
                 }
@@ -47,11 +53,175 @@ namespace MagiRogue.GameSys.MapGen
         /// <param name="worldTile"></param>
         private static void FinishingTouches(Map completeMap, WorldTile worldTile)
         {
+            // here prune trees
+            if (worldTile.CivInfluence is not null)
+            {
+                PruneTrees(completeMap, worldTile);
+                MakeRoomUseful(completeMap, worldTile);
+            }
+        }
+
+        private static void MakeRoomUseful(Map completeMap, WorldTile worldTile)
+        {
+            List<Room> mapRooms = completeMap.Rooms;
+            bool oneRulerOnly = false;
+            if (mapRooms is null)
+                return;
+            foreach (Room room in mapRooms)
+            {
+                if (room.RoomRectangle.Area >= 6)
+                {
+                    int rng = GoRogue.Random
+                        .GlobalRandom.DefaultRNG.NextInt(Enum.GetValues(typeof(RoomTag)).Length);
+                    var tag = (RoomTag)rng;
+                    if (tag != RoomTag.Throne)
+                    {
+                        room.Tag = tag;
+                    }
+                    else if (tag == RoomTag.Throne && !oneRulerOnly)
+                    {
+                        room.Tag = tag;
+                        oneRulerOnly = true;
+                    }
+                    else
+                        continue;
+
+                    GiveRoomFurniture(room, completeMap);
+                }
+            }
+        }
+
+        private static void GiveRoomFurniture(Room room, Map map)
+        {
+            switch (room.Tag)
+            {
+                case RoomTag.Generic:
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("wood_table"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("wood_chair"), room, map);
+                    break;
+
+                case RoomTag.Inn:
+                    AddFurnituresAtRandomPos(DataManager.QueryFurnitureInData("wood_table"), room, map, 4);
+                    AddFurnituresAtRandomPos(DataManager.QueryFurnitureInData("wood_chair"), room, map, 3);
+                    AddFurnituresAtRandomPos(DataManager.QueryFurnitureInData("keg"), room, map, 3);
+                    break;
+
+                case RoomTag.Temple:
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("religious_altar"), room, map);
+                    AddFurnituresAtRandomPos(DataManager.QueryFurnitureInData("wood_chair"), room, map, 3);
+
+                    break;
+
+                case RoomTag.Blacksmith:
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("stone_forge"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("anvil"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("coal_sack"), room, map);
+                    break;
+
+                case RoomTag.Clothier:
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("wood_loom"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("wood_chair"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("wood_table"), room, map);
+                    break;
+
+                case RoomTag.Alchemist:
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("alembic"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("crucible"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("stone_forge"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("magical_distilator"), room, map);
+                    break;
+
+                case RoomTag.Hovel:
+                    AddFurnituresAtRandomPos(DataManager.QueryFurnitureInData("wood_bed"), room, map, 5);
+                    break;
+
+                case RoomTag.Abandoned:
+                    AddFurnituresAtRandomPos(DataManager.QueryFurnitureInData("broken_misc"), room, map, 5);
+                    break;
+
+                case RoomTag.House:
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("wood_table"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("wood_chair"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("wood_chest"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("wood_bed"), room, map);
+                    break;
+
+                case RoomTag.Throne:
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("wood_table"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("wood_chair"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("wood_chest"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("wood_throne"), room, map);
+                    break;
+
+                case RoomTag.Kitchen:
+                    AddFurnituresAtRandomPos(DataManager.QueryFurnitureInData("wood_table"), room, map, 2);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("wood_chair"), room, map);
+                    AddFurnituresAtRandomPos(DataManager.QueryFurnitureInData("oven"), room, map, 2);
+
+                    break;
+
+                case RoomTag.GenericWorkshop:
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("wood_chair"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("crafting_table"), room, map);
+                    break;
+
+                case RoomTag.Dinner:
+                    AddFurnituresAtRandomPos(DataManager.QueryFurnitureInData("wood_table"), room, map, 2);
+                    AddFurnituresAtRandomPos(DataManager.QueryFurnitureInData("wood_chair"), room, map, 4);
+
+                    break;
+
+                default:
+                    throw new ApplicationException("Type of room not defined!");
+            }
+        }
+
+        private static void AddFurnituresAtRandomPos(Furniture furniture, Room room, Map map, int quantity)
+        {
+            for (int i = 0; i < quantity; i++)
+            {
+                AddFurnitureAtRandomPos(furniture.Copy(), room, map);
+            }
+        }
+
+        private static void AddFurnitureAtRandomPos(Furniture furniture, Room room, Map map)
+        {
+            Point pos = Point.None;
+            while (!map.IsTileWalkable(pos) || map.EntityIsThere(pos))
+            {
+                pos = room.ReturnRandomPosRoom();
+            }
+            furniture.Position = pos;
+            map.Add(furniture);
+            //furniture.Position = Point.None;
+
+            //while (!map.CanAddEntity(furniture))
+            //    furniture.Position = room.ReturnRandomPosRoom();
+
+            //map.Add(furniture);
+        }
+
+        private static void PruneTrees(Map completeMap, WorldTile worldTile)
+        {
+            List<TileBase> trees = completeMap.ReturnAllTrees();
+
+            int chanceToRemoveTree = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt
+                ((worldTile.CivInfluence.GetSettlement(worldTile).Population)) / 100;
+            for (int i = 0; i < trees.Count; i++)
+            {
+                int rng = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, 101);
+                if (rng <= chanceToRemoveTree)
+                {
+                    Point pos = trees[i].Position;
+                    var floor = TileEncyclopedia.GenericTreeTrunk(pos);
+                    completeMap.SetTerrain(floor);
+                }
+            }
         }
 
         /// <summary>
         /// If the map has any modifer, like strong magic aura, cities, roads and particulaly civs
-        /// \nAnything that changes the composition of the World Tile map.
+        /// Anything that changes the composition of the World Tile map.
         /// Trees also spawn here
         /// </summary>
         /// <param name="completeMap"></param>
@@ -121,12 +291,7 @@ namespace MagiRogue.GameSys.MapGen
                 default:
                     break;
             }
-            if (worldTile.CivInfluence is not null)
-            {
-                CityGenerator city = new();
-                city.GenerateSmallVillageFromMapBSP(completeMap,
-                    randNum.NextInt(6, 23), randNum.NextInt(4, 7), randNum.NextInt(8, 12), "Test Town");
-            }
+
             if (worldTile.Rivers.Count > 0)
             {
             }
@@ -149,6 +314,61 @@ namespace MagiRogue.GameSys.MapGen
                 default:
                     break;
             }*/
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="completeMap"></param>
+        /// <param name="worldTile"></param>
+        /// <param name="createdSettlements"></param>
+        /// <returns>Returns the number of settlement already created on the map</returns>
+        /// <exception cref="ApplicationException"></exception>
+        private int CreateSettlementsIfAny(Map completeMap, WorldTile worldTile, int createdSettlements)
+        {
+            if (worldTile.CivInfluence is not null)
+            {
+                CityGenerator city = new();
+                var settlement = worldTile.CivInfluence.GetSettlement(worldTile);
+                if ((int)settlement.Size == createdSettlements)
+                    return (int)settlement.Size;
+                switch (settlement.Size)
+                {
+                    case SettlementSize.Default:
+                        throw new ApplicationException("Room generated was from the default error!");
+
+                    case SettlementSize.Small:
+                        city.GenerateSmallVillage(completeMap,
+                            randNum.NextInt(4, 7),
+                            randNum.NextInt(4, 7),
+                            randNum.NextInt(8, 12),
+                            settlement.Name);
+                        break;
+
+                    case SettlementSize.Medium:
+                        city.GenerateMediumTown(completeMap,
+                            randNum.NextInt(4, 7),
+                            randNum.NextInt(4, 7),
+                            randNum.NextInt(8, 12),
+                            settlement.Name);
+                        break;
+
+                    case SettlementSize.Large:
+                        city.GenerateBigCityFromMapBSP(completeMap,
+                            randNum.NextInt(17, 30),
+                            randNum.NextInt(4, 7),
+                            randNum.NextInt(8, 12),
+                            settlement.Name);
+                        break;
+
+                    default:
+                        throw new ApplicationException("There was an error with the room generated!");
+                }
+
+                return ++createdSettlements;
+            }
+
+            return 0;
         }
 
         private static Map DetermineBiomeLookForTile(WorldTile worldTile)
@@ -321,8 +541,8 @@ namespace MagiRogue.GameSys.MapGen
             for (int i = 0; i < map.Tiles.Length; i++)
             {
                 Point pos = Point.FromIndex(i, map.Width);
-                TileFloor tile = new TileFloor("Sand", pos, "sand", worldTile.Glyph,
-                    worldTile.Foreground, Color.Transparent);
+                TileFloor tile = DataManager.QueryTileInData<TileFloor>("t_sand").Copy();
+                tile.Position = pos;
                 PrepareForAnyFloor(tile, map);
             }
 

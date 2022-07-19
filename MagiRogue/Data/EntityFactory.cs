@@ -1,8 +1,6 @@
-﻿using MagiRogue.Entities;
-using SadRogue.Primitives;
-using MagiRogue.Data.Serialization;
+﻿using MagiRogue.Data.Serialization.EntitySerialization;
+using MagiRogue.Entities;
 using System.Collections.Generic;
-using System;
 
 namespace MagiRogue.Data
 {
@@ -23,9 +21,9 @@ namespace MagiRogue.Data
                 )
                 {
                     Stats = actorTemplate.Stats,
+                    Description = actorTemplate.Description,
+                    Material = GameSys.Physics.PhysicsManager.SetMaterial(actorTemplate.MaterialId)
                 };
-            actor.Description = actorTemplate.Description;
-            actor.Material = GameSys.Physics.PhysicsManager.SetMaterial(actorTemplate.MaterialId);
             if (actorTemplate.Abilities is not null && actorTemplate.Abilities.Count > 0)
             {
                 for (int i = 0; i < actorTemplate.Abilities.Count; i++)

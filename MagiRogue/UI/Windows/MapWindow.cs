@@ -1,14 +1,6 @@
-﻿using MagiRogue.Commands;
-using MagiRogue.Entities;
+﻿using MagiRogue.Entities;
 using MagiRogue.GameSys;
-using MagiRogue.GameSys.Tiles;
-using MagiRogue.GameSys.Time;
-using SadConsole;
-using SadConsole.Input;
 using SadRogue.Primitives;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Console = SadConsole.Console;
 using Rectangle = SadRogue.Primitives.Rectangle;
 

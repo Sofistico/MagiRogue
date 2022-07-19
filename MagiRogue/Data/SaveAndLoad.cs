@@ -1,14 +1,11 @@
-﻿using SadConsole;
+﻿using MagiRogue.GameSys;
+using MagiRogue.Utils;
+using Newtonsoft.Json;
+using SadConsole;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-using Newtonsoft.Json;
-using MagiRogue.Data.Serialization;
-using MagiRogue.GameSys;
-using MagiRogue.Utils;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace MagiRogue.Data
@@ -294,6 +291,25 @@ namespace MagiRogue.Data
             var regions = LoadChunks(file);
 
             return regions.FirstOrDefault(i => i.ToIndex(mapWidth) == index);
+        }
+
+        public static Map LoadMapById(int id)
+        {
+            string pathWildcard = @$"SaveDir\Chunks_*.mr";
+            string[] list = FileUtils.GetFiles(pathWildcard);
+
+            for (int i = 0; i < list.Length; i++)
+            {
+                RegionChunk[] chunks = LoadChunks(list[i]);
+                for (int y = 0; y < chunks.Length; y++)
+                {
+                    var m = chunks[i].LocalMaps.FirstOrDefault(i => i.MapId == id);
+                    if (m != null)
+                        return m;
+                }
+            }
+
+            return null;
         }
     }
 }

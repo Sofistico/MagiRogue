@@ -1,4 +1,5 @@
-﻿using SadRogue.Primitives;
+﻿using MagiRogue.Data.Enumerators;
+using SadRogue.Primitives;
 
 namespace MagiRogue.GameSys.Tiles
 {

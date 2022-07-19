@@ -1,8 +1,9 @@
-﻿using MagiRogue.GameSys.Tiles;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization.MapSerialization;
+using MagiRogue.GameSys.Tiles;
+using MagiRogue.Utils;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using SadRogue.Primitives;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,10 +18,28 @@ namespace MagiRogue.GameSys
         public List<TileDoor> Doors { get; set; } = new List<TileDoor>();
         public List<Point> DoorsPoint { get; set; } = new List<Point>();
 
+        [JsonIgnore]
+        public Dictionary<string, object> Furniture { get; set; } = new();
+
+        [JsonIgnore]
+        public Dictionary<string, object> Terrain { get; set; } = new();
+
+        [JsonIgnore]
+        public RoomTemplate Template { get; set; }
+
         public Room(Rectangle roomRectangle, RoomTag tag)
         {
             RoomRectangle = roomRectangle;
             Tag = tag;
+        }
+
+        public Room(Rectangle roomRectangle,
+            RoomTag tag,
+            Dictionary<string, object> furniture,
+            Dictionary<string, object> terrain) : this(roomRectangle, tag)
+        {
+            Furniture = furniture;
+            Terrain = terrain;
         }
 
         public Room(Rectangle roomRectangle)
@@ -77,9 +96,17 @@ namespace MagiRogue.GameSys
             }
         }
 
-        public Point[] PositionInsideRoom()
+        public Point[] PositionsRoom()
         {
-            return RoomRectangle.Positions().ToArray();
+            var points = RoomRectangle.Positions().ToList();
+            foreach (var item in ReturnRecPerimiter())
+            {
+                if (!points.Contains(item))
+                {
+                    points.Add(item);
+                }
+            }
+            return points.ToArray();
         }
 
         public List<Point> ReturnRecPerimiter()
@@ -92,48 +119,31 @@ namespace MagiRogue.GameSys
 
             // build a list of room border cells using a series of
             // straight lines
-            List<Point> borderCells = GetTileLocationsAlongLine(xMin, yMin, xMax, yMin).ToList();
-            borderCells.AddRange(GetTileLocationsAlongLine(xMin, yMin, xMin, yMax));
-            borderCells.AddRange(GetTileLocationsAlongLine(xMin, yMax, xMax, yMax));
-            borderCells.AddRange(GetTileLocationsAlongLine(xMax, yMin, xMax, yMax));
+            List<Point> borderCells = PointUtils.GetTileLocationsAlongLine(xMin, yMin, xMax, yMin).ToList();
+            borderCells.AddRange(PointUtils.GetTileLocationsAlongLine(xMin, yMin, xMin, yMax));
+            borderCells.AddRange(PointUtils.GetTileLocationsAlongLine(xMin, yMax, xMax, yMax));
+            borderCells.AddRange(PointUtils.GetTileLocationsAlongLine(xMax, yMin, xMax, yMax));
 
             return borderCells;
         }
 
-        private static IEnumerable<Point> GetTileLocationsAlongLine(
-            int xOrigin, int yOrigin, int xDestination, int yDestination)
+        internal Point ReturnRandomPosRoom()
         {
-            int dx = Math.Abs(xDestination - xOrigin);
-            int dy = Math.Abs(yDestination - yOrigin);
+            int x = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(RoomRectangle.MinExtentX, RoomRectangle.MaxExtentX + 1);
+            int y = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(RoomRectangle.MinExtentY, RoomRectangle.MaxExtentY + 1);
 
-            int sx = xOrigin < xDestination ? 1 : -1;
-            int sy = yOrigin < yDestination ? 1 : -1;
-            int err = dx - dy;
-
-            while (true)
-            {
-                yield return new Point(xOrigin, yOrigin);
-                if (xOrigin == xDestination && yOrigin == yDestination)
-                    break;
-
-                int e2 = 2 * err;
-                if (e2 > -dy)
-                {
-                    err -= dy;
-                    xOrigin += sx;
-                }
-                if (e2 < dx)
-                {
-                    err += dx;
-                    yOrigin += sy;
-                }
-            }
+            Point pos = new SadRogue.Primitives.Point(x, y);
+            return pos;
         }
-    }
 
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum RoomTag
-    {
-        Generic, Inn, Temple, Blacksmith, Clothier, Alchemist, PlayerHouse, Hovel, Abandoned
+        public void ChangeRoomPos(Point point)
+        {
+            RoomRectangle = RoomRectangle.WithPosition(point);
+        }
+
+        public void ChangeRoomPos(int newRoomX, int newRoomY)
+        {
+            ChangeRoomPos(new SadRogue.Primitives.Point(newRoomX, newRoomY));
+        }
     }
 }

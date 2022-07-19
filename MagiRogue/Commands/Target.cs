@@ -1,6 +1,6 @@
 ﻿using GoRogue.Pathing;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
-using MagiRogue.GameSys;
 using MagiRogue.GameSys.Magic;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.UI.Windows;
@@ -57,7 +57,7 @@ namespace MagiRogue.Commands
             SadConsole.Effects.Blink blink = new SadConsole.Effects.Blink()
             {
                 BlinkCount = -1,
-                BlinkSpeed = TimeSpan.FromSeconds(1.5),
+                BlinkSpeed = TimeSpan.FromSeconds(0.5),
                 UseCellBackgroundColor = true
             };
             Cursor.Effect = blink;
@@ -379,12 +379,6 @@ namespace MagiRogue.Commands
             {
                 throw new("Cound't find what to target!");
             }
-        }
-
-        public enum TargetState
-        {
-            Resting,
-            Targeting
         }
     }
 }

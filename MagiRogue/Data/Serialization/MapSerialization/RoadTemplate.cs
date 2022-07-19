@@ -1,15 +1,11 @@
-﻿using MagiRogue.GameSys.Civ;
-using MagiRogue.GameSys.Planet;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Tiles;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
-namespace MagiRogue.Data.Serialization
+namespace MagiRogue.Data.Serialization.MapSerialization
 {
     public class RoadJsonConverter : JsonConverter<Road>
     {

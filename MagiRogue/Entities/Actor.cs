@@ -1,14 +1,14 @@
 ﻿using MagiRogue.Commands;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.GameSys;
 using MagiRogue.GameSys.Tiles;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
-using System;
 using System.Collections.Generic;
 
 namespace MagiRogue.Entities
 {
-    [JsonConverter(typeof(Data.Serialization.ActorJsonConverter))]
+    [JsonConverter(typeof(Data.Serialization.EntitySerialization.ActorJsonConverter))]
     public class Actor : Entity
     {
         #region Fields
@@ -35,6 +35,7 @@ namespace MagiRogue.Entities
         /// </summary>
         public bool Bumped { get => bumped; set => bumped = value; }
 
+        // TODO: change inventory...
         /// <summary>
         /// Here we define were the inventory is
         /// </summary>

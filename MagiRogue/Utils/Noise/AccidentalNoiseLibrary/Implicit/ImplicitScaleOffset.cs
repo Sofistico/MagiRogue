@@ -31,7 +31,7 @@ namespace TinkerWorX.AccidentalNoiseLibrary
         {
             return this.Source.Get(x, y, z, w) * this.Scale.Get(x, y, z, w) + this.Offset.Get(x, y, z, w);
         }
-            
+
         public override Double Get(Double x, Double y, Double z, Double w, Double u, Double v)
         {
             return this.Source.Get(x, y, z, w, u, v) * this.Scale.Get(x, y, z, w, u, v) + this.Offset.Get(x, y, z, w, u, v);

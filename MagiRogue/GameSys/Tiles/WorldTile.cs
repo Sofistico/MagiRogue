@@ -1,76 +1,13 @@
-﻿using MagiRogue.GameSys.Civ;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Planet;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MagiRogue.GameSys.Tiles
 {
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum HeightType
-    {
-        Error,
-        DeepWater,
-        ShallowWater,
-        Shore,
-        Sand,
-        Grass,
-        Forest,
-        Mountain,
-        Snow,
-        River,
-        HighMountain
-    }
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum HeatType
-    {
-        Coldest,
-        Colder,
-        Cold,
-        Warm,
-        Warmer,
-        Warmest
-    }
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum MoistureType
-    {
-        Wettest,
-        Wetter,
-        Wet,
-        Dry,
-        Dryer,
-        Dryest
-    }
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum BiomeType
-    {
-        Sea,
-        Desert,
-        Savanna,
-        TropicalRainforest,
-        Grassland,
-        Woodland,
-        SeasonalForest,
-        TemperateRainforest,
-        BorealForest,
-        Tundra,
-        Ice,
-        Mountain,
-        Null
-    }
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum SpecialLandType
-    {
-        None,
-        MagicLand,
-    }
-
     [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
     public sealed class WorldTile : TileBase
     {
@@ -234,6 +171,11 @@ namespace MagiRogue.GameSys.Tiles
             {
                 throw new Exception($"Recursive river generation failed!");
             }
+        }
+
+        public Settlement GetSettlement()
+        {
+            return CivInfluence is not null ? CivInfluence.GetSettlement(this) : null;
         }
 
         private void SetRiverTile(River river)

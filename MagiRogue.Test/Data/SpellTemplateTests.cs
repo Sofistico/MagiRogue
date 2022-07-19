@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MagiRogue.GameSys.Magic;
 using Newtonsoft.Json;
+using MagiRogue.Data.Enumerators;
 
 namespace MagiRogue.Test.Data
 {

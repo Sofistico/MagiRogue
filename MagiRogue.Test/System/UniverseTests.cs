@@ -16,6 +16,7 @@ using BenchmarkDotNet;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using Newtonsoft.Json.Linq;
+using MagiRogue.Data.Enumerators;
 
 namespace MagiRogue.Test.System
 {
@@ -30,7 +31,7 @@ namespace MagiRogue.Test.System
             var chunck = new RegionChunk(new Point(0, 0));
             uni = new(new PlanetMap(50, 50), null, null,
                 new MagiRogue.GameSys.Time.TimeSystem(500), true,
-                MagiRogue.GameSys.Time.SeasonType.Spring, new(), chunck);
+                SeasonType.Spring, new(), chunck);
             PrepareForChunkTest();
         }
 

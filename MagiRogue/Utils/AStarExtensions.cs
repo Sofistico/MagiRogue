@@ -1,16 +1,11 @@
 ﻿using GoRogue.Pathing;
 using SadRogue.Primitives;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MagiRogue.Utils
 {
     public static class AStarExtensions
     {
-        public static Path ShortestPath(this AStar aStar, Point originCoord, Point endCoord, 
+        public static Path ShortestPath(this AStar aStar, Point originCoord, Point endCoord,
             Distance distanceMeasurement,
             bool assumeEndPointWalkable = true)
         {

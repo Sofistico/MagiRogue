@@ -1,13 +1,14 @@
 ﻿using MagiRogue.Data;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Tiles;
+using MagiRogue.Utils;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
+using ShaiRandom.Generators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ShaiRandom.Generators;
-using MagiRogue.Utils;
 
 namespace MagiRogue.GameSys.MapGen
 {
@@ -42,7 +43,7 @@ namespace MagiRogue.GameSys.MapGen
         protected void InsertStairs(Room room)
         {
             Furniture stairsDown = new Furniture(Color.White, Color.Black, '>', room.RoomRectangle.Center,
-                (int)MapLayer.FURNITURE, FurnitureType.StairsDown);
+                FurnitureType.StairsDown, "wood", "Stair");
 
             // debug to unlock the room
             //room.ForceUnlock();
@@ -153,19 +154,20 @@ namespace MagiRogue.GameSys.MapGen
         /// Floors are placed in the interior area of the room
         /// </summary>
         /// <param name="room"></param>
-        protected void CreateRoom(Rectangle room, TileWall wall, TileFloor floor)
+        protected void CreateRoom(Room room, TileWall wall, TileFloor floor)
         {
+            Rectangle rectangle = room.RoomRectangle;
             // Place floors in interior area
-            for (int x = room.ToMonoRectangle().Left + 1; x < room.ToMonoRectangle().Right; x++)
+            for (int x = rectangle.ToMonoRectangle().Left + 1; x < rectangle.ToMonoRectangle().Right; x++)
             {
-                for (int y = room.ToMonoRectangle().Top + 1; y < room.ToMonoRectangle().Bottom; y++)
+                for (int y = rectangle.ToMonoRectangle().Top + 1; y < rectangle.ToMonoRectangle().Bottom; y++)
                 {
                     CreateAnyFloor(new Point(x, y), floor);
                 }
             }
 
             // Place walls at perimeter
-            List<Point> perimeter = GetBorderCellLocations(room);
+            List<Point> perimeter = PointUtils.GetBorderCellLocations(rectangle);
 
             foreach (Point location in perimeter)
             {
@@ -173,14 +175,14 @@ namespace MagiRogue.GameSys.MapGen
             }
         }
 
-        private void CreateAnyWall(Point location, TileWall wall)
+        protected void CreateAnyWall(Point location, TileWall wall)
         {
             var copyWall = wall.Copy();
             copyWall.Position = location;
             _map.SetTerrain(copyWall);
         }
 
-        private void CreateAnyFloor(Point point, TileFloor floor)
+        protected void CreateAnyFloor(Point point, TileFloor floor)
         {
             var copyFloor = floor.Copy();
             copyFloor.Position = point;
@@ -235,29 +237,6 @@ namespace MagiRogue.GameSys.MapGen
                 TileWall wall = new TileWall(Point.FromIndex(i, _map.Width), "stone");
                 _map.SetTerrain(wall);
             }
-        }
-
-        /// <summary>
-        /// Returns a list of points expressing the perimeter of a rectangle
-        /// </summary>
-        /// <param name="room"></param>
-        /// <returns></returns>
-        public List<Point> GetBorderCellLocations(Rectangle room)
-        {
-            //establish room boundaries
-            int xMin = room.ToMonoRectangle().Left;
-            int xMax = room.ToMonoRectangle().Right;
-            int yMin = room.ToMonoRectangle().Bottom;
-            int yMax = room.ToMonoRectangle().Top;
-
-            // build a list of room border cells using a series of
-            // straight lines
-            List<Point> borderCells = GetTileLocationsAlongLine(xMin, yMin, xMax, yMin).ToList();
-            borderCells.AddRange(GetTileLocationsAlongLine(xMin, yMin, xMin, yMax));
-            borderCells.AddRange(GetTileLocationsAlongLine(xMin, yMax, xMax, yMax));
-            borderCells.AddRange(GetTileLocationsAlongLine(xMax, yMin, xMax, yMax));
-
-            return borderCells;
         }
 
         /// <summary>
@@ -487,17 +466,19 @@ namespace MagiRogue.GameSys.MapGen
         /// <param name="acceptsMoreThanOneDoor"></param>
         protected void CreateDoor(Room room, bool acceptsMoreThanOneDoor = false)
         {
-            List<Point> borderCells = GetBorderCellLocations(room.RoomRectangle);
+            List<Point> borderCells = PointUtils.GetBorderCellLocations(room.RoomRectangle);
             bool alreadyHasDoor = false;
 
             //go through every border cell and look for potential door candidates
             foreach (Point location in borderCells)
             {
+                if (alreadyHasDoor)
+                    break;
                 //int locationIndex = location.ToIndex(_map.Width);
                 if (IsPotentialDoor(location) && !alreadyHasDoor)
                 {
                     // Create a new door that is closed and unlocked.
-                    TileDoor newDoor = new(false, false, location, "wood");
+                    TileDoor newDoor = DataManager.QueryTileInData<TileDoor>("wood_door", location);
                     _map.SetTerrain(newDoor);
                     if (!acceptsMoreThanOneDoor)
                         alreadyHasDoor = true;
@@ -830,5 +811,33 @@ namespace MagiRogue.GameSys.MapGen
         #endregion BSPGen
 
         #endregion MapGenAlgorithms
+
+        #region Utils
+
+        // quite clever 🐴
+        protected static T QueryTilesForTrait<T>(Trait trait) where T : TileBase
+        {
+            List<BasicTile> tiles = DataManager.QueryTilesInDataWithTrait(trait);
+            if (tiles.Count < 1)
+            {
+                throw new ApplicationException($"There wasn't any tile with that material! \nMaterial: {trait}");
+            }
+            List<TileBase> possibleResults = new List<TileBase>();
+            TileBase result;
+            for (int i = 0; i < tiles.Count; i++)
+            {
+                TileBase tile = (TileBase)tiles[i];
+                if (tile is T && tile.Traits.Contains(trait))
+                {
+                    possibleResults.Add(tile);
+                }
+            }
+
+            result = possibleResults.GetRandomItemFromList();
+
+            return (T)result;
+        }
+
+        #endregion Utils
     }
 }

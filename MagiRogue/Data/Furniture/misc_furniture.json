@@ -1,0 +1,41 @@
+[
+  {
+    "Id": "broken_misc",
+    "MaterialId": "wood",
+    "Name": "Broken Furniture",
+    "Description": "A bunch of broken furniture lies in the floor, looks pretty much as garbage.",
+    "Glyph": "{",
+    "Weight": 40,
+    "Size": 120,
+    "Durability": 1,
+    "FurnitureType": "General"
+  },
+  {
+    "Id": "religious_altar",
+    "MaterialId": "wood",
+    "Name": "Religious Altar",
+    "Description": "An altar for a deity, there is inscription with holy words.",
+    "Glyph": "_",
+    "Weight": 100,
+    "Size": 120,
+    "Durability": 2,
+    "FurnitureType": "General",
+    "Traits": [ "Holy", "WorkItem" ],
+    "UseAction": [ "Pray" ]
+  },
+  {
+    // TODO: Redefine the way a furniture holds equip
+    "Id": "coal_sack",
+    "MaterialId": "carbon_coal",
+    "Name": "Sack of Coal",
+    "Description": "An altar for a deity, there is inscription with holy words.",
+    "Glyph": "*",
+    "Weight": 51,
+    "Size": 120,
+    "Durability": 1,
+    "FurnitureType": "General",
+    "Traits": [ "Storage" ],
+    "UseAction": [ "Store" ],
+    "Inventory": [ [ "coal_item", 10 ] ]
+  }
+]

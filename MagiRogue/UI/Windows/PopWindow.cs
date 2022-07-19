@@ -1,6 +1,5 @@
 ﻿using SadConsole;
 using SadConsole.UI.Controls;
-using SadRogue.Primitives;
 
 namespace MagiRogue.UI.Windows
 {

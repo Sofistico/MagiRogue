@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
-using MagiRogue.Data.Serialization;
-using System;
+﻿using MagiRogue.Data.Serialization.MapSerialization;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace MagiRogue.GameSys
 {
@@ -47,6 +47,19 @@ namespace MagiRogue.GameSys
                     return false;
             }
             return true;
+        }
+
+        public List<Room> ReturnAllRoomsOnChunk()
+        {
+            List<Room> rooms = new List<Room>();
+            for (int i = 0; i < LocalMaps.Length; i++)
+            {
+                foreach (Room room in LocalMaps[i].Rooms)
+                {
+                    rooms.Add(room);
+                }
+            }
+            return rooms;
         }
 
         internal void SetMapsToUpdate()

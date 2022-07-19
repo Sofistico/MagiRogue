@@ -1,5 +1,6 @@
 ﻿using GoRogue.DiceNotation;
 using GoRogue.Pathing;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
@@ -7,7 +8,6 @@ using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using TinkerWorX.AccidentalNoiseLibrary;
-using Console = SadConsole.Console;
 
 namespace MagiRogue.GameSys.Planet
 {
@@ -334,6 +334,7 @@ namespace MagiRogue.GameSys.Planet
                 || tile.HeightType == HeightType.ShallowWater
                 || tile.HeightType == HeightType.River)
                     continue;
+
                 if (tile.CivInfluence != null)
                     continue;
 
@@ -341,12 +342,18 @@ namespace MagiRogue.GameSys.Planet
 
                 int pop = (int)(rng * ((int)tile.HeightType * tile.MoistureValue + 1));
 
-                Civilization civ = new($"Random Name Here {currentCivCount}",
-                    new Entities.Race("Human"), pop, RandomCivTendency());
+                Settlement set = new Settlement(tile.Position, RandomNames.SettlementNameGen(), pop)
+                {
+                    MundaneResources = tile.MineralValue
+                };
+                set.DefineSettlementSize();
 
-                civ.MundaneResources = tile.MineralValue;
+                Civilization civ = new($"Random Name Here {currentCivCount}",
+                    new Entities.Race("Human"), RandomCivTendency());
+
                 tile.CivInfluence = civ;
                 civ.Territory.Add(tile.Position);
+                civ.AddSettlementToCiv(set);
 
                 if (currentCivCount < maxCivsWorld)
                 {
@@ -401,7 +408,7 @@ namespace MagiRogue.GameSys.Planet
                     t.Position = new SadRogue.Primitives.Point(x, y);
 
                     float heightValue = HeightData[x, y];
-                    t.MineralValue = MathMagi.ReturnPositive(MathF.Round
+                    t.MineralValue = MathMagi.ReturnPositive(MathMagi.Round
                         ((HeightData[x, y] + HeatData[x, y]) * 200));
 
                     // normalize value between 0 and 1
@@ -460,7 +467,7 @@ namespace MagiRogue.GameSys.Planet
 
                     //Moisture Map Analyze
                     float moistureValue = MathMagi.ReturnPositive(MoistureData[x, y]);
-                    t.MoistureValue = MathF.Round(moistureValue, 1);
+                    t.MoistureValue = MathMagi.Round(moistureValue);
 
                     //adjust moisture based on height
                     if (t.HeightType == HeightType.DeepWater)

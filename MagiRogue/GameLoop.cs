@@ -16,16 +16,11 @@ namespace MagiRogue
         public static Universe Universe { get; set; }
 
         public static IDGenerator IdGen { get; private set; } = new(1);
+        public static ShaiRandom.Generators.IEnhancedRandom GlobalRand { get; } = GoRogue.Random.GlobalRandom.DefaultRNG;
 
-        private static void Main()
+        private static void Main(string[] args)
         {
-            // Pre options before creating the game, defines the title and if can resize
-            SadConsole.Settings.WindowTitle = "MagiRogue";
-            SadConsole.Settings.AllowWindowResize = true;
-            // It's ugly, but it's the best
-            SadConsole.Settings.ResizeMode = SadConsole.Settings.WindowResizeOptions.Stretch;
-            // Let's see how this one can be done, will be used in a future serialization work
-            SadConsole.Settings.AutomaticAddColorsToMappings = true;
+            ConfigureBeforeCreateGame();
 
             // Setup the engine and creat the main window.
             SadConsole.Game.Create(GameWidth, GameHeight);
@@ -38,6 +33,17 @@ namespace MagiRogue
 
             // Code here will not run until the game window closes.
             SadConsole.Game.Instance.Dispose();
+        }
+
+        private static void ConfigureBeforeCreateGame()
+        {
+            // Pre options before creating the game, defines the title and if can resize
+            SadConsole.Settings.WindowTitle = "MagiRogue";
+            SadConsole.Settings.AllowWindowResize = true;
+            // It's ugly, but it's the best
+            SadConsole.Settings.ResizeMode = SadConsole.Settings.WindowResizeOptions.Stretch;
+            // Let's see how this one can be done, will be used in a future serialization work
+            SadConsole.Settings.AutomaticAddColorsToMappings = true;
         }
 
         private static void Init()
@@ -62,5 +68,7 @@ namespace MagiRogue
         public static Map GetCurrentMap() => Universe.CurrentMap;
 
         public static void SetIdGen(uint lastId) => IdGen = new IDGenerator(lastId + 1);
+
+        public static void AddMessageLog(string message) => UIManager.MessageLog.Add(message);
     }
 }

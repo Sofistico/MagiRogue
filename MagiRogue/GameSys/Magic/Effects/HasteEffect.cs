@@ -1,8 +1,5 @@
-﻿using MagiRogue.Data;
-using MagiRogue.Data.Serialization;
+﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
-using MagiRogue.Utils;
-using SadRogue.Primitives;
 
 namespace MagiRogue.GameSys.Magic.Effects
 {

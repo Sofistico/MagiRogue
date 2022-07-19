@@ -1,13 +1,14 @@
-﻿using MagiRogue.Entities;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Entities;
 using MagiRogue.GameSys.Magic;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace MagiRogue.Data.Serialization
+namespace MagiRogue.Data.Serialization.EntitySerialization
 {
     public class ItemJsonConverter : JsonConverter<Item>
     {
@@ -29,44 +30,6 @@ namespace MagiRogue.Data.Serialization
     [Serializable]
     public class ItemTemplate
     {
-        /// <summary>
-        /// An item creator, defines the template in how it should be created, acess this to create new items.
-        /// This is used for the deserialization.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="foreground"></param>
-        /// <param name="background"></param>
-        /// <param name="glyph"></param>
-        /// <param name="weight"></param>
-        /// <param name="condition">Defaults to 100%</param>
-        public ItemTemplate(string name, string foreground, string background, int glyph,
-            float weight, int size, string description, string materialId, int condition = 100)
-        {
-            Name = name;
-            Foreground = foreground;
-            Background = background;
-            Glyph = (char)glyph;
-            Weight = weight;
-            Condition = condition;
-            Description = description;
-            Size = size;
-            MaterialId = materialId;
-            Material = GameSys.Physics.PhysicsManager.SetMaterial(materialId);
-
-            ForegroundBackingField = new MagiColorSerialization(foreground);
-            BackgroundBackingField = new MagiColorSerialization(background);
-        }
-
-        /// <summary>
-        /// An item creator, defines the template in how it should be created, acess this to create new items.
-        /// This is used in the serialization of the item.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="foreground"></param>
-        /// <param name="background"></param>
-        /// <param name="glyph"></param>
-        /// <param name="weight"></param>
-        /// <param name="condition">Defaults to 100%</param>
         public ItemTemplate(string name, uint foreground, uint background, int glyph,
             float weight, int size, string materialId, MagicManager magic, int condition = 100)
         {
@@ -90,9 +53,6 @@ namespace MagiRogue.Data.Serialization
 
         [DataMember]
         public string Id { get; set; }
-
-        [DataMember]
-        public uint SerialId { get; set; }
 
         [DataMember]
         public string Name { get; internal set; }
@@ -156,6 +116,16 @@ namespace MagiRogue.Data.Serialization
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public DamageType DamageType { get; private set; }
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<IActivable> UseAction { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<Trait> Traits { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public List<List<string>> Qualities { get; set; }
+        public EquipType EquipType { get; set; }
+
         // Will need to see if it works, but so far the logic seems to check
         public static implicit operator ItemTemplate(Item item)
         {
@@ -172,31 +142,53 @@ namespace MagiRogue.Data.Serialization
             {
                 CanInteract = item.CanInteract,
                 BaseDamage = item.BaseDmg,
-                DamageType = item.ItemDamageType
+                DamageType = item.ItemDamageType,
+                UseAction = item.UseAction,
+                Description = item.Description,
+                Traits = item.Traits,
+                Qualities = Quality.ReturnQualityListAsString(item.Qualities),
+                EquipType = item.EquipType,
             };
-            itemSerialized.SerialId = item.ID;
 
             return itemSerialized;
         }
 
         public static implicit operator Item(ItemTemplate itemTemplate)
         {
-            Item item = new(itemTemplate.ForegroundBackingField.Color,
-                itemTemplate.BackgroundBackingField.Color,
+            int glyph = GlyphHelper.GlyphExistInDictionary(itemTemplate.Glyph) ?
+                GlyphHelper.GetGlyph(itemTemplate.Glyph) : itemTemplate.Glyph;
+            MagiColorSerialization foreground = new MagiColorSerialization(itemTemplate.Foreground);
+            Color background = !string.IsNullOrEmpty(itemTemplate.Background) ? itemTemplate.BackgroundBackingField.Color : Color.Transparent;
+
+            Item item = new(foreground.Color,
+                background,
                 itemTemplate.Name,
-                itemTemplate.Glyph,
+                glyph,
                 Point.None,
                 itemTemplate.Size,
                 itemTemplate.Weight,
-                itemTemplate.Condition)
+                itemTemplate.Condition,
+                materialId: itemTemplate.MaterialId)
             {
                 BaseDmg = itemTemplate.BaseDamage,
                 CanInteract = itemTemplate.CanInteract,
-                ItemDamageType = itemTemplate.DamageType
+                ItemDamageType = itemTemplate.DamageType,
+                UseAction = itemTemplate.UseAction,
+                Description = itemTemplate.Description,
+                Traits = itemTemplate.Traits,
+                Qualities = Quality.ReturnQualityList(itemTemplate.Qualities),
+                ItemId = itemTemplate.Id,
+                EquipType = itemTemplate.EquipType,
             };
-
-            item.Material = GameSys.Physics.PhysicsManager.SetMaterial(itemTemplate.MaterialId);
+            if (itemTemplate.Condition != 100)
+            {
+                item.Condition = itemTemplate.Condition;
+            }
             item.Description = itemTemplate.Description;
+            if (item.Material.ConfersTraits is not null && item.Material.ConfersTraits.Count > 0)
+            {
+                item.Traits.AddRange(item.Material.ConfersTraits);
+            }
 
             return item;
         }

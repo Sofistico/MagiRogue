@@ -1,9 +1,4 @@
 ﻿using SadRogue.Primitives;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MagiRogue
 {
@@ -56,6 +51,8 @@ namespace MagiRogue
         public static readonly Color Dirt = new Color(165, 103, 42);
         public static readonly Color DirtRoad = Color.Brown;
         public static readonly Color Wood = new Color(186, 140, 99);
+        public static readonly Color DarkWood = new Color(87, 65, 46);
+        public static readonly Color UnclearGlass = new Color(183, 183, 189);
 
         public static void AddToColorDictionary()
         {
@@ -80,7 +77,6 @@ namespace MagiRogue
             ColorExtensions2.ColorMappings.Add("Warm".ToLower(), Warm);
             ColorExtensions2.ColorMappings.Add("Warmer".ToLower(), Warmer);
             ColorExtensions2.ColorMappings.Add("Warmest".ToLower(), Warmest);
-
             // hydro map color
             ColorExtensions2.ColorMappings.Add("Dryest".ToLower(), Dryest);
             ColorExtensions2.ColorMappings.Add("Dryer".ToLower(), Dryer);
@@ -110,6 +106,8 @@ namespace MagiRogue
             ColorExtensions2.ColorMappings.Add("Dirt".ToLower(), Dirt);
             ColorExtensions2.ColorMappings.Add("DirtRoad".ToLower(), DirtRoad);
             ColorExtensions2.ColorMappings.Add("Wood".ToLower(), Wood);
+            ColorExtensions2.ColorMappings.Add("DarkWood".ToLower(), DarkWood);
+            ColorExtensions2.ColorMappings.Add("UnclearGlass".ToLower(), UnclearGlass);
         }
     }
 }

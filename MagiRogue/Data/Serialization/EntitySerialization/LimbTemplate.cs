@@ -1,10 +1,10 @@
-﻿using MagiRogue.Entities;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Entities;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace MagiRogue.Data.Serialization
+namespace MagiRogue.Data.Serialization.EntitySerialization
 {
     public class LimbJsonConverter : JsonConverter<Limb>
     {
@@ -46,7 +46,7 @@ namespace MagiRogue.Data.Serialization
         public string LimbName { get; set; }
 
         [DataMember]
-        public Limb.LimbOrientation LimbOrientation { get; set; }
+        public LimbOrientation LimbOrientation { get; set; }
 
         [DataMember]
         public string LimbMaterialId { get; set; }
@@ -76,7 +76,7 @@ namespace MagiRogue.Data.Serialization
             int limbHp,
             double limbWeight,
             string limbName,
-            Limb.LimbOrientation limbOrientation,
+            LimbOrientation limbOrientation,
             string limbMaterialId,
             bool attached,
             string? connectsTo)

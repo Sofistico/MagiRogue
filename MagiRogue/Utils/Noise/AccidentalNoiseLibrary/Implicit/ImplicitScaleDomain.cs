@@ -4,7 +4,7 @@ namespace TinkerWorX.AccidentalNoiseLibrary
 {
     public sealed class ImplicitScaleDomain : ImplicitModuleBase
     {
-        public ImplicitScaleDomain(ImplicitModuleBase source, 
+        public ImplicitScaleDomain(ImplicitModuleBase source,
             Double xScale = 1.00, Double yScale = 1.00, Double zScale = 1.00,
             Double wScale = 1.00, Double uScale = 1.00, Double vScale = 1.00)
         {
@@ -46,23 +46,23 @@ namespace TinkerWorX.AccidentalNoiseLibrary
         public override Double Get(Double x, Double y)
         {
             return this.Source.Get(
-                x * this.XScale.Get(x, y), 
+                x * this.XScale.Get(x, y),
                 y * this.YScale.Get(x, y));
         }
 
         public override Double Get(Double x, Double y, Double z)
         {
             return this.Source.Get(
-                x * this.XScale.Get(x, y, z), 
-                y * this.YScale.Get(x, y, z), 
+                x * this.XScale.Get(x, y, z),
+                y * this.YScale.Get(x, y, z),
                 z * this.ZScale.Get(x, y, z));
         }
 
         public override Double Get(Double x, Double y, Double z, Double w)
         {
             return this.Source.Get(
-                x * this.XScale.Get(x, y, z, w), 
-                y * this.YScale.Get(x, y, z, w), 
+                x * this.XScale.Get(x, y, z, w),
+                y * this.YScale.Get(x, y, z, w),
                 z * this.ZScale.Get(x, y, z, w),
                 w * this.WScale.Get(x, y, z, w));
         }

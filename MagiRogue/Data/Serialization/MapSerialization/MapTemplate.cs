@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MagiRogue.Data.Serialization
+namespace MagiRogue.Data.Serialization.MapSerialization
 {
     #region Serialization
 
@@ -280,8 +280,9 @@ namespace MagiRogue.Data.Serialization
         public bool[] Explored { get; set; }
         public ulong Seed { get; set; }
         public bool? HasFOV { get; set; }
-        public int[]? ZLevels { get; set; }
+        public int ZAmount { get; set; }
         public List<Room> Rooms { get; set; }
+        //public Light[] Ilumination { get; set; }
 
         [JsonConstructor]
         public MapTemplate(string mapName,
@@ -290,6 +291,7 @@ namespace MagiRogue.Data.Serialization
             int height,
             Point lastPlayerPosition,
             uint mapId, bool[] explored)
+        //Light[] ilumination)
         {
             MapName = mapName;
             Tiles = tiles;
@@ -298,6 +300,7 @@ namespace MagiRogue.Data.Serialization
             LastPlayerPosition = lastPlayerPosition;
             MapId = mapId;
             Explored = explored;
+            //Ilumination = ilumination;
         }
 
         public MapTemplate(string mapName, int width, int height)
@@ -341,8 +344,7 @@ namespace MagiRogue.Data.Serialization
             else
                 template.HasFOV = false;
 
-            if (map.ZLevels is not null)
-                template.ZLevels = map.ZLevels;
+            template.ZAmount = map.ZAmount;
             template.Rooms = map.Rooms;
             return template;
         }
@@ -381,8 +383,7 @@ namespace MagiRogue.Data.Serialization
                 map.Explored, map.Width);
             objMap.SetSeed(map.Seed);
             objMap.GoRogueComponents.GetFirstOrDefault<MagiRogueFOVVisibilityHandler>().RefreshExploredTerrain();
-            if (map.ZLevels is not null)
-                objMap.ZLevels = map.ZLevels;
+            objMap.ZAmount = map.ZAmount;
             objMap.Rooms = map.Rooms;
             return objMap;
         }

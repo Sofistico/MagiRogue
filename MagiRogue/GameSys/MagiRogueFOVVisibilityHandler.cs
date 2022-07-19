@@ -60,12 +60,14 @@ namespace MagiRogue.GameSys
         /// <param name="entity">Entity to modify.</param>
         protected override void UpdateEntitySeen(Entity entity)
         {
+            //Map.EntityRender.DoEntityUpdate = true;
             if (entity.Layer == _ghostLayer)
             {
+                //Map.EntityRender.Remove(entity);
                 Map.Remove(entity);
                 return;
             }
-
+            //Map.EntityRender.Add(entity);
             entity.IsVisible = true;
         }
 
@@ -91,9 +93,11 @@ namespace MagiRogue.GameSys
                 };
 
                 //ghost.OnCalculateRenderPosition();
+                //Map.EntityRender.Add(entity);
 
                 Map.Add(ghost);
             }
+            //Map.EntityRender.Remove(entity);
             entity.IsVisible = false;
         }
 

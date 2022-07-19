@@ -10,6 +10,8 @@ using Newtonsoft.Json;
 using MagiRogue.Entities;
 using MagiRogue.Data.Serialization;
 using Newtonsoft.Json.Linq;
+using MagiRogue.Data.Serialization.EntitySerialization;
+using MagiRogue.Data.Enumerators;
 
 namespace MagiRogue.Test.Data
 {
@@ -48,7 +50,7 @@ namespace MagiRogue.Test.Data
         public void SerializeOrgans()
         {
             Organ organ = new Organ("organ_test", "Test", null,
-                Limb.LimbOrientation.Center,
+                LimbOrientation.Center,
                 OrganType.Misc,
                 15,
                 "null",
@@ -68,7 +70,7 @@ namespace MagiRogue.Test.Data
                 12,
                 2.5,
                 "Test",
-                Limb.LimbOrientation.Center,
+                LimbOrientation.Center,
                 "humanoid_torso");
 
             string json = JsonConvert.SerializeObject(limb);

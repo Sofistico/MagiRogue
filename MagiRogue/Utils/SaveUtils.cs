@@ -31,7 +31,15 @@ namespace MagiRogue.Utils
 
         public static bool CheckIfThereIsSaveFile()
         {
-            string[] files = Directory.GetDirectories(Path.Combine(dir, _folderName));
+            string[] files;
+            try
+            {
+                files = Directory.GetDirectories(Path.Combine(dir, _folderName));
+            }
+            catch (IOException)
+            {
+                return false;
+            }
 
             return files.Length > 0;
         }

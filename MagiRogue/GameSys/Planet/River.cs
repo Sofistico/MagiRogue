@@ -1,4 +1,5 @@
-﻿using MagiRogue.Data.Serialization;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.GameSys.Tiles;
 using Newtonsoft.Json;
 using System.Collections.Generic;

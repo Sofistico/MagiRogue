@@ -1,5 +1,7 @@
 ﻿using MagiRogue.Data;
 using MagiRogue.Data.Serialization;
+using MagiRogue.Data.Serialization.EntitySerialization;
+using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys;
 using MagiRogue.GameSys.Planet;
@@ -34,7 +36,6 @@ namespace MagiRogue.Test.System
         public void ChangeEntityCurrentMap()
         {
             var actor = new Actor("Test", Color.Black, Color.Black, '@', new Point(1, 1));
-            Universe world = new(null);
             map.Add(actor);
             var newMap = new Map("MapTest", 1, 1);
             newMap.Tiles[0] = new TileFloor(new Point(0, 0));
@@ -114,6 +115,17 @@ namespace MagiRogue.Test.System
             Map newMap = JsonConvert.DeserializeObject<Map>(json);
 
             Assert.Equal(map.MapId, newMap.MapId);
+        }
+
+        [Fact]
+        public void TestSpawnMultipleThingSamePos()
+        {
+            var fur = DataManager.QueryFurnitureInData("wood_table");
+            fur.Position = new Point();
+            map.Add(fur);
+            var item = DataManager.QueryItemInData("coal_item");
+            item.Position = new Point();
+            Assert.True(map.CanAddEntity(item));
         }
     }
 }
