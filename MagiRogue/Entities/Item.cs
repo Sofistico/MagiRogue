@@ -101,7 +101,7 @@ namespace MagiRogue.Entities
                 return;
             }
 
-            if (!actor.Equipment.TryAdd(actor.Anatomy.Limbs.Find
+            if (!actor.GetEquipment().TryAdd(actor.GetAnatomy().Limbs.Find
                 (l => l.TypeLimb.ToString() == EquipType.ToString()), this))
             {
                 GameLoop.UIManager.MessageLog.Add($"{actor.Name} has already an item equiped in addHere!");

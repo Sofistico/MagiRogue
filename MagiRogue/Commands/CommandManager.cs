@@ -64,7 +64,7 @@ namespace MagiRogue.Commands
             if (!defender.CanBeAttacked)
                 return;
 
-            if (!attacker.Anatomy.HasEnoughArms)
+            if (!attacker.GetAnatomy().HasEnoughArms)
             {
                 GameLoop.UIManager.MessageLog.Add
                     ($"The {attacker.Name} doesn't have enough arms to hit {defender.Name}");
@@ -424,7 +424,7 @@ namespace MagiRogue.Commands
             if (actor.Soul.CurrentMana != maxMana)
             {
                 //actor.Anatomy.Health -= 1;
-                actor.Anatomy.BloodCount -= 100f;
+                actor.GetAnatomy().BloodCount -= 100f;
                 int roll = Dice.Roll("1d3");
                 float bloodyManaGained = float.Parse($"0.{roll}", CultureInfo.InvariantCulture.NumberFormat);
                 actor.Soul.CurrentMana = MathMagi.Round(actor.Soul.CurrentMana + bloodyManaGained);
@@ -438,7 +438,7 @@ namespace MagiRogue.Commands
 
         public static bool RestTillFull(Actor actor)
         {
-            Anatomy bodyStats = actor.Anatomy;
+            Body bodyStats = actor.Body;
             Mind mindStats = actor.Mind;
             Soul soulStats = actor.Soul;
 
@@ -486,7 +486,7 @@ namespace MagiRogue.Commands
         public static bool EquipItem(Actor actor, Item item)
         {
             item.Equip(actor);
-            if (actor.Equipment.ContainsValue(item))
+            if (actor.GetEquipment().ContainsValue(item))
                 return true;
             else
                 return false;
@@ -501,7 +501,7 @@ namespace MagiRogue.Commands
         public static bool UnequipItem(Actor actor, Item item)
         {
             item.Unequip(actor);
-            if (!actor.Equipment.ContainsValue(item))
+            if (!actor.GetEquipment().ContainsValue(item))
                 return true;
             else
                 return false;

@@ -38,7 +38,7 @@ namespace MagiRogue.Utils
                     return;
                 }
 
-                actor.Anatomy.Health -= dmg;
+                actor.GetAnatomy().Health -= dmg;
 
                 if (actor.CheckIfDed())
                 {

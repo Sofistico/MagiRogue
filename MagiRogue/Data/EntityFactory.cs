@@ -30,7 +30,7 @@ namespace MagiRogue.Data
                 for (int i = 0; i < actorTemplate.Abilities.Count; i++)
                 {
                     var ability = actorTemplate.Abilities[i];
-                    actor.AddAbilityToDictionary(ability);
+                    actor.Mind.AddAbilityToDictionary(ability);
                 }
             }
 

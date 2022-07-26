@@ -32,9 +32,9 @@ namespace MagiRogue.Entities
         public Mind Mind { get; set; }
 
         /// <summary>
-        /// The anatomy of the actor
+        /// The body of the actor
         /// </summary>
-        public Anatomy Anatomy { get; set; }
+        public Body Body { get; set; }
 
         /// <summary>
         /// Sets if the char has bumbed in something
@@ -52,20 +52,8 @@ namespace MagiRogue.Entities
         /// </summary>
         public List<Item> Inventory { get; set; }
 
-        /// <summary>
-        /// The equipment that the actor is curently using
-        /// </summary>
-        [JsonIgnore]
-        public Dictionary<Limb, Item> Equipment { get; set; }
-
         [JsonIgnore]
         public int XP { get; set; }
-
-        /// <summary>
-        /// Dictionary of the Abilities of an actor.
-        /// Never add directly to the dictionary, use the method AddAbilityToDictionary to add new abilities
-        /// </summary>
-        public Dictionary<int, Ability> Abilities { get; set; }
 
         public bool IsPlayer { get; set; }
 
@@ -87,13 +75,13 @@ namespace MagiRogue.Entities
             ) : base(foreground, background,
             glyph, coord, layer)
         {
-            Anatomy = new Anatomy(this);
+            Body = new Body(this);
             Inventory = new List<Item>();
-            Equipment = new Dictionary<Limb, Item>();
-            Abilities = new();
             Name = name;
             // by default the material of the actor will be mostly flesh
             Material = GameSys.Physics.PhysicsManager.SetMaterial("flesh");
+            Mind = new Mind();
+            Soul = new Soul();
         }
 
         #endregion Constructor
@@ -134,7 +122,7 @@ namespace MagiRogue.Entities
             }
         }
 
-        internal int GetAttackSpeed()
+        public int GetAttackSpeed()
         {
             throw new NotImplementedException();
         }
@@ -157,17 +145,17 @@ namespace MagiRogue.Entities
                 return false;
         }
 
-        internal int GetPrecisionAbility()
+        public int GetPrecisionAbility()
         {
             throw new NotImplementedException();
         }
 
-        internal int GetDefenseAbility()
+        public int GetDefenseAbility()
         {
             throw new NotImplementedException();
         }
 
-        internal int GetAttackAbility()
+        public int GetAttackAbility()
         {
             throw new NotImplementedException();
         }
@@ -196,14 +184,14 @@ namespace MagiRogue.Entities
             return Bumped;
         }
 
-        internal int GetProtection()
+        public int GetProtection()
         {
             throw new NotImplementedException();
         }
 
-        internal int GetStrenght()
+        public int GetStrenght()
         {
-            throw new NotImplementedException();
+            return GetAnatomy().GetActorRace().BaseStrenghtScore + Body.StrengthScore;
         }
 
         private bool CheckIfThereIsDoor(Point positionChange)
@@ -240,13 +228,8 @@ namespace MagiRogue.Entities
 
         public Item? WieldedItem()
         {
-            return Equipment.GetValueOrDefault(Anatomy.Limbs.Find(l =>
+            return Body.Equipment.GetValueOrDefault(GetAnatomy().Limbs.Find(l =>
             l.TypeLimb == TypeOfLimb.Hand));
-        }
-
-        public void AddAbilityToDictionary(Ability ability)
-        {
-            Abilities.Add(ability.Id, ability);
         }
 
         internal float GetActorBaseSpeed()
@@ -280,7 +263,7 @@ namespace MagiRogue.Entities
 
         public int GetViewRadius()
         {
-            return Anatomy.GetActorRace().RaceViewRadius;
+            return GetAnatomy().GetActorRace().RaceViewRadius + Body.ViewRadius;
         }
 
         public double GetBaseHpRegen()
@@ -292,6 +275,10 @@ namespace MagiRogue.Entities
         {
             throw new NotImplementedException();
         }
+
+        public Anatomy GetAnatomy() => Body.Anatomy;
+
+        public Dictionary<Limb, Item> GetEquipment() => Body.Equipment;
 
         #endregion HelpCode
     }
