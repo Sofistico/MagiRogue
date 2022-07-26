@@ -142,14 +142,14 @@ namespace MagiRogue.GameSys.Magic
             Effects = new List<ISpellEffect>();
         }
 
-        public bool CanCast(MagicManager magicSkills, Stat stats)
+        public bool CanCast(MagicManager magicSkills, Actor stats)
         {
             if (magicSkills.KnowSpells.Contains(this))
             {
                 int reqShapingWithDiscount;
                 try
                 {
-                    reqShapingWithDiscount = RequiredShapingSkill / stats.SoulStat;
+                    reqShapingWithDiscount = RequiredShapingSkill / stats.Soul.WillPower;
                 }
                 catch (DivideByZeroException)
                 {
@@ -164,7 +164,7 @@ namespace MagiRogue.GameSys.Magic
                     TickProfiency();
                     errorMessage = "Can't cast the spell because you don't have the required shaping skills and/or the proficiency";
                 }
-                if (stats.PersonalMana <= ManaCost)
+                if (stats.Soul.CurrentMana <= ManaCost)
                 {
                     errorMessage = "You don't have enough mana to cast the spell!";
                     canCast = false;
@@ -184,7 +184,7 @@ namespace MagiRogue.GameSys.Magic
         /// <returns></returns>
         public bool CastSpell(Point target, Actor caster)
         {
-            if (CanCast(caster.Magic, caster.Stats) && target != Point.None)
+            if (CanCast(caster.Magic, caster) && target != Point.None)
             {
                 Entity entity = GameLoop.GetCurrentMap().GetEntityAt<Entity>(target);
 
@@ -199,7 +199,7 @@ namespace MagiRogue.GameSys.Magic
                     }
                 }
 
-                caster.Stats.PersonalMana -= (float)ManaCost;
+                caster.Soul.CurrentMana -= (float)ManaCost;
                 TickProfiency();
 
                 return true;
@@ -219,7 +219,7 @@ namespace MagiRogue.GameSys.Magic
         /// <returns></returns>
         public bool CastSpell(List<Point> target, Actor caster)
         {
-            if (CanCast(caster.Magic, caster.Stats) && target.Count > 0)
+            if (CanCast(caster.Magic, caster) && target.Count > 0)
             {
                 GameLoop.UIManager.MessageLog.Add($"{caster.Name} casted {SpellName}");
 
@@ -233,7 +233,7 @@ namespace MagiRogue.GameSys.Magic
                     }
                 }
 
-                caster.Stats.PersonalMana -= (float)ManaCost;
+                caster.Soul.CurrentMana -= ManaCost;
                 TickProfiency();
 
                 return true;

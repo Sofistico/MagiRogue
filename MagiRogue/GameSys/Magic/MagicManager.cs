@@ -59,10 +59,10 @@ namespace MagiRogue.GameSys.Magic
             KnowSpells = new List<SpellBase>();
         }
 
-        public static int CalculateSpellDamage(Stat entityStats, SpellBase spellCasted)
+        public static int CalculateSpellDamage(Actor entityStats, SpellBase spellCasted)
         {
             int baseDamage = (int)(spellCasted.Power + spellCasted.SpellLevel
-                + entityStats.MindStat + (entityStats.SoulStat * 0.5));
+                + entityStats.Mind.Inteligence + (entityStats.Soul.WillPower * 0.5));
 
             int rngDmg = Dice.Roll($"{spellCasted.SpellLevel}d{baseDamage}");
 

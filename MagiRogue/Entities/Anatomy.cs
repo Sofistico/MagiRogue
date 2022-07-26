@@ -1,6 +1,8 @@
-﻿using MagiRogue.Data.Enumerators;
+﻿using MagiRogue.Data;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
@@ -9,12 +11,6 @@ namespace MagiRogue.Entities
 {
     public class Anatomy
     {
-        #region Fields
-
-        private Race race;
-
-        #endregion Fields
-
         #region Properties
 
         [DataMember]
@@ -24,15 +20,7 @@ namespace MagiRogue.Entities
         public List<Organ> Organs { get; set; }
 
         [DataMember]
-        public Race Race
-        {
-            get => race;
-
-            private set
-            {
-                race = value;
-            }
-        }
+        public string Race { get; set; }
 
         /// <summary>
         /// It uses an aproximation of blood count equal to 75 ml/kg for an adult male
@@ -54,19 +42,16 @@ namespace MagiRogue.Entities
 
         [JsonIgnore]
         public bool CanSee => Organs.Exists(o => o.OrganType is OrganType.Visual
-                                                                                                && (!o.Destroyed || o.Attached));
-
-        /// <summary>
-        /// The total lifespan of a character
-        /// </summary>
-        [DataMember]
-        public int Lifespan { get; set; }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                && (!o.Destroyed || o.Attached));
 
         /// <summary>
         /// The current age of a character
         /// </summary>
         [DataMember]
         public int CurrentAge { get; set; }
+
+        public float BloodLoss { get; set; }
+        public int Lifespan { get; set; }
 
         #endregion Properties
 
@@ -91,7 +76,7 @@ namespace MagiRogue.Entities
                 BloodCount = MathMagi.Round(weight * 75);
         }
 
-        public void SetRace(Race race) => Race = race;
+        public Race GetActorRace() => DataManager.QueryRaceInData(Race);
 
         public void SetLimbs(params Limb[] limbs)
         {
@@ -101,8 +86,9 @@ namespace MagiRogue.Entities
             }
         }
 
-        public void ContinousBleed(float bleedAmount, InjurySeverity severity)
+        public void Injury(float bleedAmount, InjurySeverity severity)
         {
+            BloodLoss += bleedAmount;
             BloodCount = MathMagi.Round(BloodCount - bleedAmount);
 
             /* switch (severity)
@@ -189,9 +175,9 @@ namespace MagiRogue.Entities
 
             bodyPart.Attached = false;
             totalHpLost += bodyPart.LimbHp;
-            actor.Stats.Health -= totalHpLost;
-            if (actor.Stats.Health <= 0)
-                Commands.CommandManager.ResolveDeath(actor);
+            //actor.Stats.Health -= totalHpLost;
+            /*if (actor.Stats.Health <= 0)
+                Commands.CommandManager.ResolveDeath(actor);*/
 
             DismemberMessage(actor, bodyPart, totalHpLost);
         }
@@ -209,9 +195,25 @@ namespace MagiRogue.Entities
             GameLoop.GetCurrentMap().Add(limb.ReturnLimbAsItem(actor));
         }
 
-        internal void Update(Actor actor)
+        public void Update(Actor actor)
         {
             CalculateBlood(actor.Weight);
+        }
+
+        public (int, int) GetMinMaxLifespan() => (GetActorRace().LifespanMin, GetActorRace().LifespanMax);
+
+        public int GetRaceAdulthoodAge() => GetActorRace().AdulthoodAge;
+
+        public void SetRandomLifespanByRace()
+        {
+            (int min, int max) = GetMinMaxLifespan();
+            Lifespan = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(min, max);
+        }
+
+        public void SetCurrentAge()
+        {
+            CurrentAge = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(GetRaceAdulthoodAge(),
+                GetRaceAdulthoodAge() + 4);
         }
 
         #endregion Methods

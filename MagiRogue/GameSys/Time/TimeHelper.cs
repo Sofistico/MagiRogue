@@ -16,7 +16,7 @@ namespace MagiRogue.GameSys.Time
 
         public static int GetWalkTime(Actor actor, TileBase tileToMove)
         {
-            return (int)(tileToMove.MoveTimeCost / actor.Stats.Speed);
+            return (int)(tileToMove.MoveTimeCost / actor.GetActorBaseSpeed());
         }
 
         public static int GetWalkTime(Actor actor, Point pos)
@@ -29,19 +29,19 @@ namespace MagiRogue.GameSys.Time
         {
             // TODO: Need to fix this time to represent how slow it is to move on the overmap based
             // on the size of a overmap tile, which is to be defined.
-            return (int)((tile.MoveTimeCost * 100) / actor.Stats.Speed);
+            return (int)((tile.MoveTimeCost * 100) / actor.GetActorBaseSpeed());
         }
 
         public static int GetAttackTime(Actor actor)
         {
-            return (int)(AttackTime / actor.Stats.Speed);
+            return (int)(AttackTime / actor.GetActorBaseSpeed());
         }
 
         public static int GetCastingTime(Actor actor, SpellBase spellCasted)
         {
             return (int)
                 ((MagicalThings + spellCasted.SpellLevel + spellCasted.ManaCost)
-                / (actor.Stats.Speed + actor.Magic.ShapingSkill * 0.5));
+                / (actor.GetActorBaseSpeed() + actor.Magic.ShapingSkill * 0.5));
         }
     }
 }

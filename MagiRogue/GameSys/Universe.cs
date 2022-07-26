@@ -401,7 +401,7 @@ namespace MagiRogue.GameSys
         /// <returns>returns true if the player made it's action sucessfully, false if otherwise</returns>
         private bool ProcessPlayerTurn(long playerTime)
         {
-            if (Player.Stats.Health <= 0)
+            if (Player.CheckIfDed())
             {
                 DeleteSave();
                 RestartGame();
@@ -411,9 +411,9 @@ namespace MagiRogue.GameSys
             PlayerTimeNode playerTurn = new PlayerTimeNode(Time.TimePassed.Ticks + playerTime);
             Time.RegisterEntity(playerTurn);
 
-            Player.Stats.ApplyHpRegen();
-            Player.Stats.ApplyManaRegen();
-            CurrentMap.PlayerFOV.Calculate(Player.Position, Player.Stats.ViewRadius);
+            Player.ApplyHpRegen();
+            Player.ApplyManaRegen();
+            CurrentMap.PlayerFOV.Calculate(Player.Position, Player.GetViewRadius());
 
             return true;
         }
@@ -449,7 +449,7 @@ namespace MagiRogue.GameSys
                 IAiComponent ai = entity.GoRogueComponents.GetFirstOrDefault<IAiComponent>();
                 (bool sucess, long tick) = ai?.RunAi(CurrentMap, GameLoop.UIManager.MessageLog)
                     ?? (false, -1);
-                entity.Stats.ApplyAllRegen();
+                entity.ApplyAllRegen();
 
                 if (!sucess || tick < -1)
                     return;

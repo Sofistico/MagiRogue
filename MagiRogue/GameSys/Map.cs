@@ -421,7 +421,7 @@ namespace MagiRogue.GameSys
             /*if (PlayerFOV.CurrentFOV.Count() >= actor.Stats.ViewRadius)*/
             if (actor.Anatomy.CanSee)
             {
-                PlayerFOV.Calculate(actor.Position, actor.Stats.ViewRadius, Radius.Circle);
+                PlayerFOV.Calculate(actor.Position, actor.GetViewRadius(), Radius.Circle);
                 FOVRecalculated?.Invoke(this, EventArgs.Empty);
             }
         }

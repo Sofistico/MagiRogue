@@ -19,5 +19,6 @@ namespace MagiRogue.Data.Enumerators
         Kitchen,
         GenericWorkshop,
         Dinner,
+        DungeonKeeper,
     }
 }

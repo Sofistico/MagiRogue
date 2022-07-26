@@ -38,9 +38,9 @@ namespace MagiRogue.Utils
                     return;
                 }
 
-                actor.Stats.Health -= dmg;
+                actor.Anatomy.Health -= dmg;
 
-                if (actor.Stats.Health < 0)
+                if (actor.CheckIfDed())
                 {
                     Commands.CommandManager.ResolveDeath(actor);
                 }
@@ -54,7 +54,7 @@ namespace MagiRogue.Utils
             GameLoop.UIManager.MessageLog.Add($"The {entity.Name} took {dmg} {dmgType} total damage!");
         }
 
-        public static void ApplyHealing(int dmg, Stat stats, DamageType healingType)
+        public static void ApplyHealing(int dmg, Actor stats, DamageType healingType)
         {
             stats.Health += dmg;
 
@@ -140,10 +140,10 @@ namespace MagiRogue.Utils
             }
             else
             {
-                int diceRoll = Mrn.Exploding2D6Dice + caster.Stats.Precision;
+                int diceRoll = Mrn.Exploding2D6Dice + caster.GetPrecisionAbility();
                 // the actor + exploding dice is the dice that the target will throw for either defense or blocking the projectile
                 // TODO: When shield is done, needs to add the shield or any protection against the spell
-                if (poorGuy is Actor actor && diceRoll >= actor.Stats.Defense + Mrn.Exploding2D6Dice)
+                if (poorGuy is Actor actor && diceRoll >= actor.GetDefenseAbility() + Mrn.Exploding2D6Dice)
                 {
                     ResolveResist(poorGuy, caster, spellCasted, effect);
                 }

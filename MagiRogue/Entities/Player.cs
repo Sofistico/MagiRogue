@@ -2,6 +2,7 @@
 using MagiRogue.Data.Enumerators;
 using MagiRogue.GameSys.Magic;
 using SadRogue.Primitives;
+using System;
 using System.Collections.Generic;
 
 namespace MagiRogue.Entities
@@ -19,8 +20,8 @@ namespace MagiRogue.Entities
             Weight = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(50, 95);
             Size = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(155, 200);
             Anatomy.Update(this);
-            Anatomy.Lifespan = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(75, 125);
-            Anatomy.CurrentAge = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(18, 21);
+            Anatomy.SetRandomLifespanByRace();
+            Anatomy.SetCurrentAge();
         }
 
         public static Player TestPlayer()
@@ -41,7 +42,7 @@ namespace MagiRogue.Entities
                 _baseManaRegen: 0.1f,
                 personalMana: 12
                 );
-            player.Stats.Precision = 3;
+            player.Mind.Precision = 3;
 
             player.Anatomy.Limbs = EntityFactory.BasicHumanoidBody();
             player.Anatomy.Organs = EntityFactory.BasicHumanoidOrgans();
@@ -107,14 +108,16 @@ namespace MagiRogue.Entities
             {
                 Inventory = actor.Inventory,
                 Magic = actor.Magic,
-                Stats = actor.Stats,
+                //Stats = actor.Stats,
                 Size = actor.Size,
                 Weight = actor.Weight,
                 Abilities = actor.Abilities,
                 Anatomy = actor.Anatomy,
                 Equipment = actor.Equipment,
                 Material = actor.Material,
-                XP = actor.XP
+                XP = actor.XP,
+                Mind = actor.Mind,
+                Soul = actor.Soul
             };
 
             return player;

@@ -108,12 +108,12 @@ namespace MagiRogue.Commands
             attackMessage.AppendFormat("{0} attacks {1}", attacker.Name, defender.Name);
 
             // The attacker's AttackSpeed value determines the number of attacks dice rolled
-            for (int nmrAttack = 0; nmrAttack < attacker.Stats.AttackSpeed; nmrAttack++)
+            for (int nmrAttack = 0; nmrAttack < attacker.GetAttackSpeed(); nmrAttack++)
             {
                 //Resolve the dicing outcome and register a hit, governed by the
                 //attacker's BaseAttack value.
                 //TODO: Adds the fatigue atribute and any penalties.
-                if (attacker.Stats.BaseAttack + Mrn.Exploding2D6Dice > defender.Stats.Defense + Mrn.Exploding2D6Dice)
+                if (attacker.GetAttackAbility() + Mrn.Exploding2D6Dice > defender.GetDefenseAbility() + Mrn.Exploding2D6Dice)
                     hits++;
             }
 
@@ -147,11 +147,11 @@ namespace MagiRogue.Commands
                     Item wieldedItem = attacker.WieldedItem();
                     // TODO: adds a way to get the attack of the weapon or fist or something else
                     if (wieldedItem is null)
-                        loopDamage = attacker.Stats.Strength + Mrn.Exploding2D6Dice;
+                        loopDamage = attacker.GetStrenght() + Mrn.Exploding2D6Dice;
                     else
-                        loopDamage = attacker.Stats.Strength + wieldedItem.BaseDmg + Mrn.Exploding2D6Dice;
+                        loopDamage = attacker.GetStrenght() + wieldedItem.BaseDmg + Mrn.Exploding2D6Dice;
 
-                    loopDamage -= defender.Stats.Protection + Mrn.Exploding2D6Dice;
+                    loopDamage -= defender.GetProtection() + Mrn.Exploding2D6Dice;
 
                     defenseMessage.AppendFormat("   Hit {0}: {1} was hit for {2} damage", hits, defender.Name, loopDamage);
                     totalDamage += loopDamage;
@@ -420,14 +420,14 @@ namespace MagiRogue.Commands
 
         public static bool SacrificeLifeEnergyToMana(Actor actor)
         {
-            int maxMana = actor.Stats.BodyStat + actor.Stats.SoulStat + actor.Stats.MindStat;
-            if (actor.Stats.PersonalMana != maxMana)
+            int maxMana = actor.Soul.MaxMana;
+            if (actor.Soul.CurrentMana != maxMana)
             {
-                actor.Stats.Health -= 1;
+                //actor.Anatomy.Health -= 1;
                 actor.Anatomy.BloodCount -= 100f;
                 int roll = Dice.Roll("1d3");
                 float bloodyManaGained = float.Parse($"0.{roll}", CultureInfo.InvariantCulture.NumberFormat);
-                actor.Stats.PersonalMana = MathMagi.Round(actor.Stats.PersonalMana + bloodyManaGained);
+                actor.Soul.CurrentMana = MathMagi.Round(actor.Soul.CurrentMana + bloodyManaGained);
                 GameLoop.UIManager.MessageLog.Add($"You ritually wound yourself, channeling your blood into mana, gaining {bloodyManaGained} blood mana");
                 return true;
             }
@@ -438,17 +438,19 @@ namespace MagiRogue.Commands
 
         public static bool RestTillFull(Actor actor)
         {
-            Stat stats = actor.Stats;
+            Anatomy bodyStats = actor.Anatomy;
+            Mind mindStats = actor.Mind;
+            Soul soulStats = actor.Soul;
 
-            if ((stats.Health < stats.MaxHealth || stats.PersonalMana < stats.MaxPersonalMana))
+            if ((bodyStats.Health < bodyStats.MaxHealth || soulStats.CurrentMana < soulStats.MaxMana))
             {
                 // calculate here the amount of time that it will take in turns to rest to full
-                float healDif, manaDif;
+                double healDif, manaDif;
 
-                healDif = MathMagi.Round((stats.MaxHealth - stats.Health) / stats.BaseHpRegen);
-                manaDif = MathMagi.Round((stats.MaxPersonalMana - stats.PersonalMana) / stats.BaseManaRegen);
+                healDif = MathMagi.Round((stats.MaxHealth - stats.Health) / actor.GetBaseHpRegen());
+                manaDif = MathMagi.Round((soulStats.MaxMana - soulStats.CurrentMana) / actor.GetBaseManaRegen());
 
-                float totalTurnsWait = healDif + manaDif;
+                double totalTurnsWait = healDif + manaDif;
 
                 for (int i = 0; i < totalTurnsWait + 1; i++)
                 {

@@ -2,8 +2,10 @@
 using MagiRogue.Data.Enumerators;
 using MagiRogue.GameSys;
 using MagiRogue.GameSys.Tiles;
+using MagiRogue.Utils;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
+using System;
 using System.Collections.Generic;
 
 namespace MagiRogue.Entities
@@ -14,16 +16,20 @@ namespace MagiRogue.Entities
         #region Fields
 
         private bool bumped = false;
-        private Stat stats = new Stat();
 
         #endregion Fields
 
         #region Properties
 
         /// <summary>
-        /// The stats of the actor
+        /// The soul of the actor, where magic happens
         /// </summary>
-        public Stat Stats { get => stats; set => stats = value; }
+        public Soul Soul { get; set; }
+
+        /// <summary>
+        /// The mind of the actor, where thought and brain is
+        /// </summary>
+        public Mind Mind { get; set; }
 
         /// <summary>
         /// The anatomy of the actor
@@ -34,6 +40,11 @@ namespace MagiRogue.Entities
         /// Sets if the char has bumbed in something
         /// </summary>
         public bool Bumped { get => bumped; set => bumped = value; }
+
+        internal bool CheckIfDed()
+        {
+            throw new NotImplementedException();
+        }
 
         // TODO: change inventory...
         /// <summary>
@@ -123,6 +134,11 @@ namespace MagiRogue.Entities
             }
         }
 
+        internal int GetAttackSpeed()
+        {
+            throw new NotImplementedException();
+        }
+
         private bool CheckForChangeMapChunk(Point pos, Point positionChange)
         {
             Direction dir = Direction.GetCardinalDirection(positionChange);
@@ -139,6 +155,21 @@ namespace MagiRogue.Entities
             }
             else
                 return false;
+        }
+
+        internal int GetPrecisionAbility()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal int GetDefenseAbility()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal int GetAttackAbility()
+        {
+            throw new NotImplementedException();
         }
 
         private static Point GetNextMapPos(Map map, Point pos)
@@ -163,6 +194,16 @@ namespace MagiRogue.Entities
 
             Bumped = false;
             return Bumped;
+        }
+
+        internal int GetProtection()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal int GetStrenght()
+        {
+            throw new NotImplementedException();
         }
 
         private bool CheckIfThereIsDoor(Point positionChange)
@@ -206,6 +247,50 @@ namespace MagiRogue.Entities
         public void AddAbilityToDictionary(Ability ability)
         {
             Abilities.Add(ability.Id, ability);
+        }
+
+        internal float GetActorBaseSpeed()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ApplyAllRegen()
+        {
+            ApplyHpRegen();
+            ApplyManaRegen();
+        }
+
+        public void ApplyHpRegen()
+        {
+            if (Health < MaxHealth)
+            {
+                double newHp = (GetBaseHpRegen() + Health);
+                Health = MathMagi.Round(newHp);
+            }
+        }
+
+        public void ApplyManaRegen()
+        {
+            if (Soul.CurrentMana < Soul.MaxMana)
+            {
+                double newMana = (GetBaseManaRegen() + Soul.CurrentMana);
+                Soul.CurrentMana = MathMagi.Round(newMana);
+            }
+        }
+
+        public int GetViewRadius()
+        {
+            return Anatomy.GetActorRace().RaceViewRadius;
+        }
+
+        public double GetBaseHpRegen()
+        {
+            throw new NotImplementedException();
+        }
+
+        public double GetBaseManaRegen()
+        {
+            throw new NotImplementedException();
         }
 
         #endregion HelpCode

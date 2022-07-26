@@ -41,6 +41,9 @@ namespace MagiRogue.Data
         public static readonly IReadOnlyList<RoomTemplate> ListOfRooms =
             GetSourceTree<RoomTemplate>(@".\Data\Rooms\*.json");
 
+        public static readonly IReadOnlyList<Race> ListOfRaces =
+            GetSourceTree<Race>(@".\Data\Races\*.json");
+
         public static IReadOnlyList<T> GetSourceTree<T>(string wildCard)
         {
             string[] files = FileUtils.GetFiles(wildCard);
@@ -102,5 +105,8 @@ namespace MagiRogue.Data
         public static List<BasicTile> QueryTilesInDataWithTrait(Trait trait)
             => ListOfTiles.Where(i => i.HasAnyTrait()
                 && i.Traits.Contains(trait)).ToList();
+
+        public static Race QueryRaceInData(string raceId)
+            => ListOfRaces.Where(c => c.Id.Equals(raceId)).FirstOrDefault();
     }
 }

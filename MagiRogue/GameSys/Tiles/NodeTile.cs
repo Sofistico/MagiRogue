@@ -95,7 +95,7 @@ namespace MagiRogue.GameSys.Tiles
 
                 GameLoop.UIManager.MessageLog.Add($"{actor.Name} drained {rndDrain} from node!");
 
-                actor.Stats.AmbientMana += rndDrain;
+                actor.Soul.WildMana += rndDrain;
             }
             else
             {

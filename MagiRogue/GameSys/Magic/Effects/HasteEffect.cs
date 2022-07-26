@@ -6,7 +6,7 @@ namespace MagiRogue.GameSys.Magic.Effects
     public class HasteEffect : IHasteEffect
     {
         private float previousSpeed;
-        private Stat currentStats;
+        private float currentSpeed;
         private bool isHasted;
         private int turnToRemove;
 
@@ -46,8 +46,9 @@ namespace MagiRogue.GameSys.Magic.Effects
 
         private void Haste(Point target, SpellBase spellCasted)
         {
-            Stat targetStats = GameLoop.GetCurrentMap().GetEntityAt<Actor>(target).Stats;
+            float targetStats = GameLoop.GetCurrentMap().GetEntityAt<Actor>(target).GetActorBaseSpeed();
 
+            // TODO: Refactor this shit
             if (turnToRemove == 0)
                 GameLoop.Universe.Time.TurnPassed -= GetTime_TurnPassed;
             if (isHasted)
@@ -55,9 +56,9 @@ namespace MagiRogue.GameSys.Magic.Effects
                 GameLoop.UIManager.MessageLog.Add("Can only have one haste effect per time");
                 return;
             }
-            currentStats = targetStats;
-            previousSpeed = targetStats.Speed;
-            targetStats.Speed += HastePower;
+            currentSpeed = targetStats;
+            previousSpeed = targetStats;
+            targetStats += HastePower;
             TurnApplied = GameLoop.Universe.Time.Turns;
             turnToRemove = TurnApplied + Duration;
             isHasted = true;
@@ -69,7 +70,7 @@ namespace MagiRogue.GameSys.Magic.Effects
         {
             if (e.Seconds >= turnToRemove)
             {
-                currentStats.Speed = previousSpeed;
+                currentSpeed = previousSpeed;
                 turnToRemove = 0;
                 isHasted = false;
 

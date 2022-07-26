@@ -110,6 +110,12 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         [DataMember]
         public List<EquipTemplate> Equip { get; set; }
 
+        [DataMember]
+        public Mind Mind { get; set; }
+
+        [DataMember]
+        public Soul Soul { get; set; }
+
         /// <summary>
         /// Is used in the serialization of the actor.
         /// </summary>
@@ -125,13 +131,14 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         /// <param name="weight"></param>
         /// <param name="materialId"></param>
         public ActorTemplate(string name, uint foreground, uint background, int glyph,
-            int layer, Stat stats, Anatomy anatomy, int size, float weight, string materialId,
-            List<AbilityTemplate> abilities, MagicManager magic)
+            int layer, Anatomy anatomy, int size, float weight, string materialId,
+            List<AbilityTemplate> abilities, MagicManager magic, Soul soul, Mind mind)
         {
             Name = name;
             Glyph = (char)glyph;
-            Stats = stats;
             Anatomy = anatomy;
+            Soul = soul;
+            Mind = mind;
             Layer = layer;
             Size = size;
             Weight = weight;
@@ -147,56 +154,12 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             Equip = new();
         }
 
-        public ActorTemplate(string name, Color foreground, Color background, int glyph,
-            int layer, Stat stats, Anatomy anatomy, string description, int size, float weight,
-            string materialId)
-        {
-            Name = name;
-            Glyph = (char)glyph;
-            Stats = stats;
-            Anatomy = anatomy;
-            Description = description;
-            Layer = layer;
-            Size = size;
-            Weight = weight;
-            MaterialId = materialId;
-
-            ForegroundBackingField = new MagiColorSerialization(foreground);
-            BackgroundBackingField = new MagiColorSerialization(background);
-
-            Equip = new();
-        }
-
-        public ActorTemplate(string name, string foreground, string background, int glyph,
-           int layer, Stat stats, Anatomy anatomy, string description, int size, float weight, string materialId
-            , List<AbilityTemplate> abilities)
-        {
-            Name = name;
-            Foreground = foreground;
-            Background = background;
-            Glyph = (char)glyph;
-            Stats = stats;
-            Anatomy = anatomy;
-            Description = description;
-            Layer = layer;
-            Size = size;
-            Weight = weight;
-            MaterialId = materialId;
-
-            ForegroundBackingField = new MagiColorSerialization(foreground);
-            BackgroundBackingField = new MagiColorSerialization(background);
-
-            Abilities = abilities;
-            Equip = new();
-        }
-
         public ActorTemplate(Actor actor)
         {
             Name = actor.Name;
             ForegroundBackingField = new MagiColorSerialization(actor.Appearance.Foreground);
             BackgroundBackingField = new MagiColorSerialization(actor.Appearance.Background);
             Glyph = (char)actor.Appearance.Glyph;
-            Stats = actor.Stats;
             Anatomy = actor.Anatomy;
             Description = actor.Description;
             Layer = actor.Layer;
@@ -206,6 +169,8 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             Abilities = new();
             AddToAbilities(actor);
             Equip = new();
+            Soul = actor.Soul;
+            Mind = actor.Mind;
         }
 
         private void AddToAbilities(Actor actor)
@@ -247,7 +212,6 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 Point.None)
                 {
                     Description = actorTemplate.Description,
-                    Stats = actorTemplate.Stats,
                     Anatomy = actorTemplate.Anatomy,
                     Size = actorTemplate.Size,
                     Weight = actorTemplate.Weight,
@@ -297,6 +261,8 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                     new MagiColorSerialization(actorTemplate.BackgroundPackedValue).Color;
             }
             actor.Description = actorTemplate.Description;
+            actor.Mind = actorTemplate.Mind;
+            actor.Soul = actorTemplate.Soul;
 
             return actor;
         }
@@ -319,13 +285,14 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                actor.Appearance.Background.PackedValue,
                actor.Appearance.Glyph,
                actor.Layer,
-               actor.Stats,
                actor.Anatomy,
                actor.Size,
                actor.Weight,
                actor.Material.Id,
                abilitylist,
-               actor.Magic);
+               actor.Magic,
+               actor.Soul,
+               actor.Mind);
             if (!string.IsNullOrWhiteSpace(actor.Description))
                 actorTemplate.Description = actor.Description;
 

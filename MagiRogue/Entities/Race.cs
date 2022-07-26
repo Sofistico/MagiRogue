@@ -3,12 +3,24 @@ using System.Runtime.Serialization;
 
 namespace MagiRogue.Entities
 {
-    [DataContract]
     [DebuggerDisplay("{DebuggerDisplay, nq}")]
     public class Race
     {
-        [DataMember]
+        public string Id { get; set; }
+
         public string RaceName { get; set; }
+
+        // Max lifespan of the race
+        public int LifespanMax { get; set; }
+
+        // min lifespan of the race
+        public int LifespanMin { get; set; }
+        public int AdulthoodAge { get; set; }
+        public int RaceViewRadius { get; set; }
+
+        public Race()
+        {
+        }
 
         public Race(string raceName)
         {

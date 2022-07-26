@@ -236,14 +236,14 @@ namespace MagiRogue.UI
             if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.Z))
             {
                 SpellSelectWindow spell =
-                    new SpellSelectWindow(GetPlayer.Stats.PersonalMana);
+                    new SpellSelectWindow(GetPlayer.Soul.CurrentMana);
 
                 targetCursor = new Target(GetPlayer.Position);
 
                 spell.Show(GetPlayer.Magic.KnowSpells,
                     selectedSpell => targetCursor.OnSelectSpell(selectedSpell,
                     (Actor)world.CurrentMap.ControlledEntitiy),
-                    GetPlayer.Stats.PersonalMana);
+                    GetPlayer.Soul.CurrentMana);
 
                 return true;
             }

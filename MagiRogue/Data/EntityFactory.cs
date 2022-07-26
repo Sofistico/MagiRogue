@@ -20,9 +20,10 @@ namespace MagiRogue.Data
                 position
                 )
                 {
-                    Stats = actorTemplate.Stats,
                     Description = actorTemplate.Description,
-                    Material = GameSys.Physics.PhysicsManager.SetMaterial(actorTemplate.MaterialId)
+                    Material = GameSys.Physics.PhysicsManager.SetMaterial(actorTemplate.MaterialId),
+                    Soul = actorTemplate.Soul,
+                    Mind = actorTemplate.Mind
                 };
             if (actorTemplate.Abilities is not null && actorTemplate.Abilities.Count > 0)
             {
