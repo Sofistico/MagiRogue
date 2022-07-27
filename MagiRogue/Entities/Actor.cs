@@ -41,11 +41,6 @@ namespace MagiRogue.Entities
         /// </summary>
         public bool Bumped { get => bumped; set => bumped = value; }
 
-        internal bool CheckIfDed()
-        {
-            throw new NotImplementedException();
-        }
-
         // TODO: change inventory...
         /// <summary>
         /// Here we define were the inventory is
@@ -86,7 +81,7 @@ namespace MagiRogue.Entities
 
         #endregion Constructor
 
-        #region HelpCode
+        #region Methods
 
         // Moves the Actor BY positionChange tiles in any X/Y direction
         // returns true if actor was able to move, false if failed to move
@@ -122,11 +117,6 @@ namespace MagiRogue.Entities
             }
         }
 
-        public int GetAttackSpeed()
-        {
-            throw new NotImplementedException();
-        }
-
         private bool CheckForChangeMapChunk(Point pos, Point positionChange)
         {
             Direction dir = Direction.GetCardinalDirection(positionChange);
@@ -155,7 +145,7 @@ namespace MagiRogue.Entities
             throw new NotImplementedException();
         }
 
-        public int GetAttackAbility()
+        public int GetRelevantAbility()
         {
             throw new NotImplementedException();
         }
@@ -187,11 +177,6 @@ namespace MagiRogue.Entities
         public int GetProtection()
         {
             throw new NotImplementedException();
-        }
-
-        public int GetStrenght()
-        {
-            return GetAnatomy().GetActorRace().BaseStrenghtScore + Body.StrengthScore;
         }
 
         private bool CheckIfThereIsDoor(Point positionChange)
@@ -226,60 +211,124 @@ namespace MagiRogue.Entities
             }
         }
 
-        public Item? WieldedItem()
+        public Item WieldedItem()
         {
             return Body.Equipment.GetValueOrDefault(GetAnatomy().Limbs.Find(l =>
             l.TypeLimb == TypeOfLimb.Hand));
         }
 
-        internal float GetActorBaseSpeed()
-        {
-            throw new NotImplementedException();
-        }
+        #region RegenCode
 
         public void ApplyAllRegen()
         {
-            ApplyHpRegen();
+            ApplyBodyRegen();
+            ApplyStaminaRegen();
             ApplyManaRegen();
         }
 
-        public void ApplyHpRegen()
+        public void ApplyBodyRegen()
         {
-            if (Health < MaxHealth)
+            foreach (Limb limb in GetAnatomy().Limbs)
             {
-                double newHp = (GetBaseHpRegen() + Health);
-                Health = MathMagi.Round(newHp);
+                if (limb.Attached && !GetAnatomy().GetActorRace().CanRegenLostLimbs)
+                {
+                    if (limb.CanHeal)
+                    {
+                        limb.ApplyHeal(GetNormalLimbRegen() * limb.RateOfHeal);
+                    }
+                }
+                // ignore the limb if the actor has lost them and can't regenerate
+                else
+                {
+                    continue;
+                }
             }
         }
 
         public void ApplyManaRegen()
         {
-            if (Soul.CurrentMana < Soul.MaxMana)
-            {
-                double newMana = (GetBaseManaRegen() + Soul.CurrentMana);
-                Soul.CurrentMana = MathMagi.Round(newMana);
-            }
+            Soul.ApplyManaRegen(GetManaRegen());
         }
+
+        public void ApplyStaminaRegen()
+        {
+            Body.ApplyStaminaRegen(GetStaminaRegen());
+        }
+
+        #endregion RegenCode
+
+        #region GetProperties
 
         public int GetViewRadius()
         {
             return GetAnatomy().GetActorRace().RaceViewRadius + Body.ViewRadius;
         }
 
-        public double GetBaseHpRegen()
+        public double GetNormalLimbRegen()
         {
-            throw new NotImplementedException();
+            return GetAnatomy().GetActorRace().RaceNormalLimbRegen + Body.Anatomy.NormalLimbRegen;
         }
 
-        public double GetBaseManaRegen()
+        public double GetManaRegen()
         {
-            throw new NotImplementedException();
+            return Soul.BaseManaRegen;
         }
 
         public Anatomy GetAnatomy() => Body.Anatomy;
 
         public Dictionary<Limb, Item> GetEquipment() => Body.Equipment;
 
-        #endregion HelpCode
+        public double GetStaminaRegen()
+        {
+            return Body.StaminaRegen * GetAnatomy().FitLevel;
+        }
+
+        public double GetActorBaseSpeed()
+        {
+            return Body.GeneralSpeed;
+        }
+
+        public double GetActorCastingSpeed()
+        {
+            return GetActorBaseSpeed() + ((Magic.ShapingSkill * 0.7) * (Soul.WillPower * 0.3));
+        }
+
+        public double GetAttackSpeed()
+        {
+            var itemHeld = WieldedItem();
+            if (itemHeld is not null)
+            {
+                var speed = ((itemHeld.SpeedOfAttack + itemHeld.Weight * itemHeld.Size)
+                    / GetActorBaseSpeed());
+                var ability = GetRelevantAttackAbility(itemHeld.WeaponType);
+                var finalSpeed = ability != 0 ? speed / ability : speed;
+                return finalSpeed;
+            }
+            return GetActorBaseSpeed();
+        }
+
+        public int GetRelevantAttackAbility(WeaponType weaponType)
+        {
+            if (Mind.HasSpecifiedAttackAbility(weaponType, out int abilityScore))
+            {
+                return abilityScore;
+            }
+            else
+                return 0;
+        }
+
+        public int GetStrenght()
+        {
+            return Body.StrengthScore;
+        }
+
+        #endregion GetProperties
+
+        public bool CheckIfDed()
+        {
+            return !GetAnatomy().EnoughBodyToLive();
+        }
+
+        #endregion Methods
     }
 }

@@ -50,6 +50,11 @@ namespace MagiRogue.Entities
         public int BaseDmg { get; set; } = 1;
 
         /// <summary>
+        /// How fast the item is to attack, heavier itens and lenghtier item suffer
+        /// </summary>
+        public int SpeedOfAttack { get; set; } = 100;
+
+        /// <summary>
         /// The type of damage the item deals, should be default of blunt type
         /// </summary>
         public DamageType ItemDamageType { get; set; } = DamageType.Blunt;
@@ -61,6 +66,7 @@ namespace MagiRogue.Entities
         public List<Trait> Traits { get; set; }
         public List<Quality> Qualities { get; internal set; }
         public string ItemId { get; set; }
+        public WeaponType WeaponType { get; set; }
 
         // By default, a new Item is sized 1x1, with a weight of 1, and at 100% condition
         public Item(Color foreground, Color background, string name, int glyph, Point coord, int size,
@@ -97,23 +103,23 @@ namespace MagiRogue.Entities
 
             if (EquipType == EquipType.None)
             {
-                GameLoop.UIManager.MessageLog.Add("This item can't be equiped!");
+                GameLoop.AddMessageLog("This item can't be equiped!");
                 return;
             }
 
             if (!actor.GetEquipment().TryAdd(actor.GetAnatomy().Limbs.Find
                 (l => l.TypeLimb.ToString() == EquipType.ToString()), this))
             {
-                GameLoop.UIManager.MessageLog.Add($"{actor.Name} has already an item equiped in addHere!");
+                GameLoop.AddMessageLog($"{actor.Name} has already an item equiped in addHere!");
                 return;
             }
 
             if (EquipType == EquipType.Hand)
             {
-                GameLoop.UIManager.MessageLog.Add($"{actor.Name} wields {Name}");
+                GameLoop.AddMessageLog($"{actor.Name} wields {Name}");
             }
             else
-                GameLoop.UIManager.MessageLog.Add($"{actor.Name} equipped {Name} in {EquipType}");
+                GameLoop.AddMessageLog($"{actor.Name} equipped {Name} in {EquipType}");
         }
 
         public void Unequip(Actor actor)

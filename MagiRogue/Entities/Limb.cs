@@ -1,6 +1,8 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
+using MagiRogue.Utils;
 using Newtonsoft.Json;
+using System;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 
@@ -11,7 +13,7 @@ namespace MagiRogue.Entities
     [JsonConverter(typeof(Data.Serialization.EntitySerialization.LimbJsonConverter))]
     public class Limb
     {
-        private int limbHp;
+        private double limbHp;
         private double weight;
         private string _connectedLimb;
 
@@ -19,7 +21,7 @@ namespace MagiRogue.Entities
         public string Id { get; set; }
 
         [DataMember]
-        public int LimbHp
+        public double LimbHp
         {
             get
             {
@@ -43,7 +45,7 @@ namespace MagiRogue.Entities
         }
 
         [DataMember]
-        public int MaxLimbHp { get; set; }
+        public double MaxLimbHp { get; set; }
 
         [DataMember]
         public double LimbWeight
@@ -93,6 +95,13 @@ namespace MagiRogue.Entities
         }
 
         public bool Broken { get; set; } = false;
+
+        /// <summary>
+        /// Determines how effective the races regen is...
+        /// Values are between 0 and 1, where 0 is no regen for the limb and 1 is full regen.
+        /// </summary>
+        public double RateOfHeal { get; internal set; }
+        public bool CanHeal { get; internal set; }
 
         /// <summary>
         /// This class creates a limb for a body.
@@ -161,6 +170,15 @@ namespace MagiRogue.Entities
             get
             {
                 return string.Format($"{nameof(Limb)} : {LimbName}, {TypeLimb}");
+            }
+        }
+
+        public void ApplyHeal(double rateOfHeal)
+        {
+            if (LimbHp < MaxLimbHp)
+            {
+                double newHp = rateOfHeal + LimbHp;
+                LimbHp = MathMagi.Round(newHp);
             }
         }
     }

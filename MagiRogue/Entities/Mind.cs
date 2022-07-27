@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MagiRogue.Data.Enumerators;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +9,8 @@ namespace MagiRogue.Entities
 {
     public class Mind
     {
-        public int Inteligence { get; internal set; }
-        public int Precision { get; internal set; }
+        public int Inteligence { get; set; }
+        public int Precision { get; set; }
 
         /// <summary>
         /// Dictionary of the Abilities of an actor.
@@ -25,6 +26,21 @@ namespace MagiRogue.Entities
         public void AddAbilityToDictionary(Ability ability)
         {
             Abilities.Add(ability.Id, ability);
+        }
+
+        public bool HasSpecifiedAttackAbility(WeaponType weaponType, out int abilityScore)
+        {
+            int possibleId = (int)Ability.ReturnAbilityEnumFromString(weaponType.ToString());
+            abilityScore = 0;
+            if (Abilities.ContainsKey(possibleId))
+            {
+                abilityScore = Abilities[possibleId].Score;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

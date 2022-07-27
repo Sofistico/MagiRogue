@@ -85,7 +85,7 @@ namespace MagiRogue.GameSys.Magic.Effects
 
                 if (happyGuy.CanBeAttacked)
                 {
-                    GameLoop.UIManager.MessageLog.Add("You can't heal what can't take damage");
+                    GameLoop.AddMessageLog("You can't heal what can't take damage");
                     return;
                 }
 

@@ -53,7 +53,7 @@ namespace MagiRogue.GameSys.Magic.Effects
                 GameLoop.Universe.Time.TurnPassed -= GetTime_TurnPassed;
             if (isHasted)
             {
-                GameLoop.UIManager.MessageLog.Add("Can only have one haste effect per time");
+                GameLoop.AddMessageLog("Can only have one haste effect per time");
                 return;
             }
             currentSpeed = targetStats;
@@ -74,7 +74,7 @@ namespace MagiRogue.GameSys.Magic.Effects
                 turnToRemove = 0;
                 isHasted = false;
 
-                GameLoop.UIManager.MessageLog.Add("You feel yourself slowing down");
+                GameLoop.AddMessageLog("You feel yourself slowing down");
                 GameLoop.Universe.Time.TurnPassed -= GetTime_TurnPassed;
             }
         }

@@ -25,7 +25,7 @@ namespace MagiRogue.GameSys.Magic.Effects
         {
             if (Commands.CommandManager.MoveActorTo(caster, target))
             {
-                GameLoop.UIManager.MessageLog.Add($"{caster.Name} disappeared!");
+                GameLoop.AddMessageLog($"{caster.Name} disappeared!");
             }
         }
     }

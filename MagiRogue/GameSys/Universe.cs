@@ -389,7 +389,7 @@ namespace MagiRogue.GameSys
                 GameLoop.UIManager.MapWindow.MapConsole.IsDirty = true;
 
 #if DEBUG
-                GameLoop.UIManager.MessageLog.Add($"Turns: {Time.Turns}, Tick: {Time.TimePassed.Ticks}");
+                GameLoop.AddMessageLog($"Turns: {Time.Turns}, Tick: {Time.TimePassed.Ticks}");
 #endif
             }
         }
@@ -410,9 +410,7 @@ namespace MagiRogue.GameSys
 
             PlayerTimeNode playerTurn = new PlayerTimeNode(Time.TimePassed.Ticks + playerTime);
             Time.RegisterEntity(playerTurn);
-
-            Player.ApplyHpRegen();
-            Player.ApplyManaRegen();
+            Player.ApplyAllRegen();
             CurrentMap.PlayerFOV.Calculate(Player.Position, Player.GetViewRadius());
 
             return true;

@@ -2,8 +2,9 @@
 {
     public enum AbilityName
     {
+        None,
         General,
         MagicLore,
-        Swin
+        Swin,
     }
 }

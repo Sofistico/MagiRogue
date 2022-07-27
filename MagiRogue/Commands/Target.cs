@@ -132,7 +132,7 @@ namespace MagiRogue.Commands
             {
                 return AffectTarget();
             }
-            GameLoop.UIManager.MessageLog.Add("The target is too far!");
+            GameLoop.AddMessageLog("The target is too far!");
             return (false, null);
         }
 
@@ -148,7 +148,7 @@ namespace MagiRogue.Commands
             else
             {
                 casted = false;
-                GameLoop.UIManager.MessageLog.Add("An error ocurred, cound't find a target!");
+                GameLoop.AddMessageLog("An error ocurred, cound't find a target!");
             }
             var spellCasted = SpellSelected;
             EndTargetting();

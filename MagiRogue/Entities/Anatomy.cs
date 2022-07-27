@@ -4,11 +4,15 @@ using MagiRogue.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 
 namespace MagiRogue.Entities
 {
+    /// <summary>
+    /// Your body characteristics, what race you are, if you are an undead or alive, if you are okay and etc
+    /// </summary>
     public class Anatomy
     {
         #region Properties
@@ -41,8 +45,13 @@ namespace MagiRogue.Entities
         public bool HasEnoughWings => Limbs.FindAll(l => l.TypeLimb is TypeOfLimb.Wing).Count >= 2;
 
         [JsonIgnore]
-        public bool CanSee => Organs.Exists(o => o.OrganType is OrganType.Visual
-                                                                                                                                                                                                                                                                                                                                                                                                                                                && (!o.Destroyed || o.Attached));
+        public bool HasAtLeastOneHead => Limbs.Exists(i => i.TypeLimb is TypeOfLimb.Head && i.LimbHp > 0);
+
+        [JsonIgnore]
+        public bool CanSee => Organs.Exists(o => o.OrganType is OrganType.Visual && (!o.Destroyed || o.Attached));
+
+        [JsonIgnore]
+        public bool HasATorso => Limbs.Exists(l => l.TypeLimb is TypeOfLimb.Torso && l.LimbHp > 0);
 
         /// <summary>
         /// The current age of a character
@@ -50,8 +59,18 @@ namespace MagiRogue.Entities
         [DataMember]
         public int CurrentAge { get; set; }
 
-        public float BloodLoss { get; set; }
+        public float BloodLoss { get; set; } = 0;
         public int Lifespan { get; set; }
+        public double NormalLimbRegen { get; set; } = 0.001;
+
+        /// <summary>
+        /// Value between 0 and 2, fitness level determines how well you "health" you are and how well you recover
+        /// your stamina, also helps with how long you will live.
+        /// </summary>
+        public double FitLevel { get; set; } = 0.1;
+        public bool NeedsHead { get; set; } = true;
+
+        //public bool CanRegenLostLimbs { get; set; }
 
         #endregion Properties
 
@@ -156,14 +175,14 @@ namespace MagiRogue.Entities
 
             if (bodyParts.Count < 1)
             {
-                GameLoop.UIManager.MessageLog.Add("Fix the game!");
+                GameLoop.AddMessageLog("Fix the game!");
             }
 
             bodyPartIndex = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(bodyParts.Count);
             bodyPart = bodyParts[bodyPartIndex];
 
             List<Limb> connectedParts = Limbs.FindAll(c => c.ConnectedTo == bodyPart.Id);
-            int totalHpLost = 0;
+            double totalHpLost = 0;
             if (connectedParts.Count > 0)
             {
                 foreach (Limb connectedLimb in connectedParts)
@@ -182,15 +201,15 @@ namespace MagiRogue.Entities
             DismemberMessage(actor, bodyPart, totalHpLost);
         }
 
-        private static void DismemberMessage(Actor actor, Limb limb, int totalDmg = 0)
+        private static void DismemberMessage(Actor actor, Limb limb, double totalDmg = 0)
         {
             StringBuilder dismemberMessage = new StringBuilder();
 
             dismemberMessage.Append($"{actor.Name} lost {limb.LimbName}");
 
-            GameLoop.UIManager.MessageLog.Add(dismemberMessage.ToString());
+            GameLoop.AddMessageLog(dismemberMessage.ToString());
             if (totalDmg > 0)
-                GameLoop.UIManager.MessageLog.Add($"and took {totalDmg} damage!");
+                GameLoop.AddMessageLog($"and took {totalDmg} damage!");
 
             GameLoop.GetCurrentMap().Add(limb.ReturnLimbAsItem(actor));
         }
@@ -214,6 +233,22 @@ namespace MagiRogue.Entities
         {
             CurrentAge = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(GetRaceAdulthoodAge(),
                 GetRaceAdulthoodAge() + 4);
+        }
+
+        public bool EnoughBodyToLive()
+        {
+            if (BloodCount > 0) return false;
+            if (Limbs.Count > 0) return false;
+            if (CheckIfHasHeadAndNeedsOne()) return false;
+            if (!HasATorso) return false;
+
+            // if for some reason still alive, then has enough of a body to live!
+            return true;
+        }
+
+        private bool CheckIfHasHeadAndNeedsOne()
+        {
+            return HasAtLeastOneHead && NeedsHead;
         }
 
         #endregion Methods

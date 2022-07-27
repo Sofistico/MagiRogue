@@ -52,11 +52,11 @@ namespace MagiRogue.GameSys.Magic
                         RitualSchool, RitualRange, BaseDifficulty, MpNodeCost));
                 }
 
-                GameLoop.UIManager.MessageLog.Add($"{caster.Name} performed the {RitualName}!");
+                GameLoop.AddMessageLog($"{caster.Name} performed the {RitualName}!");
                 return;
             }
 
-            GameLoop.UIManager.MessageLog.Add($"{caster.Name} didn't have enough mana in the node for the ritual!");
+            GameLoop.AddMessageLog($"{caster.Name} didn't have enough mana in the node for the ritual!");
         }
 
         public override string ToString()

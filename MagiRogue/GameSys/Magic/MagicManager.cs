@@ -16,7 +16,7 @@ namespace MagiRogue.GameSys.Magic
         /// <summary>
         /// The amount of mana finess required to pull of a spell, something can only be casted if you can
         /// have enough control to properly control the mana, see <see cref="SpellBase.Proficiency"/>.
-        /// <para> Should be at minimum a 5 to cast the simplest battle spell.</para>
+        /// <para> Should be at minimum a 3 to cast the simplest battle spell reliable.</para>
         /// </summary>
         public int ShapingSkill { get; set; }
 

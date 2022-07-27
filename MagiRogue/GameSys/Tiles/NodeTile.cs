@@ -93,7 +93,7 @@ namespace MagiRogue.GameSys.Tiles
                     DestroyTile(BecomeNextTile());
                 }
 
-                GameLoop.UIManager.MessageLog.Add($"{actor.Name} drained {rndDrain} from node!");
+                GameLoop.AddMessageLog($"{actor.Name} drained {rndDrain} from node!");
 
                 actor.Soul.WildMana += rndDrain;
             }
@@ -101,7 +101,7 @@ namespace MagiRogue.GameSys.Tiles
             {
                 DestroyTile(new TileFloor(Position, "stone"));
 
-                GameLoop.UIManager.MessageLog.Add("The node here is already empty");
+                GameLoop.AddMessageLog("The node here is already empty");
             }
         }
 

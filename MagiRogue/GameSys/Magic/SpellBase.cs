@@ -188,7 +188,7 @@ namespace MagiRogue.GameSys.Magic
             {
                 Entity entity = GameLoop.GetCurrentMap().GetEntityAt<Entity>(target);
 
-                GameLoop.UIManager.MessageLog.Add($"{caster.Name} casted {SpellName}");
+                GameLoop.AddMessageLog($"{caster.Name} casted {SpellName}");
 
                 foreach (ISpellEffect effect in Effects)
                 {
@@ -205,7 +205,7 @@ namespace MagiRogue.GameSys.Magic
                 return true;
             }
 
-            GameLoop.UIManager.MessageLog.Add(errorMessage);
+            GameLoop.AddMessageLog(errorMessage);
             errorMessage = "Can't cast the spell";
 
             return false;
@@ -221,7 +221,7 @@ namespace MagiRogue.GameSys.Magic
         {
             if (CanCast(caster.Magic, caster) && target.Count > 0)
             {
-                GameLoop.UIManager.MessageLog.Add($"{caster.Name} casted {SpellName}");
+                GameLoop.AddMessageLog($"{caster.Name} casted {SpellName}");
 
                 foreach (var pos in target)
                 {
@@ -239,7 +239,7 @@ namespace MagiRogue.GameSys.Magic
                 return true;
             }
             errorMessage = "Can't cast the spell, there must be an entity to target";
-            GameLoop.UIManager.MessageLog.Add(errorMessage);
+            GameLoop.AddMessageLog(errorMessage);
             errorMessage = "Can't cast the spell";
 
             return false;

@@ -33,7 +33,7 @@ namespace MagiRogue.Utils
 
             points = coneFov.CurrentFOV.ToArray();
 #if DEBUG
-            GameLoop.UIManager.MessageLog.Add(angle.ToString());
+            GameLoop.AddMessageLog(angle.ToString());
 #endif
             return new Shape(points, radius);
         }

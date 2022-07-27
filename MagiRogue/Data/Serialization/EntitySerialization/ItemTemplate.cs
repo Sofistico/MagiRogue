@@ -126,6 +126,12 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         public List<List<string>> Qualities { get; set; }
         public EquipType EquipType { get; set; }
 
+        [DataMember]
+        public int SpeedOfAttack { get; set; }
+
+        [DataMember]
+        public WeaponType WeaponType { get; set; }
+
         // Will need to see if it works, but so far the logic seems to check
         public static implicit operator ItemTemplate(Item item)
         {
@@ -148,6 +154,8 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 Traits = item.Traits,
                 Qualities = Quality.ReturnQualityListAsString(item.Qualities),
                 EquipType = item.EquipType,
+                SpeedOfAttack = item.SpeedOfAttack,
+                WeaponType = item.WeaponType,
             };
 
             return itemSerialized;
@@ -179,6 +187,8 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 Qualities = Quality.ReturnQualityList(itemTemplate.Qualities),
                 ItemId = itemTemplate.Id,
                 EquipType = itemTemplate.EquipType,
+                SpeedOfAttack = itemTemplate.SpeedOfAttack,
+                WeaponType = itemTemplate.WeaponType,
             };
             if (itemTemplate.Condition != 100)
             {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MagiRogue.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,9 +9,19 @@ namespace MagiRogue.Entities
 {
     public class Soul
     {
-        public int MaxMana { get; internal set; }
-        public double CurrentMana { get; internal set; }
-        public int WillPower { get; internal set; }
-        public int WildMana { get; internal set; }
+        public int MaxMana { get; set; }
+        public double CurrentMana { get; set; }
+        public int WillPower { get; set; }
+        public int WildMana { get; set; }
+        public double BaseManaRegen { get; set; }
+
+        public void ApplyManaRegen(double manaRegen)
+        {
+            if (CurrentMana < MaxMana)
+            {
+                double newMana = (manaRegen + CurrentMana);
+                CurrentMana = MathMagi.Round(newMana);
+            }
+        }
     }
 }

@@ -6,13 +6,10 @@ namespace MagiRogue.GameSys.Time
 {
     public static class TimeHelper
     {
-        //public const int WalkTime = 100;
-        public const int AttackTime = 150;
         public const int Wait = 100;
         public const int Interact = 50;
         public const int Wear = 200;
         public const int MagicalThings = 250;
-        //public const int Year = 31536000;
 
         public static int GetWalkTime(Actor actor, TileBase tileToMove)
         {
@@ -34,14 +31,14 @@ namespace MagiRogue.GameSys.Time
 
         public static int GetAttackTime(Actor actor)
         {
-            return (int)(AttackTime / actor.GetActorBaseSpeed());
+            return (int)actor.GetAttackSpeed();
         }
 
         public static int GetCastingTime(Actor actor, SpellBase spellCasted)
         {
             return (int)
-                ((MagicalThings + spellCasted.SpellLevel + spellCasted.ManaCost)
-                / (actor.GetActorBaseSpeed() + actor.Magic.ShapingSkill * 0.5));
+                ((MagicalThings * (spellCasted.SpellLevel + spellCasted.ManaCost))
+                    / (actor.GetActorCastingSpeed()));
         }
     }
 }

@@ -34,14 +34,21 @@ namespace MagiRogue.Entities
             return string.Join(" ", Regex.Split(tempName, @"(?<!^)(?=[A-Z](?![A-Z]|$))"));
         }
 
-        private static AbilityName ReturnAbilityEnumFromString(string name)
+        public static AbilityName ReturnAbilityEnumFromString(string name)
         {
-            return name switch
+            try
             {
-                "Magic Lore" => AbilityName.MagicLore,
-                "Swin" => AbilityName.Swin,
-                _ => throw new AbilityNotFoundExepction("Cound't find the ability in the enum class"),
-            };
+                return name switch
+                {
+                    "Magic Lore" => AbilityName.MagicLore,
+                    "Swin" => AbilityName.Swin,
+                    _ => throw new AbilityNotFoundExepction("Cound't find the ability in the enum class"),
+                };
+            }
+            catch (AbilityNotFoundExepction)
+            {
+                return AbilityName.None;
+            }
         }
     }
 
