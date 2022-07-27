@@ -34,10 +34,10 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         public TypeOfLimb LimbType { get; set; }
 
         [DataMember]
-        public int MaxLimbHp { get; set; }
+        public double MaxLimbHp { get; set; }
 
         [DataMember]
-        public int LimbHp { get; set; }
+        public double LimbHp { get; set; }
 
         [DataMember]
         public double LimbWeight { get; set; }
@@ -72,8 +72,8 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
         [JsonConstructor()]
         public LimbTemplate(TypeOfLimb limbType,
-            int maxLimbHp,
-            int limbHp,
+            double maxLimbHp,
+            double limbHp,
             double limbWeight,
             string limbName,
             LimbOrientation limbOrientation,

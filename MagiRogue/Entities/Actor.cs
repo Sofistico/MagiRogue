@@ -322,6 +322,11 @@ namespace MagiRogue.Entities
             return Body.StrengthScore;
         }
 
+        public DamageType GetDamageType()
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion GetProperties
 
         public bool CheckIfDed()

@@ -115,7 +115,7 @@ namespace MagiRogue.Entities
         /// <param name="materialID">The id to define the material, if needeed look at the material definition json\n
         /// Defaults to "flesh"</param>
 
-        public Limb(TypeOfLimb limbType, int limbHp, int maxLimbHp,
+        public Limb(TypeOfLimb limbType, double limbHp, double maxLimbHp,
             double limbWeight, string limbName, LimbOrientation orientation, string? connectedTo,
             string materialID = "flesh")
         {

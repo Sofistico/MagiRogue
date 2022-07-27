@@ -168,24 +168,17 @@ namespace MagiRogue.Utils
         /// <param name="defender"></param>
         /// <param name="attackMessage"></param>
         /// <returns></returns>
-        public static int ResolveHit(Actor attacker, Actor defender, StringBuilder attackMessage)
+        public static bool ResolveHit(Actor attacker, Actor defender, StringBuilder attackMessage)
         {
             // Create a string that expresses the attacker and defender's names
-            int hits = 0;
             attackMessage.AppendFormat("{0} attacks {1}", attacker.Name, defender.Name);
 
-            // The attacker's AttackSpeed value determines the number of attacks dice rolled
-            // which will always be at the very least one attack per turn, so yeah need to look later into this
-            for (int nmrAttack = 0; nmrAttack < attacker.GetNumberOfAttacks(); nmrAttack++)
+            if (attacker.GetRelevantAbility() + Mrn.Exploding2D6Dice > defender.GetDefenseAbility() + Mrn.Exploding2D6Dice)
+                return true;
+            else
             {
-                //Resolve the dicing outcome and register a hit, governed by the
-                //attacker's BaseAttack value.
-                //TODO: Adds the fatigue atribute and any penalties.
-                if (attacker.GetRelevantAbility() + Mrn.Exploding2D6Dice > defender.GetDefenseAbility() + Mrn.Exploding2D6Dice)
-                    hits++;
+                return false;
             }
-
-            return hits;
         }
 
         /// <summary>
@@ -199,31 +192,27 @@ namespace MagiRogue.Utils
         /// <param name="attackMessage"></param>
         /// <param name="defenseMessage"></param>
         /// <returns></returns>
-        public static int ResolveDefense(Actor attacker, Actor defender, int hits, StringBuilder attackMessage,
+        public static int ResolveDefense(Actor attacker, Actor defender, bool hit, StringBuilder attackMessage,
             StringBuilder defenseMessage)
         {
             int totalDamage = 0;
 
-            if (hits > 0)
+            if (hit)
             {
                 // Create a string that displays the defender's name and outcomes
-                attackMessage.AppendFormat(" scoring {0} hits.", hits);
 
-                for (int i = 0; i < hits; i++)
-                {
-                    int loopDamage;
-                    Item wieldedItem = attacker.WieldedItem();
-                    // TODO: adds a way to get the attack of the weapon or fist or something else
-                    if (wieldedItem is null)
-                        loopDamage = attacker.GetStrenght() + Mrn.Exploding2D6Dice;
-                    else
-                        loopDamage = attacker.GetStrenght() + wieldedItem.BaseDmg + Mrn.Exploding2D6Dice;
+                int loopDamage;
+                Item wieldedItem = attacker.WieldedItem();
+                // TODO: adds a way to get the attack of the weapon or fist or something else
+                if (wieldedItem is null)
+                    loopDamage = attacker.GetStrenght() + Mrn.Exploding2D6Dice;
+                else
+                    loopDamage = attacker.GetStrenght() + wieldedItem.BaseDmg + Mrn.Exploding2D6Dice;
 
-                    loopDamage -= defender.GetProtection() + Mrn.Exploding2D6Dice;
+                loopDamage -= defender.GetProtection() + Mrn.Exploding2D6Dice;
 
-                    defenseMessage.AppendFormat("   Hit {0}: {1} was hit for {2} damage", hits, defender.Name, loopDamage);
-                    totalDamage += loopDamage;
-                }
+                defenseMessage.AppendFormat("   {0} was hit for {1} damage", defender.Name, loopDamage);
+                totalDamage += loopDamage;
             }
             else
                 attackMessage.Append(" and misses completely!");
