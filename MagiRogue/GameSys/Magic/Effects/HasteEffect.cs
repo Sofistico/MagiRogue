@@ -5,8 +5,8 @@ namespace MagiRogue.GameSys.Magic.Effects
 {
     public class HasteEffect : IHasteEffect
     {
-        private float previousSpeed;
-        private float currentSpeed;
+        private double previousSpeed;
+        private double currentSpeed;
         private bool isHasted;
         private int turnToRemove;
 
@@ -46,7 +46,7 @@ namespace MagiRogue.GameSys.Magic.Effects
 
         private void Haste(Point target, SpellBase spellCasted)
         {
-            float targetStats = GameLoop.GetCurrentMap().GetEntityAt<Actor>(target).GetActorBaseSpeed();
+            double targetStats = GameLoop.GetCurrentMap().GetEntityAt<Actor>(target).GetActorBaseSpeed();
 
             // TODO: Refactor this shit
             if (turnToRemove == 0)
