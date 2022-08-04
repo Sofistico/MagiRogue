@@ -6,83 +6,53 @@ using System.Runtime.Serialization;
 
 namespace MagiRogue.Entities
 {
-    public class Organ
+    public class Organ : BodyPart
     {
-        [DataMember]
-        public string Id { get; set; }
-
-        [DataMember]
-        public string Name { get; set; }
-
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string? InsideOf { get; set; }
 
         [DataMember]
-        public LimbOrientation Orientation { get; set; }
-
-        [DataMember]
         public OrganType OrganType { get; set; }
 
-        [JsonProperty(Required = Required.Default)]
-        public bool Attached { get; set; } = true;
-
         [DataMember]
-        public bool Destroyed { get => OrganHp <= 0; }
-
-        [DataMember]
-        public int OrganHp { get; set; }
-
-        [JsonIgnore]
-        public MaterialTemplate Material { get; set; }
-
-        [DataMember]
-        public string MaterialId { get; set; }
-
-        [DataMember]
-        public int MaxOrganHp { get; set; }
-
-        [DataMember]
-        public float OrganWeight { get; set; }
+        public bool Destroyed { get => BodyPartHp <= 0; }
 
         public Organ(string name,
             string? connectedTo,
-            LimbOrientation orientation,
+            BodyPartOrientation orientation,
             OrganType organType,
             int organHp,
-            string materialId,
-            float organWeight)
+            string materialId)
         {
-            Name = name;
+            BodyPartName = name;
             InsideOf = connectedTo;
             Orientation = orientation;
             OrganType = organType;
-            OrganHp = organHp;
+            BodyPartHp = organHp;
             MaterialId = materialId;
-            Material = PhysicsManager.SetMaterial(materialId);
-            MaxOrganHp = organHp;
-            OrganWeight = organWeight;
+            BodyPartMaterial = PhysicsManager.SetMaterial(materialId);
+            MaxBodyPartHp = organHp;
+            //BodyPartWeight = organWeight;
         }
 
         [JsonConstructor()]
         public Organ(string id,
            string name,
            string? connectedTo,
-           LimbOrientation orientation,
+           BodyPartOrientation orientation,
            OrganType organType,
            int organHp,
-           string materialId,
-           float organWeight)
+           string materialId)
         {
             Id = id;
-            Name = name;
+            BodyPartName = name;
             InsideOf = connectedTo;
             Orientation = orientation;
             OrganType = organType;
-            OrganHp = organHp;
+            BodyPartHp = organHp;
             MaterialId = materialId;
-            Material = PhysicsManager.SetMaterial(materialId);
-            MaxOrganHp = organHp;
-            OrganWeight = organWeight;
+            BodyPartMaterial = PhysicsManager.SetMaterial(materialId);
+            MaxBodyPartHp = organHp;
         }
 
         public Organ()
@@ -96,14 +66,14 @@ namespace MagiRogue.Entities
             {
                 Attached = this.Attached,
                 Id = this.Id,
-                Name = this.Name,
+                BodyPartName = this.BodyPartName,
                 InsideOf = this.InsideOf,
                 Orientation = this.Orientation,
-                OrganHp = this.OrganHp,
+                BodyPartHp = this.BodyPartHp,
                 MaterialId = this.MaterialId,
-                Material = this.Material,
-                MaxOrganHp = this.MaxOrganHp,
-                OrganWeight = this.OrganWeight,
+                BodyPartMaterial = this.BodyPartMaterial,
+                MaxBodyPartHp = this.MaxBodyPartHp,
+                //BodyPartWeight = this.BodyPartWeight,
                 OrganType = this.OrganType
             };
 

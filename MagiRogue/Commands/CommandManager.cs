@@ -59,7 +59,7 @@ namespace MagiRogue.Commands
         /// </summary>
         /// <param name="attacker"></param>
         /// <param name="defender"></param>
-        public static void Attack(Actor attacker, Actor defender)
+        public static void MeleeAttack(Actor attacker, Actor defender)
         {
             if (!defender.CanBeAttacked)
                 return;
@@ -78,8 +78,9 @@ namespace MagiRogue.Commands
 
             // Count up the amount of attacking damage done
             // and the number of successful blocks
-            bool hit = CombatUtils.ResolveHit(attacker, defender, attackMessage);
-            double damage = CombatUtils.ResolveDefense(attacker, defender, hit, attackMessage, defenseMessage);
+            (bool hit, Limb limb, DamageType dmgType) = CombatUtils.ResolveHit(attacker, defender, attackMessage);
+            double damage = CombatUtils.ResolveDefense(attacker,
+                defender, hit, attackMessage, defenseMessage, limb, dmgType);
 
             // Display the outcome of the attack & defense
             GameLoop.AddMessageLog(attackMessage.ToString());
@@ -87,7 +88,7 @@ namespace MagiRogue.Commands
                 GameLoop.AddMessageLog(defenseMessage.ToString());
 
             // The defender now takes damage
-            CombatUtils.ResolveDamage(defender, damage, attacker.GetDamageType());
+            CombatUtils.ResolveDamage(defender, damage, dmgType);
         }
 
         /// <summary>
@@ -127,7 +128,7 @@ namespace MagiRogue.Commands
                         // TODO: make it possible to choose which monster to strike and test what happens when there is more
                         // than one monster nearby.
                         Actor closestMonster = monsterClose.First();
-                        Attack(attacker, closestMonster);
+                        MeleeAttack(attacker, closestMonster);
                         return true;
                     }
                 }

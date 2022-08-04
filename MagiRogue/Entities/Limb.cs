@@ -9,72 +9,13 @@ using System.Runtime.Serialization;
 namespace MagiRogue.Entities
 {
     [DataContract]
-    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     [JsonConverter(typeof(Data.Serialization.EntitySerialization.LimbJsonConverter))]
-    public class Limb
+    public class Limb : BodyPart
     {
-        private double limbHp;
-        private double weight;
         private string _connectedLimb;
 
         [DataMember]
-        public string Id { get; set; }
-
-        [DataMember]
-        public double LimbHp
-        {
-            get
-            {
-                if (limbHp > MaxLimbHp)
-                {
-                    return MaxLimbHp;
-                }
-                else
-                    return limbHp;
-            }
-
-            set
-            {
-                if (value > MaxLimbHp)
-                {
-                    limbHp = MaxLimbHp;
-                }
-                else
-                    limbHp = value;
-            }
-        }
-
-        [DataMember]
-        public double MaxLimbHp { get; set; }
-
-        [DataMember]
-        public double LimbWeight
-        {
-            get { return weight; }
-
-            set
-            {
-                weight = value * LimbMaterial.Density;
-            }
-        }
-
-        [DataMember]
-        public bool Attached { get; set; }
-
-        /// <summary>
-        /// Marks if the limb is right, left, or center, this is the property.
-        /// </summary>
-        [DataMember]
-        public LimbOrientation Orientation { get; set; }
-
-        [DataMember]
-        public string LimbName { get; set; }
-
-        [DataMember]
         public TypeOfLimb TypeLimb { get; set; }
-
-        [DataMember]
-        public MaterialTemplate LimbMaterial { get; set; }
 
         [DataMember]
         public string? ConnectedTo
@@ -97,15 +38,6 @@ namespace MagiRogue.Entities
         public bool Broken { get; set; } = false;
 
         /// <summary>
-        /// Determines how effective the races regen is...
-        /// Values are between 0 and 1, where 0 is no regen for the limb and 1 is full regen.
-        /// </summary>
-        public double RateOfHeal { get; internal set; }
-        public bool CanHeal { get; internal set; }
-
-        public BodyFunction LimbFunction { get; set; }
-
-        /// <summary>
         /// This class creates a limb for a body.
         /// </summary>
         /// <param name="limbType">The type of the limb, if its a arm or a leg or etc...</param>
@@ -117,44 +49,45 @@ namespace MagiRogue.Entities
         /// <param name="materialID">The id to define the material, if needeed look at the material definition json\n
         /// Defaults to "flesh"</param>
 
-        public Limb(TypeOfLimb limbType, double limbHp, double maxLimbHp,
-            double limbWeight, string limbName, LimbOrientation orientation, string connectedTo,
-            string materialID = "flesh", BodyFunction limbFunction = BodyFunction.Limb)
+        public Limb(TypeOfLimb limbType, double limbHp, double maxLimbHp, string limbName,
+            BodyPartOrientation orientation, string connectedTo,
+            string materialID = "flesh", BodyPartFunction limbFunction = BodyPartFunction.Limb)
         {
-            LimbMaterial = GameSys.Physics.PhysicsManager.SetMaterial(materialID);
+            MaterialId = materialID;
+            BodyPartMaterial = GameSys.Physics.PhysicsManager.SetMaterial(materialID);
             TypeLimb = limbType;
-            MaxLimbHp = maxLimbHp;
-            LimbHp = limbHp;
-            LimbWeight = limbWeight;
+            MaxBodyPartHp = maxLimbHp;
+            BodyPartHp = limbHp;
+            //BodyPartWeight = limbWeight;
             // Defaults to true
             Attached = true;
-            LimbName = limbName;
+            BodyPartName = limbName;
             Orientation = orientation;
             ConnectedTo = connectedTo;
             LimbFunction = limbFunction;
         }
 
-        public Limb(string id, TypeOfLimb limbType, int limbHp, int maxLimbHp,
-           double limbWeight, string limbName, LimbOrientation orientation, string? connectedTo,
+        public Limb(string id, TypeOfLimb limbType, int limbHp, int maxLimbHp, string limbName, BodyPartOrientation orientation, string? connectedTo,
            string materialID = "flesh")
         {
             Id = id;
-            LimbMaterial = GameSys.Physics.PhysicsManager.SetMaterial(materialID);
+            MaterialId = materialID;
+            BodyPartMaterial = GameSys.Physics.PhysicsManager.SetMaterial(materialID);
             TypeLimb = limbType;
-            MaxLimbHp = maxLimbHp;
-            LimbHp = limbHp;
-            LimbWeight = limbWeight;
+            MaxBodyPartHp = maxLimbHp;
+            BodyPartHp = limbHp;
+            //BodyPartWeight = limbWeight;
             // Defaults to true
             Attached = true;
-            LimbName = limbName;
+            BodyPartName = limbName;
             Orientation = orientation;
             ConnectedTo = connectedTo;
         }
 
         public Item ReturnLimbAsItem(Actor actor)
         {
-            string limbName = actor.Name + "'s " + LimbName;
-            int size = (int)(actor.Size / LimbWeight);
+            string limbName = actor.Name + "'s " + BodyPartName;
+            int size = Size;
             Attached = false;
 
             return new Item(actor.Appearance.Foreground,
@@ -163,26 +96,9 @@ namespace MagiRogue.Entities
                 253,
                 actor.Position,
                 size,
-                (float)LimbWeight,
-                materialId: LimbMaterial.Id
+                (float)BodyPartWeight,
+                materialId: MaterialId
                 );
-        }
-
-        private string DebuggerDisplay
-        {
-            get
-            {
-                return string.Format($"{nameof(Limb)} : {LimbName}, {TypeLimb}");
-            }
-        }
-
-        public void ApplyHeal(double rateOfHeal)
-        {
-            if (LimbHp < MaxLimbHp)
-            {
-                double newHp = rateOfHeal + LimbHp;
-                LimbHp = MathMagi.Round(newHp);
-            }
         }
     }
 }

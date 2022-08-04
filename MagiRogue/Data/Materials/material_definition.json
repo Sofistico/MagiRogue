@@ -31,7 +31,7 @@
     "Hardness": 3,
     "MPInfusionLimit": 1,
     "CanRegen": true,
-    "Density": 1.1,
+    "Density": 1.0,
     "MeltingPoint": 41,
     "Color": "Red"
   },

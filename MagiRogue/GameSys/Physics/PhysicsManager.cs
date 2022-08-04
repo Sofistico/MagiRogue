@@ -19,7 +19,7 @@ namespace MagiRogue.GameSys.Physics
         public static MaterialTemplate SetMaterial(string id) =>
             DataManager.QueryMaterial(id);
 
-        public static int CalculateStrikeForce(float weight, int actorStrikeForce)
+        public static int CalculateStrikeForce(double weight, int actorStrikeForce)
         {
             return (int)MathMagi.Round(weight * actorStrikeForce);
         }

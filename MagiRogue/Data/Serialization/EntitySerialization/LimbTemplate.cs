@@ -46,7 +46,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         public string LimbName { get; set; }
 
         [DataMember]
-        public LimbOrientation LimbOrientation { get; set; }
+        public BodyPartOrientation LimbOrientation { get; set; }
 
         [DataMember]
         public string LimbMaterialId { get; set; }
@@ -62,7 +62,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
         [DataMember]
         public bool Broken { get; set; } = false;
-        public BodyFunction LimbFunction { get; set; }
+        public BodyPartFunction LimbFunction { get; set; }
 
         // Here will be a class designed to reliable build different types of anatomys, for use in a future dictionary
         // static class for anatomies
@@ -77,7 +77,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             double limbHp,
             double limbWeight,
             string limbName,
-            LimbOrientation limbOrientation,
+            BodyPartOrientation limbOrientation,
             string limbMaterialId,
             bool attached,
             string? connectsTo)
@@ -119,7 +119,6 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             Limb limb = new Limb(template.LimbType,
                 template.LimbHp,
                 template.MaxLimbHp,
-                template.LimbWeight,
                 template.LimbName,
                 template.LimbOrientation,
                 template.ConnectedToId,
@@ -135,12 +134,12 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         public static implicit operator LimbTemplate(Limb limb)
         {
             LimbTemplate template = new LimbTemplate(limb.TypeLimb,
-                limb.MaxLimbHp,
-                limb.LimbHp,
-                limb.LimbWeight,
-                limb.LimbName,
+                limb.MaxBodyPartHp,
+                limb.BodyPartHp,
+                limb.BodyPartWeight,
+                limb.BodyPartName,
                 limb.Orientation,
-                limb.LimbMaterial.Id,
+                limb.MaterialId,
                 limb.Attached,
                 limb.ConnectedTo);
             template.Id = limb.Id;

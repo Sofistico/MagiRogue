@@ -30,7 +30,7 @@ namespace MagiRogue.Entities
         /// It uses an aproximation of blood count equal to 75 ml/kg for an adult male
         /// </summary>
         [DataMember]
-        public float BloodCount { get; set; }  // the amount of blood inside the actor, its in ml, to facilitate the calculus of blood volume, the formula is ml/kg
+        public double BloodCount { get; set; }  // the amount of blood inside the actor, its in ml, to facilitate the calculus of blood volume, the formula is ml/kg
 
         [DataMember]
         public bool HasBlood { get; set; } = true;
@@ -45,13 +45,13 @@ namespace MagiRogue.Entities
         public bool HasEnoughWings => Limbs.FindAll(l => l.TypeLimb is TypeOfLimb.Wing).Count >= 2;
 
         [JsonIgnore]
-        public bool HasAtLeastOneHead => Limbs.Exists(i => i.TypeLimb is TypeOfLimb.Head && i.LimbHp > 0);
+        public bool HasAtLeastOneHead => Limbs.Exists(i => i.TypeLimb is TypeOfLimb.Head && i.BodyPartHp > 0);
 
         [JsonIgnore]
         public bool CanSee => Organs.Exists(o => o.OrganType is OrganType.Visual && (!o.Destroyed || o.Attached));
 
         [JsonIgnore]
-        public bool HasATorso => Limbs.Exists(l => l.TypeLimb is TypeOfLimb.Torso && l.LimbHp > 0);
+        public bool HasATorso => Limbs.Exists(l => l.TypeLimb is TypeOfLimb.Torso && l.BodyPartHp > 0);
 
         /// <summary>
         /// The current age of a character
@@ -89,7 +89,7 @@ namespace MagiRogue.Entities
 
         #region Methods
 
-        protected void CalculateBlood(float weight)
+        protected void CalculateBlood(double weight)
         {
             if (HasBlood)
                 BloodCount = MathMagi.Round(weight * 75);
@@ -188,12 +188,12 @@ namespace MagiRogue.Entities
                 foreach (Limb connectedLimb in connectedParts)
                 {
                     connectedLimb.Attached = false;
-                    totalHpLost += connectedLimb.LimbHp;
+                    totalHpLost += connectedLimb.BodyPartHp;
                 }
             }
 
             bodyPart.Attached = false;
-            totalHpLost += bodyPart.LimbHp;
+            totalHpLost += bodyPart.BodyPartHp;
             //actor.Stats.Health -= totalHpLost;
             /*if (actor.Stats.Health <= 0)
                 Commands.CommandManager.ResolveDeath(actor);*/
@@ -205,13 +205,20 @@ namespace MagiRogue.Entities
         {
             StringBuilder dismemberMessage = new StringBuilder();
 
-            dismemberMessage.Append($"{actor.Name} lost {limb.LimbName}");
+            dismemberMessage.Append($"{actor.Name} lost {limb.BodyPartName}");
 
             GameLoop.AddMessageLog(dismemberMessage.ToString());
             if (totalDmg > 0)
                 GameLoop.AddMessageLog($"and took {totalDmg} damage!");
 
             GameLoop.GetCurrentMap().Add(limb.ReturnLimbAsItem(actor));
+        }
+
+        public Limb GetRandomLimb()
+        {
+            int rng = GameLoop.GlobalRand.NextInt(Limbs.Count);
+
+            return Limbs[rng];
         }
 
         public void Update(Actor actor)

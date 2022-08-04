@@ -168,16 +168,22 @@ namespace MagiRogue.Utils
         /// <param name="defender"></param>
         /// <param name="attackMessage"></param>
         /// <returns></returns>
-        public static bool ResolveHit(Actor attacker, Actor defender, StringBuilder attackMessage)
+        public static (bool, Limb?, DamageType) ResolveHit(Actor attacker,
+            Actor defender, StringBuilder attackMessage)
         {
             // Create a string that expresses the attacker and defender's names
             attackMessage.AppendFormat("{0} attacks {1}", attacker.Name, defender.Name);
 
-            if (attacker.GetRelevantAbility() + Mrn.Exploding2D6Dice > defender.GetDefenseAbility() + Mrn.Exploding2D6Dice)
-                return true;
+            if (attacker.GetRelevantAbility() + Mrn.Exploding2D6Dice
+                > defender.GetDefenseAbility() + Mrn.Exploding2D6Dice)
+            {
+                var attackType = attacker.GetDamageType();
+                Limb limb = defender.GetAnatomy().GetRandomLimb();
+                return (true, limb, attackType);
+            }
             else
             {
-                return false;
+                return (false, null, attacker.GetDamageType());
             }
         }
 
@@ -193,7 +199,7 @@ namespace MagiRogue.Utils
         /// <param name="defenseMessage"></param>
         /// <returns></returns>
         public static double ResolveDefense(Actor attacker, Actor defender, bool hit, StringBuilder attackMessage,
-            StringBuilder defenseMessage)
+            StringBuilder defenseMessage, Limb limbToHit, DamageType damageType)
         {
             double totalDamage = 0;
 
@@ -209,7 +215,31 @@ namespace MagiRogue.Utils
                 else
                     loopDamage = GetAttackMomentum(attacker, wieldedItem);
 
-                loopDamage -= defender.GetProtection() + Mrn.Exploding2D6Dice;
+                double protection = defender.GetProtection(limbToHit);
+
+                switch (damageType)
+                {
+                    case DamageType.Blunt:
+                        protection *= 0.8;
+                        break;
+
+                    case DamageType.Point:
+                        protection *= 0.5;
+                        break;
+
+                    case DamageType.Soul:
+                        protection = 0;
+                        break;
+
+                    case DamageType.Mind:
+                        protection = 0;
+                        break;
+
+                    default:
+                        break;
+                }
+
+                loopDamage -= protection + Mrn.Exploding2D6Dice;
 
                 defenseMessage.AppendFormat("   {0} was hit for {1} damage", defender.Name, loopDamage);
                 totalDamage += loopDamage;

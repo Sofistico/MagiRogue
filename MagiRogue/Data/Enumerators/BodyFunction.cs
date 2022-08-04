@@ -9,13 +9,18 @@ using System.Threading.Tasks;
 namespace MagiRogue.Data.Enumerators
 {
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum BodyFunction
+    public enum BodyPartFunction
     {
         Limb,
         Grasp,
         Stance,
         Flier,
+        Digit,
+        Aperture,
+
         Vital,
-        Thought
+        Thought,
+        Breathe,
+        Embedded,
     }
 }

@@ -65,5 +65,10 @@ namespace MagiRogue.Entities
                 Stamina = MathMagi.Round(newSta);
             }
         }
+
+        public Item GetArmorOnLimbIfAny(Limb limb)
+        {
+            return Equipment[limb].EquipType is not Data.Enumerators.EquipType.None ? Equipment[limb] : null;
+        }
     }
 }

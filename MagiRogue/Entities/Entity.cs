@@ -21,11 +21,14 @@ namespace MagiRogue.Entities
         public int Layer { get; set; } // stores and sets the layer that the entity is rendered
 
         [DataMember]
-        public float Weight { get; set; }
+        public double Weight { get; set; }
 
         [DataMember]
         public MaterialTemplate Material { get; set; }
 
+        /// <summary>
+        /// The size is defined as cm³
+        /// </summary>
         [DataMember]
         public int Size { get; set; }
 

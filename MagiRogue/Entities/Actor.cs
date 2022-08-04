@@ -165,7 +165,7 @@ namespace MagiRogue.Entities
 
             if (actor != null && CanBeAttacked)
             {
-                CommandManager.Attack(this, actor);
+                CommandManager.MeleeAttack(this, actor);
                 Bumped = true;
                 return Bumped;
             }
@@ -174,9 +174,10 @@ namespace MagiRogue.Entities
             return Bumped;
         }
 
-        public int GetProtection(Limb limb)
+        public double GetProtection(Limb limb)
         {
-            return Body.Toughness + Body.GetArmorOnLimbIfAny(limb);
+            var item = Body.GetArmorOnLimbIfAny(limb);
+            return Body.Toughness + (item.Material.Hardness * Body.GetArmorOnLimbIfAny(limb).Material.Density);
         }
 
         private bool CheckIfThereIsDoor(Point positionChange)
@@ -334,7 +335,14 @@ namespace MagiRogue.Entities
 
         public DamageType GetDamageType()
         {
-            throw new NotImplementedException();
+            if (WieldedItem() is not null && WieldedItem() is Item item)
+            {
+                return item.ItemDamageType;
+            }
+            else
+            {
+                return DamageType.Blunt;
+            }
         }
 
         #endregion GetProperties

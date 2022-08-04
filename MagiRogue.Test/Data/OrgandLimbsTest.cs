@@ -50,7 +50,7 @@ namespace MagiRogue.Test.Data
         public void SerializeOrgans()
         {
             Organ organ = new Organ("organ_test", "Test", null,
-                LimbOrientation.Center,
+                BodyPartOrientation.Center,
                 OrganType.Misc,
                 15,
                 "null",
@@ -70,7 +70,7 @@ namespace MagiRogue.Test.Data
                 12,
                 2.5,
                 "Test",
-                LimbOrientation.Center,
+                BodyPartOrientation.Center,
                 "humanoid_torso");
 
             string json = JsonConvert.SerializeObject(limb);

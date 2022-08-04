@@ -22,7 +22,7 @@ namespace MagiRogue.Entities
 
         public Furniture(Color foreground, Color background, int glyph, Point coord,
             FurnitureType type, string materialId, string name, string furId = null,
-            float weight = 0, int durability = 0)
+            double weight = 0, int durability = 0)
             : base(foreground, background, glyph, coord, (int)MapLayer.FURNITURE)
         {
             Traits = new();

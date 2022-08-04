@@ -35,5 +35,22 @@ namespace MagiRogue.Utils
         {
             return MathF.Round(x, 2, MidpointRounding.AwayFromZero);
         }
+
+        public static int GetVolumeOfObject(double densityInGCm, double weightInKg)
+        {
+            int densityKgM = GetDensityInKgM(densityInGCm);
+            return (int)(weightInKg / densityKgM);
+        }
+
+        public static double GetWeightWithDensity(double densityInGCm, int volumeInCM3)
+        {
+            int densityKgM = GetDensityInKgM(densityInGCm);
+            return densityKgM * volumeInCM3 / 1000000;
+        }
+
+        public static int GetDensityInKgM(double densityInGCm)
+        {
+            return (int)(densityInGCm * 1000);
+        }
     }
 }
