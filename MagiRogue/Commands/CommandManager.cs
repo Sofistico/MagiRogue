@@ -79,7 +79,7 @@ namespace MagiRogue.Commands
             // Count up the amount of attacking damage done
             // and the number of successful blocks
             bool hit = CombatUtils.ResolveHit(attacker, defender, attackMessage);
-            int damage = CombatUtils.ResolveDefense(attacker, defender, hit, attackMessage, defenseMessage);
+            double damage = CombatUtils.ResolveDefense(attacker, defender, hit, attackMessage, defenseMessage);
 
             // Display the outcome of the attack & defense
             GameLoop.AddMessageLog(attackMessage.ToString());

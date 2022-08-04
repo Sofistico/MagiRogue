@@ -174,9 +174,9 @@ namespace MagiRogue.Entities
             return Bumped;
         }
 
-        public int GetProtection()
+        public int GetProtection(Limb limb)
         {
-            throw new NotImplementedException();
+            return Body.Toughness + Body.GetArmorOnLimbIfAny(limb);
         }
 
         private bool CheckIfThereIsDoor(Point positionChange)
@@ -293,7 +293,7 @@ namespace MagiRogue.Entities
             return GetActorBaseSpeed() + ((Magic.ShapingSkill * 0.7) * (Soul.WillPower * 0.3));
         }
 
-        public double GetAttackSpeed()
+        public double GetAttackVelocity()
         {
             var itemHeld = WieldedItem();
             if (itemHeld is not null)
@@ -317,9 +317,19 @@ namespace MagiRogue.Entities
                 return 0;
         }
 
+        public double GetRelevantAttackAbilityMultiplier(WeaponType weaponType)
+        {
+            if (Mind.HasSpecifiedAttackAbility(weaponType, out int abilityScore))
+            {
+                return abilityScore * 0.3;
+            }
+            else
+                return 0;
+        }
+
         public int GetStrenght()
         {
-            return Body.StrengthScore;
+            return Body.Strength;
         }
 
         public DamageType GetDamageType()

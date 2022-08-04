@@ -19,6 +19,7 @@ namespace MagiRogue.Data.Enumerators
         Neck,
         Finger,
         Toe,
-        Misc
+        Misc,
+        Hoof
     }
 }

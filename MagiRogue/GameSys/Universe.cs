@@ -23,18 +23,10 @@ namespace MagiRogue.GameSys
     public class Universe
     {
         // map creation and storage data
-        private const int _mapWidth = 50;
-        //private const int _mapHeight = 50;
-        private readonly int maxChunks;
         private readonly int planetWidth = 257;
         private readonly int planetHeight = 257;
         private readonly int planetMaxCivs = 30;
-        private readonly int _maxRooms = 20;
-        private readonly int _minRoomSize = 4;
-        private readonly int _maxRoomSize = 10;
         private readonly Random rndNum = new();
-        /*private const int _zMaxUpLevel = 10;
-        private const int _zMaxLowLevel = -10;*/
 
         /// <summary>
         /// The World map, contains the map data and the Planet data
@@ -238,7 +230,7 @@ namespace MagiRogue.GameSys
             for (int i = 0; i < CurrentMap.Tiles.Length; i++)
             {
                 if (!CurrentMap.Tiles[i].IsBlockingMove && CurrentMap.Tiles[i] is not NodeTile
-                    && !CurrentMap.GetEntitiesAt<Entity>(Point.FromIndex(i, _mapWidth)).Any())
+                    && !CurrentMap.GetEntitiesAt<Entity>(Point.FromIndex(i, CurrentMap.Width)).Any())
                 {
                     // Set the player's position to the index of the current map position
                     var pos = Point.FromIndex(i, CurrentMap.Width);

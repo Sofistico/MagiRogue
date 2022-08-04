@@ -28,7 +28,7 @@ namespace MagiRogue.Utils
             return a ^ b;
         }
 
-        public static void DealDamage(int dmg, Entity entity, DamageType dmgType)
+        public static void DealDamage(double dmg, Entity entity, DamageType dmgType)
         {
             if (entity is Actor actor)
             {
@@ -48,7 +48,7 @@ namespace MagiRogue.Utils
 
             if (entity is Item item)
             {
-                item.Condition -= dmg;
+                item.Condition -= (int)dmg;
             }
 
             GameLoop.AddMessageLog($"The {entity.Name} took {dmg} {dmgType} total damage!");
@@ -192,22 +192,22 @@ namespace MagiRogue.Utils
         /// <param name="attackMessage"></param>
         /// <param name="defenseMessage"></param>
         /// <returns></returns>
-        public static int ResolveDefense(Actor attacker, Actor defender, bool hit, StringBuilder attackMessage,
+        public static double ResolveDefense(Actor attacker, Actor defender, bool hit, StringBuilder attackMessage,
             StringBuilder defenseMessage)
         {
-            int totalDamage = 0;
+            double totalDamage = 0;
 
             if (hit)
             {
                 // Create a string that displays the defender's name and outcomes
 
-                int loopDamage;
+                double loopDamage;
                 Item wieldedItem = attacker.WieldedItem();
                 // TODO: adds a way to get the attack of the weapon or fist or something else
                 if (wieldedItem is null)
                     loopDamage = attacker.GetStrenght() + Mrn.Exploding2D6Dice;
                 else
-                    loopDamage = attacker.GetStrenght() + wieldedItem.BaseDmg + Mrn.Exploding2D6Dice;
+                    loopDamage = GetAttackMomentum(attacker, wieldedItem);
 
                 loopDamage -= defender.GetProtection() + Mrn.Exploding2D6Dice;
 
@@ -221,13 +221,29 @@ namespace MagiRogue.Utils
         }
 
         /// <summary>
+        /// Gets the momentum of the attack, based partially on the Dwarf Fortress math on attack momentum calculation
+        /// <para><seealso href="https://dwarffortresswiki.org/index.php/DF2014:Weapon">Link to DF wiki article</seealso></para>
+        /// </summary>
+        /// <param name="attacker"></param>
+        /// <param name="wieldedItem"></param>
+        /// <returns></returns>
+        public static double GetAttackMomentum(Actor attacker, Item wieldedItem)
+        {
+            return MathMagi.Round(
+                (attacker.GetStrenght() + wieldedItem.BaseDmg + Mrn.Exploding2D6Dice)
+                * attacker.GetRelevantAttackAbilityMultiplier(wieldedItem.WeaponType)
+                + (10 + 2 * wieldedItem.QualityMultiplier())) * attacker.GetAttackVelocity()
+                + (1 + attacker.Size / (wieldedItem.Material.Density * wieldedItem.Size));
+        }
+
+        /// <summary>
         /// Calculates the damage a defender takes after a successful hit
         /// and subtracts it from its Health
         /// Then displays the outcome in the MessageLog.
         /// </summary>
         /// <param name="defender"></param>
         /// <param name="damage"></param>
-        public static void ResolveDamage(Actor defender, int damage, DamageType dmgType)
+        public static void ResolveDamage(Actor defender, double damage, DamageType dmgType)
         {
             if (damage > 0)
             {

@@ -31,7 +31,7 @@ namespace MagiRogue.GameSys.Time
 
         public static int GetAttackTime(Actor actor)
         {
-            return (int)actor.GetAttackSpeed();
+            return (int)actor.GetAttackVelocity();
         }
 
         public static int GetCastingTime(Actor actor, SpellBase spellCasted)

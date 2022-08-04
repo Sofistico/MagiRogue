@@ -62,6 +62,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
         [DataMember]
         public bool Broken { get; set; } = false;
+        public BodyFunction LimbFunction { get; set; }
 
         // Here will be a class designed to reliable build different types of anatomys, for use in a future dictionary
         // static class for anatomies
@@ -107,6 +108,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 LimbType = this.LimbType,
                 LimbWeight = this.LimbWeight,
                 MaxLimbHp = this.MaxLimbHp,
+                LimbFunction = this.LimbFunction,
             };
 
             return copy;
@@ -121,7 +123,8 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 template.LimbName,
                 template.LimbOrientation,
                 template.ConnectedToId,
-                template.LimbMaterialId
+                template.LimbMaterialId,
+                template.LimbFunction
                 );
             limb.Id = template.Id;
             limb.Broken = template.Broken;
@@ -142,6 +145,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 limb.ConnectedTo);
             template.Id = limb.Id;
             template.Broken = limb.Broken;
+            template.LimbFunction = limb.LimbFunction;
 
             return template;
         }

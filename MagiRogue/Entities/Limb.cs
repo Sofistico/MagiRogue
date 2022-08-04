@@ -103,6 +103,8 @@ namespace MagiRogue.Entities
         public double RateOfHeal { get; internal set; }
         public bool CanHeal { get; internal set; }
 
+        public BodyFunction LimbFunction { get; set; }
+
         /// <summary>
         /// This class creates a limb for a body.
         /// </summary>
@@ -116,8 +118,8 @@ namespace MagiRogue.Entities
         /// Defaults to "flesh"</param>
 
         public Limb(TypeOfLimb limbType, double limbHp, double maxLimbHp,
-            double limbWeight, string limbName, LimbOrientation orientation, string? connectedTo,
-            string materialID = "flesh")
+            double limbWeight, string limbName, LimbOrientation orientation, string connectedTo,
+            string materialID = "flesh", BodyFunction limbFunction = BodyFunction.Limb)
         {
             LimbMaterial = GameSys.Physics.PhysicsManager.SetMaterial(materialID);
             TypeLimb = limbType;
@@ -129,6 +131,7 @@ namespace MagiRogue.Entities
             LimbName = limbName;
             Orientation = orientation;
             ConnectedTo = connectedTo;
+            LimbFunction = limbFunction;
         }
 
         public Limb(string id, TypeOfLimb limbType, int limbHp, int maxLimbHp,

@@ -27,21 +27,21 @@ namespace MagiRogue.Entities
         public static Player TestPlayer()
         {
             Player player = new Player("Magus", Color.White, Color.Black, Point.None);
-            player.Stats.SetAttributes(
-                viewRadius: 7,
-                health: 10,
-                baseHpRegen: 0.1f,
-                bodyStat: 1,
-                mindStat: 1,
-                soulStat: 1,
-                baseAttack: 10,
-                attackChance: 40,
-                protection: 5,
-                defenseChance: 20,
-                speed: 1.0f,
-                _baseManaRegen: 0.1f,
-                personalMana: 12
-                );
+            //player.Stats.SetAttributes(
+            //    viewRadius: 7,
+            //    health: 10,
+            //    baseHpRegen: 0.1f,
+            //    bodyStat: 1,
+            //    mindStat: 1,
+            //    soulStat: 1,
+            //    baseAttack: 10,
+            //    attackChance: 40,
+            //    protection: 5,
+            //    defenseChance: 20,
+            //    speed: 1.0f,
+            //    _baseManaRegen: 0.1f,
+            //    personalMana: 12
+            //    );
             player.Mind.Precision = 3;
 
             player.GetAnatomy().Limbs = EntityFactory.BasicHumanoidBody();

@@ -137,6 +137,11 @@ namespace MagiRogue.Entities
             return GameSys.Physics.PhysicsManager.CalculateStrikeForce(Weight, itemAceleration) + BaseDmg;
         }
 
+        public double QualityMultiplier()
+        {
+            return Qualities.Find(i => i.QualityType is QualityType.ItemQuality).QualitySuitabiliy * 0.3;
+        }
+
         public override string ToString()
         {
             return $"{Name} : Equip {EquipType}";

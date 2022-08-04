@@ -7,6 +7,10 @@ namespace MagiRogue.Data.Enumerators
     public enum QualityType
     {
         None,
+        /// <summary>
+        /// How well made the item is!
+        /// </summary>
+        ItemQuality,
         Forge,
         Smelt,
         Anvil,

@@ -18,7 +18,6 @@ namespace MagiRogue.Entities
         /// The anatomy of the actor
         /// </summary>
         public Anatomy Anatomy { get; set; }
-        public int StrengthScore { get; set; }
 
         /// <summary>
         /// The equipment that the actor is curently using
@@ -44,6 +43,8 @@ namespace MagiRogue.Entities
         public double MaxStamina { get; set; }
         public double StaminaRegen { get; set; }
         public double GeneralSpeed { get; set; }
+        public int Toughness { get; set; }
+        public int Strength { get; set; }
 
         public Body()
         {
