@@ -23,7 +23,7 @@ namespace MagiRogue.GameSys.Magic.Effects
 
         public void ApplyEffect(Point target, Actor caster, SpellBase spellCasted)
         {
-            if (Commands.CommandManager.MoveActorTo(caster, target))
+            if (Commands.ActionManager.MoveActorTo(caster, target))
             {
                 GameLoop.AddMessageLog($"{caster.Name} disappeared!");
             }

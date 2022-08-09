@@ -1,4 +1,5 @@
-﻿using MagiRogue.Data;
+﻿using MagiRogue.Commands;
+using MagiRogue.Data;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
@@ -36,22 +37,28 @@ namespace MagiRogue.Entities
         public bool HasBlood { get; set; } = true;
 
         [JsonIgnore]
-        public bool HasEnoughArms => Limbs.FindAll(l => l.TypeLimb is TypeOfLimb.Arm).Count >= 1;
+        public bool HasEnoughArms =>
+            Limbs.FindAll(l => l.LimbFunction is BodyPartFunction.Grasp).Count >= 1;
 
         [JsonIgnore]
-        public bool HasEnoughLegs => Limbs.Exists(l => l.TypeLimb is TypeOfLimb.Leg);
+        public bool HasEnoughLegs =>
+            Limbs.Exists(l => l.LimbFunction is BodyPartFunction.Stance);
 
         [JsonIgnore]
-        public bool HasEnoughWings => Limbs.FindAll(l => l.TypeLimb is TypeOfLimb.Wing).Count >= 2;
+        public bool HasEnoughWings =>
+            Limbs.FindAll(l => l.LimbFunction is BodyPartFunction.Flier).Count >= 2;
 
         [JsonIgnore]
-        public bool HasAtLeastOneHead => Limbs.Exists(i => i.TypeLimb is TypeOfLimb.Head && i.BodyPartHp > 0);
+        public bool HasAtLeastOneHead =>
+            Limbs.Exists(i => i.LimbFunction is BodyPartFunction.Thought && i.BodyPartHp > 0);
 
         [JsonIgnore]
-        public bool CanSee => Organs.Exists(o => o.OrganType is OrganType.Visual && (!o.Destroyed || o.Attached));
+        public bool CanSee =>
+            Organs.Exists(o => o.OrganType is OrganType.Visual && (!o.Destroyed || o.Working));
 
         [JsonIgnore]
-        public bool HasATorso => Limbs.Exists(l => l.TypeLimb is TypeOfLimb.Torso && l.BodyPartHp > 0);
+        public bool HasATorso =>
+            Limbs.Exists(l => l.TypeLimb is TypeOfLimb.Torso && l.BodyPartHp > 0);
 
         /// <summary>
         /// The current age of a character
@@ -59,7 +66,7 @@ namespace MagiRogue.Entities
         [DataMember]
         public int CurrentAge { get; set; }
 
-        public float BloodLoss { get; set; } = 0;
+        public double BloodLoss { get; set; } = 0;
         public int Lifespan { get; set; }
         public double NormalLimbRegen { get; set; } = 0.001;
 
@@ -82,6 +89,7 @@ namespace MagiRogue.Entities
 
         public Anatomy(Actor actor)
         {
+            actor.Weight = Limbs.Sum(w => w.BodyPartWeight) + Organs.Sum(w => w.BodyPartWeight);
             CalculateBlood(actor.Weight);
         }
 
@@ -89,7 +97,7 @@ namespace MagiRogue.Entities
 
         #region Methods
 
-        protected void CalculateBlood(double weight)
+        public void CalculateBlood(double weight)
         {
             if (HasBlood)
                 BloodCount = MathMagi.Round(weight * 75);
@@ -105,40 +113,53 @@ namespace MagiRogue.Entities
             }
         }
 
-        public void Injury(float bleedAmount, InjurySeverity severity)
+        public void Injury(Wound wound, BodyPart bpInjured, Actor actorWounded)
         {
-            BloodLoss += bleedAmount;
-            BloodCount = MathMagi.Round(BloodCount - bleedAmount);
+            double hpLostPercentage = wound.HpLost / bpInjured.MaxBodyPartHp;
 
-            /* switch (severity)
-             {
-                 case InjurySeverity.Scratch:
-                     break;
+            switch (hpLostPercentage)
+            {
+                case > 0 and <= 0.15:
+                    wound.Severity = InjurySeverity.Bruise;
+                    break;
 
-                 case InjurySeverity.LigthInjury:
-                     break;
+                case > 0.15 and <= 0.25:
+                    wound.Severity = InjurySeverity.Minor;
+                    break;
 
-                 case InjurySeverity.MediumInjury:
-                     break;
+                case > 0.25 and <= 0.75:
+                    wound.Severity = InjurySeverity.Inhibited;
+                    break;
 
-                 case InjurySeverity.SeriousInjury:
-                     break;
+                case > 0.75 and < 1:
+                    wound.Severity = InjurySeverity.Broken;
+                    break;
 
-                 case InjurySeverity.Crippling:
-                     break;
+                case >= 1:
+                    wound.Severity = bpInjured is Limb ? InjurySeverity.Missing : InjurySeverity.Pulped;
+                    if (wound.DamageSource is DamageType.Blunt)
+                        wound.Severity = InjurySeverity.Pulped;
+                    break;
 
-                 case InjurySeverity.Fatal:
-                     break;
+                default:
+                    throw new Exception($"Error with getting percentage of the damage done to the body part: {hpLostPercentage}");
+            }
 
-                 case InjurySeverity.LimbLoss:
-                     break;
+            if (wound.DamageSource is DamageType.Sharp || wound.DamageSource is DamageType.Point)
+            {
+                wound.Bleeding = (actorWounded.Weight / bpInjured.BodyPartWeight) * (int)wound.Severity;
+            }
 
-                 default:
-                     break;
-             }*/
+            BloodLoss += wound.Bleeding;
+            bpInjured.Wounds.Add(wound);
+            bpInjured.CalculateWounds();
+            if (wound.Severity is InjurySeverity.Missing && bpInjured is Limb limb)
+            {
+                Dismember(limb.TypeLimb, actorWounded);
+            }
         }
 
-        public void Dismember(TypeOfLimb limb, Actor actor)
+        private void Dismember(TypeOfLimb limb, Actor actor)
         {
             List<Limb> bodyParts;
             int bodyPartIndex;
@@ -146,32 +167,48 @@ namespace MagiRogue.Entities
 
             if (limb == TypeOfLimb.Head || limb == TypeOfLimb.Neck)
             {
-                bodyParts = Limbs.FindAll(h => h.TypeLimb == TypeOfLimb.Head);
+                bodyParts = Limbs.FindAll(h => h.LimbFunction == BodyPartFunction.Thought && NeedsHead);
                 if (bodyParts.Count > 1)
                 {
-                    bodyParts[0].Attached = false;
+                    //bodyParts[0].Working = false;
                     DismemberMessage(actor, bodyParts[0]);
-                    Commands.CommandManager.ResolveDeath(actor);
+                    //Injury(new Wound(bodyParts[0].Volume,
+                    //    bodyParts[0].BodyPartHp,
+                    //    InjurySeverity.Missing),
+                    //    bodyParts[0],
+                    //    actor);
+                    Commands.ActionManager.ResolveDeath(actor);
                     return;
                 }
                 else
                 {
                     bodyPartIndex = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(bodyParts.Count);
                     bodyPart = bodyParts[bodyPartIndex];
-                    bodyPart.Attached = false;
+                    //bodyPart.Working = false;
+                    //Injury(new Wound(bodyPart.Volume,
+                    //    bodyPart.BodyPartHp,
+                    //    InjurySeverity.Missing),
+                    //    bodyPart,
+                    //    actor);
                     DismemberMessage(actor, bodyPart);
-                    Commands.CommandManager.ResolveDeath(actor);
+                    Commands.ActionManager.ResolveDeath(actor);
                     return;
                 }
             }
             else if (limb == TypeOfLimb.Torso)
             {
-                DismemberMessage(actor, Limbs.Find(a => a.TypeLimb == TypeOfLimb.Torso));
-                Commands.CommandManager.ResolveDeath(actor);
+                bodyPart = Limbs.Find(i => i.TypeLimb is TypeOfLimb.Torso);
+                //Injury(new Wound(bodyPart.Volume,
+                //    bodyPart.BodyPartHp,
+                //    InjurySeverity.Missing),
+                //    bodyPart,
+                //    actor);
+                DismemberMessage(actor, bodyPart);
+                ActionManager.ResolveDeath(actor);
                 return;
             }
 
-            bodyParts = Limbs.FindAll(l => l.TypeLimb == limb && l.Attached);
+            bodyParts = Limbs.FindAll(l => l.TypeLimb == limb && l.Working);
 
             if (bodyParts.Count < 1)
             {
@@ -181,35 +218,44 @@ namespace MagiRogue.Entities
             bodyPartIndex = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(bodyParts.Count);
             bodyPart = bodyParts[bodyPartIndex];
 
-            List<Limb> connectedParts = Limbs.FindAll(c => c.ConnectedTo == bodyPart.Id);
-            double totalHpLost = 0;
+            List<Limb> connectedParts = GetAllConnectedBP(bodyPart);
             if (connectedParts.Count > 0)
             {
                 foreach (Limb connectedLimb in connectedParts)
                 {
-                    connectedLimb.Attached = false;
-                    totalHpLost += connectedLimb.BodyPartHp;
+                    //connectedLimb.Working = false;
+                    //Injury(new Wound(connectedLimb.Volume,
+                    //    connectedLimb.BodyPartHp,
+                    //    InjurySeverity.Missing),
+                    //    connectedLimb,
+                    //    actor);
                 }
             }
 
-            bodyPart.Attached = false;
-            totalHpLost += bodyPart.BodyPartHp;
-            //actor.Stats.Health -= totalHpLost;
-            /*if (actor.Stats.Health <= 0)
-                Commands.CommandManager.ResolveDeath(actor);*/
+            //bodyPart.Working = false;
+            //Injury(new Wound(bodyPart.Volume,
+            //    bodyPart.BodyPartHp,
+            //    InjurySeverity.Missing),
+            //    bodyPart,
+            //    actor);
 
-            DismemberMessage(actor, bodyPart, totalHpLost);
+            DismemberMessage(actor, bodyPart);
         }
 
-        private static void DismemberMessage(Actor actor, Limb limb, double totalDmg = 0)
+        public List<Limb> GetAllConnectedBP(Limb bodyPart)
+        {
+            return Limbs.FindAll(c => c.ConnectedTo == bodyPart.Id);
+        }
+
+        private static void DismemberMessage(Actor actor, Limb limb)
         {
             StringBuilder dismemberMessage = new StringBuilder();
 
             dismemberMessage.Append($"{actor.Name} lost {limb.BodyPartName}");
 
             GameLoop.AddMessageLog(dismemberMessage.ToString());
-            if (totalDmg > 0)
-                GameLoop.AddMessageLog($"and took {totalDmg} damage!");
+            //if (totalDmg > 0)
+            //    GameLoop.AddMessageLog($"and took {totalDmg} damage!");
 
             GameLoop.GetCurrentMap().Add(limb.ReturnLimbAsItem(actor));
         }
@@ -221,9 +267,14 @@ namespace MagiRogue.Entities
             return Limbs[rng];
         }
 
-        public void Update(Actor actor)
+        public void UpdateBody(Actor actor)
         {
-            CalculateBlood(actor.Weight);
+            if (BloodLoss > 0)
+                BloodCount -= BloodLoss;
+            if (BloodCount <= 0)
+                ActionManager.ResolveDeath(actor);
+            actor.ApplyAllRegen();
+            BloodLoss -= actor.GetBloodCoagulation();
         }
 
         public (int, int) GetMinMaxLifespan() => (GetActorRace().LifespanMin, GetActorRace().LifespanMax);
@@ -236,7 +287,7 @@ namespace MagiRogue.Entities
             Lifespan = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(min, max);
         }
 
-        public void SetCurrentAge()
+        public void SetCurrentAgeWithingAdulthood()
         {
             CurrentAge = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(GetRaceAdulthoodAge(),
                 GetRaceAdulthoodAge() + 4);

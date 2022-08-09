@@ -19,6 +19,7 @@ namespace MagiRogue.Entities
         public int RaceViewRadius { get; set; }
         public int BaseStrenghtScore { get; internal set; }
         public double RaceNormalLimbRegen { get; internal set; }
+        public double BleedRegenaration { get; set; }
         public bool CanRegenLostLimbs { get; set; }
 
         public Race()

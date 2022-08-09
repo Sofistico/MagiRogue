@@ -41,9 +41,11 @@ namespace MagiRogue.GameSys.Magic.Effects
                 var rng = GoRogue.Random.GlobalRandom.DefaultRNG;
                 int i = rng.NextInt(poorGuy.GetAnatomy().Limbs.Count);
 
-                TypeOfLimb limbToLose = poorGuy.GetAnatomy().Limbs[i].TypeLimb;
+                Limb limbToLose = poorGuy.GetAnatomy().Limbs[i];
 
-                poorGuy.GetAnatomy().Dismember(limbToLose, poorGuy);
+                //poorGuy.GetAnatomy().Dismember(limbToLose, poorGuy);
+                Wound injury = new Wound(limbToLose.MaxBodyPartHp, DamageType.Sharp);
+                poorGuy.GetAnatomy().Injury(injury, limbToLose, poorGuy);
 
                 if (poorGuy is not null)
                 {

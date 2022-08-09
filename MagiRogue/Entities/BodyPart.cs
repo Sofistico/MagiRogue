@@ -51,7 +51,7 @@ namespace MagiRogue.Entities
         {
             get
             {
-                double finalResult = MathMagi.GetWeightWithDensity(BodyPartMaterial.Density, Size / 1000);
+                double finalResult = MathMagi.GetWeightWithDensity(BodyPartMaterial.Density, Volume / 1000);
                 return finalResult;
             }
         }
@@ -60,7 +60,13 @@ namespace MagiRogue.Entities
         /// The size of the bodypart in cm³
         /// </summary>
         [DataMember]
-        public int Size { get; set; }
+        public int Volume { get; set; }
+
+        /// <summary>
+        /// The relative size of the being body part.
+        /// So that a giant doens't have the arm the size of a normal human
+        /// </summary>
+        public int RelativeVolume { get; set; }
 
         /// <summary>
         /// Marks if the BP is right, left, or center, this is the property.
@@ -83,12 +89,13 @@ namespace MagiRogue.Entities
         /// </summary>
         public double RateOfHeal { get; set; }
         public bool CanHeal { get; set; }
-
         public BodyPartFunction LimbFunction { get; set; }
-        public bool Attached { get; set; } = true;
+        public bool Working { get; set; } = true;
+        public List<Wound> Wounds { get; set; }
 
         public BodyPart()
         {
+            Wounds = new();
         }
 
         public void ApplyHeal(double rateOfHeal)
@@ -105,6 +112,19 @@ namespace MagiRogue.Entities
             get
             {
                 return string.Format($"{nameof(BodyPart)} : {BodyPartName}");
+            }
+        }
+
+        public virtual void CalculateWounds()
+        {
+            foreach (Wound wound in Wounds)
+            {
+                if (wound.Severity is InjurySeverity.Missing
+                    || wound.Severity is InjurySeverity.Pulped
+                    || wound.Severity is InjurySeverity.Broken)
+                    Working = false;
+
+                BodyPartHp -= wound.HpLost;
             }
         }
     }

@@ -402,7 +402,7 @@ namespace MagiRogue.GameSys
 
             PlayerTimeNode playerTurn = new PlayerTimeNode(Time.TimePassed.Ticks + playerTime);
             Time.RegisterEntity(playerTurn);
-            Player.ApplyAllRegen();
+            Player.GetAnatomy().UpdateBody(Player);
             CurrentMap.PlayerFOV.Calculate(Player.Position, Player.GetViewRadius());
 
             return true;
@@ -439,7 +439,7 @@ namespace MagiRogue.GameSys
                 IAiComponent ai = entity.GoRogueComponents.GetFirstOrDefault<IAiComponent>();
                 (bool sucess, long tick) = ai?.RunAi(CurrentMap, GameLoop.UIManager.MessageLog)
                     ?? (false, -1);
-                entity.ApplyAllRegen();
+                entity.GetAnatomy().UpdateBody(entity);
 
                 if (!sucess || tick < -1)
                     return;

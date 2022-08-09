@@ -6,5 +6,16 @@
         General,
         MagicLore,
         Swin,
+        Precison,
+
+        // Combat skills
+        ArmorUse,
+        Unarmed,
+        Misc,
+        Fist,
+        Sword,
+        Hammer,
+        Spear,
+        Axe,
     }
 }

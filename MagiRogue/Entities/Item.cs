@@ -1,5 +1,6 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization.EntitySerialization;
+using MagiRogue.Utils;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System;
@@ -39,6 +40,14 @@ namespace MagiRogue.Entities
             }
         }
 
+        public override double Weight
+        {
+            get
+            {
+                return MathMagi.GetWeightWithDensity(Material.Density, Volume);
+            }
+        }
+
         /// <summary>
         /// In what slot can this item be equiped? None means you can't equip the item
         /// </summary>
@@ -70,12 +79,11 @@ namespace MagiRogue.Entities
 
         // By default, a new Item is sized 1x1, with a weight of 1, and at 100% condition
         public Item(Color foreground, Color background, string name, int glyph, Point coord, int size,
-            float weight = 1, int condition = 100, int layer = (int)MapLayer.ITEMS,
+            int condition = 100, int layer = (int)MapLayer.ITEMS,
             string materialId = "null") :
             base(foreground, background, glyph, coord, layer)
         {
-            Size = size;
-            Weight = weight;
+            Volume = size;
             Condition = condition;
             Material = GameSys.Physics.PhysicsManager.SetMaterial(materialId);
             Name = Material.ReturnNameFromMaterial(name);

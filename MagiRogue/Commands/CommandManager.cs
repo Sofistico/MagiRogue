@@ -19,9 +19,9 @@ namespace MagiRogue.Commands
     /// Contains all generic actions performed on entities and tiles
     /// including combat, movement, and so on.
     /// </summary>
-    public sealed class CommandManager
+    public sealed class ActionManager
     {
-        private CommandManager()
+        private ActionManager()
         {
             // makes sure that it's never instantiated
         }
@@ -78,9 +78,10 @@ namespace MagiRogue.Commands
 
             // Count up the amount of attacking damage done
             // and the number of successful blocks
-            (bool hit, Limb limb, DamageType dmgType) = CombatUtils.ResolveHit(attacker, defender, attackMessage);
+            (bool hit, Limb limbAttacked, Limb limbAttacking, DamageType dmgType)
+                = CombatUtils.ResolveHit(attacker, defender, attackMessage);
             double damage = CombatUtils.ResolveDefense(attacker,
-                defender, hit, attackMessage, defenseMessage, limb, dmgType);
+                defender, hit, attackMessage, defenseMessage, limbAttacked, dmgType, limbAttacking);
 
             // Display the outcome of the attack & defense
             GameLoop.AddMessageLog(attackMessage.ToString());
@@ -88,7 +89,7 @@ namespace MagiRogue.Commands
                 GameLoop.AddMessageLog(defenseMessage.ToString());
 
             // The defender now takes damage
-            CombatUtils.ResolveDamage(defender, damage, dmgType);
+            CombatUtils.ResolveDamage(defender, damage, dmgType, limbAttacking, limbAttacked);
         }
 
         /// <summary>
@@ -96,10 +97,10 @@ namespace MagiRogue.Commands
         /// and displays a message showing
         /// the actor that has died, and the loot they dropped
         /// </summary>
-        /// <param name="defender"></param>
-        public static void ResolveDeath(Actor defender)
+        /// <param name="actor"></param>
+        public static void ResolveDeath(Actor actor)
         {
-            CombatUtils.ResolveDeath(defender);
+            CombatUtils.ResolveDeath(actor);
         }
 
         /// <summary>

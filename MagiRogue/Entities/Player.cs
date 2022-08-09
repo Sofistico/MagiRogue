@@ -18,10 +18,10 @@ namespace MagiRogue.Entities
             GetAnatomy().Limbs = EntityFactory.BasicHumanoidBody();
             GetAnatomy().Organs = EntityFactory.BasicHumanoidOrgans();
             Weight = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(50, 95);
-            Size = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(155, 200);
-            GetAnatomy().Update(this);
+            Volume = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(155, 200);
+            //GetAnatomy().CalculateBlood(Weight);
             GetAnatomy().SetRandomLifespanByRace();
-            GetAnatomy().SetCurrentAge();
+            GetAnatomy().SetCurrentAgeWithingAdulthood();
         }
 
         public static Player TestPlayer()
@@ -109,7 +109,7 @@ namespace MagiRogue.Entities
                 Inventory = actor.Inventory,
                 Magic = actor.Magic,
                 //Stats = actor.Stats,
-                Size = actor.Size,
+                Volume = actor.Volume,
                 Weight = actor.Weight,
                 Material = actor.Material,
                 XP = actor.XP,

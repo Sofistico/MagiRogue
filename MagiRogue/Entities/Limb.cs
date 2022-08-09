@@ -23,7 +23,7 @@ namespace MagiRogue.Entities
         {
             get
             {
-                if (Attached)
+                if (Working)
                     return _connectedLimb;
                 else
                     return null;
@@ -37,13 +37,14 @@ namespace MagiRogue.Entities
 
         public bool Broken { get; set; } = false;
 
+        public bool Attached { get; set; } = true;
+
         /// <summary>
         /// This class creates a limb for a body.
         /// </summary>
         /// <param name="limbType">The type of the limb, if its a arm or a leg or etc...</param>
         /// <param name="limbHp">the total hp of the limb</param>
         /// <param name="maxLimbHp">the max limb hp that it can recover</param>
-        /// <param name="limbWeight">The total weight of the limb</param>
         /// <param name="limbName">The name of the limb</param>
         /// <param name="orientation">If it's in the center, left or right of the body</param>
         /// <param name="materialID">The id to define the material, if needeed look at the material definition json\n
@@ -51,16 +52,14 @@ namespace MagiRogue.Entities
 
         public Limb(TypeOfLimb limbType, double limbHp, double maxLimbHp, string limbName,
             BodyPartOrientation orientation, string connectedTo,
-            string materialID = "flesh", BodyPartFunction limbFunction = BodyPartFunction.Limb)
+            string materialID = "flesh", BodyPartFunction limbFunction = BodyPartFunction.Limb) : base()
         {
             MaterialId = materialID;
             BodyPartMaterial = GameSys.Physics.PhysicsManager.SetMaterial(materialID);
             TypeLimb = limbType;
             MaxBodyPartHp = maxLimbHp;
             BodyPartHp = limbHp;
-            //BodyPartWeight = limbWeight;
-            // Defaults to true
-            Attached = true;
+            Working = true;
             BodyPartName = limbName;
             Orientation = orientation;
             ConnectedTo = connectedTo;
@@ -68,7 +67,7 @@ namespace MagiRogue.Entities
         }
 
         public Limb(string id, TypeOfLimb limbType, int limbHp, int maxLimbHp, string limbName, BodyPartOrientation orientation, string? connectedTo,
-           string materialID = "flesh")
+           string materialID = "flesh") : base()
         {
             Id = id;
             MaterialId = materialID;
@@ -78,7 +77,7 @@ namespace MagiRogue.Entities
             BodyPartHp = limbHp;
             //BodyPartWeight = limbWeight;
             // Defaults to true
-            Attached = true;
+            Working = true;
             BodyPartName = limbName;
             Orientation = orientation;
             ConnectedTo = connectedTo;
@@ -87,8 +86,8 @@ namespace MagiRogue.Entities
         public Item ReturnLimbAsItem(Actor actor)
         {
             string limbName = actor.Name + "'s " + BodyPartName;
-            int size = Size;
-            Attached = false;
+            int size = Volume;
+            Working = false;
 
             return new Item(actor.Appearance.Foreground,
                 actor.Appearance.Background,
@@ -96,9 +95,33 @@ namespace MagiRogue.Entities
                 253,
                 actor.Position,
                 size,
-                (float)BodyPartWeight,
                 materialId: MaterialId
                 );
+        }
+
+        public override void CalculateWounds()
+        {
+            base.CalculateWounds();
+            foreach (Wound wound in Wounds)
+            {
+                switch (wound.Severity)
+                {
+                    case InjurySeverity.Broken:
+                        Broken = true;
+                        break;
+
+                    case InjurySeverity.Missing:
+                        Attached = false;
+                        break;
+
+                    case InjurySeverity.Pulped:
+                        Broken = true;
+                        break;
+
+                    default:
+                        break;
+                }
+            }
         }
     }
 }

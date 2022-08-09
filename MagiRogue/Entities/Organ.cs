@@ -22,7 +22,7 @@ namespace MagiRogue.Entities
             BodyPartOrientation orientation,
             OrganType organType,
             int organHp,
-            string materialId)
+            string materialId) : base()
         {
             BodyPartName = name;
             InsideOf = connectedTo;
@@ -32,7 +32,6 @@ namespace MagiRogue.Entities
             MaterialId = materialId;
             BodyPartMaterial = PhysicsManager.SetMaterial(materialId);
             MaxBodyPartHp = organHp;
-            //BodyPartWeight = organWeight;
         }
 
         [JsonConstructor()]
@@ -42,7 +41,7 @@ namespace MagiRogue.Entities
            BodyPartOrientation orientation,
            OrganType organType,
            int organHp,
-           string materialId)
+           string materialId) : base()
         {
             Id = id;
             BodyPartName = name;
@@ -55,7 +54,7 @@ namespace MagiRogue.Entities
             MaxBodyPartHp = organHp;
         }
 
-        public Organ()
+        public Organ() : base()
         {
             // Empty!
         }
@@ -64,7 +63,7 @@ namespace MagiRogue.Entities
         {
             Organ copy = new Organ()
             {
-                Attached = this.Attached,
+                Working = this.Working,
                 Id = this.Id,
                 BodyPartName = this.BodyPartName,
                 InsideOf = this.InsideOf,
@@ -73,7 +72,6 @@ namespace MagiRogue.Entities
                 MaterialId = this.MaterialId,
                 BodyPartMaterial = this.BodyPartMaterial,
                 MaxBodyPartHp = this.MaxBodyPartHp,
-                //BodyPartWeight = this.BodyPartWeight,
                 OrganType = this.OrganType
             };
 

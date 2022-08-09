@@ -51,13 +51,13 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         public int GlyphInt { get; set; }
 
         /// <summary>
-        /// <inheritdoc cref="Entity.Size"/>
+        /// <inheritdoc cref="Entity.Volume"/>
         /// </summary>
         [DataMember]
-        public int Size { get; set; }
+        public int Volume { get; set; }
 
         [DataMember]
-        public float Weight { get; set; }
+        public double Weight { get; set; }
 
         [DataMember]
         public string MaterialId { get; set; }
@@ -128,7 +128,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         /// <param name="weight"></param>
         /// <param name="materialId"></param>
         public ActorTemplate(string name, uint foreground, uint background, int glyph,
-            int layer, Body body, int size, float weight, string materialId,
+            int layer, Body body, int size, double weight, string materialId,
             List<AbilityTemplate> abilities, MagicManager magic, Soul soul, Mind mind)
         {
             Name = name;
@@ -137,7 +137,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             Soul = soul;
             Mind = mind;
             Layer = layer;
-            Size = size;
+            Volume = size;
             Weight = weight;
             MaterialId = materialId;
             MagicStuff = magic;
@@ -160,7 +160,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             Body = actor.Body;
             Description = actor.Description;
             Layer = actor.Layer;
-            Size = actor.Size;
+            Volume = actor.Volume;
             Weight = actor.Weight;
             MaterialId = actor.Material.Id;
             Abilities = new();
@@ -179,7 +179,6 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 {
                     Name = actorAbility.Name,
                     Score = actorAbility.Score,
-                    Speciality = actorAbility.Speciality
                 };
                 Abilities.Add(abilityTemplaye);
             }
@@ -210,7 +209,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 {
                     Description = actorTemplate.Description,
                     Body = actorTemplate.Body,
-                    Size = actorTemplate.Size,
+                    Volume = actorTemplate.Volume,
                     Weight = actorTemplate.Weight,
                     Material = GameSys.Physics.PhysicsManager.SetMaterial(actorTemplate.MaterialId)
                 };
@@ -283,7 +282,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                actor.Appearance.Glyph,
                actor.Layer,
                actor.Body,
-               actor.Size,
+               actor.Volume,
                actor.Weight,
                actor.Material.Id,
                abilitylist,

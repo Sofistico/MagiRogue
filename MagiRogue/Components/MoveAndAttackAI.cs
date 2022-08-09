@@ -68,7 +68,7 @@ namespace MagiRogue.Components
             }
 
             Point coord = new Point(direction.DeltaX, direction.DeltaY);
-            return Commands.CommandManager.MoveActorBy(actor, coord);
+            return Commands.ActionManager.MoveActorBy(actor, coord);
         }
     }
 }

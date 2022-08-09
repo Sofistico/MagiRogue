@@ -1,12 +1,14 @@
 ﻿using MagiRogue.Commands;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.GameSys;
+using MagiRogue.GameSys.Physics;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MagiRogue.Entities
 {
@@ -83,6 +85,8 @@ namespace MagiRogue.Entities
 
         #region Methods
 
+        #region Utils
+
         // Moves the Actor BY positionChange tiles in any X/Y direction
         // returns true if actor was able to move, false if failed to move
         // Checks for Monsters, and allows the Actor to commit
@@ -135,21 +139,6 @@ namespace MagiRogue.Entities
                 return false;
         }
 
-        public int GetPrecisionAbility()
-        {
-            throw new NotImplementedException();
-        }
-
-        public int GetDefenseAbility()
-        {
-            throw new NotImplementedException();
-        }
-
-        public int GetRelevantAbility()
-        {
-            throw new NotImplementedException();
-        }
-
         private static Point GetNextMapPos(Map map, Point pos)
         {
             int x = pos.X % map.Width < 0 ? map.Width + (pos.X % map.Width) : pos.X % map.Width;
@@ -165,19 +154,13 @@ namespace MagiRogue.Entities
 
             if (actor != null && CanBeAttacked)
             {
-                CommandManager.MeleeAttack(this, actor);
+                ActionManager.MeleeAttack(this, actor);
                 Bumped = true;
                 return Bumped;
             }
 
             Bumped = false;
             return Bumped;
-        }
-
-        public double GetProtection(Limb limb)
-        {
-            var item = Body.GetArmorOnLimbIfAny(limb);
-            return Body.Toughness + (item.Material.Hardness * Body.GetArmorOnLimbIfAny(limb).Material.Density);
         }
 
         private bool CheckIfThereIsDoor(Point positionChange)
@@ -189,7 +172,7 @@ namespace MagiRogue.Entities
             // try to use it
             if (door != null && CanInteract)
             {
-                CommandManager.UseDoor(this, door);
+                ActionManager.UseDoor(this, door);
                 GameLoop.UIManager.MapWindow.MapConsole.IsDirty = true;
                 return true;
             }
@@ -215,8 +198,20 @@ namespace MagiRogue.Entities
         public Item WieldedItem()
         {
             return Body.Equipment.GetValueOrDefault(GetAnatomy().Limbs.Find(l =>
-            l.TypeLimb == TypeOfLimb.Hand));
+                l.TypeLimb == TypeOfLimb.Hand));
         }
+
+        public Limb GetAttackingLimb(Item item)
+        {
+            return Body.Equipment.FirstOrDefault(x => x.Value == item).Key;
+        }
+
+        public bool CheckIfDed()
+        {
+            return !GetAnatomy().EnoughBodyToLive();
+        }
+
+        #endregion Utils
 
         #region RegenCode
 
@@ -231,12 +226,32 @@ namespace MagiRogue.Entities
         {
             foreach (Limb limb in GetAnatomy().Limbs)
             {
-                if (limb.Attached && !GetAnatomy().GetActorRace().CanRegenLostLimbs)
+                if (limb.Working && !GetAnatomy().GetActorRace().CanRegenLostLimbs)
                 {
                     if (limb.CanHeal)
                     {
                         limb.ApplyHeal(GetNormalLimbRegen() * limb.RateOfHeal);
                     }
+                }
+                if (!limb.Working && GetAnatomy().GetActorRace().CanRegenLostLimbs)
+                {
+                    var listLimbs = GetAnatomy().GetAllConnectedBP(limb);
+                    if (listLimbs.Count > 0)
+                    {
+                        foreach (Limb lostLimb in listLimbs)
+                        {
+                            var limbsConnecetedToLostLimb = GetAnatomy().GetAllConnectedBP(lostLimb);
+                            if (limbsConnecetedToLostLimb != null)
+                            {
+                                foreach (Limb item in limbsConnecetedToLostLimb)
+                                {
+                                    // Gods help me....
+                                }
+                            }
+                            lostLimb.ApplyHeal(GetNormalLimbRegen() * lostLimb.RateOfHeal + 0.1);
+                        }
+                    }
+                    limb.ApplyHeal(GetNormalLimbRegen() * limb.RateOfHeal + 0.1);
                 }
                 // ignore the limb if the actor has lost them and can't regenerate
                 else
@@ -270,6 +285,15 @@ namespace MagiRogue.Entities
             return GetAnatomy().GetActorRace().RaceNormalLimbRegen + Body.Anatomy.NormalLimbRegen;
         }
 
+        public double GetBloodCoagulation()
+        {
+            if (GetAnatomy().HasBlood)
+            {
+                return GetAnatomy().GetActorRace().BleedRegenaration + (Body.Toughness * 0.2);
+            }
+            return 0;
+        }
+
         public double GetManaRegen()
         {
             return Soul.BaseManaRegen;
@@ -296,16 +320,52 @@ namespace MagiRogue.Entities
 
         public double GetAttackVelocity()
         {
-            var itemHeld = WieldedItem();
-            if (itemHeld is not null)
+            return PhysicsManager.GetAttackVelocity(this);
+        }
+
+        public double GetProtection(Limb limb)
+        {
+            var item = Body.GetArmorOnLimbIfAny(limb);
+            return Body.Toughness +
+                (item.Material.Hardness * Body.GetArmorOnLimbIfAny(limb).Material.Density)
+                + GetRelevantAbility(AbilityName.ArmorUse);
+        }
+
+        public int GetPrecisionAbility()
+        {
+            if (Mind.Abilities.ContainsKey((int)AbilityName.Precison))
             {
-                var speed = ((itemHeld.SpeedOfAttack + itemHeld.Weight * itemHeld.Size)
-                    / GetActorBaseSpeed());
-                var ability = GetRelevantAttackAbility(itemHeld.WeaponType);
-                var finalSpeed = ability != 0 ? speed / ability : speed;
-                return finalSpeed;
+                return Mind.Abilities[(int)AbilityName.Precison].Score;
             }
-            return GetActorBaseSpeed();
+            else
+                return 0;
+        }
+
+        public int GetDefenseAbility()
+        {
+            throw new NotImplementedException();
+        }
+
+        public int GetRelevantAbility(AbilityName ability)
+        {
+            if (Mind.Abilities.ContainsKey((int)ability))
+            {
+                return Mind.Abilities[(int)ability].Score;
+            }
+            else
+                return 0;
+        }
+
+        public int GetRelevantAttackAbility()
+        {
+            if (WieldedItem() is not null && WieldedItem() is Item item)
+            {
+                return GetRelevantAttackAbility(item.WeaponType);
+            }
+            else
+            {
+                return GetRelevantAbility(AbilityName.Unarmed);
+            }
         }
 
         public int GetRelevantAttackAbility(WeaponType weaponType)
@@ -323,6 +383,16 @@ namespace MagiRogue.Entities
             if (Mind.HasSpecifiedAttackAbility(weaponType, out int abilityScore))
             {
                 return abilityScore * 0.3;
+            }
+            else
+                return 0;
+        }
+
+        public double GetRelevantAbilityMultiplier(AbilityName ability)
+        {
+            if (Mind.Abilities.ContainsKey((int)ability))
+            {
+                return Mind.Abilities[(int)ability].Score * 0.3;
             }
             else
                 return 0;
@@ -346,11 +416,6 @@ namespace MagiRogue.Entities
         }
 
         #endregion GetProperties
-
-        public bool CheckIfDed()
-        {
-            return !GetAnatomy().EnoughBodyToLive();
-        }
 
         #endregion Methods
     }

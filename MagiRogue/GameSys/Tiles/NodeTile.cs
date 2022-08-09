@@ -131,8 +131,8 @@ namespace MagiRogue.GameSys.Tiles
             DestroyNodeTurn(GameLoop.Universe);
 
             return Data.EntityFactory.ItemCreator(Position,
-                new Item(Foreground, Background, "Node Vis", Glyph, Position, NodeStrength,
-                (float)MaterialOfTile.Density));
+                new Item(Foreground, Background, "Node Vis", Glyph, Position, (int)MpPoints * 1000,
+                materialId: MaterialOfTile.Id)); // pretty much is 1 centimeter per mana
         }
 
         private TileBase BecomeNextTile()

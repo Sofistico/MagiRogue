@@ -31,7 +31,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
     public class ItemTemplate
     {
         public ItemTemplate(string name, uint foreground, uint background, int glyph,
-            float weight, int size, string materialId, MagicManager magic, int condition = 100)
+            double weight, int size, string materialId, MagicManager magic, int condition = 100)
         {
             Name = name;
             ForegroundBackingField = new MagiColorSerialization(foreground);
@@ -41,7 +41,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             Glyph = (char)glyph;
             Weight = weight;
             Condition = condition;
-            Size = size;
+            Volume = size;
             MaterialId = materialId;
             Material = GameSys.Physics.PhysicsManager.SetMaterial(materialId);
             MagicStuff = magic;
@@ -58,25 +58,25 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         public string Name { get; internal set; }
 
         [JsonIgnore]
-        public MagiColorSerialization ForegroundBackingField { get; internal set; }
+        public MagiColorSerialization ForegroundBackingField { get; set; }
 
         [JsonIgnore]
-        public MagiColorSerialization BackgroundBackingField { get; internal set; }
+        public MagiColorSerialization BackgroundBackingField { get; set; }
 
         [DataMember]
-        public string Foreground { get; internal set; }
+        public string Foreground { get; set; }
 
         [DataMember]
-        public string Background { get; internal set; }
+        public string Background { get; set; }
 
         [DataMember]
-        public char Glyph { get; internal set; }
+        public char Glyph { get; set; }
 
         [DataMember]
-        public float Weight { get; internal set; }
+        public double Weight { get; set; }
 
         [DataMember]
-        public int Size { get; set; }
+        public int Volume { get; set; }
 
         [DataMember]
         public int Condition { get; internal set; }
@@ -140,7 +140,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 item.Appearance.Background.PackedValue,
                 item.Appearance.Glyph,
                 item.Weight,
-                item.Size,
+                item.Volume,
                 item.Material.Id,
                 item.Magic,
                 item.Condition
@@ -173,8 +173,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 itemTemplate.Name,
                 glyph,
                 Point.None,
-                itemTemplate.Size,
-                itemTemplate.Weight,
+                itemTemplate.Volume,
                 itemTemplate.Condition,
                 materialId: itemTemplate.MaterialId)
             {

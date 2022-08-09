@@ -2,6 +2,7 @@
 using GoRogue.GameFramework;
 using MagiRogue.Data.Serialization;
 using MagiRogue.GameSys.Magic;
+using MagiRogue.Utils;
 using SadConsole;
 using SadRogue.Primitives;
 using System;
@@ -21,7 +22,7 @@ namespace MagiRogue.Entities
         public int Layer { get; set; } // stores and sets the layer that the entity is rendered
 
         [DataMember]
-        public double Weight { get; set; }
+        public virtual double Weight { get; set; }
 
         [DataMember]
         public MaterialTemplate Material { get; set; }
@@ -30,7 +31,7 @@ namespace MagiRogue.Entities
         /// The size is defined as cm³
         /// </summary>
         [DataMember]
-        public int Size { get; set; }
+        public int Volume { get; set; }
 
         /// <summary>
         /// Determines whetever the entity leaves an ghost when it leaves the fov
@@ -141,7 +142,7 @@ namespace MagiRogue.Entities
                 Description = Description,
                 IgnoresWalls = IgnoresWalls,
                 LeavesGhost = LeavesGhost,
-                Size = Size,
+                Volume = Volume,
                 Weight = Weight,
                 ZIndex = ZIndex,
                 Name = Name,

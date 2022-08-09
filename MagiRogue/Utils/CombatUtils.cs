@@ -28,7 +28,8 @@ namespace MagiRogue.Utils
             return a ^ b;
         }
 
-        public static void DealDamage(double dmg, Entity entity, DamageType dmgType)
+        public static void DealDamage(double dmg, Entity entity, DamageType dmgType,
+            Limb? limbAttacking = null, Limb? limbAttacked = null)
         {
             if (entity is Actor actor)
             {
@@ -39,10 +40,17 @@ namespace MagiRogue.Utils
                 }
 
                 actor.Body.Stamina -= dmg;
+                Wound woundTaken = new Wound
+                {
+                    DamageSource = dmgType,
+                    HpLost = dmg
+                };
+
+                actor.GetAnatomy().Injury(woundTaken, limbAttacked, actor);
 
                 if (actor.CheckIfDed())
                 {
-                    Commands.CommandManager.ResolveDeath(actor);
+                    Commands.ActionManager.ResolveDeath(actor);
                 }
             }
 
@@ -168,22 +176,24 @@ namespace MagiRogue.Utils
         /// <param name="defender"></param>
         /// <param name="attackMessage"></param>
         /// <returns></returns>
-        public static (bool, Limb?, DamageType) ResolveHit(Actor attacker,
+        public static (bool, Limb?, Limb, DamageType) ResolveHit(Actor attacker,
             Actor defender, StringBuilder attackMessage)
         {
             // Create a string that expresses the attacker and defender's names
             attackMessage.AppendFormat("{0} attacks {1}", attacker.Name, defender.Name);
+            Item wieldedItem = attacker.WieldedItem();
+            Limb limbAttacking = attacker.GetAttackingLimb(wieldedItem);
 
-            if (attacker.GetRelevantAbility() + Mrn.Exploding2D6Dice
+            if (attacker.GetRelevantAttackAbility() + Mrn.Exploding2D6Dice
                 > defender.GetDefenseAbility() + Mrn.Exploding2D6Dice)
             {
                 var attackType = attacker.GetDamageType();
-                Limb limb = defender.GetAnatomy().GetRandomLimb();
-                return (true, limb, attackType);
+                Limb limbAttacked = defender.GetAnatomy().GetRandomLimb();
+                return (true, limbAttacked, limbAttacking, attackType);
             }
             else
             {
-                return (false, null, attacker.GetDamageType());
+                return (false, null, limbAttacking, attacker.GetDamageType());
             }
         }
 
@@ -199,7 +209,7 @@ namespace MagiRogue.Utils
         /// <param name="defenseMessage"></param>
         /// <returns></returns>
         public static double ResolveDefense(Actor attacker, Actor defender, bool hit, StringBuilder attackMessage,
-            StringBuilder defenseMessage, Limb limbToHit, DamageType damageType)
+            StringBuilder defenseMessage, Limb limbToHit, DamageType damageType, Limb limbAttacking)
         {
             double totalDamage = 0;
 
@@ -211,9 +221,9 @@ namespace MagiRogue.Utils
                 Item wieldedItem = attacker.WieldedItem();
                 // TODO: adds a way to get the attack of the weapon or fist or something else
                 if (wieldedItem is null)
-                    loopDamage = attacker.GetStrenght() + Mrn.Exploding2D6Dice;
+                    loopDamage = GetAttackMomentum(attacker, limbAttacking);
                 else
-                    loopDamage = GetAttackMomentum(attacker, wieldedItem);
+                    loopDamage = GetAttackMomentumWithItem(attacker, wieldedItem);
 
                 double protection = defender.GetProtection(limbToHit);
 
@@ -257,13 +267,29 @@ namespace MagiRogue.Utils
         /// <param name="attacker"></param>
         /// <param name="wieldedItem"></param>
         /// <returns></returns>
-        public static double GetAttackMomentum(Actor attacker, Item wieldedItem)
+        public static double GetAttackMomentumWithItem(Actor attacker, Item wieldedItem)
         {
             return MathMagi.Round(
                 (attacker.GetStrenght() + wieldedItem.BaseDmg + Mrn.Exploding2D6Dice)
                 * attacker.GetRelevantAttackAbilityMultiplier(wieldedItem.WeaponType)
                 + (10 + 2 * wieldedItem.QualityMultiplier())) * attacker.GetAttackVelocity()
-                + (1 + attacker.Size / (wieldedItem.Material.Density * wieldedItem.Size));
+                + (1 + attacker.Volume / (wieldedItem.Material.Density * wieldedItem.Volume));
+        }
+
+        /// <summary>
+        /// Gets the momentum of the attack, based partially on the Dwarf Fortress math on attack momentum calculation
+        /// <para><seealso href="https://dwarffortresswiki.org/index.php/DF2014:Weapon">Link to DF wiki article</seealso></para>
+        /// </summary>
+        /// <param name="attacker"></param>
+        /// <param name="wieldedItem"></param>
+        /// <returns></returns>
+        public static double GetAttackMomentum(Actor attacker, Limb limbAttacking)
+        {
+            return MathMagi.Round(
+                (attacker.GetStrenght() + Mrn.Exploding2D6Dice)
+                * attacker.GetRelevantAbilityMultiplier(AbilityName.Unarmed)
+                * attacker.GetAttackVelocity()
+                + (1 + attacker.Volume / (limbAttacking.BodyPartMaterial.Density * limbAttacking.Volume)));
         }
 
         /// <summary>
@@ -273,11 +299,12 @@ namespace MagiRogue.Utils
         /// </summary>
         /// <param name="defender"></param>
         /// <param name="damage"></param>
-        public static void ResolveDamage(Actor defender, double damage, DamageType dmgType)
+        public static void ResolveDamage(Actor defender, double damage, DamageType dmgType,
+            Limb limbAttacked, Limb limbAttacking)
         {
             if (damage > 0)
             {
-                DealDamage(damage, defender, dmgType);
+                DealDamage(damage, defender, dmgType, limbAttacking, limbAttacked);
             }
             else
                 GameLoop.AddMessageLog($"{defender.Name} blocked all damage!");
@@ -297,13 +324,11 @@ namespace MagiRogue.Utils
 
             // Set up a customized death message
             StringBuilder deathMessage = new StringBuilder();
-
+            deathMessage.AppendFormat("{0} died", defender.Name);
             // dump the dead actor's inventory (if any)
             // at the map position where it died
             if (defender.Inventory.Count > 0)
             {
-                deathMessage.AppendFormat("{0} died and dropped", defender.Name);
-
                 foreach (Item item in defender.Inventory)
                 {
                     // move the Item to the place where the actor died
@@ -311,19 +336,11 @@ namespace MagiRogue.Utils
 
                     // Now let the MultiSpatialMap know that the Item is visible
                     GameLoop.GetCurrentMap().Add(item);
-
-                    // Append the item to the deathMessage
-                    deathMessage.Append(", " + item.Name);
                 }
 
                 // Clear the actor's inventory. Not strictly
                 // necessary, but makes for good coding habits!
                 defender.Inventory.Clear();
-            }
-            else
-            {
-                // The monster carries no loot, so don't show any loot dropped
-                deathMessage.Append('.');
             }
 
             // actor goes bye-bye

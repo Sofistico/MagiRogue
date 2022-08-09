@@ -45,9 +45,9 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
         public char Glyph { get; set; }
 
-        public float Weight { get; set; }
+        public double Weight { get; set; }
 
-        public int Size { get; set; }
+        public int Volume { get; set; }
 
         public int Durability { get; set; }
 
@@ -80,7 +80,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             string foreground,
             string background,
             char glyph,
-            float weight,
+            double weight,
             int size,
             string description,
             string materialId,
@@ -95,7 +95,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             Background = background;
             Glyph = glyph;
             Weight = weight;
-            Size = size;
+            Volume = size;
             Description = description;
             MaterialId = materialId;
             MagicStuff = magicStuff;
@@ -110,7 +110,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             uint foreground,
             uint background,
             char glyph,
-            float weight,
+            double weight,
             int size,
             string description,
             string materialId,
@@ -121,7 +121,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             Name = name;
             Glyph = glyph;
             Weight = weight;
-            Size = size;
+            Volume = size;
             Description = description;
             MaterialId = materialId;
             MagicStuff = magicStuff;
@@ -201,13 +201,12 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
             var objFur = new Furniture(template.ForegroundBackingField.Color,
                 template.BackgroundBackingField.Color, glpyh, template.Position,
-                template.FurnitureType, template.MaterialId, template.Name, template.Id,
-                template.Weight, template.Durability)
+                template.FurnitureType, template.MaterialId, template.Name, template.Id, template.Durability)
             {
                 UseActions = template.UseActions,
                 Magic = template.MagicStuff,
                 MapIdConnection = template.MapIdConnection,
-                Size = template.Size,
+                Volume = template.Volume,
                 Description = template.Description,
                 Qualities = Quality.ReturnQualityList(template.Qualities),
             };
@@ -231,7 +230,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 fur.Appearance.Background.PackedValue,
                 fur.Appearance.GlyphCharacter,
                 fur.Weight,
-                fur.Size,
+                fur.Volume,
                 fur.Description,
                 fur.Material.Id,
                 fur.Magic,

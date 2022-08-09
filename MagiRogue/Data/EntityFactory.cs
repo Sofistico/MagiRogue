@@ -47,8 +47,7 @@ namespace MagiRogue.Data
                     itemTemplate.Name,
                     itemTemplate.Glyph,
                     position,
-                    itemTemplate.Size,
-                    itemTemplate.Weight,
+                    itemTemplate.Volume,
                     itemTemplate.Condition
                 )
                 {

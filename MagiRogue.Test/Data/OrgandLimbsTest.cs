@@ -53,8 +53,7 @@ namespace MagiRogue.Test.Data
                 BodyPartOrientation.Center,
                 OrganType.Misc,
                 15,
-                "null",
-                1.5f);
+                "null");
 
             string json = JsonConvert.SerializeObject(organ);
             JObject jOrgan = JObject.Parse(json);
@@ -68,7 +67,6 @@ namespace MagiRogue.Test.Data
             Limb limb = new Limb("head_test", TypeOfLimb.Head,
                 12,
                 12,
-                2.5,
                 "Test",
                 BodyPartOrientation.Center,
                 "humanoid_torso");

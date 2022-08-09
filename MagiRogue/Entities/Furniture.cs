@@ -20,9 +20,16 @@ namespace MagiRogue.Entities
         public List<Quality> Qualities { get; internal set; }
         public List<Item> Inventory { get; set; }
 
+        public override double Weight
+        {
+            get
+            {
+                return MathMagi.GetWeightWithDensity(Material.Density, Volume);
+            }
+        }
+
         public Furniture(Color foreground, Color background, int glyph, Point coord,
-            FurnitureType type, string materialId, string name, string furId = null,
-            double weight = 0, int durability = 0)
+            FurnitureType type, string materialId, string name, string furId = null, int durability = 0)
             : base(foreground, background, glyph, coord, (int)MapLayer.FURNITURE)
         {
             Traits = new();
@@ -35,7 +42,6 @@ namespace MagiRogue.Entities
             Name = Material.ReturnNameFromMaterial(name);
             Durability = (int)(Material.Hardness * Material.Density) + durability;
             FurId = furId;
-            Weight = MathMagi.Round((float)Material.Density * weight);
             Inventory = new();
         }
 
@@ -45,7 +51,7 @@ namespace MagiRogue.Entities
             Furniture fur = new Furniture(baseEntity.Appearance.Foreground,
                 baseEntity.Appearance.Background, baseEntity.Appearance.Glyph,
                 baseEntity.Position,
-                FurnitureType, Material.Id, Name, FurId, Weight, Durability)
+                FurnitureType, Material.Id, Name, FurId, Durability)
             {
                 Traits = Traits,
                 UseActions = UseActions,

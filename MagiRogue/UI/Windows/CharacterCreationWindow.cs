@@ -149,7 +149,7 @@ namespace MagiRogue.UI.Windows
             // to work,
             // but if the player doens't have enough shaping skills for the spell, the player would play as an failed mage.
             player.Magic.KnowSpells.Add(DataManager.QuerySpellInData("magic_missile"));
-            player.Size = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(160, 200);
+            player.Volume = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(160, 200);
             player.Weight = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(50, 90);
 
             return player;

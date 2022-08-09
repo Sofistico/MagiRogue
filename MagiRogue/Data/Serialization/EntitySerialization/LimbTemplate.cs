@@ -140,7 +140,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 limb.BodyPartName,
                 limb.Orientation,
                 limb.MaterialId,
-                limb.Attached,
+                limb.Working,
                 limb.ConnectedTo);
             template.Id = limb.Id;
             template.Broken = limb.Broken;
