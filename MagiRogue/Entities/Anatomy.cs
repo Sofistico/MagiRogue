@@ -208,6 +208,11 @@ namespace MagiRogue.Entities
             DismemberMessage(actor, bodyPart);
         }
 
+        /// <summary>
+        /// Get all conneceted limbs exclusive from the bodyPart informe in the parameter
+        /// </summary>
+        /// <param name="bodyPart"></param>
+        /// <returns></returns>
         public List<Limb> GetAllConnectedLimb(Limb bodyPart)
         {
             List<Limb> connectedParts = new();
@@ -222,6 +227,11 @@ namespace MagiRogue.Entities
             return connectedParts;
         }
 
+        /// <summary>
+        /// Get all parents from an informed bodyPart, up to it's root, usually the Torso
+        /// </summary>
+        /// <param name="bodyPart"></param>
+        /// <returns></returns>
         public List<Limb> GetAllParentConnectionLimb(Limb bodyPart)
         {
             List<Limb> limbs = new List<Limb>();
