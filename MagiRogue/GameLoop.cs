@@ -65,10 +65,18 @@ namespace MagiRogue
         /// Gets the current map, a shorthand for GameLoop.Universe.CurrentMap
         /// </summary>
         /// <returns></returns>
-        public static Map GetCurrentMap() => Universe.CurrentMap;
+        public static Map GetCurrentMap()
+        {
+            return Universe.CurrentMap;
+        }
 
         public static void SetIdGen(uint lastId) => IdGen = new IDGenerator(lastId + 1);
 
-        public static void AddMessageLog(string message) => UIManager.MessageLog.Add(message);
+        public static void AddMessageLog(string message)
+        {
+            if (UIManager is null)
+                return;
+            UIManager.MessageLog.Add(message);
+        }
     }
 }

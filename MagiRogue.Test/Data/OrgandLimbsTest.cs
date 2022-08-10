@@ -12,6 +12,7 @@ using MagiRogue.Data.Serialization;
 using Newtonsoft.Json.Linq;
 using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Data.Enumerators;
+using SadRogue.Primitives;
 
 namespace MagiRogue.Test.Data
 {
@@ -95,6 +96,29 @@ namespace MagiRogue.Test.Data
             ana.Limbs = basicHuman;
             List<Limb> test = ana.GetAllParentConnectionLimb(basicHuman.Find(i => i.TypeLimb is TypeOfLimb.Finger));
             Assert.True(test.Count >= 1);
+        }
+
+        [Fact]
+        public void RegenActorLostLimb()
+        {
+            Actor actor = new Actor("Test actor", Color.AliceBlue, Color.AliceBlue, '@',
+                new Point(0, 0));
+            actor.GetAnatomy().Race = "test_race";
+            actor.GetAnatomy().Limbs = EntityFactory.BasicHumanoidBody();
+            var arms = actor.GetAnatomy().Limbs.FindAll(l => l.TypeLimb is TypeOfLimb.Arm);
+            foreach (var arm in arms)
+            {
+                actor.GetAnatomy().Injury(new Wound(arm.BodyPartHp, DamageType.Sharp), arm, actor);
+            }
+            bool healing = true;
+            while (healing)
+            {
+                actor.ApplyAllRegen();
+                if (actor.GetAnatomy().Limbs.All(i => i.Attached))
+                    healing = false;
+            }
+
+            Assert.True(actor.GetAnatomy().Limbs.All(i => i.Attached));
         }
     }
 }

@@ -59,9 +59,6 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         [DataMember]
         public double Weight { get; set; }
 
-        [DataMember]
-        public string MaterialId { get; set; }
-
         [DataMember(EmitDefaultValue = false, IsRequired = false)]
         public int Layer { get; set; }
 
@@ -128,7 +125,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         /// <param name="weight"></param>
         /// <param name="materialId"></param>
         public ActorTemplate(string name, uint foreground, uint background, int glyph,
-            int layer, Body body, int size, double weight, string materialId,
+            int layer, Body body, int size, double weight,
             List<AbilityTemplate> abilities, MagicManager magic, Soul soul, Mind mind)
         {
             Name = name;
@@ -139,7 +136,6 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             Layer = layer;
             Volume = size;
             Weight = weight;
-            MaterialId = materialId;
             MagicStuff = magic;
 
             ForegroundBackingField = new MagiColorSerialization(foreground);
@@ -162,7 +158,6 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             Layer = actor.Layer;
             Volume = actor.Volume;
             Weight = actor.Weight;
-            MaterialId = actor.Material.Id;
             Abilities = new();
             AddToAbilities(actor);
             Equip = new();
@@ -211,7 +206,6 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                     Body = actorTemplate.Body,
                     Volume = actorTemplate.Volume,
                     Weight = actorTemplate.Weight,
-                    Material = GameSys.Physics.PhysicsManager.SetMaterial(actorTemplate.MaterialId)
                 };
             if (actorTemplate.Abilities is not null && actorTemplate.Abilities.Count > 0)
             {
@@ -284,7 +278,6 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                actor.Body,
                actor.Volume,
                actor.Weight,
-               actor.Material.Id,
                abilitylist,
                actor.Magic,
                actor.Soul,

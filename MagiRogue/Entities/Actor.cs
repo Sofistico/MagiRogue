@@ -9,6 +9,7 @@ using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MagiRogue.Entities
 {
@@ -73,12 +74,12 @@ namespace MagiRogue.Entities
             glyph, coord, layer)
         {
             Body = new Body(this);
+            Mind = new Mind();
+            Soul = new Soul();
             Inventory = new List<Item>();
             Name = name;
             // by default the material of the actor will be mostly flesh
-            Material = GameSys.Physics.PhysicsManager.SetMaterial("flesh");
-            Mind = new Mind();
-            Soul = new Soul();
+            //Material = GameSys.Physics.PhysicsManager.SetMaterial("flesh");
         }
 
         #endregion Constructor
@@ -224,23 +225,55 @@ namespace MagiRogue.Entities
 
         public void ApplyBodyRegen()
         {
+            #region Broken dreams lies here....
+
+            //Parallel.ForEach(GetAnatomy().Limbs, limb =>
+            //{
+            //    if (limb.BodyPartHp < limb.MaxBodyPartHp)
+            //    {
+            //        if (limb.Attached)
+            //        {
+            //            if (limb.CanHeal || GetAnatomy().GetActorRace().CanRegenLostLimbs)
+            //            {
+            //                limb.ApplyHeal(GetNormalLimbRegen() * limb.RateOfHeal);
+            //            }
+            //        }
+            //        if (!limb.Attached && GetAnatomy().GetActorRace().CanRegenLostLimbs)
+            //        {
+            //            List<Limb> connectedLimbs = GetAnatomy().GetAllParentConnectionLimb(limb);
+            //            if (!connectedLimbs.Any(i => !i.Attached))
+            //            {
+            //                limb.ApplyHeal(GetNormalLimbRegen() * limb.RateOfHeal + 0.5);
+            //                if (!limb.Wounds.Any(i => i.Severity is InjurySeverity.Missing))
+            //                    limb.Attached = true;
+            //            }
+            //        }
+            //    }
+            //});
+
+            #endregion Broken dreams lies here....
+
             foreach (Limb limb in GetAnatomy().Limbs)
             {
-                if (limb.Attached)
+                if (limb.BodyPartHp < limb.MaxBodyPartHp)
                 {
-                    if (limb.CanHeal || GetAnatomy().GetActorRace().CanRegenLostLimbs)
+                    if (limb.Attached)
                     {
-                        limb.ApplyHeal(GetNormalLimbRegen() * limb.RateOfHeal);
+                        if (limb.CanHeal || GetAnatomy().GetActorRace().CanRegenLostLimbs)
+                        {
+                            limb.ApplyHeal(GetNormalLimbRegen() * limb.RateOfHeal);
+                        }
                     }
-                }
-                if (!limb.Attached && GetAnatomy().GetActorRace().CanRegenLostLimbs)
-                {
-                    limb.ApplyHeal(GetNormalLimbRegen() * limb.RateOfHeal + 0.1);
-                }
-                // ignore the limb if the actor has lost them and can't regenerate
-                else
-                {
-                    continue;
+                    if (!limb.Attached && GetAnatomy().GetActorRace().CanRegenLostLimbs)
+                    {
+                        List<Limb> connectedLimbs = GetAnatomy().GetAllParentConnectionLimb(limb);
+                        if (!connectedLimbs.Any(i => !i.Attached))
+                        {
+                            limb.ApplyHeal(GetNormalLimbRegen() * limb.RateOfHeal + 0.5);
+                            if (!limb.Wounds.Any(i => i.Severity is InjurySeverity.Missing))
+                                limb.Attached = true;
+                        }
+                    }
                 }
             }
         }

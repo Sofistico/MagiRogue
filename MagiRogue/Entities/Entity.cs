@@ -24,9 +24,6 @@ namespace MagiRogue.Entities
         [DataMember]
         public virtual double Weight { get; set; }
 
-        [DataMember]
-        public MaterialTemplate Material { get; set; }
-
         /// <summary>
         /// The size is defined as cm³
         /// </summary>
@@ -103,7 +100,6 @@ namespace MagiRogue.Entities
             PositionChanged += Position_Changed;
 
             Magic = new MagicManager();
-            Material = new MaterialTemplate();
 
             //IsWalkable = false;
         }

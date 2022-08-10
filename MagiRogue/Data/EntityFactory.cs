@@ -21,7 +21,6 @@ namespace MagiRogue.Data
                 )
                 {
                     Description = actorTemplate.Description,
-                    Material = GameSys.Physics.PhysicsManager.SetMaterial(actorTemplate.MaterialId),
                     Soul = actorTemplate.Soul,
                     Mind = actorTemplate.Mind
                 };
@@ -71,8 +70,9 @@ namespace MagiRogue.Data
             Limb rHand = DataManager.QueryLimbInData("humanoid_r_hand");
             Limb rFoot = DataManager.QueryLimbInData("humanoid_r_foot");
             Limb lFoot = DataManager.QueryLimbInData("humanoid_l_foot");
+            // temporary
             List<Limb> fingerAndToes = new List<Limb>();
-            for (int i = 0; i < 10; i++)
+            for (int i = 1; i < 10 + 1; i++)
             {
                 Limb rFinger = new Limb(Enumerators.TypeOfLimb.Finger, 1, 1, $"{i} Right Finger",
                     Enumerators.BodyPartOrientation.Right, "humanoid_r_hand");

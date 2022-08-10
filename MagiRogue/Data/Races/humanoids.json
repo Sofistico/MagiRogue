@@ -1,4 +1,14 @@
 ﻿[
   {
+    "Id": "test_race",
+    "RaceName": "Debug Race",
+    "LifespanMax": 100,
+    "LifespanMin": 65,
+    "AdulthoodAge": 18,
+    "RaceViewRadius": 25,
+    "BaseStrenghtScore": 15,
+    "RaceNormalLimbRegen": 1.0,
+    "BleedRegenaration": 1.0,
+    "CanRegenLostLimbs": true
   }
 ]

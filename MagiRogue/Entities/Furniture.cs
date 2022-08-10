@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization;
 using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.GameSys.Physics;
 using MagiRogue.Utils;
@@ -19,6 +20,7 @@ namespace MagiRogue.Entities
         public List<IActivable> UseActions { get; internal set; }
         public List<Quality> Qualities { get; internal set; }
         public List<Item> Inventory { get; set; }
+        public MaterialTemplate Material { get; set; }
 
         public override double Weight
         {

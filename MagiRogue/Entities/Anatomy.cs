@@ -16,6 +16,8 @@ namespace MagiRogue.Entities
     /// </summary>
     public class Anatomy
     {
+        private Race raceField;
+
         #region Properties
 
         [DataMember]
@@ -85,12 +87,17 @@ namespace MagiRogue.Entities
 
         public Anatomy()
         {
+            Limbs = new();
         }
 
         public Anatomy(Actor actor)
         {
-            actor.Weight = Limbs.Sum(w => w.BodyPartWeight) + Organs.Sum(w => w.BodyPartWeight);
-            CalculateBlood(actor.Weight);
+            Limbs = new();
+            if (Limbs.Count > 0)
+            {
+                actor.Weight = Limbs.Sum(w => w.BodyPartWeight) + Organs.Sum(w => w.BodyPartWeight);
+                CalculateBlood(actor.Weight);
+            }
         }
 
         #endregion Constructor
@@ -103,7 +110,12 @@ namespace MagiRogue.Entities
                 BloodCount = MathMagi.Round(weight * 75);
         }
 
-        public Race GetActorRace() => DataManager.QueryRaceInData(Race);
+        public Race GetActorRace()
+        {
+            if (raceField == null)
+                raceField = DataManager.QueryRaceInData(Race);
+            return raceField;
+        }
 
         public void Injury(Wound wound, BodyPart bpInjured, Actor actorWounded)
         {
@@ -139,23 +151,23 @@ namespace MagiRogue.Entities
 
             if (wound.DamageSource is DamageType.Sharp || wound.DamageSource is DamageType.Point)
             {
-                wound.Bleeding = (actorWounded.Weight / bpInjured.BodyPartWeight) * (int)wound.Severity;
+                wound.Bleeding = ((actorWounded.Weight / bpInjured.BodyPartWeight) * (int)wound.Severity) + 0.1;
             }
 
             bpInjured.CalculateWound(wound);
             if (wound.Severity is InjurySeverity.Missing && bpInjured is Limb limb)
             {
-                Dismember(limb.TypeLimb, actorWounded);
+                Dismember(limb, actorWounded);
             }
         }
 
-        private void Dismember(TypeOfLimb limb, Actor actor)
+        private void Dismember(Limb limb, Actor actor)
         {
             List<Limb> bodyParts;
             int bodyPartIndex;
             Limb bodyPart;
 
-            if (limb == TypeOfLimb.Head || limb == TypeOfLimb.Neck)
+            if (limb.TypeLimb == TypeOfLimb.Head || limb.TypeLimb == TypeOfLimb.Neck)
             {
                 bodyParts = Limbs.FindAll(h => h.LimbFunction == BodyPartFunction.Thought && NeedsHead);
                 if (bodyParts.Count > 1)
@@ -173,25 +185,14 @@ namespace MagiRogue.Entities
                     return;
                 }
             }
-            else if (limb == TypeOfLimb.Torso)
+            else if (limb.TypeLimb == TypeOfLimb.Torso)
             {
-                bodyPart = Limbs.Find(i => i.TypeLimb is TypeOfLimb.Torso);
-                DismemberMessage(actor, bodyPart);
+                DismemberMessage(actor, limb);
                 ActionManager.ResolveDeath(actor);
                 return;
             }
 
-            bodyParts = Limbs.FindAll(l => l.TypeLimb == limb && l.Attached);
-
-            if (bodyParts.Count < 1)
-            {
-                GameLoop.AddMessageLog("Fix the game!");
-            }
-
-            bodyPartIndex = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(bodyParts.Count);
-            bodyPart = bodyParts[bodyPartIndex];
-
-            List<Limb> connectedParts = GetAllConnectedLimb(bodyPart);
+            List<Limb> connectedParts = GetAllConnectedLimb(limb);
             if (connectedParts.Count > 0)
             {
                 foreach (Limb connectedLimb in connectedParts)
@@ -205,7 +206,7 @@ namespace MagiRogue.Entities
                 }
             }
 
-            DismemberMessage(actor, bodyPart);
+            DismemberMessage(actor, limb);
         }
 
         /// <summary>
@@ -252,12 +253,18 @@ namespace MagiRogue.Entities
             StringBuilder dismemberMessage = new StringBuilder();
 
             dismemberMessage.Append($"{actor.Name} lost {limb.BodyPartName}");
+            try
+            {
+                GameLoop.AddMessageLog(dismemberMessage.ToString());
+                //if (totalDmg > 0)
+                //    GameLoop.AddMessageLog($"and took {totalDmg} damage!");
 
-            GameLoop.AddMessageLog(dismemberMessage.ToString());
-            //if (totalDmg > 0)
-            //    GameLoop.AddMessageLog($"and took {totalDmg} damage!");
-
-            GameLoop.GetCurrentMap().Add(limb.ReturnLimbAsItem(actor));
+                GameLoop.GetCurrentMap().Add(limb.ReturnLimbAsItem(actor));
+            }
+            catch (Exception)
+            {
+                return;
+            }
         }
 
         public Limb GetRandomLimb()

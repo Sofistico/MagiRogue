@@ -90,8 +90,6 @@ namespace MagiRogue.Entities
         public double RateOfHeal { get; set; }
         public bool CanHeal { get; set; }
         public BodyPartFunction LimbFunction { get; set; }
-
-        //public bool Working { get; set; } = true;
         public List<Wound> Wounds { get; set; }
 
         public BodyPart()
@@ -99,23 +97,23 @@ namespace MagiRogue.Entities
             Wounds = new();
         }
 
-        public void ApplyHeal(double rateOfHeal)
+        public void ApplyHeal(double rateOfHeal, bool regenLostLimb = false)
         {
             foreach (Wound wound in Wounds)
             {
-                if (wound.Severity is not InjurySeverity.Missing || wound.Severity is not InjurySeverity.Pulped)
+                if (!regenLostLimb && (wound.Severity is not InjurySeverity.Missing || wound.Severity is not InjurySeverity.Pulped))
                 {
-                    wound.Recovery += rateOfHeal;
+                    wound.Recovery = MathMagi.Round(rateOfHeal + wound.Recovery);
                     if (wound.Recovery >= MathMagi.ReturnPositive(wound.HpLost))
+                    {
                         wound.Recovered = true;
+                    }
                     if (wound.Recovery > 0)
-                        BodyPartHp += wound.Recovery;
+                    {
+                        double newHp = MathMagi.Round(BodyPartHp + rateOfHeal);
+                        BodyPartHp = newHp;
+                    }
                 }
-            }
-            if (BodyPartHp < MaxBodyPartHp)
-            {
-                //double newHp = rateOfHeal + BodyPartHp;
-                BodyPartHp = MathMagi.Round(BodyPartHp);
             }
             Wounds.RemoveAll(a => a.Recovered);
         }

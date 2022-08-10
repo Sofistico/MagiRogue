@@ -111,7 +111,6 @@ namespace MagiRogue.Entities
                 //Stats = actor.Stats,
                 Volume = actor.Volume,
                 Weight = actor.Weight,
-                Material = actor.Material,
                 XP = actor.XP,
                 Mind = actor.Mind,
                 Soul = actor.Soul
