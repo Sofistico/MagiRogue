@@ -10,21 +10,21 @@ namespace MagiRogue.Test.Entities
         {
             Stat testStat = new Stat();
 
-            testStat.SetAttributes(
-                viewRadius: 1,
-                health: 5,
-                baseHpRegen: 1.5f,
-                bodyStat: 2,
-                mindStat: 2,
-                soulStat: 2,
-                baseAttack: 3,
-                attackChance: 50,
-                protection: 1,
-                defenseChance: 50,
-                speed: 1,
-                _baseManaRegen: 1,
-                personalMana: 1
-                );
+            //testStat.SetAttributes(
+            //    viewRadius: 1,
+            //    health: 5,
+            //    baseHpRegen: 1.5f,
+            //    bodyStat: 2,
+            //    mindStat: 2,
+            //    soulStat: 2,
+            //    baseAttack: 3,
+            //    attackChance: 50,
+            //    protection: 1,
+            //    defenseChance: 50,
+            //    speed: 1,
+            //    _baseManaRegen: 1,
+            //    personalMana: 1
+            //    );
 
             bool testOk = testStat.ViewRadius == 1 & testStat.Health == 5 & testStat.MaxHealth == 5
                 & testStat.BaseHpRegen == 1.5f & testStat.BodyStat == 2 & testStat.MindStat == 2
@@ -47,7 +47,7 @@ namespace MagiRogue.Test.Entities
 
             test.Health -= 5;
 
-            test.ApplyHpRegen();
+            //test.ApplyHpRegen();
 
             Assert.True(test.Health == 1);
         }

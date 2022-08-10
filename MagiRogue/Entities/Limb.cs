@@ -18,15 +18,11 @@ namespace MagiRogue.Entities
         public TypeOfLimb TypeLimb { get; set; }
 
         [DataMember]
-        public string? ConnectedTo
-#nullable disable
+        public string ConnectedTo
         {
             get
             {
-                if (Working)
-                    return _connectedLimb;
-                else
-                    return null;
+                return _connectedLimb;
             }
 
             set
@@ -59,7 +55,7 @@ namespace MagiRogue.Entities
             TypeLimb = limbType;
             MaxBodyPartHp = maxLimbHp;
             BodyPartHp = limbHp;
-            Working = true;
+            Attached = true;
             BodyPartName = limbName;
             Orientation = orientation;
             ConnectedTo = connectedTo;
@@ -77,7 +73,7 @@ namespace MagiRogue.Entities
             BodyPartHp = limbHp;
             //BodyPartWeight = limbWeight;
             // Defaults to true
-            Working = true;
+            Attached = true;
             BodyPartName = limbName;
             Orientation = orientation;
             ConnectedTo = connectedTo;
@@ -87,7 +83,7 @@ namespace MagiRogue.Entities
         {
             string limbName = actor.Name + "'s " + BodyPartName;
             int size = Volume;
-            Working = false;
+            //Attached = false;
 
             return new Item(actor.Appearance.Foreground,
                 actor.Appearance.Background,
@@ -99,28 +95,25 @@ namespace MagiRogue.Entities
                 );
         }
 
-        public override void CalculateWounds()
+        public override void CalculateWound(Wound wound)
         {
-            base.CalculateWounds();
-            foreach (Wound wound in Wounds)
+            base.CalculateWound(wound);
+            switch (wound.Severity)
             {
-                switch (wound.Severity)
-                {
-                    case InjurySeverity.Broken:
-                        Broken = true;
-                        break;
+                case InjurySeverity.Broken:
+                    Broken = true;
+                    break;
 
-                    case InjurySeverity.Missing:
-                        Attached = false;
-                        break;
+                case InjurySeverity.Missing:
+                    Attached = false;
+                    break;
 
-                    case InjurySeverity.Pulped:
-                        Broken = true;
-                        break;
+                case InjurySeverity.Pulped:
+                    Broken = true;
+                    break;
 
-                    default:
-                        break;
-                }
+                default:
+                    break;
             }
         }
     }

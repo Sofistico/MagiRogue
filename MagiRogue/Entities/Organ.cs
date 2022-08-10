@@ -63,7 +63,6 @@ namespace MagiRogue.Entities
         {
             Organ copy = new Organ()
             {
-                Working = this.Working,
                 Id = this.Id,
                 BodyPartName = this.BodyPartName,
                 InsideOf = this.InsideOf,

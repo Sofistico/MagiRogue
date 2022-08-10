@@ -14,6 +14,16 @@ namespace MagiRogue.Utils
             return positive;
         }
 
+        public static double ReturnPositive(double nmb)
+        {
+            double positive;
+            if (nmb < 0)
+                positive = nmb * -1;
+            else
+                positive = nmb;
+            return positive;
+        }
+
         /// <summary>
         /// Method to return only the positive module.
         /// </summary>

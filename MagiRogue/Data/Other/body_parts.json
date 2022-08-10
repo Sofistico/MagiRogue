@@ -34,7 +34,7 @@
     "ConnectedToId": "humanoid_neck"
   },
   {
-    "Id": "humanoid_r_arm",
+    "Id": "humanoid_l_arm",
     "LimbType": "Arm",
     "MaxLimbHp": 7,
     "LimbHp": 7,
@@ -46,7 +46,7 @@
     "ConnectedToId": "humanoid_torso"
   },
   {
-    "Id": "humanoid_l_arm",
+    "Id": "humanoid_r_arm",
     "LimbType": "Arm",
     "MaxLimbHp": 7,
     "LimbHp": 7,
@@ -82,7 +82,7 @@
     "ConnectedToId": "humanoid_torso"
   },
   {
-    "Id": "humanoid_r_hand",
+    "Id": "humanoid_l_hand",
     "LimbType": "Hand",
     "MaxLimbHp": 7,
     "LimbHp": 4,
@@ -91,10 +91,10 @@
     "LimbOrientation": "Left",
     "LimbMaterialId": "flesh",
     "Attached": true,
-    "ConnectedToId": "humanoid_r_arm"
+    "ConnectedToId": "humanoid_l_arm"
   },
   {
-    "Id": "humanoid_l_hand",
+    "Id": "humanoid_r_hand",
     "LimbType": "Hand",
     "MaxLimbHp": 7,
     "LimbHp": 4,
@@ -103,7 +103,7 @@
     "LimbOrientation": "Right",
     "LimbMaterialId": "flesh",
     "Attached": true,
-    "ConnectedToId": "humanoid_l_arm"
+    "ConnectedToId": "humanoid_r_arm"
   },
   {
     "Id": "humanoid_r_foot",

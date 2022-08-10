@@ -16,6 +16,8 @@ namespace MagiRogue.Entities
         public bool Infected { get; set; }
         public bool Treated { get; set; }
         public DamageType DamageSource { get; set; }
+        public double Recovery { get; set; }
+        public bool Recovered { get; set; }
 
         public Wound()
         {

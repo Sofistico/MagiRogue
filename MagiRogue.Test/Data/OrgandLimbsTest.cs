@@ -76,5 +76,25 @@ namespace MagiRogue.Test.Data
 
             Assert.Equal(limb.Id, obj["Id"].ToString());
         }
+
+        [Fact]
+        public void GetConnecetLimb()
+        {
+            List<Limb> basicHuman = EntityFactory.BasicHumanoidBody();
+            Anatomy ana = new Anatomy();
+            ana.Limbs = basicHuman;
+            List<Limb> test = ana.GetAllConnectedLimb(basicHuman.Find(f => f.TypeLimb is TypeOfLimb.Arm));
+            Assert.True(test.Count >= 3);
+        }
+
+        [Fact]
+        public void FindLimbTillRootParent()
+        {
+            List<Limb> basicHuman = EntityFactory.BasicHumanoidBody();
+            Anatomy ana = new Anatomy();
+            ana.Limbs = basicHuman;
+            List<Limb> test = ana.GetAllParentConnectionLimb(basicHuman.Find(i => i.TypeLimb is TypeOfLimb.Finger));
+            Assert.True(test.Count >= 1);
+        }
     }
 }

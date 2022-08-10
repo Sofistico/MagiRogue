@@ -124,8 +124,8 @@ namespace MagiRogue.UI.Windows
                 error.Show(true);
                 return null;
             }
-            int stamina = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(5, bodyStat + 10) + 3;
-            int mana = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(8, soulStat + 10);
+            //int stamina = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(5, bodyStat + 10) + 3;
+            //int mana = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(8, soulStat + 10);
             float speed = (float)MathMagi.Round(GoRogue.Random.GlobalRandom
                 .DefaultRNG.NextDouble(0.9, 1.1));
             //player.Stats = new Stat()
@@ -144,7 +144,7 @@ namespace MagiRogue.UI.Windows
             //    BaseHpRegen = 0.01f,
             //    BaseManaRegen = 0.1f
             //};
-            player.Magic.ShapingSkill = shapSkill;
+            //player.Magic.ShapingSkill = shapSkill;
             // The first spell any mage learns is magic missile, it's the first proper combat spell that doens't require hours of practice
             // to work,
             // but if the player doens't have enough shaping skills for the spell, the player would play as an failed mage.

@@ -226,31 +226,15 @@ namespace MagiRogue.Entities
         {
             foreach (Limb limb in GetAnatomy().Limbs)
             {
-                if (limb.Working && !GetAnatomy().GetActorRace().CanRegenLostLimbs)
+                if (limb.Attached)
                 {
-                    if (limb.CanHeal)
+                    if (limb.CanHeal || GetAnatomy().GetActorRace().CanRegenLostLimbs)
                     {
                         limb.ApplyHeal(GetNormalLimbRegen() * limb.RateOfHeal);
                     }
                 }
-                if (!limb.Working && GetAnatomy().GetActorRace().CanRegenLostLimbs)
+                if (!limb.Attached && GetAnatomy().GetActorRace().CanRegenLostLimbs)
                 {
-                    var listLimbs = GetAnatomy().GetAllConnectedBP(limb);
-                    if (listLimbs.Count > 0)
-                    {
-                        foreach (Limb lostLimb in listLimbs)
-                        {
-                            var limbsConnecetedToLostLimb = GetAnatomy().GetAllConnectedBP(lostLimb);
-                            if (limbsConnecetedToLostLimb != null)
-                            {
-                                foreach (Limb item in limbsConnecetedToLostLimb)
-                                {
-                                    // Gods help me....
-                                }
-                            }
-                            lostLimb.ApplyHeal(GetNormalLimbRegen() * lostLimb.RateOfHeal + 0.1);
-                        }
-                    }
                     limb.ApplyHeal(GetNormalLimbRegen() * limb.RateOfHeal + 0.1);
                 }
                 // ignore the limb if the actor has lost them and can't regenerate

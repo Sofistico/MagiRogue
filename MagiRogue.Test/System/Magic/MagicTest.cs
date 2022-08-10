@@ -21,21 +21,21 @@ namespace MagiRogue.Test.System.Magic
             Game.Create(1, 1);
 
             testStats = new Stat();
-            testStats.SetAttributes(
-                viewRadius: 7,
-                health: 10,
-                baseHpRegen: 0.1f,
-                bodyStat: 1,
-                mindStat: 1,
-                soulStat: 1,
-                baseAttack: 10,
-                attackChance: 40,
-                protection: 5,
-                defenseChance: 20,
-                speed: 1.0f,
-                _baseManaRegen: 0.1f,
-                personalMana: 12
-                );
+            //testStats.SetAttributes(
+            //    viewRadius: 7,
+            //    health: 10,
+            //    baseHpRegen: 0.1f,
+            //    bodyStat: 1,
+            //    mindStat: 1,
+            //    soulStat: 1,
+            //    baseAttack: 10,
+            //    attackChance: 40,
+            //    protection: 5,
+            //    defenseChance: 20,
+            //    speed: 1.0f,
+            //    _baseManaRegen: 0.1f,
+            //    personalMana: 12
+            //    );
         }
 
         [Fact]
@@ -64,19 +64,19 @@ namespace MagiRogue.Test.System.Magic
             Actor weakSpellCaster = new Actor("Test1", Color.Black, Color.Black, 't', Point.None)
             {
                 Magic = weakMagic,
-                Stats = testStats
+                //Stats = testStats
             };
 
             Actor mediumSpellCaster = new Actor("Test2", Color.Black, Color.Black, 't', Point.None)
             {
                 Magic = mediumMagic,
-                Stats = testStats
+                //Stats = testStats
             };
 
             Actor strongSpellCaster = new Actor("Test3", Color.Black, Color.Black, 't', Point.None)
             {
                 Magic = strongMagic,
-                Stats = testStats
+                //Stats = testStats
             };
 
             List<bool> canWeakCast = new();
@@ -85,15 +85,15 @@ namespace MagiRogue.Test.System.Magic
 
             foreach (var item in weakMagic.KnowSpells)
             {
-                canWeakCast.Add(item.CanCast(weakMagic, weakSpellCaster.Stats));
+                canWeakCast.Add(item.CanCast(weakMagic, weakSpellCaster));
             }
             foreach (var item in mediumMagic.KnowSpells)
             {
-                canMediumCast.Add(item.CanCast(mediumMagic, mediumSpellCaster.Stats));
+                canMediumCast.Add(item.CanCast(mediumMagic, mediumSpellCaster));
             }
             foreach (var item in strongMagic.KnowSpells)
             {
-                canStrongCast.Add(item.CanCast(strongMagic, strongSpellCaster.Stats));
+                canStrongCast.Add(item.CanCast(strongMagic, strongSpellCaster));
             }
 
             Assert.True((canWeakCast.Where(a => a == true).Count().Equals(1))

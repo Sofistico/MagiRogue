@@ -54,7 +54,7 @@ namespace MagiRogue.Entities
 
         [JsonIgnore]
         public bool CanSee =>
-            Organs.Exists(o => o.OrganType is OrganType.Visual && (!o.Destroyed || o.Working));
+            Organs.Exists(o => o.OrganType is OrganType.Visual && (!o.Destroyed));
 
         [JsonIgnore]
         public bool HasATorso =>
@@ -66,7 +66,7 @@ namespace MagiRogue.Entities
         [DataMember]
         public int CurrentAge { get; set; }
 
-        public double BloodLoss { get; set; } = 0;
+        //public double BloodLoss { get; set; } = 0;
         public int Lifespan { get; set; }
         public double NormalLimbRegen { get; set; } = 0.001;
 
@@ -105,14 +105,6 @@ namespace MagiRogue.Entities
 
         public Race GetActorRace() => DataManager.QueryRaceInData(Race);
 
-        public void SetLimbs(params Limb[] limbs)
-        {
-            foreach (Limb limb in limbs)
-            {
-                Limbs.Add(limb);
-            }
-        }
-
         public void Injury(Wound wound, BodyPart bpInjured, Actor actorWounded)
         {
             double hpLostPercentage = wound.HpLost / bpInjured.MaxBodyPartHp;
@@ -150,9 +142,7 @@ namespace MagiRogue.Entities
                 wound.Bleeding = (actorWounded.Weight / bpInjured.BodyPartWeight) * (int)wound.Severity;
             }
 
-            BloodLoss += wound.Bleeding;
-            bpInjured.Wounds.Add(wound);
-            bpInjured.CalculateWounds();
+            bpInjured.CalculateWound(wound);
             if (wound.Severity is InjurySeverity.Missing && bpInjured is Limb limb)
             {
                 Dismember(limb.TypeLimb, actorWounded);
@@ -170,13 +160,7 @@ namespace MagiRogue.Entities
                 bodyParts = Limbs.FindAll(h => h.LimbFunction == BodyPartFunction.Thought && NeedsHead);
                 if (bodyParts.Count > 1)
                 {
-                    //bodyParts[0].Working = false;
                     DismemberMessage(actor, bodyParts[0]);
-                    //Injury(new Wound(bodyParts[0].Volume,
-                    //    bodyParts[0].BodyPartHp,
-                    //    InjurySeverity.Missing),
-                    //    bodyParts[0],
-                    //    actor);
                     Commands.ActionManager.ResolveDeath(actor);
                     return;
                 }
@@ -184,12 +168,6 @@ namespace MagiRogue.Entities
                 {
                     bodyPartIndex = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(bodyParts.Count);
                     bodyPart = bodyParts[bodyPartIndex];
-                    //bodyPart.Working = false;
-                    //Injury(new Wound(bodyPart.Volume,
-                    //    bodyPart.BodyPartHp,
-                    //    InjurySeverity.Missing),
-                    //    bodyPart,
-                    //    actor);
                     DismemberMessage(actor, bodyPart);
                     Commands.ActionManager.ResolveDeath(actor);
                     return;
@@ -198,17 +176,12 @@ namespace MagiRogue.Entities
             else if (limb == TypeOfLimb.Torso)
             {
                 bodyPart = Limbs.Find(i => i.TypeLimb is TypeOfLimb.Torso);
-                //Injury(new Wound(bodyPart.Volume,
-                //    bodyPart.BodyPartHp,
-                //    InjurySeverity.Missing),
-                //    bodyPart,
-                //    actor);
                 DismemberMessage(actor, bodyPart);
                 ActionManager.ResolveDeath(actor);
                 return;
             }
 
-            bodyParts = Limbs.FindAll(l => l.TypeLimb == limb && l.Working);
+            bodyParts = Limbs.FindAll(l => l.TypeLimb == limb && l.Attached);
 
             if (bodyParts.Count < 1)
             {
@@ -218,33 +191,50 @@ namespace MagiRogue.Entities
             bodyPartIndex = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(bodyParts.Count);
             bodyPart = bodyParts[bodyPartIndex];
 
-            List<Limb> connectedParts = GetAllConnectedBP(bodyPart);
+            List<Limb> connectedParts = GetAllConnectedLimb(bodyPart);
             if (connectedParts.Count > 0)
             {
                 foreach (Limb connectedLimb in connectedParts)
                 {
-                    //connectedLimb.Working = false;
-                    //Injury(new Wound(connectedLimb.Volume,
-                    //    connectedLimb.BodyPartHp,
-                    //    InjurySeverity.Missing),
-                    //    connectedLimb,
-                    //    actor);
+                    // Here so that the bleeding from a lost part isn't being considered
+                    Wound lostLimb = new Wound(connectedLimb.BodyPartHp, DamageType.Sharp)
+                    {
+                        Severity = InjurySeverity.Missing
+                    };
+                    connectedLimb.CalculateWound(lostLimb);
                 }
             }
-
-            //bodyPart.Working = false;
-            //Injury(new Wound(bodyPart.Volume,
-            //    bodyPart.BodyPartHp,
-            //    InjurySeverity.Missing),
-            //    bodyPart,
-            //    actor);
 
             DismemberMessage(actor, bodyPart);
         }
 
-        public List<Limb> GetAllConnectedBP(Limb bodyPart)
+        public List<Limb> GetAllConnectedLimb(Limb bodyPart)
         {
-            return Limbs.FindAll(c => c.ConnectedTo == bodyPart.Id);
+            List<Limb> connectedParts = new();
+            List<Limb> temporaryList = Limbs.FindAll(c =>
+                !string.IsNullOrEmpty(c.ConnectedTo) && c.ConnectedTo == bodyPart.Id);
+            foreach (Limb limb in temporaryList)
+            {
+                connectedParts.Add(limb);
+                var temp = GetAllConnectedLimb(limb);
+                connectedParts.AddRange(temp);
+            }
+            return connectedParts;
+        }
+
+        public List<Limb> GetAllParentConnectionLimb(Limb bodyPart)
+        {
+            List<Limb> limbs = new List<Limb>();
+            foreach (Limb limb in Limbs)
+            {
+                if (!string.IsNullOrEmpty(bodyPart.ConnectedTo) && bodyPart.ConnectedTo == limb.Id)
+                {
+                    limbs.Add(limb);
+                    var temp = GetAllParentConnectionLimb(limb);
+                    limbs.AddRange(temp);
+                }
+            }
+            return limbs;
         }
 
         private static void DismemberMessage(Actor actor, Limb limb)
@@ -269,12 +259,25 @@ namespace MagiRogue.Entities
 
         public void UpdateBody(Actor actor)
         {
-            if (BloodLoss > 0)
-                BloodCount -= BloodLoss;
             if (BloodCount <= 0)
                 ActionManager.ResolveDeath(actor);
             actor.ApplyAllRegen();
-            BloodLoss -= actor.GetBloodCoagulation();
+            List<Wound> wounds = GetAllWounds();
+            if (wounds.Count > 0)
+            {
+                foreach (Wound wound in wounds)
+                {
+                    if (wound.Bleeding > 0)
+                    {
+                        BloodCount -= wound.Bleeding;
+
+                        if (wound.Treated)
+                            wound.Bleeding -= actor.GetBloodCoagulation();
+                        else
+                            wound.Bleeding -= (actor.GetBloodCoagulation() / (int)wound.Severity + 1);
+                    }
+                }
+            }
         }
 
         public (int, int) GetMinMaxLifespan() => (GetActorRace().LifespanMin, GetActorRace().LifespanMax);
@@ -285,6 +288,20 @@ namespace MagiRogue.Entities
         {
             (int min, int max) = GetMinMaxLifespan();
             Lifespan = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(min, max);
+        }
+
+        public List<Wound> GetAllWounds()
+        {
+            List<Wound> list = new List<Wound>();
+            List<BodyPart> bps = new List<BodyPart>();
+            bps.AddRange(Limbs);
+            bps.AddRange(Organs);
+            foreach (BodyPart item in bps)
+            {
+                if (item.Wounds.Count > 0)
+                    list.AddRange(item.Wounds);
+            }
+            return list;
         }
 
         public void SetCurrentAgeWithingAdulthood()

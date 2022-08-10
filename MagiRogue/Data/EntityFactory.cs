@@ -71,6 +71,22 @@ namespace MagiRogue.Data
             Limb rHand = DataManager.QueryLimbInData("humanoid_r_hand");
             Limb rFoot = DataManager.QueryLimbInData("humanoid_r_foot");
             Limb lFoot = DataManager.QueryLimbInData("humanoid_l_foot");
+            List<Limb> fingerAndToes = new List<Limb>();
+            for (int i = 0; i < 10; i++)
+            {
+                Limb rFinger = new Limb(Enumerators.TypeOfLimb.Finger, 1, 1, $"{i} Right Finger",
+                    Enumerators.BodyPartOrientation.Right, "humanoid_r_hand");
+                Limb lFinger = new Limb(Enumerators.TypeOfLimb.Finger, 1, 1, $"{i} Left Finger",
+                    Enumerators.BodyPartOrientation.Left, "humanoid_l_hand");
+                Limb rToes = new Limb(Enumerators.TypeOfLimb.Toe, 1, 1, $"{i} Right Toe",
+                    Enumerators.BodyPartOrientation.Right, "humanoid_r_foot");
+                Limb lToes = new Limb(Enumerators.TypeOfLimb.Toe, 1, 1, $"{i} Left Toe",
+                    Enumerators.BodyPartOrientation.Left, "humanoid_l_foot");
+                fingerAndToes.Add(rFinger);
+                fingerAndToes.Add(lFinger);
+                fingerAndToes.Add(rToes);
+                fingerAndToes.Add(lToes);
+            }
 
             List<Limb> limbs = new()
             {
@@ -86,6 +102,7 @@ namespace MagiRogue.Data
                 rFoot,
                 lFoot
             };
+            limbs.AddRange(fingerAndToes);
 
             return limbs;
         }
