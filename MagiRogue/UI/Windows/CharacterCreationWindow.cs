@@ -1,5 +1,6 @@
 ﻿using MagiRogue.Data;
 using MagiRogue.Entities;
+using MagiRogue.Entities.StarterScenarios;
 using MagiRogue.UI.Controls;
 using MagiRogue.Utils;
 using SadConsole;
@@ -24,6 +25,7 @@ namespace MagiRogue.UI.Windows
             " effect across the board in the spell casting portion). \n\nYou will have 120 points to distribute as you see" +
             " fit for your base stats.";
         private TextBox charName;
+        private Scenario chosenScenario;
 
         public CharacterCreationWindow(int width, int height) : base(width, height, "Character Creation")
         {
@@ -126,24 +128,9 @@ namespace MagiRogue.UI.Windows
             }
             //int stamina = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(5, bodyStat + 10) + 3;
             //int mana = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(8, soulStat + 10);
-            float speed = (float)MathMagi.Round(GoRogue.Random.GlobalRandom
+            double speed = MathMagi.Round(GoRogue.Random.GlobalRandom
                 .DefaultRNG.NextDouble(0.9, 1.1));
-            //player.Stats = new Stat()
-            //{
-            //    BodyStat = bodyStat,
-            //    MindStat = mindStat,
-            //    SoulStat = soulStat,
-            //    BaseAttack = attackSkill,
-            //    Defense = defenseSkill,
-            //    Strength = str,
-            //    Precision = precision,
-            //    Health = health,
-            //    PersonalMana = mana,
-            //    ViewRadius = 7,
-            //    Speed = speed,
-            //    BaseHpRegen = 0.01f,
-            //    BaseManaRegen = 0.1f
-            //};
+
             //player.Magic.ShapingSkill = shapSkill;
             // The first spell any mage learns is magic missile, it's the first proper combat spell that doens't require hours of practice
             // to work,
@@ -154,211 +141,6 @@ namespace MagiRogue.UI.Windows
 
             return player;
         }
-
-        //private MagiButton[] SetPlusAndMinusButtons(int x, int y, Stats statEnum)
-        //{
-        //    MagiButton plus = new("+".Length + 2)
-        //    {
-        //        Text = "+",
-        //        Position = new Point(x, y)
-        //    };
-        //    plus.Click += (_, __) =>
-        //    {
-        //        CalculatePoints(statEnum);
-        //    };
-        //    MagiButton minus = new("-".Length + 2)
-        //    {
-        //        Text = "-",
-        //        Position = new Point(x + 4, y)
-        //    };
-        //    minus.Click += (_, __) =>
-        //    {
-        //        SubtractPoints(statEnum);
-        //    };
-
-        //    return new MagiButton[] { plus, minus };
-        //}
-
-        //private void SubtractPoints(Stats statEnum)
-        //{
-        //    if (totalSpent <= startPoints && totalSpent > 0)
-        //    {
-        //        switch (statEnum)
-        //        {
-        //            case Stats.Body:
-        //                if (bodyStat > 0 && RemoveTotalSpent(bodyStat))
-        //                    bodyStat--;
-        //                break;
-
-        //            case Stats.Mind:
-        //                if (mindStat > 0 && RemoveTotalSpent(mindStat))
-        //                    mindStat--;
-        //                break;
-
-        //            case Stats.Soul:
-        //                if (soulStat > 0 && RemoveTotalSpent(soulStat))
-        //                    soulStat--;
-        //                break;
-
-        //            case Stats.Str:
-        //                if (str > 0 && RemoveTotalSpent(str))
-        //                    str--;
-        //                break;
-
-        //            case Stats.Pre:
-        //                if (precision > 0 && RemoveTotalSpent(precision))
-        //                    precision--;
-        //                break;
-
-        //            case Stats.ShapSkill:
-        //                if (shapSkill > 0 && RemoveTotalSpent(shapSkill))
-        //                    shapSkill--;
-        //                break;
-
-        //            case Stats.Attack:
-        //                if (attackSkill > 0 && RemoveTotalSpent(attackSkill))
-        //                    attackSkill--;
-        //                break;
-
-        //            case Stats.Defense:
-        //                if (defenseSkill > 0 && RemoveTotalSpent(defenseSkill))
-        //                    defenseSkill--;
-        //                break;
-
-        //            default:
-        //                break;
-        //        }
-        //    }
-        //}
-
-        //private void CalculatePoints(Stats statEnum)
-        //{
-        //    if (totalSpent <= startPoints)
-        //    {
-        //        switch (statEnum)
-        //        {
-        //            case Stats.Body:
-        //                if (bodyStat < 5 && CalculateTotalSpent(bodyStat))
-        //                {
-        //                    bodyStat++;
-        //                }
-        //                break;
-
-        //            case Stats.Mind:
-        //                if (mindStat < 5 && CalculateTotalSpent(mindStat))
-        //                {
-        //                    mindStat++;
-        //                }
-        //                break;
-
-        //            case Stats.Soul:
-        //                if (soulStat < 5 && CalculateTotalSpent(soulStat))
-        //                {
-        //                    soulStat++;
-        //                }
-        //                break;
-
-        //            case Stats.Str:
-        //                if (str < 12 && CalculateTotalSpent(str))
-        //                {
-        //                    str++;
-        //                }
-        //                break;
-
-        //            case Stats.Pre:
-        //                if (precision < 12 && CalculateTotalSpent(precision))
-        //                {
-        //                    precision++;
-        //                }
-        //                break;
-
-        //            case Stats.ShapSkill:
-        //                if (shapSkill < 12 && CalculateTotalSpent(shapSkill))
-        //                {
-        //                    shapSkill++;
-        //                }
-        //                break;
-
-        //            case Stats.Attack:
-        //                if (attackSkill < 12 && CalculateTotalSpent(attackSkill))
-        //                {
-        //                    attackSkill++;
-        //                }
-        //                break;
-
-        //            case Stats.Defense:
-        //                if (defenseSkill < 12 && CalculateTotalSpent(defenseSkill))
-        //                {
-        //                    defenseSkill++;
-        //                }
-        //                break;
-
-        //            default:
-        //                break;
-        //        }
-        //    }
-        //}
-
-        //private bool CalculateTotalSpent(int stat)
-        //{
-        //    if (totalSpent < startPoints)
-        //    {
-        //        totalSpent += stat + 1 * 2;
-        //        if (totalSpent > startPoints)
-        //        {
-        //            totalSpent -= stat + 1 * 2;
-        //            return false;
-        //        }
-        //        return true;
-        //    }
-        //    return false;
-        //}
-
-        //private bool RemoveTotalSpent(int stat)
-        //{
-        //    if (totalSpent > 0)
-        //    {
-        //        // This -1 is to represent that since the stat will go down, it needs to account here as well.
-        //        totalSpent -= stat + 1 * 2 - 1;
-        //        return true;
-        //    }
-        //    return false;
-        //}
-
-        //private enum Stats
-        //{
-        //    Body,
-        //    Mind,
-        //    Soul,
-        //    Str,
-        //    Pre,
-        //    ShapSkill,
-        //    Attack,
-        //    Defense,
-        //    Age
-        //}
-
-        //public override void Update(TimeSpan time)
-        //{
-        //    if (!GameLoop.UIManager.MainMenu.GameStarted)
-        //    {
-        //        Surface.Print(Width / 2 - 9, Height / 2 - 12, $"Points: {totalSpent} / {startPoints}   ");
-        //        Surface.Print(Width / 2 - 9, Height / 2 - 11, "Stats: each is 1 + n * 2, n being the current number of points");
-        //        Surface.Print(Width / 2 - 9, Height / 2 - 10, $"Body Stat : {bodyStat} / 5");
-        //        Surface.Print(Width / 2 - 9, Height / 2 - 9, $"Mind Stat : {mindStat} / 5");
-        //        Surface.Print(Width / 2 - 9, Height / 2 - 8, $"Soul Stat : {soulStat} / 5");
-        //        Surface.Print(Width / 2 - 9, Height / 2 - 7, $"Strength: {str} / 12");
-        //        Surface.Print(Width / 2 - 9, Height / 2 - 6, $"Precision: {precision} / 12");
-        //        Surface.Print(Width / 2 - 9, Height / 2 - 4, "Skills: each is 1 + n * 2");
-        //        Surface.Print(Width / 2 - 9, Height / 2 - 3, "Keep in mind Shaping skills shoud be at a minimum 8 to cast");
-        //        Surface.Print(Width / 2 - 9, Height / 2 - 2, "the most simple battle spell, unless you want to play as is.");
-        //        Surface.Print(Width / 2 - 9, Height / 2 - 1, $"Shaping Skills : {shapSkill} / 12");
-        //        Surface.Print(Width / 2 - 9, Height / 2, $"Attack Skill: {attackSkill} / 12");
-        //        Surface.Print(Width / 2 - 9, Height / 2 + 1, $"Defense Skill: {defenseSkill} / 12");
-        //        Surface.Print(Width / 2 - 9, Height / 2 + 4, $"The name of your mage:");
-        //    }
-        //    base.Update(time);
-        //}
 
         public override string ToString() => "Character Creation Screen";
     }
