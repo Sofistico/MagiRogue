@@ -76,11 +76,17 @@ namespace MagiRogue.Data
         public static SpellBase QuerySpellInData(string spellId) => ListOfSpells.FirstOrDefault
                 (m => m.SpellId.Equals(spellId)).Copy();
 
-        public static LimbTemplate QueryLimbInData(string limbId) =>
-            ListOfLimbs.FirstOrDefault(l => l.Id.Equals(limbId)).Copy();
+        public static LimbTemplate QueryLimbInData(string limbId) 
+        {
+            var limb = ListOfLimbs.FirstOrDefault(l => l.Id.Equals(limbId), null);
+            return limb?.Copy();
+        }
 
-        public static Organ QueryOrganInData(string organId)
-            => ListOfOrgans.FirstOrDefault(o => o.Id.Equals(organId)).Copy();
+        public static Organ? QueryOrganInData(string organId)
+        {
+            var organ = ListOfOrgans.FirstOrDefault(o => o.Id.Equals(organId), null);
+            return organ?.Copy();
+        }
 
         public static TileBase QueryTileInData(string tileId)
             => ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId)).Copy();

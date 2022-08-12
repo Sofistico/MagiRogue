@@ -9,7 +9,8 @@ namespace MagiRogue.Data.Enumerators
     public enum TypeOfLimb
     {
         Head,
-        Torso,
+        UpperBody,
+        LowerBody,
         Arm,
         Leg,
         Foot,

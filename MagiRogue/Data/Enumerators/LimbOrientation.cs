@@ -9,5 +9,5 @@ namespace MagiRogue.Data.Enumerators
     [DataContract]
     [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
     public enum BodyPartOrientation
-    { Right, Left, Center }
+    { Right, Left, Center, Tbd }
 }

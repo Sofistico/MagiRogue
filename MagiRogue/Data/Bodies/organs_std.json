@@ -15,7 +15,7 @@
     "MaterialId": "flesh",
     "OrganHp": 10,
     "OrganWeight": 1,
-    "InsideOf": "humanoid_torso",
+    "InsideOf": "humanoid_upper_body",
     "Orientation": "Center",
     "OrganType": "Heart"
   },
@@ -25,7 +25,7 @@
     "MaterialId": "flesh",
     "OrganHp": 20,
     "OrganWeight": 10,
-    "InsideOf": "humanoid_torso",
+    "InsideOf": "humanoid_neck",
     "Orientation": "Center",
     "OrganType": "Nerve"
   },
@@ -35,7 +35,7 @@
     "MaterialId": "flesh",
     "OrganHp": 25,
     "OrganWeight": 5,
-    "InsideOf": "humanoid_torso",
+    "InsideOf": "humanoid_lower_body",
     "Orientation": "Center",
     "OrganType": "Digestive"
   },
@@ -45,7 +45,7 @@
     "MaterialId": "flesh",
     "OrganHp": 15,
     "OrganWeight": 5,
-    "InsideOf": "humanoid_torso",
+    "InsideOf": "humanoid_lower_body",
     "Orientation": "Center",
     "OrganType": "Digestive"
   },
@@ -55,7 +55,7 @@
     "MaterialId": "flesh",
     "OrganHp": 15,
     "OrganWeight": 3,
-    "InsideOf": "humanoid_torso",
+    "InsideOf": "humanoid_upper_body",
     "Orientation": "Right",
     "OrganType": "Breather"
   },
@@ -65,7 +65,7 @@
     "MaterialId": "flesh",
     "OrganHp": 15,
     "OrganWeight": 3,
-    "InsideOf": "humanoid_torso",
+    "InsideOf": "humanoid_upper_body",
     "Orientation": "Left",
     "OrganType": "Breather"
   },
@@ -75,7 +75,7 @@
     "MaterialId": "flesh",
     "OrganHp": 7,
     "OrganWeight": 0.8,
-    "InsideOf": "humanoid_torso",
+    "InsideOf": "humanoid_lower_body",
     "Orientation": "Right",
     "OrganType": "Filtering"
   },
@@ -85,7 +85,7 @@
     "MaterialId": "flesh",
     "OrganHp": 7,
     "OrganWeight": 0.8,
-    "InsideOf": "humanoid_torso",
+    "InsideOf": "humanoid_lower_body",
     "Orientation": "Left",
     "OrganType": "Filtering"
   },

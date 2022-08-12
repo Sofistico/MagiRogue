@@ -12,7 +12,7 @@ namespace MagiRogue.Data
         public static Actor ActorCreator(Point position, string raceId)
         {
             Race race = DataManager.QueryRaceInData(raceId);
-
+            Actor actor = null;
             //Actor actor =
             //    new(
             //    actorTemplate.Name,
@@ -61,7 +61,8 @@ namespace MagiRogue.Data
 
         public static List<Limb> BasicHumanoidBody()
         {
-            Limb torso = DataManager.QueryLimbInData("humanoid_torso");
+            Limb upperBody = DataManager.QueryLimbInData("humanoid_upper_body");
+            Limb lowerBody = DataManager.QueryLimbInData("humanoid_lower_body");
             Limb neck = DataManager.QueryLimbInData("humanoid_neck");
             Limb head = DataManager.QueryLimbInData("humanoid_head");
             Limb lArm = DataManager.QueryLimbInData("humanoid_l_arm");
@@ -92,7 +93,8 @@ namespace MagiRogue.Data
 
             List<Limb> limbs = new()
             {
-                torso,
+                upperBody,
+                lowerBody,
                 neck,
                 head,
                 lArm,

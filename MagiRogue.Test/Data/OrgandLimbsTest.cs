@@ -120,5 +120,15 @@ namespace MagiRogue.Test.Data
 
             Assert.True(actor.GetAnatomy().Limbs.All(i => i.Attached));
         }
+
+        [Fact]
+        public void TestFingers()
+        {
+            var bp = DataManager.QueryBpPlanInData("humanoid_limbs");
+            bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5fingers").BodyParts);
+            bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5toes").BodyParts);
+            var seeWhatHappens = bp.ReturnBodyParts();
+            Assert.Contains(seeWhatHappens, i => i.BodyPartName.Contains("{0}"));
+        }
     }
 }

@@ -11,6 +11,7 @@ namespace MagiRogue.Data.Enumerators
     [JsonConverter(typeof(StringEnumConverter))]
     public enum BodyPartFunction
     {
+        Root, // where the body begins, normally the upper body
         Limb,
         Grasp,
         Stance,

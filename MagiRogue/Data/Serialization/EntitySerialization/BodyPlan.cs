@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Entities;
+using MagiRogue.Data.Enumerators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +33,45 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                     throw new ApplicationException($"Coudn't find a valid body part! bodypart id: {bp}");
             }
 
+            var bodyParts = returnParts.Where(i => i is Limb lim && (lim.TypeLimb is TypeOfLimb.Finger
+                || lim.TypeLimb is TypeOfLimb.Toe)).ToList();
+            var connectorLimbs = returnParts.Where(i => i.LimbFunction is BodyPartFunction.Grasp
+                || i.LimbFunction is BodyPartFunction.Stance).ToList();
+
+            foreach (Limb smallBp in bodyParts.Cast<Limb>())
+            {
+                DealWithDigits(returnParts, connectorLimbs, smallBp);
+            }
             return returnParts;
+        }
+
+        private static void DealWithDigits(List<BodyPart> returnParts,
+            List<BodyPart> connectorLimbs, Limb smallBp)
+        {
+            returnParts.Remove(smallBp);
+            foreach (Limb limb in connectorLimbs.Cast<Limb>())
+            {
+                if (smallBp.TypeLimb is TypeOfLimb.Finger && limb.LimbFunction is BodyPartFunction.Grasp)
+                {
+                    CreateNewDigitAndAdd(returnParts, smallBp, limb);
+                }
+                if (smallBp.TypeLimb is TypeOfLimb.Toe && limb.LimbFunction is BodyPartFunction.Stance)
+                {
+                    CreateNewDigitAndAdd(returnParts, smallBp, limb);
+                }
+            }
+        }
+
+        private static void CreateNewDigitAndAdd(List<BodyPart> returnParts, Limb smallBp, Limb limb)
+        {
+            var template = (LimbTemplate)smallBp;
+            Limb digit = template.Copy();
+            digit.Orientation = limb.Orientation;
+            string orientation = digit.Orientation.ToString().ToLower();
+            digit.Id = $"{digit.Id}_{orientation}";
+            digit.ConnectedTo = limb.Id;
+            digit.BodyPartName = digit.BodyPartName.Replace("{0}", $"{digit.Orientation}");
+            returnParts.Add(digit);
         }
     }
 }

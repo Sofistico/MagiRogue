@@ -62,7 +62,7 @@ namespace MagiRogue.Entities.StarterScenarios
 
         public string[] RacesAllowed { get; set; }
 
-        public string SpellsKnow { get; set; }
+        public string[] SpellsKnow { get; set; }
 
         #endregion Properties
 

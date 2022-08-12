@@ -60,7 +60,7 @@ namespace MagiRogue.Entities
 
         [JsonIgnore]
         public bool HasATorso =>
-            Limbs.Exists(l => l.TypeLimb is TypeOfLimb.Torso && l.BodyPartHp > 0);
+            Limbs.Exists(l => l.TypeLimb is TypeOfLimb.UpperBody && l.BodyPartHp > 0);
 
         /// <summary>
         /// The current age of a character
@@ -184,7 +184,7 @@ namespace MagiRogue.Entities
                     return;
                 }
             }
-            else if (limb.TypeLimb == TypeOfLimb.Torso)
+            else if (limb.TypeLimb == TypeOfLimb.UpperBody || limb.TypeLimb == TypeOfLimb.LowerBody)
             {
                 DismemberMessage(actor, limb);
                 ActionManager.ResolveDeath(actor);

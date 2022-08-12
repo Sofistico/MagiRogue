@@ -1,7 +1,7 @@
 ﻿[
   {
     "Id": "humanoid_limbs",
-    "BodyParts": [ "humanoid_torso", "humanoid_neck", "humanoid_head", "humanoid_l_arm", "humanoid_r_arm", "humanoid_r_leg", "humanoid_l_leg", "humanoid_l_hand", "humanoid_r_hand", "humanoid_r_foot", "humanoid_l_foot" ]
+    "BodyParts": [ "humanoid_upper_body", "humanoid_lower_body", "humanoid_neck", "humanoid_head", "humanoid_l_arm", "humanoid_r_arm", "humanoid_r_leg", "humanoid_l_leg", "humanoid_l_hand", "humanoid_r_hand", "humanoid_r_foot", "humanoid_l_foot" ]
   },
   {
     "Id": "humanoid_organs",
