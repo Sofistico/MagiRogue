@@ -1,12 +1,14 @@
 ﻿using GoRogue.DiceNotation;
 using GoRogue.Pathing;
 using MagiRogue.Data.Enumerators;
+using MagiRogue.Entities;
 using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TinkerWorX.AccidentalNoiseLibrary;
 
 namespace MagiRogue.GameSys.Planet
@@ -347,9 +349,10 @@ namespace MagiRogue.GameSys.Planet
                     MundaneResources = tile.MineralValue
                 };
                 set.DefineSettlementSize();
-
+                var nmbrRaces = Data.DataManager.ListOfRaces.Where(i => i.ValidCivRace).Count();
+                Race race = Data.DataManager.ListOfRaces[GameLoop.GlobalRand.NextInt(nmbrRaces)];
                 Civilization civ = new($"Random Name Here {currentCivCount}",
-                    new Entities.Race("Human"), RandomCivTendency());
+                    race, RandomCivTendency());
 
                 tile.CivInfluence = civ;
                 civ.Territory.Add(tile.Position);

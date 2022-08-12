@@ -3,6 +3,7 @@ using MagiRogue.Data.Serialization;
 using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.Entities;
+using MagiRogue.Entities.StarterScenarios;
 using MagiRogue.GameSys.Magic;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
@@ -27,10 +28,10 @@ namespace MagiRogue.Data
             GetSourceTree<ActorTemplate>(@".\Data\Actors\*.json");
 
         public static readonly IReadOnlyList<Organ> ListOfOrgans =
-            GetSourceTree<Organ>(@".\Data\Other\organs.json");
+            GetSourceTree<Organ>(@".\Data\Bodies\organs_*.json");
 
         public static readonly IReadOnlyList<LimbTemplate> ListOfLimbs =
-            GetSourceTree<LimbTemplate>(@".\Data\Other\body_parts.json");
+            GetSourceTree<LimbTemplate>(@".\Data\Bodies\limb_*.json");
 
         public static readonly IReadOnlyList<BasicTile> ListOfTiles =
             GetSourceTree<BasicTile>(@".\Data\Tiles\*.json");
@@ -42,7 +43,13 @@ namespace MagiRogue.Data
             GetSourceTree<RoomTemplate>(@".\Data\Rooms\*.json");
 
         public static readonly IReadOnlyList<Race> ListOfRaces =
-            GetSourceTree<Race>(@".\Data\Races\*.json");
+            GetSourceTree<Race>(@".\Data\Races\race_*.json");
+
+        public static readonly IReadOnlyList<Scenario> ListOfScenarios =
+            GetSourceTree<Scenario>(@".\Data\Scenarios\scenarios_*.json");
+
+        public static readonly IReadOnlyList<BodyPlan> ListOfBpPlan =
+            GetSourceTree<BodyPlan>(@".\Data\Bodies\body_*.json");
 
         public static IReadOnlyList<T> GetSourceTree<T>(string wildCard)
         {
@@ -108,5 +115,11 @@ namespace MagiRogue.Data
 
         public static Race QueryRaceInData(string raceId)
             => ListOfRaces.Where(c => c.Id.Equals(raceId)).FirstOrDefault();
+
+        public static Scenario QueryScenarioInData(string scenarioId)
+            => ListOfScenarios.Where(c => c.Id.Equals(scenarioId)).FirstOrDefault();
+
+        public static BodyPlan QueryBpPlanInData(string bpPlanId)
+            => ListOfBpPlan.Where(c => c.Id.Equals(bpPlanId)).FirstOrDefault();
     }
 }

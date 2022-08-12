@@ -294,12 +294,12 @@ namespace MagiRogue.Entities
 
         public int GetViewRadius()
         {
-            return GetAnatomy().GetActorRace().RaceViewRadius + Body.ViewRadius;
+            return Body.ViewRadius;
         }
 
         public double GetNormalLimbRegen()
         {
-            return GetAnatomy().GetActorRace().RaceNormalLimbRegen + Body.Anatomy.NormalLimbRegen;
+            return Body.Anatomy.NormalLimbRegen;
         }
 
         public double GetBloodCoagulation()
@@ -348,14 +348,9 @@ namespace MagiRogue.Entities
                 + GetRelevantAbility(AbilityName.ArmorUse);
         }
 
-        public int GetPrecisionAbility()
+        public int GetPrecision()
         {
-            if (Mind.Abilities.ContainsKey((int)AbilityName.Precison))
-            {
-                return Mind.Abilities[(int)AbilityName.Precison].Score;
-            }
-            else
-                return 0;
+            return Mind.Precision;
         }
 
         public int GetDefenseAbility()

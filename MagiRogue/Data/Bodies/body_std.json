@@ -1,0 +1,10 @@
+﻿[
+    {
+        "Id": "humanoid_limbs",
+        "BodyParts": []
+    }
+    {
+        "Id": "humanoid_organs",
+        "BodyParts": []
+    }
+]

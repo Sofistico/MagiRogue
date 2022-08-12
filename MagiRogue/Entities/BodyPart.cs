@@ -1,6 +1,7 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Utils;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,14 +13,12 @@ using System.Threading.Tasks;
 namespace MagiRogue.Entities
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public class BodyPart
+    public abstract class BodyPart
     {
         private double bodyPartHp;
 
-        [DataMember]
         public string Id { get; set; }
 
-        [DataMember]
         public double BodyPartHp
         {
             get
@@ -43,10 +42,8 @@ namespace MagiRogue.Entities
             }
         }
 
-        [DataMember]
         public double MaxBodyPartHp { get; set; }
 
-        [DataMember]
         public double BodyPartWeight
         {
             get
@@ -59,7 +56,7 @@ namespace MagiRogue.Entities
         /// <summary>
         /// The size of the bodypart in cm³
         /// </summary>
-        [DataMember]
+
         public int Volume { get; set; }
 
         /// <summary>
@@ -71,16 +68,14 @@ namespace MagiRogue.Entities
         /// <summary>
         /// Marks if the BP is right, left, or center, this is the property.
         /// </summary>
-        [DataMember]
+
         public BodyPartOrientation Orientation { get; set; }
 
-        [DataMember]
         public string BodyPartName { get; set; }
 
-        [DataMember]
+        [JsonIgnore]
         public MaterialTemplate BodyPartMaterial { get; set; }
 
-        [DataMember]
         public string MaterialId { get; set; }
 
         /// <summary>

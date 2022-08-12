@@ -1,0 +1,47 @@
+﻿[
+  {
+    "Id": "new_wiz",
+    "ScenarioName": "New Wizard",
+    "Description": "You have recently completed your own apprenticeship under your master, finally you can be free to pursue your own magical interest!",
+    "AgeGroup": "Adult",
+    "Strenght": -3,
+    "Endurance": 2,
+    "Toughness": -1,
+    "Inteligence": 3,
+    "Precision": 1,
+    "WillPower": 0,
+    "MaxMana": 2.0,
+    "MaxStamina": -2.0,
+    "StaminaRegen": 0.0,
+    "ManaRegen": 0.0,
+    "LimbRegen": 0.0,
+    "FitLevel": -0.1,
+    "ShapingSkill": 5,
+    "Abilities": [
+      {
+        "Ability": "MagicLore",
+        "Score": 3
+      },
+      {
+        "Ability": "Staff",
+        "Score": 1
+      },
+      {
+        "Ability": "Alchemy",
+        "Score": 1
+      },
+      {
+        "Ability": "Enchantment",
+        "Score": 1
+      },
+      {
+        "Ability": "Read",
+        "Score": 5
+      }
+    ],
+    "Inventory": [ "Book on Magic" ],
+    "Equipment": [ "cap", "robe", "leather_shoe", "leather_shoe" ],
+    "RacesAllowed": [ "human", "elf", "dwarf" ],
+    "SpellsKnow": [ "magic_missile" ]
+  }
+]

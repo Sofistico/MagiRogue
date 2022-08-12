@@ -112,8 +112,7 @@ namespace MagiRogue.Entities
 
         public Race GetActorRace()
         {
-            if (raceField == null)
-                raceField = DataManager.QueryRaceInData(Race);
+            raceField ??= DataManager.QueryRaceInData(Race);
             return raceField;
         }
 

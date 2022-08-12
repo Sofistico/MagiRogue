@@ -151,7 +151,7 @@ namespace MagiRogue.Utils
             }
             else
             {
-                int diceRoll = Mrn.Exploding2D6Dice + caster.GetPrecisionAbility();
+                int diceRoll = Mrn.Exploding2D6Dice + caster.GetPrecision();
                 // the actor + exploding dice is the dice that the target will throw for either defense or blocking the projectile
                 // TODO: When shield is done, needs to add the shield or any protection against the spell
                 if (poorGuy is Actor actor && diceRoll >= actor.GetDefenseAbility() + Mrn.Exploding2D6Dice)
@@ -249,7 +249,7 @@ namespace MagiRogue.Utils
                         break;
                 }
 
-                loopDamage -= protection + Mrn.Exploding2D6Dice;
+                loopDamage -= (protection + Mrn.Exploding2D6Dice) + (defender.Body.Endurance * 0.5);
 
                 defenseMessage.AppendFormat("   {0} was hit for {1} damage", defender.Name, loopDamage);
                 totalDamage += loopDamage;

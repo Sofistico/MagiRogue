@@ -40,10 +40,12 @@ namespace MagiRogue.Entities
                 }
             }
         }
+
         public double MaxStamina { get; set; }
         public double StaminaRegen { get; set; }
         public double GeneralSpeed { get; set; }
         public int Toughness { get; set; }
+        public int Endurance { get; set; }
         public int Strength { get; set; }
 
         public Body()
