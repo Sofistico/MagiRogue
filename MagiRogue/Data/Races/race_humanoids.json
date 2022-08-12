@@ -2,6 +2,9 @@
   {
     "Id": "test_race",
     "RaceName": "Debug Race",
+    "RaceGlyph": "T",
+    "RaceForeground": "Blue",
+    "RaceBackground": "Transparent",
     "ChildVolume": 4000,
     "AverageVolume": 15000,
     "MaxVolume": 100000,
@@ -19,11 +22,14 @@
     "BleedRegenaration": 1.0,
     "CanRegenLostLimbs": true,
     "ValidCivRace": false,
-    "BodyPlan": [ "humanoid_limbs", "humanoid_organs" ]
+    "BodyPlan": [ "humanoid_limbs", "humanoid_organs", "5fingers", "5toes" ]
   },
   {
     "Id": "human",
     "RaceName": "Human",
+    "RaceGlyph": "U",
+    "RaceForeground": "White",
+    "RaceBackground": "Transparent",
     "ChildVolume": 4000,
     "AverageVolume": 17500,
     "MaxVolume": 70000,
@@ -43,6 +49,6 @@
     "BleedRegenaration": 0.7,
     "CanRegenLostLimbs": false,
     "ValidCivRace": true,
-    "BodyPlan": [ "humanoid_limbs", "humanoid_organs" ]
+    "BodyPlan": [ "humanoid_limbs", "humanoid_organs", "5fingers", "5toes" ]
   }
 ]

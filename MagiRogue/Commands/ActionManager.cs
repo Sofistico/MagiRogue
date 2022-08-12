@@ -279,7 +279,7 @@ namespace MagiRogue.Commands
         public static bool CreateTestEntity(Point pos, Map map)
         {
             Actor found = EntityFactory.ActorCreator(pos,
-                 DataManager.QueryActorInData("test_troll"));
+                 "human");
             map.Add(found);
             return true;
         }

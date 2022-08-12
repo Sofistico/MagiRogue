@@ -48,8 +48,7 @@ namespace MagiRogue.Test.Entities
             {
                 List<ActorTemplate> deserialized = JsonUtils.JsonDeseralize<List<ActorTemplate>>
                     (Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "Actors", "Humanoids.json"));
-                Actor found = EntityFactory.ActorCreator(Point.None,
-                    deserialized.FirstOrDefault(i => i.ID == "test_troll"));
+                Actor found = deserialized.FirstOrDefault();
                 Assert.Equal(found.Name, deserialized.FirstOrDefault(i => i.ID == "test_troll").Name);
             }
             catch (Exception)

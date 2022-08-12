@@ -9,6 +9,10 @@ namespace MagiRogue.Entities
         public string Id { get; set; }
         public string RaceName { get; set; }
 
+        public char RaceGlyph { get; set; }
+        public string RaceForeground { get; set; }
+        public string RaceBackground { get; set; }
+
         public int AverageVolume { get; set; }
         public int MaxVolume { get; set; }
 

@@ -24,9 +24,6 @@ namespace MagiRogue.Data
         public static readonly IReadOnlyList<SpellBase> ListOfSpells =
             GetSourceTree<SpellBase>(@".\Data\Spells\*.json");
 
-        public static readonly IReadOnlyList<ActorTemplate> ListOfActors =
-            GetSourceTree<ActorTemplate>(@".\Data\Actors\*.json");
-
         public static readonly IReadOnlyList<Organ> ListOfOrgans =
             GetSourceTree<Organ>(@".\Data\Bodies\organs_*.json");
 
@@ -93,9 +90,6 @@ namespace MagiRogue.Data
 
         public static T QueryTileInData<T>(string tileId, Point pos) where T : TileBase
             => (T)ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId)).Copy(pos);
-
-        public static Actor QueryActorInData(string actorId)
-            => ListOfActors.FirstOrDefault(a => a.ID.Equals(actorId));
 
         public static Item QueryItemInData(string itemId)
             => ListOfItems.FirstOrDefault(i => i.Id.Equals(itemId));

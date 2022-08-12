@@ -9,29 +9,31 @@ namespace MagiRogue.Data
     /// </summary>
     public static class EntityFactory
     {
-        public static Actor ActorCreator(Point position, ActorTemplate actorTemplate)
+        public static Actor ActorCreator(Point position, string raceId)
         {
-            Actor actor =
-                new(
-                actorTemplate.Name,
-                actorTemplate.ForegroundBackingField.Color,
-                actorTemplate.BackgroundBackingField.Color,
-                actorTemplate.Glyph,
-                position
-                )
-                {
-                    Description = actorTemplate.Description,
-                    Soul = actorTemplate.Soul,
-                    Mind = actorTemplate.Mind
-                };
-            if (actorTemplate.Abilities is not null && actorTemplate.Abilities.Count > 0)
-            {
-                for (int i = 0; i < actorTemplate.Abilities.Count; i++)
-                {
-                    var ability = actorTemplate.Abilities[i];
-                    actor.Mind.AddAbilityToDictionary(ability);
-                }
-            }
+            Race race = DataManager.QueryRaceInData(raceId);
+
+            //Actor actor =
+            //    new(
+            //    actorTemplate.Name,
+            //    actorTemplate.ForegroundBackingField.Color,
+            //    actorTemplate.BackgroundBackingField.Color,
+            //    actorTemplate.Glyph,
+            //    position
+            //    )
+            //    {
+            //        Description = actorTemplate.Description,
+            //        Soul = actorTemplate.Soul,
+            //        Mind = actorTemplate.Mind
+            //    };
+            //if (actorTemplate.Abilities is not null && actorTemplate.Abilities.Count > 0)
+            //{
+            //    for (int i = 0; i < actorTemplate.Abilities.Count; i++)
+            //    {
+            //        var ability = actorTemplate.Abilities[i];
+            //        actor.Mind.AddAbilityToDictionary(ability);
+            //    }
+            //}
 
             return actor;
         }
