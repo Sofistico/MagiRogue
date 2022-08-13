@@ -16,7 +16,7 @@
     "ManaRegen": 0.0,
     "LimbRegen": 0.0,
     "FitLevel": -0.1,
-    "ShapingSkill": 5,
+    "ShapingSkill": 8,
     "Abilities": [
       {
         "Ability": "MagicLore",

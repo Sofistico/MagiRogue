@@ -38,9 +38,19 @@ namespace MagiRogue.Data
             SetupScenarioStats(scenario, actor);
             SetupAbilities(actor, scenario.Abilities);
             SetupScenarioMagic(actor, scenario);
+            SetupInventory(actor, scenario);
+            SetupEquipment(actor, scenario);
             Player player = Player.ReturnPlayerFromActor(actor);
 
             return player;
+        }
+
+        private static void SetupEquipment(Actor actor, Scenario scenario)
+        {
+        }
+
+        private static void SetupInventory(Actor actor, Scenario scenario)
+        {
         }
 
         private static void SetupScenarioMagic(Actor actor, Scenario scenario)
@@ -62,17 +72,22 @@ namespace MagiRogue.Data
             body.Strength += scenario.Strenght;
             body.Toughness += scenario.Toughness;
             body.Endurance += scenario.Endurance;
+            body.MaxStamina = body.Endurance * 1000;
             body.MaxStamina += scenario.MaxStamina;
+            body.Stamina = body.MaxStamina;
             body.StaminaRegen += scenario.StaminaRegen;
 
             anatomy.FitLevel += scenario.FitLevel;
             anatomy.NormalLimbRegen += scenario.LimbRegen;
+            anatomy.CurrentAge = anatomy.GetRace().GetAgeFromAgeGroup(scenario.AgeGroup);
 
             mind.Inteligence += scenario.Inteligence;
             mind.Precision += scenario.Precision;
 
             soul.WillPower += scenario.WillPower;
+            soul.MaxMana = (soul.WillPower / 2) + (mind.Inteligence / 2) + GameLoop.GlobalRand.NextInt(10);
             soul.MaxMana += scenario.MaxMana;
+            soul.CurrentMana = soul.MaxMana;
             soul.BaseManaRegen += scenario.ManaRegen;
         }
 
@@ -94,6 +109,7 @@ namespace MagiRogue.Data
         {
             Body body = actor.Body;
             Anatomy anatomy = actor.GetAnatomy();
+            MagicManager magic = actor.Magic;
             Mind mind = actor.Mind;
             Soul soul = actor.Soul;
 
@@ -106,12 +122,18 @@ namespace MagiRogue.Data
             body.Strength = race.BaseStrenght;
             body.Toughness = race.BaseToughness;
             body.GeneralSpeed = race.GeneralSpeed;
+            body.MaxStamina = body.Endurance * 1000;
+            body.Stamina = body.Stamina;
 
             mind.Inteligence = race.BaseInt;
             mind.Precision = race.BasePrecision;
 
             soul.WillPower = race.BaseWillPower;
             soul.BaseManaRegen = race.BaseManaRegen;
+            soul.MaxMana = (soul.WillPower / 2) + (mind.Inteligence / 2) + GameLoop.GlobalRand.NextInt(10);
+            soul.CurrentMana = soul.MaxMana;
+
+            magic.InnateMagicResistance = race.BaseMagicResistance;
         }
 
         public static Item ItemCreator(Point position, ItemTemplate itemTemplate)

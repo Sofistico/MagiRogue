@@ -46,6 +46,7 @@ namespace MagiRogue.Entities
         public int BaseWillPower { get; set; }
         public int BasePrecision { get; set; }
         public double BaseManaRegen { get; set; }
+        public int BaseMagicResistance { get; set; }
 
         // Body
         public double RaceNormalLimbRegen { get; set; }
@@ -108,7 +109,7 @@ namespace MagiRogue.Entities
             return volume;
         }
 
-        public AgeGroup GetAgeGroup(int age, int lifeSpan, bool ages)
+        public AgeGroup GetAgeGroup(int age, bool ages)
         {
             if (ChildAge.HasValue && age < ChildAge)
                 return AgeGroup.Baby;
@@ -116,12 +117,26 @@ namespace MagiRogue.Entities
                 return AgeGroup.Child;
             if (TeenAge.HasValue && age >= TeenAge && age < AdulthoodAge)
                 return AgeGroup.Teen;
-            if (age >= AdulthoodAge || !ages)
+            if (age >= AdulthoodAge && (!ages || age < LifespanMin))
                 return AgeGroup.Adult;
-            if (age >= lifeSpan)
+            if (age >= LifespanMin && ages)
                 return AgeGroup.Elderly;
             // if did't hit any, then it's an adult
             return AgeGroup.Adult;
+        }
+
+        public int GetAgeFromAgeGroup(AgeGroup group)
+        {
+            var rng = GameLoop.GlobalRand;
+            return group switch
+            {
+                AgeGroup.Baby => rng.NextInt(ChildAge.Value - 1),
+                AgeGroup.Child => rng.NextInt(ChildAge.Value, TeenAge.Value - 1),
+                AgeGroup.Teen => rng.NextInt(TeenAge.Value, AdulthoodAge - 1),
+                AgeGroup.Adult => rng.NextInt(AdulthoodAge, LifespanMin - 1),
+                AgeGroup.Elderly => rng.NextInt(LifespanMin, LifespanMax - 1),
+                _ => rng.NextInt(AdulthoodAge, LifespanMax - 1),
+            };
         }
     }
 }

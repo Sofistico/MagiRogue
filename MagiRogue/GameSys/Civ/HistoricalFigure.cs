@@ -35,7 +35,7 @@ namespace MagiRogue.GameSys.Civ
             IsAlive = isAlive;
             AssocietedActor = associetedActor;
             Description = associetedActor.Description;
-            Race = associetedActor.GetAnatomy().GetActorRace().RaceName;
+            Race = associetedActor.GetAnatomy().GetRace().RaceName;
         }
 
         public HistoricalFigure(string name,

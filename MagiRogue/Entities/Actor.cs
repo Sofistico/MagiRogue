@@ -259,12 +259,12 @@ namespace MagiRogue.Entities
                 {
                     if (limb.Attached)
                     {
-                        if (limb.CanHeal || GetAnatomy().GetActorRace().CanRegenLostLimbs)
+                        if (limb.CanHeal || GetAnatomy().GetRace().CanRegenLostLimbs)
                         {
                             limb.ApplyHeal(GetNormalLimbRegen() * limb.RateOfHeal);
                         }
                     }
-                    if (!limb.Attached && GetAnatomy().GetActorRace().CanRegenLostLimbs)
+                    if (!limb.Attached && GetAnatomy().GetRace().CanRegenLostLimbs)
                     {
                         List<Limb> connectedLimbs = GetAnatomy().GetAllParentConnectionLimb(limb);
                         if (!connectedLimbs.Any(i => !i.Attached))
@@ -306,7 +306,7 @@ namespace MagiRogue.Entities
         {
             if (GetAnatomy().HasBlood)
             {
-                return GetAnatomy().GetActorRace().BleedRegenaration + (Body.Toughness * 0.2);
+                return GetAnatomy().GetRace().BleedRegenaration + (Body.Toughness * 0.2);
             }
             return 0;
         }

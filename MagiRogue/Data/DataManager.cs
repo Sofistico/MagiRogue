@@ -22,7 +22,7 @@ namespace MagiRogue.Data
            GetSourceTree<MaterialTemplate>(@".\Data\Materials\*.json");
 
         public static readonly IReadOnlyList<SpellBase> ListOfSpells =
-            GetSourceTree<SpellBase>(@".\Data\Spells\*.json");
+            GetSourceTree<SpellBase>(@".\Data\Spells\spells_*.json");
 
         public static readonly IReadOnlyList<Organ> ListOfOrgans =
             GetSourceTree<Organ>(@".\Data\Bodies\organs_*.json");

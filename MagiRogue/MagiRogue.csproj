@@ -94,19 +94,19 @@
     <None Update="Data\Scenarios\scenarios_wizard.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Data\Spells\divination_spells.json">
+    <None Update="Data\Spells\spells_divination.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Data\Spells\medical_spells.json">
+    <None Update="Data\Spells\spells_medical.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Data\Spells\dimensionalism_spells.json">
+    <None Update="Data\Spells\spells_dimensionalism.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Data\Spells\projection_spells.json">
+    <None Update="Data\Spells\spells_projection.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Data\Spells\soul_spells.json">
+    <None Update="Data\Spells\spells_soul.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Data\Tiles\floors.json">

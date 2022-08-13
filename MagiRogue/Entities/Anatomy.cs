@@ -116,7 +116,7 @@ namespace MagiRogue.Entities
                 BloodCount = MathMagi.Round(weight * raceField.BloodMultiplier);
         }
 
-        public Race GetActorRace()
+        public Race GetRace()
         {
             raceField ??= DataManager.QueryRaceInData(Race);
             return raceField;
@@ -194,6 +194,8 @@ namespace MagiRogue.Entities
             foreach (BodyPart bp in bps)
             {
                 bp.Volume = (int)(volume * bp.RelativeVolume);
+                bp.MaxBodyPartHp = bp.BodyPartHp * bp.Volume;
+                bp.BodyPartHp = bp.MaxBodyPartHp;
             }
         }
 
@@ -354,13 +356,13 @@ namespace MagiRogue.Entities
 
         public int RateOfGrowthPerYear()
         {
-            var race = GetActorRace();
+            var race = GetRace();
             return race.MaxVolume / race.AdulthoodAge;
         }
 
-        public (int, int) GetMinMaxLifespan() => (GetActorRace().LifespanMin, GetActorRace().LifespanMax);
+        public (int, int) GetMinMaxLifespan() => (GetRace().LifespanMin, GetRace().LifespanMax);
 
-        public int GetRaceAdulthoodAge() => GetActorRace().AdulthoodAge;
+        public int GetRaceAdulthoodAge() => GetRace().AdulthoodAge;
 
         public void SetRandomLifespanByRace()
         {
