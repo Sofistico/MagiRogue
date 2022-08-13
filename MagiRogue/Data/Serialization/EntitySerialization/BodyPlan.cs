@@ -13,6 +13,11 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         public string Id { get; set; }
         public List<string> BodyParts { get; set; }
 
+        public BodyPlan()
+        {
+            BodyParts = new();
+        }
+
         public List<BodyPart> ReturnBodyParts()
         {
             List<BodyPart> returnParts = new List<BodyPart>();

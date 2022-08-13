@@ -10,6 +10,8 @@ using Newtonsoft.Json;
 using SadConsole;
 using SadRogue.Primitives;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace MagiRogue.Test.System
@@ -93,7 +95,14 @@ namespace MagiRogue.Test.System
             ItemTemplate item = new Item(Color.Black, Color.Black,
                 "Test Item", '@', Point.None, 100);
             Player player = new Player("Test", Color.Black, Color.Black, new Point(0, 0));
-            player.GetEquipment().Add(EntityFactory.BasicHumanoidBody()[0], item);
+            var bp = DataManager.QueryBpPlanInData("humanoid_limbs");
+            bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5fingers").BodyParts);
+            bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5toes").BodyParts);
+            List<Limb> basicHuman = bp.ReturnBodyParts().Where(i => i is Limb).Cast<Limb>().ToList();
+
+            player.GetAnatomy().Limbs = basicHuman;
+            player.GetEquipment().Add(basicHuman[0], item);
+
             map.Add(actor);
             map.Add(item);
             map.Add(player);

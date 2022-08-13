@@ -172,7 +172,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 var actorAbility = actor.Mind.Abilities[i];
                 var abilityTemplaye = new AbilityTemplate()
                 {
-                    Name = actorAbility.ReturnAbilityEnumFromString(),
+                    Ability = actorAbility.ReturnAbilityEnumFromString(),
                     Score = actorAbility.Score,
                 };
                 Abilities.Add(abilityTemplaye);

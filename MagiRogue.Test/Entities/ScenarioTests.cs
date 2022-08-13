@@ -22,8 +22,10 @@ namespace MagiRogue.Test.Entities
                 "Test",
                 25,
                 MagiRogue.Data.Enumerators.Gender.Asexual);
+            Player player = EntityFactory.PlayerCreatorFromActor(test, scenario,
+                MagiRogue.Data.Enumerators.Gender.Male);
 
-            Assert.Equal(scenario.ShapingSkills, test.Magic.ShapingSkill);
+            Assert.Equal(scenario.ShapingSkill, player.Magic.ShapingSkill);
         }
     }
 }

@@ -2,6 +2,7 @@
   {
     "Id": "humanoid_upper_body",
     "LimbType": "UpperBody",
+    "RelativeSize": 0.18,
     "MaxLimbHp": 15,
     "LimbHp": 15,
     "LimbWeight": 10.24,
@@ -15,6 +16,7 @@
   {
     "Id": "humanoid_lower_body",
     "LimbType": "LowerBody",
+    "RelativeSize": 0.18,
     "MaxLimbHp": 15,
     "LimbHp": 15,
     "LimbWeight": 10.24,
@@ -28,6 +30,7 @@
   {
     "Id": "humanoid_neck",
     "LimbType": "Neck",
+    "RelativeSize": 0.018,
     "LimbHp": 5,
     "LimbWeight": 6.05,
     "LimbName": "Neck",
@@ -41,6 +44,7 @@
   {
     "Id": "humanoid_head",
     "LimbType": "Head",
+    "RelativeSize": 0.054,
     "MaxLimbHp": 10,
     "LimbHp": 10,
     "LimbWeight": 7.26,
@@ -55,6 +59,7 @@
   {
     "Id": "humanoid_l_arm",
     "LimbType": "Arm",
+    "RelativeSize": 0.072,
     "MaxLimbHp": 7,
     "LimbHp": 7,
     "LimbWeight": 4.84,
@@ -69,6 +74,7 @@
   {
     "Id": "humanoid_r_arm",
     "LimbType": "Arm",
+    "RelativeSize": 0.072,
     "MaxLimbHp": 7,
     "LimbHp": 7,
     "LimbWeight": 4.84,
@@ -83,6 +89,7 @@
   {
     "Id": "humanoid_r_leg",
     "LimbType": "Leg",
+    "RelativeSize": 0.163,
     "MaxLimbHp": 7,
     "LimbHp": 7,
     "LimbWeight": 7.26,
@@ -97,6 +104,7 @@
   {
     "Id": "humanoid_l_leg",
     "LimbType": "Leg",
+    "RelativeSize": 0.163,
     "MaxLimbHp": 7,
     "LimbHp": 7,
     "LimbWeight": 7.26,
@@ -111,6 +119,7 @@
   {
     "Id": "humanoid_l_hand",
     "LimbType": "Hand",
+    "RelativeSize": 0.014,
     "MaxLimbHp": 7,
     "LimbHp": 4,
     "LimbWeight": 7.26,
@@ -125,6 +134,7 @@
   {
     "Id": "humanoid_r_hand",
     "LimbType": "Hand",
+    "RelativeSize": 0.014,
     "MaxLimbHp": 7,
     "LimbHp": 4,
     "LimbWeight": 7.26,
@@ -139,6 +149,7 @@
   {
     "Id": "humanoid_r_foot",
     "LimbType": "Foot",
+    "RelativeSize": 0.022,
     "MaxLimbHp": 7,
     "LimbHp": 4,
     "LimbWeight": 7.26,
@@ -153,6 +164,7 @@
   {
     "Id": "humanoid_l_foot",
     "LimbType": "Foot",
+    "RelativeSize": 0.022,
     "MaxLimbHp": 7,
     "LimbHp": 4,
     "LimbWeight": 7.26,
@@ -167,6 +179,7 @@
   {
     "Id": "finger1",
     "LimbType": "Finger",
+    "RelativeSize": 0.015,
     "MaxLimbHp": 2,
     "LimbHp": 2,
     "LimbName": "{0} Thumb",
@@ -180,6 +193,7 @@
   {
     "Id": "finger2",
     "LimbType": "Finger",
+    "RelativeSize": 0.021,
     "MaxLimbHp": 2,
     "LimbHp": 2,
     "LimbName": "{0} First Finger",
@@ -193,6 +207,7 @@
   {
     "Id": "finger3",
     "LimbType": "Finger",
+    "RelativeSize": 0.023,
     "MaxLimbHp": 2,
     "LimbHp": 2,
     "LimbName": "{0} Second Finger",
@@ -206,6 +221,7 @@
   {
     "Id": "finger4",
     "LimbType": "Finger",
+    "RelativeSize": 0.021,
     "MaxLimbHp": 2,
     "LimbHp": 2,
     "LimbName": "{0} Third Finger",
@@ -219,6 +235,7 @@
   {
     "Id": "finger5",
     "LimbType": "Finger",
+    "RelativeSize": 0.012,
     "MaxLimbHp": 2,
     "LimbHp": 2,
     "LimbName": "{0} Fourth Finger",
@@ -232,6 +249,7 @@
   {
     "Id": "toe1",
     "LimbType": "Toe",
+    "RelativeSize": 0.017,
     "MaxLimbHp": 2,
     "LimbHp": 2,
     "LimbName": "{0} First Thumb",
@@ -245,6 +263,7 @@
   {
     "Id": "toe2",
     "LimbType": "Toe",
+    "RelativeSize": 0.011,
     "MaxLimbHp": 2,
     "LimbHp": 2,
     "LimbName": "{0} Second Toe",
@@ -258,6 +277,7 @@
   {
     "Id": "toe3",
     "LimbType": "Toe",
+    "RelativeSize": 0.011,
     "MaxLimbHp": 2,
     "LimbHp": 2,
     "LimbName": "{0} Third Toe",
@@ -271,6 +291,7 @@
   {
     "Id": "toe4",
     "LimbType": "Toe",
+    "RelativeSize": 0.011,
     "MaxLimbHp": 2,
     "LimbHp": 2,
     "LimbName": "{0} Fourth Toe",
@@ -284,6 +305,7 @@
   {
     "Id": "toe5",
     "LimbType": "Toe",
+    "RelativeSize": 0.008,
     "MaxLimbHp": 2,
     "LimbHp": 2,
     "LimbName": "{0} Fifth Toe",

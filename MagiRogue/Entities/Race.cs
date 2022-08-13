@@ -1,6 +1,8 @@
 ﻿using MagiRogue.Data;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
+using MagiRogue.Data.Serialization.EntitySerialization;
+using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
@@ -13,7 +15,7 @@ namespace MagiRogue.Entities
     [DebuggerDisplay("{DebuggerDisplay, nq}")]
     public class Race
     {
-        private readonly List<BodyPart> bodyParts;
+        private List<BodyPart> bodyParts;
 
         public string Id { get; set; }
         public string RaceName { get; set; }
@@ -55,8 +57,13 @@ namespace MagiRogue.Entities
         // Civ tendencies
         // Temporary
         public bool ValidCivRace { get; set; }
+        public double BloodMultiplier { get; set; }
 
         public Race()
+        {
+        }
+
+        public void SetBodyPlan()
         {
             if (BodyPlan is not null && BodyPlan.Length > 0)
             {

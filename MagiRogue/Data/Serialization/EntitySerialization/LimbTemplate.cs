@@ -62,10 +62,15 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
         [DataMember]
         public bool Broken { get; set; } = false;
+
         [DataMember]
         public BodyPartFunction LimbFunction { get; set; }
+
         [DataMember]
         public double RateOfHeal { get; set; }
+
+        [DataMember]
+        public double RelativeSize { get; set; }
 
         // Here will be a class designed to reliable build different types of anatomys, for use in a future dictionary
         // static class for anatomies
@@ -97,7 +102,6 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
         public LimbTemplate Copy()
         {
-            
             LimbTemplate copy = new LimbTemplate()
             {
                 Attached = this.Attached,
@@ -113,6 +117,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 MaxLimbHp = this.MaxLimbHp,
                 LimbFunction = this.LimbFunction,
                 RateOfHeal = this.RateOfHeal,
+                RelativeSize = this.RelativeSize,
             };
 
             return copy;
@@ -120,6 +125,8 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
         public static implicit operator Limb(LimbTemplate template)
         {
+            if (template is null)
+                return null;
             Limb limb = new Limb(template.LimbType,
                 template.LimbHp,
                 template.MaxLimbHp,
@@ -132,6 +139,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             limb.Id = template.Id;
             limb.Broken = template.Broken;
             limb.RateOfHeal = template.RateOfHeal;
+            limb.RelativeVolume = template.RelativeSize;
 
             return limb;
         }

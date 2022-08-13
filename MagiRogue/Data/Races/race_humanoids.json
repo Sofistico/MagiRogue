@@ -25,7 +25,8 @@
     "BleedRegenaration": 1.0,
     "CanRegenLostLimbs": true,
     "ValidCivRace": false,
-    "BodyPlan": [ "humanoid_limbs", "humanoid_organs", "5fingers", "5toes" ]
+    "BodyPlan": [ "humanoid_limbs", "humanoid_organs", "5fingers", "5toes" ],
+    "BloodMultiplier": 75
   },
   {
     "Id": "human",
@@ -55,6 +56,7 @@
     "BleedRegenaration": 0.7,
     "CanRegenLostLimbs": false,
     "ValidCivRace": true,
-    "BodyPlan": [ "humanoid_limbs", "humanoid_organs", "5fingers", "5toes" ]
+    "BodyPlan": [ "humanoid_limbs", "humanoid_organs", "5fingers", "5toes" ],
+    "BloodMultiplier": 75
   }
 ]

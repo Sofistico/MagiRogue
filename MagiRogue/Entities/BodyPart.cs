@@ -48,7 +48,7 @@ namespace MagiRogue.Entities
         {
             get
             {
-                double finalResult = MathMagi.GetWeightWithDensity(BodyPartMaterial.Density, Volume / 1000);
+                double finalResult = MathMagi.GetWeightWithDensity(BodyPartMaterial.Density, Volume);
                 return finalResult;
             }
         }
@@ -63,7 +63,7 @@ namespace MagiRogue.Entities
         /// The relative size of the being body part.
         /// So that a giant doens't have the arm the size of a normal human
         /// </summary>
-        public int RelativeVolume { get; set; }
+        public double RelativeVolume { get; set; }
 
         /// <summary>
         /// Marks if the BP is right, left, or center, this is the property.

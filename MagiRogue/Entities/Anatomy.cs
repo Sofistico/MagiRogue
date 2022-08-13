@@ -86,7 +86,7 @@ namespace MagiRogue.Entities
         /// your stamina, also helps with how long you will live.
         /// </summary>
         [DataMember]
-        public double FitLevel { get; set; } = 0.1;
+        public double FitLevel { get; set; } = 0.3;
 
         [DataMember]
         public bool NeedsHead { get; set; } = true;
@@ -113,7 +113,7 @@ namespace MagiRogue.Entities
         public void CalculateBlood(double weight)
         {
             if (HasBlood)
-                BloodCount = MathMagi.Round(weight * 75);
+                BloodCount = MathMagi.Round(weight * raceField.BloodMultiplier);
         }
 
         public Race GetActorRace()
@@ -169,6 +169,7 @@ namespace MagiRogue.Entities
         public void Setup(Actor actor, Race race, int actorAge, Gender gender, int volume)
         {
             actor.Volume = volume;
+            raceField = race;
             Race = race.Id;
             SetRandomLifespanByRace();
             Limbs = race.ReturnRaceLimbs();
@@ -192,7 +193,7 @@ namespace MagiRogue.Entities
             bps.AddRange(Organs);
             foreach (BodyPart bp in bps)
             {
-                bp.Volume = volume / bp.RelativeVolume;
+                bp.Volume = (int)(volume * bp.RelativeVolume);
             }
         }
 

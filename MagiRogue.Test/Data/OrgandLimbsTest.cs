@@ -81,7 +81,10 @@ namespace MagiRogue.Test.Data
         [Fact]
         public void GetConnecetLimb()
         {
-            List<Limb> basicHuman = EntityFactory.BasicHumanoidBody();
+            var bp = DataManager.QueryBpPlanInData("humanoid_limbs");
+            bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5fingers").BodyParts);
+            bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5toes").BodyParts);
+            List<Limb> basicHuman = bp.ReturnBodyParts().Where(i => i is Limb).Cast<Limb>().ToList();
             Anatomy ana = new Anatomy();
             ana.Limbs = basicHuman;
             List<Limb> test = ana.GetAllConnectedLimb(basicHuman.Find(f => f.TypeLimb is TypeOfLimb.Arm));
@@ -91,7 +94,10 @@ namespace MagiRogue.Test.Data
         [Fact]
         public void FindLimbTillRootParent()
         {
-            List<Limb> basicHuman = EntityFactory.BasicHumanoidBody();
+            var bp = DataManager.QueryBpPlanInData("humanoid_limbs");
+            bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5fingers").BodyParts);
+            bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5toes").BodyParts);
+            List<Limb> basicHuman = bp.ReturnBodyParts().Where(i => i is Limb).Cast<Limb>().ToList();
             Anatomy ana = new Anatomy();
             ana.Limbs = basicHuman;
             List<Limb> test = ana.GetAllParentConnectionLimb(basicHuman.Find(i => i.TypeLimb is TypeOfLimb.Finger));
@@ -104,7 +110,10 @@ namespace MagiRogue.Test.Data
             Actor actor = new Actor("Test actor", Color.AliceBlue, Color.AliceBlue, '@',
                 new Point(0, 0));
             actor.GetAnatomy().Race = "test_race";
-            actor.GetAnatomy().Limbs = EntityFactory.BasicHumanoidBody();
+            var bp = DataManager.QueryBpPlanInData("humanoid_limbs");
+            bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5fingers").BodyParts);
+            bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5toes").BodyParts);
+            actor.GetAnatomy().Limbs = bp.ReturnBodyParts().Where(i => i is Limb).Cast<Limb>().ToList();
             var arms = actor.GetAnatomy().Limbs.FindAll(l => l.TypeLimb is TypeOfLimb.Arm);
             foreach (var arm in arms)
             {

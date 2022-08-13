@@ -22,8 +22,8 @@ namespace MagiRogue.Entities
             Player player = new Player("Magus", Color.White, Color.Black, Point.None);
             player.Mind.Precision = 3;
 
-            player.GetAnatomy().Limbs = EntityFactory.BasicHumanoidBody();
-            player.GetAnatomy().Organs = EntityFactory.BasicHumanoidOrgans();
+            //player.GetAnatomy().Limbs = EntityFactory.BasicHumanoidBody();
+            //player.GetAnatomy().Organs = EntityFactory.BasicHumanoidOrgans();
 
             player.Magic.ShapingSkill = 9;
 

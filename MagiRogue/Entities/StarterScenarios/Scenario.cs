@@ -23,6 +23,7 @@ namespace MagiRogue.Entities.StarterScenarios
         // body
         public int Strenght { get; set; }
         public int Toughness { get; set; }
+        public int Endurance { get; set; }
 
         // mind
         public int Inteligence { get; set; }
@@ -32,8 +33,8 @@ namespace MagiRogue.Entities.StarterScenarios
         public int WillPower { get; set; }
 
         // max stuff
-        public double MaxMana { get; set; }
-        public double MaxStamina { get; set; }
+        public int MaxMana { get; set; }
+        public int MaxStamina { get; set; }
 
         // regen
         public double StaminaRegen { get; set; }
@@ -47,7 +48,7 @@ namespace MagiRogue.Entities.StarterScenarios
 
         #region Skills
 
-        public int ShapingSkills;
+        public int ShapingSkill { get; set; }
 
         public List<AbilityTemplate> Abilities { get; set; }
 

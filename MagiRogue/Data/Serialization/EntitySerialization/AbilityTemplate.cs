@@ -5,14 +5,14 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 {
     public class AbilityTemplate
     {
-        public AbilityName Name { get; set; }
+        public AbilityName Ability { get; set; }
         public int Score { get; set; }
 
         public static implicit operator AbilityTemplate(Ability ability)
         {
             var abilityTemplaye = new AbilityTemplate()
             {
-                Name = ability.ReturnAbilityEnumFromString(),
+                Ability = ability.ReturnAbilityEnumFromString(),
                 Score = ability.Score,
             };
 
@@ -21,7 +21,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
         public static implicit operator Ability(AbilityTemplate abilityTemplate)
         {
-            var ability = new Ability(abilityTemplate.Name, abilityTemplate.Score);
+            var ability = new Ability(abilityTemplate.Ability, abilityTemplate.Score);
             return ability;
         }
     }
