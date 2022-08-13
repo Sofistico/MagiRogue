@@ -5,6 +5,7 @@ using MagiRogue.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -68,18 +69,33 @@ namespace MagiRogue.Entities
         [DataMember]
         public int CurrentAge { get; set; }
 
-        //public double BloodLoss { get; set; } = 0;
+        [DataMember]
+        public int TickBorn { get; set; }
+
+        /// <summary>
+        /// How long the person is likely to live without death
+        /// </summary>
+        [DataMember]
         public int Lifespan { get; set; }
+
+        [DataMember]
         public double NormalLimbRegen { get; set; } = 0.001;
 
         /// <summary>
         /// Value between 0 and 2, fitness level determines how well you "health" you are and how well you recover
         /// your stamina, also helps with how long you will live.
         /// </summary>
+        [DataMember]
         public double FitLevel { get; set; } = 0.1;
+
+        [DataMember]
         public bool NeedsHead { get; set; } = true;
 
-        //public bool CanRegenLostLimbs { get; set; }
+        [DataMember]
+        public Gender Gender { get; set; }
+
+        [DataMember]
+        public bool Ages { get; set; } = true;
 
         #endregion Properties
 
@@ -88,16 +104,6 @@ namespace MagiRogue.Entities
         public Anatomy()
         {
             Limbs = new();
-        }
-
-        public Anatomy(Actor actor)
-        {
-            Limbs = new();
-            if (Limbs.Count > 0)
-            {
-                actor.Weight = Limbs.Sum(w => w.BodyPartWeight) + Organs.Sum(w => w.BodyPartWeight);
-                CalculateBlood(actor.Weight);
-            }
         }
 
         #endregion Constructor
@@ -158,6 +164,41 @@ namespace MagiRogue.Entities
             {
                 Dismember(limb, actorWounded);
             }
+        }
+
+        public void Setup(Actor actor, Race race, int actorAge, Gender gender, int volume)
+        {
+            actor.Volume = volume;
+            Race = race.Id;
+            SetRandomLifespanByRace();
+            Limbs = race.ReturnRaceLimbs();
+            Organs = race.ReturnRaceOrgans();
+            NormalLimbRegen = race.RaceNormalLimbRegen;
+            CurrentAge = actorAge;
+            Gender = gender;
+
+            if (Limbs.Count > 0)
+            {
+                CalculateRelativeLimbVolume(actor.Volume);
+                CalculateWeight(actor);
+                CalculateBlood(actor.Weight);
+            }
+        }
+
+        private void CalculateRelativeLimbVolume(int volume)
+        {
+            List<BodyPart> bps = new();
+            bps.AddRange(Limbs);
+            bps.AddRange(Organs);
+            foreach (BodyPart bp in bps)
+            {
+                bp.Volume = volume / bp.RelativeVolume;
+            }
+        }
+
+        private void CalculateWeight(Actor actor)
+        {
+            actor.Weight = Limbs.Sum(w => w.BodyPartWeight) + Organs.Sum(w => w.BodyPartWeight);
         }
 
         private void Dismember(Limb limb, Actor actor)
@@ -294,6 +335,26 @@ namespace MagiRogue.Entities
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Checks once a year for aging related stuff and etc...
+        /// To be used
+        /// </summary>
+        public void CheckAge()
+        {
+            if (Ages && CurrentAge > Lifespan)
+            {
+                int rng = GameLoop.GlobalRand.NextInt(100);
+                // one in rng. better be lucky!
+                Mrn.OneIn(rng);
+            }
+        }
+
+        public int RateOfGrowthPerYear()
+        {
+            var race = GetActorRace();
+            return race.MaxVolume / race.AdulthoodAge;
         }
 
         public (int, int) GetMinMaxLifespan() => (GetActorRace().LifespanMin, GetActorRace().LifespanMax);

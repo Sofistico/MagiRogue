@@ -9,6 +9,10 @@ namespace MagiRogue.GameSys.Time
     [JsonConverter(typeof(TimeJsonConverter))]
     public class TimeSystem : ITimeSystem
     {
+        // Add a priority queue to represent the queue that an actor will act, or a linked dictionary, or whatever
+        private readonly SimplePriorityQueue<ITimeNode, long> turnQueue = new SimplePriorityQueue<ITimeNode, long>();
+        private readonly TimeDefSpan timeSpan;
+
         public event EventHandler<TimeDefSpan> TurnPassed;
 
         [JsonIgnore]
@@ -16,10 +20,6 @@ namespace MagiRogue.GameSys.Time
 
         [JsonIgnore]
         public int Turns => (int)timeSpan.Seconds;
-
-        // Add a priority queue to represent the queue that an actor will act, or a linked dictionary, or whatever
-        private readonly SimplePriorityQueue<ITimeNode, long> turnQueue = new SimplePriorityQueue<ITimeNode, long>();
-        private readonly TimeDefSpan timeSpan;
 
         public TimeSystem(long initialTick = 0)
         {

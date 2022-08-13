@@ -128,7 +128,7 @@ namespace MagiRogue.Test.Data
             bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5fingers").BodyParts);
             bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5toes").BodyParts);
             var seeWhatHappens = bp.ReturnBodyParts();
-            Assert.Contains(seeWhatHappens, i => i.BodyPartName.Contains("{0}"));
+            Assert.DoesNotContain(seeWhatHappens, i => i.BodyPartName.Contains("{0}"));
         }
     }
 }

@@ -15,33 +15,11 @@ namespace MagiRogue.Entities
              int layer = (int)MapLayer.PLAYER) :
             base(name, foreground, background, '@', position, layer)
         {
-            GetAnatomy().Limbs = EntityFactory.BasicHumanoidBody();
-            GetAnatomy().Organs = EntityFactory.BasicHumanoidOrgans();
-            Weight = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(50, 95);
-            Volume = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(155, 200);
-            //GetAnatomy().CalculateBlood(Weight);
-            GetAnatomy().SetRandomLifespanByRace();
-            GetAnatomy().SetCurrentAgeWithingAdulthood();
         }
 
         public static Player TestPlayer()
         {
             Player player = new Player("Magus", Color.White, Color.Black, Point.None);
-            //player.Stats.SetAttributes(
-            //    viewRadius: 7,
-            //    health: 10,
-            //    baseHpRegen: 0.1f,
-            //    bodyStat: 1,
-            //    mindStat: 1,
-            //    soulStat: 1,
-            //    baseAttack: 10,
-            //    attackChance: 40,
-            //    protection: 5,
-            //    defenseChance: 20,
-            //    speed: 1.0f,
-            //    _baseManaRegen: 0.1f,
-            //    personalMana: 12
-            //    );
             player.Mind.Precision = 3;
 
             player.GetAnatomy().Limbs = EntityFactory.BasicHumanoidBody();
@@ -108,12 +86,16 @@ namespace MagiRogue.Entities
             {
                 Inventory = actor.Inventory,
                 Magic = actor.Magic,
-                //Stats = actor.Stats,
                 Volume = actor.Volume,
                 Weight = actor.Weight,
                 XP = actor.XP,
+                Body = actor.Body,
                 Mind = actor.Mind,
-                Soul = actor.Soul
+                Soul = actor.Soul,
+                CanBeKilled = actor.CanBeKilled,
+                Description = actor.Description,
+                IgnoresWalls = actor.IgnoresWalls,
+                IsPlayer = true
             };
 
             return player;

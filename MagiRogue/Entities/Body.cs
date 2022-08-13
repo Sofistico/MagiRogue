@@ -50,13 +50,8 @@ namespace MagiRogue.Entities
 
         public Body()
         {
-            Anatomy = new();
-        }
-
-        public Body(Actor actor)
-        {
             Equipment = new Dictionary<Limb, Item>();
-            Anatomy = new(actor);
+            Anatomy = new();
         }
 
         public void ApplyStaminaRegen(double staminaRegen)

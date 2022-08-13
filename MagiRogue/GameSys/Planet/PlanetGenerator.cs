@@ -137,7 +137,7 @@ namespace MagiRogue.GameSys.Planet
             UpdateBiomeBitmask();
 
             SeedCivilizations();
-            BasicHistory();
+            BasicHistory(550);
 
             // Here will take care of the visualization
             CreateConsole(tiles);
@@ -147,8 +147,9 @@ namespace MagiRogue.GameSys.Planet
 
         #region Civ
 
-        private void BasicHistory()
+        private void BasicHistory(int yearToGameBegin)
         {
+            planetData.TicksSinceCreation = yearToGameBegin / 3155695200;
             for (int i = 0; i < _civilizations.Length; i++)
             {
                 var civ = _civilizations[i];

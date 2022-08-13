@@ -73,7 +73,7 @@ namespace MagiRogue.Entities
             ) : base(foreground, background,
             glyph, coord, layer)
         {
-            Body = new Body(this);
+            Body = new Body();
             Mind = new Mind();
             Soul = new Soul();
             Inventory = new List<Item>();

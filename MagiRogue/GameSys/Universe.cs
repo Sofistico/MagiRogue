@@ -87,6 +87,7 @@ namespace MagiRogue.GameSys
                 WorldMap = new PlanetGenerator().CreatePlanet(planetWidth,
                     planetHeight,
                     planetMaxCivs);
+                Time = WorldMap.GetTimePassed();
                 WorldMap.AssocietatedMap.IsActive = true;
                 //maxChunks = planetWidth * planetHeight;
                 //AllChunks = new RegionChunk[maxChunks];

@@ -1,5 +1,8 @@
-﻿using MagiRogue.Data.Serialization.EntitySerialization;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Entities;
+using MagiRogue.Entities.StarterScenarios;
+using System;
 using System.Collections.Generic;
 
 namespace MagiRogue.Data
@@ -9,33 +12,62 @@ namespace MagiRogue.Data
     /// </summary>
     public static class EntityFactory
     {
-        public static Actor ActorCreator(Point position, string raceId)
+        public static Actor ActorCreatorFirstStep(Point position, string raceId,
+            string actorName, int actorAge, Gender gender)
         {
             Race race = DataManager.QueryRaceInData(raceId);
-            Actor actor = null;
-            //Actor actor =
-            //    new(
-            //    actorTemplate.Name,
-            //    actorTemplate.ForegroundBackingField.Color,
-            //    actorTemplate.BackgroundBackingField.Color,
-            //    actorTemplate.Glyph,
-            //    position
-            //    )
-            //    {
-            //        Description = actorTemplate.Description,
-            //        Soul = actorTemplate.Soul,
-            //        Mind = actorTemplate.Mind
-            //    };
-            //if (actorTemplate.Abilities is not null && actorTemplate.Abilities.Count > 0)
-            //{
-            //    for (int i = 0; i < actorTemplate.Abilities.Count; i++)
-            //    {
-            //        var ability = actorTemplate.Abilities[i];
-            //        actor.Mind.AddAbilityToDictionary(ability);
-            //    }
-            //}
+            Actor actor = new Actor(actorName,
+                race.ReturnForegroundColor(),
+                race.ReturnBackgroundColor(),
+                race.RaceGlyph,
+                position)
+            {
+                Description = race.Description,
+            };
+            SetupBodySoulAndMind(race, actor, actorAge, gender);
 
             return actor;
+        }
+
+        public static Player ActorCreatorPlayerCreator(Actor actor, string scenarioId, Gender gender)
+        {
+            Scenario scenario = DataManager.QueryScenarioInData(scenarioId);
+            actor.GetAnatomy().Gender = gender;
+            SetupAbilities(actor, scenario.Abilities);
+            Player player = Player.ReturnPlayerFromActor(actor);
+
+            return player;
+        }
+
+        private static void SetupAbilities(Actor actor, List<AbilityTemplate> abilities)
+        {
+            foreach (Ability item in abilities)
+            {
+                actor.Mind.AddAbilityToDictionary(item);
+            }
+        }
+
+        private static void SetupBodySoulAndMind(Race race, Actor actor, int actorAge, Gender gender)
+        {
+            Body body = actor.Body;
+            Anatomy anatomy = actor.GetAnatomy();
+            Mind mind = actor.Mind;
+            Soul soul = actor.Soul;
+
+            int volume = race.GetRngVolume(actorAge);
+
+            anatomy.Setup(actor, race, actorAge, gender, volume);
+
+            body.Endurance = race.BaseEndurance;
+            body.Strength = race.BaseStrenght;
+            body.Toughness = race.BaseToughness;
+            body.GeneralSpeed = race.GeneralSpeed;
+
+            mind.Inteligence = race.BaseInt;
+            mind.Precision = race.BasePrecision;
+
+            soul.WillPower = race.BaseWillPower;
+            soul.BaseManaRegen = race.BaseManaRegen;
         }
 
         public static Item ItemCreator(Point position, ItemTemplate itemTemplate)

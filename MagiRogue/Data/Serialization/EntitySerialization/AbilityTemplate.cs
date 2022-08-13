@@ -1,17 +1,18 @@
-﻿using MagiRogue.Entities;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Entities;
 
 namespace MagiRogue.Data.Serialization.EntitySerialization
 {
     public class AbilityTemplate
     {
-        public string Name { get; set; }
+        public AbilityName Name { get; set; }
         public int Score { get; set; }
 
         public static implicit operator AbilityTemplate(Ability ability)
         {
             var abilityTemplaye = new AbilityTemplate()
             {
-                Name = ability.Name,
+                Name = ability.ReturnAbilityEnumFromString(),
                 Score = ability.Score,
             };
 

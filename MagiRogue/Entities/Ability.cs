@@ -18,17 +18,27 @@ namespace MagiRogue.Entities
             Id = (int)name;
         }
 
-        public Ability(string name, int score)
-        {
-            Name = name;
-            Score = score;
-            Id = (int)ReturnAbilityEnumFromString(name);
-        }
-
         private static string ReturnEnumString(Enum name)
         {
             string tempName = name.ToString();
             return string.Join(" ", Regex.Split(tempName, @"(?<!^)(?=[A-Z](?![A-Z]|$))"));
+        }
+
+        public AbilityName ReturnAbilityEnumFromString()
+        {
+            try
+            {
+                return Name switch
+                {
+                    "Magic Lore" => AbilityName.MagicLore,
+                    "Swin" => AbilityName.Swin,
+                    _ => throw new AbilityNotFoundExepction("Cound't find the ability in the enum class"),
+                };
+            }
+            catch (AbilityNotFoundExepction)
+            {
+                return AbilityName.None;
+            }
         }
 
         public static AbilityName ReturnAbilityEnumFromString(string name)

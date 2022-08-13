@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization.EntitySerialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,7 +49,7 @@ namespace MagiRogue.Entities.StarterScenarios
 
         public int ShapingSkills;
 
-        public List<AbilityScenario> Abilities { get; set; }
+        public List<AbilityTemplate> Abilities { get; set; }
 
         #endregion Skills
 

@@ -76,7 +76,7 @@ namespace MagiRogue.Data
         public static SpellBase QuerySpellInData(string spellId) => ListOfSpells.FirstOrDefault
                 (m => m.SpellId.Equals(spellId)).Copy();
 
-        public static LimbTemplate QueryLimbInData(string limbId) 
+        public static LimbTemplate QueryLimbInData(string limbId)
         {
             var limb = ListOfLimbs.FirstOrDefault(l => l.Id.Equals(limbId), null);
             return limb?.Copy();
@@ -121,5 +121,17 @@ namespace MagiRogue.Data
 
         public static BodyPlan QueryBpPlanInData(string bpPlanId)
             => ListOfBpPlan.Where(c => c.Id.Equals(bpPlanId)).FirstOrDefault();
+
+        public static List<BodyPart> QueryBpsPlansInDataAndReturnBodyParts(string[] bpPlansId)
+        {
+            List<BodyPart> bps = new();
+            foreach (var ids in bpPlansId)
+            {
+                BodyPlan bp = QueryBpPlanInData(ids);
+                bps.AddRange(bp.ReturnBodyParts());
+            }
+
+            return bps;
+        }
     }
 }

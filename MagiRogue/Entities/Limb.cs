@@ -62,7 +62,8 @@ namespace MagiRogue.Entities
             LimbFunction = limbFunction;
         }
 
-        public Limb(string id, TypeOfLimb limbType, int limbHp, int maxLimbHp, string limbName, BodyPartOrientation orientation, string? connectedTo,
+        public Limb(string id, TypeOfLimb limbType, int limbHp, int maxLimbHp,
+            string limbName, BodyPartOrientation orientation, string connectedTo,
            string materialID = "flesh") : base()
         {
             Id = id;
