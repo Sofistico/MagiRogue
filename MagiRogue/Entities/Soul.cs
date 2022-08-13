@@ -23,5 +23,11 @@ namespace MagiRogue.Entities
                 CurrentMana = MathMagi.Round(newMana);
             }
         }
+
+        public void InitialMana(int inteligence)
+        {
+            MaxMana = (WillPower / 2) + (inteligence / 2) + GameLoop.GlobalRand.NextInt(10);
+            CurrentMana = MaxMana;
+        }
     }
 }

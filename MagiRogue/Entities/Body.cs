@@ -67,5 +67,11 @@ namespace MagiRogue.Entities
         {
             return Equipment[limb].EquipType is not Data.Enumerators.EquipType.None ? Equipment[limb] : null;
         }
+
+        public void InitialStamina()
+        {
+            MaxStamina = Endurance * 1000;
+            Stamina = MaxStamina;
+        }
     }
 }

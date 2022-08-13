@@ -72,7 +72,7 @@ namespace MagiRogue.Data
             body.Strength += scenario.Strenght;
             body.Toughness += scenario.Toughness;
             body.Endurance += scenario.Endurance;
-            body.MaxStamina = body.Endurance * 1000;
+            body.InitialStamina();
             body.MaxStamina += scenario.MaxStamina;
             body.Stamina = body.MaxStamina;
             body.StaminaRegen += scenario.StaminaRegen;
@@ -85,7 +85,7 @@ namespace MagiRogue.Data
             mind.Precision += scenario.Precision;
 
             soul.WillPower += scenario.WillPower;
-            soul.MaxMana = (soul.WillPower / 2) + (mind.Inteligence / 2) + GameLoop.GlobalRand.NextInt(10);
+            soul.InitialMana(mind.Inteligence);
             soul.MaxMana += scenario.MaxMana;
             soul.CurrentMana = soul.MaxMana;
             soul.BaseManaRegen += scenario.ManaRegen;
@@ -114,24 +114,24 @@ namespace MagiRogue.Data
             Soul soul = actor.Soul;
 
             int volume = race.GetRngVolume(actorAge);
+            int volumeWithVariancy = (int)(volume
+                + (volume * GameLoop.GlobalRand.NextInclusiveDouble(0.85, 1.25)));
 
             race.SetBodyPlan();
-            anatomy.Setup(actor, race, actorAge, gender, volume);
+            anatomy.Setup(actor, race, actorAge, gender, volumeWithVariancy);
 
             body.Endurance = race.BaseEndurance;
             body.Strength = race.BaseStrenght;
             body.Toughness = race.BaseToughness;
             body.GeneralSpeed = race.GeneralSpeed;
-            body.MaxStamina = body.Endurance * 1000;
-            body.Stamina = body.Stamina;
+            body.InitialStamina();
 
             mind.Inteligence = race.BaseInt;
             mind.Precision = race.BasePrecision;
 
             soul.WillPower = race.BaseWillPower;
             soul.BaseManaRegen = race.BaseManaRegen;
-            soul.MaxMana = (soul.WillPower / 2) + (mind.Inteligence / 2) + GameLoop.GlobalRand.NextInt(10);
-            soul.CurrentMana = soul.MaxMana;
+            soul.InitialMana(mind.Inteligence);
 
             magic.InnateMagicResistance = race.BaseMagicResistance;
         }
