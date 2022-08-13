@@ -42,7 +42,7 @@ namespace MagiRogue.Entities
             }
         }
 
-        public double MaxBodyPartHp { get; set; }
+        public int MaxBodyPartHp { get; set; }
 
         public double BodyPartWeight
         {

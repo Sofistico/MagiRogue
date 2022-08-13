@@ -4,8 +4,6 @@
     "Name": "Brain",
     "MaterialId": "flesh",
     "RelativeSize": 0.1,
-    "OrganHp": 10,
-    "OrganWeight": 0.5,
     "InsideOf": "humanoid_head",
     "Orientation": "Center",
     "OrganType": "Brain"
@@ -15,8 +13,6 @@
     "Name": "Heart",
     "MaterialId": "flesh",
     "RelativeSize": 0.05,
-    "OrganHp": 10,
-    "OrganWeight": 1,
     "InsideOf": "humanoid_upper_body",
     "Orientation": "Center",
     "OrganType": "Heart"
@@ -26,8 +22,6 @@
     "Name": "Spine",
     "MaterialId": "flesh",
     "RelativeSize": 0.15,
-    "OrganHp": 20,
-    "OrganWeight": 10,
     "InsideOf": "humanoid_neck",
     "Orientation": "Center",
     "OrganType": "Nerve"
@@ -37,8 +31,6 @@
     "Name": "Stomach",
     "MaterialId": "flesh",
     "RelativeSize": 0.1,
-    "OrganHp": 25,
-    "OrganWeight": 5,
     "InsideOf": "humanoid_lower_body",
     "Orientation": "Center",
     "OrganType": "Digestive"
@@ -48,8 +40,6 @@
     "Name": "Guts",
     "MaterialId": "flesh",
     "RelativeSize": 0.2,
-    "OrganHp": 15,
-    "OrganWeight": 5,
     "InsideOf": "humanoid_lower_body",
     "Orientation": "Center",
     "OrganType": "Digestive"
@@ -59,8 +49,6 @@
     "Name": "Right Lung",
     "MaterialId": "flesh",
     "RelativeSize": 0.1,
-    "OrganHp": 15,
-    "OrganWeight": 3,
     "InsideOf": "humanoid_upper_body",
     "Orientation": "Right",
     "OrganType": "Breather"
@@ -70,8 +58,6 @@
     "Name": "Left Lung",
     "MaterialId": "flesh",
     "RelativeSize": 0.1,
-    "OrganHp": 15,
-    "OrganWeight": 3,
     "InsideOf": "humanoid_upper_body",
     "Orientation": "Left",
     "OrganType": "Breather"
@@ -81,8 +67,6 @@
     "Name": "Right Kidney",
     "MaterialId": "flesh",
     "RelativeSize": 0.02,
-    "OrganHp": 7,
-    "OrganWeight": 0.8,
     "InsideOf": "humanoid_lower_body",
     "Orientation": "Right",
     "OrganType": "Filtering"
@@ -92,8 +76,6 @@
     "Name": "Left Kidney",
     "MaterialId": "flesh",
     "RelativeSize": 0.02,
-    "OrganHp": 7,
-    "OrganWeight": 0.8,
     "InsideOf": "humanoid_lower_body",
     "Orientation": "Left",
     "OrganType": "Filtering"
@@ -103,8 +85,6 @@
     "Name": "Right Eye",
     "MaterialId": "flesh",
     "RelativeSize": 0.05,
-    "OrganHp": 5,
-    "OrganWeight": 0.5,
     "InsideOf": "humanoid_head",
     "Orientation": "Right",
     "OrganType": "Visual"
@@ -114,8 +94,6 @@
     "Name": "Left Eye",
     "MaterialId": "flesh",
     "RelativeSize": 0.05,
-    "OrganHp": 5,
-    "OrganWeight": 0.5,
     "InsideOf": "humanoid_head",
     "Orientation": "Left",
     "OrganType": "Visual"

@@ -46,15 +46,13 @@ namespace MagiRogue.Entities
         /// <param name="materialID">The id to define the material, if needeed look at the material definition json\n
         /// Defaults to "flesh"</param>
 
-        public Limb(TypeOfLimb limbType, double limbHp, double maxLimbHp, string limbName,
+        public Limb(TypeOfLimb limbType, string limbName,
             BodyPartOrientation orientation, string connectedTo,
             string materialID = "flesh", BodyPartFunction limbFunction = BodyPartFunction.Limb) : base()
         {
             MaterialId = materialID;
             BodyPartMaterial = GameSys.Physics.PhysicsManager.SetMaterial(materialID);
             TypeLimb = limbType;
-            MaxBodyPartHp = maxLimbHp;
-            BodyPartHp = limbHp;
             Attached = true;
             BodyPartName = limbName;
             Orientation = orientation;

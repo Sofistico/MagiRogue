@@ -193,8 +193,9 @@ namespace MagiRogue.Entities
             bps.AddRange(Organs);
             foreach (BodyPart bp in bps)
             {
-                bp.Volume = (int)(volume * bp.RelativeVolume);
-                bp.MaxBodyPartHp = bp.BodyPartHp * bp.Volume;
+                bp.Volume = (int)(volume * (bp.RelativeVolume
+                    + GameLoop.GlobalRand.NextInclusiveDouble(-0.01, 0.01)));
+                bp.MaxBodyPartHp = (int)(bp.Volume / bp.BodyPartWeight);
                 bp.BodyPartHp = bp.MaxBodyPartHp;
             }
         }

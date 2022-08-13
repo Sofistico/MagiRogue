@@ -128,8 +128,6 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             if (template is null)
                 return null;
             Limb limb = new Limb(template.LimbType,
-                template.LimbHp,
-                template.MaxLimbHp,
                 template.LimbName,
                 template.LimbOrientation,
                 template.ConnectedToId,
