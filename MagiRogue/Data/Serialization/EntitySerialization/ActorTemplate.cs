@@ -57,6 +57,15 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         public int Volume { get; set; }
 
         [DataMember]
+        public int Height { get; set; }
+
+        [DataMember]
+        public int Length { get; set; }
+
+        [DataMember]
+        public int Broadness { get; set; }
+
+        [DataMember]
         public double Weight { get; set; }
 
         [DataMember(EmitDefaultValue = false, IsRequired = false)]
@@ -254,6 +263,10 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             actor.Mind = actorTemplate.Mind;
             actor.Soul = actorTemplate.Soul;
 
+            actor.Height = actorTemplate.Height;
+            actor.Broadness = actorTemplate.Broadness;
+            actor.Length = actorTemplate.Length;
+
             return actor;
         }
 
@@ -303,6 +316,10 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 actorTemplate.Equip.Add(new EquipTemplate(actor.GetEquipment()[limb], limb));
             }
             actorTemplate.GlyphInt = actor.Appearance.Glyph;
+
+            actorTemplate.Length = actor.Length;
+            actorTemplate.Height = actor.Height;
+            actorTemplate.Broadness = actor.Broadness;
 
             return actorTemplate;
         }

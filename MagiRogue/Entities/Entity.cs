@@ -31,7 +31,6 @@ namespace MagiRogue.Entities
         [DataMember]
         public int Volume { get; set; }
 
-        // TODO: For the future! will be based on the volume...
         public int Height { get; set; }
         public int Length { get; set; }
         public int Broadness { get; set; }

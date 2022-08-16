@@ -1,4 +1,5 @@
-﻿using MagiRogue.Data.Enumerators;
+﻿using GoRogue.DiceNotation.Terms;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Magic;
 using MagiRogue.GameSys.Physics;
@@ -48,6 +49,12 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         public double Weight { get; set; }
 
         public int Volume { get; set; }
+
+        public int Height { get; set; }
+
+        public int Length { get; set; }
+
+        public int Broadness { get; set; }
 
         public int Durability { get; set; }
 
@@ -220,6 +227,10 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 objFur.Traits.AddRange(objFur.Material.ConfersTraits);
             }
 
+            objFur.Broadness = template.Broadness;
+            objFur.Height = template.Height;
+            objFur.Length = template.Length;
+
             return objFur;
         }
 
@@ -245,6 +256,10 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 Qualities = Quality.ReturnQualityListAsString(fur.Qualities),
             };
             DetermineInventoryFromItem(fur, template);
+
+            template.Broadness = fur.Broadness;
+            template.Height = fur.Height;
+            template.Length = fur.Length;
 
             return template;
         }

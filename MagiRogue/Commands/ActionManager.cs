@@ -286,23 +286,23 @@ namespace MagiRogue.Commands
 
 #endif
 
-        public static bool SacrificeLifeEnergyToMana(Actor actor)
-        {
-            int maxMana = actor.Soul.MaxMana;
-            if (actor.Soul.CurrentMana != maxMana)
-            {
-                //actor.Anatomy.Health -= 1;
-                actor.GetAnatomy().BloodCount -= 100f;
-                int roll = Dice.Roll("1d3");
-                float bloodyManaGained = float.Parse($"0.{roll}", CultureInfo.InvariantCulture.NumberFormat);
-                actor.Soul.CurrentMana = MathMagi.Round(actor.Soul.CurrentMana + bloodyManaGained);
-                GameLoop.AddMessageLog($"You ritually wound yourself, channeling your blood into mana, gaining {bloodyManaGained} blood mana");
-                return true;
-            }
+        //public static bool SacrificeLifeEnergyToMana(Actor actor)
+        //{
+        //    int maxMana = actor.Soul.MaxMana;
+        //    if (actor.Soul.CurrentMana != maxMana)
+        //    {
+        //        //actor.Anatomy.Health -= 1;
+        //        actor.GetAnatomy().BloodCount -= 100f;
+        //        int roll = Dice.Roll("1d3");
+        //        float bloodyManaGained = float.Parse($"0.{roll}", CultureInfo.InvariantCulture.NumberFormat);
+        //        actor.Soul.CurrentMana = MathMagi.Round(actor.Soul.CurrentMana + bloodyManaGained);
+        //        GameLoop.AddMessageLog($"You ritually wound yourself, channeling your blood into mana, gaining {bloodyManaGained} blood mana");
+        //        return true;
+        //    }
 
-            GameLoop.AddMessageLog("You feel too full for this right now");
-            return false;
-        }
+        //    GameLoop.AddMessageLog("You feel too full for this right now");
+        //    return false;
+        //}
 
         public static bool RestTillFull(Actor actor)
         {

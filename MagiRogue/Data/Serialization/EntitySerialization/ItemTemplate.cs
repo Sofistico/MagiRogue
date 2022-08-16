@@ -132,6 +132,15 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         [DataMember]
         public WeaponType WeaponType { get; set; }
 
+        [DataMember]
+        public int Height { get; set; }
+
+        [DataMember]
+        public int Length { get; set; }
+
+        [DataMember]
+        public int Broadness { get; set; }
+
         // Will need to see if it works, but so far the logic seems to check
         public static implicit operator ItemTemplate(Item item)
         {
@@ -157,6 +166,10 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 SpeedOfAttack = item.SpeedOfAttack,
                 WeaponType = item.WeaponType,
             };
+
+            itemSerialized.Broadness = item.Broadness;
+            itemSerialized.Height = item.Height;
+            itemSerialized.Length = item.Length;
 
             return itemSerialized;
         }
@@ -198,6 +211,10 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             {
                 item.Traits.AddRange(item.Material.ConfersTraits);
             }
+
+            item.Broadness = itemTemplate.Broadness;
+            item.Height = itemTemplate.Height;
+            item.Length = itemTemplate.Length;
 
             return item;
         }
