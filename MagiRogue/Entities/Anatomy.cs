@@ -97,6 +97,15 @@ namespace MagiRogue.Entities
         [DataMember]
         public bool Ages { get; set; } = true;
 
+        [DataMember]
+        public int MaxGraspLimbs { get; set; }
+
+        [DataMember]
+        public int MaxStanceLimbs { get; set; }
+
+        [DataMember]
+        public int MaxFlierLimbs { get; set; }
+
         #endregion Properties
 
         #region Constructor
@@ -181,8 +190,47 @@ namespace MagiRogue.Entities
             if (Limbs.Count > 0)
             {
                 CalculateRelativeLimbVolume(actor.Volume);
+                SetMaxStandAndGraspCount();
+                FindAllMaterials(actor);
                 CalculateWeight(actor);
                 CalculateBlood(actor.Weight);
+            }
+        }
+
+        private void SetMaxStandAndGraspCount()
+        {
+            foreach (Limb limb in Limbs)
+            {
+                switch (limb.LimbFunction)
+                {
+                    case BodyPartFunction.Grasp:
+                        MaxGraspLimbs++;
+                        break;
+
+                    case BodyPartFunction.Stance:
+                        MaxStanceLimbs++;
+                        break;
+
+                    case BodyPartFunction.Flier:
+                        MaxFlierLimbs++;
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private void FindAllMaterials(Actor actor)
+        {
+            List<BodyPart> bps = new();
+            bps.AddRange(Limbs);
+            bps.AddRange(Organs);
+
+            foreach (BodyPart bp in bps)
+            {
+                if (!actor.Body.MaterialsId.Contains(bp.MaterialId))
+                    actor.Body.MaterialsId.Add(bp.MaterialId);
             }
         }
 
@@ -202,7 +250,7 @@ namespace MagiRogue.Entities
 
         private void CalculateWeight(Actor actor)
         {
-            actor.Weight = Limbs.Sum(w => w.BodyPartWeight) + Organs.Sum(w => w.BodyPartWeight);
+            actor.Weight = (Limbs.Sum(w => w.BodyPartWeight) + Organs.Sum(w => w.BodyPartWeight));
         }
 
         private void Dismember(Limb limb, Actor actor)
@@ -247,8 +295,11 @@ namespace MagiRogue.Entities
                         Severity = InjurySeverity.Missing
                     };
                     connectedLimb.CalculateWound(lostLimb);
+                    actor.Weight -= connectedLimb.BodyPartWeight;
                 }
             }
+
+            actor.Weight -= limb.BodyPartWeight;
 
             DismemberMessage(actor, limb);
         }

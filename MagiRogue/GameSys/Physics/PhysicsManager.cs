@@ -2,6 +2,7 @@
 using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
 using MagiRogue.Utils;
+using System;
 
 namespace MagiRogue.GameSys.Physics
 {

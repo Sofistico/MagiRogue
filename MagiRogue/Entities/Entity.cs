@@ -2,6 +2,7 @@
 using GoRogue.GameFramework;
 using MagiRogue.Data.Serialization;
 using MagiRogue.GameSys.Magic;
+using MagiRogue.GameSys.Physics;
 using MagiRogue.Utils;
 using SadConsole;
 using SadRogue.Primitives;
@@ -29,6 +30,11 @@ namespace MagiRogue.Entities
         /// </summary>
         [DataMember]
         public int Volume { get; set; }
+
+        // TODO: For the future! will be based on the volume...
+        public int Height { get; set; }
+        public int Length { get; set; }
+        public int Broadness { get; set; }
 
         /// <summary>
         /// Determines whetever the entity leaves an ghost when it leaves the fov

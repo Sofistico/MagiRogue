@@ -27,6 +27,9 @@
     "CanRegenLostLimbs": true,
     "ValidCivRace": false,
     "BodyPlan": [ "humanoid_limbs", "humanoid_organs", "5fingers", "5toes" ],
+    // lowest, lower, low, median, high, higher, highest
+    "HeightModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
+    "BroadnessModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "BloodMultiplier": 75
   },
   {
@@ -59,6 +62,8 @@
     "CanRegenLostLimbs": false,
     "ValidCivRace": true,
     "BodyPlan": [ "humanoid_limbs", "humanoid_organs", "5fingers", "5toes" ],
+    "HeightModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
+    "BroadnessModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "BloodMultiplier": 75
   }
 ]

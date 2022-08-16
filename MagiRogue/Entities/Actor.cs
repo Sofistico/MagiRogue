@@ -1,5 +1,6 @@
 ﻿using MagiRogue.Commands;
 using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization;
 using MagiRogue.GameSys;
 using MagiRogue.GameSys.Physics;
 using MagiRogue.GameSys.Tiles;

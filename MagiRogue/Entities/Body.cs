@@ -1,4 +1,5 @@
-﻿using MagiRogue.Utils;
+﻿using MagiRogue.Data.Serialization;
+using MagiRogue.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,10 +48,12 @@ namespace MagiRogue.Entities
         public int Toughness { get; set; }
         public int Endurance { get; set; }
         public int Strength { get; set; }
+        public List<string> MaterialsId { get; set; }
 
         public Body()
         {
             Equipment = new Dictionary<Limb, Item>();
+            MaterialsId = new();
             Anatomy = new();
         }
 

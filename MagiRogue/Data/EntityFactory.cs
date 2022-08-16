@@ -114,11 +114,15 @@ namespace MagiRogue.Data
             Soul soul = actor.Soul;
 
             int volume = race.GetRngVolume(actorAge);
-            int volumeWithVariancy = (int)(volume
-                + (volume * GameLoop.GlobalRand.NextInclusiveDouble(0.85, 1.25)));
+            actor.Height = race.GetRandomHeight();
+            actor.Length = race.GetRandomLength();
+            actor.Broadness = race.GetRandomBroadness();
+            int volumeWithHeight = actor.Height > 0 ? (int)((volume) * (actor.Height / (double)100)) : volume;
+            int volumeWithLenght = actor.Length > 0 ? (int)(volume * (actor.Length / (double)100)) : volumeWithHeight;
+            int finalVolume = actor.Broadness > 0 ? (int)(volume * (actor.Broadness / (double)100)) : volumeWithLenght;
 
             race.SetBodyPlan();
-            anatomy.Setup(actor, race, actorAge, gender, volumeWithVariancy);
+            anatomy.Setup(actor, race, actorAge, gender, finalVolume);
 
             body.Endurance = race.BaseEndurance;
             body.Strength = race.BaseStrenght;

@@ -96,6 +96,13 @@ namespace MagiRogue.Entities
         {
             foreach (Wound wound in Wounds)
             {
+                // if the wound is festering and the injury is that bad, then no need to check if it will heal
+                // cuz it will not!
+                if (!wound.Treated
+                    && (wound.Severity is not InjurySeverity.Bruise
+                    || wound.Severity is not InjurySeverity.Minor))
+                    continue;
+
                 if (!regenLostLimb && (wound.Severity is not InjurySeverity.Missing || wound.Severity is not InjurySeverity.Pulped))
                 {
                     wound.Recovery = MathMagi.Round(rateOfHeal + wound.Recovery);

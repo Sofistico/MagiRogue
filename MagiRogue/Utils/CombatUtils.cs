@@ -40,11 +40,7 @@ namespace MagiRogue.Utils
                 }
 
                 actor.Body.Stamina -= dmg;
-                Wound woundTaken = new Wound
-                {
-                    DamageSource = dmgType,
-                    HpLost = dmg
-                };
+                Wound woundTaken = new Wound(dmg, dmgType);
 
                 actor.GetAnatomy().Injury(woundTaken, limbAttacked, actor);
 
@@ -59,7 +55,7 @@ namespace MagiRogue.Utils
                 item.Condition -= (int)dmg;
             }
 
-            GameLoop.AddMessageLog($"The {entity.Name} took {dmg} {dmgType} total damage!");
+            GameLoop.AddMessageLog($"The {entity.Name} took {dmg} {dmgType} total damage in the {limbAttacking.BodyPartName}!");
         }
 
         public static void ApplyHealing(int dmg, Actor stats, DamageType healingType)

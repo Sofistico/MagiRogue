@@ -54,6 +54,9 @@ namespace MagiRogue.Entities
         public bool CanRegenLostLimbs { get; set; }
 
         public string[] BodyPlan { get; set; }
+        public int[] HeightModifier { get; set; }
+        public int[] BroadnessModifier { get; set; }
+        public int[] LengthModifier { get; set; }
 
         // Civ tendencies
         // Temporary
@@ -137,6 +140,33 @@ namespace MagiRogue.Entities
                 AgeGroup.Elderly => rng.NextInt(LifespanMin, LifespanMax - 1),
                 _ => rng.NextInt(AdulthoodAge, LifespanMax - 1),
             };
+        }
+
+        public int GetRandomBroadness()
+        {
+            if (BroadnessModifier is null)
+                return 0;
+            int rng = GameLoop.GlobalRand.NextInt(BroadnessModifier.Length);
+            int value = BroadnessModifier.Length > 0 ? BroadnessModifier[rng] : 0;
+            return value;
+        }
+
+        public int GetRandomLength()
+        {
+            if (LengthModifier is null)
+                return 0;
+            int rng = GameLoop.GlobalRand.NextInt(LengthModifier.Length);
+            int value = LengthModifier.Length > 0 ? LengthModifier[rng] : 0;
+            return value;
+        }
+
+        public int GetRandomHeight()
+        {
+            if (HeightModifier is null)
+                return 0;
+            int rng = GameLoop.GlobalRand.NextInt(HeightModifier.Length);
+            int value = HeightModifier.Length > 0 ? HeightModifier[rng] : 0;
+            return value;
         }
     }
 }
