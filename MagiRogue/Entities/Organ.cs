@@ -76,5 +76,27 @@ namespace MagiRogue.Entities
 
             return copy;
         }
+
+        public override void CalculateWound(Wound wound)
+        {
+            base.CalculateWound(wound);
+            switch (wound.Severity)
+            {
+                case InjurySeverity.Inhibited:
+                    Working = false;
+                    break;
+
+                case InjurySeverity.Broken:
+                    Working = false;
+                    break;
+
+                case InjurySeverity.Pulped:
+                    Working = true;
+                    break;
+
+                default:
+                    break;
+            }
+        }
     }
 }

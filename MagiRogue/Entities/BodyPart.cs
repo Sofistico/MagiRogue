@@ -87,6 +87,8 @@ namespace MagiRogue.Entities
         public BodyPartFunction LimbFunction { get; set; }
         public List<Wound> Wounds { get; set; }
 
+        public bool Working { get; set; }
+
         public BodyPart()
         {
             Wounds = new();
