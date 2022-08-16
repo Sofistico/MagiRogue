@@ -28,13 +28,10 @@ namespace MagiRogue.Entities
         {
             try
             {
-                return Name switch
-                {
-                    "Magic Lore" => AbilityName.MagicLore,
-                    "Swin" => AbilityName.Swin,
-                    _ => throw new AbilityNotFoundExepction("Cound't find the ability in the enum class"),
-                };
-            }
+                string test = Name.Replace(" ", "");
+                AbilityName ability = Enum.Parse<AbilityName>(test);
+                return ability;   
+                    }
             catch (AbilityNotFoundExepction)
             {
                 return AbilityName.None;

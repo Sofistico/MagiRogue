@@ -417,7 +417,7 @@ namespace MagiRogue.GameSys
         private void RestartGame()
         {
             CurrentMap.DestroyMap();
-            int chunckLenght = CurrentChunk.LocalMaps.Length;
+            int chunckLenght = CurrentChunk is not null ? CurrentChunk.LocalMaps.Length : 0;
             for (int i = 0; i < chunckLenght; i++)
             {
                 Map maps = CurrentChunk.LocalMaps[i];

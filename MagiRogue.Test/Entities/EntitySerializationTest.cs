@@ -56,5 +56,21 @@ namespace MagiRogue.Test.Entities
                 // This is here so that travis stops failing
             }
         }
+
+        [Fact]
+        public void ActorSerializeBody()
+        {
+            var playa = EntityFactory.PlayerCreatorFromZero(new Point(0, 0),
+                "human",
+                "Test",
+                MagiRogue.Data.Enumerators.Gender.Asexual,
+                "new_wiz");
+
+            var json = JsonConvert.SerializeObject(playa);
+            var deserialized = JsonConvert.DeserializeObject<Actor>(json);
+
+            Assert.Equal(playa.Body.Stamina, deserialized.Body.Stamina);
+            Assert.Equal(playa.Body.StaminaRegen, deserialized.Body.StaminaRegen);
+        }
     }
 }

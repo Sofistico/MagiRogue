@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Data;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.Entities.StarterScenarios;
 using MagiRogue.UI.Controls;
@@ -8,6 +9,7 @@ using SadConsole.Instructions;
 using SadConsole.UI.Controls;
 using SadRogue.Primitives;
 using System;
+using System.Collections.Generic;
 using Console = SadConsole.Console;
 
 namespace MagiRogue.UI.Windows
@@ -25,7 +27,9 @@ namespace MagiRogue.UI.Windows
             " effect across the board in the spell casting portion). \n\nYou will have 120 points to distribute as you see" +
             " fit for your base stats.";
         private TextBox charName;
-        private Scenario chosenScenario;
+        private ListBox scenarioChooser;
+        private ListBox raceChooser;
+        private ListBox genderChooser;
 
         public CharacterCreationWindow(int width, int height) : base(width, height, "Character Creation")
         {
@@ -88,58 +92,143 @@ namespace MagiRogue.UI.Windows
                 pop.SadComponents.Add(typingInstruction);
                 window.Show(true);
             };
-
             charName = new(25)
             {
-                Position = new Point(Width / 2 - 9, Height / 2 + 5)
+                Position = new Point(Width / 2 - 9, Height / 2 + 5),
+                IsNumeric = false,
             };
-            charName.IsVisible = true;
+            PrintUpFromPosition(charName.Position.X, charName.Position.Y, "Name:");
+            const string back = "Go Back";
+            MagiButton goBack = new(back.Length + 2)
+            {
+                Text = back,
+                Position = new Point(width / 2, 27)
+            };
+            goBack.Click += (_, __) =>
+            {
+                Hide();
+                GameLoop.UIManager.MainMenu.Show();
+            };
+
             Controls.Add(charName);
             SetupSelectionButtons(beginGame,
-                helpButton);
+                helpButton,
+                goBack);
+            SetupListBox();
+        }
 
-            //// Body Stat
-            //AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 10, Height / 2 - 10, Stats.Body));
-            //AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 10, Height / 2 - 9, Stats.Mind));
-            //AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 10, Height / 2 - 8, Stats.Soul));
-            //AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 10, Height / 2 - 7, Stats.Str));
-            //AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 10, Height / 2 - 6, Stats.Pre));
-            //AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 15, Height / 2 - 1, Stats.ShapSkill));
-            //AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 15, Height / 2, Stats.Attack));
-            //AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 15, Height / 2 + 1, Stats.Defense));
+        private void SetupListBox()
+        {
+            scenarioChooser = new ListBox(30, 10)
+            {
+                Position = new SadRogue.Primitives.Point(Width / 4 - 10, Height / 2 - 10),
+                Theme = new SadConsole.UI.Themes.ListBoxTheme(new SadConsole.UI.Themes.ScrollBarTheme())
+                {
+                    DrawBorder = true,
+                }
+            };
+            foreach (var item in DataManager.ListOfScenarios)
+            {
+                scenarioChooser.Items.Add(item);
+            }
+
+            Controls.Add(scenarioChooser);
+            const string scenarioText = "Select your starting scenario:";
+            PrintUpFromPosition(scenarioChooser.Position.X, scenarioChooser.Position.Y, scenarioText);
+
+            genderChooser = new ListBox(10, 5)
+            {
+                Position = new SadRogue.Primitives.Point(Width / 2 - 5, Height / 2 - 10),
+                Theme = new SadConsole.UI.Themes.ListBoxTheme(new SadConsole.UI.Themes.ScrollBarTheme())
+                {
+                    DrawBorder = true,
+                },
+                IsVisible = false
+            };
+
+            foreach (var item in Enum.GetValues(typeof(Gender)))
+            {
+                genderChooser.Items.Add(item.ToString());
+            }
+
+            Controls.Add(genderChooser);
+
+            raceChooser = new ListBox(20, 10)
+            {
+                Position = new SadRogue.Primitives.Point(Width / 2 + 20, Height / 2 - 10),
+                Theme = new SadConsole.UI.Themes.ListBoxTheme(new SadConsole.UI.Themes.ScrollBarTheme())
+                {
+                    DrawBorder = true,
+                },
+                IsVisible = false
+            };
+
+            Controls.Add(raceChooser);
+            genderChooser.SelectedItemChanged += (_, __) =>
+            {
+                PrintUpFromPosition(raceChooser.Position, "Now, choose from the available races:");
+                raceChooser.IsVisible = true;
+                raceChooser.Items.Clear();
+                Scenario scenario = (Scenario)scenarioChooser.SelectedItem;
+                foreach (string race in scenario.RacesAllowed)
+                {
+                    raceChooser.Items.Add(DataManager.QueryRaceInData(race));
+                }
+            };
+
+            scenarioChooser.SelectedItemChanged += (_, __) =>
+            {
+                PrintUpFromPosition(genderChooser.Position, "Choose your gender:");
+                genderChooser.IsVisible = true;
+            };
         }
 
         private Player CreatePlayer()
         {
-            if (charName.Text != "")
-                player = new Player(charName.Text, Color.White, Color.Black, Point.None);
-            else
+            if (string.IsNullOrEmpty(charName.Text))
             {
                 /*#if DEBUG
                                 player = Player.TestPlayer();
                                 return player;
                 #endif*/
 
-                PopWindow error = new PopWindow("Error");
-                error.Surface.Clear();
-                error.Surface.Print(1, 1, "You need to insert a name!");
-                error.Show(true);
+                ShowError("You need to insert a name!");
                 return null;
             }
-            //int stamina = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(5, bodyStat + 10) + 3;
-            //int mana = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(8, soulStat + 10);
-            double speed = MathMagi.Round(GoRogue.Random.GlobalRandom
-                .DefaultRNG.NextDouble(0.9, 1.1));
+            if (genderChooser.SelectedItem is null)
+            {
+                ShowError("You need to select a gender!");
+                return null;
+            }
+            if (scenarioChooser.SelectedItem is null)
+            {
+                ShowError("You need to select a scenario!");
+                return null;
+            }
+            if (raceChooser.SelectedItem is null)
+            {
+                ShowError("You need to select a race!");
+                return null;
+            }
 
-            //player.Magic.ShapingSkill = shapSkill;
-            // The first spell any mage learns is magic missile, it's the first proper combat spell that doens't require hours of practice
-            // to work,
-            // but if the player doens't have enough shaping skills for the spell, the player would play as an failed mage.
-            player.Magic.KnowSpells.Add(DataManager.QuerySpellInData("magic_missile"));
-            player.Volume = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(160, 200);
-            player.Weight = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(50, 90);
+            var scenario = (Scenario)scenarioChooser.SelectedItem;
+            var race = (Race)raceChooser.SelectedItem;
+
+            player = EntityFactory.PlayerCreatorFromZero(Point.None,
+                race.Id,
+                charName.Text,
+                Enum.Parse<Gender>(genderChooser.SelectedItem.ToString()),
+                scenario.Id);
 
             return player;
+        }
+
+        private static void ShowError(string textError)
+        {
+            PopWindow error = new PopWindow("Error");
+            error.Surface.Clear();
+            error.Surface.Print(1, 1, textError);
+            error.Show(true);
         }
 
         public override string ToString() => "Character Creation Screen";

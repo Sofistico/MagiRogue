@@ -8,16 +8,13 @@ using System.Runtime.Serialization;
 
 namespace MagiRogue.Entities
 {
-    [DataContract]
-    [JsonConverter(typeof(Data.Serialization.EntitySerialization.LimbJsonConverter))]
     public class Limb : BodyPart
     {
+        //[JsonConverter(typeof(Data.Serialization.EntitySerialization.LimbJsonConverter))]
         private string _connectedLimb;
 
-        [DataMember]
         public TypeOfLimb TypeLimb { get; set; }
 
-        [DataMember]
         public string ConnectedTo
         {
             get
@@ -35,12 +32,15 @@ namespace MagiRogue.Entities
 
         public bool Attached { get; set; } = true;
 
+        [JsonConstructor()]
+        public Limb(string materialId) : base(materialId)
+        {
+        }
+
         /// <summary>
         /// This class creates a limb for a body.
         /// </summary>
         /// <param name="limbType">The type of the limb, if its a arm or a leg or etc...</param>
-        /// <param name="limbHp">the total hp of the limb</param>
-        /// <param name="maxLimbHp">the max limb hp that it can recover</param>
         /// <param name="limbName">The name of the limb</param>
         /// <param name="orientation">If it's in the center, left or right of the body</param>
         /// <param name="materialID">The id to define the material, if needeed look at the material definition json\n
@@ -48,10 +48,8 @@ namespace MagiRogue.Entities
 
         public Limb(TypeOfLimb limbType, string limbName,
             BodyPartOrientation orientation, string connectedTo,
-            string materialID = "flesh", BodyPartFunction limbFunction = BodyPartFunction.Limb) : base()
+            string materialID = "flesh", BodyPartFunction limbFunction = BodyPartFunction.Limb) : base(materialID)
         {
-            MaterialId = materialID;
-            BodyPartMaterial = GameSys.Physics.PhysicsManager.SetMaterial(materialID);
             TypeLimb = limbType;
             Attached = true;
             BodyPartName = limbName;
@@ -62,11 +60,9 @@ namespace MagiRogue.Entities
 
         public Limb(string id, TypeOfLimb limbType, int limbHp, int maxLimbHp,
             string limbName, BodyPartOrientation orientation, string connectedTo,
-           string materialID = "flesh") : base()
+           string materialID = "flesh") : base(materialID)
         {
             Id = id;
-            MaterialId = materialID;
-            BodyPartMaterial = GameSys.Physics.PhysicsManager.SetMaterial(materialID);
             TypeLimb = limbType;
             MaxBodyPartHp = maxLimbHp;
             BodyPartHp = limbHp;

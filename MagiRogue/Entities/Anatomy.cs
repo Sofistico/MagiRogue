@@ -39,29 +39,47 @@ namespace MagiRogue.Entities
         [DataMember]
         public bool HasBlood { get; set; } = true;
 
-        [JsonIgnore]
-        public bool HasEnoughArms =>
-            Limbs.FindAll(l => l.LimbFunction is BodyPartFunction.Grasp).Count >= 1;
+        [DataMember]
+        public bool HasEnoughArms
+        {
+            get
+            {
+                return Limbs.FindAll(l => l.LimbFunction is BodyPartFunction.Grasp && l.Working).Count >= 1;
+            }
+        }
 
-        [JsonIgnore]
-        public bool HasEnoughLegs =>
-            Limbs.Exists(l => l.LimbFunction is BodyPartFunction.Stance);
+        [DataMember]
+        public bool HasEnoughLegs
+        {
+            get
+            {
+                return Limbs.FindAll(l => l.LimbFunction is BodyPartFunction.Stance && l.Working).Count >= MaxStanceLimbs;
+            }
+        }
 
-        [JsonIgnore]
-        public bool HasEnoughWings =>
-            Limbs.FindAll(l => l.LimbFunction is BodyPartFunction.Flier).Count >= 2;
+        [DataMember]
+        public bool HasEnoughWings { get => Limbs.FindAll(l => l.LimbFunction is BodyPartFunction.Flier && l.Working).Count >= MaxFlierLimbs; }
 
-        [JsonIgnore]
-        public bool HasAtLeastOneHead =>
-            Limbs.Exists(i => i.LimbFunction is BodyPartFunction.Thought && i.BodyPartHp > 0);
+        [DataMember]
+        public bool HasAtLeastOneHead { get => Limbs.Exists(i => i.TypeLimb is TypeOfLimb.Head && i.BodyPartHp > 0); }
 
-        [JsonIgnore]
-        public bool CanSee =>
-            Organs.Exists(o => o.OrganType is OrganType.Visual && (!o.Destroyed));
+        [DataMember]
+        public bool CanSee
+        {
+            get
+            {
+                return Organs.Exists(o => o.OrganType is OrganType.Visual && (!o.Destroyed || o.Working));
+            }
+        }
 
-        [JsonIgnore]
-        public bool HasATorso =>
-            Limbs.Exists(l => l.TypeLimb is TypeOfLimb.UpperBody && l.BodyPartHp > 0);
+        [DataMember]
+        public bool HasATorso
+        {
+            get
+            {
+                return Limbs.Exists(l => l.TypeLimb is TypeOfLimb.UpperBody && l.BodyPartHp > 0);
+            }
+        }
 
         /// <summary>
         /// The current age of a character
@@ -243,7 +261,7 @@ namespace MagiRogue.Entities
             {
                 bp.Volume = MathMagi.ReturnPositive((int)(volume * (bp.RelativeVolume
                     + GameLoop.GlobalRand.NextInclusiveDouble(-0.01, 0.01))));
-                bp.MaxBodyPartHp = (int)((bp.Volume + 1)/ (bp.BodyPartWeight + 1));
+                bp.MaxBodyPartHp = (int)((bp.Volume + 1) / (bp.BodyPartWeight + 1));
                 bp.BodyPartHp = bp.MaxBodyPartHp;
             }
         }
@@ -412,14 +430,19 @@ namespace MagiRogue.Entities
             return race.MaxVolume / race.AdulthoodAge;
         }
 
-        public (int, int) GetMinMaxLifespan() => (GetRace().LifespanMin, GetRace().LifespanMax);
+        public (int?, int?) GetMinMaxLifespan() => (GetRace().LifespanMin, GetRace().LifespanMax);
 
         public int GetRaceAdulthoodAge() => GetRace().AdulthoodAge;
 
         public void SetRandomLifespanByRace()
         {
-            (int min, int max) = GetMinMaxLifespan();
-            Lifespan = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(min, max);
+            (int? min, int? max) = GetMinMaxLifespan();
+            if (min.HasValue && max.HasValue)
+            {
+                Lifespan = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(min.Value, max.Value);
+            }
+            else
+                Ages = false; // else is immortal
         }
 
         public List<Wound> GetAllWounds()
@@ -444,10 +467,14 @@ namespace MagiRogue.Entities
 
         public bool EnoughBodyToLive()
         {
-            if (BloodCount > 0) return false;
-            if (Limbs.Count > 0) return false;
-            if (CheckIfHasHeadAndNeedsOne()) return false;
-            if (!HasATorso) return false;
+            if (BloodCount <= 0)
+                return false;
+            if (Limbs.Count <= 0)
+                return false;
+            if (!CheckIfHasHeadAndNeedsOne())
+                return false;
+            if (!HasATorso)
+                return false;
 
             // if for some reason still alive, then has enough of a body to live!
             return true;

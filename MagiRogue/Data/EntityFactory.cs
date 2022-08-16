@@ -18,10 +18,13 @@ namespace MagiRogue.Data
             string actorName, int actorAge, Gender gender)
         {
             Race race = DataManager.QueryRaceInData(raceId);
+            int glyph = GlyphHelper.GlyphExistInDictionary(race.RaceGlyph) ?
+                GlyphHelper.GetGlyph(race.RaceGlyph) : race.RaceGlyph;
+
             Actor actor = new Actor(actorName,
                 race.ReturnForegroundColor(),
                 race.ReturnBackgroundColor(),
-                race.RaceGlyph,
+                glyph,
                 position)
             {
                 Description = race.Description,
@@ -129,6 +132,7 @@ namespace MagiRogue.Data
             body.Strength = race.BaseStrenght;
             body.Toughness = race.BaseToughness;
             body.GeneralSpeed = race.GeneralSpeed;
+            body.ViewRadius = race.RaceViewRadius;
             body.InitialStamina();
 
             mind.Inteligence = race.BaseInt;
@@ -160,6 +164,17 @@ namespace MagiRogue.Data
                 };
 
             return item;
+        }
+
+        public static Player PlayerCreatorFromZero(Point pos, string race, string name, Gender gender,
+            string scenarioId)
+        {
+            var scenario = DataManager.QueryScenarioInData(scenarioId);
+            var foundRace = DataManager.QueryRaceInData(race);
+            int age = foundRace.GetAgeFromAgeGroup(scenario.AgeGroup);
+            Actor actor = ActorCreatorFirstStep(pos, race, name, age, gender);
+            Player player = PlayerCreatorFromActor(actor, scenarioId, gender);
+            return player;
         }
 
         public static Player PlayerCreatorFromZero(Point pos, string race, string name, int age, Gender gender,

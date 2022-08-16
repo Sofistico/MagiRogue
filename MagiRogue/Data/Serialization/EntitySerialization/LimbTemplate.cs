@@ -55,7 +55,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         public bool Attached { get; private set; }
 
         [DataMember]
-        public string? ConnectedToId { get; private set; }
+        public string? ConnectedToId { get; set; }
 
         [DataMember]
         public string Id { get; set; }
@@ -80,7 +80,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         }
 
         public LimbTemplate(TypeOfLimb limbType,
-            double maxLimbHp,
+            int maxLimbHp,
             double limbHp,
             double limbWeight,
             string limbName,
@@ -135,6 +135,8 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 template.LimbFunction
                 );
             limb.Id = template.Id;
+            limb.BodyPartHp = template.LimbHp;
+            limb.MaxBodyPartHp = (int)template.MaxLimbHp;
             limb.Broken = template.Broken;
             limb.RateOfHeal = template.RateOfHeal;
             limb.RelativeVolume = template.RelativeSize;

@@ -14,6 +14,7 @@ namespace MagiRogue.Entities
     /// </summary>
     public class Body
     {
+        [JsonProperty("Stamina")]
         private double stamina;
 
         /// <summary>
@@ -28,6 +29,7 @@ namespace MagiRogue.Entities
         public int ViewRadius { get; set; }
         public bool IsDed { get; set; }
 
+        [JsonIgnore]
         public double Stamina
         {
             get => stamina < MaxStamina ? stamina : MaxStamina;
@@ -42,9 +44,8 @@ namespace MagiRogue.Entities
                 }
             }
         }
-
         public double MaxStamina { get; set; }
-        public double StaminaRegen { get; set; }
+        public double StaminaRegen { get; set; } = 100;
         public double GeneralSpeed { get; set; }
         public int Toughness { get; set; }
         public int Endurance { get; set; }

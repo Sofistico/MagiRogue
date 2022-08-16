@@ -1,5 +1,6 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
+using MagiRogue.GameSys.Physics;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
 using System;
@@ -15,10 +16,12 @@ namespace MagiRogue.Entities
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public abstract class BodyPart
     {
+        [JsonProperty("BodyPartHp")]
         private double bodyPartHp;
 
         public string Id { get; set; }
 
+        [JsonIgnore]
         public double BodyPartHp
         {
             get
@@ -89,9 +92,12 @@ namespace MagiRogue.Entities
 
         public bool Working { get; set; }
 
-        public BodyPart()
+        [JsonConstructor()]
+        public BodyPart(string materialId)
         {
             Wounds = new();
+            MaterialId = materialId;
+            BodyPartMaterial = PhysicsManager.SetMaterial(materialId);
         }
 
         public void ApplyHeal(double rateOfHeal, bool regenLostLimb = false)

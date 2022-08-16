@@ -1,4 +1,5 @@
 ﻿using MagiRogue.UI.Controls;
+using SadConsole;
 using SadConsole.UI;
 using System;
 using System.Collections.Generic;
@@ -121,6 +122,16 @@ namespace MagiRogue.UI.Windows
             }
 
             base.Update(time);
+        }
+
+        protected void PrintUpFromPosition(int x, int y, string text)
+        {
+            Surface.Print(x + 1, y - 1, text);
+        }
+
+        protected void PrintUpFromPosition(Point pos, string text)
+        {
+            PrintUpFromPosition(pos.X, pos.Y, text);
         }
     }
 }

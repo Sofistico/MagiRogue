@@ -22,15 +22,13 @@ namespace MagiRogue.Entities
             BodyPartOrientation orientation,
             OrganType organType,
             int organHp,
-            string materialId) : base()
+            string materialId) : base(materialId)
         {
             BodyPartName = name;
             InsideOf = connectedTo;
             Orientation = orientation;
             OrganType = organType;
             BodyPartHp = organHp;
-            MaterialId = materialId;
-            BodyPartMaterial = PhysicsManager.SetMaterial(materialId);
             MaxBodyPartHp = organHp;
         }
 
@@ -41,7 +39,7 @@ namespace MagiRogue.Entities
            BodyPartOrientation orientation,
            OrganType organType,
            int organHp,
-           string materialId) : base()
+           string materialId) : base(materialId)
         {
             Id = id;
             BodyPartName = name;
@@ -49,12 +47,10 @@ namespace MagiRogue.Entities
             Orientation = orientation;
             OrganType = organType;
             BodyPartHp = organHp;
-            MaterialId = materialId;
-            BodyPartMaterial = PhysicsManager.SetMaterial(materialId);
             MaxBodyPartHp = organHp;
         }
 
-        public Organ() : base()
+        public Organ(string materialId = "flesh") : base(materialId)
         {
             // Empty!
         }

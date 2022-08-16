@@ -30,8 +30,8 @@ namespace MagiRogue.Entities
         public int MaxVolume { get; set; }
 
         // Age related stuff
-        public int LifespanMax { get; set; }
-        public int LifespanMin { get; set; }
+        public int? LifespanMax { get; set; }
+        public int? LifespanMin { get; set; }
         public int? ChildAge { get; set; }
         public int? TeenAge { get; set; }
         public int AdulthoodAge { get; set; }
@@ -136,9 +136,9 @@ namespace MagiRogue.Entities
                 AgeGroup.Baby => rng.NextInt(ChildAge.Value - 1),
                 AgeGroup.Child => rng.NextInt(ChildAge.Value, TeenAge.Value - 1),
                 AgeGroup.Teen => rng.NextInt(TeenAge.Value, AdulthoodAge - 1),
-                AgeGroup.Adult => rng.NextInt(AdulthoodAge, LifespanMin - 1),
-                AgeGroup.Elderly => rng.NextInt(LifespanMin, LifespanMax - 1),
-                _ => rng.NextInt(AdulthoodAge, LifespanMax - 1),
+                AgeGroup.Adult => rng.NextInt(AdulthoodAge, LifespanMin.HasValue ? LifespanMin.Value - 1 : int.MaxValue),
+                AgeGroup.Elderly => rng.NextInt(LifespanMin.Value, LifespanMax.Value - 1),
+                _ => rng.NextInt(AdulthoodAge, LifespanMin.HasValue ? LifespanMin.Value - 1 : int.MaxValue),
             };
         }
 
@@ -164,6 +164,11 @@ namespace MagiRogue.Entities
             int rng = GameLoop.GlobalRand.NextInt(modifiers.Length);
             int value = modifiers.Length > 0 ? modifiers[rng] : 0;
             return value;
+        }
+
+        public override string ToString()
+        {
+            return RaceName;
         }
     }
 }

@@ -71,5 +71,10 @@ namespace MagiRogue.Entities.StarterScenarios
         public Scenario()
         {
         }
+
+        public override string ToString()
+        {
+            return ScenarioName;
+        }
     }
 }
