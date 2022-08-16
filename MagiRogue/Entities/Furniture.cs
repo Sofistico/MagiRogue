@@ -16,9 +16,9 @@ namespace MagiRogue.Entities
         public int? MapIdConnection { get; set; }
         public string FurId { get; set; }
         public int Durability { get; set; }
-        public List<Trait> Traits { get; internal set; }
-        public List<IActivable> UseActions { get; internal set; }
-        public List<Quality> Qualities { get; internal set; }
+        public List<Trait> Traits { get; set; }
+        public List<IActivable> UseActions { get; set; }
+        public List<Quality> Qualities { get; set; }
         public List<Item> Inventory { get; set; }
         public MaterialTemplate Material { get; set; }
 

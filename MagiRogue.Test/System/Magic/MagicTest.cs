@@ -14,28 +14,10 @@ namespace MagiRogue.Test.System.Magic
         private MagiRogue.GameSys.Magic.MagicManager weakMagic;
         private MagiRogue.GameSys.Magic.MagicManager mediumMagic;
         private MagiRogue.GameSys.Magic.MagicManager strongMagic;
-        private readonly Stat testStats;
 
         public MagicTest()
         {
             Game.Create(1, 1);
-
-            testStats = new Stat();
-            //testStats.SetAttributes(
-            //    viewRadius: 7,
-            //    health: 10,
-            //    baseHpRegen: 0.1f,
-            //    bodyStat: 1,
-            //    mindStat: 1,
-            //    soulStat: 1,
-            //    baseAttack: 10,
-            //    attackChance: 40,
-            //    protection: 5,
-            //    defenseChance: 20,
-            //    speed: 1.0f,
-            //    _baseManaRegen: 0.1f,
-            //    personalMana: 12
-            //    );
         }
 
         [Fact]

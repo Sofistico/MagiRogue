@@ -204,11 +204,11 @@ namespace MagiRogue.UI
                 world.ProcessTurn(TimeHelper.Interact, sucess);
                 ui.MapWindow.MapConsole.IsDirty = true;
             }
-            if (info.IsKeyPressed(Keys.H) && !info.IsKeyDown(Keys.LeftShift))
-            {
-                bool sucess = ActionManager.SacrificeLifeEnergyToMana(world.Player);
-                world.ProcessTurn(TimeHelper.MagicalThings, sucess);
-            }
+            //if (info.IsKeyPressed(Keys.H) && !info.IsKeyDown(Keys.LeftShift))
+            //{
+            //    bool sucess = ActionManager.SacrificeLifeEnergyToMana(world.Player);
+            //    world.ProcessTurn(TimeHelper.MagicalThings, sucess);
+            //}
             if (info.IsKeyPressed(Keys.H) && info.IsKeyDown(Keys.LeftShift))
             {
                 bool sucess = ActionManager.NodeDrain(GetPlayer);
