@@ -39,7 +39,7 @@ namespace MagiRogue.Entities
         [DataMember]
         public bool HasBlood { get; set; } = true;
 
-        [DataMember]
+        [JsonIgnore]
         public bool HasEnoughArms
         {
             get
@@ -48,7 +48,7 @@ namespace MagiRogue.Entities
             }
         }
 
-        [DataMember]
+        [JsonIgnore]
         public bool HasEnoughLegs
         {
             get
@@ -57,13 +57,13 @@ namespace MagiRogue.Entities
             }
         }
 
-        [DataMember]
+        [JsonIgnore]
         public bool HasEnoughWings { get => Limbs.FindAll(l => l.LimbFunction is BodyPartFunction.Flier && l.Working).Count >= MaxFlierLimbs; }
 
-        [DataMember]
+        [JsonIgnore]
         public bool HasAtLeastOneHead { get => Limbs.Exists(i => i.TypeLimb is TypeOfLimb.Head && i.BodyPartHp > 0); }
 
-        [DataMember]
+        [JsonIgnore]
         public bool CanSee
         {
             get
@@ -72,7 +72,7 @@ namespace MagiRogue.Entities
             }
         }
 
-        [DataMember]
+        [JsonIgnore]
         public bool HasATorso
         {
             get

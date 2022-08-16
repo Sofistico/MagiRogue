@@ -72,5 +72,39 @@ namespace MagiRogue.Test.Entities
             Assert.Equal(playa.Body.Stamina, deserialized.Body.Stamina);
             Assert.Equal(playa.Body.StaminaRegen, deserialized.Body.StaminaRegen);
         }
+
+        [Fact]
+        public void ActorSerializeToSeeIfCanSeeFalse()
+        {
+            var playa = EntityFactory.PlayerCreatorFromZero(new Point(0, 0),
+                "human",
+                "Test",
+                MagiRogue.Data.Enumerators.Gender.Asexual,
+                "new_wiz");
+            var eyes = playa.GetAnatomy().Organs.FindAll(i => i.OrganType is MagiRogue.Data.Enumerators.OrganType.Visual);
+            foreach (var item in eyes)
+            {
+                item.BodyPartHp = 0;
+                item.Working = false;
+            }
+            var json = JsonConvert.SerializeObject(playa);
+            var deserialized = JsonConvert.DeserializeObject<Actor>(json);
+
+            Assert.False(deserialized.GetAnatomy().CanSee);
+        }
+
+        [Fact]
+        public void ActorSerializeToSeeIfCanSeeTrue()
+        {
+            var playa = EntityFactory.PlayerCreatorFromZero(new Point(0, 0),
+                "human",
+                "Test",
+                MagiRogue.Data.Enumerators.Gender.Asexual,
+                "new_wiz");
+            var json = JsonConvert.SerializeObject(playa);
+            var deserialized = JsonConvert.DeserializeObject<Actor>(json);
+
+            Assert.True(deserialized.GetAnatomy().CanSee);
+        }
     }
 }
