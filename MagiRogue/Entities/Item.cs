@@ -104,7 +104,7 @@ namespace MagiRogue.Entities
             GameLoop.GetCurrentMap().Remove(this);
         }
 
-        public void Equip(Actor actor)
+        public bool Equip(Actor actor)
         {
             // We need to store our modifiers in variables before adding them to the stat.
             // just example code
@@ -115,14 +115,14 @@ namespace MagiRogue.Entities
             if (EquipType == EquipType.None)
             {
                 GameLoop.AddMessageLog("This item can't be equiped!");
-                return;
+                return false;
             }
 
             if (!actor.GetEquipment().TryAdd(actor.GetAnatomy().Limbs.Find
-                (l => l.TypeLimb.ToString() == EquipType.ToString()), this))
+                (l => l.TypeLimb.ToString() == EquipType.ToString()).Id, this))
             {
                 GameLoop.AddMessageLog($"{actor.Name} has already an item equiped in addHere!");
-                return;
+                return false;
             }
 
             if (EquipType == EquipType.Hand)
@@ -131,6 +131,7 @@ namespace MagiRogue.Entities
             }
             else
                 GameLoop.AddMessageLog($"{actor.Name} equipped {Name} in {EquipType}");
+            return true;
         }
 
         public void Unequip(Actor actor)

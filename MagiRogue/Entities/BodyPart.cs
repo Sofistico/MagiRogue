@@ -48,7 +48,7 @@ namespace MagiRogue.Entities
         {
             get
             {
-                double finalResult = MathMagi.GetWeightWithDensity(BodyPartMaterial.Density, Volume);
+                double finalResult = MathMagi.ReturnPositive(MathMagi.GetWeightWithDensity(BodyPartMaterial.Density, Volume));
                 return finalResult;
             }
         }
@@ -98,12 +98,12 @@ namespace MagiRogue.Entities
             {
                 // if the wound is festering and the injury is that bad, then no need to check if it will heal
                 // cuz it will not!
-                if (!wound.Treated
+                if (!regenLostLimb && !wound.Treated
                     && (wound.Severity is not InjurySeverity.Bruise
                     || wound.Severity is not InjurySeverity.Minor))
                     continue;
 
-                if (!regenLostLimb && (wound.Severity is not InjurySeverity.Missing || wound.Severity is not InjurySeverity.Pulped))
+                if (regenLostLimb || (wound.Severity is not InjurySeverity.Missing || wound.Severity is not InjurySeverity.Pulped))
                 {
                     wound.Recovery = MathMagi.Round(rateOfHeal + wound.Recovery);
                     if (wound.Recovery >= MathMagi.ReturnPositive(wound.HpLost))

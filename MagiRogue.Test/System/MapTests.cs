@@ -68,9 +68,9 @@ namespace MagiRogue.Test.System
         public void WorldSerialization()
         {
             PlanetMap planet = new PlanetGenerator().CreatePlanet(150, 150, 30);
-
-            planet.AssocietatedMap.Add(new Player("pla", Color.Black,
-                Color.White, new Point(0, 0)));
+            Player playa = EntityFactory.PlayerCreatorFromZero(new Point(), "human", "Playa", 25,
+                MagiRogue.Data.Enumerators.Gender.Female, "new_wiz");
+            planet.AssocietatedMap.Add(playa);
 
             PlanetMapTemplate planetMapTemplate = planet;
 
@@ -93,15 +93,13 @@ namespace MagiRogue.Test.System
             ActorTemplate actor = new Actor("Test", Color.Black, Color.Black, '@', new Point(0, 0));
             actor.Description = "Test Desc";
             ItemTemplate item = new Item(Color.Black, Color.Black,
-                "Test Item", '@', Point.None, 100);
-            Player player = new Player("Test", Color.Black, Color.Black, new Point(0, 0));
-            var bp = DataManager.QueryBpPlanInData("humanoid_limbs");
-            bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5fingers").BodyParts);
-            bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5toes").BodyParts);
-            List<Limb> basicHuman = bp.ReturnBodyParts().Where(i => i is Limb).Cast<Limb>().ToList();
-
-            player.GetAnatomy().Limbs = basicHuman;
-            player.GetEquipment().Add(basicHuman[0], item);
+                "Test Item", '@', Point.None, 100)
+            {
+                ItemId = "test",
+                EquipType = MagiRogue.Data.Enumerators.EquipType.Head
+            };
+            Player player = Player.TestPlayer();
+            player.AddToEquipment(item);
 
             map.Add(actor);
             map.Add(item);

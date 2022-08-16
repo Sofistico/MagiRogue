@@ -1,5 +1,6 @@
 ﻿using MagiRogue.Data;
 using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.GameSys.Magic;
 using SadRogue.Primitives;
 using System;
@@ -19,16 +20,12 @@ namespace MagiRogue.Entities
 
         public static Player TestPlayer()
         {
-            Player player = new Player("Magus", Color.White, Color.Black, Point.None);
-            player.Mind.Precision = 3;
-
-            //player.GetAnatomy().Limbs = EntityFactory.BasicHumanoidBody();
-            //player.GetAnatomy().Organs = EntityFactory.BasicHumanoidOrgans();
+            Player player = EntityFactory.PlayerCreatorFromZero(new Point(), "human", "Playa", 25,
+                MagiRogue.Data.Enumerators.Gender.Female, "new_wiz");
 
             player.Magic.ShapingSkill = 9;
 
-            SpellBase missile = DataManager.QuerySpellInData("magic_missile");
-            missile.Proficiency = 1;
+            player.Magic.KnowSpells[0].Proficiency = 1;
 
             SpellBase cure = DataManager.QuerySpellInData("minor_cure");
             cure.Proficiency = 1;
@@ -57,7 +54,6 @@ namespace MagiRogue.Entities
 
             List<SpellBase> testSpells = new List<SpellBase>()
             {
-                missile,
                 cure,
                 haste,
                 mageSight,
@@ -95,7 +91,10 @@ namespace MagiRogue.Entities
                 CanBeKilled = actor.CanBeKilled,
                 Description = actor.Description,
                 IgnoresWalls = actor.IgnoresWalls,
-                IsPlayer = true
+                IsPlayer = true,
+                Height = actor.Height,
+                Broadness = actor.Broadness,
+                Length = actor.Length
             };
 
             return player;

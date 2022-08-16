@@ -24,6 +24,16 @@ namespace MagiRogue.Utils
             return positive;
         }
 
+        public static int ReturnPositive(int nmb)
+        {
+            int positive;
+            if (nmb < 0)
+                positive = nmb * -1;
+            else
+                positive = nmb;
+            return positive;
+        }
+
         /// <summary>
         /// Method to return only the positive module.
         /// </summary>
@@ -55,7 +65,7 @@ namespace MagiRogue.Utils
         public static double GetWeightWithDensity(double densityInGCm, int volumeInCM3)
         {
             int densityKgM = GetDensityInKgM(densityInGCm);
-            return densityKgM * volumeInCM3 / 1000000;
+            return (double)((densityKgM * volumeInCM3) / (double)1000000);
         }
 
         public static int GetDensityInKgM(double densityInGCm)

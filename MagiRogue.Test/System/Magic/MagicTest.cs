@@ -33,31 +33,39 @@ namespace MagiRogue.Test.System.Magic
 
             mediumMagic = new MagiRogue.GameSys.Magic.MagicManager()
             {
-                ShapingSkill = 15,
+                ShapingSkill = 10,
                 KnowSpells = spellBase
             };
 
             strongMagic = new MagiRogue.GameSys.Magic.MagicManager()
             {
-                ShapingSkill = 30,
+                ShapingSkill = 15,
                 KnowSpells = spellBase
+            };
+            Soul soul = new Soul()
+            {
+                WillPower = 10,
+                CurrentMana = 100
             };
 
             Actor weakSpellCaster = new Actor("Test1", Color.Black, Color.Black, 't', Point.None)
             {
                 Magic = weakMagic,
+                Soul = soul,
                 //Stats = testStats
             };
 
             Actor mediumSpellCaster = new Actor("Test2", Color.Black, Color.Black, 't', Point.None)
             {
                 Magic = mediumMagic,
+                Soul = soul
                 //Stats = testStats
             };
 
             Actor strongSpellCaster = new Actor("Test3", Color.Black, Color.Black, 't', Point.None)
             {
                 Magic = strongMagic,
+                Soul = soul
                 //Stats = testStats
             };
 

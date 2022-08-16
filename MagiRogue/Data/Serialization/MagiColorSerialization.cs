@@ -11,7 +11,7 @@ namespace MagiRogue.Data.Serialization
 
         public MagiColorSerialization(string colorName)
         {
-            if (ColorExtensions2.ColorMappings.ContainsKey(colorName.ToLower()))
+            if (colorName is not null && ColorExtensions2.ColorMappings.ContainsKey(colorName.ToLower()))
             {
                 Color = ColorExtensions2.FromName(colorName);
             }

@@ -200,12 +200,25 @@ namespace MagiRogue.Entities
         public Item WieldedItem()
         {
             return Body.Equipment.GetValueOrDefault(GetAnatomy().Limbs.Find(l =>
-                l.TypeLimb == TypeOfLimb.Hand));
+                l.TypeLimb == TypeOfLimb.Hand).Id);
         }
 
         public Limb GetAttackingLimb(Item item)
         {
-            return Body.Equipment.FirstOrDefault(x => x.Value == item).Key;
+            var key = Body.Equipment.FirstOrDefault(x => x.Value == item).Key;
+            var limb = GetAnatomy().Limbs.Find(i => i.Id.Equals(key));
+            return limb;
+        }
+
+        public void AddToEquipment(Item item)
+        {
+            if (item.Equip(this))
+            {
+                if (!Inventory.Contains(item))
+                {
+                    Inventory.Add(item);
+                }
+            }
         }
 
         public bool CheckIfDed()
@@ -256,7 +269,7 @@ namespace MagiRogue.Entities
 
             foreach (Limb limb in GetAnatomy().Limbs)
             {
-                if (limb.BodyPartHp < limb.MaxBodyPartHp)
+                if (limb.BodyPartHp < limb.MaxBodyPartHp || limb.Wounds.Count > 0)
                 {
                     if (limb.Attached)
                     {
@@ -270,7 +283,7 @@ namespace MagiRogue.Entities
                         List<Limb> connectedLimbs = GetAnatomy().GetAllParentConnectionLimb(limb);
                         if (!connectedLimbs.Any(i => !i.Attached))
                         {
-                            limb.ApplyHeal(GetNormalLimbRegen() * limb.RateOfHeal + 0.5);
+                            limb.ApplyHeal((GetNormalLimbRegen() * limb.RateOfHeal + 0.5 * 2), GetAnatomy().GetRace().CanRegenLostLimbs);
                             if (!limb.Wounds.Any(i => i.Severity is InjurySeverity.Missing))
                                 limb.Attached = true;
                         }
@@ -319,7 +332,7 @@ namespace MagiRogue.Entities
 
         public Anatomy GetAnatomy() => Body.Anatomy;
 
-        public Dictionary<Limb, Item> GetEquipment() => Body.Equipment;
+        public Dictionary<string, Item> GetEquipment() => Body.Equipment;
 
         public double GetStaminaRegen()
         {

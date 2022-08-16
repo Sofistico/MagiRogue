@@ -1,5 +1,6 @@
 ﻿using MagiRogue.Data.Serialization;
 using MagiRogue.Utils;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace MagiRogue.Entities
         /// <summary>
         /// The equipment that the actor is curently using
         /// </summary>
-        public Dictionary<Limb, Item> Equipment { get; set; }
+        public Dictionary<string, Item> Equipment { get; set; }
         public int ViewRadius { get; set; }
         public bool IsDed { get; set; }
 
@@ -52,7 +53,7 @@ namespace MagiRogue.Entities
 
         public Body()
         {
-            Equipment = new Dictionary<Limb, Item>();
+            Equipment = new Dictionary<string, Item>();
             MaterialsId = new();
             Anatomy = new();
         }
@@ -68,7 +69,7 @@ namespace MagiRogue.Entities
 
         public Item GetArmorOnLimbIfAny(Limb limb)
         {
-            return Equipment[limb].EquipType is not Data.Enumerators.EquipType.None ? Equipment[limb] : null;
+            return Equipment[limb.Id].EquipType is not Data.Enumerators.EquipType.None ? Equipment[limb.Id] : null;
         }
 
         public void InitialStamina()

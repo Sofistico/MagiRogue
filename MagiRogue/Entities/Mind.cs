@@ -25,7 +25,7 @@ namespace MagiRogue.Entities
 
         public void AddAbilityToDictionary(Ability ability)
         {
-            Abilities.Add(ability.Id, ability);
+            Abilities.TryAdd(ability.Id, ability);
         }
 
         public bool HasSpecifiedAttackAbility(WeaponType weaponType, out int abilityScore)

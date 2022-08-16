@@ -27,7 +27,7 @@ namespace MagiRogue.Test.Data
         {
             var path = AppDomain.CurrentDomain.BaseDirectory;
             List<Organ> organs = JsonUtils.JsonDeseralize<List<Organ>>
-                (path + @"\Data\Other\organs.json");
+                (path + @"\Data\Bodies\organs_std.json");
 
             var otg = DataManager.QueryOrganInData("brain");
 
@@ -40,9 +40,9 @@ namespace MagiRogue.Test.Data
             var path = AppDomain.CurrentDomain.BaseDirectory;
 
             List<LimbTemplate> limb = MagiRogue.Utils.JsonUtils.JsonDeseralize<List<LimbTemplate>>
-                (path + @"\Data\Other\body_parts.json");
+                (path + @"\Data\Bodies\limb_std.json");
 
-            var otherLimb = DataManager.QueryLimbInData("humanoid_torso");
+            var otherLimb = DataManager.QueryLimbInData("humanoid_upper_body");
 
             Assert.Equal(limb[0].Id, otherLimb.Id);
         }
@@ -107,13 +107,14 @@ namespace MagiRogue.Test.Data
         [Fact]
         public void RegenActorLostLimb()
         {
-            Actor actor = new Actor("Test actor", Color.AliceBlue, Color.AliceBlue, '@',
-                new Point(0, 0));
-            actor.GetAnatomy().Race = "test_race";
-            var bp = DataManager.QueryBpPlanInData("humanoid_limbs");
-            bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5fingers").BodyParts);
-            bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5toes").BodyParts);
-            actor.GetAnatomy().Limbs = bp.ReturnBodyParts().Where(i => i is Limb).Cast<Limb>().ToList();
+            Actor actor = EntityFactory.ActorCreatorFirstStep(Point.None, "test_race", "test dummy", 20, Gender.Asexual);
+            //Actor actor = new Actor("Test actor", Color.AliceBlue, Color.AliceBlue, '@',
+            //    new Point(0, 0));
+            //actor.GetAnatomy().Race = "test_race";
+            //var bp = DataManager.QueryBpPlanInData("humanoid_limbs");
+            //bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5fingers").BodyParts);
+            //bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5toes").BodyParts);
+            //actor.GetAnatomy().Limbs = bp.ReturnBodyParts().Where(i => i is Limb).Cast<Limb>().ToList();
             var arms = actor.GetAnatomy().Limbs.FindAll(l => l.TypeLimb is TypeOfLimb.Arm);
             foreach (var arm in arms)
             {

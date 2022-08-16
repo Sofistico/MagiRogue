@@ -239,8 +239,8 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             {
                 for (int i = 0; i < actorTemplate.Equip.Count; i++)
                 {
-                    actor.GetEquipment().TryAdd(actorTemplate.Equip[i].LimbEquipped,
-                        actorTemplate.Equip[i].ItemEquipped);
+                    EquipTemplate equip = actorTemplate.Equip[i];
+                    actor.AddToEquipment(actorTemplate.Inventory.Find(i => i.Id.Equals(equip.ItemEquipped)));
                 }
             }
 
@@ -276,10 +276,9 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
             if (actor.Mind.Abilities is not null && actor.Mind.Abilities.Count > 0)
             {
-                for (int i = 0; i < actor.Mind.Abilities.Count; i++)
+                foreach (var item in actor.Mind.Abilities.Values)
                 {
-                    var ability = actor.Mind.Abilities[i];
-                    abilitylist.Add(ability);
+                    abilitylist.Add(item);
                 }
             }
 
@@ -311,9 +310,9 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 actorTemplate.Inventory.Add(actor.Inventory[a]);
             }
 
-            foreach (Limb limb in actor.GetEquipment().Keys)
+            foreach (string limb in actor.GetEquipment().Keys)
             {
-                actorTemplate.Equip.Add(new EquipTemplate(actor.GetEquipment()[limb], limb));
+                actorTemplate.Equip.Add(new EquipTemplate(actor.GetEquipment()[limb].ItemId, limb));
             }
             actorTemplate.GlyphInt = actor.Appearance.Glyph;
 

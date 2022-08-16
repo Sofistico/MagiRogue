@@ -170,6 +170,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             itemSerialized.Broadness = item.Broadness;
             itemSerialized.Height = item.Height;
             itemSerialized.Length = item.Length;
+            itemSerialized.Id = item.ItemId;
 
             return itemSerialized;
         }
@@ -179,10 +180,10 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             int glyph = GlyphHelper.GlyphExistInDictionary(itemTemplate.Glyph) ?
                 GlyphHelper.GetGlyph(itemTemplate.Glyph) : itemTemplate.Glyph;
             MagiColorSerialization foreground = new MagiColorSerialization(itemTemplate.Foreground);
-            Color background = !string.IsNullOrEmpty(itemTemplate.Background) ? itemTemplate.BackgroundBackingField.Color : Color.Transparent;
+            MagiColorSerialization background = new MagiColorSerialization(itemTemplate.Background);
 
             Item item = new(foreground.Color,
-                background,
+                background.Color,
                 itemTemplate.Name,
                 glyph,
                 Point.None,

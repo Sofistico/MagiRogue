@@ -24,7 +24,7 @@ namespace MagiRogue.GameSys.Magic
         /// </summary>
         public int RequiredShapingSkill
         {
-            get => (int)MathMagi.Round(Power * 2 / Proficiency);
+            get => (int)MathMagi.Round(Power * 6 / Proficiency);
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace MagiRogue.GameSys.Magic
             MagicSchool spellSchool,
             int spellRange,
             int spellLevel = 1,
-            double manaCost = 0.1f)
+            double manaCost = 0.1)
         {
             SpellId = spellId;
             SpellName = spellName;
@@ -149,11 +149,11 @@ namespace MagiRogue.GameSys.Magic
                 int reqShapingWithDiscount;
                 try
                 {
-                    reqShapingWithDiscount = RequiredShapingSkill / stats.Soul.WillPower;
+                    reqShapingWithDiscount = (int)(RequiredShapingSkill / (double)((stats.Soul.WillPower * 0.3) + 1));
                 }
                 catch (DivideByZeroException)
                 {
-                    GameLoop.AddMessageLog("Tried to divide your non existant soul by zero! The universe almost exploded because of you");
+                    GameLoop.AddMessageLog("Tried to divide your non existant will by zero! The universe almost exploded because of you");
                     return false;
                 }
 

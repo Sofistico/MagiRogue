@@ -120,7 +120,7 @@ namespace MagiRogue.Data
             actor.Broadness = race.GetRandomBroadness();
             int volumeWithHeight = actor.Height > 0 ? MathMagi.CalculateVolumeWithModifier(actor.Height, volume) : volume;
             int volumeWithLenght = actor.Length > 0 ? MathMagi.CalculateVolumeWithModifier(actor.Length, volumeWithHeight) : volumeWithHeight;
-            int finalVolume = actor.Broadness > 0 ? MathMagi.CalculateVolumeWithModifier(actor.Length, volumeWithLenght) : volumeWithLenght;
+            int finalVolume = actor.Broadness > 0 ? MathMagi.CalculateVolumeWithModifier(actor.Broadness, volumeWithLenght) : volumeWithLenght;
 
             race.SetBodyPlan();
             anatomy.Setup(actor, race, actorAge, gender, finalVolume);
@@ -160,6 +160,14 @@ namespace MagiRogue.Data
                 };
 
             return item;
+        }
+
+        public static Player PlayerCreatorFromZero(Point pos, string race, string name, int age, Gender gender,
+            string scenarioId)
+        {
+            Actor actor = ActorCreatorFirstStep(pos, race, name, age, gender);
+            Player player = PlayerCreatorFromActor(actor, scenarioId, gender);
+            return player;
         }
     }
 }
