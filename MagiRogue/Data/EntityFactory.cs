@@ -3,6 +3,7 @@ using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Entities;
 using MagiRogue.Entities.StarterScenarios;
 using MagiRogue.GameSys.Magic;
+using MagiRogue.Utils;
 using System;
 using System.Collections.Generic;
 
@@ -117,9 +118,9 @@ namespace MagiRogue.Data
             actor.Height = race.GetRandomHeight();
             actor.Length = race.GetRandomLength();
             actor.Broadness = race.GetRandomBroadness();
-            int volumeWithHeight = actor.Height > 0 ? (int)((volume) * (actor.Height / (double)100)) : volume;
-            int volumeWithLenght = actor.Length > 0 ? (int)(volume * (actor.Length / (double)100)) : volumeWithHeight;
-            int finalVolume = actor.Broadness > 0 ? (int)(volume * (actor.Broadness / (double)100)) : volumeWithLenght;
+            int volumeWithHeight = actor.Height > 0 ? MathMagi.CalculateVolumeWithModifier(actor.Height, volume) : volume;
+            int volumeWithLenght = actor.Length > 0 ? MathMagi.CalculateVolumeWithModifier(actor.Length, volumeWithHeight) : volumeWithHeight;
+            int finalVolume = actor.Broadness > 0 ? MathMagi.CalculateVolumeWithModifier(actor.Length, volumeWithLenght) : volumeWithLenght;
 
             race.SetBodyPlan();
             anatomy.Setup(actor, race, actorAge, gender, finalVolume);

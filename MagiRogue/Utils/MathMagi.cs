@@ -62,5 +62,10 @@ namespace MagiRogue.Utils
         {
             return (int)(densityInGCm * 1000);
         }
+
+        public static int CalculateVolumeWithModifier(int modifier, int volume)
+        {
+            return (int)((volume) * (modifier / (double)100));
+        }
     }
 }

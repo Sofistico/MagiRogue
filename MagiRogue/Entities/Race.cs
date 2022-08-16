@@ -144,28 +144,25 @@ namespace MagiRogue.Entities
 
         public int GetRandomBroadness()
         {
-            if (BroadnessModifier is null)
-                return 0;
-            int rng = GameLoop.GlobalRand.NextInt(BroadnessModifier.Length);
-            int value = BroadnessModifier.Length > 0 ? BroadnessModifier[rng] : 0;
-            return value;
+            return GetRandomModifierFromList(BroadnessModifier);
         }
 
         public int GetRandomLength()
         {
-            if (LengthModifier is null)
-                return 0;
-            int rng = GameLoop.GlobalRand.NextInt(LengthModifier.Length);
-            int value = LengthModifier.Length > 0 ? LengthModifier[rng] : 0;
-            return value;
+            return GetRandomModifierFromList(LengthModifier);
         }
 
         public int GetRandomHeight()
         {
-            if (HeightModifier is null)
+            return GetRandomModifierFromList(HeightModifier);
+        }
+
+        private static int GetRandomModifierFromList(int[] modifiers)
+        {
+            if (modifiers is null)
                 return 0;
-            int rng = GameLoop.GlobalRand.NextInt(HeightModifier.Length);
-            int value = HeightModifier.Length > 0 ? HeightModifier[rng] : 0;
+            int rng = GameLoop.GlobalRand.NextInt(modifiers.Length);
+            int value = modifiers.Length > 0 ? modifiers[rng] : 0;
             return value;
         }
     }
