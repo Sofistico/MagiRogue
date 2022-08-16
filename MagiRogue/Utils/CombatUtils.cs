@@ -39,14 +39,31 @@ namespace MagiRogue.Utils
                     return;
                 }
 
-                actor.Body.Stamina -= dmg;
-                Wound woundTaken = new Wound(dmg, dmgType);
+                // the stamina takes the hit first
+                double staminaAfterHit = MathMagi.Round(actor.Body.Stamina - dmg);
+                double differenceSta = actor.Body.Stamina - staminaAfterHit;
+                dmg -= differenceSta;
+                //actor.Body.Stamina -= dmg;
 
-                actor.GetAnatomy().Injury(woundTaken, limbAttacked, actor);
-
-                if (actor.CheckIfDed())
+                // any remaining dmg goes to create a wound
+                if (dmg > 0)
                 {
-                    Commands.ActionManager.ResolveDeath(actor);
+                    Wound woundTaken = new Wound(dmg, dmgType);
+
+                    actor.GetAnatomy().Injury(woundTaken, limbAttacked, actor);
+
+                    if (actor.CheckIfDed())
+                    {
+                        Commands.ActionManager.ResolveDeath(actor);
+                    }
+
+                    GameLoop.AddMessageLog($"The {entity.Name} took {dmg} {dmgType} total damage in the {limbAttacking.BodyPartName}!");
+                    return;
+                }
+                else
+                {
+                    GameLoop.AddMessageLog($"The {entity.Name} took {dmg} {dmgType} total damage to it's stamina!");
+                    return;
                 }
             }
 
@@ -54,8 +71,6 @@ namespace MagiRogue.Utils
             {
                 item.Condition -= (int)dmg;
             }
-
-            GameLoop.AddMessageLog($"The {entity.Name} took {dmg} {dmgType} total damage in the {limbAttacking.BodyPartName}!");
         }
 
         public static void ApplyHealing(int dmg, Actor stats, DamageType healingType)
