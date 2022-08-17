@@ -24,7 +24,7 @@ namespace MagiRogue.GameSys.Magic
         /// </summary>
         public int RequiredShapingSkill
         {
-            get => (int)MathMagi.Round(Power * 2 / Proficiency);
+            get => (int)MathMagi.Round(Power * 6 / Proficiency);
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace MagiRogue.GameSys.Magic
             MagicSchool spellSchool,
             int spellRange,
             int spellLevel = 1,
-            double manaCost = 0.1f)
+            double manaCost = 0.1)
         {
             SpellId = spellId;
             SpellName = spellName;
@@ -142,18 +142,18 @@ namespace MagiRogue.GameSys.Magic
             Effects = new List<ISpellEffect>();
         }
 
-        public bool CanCast(MagicManager magicSkills, Stat stats)
+        public bool CanCast(MagicManager magicSkills, Actor stats)
         {
             if (magicSkills.KnowSpells.Contains(this))
             {
                 int reqShapingWithDiscount;
                 try
                 {
-                    reqShapingWithDiscount = RequiredShapingSkill / stats.SoulStat;
+                    reqShapingWithDiscount = (int)(RequiredShapingSkill / (double)((stats.Soul.WillPower * 0.3) + 1));
                 }
                 catch (DivideByZeroException)
                 {
-                    GameLoop.AddMessageLog("Tried to divide your non existant soul by zero! The universe almost exploded because of you");
+                    GameLoop.AddMessageLog("Tried to divide your non existant will by zero! The universe almost exploded because of you");
                     return false;
                 }
 
@@ -164,7 +164,7 @@ namespace MagiRogue.GameSys.Magic
                     TickProfiency();
                     errorMessage = "Can't cast the spell because you don't have the required shaping skills and/or the proficiency";
                 }
-                if (stats.PersonalMana <= ManaCost)
+                if (stats.Soul.CurrentMana <= ManaCost)
                 {
                     errorMessage = "You don't have enough mana to cast the spell!";
                     canCast = false;
@@ -184,11 +184,11 @@ namespace MagiRogue.GameSys.Magic
         /// <returns></returns>
         public bool CastSpell(Point target, Actor caster)
         {
-            if (CanCast(caster.Magic, caster.Stats) && target != Point.None)
+            if (CanCast(caster.Magic, caster) && target != Point.None)
             {
                 Entity entity = GameLoop.GetCurrentMap().GetEntityAt<Entity>(target);
 
-                GameLoop.UIManager.MessageLog.Add($"{caster.Name} casted {SpellName}");
+                GameLoop.AddMessageLog($"{caster.Name} casted {SpellName}");
 
                 foreach (ISpellEffect effect in Effects)
                 {
@@ -199,13 +199,13 @@ namespace MagiRogue.GameSys.Magic
                     }
                 }
 
-                caster.Stats.PersonalMana -= (float)ManaCost;
+                caster.Soul.CurrentMana -= (float)ManaCost;
                 TickProfiency();
 
                 return true;
             }
 
-            GameLoop.UIManager.MessageLog.Add(errorMessage);
+            GameLoop.AddMessageLog(errorMessage);
             errorMessage = "Can't cast the spell";
 
             return false;
@@ -219,9 +219,9 @@ namespace MagiRogue.GameSys.Magic
         /// <returns></returns>
         public bool CastSpell(List<Point> target, Actor caster)
         {
-            if (CanCast(caster.Magic, caster.Stats) && target.Count > 0)
+            if (CanCast(caster.Magic, caster) && target.Count > 0)
             {
-                GameLoop.UIManager.MessageLog.Add($"{caster.Name} casted {SpellName}");
+                GameLoop.AddMessageLog($"{caster.Name} casted {SpellName}");
 
                 foreach (var pos in target)
                 {
@@ -233,13 +233,13 @@ namespace MagiRogue.GameSys.Magic
                     }
                 }
 
-                caster.Stats.PersonalMana -= (float)ManaCost;
+                caster.Soul.CurrentMana -= ManaCost;
                 TickProfiency();
 
                 return true;
             }
             errorMessage = "Can't cast the spell, there must be an entity to target";
-            GameLoop.UIManager.MessageLog.Add(errorMessage);
+            GameLoop.AddMessageLog(errorMessage);
             errorMessage = "Can't cast the spell";
 
             return false;

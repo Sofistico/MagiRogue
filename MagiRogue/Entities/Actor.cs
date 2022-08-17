@@ -1,10 +1,16 @@
 ﻿using MagiRogue.Commands;
 using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization;
 using MagiRogue.GameSys;
+using MagiRogue.GameSys.Physics;
 using MagiRogue.GameSys.Tiles;
+using MagiRogue.Utils;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MagiRogue.Entities
 {
@@ -14,21 +20,25 @@ namespace MagiRogue.Entities
         #region Fields
 
         private bool bumped = false;
-        private Stat stats = new Stat();
 
         #endregion Fields
 
         #region Properties
 
         /// <summary>
-        /// The stats of the actor
+        /// The soul of the actor, where magic happens
         /// </summary>
-        public Stat Stats { get => stats; set => stats = value; }
+        public Soul Soul { get; set; }
 
         /// <summary>
-        /// The anatomy of the actor
+        /// The mind of the actor, where thought and brain is
         /// </summary>
-        public Anatomy Anatomy { get; set; }
+        public Mind Mind { get; set; }
+
+        /// <summary>
+        /// The body of the actor
+        /// </summary>
+        public Body Body { get; set; }
 
         /// <summary>
         /// Sets if the char has bumbed in something
@@ -41,20 +51,8 @@ namespace MagiRogue.Entities
         /// </summary>
         public List<Item> Inventory { get; set; }
 
-        /// <summary>
-        /// The equipment that the actor is curently using
-        /// </summary>
-        [JsonIgnore]
-        public Dictionary<Limb, Item> Equipment { get; set; }
-
         [JsonIgnore]
         public int XP { get; set; }
-
-        /// <summary>
-        /// Dictionary of the Abilities of an actor.
-        /// Never add directly to the dictionary, use the method AddAbilityToDictionary to add new abilities
-        /// </summary>
-        public Dictionary<int, Ability> Abilities { get; set; }
 
         public bool IsPlayer { get; set; }
 
@@ -76,18 +74,20 @@ namespace MagiRogue.Entities
             ) : base(foreground, background,
             glyph, coord, layer)
         {
-            Anatomy = new Anatomy(this);
+            Body = new Body();
+            Mind = new Mind();
+            Soul = new Soul();
             Inventory = new List<Item>();
-            Equipment = new Dictionary<Limb, Item>();
-            Abilities = new();
             Name = name;
             // by default the material of the actor will be mostly flesh
-            Material = GameSys.Physics.PhysicsManager.SetMaterial("flesh");
+            //Material = GameSys.Physics.PhysicsManager.SetMaterial("flesh");
         }
 
         #endregion Constructor
 
-        #region HelpCode
+        #region Methods
+
+        #region Utils
 
         // Moves the Actor BY positionChange tiles in any X/Y direction
         // returns true if actor was able to move, false if failed to move
@@ -156,7 +156,7 @@ namespace MagiRogue.Entities
 
             if (actor != null && CanBeAttacked)
             {
-                CommandManager.Attack(this, actor);
+                ActionManager.MeleeAttack(this, actor);
                 Bumped = true;
                 return Bumped;
             }
@@ -174,7 +174,7 @@ namespace MagiRogue.Entities
             // try to use it
             if (door != null && CanInteract)
             {
-                CommandManager.UseDoor(this, door);
+                ActionManager.UseDoor(this, door);
                 GameLoop.UIManager.MapWindow.MapConsole.IsDirty = true;
                 return true;
             }
@@ -197,17 +197,252 @@ namespace MagiRogue.Entities
             }
         }
 
-        public Item? WieldedItem()
+        public Item WieldedItem()
         {
-            return Equipment.GetValueOrDefault(Anatomy.Limbs.Find(l =>
-            l.TypeLimb == TypeOfLimb.Hand));
+            return Body.Equipment.GetValueOrDefault(GetAnatomy().Limbs.Find(l =>
+                l.TypeLimb == TypeOfLimb.Hand).Id);
         }
 
-        public void AddAbilityToDictionary(Ability ability)
+        public Limb GetAttackingLimb(Item item)
         {
-            Abilities.Add(ability.Id, ability);
+            var key = Body.Equipment.FirstOrDefault(x => x.Value == item).Key;
+            var limb = GetAnatomy().Limbs.Find(i => i.Id.Equals(key));
+            return limb;
         }
 
-        #endregion HelpCode
+        public void AddToEquipment(Item item)
+        {
+            if (item.Equip(this))
+            {
+                if (!Inventory.Contains(item))
+                {
+                    Inventory.Add(item);
+                }
+            }
+        }
+
+        public bool CheckIfDed()
+        {
+            return !GetAnatomy().EnoughBodyToLive();
+        }
+
+        #endregion Utils
+
+        #region RegenCode
+
+        public void ApplyAllRegen()
+        {
+            ApplyBodyRegen();
+            ApplyStaminaRegen();
+            ApplyManaRegen();
+        }
+
+        public void ApplyBodyRegen()
+        {
+            #region Broken dreams lies here....
+
+            //Parallel.ForEach(GetAnatomy().Limbs, limb =>
+            //{
+            //    if (limb.BodyPartHp < limb.MaxBodyPartHp)
+            //    {
+            //        if (limb.Attached)
+            //        {
+            //            if (limb.CanHeal || GetAnatomy().GetActorRace().CanRegenLostLimbs)
+            //            {
+            //                limb.ApplyHeal(GetNormalLimbRegen() * limb.RateOfHeal);
+            //            }
+            //        }
+            //        if (!limb.Attached && GetAnatomy().GetActorRace().CanRegenLostLimbs)
+            //        {
+            //            List<Limb> connectedLimbs = GetAnatomy().GetAllParentConnectionLimb(limb);
+            //            if (!connectedLimbs.Any(i => !i.Attached))
+            //            {
+            //                limb.ApplyHeal(GetNormalLimbRegen() * limb.RateOfHeal + 0.5);
+            //                if (!limb.Wounds.Any(i => i.Severity is InjurySeverity.Missing))
+            //                    limb.Attached = true;
+            //            }
+            //        }
+            //    }
+            //});
+
+            #endregion Broken dreams lies here....
+
+            foreach (Limb limb in GetAnatomy().Limbs)
+            {
+                if (limb.BodyPartHp < limb.MaxBodyPartHp || limb.Wounds.Count > 0)
+                {
+                    if (limb.Attached)
+                    {
+                        if (limb.CanHeal || GetAnatomy().GetRace().CanRegenLostLimbs)
+                        {
+                            limb.ApplyHeal(GetNormalLimbRegen() * limb.RateOfHeal);
+                        }
+                    }
+                    if (!limb.Attached && GetAnatomy().GetRace().CanRegenLostLimbs)
+                    {
+                        List<Limb> connectedLimbs = GetAnatomy().GetAllParentConnectionLimb(limb);
+                        if (!connectedLimbs.Any(i => !i.Attached))
+                        {
+                            limb.ApplyHeal((GetNormalLimbRegen() * limb.RateOfHeal + 0.5 * 2), GetAnatomy().GetRace().CanRegenLostLimbs);
+                            if (!limb.Wounds.Any(i => i.Severity is InjurySeverity.Missing))
+                                limb.Attached = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        public void ApplyManaRegen()
+        {
+            Soul.ApplyManaRegen(GetManaRegen());
+        }
+
+        public void ApplyStaminaRegen()
+        {
+            Body.ApplyStaminaRegen(GetStaminaRegen());
+        }
+
+        #endregion RegenCode
+
+        #region GetProperties
+
+        public int GetViewRadius()
+        {
+            return Body.ViewRadius;
+        }
+
+        public double GetNormalLimbRegen()
+        {
+            return Body.Anatomy.NormalLimbRegen;
+        }
+
+        public double GetBloodCoagulation()
+        {
+            if (GetAnatomy().HasBlood)
+            {
+                return GetAnatomy().GetRace().BleedRegenaration + (Body.Toughness * 0.2);
+            }
+            return 0;
+        }
+
+        public double GetManaRegen()
+        {
+            return Soul.BaseManaRegen;
+        }
+
+        public Anatomy GetAnatomy() => Body.Anatomy;
+
+        public Dictionary<string, Item> GetEquipment() => Body.Equipment;
+
+        public double GetStaminaRegen()
+        {
+            return Body.StaminaRegen * GetAnatomy().FitLevel;
+        }
+
+        public double GetActorBaseSpeed()
+        {
+            return Body.GeneralSpeed;
+        }
+
+        public double GetActorCastingSpeed()
+        {
+            return GetActorBaseSpeed() + ((Magic.ShapingSkill * 0.7) * (Soul.WillPower * 0.3));
+        }
+
+        public double GetAttackVelocity()
+        {
+            return PhysicsManager.GetAttackVelocity(this);
+        }
+
+        public double GetProtection(Limb limb)
+        {
+            var item = Body.GetArmorOnLimbIfAny(limb);
+            return Body.Toughness +
+                (item.Material.Hardness * Body.GetArmorOnLimbIfAny(limb).Material.Density)
+                + GetRelevantAbility(AbilityName.ArmorUse);
+        }
+
+        public int GetPrecision()
+        {
+            return Mind.Precision;
+        }
+
+        public int GetDefenseAbility()
+        {
+            throw new NotImplementedException();
+        }
+
+        public int GetRelevantAbility(AbilityName ability)
+        {
+            if (Mind.Abilities.ContainsKey((int)ability))
+            {
+                return Mind.Abilities[(int)ability].Score;
+            }
+            else
+                return 0;
+        }
+
+        public int GetRelevantAttackAbility()
+        {
+            if (WieldedItem() is not null && WieldedItem() is Item item)
+            {
+                return GetRelevantAttackAbility(item.WeaponType);
+            }
+            else
+            {
+                return GetRelevantAbility(AbilityName.Unarmed);
+            }
+        }
+
+        public int GetRelevantAttackAbility(WeaponType weaponType)
+        {
+            if (Mind.HasSpecifiedAttackAbility(weaponType, out int abilityScore))
+            {
+                return abilityScore;
+            }
+            else
+                return 0;
+        }
+
+        public double GetRelevantAttackAbilityMultiplier(WeaponType weaponType)
+        {
+            if (Mind.HasSpecifiedAttackAbility(weaponType, out int abilityScore))
+            {
+                return abilityScore * 0.3;
+            }
+            else
+                return 0;
+        }
+
+        public double GetRelevantAbilityMultiplier(AbilityName ability)
+        {
+            if (Mind.Abilities.ContainsKey((int)ability))
+            {
+                return Mind.Abilities[(int)ability].Score * 0.3;
+            }
+            else
+                return 0;
+        }
+
+        public int GetStrenght()
+        {
+            return Body.Strength;
+        }
+
+        public DamageType GetDamageType()
+        {
+            if (WieldedItem() is not null && WieldedItem() is Item item)
+            {
+                return item.ItemDamageType;
+            }
+            else
+            {
+                return DamageType.Blunt;
+            }
+        }
+
+        #endregion GetProperties
+
+        #endregion Methods
     }
 }

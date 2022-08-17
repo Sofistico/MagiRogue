@@ -51,22 +51,22 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         public int GlyphInt { get; set; }
 
         /// <summary>
-        /// <inheritdoc cref="Entity.Size"/>
+        /// <inheritdoc cref="Entity.Volume"/>
         /// </summary>
         [DataMember]
-        public int Size { get; set; }
+        public int Volume { get; set; }
 
         [DataMember]
-        public float Weight { get; set; }
+        public int Height { get; set; }
 
         [DataMember]
-        public string MaterialId { get; set; }
+        public int Length { get; set; }
 
         [DataMember]
-        public Stat Stats { get; set; }
+        public int Broadness { get; set; }
 
         [DataMember]
-        public Anatomy Anatomy { get; set; }
+        public double Weight { get; set; }
 
         [DataMember(EmitDefaultValue = false, IsRequired = false)]
         public int Layer { get; set; }
@@ -110,6 +110,15 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         [DataMember]
         public List<EquipTemplate> Equip { get; set; }
 
+        [DataMember]
+        public Mind Mind { get; set; }
+
+        [DataMember]
+        public Soul Soul { get; set; }
+
+        [DataMember]
+        public Body Body { get; set; }
+
         /// <summary>
         /// Is used in the serialization of the actor.
         /// </summary>
@@ -125,17 +134,17 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         /// <param name="weight"></param>
         /// <param name="materialId"></param>
         public ActorTemplate(string name, uint foreground, uint background, int glyph,
-            int layer, Stat stats, Anatomy anatomy, int size, float weight, string materialId,
-            List<AbilityTemplate> abilities, MagicManager magic)
+            int layer, Body body, int size, double weight,
+            List<AbilityTemplate> abilities, MagicManager magic, Soul soul, Mind mind)
         {
             Name = name;
             Glyph = (char)glyph;
-            Stats = stats;
-            Anatomy = anatomy;
+            Body = body;
+            Soul = soul;
+            Mind = mind;
             Layer = layer;
-            Size = size;
+            Volume = size;
             Weight = weight;
-            MaterialId = materialId;
             MagicStuff = magic;
 
             ForegroundBackingField = new MagiColorSerialization(foreground);
@@ -147,77 +156,33 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             Equip = new();
         }
 
-        public ActorTemplate(string name, Color foreground, Color background, int glyph,
-            int layer, Stat stats, Anatomy anatomy, string description, int size, float weight,
-            string materialId)
-        {
-            Name = name;
-            Glyph = (char)glyph;
-            Stats = stats;
-            Anatomy = anatomy;
-            Description = description;
-            Layer = layer;
-            Size = size;
-            Weight = weight;
-            MaterialId = materialId;
-
-            ForegroundBackingField = new MagiColorSerialization(foreground);
-            BackgroundBackingField = new MagiColorSerialization(background);
-
-            Equip = new();
-        }
-
-        public ActorTemplate(string name, string foreground, string background, int glyph,
-           int layer, Stat stats, Anatomy anatomy, string description, int size, float weight, string materialId
-            , List<AbilityTemplate> abilities)
-        {
-            Name = name;
-            Foreground = foreground;
-            Background = background;
-            Glyph = (char)glyph;
-            Stats = stats;
-            Anatomy = anatomy;
-            Description = description;
-            Layer = layer;
-            Size = size;
-            Weight = weight;
-            MaterialId = materialId;
-
-            ForegroundBackingField = new MagiColorSerialization(foreground);
-            BackgroundBackingField = new MagiColorSerialization(background);
-
-            Abilities = abilities;
-            Equip = new();
-        }
-
         public ActorTemplate(Actor actor)
         {
             Name = actor.Name;
             ForegroundBackingField = new MagiColorSerialization(actor.Appearance.Foreground);
             BackgroundBackingField = new MagiColorSerialization(actor.Appearance.Background);
             Glyph = (char)actor.Appearance.Glyph;
-            Stats = actor.Stats;
-            Anatomy = actor.Anatomy;
+            Body = actor.Body;
             Description = actor.Description;
             Layer = actor.Layer;
-            Size = actor.Size;
+            Volume = actor.Volume;
             Weight = actor.Weight;
-            MaterialId = actor.Material.Id;
             Abilities = new();
             AddToAbilities(actor);
             Equip = new();
+            Soul = actor.Soul;
+            Mind = actor.Mind;
         }
 
         private void AddToAbilities(Actor actor)
         {
-            for (int i = 0; i < actor.Abilities.Count; i++)
+            for (int i = 0; i < actor.Mind.Abilities.Count; i++)
             {
-                var actorAbility = actor.Abilities[i];
+                var actorAbility = actor.Mind.Abilities[i];
                 var abilityTemplaye = new AbilityTemplate()
                 {
-                    Name = actorAbility.Name,
+                    Ability = actorAbility.ReturnAbilityEnumFromString(),
                     Score = actorAbility.Score,
-                    Speciality = actorAbility.Speciality
                 };
                 Abilities.Add(abilityTemplaye);
             }
@@ -247,18 +212,16 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 Point.None)
                 {
                     Description = actorTemplate.Description,
-                    Stats = actorTemplate.Stats,
-                    Anatomy = actorTemplate.Anatomy,
-                    Size = actorTemplate.Size,
+                    Body = actorTemplate.Body,
+                    Volume = actorTemplate.Volume,
                     Weight = actorTemplate.Weight,
-                    Material = GameSys.Physics.PhysicsManager.SetMaterial(actorTemplate.MaterialId)
                 };
             if (actorTemplate.Abilities is not null && actorTemplate.Abilities.Count > 0)
             {
                 for (int i = 0; i < actorTemplate.Abilities.Count; i++)
                 {
                     var abilityTemplate = actorTemplate.Abilities[i];
-                    actor.AddAbilityToDictionary(abilityTemplate);
+                    actor.Mind.AddAbilityToDictionary(abilityTemplate);
                 }
             }
             if (!actorTemplate.Position.Equals(Point.None))
@@ -276,8 +239,8 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             {
                 for (int i = 0; i < actorTemplate.Equip.Count; i++)
                 {
-                    actor.Equipment.TryAdd(actorTemplate.Equip[i].LimbEquipped,
-                        actorTemplate.Equip[i].ItemEquipped);
+                    EquipTemplate equip = actorTemplate.Equip[i];
+                    actor.AddToEquipment(actorTemplate.Inventory.Find(i => i.Id.Equals(equip.ItemEquipped)));
                 }
             }
 
@@ -297,6 +260,12 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                     new MagiColorSerialization(actorTemplate.BackgroundPackedValue).Color;
             }
             actor.Description = actorTemplate.Description;
+            actor.Mind = actorTemplate.Mind;
+            actor.Soul = actorTemplate.Soul;
+
+            actor.Height = actorTemplate.Height;
+            actor.Broadness = actorTemplate.Broadness;
+            actor.Length = actorTemplate.Length;
 
             return actor;
         }
@@ -305,12 +274,11 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         {
             var abilitylist = new List<AbilityTemplate>();
 
-            if (actor.Abilities is not null && actor.Abilities.Count > 0)
+            if (actor.Mind.Abilities is not null && actor.Mind.Abilities.Count > 0)
             {
-                for (int i = 0; i < actor.Abilities.Count; i++)
+                foreach (var item in actor.Mind.Abilities.Values)
                 {
-                    var ability = actor.Abilities[i];
-                    abilitylist.Add(ability);
+                    abilitylist.Add(item);
                 }
             }
 
@@ -319,13 +287,13 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                actor.Appearance.Background.PackedValue,
                actor.Appearance.Glyph,
                actor.Layer,
-               actor.Stats,
-               actor.Anatomy,
-               actor.Size,
+               actor.Body,
+               actor.Volume,
                actor.Weight,
-               actor.Material.Id,
                abilitylist,
-               actor.Magic);
+               actor.Magic,
+               actor.Soul,
+               actor.Mind);
             if (!string.IsNullOrWhiteSpace(actor.Description))
                 actorTemplate.Description = actor.Description;
 
@@ -342,11 +310,15 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 actorTemplate.Inventory.Add(actor.Inventory[a]);
             }
 
-            foreach (Limb limb in actor.Equipment.Keys)
+            foreach (string limb in actor.GetEquipment().Keys)
             {
-                actorTemplate.Equip.Add(new EquipTemplate(actor.Equipment[limb], limb));
+                actorTemplate.Equip.Add(new EquipTemplate(actor.GetEquipment()[limb].ItemId, limb));
             }
             actorTemplate.GlyphInt = actor.Appearance.Glyph;
+
+            actorTemplate.Length = actor.Length;
+            actorTemplate.Height = actor.Height;
+            actorTemplate.Broadness = actor.Broadness;
 
             return actorTemplate;
         }

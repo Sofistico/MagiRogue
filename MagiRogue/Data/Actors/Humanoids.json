@@ -24,9 +24,7 @@
     },
     "Anatomy": {
       "Limbs": null,
-      "Race": {
-        "RaceName": "Test Troll"
-      },
+      "Race": "test_troll",
       "Temperature": 35,
       "HasBlood": true
     },
@@ -58,9 +56,7 @@
     },
     "Anatomy": {
       "Limbs": null,
-      "Race": {
-        "RaceName": "Human"
-      },
+      "Race": "human",
       "Temperature": 37,
       "HasBlood": true
     },

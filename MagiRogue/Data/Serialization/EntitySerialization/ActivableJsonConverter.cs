@@ -3,6 +3,7 @@ using MagiRogue.Entities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Reflection.PortableExecutable;
 
 namespace MagiRogue.Data.Serialization.EntitySerialization
 {
@@ -38,7 +39,10 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
         public override void WriteJson(JsonWriter writer, IActivable? value, JsonSerializer serializer)
         {
-            throw new InvalidOperationException("Use default serialization.");
+            //throw new InvalidOperationException("Use default serialization.");
+            // as we call on my language: GAMBIARRA
+            UseAction action = (UseAction)Enum.Parse(typeof(UseAction), value.ToString().Split('.')[2]);
+            serializer.Serialize(writer, action);
         }
     }
 }

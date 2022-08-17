@@ -1,12 +1,14 @@
 ﻿using GoRogue.DiceNotation;
 using GoRogue.Pathing;
 using MagiRogue.Data.Enumerators;
+using MagiRogue.Entities;
 using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TinkerWorX.AccidentalNoiseLibrary;
 
 namespace MagiRogue.GameSys.Planet
@@ -135,7 +137,7 @@ namespace MagiRogue.GameSys.Planet
             UpdateBiomeBitmask();
 
             SeedCivilizations();
-            BasicHistory();
+            BasicHistory(550);
 
             // Here will take care of the visualization
             CreateConsole(tiles);
@@ -145,8 +147,9 @@ namespace MagiRogue.GameSys.Planet
 
         #region Civ
 
-        private void BasicHistory()
+        private void BasicHistory(int yearToGameBegin)
         {
+            planetData.TicksSinceCreation = yearToGameBegin / 3155695200;
             for (int i = 0; i < _civilizations.Length; i++)
             {
                 var civ = _civilizations[i];
@@ -347,9 +350,10 @@ namespace MagiRogue.GameSys.Planet
                     MundaneResources = tile.MineralValue
                 };
                 set.DefineSettlementSize();
-
+                var nmbrRaces = Data.DataManager.ListOfRaces.Where(i => i.ValidCivRace).Count();
+                Race race = Data.DataManager.ListOfRaces[GameLoop.GlobalRand.NextInt(nmbrRaces)];
                 Civilization civ = new($"Random Name Here {currentCivCount}",
-                    new Entities.Race("Human"), RandomCivTendency());
+                    race, RandomCivTendency());
 
                 tile.CivInfluence = civ;
                 civ.Territory.Add(tile.Position);

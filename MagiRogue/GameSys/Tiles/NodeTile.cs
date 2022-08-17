@@ -93,15 +93,15 @@ namespace MagiRogue.GameSys.Tiles
                     DestroyTile(BecomeNextTile());
                 }
 
-                GameLoop.UIManager.MessageLog.Add($"{actor.Name} drained {rndDrain} from node!");
+                GameLoop.AddMessageLog($"{actor.Name} drained {rndDrain} from node!");
 
-                actor.Stats.AmbientMana += rndDrain;
+                actor.Soul.WildMana += rndDrain;
             }
             else
             {
                 DestroyTile(new TileFloor(Position, "stone"));
 
-                GameLoop.UIManager.MessageLog.Add("The node here is already empty");
+                GameLoop.AddMessageLog("The node here is already empty");
             }
         }
 
@@ -131,8 +131,8 @@ namespace MagiRogue.GameSys.Tiles
             DestroyNodeTurn(GameLoop.Universe);
 
             return Data.EntityFactory.ItemCreator(Position,
-                new Item(Foreground, Background, "Node Vis", Glyph, Position, NodeStrength,
-                (float)MaterialOfTile.Density));
+                new Item(Foreground, Background, "Node Vis", Glyph, Position, (int)MpPoints * 1000,
+                materialId: MaterialOfTile.Id)); // pretty much is 1 centimeter per mana
         }
 
         private TileBase BecomeNextTile()

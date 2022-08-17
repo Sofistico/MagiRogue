@@ -1,5 +1,7 @@
 ﻿using MagiRogue.Data;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
+using MagiRogue.Entities.StarterScenarios;
 using MagiRogue.UI.Controls;
 using MagiRogue.Utils;
 using SadConsole;
@@ -7,6 +9,7 @@ using SadConsole.Instructions;
 using SadConsole.UI.Controls;
 using SadRogue.Primitives;
 using System;
+using System.Collections.Generic;
 using Console = SadConsole.Console;
 
 namespace MagiRogue.UI.Windows
@@ -14,16 +17,6 @@ namespace MagiRogue.UI.Windows
     public class CharacterCreationWindow : MagiBaseWindow
     {
         private Player player;
-        private const int startPoints = 100;
-        private int totalSpent = 0;
-        private int bodyStat;
-        private int mindStat;
-        private int soulStat;
-        private int shapSkill;
-        private int attackSkill;
-        private int defenseSkill;
-        private int str;
-        private int precision;
         private const string helpText = "\n\rHere we begin the process of creating your player, there is much to be" +
             " done before you can create, you must first decide the 3 most important attributes that determine" +
             " what your character can and can't do. \n\nThese are the Body Stat(Used to determine various effects that" +
@@ -34,6 +27,9 @@ namespace MagiRogue.UI.Windows
             " effect across the board in the spell casting portion). \n\nYou will have 120 points to distribute as you see" +
             " fit for your base stats.";
         private TextBox charName;
+        private ListBox scenarioChooser;
+        private ListBox raceChooser;
+        private ListBox genderChooser;
 
         public CharacterCreationWindow(int width, int height) : base(width, height, "Character Creation")
         {
@@ -96,278 +92,143 @@ namespace MagiRogue.UI.Windows
                 pop.SadComponents.Add(typingInstruction);
                 window.Show(true);
             };
-
             charName = new(25)
             {
-                Position = new Point(Width / 2 - 9, Height / 2 + 5)
+                Position = new Point(Width / 2 - 9, Height / 2 + 5),
+                IsNumeric = false,
             };
-            charName.IsVisible = true;
+            PrintUpFromPosition(charName.Position.X, charName.Position.Y, "Name:");
+            const string back = "Go Back";
+            MagiButton goBack = new(back.Length + 2)
+            {
+                Text = back,
+                Position = new Point(width / 2, 27)
+            };
+            goBack.Click += (_, __) =>
+            {
+                Hide();
+                GameLoop.UIManager.MainMenu.Show();
+            };
+
             Controls.Add(charName);
             SetupSelectionButtons(beginGame,
-                helpButton);
+                helpButton,
+                goBack);
+            SetupListBox();
+        }
 
-            // Body Stat
-            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 10, Height / 2 - 10, Stats.Body));
-            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 10, Height / 2 - 9, Stats.Mind));
-            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 10, Height / 2 - 8, Stats.Soul));
-            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 10, Height / 2 - 7, Stats.Str));
-            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 10, Height / 2 - 6, Stats.Pre));
-            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 15, Height / 2 - 1, Stats.ShapSkill));
-            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 15, Height / 2, Stats.Attack));
-            AddToDictionary(SetPlusAndMinusButtons(Width / 2 + 15, Height / 2 + 1, Stats.Defense));
+        private void SetupListBox()
+        {
+            scenarioChooser = new ListBox(30, 10)
+            {
+                Position = new SadRogue.Primitives.Point(Width / 4 - 10, Height / 2 - 10),
+                Theme = new SadConsole.UI.Themes.ListBoxTheme(new SadConsole.UI.Themes.ScrollBarTheme())
+                {
+                    DrawBorder = true,
+                }
+            };
+            foreach (var item in DataManager.ListOfScenarios)
+            {
+                scenarioChooser.Items.Add(item);
+            }
+
+            Controls.Add(scenarioChooser);
+            const string scenarioText = "Select your starting scenario:";
+            PrintUpFromPosition(scenarioChooser.Position.X, scenarioChooser.Position.Y, scenarioText);
+
+            genderChooser = new ListBox(10, 5)
+            {
+                Position = new SadRogue.Primitives.Point(Width / 2 - 5, Height / 2 - 10),
+                Theme = new SadConsole.UI.Themes.ListBoxTheme(new SadConsole.UI.Themes.ScrollBarTheme())
+                {
+                    DrawBorder = true,
+                },
+                IsVisible = false
+            };
+
+            foreach (var item in Enum.GetValues(typeof(Gender)))
+            {
+                genderChooser.Items.Add(item.ToString());
+            }
+
+            Controls.Add(genderChooser);
+
+            raceChooser = new ListBox(20, 10)
+            {
+                Position = new SadRogue.Primitives.Point(Width / 2 + 20, Height / 2 - 10),
+                Theme = new SadConsole.UI.Themes.ListBoxTheme(new SadConsole.UI.Themes.ScrollBarTheme())
+                {
+                    DrawBorder = true,
+                },
+                IsVisible = false
+            };
+
+            Controls.Add(raceChooser);
+            genderChooser.SelectedItemChanged += (_, __) =>
+            {
+                PrintUpFromPosition(raceChooser.Position, "Now, choose from the available races:");
+                raceChooser.IsVisible = true;
+                raceChooser.Items.Clear();
+                Scenario scenario = (Scenario)scenarioChooser.SelectedItem;
+                foreach (string race in scenario.RacesAllowed)
+                {
+                    raceChooser.Items.Add(DataManager.QueryRaceInData(race));
+                }
+            };
+
+            scenarioChooser.SelectedItemChanged += (_, __) =>
+            {
+                PrintUpFromPosition(genderChooser.Position, "Choose your gender:");
+                genderChooser.IsVisible = true;
+            };
         }
 
         private Player CreatePlayer()
         {
-            if (charName.Text != "")
-                player = new Player(charName.Text, Color.White, Color.Black, Point.None);
-            else
+            if (string.IsNullOrEmpty(charName.Text))
             {
                 /*#if DEBUG
                                 player = Player.TestPlayer();
                                 return player;
                 #endif*/
 
-                PopWindow error = new PopWindow("Error");
-                error.Surface.Clear();
-                error.Surface.Print(1, 1, "You need to insert a name!");
-                error.Show(true);
+                ShowError("You need to insert a name!");
                 return null;
             }
-            int health = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(5, bodyStat + 10) + 3;
-            int mana = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(8, soulStat + 10);
-            float speed = (float)MathMagi.Round(GoRogue.Random.GlobalRandom
-                .DefaultRNG.NextDouble(0.9, 1.1));
-            player.Stats = new Stat()
+            if (genderChooser.SelectedItem is null)
             {
-                BodyStat = bodyStat,
-                MindStat = mindStat,
-                SoulStat = soulStat,
-                BaseAttack = attackSkill,
-                Defense = defenseSkill,
-                Strength = str,
-                Precision = precision,
-                Health = health,
-                PersonalMana = mana,
-                ViewRadius = 7,
-                Speed = speed,
-                BaseHpRegen = 0.01f,
-                BaseManaRegen = 0.1f
-            };
-            player.Magic.ShapingSkill = shapSkill;
-            // The first spell any mage learns is magic missile, it's the first proper combat spell that doens't require hours of practice
-            // to work,
-            // but if the player doens't have enough shaping skills for the spell, the player would play as an failed mage.
-            player.Magic.KnowSpells.Add(DataManager.QuerySpellInData("magic_missile"));
-            player.Size = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(160, 200);
-            player.Weight = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(50, 90);
+                ShowError("You need to select a gender!");
+                return null;
+            }
+            if (scenarioChooser.SelectedItem is null)
+            {
+                ShowError("You need to select a scenario!");
+                return null;
+            }
+            if (raceChooser.SelectedItem is null)
+            {
+                ShowError("You need to select a race!");
+                return null;
+            }
+
+            var scenario = (Scenario)scenarioChooser.SelectedItem;
+            var race = (Race)raceChooser.SelectedItem;
+
+            player = EntityFactory.PlayerCreatorFromZero(Point.None,
+                race.Id,
+                charName.Text,
+                Enum.Parse<Gender>(genderChooser.SelectedItem.ToString()),
+                scenario.Id);
 
             return player;
         }
 
-        private MagiButton[] SetPlusAndMinusButtons(int x, int y, Stats statEnum)
+        private static void ShowError(string textError)
         {
-            MagiButton plus = new("+".Length + 2)
-            {
-                Text = "+",
-                Position = new Point(x, y)
-            };
-            plus.Click += (_, __) =>
-            {
-                CalculatePoints(statEnum);
-            };
-            MagiButton minus = new("-".Length + 2)
-            {
-                Text = "-",
-                Position = new Point(x + 4, y)
-            };
-            minus.Click += (_, __) =>
-            {
-                SubtractPoints(statEnum);
-            };
-
-            return new MagiButton[] { plus, minus };
-        }
-
-        private void SubtractPoints(Stats statEnum)
-        {
-            if (totalSpent <= startPoints && totalSpent > 0)
-            {
-                switch (statEnum)
-                {
-                    case Stats.Body:
-                        if (bodyStat > 0 && RemoveTotalSpent(bodyStat))
-                            bodyStat--;
-                        break;
-
-                    case Stats.Mind:
-                        if (mindStat > 0 && RemoveTotalSpent(mindStat))
-                            mindStat--;
-                        break;
-
-                    case Stats.Soul:
-                        if (soulStat > 0 && RemoveTotalSpent(soulStat))
-                            soulStat--;
-                        break;
-
-                    case Stats.Str:
-                        if (str > 0 && RemoveTotalSpent(str))
-                            str--;
-                        break;
-
-                    case Stats.Pre:
-                        if (precision > 0 && RemoveTotalSpent(precision))
-                            precision--;
-                        break;
-
-                    case Stats.ShapSkill:
-                        if (shapSkill > 0 && RemoveTotalSpent(shapSkill))
-                            shapSkill--;
-                        break;
-
-                    case Stats.Attack:
-                        if (attackSkill > 0 && RemoveTotalSpent(attackSkill))
-                            attackSkill--;
-                        break;
-
-                    case Stats.Defense:
-                        if (defenseSkill > 0 && RemoveTotalSpent(defenseSkill))
-                            defenseSkill--;
-                        break;
-
-                    default:
-                        break;
-                }
-            }
-        }
-
-        private void CalculatePoints(Stats statEnum)
-        {
-            if (totalSpent <= startPoints)
-            {
-                switch (statEnum)
-                {
-                    case Stats.Body:
-                        if (bodyStat < 5 && CalculateTotalSpent(bodyStat))
-                        {
-                            bodyStat++;
-                        }
-                        break;
-
-                    case Stats.Mind:
-                        if (mindStat < 5 && CalculateTotalSpent(mindStat))
-                        {
-                            mindStat++;
-                        }
-                        break;
-
-                    case Stats.Soul:
-                        if (soulStat < 5 && CalculateTotalSpent(soulStat))
-                        {
-                            soulStat++;
-                        }
-                        break;
-
-                    case Stats.Str:
-                        if (str < 12 && CalculateTotalSpent(str))
-                        {
-                            str++;
-                        }
-                        break;
-
-                    case Stats.Pre:
-                        if (precision < 12 && CalculateTotalSpent(precision))
-                        {
-                            precision++;
-                        }
-                        break;
-
-                    case Stats.ShapSkill:
-                        if (shapSkill < 12 && CalculateTotalSpent(shapSkill))
-                        {
-                            shapSkill++;
-                        }
-                        break;
-
-                    case Stats.Attack:
-                        if (attackSkill < 12 && CalculateTotalSpent(attackSkill))
-                        {
-                            attackSkill++;
-                        }
-                        break;
-
-                    case Stats.Defense:
-                        if (defenseSkill < 12 && CalculateTotalSpent(defenseSkill))
-                        {
-                            defenseSkill++;
-                        }
-                        break;
-
-                    default:
-                        break;
-                }
-            }
-        }
-
-        private bool CalculateTotalSpent(int stat)
-        {
-            if (totalSpent < startPoints)
-            {
-                totalSpent += stat + 1 * 2;
-                if (totalSpent > startPoints)
-                {
-                    totalSpent -= stat + 1 * 2;
-                    return false;
-                }
-                return true;
-            }
-            return false;
-        }
-
-        private bool RemoveTotalSpent(int stat)
-        {
-            if (totalSpent > 0)
-            {
-                // This -1 is to represent that since the stat will go down, it needs to account here as well.
-                totalSpent -= stat + 1 * 2 - 1;
-                return true;
-            }
-            return false;
-        }
-
-        private enum Stats
-        {
-            Body,
-            Mind,
-            Soul,
-            Str,
-            Pre,
-            ShapSkill,
-            Attack,
-            Defense,
-            Age
-        }
-
-        public override void Update(TimeSpan time)
-        {
-            if (!GameLoop.UIManager.MainMenu.GameStarted)
-            {
-                Surface.Print(Width / 2 - 9, Height / 2 - 12, $"Points: {totalSpent} / {startPoints}   ");
-                Surface.Print(Width / 2 - 9, Height / 2 - 11, "Stats: each is 1 + n * 2, n being the current number of points");
-                Surface.Print(Width / 2 - 9, Height / 2 - 10, $"Body Stat : {bodyStat} / 5");
-                Surface.Print(Width / 2 - 9, Height / 2 - 9, $"Mind Stat : {mindStat} / 5");
-                Surface.Print(Width / 2 - 9, Height / 2 - 8, $"Soul Stat : {soulStat} / 5");
-                Surface.Print(Width / 2 - 9, Height / 2 - 7, $"Strength: {str} / 12");
-                Surface.Print(Width / 2 - 9, Height / 2 - 6, $"Precision: {precision} / 12");
-                Surface.Print(Width / 2 - 9, Height / 2 - 4, "Skills: each is 1 + n * 2");
-                Surface.Print(Width / 2 - 9, Height / 2 - 3, "Keep in mind Shaping skills shoud be at a minimum 8 to cast");
-                Surface.Print(Width / 2 - 9, Height / 2 - 2, "the most simple battle spell, unless you want to play as is.");
-                Surface.Print(Width / 2 - 9, Height / 2 - 1, $"Shaping Skills : {shapSkill} / 12");
-                Surface.Print(Width / 2 - 9, Height / 2, $"Attack Skill: {attackSkill} / 12");
-                Surface.Print(Width / 2 - 9, Height / 2 + 1, $"Defense Skill: {defenseSkill} / 12");
-                Surface.Print(Width / 2 - 9, Height / 2 + 4, $"The name of your mage:");
-            }
-            base.Update(time);
+            PopWindow error = new PopWindow("Error");
+            error.Surface.Clear();
+            error.Surface.Print(1, 1, textError);
+            error.Show(true);
         }
 
         public override string ToString() => "Character Creation Screen";

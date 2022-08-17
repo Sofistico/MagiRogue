@@ -1,4 +1,5 @@
-﻿using MagiRogue.Data.Enumerators;
+﻿using GoRogue.DiceNotation.Terms;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Magic;
 using MagiRogue.GameSys.Physics;
@@ -45,9 +46,15 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
         public char Glyph { get; set; }
 
-        public float Weight { get; set; }
+        public double Weight { get; set; }
 
-        public int Size { get; set; }
+        public int Volume { get; set; }
+
+        public int Height { get; set; }
+
+        public int Length { get; set; }
+
+        public int Broadness { get; set; }
 
         public int Durability { get; set; }
 
@@ -80,7 +87,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             string foreground,
             string background,
             char glyph,
-            float weight,
+            double weight,
             int size,
             string description,
             string materialId,
@@ -95,7 +102,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             Background = background;
             Glyph = glyph;
             Weight = weight;
-            Size = size;
+            Volume = size;
             Description = description;
             MaterialId = materialId;
             MagicStuff = magicStuff;
@@ -110,7 +117,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             uint foreground,
             uint background,
             char glyph,
-            float weight,
+            double weight,
             int size,
             string description,
             string materialId,
@@ -121,7 +128,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             Name = name;
             Glyph = glyph;
             Weight = weight;
-            Size = size;
+            Volume = size;
             Description = description;
             MaterialId = materialId;
             MagicStuff = magicStuff;
@@ -201,13 +208,12 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
             var objFur = new Furniture(template.ForegroundBackingField.Color,
                 template.BackgroundBackingField.Color, glpyh, template.Position,
-                template.FurnitureType, template.MaterialId, template.Name, template.Id,
-                template.Weight, template.Durability)
+                template.FurnitureType, template.MaterialId, template.Name, template.Id, template.Durability)
             {
                 UseActions = template.UseActions,
                 Magic = template.MagicStuff,
                 MapIdConnection = template.MapIdConnection,
-                Size = template.Size,
+                Volume = template.Volume,
                 Description = template.Description,
                 Qualities = Quality.ReturnQualityList(template.Qualities),
             };
@@ -221,6 +227,10 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 objFur.Traits.AddRange(objFur.Material.ConfersTraits);
             }
 
+            objFur.Broadness = template.Broadness;
+            objFur.Height = template.Height;
+            objFur.Length = template.Length;
+
             return objFur;
         }
 
@@ -231,7 +241,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 fur.Appearance.Background.PackedValue,
                 fur.Appearance.GlyphCharacter,
                 fur.Weight,
-                fur.Size,
+                fur.Volume,
                 fur.Description,
                 fur.Material.Id,
                 fur.Magic,
@@ -246,6 +256,10 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 Qualities = Quality.ReturnQualityListAsString(fur.Qualities),
             };
             DetermineInventoryFromItem(fur, template);
+
+            template.Broadness = fur.Broadness;
+            template.Height = fur.Height;
+            template.Length = fur.Length;
 
             return template;
         }

@@ -6,86 +6,51 @@ using System.Runtime.Serialization;
 
 namespace MagiRogue.Entities
 {
-    public class Organ
+    public class Organ : BodyPart
     {
-        [DataMember]
-        public string Id { get; set; }
-
-        [DataMember]
-        public string Name { get; set; }
-
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string? InsideOf { get; set; }
 
         [DataMember]
-        public LimbOrientation Orientation { get; set; }
-
-        [DataMember]
         public OrganType OrganType { get; set; }
 
-        [JsonProperty(Required = Required.Default)]
-        public bool Attached { get; set; } = true;
-
         [DataMember]
-        public bool Destroyed { get => OrganHp <= 0; }
-
-        [DataMember]
-        public int OrganHp { get; set; }
-
-        [JsonIgnore]
-        public MaterialTemplate Material { get; set; }
-
-        [DataMember]
-        public string MaterialId { get; set; }
-
-        [DataMember]
-        public int MaxOrganHp { get; set; }
-
-        [DataMember]
-        public float OrganWeight { get; set; }
+        public bool Destroyed { get => BodyPartHp <= 0; }
 
         public Organ(string name,
             string? connectedTo,
-            LimbOrientation orientation,
+            BodyPartOrientation orientation,
             OrganType organType,
             int organHp,
-            string materialId,
-            float organWeight)
+            string materialId) : base(materialId)
         {
-            Name = name;
+            BodyPartName = name;
             InsideOf = connectedTo;
             Orientation = orientation;
             OrganType = organType;
-            OrganHp = organHp;
-            MaterialId = materialId;
-            Material = PhysicsManager.SetMaterial(materialId);
-            MaxOrganHp = organHp;
-            OrganWeight = organWeight;
+            BodyPartHp = organHp;
+            MaxBodyPartHp = organHp;
         }
 
         [JsonConstructor()]
         public Organ(string id,
            string name,
            string? connectedTo,
-           LimbOrientation orientation,
+           BodyPartOrientation orientation,
            OrganType organType,
            int organHp,
-           string materialId,
-           float organWeight)
+           string materialId) : base(materialId)
         {
             Id = id;
-            Name = name;
+            BodyPartName = name;
             InsideOf = connectedTo;
             Orientation = orientation;
             OrganType = organType;
-            OrganHp = organHp;
-            MaterialId = materialId;
-            Material = PhysicsManager.SetMaterial(materialId);
-            MaxOrganHp = organHp;
-            OrganWeight = organWeight;
+            BodyPartHp = organHp;
+            MaxBodyPartHp = organHp;
         }
 
-        public Organ()
+        public Organ(string materialId = "flesh") : base(materialId)
         {
             // Empty!
         }
@@ -94,20 +59,40 @@ namespace MagiRogue.Entities
         {
             Organ copy = new Organ()
             {
-                Attached = this.Attached,
                 Id = this.Id,
-                Name = this.Name,
+                BodyPartName = this.BodyPartName,
                 InsideOf = this.InsideOf,
                 Orientation = this.Orientation,
-                OrganHp = this.OrganHp,
+                BodyPartHp = this.BodyPartHp,
                 MaterialId = this.MaterialId,
-                Material = this.Material,
-                MaxOrganHp = this.MaxOrganHp,
-                OrganWeight = this.OrganWeight,
+                BodyPartMaterial = this.BodyPartMaterial,
+                MaxBodyPartHp = this.MaxBodyPartHp,
                 OrganType = this.OrganType
             };
 
             return copy;
+        }
+
+        public override void CalculateWound(Wound wound)
+        {
+            base.CalculateWound(wound);
+            switch (wound.Severity)
+            {
+                case InjurySeverity.Inhibited:
+                    Working = false;
+                    break;
+
+                case InjurySeverity.Broken:
+                    Working = false;
+                    break;
+
+                case InjurySeverity.Pulped:
+                    Working = true;
+                    break;
+
+                default:
+                    break;
+            }
         }
     }
 }

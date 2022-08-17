@@ -12,6 +12,7 @@ using MagiRogue.Data.Serialization;
 using Newtonsoft.Json.Linq;
 using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Data.Enumerators;
+using SadRogue.Primitives;
 
 namespace MagiRogue.Test.Data
 {
@@ -26,7 +27,7 @@ namespace MagiRogue.Test.Data
         {
             var path = AppDomain.CurrentDomain.BaseDirectory;
             List<Organ> organs = JsonUtils.JsonDeseralize<List<Organ>>
-                (path + @"\Data\Other\organs.json");
+                (path + @"\Data\Bodies\organs_std.json");
 
             var otg = DataManager.QueryOrganInData("brain");
 
@@ -39,9 +40,9 @@ namespace MagiRogue.Test.Data
             var path = AppDomain.CurrentDomain.BaseDirectory;
 
             List<LimbTemplate> limb = MagiRogue.Utils.JsonUtils.JsonDeseralize<List<LimbTemplate>>
-                (path + @"\Data\Other\body_parts.json");
+                (path + @"\Data\Bodies\limb_std.json");
 
-            var otherLimb = DataManager.QueryLimbInData("humanoid_torso");
+            var otherLimb = DataManager.QueryLimbInData("humanoid_upper_body");
 
             Assert.Equal(limb[0].Id, otherLimb.Id);
         }
@@ -50,11 +51,10 @@ namespace MagiRogue.Test.Data
         public void SerializeOrgans()
         {
             Organ organ = new Organ("organ_test", "Test", null,
-                LimbOrientation.Center,
+                BodyPartOrientation.Center,
                 OrganType.Misc,
                 15,
-                "null",
-                1.5f);
+                "null");
 
             string json = JsonConvert.SerializeObject(organ);
             JObject jOrgan = JObject.Parse(json);
@@ -68,15 +68,77 @@ namespace MagiRogue.Test.Data
             Limb limb = new Limb("head_test", TypeOfLimb.Head,
                 12,
                 12,
-                2.5,
                 "Test",
-                LimbOrientation.Center,
+                BodyPartOrientation.Center,
                 "humanoid_torso");
 
             string json = JsonConvert.SerializeObject(limb);
             JObject obj = JObject.Parse(json);
 
             Assert.Equal(limb.Id, obj["Id"].ToString());
+        }
+
+        [Fact]
+        public void GetConnecetLimb()
+        {
+            var bp = DataManager.QueryBpPlanInData("humanoid_limbs");
+            bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5fingers").BodyParts);
+            bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5toes").BodyParts);
+            List<Limb> basicHuman = bp.ReturnBodyParts().Where(i => i is Limb).Cast<Limb>().ToList();
+            Anatomy ana = new Anatomy();
+            ana.Limbs = basicHuman;
+            List<Limb> test = ana.GetAllConnectedLimb(basicHuman.Find(f => f.TypeLimb is TypeOfLimb.Arm));
+            Assert.True(test.Count >= 3);
+        }
+
+        [Fact]
+        public void FindLimbTillRootParent()
+        {
+            var bp = DataManager.QueryBpPlanInData("humanoid_limbs");
+            bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5fingers").BodyParts);
+            bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5toes").BodyParts);
+            List<Limb> basicHuman = bp.ReturnBodyParts().Where(i => i is Limb).Cast<Limb>().ToList();
+            Anatomy ana = new Anatomy();
+            ana.Limbs = basicHuman;
+            List<Limb> test = ana.GetAllParentConnectionLimb(basicHuman.Find(i => i.TypeLimb is TypeOfLimb.Finger));
+            Assert.True(test.Count >= 1);
+        }
+
+        [Fact]
+        public void RegenActorLostLimb()
+        {
+            Actor actor = EntityFactory.ActorCreatorFirstStep(Point.None, "test_race", "test dummy", 20, Gender.Asexual);
+            //Actor actor = new Actor("Test actor", Color.AliceBlue, Color.AliceBlue, '@',
+            //    new Point(0, 0));
+            //actor.GetAnatomy().Race = "test_race";
+            //var bp = DataManager.QueryBpPlanInData("humanoid_limbs");
+            //bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5fingers").BodyParts);
+            //bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5toes").BodyParts);
+            //actor.GetAnatomy().Limbs = bp.ReturnBodyParts().Where(i => i is Limb).Cast<Limb>().ToList();
+            var arms = actor.GetAnatomy().Limbs.FindAll(l => l.TypeLimb is TypeOfLimb.Arm);
+            foreach (var arm in arms)
+            {
+                actor.GetAnatomy().Injury(new Wound(arm.BodyPartHp, DamageType.Sharp), arm, actor);
+            }
+            bool healing = true;
+            while (healing)
+            {
+                actor.ApplyAllRegen();
+                if (actor.GetAnatomy().Limbs.All(i => i.Attached))
+                    healing = false;
+            }
+
+            Assert.True(actor.GetAnatomy().Limbs.All(i => i.Attached));
+        }
+
+        [Fact]
+        public void TestFingers()
+        {
+            var bp = DataManager.QueryBpPlanInData("humanoid_limbs");
+            bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5fingers").BodyParts);
+            bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5toes").BodyParts);
+            var seeWhatHappens = bp.ReturnBodyParts();
+            Assert.DoesNotContain(seeWhatHappens, i => i.BodyPartName.Contains("{0}"));
         }
     }
 }

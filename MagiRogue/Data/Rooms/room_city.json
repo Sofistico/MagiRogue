@@ -31,5 +31,18 @@
         ]
       }
     }
+  },
+  {
+    "Id": "room_dungeon_keeper",
+    "Obj": {
+      "EmptyFill": "t_grass",
+      "Tag": "Dinner",
+      "Rows": [
+      ],
+      "Terrain": {
+      },
+      "Furniture": {
+      }
+    }
   }
 ]

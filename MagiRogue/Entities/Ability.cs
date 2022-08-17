@@ -9,23 +9,13 @@ namespace MagiRogue.Entities
     {
         public string Name { get; }
         public int Score { get; set; }
-        public string Speciality { get; set; }
         public int Id { get; }
 
-        public Ability(AbilityName name, int abilityScore, SpecialityType speciality)
+        public Ability(AbilityName name, int abilityScore)
         {
             Name = ReturnEnumString(name);
             Score = abilityScore;
             Id = (int)name;
-            Speciality = ReturnEnumString(speciality);
-        }
-
-        public Ability(string name, int score, string speciality)
-        {
-            Name = name;
-            Score = score;
-            Id = (int)ReturnAbilityEnumFromString(name);
-            Speciality = speciality;
         }
 
         private static string ReturnEnumString(Enum name)
@@ -34,14 +24,35 @@ namespace MagiRogue.Entities
             return string.Join(" ", Regex.Split(tempName, @"(?<!^)(?=[A-Z](?![A-Z]|$))"));
         }
 
-        private static AbilityName ReturnAbilityEnumFromString(string name)
+        public AbilityName ReturnAbilityEnumFromString()
         {
-            return name switch
+            try
             {
-                "Magic Lore" => AbilityName.MagicLore,
-                "Swin" => AbilityName.Swin,
-                _ => throw new AbilityNotFoundExepction("Cound't find the ability in the enum class"),
-            };
+                string test = Name.Replace(" ", "");
+                AbilityName ability = Enum.Parse<AbilityName>(test);
+                return ability;   
+                    }
+            catch (AbilityNotFoundExepction)
+            {
+                return AbilityName.None;
+            }
+        }
+
+        public static AbilityName ReturnAbilityEnumFromString(string name)
+        {
+            try
+            {
+                return name switch
+                {
+                    "Magic Lore" => AbilityName.MagicLore,
+                    "Swin" => AbilityName.Swin,
+                    _ => throw new AbilityNotFoundExepction("Cound't find the ability in the enum class"),
+                };
+            }
+            catch (AbilityNotFoundExepction)
+            {
+                return AbilityName.None;
+            }
         }
     }
 

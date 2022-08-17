@@ -1,7 +1,9 @@
 ﻿using MagiRogue.Data;
 using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.GameSys.Magic;
 using SadRogue.Primitives;
+using System;
 using System.Collections.Generic;
 
 namespace MagiRogue.Entities
@@ -14,42 +16,16 @@ namespace MagiRogue.Entities
              int layer = (int)MapLayer.PLAYER) :
             base(name, foreground, background, '@', position, layer)
         {
-            Anatomy.Limbs = EntityFactory.BasicHumanoidBody();
-            Anatomy.Organs = EntityFactory.BasicHumanoidOrgans();
-            Weight = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(50, 95);
-            Size = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(155, 200);
-            Anatomy.Update(this);
-            Anatomy.Lifespan = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(75, 125);
-            Anatomy.CurrentAge = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(18, 21);
         }
 
         public static Player TestPlayer()
         {
-            Player player = new Player("Magus", Color.White, Color.Black, Point.None);
-            player.Stats.SetAttributes(
-                viewRadius: 7,
-                health: 10,
-                baseHpRegen: 0.1f,
-                bodyStat: 1,
-                mindStat: 1,
-                soulStat: 1,
-                baseAttack: 10,
-                attackChance: 40,
-                protection: 5,
-                defenseChance: 20,
-                speed: 1.0f,
-                _baseManaRegen: 0.1f,
-                personalMana: 12
-                );
-            player.Stats.Precision = 3;
-
-            player.Anatomy.Limbs = EntityFactory.BasicHumanoidBody();
-            player.Anatomy.Organs = EntityFactory.BasicHumanoidOrgans();
+            Player player = EntityFactory.PlayerCreatorFromZero(new Point(), "human", "Playa", 25,
+                MagiRogue.Data.Enumerators.Gender.Female, "new_wiz");
 
             player.Magic.ShapingSkill = 9;
 
-            SpellBase missile = DataManager.QuerySpellInData("magic_missile");
-            missile.Proficiency = 1;
+            player.Magic.KnowSpells[0].Proficiency = 1;
 
             SpellBase cure = DataManager.QuerySpellInData("minor_cure");
             cure.Proficiency = 1;
@@ -78,7 +54,6 @@ namespace MagiRogue.Entities
 
             List<SpellBase> testSpells = new List<SpellBase>()
             {
-                missile,
                 cure,
                 haste,
                 mageSight,
@@ -107,14 +82,19 @@ namespace MagiRogue.Entities
             {
                 Inventory = actor.Inventory,
                 Magic = actor.Magic,
-                Stats = actor.Stats,
-                Size = actor.Size,
+                Volume = actor.Volume,
                 Weight = actor.Weight,
-                Abilities = actor.Abilities,
-                Anatomy = actor.Anatomy,
-                Equipment = actor.Equipment,
-                Material = actor.Material,
-                XP = actor.XP
+                XP = actor.XP,
+                Body = actor.Body,
+                Mind = actor.Mind,
+                Soul = actor.Soul,
+                CanBeKilled = actor.CanBeKilled,
+                Description = actor.Description,
+                IgnoresWalls = actor.IgnoresWalls,
+                IsPlayer = true,
+                Height = actor.Height,
+                Broadness = actor.Broadness,
+                Length = actor.Length
             };
 
             return player;

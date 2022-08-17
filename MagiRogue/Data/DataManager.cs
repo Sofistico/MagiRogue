@@ -3,6 +3,7 @@ using MagiRogue.Data.Serialization;
 using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.Entities;
+using MagiRogue.Entities.StarterScenarios;
 using MagiRogue.GameSys.Magic;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
@@ -21,16 +22,13 @@ namespace MagiRogue.Data
            GetSourceTree<MaterialTemplate>(@".\Data\Materials\*.json");
 
         public static readonly IReadOnlyList<SpellBase> ListOfSpells =
-            GetSourceTree<SpellBase>(@".\Data\Spells\*.json");
-
-        public static readonly IReadOnlyList<ActorTemplate> ListOfActors =
-            GetSourceTree<ActorTemplate>(@".\Data\Actors\*.json");
+            GetSourceTree<SpellBase>(@".\Data\Spells\spells_*.json");
 
         public static readonly IReadOnlyList<Organ> ListOfOrgans =
-            GetSourceTree<Organ>(@".\Data\Other\organs.json");
+            GetSourceTree<Organ>(@".\Data\Bodies\organs_*.json");
 
         public static readonly IReadOnlyList<LimbTemplate> ListOfLimbs =
-            GetSourceTree<LimbTemplate>(@".\Data\Other\body_parts.json");
+            GetSourceTree<LimbTemplate>(@".\Data\Bodies\limb_*.json");
 
         public static readonly IReadOnlyList<BasicTile> ListOfTiles =
             GetSourceTree<BasicTile>(@".\Data\Tiles\*.json");
@@ -40,6 +38,15 @@ namespace MagiRogue.Data
 
         public static readonly IReadOnlyList<RoomTemplate> ListOfRooms =
             GetSourceTree<RoomTemplate>(@".\Data\Rooms\*.json");
+
+        public static readonly IReadOnlyList<Race> ListOfRaces =
+            GetSourceTree<Race>(@".\Data\Races\race_*.json");
+
+        public static readonly IReadOnlyList<Scenario> ListOfScenarios =
+            GetSourceTree<Scenario>(@".\Data\Scenarios\scenarios_*.json");
+
+        public static readonly IReadOnlyList<BodyPlan> ListOfBpPlan =
+            GetSourceTree<BodyPlan>(@".\Data\Bodies\body_*.json");
 
         public static IReadOnlyList<T> GetSourceTree<T>(string wildCard)
         {
@@ -69,11 +76,17 @@ namespace MagiRogue.Data
         public static SpellBase QuerySpellInData(string spellId) => ListOfSpells.FirstOrDefault
                 (m => m.SpellId.Equals(spellId)).Copy();
 
-        public static LimbTemplate QueryLimbInData(string limbId) =>
-            ListOfLimbs.FirstOrDefault(l => l.Id.Equals(limbId)).Copy();
+        public static LimbTemplate QueryLimbInData(string limbId)
+        {
+            var limb = ListOfLimbs.FirstOrDefault(l => l.Id.Equals(limbId), null);
+            return limb?.Copy();
+        }
 
-        public static Organ QueryOrganInData(string organId)
-            => ListOfOrgans.FirstOrDefault(o => o.Id.Equals(organId)).Copy();
+        public static Organ? QueryOrganInData(string organId)
+        {
+            var organ = ListOfOrgans.FirstOrDefault(o => o.Id.Equals(organId), null);
+            return organ?.Copy();
+        }
 
         public static TileBase QueryTileInData(string tileId)
             => ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId)).Copy();
@@ -83,9 +96,6 @@ namespace MagiRogue.Data
 
         public static T QueryTileInData<T>(string tileId, Point pos) where T : TileBase
             => (T)ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId)).Copy(pos);
-
-        public static Actor QueryActorInData(string actorId)
-            => ListOfActors.FirstOrDefault(a => a.ID.Equals(actorId));
 
         public static Item QueryItemInData(string itemId)
             => ListOfItems.FirstOrDefault(i => i.Id.Equals(itemId));
@@ -102,5 +112,28 @@ namespace MagiRogue.Data
         public static List<BasicTile> QueryTilesInDataWithTrait(Trait trait)
             => ListOfTiles.Where(i => i.HasAnyTrait()
                 && i.Traits.Contains(trait)).ToList();
+
+        public static Race QueryRaceInData(string raceId)
+            => ListOfRaces.Where(c => c.Id.Equals(raceId)).FirstOrDefault();
+
+        public static Scenario QueryScenarioInData(string scenarioId)
+            => ListOfScenarios.Where(c => c.Id.Equals(scenarioId)).FirstOrDefault();
+
+        public static BodyPlan QueryBpPlanInData(string bpPlanId)
+            => ListOfBpPlan.Where(c => c.Id.Equals(bpPlanId)).FirstOrDefault();
+
+        public static List<BodyPart> QueryBpsPlansInDataAndReturnBodyParts(string[] bpPlansId)
+        {
+            List<BodyPart> bps = new();
+            BodyPlan bodyPlan = new();
+            foreach (var ids in bpPlansId)
+            {
+                BodyPlan bp = QueryBpPlanInData(ids);
+                bodyPlan.BodyParts.AddRange(bp.BodyParts);
+            }
+            bps.AddRange(bodyPlan.ReturnBodyParts());
+
+            return bps;
+        }
     }
 }

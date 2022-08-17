@@ -31,7 +31,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
     public class ItemTemplate
     {
         public ItemTemplate(string name, uint foreground, uint background, int glyph,
-            float weight, int size, string materialId, MagicManager magic, int condition = 100)
+            double weight, int size, string materialId, MagicManager magic, int condition = 100)
         {
             Name = name;
             ForegroundBackingField = new MagiColorSerialization(foreground);
@@ -41,7 +41,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             Glyph = (char)glyph;
             Weight = weight;
             Condition = condition;
-            Size = size;
+            Volume = size;
             MaterialId = materialId;
             Material = GameSys.Physics.PhysicsManager.SetMaterial(materialId);
             MagicStuff = magic;
@@ -58,25 +58,25 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         public string Name { get; internal set; }
 
         [JsonIgnore]
-        public MagiColorSerialization ForegroundBackingField { get; internal set; }
+        public MagiColorSerialization ForegroundBackingField { get; set; }
 
         [JsonIgnore]
-        public MagiColorSerialization BackgroundBackingField { get; internal set; }
+        public MagiColorSerialization BackgroundBackingField { get; set; }
 
         [DataMember]
-        public string Foreground { get; internal set; }
+        public string Foreground { get; set; }
 
         [DataMember]
-        public string Background { get; internal set; }
+        public string Background { get; set; }
 
         [DataMember]
-        public char Glyph { get; internal set; }
+        public char Glyph { get; set; }
 
         [DataMember]
-        public float Weight { get; internal set; }
+        public double Weight { get; set; }
 
         [DataMember]
-        public int Size { get; set; }
+        public int Volume { get; set; }
 
         [DataMember]
         public int Condition { get; internal set; }
@@ -126,6 +126,21 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         public List<List<string>> Qualities { get; set; }
         public EquipType EquipType { get; set; }
 
+        [DataMember]
+        public int SpeedOfAttack { get; set; }
+
+        [DataMember]
+        public WeaponType WeaponType { get; set; }
+
+        [DataMember]
+        public int Height { get; set; }
+
+        [DataMember]
+        public int Length { get; set; }
+
+        [DataMember]
+        public int Broadness { get; set; }
+
         // Will need to see if it works, but so far the logic seems to check
         public static implicit operator ItemTemplate(Item item)
         {
@@ -134,7 +149,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 item.Appearance.Background.PackedValue,
                 item.Appearance.Glyph,
                 item.Weight,
-                item.Size,
+                item.Volume,
                 item.Material.Id,
                 item.Magic,
                 item.Condition
@@ -148,7 +163,14 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 Traits = item.Traits,
                 Qualities = Quality.ReturnQualityListAsString(item.Qualities),
                 EquipType = item.EquipType,
+                SpeedOfAttack = item.SpeedOfAttack,
+                WeaponType = item.WeaponType,
             };
+
+            itemSerialized.Broadness = item.Broadness;
+            itemSerialized.Height = item.Height;
+            itemSerialized.Length = item.Length;
+            itemSerialized.Id = item.ItemId;
 
             return itemSerialized;
         }
@@ -158,15 +180,14 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             int glyph = GlyphHelper.GlyphExistInDictionary(itemTemplate.Glyph) ?
                 GlyphHelper.GetGlyph(itemTemplate.Glyph) : itemTemplate.Glyph;
             MagiColorSerialization foreground = new MagiColorSerialization(itemTemplate.Foreground);
-            Color background = !string.IsNullOrEmpty(itemTemplate.Background) ? itemTemplate.BackgroundBackingField.Color : Color.Transparent;
+            MagiColorSerialization background = new MagiColorSerialization(itemTemplate.Background);
 
             Item item = new(foreground.Color,
-                background,
+                background.Color,
                 itemTemplate.Name,
                 glyph,
                 Point.None,
-                itemTemplate.Size,
-                itemTemplate.Weight,
+                itemTemplate.Volume,
                 itemTemplate.Condition,
                 materialId: itemTemplate.MaterialId)
             {
@@ -179,6 +200,8 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 Qualities = Quality.ReturnQualityList(itemTemplate.Qualities),
                 ItemId = itemTemplate.Id,
                 EquipType = itemTemplate.EquipType,
+                SpeedOfAttack = itemTemplate.SpeedOfAttack,
+                WeaponType = itemTemplate.WeaponType,
             };
             if (itemTemplate.Condition != 100)
             {
@@ -189,6 +212,10 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             {
                 item.Traits.AddRange(item.Material.ConfersTraits);
             }
+
+            item.Broadness = itemTemplate.Broadness;
+            item.Height = itemTemplate.Height;
+            item.Length = itemTemplate.Length;
 
             return item;
         }

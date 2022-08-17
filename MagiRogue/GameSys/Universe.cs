@@ -23,18 +23,10 @@ namespace MagiRogue.GameSys
     public class Universe
     {
         // map creation and storage data
-        private const int _mapWidth = 50;
-        //private const int _mapHeight = 50;
-        private readonly int maxChunks;
         private readonly int planetWidth = 257;
         private readonly int planetHeight = 257;
         private readonly int planetMaxCivs = 30;
-        private readonly int _maxRooms = 20;
-        private readonly int _minRoomSize = 4;
-        private readonly int _maxRoomSize = 10;
         private readonly Random rndNum = new();
-        /*private const int _zMaxUpLevel = 10;
-        private const int _zMaxLowLevel = -10;*/
 
         /// <summary>
         /// The World map, contains the map data and the Planet data
@@ -95,6 +87,7 @@ namespace MagiRogue.GameSys
                 WorldMap = new PlanetGenerator().CreatePlanet(planetWidth,
                     planetHeight,
                     planetMaxCivs);
+                Time = WorldMap.GetTimePassed();
                 WorldMap.AssocietatedMap.IsActive = true;
                 //maxChunks = planetWidth * planetHeight;
                 //AllChunks = new RegionChunk[maxChunks];
@@ -238,7 +231,7 @@ namespace MagiRogue.GameSys
             for (int i = 0; i < CurrentMap.Tiles.Length; i++)
             {
                 if (!CurrentMap.Tiles[i].IsBlockingMove && CurrentMap.Tiles[i] is not NodeTile
-                    && !CurrentMap.GetEntitiesAt<Entity>(Point.FromIndex(i, _mapWidth)).Any())
+                    && !CurrentMap.GetEntitiesAt<Entity>(Point.FromIndex(i, CurrentMap.Width)).Any())
                 {
                     // Set the player's position to the index of the current map position
                     var pos = Point.FromIndex(i, CurrentMap.Width);
@@ -389,7 +382,7 @@ namespace MagiRogue.GameSys
                 GameLoop.UIManager.MapWindow.MapConsole.IsDirty = true;
 
 #if DEBUG
-                GameLoop.UIManager.MessageLog.Add($"Turns: {Time.Turns}, Tick: {Time.TimePassed.Ticks}");
+                GameLoop.AddMessageLog($"Turns: {Time.Turns}, Tick: {Time.TimePassed.Ticks}");
 #endif
             }
         }
@@ -401,7 +394,7 @@ namespace MagiRogue.GameSys
         /// <returns>returns true if the player made it's action sucessfully, false if otherwise</returns>
         private bool ProcessPlayerTurn(long playerTime)
         {
-            if (Player.Stats.Health <= 0)
+            if (Player.CheckIfDed())
             {
                 DeleteSave();
                 RestartGame();
@@ -410,10 +403,8 @@ namespace MagiRogue.GameSys
 
             PlayerTimeNode playerTurn = new PlayerTimeNode(Time.TimePassed.Ticks + playerTime);
             Time.RegisterEntity(playerTurn);
-
-            Player.Stats.ApplyHpRegen();
-            Player.Stats.ApplyManaRegen();
-            CurrentMap.PlayerFOV.Calculate(Player.Position, Player.Stats.ViewRadius);
+            Player.GetAnatomy().UpdateBody(Player);
+            CurrentMap.PlayerFOV.Calculate(Player.Position, Player.GetViewRadius());
 
             return true;
         }
@@ -426,7 +417,7 @@ namespace MagiRogue.GameSys
         private void RestartGame()
         {
             CurrentMap.DestroyMap();
-            int chunckLenght = CurrentChunk.LocalMaps.Length;
+            int chunckLenght = CurrentChunk is not null ? CurrentChunk.LocalMaps.Length : 0;
             for (int i = 0; i < chunckLenght; i++)
             {
                 Map maps = CurrentChunk.LocalMaps[i];
@@ -449,7 +440,7 @@ namespace MagiRogue.GameSys
                 IAiComponent ai = entity.GoRogueComponents.GetFirstOrDefault<IAiComponent>();
                 (bool sucess, long tick) = ai?.RunAi(CurrentMap, GameLoop.UIManager.MessageLog)
                     ?? (false, -1);
-                entity.Stats.ApplyAllRegen();
+                entity.GetAnatomy().UpdateBody(entity);
 
                 if (!sucess || tick < -1)
                     return;

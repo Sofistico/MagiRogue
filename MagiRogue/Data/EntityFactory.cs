@@ -1,5 +1,10 @@
-﻿using MagiRogue.Data.Serialization.EntitySerialization;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Entities;
+using MagiRogue.Entities.StarterScenarios;
+using MagiRogue.GameSys.Magic;
+using MagiRogue.Utils;
+using System;
 using System.Collections.Generic;
 
 namespace MagiRogue.Data
@@ -9,31 +14,135 @@ namespace MagiRogue.Data
     /// </summary>
     public static class EntityFactory
     {
-        public static Actor ActorCreator(Point position, ActorTemplate actorTemplate)
+        public static Actor ActorCreatorFirstStep(Point position, string raceId,
+            string actorName, int actorAge, Gender gender)
         {
-            Actor actor =
-                new(
-                actorTemplate.Name,
-                actorTemplate.ForegroundBackingField.Color,
-                actorTemplate.BackgroundBackingField.Color,
-                actorTemplate.Glyph,
-                position
-                )
-                {
-                    Stats = actorTemplate.Stats,
-                    Description = actorTemplate.Description,
-                    Material = GameSys.Physics.PhysicsManager.SetMaterial(actorTemplate.MaterialId)
-                };
-            if (actorTemplate.Abilities is not null && actorTemplate.Abilities.Count > 0)
+            Race race = DataManager.QueryRaceInData(raceId);
+            int glyph = GlyphHelper.GlyphExistInDictionary(race.RaceGlyph) ?
+                GlyphHelper.GetGlyph(race.RaceGlyph) : race.RaceGlyph;
+
+            Actor actor = new Actor(actorName,
+                race.ReturnForegroundColor(),
+                race.ReturnBackgroundColor(),
+                glyph,
+                position)
             {
-                for (int i = 0; i < actorTemplate.Abilities.Count; i++)
-                {
-                    var ability = actorTemplate.Abilities[i];
-                    actor.AddAbilityToDictionary(ability);
-                }
-            }
+                Description = race.Description,
+            };
+            SetupBodySoulAndMind(race, actor, actorAge, gender);
 
             return actor;
+        }
+
+        public static Player PlayerCreatorFromActor(Actor actor,
+            string scenarioId, Gender gender)
+        {
+            Scenario scenario = DataManager.QueryScenarioInData(scenarioId);
+            actor.GetAnatomy().Gender = gender;
+            SetupScenarioStats(scenario, actor);
+            SetupAbilities(actor, scenario.Abilities);
+            SetupScenarioMagic(actor, scenario);
+            SetupInventory(actor, scenario);
+            SetupEquipment(actor, scenario);
+            Player player = Player.ReturnPlayerFromActor(actor);
+
+            return player;
+        }
+
+        private static void SetupEquipment(Actor actor, Scenario scenario)
+        {
+        }
+
+        private static void SetupInventory(Actor actor, Scenario scenario)
+        {
+        }
+
+        private static void SetupScenarioMagic(Actor actor, Scenario scenario)
+        {
+            actor.Magic.ShapingSkill += scenario.ShapingSkill;
+            foreach (var str in scenario.SpellsKnow)
+            {
+                actor.Magic.KnowSpells.Add(DataManager.QuerySpellInData(str));
+            }
+        }
+
+        private static void SetupScenarioStats(Scenario scenario, Actor actor)
+        {
+            Body body = actor.Body;
+            Anatomy anatomy = actor.GetAnatomy();
+            Mind mind = actor.Mind;
+            Soul soul = actor.Soul;
+
+            body.Strength += scenario.Strenght;
+            body.Toughness += scenario.Toughness;
+            body.Endurance += scenario.Endurance;
+            body.InitialStamina();
+            body.MaxStamina += scenario.MaxStamina;
+            body.Stamina = body.MaxStamina;
+            body.StaminaRegen += scenario.StaminaRegen;
+
+            anatomy.FitLevel += scenario.FitLevel;
+            anatomy.NormalLimbRegen += scenario.LimbRegen;
+            anatomy.CurrentAge = anatomy.GetRace().GetAgeFromAgeGroup(scenario.AgeGroup);
+
+            mind.Inteligence += scenario.Inteligence;
+            mind.Precision += scenario.Precision;
+
+            soul.WillPower += scenario.WillPower;
+            soul.InitialMana(mind.Inteligence);
+            soul.MaxMana += scenario.MaxMana;
+            soul.CurrentMana = soul.MaxMana;
+            soul.BaseManaRegen += scenario.ManaRegen;
+        }
+
+        public static Player PlayerCreatorFromActor(Actor actor, Scenario scenario,
+            Gender gender)
+        {
+            return PlayerCreatorFromActor(actor, scenario.Id, gender);
+        }
+
+        private static void SetupAbilities(Actor actor, List<AbilityTemplate> abilities)
+        {
+            foreach (Ability item in abilities)
+            {
+                actor.Mind.AddAbilityToDictionary(item);
+            }
+        }
+
+        private static void SetupBodySoulAndMind(Race race, Actor actor, int actorAge, Gender gender)
+        {
+            Body body = actor.Body;
+            Anatomy anatomy = actor.GetAnatomy();
+            MagicManager magic = actor.Magic;
+            Mind mind = actor.Mind;
+            Soul soul = actor.Soul;
+
+            int volume = race.GetRngVolume(actorAge);
+            actor.Height = race.GetRandomHeight();
+            actor.Length = race.GetRandomLength();
+            actor.Broadness = race.GetRandomBroadness();
+            int volumeWithHeight = actor.Height > 0 ? MathMagi.CalculateVolumeWithModifier(actor.Height, volume) : volume;
+            int volumeWithLenght = actor.Length > 0 ? MathMagi.CalculateVolumeWithModifier(actor.Length, volumeWithHeight) : volumeWithHeight;
+            int finalVolume = actor.Broadness > 0 ? MathMagi.CalculateVolumeWithModifier(actor.Broadness, volumeWithLenght) : volumeWithLenght;
+
+            race.SetBodyPlan();
+            anatomy.Setup(actor, race, actorAge, gender, finalVolume);
+
+            body.Endurance = race.BaseEndurance;
+            body.Strength = race.BaseStrenght;
+            body.Toughness = race.BaseToughness;
+            body.GeneralSpeed = race.GeneralSpeed;
+            body.ViewRadius = race.RaceViewRadius;
+            body.InitialStamina();
+
+            mind.Inteligence = race.BaseInt;
+            mind.Precision = race.BasePrecision;
+
+            soul.WillPower = race.BaseWillPower;
+            soul.BaseManaRegen = race.BaseManaRegen;
+            soul.InitialMana(mind.Inteligence);
+
+            magic.InnateMagicResistance = race.BaseMagicResistance;
         }
 
         public static Item ItemCreator(Point position, ItemTemplate itemTemplate)
@@ -46,8 +155,7 @@ namespace MagiRogue.Data
                     itemTemplate.Name,
                     itemTemplate.Glyph,
                     position,
-                    itemTemplate.Size,
-                    itemTemplate.Weight,
+                    itemTemplate.Volume,
                     itemTemplate.Condition
                 )
                 {
@@ -58,68 +166,23 @@ namespace MagiRogue.Data
             return item;
         }
 
-        public static List<Limb> BasicHumanoidBody()
+        public static Player PlayerCreatorFromZero(Point pos, string race, string name, Gender gender,
+            string scenarioId)
         {
-            Limb torso = DataManager.QueryLimbInData("humanoid_torso");
-            Limb neck = DataManager.QueryLimbInData("humanoid_neck");
-            Limb head = DataManager.QueryLimbInData("humanoid_head");
-            Limb lArm = DataManager.QueryLimbInData("humanoid_l_arm");
-            Limb rArm = DataManager.QueryLimbInData("humanoid_r_arm");
-            Limb rLeg = DataManager.QueryLimbInData("humanoid_r_leg");
-            Limb lLeg = DataManager.QueryLimbInData("humanoid_l_leg");
-            Limb lHand = DataManager.QueryLimbInData("humanoid_l_hand");
-            Limb rHand = DataManager.QueryLimbInData("humanoid_r_hand");
-            Limb rFoot = DataManager.QueryLimbInData("humanoid_r_foot");
-            Limb lFoot = DataManager.QueryLimbInData("humanoid_l_foot");
-
-            List<Limb> limbs = new()
-            {
-                torso,
-                neck,
-                head,
-                lArm,
-                rArm,
-                rLeg,
-                lLeg,
-                lHand,
-                rHand,
-                rFoot,
-                lFoot
-            };
-
-            return limbs;
+            var scenario = DataManager.QueryScenarioInData(scenarioId);
+            var foundRace = DataManager.QueryRaceInData(race);
+            int age = foundRace.GetAgeFromAgeGroup(scenario.AgeGroup);
+            Actor actor = ActorCreatorFirstStep(pos, race, name, age, gender);
+            Player player = PlayerCreatorFromActor(actor, scenarioId, gender);
+            return player;
         }
 
-        public static List<Organ> BasicHumanoidOrgans()
+        public static Player PlayerCreatorFromZero(Point pos, string race, string name, int age, Gender gender,
+            string scenarioId)
         {
-            Organ brain = DataManager.QueryOrganInData("brain");
-            Organ heart = DataManager.QueryOrganInData("humanoid_heart");
-            Organ spine = DataManager.QueryOrganInData("humanoid_spine");
-            Organ stomach = DataManager.QueryOrganInData("humanoid_stomach");
-            Organ intestine = DataManager.QueryOrganInData("humanoid_intestine");
-            Organ r_lung = DataManager.QueryOrganInData("humanoid_r_lung");
-            Organ l_lung = DataManager.QueryOrganInData("humanoid_l_lung");
-            Organ r_kidney = DataManager.QueryOrganInData("humanoid_r_kidney");
-            Organ l_kidney = DataManager.QueryOrganInData("humanoid_l_kidney");
-            Organ r_eye = DataManager.QueryOrganInData("humanoid_r_eye");
-            Organ l_eye = DataManager.QueryOrganInData("humanoid_l_eye");
-
-            List<Organ> list = new()
-            {
-                brain,
-                heart,
-                spine,
-                stomach,
-                intestine,
-                r_lung,
-                l_lung,
-                r_kidney,
-                l_kidney,
-                r_eye,
-                l_eye
-            };
-
-            return list;
+            Actor actor = ActorCreatorFirstStep(pos, race, name, age, gender);
+            Player player = PlayerCreatorFromActor(actor, scenarioId, gender);
+            return player;
         }
     }
 }

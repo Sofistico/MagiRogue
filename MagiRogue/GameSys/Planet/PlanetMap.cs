@@ -1,7 +1,9 @@
 ﻿using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Tiles;
+using MagiRogue.GameSys.Time;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -25,6 +27,8 @@ namespace MagiRogue.GameSys.Planet
 
         [DataMember]
         public Map AssocietatedMap { get; }
+
+        public long TicksSinceCreation { get; set; }
 
         public PlanetMap(int width, int height)
         {
@@ -60,6 +64,11 @@ namespace MagiRogue.GameSys.Planet
                     AssocietatedMap.SetTerrain(tiles[x, y]);
                 }
             }
+        }
+
+        public TimeSystem GetTimePassed()
+        {
+            return new TimeSystem(TicksSinceCreation);
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization;
 using MagiRogue.Data.Serialization.EntitySerialization;
+using MagiRogue.Utils;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System;
@@ -39,6 +41,14 @@ namespace MagiRogue.Entities
             }
         }
 
+        public override double Weight
+        {
+            get
+            {
+                return MathMagi.GetWeightWithDensity(Material.Density, Volume);
+            }
+        }
+
         /// <summary>
         /// In what slot can this item be equiped? None means you can't equip the item
         /// </summary>
@@ -48,6 +58,11 @@ namespace MagiRogue.Entities
         /// The damage that an item will deal if hitting someone with it, should alway be 1.
         /// </summary>
         public int BaseDmg { get; set; } = 1;
+
+        /// <summary>
+        /// How fast the item is to attack, heavier itens and lenghtier item suffer
+        /// </summary>
+        public int SpeedOfAttack { get; set; } = 100;
 
         /// <summary>
         /// The type of damage the item deals, should be default of blunt type
@@ -61,15 +76,17 @@ namespace MagiRogue.Entities
         public List<Trait> Traits { get; set; }
         public List<Quality> Qualities { get; internal set; }
         public string ItemId { get; set; }
+        public WeaponType WeaponType { get; set; }
+
+        public MaterialTemplate Material { get; set; }
 
         // By default, a new Item is sized 1x1, with a weight of 1, and at 100% condition
         public Item(Color foreground, Color background, string name, int glyph, Point coord, int size,
-            float weight = 1, int condition = 100, int layer = (int)MapLayer.ITEMS,
+            int condition = 100, int layer = (int)MapLayer.ITEMS,
             string materialId = "null") :
             base(foreground, background, glyph, coord, layer)
         {
-            Size = size;
-            Weight = weight;
+            Volume = size;
             Condition = condition;
             Material = GameSys.Physics.PhysicsManager.SetMaterial(materialId);
             Name = Material.ReturnNameFromMaterial(name);
@@ -87,7 +104,7 @@ namespace MagiRogue.Entities
             GameLoop.GetCurrentMap().Remove(this);
         }
 
-        public void Equip(Actor actor)
+        public bool Equip(Actor actor)
         {
             // We need to store our modifiers in variables before adding them to the stat.
             // just example code
@@ -97,23 +114,24 @@ namespace MagiRogue.Entities
 
             if (EquipType == EquipType.None)
             {
-                GameLoop.UIManager.MessageLog.Add("This item can't be equiped!");
-                return;
+                GameLoop.AddMessageLog("This item can't be equiped!");
+                return false;
             }
 
-            if (!actor.Equipment.TryAdd(actor.Anatomy.Limbs.Find
-                (l => l.TypeLimb.ToString() == EquipType.ToString()), this))
+            if (!actor.GetEquipment().TryAdd(actor.GetAnatomy().Limbs.Find
+                (l => l.TypeLimb.ToString() == EquipType.ToString()).Id, this))
             {
-                GameLoop.UIManager.MessageLog.Add($"{actor.Name} has already an item equiped in addHere!");
-                return;
+                GameLoop.AddMessageLog($"{actor.Name} has already an item equiped in addHere!");
+                return false;
             }
 
             if (EquipType == EquipType.Hand)
             {
-                GameLoop.UIManager.MessageLog.Add($"{actor.Name} wields {Name}");
+                GameLoop.AddMessageLog($"{actor.Name} wields {Name}");
             }
             else
-                GameLoop.UIManager.MessageLog.Add($"{actor.Name} equipped {Name} in {EquipType}");
+                GameLoop.AddMessageLog($"{actor.Name} equipped {Name} in {EquipType}");
+            return true;
         }
 
         public void Unequip(Actor actor)
@@ -129,6 +147,11 @@ namespace MagiRogue.Entities
         public int DamageWhenItemStrikes(int itemAceleration)
         {
             return GameSys.Physics.PhysicsManager.CalculateStrikeForce(Weight, itemAceleration) + BaseDmg;
+        }
+
+        public double QualityMultiplier()
+        {
+            return Qualities.Find(i => i.QualityType is QualityType.ItemQuality).QualitySuitabiliy * 0.3;
         }
 
         public override string ToString()

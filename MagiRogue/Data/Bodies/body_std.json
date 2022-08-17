@@ -1,0 +1,18 @@
+﻿[
+  {
+    "Id": "humanoid_limbs",
+    "BodyParts": [ "humanoid_upper_body", "humanoid_lower_body", "humanoid_neck", "humanoid_head", "humanoid_l_arm", "humanoid_r_arm", "humanoid_r_leg", "humanoid_l_leg", "humanoid_l_hand", "humanoid_r_hand", "humanoid_r_foot", "humanoid_l_foot" ]
+  },
+  {
+    "Id": "humanoid_organs",
+    "BodyParts": [ "brain", "humanoid_heart", "humanoid_upper_spine", "humanoid_medium_spine", "humanoid_lower_spine", "humanoid_stomach", "humanoid_intestine", "humanoid_r_lung", "humanoid_l_lung", "humanoid_r_kidney", "humanoid_l_kidney", "humanoid_r_eye", "humanoid_l_eye" ]
+  },
+  {
+    "Id": "5fingers",
+    "BodyParts": [ "finger1", "finger2", "finger3", "finger4", "finger5" ]
+  },
+  {
+    "Id": "5toes",
+    "BodyParts": [ "toe1", "toe2", "toe3", "toe4", "toe5" ]
+  }
+]

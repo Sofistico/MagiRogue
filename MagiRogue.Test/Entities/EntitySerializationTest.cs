@@ -48,14 +48,63 @@ namespace MagiRogue.Test.Entities
             {
                 List<ActorTemplate> deserialized = JsonUtils.JsonDeseralize<List<ActorTemplate>>
                     (Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "Actors", "Humanoids.json"));
-                Actor found = EntityFactory.ActorCreator(Point.None,
-                    deserialized.FirstOrDefault(i => i.ID == "test_troll"));
+                Actor found = deserialized.FirstOrDefault();
                 Assert.Equal(found.Name, deserialized.FirstOrDefault(i => i.ID == "test_troll").Name);
             }
             catch (Exception)
             {
                 // This is here so that travis stops failing
             }
+        }
+
+        [Fact]
+        public void ActorSerializeBody()
+        {
+            var playa = EntityFactory.PlayerCreatorFromZero(new Point(0, 0),
+                "human",
+                "Test",
+                MagiRogue.Data.Enumerators.Gender.Asexual,
+                "new_wiz");
+
+            var json = JsonConvert.SerializeObject(playa);
+            var deserialized = JsonConvert.DeserializeObject<Actor>(json);
+
+            Assert.Equal(playa.Body.Stamina, deserialized.Body.Stamina);
+            Assert.Equal(playa.Body.StaminaRegen, deserialized.Body.StaminaRegen);
+        }
+
+        [Fact]
+        public void ActorSerializeToSeeIfCanSeeFalse()
+        {
+            var playa = EntityFactory.PlayerCreatorFromZero(new Point(0, 0),
+                "human",
+                "Test",
+                MagiRogue.Data.Enumerators.Gender.Asexual,
+                "new_wiz");
+            var eyes = playa.GetAnatomy().Organs.FindAll(i => i.OrganType is MagiRogue.Data.Enumerators.OrganType.Visual);
+            foreach (var item in eyes)
+            {
+                item.BodyPartHp = 0;
+                item.Working = false;
+            }
+            var json = JsonConvert.SerializeObject(playa);
+            var deserialized = JsonConvert.DeserializeObject<Actor>(json);
+
+            Assert.False(deserialized.GetAnatomy().CanSee);
+        }
+
+        [Fact]
+        public void ActorSerializeToSeeIfCanSeeTrue()
+        {
+            var playa = EntityFactory.PlayerCreatorFromZero(new Point(0, 0),
+                "human",
+                "Test",
+                MagiRogue.Data.Enumerators.Gender.Asexual,
+                "new_wiz");
+            var json = JsonConvert.SerializeObject(playa);
+            var deserialized = JsonConvert.DeserializeObject<Actor>(json);
+
+            Assert.True(deserialized.GetAnatomy().CanSee);
         }
     }
 }

@@ -5,7 +5,7 @@
         /// <summary>
         /// In meters per second, m/s²
         /// </summary>
-        public const float EarthGravity = 9.807f;
+        public const double EarthGravity = 9.807;
 
         /// <summary>
         /// Represents the speed that something will reach when eventually going to the ground.
@@ -14,7 +14,7 @@
         /// </summary>
         /// <param name="ticksFalling">the amount of ticks something will be falling</param>
         /// <returns>Returns the speed in m/s</returns>
-        public static float CalculateFallSpeed(int ticksFalling)
+        public static double CalculateFallSpeed(int ticksFalling)
         {
             return EarthGravity * ticksFalling;
         }

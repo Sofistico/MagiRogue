@@ -14,28 +14,10 @@ namespace MagiRogue.Test.System.Magic
         private MagiRogue.GameSys.Magic.MagicManager weakMagic;
         private MagiRogue.GameSys.Magic.MagicManager mediumMagic;
         private MagiRogue.GameSys.Magic.MagicManager strongMagic;
-        private readonly Stat testStats;
 
         public MagicTest()
         {
             Game.Create(1, 1);
-
-            testStats = new Stat();
-            testStats.SetAttributes(
-                viewRadius: 7,
-                health: 10,
-                baseHpRegen: 0.1f,
-                bodyStat: 1,
-                mindStat: 1,
-                soulStat: 1,
-                baseAttack: 10,
-                attackChance: 40,
-                protection: 5,
-                defenseChance: 20,
-                speed: 1.0f,
-                _baseManaRegen: 0.1f,
-                personalMana: 12
-                );
         }
 
         [Fact]
@@ -51,32 +33,40 @@ namespace MagiRogue.Test.System.Magic
 
             mediumMagic = new MagiRogue.GameSys.Magic.MagicManager()
             {
-                ShapingSkill = 15,
+                ShapingSkill = 10,
                 KnowSpells = spellBase
             };
 
             strongMagic = new MagiRogue.GameSys.Magic.MagicManager()
             {
-                ShapingSkill = 30,
+                ShapingSkill = 15,
                 KnowSpells = spellBase
+            };
+            Soul soul = new Soul()
+            {
+                WillPower = 10,
+                CurrentMana = 100
             };
 
             Actor weakSpellCaster = new Actor("Test1", Color.Black, Color.Black, 't', Point.None)
             {
                 Magic = weakMagic,
-                Stats = testStats
+                Soul = soul,
+                //Stats = testStats
             };
 
             Actor mediumSpellCaster = new Actor("Test2", Color.Black, Color.Black, 't', Point.None)
             {
                 Magic = mediumMagic,
-                Stats = testStats
+                Soul = soul
+                //Stats = testStats
             };
 
             Actor strongSpellCaster = new Actor("Test3", Color.Black, Color.Black, 't', Point.None)
             {
                 Magic = strongMagic,
-                Stats = testStats
+                Soul = soul
+                //Stats = testStats
             };
 
             List<bool> canWeakCast = new();
@@ -85,15 +75,15 @@ namespace MagiRogue.Test.System.Magic
 
             foreach (var item in weakMagic.KnowSpells)
             {
-                canWeakCast.Add(item.CanCast(weakMagic, weakSpellCaster.Stats));
+                canWeakCast.Add(item.CanCast(weakMagic, weakSpellCaster));
             }
             foreach (var item in mediumMagic.KnowSpells)
             {
-                canMediumCast.Add(item.CanCast(mediumMagic, mediumSpellCaster.Stats));
+                canMediumCast.Add(item.CanCast(mediumMagic, mediumSpellCaster));
             }
             foreach (var item in strongMagic.KnowSpells)
             {
-                canStrongCast.Add(item.CanCast(strongMagic, strongSpellCaster.Stats));
+                canStrongCast.Add(item.CanCast(strongMagic, strongSpellCaster));
             }
 
             Assert.True((canWeakCast.Where(a => a == true).Count().Equals(1))

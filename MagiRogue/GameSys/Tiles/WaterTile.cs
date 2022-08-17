@@ -23,7 +23,7 @@ namespace MagiRogue.GameSys.Tiles
 
         public bool CanSwinThere(Actor actor)
         {
-            if (actor.Abilities[((int)AbilityName.Swin)].Score > SwinDifficulty)
+            if (actor.Mind.Abilities[((int)AbilityName.Swin)].Score > SwinDifficulty)
             {
                 return true;
             }

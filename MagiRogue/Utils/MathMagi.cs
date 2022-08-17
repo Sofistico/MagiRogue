@@ -14,6 +14,26 @@ namespace MagiRogue.Utils
             return positive;
         }
 
+        public static double ReturnPositive(double nmb)
+        {
+            double positive;
+            if (nmb < 0)
+                positive = nmb * -1;
+            else
+                positive = nmb;
+            return positive;
+        }
+
+        public static int ReturnPositive(int nmb)
+        {
+            int positive;
+            if (nmb < 0)
+                positive = nmb * -1;
+            else
+                positive = nmb;
+            return positive;
+        }
+
         /// <summary>
         /// Method to return only the positive module.
         /// </summary>
@@ -34,6 +54,28 @@ namespace MagiRogue.Utils
         public static float Round(float x)
         {
             return MathF.Round(x, 2, MidpointRounding.AwayFromZero);
+        }
+
+        public static int GetVolumeOfObject(double densityInGCm, double weightInKg)
+        {
+            int densityKgM = GetDensityInKgM(densityInGCm);
+            return (int)(weightInKg / densityKgM);
+        }
+
+        public static double GetWeightWithDensity(double densityInGCm, int volumeInCM3)
+        {
+            int densityKgM = GetDensityInKgM(densityInGCm);
+            return (double)((densityKgM * volumeInCM3) / (double)1000000);
+        }
+
+        public static int GetDensityInKgM(double densityInGCm)
+        {
+            return (int)(densityInGCm * 1000);
+        }
+
+        public static int CalculateVolumeWithModifier(int modifier, int volume)
+        {
+            return (int)((volume) * (modifier / (double)100));
         }
     }
 }

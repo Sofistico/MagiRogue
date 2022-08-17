@@ -108,7 +108,7 @@ namespace MagiRogue.UI
                             [world.CurrentMap.ControlledEntitiy.Position + coorToMove]
                             && distance <= targetCursor.MaxDistance)
                         {
-                            return CommandManager.MoveActorBy
+                            return ActionManager.MoveActorBy
                                 ((Actor)world.CurrentMap.ControlledEntitiy, coorToMove);
                         }
                         else
@@ -116,7 +116,7 @@ namespace MagiRogue.UI
                     }
 
                     bool sucess =
-                        CommandManager.MoveActorBy((Actor)world.CurrentMap.ControlledEntitiy, coorToMove);
+                        ActionManager.MoveActorBy((Actor)world.CurrentMap.ControlledEntitiy, coorToMove);
                     return sucess;
                 }
             }
@@ -148,12 +148,12 @@ namespace MagiRogue.UI
             // Work around for a > symbol, must be top to not make the char wait
             if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.OemPeriod))
             {
-                return CommandManager.EnterDownMovement(GetPlayer.Position);
+                return ActionManager.EnterDownMovement(GetPlayer.Position);
             }
             // Work around for a < symbol, must be top to not make the char wait
             if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.OemComma))
             {
-                return CommandManager.EnterUpMovement(GetPlayer.Position);
+                return ActionManager.EnterUpMovement(GetPlayer.Position);
             }
             if (HandleMove(info, world))
             {
@@ -168,7 +168,7 @@ namespace MagiRogue.UI
 
             if (info.IsKeyPressed(Keys.NumPad5) && info.IsKeyDown(Keys.LeftControl))
             {
-                return CommandManager.RestTillFull(GetPlayer);
+                return ActionManager.RestTillFull(GetPlayer);
             }
 
             if (info.IsKeyPressed(Keys.NumPad5) || info.IsKeyPressed(Keys.OemPeriod))
@@ -179,39 +179,39 @@ namespace MagiRogue.UI
 
             if (info.IsKeyPressed(Keys.A))
             {
-                bool sucess = CommandManager.DirectAttack(world.Player);
+                bool sucess = ActionManager.DirectAttack(world.Player);
                 world.ProcessTurn(TimeHelper.GetAttackTime(world.Player), sucess);
                 return sucess;
             }
             if (info.IsKeyPressed(Keys.G))
             {
                 Item item = world.CurrentMap.GetEntityAt<Item>(world.Player.Position);
-                bool sucess = CommandManager.PickUp(world.Player, item);
+                bool sucess = ActionManager.PickUp(world.Player, item);
                 ui.InventoryScreen.ShowItems(world.Player);
                 world.ProcessTurn(TimeHelper.Interact, sucess);
                 return sucess;
             }
             if (info.IsKeyPressed(Keys.D))
             {
-                bool sucess = CommandManager.DropItems(world.Player);
+                bool sucess = ActionManager.DropItems(world.Player);
                 ui.InventoryScreen.ShowItems(world.Player);
                 world.ProcessTurn(TimeHelper.Interact, sucess);
                 return sucess;
             }
             if (info.IsKeyPressed(Keys.C))
             {
-                bool sucess = CommandManager.CloseDoor(world.Player);
+                bool sucess = ActionManager.CloseDoor(world.Player);
                 world.ProcessTurn(TimeHelper.Interact, sucess);
                 ui.MapWindow.MapConsole.IsDirty = true;
             }
-            if (info.IsKeyPressed(Keys.H) && !info.IsKeyDown(Keys.LeftShift))
-            {
-                bool sucess = CommandManager.SacrificeLifeEnergyToMana(world.Player);
-                world.ProcessTurn(TimeHelper.MagicalThings, sucess);
-            }
+            //if (info.IsKeyPressed(Keys.H) && !info.IsKeyDown(Keys.LeftShift))
+            //{
+            //    bool sucess = ActionManager.SacrificeLifeEnergyToMana(world.Player);
+            //    world.ProcessTurn(TimeHelper.MagicalThings, sucess);
+            //}
             if (info.IsKeyPressed(Keys.H) && info.IsKeyDown(Keys.LeftShift))
             {
-                bool sucess = CommandManager.NodeDrain(GetPlayer);
+                bool sucess = ActionManager.NodeDrain(GetPlayer);
                 world.ProcessTurn(TimeHelper.MagicalThings, sucess);
             }
             if (info.IsKeyPressed(Keys.L))
@@ -236,14 +236,14 @@ namespace MagiRogue.UI
             if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.Z))
             {
                 SpellSelectWindow spell =
-                    new SpellSelectWindow(GetPlayer.Stats.PersonalMana);
+                    new SpellSelectWindow(GetPlayer.Soul.CurrentMana);
 
                 targetCursor = new Target(GetPlayer.Position);
 
                 spell.Show(GetPlayer.Magic.KnowSpells,
                     selectedSpell => targetCursor.OnSelectSpell(selectedSpell,
                     (Actor)world.CurrentMap.ControlledEntitiy),
-                    GetPlayer.Stats.PersonalMana);
+                    GetPlayer.Soul.CurrentMana);
 
                 return true;
             }
@@ -286,7 +286,7 @@ namespace MagiRogue.UI
 #if DEBUG
             if (info.IsKeyPressed(Keys.F10))
             {
-                CommandManager.ToggleFOV();
+                ActionManager.ToggleFOV();
                 ui.MapWindow.MapConsole.IsDirty = true;
                 int c = world.CurrentMap.PlayerExplored.Count;
                 for (int i = 0; i < c; i++)
@@ -324,7 +324,7 @@ namespace MagiRogue.UI
 
             if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.O) && targetCursor is not null)
             {
-                CommandManager.CreateTestEntity(targetCursor.Cursor.Position, world.CurrentMap);
+                ActionManager.CreateTestEntity(targetCursor.Cursor.Position, world.CurrentMap);
             }
 
             if (info.IsKeyPressed(Keys.T))
@@ -341,7 +341,7 @@ namespace MagiRogue.UI
 
             if (info.IsKeyPressed(Keys.Tab))
             {
-                CommandManager.CreateNewMapForTesting();
+                ActionManager.CreateNewMapForTesting();
             }
             if (info.IsKeyPressed(Keys.OemPlus))
             {

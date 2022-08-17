@@ -50,7 +50,7 @@ namespace MagiRogue.GameSys.Magic.Effects
 
         private void DmgEff(Point target, Actor caster, SpellBase spellCasted)
         {
-            BaseDamage = MagicManager.CalculateSpellDamage(caster.Stats, spellCasted);
+            BaseDamage = MagicManager.CalculateSpellDamage(caster, spellCasted);
 
             Entity poorGuy = GameLoop.GetCurrentMap().GetEntityAt<Entity>(target);
 
@@ -70,12 +70,10 @@ namespace MagiRogue.GameSys.Magic.Effects
 
         private void HealEffect(Point target, Actor caster, SpellBase spellCasted)
         {
-            Stat casterStats = caster.Stats;
-
-            BaseDamage = MagicManager.CalculateSpellDamage(casterStats, spellCasted);
+            BaseDamage = MagicManager.CalculateSpellDamage(caster, spellCasted);
 
             if (AreaOfEffect is SpellAreaEffect.Self)
-                CombatUtils.ApplyHealing(BaseDamage, casterStats, SpellDamageType);
+                CombatUtils.ApplyHealing(BaseDamage, caster, SpellDamageType);
             else
             {
                 Actor happyGuy = GameLoop.GetCurrentMap().GetEntityAt<Actor>(target);
@@ -87,11 +85,11 @@ namespace MagiRogue.GameSys.Magic.Effects
 
                 if (happyGuy.CanBeAttacked)
                 {
-                    GameLoop.UIManager.MessageLog.Add("You can't heal what can't take damage");
+                    GameLoop.AddMessageLog("You can't heal what can't take damage");
                     return;
                 }
 
-                CombatUtils.ApplyHealing(BaseDamage, happyGuy.Stats, SpellDamageType);
+                CombatUtils.ApplyHealing(BaseDamage, happyGuy, SpellDamageType);
             }
         }
     }

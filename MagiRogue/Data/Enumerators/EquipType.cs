@@ -7,7 +7,8 @@ namespace MagiRogue.Data.Enumerators
     {
         None,
         Head,
-        Torso,
+        UpperBody,
+        LowerBody,
         Arm,
         Leg,
         Foot,

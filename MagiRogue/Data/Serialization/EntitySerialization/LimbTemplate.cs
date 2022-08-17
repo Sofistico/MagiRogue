@@ -34,10 +34,10 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         public TypeOfLimb LimbType { get; set; }
 
         [DataMember]
-        public int MaxLimbHp { get; set; }
+        public double MaxLimbHp { get; set; }
 
         [DataMember]
-        public int LimbHp { get; set; }
+        public double LimbHp { get; set; }
 
         [DataMember]
         public double LimbWeight { get; set; }
@@ -46,7 +46,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         public string LimbName { get; set; }
 
         [DataMember]
-        public LimbOrientation LimbOrientation { get; set; }
+        public BodyPartOrientation LimbOrientation { get; set; }
 
         [DataMember]
         public string LimbMaterialId { get; set; }
@@ -55,13 +55,22 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         public bool Attached { get; private set; }
 
         [DataMember]
-        public string? ConnectedToId { get; private set; }
+        public string? ConnectedToId { get; set; }
 
         [DataMember]
         public string Id { get; set; }
 
         [DataMember]
         public bool Broken { get; set; } = false;
+
+        [DataMember]
+        public BodyPartFunction BodyPartFunction { get; set; }
+
+        [DataMember]
+        public double RateOfHeal { get; set; }
+
+        [DataMember]
+        public double RelativeSize { get; set; }
 
         // Here will be a class designed to reliable build different types of anatomys, for use in a future dictionary
         // static class for anatomies
@@ -70,13 +79,12 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         {
         }
 
-        [JsonConstructor()]
         public LimbTemplate(TypeOfLimb limbType,
             int maxLimbHp,
-            int limbHp,
+            double limbHp,
             double limbWeight,
             string limbName,
-            LimbOrientation limbOrientation,
+            BodyPartOrientation limbOrientation,
             string limbMaterialId,
             bool attached,
             string? connectsTo)
@@ -107,6 +115,9 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 LimbType = this.LimbType,
                 LimbWeight = this.LimbWeight,
                 MaxLimbHp = this.MaxLimbHp,
+                BodyPartFunction = this.BodyPartFunction,
+                RateOfHeal = this.RateOfHeal,
+                RelativeSize = this.RelativeSize,
             };
 
             return copy;
@@ -114,17 +125,21 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
         public static implicit operator Limb(LimbTemplate template)
         {
+            if (template is null)
+                return null;
             Limb limb = new Limb(template.LimbType,
-                template.LimbHp,
-                template.MaxLimbHp,
-                template.LimbWeight,
                 template.LimbName,
                 template.LimbOrientation,
                 template.ConnectedToId,
-                template.LimbMaterialId
+                template.LimbMaterialId,
+                template.BodyPartFunction
                 );
             limb.Id = template.Id;
+            limb.BodyPartHp = template.LimbHp;
+            limb.MaxBodyPartHp = (int)template.MaxLimbHp;
             limb.Broken = template.Broken;
+            limb.RateOfHeal = template.RateOfHeal;
+            limb.RelativeVolume = template.RelativeSize;
 
             return limb;
         }
@@ -132,16 +147,18 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         public static implicit operator LimbTemplate(Limb limb)
         {
             LimbTemplate template = new LimbTemplate(limb.TypeLimb,
-                limb.MaxLimbHp,
-                limb.LimbHp,
-                limb.LimbWeight,
-                limb.LimbName,
+                limb.MaxBodyPartHp,
+                limb.BodyPartHp,
+                limb.BodyPartWeight,
+                limb.BodyPartName,
                 limb.Orientation,
-                limb.LimbMaterial.Id,
+                limb.MaterialId,
                 limb.Attached,
                 limb.ConnectedTo);
             template.Id = limb.Id;
             template.Broken = limb.Broken;
+            template.BodyPartFunction = limb.BodyPartFunction;
+            template.RateOfHeal = limb.RateOfHeal;
 
             return template;
         }

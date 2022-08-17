@@ -42,7 +42,7 @@
 
   <ItemGroup>
     <PackageReference Include="GoRogue" Version="3.0.0-alpha14" />
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="SadConsole" Version="9.2.2" />
     <PackageReference Include="SadConsole.Host.MonoGame" Version="9.2.2" />
@@ -52,7 +52,7 @@
     <None Update="Data\Actors\humanoids.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Data\Actors\vegetation.json">
+    <None Update="Data\Bodies\body_std.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Data\Furniture\crafting_fur.json">
@@ -79,28 +79,34 @@
     <None Update="Data\Materials\material_definition.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Data\Other\body_parts.json">
+    <None Update="Data\Bodies\limb_std.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Data\Other\organs.json">
+    <None Update="Data\Bodies\organs_std.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\Races\race_humanoids.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Data\Rooms\room_city.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Data\Spells\divination_spells.json">
+    <None Update="Data\Scenarios\scenarios_wizard.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Data\Spells\medical_spells.json">
+    <None Update="Data\Spells\spells_divination.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Data\Spells\dimensionalism_spells.json">
+    <None Update="Data\Spells\spells_medical.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Data\Spells\projection_spells.json">
+    <None Update="Data\Spells\spells_dimensionalism.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Data\Spells\soul_spells.json">
+    <None Update="Data\Spells\spells_projection.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\Spells\spells_soul.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Data\Tiles\floors.json">
@@ -110,5 +116,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
 </Project>
