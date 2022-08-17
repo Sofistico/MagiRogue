@@ -143,7 +143,6 @@ namespace MagiRogue.GameSys
                 Civilization startTown = WorldMap.Civilizations
                     .FirstOrDefault(a => a.Tendency == CivilizationTendency.Normal);
                 player.Position = startTown.ReturnAllLandTerritory(WorldMap.AssocietatedMap)[0].Position;
-                player.Description = "Here is you, you are beautiful";
                 Player = player;
 
                 CurrentMap.Add(Player);
@@ -186,6 +185,7 @@ namespace MagiRogue.GameSys
                 // if the map is now updated, then no need to change anything!
                 mapToGo.NeedsUpdate = false;
                 mapToGo.UpdateRooms();
+                RegisterEntitiesToTime();
             }
             else
                 return; // Do nothing
@@ -247,110 +247,6 @@ namespace MagiRogue.GameSys
             CurrentMap.Add(Player);
         }
 
-        // Create some random monsters with random attack and defense values
-        // and drop them all over the map in
-        // random places.
-        /*private void CreateMonster(Map map, int numMonster)
-        {
-            // Create several monsters and
-            // pick a random position on the map to place them.
-            // check if the placement spot is blocking (e.g. a wall)
-            // and if it is, try a new position
-            for (int i = 0; i < numMonster; i++)
-            {
-                int monsterPosition = 0;
-                while (map.Tiles[monsterPosition].IsBlockingMove)
-                {
-                    // pick a random spot on the map
-                    monsterPosition = rndNum.Next(0, map.Width * map.Height);
-                    if (map.Tiles[monsterPosition] is NodeTile)
-                    {
-                        monsterPosition = rndNum.Next(0, map.Width * map.Height);
-                    }
-                }
-
-                // Set the monster's new position
-                // Note: this fancy math will be replaced by a new helper method
-                // in the next revision of SadConsole
-                var pos = new Point(monsterPosition % map.Width, monsterPosition / map.Height);
-
-                Stat monsterStat = new Stat()
-                {
-                    Protection = rndNum.Next(0, 5),
-                    Defense = rndNum.Next(7, 12),
-                    Strength = rndNum.Next(3, 10),
-                    BaseAttack = rndNum.Next(3, 12),
-                    Speed = 1,
-                    ViewRadius = 7,
-                    Health = 10,
-                    MaxHealth = 10
-                };
-
-                // Need to refactor this so that it's simpler to create a monster, propably gonna use the example
-                // of moving castle to make a static class containing blueprints on how to create the actors and items.
-                Anatomy monsterAnatomy = new();
-                monsterAnatomy.SetRace(new Race("Debug Race"));
-
-                Actor debugMonster = EntityFactory.ActorCreator(
-                    pos,
-                    new ActorTemplate("Debug Monster", Color.Blue, Color.Transparent, 'M',
-                    (int)MapLayer.ACTORS, monsterStat, monsterAnatomy, "DebugTest", 150, 60, "flesh"));
-
-                debugMonster.AddComponent(new MoveAndAttackAI(debugMonster.Stats.ViewRadius));
-                debugMonster.Inventory.Add(EntityFactory.ItemCreator(debugMonster.Position,
-                    new ItemTemplate("Debug Remains",
-                    Color.Red.PackedValue,
-                    Color.Black.PackedValue, '%', 1.5f, 35, "flesh", new MagicManager())
-                    {
-                        Description = "DebugRotten"
-                    }));
-                debugMonster.Anatomy.Limbs = EntityFactory.BasicHumanoidBody();
-
-                map.Add(debugMonster);
-                EntityTimeNode entityNode = new EntityTimeNode(debugMonster.ID, Time.TimePassed.Ticks + 100);
-                Time.RegisterEntity(entityNode);
-            }
-
-            map.Add(DataManager.ListOfActors[0]);
-        }
-
-        private void CreateLoot(Map map, int numLoot)
-        {
-            // Produce loot up to a max of numLoot
-            for (int i = 0; i < numLoot; i++)
-            {
-                // Create an Item with some standard attributes
-                int lootPosition = 0;
-
-                // Try placing the Item at lootPosition; if this fails, try random positions on the map's tile array
-                while (map.Tiles[lootPosition].IsBlockingMove)
-                {
-                    // pick a random spot on the map
-                    lootPosition = rndNum.Next(0, map.Width * map.Height);
-                    if (map.Tiles[lootPosition] is NodeTile)
-                    {
-                        lootPosition = rndNum.Next(0, map.Width * map.Height);
-                    }
-                }
-
-                // set the loot's new position
-                Point posNew = new Point(lootPosition % map.Width, lootPosition / map.Height);
-
-                Item newLoot = EntityFactory.ItemCreator(posNew,
-                    new ItemTemplate("Gold Bar", "Gold", "White", '=', 12.5f, 15, "Here is a gold bar, pretty heavy", "gold"));
-
-                // add the Item to the MultiSpatialMap
-                map.Add(newLoot);
-            }
-#if DEBUG
-            Item test =
-                EntityFactory.ItemCreator(new Point(10, 10), DataManager.ListOfItems.FirstOrDefault
-                (i => i.Id == "test"));
-
-            map.Add(test);
-#endif
-        }*/
-
         public void ProcessTurn(long playerTime, bool sucess)
         {
             if (sucess)
@@ -360,8 +256,10 @@ namespace MagiRogue.GameSys
                 if (!playerActionWorked)
                     return;
 
-                var turnNode = Time.NextNode();
+                RegisterEntitiesToTime();
 
+                // here the player has done it's turn, so let's go to the next one
+                var turnNode = Time.NextNode();
                 // put here terrrain effect
 
                 while (turnNode is not PlayerTimeNode)
@@ -369,7 +267,7 @@ namespace MagiRogue.GameSys
                     switch (turnNode)
                     {
                         case EntityTimeNode entityTurn:
-                            ProcessAiTurn(entityTurn.EntityId, Time.TimePassed.Ticks);
+                            ProcessAiTurn(entityTurn.EntityId);
                             break;
 
                         default:
@@ -387,6 +285,16 @@ namespace MagiRogue.GameSys
             }
         }
 
+        private void RegisterEntitiesToTime()
+        {
+            var population = CurrentChunk.TotalPopulation();
+            // called only once, to properly register the entity
+            foreach (Actor actor in population)
+            {
+                Time.RegisterEntity(new EntityTimeNode(actor.ID, Time.TimePassed.Ticks + 1));
+            }
+        }
+
         /// <summary>
         /// The player turn handler
         /// </summary>
@@ -401,7 +309,7 @@ namespace MagiRogue.GameSys
                 return false;
             }
 
-            PlayerTimeNode playerTurn = new PlayerTimeNode(Time.TimePassed.Ticks + playerTime);
+            PlayerTimeNode playerTurn = new PlayerTimeNode(Time.GetTimePassed(playerTime));
             Time.RegisterEntity(playerTurn);
             Player.GetAnatomy().UpdateBody(Player);
             CurrentMap.PlayerFOV.Calculate(Player.Position, Player.GetViewRadius());
@@ -431,7 +339,7 @@ namespace MagiRogue.GameSys
             GameLoop.UIManager.MainMenu.RestartGame();
         }
 
-        private void ProcessAiTurn(uint entityId, long time)
+        private void ProcessAiTurn(uint entityId)
         {
             Actor entity = (Actor)CurrentMap.GetEntityById(entityId);
 
@@ -445,7 +353,7 @@ namespace MagiRogue.GameSys
                 if (!sucess || tick < -1)
                     return;
 
-                EntityTimeNode nextTurnNode = new EntityTimeNode(entityId, time + tick);
+                EntityTimeNode nextTurnNode = new EntityTimeNode(entityId, Time.GetTimePassed(tick));
                 Time.RegisterEntity(nextTurnNode);
             }
         }

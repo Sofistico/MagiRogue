@@ -57,5 +57,7 @@ namespace MagiRogue.GameSys.Time
         }
 
         public IEnumerable<ITimeNode> Nodes => turnQueue;
+
+        public long GetTimePassed(long time) => TimePassed.Ticks + time;
     }
 }

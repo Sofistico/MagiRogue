@@ -69,7 +69,7 @@ namespace MagiRogue.Test.System
         {
             PlanetMap planet = new PlanetGenerator().CreatePlanet(150, 150, 30);
             Player playa = EntityFactory.PlayerCreatorFromZero(new Point(), "human", "Playa", 25,
-                MagiRogue.Data.Enumerators.Gender.Female, "new_wiz");
+                MagiRogue.Data.Enumerators.Sex.Female, "new_wiz");
             planet.AssocietatedMap.Add(playa);
 
             PlanetMapTemplate planetMapTemplate = planet;

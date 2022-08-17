@@ -369,7 +369,20 @@ namespace MagiRogue.Entities
 
         public int GetDefenseAbility()
         {
-            throw new NotImplementedException();
+            // four different ways to defend
+            int shieldAbility = GetRelevantAbility(AbilityName.Shield);
+            int armorAbility = GetRelevantAbility(AbilityName.ArmorUse);
+            int dodgeAbility = GetRelevantAbility(AbilityName.Dodge);
+            int weaponAbility = GetRelevantAttackAbility();
+
+            if (shieldAbility > weaponAbility)
+                return shieldAbility;
+            if (weaponAbility > armorAbility)
+                return weaponAbility;
+            if (armorAbility > dodgeAbility)
+                return armorAbility;
+
+            return dodgeAbility;
         }
 
         public int GetRelevantAbility(AbilityName ability)

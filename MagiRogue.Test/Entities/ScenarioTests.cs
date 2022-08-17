@@ -21,9 +21,9 @@ namespace MagiRogue.Test.Entities
                 scenario.RacesAllowed[0],
                 "Test",
                 25,
-                MagiRogue.Data.Enumerators.Gender.Asexual);
+                MagiRogue.Data.Enumerators.Sex.None);
             Player player = EntityFactory.PlayerCreatorFromActor(test, scenario,
-                MagiRogue.Data.Enumerators.Gender.Male);
+                MagiRogue.Data.Enumerators.Sex.Male);
 
             Assert.Equal(scenario.ShapingSkill, player.Magic.ShapingSkill);
         }

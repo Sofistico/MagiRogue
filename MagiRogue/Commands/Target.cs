@@ -44,7 +44,7 @@ namespace MagiRogue.Commands
             OriginCoord = spawnCoord;
 
             Cursor = new Actor("Target Cursor",
-                targetColor, Color.Transparent, 'X', spawnCoord, (int)MapLayer.PLAYER)
+                targetColor, Color.AnsiYellow, 'X', spawnCoord, (int)MapLayer.PLAYER)
             {
                 IsWalkable = true,
                 CanBeKilled = false,
@@ -58,7 +58,8 @@ namespace MagiRogue.Commands
             {
                 BlinkCount = -1,
                 BlinkSpeed = TimeSpan.FromSeconds(0.5),
-                UseCellBackgroundColor = true
+                BlinkOutColor = Color.Aquamarine,
+                UseCellBackgroundColor = false,
             };
             Cursor.Effect = blink;
             blink.Restart();
@@ -99,6 +100,8 @@ namespace MagiRogue.Commands
 
         public void StartTargetting()
         {
+            if (State is TargetState.Targeting)
+                return;
             OriginCoord = new Point(
                 GameLoop.GetCurrentMap().ControlledEntitiy.Position.X,
                 GameLoop.GetCurrentMap().ControlledEntitiy.Position.Y);
@@ -361,9 +364,9 @@ namespace MagiRogue.Commands
             w.Show();
         }
 
-        private Entity TargetEntity() => GameLoop.GetCurrentMap().GetEntityAt<Entity>(Cursor.Position);
+        public Entity TargetEntity() => GameLoop.GetCurrentMap().GetEntityAt<Entity>(Cursor.Position);
 
-        private TileBase LookAtTile() => GameLoop.GetCurrentMap().GetTileAt<TileBase>(Cursor.Position);
+        public TileBase TargetAtTile() => GameLoop.GetCurrentMap().GetTileAt<TileBase>(Cursor.Position);
 
         private dynamic DetermineWhatToLook()
         {
@@ -373,7 +376,7 @@ namespace MagiRogue.Commands
             }
             else if (TileInTarget())
             {
-                return LookAtTile();
+                return TargetAtTile();
             }
             else
             {

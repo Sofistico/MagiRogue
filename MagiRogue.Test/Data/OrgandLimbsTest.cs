@@ -107,7 +107,7 @@ namespace MagiRogue.Test.Data
         [Fact]
         public void RegenActorLostLimb()
         {
-            Actor actor = EntityFactory.ActorCreatorFirstStep(Point.None, "test_race", "test dummy", 20, Gender.Asexual);
+            Actor actor = EntityFactory.ActorCreatorFirstStep(Point.None, "test_race", "test dummy", 20, Sex.None);
             //Actor actor = new Actor("Test actor", Color.AliceBlue, Color.AliceBlue, '@',
             //    new Point(0, 0));
             //actor.GetAnatomy().Race = "test_race";

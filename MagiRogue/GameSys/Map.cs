@@ -67,7 +67,7 @@ namespace MagiRogue.GameSys
 
         public Point LastPlayerPosition { get; set; } = Point.None;
         public string MapName { get; set; }
-        public bool NeedsUpdate { get; internal set; }
+        public bool NeedsUpdate { get; set; }
         public bool IsCurrentMap { get; set; }
         public bool IsActive { get; set; }
         public uint MapId { get; private set; }

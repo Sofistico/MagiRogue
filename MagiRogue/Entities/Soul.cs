@@ -12,7 +12,8 @@ namespace MagiRogue.Entities
         public int MaxMana { get; set; }
         public double CurrentMana { get; set; }
         public int WillPower { get; set; }
-        public int WildMana { get; set; }
+
+        //public int WildMana { get; set; }
         public double BaseManaRegen { get; set; }
 
         public void ApplyManaRegen(double manaRegen)

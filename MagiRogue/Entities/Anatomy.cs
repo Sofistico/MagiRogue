@@ -110,7 +110,7 @@ namespace MagiRogue.Entities
         public bool NeedsHead { get; set; } = true;
 
         [DataMember]
-        public Gender Gender { get; set; }
+        public Sex Gender { get; set; }
 
         [DataMember]
         public bool Ages { get; set; } = true;
@@ -193,7 +193,7 @@ namespace MagiRogue.Entities
             }
         }
 
-        public void Setup(Actor actor, Race race, int actorAge, Gender gender, int volume)
+        public void Setup(Actor actor, Race race, int actorAge, Sex sex, int volume)
         {
             actor.Volume = volume;
             raceField = race;
@@ -203,7 +203,7 @@ namespace MagiRogue.Entities
             Organs = race.ReturnRaceOrgans();
             NormalLimbRegen = race.RaceNormalLimbRegen;
             CurrentAge = actorAge;
-            Gender = gender;
+            Gender = sex;
 
             if (Limbs.Count > 0)
             {

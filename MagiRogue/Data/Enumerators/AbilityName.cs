@@ -18,6 +18,8 @@ namespace MagiRogue.Data.Enumerators
         Hammer,
         Spear,
         Axe,
+        Shield,
+        Dodge,
 
         // Craft skills
         Mason,

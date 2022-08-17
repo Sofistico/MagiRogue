@@ -326,6 +326,12 @@ namespace MagiRogue.UI
             {
                 ActionManager.CreateTestEntity(targetCursor.Cursor.Position, world.CurrentMap);
             }
+            if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.P) && targetCursor.EntityInTarget())
+            {
+                Actor actor = (Actor)targetCursor.TargetEntity();
+                actor.AddComponent(new Components.MoveAndAttackAI(actor.GetViewRadius()));
+                GameLoop.AddMessageLog($"Added attack component to {actor.Name}!");
+            }
 
             if (info.IsKeyPressed(Keys.T))
             {

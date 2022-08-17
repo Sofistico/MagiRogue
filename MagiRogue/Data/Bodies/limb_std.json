@@ -1,6 +1,6 @@
 ﻿[
   {
-    "Id": "humanoid_upper_body",
+    "Id": "upper_body",
     "LimbType": "UpperBody",
     "RelativeSize": 0.18,
     "LimbName": "Upper Body",
@@ -11,7 +11,7 @@
     "Attached": true
   },
   {
-    "Id": "humanoid_lower_body",
+    "Id": "lower_body",
     "LimbType": "LowerBody",
     "RelativeSize": 0.18,
     "LimbName": "Lower Body",
@@ -22,7 +22,7 @@
     "Attached": true
   },
   {
-    "Id": "humanoid_neck",
+    "Id": "neck",
     "LimbType": "Neck",
     "RelativeSize": 0.018,
     "LimbName": "Neck",
@@ -31,10 +31,10 @@
     "RateOfHeal": 0.9,
     "Attached": true,
     "BodyPartFunction": "Vital",
-    "ConnectedToId": "humanoid_upper_body"
+    "ConnectedToId": "upper_body"
   },
   {
-    "Id": "humanoid_head",
+    "Id": "head",
     "LimbType": "Head",
     "RelativeSize": 0.054,
     "LimbName": "Head",
@@ -43,10 +43,10 @@
     "RateOfHeal": 0.9,
     "Attached": true,
     "BodyPartFunction": "Thought",
-    "ConnectedToId": "humanoid_neck"
+    "ConnectedToId": "neck"
   },
   {
-    "Id": "humanoid_l_arm",
+    "Id": "l_arm",
     "LimbType": "Arm",
     "RelativeSize": 0.072,
     "LimbName": "Left Arm",
@@ -55,10 +55,10 @@
     "RateOfHeal": 0.9,
     "Attached": true,
     "BodyPartFunction": "Limb",
-    "ConnectedToId": "humanoid_upper_body"
+    "ConnectedToId": "upper_body"
   },
   {
-    "Id": "humanoid_r_arm",
+    "Id": "r_arm",
     "LimbType": "Arm",
     "RelativeSize": 0.072,
     "LimbName": "Right Arm",
@@ -67,10 +67,10 @@
     "RateOfHeal": 0.9,
     "Attached": true,
     "BodyPartFunction": "Limb",
-    "ConnectedToId": "humanoid_upper_body"
+    "ConnectedToId": "upper_body"
   },
   {
-    "Id": "humanoid_r_leg",
+    "Id": "r_leg",
     "LimbType": "Leg",
     "RelativeSize": 0.163,
     "LimbName": "Right Leg",
@@ -79,10 +79,10 @@
     "RateOfHeal": 0.9,
     "Attached": true,
     "BodyPartFunction": "Limb",
-    "ConnectedToId": "humanoid_lower_body"
+    "ConnectedToId": "lower_body"
   },
   {
-    "Id": "humanoid_l_leg",
+    "Id": "l_leg",
     "LimbType": "Leg",
     "RelativeSize": 0.163,
     "LimbName": "Left Leg",
@@ -91,10 +91,10 @@
     "RateOfHeal": 0.9,
     "Attached": true,
     "BodyPartFunction": "Limb",
-    "ConnectedToId": "humanoid_lower_body"
+    "ConnectedToId": "lower_body"
   },
   {
-    "Id": "humanoid_l_hand",
+    "Id": "l_hand",
     "LimbType": "Hand",
     "RelativeSize": 0.014,
     "LimbName": "Left Hand",
@@ -103,10 +103,10 @@
     "RateOfHeal": 0.9,
     "Attached": true,
     "BodyPartFunction": "Grasp",
-    "ConnectedToId": "humanoid_l_arm"
+    "ConnectedToId": "l_arm"
   },
   {
-    "Id": "humanoid_r_hand",
+    "Id": "r_hand",
     "LimbType": "Hand",
     "RelativeSize": 0.014,
     "LimbName": "Right Hand",
@@ -115,10 +115,10 @@
     "RateOfHeal": 0.9,
     "Attached": true,
     "BodyPartFunction": "Grasp",
-    "ConnectedToId": "humanoid_r_arm"
+    "ConnectedToId": "r_arm"
   },
   {
-    "Id": "humanoid_r_foot",
+    "Id": "r_foot",
     "LimbType": "Foot",
     "RelativeSize": 0.022,
     "LimbName": "Right Foot",
@@ -127,10 +127,10 @@
     "RateOfHeal": 0.9,
     "Attached": true,
     "BodyPartFunction": "Stance",
-    "ConnectedToId": "humanoid_r_leg"
+    "ConnectedToId": "r_leg"
   },
   {
-    "Id": "humanoid_l_foot",
+    "Id": "l_foot",
     "LimbType": "Foot",
     "RelativeSize": 0.022,
     "LimbName": "Left Foot",
@@ -139,7 +139,7 @@
     "RateOfHeal": 0.9,
     "Attached": true,
     "BodyPartFunction": "Stance",
-    "ConnectedToId": "humanoid_l_leg"
+    "ConnectedToId": "l_leg"
   },
   {
     "Id": "finger1",
@@ -151,7 +151,7 @@
     "RateOfHeal": 0.9,
     "Attached": true,
     "BodyPartFunction": "Digit",
-    "ConnectedToId": "humanoid_{0}"
+    "ConnectedToId": "{0}"
   },
   {
     "Id": "finger2",
@@ -163,7 +163,7 @@
     "RateOfHeal": 0.9,
     "Attached": true,
     "BodyPartFunction": "Digit",
-    "ConnectedToId": "humanoid_{0}"
+    "ConnectedToId": "{0}"
   },
   {
     "Id": "finger3",
@@ -175,7 +175,7 @@
     "RateOfHeal": 0.9,
     "Attached": true,
     "BodyPartFunction": "Digit",
-    "ConnectedToId": "humanoid_{0}"
+    "ConnectedToId": "{0}"
   },
   {
     "Id": "finger4",
@@ -187,7 +187,7 @@
     "RateOfHeal": 0.9,
     "Attached": true,
     "BodyPartFunction": "Digit",
-    "ConnectedToId": "humanoid_{0}"
+    "ConnectedToId": "{0}"
   },
   {
     "Id": "finger5",
@@ -199,7 +199,7 @@
     "RateOfHeal": 0.9,
     "Attached": true,
     "BodyPartFunction": "Digit",
-    "ConnectedToId": "humanoid_{0}"
+    "ConnectedToId": "{0}"
   },
   {
     "Id": "toe1",
@@ -211,7 +211,7 @@
     "RateOfHeal": 0.9,
     "Attached": true,
     "BodyPartFunction": "Digit",
-    "ConnectedToId": "humanoid_{0}"
+    "ConnectedToId": "{0}"
   },
   {
     "Id": "toe2",
@@ -223,7 +223,7 @@
     "RateOfHeal": 0.9,
     "Attached": true,
     "BodyPartFunction": "Digit",
-    "ConnectedToId": "humanoid_{0}"
+    "ConnectedToId": "{0}"
   },
   {
     "Id": "toe3",
@@ -235,7 +235,7 @@
     "RateOfHeal": 0.9,
     "Attached": true,
     "BodyPartFunction": "Digit",
-    "ConnectedToId": "humanoid_{0}"
+    "ConnectedToId": "{0}"
   },
   {
     "Id": "toe4",
@@ -247,7 +247,7 @@
     "RateOfHeal": 0.9,
     "Attached": true,
     "BodyPartFunction": "Digit",
-    "ConnectedToId": "humanoid_{0}"
+    "ConnectedToId": "{0}"
   },
   {
     "Id": "toe5",
@@ -259,6 +259,6 @@
     "RateOfHeal": 0.9,
     "Attached": true,
     "BodyPartFunction": "Digit",
-    "ConnectedToId": "humanoid_{0}"
+    "ConnectedToId": "{0}"
   }
 ]

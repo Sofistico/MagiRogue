@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 namespace MagiRogue.Data.Enumerators
 {
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum Gender
+    public enum Sex
     {
-        Asexual,
+        None,
         Male,
         Female,
     }

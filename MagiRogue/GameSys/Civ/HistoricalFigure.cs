@@ -11,7 +11,7 @@ namespace MagiRogue.GameSys.Civ
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public Gender HFGender { get; set; }
+        public Sex HFGender { get; set; }
         public string Race { get; set; }
         public Legend[] Legends { get; set; }
         public int YearBorn { get; set; }
@@ -20,7 +20,7 @@ namespace MagiRogue.GameSys.Civ
         public Actor? AssocietedActor { get; set; }
 
         public HistoricalFigure(string name,
-            Gender hFGender,
+            Sex hFGender,
             Legend[] legends,
             int yearBorn,
             int? yearDeath,
@@ -44,7 +44,7 @@ namespace MagiRogue.GameSys.Civ
             int born,
             int? died,
             bool alive,
-            Gender hFGender)
+            Sex hFGender)
         {
             Name = name;
             Description = desc;
