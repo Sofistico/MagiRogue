@@ -2,124 +2,148 @@
   {
     "Id": "brain",
     "Name": "Brain",
-    "MaterialId": "flesh",
+    "MaterialId": "skin",
     "RelativeSize": 0.1,
-    "InsideOf": "head",
+    "InsideOf": "skull",
     "Orientation": "Center",
     "BodyPartFunction": "Thought",
-    "OrganType": "Brain"
+    "OrganType": "Brain",
+    "CanHeal": false
   },
   {
     "Id": "heart",
     "Name": "Heart",
-    "MaterialId": "flesh",
+    "MaterialId": "skin",
     "RelativeSize": 0.05,
     "InsideOf": "upper_body",
     "Orientation": "Center",
     "BodyPartFunction": "Vital",
-    "OrganType": "Heart"
+    "OrganType": "Heart",
+    "CanHeal": false
   },
   {
     "Id": "upper_spine",
     "Name": "Upper Spine",
-    "MaterialId": "flesh",
+    "MaterialId": "skin",
     "RelativeSize": 0.10,
     "InsideOf": "neck",
     "Orientation": "Center",
-    "OrganType": "Nerve"
+    "OrganType": "Nerve",
+    "CanHeal": false
   },
   {
     "Id": "medium_spine",
     "Name": "Medium Spine",
-    "MaterialId": "flesh",
+    "MaterialId": "skin",
     "RelativeSize": 0.15,
     "InsideOf": "upper_body",
     "Orientation": "Center",
-    "OrganType": "Nerve"
+    "OrganType": "Nerve",
+    "CanHeal": false
   },
   {
     "Id": "lower_spine",
     "Name": "Low Spine",
-    "MaterialId": "flesh",
+    "MaterialId": "skin",
     "RelativeSize": 0.15,
     "InsideOf": "lower_body",
     "Orientation": "Center",
-    "OrganType": "Nerve"
+    "OrganType": "Nerve",
+    "CanHeal": false
   },
   {
     "Id": "stomach",
     "Name": "Stomach",
-    "MaterialId": "flesh",
+    "MaterialId": "skin",
     "RelativeSize": 0.1,
     "InsideOf": "lower_body",
     "Orientation": "Center",
-    "OrganType": "Digestive"
+    "OrganType": "Digestive",
+    "RateOfHeal": 0.5
   },
   {
     "Id": "intestine",
     "Name": "Guts",
-    "MaterialId": "flesh",
+    "MaterialId": "skin",
     "RelativeSize": 0.2,
     "InsideOf": "lower_body",
     "Orientation": "Center",
-    "OrganType": "Digestive"
+    "OrganType": "Digestive",
+    "RateOfHeal": 0.4
   },
   {
     "Id": "r_lung",
     "Name": "Right Lung",
-    "MaterialId": "flesh",
+    "MaterialId": "skin",
     "RelativeSize": 0.1,
     "InsideOf": "upper_body",
     "Orientation": "Right",
     "BodyPartFunction": "Breath",
-    "OrganType": "Breather"
+    "OrganType": "Breather",
+    "RateOfHeal": 0.3
   },
   {
     "Id": "l_lung",
     "Name": "Left Lung",
-    "MaterialId": "flesh",
+    "MaterialId": "skin",
     "RelativeSize": 0.1,
     "InsideOf": "upper_body",
     "Orientation": "Left",
     "BodyPartFunction": "Breath",
-    "OrganType": "Breather"
+    "OrganType": "Breather",
+    "RateOfHeal": 0.3
   },
   {
     "Id": "r_kidney",
     "Name": "Right Kidney",
-    "MaterialId": "flesh",
+    "MaterialId": "skin",
     "RelativeSize": 0.02,
     "InsideOf": "lower_body",
     "Orientation": "Right",
-    "OrganType": "Filtering"
+    "OrganType": "Filtering",
+    "RateOfHeal": 0.6
   },
   {
     "Id": "l_kidney",
     "Name": "Left Kidney",
-    "MaterialId": "flesh",
+    "MaterialId": "skin",
     "RelativeSize": 0.02,
     "InsideOf": "lower_body",
     "Orientation": "Left",
-    "OrganType": "Filtering"
+    "OrganType": "Filtering",
+    "RateOfHeal": 0.6
   },
   {
     "Id": "r_eye",
     "Name": "Right Eye",
-    "MaterialId": "flesh",
+    "MaterialId": "skin",
     "RelativeSize": 0.05,
     "InsideOf": "head",
     "Orientation": "Right",
     "BodyPartFunction": "Embedded",
-    "OrganType": "Visual"
+    "OrganType": "Visual",
+    "RateOfHeal": 0.25
   },
   {
     "Id": "l_eye",
     "Name": "Left Eye",
-    "MaterialId": "flesh",
+    "MaterialId": "skin",
     "RelativeSize": 0.05,
     "InsideOf": "head",
     "Orientation": "Left",
     "BodyPartFunction": "Embedded",
-    "OrganType": "Visual"
+    "OrganType": "Visual",
+    "RateOfHeal": 0.25
+  },
+  {
+    "Id": "skull",
+    "Name": "Skull",
+    "MaterialId": "bone",
+    "RleativeSize": 0.10,
+    "InsideOf": "head",
+    "Orientation": "Center",
+    "BodyPartFunction": "Protection",
+    "OrganType": "Protective",
+    "RateOfHeal": 0.1
   }
 ]

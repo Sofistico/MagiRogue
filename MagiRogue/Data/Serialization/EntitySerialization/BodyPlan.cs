@@ -12,6 +12,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
     {
         public string Id { get; set; }
         public List<string> BodyParts { get; set; }
+        public List<Tissue> Tissues { get; set; }
 
         public BodyPlan()
         {
@@ -38,8 +39,8 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                     throw new ApplicationException($"Coudn't find a valid body part! bodypart id: {bp}");
             }
 
-            var bodyParts = returnParts.Where(i => i is Limb lim && (lim.TypeLimb is TypeOfLimb.Finger
-                || lim.TypeLimb is TypeOfLimb.Toe)).ToList();
+            var bodyParts = returnParts.Where(i => i is Limb lim && (lim.LimbType is TypeOfLimb.Finger
+                || lim.LimbType is TypeOfLimb.Toe)).ToList();
             var connectorLimbs = returnParts.Where(i => i.BodyPartFunction is BodyPartFunction.Grasp
                 || i.BodyPartFunction is BodyPartFunction.Stance).ToList();
 
@@ -56,11 +57,11 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             returnParts.Remove(smallBp);
             foreach (Limb limb in connectorLimbs.Cast<Limb>())
             {
-                if (smallBp.TypeLimb is TypeOfLimb.Finger && limb.BodyPartFunction is BodyPartFunction.Grasp)
+                if (smallBp.LimbType is TypeOfLimb.Finger && limb.BodyPartFunction is BodyPartFunction.Grasp)
                 {
                     CreateNewDigitAndAdd(returnParts, smallBp, limb);
                 }
-                if (smallBp.TypeLimb is TypeOfLimb.Toe && limb.BodyPartFunction is BodyPartFunction.Stance)
+                if (smallBp.LimbType is TypeOfLimb.Toe && limb.BodyPartFunction is BodyPartFunction.Stance)
                 {
                     CreateNewDigitAndAdd(returnParts, smallBp, limb);
                 }
@@ -69,7 +70,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
         private static void CreateNewDigitAndAdd(List<BodyPart> returnParts, Limb smallBp, Limb limb)
         {
-            var template = (LimbTemplate)smallBp;
+            var template = smallBp;
             Limb digit = template.Copy();
             digit.Orientation = limb.Orientation;
             string orientation = digit.Orientation.ToString().ToLower();

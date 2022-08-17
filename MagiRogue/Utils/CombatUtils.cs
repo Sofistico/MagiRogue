@@ -93,7 +93,7 @@ namespace MagiRogue.Utils
             {
                 case DamageType.None:
                     GameLoop.AddMessageLog(bobTheBuilder
-                        .Append(", feeling your bones and flesh growing over your wounds!").ToString());
+                        .Append(", feeling your bones and skin growing over your wounds!").ToString());
                     break;
 
                 case DamageType.Force:

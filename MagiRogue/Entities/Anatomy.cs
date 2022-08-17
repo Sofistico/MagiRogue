@@ -61,7 +61,7 @@ namespace MagiRogue.Entities
         public bool HasEnoughWings { get => Limbs.FindAll(l => l.BodyPartFunction is BodyPartFunction.Flier && l.Working).Count >= MaxFlierLimbs; }
 
         [JsonIgnore]
-        public bool HasAtLeastOneHead { get => Limbs.Exists(i => i.TypeLimb is TypeOfLimb.Head && i.BodyPartHp > 0); }
+        public bool HasAtLeastOneHead { get => Limbs.Exists(i => i.LimbType is TypeOfLimb.Head && i.BodyPartHp > 0); }
 
         [JsonIgnore]
         public bool CanSee
@@ -77,7 +77,7 @@ namespace MagiRogue.Entities
         {
             get
             {
-                return Limbs.Exists(l => l.TypeLimb is TypeOfLimb.UpperBody && l.BodyPartHp > 0);
+                return Limbs.Exists(l => l.LimbType is TypeOfLimb.UpperBody && l.BodyPartHp > 0);
             }
         }
 
@@ -277,7 +277,7 @@ namespace MagiRogue.Entities
             int bodyPartIndex;
             Limb bodyPart;
 
-            if (limb.TypeLimb == TypeOfLimb.Head || limb.TypeLimb == TypeOfLimb.Neck)
+            if (limb.LimbType == TypeOfLimb.Head || limb.LimbType == TypeOfLimb.Neck)
             {
                 bodyParts = Limbs.FindAll(h => h.BodyPartFunction == BodyPartFunction.Thought && NeedsHead);
                 if (bodyParts.Count > 1)
@@ -295,7 +295,7 @@ namespace MagiRogue.Entities
                     return;
                 }
             }
-            else if (limb.TypeLimb == TypeOfLimb.UpperBody || limb.TypeLimb == TypeOfLimb.LowerBody)
+            else if (limb.LimbType == TypeOfLimb.UpperBody || limb.LimbType == TypeOfLimb.LowerBody)
             {
                 DismemberMessage(actor, limb);
                 ActionManager.ResolveDeath(actor);

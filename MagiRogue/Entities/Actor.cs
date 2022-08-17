@@ -79,8 +79,8 @@ namespace MagiRogue.Entities
             Soul = new Soul();
             Inventory = new List<Item>();
             Name = name;
-            // by default the material of the actor will be mostly flesh
-            //Material = GameSys.Physics.PhysicsManager.SetMaterial("flesh");
+            // by default the material of the actor will be mostly skin
+            //Material = GameSys.Physics.PhysicsManager.SetMaterial("skin");
         }
 
         #endregion Constructor
@@ -200,7 +200,7 @@ namespace MagiRogue.Entities
         public Item WieldedItem()
         {
             return Body.Equipment.GetValueOrDefault(GetAnatomy().Limbs.Find(l =>
-                l.TypeLimb == TypeOfLimb.Hand).Id);
+                l.LimbType == TypeOfLimb.Hand).Id);
         }
 
         public Limb GetAttackingLimb(Item item)

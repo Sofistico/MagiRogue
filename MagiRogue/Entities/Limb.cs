@@ -10,12 +10,13 @@ namespace MagiRogue.Entities
 {
     public class Limb : BodyPart
     {
-        //[JsonConverter(typeof(Data.Serialization.EntitySerialization.LimbJsonConverter))]
-        private string _connectedLimb;
+        [JsonProperty("ConnectedTo")]
+        private string? _connectedLimb;
 
-        public TypeOfLimb TypeLimb { get; set; }
+        public TypeOfLimb LimbType { get; set; }
 
-        public string ConnectedTo
+        [JsonIgnore]
+        public string? ConnectedTo
         {
             get
             {
@@ -44,12 +45,12 @@ namespace MagiRogue.Entities
         /// <param name="limbName">The name of the limb</param>
         /// <param name="orientation">If it's in the center, left or right of the body</param>
         /// <param name="materialID">The id to define the material, if needeed look at the material definition json\n
-        /// Defaults to "flesh"</param>
+        /// Defaults to "skin"</param>
         public Limb(TypeOfLimb limbType, string limbName,
             BodyPartOrientation orientation, string connectedTo,
-            string materialID = "flesh", BodyPartFunction bodyPartFunction = BodyPartFunction.Limb) : base(materialID)
+            string materialID = "skin", BodyPartFunction bodyPartFunction = BodyPartFunction.Limb) : base(materialID)
         {
-            TypeLimb = limbType;
+            LimbType = limbType;
             Attached = true;
             BodyPartName = limbName;
             Orientation = orientation;
@@ -59,10 +60,10 @@ namespace MagiRogue.Entities
 
         public Limb(string id, TypeOfLimb limbType, int limbHp, int maxLimbHp,
             string limbName, BodyPartOrientation orientation, string connectedTo,
-           string materialID = "flesh") : base(materialID)
+           string materialID = "skin") : base(materialID)
         {
             Id = id;
-            TypeLimb = limbType;
+            LimbType = limbType;
             MaxBodyPartHp = maxLimbHp;
             BodyPartHp = limbHp;
             //BodyPartWeight = limbWeight;
@@ -87,6 +88,32 @@ namespace MagiRogue.Entities
                 size,
                 materialId: MaterialId
                 );
+        }
+
+        public Limb Copy()
+        {
+            Limb copy = new Limb(MaterialId)
+            {
+                Attached = this.Attached,
+                Broken = this.Broken,
+                ConnectedTo = this.ConnectedTo,
+                Id = this.Id,
+                BodyPartHp = this.BodyPartHp,
+                BodyPartName = this.BodyPartName,
+                Orientation = this.Orientation,
+                LimbType = this.LimbType,
+                MaxBodyPartHp = this.MaxBodyPartHp,
+                BodyPartFunction = this.BodyPartFunction,
+                RateOfHeal = this.RateOfHeal,
+                RelativeVolume = this.RelativeVolume,
+                CanHeal = this.CanHeal,
+                Tissues = this.Tissues,
+                Volume = this.Volume,
+                Working = this.Working,
+                Wounds = this.Wounds,
+            };
+
+            return copy;
         }
 
         public override void CalculateWound(Wound wound)

@@ -2,263 +2,255 @@
   {
     "Id": "upper_body",
     "LimbType": "UpperBody",
-    "RelativeSize": 0.18,
-    "LimbName": "Upper Body",
-    "LimbOrientation": "Center",
+    "RelativeVolume": 0.18,
+    "BodyPartName": "Upper Body",
+    "Orientation": "Center",
     "RateOfHeal": 0.9,
-    "LimbMaterialId": "flesh",
+    "MaterialId": "skin",
     "BodyPartFunction": "Root",
     "Attached": true
   },
   {
     "Id": "lower_body",
     "LimbType": "LowerBody",
-    "RelativeSize": 0.18,
-    "LimbName": "Lower Body",
-    "LimbOrientation": "Center",
+    "RelativeVolume": 0.18,
+    "BodyPartName": "Lower Body",
+    "Orientation": "Center",
     "RateOfHeal": 0.9,
-    "LimbMaterialId": "flesh",
+    "MaterialId": "skin",
     "BodyPartFunction": "Vital",
+    "ConnectedTo": "upper_body",
     "Attached": true
   },
   {
     "Id": "neck",
     "LimbType": "Neck",
-    "RelativeSize": 0.018,
-    "LimbName": "Neck",
-    "LimbOrientation": "Center",
-    "LimbMaterialId": "flesh",
+    "RelativeVolume": 0.018,
+    "BodyPartName": "Neck",
+    "Orientation": "Center",
+    "MaterialId": "skin",
     "RateOfHeal": 0.9,
-    "Attached": true,
     "BodyPartFunction": "Vital",
-    "ConnectedToId": "upper_body"
+    "ConnectedTo": "upper_body"
   },
   {
     "Id": "head",
     "LimbType": "Head",
-    "RelativeSize": 0.054,
-    "LimbName": "Head",
-    "LimbOrientation": "Center",
-    "LimbMaterialId": "flesh",
+    "RelativeVolume": 0.054,
+    "BodyPartName": "Head",
+    "Orientation": "Center",
+    "MaterialId": "skin",
     "RateOfHeal": 0.9,
-    "Attached": true,
+
     "BodyPartFunction": "Thought",
-    "ConnectedToId": "neck"
+    "ConnectedTo": "neck"
   },
   {
     "Id": "l_arm",
     "LimbType": "Arm",
-    "RelativeSize": 0.072,
-    "LimbName": "Left Arm",
-    "LimbOrientation": "Left",
-    "LimbMaterialId": "flesh",
+    "RelativeVolume": 0.072,
+    "BodyPartName": "Left Arm",
+    "Orientation": "Left",
+    "MaterialId": "skin",
     "RateOfHeal": 0.9,
-    "Attached": true,
+
     "BodyPartFunction": "Limb",
-    "ConnectedToId": "upper_body"
+    "ConnectedTo": "upper_body"
   },
   {
     "Id": "r_arm",
     "LimbType": "Arm",
-    "RelativeSize": 0.072,
-    "LimbName": "Right Arm",
-    "LimbOrientation": "Right",
-    "LimbMaterialId": "flesh",
+    "RelativeVolume": 0.072,
+    "BodyPartName": "Right Arm",
+    "Orientation": "Right",
+    "MaterialId": "skin",
     "RateOfHeal": 0.9,
-    "Attached": true,
+
     "BodyPartFunction": "Limb",
-    "ConnectedToId": "upper_body"
+    "ConnectedTo": "upper_body"
   },
   {
     "Id": "r_leg",
     "LimbType": "Leg",
-    "RelativeSize": 0.163,
-    "LimbName": "Right Leg",
-    "LimbOrientation": "Right",
-    "LimbMaterialId": "flesh",
+    "RelativeVolume": 0.163,
+    "BodyPartName": "Right Leg",
+    "Orientation": "Right",
+    "MaterialId": "skin",
     "RateOfHeal": 0.9,
-    "Attached": true,
+
     "BodyPartFunction": "Limb",
-    "ConnectedToId": "lower_body"
+    "ConnectedTo": "lower_body"
   },
   {
     "Id": "l_leg",
     "LimbType": "Leg",
-    "RelativeSize": 0.163,
-    "LimbName": "Left Leg",
-    "LimbOrientation": "Left",
-    "LimbMaterialId": "flesh",
+    "RelativeVolume": 0.163,
+    "BodyPartName": "Left Leg",
+    "Orientation": "Left",
+    "MaterialId": "skin",
     "RateOfHeal": 0.9,
-    "Attached": true,
+
     "BodyPartFunction": "Limb",
-    "ConnectedToId": "lower_body"
+    "ConnectedTo": "lower_body"
   },
   {
     "Id": "l_hand",
     "LimbType": "Hand",
-    "RelativeSize": 0.014,
-    "LimbName": "Left Hand",
-    "LimbOrientation": "Left",
-    "LimbMaterialId": "flesh",
+    "RelativeVolume": 0.014,
+    "BodyPartName": "Left Hand",
+    "Orientation": "Left",
+    "MaterialId": "skin",
     "RateOfHeal": 0.9,
-    "Attached": true,
+
     "BodyPartFunction": "Grasp",
-    "ConnectedToId": "l_arm"
+    "ConnectedTo": "l_arm"
   },
   {
     "Id": "r_hand",
     "LimbType": "Hand",
-    "RelativeSize": 0.014,
-    "LimbName": "Right Hand",
-    "LimbOrientation": "Right",
-    "LimbMaterialId": "flesh",
+    "RelativeVolume": 0.014,
+    "BodyPartName": "Right Hand",
+    "Orientation": "Right",
+    "MaterialId": "skin",
     "RateOfHeal": 0.9,
-    "Attached": true,
+
     "BodyPartFunction": "Grasp",
-    "ConnectedToId": "r_arm"
+    "ConnectedTo": "r_arm"
   },
   {
     "Id": "r_foot",
     "LimbType": "Foot",
-    "RelativeSize": 0.022,
-    "LimbName": "Right Foot",
-    "LimbOrientation": "Right",
-    "LimbMaterialId": "flesh",
+    "RelativeVolume": 0.022,
+    "BodyPartName": "Right Foot",
+    "Orientation": "Right",
+    "MaterialId": "skin",
     "RateOfHeal": 0.9,
-    "Attached": true,
+
     "BodyPartFunction": "Stance",
-    "ConnectedToId": "r_leg"
+    "ConnectedTo": "r_leg"
   },
   {
     "Id": "l_foot",
     "LimbType": "Foot",
-    "RelativeSize": 0.022,
-    "LimbName": "Left Foot",
-    "LimbOrientation": "Left",
-    "LimbMaterialId": "flesh",
+    "RelativeVolume": 0.022,
+    "BodyPartName": "Left Foot",
+    "Orientation": "Left",
+    "MaterialId": "skin",
     "RateOfHeal": 0.9,
-    "Attached": true,
+
     "BodyPartFunction": "Stance",
-    "ConnectedToId": "l_leg"
+    "ConnectedTo": "l_leg"
   },
   {
     "Id": "finger1",
     "LimbType": "Finger",
-    "RelativeSize": 0.015,
-    "LimbName": "{0} Thumb",
-    "LimbOrientation": "Tbd",
-    "LimbMaterialId": "flesh",
+    "RelativeVolume": 0.015,
+    "BodyPartName": "{0} Thumb",
+    "Orientation": "Tbd",
+    "MaterialId": "skin",
     "RateOfHeal": 0.9,
-    "Attached": true,
+
     "BodyPartFunction": "Digit",
-    "ConnectedToId": "{0}"
+    "ConnectedTo": "{0}"
   },
   {
     "Id": "finger2",
     "LimbType": "Finger",
-    "RelativeSize": 0.021,
-    "LimbName": "{0} First Finger",
-    "LimbOrientation": "Tbd",
-    "LimbMaterialId": "flesh",
+    "RelativeVolume": 0.021,
+    "BodyPartName": "{0} First Finger",
+    "Orientation": "Tbd",
+    "MaterialId": "skin",
     "RateOfHeal": 0.9,
-    "Attached": true,
+
     "BodyPartFunction": "Digit",
-    "ConnectedToId": "{0}"
+    "ConnectedTo": "{0}"
   },
   {
     "Id": "finger3",
     "LimbType": "Finger",
-    "RelativeSize": 0.023,
-    "LimbName": "{0} Second Finger",
-    "LimbOrientation": "Tbd",
-    "LimbMaterialId": "flesh",
+    "RelativeVolume": 0.023,
+    "BodyPartName": "{0} Second Finger",
+    "Orientation": "Tbd",
+    "MaterialId": "skin",
     "RateOfHeal": 0.9,
-    "Attached": true,
     "BodyPartFunction": "Digit",
-    "ConnectedToId": "{0}"
+    "ConnectedTo": "{0}"
   },
   {
     "Id": "finger4",
     "LimbType": "Finger",
-    "RelativeSize": 0.021,
-    "LimbName": "{0} Third Finger",
-    "LimbOrientation": "Tbd",
-    "LimbMaterialId": "flesh",
+    "RelativeVolume": 0.021,
+    "BodyPartName": "{0} Third Finger",
+    "Orientation": "Tbd",
+    "MaterialId": "skin",
     "RateOfHeal": 0.9,
-    "Attached": true,
     "BodyPartFunction": "Digit",
-    "ConnectedToId": "{0}"
+    "ConnectedTo": "{0}"
   },
   {
     "Id": "finger5",
     "LimbType": "Finger",
-    "RelativeSize": 0.012,
-    "LimbName": "{0} Fourth Finger",
-    "LimbOrientation": "Tbd",
-    "LimbMaterialId": "flesh",
+    "RelativeVolume": 0.012,
+    "BodyPartName": "{0} Fourth Finger",
+    "Orientation": "Tbd",
+    "MaterialId": "skin",
     "RateOfHeal": 0.9,
-    "Attached": true,
     "BodyPartFunction": "Digit",
-    "ConnectedToId": "{0}"
+    "ConnectedTo": "{0}"
   },
   {
     "Id": "toe1",
     "LimbType": "Toe",
-    "RelativeSize": 0.017,
-    "LimbName": "{0} First Thumb",
-    "LimbOrientation": "Tbd",
-    "LimbMaterialId": "flesh",
+    "RelativeVolume": 0.017,
+    "BodyPartName": "{0} First Thumb",
+    "Orientation": "Tbd",
+    "MaterialId": "skin",
     "RateOfHeal": 0.9,
-    "Attached": true,
     "BodyPartFunction": "Digit",
-    "ConnectedToId": "{0}"
+    "ConnectedTo": "{0}"
   },
   {
     "Id": "toe2",
     "LimbType": "Toe",
-    "RelativeSize": 0.011,
-    "LimbName": "{0} Second Toe",
-    "LimbOrientation": "Tbd",
-    "LimbMaterialId": "flesh",
+    "RelativeVolume": 0.011,
+    "BodyPartName": "{0} Second Toe",
+    "Orientation": "Tbd",
+    "MaterialId": "skin",
     "RateOfHeal": 0.9,
-    "Attached": true,
     "BodyPartFunction": "Digit",
-    "ConnectedToId": "{0}"
+    "ConnectedTo": "{0}"
   },
   {
     "Id": "toe3",
     "LimbType": "Toe",
-    "RelativeSize": 0.011,
-    "LimbName": "{0} Third Toe",
-    "LimbOrientation": "Tbd",
-    "LimbMaterialId": "flesh",
+    "RelativeVolume": 0.011,
+    "BodyPartName": "{0} Third Toe",
+    "Orientation": "Tbd",
+    "MaterialId": "skin",
     "RateOfHeal": 0.9,
-    "Attached": true,
     "BodyPartFunction": "Digit",
-    "ConnectedToId": "{0}"
+    "ConnectedTo": "{0}"
   },
   {
     "Id": "toe4",
     "LimbType": "Toe",
-    "RelativeSize": 0.011,
-    "LimbName": "{0} Fourth Toe",
-    "LimbOrientation": "Tbd",
-    "LimbMaterialId": "flesh",
+    "RelativeVolume": 0.011,
+    "BodyPartName": "{0} Fourth Toe",
+    "Orientation": "Tbd",
+    "MaterialId": "skin",
     "RateOfHeal": 0.9,
-    "Attached": true,
     "BodyPartFunction": "Digit",
-    "ConnectedToId": "{0}"
+    "ConnectedTo": "{0}"
   },
   {
     "Id": "toe5",
     "LimbType": "Toe",
-    "RelativeSize": 0.008,
-    "LimbName": "{0} Fifth Toe",
-    "LimbOrientation": "Tbd",
-    "LimbMaterialId": "flesh",
+    "RelativeVolume": 0.008,
+    "BodyPartName": "{0} Fifth Toe",
+    "Orientation": "Tbd",
+    "MaterialId": "skin",
     "RateOfHeal": 0.9,
-    "Attached": true,
     "BodyPartFunction": "Digit",
-    "ConnectedToId": "{0}"
+    "ConnectedTo": "{0}"
   }
 ]

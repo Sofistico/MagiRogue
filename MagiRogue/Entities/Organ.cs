@@ -50,7 +50,7 @@ namespace MagiRogue.Entities
             MaxBodyPartHp = organHp;
         }
 
-        public Organ(string materialId = "flesh") : base(materialId)
+        public Organ(string materialId = "skin") : base(materialId)
         {
             // Empty!
         }

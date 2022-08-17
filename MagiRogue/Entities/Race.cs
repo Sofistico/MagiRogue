@@ -54,6 +54,7 @@ namespace MagiRogue.Entities
         public bool CanRegenLostLimbs { get; set; }
 
         public string[] BodyPlan { get; set; }
+        public string[] Tissues { get; set; }
         public int[] HeightModifier { get; set; }
         public int[] BroadnessModifier { get; set; }
         public int[] LengthModifier { get; set; }

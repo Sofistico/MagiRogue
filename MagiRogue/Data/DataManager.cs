@@ -27,8 +27,8 @@ namespace MagiRogue.Data
         public static readonly IReadOnlyList<Organ> ListOfOrgans =
             GetSourceTree<Organ>(@".\Data\Bodies\organs_*.json");
 
-        public static readonly IReadOnlyList<LimbTemplate> ListOfLimbs =
-            GetSourceTree<LimbTemplate>(@".\Data\Bodies\limb_*.json");
+        public static readonly IReadOnlyList<Limb> ListOfLimbs =
+            GetSourceTree<Limb>(@".\Data\Bodies\limb_*.json");
 
         public static readonly IReadOnlyList<BasicTile> ListOfTiles =
             GetSourceTree<BasicTile>(@".\Data\Tiles\*.json");
@@ -76,7 +76,7 @@ namespace MagiRogue.Data
         public static SpellBase QuerySpellInData(string spellId) => ListOfSpells.FirstOrDefault
                 (m => m.SpellId.Equals(spellId)).Copy();
 
-        public static LimbTemplate QueryLimbInData(string limbId)
+        public static Limb QueryLimbInData(string limbId)
         {
             var limb = ListOfLimbs.FirstOrDefault(l => l.Id.Equals(limbId), null);
             return limb?.Copy();

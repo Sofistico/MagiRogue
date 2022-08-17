@@ -17,10 +17,16 @@ namespace MagiRogue.Data.Serialization
         public string Id { get; set; }
 
         [DataMember]
+        public string? InheirtFrom { get; set; }
+
+        [DataMember]
         public string Name { get; set; }
 
         [DataMember]
         public bool Flamability { get; set; }
+
+        [DataMember]
+        public int? IgnationPoint { get; set; }
 
         [DataMember]
         public int Hardness { get; set; }
@@ -40,6 +46,7 @@ namespace MagiRogue.Data.Serialization
         [DataMember]
         public int? BoilingPoint { get; set; }
 
+        // Will be removed!
         [DataMember]
         public string LiquidTurnsInto { get; set; }
 
@@ -48,6 +55,15 @@ namespace MagiRogue.Data.Serialization
 
         [DataMember]
         public string Color { get; set; }
+
+        [DataMember]
+        public MaterialType Type { get; set; }
+
+        [DataMember]
+        public int? HeatDamageTemp { get; set; }
+
+        [DataMember]
+        public int? ColdDamageTemp { get; set; }
 
         public MaterialTemplate Copy()
         {

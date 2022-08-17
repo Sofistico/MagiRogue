@@ -86,17 +86,22 @@ namespace MagiRogue.Entities
         /// Values are between 0 and 1, where 0 is no regen for the limb and 1 is full regen.
         /// </summary>
         public double RateOfHeal { get; set; }
-        public bool CanHeal { get; set; }
+
+        public bool CanHeal { get; set; } = true;
         public BodyPartFunction BodyPartFunction { get; set; }
         public List<Wound> Wounds { get; set; }
 
         public bool Working { get; set; }
+
+        // TODO: FOR THE FUTURE!
+        public List<Tissue> Tissues { get; set; }
 
         [JsonConstructor()]
         public BodyPart(string materialId)
         {
             Wounds = new();
             MaterialId = materialId;
+            Tissues = new();
             BodyPartMaterial = PhysicsManager.SetMaterial(materialId);
         }
 
