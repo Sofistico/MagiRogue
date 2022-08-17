@@ -87,7 +87,7 @@ namespace MagiRogue.Entities
         /// </summary>
         public double RateOfHeal { get; set; }
         public bool CanHeal { get; set; }
-        public BodyPartFunction LimbFunction { get; set; }
+        public BodyPartFunction BodyPartFunction { get; set; }
         public List<Wound> Wounds { get; set; }
 
         public bool Working { get; set; }

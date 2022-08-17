@@ -45,17 +45,16 @@ namespace MagiRogue.Entities
         /// <param name="orientation">If it's in the center, left or right of the body</param>
         /// <param name="materialID">The id to define the material, if needeed look at the material definition json\n
         /// Defaults to "flesh"</param>
-
         public Limb(TypeOfLimb limbType, string limbName,
             BodyPartOrientation orientation, string connectedTo,
-            string materialID = "flesh", BodyPartFunction limbFunction = BodyPartFunction.Limb) : base(materialID)
+            string materialID = "flesh", BodyPartFunction bodyPartFunction = BodyPartFunction.Limb) : base(materialID)
         {
             TypeLimb = limbType;
             Attached = true;
             BodyPartName = limbName;
             Orientation = orientation;
             ConnectedTo = connectedTo;
-            LimbFunction = limbFunction;
+            BodyPartFunction = bodyPartFunction;
         }
 
         public Limb(string id, TypeOfLimb limbType, int limbHp, int maxLimbHp,

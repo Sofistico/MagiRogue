@@ -40,8 +40,8 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
             var bodyParts = returnParts.Where(i => i is Limb lim && (lim.TypeLimb is TypeOfLimb.Finger
                 || lim.TypeLimb is TypeOfLimb.Toe)).ToList();
-            var connectorLimbs = returnParts.Where(i => i.LimbFunction is BodyPartFunction.Grasp
-                || i.LimbFunction is BodyPartFunction.Stance).ToList();
+            var connectorLimbs = returnParts.Where(i => i.BodyPartFunction is BodyPartFunction.Grasp
+                || i.BodyPartFunction is BodyPartFunction.Stance).ToList();
 
             foreach (Limb smallBp in bodyParts.Cast<Limb>())
             {
@@ -56,11 +56,11 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             returnParts.Remove(smallBp);
             foreach (Limb limb in connectorLimbs.Cast<Limb>())
             {
-                if (smallBp.TypeLimb is TypeOfLimb.Finger && limb.LimbFunction is BodyPartFunction.Grasp)
+                if (smallBp.TypeLimb is TypeOfLimb.Finger && limb.BodyPartFunction is BodyPartFunction.Grasp)
                 {
                     CreateNewDigitAndAdd(returnParts, smallBp, limb);
                 }
-                if (smallBp.TypeLimb is TypeOfLimb.Toe && limb.LimbFunction is BodyPartFunction.Stance)
+                if (smallBp.TypeLimb is TypeOfLimb.Toe && limb.BodyPartFunction is BodyPartFunction.Stance)
                 {
                     CreateNewDigitAndAdd(returnParts, smallBp, limb);
                 }

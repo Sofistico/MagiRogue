@@ -21,7 +21,7 @@ namespace MagiRogue.Data.Enumerators
 
         Vital,
         Thought,
-        Breathe,
+        Breath,
         Embedded,
     }
 }

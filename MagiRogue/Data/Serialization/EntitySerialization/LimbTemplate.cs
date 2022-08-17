@@ -64,7 +64,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         public bool Broken { get; set; } = false;
 
         [DataMember]
-        public BodyPartFunction LimbFunction { get; set; }
+        public BodyPartFunction BodyPartFunction { get; set; }
 
         [DataMember]
         public double RateOfHeal { get; set; }
@@ -115,7 +115,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 LimbType = this.LimbType,
                 LimbWeight = this.LimbWeight,
                 MaxLimbHp = this.MaxLimbHp,
-                LimbFunction = this.LimbFunction,
+                BodyPartFunction = this.BodyPartFunction,
                 RateOfHeal = this.RateOfHeal,
                 RelativeSize = this.RelativeSize,
             };
@@ -132,7 +132,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 template.LimbOrientation,
                 template.ConnectedToId,
                 template.LimbMaterialId,
-                template.LimbFunction
+                template.BodyPartFunction
                 );
             limb.Id = template.Id;
             limb.BodyPartHp = template.LimbHp;
@@ -157,7 +157,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 limb.ConnectedTo);
             template.Id = limb.Id;
             template.Broken = limb.Broken;
-            template.LimbFunction = limb.LimbFunction;
+            template.BodyPartFunction = limb.BodyPartFunction;
             template.RateOfHeal = limb.RateOfHeal;
 
             return template;

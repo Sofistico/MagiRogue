@@ -44,7 +44,7 @@ namespace MagiRogue.Entities
         {
             get
             {
-                return Limbs.FindAll(l => l.LimbFunction is BodyPartFunction.Grasp && l.Working).Count >= 1;
+                return Limbs.FindAll(l => l.BodyPartFunction is BodyPartFunction.Grasp && l.Working).Count >= 1;
             }
         }
 
@@ -53,12 +53,12 @@ namespace MagiRogue.Entities
         {
             get
             {
-                return Limbs.FindAll(l => l.LimbFunction is BodyPartFunction.Stance && l.Working).Count >= MaxStanceLimbs;
+                return Limbs.FindAll(l => l.BodyPartFunction is BodyPartFunction.Stance && l.Working).Count >= MaxStanceLimbs;
             }
         }
 
         [JsonIgnore]
-        public bool HasEnoughWings { get => Limbs.FindAll(l => l.LimbFunction is BodyPartFunction.Flier && l.Working).Count >= MaxFlierLimbs; }
+        public bool HasEnoughWings { get => Limbs.FindAll(l => l.BodyPartFunction is BodyPartFunction.Flier && l.Working).Count >= MaxFlierLimbs; }
 
         [JsonIgnore]
         public bool HasAtLeastOneHead { get => Limbs.Exists(i => i.TypeLimb is TypeOfLimb.Head && i.BodyPartHp > 0); }
@@ -219,7 +219,7 @@ namespace MagiRogue.Entities
         {
             foreach (Limb limb in Limbs)
             {
-                switch (limb.LimbFunction)
+                switch (limb.BodyPartFunction)
                 {
                     case BodyPartFunction.Grasp:
                         MaxGraspLimbs++;
@@ -279,7 +279,7 @@ namespace MagiRogue.Entities
 
             if (limb.TypeLimb == TypeOfLimb.Head || limb.TypeLimb == TypeOfLimb.Neck)
             {
-                bodyParts = Limbs.FindAll(h => h.LimbFunction == BodyPartFunction.Thought && NeedsHead);
+                bodyParts = Limbs.FindAll(h => h.BodyPartFunction == BodyPartFunction.Thought && NeedsHead);
                 if (bodyParts.Count > 1)
                 {
                     DismemberMessage(actor, bodyParts[0]);

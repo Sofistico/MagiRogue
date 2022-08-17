@@ -6,6 +6,7 @@
     "RelativeSize": 0.1,
     "InsideOf": "humanoid_head",
     "Orientation": "Center",
+    "BodyPartFunction": "Thought",
     "OrganType": "Brain"
   },
   {
@@ -15,14 +16,33 @@
     "RelativeSize": 0.05,
     "InsideOf": "humanoid_upper_body",
     "Orientation": "Center",
+    "BodyPartFunction": "Vital",
     "OrganType": "Heart"
   },
   {
-    "Id": "humanoid_spine",
-    "Name": "Spine",
+    "Id": "humanoid_upper_spine",
+    "Name": "Upper Spine",
+    "MaterialId": "flesh",
+    "RelativeSize": 0.10,
+    "InsideOf": "humanoid_neck",
+    "Orientation": "Center",
+    "OrganType": "Nerve"
+  },
+  {
+    "Id": "humanoid_medium_spine",
+    "Name": "Medium Spine",
     "MaterialId": "flesh",
     "RelativeSize": 0.15,
-    "InsideOf": "humanoid_neck",
+    "InsideOf": "humanoid_upper_body",
+    "Orientation": "Center",
+    "OrganType": "Nerve"
+  },
+  {
+    "Id": "humanoid_low_spine",
+    "Name": "Low Spine",
+    "MaterialId": "flesh",
+    "RelativeSize": 0.15,
+    "InsideOf": "humanoid_lower_body",
     "Orientation": "Center",
     "OrganType": "Nerve"
   },
@@ -51,6 +71,7 @@
     "RelativeSize": 0.1,
     "InsideOf": "humanoid_upper_body",
     "Orientation": "Right",
+    "BodyPartFunction": "Breath",
     "OrganType": "Breather"
   },
   {
@@ -60,6 +81,7 @@
     "RelativeSize": 0.1,
     "InsideOf": "humanoid_upper_body",
     "Orientation": "Left",
+    "BodyPartFunction": "Breath",
     "OrganType": "Breather"
   },
   {
@@ -87,6 +109,7 @@
     "RelativeSize": 0.05,
     "InsideOf": "humanoid_head",
     "Orientation": "Right",
+    "BodyPartFunction": "Embedded",
     "OrganType": "Visual"
   },
   {
@@ -96,6 +119,7 @@
     "RelativeSize": 0.05,
     "InsideOf": "humanoid_head",
     "Orientation": "Left",
+    "BodyPartFunction": "Embedded",
     "OrganType": "Visual"
   }
 ]

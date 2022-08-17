@@ -5,7 +5,7 @@
   },
   {
     "Id": "humanoid_organs",
-    "BodyParts": [ "brain", "humanoid_heart", "humanoid_spine", "humanoid_stomach", "humanoid_intestine", "humanoid_r_lung", "humanoid_l_lung", "humanoid_r_kidney", "humanoid_l_kidney", "humanoid_r_eye", "humanoid_l_eye" ]
+    "BodyParts": [ "brain", "humanoid_heart", "humanoid_upper_spine", "humanoid_medium_spine", "humanoid_lower_spine", "humanoid_stomach", "humanoid_intestine", "humanoid_r_lung", "humanoid_l_lung", "humanoid_r_kidney", "humanoid_l_kidney", "humanoid_r_eye", "humanoid_l_eye" ]
   },
   {
     "Id": "5fingers",
