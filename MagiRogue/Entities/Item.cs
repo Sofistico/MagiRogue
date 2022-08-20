@@ -74,7 +74,7 @@ namespace MagiRogue.Entities
         /// </summary>
         public List<IActivable> UseAction { get; set; }
         public List<Trait> Traits { get; set; }
-        public List<Quality> Qualities { get; internal set; }
+        public List<Quality> Qualities { get; set; }
         public string ItemId { get; set; }
         public WeaponType WeaponType { get; set; }
 

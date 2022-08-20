@@ -44,7 +44,7 @@ namespace MagiRogue.Entities
         {
             get
             {
-                return Limbs.FindAll(l => l.BodyPartFunction is BodyPartFunction.Grasp && l.Working).Count >= 1;
+                return Limbs.Any(l => l.BodyPartFunction is BodyPartFunction.Grasp && l.Working);
             }
         }
 

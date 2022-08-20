@@ -98,7 +98,7 @@ namespace MagiRogue.UI.Windows
                 Position = namePoint,
                 IsNumeric = false,
             };
-            PrintUpFromPosition(namePoint, "Name:");
+            PrintUpFromPosition(namePoint, "Finally, choose your Name:");
             const string back = "Go Back";
             MagiButton goBack = new(back.Length + 2)
             {

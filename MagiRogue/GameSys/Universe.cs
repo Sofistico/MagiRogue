@@ -10,6 +10,7 @@ using MagiRogue.GameSys.Tiles;
 using MagiRogue.GameSys.Time;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MagiRogue.GameSys
@@ -185,7 +186,7 @@ namespace MagiRogue.GameSys
                 // if the map is now updated, then no need to change anything!
                 mapToGo.NeedsUpdate = false;
                 mapToGo.UpdateRooms();
-                RegisterEntitiesToTime();
+                GetEntitiesIdsToRegisterToTime();
             }
             else
                 return; // Do nothing
@@ -256,8 +257,6 @@ namespace MagiRogue.GameSys
                 if (!playerActionWorked)
                     return;
 
-                RegisterEntitiesToTime();
-
                 // here the player has done it's turn, so let's go to the next one
                 var turnNode = Time.NextNode();
                 // put here terrrain effect
@@ -285,13 +284,15 @@ namespace MagiRogue.GameSys
             }
         }
 
-        private void RegisterEntitiesToTime()
+        private void GetEntitiesIdsToRegisterToTime()
         {
-            var population = CurrentChunk.TotalPopulation();
+            var population = CurrentChunk?.TotalPopulation();
             // called only once, to properly register the entity
+            if (population is null)
+                return;
             foreach (Actor actor in population)
             {
-                Time.RegisterEntity(new EntityTimeNode(actor.ID, Time.TimePassed.Ticks + 1));
+                Time.RegisterEntity(new EntityTimeNode(actor.ID, Time.GetTimePassed(0)));
             }
         }
 

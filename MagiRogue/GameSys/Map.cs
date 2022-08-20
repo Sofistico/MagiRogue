@@ -358,6 +358,8 @@ namespace MagiRogue.GameSys
 
         public void RemoveAllTiles()
         {
+            if (Tiles is null)
+                return;
             foreach (TileBase tile in Tiles)
             {
                 RemoveTerrain(tile);
@@ -685,7 +687,8 @@ namespace MagiRogue.GameSys
         {
             RemoveAllEntities();
             RemoveAllTiles();
-            GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
+            if (GoRogueComponents.Count > 0)
+                GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
             Tiles = null;
             ControlledGameObjectChanged = null;
             this.ControlledEntitiy = null;

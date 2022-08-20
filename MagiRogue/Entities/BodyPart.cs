@@ -91,7 +91,7 @@ namespace MagiRogue.Entities
         public BodyPartFunction BodyPartFunction { get; set; }
         public List<Wound> Wounds { get; set; }
 
-        public bool Working { get; set; }
+        public bool Working { get; set; } = true;
 
         // TODO: FOR THE FUTURE!
         public List<Tissue> Tissues { get; set; }

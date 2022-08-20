@@ -171,6 +171,12 @@ namespace MagiRogue.GameSys.MapGen
 
                     break;
 
+                case RoomTag.DungeonKeeper:
+                    AddFurnituresAtRandomPos(DataManager.QueryFurnitureInData("wood_table"), room, map, 2);
+                    AddFurnituresAtRandomPos(DataManager.QueryFurnitureInData("wood_chair"), room, map, 4);
+
+                    break;
+
                 default:
                     throw new ApplicationException("Type of room not defined!");
             }
@@ -187,9 +193,15 @@ namespace MagiRogue.GameSys.MapGen
         private static void AddFurnitureAtRandomPos(Furniture furniture, Room room, Map map)
         {
             Point pos = Point.None;
-            while (!map.IsTileWalkable(pos) || map.EntityIsThere(pos))
+            int tries = 0;
+            while ((!map.IsTileWalkable(pos) || map.EntityIsThere(pos)))
             {
                 pos = room.ReturnRandomPosRoom();
+                if (tries++ <= 100)
+                {
+                    // not found a place, can stop looking
+                    return;
+                }
             }
             furniture.Position = pos;
             map.Add(furniture);

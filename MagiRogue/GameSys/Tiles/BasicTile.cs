@@ -56,13 +56,14 @@ namespace MagiRogue.GameSys.Tiles
         [JsonIgnore]
         public static int Layer { get => 0; }
         public TileType TileType { get; set; }
-        public int MoveCost { get; set; }
+        public int MoveCost { get; set; } = 100;
         public int TileHealth { get; set; }
         public uint ForegroundLastSeen { get; set; }
         public uint BackgroundLastSeen { get; set; }
         public char GlyphLastSeen { get; set; }
         public int InfusedMp { get; set; }
         public int BitMask { get; set; }
+        //public int MoveTimeCost { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<Trait> Traits { get; set; }
@@ -367,6 +368,7 @@ namespace MagiRogue.GameSys.Tiles
                 tile.TileHealth = basicTile.TileHealth;
 
             tile.Traits = basicTile.Traits is null ? new List<Trait>() : basicTile.Traits;
+            tile.MoveTimeCost = basicTile.MoveCost;
 
             return tile;
         }

@@ -284,6 +284,17 @@ namespace MagiRogue.UI
             }
 
 #if DEBUG
+            if (HandleDebugActions(info, world, ui))
+            {
+                return true;
+            }
+#endif
+
+            return false;
+        }
+
+        private static bool HandleDebugActions(Keyboard info, Universe world, UIManager ui)
+        {
             if (info.IsKeyPressed(Keys.F10))
             {
                 ActionManager.ToggleFOV();
@@ -320,6 +331,14 @@ namespace MagiRogue.UI
             {
                 LookWindow w = new LookWindow(GetPlayer);
                 w.Show();
+            }
+
+            if (info.IsKeyDown(Keys.LeftControl)
+                && info.IsKeyDown(Keys.LeftShift)
+                && info.IsKeyPressed(Keys.O) && targetCursor is not null)
+            {
+                var (_, actor) = ActionManager.CreateTestEntity(targetCursor.Cursor.Position, world.CurrentMap);
+                actor.AddComponent(new Components.MoveAndAttackAI(actor.GetViewRadius()));
             }
 
             if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.O) && targetCursor is not null)
@@ -382,8 +401,6 @@ namespace MagiRogue.UI
             {
                 GameLoop.Universe.SaveAndLoad.SaveGameToFolder(GameLoop.Universe, "TestFile");
             }
-
-#endif
 
             return false;
         }

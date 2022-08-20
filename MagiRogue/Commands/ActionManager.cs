@@ -154,7 +154,7 @@ namespace MagiRogue.Commands
             }
             else
             {
-                GameLoop.AddMessageLog("There is no item here");
+                GameLoop.AddMessageLog("There are no itens here");
                 return false;
             }
         }
@@ -276,12 +276,12 @@ namespace MagiRogue.Commands
             GameLoop.Universe.WorldMap = new PlanetGenerator().CreatePlanet(500, 500);
         }
 
-        public static bool CreateTestEntity(Point pos, Map map)
+        public static (bool, Actor) CreateTestEntity(Point pos, Map map)
         {
             Actor found = EntityFactory.ActorCreatorFirstStep(pos,
                  "human", "Test Person", 25, Sex.None);
             map.Add(found);
-            return true;
+            return (true, found);
         }
 
 #endif
@@ -394,7 +394,7 @@ namespace MagiRogue.Commands
             }
             else if (possibleStairs is null && possibleWorldTileHere is null)
             {
-                GameLoop.AddMessageLog("There is no way to go down here!");
+                GameLoop.AddMessageLog("There is no way to go down from here!");
                 return false;
             }
 

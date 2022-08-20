@@ -15,6 +15,7 @@ namespace MagiRogue.UI.Windows
         public MapWindow(int width, int height, string title) : base(width, height, title)
         {
             followComponent = new SadConsole.Components.SurfaceComponentFollowTarget();
+            UseMouse = false;
         }
 
         //

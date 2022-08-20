@@ -40,10 +40,9 @@ namespace MagiRogue.Utils
                 }
 
                 // the stamina takes the hit first
-                double staminaAfterHit = MathMagi.Round(actor.Body.Stamina - dmg);
-                double differenceSta = actor.Body.Stamina - staminaAfterHit;
-                dmg -= differenceSta;
-                //actor.Body.Stamina -= dmg;
+                double defenseFromStamina = MathMagi.Round((actor.Body.Stamina * actor.GetAnatomy().FitLevel));
+                dmg -= defenseFromStamina;
+                actor.Body.Stamina -= dmg;
 
                 // any remaining dmg goes to create a wound
                 if (dmg > 0)
@@ -62,7 +61,7 @@ namespace MagiRogue.Utils
                 }
                 else
                 {
-                    GameLoop.AddMessageLog($"The {entity.Name} took {dmg} {dmgType} total damage to it's stamina!");
+                    GameLoop.AddMessageLog($"The {entity.Name} took {defenseFromStamina} {dmgType} total damage to it's stamina!");
                     return;
                 }
             }
@@ -235,6 +234,8 @@ namespace MagiRogue.Utils
                     loopDamage = GetAttackMomentum(attacker, limbAttacking);
                 else
                     loopDamage = GetAttackMomentumWithItem(attacker, wieldedItem);
+                // some moar randomness!
+                loopDamage += Mrn.Exploding2D6Dice;
 
                 double protection = defender.GetProtection(limbToHit);
 
@@ -259,8 +260,8 @@ namespace MagiRogue.Utils
                     default:
                         break;
                 }
-
-                loopDamage -= (protection + Mrn.Exploding2D6Dice) + (defender.Body.Endurance * 0.5);
+                var damage = loopDamage - (protection + Mrn.Exploding2D6Dice) + (defender.Body.Endurance * 0.5);
+                loopDamage = MathMagi.Round(damage);
 
                 defenseMessage.AppendFormat("   {0} was hit for {1} damage", defender.Name, loopDamage);
                 totalDamage += loopDamage;
@@ -298,7 +299,7 @@ namespace MagiRogue.Utils
         {
             return MathMagi.Round(
                 (attacker.GetStrenght() + Mrn.Exploding2D6Dice)
-                * attacker.GetRelevantAbilityMultiplier(AbilityName.Unarmed)
+                * (attacker.GetRelevantAbilityMultiplier(AbilityName.Unarmed) + 1)
                 * attacker.GetAttackVelocity()
                 + (1 + attacker.Volume / (limbAttacking.BodyPartMaterial.Density * limbAttacking.Volume)));
         }

@@ -207,6 +207,14 @@ namespace MagiRogue.Entities
         {
             var key = Body.Equipment.FirstOrDefault(x => x.Value == item).Key;
             var limb = GetAnatomy().Limbs.Find(i => i.Id.Equals(key));
+            if (item is null)
+            {
+                List<Limb> graspersAndStances = GetAnatomy().Limbs.FindAll(i =>
+                    (i.BodyPartFunction is BodyPartFunction.Grasp
+                    || i.BodyPartFunction is BodyPartFunction.Stance)
+                    && i.Working);
+                return graspersAndStances.GetRandomItemFromList();
+            }
             return limb;
         }
 
@@ -357,8 +365,10 @@ namespace MagiRogue.Entities
         public double GetProtection(Limb limb)
         {
             var item = Body.GetArmorOnLimbIfAny(limb);
+            var armorModifier = item is not null ?
+                (item.Material.Hardness * Body.GetArmorOnLimbIfAny(limb).Material.Density) : 0;
             return Body.Toughness +
-                (item.Material.Hardness * Body.GetArmorOnLimbIfAny(limb).Material.Density)
+                armorModifier
                 + GetRelevantAbility(AbilityName.ArmorUse);
         }
 
