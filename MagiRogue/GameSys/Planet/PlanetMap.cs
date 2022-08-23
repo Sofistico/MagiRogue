@@ -28,6 +28,7 @@ namespace MagiRogue.GameSys.Planet
         [DataMember]
         public Map AssocietatedMap { get; }
 
+        [DataMember]
         public long TicksSinceCreation { get; set; }
 
         public PlanetMap(int width, int height)

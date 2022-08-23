@@ -6,5 +6,6 @@ namespace MagiRogue.GameSys.Civ
     {
         public string Happening { get; set; }
         public TimeDefSpan When { get; set; }
+        public HistoricalFigure WithWhat { get; set; }
     }
 }

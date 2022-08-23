@@ -149,7 +149,7 @@ namespace MagiRogue.GameSys.Planet
 
         private void BasicHistory(int yearToGameBegin)
         {
-            planetData.TicksSinceCreation = yearToGameBegin / 3155695200;
+            planetData.TicksSinceCreation = yearToGameBegin * 3214080000;
             for (int i = 0; i < _civilizations.Length; i++)
             {
                 var civ = _civilizations[i];
