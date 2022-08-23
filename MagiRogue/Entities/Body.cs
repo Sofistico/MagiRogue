@@ -33,7 +33,7 @@ namespace MagiRogue.Entities
         [JsonIgnore]
         public double Stamina
         {
-            get => stamina < MaxStamina ? stamina : MaxStamina;
+            get => stamina;
 
             set
             {
@@ -41,7 +41,8 @@ namespace MagiRogue.Entities
                     stamina = value;
                 else
                 {
-                    stamina = MaxStamina;
+                    value = MaxStamina;
+                    stamina = value;
                 }
             }
         }

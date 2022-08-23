@@ -348,7 +348,8 @@ namespace MagiRogue.UI
 
             if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.O) && targetCursor is not null)
             {
-                ActionManager.CreateTestEntity(targetCursor.Cursor.Position, world);
+                var (_, entity) = ActionManager.CreateTestEntity(targetCursor.Cursor.Position, world);
+                entity.AddComponent(new Components.BasicAi(entity));
                 return false;
             }
             if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.P) && targetCursor.EntityInTarget())

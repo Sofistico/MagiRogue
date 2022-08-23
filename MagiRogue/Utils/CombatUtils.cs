@@ -40,9 +40,10 @@ namespace MagiRogue.Utils
                 }
 
                 // the stamina takes the hit first
-                double defenseFromStamina = MathMagi.Round((actor.Body.Stamina * actor.GetAnatomy().FitLevel));
-                dmg -= defenseFromStamina;
-                actor.Body.Stamina -= dmg;
+                // decide to take only half of the damage, since the stamina right now protects everything!
+                double defenseFromStamina = MathMagi.Round((actor.Body.Stamina * actor.GetAnatomy().FitLevel) * 0.5);
+                dmg = MathMagi.Round(dmg - defenseFromStamina);
+                //actor.Body.Stamina = actor.Body.Stamina < 0 ? 0 : actor.Body.Stamina;
 
                 // any remaining dmg goes to create a wound
                 if (dmg > 0)
@@ -56,12 +57,26 @@ namespace MagiRogue.Utils
                         Commands.ActionManager.ResolveDeath(actor);
                     }
 
-                    GameLoop.AddMessageLog($"The {entity.Name} took {dmg} {dmgType} total damage in the {limbAttacking.BodyPartName}!");
+                    GameLoop.AddMessageLog($"   The {entity.Name} took {dmg} {dmgType} total damage in the {limbAttacking.BodyPartName}!");
+                    StringBuilder woundString = new("   Receiving ");
+                    switch (woundTaken.Severity)
+                    {
+                        case InjurySeverity.Inhibited:
+                            woundString.Append($"an ");
+                            break;
+
+                        default:
+                            woundString.Append($"a ");
+                            break;
+                    }
+                    woundString.Append($"{woundTaken.Severity} wound!");
+
+                    GameLoop.AddMessageLog(woundString.ToString());
                     return;
                 }
                 else
                 {
-                    GameLoop.AddMessageLog($"The {entity.Name} took {defenseFromStamina} {dmgType} total damage to it's stamina!");
+                    GameLoop.AddMessageLog($"   The {entity.Name} took {defenseFromStamina} {dmgType} total damage to it's stamina!");
                     return;
                 }
             }
@@ -263,11 +278,11 @@ namespace MagiRogue.Utils
                 var damage = loopDamage - (protection + Mrn.Exploding2D6Dice) + (defender.Body.Endurance * 0.5);
                 loopDamage = MathMagi.Round(damage);
 
-                defenseMessage.AppendFormat("   {0} was hit for {1} damage", defender.Name, loopDamage);
+                //defenseMessage.AppendFormat("   {0} was hit for {1} damage", defender.Name, loopDamage);
                 totalDamage += loopDamage;
             }
-            else
-                attackMessage.Append(" and misses completely!");
+            //else
+            //    attackMessage.Append(" and misses completely!");
 
             return totalDamage;
         }

@@ -258,7 +258,8 @@ namespace MagiRogue.GameSys
         public void AddEntityToTime(Entity entity)
         {
             // register to next turn
-            Time.RegisterEntity(new EntityTimeNode(entity.ID, Time.GetTimePassed(100)));
+            if (!Time.Nodes.Cast<EntityTimeNode>().Any(i => i.EntityId.Equals(entity.ID)))
+                Time.RegisterEntity(new EntityTimeNode(entity.ID, Time.GetTimePassed(100)));
         }
 
         public void ProcessTurn(long playerTime, bool sucess)
@@ -294,6 +295,8 @@ namespace MagiRogue.GameSys
 #if DEBUG
                 GameLoop.AddMessageLog($"Turns: {Time.Turns}, Tick: {Time.TimePassed.Ticks}");
 #endif
+                // makes sure that any entity that exists but has no AI, or the AI failed, get's a turn.
+                GetEntitiesIdsToRegisterToTime();
             }
         }
 

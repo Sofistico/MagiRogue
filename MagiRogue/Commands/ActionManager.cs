@@ -21,6 +21,8 @@ namespace MagiRogue.Commands
     /// </summary>
     public sealed class ActionManager
     {
+        private const int staminaAttackAction = 100;
+
         private ActionManager()
         {
             // makes sure that it's never instantiated
@@ -71,6 +73,12 @@ namespace MagiRogue.Commands
                 return;
             }
 
+            if (attacker.Body.Stamina <= 0)
+            {
+                GameLoop.AddMessageLog($"{attacker.Name} is far too tired to attack!");
+                return;
+            }
+
             // Create two messages that describe the outcome
             // of the attack and defense
             StringBuilder attackMessage = new();
@@ -90,6 +98,10 @@ namespace MagiRogue.Commands
 
             // The defender now takes damage
             CombatUtils.ResolveDamage(defender, damage, dmgType, limbAttacking, limbAttacked);
+
+            // discount stamina from the attacker
+            attacker.Body.Stamina =
+                MathMagi.Round((attacker.Body.Stamina - staminaAttackAction) * (attacker.Body.Endurance / 100));
         }
 
         /// <summary>
