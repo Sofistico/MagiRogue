@@ -29,15 +29,19 @@ namespace MagiRogue.GameSys.Physics
         public static double GetAttackVelocity(Actor actor)
         {
             var itemHeld = actor.WieldedItem();
+            int ability = 0;
+            double finalSpeed = 0;
             if (itemHeld is not null)
             {
                 var speed = ((itemHeld.SpeedOfAttack + itemHeld.Weight * itemHeld.Volume)
                     / actor.GetActorBaseSpeed());
-                var ability = actor.GetRelevantAttackAbility(itemHeld.WeaponType);
-                var finalSpeed = ability != 0 ? speed / ability : speed;
-                return finalSpeed;
+                ability = actor.GetRelevantAttackAbility(itemHeld.WeaponType);
+                finalSpeed = ability != 0 ? speed / ability : speed;
+                return finalSpeed * 100;
             }
-            return actor.GetActorBaseSpeed();
+            ability = actor.GetRelevantAbility(Data.Enumerators.AbilityName.Unarmed);
+            finalSpeed = ability != 0 ? actor.GetActorBaseSpeed() / ability : actor.GetActorBaseSpeed();
+            return finalSpeed * 100;
         }
     }
 }

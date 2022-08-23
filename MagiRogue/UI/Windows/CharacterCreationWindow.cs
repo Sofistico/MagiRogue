@@ -31,9 +31,17 @@ namespace MagiRogue.UI.Windows
         private ListBox raceChooser;
         private List<RadioButton> sexChooser;
 
+        // for later, see https://discord.com/channels/501465397518925843/501465397518925850/1010610089939435712
+        private readonly List<Console> consolePatches;
+        private List<RadioButton> raceRadio;
+        private Console basicConsole;
+        private Console raceConsole;
+        private Console scenarioConsole;
+
         public CharacterCreationWindow(int width, int height) : base(width, height, "Character Creation")
         {
             SetUpButtons(width);
+            consolePatches = new();
         }
 
         private void SetUpButtons(int width)
@@ -92,13 +100,13 @@ namespace MagiRogue.UI.Windows
                 pop.SadComponents.Add(typingInstruction);
                 window.Show(true);
             };
-            Point namePoint = new Point(2, Height / 2 - 13);
+            Point namePoint = new Point(Width / 2 - 9, Height / 2 + 5);
             charName = new(25)
             {
                 Position = namePoint,
                 IsNumeric = false,
+                IsVisible = false
             };
-            PrintUpFromPosition(namePoint, "Finally, choose your Name:");
             const string back = "Go Back";
             MagiButton goBack = new(back.Length + 2)
             {
@@ -194,6 +202,12 @@ namespace MagiRogue.UI.Windows
             {
                 raceChooser.Items.Add(DataManager.QueryRaceInData(race));
             }
+
+            raceChooser.SelectedItemChanged += (_, __) =>
+            {
+                charName.IsVisible = true;
+                PrintUpFromPosition(charName.Position, "Finally, choose your Name:");
+            };
         }
 
         private Player CreatePlayer()

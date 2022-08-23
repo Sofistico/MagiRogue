@@ -304,11 +304,13 @@ namespace MagiRogue.UI
                 {
                     world.CurrentMap.PlayerExplored[i] = true;
                 }
+                return false;
             }
 
             if (info.IsKeyPressed(Keys.F8))
             {
                 GetPlayer.AddComponent(new Components.TestComponent(GetPlayer));
+                return false;
             }
 
             if (info.IsKeyPressed(Keys.F6))
@@ -325,31 +327,36 @@ namespace MagiRogue.UI
                         }
                     }
                 }
+                return false;
             }
 
             if (info.IsKeyPressed(Keys.NumPad0))
             {
                 LookWindow w = new LookWindow(GetPlayer);
                 w.Show();
+                return false;
             }
 
             if (info.IsKeyDown(Keys.LeftControl)
                 && info.IsKeyDown(Keys.LeftShift)
                 && info.IsKeyPressed(Keys.O) && targetCursor is not null)
             {
-                var (_, actor) = ActionManager.CreateTestEntity(targetCursor.Cursor.Position, world.CurrentMap);
+                var (_, actor) = ActionManager.CreateTestEntity(targetCursor.Cursor.Position, world);
                 actor.AddComponent(new Components.MoveAndAttackAI(actor.GetViewRadius()));
+                return false;
             }
 
             if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.O) && targetCursor is not null)
             {
-                ActionManager.CreateTestEntity(targetCursor.Cursor.Position, world.CurrentMap);
+                ActionManager.CreateTestEntity(targetCursor.Cursor.Position, world);
+                return false;
             }
             if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.P) && targetCursor.EntityInTarget())
             {
                 Actor actor = (Actor)targetCursor.TargetEntity();
                 actor.AddComponent(new Components.MoveAndAttackAI(actor.GetViewRadius()));
                 GameLoop.AddMessageLog($"Added attack component to {actor.Name}!");
+                return false;
             }
 
             if (info.IsKeyPressed(Keys.T))
@@ -362,11 +369,13 @@ namespace MagiRogue.UI
                     }
                     node.RestoreOriginalAppearence();
                 }
+                return false;
             }
 
             if (info.IsKeyPressed(Keys.Tab))
             {
                 ActionManager.CreateNewMapForTesting();
+                return false;
             }
             if (info.IsKeyPressed(Keys.OemPlus))
             {
@@ -395,11 +404,13 @@ namespace MagiRogue.UI
                 {
                     throw e;
                 }
+                return false;
             }
 
             if (info.IsKeyPressed(Keys.OemMinus))
             {
                 GameLoop.Universe.SaveAndLoad.SaveGameToFolder(GameLoop.Universe, "TestFile");
+                return false;
             }
 
             return false;

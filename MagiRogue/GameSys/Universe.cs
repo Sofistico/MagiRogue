@@ -59,11 +59,6 @@ namespace MagiRogue.GameSys
 
         public SeasonType CurrentSeason { get; set; }
 
-        public Map GetWorldMap()
-        {
-            return WorldMap.AssocietatedMap;
-        }
-
         /*/// <summary>
         /// All the maps and chunks of the game
         /// NOTE WILL BE SLOWLEY REMOVED FROM CODE!!
@@ -169,6 +164,7 @@ namespace MagiRogue.GameSys
         public void ChangePlayerMap(Map mapToGo, Point pos, Map previousMap)
         {
             CurrentMap.LastPlayerPosition = new Point(Player.Position.X, Player.Position.Y);
+            previousMap.NeedsUpdate = true;
             ChangeActorMap(Player, mapToGo, pos, previousMap);
             UpdateIfNeedTheMap(mapToGo);
             CurrentMap = mapToGo;
@@ -190,6 +186,12 @@ namespace MagiRogue.GameSys
             }
             else
                 return; // Do nothing
+        }
+
+        public void AddEntityToCurrentMap(Entity entity)
+        {
+            CurrentMap.Add(entity);
+            AddEntityToTime(entity);
         }
 
         public static void ChangeActorMap(Entity entity, Map mapToGo, Point pos, Map previousMap)
@@ -248,6 +250,17 @@ namespace MagiRogue.GameSys
             CurrentMap.Add(Player);
         }
 
+        public Map GetWorldMap()
+        {
+            return WorldMap.AssocietatedMap;
+        }
+
+        public void AddEntityToTime(Entity entity)
+        {
+            // register to next turn
+            Time.RegisterEntity(new EntityTimeNode(entity.ID, Time.GetTimePassed(100)));
+        }
+
         public void ProcessTurn(long playerTime, bool sucess)
         {
             if (sucess)
@@ -292,7 +305,7 @@ namespace MagiRogue.GameSys
                 return;
             foreach (Actor actor in population)
             {
-                Time.RegisterEntity(new EntityTimeNode(actor.ID, Time.GetTimePassed(0)));
+                AddEntityToTime(actor);
             }
         }
 

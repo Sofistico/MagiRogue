@@ -276,11 +276,13 @@ namespace MagiRogue.Commands
             GameLoop.Universe.WorldMap = new PlanetGenerator().CreatePlanet(500, 500);
         }
 
-        public static (bool, Actor) CreateTestEntity(Point pos, Map map)
+        public static (bool, Actor) CreateTestEntity(Point pos, Universe universe)
         {
             Actor found = EntityFactory.ActorCreatorFirstStep(pos,
                  "human", "Test Person", 25, Sex.None);
-            map.Add(found);
+
+            universe.AddEntityToCurrentMap(found);
+
             return (true, found);
         }
 

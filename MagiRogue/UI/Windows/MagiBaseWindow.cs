@@ -126,7 +126,7 @@ namespace MagiRogue.UI.Windows
 
         protected void PrintUpFromPosition(int x, int y, string text)
         {
-            Surface.Print(x + 1, y - 1, text);
+            Surface.Print(x, y - 1, text);
         }
 
         protected void PrintUpFromPosition(Point pos, string text)
