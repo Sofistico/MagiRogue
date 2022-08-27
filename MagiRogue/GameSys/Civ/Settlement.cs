@@ -130,7 +130,7 @@ namespace MagiRogue.GameSys.Civ
 
         public void CreateNewBuildings()
         {
-            int numberOfNewHouses = Population % 100;
+            int numberOfNewHouses = Population % 10;
             for (int i = 0; i < numberOfNewHouses; i++)
             {
                 Room house = new Room(RoomTag.House);

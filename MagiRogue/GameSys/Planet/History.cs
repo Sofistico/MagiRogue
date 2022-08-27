@@ -12,7 +12,7 @@ namespace MagiRogue.GameSys.Planet
     public class History
     {
         private int roadId;
-        private readonly PlanetMap planetData;
+        private PlanetMap planetData;
 
         #region Consts
 
@@ -42,7 +42,8 @@ namespace MagiRogue.GameSys.Planet
             PlanetMap planet, WorldTile[,] tiles)
         {
             Civs = civilizations.ToList();
-            planet = planetData;
+            planetData = planet;
+            bool firstYearOnly = true;
             while (Year < yearToGameBegin)
             {
                 for (int i = 0; i < Civs.Count; i++)
@@ -58,15 +59,20 @@ namespace MagiRogue.GameSys.Planet
                         // interaction between civs here!
                         foreach (Civilization nextCiv in otherCivs)
                         {
-                            if (civ.Tendency == nextCiv.Tendency)
+                            // stuff that will only happen in the first year!
+                            // after that won't really happen anymore!
+                            if (firstYearOnly)
                             {
-                                civ.AddCivToRelations(nextCiv, RelationType.Friendly);
-                                BuildRoadsToFriends(civ, nextCiv, tiles);
+                                if (civ.Tendency == nextCiv.Tendency)
+                                {
+                                    civ.AddCivToRelations(nextCiv, RelationType.Friendly);
+                                }
+                                else
+                                {
+                                    civ.AddCivToRelations(nextCiv, RelationType.Neutral);
+                                }
                             }
-                            else
-                            {
-                                civ.AddCivToRelations(nextCiv, RelationType.Neutral);
-                            }
+                            BuildRoadsToFriends(civ, nextCiv, tiles);
                         }
                     }
                     int totalWealth = 0;
@@ -80,17 +86,19 @@ namespace MagiRogue.GameSys.Planet
                 }
 
                 Year++;
+                firstYearOnly = false;
             }
         }
 
         private void BuildRoadsToFriends(Civilization civ, Civilization friend, WorldTile[,] tiles)
         {
-            if (civ.Relations.Any(i => i.OtherCivId.Equals(friend.Id) && i.Relation is RelationType.Friendly))
+            if (civ.Relations.Any(i => i.OtherCivId.Equals(friend.Id)
+                && i.Relation is RelationType.Friendly && i.RoadBuilt))
                 return;
 
             var territory = civ.Territory[0];
             var friendTerr = friend.Territory[0];
-            if (planetData.AssocietatedMap.Tiles.Length < 0)
+            if (tiles.Length < 0)
                 return;
             Path path = planetData.AssocietatedMap.
                         AStar.ShortestPath(territory,
@@ -104,7 +112,10 @@ namespace MagiRogue.GameSys.Planet
             var tile = tiles[territory.X, territory.Y];
             var closestCityTile = tiles[friendTerr.X, friendTerr.Y];
             if (civ.Wealth >= wealthToCreateRoad)
+            {
                 FindPathToCityAndCreateRoad(tile, closestCityTile);
+                civ[friend.Id].RoadBuilt = true;
+            }
         }
 
         private void FindPathToCityAndCreateRoad(WorldTile tile, WorldTile closestCityTile)

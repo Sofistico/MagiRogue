@@ -8,6 +8,7 @@ namespace MagiRogue.GameSys.Civ
         public int ParentId { get; set; }
         public int OtherCivId { get; set; }
         public RelationType Relation { get; set; }
+        public bool RoadBuilt { get; set; }
 
         [JsonConstructor]
         public CivRelation(int parentId, int otherCivId, RelationType relation)

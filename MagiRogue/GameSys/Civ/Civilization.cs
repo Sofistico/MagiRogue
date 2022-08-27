@@ -25,6 +25,17 @@ namespace MagiRogue.GameSys.Civ
         public List<Settlement> Settlements { get; set; }
         public int Wealth { get; set; }
         public List<CivRelation> Relations { get; set; }
+
+        public CivRelation this[int otherCivId]
+        {
+            get => Relations.FirstOrDefault(i => i.OtherCivId == otherCivId);
+
+            set
+            {
+                var relation = Relations.FirstOrDefault(i => i.OtherCivId == otherCivId);
+                relation = value;
+            }
+        }
         public List<HistoricalFigure> ImportantPeople { get; set; }
         public bool Dead { get; set; }
 
@@ -94,15 +105,22 @@ namespace MagiRogue.GameSys.Civ
 
         public void AddCivToRelations(Civilization civ, RelationType relationType)
         {
-            if(!Relations.Any(i => i.OtherCivId.Equals(civ.Id) && i.Relation == relationType))
+            if (!Relations.Any(i => i.OtherCivId.Equals(civ.Id) && i.Relation == relationType))
                 Relations.Add(new CivRelation(Id, civ.Id, relationType));
         }
 
         public void SimulateImportantStuff()
         {
-            if (TotalPopulation >= 0)
-                Dead = true;
+            if (Dead)
+                return;
 
+            if (TotalPopulation <= 0)
+            {
+                Dead = true;
+                return;
+            }
+
+            
             foreach (HistoricalFigure figure in ImportantPeople)
             {
                 // HALP! WHY DID I MAKE THIS!
