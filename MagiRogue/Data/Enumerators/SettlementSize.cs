@@ -6,7 +6,7 @@ namespace MagiRogue.Data.Enumerators
     [JsonConverter(typeof(StringEnumConverter))]
     public enum SettlementSize
     {
-        Default = 0,
+        None = 0,
         /// <summary>
         /// Occupies one map of the chunk
         /// </summary>

@@ -67,6 +67,7 @@ namespace MagiRogue.GameSys.MapGen
             bool oneRulerOnly = false;
             if (mapRooms is null)
                 return;
+            // make so that the list of rooms come from the worldTile.CivInfluence.Settlements
             foreach (Room room in mapRooms)
             {
                 if (room.RoomRectangle.Area >= 6)
@@ -346,7 +347,7 @@ namespace MagiRogue.GameSys.MapGen
                     return (int)settlement.Size;
                 switch (settlement.Size)
                 {
-                    case SettlementSize.Default:
+                    case SettlementSize.None:
                         throw new ApplicationException("Room generated was from the default error!");
 
                     case SettlementSize.Small:
@@ -354,7 +355,8 @@ namespace MagiRogue.GameSys.MapGen
                             randNum.NextInt(4, 7),
                             randNum.NextInt(4, 7),
                             randNum.NextInt(8, 12),
-                            settlement.Name);
+                            settlement.Name,
+                            settlement.Buildings);
                         break;
 
                     case SettlementSize.Medium:
@@ -362,7 +364,8 @@ namespace MagiRogue.GameSys.MapGen
                             randNum.NextInt(4, 7),
                             randNum.NextInt(4, 7),
                             randNum.NextInt(8, 12),
-                            settlement.Name);
+                            settlement.Name,
+                            settlement.Buildings);
                         break;
 
                     case SettlementSize.Large:
@@ -370,7 +373,8 @@ namespace MagiRogue.GameSys.MapGen
                             randNum.NextInt(17, 30),
                             randNum.NextInt(4, 7),
                             randNum.NextInt(8, 12),
-                            settlement.Name);
+                            settlement.Name,
+                            settlement.Buildings);
                         break;
 
                     default:

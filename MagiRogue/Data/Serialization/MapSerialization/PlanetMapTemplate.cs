@@ -70,6 +70,7 @@ namespace MagiRogue.Data.Serialization.MapSerialization
 
         [DataMember]
         public long TicksSinceCreation { get; set; }
+        public History WorldHistory { get; set; }
 
         public PlanetMapTemplate(float min,
             float max,
@@ -103,7 +104,8 @@ namespace MagiRogue.Data.Serialization.MapSerialization
                 map.Civilizations)
             {
                 AssocietatedMap = map.AssocietatedMap,
-                TicksSinceCreation = map.TicksSinceCreation
+                TicksSinceCreation = map.TicksSinceCreation,
+                WorldHistory = map.WorldHistory
             };
             return template;
         }
@@ -121,7 +123,7 @@ namespace MagiRogue.Data.Serialization.MapSerialization
             PlanetMap mio = new PlanetMap(map.Min, map.Max,
                 civs, (MapTemplate)map.AssocietatedMap)
             {
-                TicksSinceCreation = map.TicksSinceCreation
+                WorldHistory = map.WorldHistory
             };
             /*PlanetMap mio = new PlanetMap(map.Min, map.Max,
                 civs, (MapTemplate)map.AssocietatedMap);*/

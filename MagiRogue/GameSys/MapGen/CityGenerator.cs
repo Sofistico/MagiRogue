@@ -17,7 +17,7 @@ namespace MagiRogue.GameSys.MapGen
         }
 
         public void GenerateBigCityFromMapBSP(Map map, int maxRooms,
-            int minRoomSize, int maxRoomSize, string townName)
+            int minRoomSize, int maxRoomSize, string townName, List<Room> buildings)
         {
             _map = map;
 
@@ -29,6 +29,7 @@ namespace MagiRogue.GameSys.MapGen
                 QueryTilesForTrait<TileWall>(Trait.Durable));
 
             ApplyRoads(rooms, TileEncyclopedia.GenericDirtRoad(Point.None));
+            buildings.AddRange(rooms);
         }
 
         private void PopulateMapWithRooms(List<Room> rooms, TileFloor f, TileWall w)
@@ -66,7 +67,7 @@ namespace MagiRogue.GameSys.MapGen
         }
 
         public void GenerateSmallVillage(Map map, int maxRooms,
-            int minRoomSize, int maxRoomSize, string townName)
+            int minRoomSize, int maxRoomSize, string townName, List<Room> buildings)
         {
             _map = map;
             _map.MapName = townName;
@@ -77,10 +78,11 @@ namespace MagiRogue.GameSys.MapGen
                 QueryTilesForTrait<TileWall>(Trait.Inexpensive));
 
             ApplyRoads(_rooms, TileEncyclopedia.GenericDirtRoad(Point.None));
+            buildings.AddRange(rooms);
         }
 
         public void GenerateMediumTown(Map map, int maxRooms,
-            int minRoomSize, int maxRoomSize, string townName)
+            int minRoomSize, int maxRoomSize, string townName, List<Room> buildings)
         {
             _map = map;
             _map.MapName = townName;
@@ -91,6 +93,7 @@ namespace MagiRogue.GameSys.MapGen
                 QueryTilesForTrait<TileWall>(Trait.Durable));
 
             ApplyRoads(_rooms, TileEncyclopedia.GenericDirtRoad(Point.None));
+            buildings.AddRange(rooms);
         }
     }
 }

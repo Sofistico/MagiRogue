@@ -27,11 +27,15 @@ namespace MagiRogue.Data.Serialization
 
     public class CivilizationTemplate
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public Race PrimaryRace { get; set; }
         public CivilizationTendency Tendency { get; set; }
         public List<Point> Territory { get; set; }
         public List<Settlement> Settlements { get; set; }
+        public List<CivRelation> Relations { get; set; }
+        public List<int> RoadIds { get; set; }
+        public bool Dead { get; set; }
 
         public CivilizationTemplate(string name,
             Race primaryRace,
@@ -63,6 +67,9 @@ namespace MagiRogue.Data.Serialization
             {
                 Territory = territory,
                 Settlements = template.Settlements,
+                Id = template.Id,
+                Relations = template.Relations,
+                Dead = template.Dead,
             };
 
             return civ;
@@ -83,6 +90,9 @@ namespace MagiRogue.Data.Serialization
                 basicTiles)
             {
                 Settlements = civ.Settlements,
+                Id = civ.Id,
+                Relations = civ.Relations,
+                Dead = civ.Dead
             };
 
             return template;

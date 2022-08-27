@@ -1,5 +1,6 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
+using System.Collections.Generic;
 
 namespace MagiRogue.GameSys.Civ
 {
@@ -17,7 +18,14 @@ namespace MagiRogue.GameSys.Civ
         public int YearBorn { get; set; }
         public int? YearDeath { get; set; }
         public bool IsAlive { get; set; }
-        public Actor? AssocietedActor { get; set; }
+
+        //public Actor? AssocietedActor { get; set; }
+        public List<int> RelatedCivs { get; set; } = new();
+        public List<int> RelatedSettlements { get; set; } = new();
+        public List<int> RelatedHFs { get; set; } = new();
+        public Mind Mind { get; set; } = new();
+        public Soul Soul { get; set; } = new();
+        public Body Body { get; set; } = new();
 
         public HistoricalFigure(string name,
             Sex hFGender,
@@ -33,7 +41,7 @@ namespace MagiRogue.GameSys.Civ
             YearBorn = yearBorn;
             YearDeath = yearDeath;
             IsAlive = isAlive;
-            AssocietedActor = associetedActor;
+            //AssocietedActor = associetedActor;
             Description = associetedActor.Description;
             Race = associetedActor.GetAnatomy().GetRace().RaceName;
         }

@@ -137,7 +137,7 @@ namespace MagiRogue.GameSys
             if (player != null)
             {
                 Civilization startTown = WorldMap.Civilizations
-                    .FirstOrDefault(a => a.Tendency == CivilizationTendency.Normal);
+                    .FirstOrDefault(a => a.Tendency == CivilizationTendency.Neutral);
                 player.Position = startTown.ReturnAllLandTerritory(WorldMap.AssocietatedMap)[0].Position;
                 Player = player;
 
@@ -182,6 +182,7 @@ namespace MagiRogue.GameSys
                 // if the map is now updated, then no need to change anything!
                 mapToGo.NeedsUpdate = false;
                 mapToGo.UpdateRooms();
+                //mapToGo.UpdatePathfinding();
                 GetEntitiesIdsToRegisterToTime();
             }
             else
@@ -297,8 +298,8 @@ namespace MagiRogue.GameSys
 #endif
                 // makes sure that any entity that exists but has no AI, or the AI failed, get's a turn.
                 GetEntitiesIdsToRegisterToTime();
-
-                WorldMap.TicksSinceCreation = Time.TimePassed.Ticks;
+                if (WorldMap is not null)
+                    WorldMap.WorldHistory.TicksSinceCreation = Time.TimePassed.Ticks;
             }
         }
 

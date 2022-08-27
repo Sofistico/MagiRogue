@@ -28,8 +28,10 @@ namespace MagiRogue.GameSys.Planet
         [DataMember]
         public Map AssocietatedMap { get; }
 
+        public long TicksSinceCreation { get => WorldHistory.TicksSinceCreation; }
+
         [DataMember]
-        public long TicksSinceCreation { get; set; }
+        public History WorldHistory { get; set; }
 
         public PlanetMap(int width, int height)
         {
@@ -39,6 +41,7 @@ namespace MagiRogue.GameSys.Planet
             Max = float.MaxValue;
             AssocietatedMap = new("Planet", width, height);
             Civilizations = new List<Civilization>();
+            WorldHistory = new();
         }
 
         public PlanetMap(float min, float max,

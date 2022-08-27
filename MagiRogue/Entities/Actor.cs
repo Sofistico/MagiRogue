@@ -51,9 +51,6 @@ namespace MagiRogue.Entities
         /// </summary>
         public List<Item> Inventory { get; set; }
 
-        [JsonIgnore]
-        public int XP { get; set; }
-
         public bool IsPlayer { get; set; }
 
         #endregion Properties

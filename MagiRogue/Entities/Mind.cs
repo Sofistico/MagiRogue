@@ -17,6 +17,7 @@ namespace MagiRogue.Entities
         /// Never add directly to the dictionary, use the method AddAbilityToDictionary to add new abilities
         /// </summary>
         public Dictionary<int, Ability> Abilities { get; set; }
+        public Personality Personality { get; set; }
 
         public Mind()
         {

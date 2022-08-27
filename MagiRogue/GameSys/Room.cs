@@ -52,6 +52,11 @@ namespace MagiRogue.GameSys
         {
         }
 
+        public Room(RoomTag tag)
+        {
+            Tag = tag;
+        }
+
         public List<TileDoor> GetAllDoorsInRoom()
         {
             List<TileDoor> doors = new List<TileDoor>();

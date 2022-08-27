@@ -6,7 +6,7 @@ namespace MagiRogue.Data.Enumerators
     [JsonConverter(typeof(StringEnumConverter))]
     public enum CivilizationTendency
     {
-        Normal,
+        Neutral,
         Aggresive,
         Studious,
     }

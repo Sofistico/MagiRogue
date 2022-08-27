@@ -6,31 +6,45 @@ using MagiRogue.GameSys.Tiles;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace MagiRogue.GameSys.Civ
 {
-    [JsonConverter(typeof(CivilizationJsonConverter))]
+    //[JsonConverter(typeof(CivilizationJsonConverter))]
+    [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
     public class Civilization
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public Race PrimaryRace { get; set; }
-        public int TotalPopulation { get; set; }
+        public int TotalPopulation { get => Settlements.Select(i => i.Population).Sum(); }
 
         public CivilizationTendency Tendency { get; set; }
         public List<Point> Territory { get; set; }
         public List<Settlement> Settlements { get; set; }
+        public int Wealth { get; set; }
+        public List<CivRelation> Relations { get; set; }
+        public List<HistoricalFigure> ImportantPeople { get; set; }
+        public bool Dead { get; set; }
 
+        [JsonConstructor]
         public Civilization(string name, Race primaryRace, CivilizationTendency tendency)
         {
             Name = name;
             PrimaryRace = primaryRace;
             Tendency = tendency;
             Territory = new();
-            Settlements=new List<Settlement>();
+            Settlements = new List<Settlement>();
+            ImportantPeople = new();
+            Relations = new();
         }
 
-        public void AddSettlementToCiv(Settlement settlement) => Settlements.Add(settlement);
+        public void AddSettlementToCiv(Settlement settlement)
+        {
+            Settlements.Add(settlement);
+            Wealth += settlement.MundaneResources;
+        }
 
         public List<WorldTile> ReturnAllTerritories(Map map)
         {
@@ -76,6 +90,33 @@ namespace MagiRogue.GameSys.Civ
         public Settlement GetSettlement(WorldTile worldTile)
         {
             return Settlements.FirstOrDefault(o => o.WorldPos == worldTile.Position);
+        }
+
+        public void AddCivToRelations(Civilization civ, RelationType relationType)
+        {
+            if(!Relations.Any(i => i.OtherCivId.Equals(civ.Id) && i.Relation == relationType))
+                Relations.Add(new CivRelation(Id, civ.Id, relationType));
+        }
+
+        public void SimulateImportantStuff()
+        {
+            if (TotalPopulation >= 0)
+                Dead = true;
+
+            foreach (HistoricalFigure figure in ImportantPeople)
+            {
+                // HALP! WHY DID I MAKE THIS!
+            }
+        }
+
+        private string GetDebuggerDisplay()
+        {
+            return ToString();
+        }
+
+        public override string ToString()
+        {
+            return $"{Name} - {PrimaryRace}";
         }
     }
 }
