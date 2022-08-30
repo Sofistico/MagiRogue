@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Data;
+using MagiRogue.Utils;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Data.Serialization.EntitySerialization;
@@ -58,6 +59,7 @@ namespace MagiRogue.Entities
         public int[] HeightModifier { get; set; }
         public int[] BroadnessModifier { get; set; }
         public int[] LengthModifier { get; set; }
+        public List<string> Genders { get; set; }
 
         // Civ tendencies
         // Temporary
@@ -165,6 +167,11 @@ namespace MagiRogue.Entities
             int rng = GameLoop.GlobalRand.NextInt(modifiers.Length);
             int value = modifiers.Length > 0 ? modifiers[rng] : 0;
             return value;
+        }
+
+        public Sex ReturnRandomSex()
+        {
+            return Enum.Parse<Sex>(Genders.GetRandomItemFromList());
         }
 
         public override string ToString()

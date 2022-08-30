@@ -63,6 +63,7 @@ namespace MagiRogue.GameSys.Planet
                             // after that won't really happen anymore!
                             if (firstYearOnly)
                             {
+                                civ.SetupInitialHistoricalFigures();
                                 if (civ.Tendency == nextCiv.Tendency)
                                 {
                                     civ.AddCivToRelations(nextCiv, RelationType.Friendly);

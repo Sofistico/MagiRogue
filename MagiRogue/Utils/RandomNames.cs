@@ -88,5 +88,10 @@ namespace MagiRogue.Utils
 
             return Name;
         }
+
+        internal static string RandomNames()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

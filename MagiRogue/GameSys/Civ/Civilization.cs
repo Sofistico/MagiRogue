@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 
 namespace MagiRogue.GameSys.Civ
 {
@@ -55,6 +56,28 @@ namespace MagiRogue.GameSys.Civ
         {
             Settlements.Add(settlement);
             Wealth += settlement.MundaneResources;
+        }
+
+        public void SetupInitialHistoricalFigures()
+        {
+            // 10% of the population is in anyway important... sadly
+            int nmbrOfImportant = (int)(TotalPopulation * 0.1);
+            for (int i = 0; i < nmbrOfImportant; i++)
+            {
+                string name = Utils.RandomNames.RandomNames();
+                Sex sex = PrimaryRace.ReturnRandomSex();
+                List<Legend> legends = new List<Legend>();
+                int age = PrimaryRace.GetAgeFromAgeGroup(AgeGroup.Adult);
+                StringBuilder initialLegend = new StringBuilder("In a time before time, ");
+                initialLegend.Append($"{name} was created looking like a {sex} of the {PrimaryRace.RaceName} ");
+                initialLegend.Append($" with {age} as a member of {Name}");
+                legends.Add(new Legend(initialLegend.ToString(), -1));
+                HistoricalFigure figure = new HistoricalFigure(name, sex, legends,
+                    age - 0, null, true);
+                figure.GenerateRandomPersonality();
+                figure.RelatedCivs.Add(Id);
+                ImportantPeople.Add(figure);
+            }
         }
 
         public List<WorldTile> ReturnAllTerritories(Map map)
@@ -120,7 +143,6 @@ namespace MagiRogue.GameSys.Civ
                 return;
             }
 
-            
             foreach (HistoricalFigure figure in ImportantPeople)
             {
                 // HALP! WHY DID I MAKE THIS!

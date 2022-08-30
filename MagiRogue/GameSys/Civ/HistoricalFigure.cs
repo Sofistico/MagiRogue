@@ -1,5 +1,6 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
+using System;
 using System.Collections.Generic;
 
 namespace MagiRogue.GameSys.Civ
@@ -14,12 +15,12 @@ namespace MagiRogue.GameSys.Civ
         public string Description { get; set; }
         public Sex HFGender { get; set; }
         public string Race { get; set; }
-        public Legend[] Legends { get; set; }
+        public List<Legend> Legends { get; set; }
         public int YearBorn { get; set; }
         public int? YearDeath { get; set; }
         public bool IsAlive { get; set; }
 
-        //public Actor? AssocietedActor { get; set; }
+        public Entity? AssocietedEntity { get; set; }
         public List<int> RelatedCivs { get; set; } = new();
         public List<int> RelatedSettlements { get; set; } = new();
         public List<int> RelatedHFs { get; set; } = new();
@@ -29,7 +30,7 @@ namespace MagiRogue.GameSys.Civ
 
         public HistoricalFigure(string name,
             Sex hFGender,
-            Legend[] legends,
+            List<Legend> legends,
             int yearBorn,
             int? yearDeath,
             bool isAlive,
@@ -41,7 +42,7 @@ namespace MagiRogue.GameSys.Civ
             YearBorn = yearBorn;
             YearDeath = yearDeath;
             IsAlive = isAlive;
-            //AssocietedActor = associetedActor;
+            AssocietedEntity = associetedActor;
             Description = associetedActor.Description;
             Race = associetedActor.GetAnatomy().GetRace().RaceName;
         }
@@ -61,6 +62,17 @@ namespace MagiRogue.GameSys.Civ
             YearDeath = died;
             IsAlive = alive;
             HFGender = hFGender;
+        }
+
+        public void GenerateRandomPersonality()
+        {
+            Personality personality = Mind.Personality;
+            // reflection because i'm lazy
+            var properties = typeof(Personality).GetProperties();
+            foreach (var property in properties)
+            {
+                property.SetValue(personality, GameLoop.GlobalRand.NextInt(-50, 50 + 1));
+            }
         }
     }
 }
