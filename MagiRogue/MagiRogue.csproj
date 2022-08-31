@@ -76,6 +76,9 @@
     <None Update="Data\Items\weapons.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Data\Language\language_Common.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Data\Materials\material_definition.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
