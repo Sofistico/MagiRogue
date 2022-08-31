@@ -32,4 +32,4 @@ for str in splitedSpace:
     listOfLans.append(lan.words)
 
 with open("language.json", "w") as write:
-    json.dump(listOfLans, write)
+    json.dump(listOfLans, write, ensure_ascii=False)
