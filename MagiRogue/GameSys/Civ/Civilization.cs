@@ -26,6 +26,7 @@ namespace MagiRogue.GameSys.Civ
         public List<Settlement> Settlements { get; set; }
         public int Wealth { get; set; }
         public List<CivRelation> Relations { get; set; }
+        public string LanguageId { get; set; }
 
         public CivRelation this[int otherCivId]
         {
@@ -64,10 +65,12 @@ namespace MagiRogue.GameSys.Civ
             int nmbrOfImportant = (int)(TotalPopulation * 0.1);
             for (int i = 0; i < nmbrOfImportant; i++)
             {
-                string name = Utils.RandomNames.RandomNames();
+                // creating actor
+                string name = Utils.RandomNames.RandomNamesFromLanguage(GetLanguage());
                 Sex sex = PrimaryRace.ReturnRandomSex();
                 List<Legend> legends = new List<Legend>();
                 int age = PrimaryRace.GetAgeFromAgeGroup(AgeGroup.Adult);
+                // first legend
                 StringBuilder initialLegend = new StringBuilder("In a time before time, ");
                 initialLegend.Append($"{name} was created looking like a {sex} of the {PrimaryRace.RaceName} ");
                 initialLegend.Append($" with {age} as a member of {Name}");
@@ -75,6 +78,7 @@ namespace MagiRogue.GameSys.Civ
                 HistoricalFigure figure = new HistoricalFigure(name, sex, legends,
                     age - 0, null, true);
                 figure.GenerateRandomPersonality();
+                // add to civ
                 figure.RelatedCivs.Add(Id);
                 ImportantPeople.Add(figure);
             }
@@ -148,6 +152,9 @@ namespace MagiRogue.GameSys.Civ
                 // HALP! WHY DID I MAKE THIS!
             }
         }
+
+        public Language GetLanguage()
+            => Data.DataManager.QueryLanguageInData(LanguageId);
 
         private string GetDebuggerDisplay()
         {

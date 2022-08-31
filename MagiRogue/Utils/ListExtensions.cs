@@ -37,5 +37,11 @@ namespace MagiRogue.Utils
             int rng = GameLoop.GlobalRand.NextInt(list.Count);
             return list[rng];
         }
+
+        public static T GetRandomItemFromList<T>(this IReadOnlyList<T> list)
+        {
+            int rng = GameLoop.GlobalRand.NextInt(list.Count);
+            return list[rng];
+        }
     }
 }

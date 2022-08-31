@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace MagiRogue.Utils
 {
@@ -89,9 +90,18 @@ namespace MagiRogue.Utils
             return Name;
         }
 
-        internal static string RandomNames()
+        public static string RandomNamesFromLanguage(Data.Serialization.Language language)
         {
-            throw new NotImplementedException();
+            var words = language.ReturnWords();
+            var firstName = words.GetRandomItemFromList();
+            var lastName = words.GetRandomItemFromList();
+
+            var str = new StringBuilder();
+            str.Append(firstName);
+            str.Append(' ');
+            str.Append(lastName);
+
+            return str.ToString();
         }
     }
 }

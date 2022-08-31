@@ -209,6 +209,7 @@ namespace MagiRogue.GameSys.Planet
                 tile.CivInfluence = civ;
                 civ.Territory.Add(tile.Position);
                 civ.AddSettlementToCiv(set);
+                civ.LanguageId = Data.DataManager.ListOfLanguages.GetRandomItemFromList().Id;
 
                 if (currentCivCount < maxCivsWorld)
                 {

@@ -48,6 +48,9 @@ namespace MagiRogue.Data
         public static readonly IReadOnlyList<BodyPlan> ListOfBpPlan =
             GetSourceTree<BodyPlan>(@".\Data\Bodies\body_*.json");
 
+        public static readonly IReadOnlyList<Language> ListOfLanguages =
+            GetSourceTree<Language>(@".\Data\Bodies\language_*.json");
+
         public static IReadOnlyList<T> GetSourceTree<T>(string wildCard)
         {
             string[] files = FileUtils.GetFiles(wildCard);
@@ -135,5 +138,8 @@ namespace MagiRogue.Data
 
             return bps;
         }
+
+        public static Language QueryLanguageInData(string languageId)
+            => ListOfLanguages.FirstOrDefault(i => i.Id.Equals(languageId));
     }
 }
