@@ -1,5 +1,6 @@
 ﻿using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.GameSys.Civ;
+using MagiRogue.GameSys.Planet.History;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.GameSys.Time;
 using Newtonsoft.Json;
@@ -31,7 +32,7 @@ namespace MagiRogue.GameSys.Planet
         public long TicksSinceCreation { get => WorldHistory.TicksSinceCreation; }
 
         [DataMember]
-        public History WorldHistory { get; set; }
+        public AccumulatedHistory WorldHistory { get; set; }
 
         public PlanetMap(int width, int height)
         {

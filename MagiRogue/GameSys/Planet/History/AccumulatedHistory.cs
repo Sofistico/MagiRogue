@@ -7,11 +7,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MagiRogue.GameSys.Planet
+namespace MagiRogue.GameSys.Planet.History
 {
-    public class History
+    public class AccumulatedHistory
     {
         private int roadId;
+        private int mythId;
         private PlanetMap planetData;
 
         #region Consts
@@ -22,16 +23,17 @@ namespace MagiRogue.GameSys.Planet
 
         public List<HistoricalFigure> Figures { get; set; }
         public List<Civilization> Civs { get; set; }
+        public List<Myth> Myths { get; set; } = new();
         public int Year { get; set; }
         public long TicksSinceCreation { get; set; }
 
-        public History()
+        public AccumulatedHistory()
         {
             Figures = new List<HistoricalFigure>();
             Civs = new List<Civilization>();
         }
 
-        public History(List<HistoricalFigure> figures, List<Civilization> civs, int year)
+        public AccumulatedHistory(List<HistoricalFigure> figures, List<Civilization> civs, int year)
         {
             Figures = figures;
             Civs = civs;
@@ -44,6 +46,11 @@ namespace MagiRogue.GameSys.Planet
             Civs = civilizations.ToList();
             planetData = planet;
             bool firstYearOnly = true;
+            MythGenerator mythGenerator = new MythGenerator();
+            var myths = mythGenerator.GenerateMyths(
+                Data.DataManager.ListOfRaces.ToList(),
+                Figures,
+                planet);
             while (Year < yearToGameBegin)
             {
                 for (int i = 0; i < Civs.Count; i++)

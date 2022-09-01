@@ -3,6 +3,7 @@ using GoRogue.Pathing;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Civ;
+using MagiRogue.GameSys.Planet.History;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
 using SadRogue.Primitives;
@@ -159,7 +160,7 @@ namespace MagiRogue.GameSys.Planet
 
         private void BasicHistory(int yearToGameBegin)
         {
-            History history = new History()
+            AccumulatedHistory history = new AccumulatedHistory()
             {
                 TicksSinceCreation = yearToGameBegin * 3214080000,
             };

@@ -90,6 +90,14 @@ namespace MagiRogue.Utils
             return Name;
         }
 
+        public static string GiberishFullName(int firstNameLen, int lastNameLen)
+        {
+            StringBuilder str = new(GiberishName(firstNameLen));
+            str.Append(' ');
+            str.Append(GiberishName(lastNameLen));
+            return str.ToString();
+        }
+
         public static string RandomNamesFromLanguage(Data.Serialization.Language language)
         {
             var words = language.ReturnWords();

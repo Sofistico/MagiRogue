@@ -2,6 +2,7 @@
 using MagiRogue.Data.Serialization;
 using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Entities;
+using MagiRogue.GameSys.Planet.History;
 using MagiRogue.GameSys.Tiles;
 using Newtonsoft.Json;
 using System;
@@ -70,6 +71,7 @@ namespace MagiRogue.GameSys.Civ
                 Sex sex = PrimaryRace.ReturnRandomSex();
                 List<Legend> legends = new List<Legend>();
                 int age = PrimaryRace.GetAgeFromAgeGroup(AgeGroup.Adult);
+
                 // first legend
                 StringBuilder initialLegend = new StringBuilder("In a time before time, ");
                 initialLegend.Append($"{name} was created looking like a {sex} of the {PrimaryRace.RaceName} ");
@@ -78,6 +80,9 @@ namespace MagiRogue.GameSys.Civ
                 HistoricalFigure figure = new HistoricalFigure(name, sex, legends,
                     age - 0, null, true);
                 figure.GenerateRandomPersonality();
+                figure.GenerateRandomSkills();
+                figure.DefineProfession();
+
                 // add to civ
                 figure.RelatedCivs.Add(Id);
                 ImportantPeople.Add(figure);

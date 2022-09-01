@@ -39,8 +39,9 @@ namespace MagiRogue.Data
         public static readonly IReadOnlyList<RoomTemplate> ListOfRooms =
             GetSourceTree<RoomTemplate>(@".\Data\Rooms\*.json");
 
-        public static readonly IReadOnlyList<Race> ListOfRaces =
-            GetSourceTree<Race>(@".\Data\Races\race_*.json");
+        // races can be dynamically generated ingame
+        public static readonly List<Race> ListOfRaces =
+            GetSourceTree<Race>(@".\Data\Races\race_*.json").ToList();
 
         public static readonly IReadOnlyList<Scenario> ListOfScenarios =
             GetSourceTree<Scenario>(@".\Data\Scenarios\scenarios_*.json");
@@ -50,6 +51,9 @@ namespace MagiRogue.Data
 
         public static readonly IReadOnlyList<Language> ListOfLanguages =
             GetSourceTree<Language>(@".\Data\Bodies\language_*.json");
+
+        public static readonly IReadOnlyList<Profession> ListOfProfessions =
+            GetSourceTree<Profession>(@".\Data\Professions\profession_*.json");
 
         public static IReadOnlyList<T> GetSourceTree<T>(string wildCard)
         {
@@ -141,5 +145,8 @@ namespace MagiRogue.Data
 
         public static Language QueryLanguageInData(string languageId)
             => ListOfLanguages.FirstOrDefault(i => i.Id.Equals(languageId));
+
+        public static Profession QueryProfessionInData(string professionId)
+            => ListOfProfessions.FirstOrDefault(i => i.Id.Equals(professionId));
     }
 }

@@ -1,6 +1,7 @@
 ﻿using MagiRogue.GameSys;
 using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Planet;
+using MagiRogue.GameSys.Planet.History;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -70,7 +71,9 @@ namespace MagiRogue.Data.Serialization.MapSerialization
 
         [DataMember]
         public long TicksSinceCreation { get; set; }
-        public History WorldHistory { get; set; }
+
+        [DataMember]
+        public AccumulatedHistory WorldHistory { get; set; }
 
         public PlanetMapTemplate(float min,
             float max,

@@ -57,5 +57,8 @@ namespace MagiRogue.Data.Enumerators
         MagicLore,
         Mathematician,
         Astronomer,
+        Chemist,
+        Physics,
+        Enginner,
     }
 }

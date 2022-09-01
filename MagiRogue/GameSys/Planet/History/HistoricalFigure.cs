@@ -3,7 +3,7 @@ using MagiRogue.Entities;
 using System;
 using System.Collections.Generic;
 
-namespace MagiRogue.GameSys.Civ
+namespace MagiRogue.GameSys.Planet.History
 {
     /// <summary>
     /// A class that models a historical figure of the world, if it's still alive, there should be
@@ -64,6 +64,15 @@ namespace MagiRogue.GameSys.Civ
             HFGender = hFGender;
         }
 
+        public HistoricalFigure(string name, string description, Sex hFGender, string race, bool isAlive)
+        {
+            Name = name;
+            Description = description;
+            HFGender = hFGender;
+            Race = race;
+            IsAlive = isAlive;
+        }
+
         public void GenerateRandomPersonality()
         {
             Personality personality = Mind.Personality;
@@ -73,6 +82,24 @@ namespace MagiRogue.GameSys.Civ
             {
                 property.SetValue(personality, GameLoop.GlobalRand.NextInt(-50, 50 + 1));
             }
+        }
+
+        public void GenerateRandomSkills()
+        {
+            var enums = Enum.GetValues(typeof(AbilityName));
+
+            foreach (AbilityName e in enums)
+            {
+            }
+        }
+
+        public void DefineProfession()
+        {
+        }
+
+        public void AddLegend(Legend legend)
+        {
+            Legends.Add(legend);
         }
     }
 }
