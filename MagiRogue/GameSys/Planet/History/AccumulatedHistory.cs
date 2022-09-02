@@ -47,10 +47,11 @@ namespace MagiRogue.GameSys.Planet.History
             planetData = planet;
             bool firstYearOnly = true;
             MythGenerator mythGenerator = new MythGenerator();
-            var myths = mythGenerator.GenerateMyths(
+            Myths = mythGenerator.GenerateMyths(
                 Data.DataManager.ListOfRaces.ToList(),
                 Figures,
                 planet);
+
             while (Year < yearToGameBegin)
             {
                 for (int i = 0; i < Civs.Count; i++)

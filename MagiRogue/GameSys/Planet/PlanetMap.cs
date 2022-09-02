@@ -3,6 +3,7 @@ using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Planet.History;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.GameSys.Time;
+using MagiRogue.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -34,13 +35,15 @@ namespace MagiRogue.GameSys.Planet
         [DataMember]
         public AccumulatedHistory WorldHistory { get; set; }
 
+        public string Name => AssocietatedMap.MapName;
+
         public PlanetMap(int width, int height)
         {
             _height = height;
             _width = width;
             Min = float.MinValue;
             Max = float.MaxValue;
-            AssocietatedMap = new("Planet", width, height);
+            AssocietatedMap = new(RandomNames.RandomNamesFromRandomLanguage(), width, height);
             Civilizations = new List<Civilization>();
             WorldHistory = new();
         }

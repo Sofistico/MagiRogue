@@ -24,12 +24,22 @@ namespace MagiRogue.GameSys.Planet.History
             List<Myth> myths = new List<Myth>();
             // generate the primordials hfs (gods, demons, world, etc)
             // and also define who or what created the world!
-            myths.AddRange(WhoCreatedTheWorld(figures, races));
+            myths.AddRange(WhoCreatedTheWorld(figures, races, planet.Name));
+            myths.AddRange(BunchOfMythsInteraction(races, figures, planet));
 
             return myths;
         }
 
-        private List<Myth> WhoCreatedTheWorld(List<HistoricalFigure> figures, List<Race> races)
+        private IEnumerable<Myth> BunchOfMythsInteraction(List<Race> races,
+            List<HistoricalFigure> figures, PlanetMap planet)
+        {
+            List<Myth> myths = new();
+
+            return myths;
+        }
+
+        //TODO: REmove all hardcode from this shit!
+        private List<Myth> WhoCreatedTheWorld(List<HistoricalFigure> figures, List<Race> races, string planetName)
         {
             string[] adjectives = new string[]
             {
@@ -50,9 +60,8 @@ namespace MagiRogue.GameSys.Planet.History
             List<Myth> myths = new List<Myth>();
             MythWho[] primordias = Enum.GetValues<MythWho>().ToArray();
             MythWho precursor = primordias.GetRandomItemFromList();
-            HistoricalFigure precursorFigure = null;
-            Myth myth = null;
-            Legend legend = null;
+            HistoricalFigure precursorFigure;
+
             bool alive = GameLoop.GlobalRand.NextBool();
             Race race = races.GetRandomItemFromList();
             bool createdRace = false;
@@ -154,9 +163,15 @@ namespace MagiRogue.GameSys.Planet.History
 
                     break;
             }
-            myth = new Myth(mythId++, precursorFigure.Name, precursor, MythAction.Created, MythWhat.World);
-            legend = Legend.CreateLegendFromMyth(myth);
+
+            Myth myth = new Myth(mythId++,
+                precursorFigure.Name,
+                precursor,
+                MythAction.Created,
+                MythWhat.World);
+            Legend legend = Legend.CreateLegendFromMyth(myth, worldName: planetName);
             precursorFigure.AddLegend(legend);
+
             if (createdRace)
             {
                 Myth raceCreationMyth = new Myth(mythId++,
