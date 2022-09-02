@@ -73,6 +73,12 @@ namespace MagiRogue.GameSys.Planet.History
             IsAlive = isAlive;
         }
 
+        public HistoricalFigure(string name, string description)
+        {
+            Name = name;
+            Description = description;
+        }
+
         public void GenerateRandomPersonality()
         {
             Personality personality = Mind.Personality;
@@ -100,6 +106,24 @@ namespace MagiRogue.GameSys.Planet.History
         public void AddLegend(Legend legend)
         {
             Legends.Add(legend);
+        }
+
+        public string Pronoum()
+        {
+            if (HFGender == Sex.Male)
+                return "him";
+            if (HFGender == Sex.Female)
+                return "her";
+            return "it";
+        }
+
+        public string PronoumPossesive()
+        {
+            if (HFGender == Sex.Male)
+                return "his";
+            if (HFGender == Sex.Female)
+                return "hers";
+            return "it's";
         }
     }
 }

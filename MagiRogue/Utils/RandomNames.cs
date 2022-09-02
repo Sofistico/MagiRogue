@@ -111,5 +111,7 @@ namespace MagiRogue.Utils
 
             return str.ToString();
         }
+
+        public static string RandomNamesFromRandomLanguage() => RandomNamesFromLanguage(Data.DataManager.ListOfLanguages.GetRandomItemFromList());
     }
 }

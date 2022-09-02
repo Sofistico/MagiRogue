@@ -65,6 +65,7 @@ namespace MagiRogue.Entities
         // Temporary
         public bool ValidCivRace { get; set; }
         public double BloodMultiplier { get; set; }
+        public bool DeadRace { get; set; }
 
         public Race()
         {
