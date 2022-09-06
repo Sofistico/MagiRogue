@@ -55,6 +55,18 @@
     <None Update="Data\Bodies\body_std.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Data\Descriptors\shapes_std.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\Descriptors\adjectives_std.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\Descriptors\magic_fount_std.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\Descriptors\realms_name.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Data\Furniture\crafting_fur.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -55,6 +55,19 @@ namespace MagiRogue.Data
         public static readonly IReadOnlyList<Profession> ListOfProfessions =
             GetSourceTree<Profession>(@".\Data\Professions\profession_*.json");
 
+        #region Descriptors
+
+        public static readonly IReadOnlyList<string> ListOfRealmsName =
+            GetSourceTree<string>(@".\Data\Descriptors\realms_*.json");
+        public static readonly IReadOnlyList<string> ListOfMagicFounts =
+            GetSourceTree<string>(@".\Data\Descriptors\magic_fount_*.json");
+        public static readonly IReadOnlyList<string> ListOfAdjectives =
+            GetSourceTree<string>(@".\Data\Descriptors\adjectives_*.json");
+        public static readonly IReadOnlyList<ShapeDescriptor> ListOfShapes =
+            GetSourceTree<ShapeDescriptor>(@".\Data\Descriptors\shapes_*.json");
+
+        #endregion Descriptors
+
         public static IReadOnlyList<T> GetSourceTree<T>(string wildCard)
         {
             string[] files = FileUtils.GetFiles(wildCard);
@@ -148,5 +161,8 @@ namespace MagiRogue.Data
 
         public static Profession QueryProfessionInData(string professionId)
             => ListOfProfessions.FirstOrDefault(i => i.Id.Equals(professionId));
+
+        public static ShapeDescriptor QueryShapeDescInData(string shapeId)
+            => ListOfShapes.FirstOrDefault(i => i.Id.Equals(shapeId));
     }
 }

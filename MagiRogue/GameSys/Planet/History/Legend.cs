@@ -7,6 +7,7 @@ using System.Text;
 using MagiRogue.Data;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace MagiRogue.GameSys.Planet.History
 {
@@ -37,22 +38,7 @@ namespace MagiRogue.GameSys.Planet.History
 
         public static Legend CreateLegendFromMyth(Myth myth, Race race = null, string worldName = null)
         {
-            string[] possibleRealms = new string[]
-            {
-                "fire",
-                "water",
-                "air",
-                "earth",
-                "volcano",
-                "magma",
-                "mountains",
-                "blight",
-                "undead",
-                "death",
-                "curse",
-                "soul",
-                "divinity",
-            };
+            string[] possibleRealms = DataManager.ListOfRealmsName.ToArray();
             string[] possibleRegions = new string[]
             {
                 "deserts",
@@ -67,20 +53,7 @@ namespace MagiRogue.GameSys.Planet.History
                 "savannas",
                 "rainforests"
             };
-            string[] possibleOrigins = new string[]
-            {
-                "fount",
-                "river",
-                "wellspring",
-                "light",
-                "fire",
-                "water",
-                "air",
-                "core",
-                "vein",
-                "blood",
-                "power"
-            };
+            string[] possibleOrigins = DataManager.ListOfMagicFounts.ToArray();
             string[] possibleWhys = new string[]
             {
                 "of fear",
@@ -211,7 +184,10 @@ namespace MagiRogue.GameSys.Planet.History
             return legend;
         }
 
-        private static void GaveActions(Myth myth, StringBuilder happening, Race race, string[] possibleRealms)
+        private static void GaveActions(Myth myth,
+            StringBuilder happening,
+            Race race,
+            string[] possibleRealms)
         {
             switch (myth.MythWhat)
             {

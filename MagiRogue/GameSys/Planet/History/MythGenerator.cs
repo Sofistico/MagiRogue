@@ -7,12 +7,15 @@ using System.Text;
 using System.Threading.Tasks;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Utils;
+using MagiRogue.Data;
 
 namespace MagiRogue.GameSys.Planet.History
 {
     public class MythGenerator
     {
         private int mythId;
+        // unhard code this!
+        private const int nmbrInteractions = 5;
 
         public MythGenerator()
         {
@@ -25,15 +28,25 @@ namespace MagiRogue.GameSys.Planet.History
             // generate the primordials hfs (gods, demons, world, etc)
             // and also define who or what created the world!
             myths.AddRange(WhoCreatedTheWorld(figures, races, planet.Name));
-            myths.AddRange(BunchOfMythsInteraction(races, figures, planet));
+            myths.AddRange(BunchOfMythsInteraction(races, figures, planet, nmbrInteractions));
 
             return myths;
         }
 
         private IEnumerable<Myth> BunchOfMythsInteraction(List<Race> races,
-            List<HistoricalFigure> figures, PlanetMap planet)
+            List<HistoricalFigure> figures, PlanetMap planet, int nmbrOfIterations)
         {
             List<Myth> myths = new();
+            bool processingMyths = true;
+            int currentIteration = 0;
+            Stack<Myth> stack = new Stack<Myth>(myths);
+
+            while (processingMyths)
+            {
+                currentIteration++;
+                if (currentIteration >= nmbrOfIterations)
+                    processingMyths = false;
+            }
 
             return myths;
         }
@@ -41,21 +54,7 @@ namespace MagiRogue.GameSys.Planet.History
         //TODO: REmove all hardcode from this shit!
         private List<Myth> WhoCreatedTheWorld(List<HistoricalFigure> figures, List<Race> races, string planetName)
         {
-            string[] adjectives = new string[]
-            {
-                "celestial",
-                "demonic",
-                "hardened",
-                "draconic",
-                "colossal",
-                "lively",
-                "murderous",
-                "traitorous",
-                "evil",
-                "cursed",
-                "blessed",
-                "immortal"
-            };
+            string[] adjectives = DataManager.ListOfAdjectives.ToArray();
 
             List<Myth> myths = new List<Myth>();
             MythWho[] primordias = Enum.GetValues<MythWho>().ToArray();
@@ -93,7 +92,7 @@ namespace MagiRogue.GameSys.Planet.History
 
                 case MythWho.Chaos:
                     precursorFigure = new HistoricalFigure($"The {adjectives.GetRandomItemFromList()}",
-                        "A primordial chaos");
+                        $"A primordial chaos in the shape of a {DataManager.ListOfShapes.GetRandomItemFromList().Name[0]}");
                     break;
 
                 case MythWho.Chance:
@@ -104,7 +103,7 @@ namespace MagiRogue.GameSys.Planet.History
 
                 case MythWho.Science:
                     precursorFigure = new HistoricalFigure($"The {adjectives.GetRandomItemFromList()} science",
-                        "Mad science!");
+                        "The Big Bang");
                     break;
 
                 case MythWho.Wizard:
@@ -158,8 +157,8 @@ namespace MagiRogue.GameSys.Planet.History
                     break;
 
                 default:
-                    precursorFigure = new HistoricalFigure($"a {adjectives.GetRandomItemFromList()} group of unkows",
-                        "Group of unkows");
+                    precursorFigure = new HistoricalFigure($"a {adjectives.GetRandomItemFromList()} group of {DataManager.ListOfShapes.GetRandomItemFromList().Name[0]}",
+                        $"Group of {DataManager.ListOfShapes.GetRandomItemFromList().Name[0]}");
 
                     break;
             }

@@ -1,0 +1,85 @@
+﻿[
+  {
+    "Id": "CIRCLE",
+    "Name": [ "circle", "circles" ],
+    "Adjectives": [ "round" ],
+    "Tile": "O"
+  },
+  {
+    "Id": "STAR",
+    "Name": [ "star", "stars" ],
+    "Adjectives": [ "three-pointed", "four-pointed", "five-pointed", "many-pointed" ],
+    "Tile": "*"
+  },
+  {
+    "Id": "CRESCENT",
+    "Name": [ "crescent", "crescents" ],
+    "Adjectives": [ "narrow", "thick" ],
+    "Tile": "("
+  },
+  {
+    "Id": "CROSS",
+    "Name": [ "cross", "crosses" ],
+    "Adjectives": [ "broad", "tall", "thin" ],
+    "Tile": "+"
+  },
+  {
+    "Id": "SQUARE",
+    "Name": [ "square", "squares" ],
+    "Adjectives": [ "squareness" ],
+    "Tile": "▄"
+  },
+  {
+    "Id": "DIAMOND",
+    "Name": [ "diamond", "diamonds" ],
+    "Adjectives": [ "fancy" ],
+    "Tile": "♦"
+  },
+  {
+    "Id": "SUN",
+    "Name": [ "sun", "suns" ],
+    "Adjectives": [ "warm", "blazing", "shining" ],
+    "Tile": "☼"
+  },
+  {
+    "Id": "WAVE",
+    "Name": [ "wave", "waves" ],
+    "Adjectives": [ "crescent", "mysterious", "full", "half", "hidden" ],
+    "Tile": "•"
+  },
+  {
+    "Id": "MOUNTAIN",
+    "Name": [ "mountain", "mountains" ],
+    "Adjectives": [ "tall", "imposing" ],
+    "Tile": "▲"
+  },
+  {
+    "Id": "CLOUD",
+    "Name": [ "cloud", "clouds" ],
+    "Tile": "φ"
+  },
+  {
+    "Id": "SMOOTH_PEBBLE",
+    "Name": [ "peeble", "peebles" ],
+    "Adjectives": [ "smooth", "slick" ],
+    "Tile": "○"
+  },
+  {
+    "Id": "ROUND_CABOCHON",
+    "Name": [ "cabochon", "cabochons" ],
+    "Adjectives": [ "oval", "round" ],
+    "Tile": "○"
+  },
+  {
+    "Id": "RECTANGULAR_CABOCHON",
+    "Name": [ "cabochon", "cabochons" ],
+    "Adjectives": [ "rectangular", "cushion" ],
+    "Tile": "▄"
+  },
+  {
+    "Id": "CUT_GEM",
+    "Name": [ "gem", "gems" ],
+    "Adjectives": [ "point cut", "table cut", "single cut", "rose cut", "briolette cut", "emerald cut", "marquise cut", "oval cut", "pear cut", "square brilliant cut", "radiant cut", "trillion cut", "round brilliant cut", "baguette cut", "tapered baguette cut", "cushion cut", "octagon cut", "square cut" ],
+    "Tile": "♦"
+  }
+]
