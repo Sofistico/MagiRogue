@@ -2,6 +2,7 @@
 using MagiRogue.Data.Enumerators;
 using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Tiles;
+using MagiRogue.Utils;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
@@ -12,12 +13,12 @@ namespace MagiRogue.GameSys.Planet.History
     public class AccumulatedHistory
     {
         private int roadId;
-        private int mythId;
         private PlanetMap planetData;
 
         #region Consts
 
         private const int wealthToCreateRoad = 100;
+        private const int wealthToCreateNewSettlement = 1000;
 
         #endregion Consts
 
@@ -81,17 +82,35 @@ namespace MagiRogue.GameSys.Planet.History
                                     civ.AddCivToRelations(nextCiv, RelationType.Neutral);
                                 }
                             }
-                            BuildRoadsToFriends(civ, nextCiv, tiles);
+                            if (civ.Wealth > wealthToCreateRoad)
+                            {
+                                if (BuildRoadsToFriends(civ, nextCiv, tiles))
+                                    civ.Wealth -= wealthToCreateRoad;
+                            }
                         }
                     }
-                    int totalWealth = 0;
+                    int totalRevenueYear = 0;
+
+                    if (civ.Wealth > wealthToCreateNewSettlement)
+                    {
+                        int migrants = GameLoop.GlobalRand.NextInt(10, 100);
+                        Settlement rngSettl = civ.Settlements.GetRandomItemFromList();
+                        rngSettl.Population -= migrants;
+                        Point pos = rngSettl.WorldPos.GetPointNextTo();
+                        Settlement settlement = new Settlement(pos,
+                            RandomNames.RandomNamesFromLanguage(civ.GetLanguage()),
+                            migrants);
+                        civ.AddSettlementToCiv(settlement);
+                    }
+
                     // settlement simulation from the Civ here:
                     foreach (Settlement settlement in civ.Settlements)
                     {
                         settlement.CreateNewBuildings();
-                        totalWealth += settlement.MundaneResources;
+                        totalRevenueYear += settlement.MundaneResources;
                         settlement.GenerateMundaneResources();
                     }
+                    civ.Wealth += totalRevenueYear;
                 }
 
                 Year++;
@@ -99,16 +118,18 @@ namespace MagiRogue.GameSys.Planet.History
             }
         }
 
-        private void BuildRoadsToFriends(Civilization civ, Civilization friend, WorldTile[,] tiles)
+        private bool BuildRoadsToFriends(Civilization civ, Civilization friend, WorldTile[,] tiles)
         {
             if (civ.Relations.Any(i => i.OtherCivId.Equals(friend.Id)
                 && i.Relation is RelationType.Friendly && i.RoadBuilt))
-                return;
+                return false;
+            if (civ[friend.Id].RoadBuilt)
+                return false;
 
             var territory = civ.Territory[0];
             var friendTerr = friend.Territory[0];
             if (tiles.Length < 0)
-                return;
+                return false;
             Path path = planetData.AssocietatedMap.
                         AStar.ShortestPath(territory,
                         friendTerr);
@@ -116,15 +137,13 @@ namespace MagiRogue.GameSys.Planet.History
             //TODO: Make sure that the roads don't colide with water and/or go away from water
             if (path.Length > 50)
             {
-                return;
+                return false;
             }
             var tile = tiles[territory.X, territory.Y];
             var closestCityTile = tiles[friendTerr.X, friendTerr.Y];
-            if (civ.Wealth >= wealthToCreateRoad)
-            {
-                FindPathToCityAndCreateRoad(tile, closestCityTile);
-                civ[friend.Id].RoadBuilt = true;
-            }
+            FindPathToCityAndCreateRoad(tile, closestCityTile);
+            civ[friend.Id].RoadBuilt = true;
+            return true;
         }
 
         private void FindPathToCityAndCreateRoad(WorldTile tile, WorldTile closestCityTile)

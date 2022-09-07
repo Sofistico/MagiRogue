@@ -63,7 +63,7 @@ namespace MagiRogue.GameSys.Civ
         public void SetupInitialHistoricalFigures()
         {
             // 10% of the population is in anyway important... sadly
-            int nmbrOfImportant = (int)(TotalPopulation * 0.1);
+            int nmbrOfImportant = (int)(TotalPopulation * 0.01);
             for (int i = 0; i < nmbrOfImportant; i++)
             {
                 // creating actor
@@ -75,10 +75,10 @@ namespace MagiRogue.GameSys.Civ
                 // first legend
                 StringBuilder initialLegend = new StringBuilder("In a time before time, ");
                 initialLegend.Append($"{name} was created looking like a {sex} of the {PrimaryRace.RaceName} ");
-                initialLegend.Append($" with {age} as a member of {Name}");
+                initialLegend.Append($"with {age} as a member of {Name}");
                 legends.Add(new Legend(initialLegend.ToString(), -1));
                 HistoricalFigure figure = new HistoricalFigure(name, sex, legends,
-                    age - 0, null, true);
+                    age - 0, null, true, PrimaryRace.Description, PrimaryRace.Id);
                 figure.GenerateRandomPersonality();
                 figure.GenerateRandomSkills();
                 figure.DefineProfession();

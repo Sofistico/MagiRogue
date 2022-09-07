@@ -1,4 +1,5 @@
-﻿using SadRogue.Primitives;
+﻿using MagiRogue.Data.Enumerators;
+using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,6 +64,22 @@ namespace MagiRogue.Utils
             borderCells.AddRange(GetTileLocationsAlongLine(xMax, yMin, xMax, yMax));
 
             return borderCells;
+        }
+
+        public static Point GetPointNextTo(this Point point)
+        {
+            Direction[] directions = new Direction[]
+            {
+                Direction.Down,
+                Direction.Up,
+                Direction.Left,
+                Direction.Right,
+            };
+
+            Direction directionToGo = directions.GetRandomItemFromList();
+            Point newPOint = new SadRogue.Primitives.Point(point.X + directionToGo.DeltaX, point.Y + directionToGo.DeltaY);
+
+            return newPOint;
         }
     }
 }

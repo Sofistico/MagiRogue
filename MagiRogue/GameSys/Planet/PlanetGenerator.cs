@@ -148,7 +148,7 @@ namespace MagiRogue.GameSys.Planet
             UpdateBiomeBitmask();
 
             SeedCivilizations();
-            BasicHistory(550);
+            BasicHistory(300);
 
             // Here will take care of the visualization
             CreateConsole(tiles);

@@ -22,6 +22,7 @@ namespace MagiRogue.Entities
         public Mind()
         {
             Abilities = new();
+            Personality = new Personality();
         }
 
         public void AddAbilityToDictionary(Ability ability)

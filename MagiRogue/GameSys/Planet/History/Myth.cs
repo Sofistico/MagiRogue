@@ -100,5 +100,26 @@ namespace MagiRogue.GameSys.Planet.History
 
             return figure;
         }
+
+        public static MythWhat SetFlag(MythWhat a, MythWhat b)
+        {
+            return a | b;
+        }
+
+        public static MythWhat UnsetFlag(MythWhat a, MythWhat b)
+        {
+            return a & (~b);
+        }
+
+        // Works with "None" as well
+        public static bool HasFlag(MythWhat a, MythWhat b)
+        {
+            return (a & b) == b;
+        }
+
+        public static MythWhat ToogleFlag(MythWhat a, MythWhat b)
+        {
+            return a ^ b;
+        }
     }
 }

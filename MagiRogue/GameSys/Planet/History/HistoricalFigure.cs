@@ -25,10 +25,8 @@ namespace MagiRogue.GameSys.Planet.History
         public Entity? AssocietedEntity { get; set; }
         public List<int> RelatedCivs { get; set; } = new();
         public List<int> RelatedSettlements { get; set; } = new();
-        public List<int> RelatedHFs { get; set; } = new();
+        public List<string> RelatedHFs { get; set; } = new();
         public Mind Mind { get; set; } = new();
-        public Soul Soul { get; set; } = new();
-        public Body Body { get; set; } = new();
         public List<SpecialFlag> SpecialFlags { get; set; } = new();
 
         public HistoricalFigure(string name,
@@ -37,7 +35,8 @@ namespace MagiRogue.GameSys.Planet.History
             int yearBorn,
             int? yearDeath,
             bool isAlive,
-            Actor? associetedActor = null)
+            string desc,
+            string raceId)
         {
             Name = name;
             HFGender = hFGender;
@@ -45,9 +44,9 @@ namespace MagiRogue.GameSys.Planet.History
             YearBorn = yearBorn;
             YearDeath = yearDeath;
             IsAlive = isAlive;
-            AssocietedEntity = associetedActor;
-            Description = associetedActor.Description;
-            Race = associetedActor.GetAnatomy().GetRace().RaceName;
+            //AssocietedEntity = associetedActor;
+            //Description = associetedActor is null? string.Empty : associetedActor.Description;
+            //Race = associetedActor is null ? string.Empty : associetedActor.GetAnatomy().GetRace().RaceName;
         }
 
         public HistoricalFigure(string name,

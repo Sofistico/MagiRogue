@@ -89,7 +89,7 @@ namespace MagiRogue.Entities
             Volume = size;
             Condition = condition;
             Material = GameSys.Physics.PhysicsManager.SetMaterial(materialId);
-            Name = Material.ReturnNameFromMaterial(name);
+            Name = Material is not null ? Material.ReturnNameFromMaterial(name) : "Bugged!";
             UseAction = new();
             Traits = new();
             Qualities = new();
