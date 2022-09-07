@@ -36,7 +36,9 @@ namespace MagiRogue.GameSys.Planet.History
             WithWho = withWho;
         }
 
-        public static Legend CreateLegendFromMyth(Myth myth, Race race = null, string worldName = null)
+        public static Legend CreateLegendFromMyth(Myth myth, ref HistoricalFigure figure,
+            Race race = null,
+            string worldName = null)
         {
             string[] possibleRealms = DataManager.ListOfRealmsName.ToArray();
             string[] possibleRegions = new string[]
@@ -105,6 +107,7 @@ namespace MagiRogue.GameSys.Planet.History
                 case Data.Enumerators.MythAction.Created:
                     happening.Append(" created ");
                     CreationActions(myth,
+                        figure,
                         race,
                         worldName,
                         possibleRealms,
@@ -120,7 +123,7 @@ namespace MagiRogue.GameSys.Planet.History
 
                 case Data.Enumerators.MythAction.Destroyed:
                     happening.Append(" destroyed ");
-                    DestroyingActions(myth, happening, race, worldName, possibleRealms);
+                    DestroyingActions(myth, figure, happening, race, worldName, possibleRealms);
 
                     break;
 
@@ -130,32 +133,35 @@ namespace MagiRogue.GameSys.Planet.History
 
                 case Data.Enumerators.MythAction.Antagonized:
                     happening.Append($" antagonized ");
-                    AntagonazingActions(myth, race, possibleRealms, possibleRegions, happening);
+                    AntagonazingActions(myth, race, figure, possibleRealms, possibleRegions, happening);
                     break;
 
                 case Data.Enumerators.MythAction.Killed:
                     happening.Append(" killed ");
-                    KillingActions(myth, happening, race, possibleRealms);
+                    KillingActions(myth, figure, happening, race, possibleRealms);
 
                     break;
 
                 case Data.Enumerators.MythAction.Gave:
                     happening.Append(" gave ");
-                    GaveActions(myth, happening, race, possibleRealms);
+                    GaveActions(myth, happening, figure, race, possibleRealms);
                     break;
 
                 case Data.Enumerators.MythAction.Ascended:
                     happening.Append(" ascended as a god");
+                    figure.SpecialFlags.Add(SpecialFlag.Deity);
 
                     break;
 
                 case Data.Enumerators.MythAction.Descended:
                     happening.Append(" descended to the world");
+                    figure.SpecialFlags.Add(SpecialFlag.DeityDescended);
 
                     break;
 
                 case Data.Enumerators.MythAction.OpenPortal:
                     happening.Append($" opened portal to the outer realm {possibleRealms.GetRandomItemFromList()}");
+                    figure.SpecialFlags.Add(SpecialFlag.OpenedPortal);
 
                     break;
 
@@ -186,6 +192,7 @@ namespace MagiRogue.GameSys.Planet.History
 
         private static void GaveActions(Myth myth,
             StringBuilder happening,
+            HistoricalFigure figure,
             Race race,
             string[] possibleRealms)
         {
@@ -205,6 +212,7 @@ namespace MagiRogue.GameSys.Planet.History
 
                 case Data.Enumerators.MythWhat.Magic:
                     happening.Append("magic to his creation");
+                    figure.SpecialFlags.Add(SpecialFlag.GaveMagicToCreation);
                     break;
 
                 case Data.Enumerators.MythWhat.Land:
@@ -278,6 +286,7 @@ namespace MagiRogue.GameSys.Planet.History
 
         private static void AntagonazingActions(Myth myth,
             Race race,
+            HistoricalFigure figure,
             string[] possibleRealms,
             string[] possibleRegions,
             StringBuilder happening)
@@ -286,24 +295,30 @@ namespace MagiRogue.GameSys.Planet.History
             {
                 case Data.Enumerators.MythWhat.Race:
                     happening.Append($"the primordials of {race.RaceName}");
+                    figure.SpecialFlags.Add(SpecialFlag.Antagonist);
 
                     break;
 
                 case Data.Enumerators.MythWhat.OriginMagic:
                     happening.Append("to oppose the origin of magic!");
+                    figure.SpecialFlags.Add(SpecialFlag.Antagonist);
+
                     break;
 
                 case Data.Enumerators.MythWhat.CostMagic:
                     happening.Append("to oppose the cost of magic!");
+
                     break;
 
                 case Data.Enumerators.MythWhat.Magic:
                     happening.Append("to oppose magic and those who wield it!");
+                    figure.SpecialFlags.Add(SpecialFlag.Antagonist);
 
                     break;
 
                 case Data.Enumerators.MythWhat.Land:
                     happening.Append("the creation of the land!");
+                    figure.SpecialFlags.Add(SpecialFlag.Antagonist);
 
                     break;
 
@@ -315,6 +330,7 @@ namespace MagiRogue.GameSys.Planet.History
 
                 case Data.Enumerators.MythWhat.World:
                     happening.Append($"to oppose creation of the world!");
+                    figure.SpecialFlags.Add(SpecialFlag.Antagonist);
 
                     break;
 
@@ -377,7 +393,7 @@ namespace MagiRogue.GameSys.Planet.History
             }
         }
 
-        private static void CreationActions(Myth myth, Race race, string worldName, string[] possibleRealms,
+        private static void CreationActions(Myth myth, HistoricalFigure figure, Race race, string worldName, string[] possibleRealms,
             string[] possibleRegions, string[] possibleOrigins, string[] possibleWhys, string[] possibleMagic,
             string[] possibleBecauses, Legend legend, StringBuilder happening)
         {
@@ -385,11 +401,13 @@ namespace MagiRogue.GameSys.Planet.History
             {
                 case Data.Enumerators.MythWhat.Race:
                     happening.Append($"the {race.RaceName}");
+                    figure.SpecialFlags.Add(SpecialFlag.RaceCreator);
                     break;
 
                 case Data.Enumerators.MythWhat.OriginMagic:
                     string origin = possibleOrigins.GetRandomItemFromList();
                     happening.Append($"the {origin} of magic");
+                    figure.SpecialFlags.Add(SpecialFlag.MagicCreator);
                     break;
 
                 case Data.Enumerators.MythWhat.CostMagic:
@@ -414,6 +432,7 @@ namespace MagiRogue.GameSys.Planet.History
 
                 case Data.Enumerators.MythWhat.World:
                     happening.Append($"the world {worldName}");
+                    figure.SpecialFlags.Add(SpecialFlag.WorldCreator);
                     break;
 
                 case Data.Enumerators.MythWhat.God:
@@ -461,17 +480,20 @@ namespace MagiRogue.GameSys.Planet.History
             }
         }
 
-        private static void DestroyingActions(Myth myth, StringBuilder happening, Race race, string worldName, string[] possibleRealms)
+        private static void DestroyingActions(Myth myth, HistoricalFigure figure, StringBuilder happening,
+            Race race, string worldName, string[] possibleRealms)
         {
             switch (myth.MythWhat)
             {
                 case Data.Enumerators.MythWhat.Race:
                     happening.Append($"the primordials of {race.RaceName}, so that they not exist!");
                     race.DeadRace = true;
+                    figure.SpecialFlags.Add(SpecialFlag.Antagonist);
                     break;
 
                 case Data.Enumerators.MythWhat.OriginMagic:
                     happening.Append("the origin of magic, thus making magic hard");
+                    figure.SpecialFlags.Add(SpecialFlag.Antagonist);
                     break;
 
                 case Data.Enumerators.MythWhat.CostMagic:
@@ -480,6 +502,7 @@ namespace MagiRogue.GameSys.Planet.History
 
                 case Data.Enumerators.MythWhat.Magic:
                     happening.Append("magic, thus making magic impossible");
+                    figure.SpecialFlags.Add(SpecialFlag.MagicKiller);
                     break;
 
                 case Data.Enumerators.MythWhat.Land:
@@ -497,6 +520,7 @@ namespace MagiRogue.GameSys.Planet.History
 
                 case Data.Enumerators.MythWhat.World:
                     happening.Append($"the lost world of {worldName}, thus forcing the creation cycle to begin anew");
+                    figure.SpecialFlags.Add(SpecialFlag.Antagonist);
                     break;
 
                 case Data.Enumerators.MythWhat.God:
@@ -566,17 +590,22 @@ namespace MagiRogue.GameSys.Planet.History
             }
         }
 
-        private static void KillingActions(Myth myth, StringBuilder happening, Race race, string[] possibleRealms)
+        private static void KillingActions(Myth myth, HistoricalFigure figure, StringBuilder happening,
+            Race race, string[] possibleRealms)
         {
             switch (myth.MythWhat)
             {
                 case Data.Enumerators.MythWhat.Race:
                     happening.Append($"the race {race.RaceName}");
                     race.DeadRace = true;
+                    figure.SpecialFlags.Add(SpecialFlag.Antagonist);
+
                     break;
 
                 case Data.Enumerators.MythWhat.OriginMagic:
                     happening.Append("the origin of magic");
+                    figure.SpecialFlags.Add(SpecialFlag.Antagonist);
+
                     break;
 
                 case Data.Enumerators.MythWhat.CostMagic:
@@ -584,6 +613,8 @@ namespace MagiRogue.GameSys.Planet.History
 
                 case Data.Enumerators.MythWhat.Magic:
                     happening.Append("magic");
+                    figure.SpecialFlags.Add(SpecialFlag.MagicKiller);
+
                     break;
 
                 case Data.Enumerators.MythWhat.Land:

@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Utils;
 using MagiRogue.Entities;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace MagiRogue.GameSys.Planet.History
         public Sex HFGender { get; set; }
         public string Race { get; set; }
         public List<Legend> Legends { get; set; }
+        public MythWho? MythWho { get; set; }
         public int YearBorn { get; set; }
         public int? YearDeath { get; set; }
         public bool IsAlive { get; set; }
@@ -27,6 +29,7 @@ namespace MagiRogue.GameSys.Planet.History
         public Mind Mind { get; set; } = new();
         public Soul Soul { get; set; } = new();
         public Body Body { get; set; } = new();
+        public List<SpecialFlag> SpecialFlags { get; set; } = new();
 
         public HistoricalFigure(string name,
             Sex hFGender,
@@ -124,6 +127,16 @@ namespace MagiRogue.GameSys.Planet.History
             if (HFGender == Sex.Female)
                 return "hers";
             return "it's";
+        }
+
+        public Myth MythAct(int id)
+        {
+            Myth myth = new Myth(id);
+
+            MythWhat[] whats = Enum.GetValues<MythWhat>();
+            MythAction[] actions = Enum.GetValues<MythAction>();
+
+            return myth;
         }
     }
 }

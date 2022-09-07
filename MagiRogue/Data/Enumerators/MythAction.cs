@@ -8,6 +8,7 @@ namespace MagiRogue.Data.Enumerators
 {
     public enum MythWho
     {
+        None,
         God,
         Gods,
         Egg,

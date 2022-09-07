@@ -164,5 +164,14 @@ namespace MagiRogue.Data
 
         public static ShapeDescriptor QueryShapeDescInData(string shapeId)
             => ListOfShapes.FirstOrDefault(i => i.Id.Equals(shapeId));
+
+        public static Language RandomLangugage()
+            => ListOfLanguages.GetRandomItemFromList();
+
+        public static string RandomRealm()
+            => ListOfRealmsName.GetRandomItemFromList();
+
+        public static Race RandomRace()
+            => ListOfRaces.GetRandomItemFromList();
     }
 }

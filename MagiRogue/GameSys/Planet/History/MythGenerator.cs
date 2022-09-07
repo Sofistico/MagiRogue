@@ -39,11 +39,42 @@ namespace MagiRogue.GameSys.Planet.History
             List<Myth> myths = new();
             bool processingMyths = true;
             int currentIteration = 0;
-            Stack<Myth> stack = new Stack<Myth>(myths);
+            Stack<HistoricalFigure> stack = new Stack<HistoricalFigure>(figures);
 
             while (processingMyths)
             {
                 currentIteration++;
+
+                while (stack.Count > 0)
+                {
+                    HistoricalFigure figure = stack.Pop();
+                    Myth myth = figure.MythAct(mythId);
+                    myths.Add(myth);
+
+                    if (myth.MythAction is MythAction.Created &&
+                        (myth.MythWhat is MythWhat.Race
+                        || myth.MythWhat is MythWhat.Angels
+                        || myth.MythWhat is MythWhat.Demons
+                        || myth.MythWhat is MythWhat.Forces
+                        || myth.MythWhat is MythWhat.God
+                        || myth.MythWhat is MythWhat.Individual
+                        || myth.MythWhat is MythWhat.Spirits
+                        || myth.MythWhat is MythWhat.Region))
+                    {
+                        HistoricalFigure createdFigure = myth.CreateFigureFromMyth(figure.Name);
+                        figures.Add(createdFigure);
+                    }
+
+                    Legend legend = Legend.CreateLegendFromMyth(myth, ref figure, worldName: planet.Name);
+                    figure.AddLegend(legend);
+                    myths.Add(myth);
+                }
+
+                foreach (HistoricalFigure figure in figures)
+                {
+                    stack.Push(figure);
+                }
+
                 if (currentIteration >= nmbrOfIterations)
                     processingMyths = false;
             }
@@ -168,8 +199,9 @@ namespace MagiRogue.GameSys.Planet.History
                 precursor,
                 MythAction.Created,
                 MythWhat.World);
-            Legend legend = Legend.CreateLegendFromMyth(myth, worldName: planetName);
+            Legend legend = Legend.CreateLegendFromMyth(myth, ref precursorFigure, worldName: planetName);
             precursorFigure.AddLegend(legend);
+            precursorFigure.MythWho = precursor;
 
             if (createdRace)
             {
@@ -178,7 +210,7 @@ namespace MagiRogue.GameSys.Planet.History
                     precursor,
                     MythAction.Created,
                     MythWhat.Race);
-                Legend raceCreation = Legend.CreateLegendFromMyth(raceCreationMyth, race);
+                Legend raceCreation = Legend.CreateLegendFromMyth(raceCreationMyth, ref precursorFigure, race);
                 if (!alive)
                 {
                     StringBuilder str = new StringBuilder(raceCreation.Happening);
