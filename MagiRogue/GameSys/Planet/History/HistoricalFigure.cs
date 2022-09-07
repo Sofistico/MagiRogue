@@ -16,7 +16,7 @@ namespace MagiRogue.GameSys.Planet.History
         public string Description { get; set; }
         public Sex HFGender { get; set; }
         public string Race { get; set; }
-        public List<Legend> Legends { get; set; }
+        public List<Legend> Legends { get; set; } = new();
         public MythWho? MythWho { get; set; }
         public int YearBorn { get; set; }
         public int? YearDeath { get; set; }
@@ -131,10 +131,19 @@ namespace MagiRogue.GameSys.Planet.History
 
         public Myth MythAct(int id)
         {
-            Myth myth = new Myth(id);
-
+            // make the figure do some act as a myth
             MythWhat[] whats = Enum.GetValues<MythWhat>();
+            MythWhat what = whats.GetRandomItemFromList();
             MythAction[] actions = Enum.GetValues<MythAction>();
+            MythAction action = actions.GetRandomItemFromList();
+
+            Myth myth = new(id)
+            {
+                MythWho = MythWho ?? Data.Enumerators.MythWho.None,
+                MythWhat = what,
+                MythAction = action,
+                Name = Name,
+            };
 
             return myth;
         }

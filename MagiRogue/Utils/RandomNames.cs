@@ -105,13 +105,14 @@ namespace MagiRogue.Utils
             var lastName = words.GetRandomItemFromList();
 
             var str = new StringBuilder();
-            str.Append(firstName);
+            str.Append(firstName.TranslatedWord.FirstLetterUpper());
             str.Append(' ');
-            str.Append(lastName);
+            str.Append(lastName.TranslatedWord.FirstLetterUpper());
 
             return str.ToString();
         }
 
-        public static string RandomNamesFromRandomLanguage() => RandomNamesFromLanguage(Data.DataManager.ListOfLanguages.GetRandomItemFromList());
+        public static string RandomNamesFromRandomLanguage()
+            => RandomNamesFromLanguage(Data.DataManager.ListOfLanguages.GetRandomItemFromList());
     }
 }

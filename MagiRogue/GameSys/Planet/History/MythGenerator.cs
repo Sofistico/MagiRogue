@@ -24,13 +24,22 @@ namespace MagiRogue.GameSys.Planet.History
         public List<Myth> GenerateMyths(List<Race> races,
             List<HistoricalFigure> figures, PlanetMap planet)
         {
+            // there is lot that will need some tune up and some rewrite in the future
+            // but for now, let's see to where i can go with it!
             List<Myth> myths = new List<Myth>();
             // generate the primordials hfs (gods, demons, world, etc)
             // and also define who or what created the world!
             myths.AddRange(WhoCreatedTheWorld(figures, races, planet.Name));
+            myths.AddRange(CreateSomeMinorMyths(figures, races, planet.Name));
             myths.AddRange(BunchOfMythsInteraction(races, figures, planet, nmbrInteractions));
 
             return myths;
+        }
+
+        private IEnumerable<Myth> CreateSomeMinorMyths(List<HistoricalFigure> figures,
+            List<Race> races,
+            string name)
+        {
         }
 
         private IEnumerable<Myth> BunchOfMythsInteraction(List<Race> races,
@@ -68,6 +77,12 @@ namespace MagiRogue.GameSys.Planet.History
                     Legend legend = Legend.CreateLegendFromMyth(myth, ref figure, worldName: planet.Name);
                     figure.AddLegend(legend);
                     myths.Add(myth);
+                }
+
+                if (currentIteration >= nmbrOfIterations)
+                {
+                    processingMyths = false;
+                    stack.Clear();
                 }
 
                 foreach (HistoricalFigure figure in figures)
@@ -117,28 +132,28 @@ namespace MagiRogue.GameSys.Planet.History
                     break;
 
                 case MythWho.Egg:
-                    precursorFigure = new HistoricalFigure($"The {adjectives.GetRandomItemFromList()}",
+                    precursorFigure = new HistoricalFigure($"{adjectives.GetRandomItemFromList()}",
                         "A cosmic egg");
                     break;
 
                 case MythWho.Chaos:
-                    precursorFigure = new HistoricalFigure($"The {adjectives.GetRandomItemFromList()}",
+                    precursorFigure = new HistoricalFigure($"{adjectives.GetRandomItemFromList()}",
                         $"A primordial chaos in the shape of a {DataManager.ListOfShapes.GetRandomItemFromList().Name[0]}");
                     break;
 
                 case MythWho.Chance:
-                    precursorFigure = new HistoricalFigure($"The {adjectives.GetRandomItemFromList()} chance",
+                    precursorFigure = new HistoricalFigure($"{adjectives.GetRandomItemFromList()} chance",
                         "Pure cosmic chance");
 
                     break;
 
                 case MythWho.Science:
-                    precursorFigure = new HistoricalFigure($"The {adjectives.GetRandomItemFromList()} science",
+                    precursorFigure = new HistoricalFigure($"{adjectives.GetRandomItemFromList()} Big Bang",
                         "The Big Bang");
                     break;
 
                 case MythWho.Wizard:
-                    precursorFigure = new HistoricalFigure($"The {RandomNames.GiberishFullName(6, 6)} wizard",
+                    precursorFigure = new HistoricalFigure($"{RandomNames.GiberishFullName(6, 6)} wizard",
                         "A wizard did it!", race.ReturnRandomSex(), race.Id, alive);
                     createdRace = true;
                     break;
@@ -156,12 +171,12 @@ namespace MagiRogue.GameSys.Planet.History
                     break;
 
                 case MythWho.Titans:
-                    precursorFigure = new HistoricalFigure($"The {adjectives.GetRandomItemFromList()} Primordial Titans",
+                    precursorFigure = new HistoricalFigure($"{adjectives.GetRandomItemFromList()} Primordial Titans",
                         "a Primordial titans");
                     break;
 
                 case MythWho.Precursors:
-                    precursorFigure = new HistoricalFigure($"The {adjectives.GetRandomItemFromList()} Precursors",
+                    precursorFigure = new HistoricalFigure($"{adjectives.GetRandomItemFromList()} Precursors",
                         "Precursors");
 
                     break;

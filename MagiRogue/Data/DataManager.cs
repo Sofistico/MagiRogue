@@ -50,7 +50,7 @@ namespace MagiRogue.Data
             GetSourceTree<BodyPlan>(@".\Data\Bodies\body_*.json");
 
         public static readonly IReadOnlyList<Language> ListOfLanguages =
-            GetSourceTree<Language>(@".\Data\Bodies\language_*.json");
+            GetSourceTree<Language>(@".\Data\Language\language_*.json");
 
         public static readonly IReadOnlyList<Profession> ListOfProfessions =
             GetSourceTree<Profession>(@".\Data\Professions\profession_*.json");

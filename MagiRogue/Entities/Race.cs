@@ -79,9 +79,12 @@ namespace MagiRogue.Entities
             }
         }
 
-        private string DebuggerDisplay()
+        private string DebuggerDisplay
         {
-            return ToString();
+            get
+            {
+                return string.Format($"Race : {ToString()}");
+            }
         }
 
         public Color ReturnForegroundColor()

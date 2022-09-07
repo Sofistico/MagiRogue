@@ -98,7 +98,7 @@ namespace MagiRogue.GameSys.Planet.History
                 TickWhen = -1,
                 Where = "In a time before time",
             };
-            StringBuilder happening = new($"{myth.Name} the {myth.MythWho.ToString().SeparateByUpperLetter()}");
+            StringBuilder happening = new($"{myth.Name} {myth.MythWho.ToString().SeparateByUpperLetter()}");
 
             // the switch from hell!
             // TODO: Make all that happenead translate to the world and it's people!
@@ -246,7 +246,7 @@ namespace MagiRogue.GameSys.Planet.History
                     break;
 
                 case Data.Enumerators.MythWhat.OuterRealm:
-                    happening.Append($"gave away it's {possibleRealms.GetRandomItemFromList()} realm!");
+                    happening.Append($"away it's {possibleRealms.GetRandomItemFromList()} realm!");
 
                     break;
 
@@ -257,26 +257,26 @@ namespace MagiRogue.GameSys.Planet.History
                     return;
 
                 case Data.Enumerators.MythWhat.Demons:
-                    happening.Append("gave away something to the demons!");
+                    happening.Append("away something to the demons!");
                     break;
 
                 case Data.Enumerators.MythWhat.Angels:
-                    happening.Append("gave away something to the angels!");
+                    happening.Append("away something to the angels!");
 
                     break;
 
                 case Data.Enumerators.MythWhat.Spirits:
-                    happening.Append("gave away something to the spirits!");
+                    happening.Append("away something to the spirits!");
 
                     break;
 
                 case Data.Enumerators.MythWhat.Forces:
-                    happening.Append("gave away something to the forces!");
+                    happening.Append("away something to the forces!");
 
                     break;
 
                 case Data.Enumerators.MythWhat.Individual:
-                    happening.Append($"gave away something to the {RandomNames.GiberishFullName(5, 5)}!");
+                    happening.Append($"away something to the {RandomNames.GiberishFullName(5, 5)}!");
                     break;
 
                 default:

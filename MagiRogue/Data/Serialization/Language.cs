@@ -33,7 +33,7 @@ namespace MagiRogue.Data.Serialization
     public class Word
     {
         public string TranslatedWord { get; set; }
-        public List<string> RealWord { get; set; }
+        public List<string> RealWord { get; set; } = new();
 
         public Word()
         {
