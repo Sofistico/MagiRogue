@@ -3,6 +3,7 @@ using MagiRogue.Data.Serialization.EntitySerialization;
 using System;
 using System.Collections.Generic;
 using MagiRogue.Utils;
+using MagiRogue.GameSys.Tiles;
 
 namespace MagiRogue.GameSys.Civ
 {
@@ -153,6 +154,14 @@ namespace MagiRogue.GameSys.Civ
                 Room business = new Room(tags.GetRandomItemFromList());
                 Buildings.Add(business);
             }
+        }
+
+        public void SimulatePopulationGrowth(WorldTile tile)
+        {
+            int populationCarryngCapacity = (int)tile.BiomeType;
+            int totalResources = MundaneResources / 100;
+            double result = (double)((double)populationCarryngCapacity / (double)((1 + totalResources))) / 100;
+            Population = (int)MathMagi.Round(Population * result);
         }
     }
 }

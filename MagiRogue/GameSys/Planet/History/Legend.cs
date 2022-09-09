@@ -8,6 +8,7 @@ using MagiRogue.Data;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using MagiRogue.Data.Serialization;
 
 namespace MagiRogue.GameSys.Planet.History
 {
@@ -236,7 +237,8 @@ namespace MagiRogue.GameSys.Planet.History
                     break;
 
                 case Data.Enumerators.MythWhat.Reagent:
-                    happening.Append("the secrets of reagent to creation!");
+                    MaterialTemplate temp = DataManager.ListOfMaterials.GetRandomItemFromList();
+                    happening.Append($"the secrets of material {temp.Name} to creation!");
 
                     break;
 
@@ -344,7 +346,8 @@ namespace MagiRogue.GameSys.Planet.History
                     break;
 
                 case Data.Enumerators.MythWhat.Reagent:
-                    happening.Append("the creation of the reagent");
+                    MaterialTemplate temp = DataManager.ListOfMaterials.GetRandomItemFromList();
+                    happening.Append($"the creation of the reagent {temp.Name}");
                     break;
 
                 case Data.Enumerators.MythWhat.Afterlife:
@@ -448,7 +451,8 @@ namespace MagiRogue.GameSys.Planet.History
                     break;
 
                 case Data.Enumerators.MythWhat.Reagent:
-                    happening.Append($"the TBD YOU LAZYGUY");
+                    MaterialTemplate temp = DataManager.ListOfMaterials.GetRandomItemFromList();
+                    happening.Append($"the material {temp.Name}");
                     break;
 
                 case Data.Enumerators.MythWhat.OuterRealm:
