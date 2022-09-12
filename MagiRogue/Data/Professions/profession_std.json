@@ -1,8 +1,82 @@
 ﻿[
   {
-    "Id": "wiz",
-    "Name": "Wizard",
-    "Ability": "MagicLore"
+    "Id": "magic_teach",
+    "Name": "Magic Teacher",
+    "Ability": [ "MagicLore", "Teaching" ]
   },
-
+  {
+    "Id": "basic_lore",
+    "Name": "Magic Knower",
+    "Ability": [ "MagicLore" ]
+  },
+  {
+    "Id": "astro_magery",
+    "Name": "Astrologer",
+    "Ability": [ "MagicLore", "Astronomer" ]
+  },
+  {
+    "Id": "mage_research",
+    "Name": "Magic Researcher",
+    "Ability": [ "MagicLore", "Research" ]
+  },
+  {
+    "Id": "vagabond",
+    "Name": "Vagabond",
+    "Ability": [ "None" ]
+  },
+  {
+    "Id": "military_tactician",
+    "Name": "Military Tactician",
+    "Ability": [ "MilitaryTactics" ]
+  },
+  {
+    "Id": "military_leader",
+    "Name": "Military Leader",
+    "Ability": [ "MilitaryTactics", "Leader" ]
+  },
+  {
+    "Id": "sword_user",
+    "Name": "Sword User",
+    "Ability": [ "Sword" ]
+  },
+  {
+    "Id": "martial_artist",
+    "Name": "Martial Artist",
+    "Ability": [ "Unarmed" ]
+  },
+  {
+    "Id": "misc_user",
+    "Name": "Improviser Weapon User",
+    "Ability": [ "Misc" ]
+  },
+  {
+    "Id": "staff_user",
+    "Name": "Staff User",
+    "Ability": [ "Staff" ]
+  },
+  {
+    "Id": "hammer",
+    "Name": "Hammer User",
+    "Ability": [ "Hammer" ]
+  },
+  {
+    "Id": "spear_user",
+    "Name": "Spear User",
+    "Ability": [ "Spear" ]
+  },
+  {
+    "Id": "axe_user",
+    "Name": "Axe User",
+    "Ability": [ "Axe" ]
+  },
+  {
+    "Id": "soldier",
+    "Name": "Soldier",
+    "Ability": [ "ArmorUse", "Shield" ]
+  },
+  {
+    "Id": "dodge",
+    "Name": "Dodger",
+    "Ability": [ "Dodge" ]
+  },
 ]

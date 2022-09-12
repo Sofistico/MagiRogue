@@ -3,6 +3,8 @@ using MagiRogue.Utils;
 using MagiRogue.Entities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using MagiRogue.Data;
 
 namespace MagiRogue.GameSys.Planet.History
 {
@@ -22,11 +24,12 @@ namespace MagiRogue.GameSys.Planet.History
         public int? YearDeath { get; set; }
         public bool IsAlive { get; set; }
 
-        public Entity? AssocietedEntity { get; set; }
+        //public Entity? AssocietedEntity { get; set; }
         public List<int> RelatedCivs { get; set; } = new();
         public List<int> RelatedSettlements { get; set; } = new();
         public List<string> RelatedHFs { get; set; } = new();
         public Mind Mind { get; set; } = new();
+        public Soul Soul { get; set; }
         public List<SpecialFlag> SpecialFlags { get; set; } = new();
 
         public HistoricalFigure(string name,
@@ -44,26 +47,8 @@ namespace MagiRogue.GameSys.Planet.History
             YearBorn = yearBorn;
             YearDeath = yearDeath;
             IsAlive = isAlive;
-            //AssocietedEntity = associetedActor;
-            //Description = associetedActor is null? string.Empty : associetedActor.Description;
-            //Race = associetedActor is null ? string.Empty : associetedActor.GetAnatomy().GetRace().RaceName;
-        }
-
-        public HistoricalFigure(string name,
-            string desc,
-            string race,
-            int born,
-            int? died,
-            bool alive,
-            Sex hFGender)
-        {
-            Name = name;
             Description = desc;
-            Race = race;
-            YearBorn = born;
-            YearDeath = died;
-            IsAlive = alive;
-            HFGender = hFGender;
+            Race = raceId;
         }
 
         public HistoricalFigure(string name, string description, Sex hFGender, string race, bool isAlive)
@@ -98,11 +83,48 @@ namespace MagiRogue.GameSys.Planet.History
 
             foreach (AbilityName e in enums)
             {
+                bool hasSkill = Mrn.OneIn(10);
+                if (hasSkill)
+                {
+                    // if the die explode, it's a genius!
+                    int abilityScore = Mrn.Exploding2D6Dice;
+                    Mind.AddAbilityToDictionary(new Ability(e, abilityScore));
+                }
             }
         }
 
         public void DefineProfession()
         {
+            List<Ability> skills = new List<Ability>(Mind.Abilities.Values.ToList());
+            Ability bestSkill = skills.MaxBy(i => i.Score);
+            skills.Remove(bestSkill);
+            Ability secondBestSkill = skills.MaxBy(i => i.Score);
+            skills.Remove(secondBestSkill);
+
+            var professions = DataManager.ListOfProfessions
+                .Where(i => i.Ability.First() == bestSkill.ReturnAbilityEnumFromString()).ToList();
+
+            if (professions.Count > 0)
+            {
+                foreach (var prof in professions)
+                {
+                    if (prof.Ability.Length > 0)
+                    {
+                        if (prof.Ability.Contains(secondBestSkill.ReturnAbilityEnumFromString()))
+                        {
+                            Mind.Profession = prof;
+
+                            return;
+                        }
+                    }
+                }
+                // if you didn't find anything, then anything is worth!
+                Mind.Profession = professions.GetRandomItemFromList();
+            }
+            else
+            {
+                Mind.Profession = DataManager.QueryProfessionInData("vagabond");
+            }
         }
 
         public void AddLegend(Legend legend)

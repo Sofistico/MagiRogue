@@ -12,7 +12,6 @@ namespace MagiRogue.Data.Enumerators
         ArmorUse,
         Unarmed,
         Misc,
-        Fist,
         Sword,
         Staff,
         Hammer,
@@ -55,6 +54,7 @@ namespace MagiRogue.Data.Enumerators
 
         // scholary
         MagicLore,
+        Research,
         Mathematician,
         Astronomer,
         Chemist,

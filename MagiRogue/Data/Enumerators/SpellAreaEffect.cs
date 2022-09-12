@@ -7,6 +7,7 @@ namespace MagiRogue.Data.Enumerators
     public enum SpellAreaEffect
     {
         Self,
+        Struck,
         Target,
         Ball,
         Beam,

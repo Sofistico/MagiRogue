@@ -18,6 +18,7 @@ namespace MagiRogue.Entities
         /// </summary>
         public Dictionary<int, Ability> Abilities { get; set; }
         public Personality Personality { get; set; }
+        public Profession Profession { get; set; }
 
         public Mind()
         {

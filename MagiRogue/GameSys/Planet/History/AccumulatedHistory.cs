@@ -87,37 +87,54 @@ namespace MagiRogue.GameSys.Planet.History
                                 if (BuildRoadsToFriends(civ, nextCiv, tiles))
                                     civ.Wealth -= wealthToCreateRoad;
                             }
+
+                            if (civ[nextCiv.Id].Relation is RelationType.War)
+                            {
+                                //do war!
+                            }
                         }
                     }
                     int totalRevenueYear = 0;
 
-                    if (civ.Wealth > wealthToCreateNewSettlement)
-                    {
-                        int migrants = GameLoop.GlobalRand.NextInt(10, 100);
-                        Settlement rngSettl = civ.Settlements.GetRandomItemFromList();
-                        rngSettl.Population -= migrants;
-                        Point pos = rngSettl.WorldPos.GetPointNextTo();
-                        Settlement settlement = new Settlement(pos,
-                            RandomNames.RandomNamesFromLanguage(civ.GetLanguage()),
-                            migrants);
-                        WorldTile tile = tiles[pos.X, pos.Y];
-                        tile.CivInfluence = civ;
-                        civ.AddSettlementToCiv(settlement);
-                    }
+                    CreateNewSettlementIfPossible(tiles, civ);
 
                     // settlement simulation from the Civ here:
                     foreach (Settlement settlement in civ.Settlements)
                     {
-                        settlement.CreateNewBuildings();
-                        totalRevenueYear += settlement.MundaneResources;
-                        settlement.GenerateMundaneResources();
-                        settlement.SimulatePopulationGrowth(tiles[settlement.WorldPos.X, settlement.WorldPos.Y]);
+                        totalRevenueYear = SimulateSettlementAndReturnRevenue(tiles, totalRevenueYear, settlement);
                     }
                     civ.Wealth += totalRevenueYear;
                 }
 
                 Year++;
                 firstYearOnly = false;
+            }
+        }
+
+        private static int SimulateSettlementAndReturnRevenue(WorldTile[,] tiles,
+            int totalRevenueYear, Settlement settlement)
+        {
+            settlement.CreateNewBuildings();
+            totalRevenueYear += settlement.MundaneResources;
+            settlement.GenerateMundaneResources();
+            settlement.SimulatePopulationGrowth(tiles[settlement.WorldPos.X, settlement.WorldPos.Y]);
+            return totalRevenueYear;
+        }
+
+        private static void CreateNewSettlementIfPossible(WorldTile[,] tiles, Civilization civ)
+        {
+            if (civ.Wealth > wealthToCreateNewSettlement)
+            {
+                int migrants = GameLoop.GlobalRand.NextInt(10, 100);
+                Settlement rngSettl = civ.Settlements.GetRandomItemFromList();
+                rngSettl.Population -= migrants;
+                Point pos = rngSettl.WorldPos.GetPointNextTo();
+                Settlement settlement = new Settlement(pos,
+                    RandomNames.RandomNamesFromLanguage(civ.GetLanguage()),
+                    migrants);
+                WorldTile tile = tiles[pos.X, pos.Y];
+                tile.CivInfluence = civ;
+                civ.AddSettlementToCiv(settlement);
             }
         }
 

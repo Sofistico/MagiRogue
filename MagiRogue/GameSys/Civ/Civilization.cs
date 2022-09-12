@@ -4,6 +4,7 @@ using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Planet.History;
 using MagiRogue.GameSys.Tiles;
+using MagiRogue.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -64,6 +65,8 @@ namespace MagiRogue.GameSys.Civ
         {
             // 10% of the population is in anyway important... sadly
             int nmbrOfImportant = (int)(TotalPopulation * 0.01);
+            int numberOfNobles = (int)(nmbrOfImportant * 0.1);
+            bool rulerChoosen = false;
             for (int i = 0; i < nmbrOfImportant; i++)
             {
                 // creating actor
@@ -86,6 +89,18 @@ namespace MagiRogue.GameSys.Civ
                 // add to civ
                 figure.RelatedCivs.Add(Id);
                 ImportantPeople.Add(figure);
+            }
+            for (int i = 0; i < numberOfNobles; i++)
+            {
+                bool isRuler = Mrn.OneIn(numberOfNobles);
+                if (isRuler)
+                {
+                    rulerChoosen = true;
+                }
+            }
+            if (!rulerChoosen)
+            {
+                // choose the ruler here if it hasn't appereade till now!
             }
         }
 

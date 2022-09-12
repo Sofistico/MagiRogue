@@ -11,6 +11,6 @@ namespace MagiRogue.Entities
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public AbilityName Ability { get; set; }
+        public AbilityName[] Ability { get; set; }
     }
 }
