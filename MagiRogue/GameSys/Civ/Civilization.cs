@@ -47,7 +47,7 @@ namespace MagiRogue.GameSys.Civ
         public bool Dead { get; set; }
         public List<WorldConstruction> PossibleWorldConstruction { get; set; }
         public List<SiteType> PossibleSites { get; set; }
-        public Dictionary<Noble, int> TrackAmountOfNobles { get; set; }
+        public Dictionary<string, int> TrackAmountOfNobles { get; set; }
 
         [JsonConstructor]
         public Civilization(string name, Race primaryRace, CivilizationTendency tendency)
@@ -70,8 +70,8 @@ namespace MagiRogue.GameSys.Civ
 
         public void SetupInitialHistoricalFigures()
         {
-            // 5% of the population is in anyway important... sadly
-            int nmbrOfImportant = (int)(TotalPopulation * 0.01);
+            // 10% of the population is in anyway important... sadly
+            int nmbrOfImportant = (int)(TotalPopulation * 0.1);
             int numberOfNobles = (int)(nmbrOfImportant * 0.1);
             bool rulerChoosen = false;
             for (int i = 0; i < nmbrOfImportant; i++)
@@ -138,11 +138,11 @@ namespace MagiRogue.GameSys.Civ
                 yearAdded,
                 this);
 
-            if (!TrackAmountOfNobles.TryAdd(noble, 0))
+            if (!TrackAmountOfNobles.TryAdd(noble.Id, 0))
             {
-                if (TrackAmountOfNobles[noble] >= noble.MaxAmmount)
+                if (TrackAmountOfNobles[noble.Id] >= noble.MaxAmmount)
                     return;
-                TrackAmountOfNobles[noble]++;
+                TrackAmountOfNobles[noble.Id]++;
             }
         }
 
@@ -150,12 +150,12 @@ namespace MagiRogue.GameSys.Civ
         {
             figure.NobleTitles.Remove(noble);
 
-            if (TrackAmountOfNobles.ContainsKey(noble))
+            if (TrackAmountOfNobles.ContainsKey(noble.Id))
             {
-                TrackAmountOfNobles[noble]--;
-                if (TrackAmountOfNobles[noble] <= 0)
+                TrackAmountOfNobles[noble.Id]--;
+                if (TrackAmountOfNobles[noble.Id] <= 0)
                 {
-                    TrackAmountOfNobles.Remove(noble);
+                    TrackAmountOfNobles.Remove(noble.Id);
                 }
                 return true;
             }
