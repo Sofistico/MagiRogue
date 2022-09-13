@@ -88,6 +88,16 @@ namespace MagiRogue.GameSys.Planet.History
                                     civ.Wealth -= wealthToCreateRoad;
                             }
 
+                            if (civ[nextCiv.Id].Relation is not RelationType.Enemy
+                                || civ[nextCiv.Id].Relation is RelationType.War)
+                            {
+                                // trade of various types!!
+                                if (civ[nextCiv.Id].RoadBuilt)
+                                {
+                                    // facilitates trade beetween sites
+                                }
+                            }
+
                             if (civ[nextCiv.Id].Relation is RelationType.War)
                             {
                                 //do war!

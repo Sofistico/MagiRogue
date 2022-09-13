@@ -47,6 +47,7 @@ namespace MagiRogue.GameSys.Civ
         public bool Dead { get; set; }
         public List<WorldConstruction> PossibleWorldConstruction { get; set; }
         public List<SiteType> PossibleSites { get; set; }
+        public Dictionary<Noble, int> TrackAmountOfNobles { get; set; }
 
         [JsonConstructor]
         public Civilization(string name, Race primaryRace, CivilizationTendency tendency)
@@ -69,7 +70,7 @@ namespace MagiRogue.GameSys.Civ
 
         public void SetupInitialHistoricalFigures()
         {
-            // 1% of the population is in anyway important... sadly
+            // 5% of the population is in anyway important... sadly
             int nmbrOfImportant = (int)(TotalPopulation * 0.01);
             int numberOfNobles = (int)(nmbrOfImportant * 0.1);
             bool rulerChoosen = false;
@@ -87,7 +88,10 @@ namespace MagiRogue.GameSys.Civ
                 initialLegend.Append($"with {age} as a member of {Name}");
                 legends.Add(new Legend(initialLegend.ToString(), -1));
                 HistoricalFigure figure = new HistoricalFigure(name, sex, legends,
-                    age - 0, null, true, PrimaryRace.Description, PrimaryRace.Id);
+                    age - 0, null, true, PrimaryRace.Description, PrimaryRace.Id)
+                {
+                    CurrentAge = age
+                };
                 figure.GenerateRandomPersonality();
                 figure.GenerateRandomSkills();
                 figure.DefineProfession();
@@ -98,27 +102,64 @@ namespace MagiRogue.GameSys.Civ
             }
 
             List<HistoricalFigure> nobles = ImportantPeople.ShuffleAlgorithmAndTakeN(numberOfNobles);
-
+            // in here we can already say that it's not in the time before time period
+            int year = 1;
+            var noblesPos = NoblesPosition.Where(
+                    i => !i.Responsabilities.Contains(Responsability.Rule))
+                    .ToList();
+            var rulerPos = NoblesPosition.FirstOrDefault(
+                        i => i.Responsabilities.Contains(Responsability.Rule));
             for (int i = 0; i < numberOfNobles; i++)
             {
                 bool isRuler = Mrn.OneIn(numberOfNobles);
-                nobles[i].NobleTitles.Add(NoblesPosition.Where(
-                        i => !i.Responsabilities.Contains(Responsability.Rule)).ToList().GetRandomItemFromList());
+                Noble noble = noblesPos.GetRandomItemFromList();
+                AppointNewNoble(noble, nobles[i], year);
+
                 if (isRuler && !rulerChoosen)
                 {
                     rulerChoosen = true;
-                    nobles[i].NobleTitles.Add(NoblesPosition.FirstOrDefault(
-                        i => i.Responsabilities.Contains(Responsability.Rule)));
+                    AppointNewNoble(rulerPos, nobles[i], year);
                 }
             }
 
             if (!rulerChoosen)
             {
                 // choose the ruler here if it hasn't appereade till now!
-                nobles.GetRandomItemFromList().NobleTitles.Add(NoblesPosition.FirstOrDefault(
-                        i => i.Responsabilities.Contains(Responsability.Rule)));
+                AppointNewNoble(rulerPos, nobles.GetRandomItemFromList(), year);
                 rulerChoosen = true;
             }
+        }
+
+        public void AppointNewNoble(Noble noble,
+            HistoricalFigure figureToAdd,
+            int yearAdded)
+        {
+            figureToAdd.AddNewNoblePos(noble,
+                yearAdded,
+                this);
+
+            if (!TrackAmountOfNobles.TryAdd(noble, 0))
+            {
+                if (TrackAmountOfNobles[noble] >= noble.MaxAmmount)
+                    return;
+                TrackAmountOfNobles[noble]++;
+            }
+        }
+
+        public bool RemoveNoble(Noble noble, HistoricalFigure figure)
+        {
+            figure.NobleTitles.Remove(noble);
+
+            if (TrackAmountOfNobles.ContainsKey(noble))
+            {
+                TrackAmountOfNobles[noble]--;
+                if (TrackAmountOfNobles[noble] <= 0)
+                {
+                    TrackAmountOfNobles.Remove(noble);
+                }
+                return true;
+            }
+            return false;
         }
 
         public List<WorldTile> ReturnAllTerritories(Map map)

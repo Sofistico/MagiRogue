@@ -11,7 +11,7 @@ namespace MagiRogue.GameSys.Magic.Effects
         private int turnToRemove;
 
         public SpellAreaEffect AreaOfEffect { get; set; }
-        public DamageType SpellDamageType { get; set; }
+        public DamageTypes SpellDamageType { get; set; }
         public int BaseDamage { get; set; }
 
         public float HastePower { get; set; }
@@ -22,7 +22,7 @@ namespace MagiRogue.GameSys.Magic.Effects
         public EffectTypes EffectType { get; set; } = EffectTypes.HASTE;
 
         public HasteEffect(SpellAreaEffect areaOfEffect, float hastePower, int duration,
-            DamageType spellDamageType = DamageType.Force)
+            DamageTypes spellDamageType = DamageTypes.Force)
         {
             AreaOfEffect = areaOfEffect;
             SpellDamageType = spellDamageType;

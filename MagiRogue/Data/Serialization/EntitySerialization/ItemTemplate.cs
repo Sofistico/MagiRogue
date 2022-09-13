@@ -114,7 +114,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
         [DataMember]
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public DamageType DamageType { get; private set; }
+        public DamageTypes DamageType { get; private set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<IActivable> UseAction { get; set; }

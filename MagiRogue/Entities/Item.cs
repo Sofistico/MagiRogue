@@ -67,7 +67,7 @@ namespace MagiRogue.Entities
         /// <summary>
         /// The type of damage the item deals, should be default of blunt type
         /// </summary>
-        public DamageType ItemDamageType { get; set; } = DamageType.Blunt;
+        public DamageTypes ItemDamageType { get; set; } = DamageTypes.Blunt;
 
         /// <summary>
         /// Actives that the item can do.

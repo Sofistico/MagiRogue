@@ -15,7 +15,7 @@ namespace MagiRogue.Entities
         public InjurySeverity Severity { get; set; }
         public bool Infected { get; set; }
         public bool Treated { get; set; }
-        public DamageType DamageSource { get; set; }
+        public DamageTypes DamageSource { get; set; }
         public double Recovery { get; set; }
         public bool Recovered { get; set; }
 
@@ -23,7 +23,7 @@ namespace MagiRogue.Entities
         {
         }
 
-        public Wound(double hpLost, DamageType damageSource)
+        public Wound(double hpLost, DamageTypes damageSource)
         {
             HpLost = hpLost;
             DamageSource = damageSource;

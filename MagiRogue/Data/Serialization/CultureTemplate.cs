@@ -37,6 +37,7 @@ namespace MagiRogue.Data.Serialization
                 PossibleWorldConstruction = PossibleWorldConstructions,
                 PossibleSites = PossibleSites,
                 TemplateId = Id,
+                LanguageId = LanguageSpoken,
             };
             if (Races.Length > 0)
             {
@@ -50,7 +51,7 @@ namespace MagiRogue.Data.Serialization
         private CivilizationTendency DetermineCivTendency()
         {
             List<CivilizationTendency> tendencies;
-            if (PossibleTendencies.Equals("Any"))
+            if (PossibleTendencies.Contains("Any"))
             {
                 tendencies = Enum.GetValues<CivilizationTendency>().ToList();
                 return tendencies.GetRandomItemFromList();

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MagiRogue.Data;
 using MagiRogue.GameSys.Civ;
+using System.Text;
 
 namespace MagiRogue.GameSys.Planet.History
 {
@@ -32,7 +33,8 @@ namespace MagiRogue.GameSys.Planet.History
         public Mind Mind { get; set; } = new();
         public Soul Soul { get; set; }
         public List<SpecialFlag> SpecialFlags { get; set; } = new();
-        public List<Noble> NobleTitles { get; set; }
+        public List<Noble> NobleTitles { get; set; } = new();
+        public int CurrentAge { get; set; }
 
         public HistoricalFigure(string name,
             Sex hFGender,
@@ -91,7 +93,7 @@ namespace MagiRogue.GameSys.Planet.History
                 if (hasSkill)
                 {
                     // if the die explode, it's a genius!
-                    int abilityScore = Mrn.Exploding2D6Dice;
+                    int abilityScore = Mrn.Exploding2D6Dice / 2;
                     Mind.AddAbilityToDictionary(new Ability(e, abilityScore));
                 }
             }
@@ -105,8 +107,18 @@ namespace MagiRogue.GameSys.Planet.History
             Ability secondBestSkill = skills.MaxBy(i => i.Score);
             skills.Remove(secondBestSkill);
 
+            if (!DetermineProfessionFromBestSkills(bestSkill, secondBestSkill))
+            {
+                // if no profession was found, then the figure isn't great with any profession sadly!
+                // it's tough being a legenday chemist in the middle ages....
+                Mind.Profession = DataManager.QueryProfessionInData("vagabond");
+            }
+        }
+
+        private bool DetermineProfessionFromBestSkills(Ability bestAbility, Ability secondBest)
+        {
             var professions = DataManager.ListOfProfessions
-                .Where(i => i.Ability.First() == bestSkill.ReturnAbilityEnumFromString()).ToList();
+                .Where(i => i.Ability.First() == bestAbility.ReturnAbilityEnumFromString()).ToList();
 
             if (professions.Count > 0)
             {
@@ -114,26 +126,30 @@ namespace MagiRogue.GameSys.Planet.History
                 {
                     if (prof.Ability.Length > 0)
                     {
-                        if (prof.Ability.Contains(secondBestSkill.ReturnAbilityEnumFromString()))
+                        if (prof.Ability.Contains(secondBest.ReturnAbilityEnumFromString()))
                         {
                             Mind.Profession = prof;
 
-                            return;
+                            return true;
                         }
                     }
                 }
                 // if you didn't find anything, then anything is worth!
                 Mind.Profession = professions.GetRandomItemFromList();
+                return true;
             }
-            else
-            {
-                Mind.Profession = DataManager.QueryProfessionInData("vagabond");
-            }
+            return false;
         }
 
         public void AddLegend(Legend legend)
         {
             Legends.Add(legend);
+        }
+
+        public void AddLegend(string legend, int yearWhen)
+        {
+            Legend newLegend = new Legend(legend, yearWhen);
+            Legends.Add(newLegend);
         }
 
         public string Pronoum()
@@ -171,6 +187,20 @@ namespace MagiRogue.GameSys.Planet.History
             };
 
             return myth;
+        }
+
+        public void AddNewNoblePos(Noble noble, int year, Civilization civ)
+        {
+            if (NobleTitles.Contains(noble))
+                return;
+            if (!RelatedCivs.Contains(civ.Id))
+                RelatedCivs.Add(civ.Id);
+
+            NobleTitles.Add(noble);
+            StringBuilder initialLegend = new StringBuilder($"In the year {year} ");
+            initialLegend.Append($"{Name} ascended to the post of {noble.Name} ");
+            initialLegend.Append($"with {CurrentAge} years as a member of {civ.Name}");
+            AddLegend(initialLegend.ToString(), year);
         }
     }
 }

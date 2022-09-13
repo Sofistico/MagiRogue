@@ -7,28 +7,28 @@ namespace MagiRogue.Utils
 {
     public static class CombatUtils
     {
-        public static DamageType SetFlag(DamageType a, DamageType b)
+        public static DamageTypes SetFlag(DamageTypes a, DamageTypes b)
         {
             return a | b;
         }
 
-        public static DamageType UnsetFlag(DamageType a, DamageType b)
+        public static DamageTypes UnsetFlag(DamageTypes a, DamageTypes b)
         {
             return a & (~b);
         }
 
         // Works with "None" as well
-        public static bool HasFlag(DamageType a, DamageType b)
+        public static bool HasFlag(DamageTypes a, DamageTypes b)
         {
             return (a & b) == b;
         }
 
-        public static DamageType ToogleFlag(DamageType a, DamageType b)
+        public static DamageTypes ToogleFlag(DamageTypes a, DamageTypes b)
         {
             return a ^ b;
         }
 
-        public static void DealDamage(double dmg, Entity entity, DamageType dmgType,
+        public static void DealDamage(double dmg, Entity entity, DamageTypes dmgType,
             Limb? limbAttacking = null, Limb? limbAttacked = null)
         {
             if (entity is Actor actor)
@@ -87,7 +87,7 @@ namespace MagiRogue.Utils
             }
         }
 
-        public static void ApplyHealing(int dmg, Actor stats, DamageType healingType)
+        public static void ApplyHealing(int dmg, Actor stats, DamageTypes healingType)
         {
             // Recovr stamina first
             stats.Body.Stamina += dmg;
@@ -105,49 +105,49 @@ namespace MagiRogue.Utils
             StringBuilder bobTheBuilder = new StringBuilder($"You healed for {dmg} damage");
             switch (healingType)
             {
-                case DamageType.None:
+                case DamageTypes.None:
                     GameLoop.AddMessageLog(bobTheBuilder
                         .Append(", feeling your bones and skin growing over your wounds!").ToString());
                     break;
 
-                case DamageType.Force:
+                case DamageTypes.Force:
                     GameLoop.AddMessageLog(bobTheBuilder
                         .Append(", filling your movements with a spring!").ToString());
                     break;
 
-                case DamageType.Fire:
+                case DamageTypes.Fire:
                     GameLoop.AddMessageLog(bobTheBuilder
                         .Append(", firing your will!").ToString());
                     break;
 
-                case DamageType.Cold:
+                case DamageTypes.Cold:
 
                     GameLoop.AddMessageLog(bobTheBuilder
                         .Append(", leaving you lethargic.").ToString());
                     break;
 
-                case DamageType.Poison:
+                case DamageTypes.Poison:
                     GameLoop.AddMessageLog(bobTheBuilder
                         .Append(", ouch it hurt!").ToString());
                     break;
 
-                case DamageType.Acid:
+                case DamageTypes.Acid:
                     stats.Body.Stamina -= dmg;
                     GameLoop.AddMessageLog(bobTheBuilder
                         .Append(", dealing equal damage to yourself, shouldn't have done that.").ToString());
                     break;
 
-                case DamageType.Shock:
+                case DamageTypes.Shock:
                     GameLoop.AddMessageLog(bobTheBuilder
                         .Append(", felling yourself speeding up!").ToString());
                     break;
 
-                case DamageType.Soul:
+                case DamageTypes.Soul:
                     GameLoop.AddMessageLog(bobTheBuilder
                         .Append(", feeling your soul at rest.").ToString());
                     break;
 
-                case DamageType.Mind:
+                case DamageTypes.Mind:
                     GameLoop.AddMessageLog(bobTheBuilder
                         .Append(", feeling your mind at ease.").ToString());
                     break;
@@ -201,7 +201,7 @@ namespace MagiRogue.Utils
         /// <param name="defender"></param>
         /// <param name="attackMessage"></param>
         /// <returns></returns>
-        public static (bool, Limb?, Limb, DamageType) ResolveHit(Actor attacker,
+        public static (bool, Limb?, Limb, DamageTypes) ResolveHit(Actor attacker,
             Actor defender, StringBuilder attackMessage)
         {
             // Create a string that expresses the attacker and defender's names
@@ -234,7 +234,7 @@ namespace MagiRogue.Utils
         /// <param name="defenseMessage"></param>
         /// <returns></returns>
         public static double ResolveDefense(Actor attacker, Actor defender, bool hit, StringBuilder attackMessage,
-            StringBuilder defenseMessage, Limb limbToHit, DamageType damageType, Limb limbAttacking)
+            StringBuilder defenseMessage, Limb limbToHit, DamageTypes damageType, Limb limbAttacking)
         {
             double totalDamage = 0;
 
@@ -256,19 +256,19 @@ namespace MagiRogue.Utils
 
                 switch (damageType)
                 {
-                    case DamageType.Blunt:
+                    case DamageTypes.Blunt:
                         protection *= 0.8;
                         break;
 
-                    case DamageType.Point:
+                    case DamageTypes.Point:
                         protection *= 0.5;
                         break;
 
-                    case DamageType.Soul:
+                    case DamageTypes.Soul:
                         protection = 0;
                         break;
 
-                    case DamageType.Mind:
+                    case DamageTypes.Mind:
                         protection = 0;
                         break;
 
@@ -326,7 +326,7 @@ namespace MagiRogue.Utils
         /// </summary>
         /// <param name="defender"></param>
         /// <param name="damage"></param>
-        public static void ResolveDamage(Actor defender, double damage, DamageType dmgType,
+        public static void ResolveDamage(Actor defender, double damage, DamageTypes dmgType,
             Limb limbAttacked, Limb limbAttacking)
         {
             if (damage > 0)

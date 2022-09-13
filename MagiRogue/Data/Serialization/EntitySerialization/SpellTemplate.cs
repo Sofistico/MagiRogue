@@ -61,7 +61,9 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 "MAGESIGHT" => EffectTypes.MAGESIGHT,
                 "SEVER" => EffectTypes.SEVER,
                 "TELEPORT" => EffectTypes.TELEPORT,
-                _ => throw new Exception($"It wasn't possible to convert the effect, " +
+                "DEBUFF" => EffectTypes.DEBUFF,
+                "BUFF" => EffectTypes.BUFF,
+                _ => throw new ApplicationException($"It wasn't possible to convert the effect, " +
                     $"please use only the provided effects types.\nEffect used: {st}"),
             };
         }
@@ -81,22 +83,23 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             };
         }
 
-        private static DamageType StringToDamageType(string st)
+        private static DamageTypes StringToDamageType(string st)
         {
             return st switch
             {
-                "None" => DamageType.None,
-                "Blunt" => DamageType.Blunt,
-                "Sharp" => DamageType.Sharp,
-                "Point" => DamageType.Point,
-                "Force" => DamageType.Force,
-                "Fire" => DamageType.Fire,
-                "Cold" => DamageType.Cold,
-                "Poison" => DamageType.Poison,
-                "Acid" => DamageType.Acid,
-                "Shock" => DamageType.Shock,
-                "Soul" => DamageType.Soul,
-                "Mind" => DamageType.Mind,
+                "None" => DamageTypes.None,
+                "Blunt" => DamageTypes.Blunt,
+                "Sharp" => DamageTypes.Sharp,
+                "Point" => DamageTypes.Point,
+                "Force" => DamageTypes.Force,
+                "Fire" => DamageTypes.Fire,
+                "Cold" => DamageTypes.Cold,
+                "Lighting" => DamageTypes.Ligthing,
+                "Poison" => DamageTypes.Poison,
+                "Acid" => DamageTypes.Acid,
+                "Shock" => DamageTypes.Shock,
+                "Soul" => DamageTypes.Soul,
+                "Mind" => DamageTypes.Mind,
                 _ => throw new Exception($"This isn't a valid damage type, please use a valid one. Value used: {st}")
             };
         }

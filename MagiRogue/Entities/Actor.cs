@@ -449,7 +449,7 @@ namespace MagiRogue.Entities
             return Body.Strength;
         }
 
-        public DamageType GetDamageType()
+        public DamageTypes GetDamageType()
         {
             if (WieldedItem() is not null && WieldedItem() is Item item)
             {
@@ -457,7 +457,7 @@ namespace MagiRogue.Entities
             }
             else
             {
-                return DamageType.Blunt;
+                return DamageTypes.Blunt;
             }
         }
 

@@ -6,7 +6,7 @@ namespace MagiRogue.Data.Enumerators
 {
     [Flags]
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum DamageType
+    public enum DamageTypes
     {
         None = 0,
         Blunt = 1,
@@ -19,6 +19,7 @@ namespace MagiRogue.Data.Enumerators
         Acid = 8,
         Shock = 9,
         Soul = 10,
-        Mind = 11
+        Mind = 11,
+        Ligthing = 12
     }
 }

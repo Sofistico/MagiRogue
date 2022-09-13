@@ -173,7 +173,7 @@ namespace MagiRogue.Entities
 
                 case >= 1:
                     wound.Severity = bpInjured is Limb ? InjurySeverity.Missing : InjurySeverity.Pulped;
-                    if (wound.DamageSource is DamageType.Blunt)
+                    if (wound.DamageSource is DamageTypes.Blunt)
                         wound.Severity = InjurySeverity.Pulped;
                     break;
 
@@ -181,7 +181,7 @@ namespace MagiRogue.Entities
                     throw new Exception($"Error with getting percentage of the damage done to the body part: {hpLostPercentage}");
             }
 
-            if (wound.DamageSource is DamageType.Sharp || wound.DamageSource is DamageType.Point)
+            if (wound.DamageSource is DamageTypes.Sharp || wound.DamageSource is DamageTypes.Point)
             {
                 wound.Bleeding = ((actorWounded.Weight / bpInjured.BodyPartWeight) * (int)wound.Severity) + 0.1;
             }
@@ -308,7 +308,7 @@ namespace MagiRogue.Entities
                 foreach (Limb connectedLimb in connectedParts)
                 {
                     // Here so that the bleeding from a lost part isn't being considered
-                    Wound lostLimb = new Wound(connectedLimb.BodyPartHp, DamageType.Sharp)
+                    Wound lostLimb = new Wound(connectedLimb.BodyPartHp, DamageTypes.Sharp)
                     {
                         Severity = InjurySeverity.Missing
                     };

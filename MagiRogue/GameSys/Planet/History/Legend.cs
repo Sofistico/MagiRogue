@@ -16,6 +16,7 @@ namespace MagiRogue.GameSys.Planet.History
     public class Legend
     {
         public string Happening { get; set; }
+        public int YearWhen { get; set; }
         public long TickWhen { get; set; }
         public HistoricalFigure WithWho { get; set; }
         public List<HistoricalFigure> WithWhos { get; set; }
@@ -23,6 +24,12 @@ namespace MagiRogue.GameSys.Planet.History
 
         public Legend()
         {
+        }
+
+        public Legend(string happening, int yearWhen)
+        {
+            Happening = happening;
+            YearWhen = yearWhen;
         }
 
         public Legend(string happening, long tickWhen)

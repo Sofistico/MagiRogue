@@ -86,7 +86,7 @@ namespace MagiRogue.Commands
 
             // Count up the amount of attacking damage done
             // and the number of successful blocks
-            (bool hit, Limb limbAttacked, Limb limbAttacking, DamageType dmgType)
+            (bool hit, Limb limbAttacked, Limb limbAttacking, DamageTypes dmgType)
                 = CombatUtils.ResolveHit(attacker, defender, attackMessage);
             double damage = CombatUtils.ResolveDefense(attacker,
                 defender, hit, attackMessage, defenseMessage, limbAttacked, dmgType, limbAttacking);

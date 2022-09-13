@@ -6,7 +6,7 @@ namespace MagiRogue.GameSys.Magic.Effects
     public class TeleportEffect : ISpellEffect
     {
         public SpellAreaEffect AreaOfEffect { get; set; }
-        public DamageType SpellDamageType { get; set; }
+        public DamageTypes SpellDamageType { get; set; }
         public int Radius { get; set; }
         public bool TargetsTile { get; set; } = true;
 
@@ -14,7 +14,7 @@ namespace MagiRogue.GameSys.Magic.Effects
         public int BaseDamage { get; set; } = 0;
 
         public TeleportEffect(SpellAreaEffect areaOfEffect = SpellAreaEffect.Target,
-            DamageType spellDamageType = DamageType.None, int radius = 0)
+            DamageTypes spellDamageType = DamageTypes.None, int radius = 0)
         {
             AreaOfEffect = areaOfEffect;
             SpellDamageType = spellDamageType;

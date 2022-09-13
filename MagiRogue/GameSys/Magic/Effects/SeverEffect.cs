@@ -9,14 +9,14 @@ namespace MagiRogue.GameSys.Magic.Effects
     public class SeverEffect : ISpellEffect
     {
         public SpellAreaEffect AreaOfEffect { get; set; }
-        public DamageType SpellDamageType { get; set; }
+        public DamageTypes SpellDamageType { get; set; }
         public int Radius { get; set; }
 
         public bool TargetsTile { get; set; } = false;
         public EffectTypes EffectType { get; set; } = EffectTypes.SEVER;
         public int BaseDamage { get; set; }
 
-        public SeverEffect(SpellAreaEffect areaOfEffect, DamageType spellDamageType, int radius, int dmg)
+        public SeverEffect(SpellAreaEffect areaOfEffect, DamageTypes spellDamageType, int radius, int dmg)
         {
             AreaOfEffect = areaOfEffect;
             SpellDamageType = spellDamageType;
@@ -44,7 +44,7 @@ namespace MagiRogue.GameSys.Magic.Effects
                 Limb limbToLose = poorGuy.GetAnatomy().Limbs[i];
 
                 //poorGuy.GetAnatomy().Dismember(limbToLose, poorGuy);
-                Wound injury = new Wound(limbToLose.MaxBodyPartHp, DamageType.Sharp);
+                Wound injury = new Wound(limbToLose.MaxBodyPartHp, DamageTypes.Sharp);
                 poorGuy.GetAnatomy().Injury(injury, limbToLose, poorGuy);
 
                 if (poorGuy is not null)

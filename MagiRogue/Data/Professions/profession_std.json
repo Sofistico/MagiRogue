@@ -2,7 +2,7 @@
   {
     "Id": "magic_teach",
     "Name": "Magic Teacher",
-    "Ability": [ "MagicLore", "Teaching" ]
+    "Ability": [ "MagicLore", "Teach" ]
   },
   {
     "Id": "basic_lore",
