@@ -7,7 +7,7 @@ using MagiRogue.GameSys.Tiles;
 
 namespace MagiRogue.GameSys.Civ
 {
-    public class Settlement
+    public sealed class Settlement
     {
         public Point WorldPos { get; set; }
         public SettlementType SettlementType { get; set; }

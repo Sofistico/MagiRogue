@@ -69,7 +69,7 @@ namespace MagiRogue.GameSys.Civ
 
         public void SetupInitialHistoricalFigures()
         {
-            // 10% of the population is in anyway important... sadly
+            // 1% of the population is in anyway important... sadly
             int nmbrOfImportant = (int)(TotalPopulation * 0.01);
             int numberOfNobles = (int)(nmbrOfImportant * 0.1);
             bool rulerChoosen = false;

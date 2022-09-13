@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace MagiRogue.GameSys.Civ
 {
-    public class CivRelation
+    public sealed class CivRelation
     {
         public int ParentId { get; set; }
         public int OtherCivId { get; set; }

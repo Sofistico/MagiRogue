@@ -13,7 +13,7 @@ namespace MagiRogue.GameSys.Planet.History
     /// A class that models a historical figure of the world, if it's still alive, there should be
     /// an associetaded actor to represent it.
     /// </summary>
-    public class HistoricalFigure
+    public sealed class HistoricalFigure
     {
         public string Name { get; set; }
         public string Description { get; set; }

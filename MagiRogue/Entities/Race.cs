@@ -14,7 +14,7 @@ using System.Runtime.Serialization;
 namespace MagiRogue.Entities
 {
     [DebuggerDisplay("{DebuggerDisplay, nq}")]
-    public class Race
+    public sealed class Race
     {
         private List<BodyPart> bodyParts;
 
