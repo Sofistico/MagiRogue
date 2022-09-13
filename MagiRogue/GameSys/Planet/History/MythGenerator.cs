@@ -11,7 +11,7 @@ using MagiRogue.Data;
 
 namespace MagiRogue.GameSys.Planet.History
 {
-    public class MythGenerator
+    public sealed class MythGenerator
     {
         private int mythId;
         // unhard code this!
@@ -54,7 +54,7 @@ namespace MagiRogue.GameSys.Planet.History
                 Myth newMyth = new Myth(mythId++, figures[0].Name, figures[0].MythWho.Value,
                     MythAction.Created, num.GetRandomItemFromList());
                 HistoricalFigure createdFigure = newMyth.CreateFigureFromMyth(figures[0].Name);
-                if(createdFigure is not null)
+                if (createdFigure is not null)
                 {
                     figures[0].RelatedHFs.Add(createdFigure.Name);
                     figures.Add(createdFigure);

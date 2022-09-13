@@ -25,7 +25,7 @@ namespace MagiRogue.GameSys
     /// </summary>
     [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
     [JsonConverter(typeof(MapJsonConverter))]
-    public class Map : GoRogue.GameFramework.Map, IDisposable
+    public sealed class Map : GoRogue.GameFramework.Map, IDisposable
     {
         #region Properties
 

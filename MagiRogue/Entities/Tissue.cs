@@ -3,7 +3,7 @@ using MagiRogue.GameSys.Physics;
 
 namespace MagiRogue.Entities
 {
-    public class Tissue
+    public sealed class Tissue
     {
         public string Name { get; set; }
         public MaterialTemplate Material { get; private set; }

@@ -13,7 +13,7 @@ namespace MagiRogue.Data
     /// <summary>
     /// This class takes care of the saving and loading of save files
     /// </summary>
-    public class SaveAndLoad
+    public sealed class SaveAndLoad
     {
         private const string _folderName = "Saves";
         private const int chunkPartition = 500;

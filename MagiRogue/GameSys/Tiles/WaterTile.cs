@@ -4,7 +4,7 @@ using SadRogue.Primitives;
 
 namespace MagiRogue.GameSys.Tiles
 {
-    public class WaterTile : TileBase
+    public sealed class WaterTile : TileBase
     {
         public bool IsSea { get; set; }
         public int SwinDifficulty { get; private set; } = 2;

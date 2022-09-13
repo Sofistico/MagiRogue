@@ -1,4 +1,4 @@
-﻿namespace MagiRogue.GameSys.Planet.History
+﻿namespace MagiRogue.Data.Enumerators
 {
     public enum SpecialFlag
     {

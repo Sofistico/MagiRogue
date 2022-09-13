@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MagiRogue.Entities
 {
-    public class Wound
+    public sealed class Wound
     {
         public double Bleeding { get; set; }
         public double HpLost { get; set; }

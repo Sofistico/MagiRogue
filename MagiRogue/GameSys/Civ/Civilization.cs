@@ -16,7 +16,7 @@ namespace MagiRogue.GameSys.Civ
 {
     //[JsonConverter(typeof(CivilizationJsonConverter))]
     [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
-    public class Civilization
+    public sealed class Civilization
     {
         public int Id { get; set; }
         public string Name { get; set; }

@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace MagiRogue.GameSys
 {
-    public class Room
+    public sealed class Room
     {
         public Rectangle RoomRectangle { get; set; }
         public RoomTag Tag { get; set; }

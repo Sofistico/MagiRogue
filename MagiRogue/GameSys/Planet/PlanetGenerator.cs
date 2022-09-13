@@ -17,7 +17,7 @@ namespace MagiRogue.GameSys.Planet
     /// <summary>
     /// Generates a brand new planet
     /// </summary>
-    public class PlanetGenerator
+    public sealed class PlanetGenerator
     {
         #region Fields
 

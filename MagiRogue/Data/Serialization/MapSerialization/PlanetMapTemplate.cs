@@ -9,7 +9,7 @@ using System.Runtime.Serialization;
 
 namespace MagiRogue.Data.Serialization.MapSerialization
 {
-    public class PlanetMapJsonConverter : JsonConverter<PlanetMap>
+    public sealed class PlanetMapJsonConverter : JsonConverter<PlanetMap>
     {
         public override PlanetMap? ReadJson(JsonReader reader, Type objectType,
             PlanetMap? existingValue, bool hasExistingValue,
@@ -54,7 +54,7 @@ namespace MagiRogue.Data.Serialization.MapSerialization
         }
     }
 
-    public class PlanetMapTemplate
+    public sealed class PlanetMapTemplate
     {
         [JsonIgnore]
         public float Min { get; set; }

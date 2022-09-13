@@ -8,7 +8,7 @@ using System.Runtime.Serialization;
 
 namespace MagiRogue.Entities
 {
-    public class Limb : BodyPart
+    public sealed class Limb : BodyPart
     {
         [JsonProperty("ConnectedTo")]
         private string? _connectedLimb;

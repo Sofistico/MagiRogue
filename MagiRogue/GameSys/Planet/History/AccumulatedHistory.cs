@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace MagiRogue.GameSys.Planet.History
 {
-    public class AccumulatedHistory
+    public sealed class AccumulatedHistory
     {
         private int roadId;
         private PlanetMap planetData;

@@ -21,7 +21,7 @@ namespace MagiRogue.GameSys
     /// for map creation
     /// </summary>
     [JsonConverter(typeof(UniverseJsonConverter))]
-    public class Universe
+    public sealed class Universe
     {
         // map creation and storage data
         private readonly int planetWidth = 257;

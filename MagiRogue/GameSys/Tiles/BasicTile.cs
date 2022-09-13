@@ -11,7 +11,7 @@ namespace MagiRogue.GameSys.Tiles
 {
     #region Tile Serializer
 
-    public class TileJsonConverter : JsonConverter<TileBase>
+    public sealed class TileJsonConverter : JsonConverter<TileBase>
     {
         public override TileBase ReadJson(JsonReader reader,
             Type objectType, TileBase? existingValue,
@@ -29,7 +29,7 @@ namespace MagiRogue.GameSys.Tiles
 
     #endregion Tile Serializer
 
-    public class BasicTile
+    public sealed class BasicTile
     {
         #region TileBase Properties
 
