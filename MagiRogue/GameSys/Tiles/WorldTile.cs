@@ -49,7 +49,7 @@ namespace MagiRogue.GameSys.Tiles
         public int RiverSize { get; set; }
         public int BiomeBitmask { get; set; }
 
-        public Settlement? SettlementInfluence { get; set; }
+        public Site? SiteInfluence { get; set; }
         public Road? Road { get; internal set; }
         public bool Visited { get; internal set; }
 

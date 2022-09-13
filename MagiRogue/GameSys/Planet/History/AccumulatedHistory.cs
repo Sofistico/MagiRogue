@@ -18,7 +18,7 @@ namespace MagiRogue.GameSys.Planet.History
         #region Consts
 
         private const int wealthToCreateRoad = 100;
-        private const int wealthToCreateNewSettlement = 1000;
+        private const int wealthToCreateNewSite = 1000;
 
         #endregion Consts
 
@@ -96,12 +96,12 @@ namespace MagiRogue.GameSys.Planet.History
                     }
                     int totalRevenueYear = 0;
 
-                    CreateNewSettlementIfPossible(tiles, civ);
+                    CreateNewSiteIfPossible(tiles, civ);
 
-                    // settlement simulation from the Civ here:
-                    foreach (Settlement settlement in civ.Settlements)
+                    // Site simulation from the Civ here:
+                    foreach (Site Site in civ.Sites)
                     {
-                        totalRevenueYear = SimulateSettlementAndReturnRevenue(tiles, totalRevenueYear, settlement);
+                        totalRevenueYear = SimulateSiteAndReturnRevenue(tiles, totalRevenueYear, Site);
                     }
                     civ.Wealth += totalRevenueYear;
                 }
@@ -111,30 +111,30 @@ namespace MagiRogue.GameSys.Planet.History
             }
         }
 
-        private static int SimulateSettlementAndReturnRevenue(WorldTile[,] tiles,
-            int totalRevenueYear, Settlement settlement)
+        private static int SimulateSiteAndReturnRevenue(WorldTile[,] tiles,
+            int totalRevenueYear, Site Site)
         {
-            settlement.CreateNewBuildings();
-            totalRevenueYear += settlement.MundaneResources;
-            settlement.GenerateMundaneResources();
-            settlement.SimulatePopulationGrowth(tiles[settlement.WorldPos.X, settlement.WorldPos.Y]);
+            Site.CreateNewBuildings();
+            totalRevenueYear += Site.MundaneResources;
+            Site.GenerateMundaneResources();
+            Site.SimulatePopulationGrowth(tiles[Site.WorldPos.X, Site.WorldPos.Y]);
             return totalRevenueYear;
         }
 
-        private static void CreateNewSettlementIfPossible(WorldTile[,] tiles, Civilization civ)
+        private static void CreateNewSiteIfPossible(WorldTile[,] tiles, Civilization civ)
         {
-            if (civ.Wealth > wealthToCreateNewSettlement)
+            if (civ.Wealth > wealthToCreateNewSite)
             {
                 int migrants = GameLoop.GlobalRand.NextInt(10, 100);
-                Settlement rngSettl = civ.Settlements.GetRandomItemFromList();
+                Site rngSettl = civ.Sites.GetRandomItemFromList();
                 rngSettl.Population -= migrants;
                 Point pos = rngSettl.WorldPos.GetPointNextTo();
-                Settlement settlement = new Settlement(pos,
-                    civ.RandomSettlementFromLanguageName(),
+                Site Site = new Site(pos,
+                    civ.RandomSiteFromLanguageName(),
                     migrants);
                 WorldTile tile = tiles[pos.X, pos.Y];
-                tile.SettlementInfluence = settlement;
-                civ.AddSettlementToCiv(settlement);
+                tile.SiteInfluence = Site;
+                civ.AddSiteToCiv(Site);
             }
         }
 
@@ -198,7 +198,7 @@ namespace MagiRogue.GameSys.Planet.History
             if (direction == Direction.Up)
             {
                 WorldTile worldTile = tile.Top;
-                if (worldTile.SettlementInfluence is not null)
+                if (worldTile.SiteInfluence is not null)
                 {
                     return;
                 }
@@ -211,7 +211,7 @@ namespace MagiRogue.GameSys.Planet.History
             if (direction == Direction.Down)
             {
                 WorldTile worldTile = tile.Bottom;
-                if (worldTile.SettlementInfluence is not null)
+                if (worldTile.SiteInfluence is not null)
                 {
                     return;
                 }
@@ -224,7 +224,7 @@ namespace MagiRogue.GameSys.Planet.History
             if (direction == Direction.Left)
             {
                 WorldTile worldTile = tile.Left;
-                if (worldTile.SettlementInfluence is not null)
+                if (worldTile.SiteInfluence is not null)
                 {
                     return;
                 }
@@ -238,7 +238,7 @@ namespace MagiRogue.GameSys.Planet.History
             if (direction == Direction.Right)
             {
                 WorldTile worldTile = tile.Right;
-                if (worldTile.SettlementInfluence is not null)
+                if (worldTile.SiteInfluence is not null)
                 {
                     return;
                 }
@@ -252,7 +252,7 @@ namespace MagiRogue.GameSys.Planet.History
             if (direction == Direction.UpLeft)
             {
                 WorldTile worldTile = tile.TopLeft;
-                if (worldTile.SettlementInfluence is not null)
+                if (worldTile.SiteInfluence is not null)
                 {
                     return;
                 }
@@ -266,7 +266,7 @@ namespace MagiRogue.GameSys.Planet.History
             if (direction == Direction.UpRight)
             {
                 WorldTile worldTile = tile.TopRight;
-                if (worldTile.SettlementInfluence is not null)
+                if (worldTile.SiteInfluence is not null)
                 {
                     return;
                 }
@@ -280,7 +280,7 @@ namespace MagiRogue.GameSys.Planet.History
             if (direction == Direction.DownLeft)
             {
                 WorldTile worldTile = tile.BottomLeft;
-                if (worldTile.SettlementInfluence is not null)
+                if (worldTile.SiteInfluence is not null)
                 {
                     return;
                 }
@@ -294,7 +294,7 @@ namespace MagiRogue.GameSys.Planet.History
             if (direction == Direction.DownRight)
             {
                 WorldTile worldTile = tile.BottomRight;
-                if (worldTile.SettlementInfluence is not null)
+                if (worldTile.SiteInfluence is not null)
                 {
                     return;
                 }

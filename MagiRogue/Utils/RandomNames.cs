@@ -5,7 +5,7 @@ namespace MagiRogue.Utils
 {
     public class RandomNames
     {
-        public static string SettlementNameGen()
+        public static string SiteNameGen()
         {
             string[] townNames = new string[] {"Blencathra",
                                     "Bellmoral",

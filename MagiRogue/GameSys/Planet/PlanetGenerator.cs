@@ -188,7 +188,7 @@ namespace MagiRogue.GameSys.Planet
                 || tile.HeightType == HeightType.River)
                     continue;
 
-                if (tile.SettlementInfluence != null)
+                if (tile.SiteInfluence != null)
                     continue;
 
                 var possibleCivs = DataManager.QueryCultureTemplateFromBiome(tile.BiomeType.ToString());
@@ -204,14 +204,14 @@ namespace MagiRogue.GameSys.Planet
 
                 int pop = (int)(rng * ((int)tile.HeightType * tile.MoistureValue + 1));
 
-                Settlement set = new Settlement(tile.Position, civ.RandomSettlementFromLanguageName(), pop)
+                Site set = new Site(tile.Position, civ.RandomSiteFromLanguageName(), pop)
                 {
                     MundaneResources = (int)tile.MineralValue
                 };
-                set.DefineSettlementSize();
+                set.DefineSiteSize();
 
-                tile.SettlementInfluence = set;
-                civ.AddSettlementToCiv(set);
+                tile.SiteInfluence = set;
+                civ.AddSiteToCiv(set);
                 civ.LanguageId = Data.DataManager.ListOfLanguages.GetRandomItemFromList().Id;
 
                 if (currentCivCount < maxCivsWorld)

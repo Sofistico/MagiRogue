@@ -17,7 +17,7 @@ namespace MagiRogue.Data.Serialization
         public string StartBiome { get; set; }
         public string LanguageSpoken { get; set; }
         public string[] PossibleTendencies { get; set; }
-        public List<SettlementType> PossibleSettlements { get; set; }
+        public List<SiteType> PossibleSites { get; set; }
         public List<WorldConstruction> PossibleWorldConstructions { get; set; }
         public List<Noble> Nobles { get; set; }
 
@@ -35,7 +35,7 @@ namespace MagiRogue.Data.Serialization
             {
                 NoblesPosition = Nobles,
                 PossibleWorldConstruction = PossibleWorldConstructions,
-                PossibleSettlements = PossibleSettlements,
+                PossibleSites = PossibleSites,
                 TemplateId = Id,
             };
             if (Races.Length > 0)

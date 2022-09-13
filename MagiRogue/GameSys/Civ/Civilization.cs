@@ -24,10 +24,10 @@ namespace MagiRogue.GameSys.Civ
         public string Name { get; set; }
         public Race PrimaryRace { get; set; }
         public List<string> OtherRaces { get; set; }
-        public int TotalPopulation { get => Settlements.Select(i => i.Population).Sum(); }
+        public int TotalPopulation { get => Sites.Select(i => i.Population).Sum(); }
         public CivilizationTendency Tendency { get; set; }
         public List<Point> Territory { get; set; }
-        public List<Settlement> Settlements { get; set; }
+        public List<Site> Sites { get; set; }
         public int Wealth { get; set; }
         public List<CivRelation> Relations { get; set; }
         public string LanguageId { get; set; }
@@ -46,7 +46,7 @@ namespace MagiRogue.GameSys.Civ
         public List<HistoricalFigure> ImportantPeople { get; set; }
         public bool Dead { get; set; }
         public List<WorldConstruction> PossibleWorldConstruction { get; set; }
-        public List<SettlementType> PossibleSettlements { get; set; }
+        public List<SiteType> PossibleSites { get; set; }
 
         [JsonConstructor]
         public Civilization(string name, Race primaryRace, CivilizationTendency tendency)
@@ -55,16 +55,16 @@ namespace MagiRogue.GameSys.Civ
             PrimaryRace = primaryRace;
             Tendency = tendency;
             Territory = new();
-            Settlements = new List<Settlement>();
+            Sites = new List<Site>();
             ImportantPeople = new();
             Relations = new();
         }
 
-        public void AddSettlementToCiv(Settlement settlement)
+        public void AddSiteToCiv(Site Site)
         {
-            Settlements.Add(settlement);
-            Territory.Add(settlement.WorldPos);
-            Wealth += settlement.MundaneResources;
+            Sites.Add(Site);
+            Territory.Add(Site.WorldPos);
+            Wealth += Site.MundaneResources;
         }
 
         public void SetupInitialHistoricalFigures()
@@ -162,9 +162,9 @@ namespace MagiRogue.GameSys.Civ
             return waterList;
         }
 
-        public Settlement GetSettlement(WorldTile worldTile)
+        public Site GetSite(WorldTile worldTile)
         {
-            return Settlements.FirstOrDefault(o => o.WorldPos == worldTile.Position);
+            return Sites.FirstOrDefault(o => o.WorldPos == worldTile.Position);
         }
 
         public void AddCivToRelations(Civilization civ, RelationType relationType)
@@ -203,7 +203,7 @@ namespace MagiRogue.GameSys.Civ
             return $"{Name} - {PrimaryRace}";
         }
 
-        public string RandomSettlementFromLanguageName()
+        public string RandomSiteFromLanguageName()
         {
             return RandomNames.RandomNamesFromLanguage(LanguageId).Replace(" ", "");
         }

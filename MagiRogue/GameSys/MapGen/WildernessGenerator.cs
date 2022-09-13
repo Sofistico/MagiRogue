@@ -30,7 +30,7 @@ namespace MagiRogue.GameSys.MapGen
                 {
                     ApplyModifierToTheMap(completeMap, worldTile, (uint)i);
                     // Revist when the mind is better working! i really need to sleep my little 🐴
-                    settlmentCounter = CreateSettlementsIfAny(completeMap,
+                    settlmentCounter = CreateSitesIfAny(completeMap,
                         worldTile, settlmentCounter);
                     FinishingTouches(completeMap, worldTile);
                     maps[i] = completeMap;
@@ -54,7 +54,7 @@ namespace MagiRogue.GameSys.MapGen
         private static void FinishingTouches(Map completeMap, WorldTile worldTile)
         {
             // here prune trees
-            if (worldTile.SettlementInfluence is not null)
+            if (worldTile.SiteInfluence is not null)
             {
                 PruneTrees(completeMap, worldTile);
                 MakeRoomUseful(completeMap, worldTile);
@@ -67,7 +67,7 @@ namespace MagiRogue.GameSys.MapGen
             bool oneRulerOnly = false;
             if (mapRooms is null)
                 return;
-            // make so that the list of rooms come from the worldTile.CivInfluence.Settlements
+            // make so that the list of rooms come from the worldTile.CivInfluence.Sites
             foreach (Room room in mapRooms)
             {
                 if (room.RoomRectangle.Area >= 6)
@@ -219,7 +219,7 @@ namespace MagiRogue.GameSys.MapGen
             List<TileBase> trees = completeMap.ReturnAllTrees();
 
             int chanceToRemoveTree = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt
-                ((worldTile.SettlementInfluence.Population)) / 100;
+                ((worldTile.SiteInfluence.Population)) / 100;
             for (int i = 0; i < trees.Count; i++)
             {
                 int rng = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, 101);
@@ -334,54 +334,54 @@ namespace MagiRogue.GameSys.MapGen
         /// </summary>
         /// <param name="completeMap"></param>
         /// <param name="worldTile"></param>
-        /// <param name="createdSettlements"></param>
-        /// <returns>Returns the number of settlement already created on the map</returns>
+        /// <param name="createdSites"></param>
+        /// <returns>Returns the number of Site already created on the map</returns>
         /// <exception cref="ApplicationException"></exception>
-        private int CreateSettlementsIfAny(Map completeMap, WorldTile worldTile, int createdSettlements)
+        private int CreateSitesIfAny(Map completeMap, WorldTile worldTile, int createdSites)
         {
-            if (worldTile.SettlementInfluence is not null)
+            if (worldTile.SiteInfluence is not null)
             {
                 CityGenerator city = new();
-                var settlement = worldTile.SettlementInfluence;
-                if ((int)settlement.Size == createdSettlements)
-                    return (int)settlement.Size;
-                switch (settlement.Size)
+                var Site = worldTile.SiteInfluence;
+                if ((int)Site.Size == createdSites)
+                    return (int)Site.Size;
+                switch (Site.Size)
                 {
-                    case SettlementSize.None:
+                    case SiteSize.None:
                         throw new ApplicationException("Room generated was from the default error!");
 
-                    case SettlementSize.Small:
+                    case SiteSize.Small:
                         city.GenerateSmallVillage(completeMap,
                             randNum.NextInt(4, 7),
                             randNum.NextInt(4, 7),
                             randNum.NextInt(8, 12),
-                            settlement.Name,
-                            settlement.Buildings);
+                            Site.Name,
+                            Site.Buildings);
                         break;
 
-                    case SettlementSize.Medium:
+                    case SiteSize.Medium:
                         city.GenerateMediumTown(completeMap,
                             randNum.NextInt(4, 7),
                             randNum.NextInt(4, 7),
                             randNum.NextInt(8, 12),
-                            settlement.Name,
-                            settlement.Buildings);
+                            Site.Name,
+                            Site.Buildings);
                         break;
 
-                    case SettlementSize.Large:
+                    case SiteSize.Large:
                         city.GenerateBigCityFromMapBSP(completeMap,
                             randNum.NextInt(17, 30),
                             randNum.NextInt(4, 7),
                             randNum.NextInt(8, 12),
-                            settlement.Name,
-                            settlement.Buildings);
+                            Site.Name,
+                            Site.Buildings);
                         break;
 
                     default:
                         throw new ApplicationException("There was an error with the room generated!");
                 }
 
-                return ++createdSettlements;
+                return ++createdSites;
             }
 
             return 0;

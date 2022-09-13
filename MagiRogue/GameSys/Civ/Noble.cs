@@ -15,8 +15,8 @@ namespace MagiRogue.GameSys.Civ
         public int MaxAmmount { get; set; }
 
         /// <summary>
-        /// Goes from 1 to 3, 1 is just the settlement level,
-        /// 2 is for interacting beetween settlement and 3 is beetween civs
+        /// Goes from 1 to 3, 1 is just the Site level,
+        /// 2 is for interacting beetween Site and 3 is beetween civs
         /// </summary>
         public int ImportanceLevel { get; set; }
         public int Precedence { get; set; }

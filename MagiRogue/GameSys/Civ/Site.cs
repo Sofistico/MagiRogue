@@ -7,12 +7,12 @@ using MagiRogue.GameSys.Tiles;
 
 namespace MagiRogue.GameSys.Civ
 {
-    public sealed class Settlement
+    public sealed class Site
     {
         public Point WorldPos { get; set; }
-        public SettlementType SettlementType { get; set; }
+        public SiteType SiteType { get; set; }
         public string Name { get; set; }
-        public SettlementSize Size { get; set; }
+        public SiteSize Size { get; set; }
         public int MilitaryStrenght { get; set; }
         public int MagicStrenght { get; set; }
         public int Population { get; set; }
@@ -21,18 +21,18 @@ namespace MagiRogue.GameSys.Civ
         public List<Room> Buildings { get; set; } = new();
         public bool Dead { get; set; }
 
-        public Settlement()
+        public Site()
         {
         }
 
-        public Settlement(Point pos, string name, int totalPopulation)
+        public Site(Point pos, string name, int totalPopulation)
         {
             WorldPos = pos;
             Name = name;
             Population = totalPopulation;
         }
 
-        public void DefineSettlementSize()
+        public void DefineSiteSize()
         {
             int usableResources = 0;
             try
@@ -41,19 +41,19 @@ namespace MagiRogue.GameSys.Civ
             }
             catch (DivideByZeroException)
             {
-                Size = SettlementSize.None;
+                Size = SiteSize.None;
             }
             if (usableResources > 100 && usableResources < 1000)
             {
-                Size = SettlementSize.Small;
+                Size = SiteSize.Small;
             }
             if (usableResources > 1000 && usableResources < 10000)
             {
-                Size = SettlementSize.Medium;
+                Size = SiteSize.Medium;
             }
             if (usableResources > 10000)
             {
-                Size = SettlementSize.Large;
+                Size = SiteSize.Large;
             }
         }
 
@@ -127,7 +127,7 @@ namespace MagiRogue.GameSys.Civ
                     room.Tag = RoomTag.Abandoned;
             }
             // if the resources got big enough, update!
-            DefineSettlementSize();
+            DefineSiteSize();
         }
 
         public void CreateNewBuildings()

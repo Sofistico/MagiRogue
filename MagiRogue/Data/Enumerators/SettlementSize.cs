@@ -4,7 +4,7 @@ using Newtonsoft.Json.Converters;
 namespace MagiRogue.Data.Enumerators
 {
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum SettlementSize
+    public enum SiteSize
     {
         None = 0,
         /// <summary>

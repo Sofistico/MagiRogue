@@ -27,7 +27,7 @@ namespace MagiRogue.GameSys.Planet.History
 
         //public Entity? AssocietedEntity { get; set; }
         public List<int> RelatedCivs { get; set; } = new();
-        public List<int> RelatedSettlements { get; set; } = new();
+        public List<int> RelatedSites { get; set; } = new();
         public List<string> RelatedHFs { get; set; } = new();
         public Mind Mind { get; set; } = new();
         public Soul Soul { get; set; }

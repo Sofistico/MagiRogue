@@ -4,7 +4,7 @@
     "Races": [ "human" ],
     "LanguageSpoken": "common_language",
     "PossibleTendencies": [ "Any" ],
-    "PossibleSettlements": [ "City" ],
+    "PossibleSites": [ "City" ],
     "PossibleWorldConstructions": [ "Road", "Bridge" ],
     "StartBiome": "Grassland",
     "Nobles": [
