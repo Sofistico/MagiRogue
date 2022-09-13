@@ -45,6 +45,7 @@ namespace MagiRogue.Data.Enumerators
 
         //Misc
         Concentration,
+        Discipline,
         Write,
         Teach,
         Read,
@@ -55,7 +56,7 @@ namespace MagiRogue.Data.Enumerators
         // scholary
         MagicLore,
         Research,
-        Mathematician,
+        Mathematics,
         Astronomer,
         Chemist,
         Physics,
