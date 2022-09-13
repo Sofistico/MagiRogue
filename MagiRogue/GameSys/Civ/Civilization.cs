@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using static SadConsole.Readers.Playscii;
 
 namespace MagiRogue.GameSys.Civ
 {
@@ -19,16 +20,19 @@ namespace MagiRogue.GameSys.Civ
     public sealed class Civilization
     {
         public int Id { get; set; }
+        public string IdName { get; set; }
         public string Name { get; set; }
+        public string PrimaryRaceId { get; set; }
         public Race PrimaryRace { get; set; }
+        public List<string> OtherRaces { get; set; } = new();
         public int TotalPopulation { get => Settlements.Select(i => i.Population).Sum(); }
-
         public CivilizationTendency Tendency { get; set; }
         public List<Point> Territory { get; set; }
         public List<Settlement> Settlements { get; set; }
         public int Wealth { get; set; }
         public List<CivRelation> Relations { get; set; }
         public string LanguageId { get; set; }
+        public List<Noble> NoblesPosition { get; set; }
 
         public CivRelation this[int otherCivId]
         {
@@ -58,6 +62,7 @@ namespace MagiRogue.GameSys.Civ
         public void AddSettlementToCiv(Settlement settlement)
         {
             Settlements.Add(settlement);
+            Territory.Add(settlement.WorldPos);
             Wealth += settlement.MundaneResources;
         }
 

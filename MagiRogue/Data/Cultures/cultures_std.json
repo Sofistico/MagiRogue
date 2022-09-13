@@ -1,0 +1,51 @@
+﻿[
+  {
+    "Id": "base_human",
+    "Races": [ "human" ],
+    "LanguageSpoken": "common_language",
+    "PossibleTendencies": [ "Any" ],
+    "PossibleSettlements": [ "City" ],
+    "StartBiome": "Grassland",
+    "Nobles": [
+      {
+        "Id": "king",
+        "Name": "Monarch",
+        "MaleName": "King",
+        "FemaleName": "Queen",
+        "Spouse": "Monarch consort",
+        "SpouseMaleName": "King consort",
+        "SpouseFemaleName": "Queen consort",
+        "MaxAmmount": 1,
+        "ImportanceLevel": 3,
+        "Precedence": 1,
+        "Responsabilities": [ "Rule", "LeadArmy" ]
+      },
+      {
+        "Id": "administrator",
+        "Name": "Administrator",
+        "MaleName": "Administrator",
+        "FemaleName": "Administrator",
+        "Spouse": "Administrator consort",
+        "SpouseMaleName": "Administrator consort",
+        "SpouseFemaleName": "Administrator consort",
+        "MaxAmmount": 999,
+        "ImportanceLevel": 1,
+        "Precedence": 10,
+        "Responsabilities": [ "Administrate" ]
+      },
+      {
+        "Id": "general",
+        "Name": "General",
+        "MaleName": "General",
+        "FemaleName": "General",
+        "Spouse": "General consort",
+        "SpouseMaleName": "General consort",
+        "SpouseFemaleName": "General consort",
+        "MaxAmmount": 999,
+        "ImportanceLevel": 2,
+        "Precedence": 5,
+        "Responsabilities": [ "LeadArmy", "AdviseRuler" ]
+      }
+    ]
+  }
+]

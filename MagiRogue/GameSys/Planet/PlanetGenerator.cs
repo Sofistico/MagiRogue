@@ -1,5 +1,6 @@
 ﻿using GoRogue.DiceNotation;
 using GoRogue.Pathing;
+using MagiRogue.Data;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Civ;
@@ -187,7 +188,16 @@ namespace MagiRogue.GameSys.Planet
                 || tile.HeightType == HeightType.River)
                     continue;
 
-                if (tile.CivInfluence != null)
+                if (tile.SettlementInfluence != null)
+                    continue;
+
+                var possibleCivs = DataManager.QueryCultureTemplateFromBiome(tile.BiomeType.ToString());
+                Civilization civ;
+                if (possibleCivs.Count > 0)
+                {
+                    civ = possibleCivs.GetRandomItemFromList().ConvertToCivilization();
+                }
+                else
                     continue;
 
                 int rng = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(100, 5000);
@@ -199,16 +209,8 @@ namespace MagiRogue.GameSys.Planet
                     MundaneResources = (int)tile.MineralValue
                 };
                 set.DefineSettlementSize();
-                var nmbrRaces = Data.DataManager.ListOfRaces.Where(i => i.ValidCivRace).Count();
-                Race race = Data.DataManager.ListOfRaces.Where(i => i.ValidCivRace).ToList()[GameLoop.GlobalRand.NextInt(nmbrRaces)];
-                Civilization civ = new($"Random Name Here {currentCivCount}",
-                    race, RandomCivTendency())
-                {
-                    Id = id,
-                };
 
-                tile.CivInfluence = civ;
-                civ.Territory.Add(tile.Position);
+                tile.SettlementInfluence = set;
                 civ.AddSettlementToCiv(set);
                 civ.LanguageId = Data.DataManager.ListOfLanguages.GetRandomItemFromList().Id;
 

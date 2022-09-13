@@ -28,6 +28,8 @@ namespace MagiRogue.Entities
 
         public void AddAbilityToDictionary(Ability ability)
         {
+            if (ability.ReturnAbilityEnumFromString() is AbilityName.None)
+                return;
             Abilities.TryAdd(ability.Id, ability);
         }
 

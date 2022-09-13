@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MagiRogue.Data;
+using MagiRogue.GameSys.Civ;
 
 namespace MagiRogue.GameSys.Planet.History
 {
@@ -31,6 +32,7 @@ namespace MagiRogue.GameSys.Planet.History
         public Mind Mind { get; set; } = new();
         public Soul Soul { get; set; }
         public List<SpecialFlag> SpecialFlags { get; set; } = new();
+        public List<Noble> NoblePositions { get; set; }
 
         public HistoricalFigure(string name,
             Sex hFGender,
@@ -83,6 +85,8 @@ namespace MagiRogue.GameSys.Planet.History
 
             foreach (AbilityName e in enums)
             {
+                if (e is AbilityName.None)
+                    continue;
                 bool hasSkill = Mrn.OneIn(10);
                 if (hasSkill)
                 {

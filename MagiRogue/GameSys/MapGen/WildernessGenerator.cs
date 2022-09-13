@@ -54,7 +54,7 @@ namespace MagiRogue.GameSys.MapGen
         private static void FinishingTouches(Map completeMap, WorldTile worldTile)
         {
             // here prune trees
-            if (worldTile.CivInfluence is not null)
+            if (worldTile.SettlementInfluence is not null)
             {
                 PruneTrees(completeMap, worldTile);
                 MakeRoomUseful(completeMap, worldTile);
@@ -219,7 +219,7 @@ namespace MagiRogue.GameSys.MapGen
             List<TileBase> trees = completeMap.ReturnAllTrees();
 
             int chanceToRemoveTree = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt
-                ((worldTile.CivInfluence.GetSettlement(worldTile).Population)) / 100;
+                ((worldTile.SettlementInfluence.Population)) / 100;
             for (int i = 0; i < trees.Count; i++)
             {
                 int rng = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, 101);
@@ -339,10 +339,10 @@ namespace MagiRogue.GameSys.MapGen
         /// <exception cref="ApplicationException"></exception>
         private int CreateSettlementsIfAny(Map completeMap, WorldTile worldTile, int createdSettlements)
         {
-            if (worldTile.CivInfluence is not null)
+            if (worldTile.SettlementInfluence is not null)
             {
                 CityGenerator city = new();
-                var settlement = worldTile.CivInfluence.GetSettlement(worldTile);
+                var settlement = worldTile.SettlementInfluence;
                 if ((int)settlement.Size == createdSettlements)
                     return (int)settlement.Size;
                 switch (settlement.Size)

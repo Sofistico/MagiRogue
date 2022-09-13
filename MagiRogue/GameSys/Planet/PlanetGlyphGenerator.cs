@@ -336,7 +336,7 @@ namespace MagiRogue.GameSys.Planet
                 {
                     WorldTile tile = tiles[x, y];
 
-                    if (tile.CivInfluence is not null)
+                    if (tile.SettlementInfluence is not null)
                     {
                         tile.Glyph = '#';
                         tile.Foreground = Color.White;

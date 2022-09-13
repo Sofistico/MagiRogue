@@ -49,7 +49,7 @@ namespace MagiRogue.GameSys.Tiles
         public int RiverSize { get; set; }
         public int BiomeBitmask { get; set; }
 
-        public Civilization? CivInfluence { get; set; }
+        public Settlement? SettlementInfluence { get; set; }
         public Road? Road { get; internal set; }
         public bool Visited { get; internal set; }
 
@@ -171,11 +171,6 @@ namespace MagiRogue.GameSys.Tiles
             {
                 throw new Exception($"Recursive river generation failed!");
             }
-        }
-
-        public Settlement GetSettlement()
-        {
-            return CivInfluence is not null ? CivInfluence.GetSettlement(this) : null;
         }
 
         private void SetRiverTile(River river)

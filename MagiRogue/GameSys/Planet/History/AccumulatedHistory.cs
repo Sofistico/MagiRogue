@@ -133,7 +133,7 @@ namespace MagiRogue.GameSys.Planet.History
                     RandomNames.RandomNamesFromLanguage(civ.GetLanguage()),
                     migrants);
                 WorldTile tile = tiles[pos.X, pos.Y];
-                tile.CivInfluence = civ;
+                tile.SettlementInfluence = settlement;
                 civ.AddSettlementToCiv(settlement);
             }
         }
@@ -195,7 +195,7 @@ namespace MagiRogue.GameSys.Planet.History
             if (direction == Direction.Up)
             {
                 WorldTile worldTile = tile.Top;
-                if (worldTile.CivInfluence is not null)
+                if (worldTile.SettlementInfluence is not null)
                 {
                     return;
                 }
@@ -208,7 +208,7 @@ namespace MagiRogue.GameSys.Planet.History
             if (direction == Direction.Down)
             {
                 WorldTile worldTile = tile.Bottom;
-                if (worldTile.CivInfluence is not null)
+                if (worldTile.SettlementInfluence is not null)
                 {
                     return;
                 }
@@ -221,7 +221,7 @@ namespace MagiRogue.GameSys.Planet.History
             if (direction == Direction.Left)
             {
                 WorldTile worldTile = tile.Left;
-                if (worldTile.CivInfluence is not null)
+                if (worldTile.SettlementInfluence is not null)
                 {
                     return;
                 }
@@ -235,7 +235,7 @@ namespace MagiRogue.GameSys.Planet.History
             if (direction == Direction.Right)
             {
                 WorldTile worldTile = tile.Right;
-                if (worldTile.CivInfluence is not null)
+                if (worldTile.SettlementInfluence is not null)
                 {
                     return;
                 }
@@ -249,7 +249,7 @@ namespace MagiRogue.GameSys.Planet.History
             if (direction == Direction.UpLeft)
             {
                 WorldTile worldTile = tile.TopLeft;
-                if (worldTile.CivInfluence is not null)
+                if (worldTile.SettlementInfluence is not null)
                 {
                     return;
                 }
@@ -263,7 +263,7 @@ namespace MagiRogue.GameSys.Planet.History
             if (direction == Direction.UpRight)
             {
                 WorldTile worldTile = tile.TopRight;
-                if (worldTile.CivInfluence is not null)
+                if (worldTile.SettlementInfluence is not null)
                 {
                     return;
                 }
@@ -277,7 +277,7 @@ namespace MagiRogue.GameSys.Planet.History
             if (direction == Direction.DownLeft)
             {
                 WorldTile worldTile = tile.BottomLeft;
-                if (worldTile.CivInfluence is not null)
+                if (worldTile.SettlementInfluence is not null)
                 {
                     return;
                 }
@@ -291,7 +291,7 @@ namespace MagiRogue.GameSys.Planet.History
             if (direction == Direction.DownRight)
             {
                 WorldTile worldTile = tile.BottomRight;
-                if (worldTile.CivInfluence is not null)
+                if (worldTile.SettlementInfluence is not null)
                 {
                     return;
                 }

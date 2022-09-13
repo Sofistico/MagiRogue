@@ -4,6 +4,7 @@ using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.Entities;
 using MagiRogue.Entities.StarterScenarios;
+using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Magic;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
@@ -55,6 +56,9 @@ namespace MagiRogue.Data
         public static readonly IReadOnlyList<Profession> ListOfProfessions =
             GetSourceTree<Profession>(@".\Data\Professions\profession_*.json");
 
+        public static readonly IReadOnlyList<CultureTemplate> ListOfCultures =
+            GetSourceTree<CultureTemplate>(@".\Data\Cultures\cultures_*.json");
+
         #region Descriptors
 
         public static readonly IReadOnlyList<string> ListOfRealmsName =
@@ -92,6 +96,8 @@ namespace MagiRogue.Data
 
             return readOnlyList;
         }
+
+        #region Queryes
 
         public static SpellBase QuerySpellInData(string spellId) => ListOfSpells.FirstOrDefault
                 (m => m.SpellId.Equals(spellId)).Copy();
@@ -164,6 +170,14 @@ namespace MagiRogue.Data
 
         public static ShapeDescriptor QueryShapeDescInData(string shapeId)
             => ListOfShapes.FirstOrDefault(i => i.Id.Equals(shapeId));
+
+        public static CultureTemplate QueryCultureTemplateInData(string cultureId)
+            => ListOfCultures.FirstOrDefault(i => i.Id.Equals(cultureId));
+
+        public static List<CultureTemplate> QueryCultureTemplateFromBiome(string biomeId)
+            => ListOfCultures.Where(i => i.StartBiome.Equals(biomeId)).ToList();
+
+        #endregion Queryes
 
         public static Language RandomLangugage()
             => ListOfLanguages.GetRandomItemFromList();

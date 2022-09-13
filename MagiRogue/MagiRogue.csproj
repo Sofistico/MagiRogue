@@ -55,6 +55,9 @@
     <None Update="Data\Bodies\body_std.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Data\Cultures\cultures_std.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Data\Descriptors\shapes_std.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
