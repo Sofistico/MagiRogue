@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using ShaiRandom.Distributions.Continuous;
+using System.Collections.Generic;
+using System.Linq;
 using System.Resources;
 
 namespace MagiRogue.Utils
@@ -43,6 +45,25 @@ namespace MagiRogue.Utils
         {
             int rng = GameLoop.GlobalRand.NextInt(list.Count);
             return list[rng];
+        }
+
+        public static void ShuffleAlgorithm<T>(this List<T> enumerable)
+        {
+            int n = enumerable.Count;
+            for (int i = n - 1; i > 0; i--)
+            {
+                int j = GameLoop.GlobalRand.NextInt(i + 1);
+                (enumerable[j], enumerable[i]) = (enumerable[i], enumerable[j]);
+            }
+        }
+
+        public static List<T> ShuffleAlgorithmAndTakeN<T>(this List<T> values, int howManyToTake)
+        {
+            List<T> list = new List<T>(values);
+
+            list.ShuffleAlgorithm();
+
+            return list.Take<T>(howManyToTake).ToList();
         }
     }
 }

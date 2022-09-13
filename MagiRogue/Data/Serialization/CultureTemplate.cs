@@ -35,7 +35,8 @@ namespace MagiRogue.Data.Serialization
             {
                 NoblesPosition = Nobles,
                 PossibleWorldConstruction = PossibleWorldConstructions,
-                PossibleSettlements = PossibleSettlements
+                PossibleSettlements = PossibleSettlements,
+                TemplateId = Id,
             };
             if (Races.Length > 0)
             {

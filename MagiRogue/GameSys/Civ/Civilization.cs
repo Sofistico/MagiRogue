@@ -20,11 +20,10 @@ namespace MagiRogue.GameSys.Civ
     public sealed class Civilization
     {
         public int Id { get; set; }
-        public string IdName { get; set; }
+        public string TemplateId { get; set; }
         public string Name { get; set; }
-        public string PrimaryRaceId { get; set; }
         public Race PrimaryRace { get; set; }
-        public List<string> OtherRaces { get; set; } = new();
+        public List<string> OtherRaces { get; set; }
         public int TotalPopulation { get => Settlements.Select(i => i.Population).Sum(); }
         public CivilizationTendency Tendency { get; set; }
         public List<Point> Territory { get; set; }
@@ -97,17 +96,28 @@ namespace MagiRogue.GameSys.Civ
                 figure.RelatedCivs.Add(Id);
                 ImportantPeople.Add(figure);
             }
+
+            List<HistoricalFigure> nobles = ImportantPeople.ShuffleAlgorithmAndTakeN(numberOfNobles);
+
             for (int i = 0; i < numberOfNobles; i++)
             {
                 bool isRuler = Mrn.OneIn(numberOfNobles);
-                if (isRuler)
+                nobles[i].NobleTitles.Add(NoblesPosition.Where(
+                        i => !i.Responsabilities.Contains(Responsability.Rule)).ToList().GetRandomItemFromList());
+                if (isRuler && !rulerChoosen)
                 {
                     rulerChoosen = true;
+                    nobles[i].NobleTitles.Add(NoblesPosition.FirstOrDefault(
+                        i => i.Responsabilities.Contains(Responsability.Rule)));
                 }
             }
+
             if (!rulerChoosen)
             {
                 // choose the ruler here if it hasn't appereade till now!
+                nobles.GetRandomItemFromList().NobleTitles.Add(NoblesPosition.FirstOrDefault(
+                        i => i.Responsabilities.Contains(Responsability.Rule)));
+                rulerChoosen = true;
             }
         }
 

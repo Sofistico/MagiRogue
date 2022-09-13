@@ -32,7 +32,7 @@ namespace MagiRogue.GameSys.Planet.History
         public Mind Mind { get; set; } = new();
         public Soul Soul { get; set; }
         public List<SpecialFlag> SpecialFlags { get; set; } = new();
-        public List<Noble> NoblePositions { get; set; }
+        public List<Noble> NobleTitles { get; set; }
 
         public HistoricalFigure(string name,
             Sex hFGender,
