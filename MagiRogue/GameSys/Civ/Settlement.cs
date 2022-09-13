@@ -10,6 +10,7 @@ namespace MagiRogue.GameSys.Civ
     public class Settlement
     {
         public Point WorldPos { get; set; }
+        public SettlementType SettlementType { get; set; }
         public string Name { get; set; }
         public SettlementSize Size { get; set; }
         public int MilitaryStrenght { get; set; }

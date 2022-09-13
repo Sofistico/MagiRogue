@@ -5,6 +5,7 @@
     "LanguageSpoken": "common_language",
     "PossibleTendencies": [ "Any" ],
     "PossibleSettlements": [ "City" ],
+    "PossibleWorldConstructions": [ "Road", "Bridge" ],
     "StartBiome": "Grassland",
     "Nobles": [
       {

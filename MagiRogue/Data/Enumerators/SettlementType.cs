@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace MagiRogue.Data.Enumerators
 {
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum PossibleSettlements
+    public enum SettlementType
     {
         City,
         Dungeon,

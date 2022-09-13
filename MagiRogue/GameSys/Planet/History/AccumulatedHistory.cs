@@ -130,7 +130,7 @@ namespace MagiRogue.GameSys.Planet.History
                 rngSettl.Population -= migrants;
                 Point pos = rngSettl.WorldPos.GetPointNextTo();
                 Settlement settlement = new Settlement(pos,
-                    RandomNames.RandomNamesFromLanguage(civ.GetLanguage()),
+                    civ.RandomSettlementFromLanguageName(),
                     migrants);
                 WorldTile tile = tiles[pos.X, pos.Y];
                 tile.SettlementInfluence = settlement;
@@ -140,8 +140,11 @@ namespace MagiRogue.GameSys.Planet.History
 
         private bool BuildRoadsToFriends(Civilization civ, Civilization friend, WorldTile[,] tiles)
         {
+            if (!civ.PossibleWorldConstruction.Contains(WorldConstruction.Road))
+                return false;
+
             if (civ.Relations.Any(i => i.OtherCivId.Equals(friend.Id)
-                && i.Relation is RelationType.Friendly && i.RoadBuilt))
+            && i.Relation is RelationType.Friendly && i.RoadBuilt))
                 return false;
             if (civ[friend.Id].RoadBuilt)
                 return false;

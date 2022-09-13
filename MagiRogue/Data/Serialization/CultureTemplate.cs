@@ -17,7 +17,8 @@ namespace MagiRogue.Data.Serialization
         public string StartBiome { get; set; }
         public string LanguageSpoken { get; set; }
         public string[] PossibleTendencies { get; set; }
-        public List<string> PossibleSettlements { get; set; }
+        public List<SettlementType> PossibleSettlements { get; set; }
+        public List<WorldConstruction> PossibleWorldConstructions { get; set; }
         public List<Noble> Nobles { get; set; }
 
         public CultureTemplate()
@@ -32,7 +33,9 @@ namespace MagiRogue.Data.Serialization
             CivilizationTendency tendency = DetermineCivTendency();
             Civilization civ = new Civilization(rngName, primaryRace, tendency)
             {
-                NoblesPosition = Nobles
+                NoblesPosition = Nobles,
+                PossibleWorldConstruction = PossibleWorldConstructions,
+                PossibleSettlements = PossibleSettlements
             };
             if (Races.Length > 0)
             {

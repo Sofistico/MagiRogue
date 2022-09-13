@@ -46,6 +46,8 @@ namespace MagiRogue.GameSys.Civ
         }
         public List<HistoricalFigure> ImportantPeople { get; set; }
         public bool Dead { get; set; }
+        public List<WorldConstruction> PossibleWorldConstruction { get; set; }
+        public List<SettlementType> PossibleSettlements { get; set; }
 
         [JsonConstructor]
         public Civilization(string name, Race primaryRace, CivilizationTendency tendency)
@@ -189,6 +191,11 @@ namespace MagiRogue.GameSys.Civ
         public override string ToString()
         {
             return $"{Name} - {PrimaryRace}";
+        }
+
+        public string RandomSettlementFromLanguageName()
+        {
+            return RandomNames.RandomNamesFromLanguage(LanguageId).Replace(" ", "");
         }
     }
 }

@@ -204,7 +204,7 @@ namespace MagiRogue.GameSys.Planet
 
                 int pop = (int)(rng * ((int)tile.HeightType * tile.MoistureValue + 1));
 
-                Settlement set = new Settlement(tile.Position, RandomNames.SettlementNameGen(), pop)
+                Settlement set = new Settlement(tile.Position, civ.RandomSettlementFromLanguageName(), pop)
                 {
                     MundaneResources = (int)tile.MineralValue
                 };
