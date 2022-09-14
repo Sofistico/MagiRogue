@@ -13,7 +13,6 @@ namespace MagiRogue.GameSys.Planet.History
 {
     public sealed class MythGenerator
     {
-        private int mythId;
         // unhard code this!
         private const int nmbrInteractions = 5;
         private const int nmbrOfNewMyths = 3;
@@ -57,12 +56,12 @@ namespace MagiRogue.GameSys.Planet.History
                     MythWhat.Spirits,
                     MythWhat.Forces,
                 };
-                Myth newMyth = new Myth(mythId++, figures[0].Name, figures[0].MythWho.Value,
+                Myth newMyth = new Myth(figures[0].Name, figures[0].MythWho.Value,
                     MythAction.Created, num.GetRandomItemFromList());
                 HistoricalFigure createdFigure = newMyth.CreateFigureFromMyth(figures[0].Name);
                 if (createdFigure is not null)
                 {
-                    figures[0].RelatedHFs.Add(createdFigure.Name);
+                    figures[0].AddRelatedHf(createdFigure.Id, HfRelationType.Creator);
                     figures.Add(createdFigure);
                     myths.Add(newMyth);
                 }
@@ -86,7 +85,7 @@ namespace MagiRogue.GameSys.Planet.History
                 while (stack.Count > 0)
                 {
                     HistoricalFigure figure = stack.Pop();
-                    Myth myth = figure.MythAct(mythId++);
+                    Myth myth = figure.MythAct();
                     myths.Add(myth);
 
                     if (myth.MythAction is MythAction.Created &&
@@ -238,7 +237,7 @@ namespace MagiRogue.GameSys.Planet.History
                     break;
             }
 
-            Myth myth = new Myth(mythId++,
+            Myth myth = new Myth(
                 precursorFigure.Name,
                 precursor,
                 MythAction.Created,
@@ -249,7 +248,7 @@ namespace MagiRogue.GameSys.Planet.History
 
             if (createdRace)
             {
-                Myth raceCreationMyth = new Myth(mythId++,
+                Myth raceCreationMyth = new Myth(
                     precursorFigure.Name,
                     precursor,
                     MythAction.Created,

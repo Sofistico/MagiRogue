@@ -7,6 +7,7 @@ using System.Linq;
 using MagiRogue.Data;
 using MagiRogue.GameSys.Civ;
 using System.Text;
+using MagiRogue.GameSys.Tiles;
 
 namespace MagiRogue.GameSys.Planet.History
 {
@@ -16,6 +17,9 @@ namespace MagiRogue.GameSys.Planet.History
     /// </summary>
     public sealed class HistoricalFigure
     {
+        #region Props
+
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public Sex HFGender { get; set; }
@@ -27,14 +31,18 @@ namespace MagiRogue.GameSys.Planet.History
         public bool IsAlive { get; set; }
 
         //public Entity? AssocietedEntity { get; set; }
-        public List<int> RelatedCivs { get; set; } = new();
-        public List<int> RelatedSites { get; set; } = new();
-        public List<string> RelatedHFs { get; set; } = new();
+        public List<CivRelation> RelatedCivs { get; set; } = new();
+        public List<SiteRelation> RelatedSites { get; set; } = new();
+        public List<HfRelation> RelatedHFs { get; set; } = new();
         public Mind Mind { get; set; } = new();
         public Soul Soul { get; set; }
         public List<SpecialFlag> SpecialFlags { get; set; } = new();
         public List<Noble> NobleTitles { get; set; } = new();
         public int CurrentAge { get; set; }
+
+        #endregion Props
+
+        #region Ctor
 
         public HistoricalFigure(string name,
             Sex hFGender,
@@ -53,6 +61,7 @@ namespace MagiRogue.GameSys.Planet.History
             IsAlive = isAlive;
             Description = desc;
             Race = raceId;
+            Id = GameLoop.GetHfId();
         }
 
         public HistoricalFigure(string name, string description, Sex hFGender, string race, bool isAlive)
@@ -62,13 +71,17 @@ namespace MagiRogue.GameSys.Planet.History
             HFGender = hFGender;
             Race = race;
             IsAlive = isAlive;
+            Id = GameLoop.GetHfId();
         }
 
         public HistoricalFigure(string name, string description)
         {
             Name = name;
             Description = description;
+            Id = GameLoop.GetHfId();
         }
+
+        #endregion Ctor
 
         public void GenerateRandomPersonality()
         {
@@ -181,7 +194,7 @@ namespace MagiRogue.GameSys.Planet.History
             return "it's";
         }
 
-        public Myth MythAct(int id)
+        public Myth MythAct()
         {
             // make the figure do some act as a myth
             MythWhat[] whats = Enum.GetValues<MythWhat>();
@@ -189,7 +202,7 @@ namespace MagiRogue.GameSys.Planet.History
             MythAction[] actions = Enum.GetValues<MythAction>();
             MythAction action = actions.GetRandomItemFromList();
 
-            Myth myth = new(id)
+            Myth myth = new()
             {
                 MythWho = MythWho ?? Data.Enumerators.MythWho.None,
                 MythWhat = what,
@@ -204,8 +217,13 @@ namespace MagiRogue.GameSys.Planet.History
         {
             if (NobleTitles.Contains(noble))
                 return;
-            if (!RelatedCivs.Contains(civ.Id))
-                RelatedCivs.Add(civ.Id);
+            if (!RelatedCivs.Any(c => c.CivRelatedId == civ.Id))
+            {
+                if (civ.GetRulerNoblePosition().Item1.Equals(noble))
+                    AddNewRelationToCiv(civ.Id, RelationType.Ruler);
+                else
+                    AddNewRelationToCiv(civ.Id, RelationType.Member);
+            }
 
             NobleTitles.Add(noble);
             StringBuilder initialLegend = new StringBuilder($"In the year {year} ");
@@ -214,17 +232,36 @@ namespace MagiRogue.GameSys.Planet.History
             AddLegend(initialLegend.ToString(), year);
         }
 
-        public void HistoryAct(int year, Tiles.WorldTile[,] tiles, List<Civilization> civs)
+        public void AddNewRelationToCiv(int civId, RelationType relation)
+        {
+            CivRelation re = new CivRelation(Id, civId, relation);
+            RelatedCivs.Add(re);
+        }
+
+        public void HistoryAct(int year, WorldTile[,] tiles,
+            List<Civilization> civs, List<HistoricalFigure> figures)
         {
             HistoryAction historyAction = new HistoryAction(this,
                 year,
                 civs,
-                tiles);
+                tiles,
+                figures);
             historyAction.Act();
-            Legends.Add(historyAction.Legend);
         }
 
         public Personality GetPersonality()
             => Mind.Personality;
+
+        // see if there is anyway to refactor this to be better!
+        // maybe some good old OOP
+        public void AddRelatedHf(int otherId, HfRelationType relation)
+        {
+            RelatedHFs.Add(new HfRelation(Id, otherId, relation));
+        }
+
+        public void AddRelatedSite(int otherId, SiteRelationType relation)
+        {
+            RelatedSites.Add(new SiteRelation(Id, otherId, relation));
+        }
     }
 }

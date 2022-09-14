@@ -35,11 +35,11 @@ namespace MagiRogue.GameSys.Civ
 
         public CivRelation this[int otherCivId]
         {
-            get => Relations.FirstOrDefault(i => i.OtherCivId == otherCivId);
+            get => Relations.FirstOrDefault(i => i.CivRelatedId == otherCivId);
 
             set
             {
-                var relation = Relations.FirstOrDefault(i => i.OtherCivId == otherCivId);
+                var relation = Relations.FirstOrDefault(i => i.CivRelatedId == otherCivId);
                 relation = value;
             }
         }
@@ -59,6 +59,7 @@ namespace MagiRogue.GameSys.Civ
             Sites = new List<Site>();
             ImportantPeople = new();
             Relations = new();
+            Id = GameLoop.GetCivId();
         }
 
         public void AddSiteToCiv(Site site)
@@ -98,7 +99,7 @@ namespace MagiRogue.GameSys.Civ
                 figure.DefineProfession();
 
                 // add to civ
-                figure.RelatedCivs.Add(Id);
+                figure.AddNewRelationToCiv(Id, RelationType.Member);
                 ImportantPeople.Add(figure);
             }
 
@@ -234,7 +235,7 @@ namespace MagiRogue.GameSys.Civ
 
         public void AddCivToRelations(Civilization civ, RelationType relationType)
         {
-            if (!Relations.Any(i => i.OtherCivId.Equals(civ.Id) && i.Relation == relationType))
+            if (!Relations.Any(i => i.CivRelatedId.Equals(civ.Id) && i.Relation == relationType))
                 Relations.Add(new CivRelation(Id, civ.Id, relationType));
         }
 
@@ -268,10 +269,10 @@ namespace MagiRogue.GameSys.Civ
             return RandomNames.RandomNamesFromLanguage(LanguageId).Replace(" ", "");
         }
 
-        public (Noble, HistoricalFigure) GetRulerNoblePosition()
+        public (Noble, HistoricalFigure?) GetRulerNoblePosition()
         {
             Noble n = NoblesPosition.First(i => i.Responsabilities.Contains(Responsability.Rule));
-            HistoricalFigure figure = ImportantPeople.FirstOrDefault(i => i.NobleTitles.Contains(n));
+            HistoricalFigure? figure = ImportantPeople.FirstOrDefault(i => i.NobleTitles.Contains(n));
 
             return (n, figure);
         }

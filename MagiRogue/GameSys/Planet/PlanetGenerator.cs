@@ -173,7 +173,6 @@ namespace MagiRogue.GameSys.Planet
             int tries = 0;
             int maxTries = 300;
             int currentCivCount = 0;
-            int id = 0;
 
             while (currentCivCount < maxCivsWorld && tries < maxTries)
             {
@@ -195,7 +194,7 @@ namespace MagiRogue.GameSys.Planet
                 Civilization civ;
                 if (possibleCivs.Count > 0)
                 {
-                    civ = possibleCivs.GetRandomItemFromList().ConvertToCivilization(id);
+                    civ = possibleCivs.GetRandomItemFromList().ConvertToCivilization();
                 }
                 else
                     continue;
@@ -222,7 +221,6 @@ namespace MagiRogue.GameSys.Planet
                 planetData.Civilizations.Add(civ);
 
                 currentCivCount++;
-                id++;
             }
         }
 

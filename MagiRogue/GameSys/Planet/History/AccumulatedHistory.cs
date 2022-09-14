@@ -78,7 +78,8 @@ namespace MagiRogue.GameSys.Planet.History
         {
             foreach (HistoricalFigure figure in Figures)
             {
-                figure.HistoryAct(Year, tiles, Civs);
+                if (figure.IsAlive)
+                    figure.HistoryAct(Year, tiles, Civs, Figures);
             }
         }
 
@@ -107,7 +108,7 @@ namespace MagiRogue.GameSys.Planet.History
                             || civ[nextCiv.Id].Relation is RelationType.War)
                         {
                             // trade of various types!!
-                            if (civ[nextCiv.Id].RoadBuilt)
+                            if (civ[nextCiv.Id].RoadBuilt.HasValue && civ[nextCiv.Id].RoadBuilt.Value)
                             {
                                 // facilitates trade beetween sites
                             }
@@ -140,13 +141,23 @@ namespace MagiRogue.GameSys.Planet.History
                 foreach (var nextCiv in otherCivs)
                 {
                     civ.SetupInitialHistoricalFigures();
-                    if (civ.Tendency == nextCiv.Tendency)
+                    Distance dis = new Distance();
+                    var distance = dis.Calculate(civ.Sites[0].WorldPos,
+                        nextCiv.Sites[0].WorldPos);
+                    if (distance <= 10)
                     {
-                        civ.AddCivToRelations(nextCiv, RelationType.Friendly);
+                        if (civ.Tendency == nextCiv.Tendency)
+                        {
+                            civ.AddCivToRelations(nextCiv, RelationType.Friendly);
+                        }
+                        else
+                        {
+                            civ.AddCivToRelations(nextCiv, RelationType.Neutral);
+                        }
                     }
                     else
                     {
-                        civ.AddCivToRelations(nextCiv, RelationType.Neutral);
+                        civ.AddCivToRelations(nextCiv, RelationType.Unknow);
                     }
                 }
             }
@@ -185,10 +196,10 @@ namespace MagiRogue.GameSys.Planet.History
             if (!civ.PossibleWorldConstruction.Contains(WorldConstruction.Road))
                 return false;
 
-            if (civ.Relations.Any(i => i.OtherCivId.Equals(friend.Id)
-            && i.Relation is RelationType.Friendly && i.RoadBuilt))
+            if (civ.Relations.Any(i => i.CivRelatedId.Equals(friend.Id)
+                && i.Relation is RelationType.Friendly && i.RoadBuilt.HasValue))
                 return false;
-            if (civ[friend.Id].RoadBuilt)
+            if (civ[friend.Id].RoadBuilt.HasValue)
                 return false;
 
             var territory = civ.Territory[0];

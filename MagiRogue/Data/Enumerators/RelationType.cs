@@ -11,10 +11,19 @@ namespace MagiRogue.Data.Enumerators
     [JsonConverter(typeof(StringEnumConverter))]
     public enum RelationType
     {
+        // relation beetween civs
+        Unknow,
         Neutral,
         Friendly,
         Enemy,
         War,
-        Allied
+        Allied,
+
+        // relation beetween civ and a hf
+        Member,
+        LoyalMember,
+        TraitorousMember,
+        Soldier,
+        Ruler,
     }
 }

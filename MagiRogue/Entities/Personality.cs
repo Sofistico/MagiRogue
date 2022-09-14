@@ -25,20 +25,27 @@ namespace MagiRogue.Entities
         public int SelfControl { get; set; }
         public int Harmony { get; set; }
         public int HardWork { get; set; }
+        public int Craftmanship { get; set; }
+        public int MartialProwess { get; set; }
         public int Sacrifice { get; set; }
         public int Perseverance { get; set; }
         public int Nature { get; set; }
         public int Peace { get; set; }
         public int Knowledge { get; set; }
+        public int Commerce { get; set; }
+        public int Rommance { get; set; }
+        public int Leisure { get; set; }
+        public int Lazyness { get; set; }
 
         // just some empty constructor, cuz i love them!
         public Personality()
         {
         }
 
+        // ctor from hell
         public Personality(int anger, int law, int loyalty, int familiy, int friendship, int power, int cunning,
             int tradition, int independence, int selfControl, int harmony, int hardWork, int sacrifice,
-            int perseverance, int nature, int peace, int knowledge)
+            int perseverance, int nature, int peace, int knowledge, int craftmanship, int martialProwess, int commerce, int rommance, int leisure, int lazyness)
         {
             Anger = anger;
             Law = law;
@@ -57,6 +64,12 @@ namespace MagiRogue.Entities
             Nature = nature;
             Peace = peace;
             Knowledge = knowledge;
+            Craftmanship = craftmanship;
+            MartialProwess = martialProwess;
+            Commerce = commerce;
+            Rommance = rommance;
+            Leisure = leisure;
+            Lazyness = lazyness;
         }
     }
 }

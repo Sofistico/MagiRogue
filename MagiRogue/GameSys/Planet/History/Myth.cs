@@ -23,14 +23,14 @@ namespace MagiRogue.GameSys.Planet.History
         public List<string> WhatItCursed { get; set; } = new();
         public List<string> WhatItModified { get; set; } = new();*/
 
-        public Myth(int id)
+        public Myth()
         {
-            Id = id;
+            Id = GameLoop.GetMythId();
         }
 
-        public Myth(int id, string name, MythWho mythWho, MythAction action, MythWhat whatAction)
+        public Myth(string name, MythWho mythWho, MythAction action, MythWhat whatAction)
         {
-            Id = id;
+            Id = GameLoop.GetMythId();
             Name = name;
             MythWho = mythWho;
             MythAction = action;

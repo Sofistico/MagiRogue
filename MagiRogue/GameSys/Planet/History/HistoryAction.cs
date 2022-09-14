@@ -1,4 +1,5 @@
-﻿using MagiRogue.GameSys.Civ;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
 using System;
@@ -9,26 +10,27 @@ namespace MagiRogue.GameSys.Planet.History
 {
     public class HistoryAction
     {
-        private readonly HistoricalFigure historicalFigure;
+        private readonly HistoricalFigure figure;
         private readonly int year;
         private readonly List<Civilization> civs;
         private readonly WorldTile[,] tiles;
-
-        public Legend Legend { get; set; }
+        private readonly List<HistoricalFigure> otherFigures;
 
         public HistoryAction(HistoricalFigure historicalFigure, int year,
             List<Civilization> civs,
-            WorldTile[,] tiles)
+            WorldTile[,] tiles,
+            List<HistoricalFigure> otherFigures)
         {
-            this.historicalFigure = historicalFigure;
+            this.figure = historicalFigure;
             this.year = year;
             this.civs = civs;
             this.tiles = tiles;
+            this.otherFigures = otherFigures;
         }
 
         public void Act()
         {
-            if (historicalFigure.MythWho.HasValue)
+            if (figure.MythWho.HasValue)
             {
                 SimulateMythStuff();
             }
@@ -36,24 +38,44 @@ namespace MagiRogue.GameSys.Planet.History
 
         private void SimulateMythStuff()
         {
-            if (historicalFigure.SpecialFlags.Contains(Data.Enumerators.SpecialFlag.DeityDescended))
+            if (figure.SpecialFlags.Contains(Data.Enumerators.SpecialFlag.DeityDescended))
             {
-                CheckForAndPerformDivineInsurrection();
+                if (CheckForInsurrection())
+                    PerformDivineInsurrection();
+                if (CheckForGiftGiving())
+                {
+                    // gift something!
+                    DeityGivesGiftToCiv();
+                }
             }
         }
 
-        private void CheckForAndPerformDivineInsurrection()
+        private void DeityGivesGiftToCiv()
         {
-            if (historicalFigure.GetPersonality().Power >= 25)
+        }
+
+        private bool CheckForGiftGiving()
+        {
+            return figure.GetPersonality().Sacrifice >= 25
+                && figure.RelatedCivs.Count > 0;
+        }
+
+        private bool CheckForInsurrection()
+            => figure.GetPersonality().Power >= 25;
+
+        private void PerformDivineInsurrection()
+        {
+            Civilization civ = civs.GetRandomItemFromList();
+            (Noble ruler, HistoricalFigure noKingAnymore) = civ.GetRulerNoblePosition();
+            if (noKingAnymore is not null)
             {
-                Civilization civ = civs.GetRandomItemFromList();
-                (Noble ruler, HistoricalFigure noKingAnymore) = civ.GetRulerNoblePosition();
+                figure.AddRelatedHf(noKingAnymore.Id, HfRelationType.Enemy);
 
                 civ.RemoveNoble(ruler, noKingAnymore, year,
-                    $"because the {historicalFigure.MythWho} assumed control of the civilization!");
-                civ.AppointNewNoble(ruler, historicalFigure, year,
-                    "because it took it's position as the divine ruler of the civilization!");
+                    $"because the {figure.MythWho} {figure.Name} assumed control of the civilization!");
             }
+            civ.AppointNewNoble(ruler, figure, year,
+                "because it took it's position as the divine ruler of the civilization!");
         }
     }
 }

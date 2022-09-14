@@ -3,18 +3,18 @@ using Newtonsoft.Json;
 
 namespace MagiRogue.GameSys.Civ
 {
-    public sealed class CivRelation
+    public class CivRelation
     {
         public int ParentId { get; set; }
-        public int OtherCivId { get; set; }
+        public int CivRelatedId { get; set; }
         public RelationType Relation { get; set; }
-        public bool RoadBuilt { get; set; }
+        public bool? RoadBuilt { get; set; }
 
         [JsonConstructor]
         public CivRelation(int parentId, int otherCivId, RelationType relation)
         {
             ParentId = parentId;
-            OtherCivId = otherCivId;
+            CivRelatedId = otherCivId;
             Relation = relation;
         }
     }
