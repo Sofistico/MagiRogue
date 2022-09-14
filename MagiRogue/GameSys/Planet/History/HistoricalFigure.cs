@@ -93,7 +93,7 @@ namespace MagiRogue.GameSys.Planet.History
                 if (hasSkill)
                 {
                     // if the die explode, it's a genius!
-                    int abilityScore = Mrn.Exploding2D6Dice / 2;
+                    int abilityScore = Mrn.Exploding2D6Dice;
                     Mind.AddAbilityToDictionary(new Ability(e, abilityScore));
                 }
             }
@@ -102,10 +102,21 @@ namespace MagiRogue.GameSys.Planet.History
         public void DefineProfession()
         {
             List<Ability> skills = new List<Ability>(Mind.Abilities.Values.ToList());
-            Ability bestSkill = skills.MaxBy(i => i.Score);
-            skills.Remove(bestSkill);
-            Ability secondBestSkill = skills.MaxBy(i => i.Score);
-            skills.Remove(secondBestSkill);
+            Ability bestSkill = new Ability(AbilityName.None, 0);
+            if (skills.Count > 0)
+            {
+                bestSkill = skills.MaxBy(i => i.Score);
+                skills.Remove(bestSkill);
+            }
+
+            Ability secondBestSkill;
+            if (skills.Count > 0)
+            {
+                secondBestSkill = skills.MaxBy(i => i.Score);
+                skills.Remove(secondBestSkill);
+            }
+            else
+                secondBestSkill = new Ability(AbilityName.None, 0);
 
             if (!DetermineProfessionFromBestSkills(bestSkill, secondBestSkill))
             {

@@ -109,17 +109,18 @@ namespace MagiRogue.GameSys.Civ
                     .ToList();
             var rulerPos = NoblesPosition.FirstOrDefault(
                         i => i.Responsabilities.Contains(Responsability.Rule));
+
             for (int i = 0; i < numberOfNobles; i++)
             {
                 bool isRuler = Mrn.OneIn(numberOfNobles);
-                Noble noble = noblesPos.GetRandomItemFromList();
-                AppointNewNoble(noble, nobles[i], year);
-
                 if (isRuler && !rulerChoosen)
                 {
                     rulerChoosen = true;
                     AppointNewNoble(rulerPos, nobles[i], year);
                 }
+
+                Noble noble = noblesPos.GetRandomItemFromList();
+                AppointNewNoble(noble, nobles[i], year);
             }
 
             if (!rulerChoosen)
@@ -134,6 +135,8 @@ namespace MagiRogue.GameSys.Civ
             HistoricalFigure figureToAdd,
             int yearAdded)
         {
+            TrackAmountOfNobles ??= new Dictionary<string, int>();
+
             figureToAdd.AddNewNoblePos(noble,
                 yearAdded,
                 this);

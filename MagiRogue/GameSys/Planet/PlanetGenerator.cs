@@ -200,7 +200,7 @@ namespace MagiRogue.GameSys.Planet
                 else
                     continue;
 
-                int rng = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(100, 2500);
+                int rng = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(50, 500);
 
                 int pop = (int)(rng * ((int)tile.HeightType * tile.MoistureValue + 1));
 

@@ -42,11 +42,24 @@
         "Spouse": "General consort",
         "SpouseMaleName": "General consort",
         "SpouseFemaleName": "General consort",
-        "MaxAmmount": 999,
+        "MaxAmmount": 10,
         "ImportanceLevel": 2,
         "Precedence": 5,
         "Responsabilities": [ "LeadArmy", "AdviseRuler" ]
-      }
+      },
+      {
+        "Id": "captain",
+        "Name": "Captain",
+        "MaleName": "Captain",
+        "FemaleName": "Captain",
+        "Spouse": "Captain consort",
+        "SpouseMaleName": "Captain consort",
+        "SpouseFemaleName": "Captain consort",
+        "MaxAmmount": 99,
+        "ImportanceLevel": 1,
+        "Precedence": 6,
+        "Responsabilities": [ "LeadArmy" ]
+      },
     ]
   }
 ]
