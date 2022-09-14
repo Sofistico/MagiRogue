@@ -61,11 +61,12 @@ namespace MagiRogue.GameSys.Civ
             Relations = new();
         }
 
-        public void AddSiteToCiv(Site Site)
+        public void AddSiteToCiv(Site site)
         {
-            Sites.Add(Site);
-            Territory.Add(Site.WorldPos);
-            Wealth += Site.MundaneResources;
+            Sites.Add(site);
+            site.CivOwnerIfAny = Id;
+            Territory.Add(site.WorldPos);
+            Wealth += site.MundaneResources;
         }
 
         public void SetupInitialHistoricalFigures()
@@ -133,7 +134,8 @@ namespace MagiRogue.GameSys.Civ
 
         public void AppointNewNoble(Noble noble,
             HistoricalFigure figureToAdd,
-            int yearAdded)
+            int yearAdded,
+            string? whyItHappenead = null)
         {
             TrackAmountOfNobles ??= new Dictionary<string, int>();
 
@@ -146,10 +148,21 @@ namespace MagiRogue.GameSys.Civ
                 if (TrackAmountOfNobles[noble.Id] >= noble.MaxAmmount)
                     return;
                 TrackAmountOfNobles[noble.Id]++;
+                StringBuilder str = new StringBuilder($"{figureToAdd.Name} ascended on the position as {noble.Name}");
+
+                if (!string.IsNullOrEmpty(whyItHappenead))
+                {
+                    str.Append(' ').Append(whyItHappenead);
+                }
+
+                figureToAdd.AddLegend(str.ToString(), yearAdded);
             }
         }
 
-        public bool RemoveNoble(Noble noble, HistoricalFigure figure)
+        public bool RemoveNoble(Noble noble,
+            HistoricalFigure figure,
+            int yearWhenItHappenad,
+            string? whyLostIt = null)
         {
             figure.NobleTitles.Remove(noble);
 
@@ -159,6 +172,14 @@ namespace MagiRogue.GameSys.Civ
                 if (TrackAmountOfNobles[noble.Id] <= 0)
                 {
                     TrackAmountOfNobles.Remove(noble.Id);
+                    StringBuilder str = new StringBuilder($"{figure.Name} lost it's position as {noble.Name}");
+
+                    if (!string.IsNullOrEmpty(whyLostIt))
+                    {
+                        str.Append(' ').Append(whyLostIt);
+                    }
+
+                    figure.AddLegend(str.ToString(), yearWhenItHappenad);
                 }
                 return true;
             }
@@ -217,7 +238,7 @@ namespace MagiRogue.GameSys.Civ
                 Relations.Add(new CivRelation(Id, civ.Id, relationType));
         }
 
-        public void SimulateImportantStuff()
+        public void CheckIfCivIsDead()
         {
             if (Dead)
                 return;
@@ -226,11 +247,6 @@ namespace MagiRogue.GameSys.Civ
             {
                 Dead = true;
                 return;
-            }
-
-            foreach (HistoricalFigure figure in ImportantPeople)
-            {
-                // HALP! WHY DID I MAKE THIS!
             }
         }
 
@@ -250,6 +266,14 @@ namespace MagiRogue.GameSys.Civ
         public string RandomSiteFromLanguageName()
         {
             return RandomNames.RandomNamesFromLanguage(LanguageId).Replace(" ", "");
+        }
+
+        public (Noble, HistoricalFigure) GetRulerNoblePosition()
+        {
+            Noble n = NoblesPosition.First(i => i.Responsabilities.Contains(Responsability.Rule));
+            HistoricalFigure figure = ImportantPeople.FirstOrDefault(i => i.NobleTitles.Contains(n));
+
+            return (n, figure);
         }
     }
 }

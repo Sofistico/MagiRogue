@@ -22,6 +22,7 @@ namespace MagiRogue.GameSys.Civ
         public int Precedence { get; set; }
         public string[] RequiredForPos { get; set; }
         public List<Responsability> Responsabilities { get; set; }
+        public NobleSuccession Succession { get; set; }
 
         public Noble()
         {

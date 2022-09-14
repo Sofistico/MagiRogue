@@ -163,7 +163,7 @@ namespace MagiRogue.GameSys.Planet
         {
             AccumulatedHistory history = new AccumulatedHistory()
             {
-                TicksSinceCreation = yearToGameBegin * 3214080000,
+                TicksSinceCreation = MathMagi.GetTickByYear(yearToGameBegin),
             };
             history.RunHistory(_civilizations, yearToGameBegin, planetData, tiles);
         }
@@ -195,7 +195,7 @@ namespace MagiRogue.GameSys.Planet
                 Civilization civ;
                 if (possibleCivs.Count > 0)
                 {
-                    civ = possibleCivs.GetRandomItemFromList().ConvertToCivilization();
+                    civ = possibleCivs.GetRandomItemFromList().ConvertToCivilization(id);
                 }
                 else
                     continue;
@@ -212,7 +212,7 @@ namespace MagiRogue.GameSys.Planet
 
                 tile.SiteInfluence = set;
                 civ.AddSiteToCiv(set);
-                civ.LanguageId = Data.DataManager.ListOfLanguages.GetRandomItemFromList().Id;
+                //civ.LanguageId = Data.DataManager.ListOfLanguages.GetRandomItemFromList().Id;
 
                 if (currentCivCount < maxCivsWorld)
                 {
@@ -224,18 +224,6 @@ namespace MagiRogue.GameSys.Planet
                 currentCivCount++;
                 id++;
             }
-        }
-
-        private static CivilizationTendency RandomCivTendency()
-        {
-            int rng = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, 2 + 1);
-            return rng switch
-            {
-                0 => CivilizationTendency.Neutral,
-                1 => CivilizationTendency.Aggresive,
-                2 => CivilizationTendency.Studious,
-                _ => throw new ArgumentOutOfRangeException(),
-            };
         }
 
         #endregion Civ

@@ -9,7 +9,7 @@
     "StartBiome": "Grassland",
     "Nobles": [
       {
-        "Id": "king",
+        "Id": "monarch",
         "Name": "Monarch",
         "MaleName": "King",
         "FemaleName": "Queen",
@@ -19,7 +19,10 @@
         "MaxAmmount": 1,
         "ImportanceLevel": 3,
         "Precedence": 1,
-        "Responsabilities": [ "Rule", "LeadArmy" ]
+        "Responsabilities": [ "Rule", "LeadArmy" ],
+        "Suscession": {
+          "Type": "Heir"
+        }
       },
       {
         "Id": "administrator",
@@ -32,7 +35,11 @@
         "MaxAmmount": 999,
         "ImportanceLevel": 1,
         "Precedence": 10,
-        "Responsabilities": [ "Administrate" ]
+        "Responsabilities": [ "Administrate" ],
+        "Suscession": {
+          "Type": "Appoint",
+          "AppointedBy": "monarch"
+        }
       },
       {
         "Id": "general",
@@ -42,10 +49,14 @@
         "Spouse": "General consort",
         "SpouseMaleName": "General consort",
         "SpouseFemaleName": "General consort",
-        "MaxAmmount": 10,
+        "MaxAmmount": 1,
         "ImportanceLevel": 2,
         "Precedence": 5,
-        "Responsabilities": [ "LeadArmy", "AdviseRuler" ]
+        "Responsabilities": [ "LeadArmy", "AdviseRuler" ],
+        "Suscession": {
+          "Type": "Appoint",
+          "AppointedBy": "monarch"
+        }
       },
       {
         "Id": "captain",
@@ -55,11 +66,15 @@
         "Spouse": "Captain consort",
         "SpouseMaleName": "Captain consort",
         "SpouseFemaleName": "Captain consort",
-        "MaxAmmount": 99,
+        "MaxAmmount": 999,
         "ImportanceLevel": 1,
         "Precedence": 6,
-        "Responsabilities": [ "LeadArmy" ]
-      },
+        "Responsabilities": [ "LeadArmy" ],
+        "Suscession": {
+          "Type": "Appoint",
+          "AppointedBy": "general"
+        }
+      }
     ]
   }
 ]

@@ -24,6 +24,7 @@ namespace MagiRogue.GameSys.Planet.History
 
         public List<HistoricalFigure> Figures { get; set; }
         public List<Civilization> Civs { get; set; }
+        public List<Site> SitesWithoutCivs { get; set; }
         public List<Myth> Myths { get; set; } = new();
         public int Year { get; set; }
         public long TicksSinceCreation { get; set; }
@@ -55,69 +56,99 @@ namespace MagiRogue.GameSys.Planet.History
 
             while (Year < yearToGameBegin)
             {
-                for (int i = 0; i < Civs.Count; i++)
+                // stuff that will only happen in the first year!
+                // after that won't really happen anymore!
+                if (firstYearOnly)
                 {
-                    var civ = Civs[i];
-
-                    // Historical figure simulation here:
-                    civ.SimulateImportantStuff();
-
-                    if (i < Civs.Count - 1)
-                    {
-                        var otherCivs = Civs.Where(i => i != civ);
-                        // interaction between civs here!
-                        foreach (Civilization nextCiv in otherCivs)
-                        {
-                            // stuff that will only happen in the first year!
-                            // after that won't really happen anymore!
-                            if (firstYearOnly)
-                            {
-                                civ.SetupInitialHistoricalFigures();
-                                if (civ.Tendency == nextCiv.Tendency)
-                                {
-                                    civ.AddCivToRelations(nextCiv, RelationType.Friendly);
-                                }
-                                else
-                                {
-                                    civ.AddCivToRelations(nextCiv, RelationType.Neutral);
-                                }
-                            }
-                            if (civ.Wealth > wealthToCreateRoad)
-                            {
-                                if (BuildRoadsToFriends(civ, nextCiv, tiles))
-                                    civ.Wealth -= wealthToCreateRoad;
-                            }
-
-                            if (civ[nextCiv.Id].Relation is not RelationType.Enemy
-                                || civ[nextCiv.Id].Relation is RelationType.War)
-                            {
-                                // trade of various types!!
-                                if (civ[nextCiv.Id].RoadBuilt)
-                                {
-                                    // facilitates trade beetween sites
-                                }
-                            }
-
-                            if (civ[nextCiv.Id].Relation is RelationType.War)
-                            {
-                                //do war!
-                            }
-                        }
-                    }
-                    int totalRevenueYear = 0;
-
-                    CreateNewSiteIfPossible(tiles, civ);
-
-                    // Site simulation from the Civ here:
-                    foreach (Site Site in civ.Sites)
-                    {
-                        totalRevenueYear = SimulateSiteAndReturnRevenue(tiles, totalRevenueYear, Site);
-                    }
-                    civ.Wealth += totalRevenueYear;
+                    FirstYearOnlyInteractions(civilizations);
                 }
+
+                // simulate historical figures stuff
+                HistoricalFigureSimulation(tiles);
+
+                // simulate civ stuff
+                CivilizationSimulation(tiles);
 
                 Year++;
                 firstYearOnly = false;
+            }
+        }
+
+        private void HistoricalFigureSimulation(WorldTile[,] tiles)
+        {
+            foreach (HistoricalFigure figure in Figures)
+            {
+                figure.HistoryAct(Year, tiles, Civs);
+            }
+        }
+
+        private void CivilizationSimulation(WorldTile[,] tiles)
+        {
+            for (int i = 0; i < Civs.Count; i++)
+            {
+                var civ = Civs[i];
+
+                // Historical figure simulation here:
+                civ.CheckIfCivIsDead();
+
+                if (i < Civs.Count - 1)
+                {
+                    var otherCivs = Civs.Where(i => i != civ);
+                    // interaction between civs here!
+                    foreach (Civilization nextCiv in otherCivs)
+                    {
+                        if (civ.Wealth > wealthToCreateRoad)
+                        {
+                            if (BuildRoadsToFriends(civ, nextCiv, tiles))
+                                civ.Wealth -= wealthToCreateRoad;
+                        }
+
+                        if (civ[nextCiv.Id].Relation is not RelationType.Enemy
+                            || civ[nextCiv.Id].Relation is RelationType.War)
+                        {
+                            // trade of various types!!
+                            if (civ[nextCiv.Id].RoadBuilt)
+                            {
+                                // facilitates trade beetween sites
+                            }
+                        }
+
+                        if (civ[nextCiv.Id].Relation is RelationType.War)
+                        {
+                            //do war!
+                        }
+                    }
+                }
+                int totalRevenueYear = 0;
+
+                CreateNewSiteIfPossible(tiles, civ);
+
+                // Site simulation from the Civ here:
+                foreach (Site Site in civ.Sites)
+                {
+                    totalRevenueYear = SimulateSiteAndReturnRevenue(tiles, totalRevenueYear, Site);
+                }
+                civ.Wealth += totalRevenueYear;
+            }
+        }
+
+        private void FirstYearOnlyInteractions(Civilization[] civilizations)
+        {
+            foreach (var civ in civilizations)
+            {
+                var otherCivs = Civs.Where(i => i != civ);
+                foreach (var nextCiv in otherCivs)
+                {
+                    civ.SetupInitialHistoricalFigures();
+                    if (civ.Tendency == nextCiv.Tendency)
+                    {
+                        civ.AddCivToRelations(nextCiv, RelationType.Friendly);
+                    }
+                    else
+                    {
+                        civ.AddCivToRelations(nextCiv, RelationType.Neutral);
+                    }
+                }
             }
         }
 
@@ -141,7 +172,8 @@ namespace MagiRogue.GameSys.Planet.History
                 Point pos = rngSettl.WorldPos.GetPointNextTo();
                 Site Site = new Site(pos,
                     civ.RandomSiteFromLanguageName(),
-                    migrants);
+                    migrants,
+                    civ.Id);
                 WorldTile tile = tiles[pos.X, pos.Y];
                 tile.SiteInfluence = Site;
                 civ.AddSiteToCiv(Site);

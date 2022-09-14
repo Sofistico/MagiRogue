@@ -34,6 +34,12 @@ namespace MagiRogue.GameSys.Planet.History
             myths.AddRange(CreateSomeMinorMyths(figures, races, nmbrOfNewMyths));
             myths.AddRange(BunchOfMythsInteraction(races, figures, planet, nmbrInteractions));
 
+            foreach (var item in figures)
+            {
+                // generate random personality for the various primoridal beings
+                item.GenerateRandomPersonality();
+            }
+
             return myths;
         }
 

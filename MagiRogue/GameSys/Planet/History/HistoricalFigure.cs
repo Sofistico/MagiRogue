@@ -213,5 +213,18 @@ namespace MagiRogue.GameSys.Planet.History
             initialLegend.Append($"with {CurrentAge} years as a member of {civ.Name}");
             AddLegend(initialLegend.ToString(), year);
         }
+
+        public void HistoryAct(int year, Tiles.WorldTile[,] tiles, List<Civilization> civs)
+        {
+            HistoryAction historyAction = new HistoryAction(this,
+                year,
+                civs,
+                tiles);
+            historyAction.Act();
+            Legends.Add(historyAction.Legend);
+        }
+
+        public Personality GetPersonality()
+            => Mind.Personality;
     }
 }

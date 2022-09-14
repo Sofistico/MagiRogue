@@ -20,16 +20,18 @@ namespace MagiRogue.GameSys.Civ
         public int MagicalResources { get; set; }
         public List<Room> Buildings { get; set; } = new();
         public bool Dead { get; set; }
+        public int? CivOwnerIfAny { get; set; }
 
         public Site()
         {
         }
 
-        public Site(Point pos, string name, int totalPopulation)
+        public Site(Point pos, string name, int totalPopulation, int? civOwnerIfAny = null)
         {
             WorldPos = pos;
             Name = name;
             Population = totalPopulation;
+            CivOwnerIfAny = civOwnerIfAny;
         }
 
         public void DefineSiteSize()

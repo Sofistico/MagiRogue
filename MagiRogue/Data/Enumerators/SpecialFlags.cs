@@ -14,5 +14,8 @@
         RaceCreator,
         WorldCreator,
         MagicKiller,
+
+        MageUser,
+        Wizard,
     }
 }

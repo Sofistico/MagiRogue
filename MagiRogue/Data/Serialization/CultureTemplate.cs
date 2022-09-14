@@ -26,7 +26,7 @@ namespace MagiRogue.Data.Serialization
             // empty
         }
 
-        public Civilization ConvertToCivilization()
+        public Civilization ConvertToCivilization(int civId)
         {
             string rngName = RandomNames.RandomNamesFromLanguage(LanguageSpoken).Replace(" ", "");
             Race primaryRace = DataManager.QueryRaceInData(Races[0]);
@@ -38,6 +38,7 @@ namespace MagiRogue.Data.Serialization
                 PossibleSites = PossibleSites,
                 TemplateId = Id,
                 LanguageId = LanguageSpoken,
+                Id = civId,
             };
             if (Races.Length > 0)
             {

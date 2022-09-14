@@ -77,5 +77,10 @@ namespace MagiRogue.Utils
         {
             return (int)((volume) * (modifier / (double)100));
         }
+
+        public static long GetTickByYear(int yearToGameBegin)
+        {
+            return yearToGameBegin * 3214080000;
+        }
     }
 }
