@@ -25,5 +25,6 @@ namespace MagiRogue.Data.Enumerators
         TraitorousMember,
         Soldier,
         Ruler,
+        PatronDeity
     }
 }

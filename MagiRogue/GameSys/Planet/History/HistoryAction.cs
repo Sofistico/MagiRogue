@@ -76,6 +76,7 @@ namespace MagiRogue.GameSys.Planet.History
             }
             civ.AppointNewNoble(ruler, figure, year,
                 "because it took it's position as the divine ruler of the civilization!");
+            figure.AddNewRelationToCiv(civ.Id, RelationType.PatronDeity);
         }
     }
 }
