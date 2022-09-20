@@ -272,23 +272,25 @@ namespace MagiRogue.Entities
 
             #endregion Broken dreams lies here....
 
+            bool regens = GetAnatomy().GetRace().CanRegenarate();
+
             foreach (Limb limb in GetAnatomy().Limbs)
             {
                 if (limb.BodyPartHp < limb.MaxBodyPartHp || limb.Wounds.Count > 0)
                 {
                     if (limb.Attached)
                     {
-                        if (limb.CanHeal || GetAnatomy().GetRace().CanRegenLostLimbs)
+                        if (limb.CanHeal || regens)
                         {
                             limb.ApplyHeal(GetNormalLimbRegen() * limb.RateOfHeal);
                         }
                     }
-                    if (!limb.Attached && GetAnatomy().GetRace().CanRegenLostLimbs)
+                    if (!limb.Attached && regens)
                     {
                         List<Limb> connectedLimbs = GetAnatomy().GetAllParentConnectionLimb(limb);
                         if (!connectedLimbs.Any(i => !i.Attached))
                         {
-                            limb.ApplyHeal((GetNormalLimbRegen() * limb.RateOfHeal + 0.5 * 2), GetAnatomy().GetRace().CanRegenLostLimbs);
+                            limb.ApplyHeal((GetNormalLimbRegen() * limb.RateOfHeal + 0.5 * 2), regens);
                             if (!limb.Wounds.Any(i => i.Severity is InjurySeverity.Missing))
                                 limb.Attached = true;
                         }

@@ -24,15 +24,14 @@
     "BaseMagicResistance": 10,
     "RaceNormalLimbRegen": 1.0,
     "BleedRegenaration": 1.0,
-    "CanRegenLostLimbs": true,
-    "ValidCivRace": false,
     "BodyPlan": [ "humanoid_limbs", "humanoid_organs", "5fingers", "5toes" ],
     "Tissues": [ "skin", "fat", "muscle", "bone" ],
     // lowest, lower, low, median, high, higher, highest
     "HeightModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "BroadnessModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "Genders": [ "Male", "Female" ],
-    "BloodMultiplier": 75
+    "BloodMultiplier": 75,
+    "SpecialFlag": [ "Regenarator", "CanLearn" ]
   },
   {
     "Id": "human",
@@ -61,14 +60,13 @@
     "BaseMagicResistance": 5,
     "RaceNormalLimbRegen": 0.8,
     "BleedRegenaration": 0.7,
-    "CanRegenLostLimbs": false,
-    "ValidCivRace": true,
     "BodyPlan": [ "humanoid_limbs", "humanoid_organs", "5fingers", "5toes" ],
     "Tissues": [ "skin", "fat", "muscle", "bone" ],
     "HeightModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "BroadnessModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "Genders": [ "Male", "Female" ],
-    "BloodMultiplier": 75
+    "BloodMultiplier": 75,
+    "SpecialFlag": [ "CanLearn" ]
   },
   {
     "Id": "elf",
@@ -95,14 +93,13 @@
     "BaseMagicResistance": 6,
     "RaceNormalLimbRegen": 0.7,
     "BleedRegenaration": 0.6,
-    "CanRegenLostLimbs": false,
-    "ValidCivRace": true,
     "BodyPlan": [ "humanoid_limbs", "humanoid_organs", "5fingers", "5toes" ],
     "Tissues": [ "skin", "fat", "muscle", "bone" ],
     "HeightModifier": [ 90, 95, 98, 100, 112, 115, 125 ],
     "BroadnessModifier": [ 75, 90, 94, 100, 101, 103, 110 ],
     "Genders": [ "Male", "Female" ],
-    "BloodMultiplier": 75
+    "BloodMultiplier": 75,
+    "SpecialFlag": [ "CanLearn" ]
   },
   {
     "Id": "dwarf",
@@ -131,13 +128,12 @@
     "BaseMagicResistance": 7,
     "RaceNormalLimbRegen": 0.8,
     "BleedRegenaration": 0.8,
-    "CanRegenLostLimbs": false,
-    "ValidCivRace": true,
     "BodyPlan": [ "humanoid_limbs", "humanoid_organs", "5fingers", "5toes" ],
     "Tissues": [ "skin", "fat", "muscle", "bone" ],
     "HeightModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "BroadnessModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "Genders": [ "Male", "Female" ],
-    "BloodMultiplier": 75
+    "BloodMultiplier": 75,
+    "SpecialFlag": [ "CanLearn" ]
   }
 ]

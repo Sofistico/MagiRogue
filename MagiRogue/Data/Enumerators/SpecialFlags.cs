@@ -1,7 +1,12 @@
-﻿namespace MagiRogue.Data.Enumerators
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
+namespace MagiRogue.Data.Enumerators
 {
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum SpecialFlag
     {
+        // hf flags
         Deity,
         DeityDescended,
         MythAge,
@@ -15,7 +20,15 @@
         WorldCreator,
         MagicKiller,
 
+        // unit flag
         MageUser,
         Wizard,
+
+        // race flags
+        Regenerator,
+        Mundane,
+        Animal,
+        CanBeFamiliar,
+        CanLearn
     }
 }

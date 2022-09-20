@@ -81,5 +81,71 @@ namespace MagiRogue.Utils
 
             return newPOint;
         }
+
+        public static Point FindClosest(this Point point, Point[] pointsToSearch)
+        {
+            Point closestPoint = Point.None;
+            double previousDistance = 999;
+            for (int i = 0; i < pointsToSearch.Length; i++)
+            {
+                Point possibleClosestPoint = pointsToSearch[i];
+                double distanceBeetweenPoints = Distance.Chebyshev.Calculate(possibleClosestPoint, point);
+                if (distanceBeetweenPoints < previousDistance)
+                {
+                    closestPoint = possibleClosestPoint;
+                    previousDistance = distanceBeetweenPoints;
+                }
+            }
+            return closestPoint;
+        }
+
+        public static Point FindClosest(this Point point, IEnumerable<Point> pointsToSearch)
+        {
+            Point closestPoint = Point.None;
+            double previousDistance = 999;
+            foreach (var possibleClosestPoint in pointsToSearch)
+            {
+                double distanceBeetweenPoints = Distance.Chebyshev.Calculate(possibleClosestPoint, point);
+                if (distanceBeetweenPoints < previousDistance)
+                {
+                    closestPoint = possibleClosestPoint;
+                    previousDistance = distanceBeetweenPoints;
+                }
+            }
+            return closestPoint;
+        }
+
+        public static (Point, double) FindClosestAndReturnDistance(this Point point, Point[] pointsToSearch)
+        {
+            Point closestPoint = Point.None;
+            double previousDistance = 999;
+            for (int i = 0; i < pointsToSearch.Length; i++)
+            {
+                Point possibleClosestPoint = pointsToSearch[i];
+                double distanceBeetweenPoints = Distance.Chebyshev.Calculate(possibleClosestPoint, point);
+                if (distanceBeetweenPoints < previousDistance)
+                {
+                    closestPoint = possibleClosestPoint;
+                    previousDistance = distanceBeetweenPoints;
+                }
+            }
+            return (closestPoint, previousDistance);
+        }
+
+        public static (Point, double) FindClosestAndReturnDistance(this Point point, IEnumerable<Point> pointsToSearch)
+        {
+            Point closestPoint = Point.None;
+            double previousDistance = 999;
+            foreach (var possibleClosestPoint in pointsToSearch)
+            {
+                double distanceBeetweenPoints = Distance.Chebyshev.Calculate(possibleClosestPoint, point);
+                if (distanceBeetweenPoints < previousDistance)
+                {
+                    closestPoint = possibleClosestPoint;
+                    previousDistance = distanceBeetweenPoints;
+                }
+            }
+            return (closestPoint, previousDistance);
+        }
     }
 }

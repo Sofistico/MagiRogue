@@ -52,7 +52,6 @@ namespace MagiRogue.Entities
         // Body
         public double RaceNormalLimbRegen { get; set; }
         public double BleedRegenaration { get; set; }
-        public bool CanRegenLostLimbs { get; set; }
 
         public string[] BodyPlan { get; set; }
         public string[] Tissues { get; set; }
@@ -61,11 +60,9 @@ namespace MagiRogue.Entities
         public int[] LengthModifier { get; set; }
         public List<string> Genders { get; set; }
 
-        // Civ tendencies
-        // Temporary
-        public bool ValidCivRace { get; set; }
-        public double BloodMultiplier { get; set; }
+        public double BloodMultiplier { get; set; } = 75; // defaults to 75
         public bool DeadRace { get; set; }
+        public List<SpecialFlag> Flags { get; set; }
 
         public Race()
         {
@@ -182,5 +179,7 @@ namespace MagiRogue.Entities
         {
             return RaceName;
         }
+
+        public bool CanRegenarate() => Flags.Contains(SpecialFlag.Regenerator);
     }
 }

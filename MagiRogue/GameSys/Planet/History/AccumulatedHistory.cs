@@ -3,6 +3,7 @@ using MagiRogue.Data.Enumerators;
 using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
+using SadConsole;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
@@ -124,12 +125,41 @@ namespace MagiRogue.GameSys.Planet.History
 
                 CreateNewSiteIfPossible(tiles, civ);
 
+                ClaimNewTerritory(civ);
+
+                CheckForTerritoryConflict(civ);
+
                 // Site simulation from the Civ here:
                 foreach (Site Site in civ.Sites)
                 {
                     totalRevenueYear = SimulateSiteAndReturnRevenue(tiles, totalRevenueYear, Site);
                 }
                 civ.Wealth += totalRevenueYear;
+            }
+        }
+
+        private void CheckForTerritoryConflict(Civilization civ)
+        {
+        }
+
+        private static void ClaimNewTerritory(Civilization civ)
+        {
+            IEnumerable<Point> getAllPointsInsideTerritory = civ.Territory.ToList();
+            IEnumerable<Point> getAllPointsSites = civ.Sites.Select(o => o.WorldPos);
+            int propagationLimit = 10; // the civ can only extend by a factor of ten from each site!
+            foreach (Point point in getAllPointsInsideTerritory)
+            {
+                var directions = point.GetDirectionPoints();
+                for (int i = 0; i < directions.Length; i++)
+                {
+                    Point direction = directions[i];
+                    (Point closestPoint, double distance) = direction.FindClosestAndReturnDistance(getAllPointsSites);
+
+                    if (distance <= propagationLimit)
+                    {
+                        civ.Territory.Add(direction);
+                    }
+                }
             }
         }
 

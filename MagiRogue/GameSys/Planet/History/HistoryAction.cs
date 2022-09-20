@@ -57,7 +57,7 @@ namespace MagiRogue.GameSys.Planet.History
         private bool CheckForGiftGiving()
         {
             return figure.GetPersonality().Sacrifice >= 25
-                && figure.RelatedCivs.Count > 0;
+                && figure.RelatedCivs.Any(i => i.Relation is RelationType.PatronDeity);
         }
 
         private bool CheckForInsurrection()
