@@ -146,7 +146,7 @@ namespace MagiRogue.GameSys.Planet.History
         {
             IEnumerable<Point> getAllPointsInsideTerritory = civ.Territory.ToList();
             IEnumerable<Point> getAllPointsSites = civ.Sites.Select(o => o.WorldPos);
-            int propagationLimit = 10; // the civ can only extend by a factor of ten from each site!
+            int propagationLimit = 10; // the civ can only extend by ten tiles from each site!
             foreach (Point point in getAllPointsInsideTerritory)
             {
                 var directions = point.GetDirectionPoints();
