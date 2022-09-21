@@ -70,8 +70,18 @@ namespace MagiRogue.GameSys.Planet.History
                 // simulate civ stuff
                 CivilizationSimulation(tiles);
 
+                // other sites that aren't tied to a Civ/Hf/etc...
+                NoCivSitesSimulation(tiles);
+
                 Year++;
                 firstYearOnly = false;
+            }
+        }
+
+        private void NoCivSitesSimulation(WorldTile[,] tiles)
+        {
+            foreach (var site in SitesWithoutCivs)
+            {
             }
         }
 
@@ -140,6 +150,9 @@ namespace MagiRogue.GameSys.Planet.History
 
         private void CheckForTerritoryConflict(Civilization civ)
         {
+            foreach (var otherCiv in Civs)
+            {
+            }
         }
 
         private static void ClaimNewTerritory(Civilization civ)
@@ -219,6 +232,16 @@ namespace MagiRogue.GameSys.Planet.History
                 tile.SiteInfluence = Site;
                 civ.AddSiteToCiv(Site);
             }
+        }
+
+        private static void CreateNewSiteIfPossibleWithNoCiv(WorldTile[,] tiles, List<Site> sitesWithNoCiv)
+        {
+            Site site = new Site();
+            WorldTile tile = tiles.Transform2DTo1D().GetRandomItemFromList();
+            tile.SiteInfluence = site;
+            site.WorldPos = tile.Position;
+            site.MundaneResources = (int)tile.GetResources();
+            sitesWithNoCiv.Add(site);
         }
 
         private bool BuildRoadsToFriends(Civilization civ, Civilization friend, WorldTile[,] tiles)

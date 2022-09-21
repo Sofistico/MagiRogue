@@ -245,5 +245,10 @@ namespace MagiRogue.GameSys.Tiles
                 Top.Right.Right.SetRiverTile(river);
             }
         }
+
+        public double GetResources()
+        {
+            return MineralValue;
+        }
     }
 }

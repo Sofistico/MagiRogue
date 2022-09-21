@@ -205,13 +205,12 @@ namespace MagiRogue.GameSys.Planet
 
                 Site set = new Site(tile.Position, civ.RandomSiteFromLanguageName(), pop)
                 {
-                    MundaneResources = (int)tile.MineralValue
+                    MundaneResources = (int)tile.GetResources()
                 };
                 set.DefineSiteSize();
 
                 tile.SiteInfluence = set;
                 civ.AddSiteToCiv(set);
-                //civ.LanguageId = Data.DataManager.ListOfLanguages.GetRandomItemFromList().Id;
 
                 if (currentCivCount < maxCivsWorld)
                 {
