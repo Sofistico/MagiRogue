@@ -17,6 +17,7 @@ namespace MagiRogue.Data.Enumerators
         Friendly,
         Enemy,
         War,
+        Tension,
         Allied,
 
         // relation beetween civ and a hf
@@ -25,6 +26,6 @@ namespace MagiRogue.Data.Enumerators
         TraitorousMember,
         Soldier,
         Ruler,
-        PatronDeity
+        PatronDeity,
     }
 }

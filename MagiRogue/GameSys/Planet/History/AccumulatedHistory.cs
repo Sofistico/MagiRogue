@@ -80,7 +80,7 @@ namespace MagiRogue.GameSys.Planet.History
 
         private void NoCivSitesSimulation(WorldTile[,] tiles)
         {
-            foreach (var site in SitesWithoutCivs)
+            foreach (Site site in SitesWithoutCivs)
             {
             }
         }
@@ -152,6 +152,10 @@ namespace MagiRogue.GameSys.Planet.History
         {
             foreach (var otherCiv in Civs)
             {
+                if (civ.Territory.Any(p => otherCiv.Territory.Contains(p)))
+                {
+                    civ.AddCivToRelations(otherCiv, RelationType.Tension);
+                }
             }
         }
 
