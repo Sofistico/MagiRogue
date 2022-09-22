@@ -1,8 +1,23 @@
 ﻿[
   {
     "Id": "magic_teach",
+    "Name": "Mage",
+    "Ability": [ "MagicTheory" ]
+  },
+  {
+    "Id": "magic_teach",
+    "Name": "Academy Mage",
+    "Ability": [ "MagicTheory" ]
+  },
+  {
+    "Id": "magic_teach",
+    "Name": "Apprentice Mage",
+    "Ability": [ "Student", "MagicTheory" ]
+  },
+  {
+    "Id": "magic_teach",
     "Name": "Magic Teacher",
-    "Ability": [ "MagicLore", "Teach" ]
+    "Ability": [ "MagicTheory", "Teach" ]
   },
   {
     "Id": "basic_lore",
@@ -17,7 +32,7 @@
   {
     "Id": "mage_research",
     "Name": "Magic Researcher",
-    "Ability": [ "MagicLore", "Research" ]
+    "Ability": [ "MagicTheory", "Research" ]
   },
   {
     "Id": "vagabond",
@@ -73,6 +88,11 @@
     "Id": "soldier",
     "Name": "Soldier",
     "Ability": [ "ArmorUse", "Discipline" ]
+  },
+  {
+    "Id": "soldier",
+    "Name": "Mage Soldier",
+    "Ability": [ "MagicTheory", "Discipline" ]
   },
   {
     "Id": "dodge",
@@ -150,8 +170,8 @@
     "Ability": [ "Swin" ]
   },
   {
-    "Id": "researcher",
-    "Name": "Researcher",
+    "Id": "scholar",
+    "Name": "Scholar",
     "Ability": [ "Research" ]
   },
   {

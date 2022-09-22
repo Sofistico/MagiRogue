@@ -56,7 +56,7 @@ namespace MagiRogue.GameSys.Planet.History
                     MythWhat.Spirits,
                     MythWhat.Forces,
                 };
-                Myth newMyth = new Myth(figures[0].Name, figures[0].MythWho.Value,
+                Myth newMyth = new Myth(figures[0].Name, figures[0].MythWho,
                     MythAction.Created, num.GetRandomItemFromList());
                 HistoricalFigure createdFigure = newMyth.CreateFigureFromMyth(figures[0].Name);
                 if (createdFigure is not null)

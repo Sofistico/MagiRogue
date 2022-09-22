@@ -396,12 +396,7 @@ namespace MagiRogue.Entities
 
         public int GetRelevantAbility(AbilityName ability)
         {
-            if (Mind.Abilities.ContainsKey((int)ability))
-            {
-                return Mind.Abilities[(int)ability].Score;
-            }
-            else
-                return 0;
+            return Mind.GetAbility(ability);
         }
 
         public int GetRelevantAttackAbility()

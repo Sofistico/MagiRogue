@@ -80,6 +80,8 @@ namespace MagiRogue.GameSys.Planet.History
 
         private void NoCivSitesSimulation(WorldTile[,] tiles)
         {
+            if (SitesWithoutCivs.Count < 1)
+                return;
             foreach (Site site in SitesWithoutCivs)
             {
             }
@@ -87,6 +89,8 @@ namespace MagiRogue.GameSys.Planet.History
 
         private void HistoricalFigureSimulation(WorldTile[,] tiles)
         {
+            if (Figures.Count < 1)
+                return;
             foreach (HistoricalFigure figure in Figures)
             {
                 if (figure.IsAlive)
@@ -100,8 +104,9 @@ namespace MagiRogue.GameSys.Planet.History
             {
                 var civ = Civs[i];
 
-                // Historical figure simulation here:
-                civ.CheckIfCivIsDead();
+                // civ simulation here, if civ is dead just skip and go to the next:
+                if (civ.CheckIfCivIsDead())
+                    continue;
 
                 if (i < Civs.Count - 1)
                 {
@@ -121,7 +126,8 @@ namespace MagiRogue.GameSys.Planet.History
                             // trade of various types!!
                             if (civ[nextCiv.Id].RoadBuilt.HasValue && civ[nextCiv.Id].RoadBuilt.Value)
                             {
-                                // facilitates trade beetween sites
+                                civ.AddToTradingList(nextCiv);
+                                civ.TradeWithOtherCiv(nextCiv);
                             }
                         }
 
@@ -131,6 +137,7 @@ namespace MagiRogue.GameSys.Planet.History
                         }
                     }
                 }
+
                 int totalRevenueYear = 0;
 
                 CreateNewSiteIfPossible(tiles, civ);
@@ -140,9 +147,9 @@ namespace MagiRogue.GameSys.Planet.History
                 CheckForTerritoryConflict(civ);
 
                 // Site simulation from the Civ here:
-                foreach (Site Site in civ.Sites)
+                foreach (Site site in civ.Sites)
                 {
-                    totalRevenueYear = SimulateSiteAndReturnRevenue(tiles, totalRevenueYear, Site);
+                    totalRevenueYear = SimulateSiteAndReturnRevenue(tiles, totalRevenueYear, site, civ);
                 }
                 civ.Wealth += totalRevenueYear;
             }
@@ -211,12 +218,13 @@ namespace MagiRogue.GameSys.Planet.History
         }
 
         private static int SimulateSiteAndReturnRevenue(WorldTile[,] tiles,
-            int totalRevenueYear, Site Site)
+            int totalRevenueYear, Site site, Civilization civ)
         {
-            Site.CreateNewBuildings();
-            totalRevenueYear += Site.MundaneResources;
-            Site.GenerateMundaneResources();
-            Site.SimulatePopulationGrowth(tiles[Site.WorldPos.X, Site.WorldPos.Y]);
+            site.CreateNewBuildings();
+            totalRevenueYear += site.MundaneResources;
+            site.GenerateMundaneResources();
+            site.SimulatePopulationGrowth(tiles[site.WorldPos.X, site.WorldPos.Y]);
+            site.SimulateTradeBetweenItsRoads(civ);
             return totalRevenueYear;
         }
 
@@ -310,6 +318,7 @@ namespace MagiRogue.GameSys.Planet.History
                 WorldTile worldTile = tile.Top;
                 if (worldTile.SiteInfluence is not null)
                 {
+                    worldTile.SiteInfluence.Roads.Add(road);
                     return;
                 }
                 worldTile.Road = road;
@@ -323,6 +332,8 @@ namespace MagiRogue.GameSys.Planet.History
                 WorldTile worldTile = tile.Bottom;
                 if (worldTile.SiteInfluence is not null)
                 {
+                    worldTile.SiteInfluence.Roads.Add(road);
+
                     return;
                 }
                 worldTile.Road = road;
@@ -336,6 +347,8 @@ namespace MagiRogue.GameSys.Planet.History
                 WorldTile worldTile = tile.Left;
                 if (worldTile.SiteInfluence is not null)
                 {
+                    worldTile.SiteInfluence.Roads.Add(road);
+
                     return;
                 }
 
@@ -350,6 +363,8 @@ namespace MagiRogue.GameSys.Planet.History
                 WorldTile worldTile = tile.Right;
                 if (worldTile.SiteInfluence is not null)
                 {
+                    worldTile.SiteInfluence.Roads.Add(road);
+
                     return;
                 }
 
@@ -364,6 +379,8 @@ namespace MagiRogue.GameSys.Planet.History
                 WorldTile worldTile = tile.TopLeft;
                 if (worldTile.SiteInfluence is not null)
                 {
+                    worldTile.SiteInfluence.Roads.Add(road);
+
                     return;
                 }
 
@@ -378,6 +395,8 @@ namespace MagiRogue.GameSys.Planet.History
                 WorldTile worldTile = tile.TopRight;
                 if (worldTile.SiteInfluence is not null)
                 {
+                    worldTile.SiteInfluence.Roads.Add(road);
+
                     return;
                 }
 
@@ -392,6 +411,8 @@ namespace MagiRogue.GameSys.Planet.History
                 WorldTile worldTile = tile.BottomLeft;
                 if (worldTile.SiteInfluence is not null)
                 {
+                    worldTile.SiteInfluence.Roads.Add(road);
+
                     return;
                 }
 
@@ -406,6 +427,8 @@ namespace MagiRogue.GameSys.Planet.History
                 WorldTile worldTile = tile.BottomRight;
                 if (worldTile.SiteInfluence is not null)
                 {
+                    worldTile.SiteInfluence.Roads.Add(road);
+
                     return;
                 }
 

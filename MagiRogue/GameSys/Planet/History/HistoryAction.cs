@@ -30,7 +30,7 @@ namespace MagiRogue.GameSys.Planet.History
 
         public void Act()
         {
-            if (figure.MythWho.HasValue)
+            if (figure.MythWho != MythWho.None)
             {
                 SimulateMythStuff();
             }

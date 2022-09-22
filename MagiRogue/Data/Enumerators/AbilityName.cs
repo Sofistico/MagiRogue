@@ -47,6 +47,7 @@ namespace MagiRogue.Data.Enumerators
         Concentration,
         Discipline,
         Write,
+        Student,
         Teach,
         Read,
         Leader,
@@ -54,6 +55,7 @@ namespace MagiRogue.Data.Enumerators
         Swin,
 
         // scholary
+        MagicTheory,
         MagicLore,
         Research,
         Mathematics,

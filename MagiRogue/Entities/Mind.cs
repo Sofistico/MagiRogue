@@ -47,5 +47,17 @@ namespace MagiRogue.Entities
                 return false;
             }
         }
+
+        public int GetAbility(AbilityName ability)
+        {
+            int possibleId = (int)Ability.ReturnAbilityEnumFromString(ability.ToString());
+            int abilityScore = 0;
+            if (Abilities.ContainsKey(possibleId))
+            {
+                abilityScore = Abilities[possibleId].Score;
+            }
+
+            return abilityScore;
+        }
     }
 }

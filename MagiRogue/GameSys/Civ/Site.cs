@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using MagiRogue.Utils;
 using MagiRogue.GameSys.Tiles;
+using MagiRogue.GameSys.Planet.History;
+using System.Linq;
 
 namespace MagiRogue.GameSys.Civ
 {
@@ -17,10 +19,14 @@ namespace MagiRogue.GameSys.Civ
         public int MagicStrenght { get; set; }
         public int Population { get; set; }
         public int MundaneResources { get; set; }
+        public int FoodQuantity { get; set; }
         public int MagicalResources { get; set; }
         public List<Room> Buildings { get; set; } = new();
         public bool Dead { get; set; }
         public int? CivOwnerIfAny { get; set; }
+        public bool Famine { get; set; }
+        public List<Road> Roads { get; set; } = new();
+        public HistoricalFigure Administrator { get; set; }
 
         public Site()
         {
@@ -121,12 +127,19 @@ namespace MagiRogue.GameSys.Civ
                         MagicalResources -= 10;
                         break;
 
+                    case RoomTag.Farm:
+                        MundaneResources += 10;
+                        FoodQuantity += 50;
+                        break;
+
                     default:
                         break;
                 }
 
                 if (MundaneResources <= 0)
                     room.Tag = RoomTag.Abandoned;
+                if (FoodQuantity >= 0)
+                    Famine = false;
             }
             // if the resources got big enough, update!
             DefineSiteSize();
@@ -152,7 +165,8 @@ namespace MagiRogue.GameSys.Civ
                     RoomTag.Clothier,
                     RoomTag.Alchemist,
                     RoomTag.Hovel,
-                    RoomTag.GenericWorkshop
+                    RoomTag.GenericWorkshop,
+                    RoomTag.Farm
                 };
                 Room business = new Room(tags.GetRandomItemFromList());
                 Buildings.Add(business);
@@ -164,7 +178,28 @@ namespace MagiRogue.GameSys.Civ
             int populationCarryngCapacity = (int)tile.BiomeType;
             int totalResources = MundaneResources / 100;
             double result = (double)((double)populationCarryngCapacity / (double)((1 + totalResources))) / 100;
+
+            if (Famine)
+            {
+                Population = (int)MathMagi.Round(Population / result);
+                totalResources -= (int)result;
+                MundaneResources -= totalResources;
+                return;
+            }
             Population = (int)MathMagi.Round(Population * result);
+            int totalFoodLost = FoodQuantity % Population;
+            FoodQuantity -= totalFoodLost;
+            if (FoodQuantity <= 0)
+                Famine = true;
+        }
+
+        public void SimulateTradeBetweenItsRoads(Civilization civParent)
+        {
+            if (civParent.CivsTradingWith.Count > 0)
+            {
+                MundaneResources += (Administrator.Mind.GetAbility(AbilityName.Negotiator)
+                    * civParent.CivsTradingWith.Count);
+            }
         }
     }
 }

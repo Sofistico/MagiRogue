@@ -235,8 +235,9 @@ namespace MagiRogue.GameSys.Planet
             //PlanetGlyphGenerator.GetMoistureMap(width, height, tiles);
             PlanetGlyphGenerator.GetBiomeMapTexture(_width, _height, tiles);
             PlanetGlyphGenerator.SetCityTiles(_width, _height, tiles);
+#if DEBUG
             PlanetGlyphGenerator.SetSpecialTiles(_width, _height, tiles);
-
+#endif
             planetData.SetWorldTiles(tiles);
         }
 

@@ -25,7 +25,7 @@ namespace MagiRogue.GameSys.Planet.History
         public Sex HFGender { get; set; }
         public string Race { get; set; }
         public List<Legend> Legends { get; set; } = new();
-        public MythWho? MythWho { get; set; }
+        public MythWho MythWho { get; set; }
         public int YearBorn { get; set; }
         public int? YearDeath { get; set; }
         public bool IsAlive { get; set; }
@@ -204,7 +204,7 @@ namespace MagiRogue.GameSys.Planet.History
 
             Myth myth = new()
             {
-                MythWho = MythWho ?? Data.Enumerators.MythWho.None,
+                MythWho = this.MythWho,
                 MythWhat = what,
                 MythAction = action,
                 Name = Name,

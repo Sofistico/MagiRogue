@@ -48,6 +48,7 @@ namespace MagiRogue.GameSys.Civ
         public List<WorldConstruction> PossibleWorldConstruction { get; set; }
         public List<SiteType> PossibleSites { get; set; }
         public Dictionary<string, int> TrackAmountOfNobles { get; set; }
+        public List<int> CivsTradingWith { get; private set; }
 
         [JsonConstructor]
         public Civilization(string name, Race primaryRace, CivilizationTendency tendency)
@@ -60,6 +61,7 @@ namespace MagiRogue.GameSys.Civ
             ImportantPeople = new();
             Relations = new();
             Id = GameLoop.GetCivId();
+            CivsTradingWith = new();
         }
 
         public void AddSiteToCiv(Site site)
@@ -239,16 +241,24 @@ namespace MagiRogue.GameSys.Civ
                 Relations.Add(new CivRelation(Id, civ.Id, relationType));
         }
 
-        public void CheckIfCivIsDead()
+        public bool CheckIfCivIsDead()
         {
             if (Dead)
-                return;
+                return true;
 
             if (TotalPopulation <= 0)
             {
                 Dead = true;
-                return;
+                Territory.Clear();
+                foreach (var site in Sites)
+                {
+                    site.Dead = true;
+                }
+                Relations.Clear();
+
+                return true;
             }
+            return false;
         }
 
         public Language GetLanguage()
@@ -275,6 +285,46 @@ namespace MagiRogue.GameSys.Civ
             HistoricalFigure? figure = ImportantPeople.FirstOrDefault(i => i.NobleTitles.Contains(n));
 
             return (n, figure);
+        }
+
+        public void AddToTradingList(Civilization nextCiv)
+        {
+            if (!CivsTradingWith.Contains(nextCiv.Id))
+                CivsTradingWith.Add(nextCiv.Id);
+        }
+
+        public void TradeWithOtherCiv(Civilization[] otherCivs)
+        {
+            foreach (var civId in CivsTradingWith)
+            {
+                Civilization civ = otherCivs.FirstOrDefault(i => i.Id == civId);
+                if (Sites.Any(i => i.Famine))
+                {
+                    var siteWithMostFood = civ.Sites.MaxBy(i => i.FoodQuantity);
+                    int resourceSpent = 100;
+                    BuyFoodFromOtherCivSite(siteWithMostFood, resourceSpent);
+                }
+                int wealthGeneratedByTrade = GetPotentialWealthGeneratedFromSimpleTrade(civ);
+            }
+        }
+
+        private int GetPotentialWealthGeneratedFromSimpleTrade(Civilization civ)
+        {
+            return (civ.Sites.Sum(i => i.MundaneResources) / (civ.TotalPopulation))
+                * ((GetRulerNoblePosition().Item2.Mind.GetAbility(AbilityName.Negotiator) + 1 / 100));
+        }
+
+        private void BuyFoodFromOtherCivSite(Site? siteWithMostFood, int resourceSpent)
+        {
+            siteWithMostFood.FoodQuantity -= resourceSpent;
+            siteWithMostFood.MundaneResources += resourceSpent;
+            Wealth -= resourceSpent;
+        }
+
+        public void TradeWithOtherCiv(Civilization nextCiv)
+        {
+            // the lazy way!
+            TradeWithOtherCiv(new Civilization[] { nextCiv });
         }
     }
 }
