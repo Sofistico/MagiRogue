@@ -6,13 +6,18 @@ using System.Threading.Tasks;
 
 namespace MagiRogue.Data.Enumerators
 {
-    public enum SiteRelationType
+    // TODO: Check if Json will serialize!
+    [Flags]
+    public enum SiteRelationTypes
     {
-        None,
-        LivesThere,
-        WantsDestroyed,
-        WantsToRule,
-        BornThere,
-        DiedThere
+        None = 1 << 1,
+        LivesThere = 1 << 2,
+        WantsDestroyed = 1 << 3,
+        WantsToRule = 1 << 4,
+        BornThere = 1 << 5,
+        DiedThere = 1 << 6,
+
+        Rules = 1 << 7,
+        Ruled = 1 << 8,
     }
 }

@@ -5,13 +5,13 @@ namespace MagiRogue.GameSys.Planet.History
     public class SiteRelation
     {
         public int ParentId { get; set; }
-        public int OtherHfId { get; set; }
-        public SiteRelationType RelationType { get; set; }
+        public int OtherSiteId { get; set; }
+        public SiteRelationTypes RelationType { get; set; }
 
-        public SiteRelation(int parentId, int otherHfId, SiteRelationType relationType)
+        public SiteRelation(int parentId, int otherSiteId, SiteRelationTypes relationType)
         {
             ParentId = parentId;
-            OtherHfId = otherHfId;
+            OtherSiteId = otherSiteId;
             RelationType = relationType;
         }
     }

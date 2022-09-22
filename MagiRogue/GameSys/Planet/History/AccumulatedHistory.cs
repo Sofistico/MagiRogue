@@ -217,7 +217,7 @@ namespace MagiRogue.GameSys.Planet.History
             }
         }
 
-        private static int SimulateSiteAndReturnRevenue(WorldTile[,] tiles,
+        private int SimulateSiteAndReturnRevenue(WorldTile[,] tiles,
             int totalRevenueYear, Site site, Civilization civ)
         {
             site.CreateNewBuildings();
@@ -225,6 +225,10 @@ namespace MagiRogue.GameSys.Planet.History
             site.GenerateMundaneResources();
             site.SimulatePopulationGrowth(tiles[site.WorldPos.X, site.WorldPos.Y]);
             site.SimulateTradeBetweenItsRoads(civ);
+            if (site.CheckIfCurrentLeaderDiedAndRemoveIt(Year))
+            {
+                site.AddNewLeader(civ, Year);
+            }
             return totalRevenueYear;
         }
 

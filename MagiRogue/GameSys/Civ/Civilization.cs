@@ -1,17 +1,14 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
-using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Planet.History;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using static SadConsole.Readers.Playscii;
 
 namespace MagiRogue.GameSys.Civ
 {
@@ -19,6 +16,8 @@ namespace MagiRogue.GameSys.Civ
     [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
     public sealed class Civilization
     {
+        #region CivDefinitionsFromTemplate
+
         public int Id { get; set; }
         public string TemplateId { get; set; }
         public string Name { get; set; }
@@ -32,6 +31,10 @@ namespace MagiRogue.GameSys.Civ
         public List<CivRelation> Relations { get; set; }
         public string LanguageId { get; set; }
         public List<Noble> NoblesPosition { get; set; }
+
+        #endregion CivDefinitionsFromTemplate
+
+        #region Information
 
         public CivRelation this[int otherCivId]
         {
@@ -49,6 +52,8 @@ namespace MagiRogue.GameSys.Civ
         public List<SiteType> PossibleSites { get; set; }
         public Dictionary<string, int> TrackAmountOfNobles { get; set; }
         public List<int> CivsTradingWith { get; private set; }
+
+        #endregion Information
 
         [JsonConstructor]
         public Civilization(string name, Race primaryRace, CivilizationTendency tendency)
@@ -80,29 +85,13 @@ namespace MagiRogue.GameSys.Civ
             bool rulerChoosen = false;
             for (int i = 0; i < nmbrOfImportant; i++)
             {
-                // creating actor
-                string name = Utils.RandomNames.RandomNamesFromLanguage(GetLanguage());
-                Sex sex = PrimaryRace.ReturnRandomSex();
-                List<Legend> legends = new List<Legend>();
-                int age = PrimaryRace.GetAgeFromAgeGroup(AgeGroup.Adult);
-
-                // first legend
+                var hf = CreateNewHfMemberFromPop(0);
                 StringBuilder initialLegend = new StringBuilder("In a time before time, ");
-                initialLegend.Append($"{name} was created looking like a {sex} of the {PrimaryRace.RaceName} ");
-                initialLegend.Append($"with {age} as a member of {Name}");
-                legends.Add(new Legend(initialLegend.ToString(), -1));
-                HistoricalFigure figure = new HistoricalFigure(name, sex, legends,
-                    age - 0, null, true, PrimaryRace.Description, PrimaryRace.Id)
-                {
-                    CurrentAge = age
-                };
-                figure.GenerateRandomPersonality();
-                figure.GenerateRandomSkills();
-                figure.DefineProfession();
+                initialLegend.Append($"{hf.Name} was created looking like a {hf.HFGender} of the {hf.GetRaceName()} ");
+                initialLegend.Append($"with {hf.CurrentAge} as a member of {Name}");
+                hf.Legends.Add(new Legend(initialLegend.ToString(), -1));
 
-                // add to civ
-                figure.AddNewRelationToCiv(Id, RelationType.Member);
-                ImportantPeople.Add(figure);
+                ImportantPeople.Add(hf);
             }
 
             List<HistoricalFigure> nobles = ImportantPeople.ShuffleAlgorithmAndTakeN(numberOfNobles);
@@ -135,6 +124,29 @@ namespace MagiRogue.GameSys.Civ
             }
         }
 
+        public HistoricalFigure CreateNewHfMemberFromPop(int yearBorn)
+        {
+            // creating actor
+            string name = Utils.RandomNames.RandomNamesFromLanguage(GetLanguage());
+            Sex sex = PrimaryRace.ReturnRandomSex();
+            List<Legend> legends = new List<Legend>();
+            int age = PrimaryRace.GetAgeFromAgeGroup(AgeGroup.Adult);
+
+            // first legend
+            HistoricalFigure figure = new HistoricalFigure(name, sex, legends,
+                age - yearBorn, null, true, PrimaryRace.Description, PrimaryRace.Id)
+            {
+                CurrentAge = age
+            };
+            figure.GenerateRandomPersonality();
+            figure.GenerateRandomSkills();
+            figure.DefineProfession();
+
+            // add to civ
+            figure.AddNewRelationToCiv(Id, RelationType.Member);
+            return figure;
+        }
+
         public void AppointNewNoble(Noble noble,
             HistoricalFigure figureToAdd,
             int yearAdded,
@@ -159,6 +171,20 @@ namespace MagiRogue.GameSys.Civ
                 }
 
                 figureToAdd.AddLegend(str.ToString(), yearAdded);
+            }
+        }
+
+        public void AppointNewNobleFromPops(Noble noble,
+            int yearAdded,
+            string? whyItHappenead = null)
+        {
+            if (TotalPopulation > 0 && TotalPopulation > ImportantPeople.Count)
+            {
+                var hf = CreateNewHfMemberFromPop(yearAdded);
+
+                ImportantPeople.Add(hf);
+
+                AppointNewNoble(noble, hf, yearAdded, whyItHappenead);
             }
         }
 
@@ -188,6 +214,54 @@ namespace MagiRogue.GameSys.Civ
             }
             return false;
         }
+
+        public void AppointNobleToAdministerSite(Site site, int currentYear)
+        {
+            // check this later for a better solution
+            List<Noble> noblesPos = GetNobleWithSpecificResponse(Responsability.Administrate);
+            if (noblesPos.Count > 0)
+            {
+                Noble noble = noblesPos.GetRandomItemFromList();
+                var hfs = GetAllHfsNoblesWithSpecificTitle(noble);
+                HistoricalFigure hf;
+                // need to check this later!
+                if (hfs.Count > 0)
+                {
+                    hf = hfs.GetRandomItemFromList();
+                }
+                else
+                {
+                    bool rng = Mrn.OneIn(2);
+                    if (rng)
+                    {
+                        // pick a random dude from the pops
+                        hf = CreateNewHfMemberFromPop(currentYear);
+                    }
+                    else
+                        // else elevate someone else to the position
+                        hf = GetAllHfsNotNobles().GetRandomItemFromList();
+                    AppointNewNoble(noble, hf, currentYear);
+                }
+
+                site.AddHfAsSiteLeader(hf, currentYear);
+            }
+            else
+            {
+                site.AddHfAsSiteLeader(GetRulerNoblePosition().Item2, currentYear);
+            }
+        }
+
+        public List<Noble> GetNobleWithSpecificResponse(Responsability responsability)
+            => NoblesPosition.Where(i => i.Responsabilities.Contains(responsability)).ToList();
+
+        public List<HistoricalFigure> GetAllHfsNobles()
+            => ImportantPeople.Where(i => i.NobleTitles.Count > 0).ToList();
+
+        public List<HistoricalFigure> GetAllHfsNoblesWithSpecificTitle(Noble noble)
+            => ImportantPeople.Where(i => i.NobleTitles.Contains(noble)).ToList();
+
+        public List<HistoricalFigure> GetAllHfsNotNobles()
+            => ImportantPeople.Where(i => i.NobleTitles.Count <= 0).ToList();
 
         public List<WorldTile> ReturnAllTerritories(Map map)
         {

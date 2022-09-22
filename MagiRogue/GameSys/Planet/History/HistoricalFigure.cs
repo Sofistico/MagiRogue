@@ -259,9 +259,20 @@ namespace MagiRogue.GameSys.Planet.History
             RelatedHFs.Add(new HfRelation(Id, otherId, relation));
         }
 
-        public void AddRelatedSite(int otherId, SiteRelationType relation)
+        public void AddRelatedSite(int otherId, SiteRelationTypes relation)
         {
             RelatedSites.Add(new SiteRelation(Id, otherId, relation));
+        }
+
+        public string GetRaceName()
+        {
+            Race race = Data.DataManager.QueryRaceInData(Race);
+            return race.RaceName;
+        }
+
+        internal void RemovePreviousSiteRelation(int id)
+        {
+            RelatedSites.RemoveAll(i => i.OtherSiteId == id);
         }
     }
 }

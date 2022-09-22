@@ -6,11 +6,15 @@ using MagiRogue.Utils;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.GameSys.Planet.History;
 using System.Linq;
+using System.Text;
+using System.Collections.Specialized;
 
 namespace MagiRogue.GameSys.Civ
 {
     public sealed class Site
     {
+        #region props
+
         public Point WorldPos { get; set; }
         public SiteType SiteType { get; set; }
         public string Name { get; set; }
@@ -26,7 +30,11 @@ namespace MagiRogue.GameSys.Civ
         public int? CivOwnerIfAny { get; set; }
         public bool Famine { get; set; }
         public List<Road> Roads { get; set; } = new();
-        public HistoricalFigure Administrator { get; set; }
+        public HistoricalFigure SiteLeader { get; set; }
+        public List<Legend> SiteLegends { get; set; } = new();
+        public int Id { get; private set; }
+
+        #endregion props
 
         public Site()
         {
@@ -197,9 +205,56 @@ namespace MagiRogue.GameSys.Civ
         {
             if (civParent.CivsTradingWith.Count > 0)
             {
-                MundaneResources += (Administrator.Mind.GetAbility(AbilityName.Negotiator)
+                MundaneResources += (SiteLeader.Mind.GetAbility(AbilityName.Negotiator)
                     * civParent.CivsTradingWith.Count);
             }
+        }
+
+        public void AddHfAsSiteLeader(HistoricalFigure hf, int currentYear)
+        {
+            StringBuilder builder = new($"In the year {currentYear} the {hf.Name} assumed control of the {SiteType} {Name}");
+            if (SiteLeader is not null)
+            {
+                builder.Append($" removing the previous leader {SiteLeader.Name} from it's post!");
+                SiteLeader.RemovePreviousSiteRelation(Id);
+                SiteLeader.AddRelatedSite(Id, SiteRelationTypes.Ruled);
+            }
+
+            SiteLeader = hf;
+
+            hf.AddRelatedSite(Id, SiteRelationTypes.LivesThere & SiteRelationTypes.Rules);
+
+            AddNewSiteLegend(builder.ToString(), currentYear, hf);
+        }
+
+        private void AddNewSiteLegend(string legend, int when, HistoricalFigure? figure = null)
+        {
+            SiteLegends.Add(new Legend(legend, when, figure));
+        }
+
+        public bool CheckIfCurrentLeaderDiedAndRemoveIt(int currentYear)
+        {
+            if (SiteLeader is not null)
+            {
+                if (!SiteLeader.IsAlive)
+                {
+                    SiteLeader.YearDeath ??= currentYear;
+                    SiteLeader.AddRelatedSite(Id, SiteRelationTypes.Ruled);
+                    SiteLeader = null;
+                }
+            }
+
+            return SiteLeader is null;
+        }
+
+        public void AddNewLeader(Civilization civ, int currentYear)
+        {
+            civ.AppointNobleToAdministerSite(this, currentYear);
+        }
+
+        public void AddNewLeader(HistoricalFigure figure, int currentYear)
+        {
+            AddHfAsSiteLeader(figure, currentYear);
         }
     }
 }
