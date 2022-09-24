@@ -252,5 +252,104 @@
     "RateOfHeal": 0.9,
     "BodyPartFunction": "Digit",
     "ConnectedTo": "{0}"
+  },
+  {
+    "Id": "right_f_leg",
+    "LimbType": "Leg",
+    "RelativeVolume": 0.072,
+    "BodyPartName": "Right Front Leg",
+    "Orientation": "Right",
+    "MaterialId": "skin",
+    "RateOfHeal": 0.9,
+    "BodyPartFunction": "Limb",
+    "ConnectedTo": "upper_body"
+  },
+  {
+    "Id": "right_r_leg",
+    "LimbType": "Leg",
+    "RelativeVolume": 0.072,
+    "BodyPartName": "Right Rear Leg",
+    "Orientation": "Right",
+    "MaterialId": "skin",
+    "RateOfHeal": 0.9,
+    "BodyPartFunction": "Limb",
+    "ConnectedTo": "lower_body"
+  },
+  {
+    "Id": "left_f_leg",
+    "LimbType": "Leg",
+    "RelativeVolume": 0.072,
+    "BodyPartName": "Left Front Leg",
+    "Orientation": "Left",
+    "MaterialId": "skin",
+    "RateOfHeal": 0.9,
+    "BodyPartFunction": "Limb",
+    "ConnectedTo": "upper_body"
+  },
+  {
+    "Id": "left_r_leg",
+    "LimbType": "Leg",
+    "RelativeVolume": 0.072,
+    "BodyPartName": "Left Rear Leg",
+    "Orientation": "Left",
+    "MaterialId": "skin",
+    "RateOfHeal": 0.9,
+    "BodyPartFunction": "Limb",
+    "ConnectedTo": "lower_body"
+  },
+  {
+    "Id": "right_f_paw",
+    "LimbType": "Foot",
+    "RelativeVolume": 0.022,
+    "BodyPartName": "Right Front Paw",
+    "Orientation": "Right",
+    "MaterialId": "skin",
+    "RateOfHeal": 0.9,
+    "BodyPartFunction": "Stance",
+    "ConnectedTo": "right_f_leg"
+  },
+  {
+    "Id": "right_r_paw",
+    "LimbType": "Foot",
+    "RelativeVolume": 0.022,
+    "BodyPartName": "Right Rear Paw",
+    "Orientation": "Right",
+    "MaterialId": "skin",
+    "RateOfHeal": 0.9,
+    "BodyPartFunction": "Stance",
+    "ConnectedTo": "right_r_leg"
+  },
+  {
+    "Id": "left_f_paw",
+    "LimbType": "Foot",
+    "RelativeVolume": 0.022,
+    "BodyPartName": "Left Front Paw",
+    "Orientation": "Left",
+    "MaterialId": "skin",
+    "RateOfHeal": 0.9,
+    "BodyPartFunction": "Stance",
+    "ConnectedTo": "left_f_leg"
+  },
+  {
+    "Id": "left_r_paw",
+    "LimbType": "Foot",
+    "RelativeVolume": 0.022,
+    "BodyPartName": "Left Rear Paw",
+    "Orientation": "Left",
+    "MaterialId": "skin",
+    "RateOfHeal": 0.9,
+    "BodyPartFunction": "Stance",
+    "ConnectedTo": "left_r_leg"
+  },
+  {
+    "Id": "animal_tail",
+    "LimbType": "Tail",
+    "RelativeVolume": 0.065,
+    "BodyPartName": "Tail",
+    "Orientation": "Center",
+    "MaterialId": "skin",
+    "RateOfHeal": 0.9,
+    "BodyPartFunction": "Limb",
+    "ConnectedTo": "lower_body"
   }
 ]

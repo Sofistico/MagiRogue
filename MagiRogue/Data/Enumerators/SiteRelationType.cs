@@ -10,14 +10,14 @@ namespace MagiRogue.Data.Enumerators
     [Flags]
     public enum SiteRelationTypes
     {
-        None = 1 << 1,
-        LivesThere = 1 << 2,
-        WantsDestroyed = 1 << 3,
-        WantsToRule = 1 << 4,
-        BornThere = 1 << 5,
-        DiedThere = 1 << 6,
+        None = 1 << 0,
+        LivesThere = 1 << 1,
+        WantsDestroyed = 1 << 2,
+        WantsToRule = 1 << 3,
+        BornThere = 1 << 4,
+        DiedThere = 1 << 5,
 
-        Rules = 1 << 7,
-        Ruled = 1 << 8,
+        Rules = 1 << 6,
+        Ruled = 1 << 7,
     }
 }

@@ -2,6 +2,8 @@
   {
     "Id": "test_race",
     "RaceName": "Debug Race",
+    "NamePlural": "Debugs",
+    "Adjective": "bug catcher",
     "Description": "A debug creature, medium sized",
     "RaceGlyph": "T",
     "RaceForeground": "Blue",
@@ -30,12 +32,14 @@
     "HeightModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "BroadnessModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "Genders": [ "Male", "Female" ],
-    "BloodMultiplier": 75,
-    "SpecialFlag": [ "Regenarator", "CanLearn" ]
+    "CreatureClass": [ "Mammal", "General" ],
+    "SpecialFlag": [ "Regenarator", "Sapient", "Diurnal" ]
   },
   {
     "Id": "human",
     "RaceName": "Human",
+    "NamePlural": "Humans",
+    "Adjective": "human",
     "Description": "A medium sized creature prone to great ambition",
     "RaceGlyph": "U",
     "RaceForeground": "White",
@@ -65,12 +69,14 @@
     "HeightModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "BroadnessModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "Genders": [ "Male", "Female" ],
-    "BloodMultiplier": 75,
-    "SpecialFlag": [ "CanLearn" ]
+    "CreatureClass": [ "Mammal", "General" ],
+    "SpecialFlag": [ "Sapient", "Diurnal" ]
   },
   {
     "Id": "elf",
     "RaceName": "Elf",
+    "NamePlural": "Elfs",
+    "Adjective": "Elven",
     "Description": "A medium sized creature with long lives and appreciation for forests",
     "RaceGlyph": "e",
     "RaceForeground": "White",
@@ -98,12 +104,14 @@
     "HeightModifier": [ 90, 95, 98, 100, 112, 115, 125 ],
     "BroadnessModifier": [ 75, 90, 94, 100, 101, 103, 110 ],
     "Genders": [ "Male", "Female" ],
-    "BloodMultiplier": 75,
-    "SpecialFlag": [ "CanLearn" ]
+    "CreatureClass": [ "Mammal", "General" ],
+    "SpecialFlag": [ "Sapient", "Diurnal" ]
   },
   {
     "Id": "dwarf",
     "RaceName": "Dwarf",
+    "NamePlural": "Dwarves",
+    "Adjective": "dwarf",
     "Description": "A small sized creature prone to great greed and greater even metalsmithing",
     "RaceGlyph": "☺",
     "RaceForeground": "White",
@@ -133,7 +141,7 @@
     "HeightModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "BroadnessModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "Genders": [ "Male", "Female" ],
-    "BloodMultiplier": 75,
-    "SpecialFlag": [ "CanLearn" ]
+    "CreatureClass": [ "Mammal", "General" ],
+    "SpecialFlag": [ "Sapient", "Diurnal" ]
   }
 ]

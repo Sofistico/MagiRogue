@@ -222,7 +222,17 @@ namespace MagiRogue.GameSys.Civ
 
             SiteLeader = hf;
 
-            hf.AddRelatedSite(Id, SiteRelationTypes.LivesThere & SiteRelationTypes.Rules);
+            var relationIfAny = hf.FindSiteRelation(Id);
+            if (relationIfAny != null)
+            {
+                relationIfAny.RelationType |= SiteRelationTypes.Rules;
+                if (!relationIfAny.RelationType.HasFlag(SiteRelationTypes.LivesThere))
+                {
+                    relationIfAny.RelationType |= SiteRelationTypes.LivesThere;
+                }
+            }
+            else
+                hf.AddRelatedSite(Id, SiteRelationTypes.LivesThere | SiteRelationTypes.Rules);
 
             AddNewSiteLegend(builder.ToString(), currentYear, hf);
         }
@@ -239,7 +249,10 @@ namespace MagiRogue.GameSys.Civ
                 if (!SiteLeader.IsAlive)
                 {
                     SiteLeader.YearDeath ??= currentYear;
-                    SiteLeader.AddRelatedSite(Id, SiteRelationTypes.Ruled);
+                    var relation = SiteLeader.FindSiteRelation(Id);
+                    relation.RelationType &= ~SiteRelationTypes.Rules;
+                    relation.RelationType |= SiteRelationTypes.Ruled;
+
                     SiteLeader = null;
                 }
             }

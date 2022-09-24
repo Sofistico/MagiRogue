@@ -23,7 +23,6 @@ namespace MagiRogue.GameSys.Planet.History
         public string Name { get; set; }
         public string Description { get; set; }
         public Sex HFGender { get; set; }
-        public string Race { get; set; }
         public List<Legend> Legends { get; set; } = new();
         public MythWho MythWho { get; set; }
         public int YearBorn { get; set; }
@@ -34,11 +33,11 @@ namespace MagiRogue.GameSys.Planet.History
         public List<CivRelation> RelatedCivs { get; set; } = new();
         public List<SiteRelation> RelatedSites { get; set; } = new();
         public List<HfRelation> RelatedHFs { get; set; } = new();
+        public Body Body { get; set; } = new();
         public Mind Mind { get; set; } = new();
         public Soul Soul { get; set; }
         public List<SpecialFlag> SpecialFlags { get; set; } = new();
         public List<Noble> NobleTitles { get; set; } = new();
-        public int CurrentAge { get; set; }
 
         #endregion Props
 
@@ -60,8 +59,8 @@ namespace MagiRogue.GameSys.Planet.History
             YearDeath = yearDeath;
             IsAlive = isAlive;
             Description = desc;
-            Race = raceId;
             Id = GameLoop.GetHfId();
+            Body.Anatomy.Race = raceId;
         }
 
         public HistoricalFigure(string name, string description, Sex hFGender, string race, bool isAlive)
@@ -69,7 +68,7 @@ namespace MagiRogue.GameSys.Planet.History
             Name = name;
             Description = description;
             HFGender = hFGender;
-            Race = race;
+            Body.Anatomy.Race = race;
             IsAlive = isAlive;
             Id = GameLoop.GetHfId();
         }
@@ -97,7 +96,8 @@ namespace MagiRogue.GameSys.Planet.History
         public void GenerateRandomSkills()
         {
             var enums = Enum.GetValues(typeof(AbilityName));
-
+            // TODO: Hfs will begins with X random amount of xp to spend, then they will use it rather than
+            // having some random value!
             foreach (AbilityName e in enums)
             {
                 if (e is AbilityName.None)
@@ -228,7 +228,7 @@ namespace MagiRogue.GameSys.Planet.History
             NobleTitles.Add(noble);
             StringBuilder initialLegend = new StringBuilder($"In the year {year} ");
             initialLegend.Append($"{Name} ascended to the post of {noble.Name} ");
-            initialLegend.Append($"with {CurrentAge} years as a member of {civ.Name}");
+            initialLegend.Append($"with {Body.Anatomy.CurrentAge} years as a member of {civ.Name}");
             AddLegend(initialLegend.ToString(), year);
         }
 
@@ -264,9 +264,12 @@ namespace MagiRogue.GameSys.Planet.History
             RelatedSites.Add(new SiteRelation(Id, otherId, relation));
         }
 
+        public SiteRelation FindSiteRelation(int siteId) =>
+            RelatedSites.FirstOrDefault(i => i.OtherSiteId == siteId);
+
         public string GetRaceName()
         {
-            Race race = Data.DataManager.QueryRaceInData(Race);
+            Race race = Data.DataManager.QueryRaceInData(Body.Anatomy.Race);
             return race.RaceName;
         }
 

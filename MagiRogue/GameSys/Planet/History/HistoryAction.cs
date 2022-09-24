@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Entities;
 using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
@@ -38,23 +39,63 @@ namespace MagiRogue.GameSys.Planet.History
 
         private void SimulateMythStuff()
         {
+            // fuck deities!
             if (figure.SpecialFlags.Contains(Data.Enumerators.SpecialFlag.DeityDescended))
             {
                 if (CheckForInsurrection())
                     PerformDivineInsurrection();
-                if (CheckForGiftGiving())
+                if (CheckForDeityGiftGiving())
                 {
                     // gift something!
                     DeityGivesGiftToCiv();
                 }
+                if (CheckForAgressiveInfluence())
+                {
+                    DeityChangesCivTendency(CivilizationTendency.Aggresive);
+                }
+                if (CheckForStudiousInfluence())
+                {
+                }
             }
+        }
+
+        private bool CheckForStudiousInfluence()
+        {
+            return figure.GetPersonality().Knowledge >= 25
+                && figure.GetPersonality().Perseverance > 0;
+        }
+
+        private void DeityChangesCivTendency(CivilizationTendency tendency)
+        {
+            Civilization civ = GetRelatedCivFromFigure(RelationType.PatronDeity);
+            civ.Tendency = tendency;
+
+            figure.AddLegend($"The {figure.Name} changed {figure.PronoumPossesive()} followers to {figure.PronoumPossesive()} own agressive tendencies!", year);
+        }
+
+        private bool CheckForAgressiveInfluence()
+        {
+            return figure.GetPersonality().Power >= 50
+                && figure.GetPersonality().Peace <= 0;
         }
 
         private void DeityGivesGiftToCiv()
         {
+            Civilization civ = GetRelatedCivFromFigure(RelationType.PatronDeity);
+            int weatlh = GameLoop.GlobalRand.NextInt(100, 500);
+            civ.Wealth += weatlh;
+            figure.AddLegend($"The {figure.Name} gifted {figure.PronoumPossesive()} followers generated wealth in the value of {weatlh}",
+                year);
         }
 
-        private bool CheckForGiftGiving()
+        private Civilization GetRelatedCivFromFigure(RelationType relationType)
+        {
+            int civId = figure.RelatedCivs.Find(i => i.Relation == relationType).CivRelatedId;
+            Civilization civ = civs.Find(i => i.Id == civId);
+            return civ;
+        }
+
+        private bool CheckForDeityGiftGiving()
         {
             return figure.GetPersonality().Sacrifice >= 25
                 && figure.RelatedCivs.Any(i => i.Relation is RelationType.PatronDeity);

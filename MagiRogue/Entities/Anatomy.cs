@@ -196,8 +196,9 @@ namespace MagiRogue.Entities
         public void Setup(Actor actor, Race race, int actorAge, Sex sex, int volume)
         {
             actor.Volume = volume;
+            if (string.IsNullOrEmpty(Race))
+                Race = race.Id;
             raceField = race;
-            Race = race.Id;
             SetRandomLifespanByRace();
             Limbs = race.ReturnRaceLimbs();
             Organs = race.ReturnRaceOrgans();

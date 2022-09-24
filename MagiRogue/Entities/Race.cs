@@ -20,6 +20,8 @@ namespace MagiRogue.Entities
 
         public string Id { get; set; }
         public string RaceName { get; set; }
+        public string NamePlural { get; set; }
+        public string Adjective { get; set; }
         public string Description { get; set; }
 
         public char RaceGlyph { get; set; }
@@ -34,6 +36,7 @@ namespace MagiRogue.Entities
         public int? LifespanMax { get; set; }
         public int? LifespanMin { get; set; }
         public int? ChildAge { get; set; }
+        public string? ChildName { get; set; }
         public int? TeenAge { get; set; }
         public int AdulthoodAge { get; set; }
 
@@ -62,6 +65,7 @@ namespace MagiRogue.Entities
 
         public double BloodMultiplier { get; set; } = 75; // defaults to 75
         public bool DeadRace { get; set; }
+        public List<string> CreatureClass { get; set; }
         public List<SpecialFlag> Flags { get; set; }
 
         public Race()

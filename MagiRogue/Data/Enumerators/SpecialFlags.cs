@@ -29,6 +29,17 @@ namespace MagiRogue.Data.Enumerators
         Mundane,
         Animal,
         CanBeFamiliar,
-        CanLearn
+        CanLearn,
+        CanSpeak,
+        Sapient, // combines CanLearn and CanSpeak into one
+
+        // race behavior flags
+        Diurnal,
+        Nocturnal,
+        Crepuscular,
+        AllActive,
+        CommonDomestic, // the race is a common domestic animal
+        CommonPet, // the animal is easily adopted by civ race
+        Pet, // the animal can be adopted
     }
 }
