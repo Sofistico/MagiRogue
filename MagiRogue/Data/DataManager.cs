@@ -6,6 +6,7 @@ using MagiRogue.Entities;
 using MagiRogue.Entities.StarterScenarios;
 using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Magic;
+using MagiRogue.GameSys.Planet.History;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
 using System;
@@ -58,6 +59,9 @@ namespace MagiRogue.Data
 
         public static readonly IReadOnlyList<CultureTemplate> ListOfCultures =
             GetSourceTree<CultureTemplate>(@".\Data\Cultures\cultures_*.json");
+
+        public static readonly IReadOnlyList<Research> ListOfResearches =
+            GetSourceTree<Research>(@".\Data\Research\research_*.json");
 
         #region Descriptors
 
@@ -177,6 +181,9 @@ namespace MagiRogue.Data
         public static List<CultureTemplate> QueryCultureTemplateFromBiome(string biomeId)
             => ListOfCultures.Where(i => i.StartBiome.Equals(biomeId)).ToList();
 
+        public static Research QueryResearchInData(string researchId)
+            => ListOfResearches.FirstOrDefault(i => i.Id.Equals(researchId));
+
         #endregion Queryes
 
         public static Language RandomLangugage()
@@ -187,5 +194,11 @@ namespace MagiRogue.Data
 
         public static Race RandomRace()
             => ListOfRaces.GetRandomItemFromList();
+
+        public static Research RandomMagicalResearch()
+            => ListOfResearches.Where(i => i.IsMagical).ToList().GetRandomItemFromList();
+
+        public static Research RandomNonMagicalResearch()
+            => ListOfResearches.Where(i => !i.IsMagical).ToList().GetRandomItemFromList();
     }
 }

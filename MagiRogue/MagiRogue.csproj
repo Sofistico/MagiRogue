@@ -85,6 +85,9 @@
     <None Update="Data\Tiles\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Data\Research\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Fonts\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

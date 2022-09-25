@@ -35,6 +35,10 @@ namespace MagiRogue.GameSys.Planet.History
             {
                 SimulateMythStuff();
             }
+            if (figure.SpecialFlags.Contains(SpecialFlag.Wizard))
+            {
+                MagicalResearch();
+            }
         }
 
         private void SimulateMythStuff()
@@ -55,8 +59,32 @@ namespace MagiRogue.GameSys.Planet.History
                 }
                 if (CheckForStudiousInfluence())
                 {
+                    DeityChangesCivTendency(CivilizationTendency.Studious);
                 }
             }
+        }
+
+        private void MagicalResearch()
+        {
+            if (CheckForProlificStudious())
+            {
+                Research research = Data.DataManager.RandomMagicalResearch();
+            }
+        }
+
+        private void TechnologyResearch()
+        {
+            if (CheckForProlificStudious())
+            {
+                Research research = Data.DataManager.RandomNonMagicalResearch();
+            }
+        }
+
+        private bool CheckForProlificStudious()
+        {
+            return figure.GetPersonality().Knowledge >= 25
+                && (figure.GetPersonality().Perseverance >= 25
+                || figure.GetPersonality().HardWork >= 25);
         }
 
         private bool CheckForStudiousInfluence()

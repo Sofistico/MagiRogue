@@ -11,23 +11,25 @@ namespace MagiRogue.Data.Enumerators
     [JsonConverter(typeof(StringEnumConverter))]
     public enum Tech
     {
-        // magic stuff
+        // default
         None,
+
+        // magic stuff
         Gate,
-        Magic,
+        SpellCasting,
         CounterMagic,
         MagicTheory,
         MagicalReagents,
         Alchemy,
         Enchanting,
-        CostOfMagic,
         SoulMagic,
+        CrudeMedicinalMagic,
         MedicinalMagic,
         DamagingMagic,
-        Rifts,
         Summoning,
         Teleport,
         Rituals,
+        BasicNodeUse,
 
         // tech stuff
         Gunpowder,
@@ -36,6 +38,29 @@ namespace MagiRogue.Data.Enumerators
         Metalsmithing,
         Woodcrafting,
         Glassmaking,
-        Engineering
+        Engineering,
+        Steelmaking,
+        BlastFurnace,
+
+        // science or mathematical discoveries
+        BasicMathematics,
+        AdvancedMathematics,
+        PhysicsConstants,
+
+        ChemicalProperties,
+        MaterialAnalyses,
+
+        BasicAstronomy,
+        Geocentrism,
+        Heliocentrism,
+
+        FolkMedicine,
+        LeechDraining,
+        BasicAnatomy,
+        WoundDressing,
+        WoundCleaning,
+        MedicinalRoutines,
+        AdvancedAnatomy,
+        Prosthetics,
     }
 }

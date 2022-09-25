@@ -1,0 +1,167 @@
+﻿[
+  {
+    "Id": "spell_casting",
+    "Name": "Spell casting",
+    "Difficulty": 2,
+    "ValidDeityGift": true,
+    "IsMagical": true,
+    "AbilityRequired": [ "MagicTheory", "Research" ],
+    "TechResearched": [ "SpellCasting" ],
+    "RequiredRes": [ "discover_magic" ]
+  },
+  {
+    "Id": "discover_magic",
+    "Name": "Unification and categorizing of magical rules and constants",
+    "Difficulty": 1,
+    "IsMagical": true,
+    "ValidDeityGift": true,
+    "AbilityRequired": [ "MagicLore", "Research" ],
+    "TechResearched": [ "MagicTheory" ]
+  },
+  {
+    "Id": "damaging_magic",
+    "Name": "The use of magic in the ways of warfare and physical bodily harm",
+    "Difficulty": 3,
+    "IsMagical": true,
+    "ValidDeityGift": true,
+    "AbilityRequired": [ "MagicTheory" ],
+    "TechResearched": [ "DamagingMagic" ],
+    "RequiredRes": [ "spell_casting" ]
+  },
+  {
+    "Id": "magical_reagents",
+    "Name": "The research of special reagents magical properties",
+    "Difficulty": 5,
+    "IsMagical": true,
+    "ValidDeityGift": true,
+    "AbilityRequired": [ "MagicTheory", "Research", "Chemist" ],
+    "TechResearched": [ "MagicalReagents" ],
+    "RequiredRes": [ "discover_magic" ]
+  },
+  {
+    "Id": "alchemy",
+    "Name": "The application of magic to the physical properties of reagents",
+    "Difficulty": 7,
+    "IsMagical": true,
+    "ValidDeityGift": true,
+    "AbilityRequired": [ "MagicTheory", "Research", "Chemist" ],
+    "TechResearched": [ "Alchemy" ],
+    "RequiredRes": [ "magical_reagents" ]
+  },
+  {
+    "Id": "enchanting",
+    "Name": "The application of magic to the physical properties of materials",
+    "Difficulty": 6,
+    "IsMagical": true,
+    "ValidDeityGift": true,
+    "AbilityRequired": [ "MagicTheory", "Research", "AnyCraft" ],
+    "TechResearched": [ "Enchanting" ],
+    "RequiredRes": [ "magical_reagents", "basic_node_usage" ]
+  },
+  {
+    "Id": "basic_node_usage",
+    "Name": "The application of concentration in the magical aura in regards to the physical",
+    "Difficulty": 10,
+    "IsMagical": true,
+    "ValidDeityGift": true,
+    "AbilityRequired": [ "MagicTheory", "AnyCraft" ],
+    "TechResearched": [ "BasicNodeUse" ],
+    "RequiredRes": [ "discover_magic" ]
+  },
+  {
+    "Id": "ritual_magic",
+    "Name": "The use of the aura and the concentration of physical aura as a form of permantent change",
+    "Difficulty": 10,
+    "IsMagical": true,
+    "ValidDeityGift": true,
+    "AbilityRequired": [ "MagicTheory", "AnyCraft" ],
+    "TechResearched": [ "BasicNodeUse" ],
+    "RequiredRes": [ "discover_magic" ]
+  },
+  {
+    "Id": "counter_magic",
+    "Name": "The use of spell casting as a way to counter magical effects upon the physical",
+    "Difficulty": 9,
+    "IsMagical": true,
+    "ValidDeityGift": true,
+    "AbilityRequired": [ "MagicTheory", "Research", "MagicLore" ],
+    "TechResearched": [ "CounterMagic" ],
+    "RequiredRes": [ "spell_casting" ]
+  },
+  {
+    "Id": "medicinal_magic",
+    "Name": "Treatise on the beneficial application of magic to the healing of the physical body",
+    "Difficulty": 20,
+    "IsMagical": true,
+    "AbilityRequired": [ "Research", "Medicine" ],
+    "TechResearched": [ "MedicinalMagic" ],
+    "RequiredRes": [ "crude_medicinal_magic", "medicinal_routines", "anatomy_knowlodge" ]
+  },
+  {
+    "Id": "crude_medicinal_magic",
+    "Name": "The use of magic in the healing of the body",
+    "Difficulty": 8,
+    "IsMagical": true,
+    "ValidDeityGift": true,
+    "AbilityRequired": [ "Research", "MagicTheory" ],
+    "TechResearched": [ "CrudeMedicinalMagic" ],
+    "RequiredRes": [ "spell_casting", "folk_medicine" ]
+  },
+  {
+    "Id": "teleporation",
+    "Name": "Application of quadratic formualic theorem using x y z as a source to the mathematical properties of translocation using magic",
+    "Difficulty": 9,
+    "IsMagical": true,
+    "AbilityRequired": [ "Mathematics", "MagicTheory" ],
+    "TechResearched": [ "Teleportation" ],
+    "RequiredRes": [ "spell_casting", "basic_mathematics" ]
+  },
+  {
+    "Id": "gate_opening",
+    "Name": "The formula to measure the use of magical energies to create a bridge between two location reliable",
+    "Difficulty": 25,
+    "IsMagical": true,
+    "IntermediareRes": true,
+    "AbilityRequired": [ "Mathematics", "MagicTheory", "Research", "Concentration" ],
+    "RequiredRes": [ "summoning", "advanced_mathematics" ]
+  },
+  {
+    "Id": "gate_portal",
+    "Name": "The cleaving of the physical barrier as a way of achiving translocation using the polynominal equation derived by the Schwarzschild method",
+    "Difficulty": 50,
+    "IsMagical": true,
+    "AbilityRequired": [ "Mathematics", "MagicTheory", "Research", "Concentration", "Astronomer" ],
+    "TechResearched": [ "Gate" ],
+    "RequiredRes": [ "gate_opening", "astronomy_knowlodge" ]
+  },
+  {
+    "Id": "summoning",
+    "Name": "Application of the principals of translocation magic to the summoning of diverse beings and items of interest",
+    "Difficulty": 10,
+    "IsMagical": true,
+    "ValidDeityGift": true,
+    "AbilityRequired": [ "Mathematics", "MagicTheory" ],
+    "TechResearched": [ "Summoning" ],
+    "RequiredRes": [ "teleporation" ]
+  },
+  {
+    "Id": "soul_knowlodge",
+    "Name": "The interactions of mana with the soul",
+    "Difficulty": 15,
+    "IsMagical": true,
+    "ValidDeityGift": true,
+    "IntermediareRes": true,
+    "AbilityRequired": [ "MagicTheory", "Research" ],
+    "RequiredRes": [ "spell_casting" ]
+  },
+  {
+    "Id": "soul_magic",
+    "Name": "The application of mana to the soul of a willing and unwilling beings and it's differentiations",
+    "Difficulty": 15,
+    "IsMagical": true,
+    "ValidDeityGift": true,
+    "AbilityRequired": [ "MagicTheory", "Research" ],
+    "TechResearched": [ "SoulMagic" ],
+    "RequiredRes": [ "soul_knowlodge" ]
+  }
+]

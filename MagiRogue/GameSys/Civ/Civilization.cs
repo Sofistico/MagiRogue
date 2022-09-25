@@ -1,6 +1,7 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
+using MagiRogue.GameSys.Planet;
 using MagiRogue.GameSys.Planet.History;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
@@ -52,6 +53,7 @@ namespace MagiRogue.GameSys.Civ
         public List<SiteType> PossibleSites { get; set; }
         public Dictionary<string, int> TrackAmountOfNobles { get; set; }
         public List<int> CivsTradingWith { get; private set; }
+        public List<Discovery> Discoveries { get; set; }
 
         #endregion Information
 
@@ -67,6 +69,7 @@ namespace MagiRogue.GameSys.Civ
             Relations = new();
             Id = GameLoop.GetCivId();
             CivsTradingWith = new();
+            Discoveries = new();
         }
 
         public void AddSiteToCiv(Site site)

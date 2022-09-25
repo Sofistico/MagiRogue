@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.GameSys.Planet.History;
 
 namespace MagiRogue.GameSys.Planet
 {
@@ -8,7 +9,11 @@ namespace MagiRogue.GameSys.Planet
         public int HFIdThatDiscovered { get; set; }
         public string WhatHappenead { get; set; }
         public string WhereHappnead { get; set; }
-        public Tech WhatWasDicovered { get; set; }
+        public Research WhatWasResearched { get; set; }
+        public int RequiredRP { get; set; } // RP = Research Points
+        public int CurrentRP { get; set; }
+        public bool IsActive { get; set; }
+        public bool Finished { get => CurrentRP >= RequiredRP; }
 
         public Discovery()
         {
@@ -18,13 +23,13 @@ namespace MagiRogue.GameSys.Planet
             int hFIdThatDiscovered,
             string whatHappenead,
             string whereHappnead,
-            Tech whatWasDicovered)
+            Research whatWasResearched)
         {
             Id = id;
             HFIdThatDiscovered = hFIdThatDiscovered;
             WhatHappenead = whatHappenead;
             WhereHappnead = whereHappnead;
-            WhatWasDicovered = whatWasDicovered;
+            WhatWasResearched = whatWasResearched;
         }
     }
 }
