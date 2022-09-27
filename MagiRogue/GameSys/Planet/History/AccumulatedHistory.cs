@@ -229,6 +229,7 @@ namespace MagiRogue.GameSys.Planet.History
             {
                 site.AddNewLeader(civ, Year);
             }
+            site.SimulateResearchPropagation(civ, tiles);
             return totalRevenueYear;
         }
 

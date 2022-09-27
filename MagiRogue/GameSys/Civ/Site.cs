@@ -8,6 +8,7 @@ using MagiRogue.GameSys.Planet.History;
 using System.Linq;
 using System.Text;
 using System.Collections.Specialized;
+using MagiRogue.GameSys.Planet;
 
 namespace MagiRogue.GameSys.Civ
 {
@@ -32,6 +33,8 @@ namespace MagiRogue.GameSys.Civ
         public List<Road> Roads { get; set; } = new();
         public HistoricalFigure SiteLeader { get; set; }
         public List<Legend> SiteLegends { get; set; } = new();
+
+        public List<Discovery> DiscoveriesKnow { get; set; } = new();
         public int Id { get; private set; }
 
         #endregion props
@@ -268,6 +271,11 @@ namespace MagiRogue.GameSys.Civ
         public void AddNewLeader(HistoricalFigure figure, int currentYear)
         {
             AddHfAsSiteLeader(figure, currentYear);
+        }
+
+        public void SimulateResearchPropagation(Civilization civ, WorldTile[,] tiles)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using MagiRogue.Data.Enumerators;
+﻿using GoRogue;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Planet;
@@ -399,6 +400,20 @@ namespace MagiRogue.GameSys.Civ
         {
             // the lazy way!
             TradeWithOtherCiv(new Civilization[] { nextCiv });
+        }
+
+        public IEnumerable<Discovery> ListAllKnowDiscoveries()
+        {
+            var siteCount = Sites.Count;
+            for (int i = 0; i < siteCount; i++)
+            {
+                Site site = Sites[i];
+                int discoveryCount = site.DiscoveriesKnow.Count;
+                for (int x = 0; x < discoveryCount; x++)
+                {
+                    yield return site.DiscoveriesKnow[x];
+                }
+            }
         }
     }
 }

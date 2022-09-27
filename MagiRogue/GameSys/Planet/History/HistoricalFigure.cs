@@ -33,6 +33,7 @@ namespace MagiRogue.GameSys.Planet.History
         public List<CivRelation> RelatedCivs { get; set; } = new();
         public List<SiteRelation> RelatedSites { get; set; } = new();
         public List<HfRelation> RelatedHFs { get; set; } = new();
+        public List<Discovery> DiscoveriesKnow { get; set; } = new();
         public Body Body { get; set; } = new();
         public Mind Mind { get; set; } = new();
         public Soul Soul { get; set; }
