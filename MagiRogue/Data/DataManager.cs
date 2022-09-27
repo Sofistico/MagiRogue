@@ -4,12 +4,10 @@ using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.Entities;
 using MagiRogue.Entities.StarterScenarios;
-using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Magic;
 using MagiRogue.GameSys.Planet.History;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,50 +16,50 @@ namespace MagiRogue.Data
     public static class DataManager
     {
         public static readonly IReadOnlyList<ItemTemplate> ListOfItems =
-            GetSourceTree<ItemTemplate>(@".\Data\Items\*.json");
+            GetSourceTree<ItemTemplate>(@".\Data\Items\items_*");
 
         public static readonly IReadOnlyList<MaterialTemplate> ListOfMaterials =
-           GetSourceTree<MaterialTemplate>(@".\Data\Materials\*.json");
+            GetSourceTree<MaterialTemplate>(@".\Data\Materials\material_*");
 
         public static readonly IReadOnlyList<SpellBase> ListOfSpells =
-            GetSourceTree<SpellBase>(@".\Data\Spells\spells_*.json");
+            GetSourceTree<SpellBase>(@".\Data\Spells\spells_*");
 
         public static readonly IReadOnlyList<Organ> ListOfOrgans =
-            GetSourceTree<Organ>(@".\Data\Bodies\organs_*.json");
+            GetSourceTree<Organ>(@".\Data\Bodies\organs_*");
 
         public static readonly IReadOnlyList<Limb> ListOfLimbs =
-            GetSourceTree<Limb>(@".\Data\Bodies\limb_*.json");
+            GetSourceTree<Limb>(@".\Data\Bodies\limbs_*");
 
         public static readonly IReadOnlyList<BasicTile> ListOfTiles =
-            GetSourceTree<BasicTile>(@".\Data\Tiles\*.json");
+            GetSourceTree<BasicTile>(@".\Data\Tiles\tiles_*");
 
         public static readonly IReadOnlyList<Furniture> ListOfFurnitures =
-            GetSourceTree<Furniture>(@".\Data\Furniture\*.json");
+            GetSourceTree<Furniture>(@".\Data\Furniture\fur_*");
 
         public static readonly IReadOnlyList<RoomTemplate> ListOfRooms =
-            GetSourceTree<RoomTemplate>(@".\Data\Rooms\*.json");
+            GetSourceTree<RoomTemplate>(@".\Data\Rooms\room_*");
 
         // races can be dynamically generated ingame
         public static readonly List<Race> ListOfRaces =
-            GetSourceTree<Race>(@".\Data\Races\race_*.json").ToList();
+            GetSourceTree<Race>(@".\Data\Races\race_*").ToList();
 
         public static readonly IReadOnlyList<Scenario> ListOfScenarios =
-            GetSourceTree<Scenario>(@".\Data\Scenarios\scenarios_*.json");
+            GetSourceTree<Scenario>(@".\Data\Scenarios\scenarios_*");
 
         public static readonly IReadOnlyList<BodyPlan> ListOfBpPlan =
-            GetSourceTree<BodyPlan>(@".\Data\Bodies\body_*.json");
+            GetSourceTree<BodyPlan>(@".\Data\Bodies\bodies_*.json");
 
         public static readonly IReadOnlyList<Language> ListOfLanguages =
-            GetSourceTree<Language>(@".\Data\Language\language_*.json");
+            GetSourceTree<Language>(@".\Data\Language\language_*");
 
         public static readonly IReadOnlyList<Profession> ListOfProfessions =
-            GetSourceTree<Profession>(@".\Data\Professions\profession_*.json");
+            GetSourceTree<Profession>(@".\Data\Professions\profession_*");
 
         public static readonly IReadOnlyList<CultureTemplate> ListOfCultures =
-            GetSourceTree<CultureTemplate>(@".\Data\Cultures\cultures_*.json");
+            GetSourceTree<CultureTemplate>(@".\Data\Cultures\cultures_*");
 
         public static readonly IReadOnlyList<Research> ListOfResearches =
-            GetSourceTree<Research>(@".\Data\Research\research_*.json");
+            GetSourceTree<Research>(@".\Data\Research\research_*");
 
         #region Descriptors
 
@@ -90,6 +88,8 @@ namespace MagiRogue.Data
 
             foreach (List<T> tList in listTList)
             {
+                if (tList is null)
+                    continue;
                 foreach (T t in tList)
                 {
                     allTList.Add(t);

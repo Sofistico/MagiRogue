@@ -64,8 +64,12 @@ namespace MagiRogue.GameSys.Planet.History
                     FirstYearOnlyInteractions(civilizations);
                 }
 
+                List<Site> sites = new List<Site>(SitesWithoutCivs);
+                List<Site> civSite = Civs.Select(i => i.Sites).ToList().ReturnListListTAsListT();
+                sites.AddRange(civSite);
+
                 // simulate historical figures stuff
-                HistoricalFigureSimulation(tiles);
+                HistoricalFigureSimulation(tiles, sites);
 
                 // simulate civ stuff
                 CivilizationSimulation(tiles);
@@ -87,14 +91,15 @@ namespace MagiRogue.GameSys.Planet.History
             }
         }
 
-        private void HistoricalFigureSimulation(WorldTile[,] tiles)
+        private void HistoricalFigureSimulation(WorldTile[,] tiles, List<Site> sites)
         {
             if (Figures.Count < 1)
                 return;
+
             foreach (HistoricalFigure figure in Figures)
             {
                 if (figure.IsAlive)
-                    figure.HistoryAct(Year, tiles, Civs, Figures);
+                    figure.HistoryAct(Year, tiles, Civs, Figures, sites);
             }
         }
 

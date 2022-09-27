@@ -23,17 +23,12 @@ namespace MagiRogue.GameSys.Magic
         /// <summary>
         /// The innate resistance to magic from a being, how hard it is to harm another with pure magic
         /// </summary>
-        public int InnateMagicResistance { get; set; } = 0;
+        public int InnateMagicResistance { get; set; } = 1;
 
         /// <summary>
         /// The resistance to magic from other stuff add to a being
         /// </summary>
         public int MagicResistance { get; set; } = 0;
-
-        /// <summary>
-        /// The research skill, how long it takes to properly research something, there is no upper limit.
-        /// </summary>
-        public int ResearchSkill { get; set; }
 
         /// <summary>
         /// How likely it is to penetrate the resistance of another being,
@@ -43,11 +38,6 @@ namespace MagiRogue.GameSys.Magic
         /// + bonusLuck >= (InnateResistance + MagicResistance) * 2
         /// </summary>
         public int MagicPenetration { get; set; } = 1;
-
-        /// <summary>
-        /// The amount of research, enchanting and lab work you can do in a session.
-        /// </summary>
-        public int LabTotal { get; set; }
 
         /// <summary>
         /// Any enchantment that affects something

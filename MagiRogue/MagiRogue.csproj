@@ -79,7 +79,7 @@
     <None Update="Data\Scenarios\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Data\Spells\**">
+    <None Update="Data\Spells\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Data\Tiles\*">

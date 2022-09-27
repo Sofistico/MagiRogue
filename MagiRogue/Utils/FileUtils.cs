@@ -17,7 +17,7 @@ namespace MagiRogue.Utils
             // Get absolutepath
             string absPath = Path.GetFullPath(Path.Combine(_appDomain, realDir));
 
-            string[] files = Directory.GetFiles(absPath, pattern, SearchOption.TopDirectoryOnly);
+            string[] files = Directory.GetFiles(absPath, pattern, SearchOption.AllDirectories);
             return files;
         }
     }

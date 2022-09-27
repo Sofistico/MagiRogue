@@ -39,6 +39,7 @@ namespace MagiRogue.GameSys.Planet.History
         public Soul Soul { get; set; }
         public List<SpecialFlag> SpecialFlags { get; set; } = new();
         public List<Noble> NobleTitles { get; set; } = new();
+        public DiscoveryResearch CurrentDiscoveryLearning { get; set; }
 
         #endregion Props
 
@@ -240,13 +241,15 @@ namespace MagiRogue.GameSys.Planet.History
         }
 
         public void HistoryAct(int year, WorldTile[,] tiles,
-            List<Civilization> civs, List<HistoricalFigure> figures)
+            List<Civilization> civs, List<HistoricalFigure> figures, List<Site> sites)
         {
+            // TODO: Calculate the impact of the instantiantion of this object in the future!
             HistoryAction historyAction = new HistoryAction(this,
                 year,
                 civs,
                 tiles,
-                figures);
+                figures,
+                sites);
             historyAction.Act();
         }
 
@@ -277,6 +280,44 @@ namespace MagiRogue.GameSys.Planet.History
         internal void RemovePreviousSiteRelation(int id)
         {
             RelatedSites.RemoveAll(i => i.OtherSiteId == id);
+        }
+
+        public int? GetLivingSiteId()
+        {
+            return RelatedSites.FirstOrDefault(i => i.RelationType.HasFlag(SiteRelationTypes.LivesThere)).OtherSiteId;
+        }
+
+        public int? GetCurrentStayingSiteId()
+        {
+            return RelatedSites.FirstOrDefault(i => i.RelationType.HasFlag(SiteRelationTypes.IsThere)).OtherSiteId;
+        }
+
+        public bool CheckForProlificStudious()
+        {
+            return GetPersonality().Knowledge >= 25
+                && (GetPersonality().Perseverance >= 25
+                || GetPersonality().HardWork >= 25);
+        }
+
+        public bool CheckForAgressiveInfluence()
+        {
+            return GetPersonality().Power >= 50
+                && GetPersonality().Peace <= 0;
+        }
+
+        public Civilization GetRelatedCivFromFigure(RelationType relationType, List<Civilization> civs)
+        {
+            int civId = RelatedCivs.Find(i => i.Relation == relationType).CivRelatedId;
+            Civilization civ = civs.Find(i => i.Id == civId);
+            return civ;
+        }
+
+        public bool CheckForInsurrection()
+            => GetPersonality().Power >= 25;
+
+        public bool DoResearch(double bonusResearchPower)
+        {
+            return CurrentDiscoveryLearning.Finished;
         }
     }
 }

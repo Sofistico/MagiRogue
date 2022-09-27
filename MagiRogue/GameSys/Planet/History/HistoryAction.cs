@@ -9,24 +9,28 @@ using System.Linq;
 
 namespace MagiRogue.GameSys.Planet.History
 {
-    public class HistoryAction
+    public sealed class HistoryAction
     {
         private readonly HistoricalFigure figure;
         private readonly int year;
         private readonly List<Civilization> civs;
         private readonly WorldTile[,] tiles;
         private readonly List<HistoricalFigure> otherFigures;
+        private readonly List<Site> sites;
 
-        public HistoryAction(HistoricalFigure historicalFigure, int year,
+        public HistoryAction(HistoricalFigure historicalFigure,
+            int year,
             List<Civilization> civs,
             WorldTile[,] tiles,
-            List<HistoricalFigure> otherFigures)
+            List<HistoricalFigure> otherFigures,
+            List<Site> sites)
         {
             this.figure = historicalFigure;
             this.year = year;
             this.civs = civs;
             this.tiles = tiles;
             this.otherFigures = otherFigures;
+            this.sites = sites;
         }
 
         public void Act()
@@ -35,9 +39,58 @@ namespace MagiRogue.GameSys.Planet.History
             {
                 SimulateMythStuff();
             }
-            if (figure.SpecialFlags.Contains(SpecialFlag.Wizard))
+            if (figure.CheckForProlificStudious())
             {
-                MagicalResearch();
+                LearnNewDiscoveriesKnowToTheSite();
+                DecideWhatToResearch();
+                DoResearchIfPossible();
+            }
+        }
+
+        private void DecideWhatToResearch()
+        {
+            if (figure.CurrentDiscoveryLearning is not null)
+                return;
+        }
+
+        private void LearnNewDiscoveriesKnowToTheSite()
+        {
+            if (figure.GetCurrentStayingSiteId().HasValue)
+            {
+                int familiarityBonus = 0;
+                int currentSiteId = figure.GetCurrentStayingSiteId().Value;
+                Site currentSite = sites.Find(i => i.Id == currentSiteId);
+                if (figure.GetLivingSiteId().HasValue && currentSiteId == figure.GetLivingSiteId().Value)
+                    familiarityBonus = Mrn.Exploding2D6Dice * 2;
+                for (int i = 0; i < currentSite.DiscoveriesKnow.Count; i++)
+                {
+                    Discovery disc = currentSite.DiscoveriesKnow[i];
+                    if (!figure.DiscoveriesKnow.Any(i => i.Id == disc.Id))
+                    {
+                        figure.CurrentDiscoveryLearning = new DiscoveryResearch(disc, familiarityBonus);
+                    }
+                }
+            }
+        }
+
+        private void DoResearchIfPossible()
+        {
+            double resarchPower = 0;
+            var currentSite = figure.GetCurrentStayingSiteId();
+            Site site = currentSite.HasValue ? sites.Find(i => i.Id == currentSite.Value) : null;
+
+            if (figure.CurrentDiscoveryLearning is not null)
+            {
+                resarchPower += Mrn.Exploding2D6Dice;
+                if (site is not null)
+                {
+                    resarchPower *= (double)((double)site.MagicalResources / 100);
+                }
+
+                if (figure.DoResearch(resarchPower))
+                {
+                    figure.CurrentDiscoveryLearning = null;
+                }
             }
         }
 
@@ -46,14 +99,14 @@ namespace MagiRogue.GameSys.Planet.History
             // fuck deities!
             if (figure.SpecialFlags.Contains(Data.Enumerators.SpecialFlag.DeityDescended))
             {
-                if (CheckForInsurrection())
+                if (figure.CheckForInsurrection())
                     PerformDivineInsurrection();
                 if (CheckForDeityGiftGiving())
                 {
                     // gift something!
                     DeityGivesGiftToCiv();
                 }
-                if (CheckForAgressiveInfluence())
+                if (figure.CheckForAgressiveInfluence())
                 {
                     DeityChangesCivTendency(CivilizationTendency.Aggresive);
                 }
@@ -64,29 +117,6 @@ namespace MagiRogue.GameSys.Planet.History
             }
         }
 
-        private void MagicalResearch()
-        {
-            if (CheckForProlificStudious())
-            {
-                Research research = Data.DataManager.RandomMagicalResearch();
-            }
-        }
-
-        private void TechnologyResearch()
-        {
-            if (CheckForProlificStudious())
-            {
-                Research research = Data.DataManager.RandomNonMagicalResearch();
-            }
-        }
-
-        private bool CheckForProlificStudious()
-        {
-            return figure.GetPersonality().Knowledge >= 25
-                && (figure.GetPersonality().Perseverance >= 25
-                || figure.GetPersonality().HardWork >= 25);
-        }
-
         private bool CheckForStudiousInfluence()
         {
             return figure.GetPersonality().Knowledge >= 25
@@ -95,32 +125,19 @@ namespace MagiRogue.GameSys.Planet.History
 
         private void DeityChangesCivTendency(CivilizationTendency tendency)
         {
-            Civilization civ = GetRelatedCivFromFigure(RelationType.PatronDeity);
+            Civilization civ = figure.GetRelatedCivFromFigure(RelationType.PatronDeity, civs);
             civ.Tendency = tendency;
 
             figure.AddLegend($"The {figure.Name} changed {figure.PronoumPossesive()} followers to {figure.PronoumPossesive()} own agressive tendencies!", year);
         }
 
-        private bool CheckForAgressiveInfluence()
-        {
-            return figure.GetPersonality().Power >= 50
-                && figure.GetPersonality().Peace <= 0;
-        }
-
         private void DeityGivesGiftToCiv()
         {
-            Civilization civ = GetRelatedCivFromFigure(RelationType.PatronDeity);
+            Civilization civ = figure.GetRelatedCivFromFigure(RelationType.PatronDeity, civs);
             int weatlh = GameLoop.GlobalRand.NextInt(100, 500);
             civ.Wealth += weatlh;
             figure.AddLegend($"The {figure.Name} gifted {figure.PronoumPossesive()} followers generated wealth in the value of {weatlh}",
                 year);
-        }
-
-        private Civilization GetRelatedCivFromFigure(RelationType relationType)
-        {
-            int civId = figure.RelatedCivs.Find(i => i.Relation == relationType).CivRelatedId;
-            Civilization civ = civs.Find(i => i.Id == civId);
-            return civ;
         }
 
         private bool CheckForDeityGiftGiving()
@@ -128,9 +145,6 @@ namespace MagiRogue.GameSys.Planet.History
             return figure.GetPersonality().Sacrifice >= 25
                 && figure.RelatedCivs.Any(i => i.Relation is RelationType.PatronDeity);
         }
-
-        private bool CheckForInsurrection()
-            => figure.GetPersonality().Power >= 25;
 
         private void PerformDivineInsurrection()
         {
