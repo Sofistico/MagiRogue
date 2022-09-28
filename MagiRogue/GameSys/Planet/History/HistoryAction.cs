@@ -89,6 +89,8 @@ namespace MagiRogue.GameSys.Planet.History
 
                 if (figure.DoResearch(resarchPower))
                 {
+                    figure.CurrentDiscoveryLearning.DiscoveryBeingRes.IsActive = true;
+                    site.DiscoveriesKnow.Add(figure.CurrentDiscoveryLearning.DiscoveryBeingRes);
                     figure.CurrentDiscoveryLearning = null;
                 }
             }

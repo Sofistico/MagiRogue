@@ -9,6 +9,11 @@ namespace MagiRogue.Entities
         public MaterialTemplate Material { get; private set; }
         public string MaterialId { get; set; }
 
+        /// <summary>
+        /// the thickness of the layer of the Tissue, should be in cm
+        /// </summary>
+        public int Thickness { get; set; }
+
         public Tissue(string name, string materialId)
         {
             Name = name;

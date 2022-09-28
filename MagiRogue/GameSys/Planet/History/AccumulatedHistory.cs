@@ -57,28 +57,34 @@ namespace MagiRogue.GameSys.Planet.History
 
             while (Year < yearToGameBegin)
             {
-                // stuff that will only happen in the first year!
-                // after that won't really happen anymore!
                 if (firstYearOnly)
                 {
+                    // stuff that will only happen in the first year!
+                    // after that won't really happen anymore!
                     FirstYearOnlyInteractions(civilizations);
+                    firstYearOnly = false;
                 }
 
                 List<Site> sites = new List<Site>(SitesWithoutCivs);
                 List<Site> civSite = Civs.Select(i => i.Sites).ToList().ReturnListListTAsListT();
                 sites.AddRange(civSite);
 
-                // simulate historical figures stuff
-                HistoricalFigureSimulation(tiles, sites);
+                int season = 1; // 4 actions per year, representing the four seasons
+                while (season <= 4)
+                {
+                    // simulate historical figures stuff
+                    HistoricalFigureSimulation(tiles, sites);
 
-                // simulate civ stuff
-                CivilizationSimulation(tiles);
+                    // simulate civ stuff
+                    CivilizationSimulation(tiles);
 
-                // other sites that aren't tied to a Civ/Hf/etc...
-                NoCivSitesSimulation(tiles);
+                    // other sites that aren't tied to a Civ/Hf/etc...
+                    NoCivSitesSimulation(tiles);
+
+                    season++; // another season passes...
+                }
 
                 Year++;
-                firstYearOnly = false;
             }
         }
 
