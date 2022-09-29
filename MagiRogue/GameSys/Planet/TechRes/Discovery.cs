@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Planet.History;
 using System.Text;
 
@@ -36,6 +37,14 @@ namespace MagiRogue.GameSys.Planet.TechRes
             builder.Append(WhatHappenead);
             builder.Append(WhereHappnead);
             return new Legend(builder.ToString(), year);
+        }
+
+        public static Discovery ReturnDiscoveryFromResearch(Research res, HistoricalFigure figure, Site site)
+        {
+            return new Discovery(figure.Id,
+                $"{figure.Name} finished reserach on ",
+                $"{site.Name}",
+                res);
         }
     }
 }

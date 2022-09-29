@@ -36,6 +36,7 @@ namespace MagiRogue.Entities
         public int Rommance { get; set; }
         public int Leisure { get; set; }
         public int Lazyness { get; set; }
+        public int Greed { get; set; }
 
         // just some empty constructor, cuz i love them!
         public Personality()

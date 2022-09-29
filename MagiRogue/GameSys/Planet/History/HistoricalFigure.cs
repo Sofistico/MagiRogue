@@ -338,7 +338,9 @@ namespace MagiRogue.GameSys.Planet.History
         {
             if (ResearchTree.CurrentResearchFocus is null)
                 return false;
-            List<AbilityName> abilitiesIntersection = GetRequisiteAbilitiesForResearch();
+            List<AbilityName> abilitiesIntersection = ResearchTree
+                .CurrentResearchFocus
+                .GetRequisiteAbilitiesForResearch(this);
 
             if (abilitiesIntersection.Count < 0)
                 return false;
@@ -379,90 +381,6 @@ namespace MagiRogue.GameSys.Planet.History
                     AnxiousInRegardsToActivity = true;
                 }
             }
-        }
-
-        private List<AbilityName> GetRequisiteAbilitiesForResearch()
-        {
-            var getResAbilities = ResearchTree.CurrentResearchFocus.Research.AbilityRequired;
-            List<AbilityName> abilitiesNeeded = new();
-            int count = getResAbilities.Count;
-            // special handling for unusual cases for
-            // AnyCraft, AnyResearch, AnyMagic, AnyCombat and AnyJob
-            for (int i = 0; i < count; i++)
-            {
-                string abilityString = getResAbilities[i];
-                switch (abilityString)
-                {
-                    case "AnyCraft":
-                        abilitiesNeeded.AddRange(new AbilityName[]
-                        {
-                            AbilityName.Mason,
-                            AbilityName.WoodCraft,
-                            AbilityName.Forge,
-                            AbilityName.Smelt,
-                            AbilityName.Weaver,
-                            AbilityName.Alchemy,
-                            AbilityName.Enchantment
-                        });
-                        break;
-
-                    case "AnyResearch":
-                        abilitiesNeeded.AddRange(new AbilityName[]
-                        {
-                            AbilityName.MagicTheory,
-                            AbilityName.MagicLore,
-                            AbilityName.Research,
-                            AbilityName.Mathematics,
-                            AbilityName.Astronomer,
-                            AbilityName.Chemist,
-                            AbilityName.Physics,
-                            AbilityName.Enginner,
-                        });
-                        break;
-
-                    case "AnyMagic":
-                        abilitiesNeeded.AddRange(new AbilityName[]
-                        {
-                            AbilityName.MagicTheory,
-                            AbilityName.MagicLore
-                        });
-                        break;
-
-                    case "AnyCombat":
-                        abilitiesNeeded.AddRange(new AbilityName[]
-                        {
-                            AbilityName.Unarmed,
-                            AbilityName.Misc,
-                            AbilityName.Sword,
-                            AbilityName.Staff,
-                            AbilityName.Hammer,
-                            AbilityName.Spear,
-                            AbilityName.Axe,
-                        });
-                        break;
-
-                    case "AnyJob":
-                        abilitiesNeeded.AddRange(new AbilityName[]
-                        {
-                            AbilityName.Farm,
-                            AbilityName.Medicine,
-                            AbilityName.Surgeon,
-                            AbilityName.Miner,
-                            AbilityName.Brewer,
-                            AbilityName.Cook,
-                        });
-                        break;
-
-                    default:
-                        abilitiesNeeded.Add(Enum.Parse<AbilityName>(abilityString));
-                        break;
-                }
-            }
-            // determine how much reserach was done:
-            // TODO: see how much generalized this can become in the future:
-            List<AbilityName> abilitiesIntersection = Mind.ReturnIntersectionAbilities(abilitiesNeeded);
-
-            return abilitiesIntersection;
         }
 
         public Discovery ReturnDiscoveryFromCurrentFocus(Site site)
@@ -570,15 +488,28 @@ namespace MagiRogue.GameSys.Planet.History
         {
             List<Research> researches;
             if (isMagical)
-                researches = new List<Research>((IEnumerable<Research>)DataManager.ListOfResearches);
+                researches = new List<Research>(DataManager.ListOfResearches);
             else
                 researches = new List<Research>(DataManager.ListOfResearches.Where(i => !i.IsMagical));
             foreach (Research item in researches)
             {
                 ReserachTreeNode node = new ReserachTreeNode(item);
                 ResearchTree.Nodes.Add(node);
+                if (DiscoveriesKnow.Exists(i => i.WhatWasResearched.Id.Equals(item.Id)))
+                    node.ForceFinish();
             }
             ResearchTree.ConfigureNodes();
+        }
+
+        public bool CheckForGreed()
+        {
+            return GetPersonality().Greed >= 10 && GetPersonality().SelfControl <= 10;
+        }
+
+        public bool CheckForStudiousInfluence()
+        {
+            return GetPersonality().Knowledge >= 10
+                && GetPersonality().Perseverance > 0;
         }
     }
 }

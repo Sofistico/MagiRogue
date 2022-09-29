@@ -1,6 +1,7 @@
-﻿using MagiRogue.Data.Enumerators;
-using MagiRogue.GameSys.Civ;
+﻿using MagiRogue.Data;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.GameSys.Planet.TechRes;
+using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
 using System.Collections.Generic;
@@ -34,6 +35,7 @@ namespace MagiRogue.GameSys.Planet.History
 
         public void Act()
         {
+            // if from hell!
             if (figure.MythWho != MythWho.None)
             {
                 SimulateMythStuff();
@@ -90,10 +92,10 @@ namespace MagiRogue.GameSys.Planet.History
                 return;
             bool canMagicalResearch = figure.MythWho is MythWho.Wizard;
 
-            var site = GetFigureStayingSiteIfAny();
-
             if (figure.ResearchTree.Nodes.Count <= 0)
                 figure.SetupResearchTree(canMagicalResearch);
+
+            figure.ResearchTree.GetNodeForResearch(figure);
         }
 
         private void LearnNewDiscoveriesKnowToTheSite()
@@ -158,17 +160,11 @@ namespace MagiRogue.GameSys.Planet.History
                 {
                     DeityChangesCivTendency(CivilizationTendency.Aggresive);
                 }
-                if (CheckForStudiousInfluence())
+                if (figure.CheckForStudiousInfluence())
                 {
                     DeityChangesCivTendency(CivilizationTendency.Studious);
                 }
             }
-        }
-
-        private bool CheckForStudiousInfluence()
-        {
-            return figure.GetPersonality().Knowledge >= 25
-                && figure.GetPersonality().Perseverance > 0;
         }
 
         private void DeityChangesCivTendency(CivilizationTendency tendency)
@@ -181,11 +177,25 @@ namespace MagiRogue.GameSys.Planet.History
 
         private void DeityGivesGiftToCiv()
         {
-            Civilization civ = figure.GetRelatedCivFromFigure(RelationType.PatronDeity, civs);
-            int weatlh = GameLoop.GlobalRand.NextInt(100, 500);
-            civ.Wealth += weatlh;
-            figure.AddLegend($"The {figure.Name} gifted {figure.PronoumPossesive()} followers generated wealth in the value of {weatlh}",
-                year);
+            if (figure.CheckForAnyStudious())
+            {
+                // deities ignore pre-requisites!
+                // TODO: See the impact
+                Research gift = DataManager.ListOfResearches.Where(i => i.ValidDeityGift)
+                    .ToArray().GetRandomItemFromList();
+
+                Civilization civ = figure.GetRelatedCivFromFigure(RelationType.PatronDeity, civs);
+                Site site = civ.Sites.GetRandomItemFromList();
+                site.DiscoveriesKnow.Add(Discovery.ReturnDiscoveryFromResearch(gift, figure, site));
+            }
+            if (figure.CheckForGreed())
+            {
+                Civilization civ = figure.GetRelatedCivFromFigure(RelationType.PatronDeity, civs);
+                int weatlh = GameLoop.GlobalRand.NextInt(100, 500);
+                civ.Wealth += weatlh;
+                figure.AddLegend($"The {figure.Name} gifted {figure.PronoumPossesive()} followers generated wealth in the value of {weatlh}",
+                    year);
+            }
         }
 
         private bool CheckForDeityGiftGiving()

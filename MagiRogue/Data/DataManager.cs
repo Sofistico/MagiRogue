@@ -6,6 +6,7 @@ using MagiRogue.Entities;
 using MagiRogue.Entities.StarterScenarios;
 using MagiRogue.GameSys.Magic;
 using MagiRogue.GameSys.Planet.History;
+using MagiRogue.GameSys.Planet.TechRes;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
 using System.Collections.Generic;
