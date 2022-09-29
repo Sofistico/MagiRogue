@@ -45,6 +45,7 @@ namespace MagiRogue.GameSys.Planet.TechRes
         public int RequiredRP { get; set; } // RP = Research Points
         public int CurrentRP { get; set; }
         public bool Finished { get => CurrentRP >= RequiredRP; }
+        public bool IsRoot { get => Parents.Count <= 0; }
 
         public ReserachTreeNode(Research research, int currentRpIfAny = 0)
         {
