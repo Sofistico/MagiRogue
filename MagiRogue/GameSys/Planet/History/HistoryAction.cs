@@ -56,7 +56,9 @@ namespace MagiRogue.GameSys.Planet.History
                 }
             }
             // everyone trains theirs focus!
-            figure.TrainAbilityFocus();
+            // check if unit has any hardworking bone in it's body or just plain old chance!
+            if (figure.CheckForHardwork() || Mrn.OneIn(10))
+                figure.TrainAbilityFocus();
         }
 
         private void DoSometingReckless()
@@ -168,6 +170,7 @@ namespace MagiRogue.GameSys.Planet.History
                     DeityChangesCivTendency(CivilizationTendency.Studious);
                 }
             }
+            // wizardy stuff will be here as well!
         }
 
         private void DeityChangesCivTendency(CivilizationTendency tendency)

@@ -207,6 +207,8 @@ namespace MagiRogue.GameSys.Planet.TechRes
 
         public List<AbilityName> GetRequisiteAbilitiesForResearch(HistoricalFigure figure)
         {
+            if (figure.TrainingFocus is AbilityName.None)
+                return null;
             var abilities = GetRequisiteAbilitiesForResearch();
             List<AbilityName> abilitiesIntersection = figure.Mind.ReturnIntersectionAbilities(abilities);
             if (abilitiesIntersection.Count <= 0)

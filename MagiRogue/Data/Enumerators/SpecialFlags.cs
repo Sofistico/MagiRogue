@@ -20,9 +20,7 @@ namespace MagiRogue.Data.Enumerators
         WorldCreator,
         MagicKiller,
 
-        // unit flag
-        MageUser,
-        Wizard,
+        // unit flag Tbd
 
         // race flags
         Regenerator,

@@ -344,7 +344,7 @@ namespace MagiRogue.GameSys.Planet.History
                 .CurrentResearchFocus
                 .GetRequisiteAbilitiesForResearch(this);
 
-            if (abilitiesIntersection.Count < 0)
+            if (abilitiesIntersection is null || abilitiesIntersection.Count <= 0)
                 return false;
 
             double totalRes = bonusResearchPower;
@@ -541,6 +541,11 @@ namespace MagiRogue.GameSys.Planet.History
                         TrainingFocus = AbilityName.None;
                 }
             }
+        }
+
+        public bool CheckForHardwork()
+        {
+            return GetPersonality().HardWork >= 10 || (GetPersonality().Perseverance >= 10);
         }
     }
 }
