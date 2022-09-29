@@ -60,6 +60,17 @@ namespace MagiRogue.Entities
             return abilityScore;
         }
 
+        public Ability ReturnAbilityFromName(AbilityName ability)
+        {
+            int possibleId = (int)Ability.ReturnAbilityEnumFromString(ability.ToString());
+            if (Abilities.ContainsKey(possibleId))
+            {
+                return Abilities[possibleId];
+            }
+            else
+                return new Ability();
+        }
+
         public List<AbilityName> CheckForCombatAbilities()
         {
             var abilitiesNeeded = new AbilityName[]

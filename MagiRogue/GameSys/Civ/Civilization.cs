@@ -82,10 +82,10 @@ namespace MagiRogue.GameSys.Civ
             Wealth += site.MundaneResources;
         }
 
-        public void SetupInitialHistoricalFigures()
+        public List<HistoricalFigure> SetupInitialHistoricalFigures()
         {
             // 10% of the population is in anyway important... sadly
-            int nmbrOfImportant = (int)(TotalPopulation * 0.1);
+            int nmbrOfImportant = (int)(TotalPopulation * 0.08);
             int numberOfNobles = (int)(nmbrOfImportant * 0.1);
             bool rulerChoosen = false;
             for (int i = 0; i < nmbrOfImportant; i++)
@@ -127,6 +127,8 @@ namespace MagiRogue.GameSys.Civ
                 AppointNewNoble(rulerPos, nobles.GetRandomItemFromList(), year);
                 rulerChoosen = true;
             }
+
+            return ImportantPeople;
         }
 
         public HistoricalFigure CreateNewHfMemberFromPop(int yearBorn)
@@ -146,6 +148,11 @@ namespace MagiRogue.GameSys.Civ
 
             // add to civ
             figure.AddNewRelationToCiv(Id, RelationType.Member);
+
+            // one in 20 will be an wizard
+            if (Mrn.OneIn(20))
+                figure.MythWho = MythWho.Wizard;
+
             return figure;
         }
 

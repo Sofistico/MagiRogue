@@ -55,6 +55,8 @@ namespace MagiRogue.GameSys.Planet.History
                     }
                 }
             }
+            // everyone trains theirs focus!
+            figure.TrainAbilityFocus();
         }
 
         private void DoSometingReckless()
@@ -88,12 +90,13 @@ namespace MagiRogue.GameSys.Planet.History
 
         private void DecideWhatToResearch()
         {
-            if (figure.ResearchTree.CurrentResearchFocus is not null)
-                return;
             bool canMagicalResearch = figure.MythWho is MythWho.Wizard;
 
-            if (figure.ResearchTree.Nodes.Count <= 0)
+            if (figure.ResearchTree is null)
                 figure.SetupResearchTree(canMagicalResearch);
+
+            if (figure.ResearchTree.CurrentResearchFocus is not null)
+                return;
 
             figure.ResearchTree.GetNodeForResearch(figure);
         }

@@ -36,7 +36,11 @@ namespace MagiRogue.GameSys.Planet.History
             foreach (var item in figures)
             {
                 // generate random personality for the various primoridal beings
-                item.GenerateRandomPersonality();
+                if(item is not null)
+                {
+                    item.GenerateRandomPersonality();
+                    item.IsAlive = true;
+                }
             }
 
             return myths;
@@ -85,6 +89,8 @@ namespace MagiRogue.GameSys.Planet.History
                 while (stack.Count > 0)
                 {
                     HistoricalFigure figure = stack.Pop();
+                    if (figure is null)
+                        continue;
                     Myth myth = figure.MythAct();
                     myths.Add(myth);
 

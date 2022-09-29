@@ -8,6 +8,7 @@ namespace MagiRogue.Utils
     public struct Mrn
     {
         public static int Exploding2D6Dice => ExplodingDice();
+        public static int Normal2D6Dice => Dice.Roll("2d6");
 
         /// <summary>
         /// This uses a similar number

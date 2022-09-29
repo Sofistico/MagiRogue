@@ -25,7 +25,7 @@ namespace MagiRogue.GameSys.Planet.History
 
         public List<HistoricalFigure> Figures { get; set; }
         public List<Civilization> Civs { get; set; }
-        public List<Site> SitesWithoutCivs { get; set; }
+        public List<Site> AllSites { get; set; } = new();
         public List<Myth> Myths { get; set; } = new();
         public int Year { get; set; }
         public long TicksSinceCreation { get; set; }
@@ -43,10 +43,10 @@ namespace MagiRogue.GameSys.Planet.History
             Year = year;
         }
 
-        public void RunHistory(Civilization[] civilizations, int yearToGameBegin,
+        public void RunHistory(List<Civilization> civilizations, int yearToGameBegin,
             PlanetMap planet, WorldTile[,] tiles)
         {
-            Civs = civilizations.ToList();
+            Civs = civilizations;
             planetData = planet;
             bool firstYearOnly = true;
             MythGenerator mythGenerator = new MythGenerator();
@@ -55,25 +55,25 @@ namespace MagiRogue.GameSys.Planet.History
                 Figures,
                 planet);
 
+            if (firstYearOnly)
+            {
+                // stuff that will only happen in the first year!
+                // after that won't really happen anymore!
+                FirstYearOnlyInteractions(civilizations.ToArray());
+                firstYearOnly = false;
+            }
+
             while (Year < yearToGameBegin)
             {
-                if (firstYearOnly)
-                {
-                    // stuff that will only happen in the first year!
-                    // after that won't really happen anymore!
-                    FirstYearOnlyInteractions(civilizations);
-                    firstYearOnly = false;
-                }
-
-                List<Site> sites = new List<Site>(SitesWithoutCivs);
                 List<Site> civSite = Civs.Select(i => i.Sites).ToList().ReturnListListTAsListT();
-                sites.AddRange(civSite);
+                AllSites.AddRange(civSite);
+                AllSites.AddRange(sitesWithNoCiv);
 
                 int season = 1; // 4 actions per year, representing the four seasons
                 while (season <= 4)
                 {
                     // simulate historical figures stuff
-                    HistoricalFigureSimulation(tiles, sites);
+                    HistoricalFigureSimulation(tiles, AllSites);
 
                     // simulate civ stuff
                     CivilizationSimulation(tiles);
@@ -84,15 +84,16 @@ namespace MagiRogue.GameSys.Planet.History
                     season++; // another season passes...
                 }
 
+                AllSites.Clear();
                 Year++;
             }
         }
 
         private void NoCivSitesSimulation(WorldTile[,] tiles)
         {
-            if (SitesWithoutCivs.Count < 1)
+            if (AllSites.Count < 1)
                 return;
-            foreach (Site site in SitesWithoutCivs)
+            foreach (Site site in AllSites)
             {
             }
         }
@@ -207,9 +208,9 @@ namespace MagiRogue.GameSys.Planet.History
             foreach (var civ in civilizations)
             {
                 var otherCivs = Civs.Where(i => i != civ);
+                Figures.AddRange(civ.SetupInitialHistoricalFigures());
                 foreach (var nextCiv in otherCivs)
                 {
-                    civ.SetupInitialHistoricalFigures();
                     Distance dis = new Distance();
                     var distance = dis.Calculate(civ.Sites[0].WorldPos,
                         nextCiv.Sites[0].WorldPos);
@@ -250,30 +251,32 @@ namespace MagiRogue.GameSys.Planet.History
 
         private void CreateNewSiteIfPossible(WorldTile[,] tiles, Civilization civ = null)
         {
+            Site site;
             if (civ is not null)
             {
                 int migrants = GameLoop.GlobalRand.NextInt(10, 100);
                 Site rngSettl = civ.Sites.GetRandomItemFromList();
                 rngSettl.Population -= migrants;
                 Point pos = rngSettl.WorldPos.GetPointNextTo();
-                Site Site = new Site(pos,
+                site = new Site(pos,
                     civ.RandomSiteFromLanguageName(),
                     migrants,
                     civ.Id);
-                Site.SetId();
+                site.SetId();
                 WorldTile tile = tiles[pos.X, pos.Y];
-                tile.SiteInfluence = Site;
-                civ.AddSiteToCiv(Site);
+                tile.SiteInfluence = site;
+                civ.AddSiteToCiv(site);
             }
             else
             {
-                Site site = new Site();
+                site = new Site();
                 WorldTile tile = tiles.Transform2DTo1D().GetRandomItemFromList();
                 tile.SiteInfluence = site;
                 site.WorldPos = tile.Position;
                 site.MundaneResources = (int)tile.GetResources();
                 sitesWithNoCiv.Add(site);
             }
+            AllSites.Add(site);
         }
 
         private bool BuildRoadsToFriends(Civilization civ, Civilization friend, WorldTile[,] tiles)

@@ -26,7 +26,7 @@ namespace MagiRogue.GameSys.Planet
 
         private int _width;
         private int _height;
-        private Civilization[] _civilizations;
+        private List<Civilization> _civilizations;
         private int maxCivsWorld;
 
         private readonly float deepWater = 0.3f;
@@ -115,7 +115,7 @@ namespace MagiRogue.GameSys.Planet
             _width = width;
             _height = height;
             maxCivsWorld = nmbCivilizations;
-            _civilizations = new Civilization[maxCivsWorld];
+            _civilizations = new();
             HeightData = new float[width, height];
             HeatData = new float[width, height];
             MoistureData = new float[width, height];
@@ -165,7 +165,7 @@ namespace MagiRogue.GameSys.Planet
         private void SeedCivilizations()
         {
             int tries = 0;
-            int maxTries = 300;
+            int maxTries = 3000;
             int currentCivCount = 0;
 
             while (currentCivCount < maxCivsWorld && tries < maxTries)
@@ -209,7 +209,7 @@ namespace MagiRogue.GameSys.Planet
 
                 if (currentCivCount < maxCivsWorld)
                 {
-                    _civilizations[currentCivCount] = civ;
+                    _civilizations.Add(civ);
                 }
 
                 planetData.Civilizations.Add(civ);

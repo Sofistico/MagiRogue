@@ -113,7 +113,7 @@
     "Difficulty": 9,
     "IsMagical": true,
     "AbilityRequired": [ "Mathematics", "MagicTheory" ],
-    "TechResearched": [ "Teleportation" ],
+    "TechResearched": [ "Teleport" ],
     "RequiredRes": [ "spell_casting", "basic_mathematics" ]
   },
   {

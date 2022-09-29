@@ -23,6 +23,7 @@ namespace MagiRogue.GameSys.Planet.History
         private int yearsOnActivity = 0;
         // year tht the activited started
         private int yearCurrentActivityStarted = 0;
+        private int whatScoreToSettleForTrainingAbility;
 
         #region Props
 
@@ -58,6 +59,7 @@ namespace MagiRogue.GameSys.Planet.History
         /// <br>The figure can only do one long term activity</br>
         /// </summary>
         public bool DoingLongTermActivity { get; set; }
+        public AbilityName TrainingFocus { get; private set; }
 
         #endregion Props
 
@@ -307,7 +309,7 @@ namespace MagiRogue.GameSys.Planet.History
 
         public int? GetCurrentStayingSiteId()
         {
-            return RelatedSites.FirstOrDefault(i => i.RelationType.HasFlag(SiteRelationTypes.IsThere)).OtherSiteId;
+            return RelatedSites.FirstOrDefault(i => i.RelationType.HasFlag(SiteRelationTypes.IsThere))?.OtherSiteId;
         }
 
         public bool CheckForProlificStudious()
@@ -491,6 +493,7 @@ namespace MagiRogue.GameSys.Planet.History
                 researches = new List<Research>(DataManager.ListOfResearches);
             else
                 researches = new List<Research>(DataManager.ListOfResearches.Where(i => !i.IsMagical));
+            ResearchTree = new ResearchTree();
             foreach (Research item in researches)
             {
                 ReserachTreeNode node = new ReserachTreeNode(item);
@@ -510,6 +513,34 @@ namespace MagiRogue.GameSys.Planet.History
         {
             return GetPersonality().Knowledge >= 10
                 && GetPersonality().Perseverance > 0;
+        }
+
+        public void SetCurrentAbilityTrainingFocus(AbilityName abilityName)
+        {
+            TrainingFocus = abilityName;
+        }
+
+        public void TrainAbilityFocus()
+        {
+            if (TrainingFocus is not AbilityName.None)
+            {
+                whatScoreToSettleForTrainingAbility = Mrn.Normal2D6Dice;
+                if (!Mind.Abilities.ContainsKey((int)TrainingFocus))
+                {
+                    Mind.Abilities.Add((int)TrainingFocus, new Ability(TrainingFocus, 0));
+                }
+                else
+                {
+                    Ability ability = Mind.ReturnAbilityFromName(TrainingFocus);
+                    if (ability.ReturnAbilityEnumFromString() is not AbilityName.None)
+                    {
+                        ability.XpTotal +=
+                            (Mind.Personality.HardWork + (Mrn.Exploding2D6Dice * Mind.Inteligence));
+                    }
+                    if (ability.Score >= whatScoreToSettleForTrainingAbility)
+                        TrainingFocus = AbilityName.None;
+                }
+            }
         }
     }
 }

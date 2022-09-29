@@ -14,6 +14,11 @@ namespace MagiRogue.GameSys.Planet.TechRes
         public List<ReserachTreeNode> Nodes { get; set; }
         public ReserachTreeNode CurrentResearchFocus { get; set; }
 
+        public ResearchTree()
+        {
+            Nodes = new();
+        }
+
         public void ConfigureNodes()
         {
             foreach (ReserachTreeNode node in Nodes)
@@ -204,6 +209,10 @@ namespace MagiRogue.GameSys.Planet.TechRes
         {
             var abilities = GetRequisiteAbilitiesForResearch();
             List<AbilityName> abilitiesIntersection = figure.Mind.ReturnIntersectionAbilities(abilities);
+            if (abilitiesIntersection.Count <= 0)
+            {
+                figure.SetCurrentAbilityTrainingFocus(abilities.GetRandomItemFromList());
+            }
 
             return abilitiesIntersection;
         }
