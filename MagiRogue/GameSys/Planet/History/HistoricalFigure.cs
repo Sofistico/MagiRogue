@@ -565,5 +565,20 @@ namespace MagiRogue.GameSys.Planet.History
                 ForceCleanupResearch();
             }
         }
+
+        public void SetupResearchTree(bool isMagical)
+        {
+            List<Research> researches;
+            if (isMagical)
+                researches = new List<Research>((IEnumerable<Research>)DataManager.ListOfResearches);
+            else
+                researches = new List<Research>(DataManager.ListOfResearches.Where(i => !i.IsMagical));
+            foreach (Research item in researches)
+            {
+                ReserachTreeNode node = new ReserachTreeNode(item);
+                ResearchTree.Nodes.Add(node);
+            }
+            ResearchTree.ConfigureNodes();
+        }
     }
 }

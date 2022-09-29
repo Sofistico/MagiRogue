@@ -91,6 +91,9 @@ namespace MagiRogue.GameSys.Planet.History
             bool canMagicalResearch = figure.MythWho is MythWho.Wizard;
 
             var site = GetFigureStayingSiteIfAny();
+
+            if (figure.ResearchTree.Nodes.Count <= 0)
+                figure.SetupResearchTree(canMagicalResearch);
         }
 
         private void LearnNewDiscoveriesKnowToTheSite()
