@@ -1,13 +1,10 @@
 ﻿using MagiRogue.Data.Enumerators;
-using MagiRogue.Entities;
 using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Planet.TechRes;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.ExceptionServices;
 
 namespace MagiRogue.GameSys.Planet.History
 {
