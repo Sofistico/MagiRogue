@@ -1,15 +1,17 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Civ;
+using MagiRogue.GameSys.Planet.TechRes;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 
 namespace MagiRogue.GameSys.Planet.History
 {
-    public sealed class HistoryAction
+    public class HistoryAction
     {
         private readonly HistoricalFigure figure;
         private readonly int year;
@@ -39,18 +41,59 @@ namespace MagiRogue.GameSys.Planet.History
             {
                 SimulateMythStuff();
             }
+            if (figure.CheckForAnyStudious())
+                LearnNewDiscoveriesKnowToTheSite();
             if (figure.CheckForProlificStudious())
             {
-                LearnNewDiscoveriesKnowToTheSite();
-                DecideWhatToResearch();
-                DoResearchIfPossible();
+                bool willResearchThisSeason = Mrn.OneIn(3);
+                if (willResearchThisSeason)
+                {
+                    DecideWhatToResearch();
+                    DoResearchIfPossible();
+                    if (figure.AnxiousInRegardsToActivity)
+                    {
+                        DoSometingReckless();
+                    }
+                }
             }
+        }
+
+        private void DoSometingReckless()
+        {
+            Site site = GetFigureStayingSiteIfAny();
+            if (site is not null)
+            {
+                if (figure.CheckForAnger())
+                {
+                    // murder someone! rob them! do something bad!
+                    bool checkMurder = figure.GetPersonality().Anger >= 30;
+                    if (checkMurder)
+                    {
+                        Civilization civ = GetCivFromSite(site);
+                        HistoricalFigure deadThing =
+                            civ.ImportantPeople
+                            .Where(i => i.GetCurrentStayingSiteId() == site.Id)
+                            .ToList()
+                            .GetRandomItemFromList();
+                        figure.TryAttackAndMurder(deadThing, year, $", so that {figure.Pronoum} could get inspiration!");
+                        figure.ClearAnxiousness();
+                    }
+                }
+            }
+        }
+
+        private Civilization GetCivFromSite(Site site)
+        {
+            return civs.FirstOrDefault(i => i.Id == site.CivOwnerIfAny.Value);
         }
 
         private void DecideWhatToResearch()
         {
-            if (figure.CurrentDiscoveryLearning is not null)
+            if (figure.ResearchTree.CurrentResearchFocus is not null)
                 return;
+            bool canMagicalResearch = figure.MythWho is MythWho.Wizard;
+
+            var site = GetFigureStayingSiteIfAny();
         }
 
         private void LearnNewDiscoveriesKnowToTheSite()
@@ -67,7 +110,7 @@ namespace MagiRogue.GameSys.Planet.History
                     Discovery disc = currentSite.DiscoveriesKnow[i];
                     if (!figure.DiscoveriesKnow.Any(i => i.Id == disc.Id))
                     {
-                        figure.CurrentDiscoveryLearning = new DiscoveryResearch(disc, familiarityBonus);
+                        figure.DiscoveriesKnow.Add(disc);
                     }
                 }
             }
@@ -76,24 +119,27 @@ namespace MagiRogue.GameSys.Planet.History
         private void DoResearchIfPossible()
         {
             double resarchPower = 0;
-            var currentSite = figure.GetCurrentStayingSiteId();
-            Site site = currentSite.HasValue ? sites.Find(i => i.Id == currentSite.Value) : null;
+            Site site = GetFigureStayingSiteIfAny();
 
-            if (figure.CurrentDiscoveryLearning is not null)
+            if (figure.ResearchTree.CurrentResearchFocus is not null)
             {
                 resarchPower += Mrn.Exploding2D6Dice;
                 if (site is not null)
                 {
                     resarchPower *= (double)((double)site.MagicalResources / 100);
                 }
-
-                if (figure.DoResearch(resarchPower))
+                if (figure.DoResearch(resarchPower, year))
                 {
-                    figure.CurrentDiscoveryLearning.DiscoveryBeingRes.IsActive = true;
-                    site.DiscoveriesKnow.Add(figure.CurrentDiscoveryLearning.DiscoveryBeingRes);
-                    figure.CurrentDiscoveryLearning = null;
+                    figure.CleanupResearch(site, year);
                 }
             }
+        }
+
+        private Site GetFigureStayingSiteIfAny()
+        {
+            var currentSite = figure.GetCurrentStayingSiteId();
+            Site site = currentSite.HasValue ? sites.Find(i => i.Id == currentSite.Value) : null;
+            return site;
         }
 
         private void SimulateMythStuff()

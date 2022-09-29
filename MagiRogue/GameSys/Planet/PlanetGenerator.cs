@@ -102,12 +102,6 @@ namespace MagiRogue.GameSys.Planet
 
         #endregion MapGenField
 
-        #region HistoryFields
-
-        private int roadId = 0;
-
-        #endregion HistoryFields
-
         #endregion Fields
 
         /// <summary>
@@ -207,6 +201,7 @@ namespace MagiRogue.GameSys.Planet
                 {
                     MundaneResources = (int)tile.GetResources()
                 };
+                set.SetId();
                 set.DefineSiteSize();
 
                 tile.SiteInfluence = set;

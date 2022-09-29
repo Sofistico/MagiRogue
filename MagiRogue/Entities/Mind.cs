@@ -59,5 +59,35 @@ namespace MagiRogue.Entities
 
             return abilityScore;
         }
+
+        public List<AbilityName> CheckForCombatAbilities()
+        {
+            var abilitiesNeeded = new AbilityName[]
+            {
+                AbilityName.Unarmed,
+                AbilityName.Misc,
+                AbilityName.Sword,
+                AbilityName.Staff,
+                AbilityName.Hammer,
+                AbilityName.Spear,
+                AbilityName.Axe,
+            };
+            return ReturnIntersectionAbilities(abilitiesNeeded);
+        }
+
+        public List<AbilityName> CheckForDefensiveAbilities()
+        {
+            var abilitiesNeeded = new AbilityName[]
+            {
+                AbilityName.ArmorUse,
+                AbilityName.Dodge,
+            };
+            return ReturnIntersectionAbilities(abilitiesNeeded);
+        }
+
+        public List<AbilityName> ReturnIntersectionAbilities(IEnumerable<AbilityName> abilitiesNeeded)
+        {
+            return abilitiesNeeded.Where(i => Abilities.ContainsKey((int)i)).ToList();
+        }
     }
 }

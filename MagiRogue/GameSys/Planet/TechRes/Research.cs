@@ -3,7 +3,7 @@ using MagiRogue.Entities;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace MagiRogue.GameSys.Planet.History
+namespace MagiRogue.GameSys.Planet.TechRes
 {
     public class Research
     {

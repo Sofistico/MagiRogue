@@ -4,6 +4,7 @@ using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Planet;
 using MagiRogue.GameSys.Planet.History;
+using MagiRogue.GameSys.Planet.TechRes;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
 using Newtonsoft.Json;

@@ -8,6 +8,8 @@ using MagiRogue.Data;
 using MagiRogue.GameSys.Civ;
 using System.Text;
 using MagiRogue.GameSys.Tiles;
+using MagiRogue.GameSys.Planet.TechRes;
+using MagiRogue.Data.Serialization;
 
 namespace MagiRogue.GameSys.Planet.History
 {
@@ -17,6 +19,11 @@ namespace MagiRogue.GameSys.Planet.History
     /// </summary>
     public sealed class HistoricalFigure
     {
+        // years that the current long activity started
+        private int yearsOnActivity = 0;
+        // year tht the activited started
+        private int yearCurrentActivityStarted = 0;
+
         #region Props
 
         public int Id { get; set; }
@@ -39,7 +46,18 @@ namespace MagiRogue.GameSys.Planet.History
         public Soul Soul { get; set; }
         public List<SpecialFlag> SpecialFlags { get; set; } = new();
         public List<Noble> NobleTitles { get; set; } = new();
-        public DiscoveryResearch CurrentDiscoveryLearning { get; set; }
+        public ResearchTree ResearchTree { get; set; }
+
+        /// <summary>
+        /// When someone is anxious, it's higher the chance that he will do something stupid!
+        /// </summary>
+        public bool AnxiousInRegardsToActivity { get; set; }
+
+        /// <summary>
+        /// Flag to check if the figure is doing some long term important stuff like reserach
+        /// <br>The figure can only do one long term activity</br>
+        /// </summary>
+        public bool DoingLongTermActivity { get; set; }
 
         #endregion Props
 
@@ -294,9 +312,10 @@ namespace MagiRogue.GameSys.Planet.History
 
         public bool CheckForProlificStudious()
         {
-            return GetPersonality().Knowledge >= 25
-                && (GetPersonality().Perseverance >= 25
+            bool valuesInRange = GetPersonality().Knowledge >= 10
+                && (GetPersonality().Perseverance >= 10
                 || GetPersonality().HardWork >= 25);
+            return valuesInRange;
         }
 
         public bool CheckForAgressiveInfluence()
@@ -315,9 +334,236 @@ namespace MagiRogue.GameSys.Planet.History
         public bool CheckForInsurrection()
             => GetPersonality().Power >= 25;
 
-        public bool DoResearch(double bonusResearchPower)
+        public bool DoResearch(double bonusResearchPower = 0, int year = 0)
         {
-            return CurrentDiscoveryLearning.Finished;
+            if (ResearchTree.CurrentResearchFocus is null)
+                return false;
+            List<AbilityName> abilitiesIntersection = GetRequisiteAbilitiesForResearch();
+
+            if (abilitiesIntersection.Count < 0)
+                return false;
+
+            double totalRes = bonusResearchPower;
+            foreach (AbilityName abiName in abilitiesIntersection)
+            {
+                // research should take years, but let's observe if will take too long as well...
+                int abilityScore = Mind.GetAbility(abiName);
+                totalRes += (abilityScore * Mrn.Exploding2D6Dice);
+            }
+            CheckForAnxious(year);
+
+            ResearchTree.CurrentResearchFocus.CurrentRP += (int)MathMagi.Round(totalRes);
+            yearsOnActivity++;
+            DoingLongTermActivity = true;
+
+            return ResearchTree.CurrentResearchFocus.Finished;
+        }
+
+        public void ClearAnxiousness()
+        {
+            AnxiousInRegardsToActivity = false;
+            yearCurrentActivityStarted = 0;
+            yearsOnActivity = 0;
+        }
+
+        public void CheckForAnxious(int year)
+        {
+            if (GetPersonality().Leisure <= 0
+                && GetPersonality().SelfControl <= 10
+                && GetPersonality().Perseverance <= 0)
+            {
+                yearCurrentActivityStarted = year;
+                bool sucess = Mrn.OneIn(GetPersonality().Perseverance * -1);
+                if (!sucess)
+                {
+                    AnxiousInRegardsToActivity = true;
+                }
+            }
+        }
+
+        private List<AbilityName> GetRequisiteAbilitiesForResearch()
+        {
+            var getResAbilities = ResearchTree.CurrentResearchFocus.Research.AbilityRequired;
+            List<AbilityName> abilitiesNeeded = new();
+            int count = getResAbilities.Count;
+            // special handling for unusual cases for
+            // AnyCraft, AnyResearch, AnyMagic, AnyCombat and AnyJob
+            for (int i = 0; i < count; i++)
+            {
+                string abilityString = getResAbilities[i];
+                switch (abilityString)
+                {
+                    case "AnyCraft":
+                        abilitiesNeeded.AddRange(new AbilityName[]
+                        {
+                            AbilityName.Mason,
+                            AbilityName.WoodCraft,
+                            AbilityName.Forge,
+                            AbilityName.Smelt,
+                            AbilityName.Weaver,
+                            AbilityName.Alchemy,
+                            AbilityName.Enchantment
+                        });
+                        break;
+
+                    case "AnyResearch":
+                        abilitiesNeeded.AddRange(new AbilityName[]
+                        {
+                            AbilityName.MagicTheory,
+                            AbilityName.MagicLore,
+                            AbilityName.Research,
+                            AbilityName.Mathematics,
+                            AbilityName.Astronomer,
+                            AbilityName.Chemist,
+                            AbilityName.Physics,
+                            AbilityName.Enginner,
+                        });
+                        break;
+
+                    case "AnyMagic":
+                        abilitiesNeeded.AddRange(new AbilityName[]
+                        {
+                            AbilityName.MagicTheory,
+                            AbilityName.MagicLore
+                        });
+                        break;
+
+                    case "AnyCombat":
+                        abilitiesNeeded.AddRange(new AbilityName[]
+                        {
+                            AbilityName.Unarmed,
+                            AbilityName.Misc,
+                            AbilityName.Sword,
+                            AbilityName.Staff,
+                            AbilityName.Hammer,
+                            AbilityName.Spear,
+                            AbilityName.Axe,
+                        });
+                        break;
+
+                    case "AnyJob":
+                        abilitiesNeeded.AddRange(new AbilityName[]
+                        {
+                            AbilityName.Farm,
+                            AbilityName.Medicine,
+                            AbilityName.Surgeon,
+                            AbilityName.Miner,
+                            AbilityName.Brewer,
+                            AbilityName.Cook,
+                        });
+                        break;
+
+                    default:
+                        abilitiesNeeded.Add(Enum.Parse<AbilityName>(abilityString));
+                        break;
+                }
+            }
+            // determine how much reserach was done:
+            // TODO: see how much generalized this can become in the future:
+            List<AbilityName> abilitiesIntersection = Mind.ReturnIntersectionAbilities(abilitiesNeeded);
+
+            return abilitiesIntersection;
+        }
+
+        public Discovery ReturnDiscoveryFromCurrentFocus(Site site)
+        {
+            return new Discovery(Id,
+                $"{Name} finished reserach on ",
+                $"{site.Name}",
+                ResearchTree.CurrentResearchFocus.Research);
+        }
+
+        public void CleanupResearch(Site site, int year)
+        {
+            var disc = ReturnDiscoveryFromCurrentFocus(site);
+            if (disc is null) // if for some reason dis is null
+                return;
+            AddLegend(disc.ReturnLegendFromDiscovery(year));
+            site.DiscoveriesKnow.Add(disc);
+            site.AddLegend(new Legend($"In the year {year}, the {Name} added a new discovery to the site {site.Name} knowlodge!", year));
+            ResearchTree.CurrentResearchFocus = null;
+            ClearAnxiousness();
+            DoingLongTermActivity = false;
+        }
+
+        public void ForceCleanupResearch()
+        {
+            ResearchTree.CurrentResearchFocus = null;
+            ClearAnxiousness();
+            DoingLongTermActivity = false;
+        }
+
+        public bool CheckForAnyStudious()
+        {
+            return GetPersonality().Knowledge >= 0 && GetPersonality().HardWork >= 10;
+        }
+
+        internal bool CheckForAnger()
+        {
+            return GetPersonality().Anger >= 20 && GetPersonality().SelfControl <= 10;
+        }
+
+        public void TryAttackAndMurder(HistoricalFigure deadThing, int year, string specialReason = "")
+        {
+            var combatAbilityAttacker = Mind.CheckForCombatAbilities().GetRandomItemFromList();
+            var defensiveAbilityAttacker = Mind.CheckForDefensiveAbilities().GetRandomItemFromList();
+            var combatAbilityDefender = Mind.CheckForCombatAbilities().GetRandomItemFromList();
+            var defensiveAbilyDefender = Mind.CheckForDefensiveAbilities().GetRandomItemFromList();
+
+            StringBuilder killer = new StringBuilder($"In the year of {year} ");
+            StringBuilder victim = new StringBuilder($"In the year of {year} ");
+
+            // TODO: Generalize this in the future
+            if (Mind.GetAbility(combatAbilityAttacker) >= deadThing.Mind.GetAbility(defensiveAbilyDefender))
+            {
+                deadThing.KillIt(year);
+                killer.Append($"the {Name} killed {deadThing.Name}");
+                killer.Append(specialReason);
+
+                victim.Append($"the {deadThing.Name} was killed by {Name}");
+                victim.Append(specialReason);
+
+                AddLegend(new Legend(killer.ToString(), year));
+                deadThing.AddLegend(new Legend(victim.ToString(), year));
+                return;
+            }
+            if (Mind.GetAbility(combatAbilityDefender) <= deadThing.Mind.GetAbility(defensiveAbilityAttacker))
+            {
+                KillIt(year);
+                killer.Append($"the {deadThing.Name} killed {Name}");
+                killer.Append("in self defense");
+
+                victim.Append($"the {Name} was killed by {deadThing.Name}");
+                victim.Append("in self defense");
+                AddLegend(new Legend(victim.ToString(), year));
+                deadThing.AddLegend(new Legend(killer.ToString(), year));
+                return;
+            }
+
+            killer.Append($"the {Name} tried to kill {deadThing.Name}");
+            killer.Append(specialReason);
+            killer.Append(" but failed!");
+
+            victim.Append($"the {deadThing.Name} had a murder attempeted by {Name}");
+            victim.Append(specialReason);
+            killer.Append($" but {Pronoum()} failed!");
+
+            AddLegend(new Legend(killer.ToString(), year));
+            deadThing.AddLegend(new Legend(victim.ToString(), year));
+        }
+
+        private void KillIt(int year)
+        {
+            YearDeath = year;
+            IsAlive = false;
+        }
+
+        internal void CleanupIfNotImportant(int year)
+        {
+            if (YearDeath - year >= 10)
+            {
+                ForceCleanupResearch();
+            }
         }
     }
 }

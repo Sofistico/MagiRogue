@@ -1,5 +1,4 @@
 ﻿using MagiRogue.Data.Enumerators;
-using MagiRogue.Data.Serialization.EntitySerialization;
 using System;
 using System.Collections.Generic;
 using MagiRogue.Utils;
@@ -9,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Collections.Specialized;
 using MagiRogue.GameSys.Planet;
+using MagiRogue.GameSys.Planet.TechRes;
 
 namespace MagiRogue.GameSys.Civ
 {
@@ -35,7 +35,7 @@ namespace MagiRogue.GameSys.Civ
         public List<Legend> SiteLegends { get; set; } = new();
 
         public List<Discovery> DiscoveriesKnow { get; set; } = new();
-        public int Id { get; private set; }
+        public int Id { get; set; }
 
         #endregion props
 
@@ -155,6 +155,9 @@ namespace MagiRogue.GameSys.Civ
             // if the resources got big enough, update!
             DefineSiteSize();
         }
+
+        public void SetId()
+            => Id = SequentialIdGenerator.SiteId;
 
         public void CreateNewBuildings()
         {
@@ -276,6 +279,11 @@ namespace MagiRogue.GameSys.Civ
         public void SimulateResearchPropagation(Civilization civ, WorldTile[,] tiles)
         {
             throw new NotImplementedException();
+        }
+
+        public void AddLegend(Legend legend)
+        {
+            SiteLegends.Add(legend);
         }
     }
 }

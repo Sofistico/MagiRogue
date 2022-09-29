@@ -13,8 +13,8 @@ namespace MagiRogue.GameSys.Planet.History
 {
     public sealed class AccumulatedHistory
     {
-        private int roadId;
         private PlanetMap planetData;
+        private List<Site> sitesWithNoCiv = new();
 
         #region Consts
 
@@ -106,6 +106,10 @@ namespace MagiRogue.GameSys.Planet.History
             {
                 if (figure.IsAlive)
                     figure.HistoryAct(Year, tiles, Civs, Figures, sites);
+                else
+                {
+                    figure.CleanupIfNotImportant(Year);
+                }
             }
         }
 
@@ -150,8 +154,8 @@ namespace MagiRogue.GameSys.Planet.History
                 }
 
                 int totalRevenueYear = 0;
-
-                CreateNewSiteIfPossible(tiles, civ);
+                if (civ.Wealth > wealthToCreateNewSite)
+                    CreateNewSiteIfPossible(tiles, civ);
 
                 ClaimNewTerritory(civ);
 
@@ -244,9 +248,9 @@ namespace MagiRogue.GameSys.Planet.History
             return totalRevenueYear;
         }
 
-        private static void CreateNewSiteIfPossible(WorldTile[,] tiles, Civilization civ)
+        private void CreateNewSiteIfPossible(WorldTile[,] tiles, Civilization civ = null)
         {
-            if (civ.Wealth > wealthToCreateNewSite)
+            if (civ is not null)
             {
                 int migrants = GameLoop.GlobalRand.NextInt(10, 100);
                 Site rngSettl = civ.Sites.GetRandomItemFromList();
@@ -256,20 +260,20 @@ namespace MagiRogue.GameSys.Planet.History
                     civ.RandomSiteFromLanguageName(),
                     migrants,
                     civ.Id);
+                Site.SetId();
                 WorldTile tile = tiles[pos.X, pos.Y];
                 tile.SiteInfluence = Site;
                 civ.AddSiteToCiv(Site);
             }
-        }
-
-        private static void CreateNewSiteIfPossibleWithNoCiv(WorldTile[,] tiles, List<Site> sitesWithNoCiv)
-        {
-            Site site = new Site();
-            WorldTile tile = tiles.Transform2DTo1D().GetRandomItemFromList();
-            tile.SiteInfluence = site;
-            site.WorldPos = tile.Position;
-            site.MundaneResources = (int)tile.GetResources();
-            sitesWithNoCiv.Add(site);
+            else
+            {
+                Site site = new Site();
+                WorldTile tile = tiles.Transform2DTo1D().GetRandomItemFromList();
+                tile.SiteInfluence = site;
+                site.WorldPos = tile.Position;
+                site.MundaneResources = (int)tile.GetResources();
+                sitesWithNoCiv.Add(site);
+            }
         }
 
         private bool BuildRoadsToFriends(Civilization civ, Civilization friend, WorldTile[,] tiles)
@@ -307,7 +311,7 @@ namespace MagiRogue.GameSys.Planet.History
         {
             Road road = new()
             {
-                RoadId = roadId++
+                RoadId = SequentialIdGenerator.RoadId
             };
 
             if (tile.HeightType == HeightType.DeepWater || tile.HeightType == HeightType.ShallowWater)
