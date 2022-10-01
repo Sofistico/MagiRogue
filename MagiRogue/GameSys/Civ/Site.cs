@@ -248,7 +248,7 @@ namespace MagiRogue.GameSys.Civ
             SiteLegends.Add(new Legend(legend, when, figure));
         }
 
-        public bool CheckIfCurrentLeaderDiedAndRemoveIt(int currentYear)
+        public bool CheckIfSiteHasCurrentLeaderOrDiedAndRemoveIt(int currentYear)
         {
             if (SiteLeader is not null)
             {

@@ -10,6 +10,7 @@ namespace MagiRogue.Data.Enumerators
         LeadArmy,
         AdviseRuler,
         CourtMage,
+        MagicStuff,
         Rule,
         Administrate
     }

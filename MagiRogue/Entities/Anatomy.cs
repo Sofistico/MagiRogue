@@ -415,14 +415,17 @@ namespace MagiRogue.Entities
         /// Checks once a year for aging related stuff and etc...
         /// To be used
         /// </summary>
-        public void CheckAge()
+        public bool CheckIfDiedByAge()
         {
-            if (Ages && CurrentAge > Lifespan)
+            if (Ages && CurrentAge >= Lifespan)
             {
-                int rng = GameLoop.GlobalRand.NextInt(100);
+                int rng = GameLoop.GlobalRand.NextInt(2 ^ (CurrentAge - Lifespan));
+                int yRng = GameLoop.GlobalRand.NextInt(Lifespan, CurrentAge);
                 // one in rng. better be lucky!
-                Mrn.OneIn(rng);
+                var died = Mrn.XinY(yRng, rng);
+                return died;
             }
+            return false;
         }
 
         public int RateOfGrowthPerYear()
@@ -484,6 +487,11 @@ namespace MagiRogue.Entities
         private bool CheckIfHasHeadAndNeedsOne()
         {
             return HasAtLeastOneHead && NeedsHead;
+        }
+
+        internal void AgeBody()
+        {
+            CurrentAge++;
         }
 
         #endregion Methods

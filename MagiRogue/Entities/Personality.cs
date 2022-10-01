@@ -33,7 +33,7 @@ namespace MagiRogue.Entities
         public int Peace { get; set; }
         public int Knowledge { get; set; }
         public int Commerce { get; set; }
-        public int Rommance { get; set; }
+        public int Romance { get; set; }
         public int Leisure { get; set; }
         public int Lazyness { get; set; }
         public int Greed { get; set; }
@@ -68,7 +68,7 @@ namespace MagiRogue.Entities
             Craftmanship = craftmanship;
             MartialProwess = martialProwess;
             Commerce = commerce;
-            Rommance = rommance;
+            Romance = rommance;
             Leisure = leisure;
             Lazyness = lazyness;
         }

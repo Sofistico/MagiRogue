@@ -21,6 +21,7 @@ namespace MagiRogue.Data.Enumerators
         MagicKiller,
 
         // unit flag Tbd
+        MagicUser,
 
         // race flags
         Regenerator,

@@ -14,6 +14,7 @@ namespace MagiRogue.Data.Enumerators
         Enemy,
         Friend,
         Nemesis,
-        Creator
+        Creator,
+        Married
     }
 }

@@ -8,6 +8,7 @@ using MagiRogue.GameSys.Planet.TechRes;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -151,7 +152,11 @@ namespace MagiRogue.GameSys.Civ
 
             // one in 20 will be an wizard
             if (Mrn.OneIn(20))
+            {
                 figure.MythWho = MythWho.Wizard;
+                figure.AddNewFlag(SpecialFlag.MagicUser);
+            }
+            figure.SetStandardRaceFlags();
 
             return figure;
         }
@@ -162,6 +167,20 @@ namespace MagiRogue.GameSys.Civ
             string? whyItHappenead = null)
         {
             TrackAmountOfNobles ??= new Dictionary<string, int>();
+            bool hasAllRequiredsForPos = true;
+            foreach (var flag in noble.RequiredForPos)
+            {
+                if (Enum.TryParse<SpecialFlag>(flag, out var result))
+                {
+                    if (figureToAdd.SpecialFlags.Contains(result))
+                        continue;
+                    else
+                        hasAllRequiredsForPos = false;
+                }
+            }
+
+            if (!hasAllRequiredsForPos)
+                return;
 
             figureToAdd.AddNewNoblePos(noble,
                 yearAdded,

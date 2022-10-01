@@ -6,6 +6,7 @@ using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace MagiRogue.GameSys.Planet.History
 {
@@ -35,13 +36,27 @@ namespace MagiRogue.GameSys.Planet.History
 
         public void Act()
         {
+            // everyone trains theirs focus!
+            // check if unit has any hardworking bone in it's body or just plain old chance!
+            if (figure.CheckForHardwork() || Mrn.OneIn(3))
+            {
+                figure.TrainAbilityFocus();
+            }
+
             // if from hell!
             if (figure.MythWho != MythWho.None)
             {
                 SimulateMythStuff();
+                return;
             }
+            // do Pet and animals do stuff?
+
             if (figure.CheckForAnyStudious())
+            {
                 LearnNewDiscoveriesKnowToTheSite();
+                return;
+            }
+
             if (figure.CheckForProlificStudious())
             {
                 bool willResearchThisSeason = Mrn.OneIn(3);
@@ -53,12 +68,68 @@ namespace MagiRogue.GameSys.Planet.History
                     {
                         DoSometingReckless();
                     }
+                    return;
                 }
             }
-            // everyone trains theirs focus!
-            // check if unit has any hardworking bone in it's body or just plain old chance!
-            if (figure.CheckForHardwork() || Mrn.OneIn(10))
-                figure.TrainAbilityFocus();
+
+            //romance and interfigure stuff!
+            if (figure.CheckForRomantic())
+            {
+                RomanceSomeoneInsideSameSite();
+            }
+
+            if (figure.CheckForFriendship())
+            {
+                GetANewFriend();
+            }
+
+            // wizardy stuff will be here as well!
+            if (figure.SpecialFlags.Contains(SpecialFlag.MagicUser))
+            {
+                return;
+            }
+        }
+
+        private void GetANewFriend()
+        {
+            Site site = GetFigureStayingSiteIfAny();
+            if (site is not null && !figure.IsMarried())
+            {
+                var peopleInside = GetAllFiguresStayingInSiteIfAny(site.Id);
+                if (peopleInside.Count >= 0)
+                {
+                    var randomPerson = peopleInside.GetRandomItemFromList();
+                    figure.MakeFriend(randomPerson);
+                }
+            }
+        }
+
+        private void RomanceSomeoneInsideSameSite()
+        {
+            Site site = GetFigureStayingSiteIfAny();
+            if (site is not null && !figure.IsMarried())
+            {
+                var peopleInside = GetAllFiguresStayingInSiteIfAny(site.Id);
+                int aceptableDiferenceAge;
+                bool isAdult = figure.Body.GetCurrentAge() >= figure.Body.Anatomy.GetRaceAdulthoodAge();
+                if (isAdult)
+                {
+                    aceptableDiferenceAge = Math.Max(figure.Body.Anatomy.GetRaceAdulthoodAge(),
+                        figure.Body.GetCurrentAge() / 2);
+                }
+                else
+                {
+                    // kids can't marry!
+                    aceptableDiferenceAge = 999;
+                }
+                var peopleInARangeOfAgeCloseAndPredispost = peopleInside.Where(i =>
+                    (i.Body.GetCurrentAge() >= aceptableDiferenceAge) && i.CheckForRomantic()).ToList();
+                if (peopleInARangeOfAgeCloseAndPredispost.Count >= 0)
+                {
+                    var randomPerson = peopleInARangeOfAgeCloseAndPredispost.GetRandomItemFromList();
+                    figure.Marry(randomPerson);
+                }
+            }
         }
 
         private void DoSometingReckless()
@@ -149,6 +220,33 @@ namespace MagiRogue.GameSys.Planet.History
             return site;
         }
 
+        private Site GetFigureStayingSiteIfAny(HistoricalFigure hf)
+        {
+            var currentSite = hf.GetCurrentStayingSiteId();
+            Site site = currentSite.HasValue ? sites.Find(i => i.Id == currentSite.Value) : null;
+            return site;
+        }
+
+        private static bool GetFigureIsStayingOnSiteId(int siteId, HistoricalFigure hf)
+        {
+            var currentSiteId = hf.GetCurrentStayingSiteId();
+            bool isStaying = currentSiteId.HasValue && siteId == currentSiteId.Value;
+            return isStaying;
+        }
+
+        private List<HistoricalFigure> GetAllFiguresStayingInSiteIfAny(int figureSiteId)
+        {
+            var list = new List<HistoricalFigure>();
+            foreach (var item in otherFigures)
+            {
+                if (GetFigureIsStayingOnSiteId(figureSiteId, item))
+                {
+                    list.Add(item);
+                }
+            }
+            return list;
+        }
+
         private void SimulateMythStuff()
         {
             // fuck deities!
@@ -170,7 +268,6 @@ namespace MagiRogue.GameSys.Planet.History
                     DeityChangesCivTendency(CivilizationTendency.Studious);
                 }
             }
-            // wizardy stuff will be here as well!
         }
 
         private void DeityChangesCivTendency(CivilizationTendency tendency)

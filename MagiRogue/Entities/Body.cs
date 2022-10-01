@@ -83,5 +83,10 @@ namespace MagiRogue.Entities
             MaxStamina = Endurance * 100;
             Stamina = MaxStamina;
         }
+
+        public int GetCurrentAge()
+        {
+            return Anatomy.CurrentAge;
+        }
     }
 }

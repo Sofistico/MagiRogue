@@ -472,7 +472,7 @@ namespace MagiRogue.GameSys.Planet.History
             deadThing.AddLegend(new Legend(victim.ToString(), year));
         }
 
-        private void KillIt(int year)
+        public void KillIt(int year)
         {
             YearDeath = year;
             IsAlive = false;
@@ -546,6 +546,46 @@ namespace MagiRogue.GameSys.Planet.History
         public bool CheckForHardwork()
         {
             return GetPersonality().HardWork >= 10 || (GetPersonality().Perseverance >= 10);
+        }
+
+        public void SetStandardRaceFlags()
+        {
+            foreach (var flag in Body.Anatomy.GetRace().Flags)
+            {
+                AddNewFlag(flag);
+            }
+        }
+
+        public void AddNewFlag(SpecialFlag flag)
+        {
+            if (SpecialFlags.Contains(flag))
+                return;
+            SpecialFlags.Add(flag);
+        }
+
+        internal bool CheckForRomantic()
+        {
+            return GetPersonality().Romance >= 0;
+        }
+
+        public bool CheckForFriendship()
+        {
+            return GetPersonality().Friendship >= 0;
+        }
+
+        public void Marry(HistoricalFigure randomPerson)
+        {
+            AddRelatedHf(randomPerson.Id, HfRelationType.Married);
+        }
+
+        public bool IsMarried()
+        {
+            return RelatedHFs.Any(i => i.RelationType is HfRelationType.Married);
+        }
+
+        public void MakeFriend(HistoricalFigure randomPerson)
+        {
+            AddRelatedHf(randomPerson.Id, HfRelationType.Friend);
         }
     }
 }

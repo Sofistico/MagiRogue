@@ -1,4 +1,5 @@
 ﻿using GoRogue.DiceNotation;
+using System.Threading.Channels;
 
 namespace MagiRogue.Utils
 {
@@ -47,6 +48,11 @@ namespace MagiRogue.Utils
         public static bool OneIn(int chance)
         {
             return chance <= 1 || GameLoop.GlobalRand.NextInt(0, chance) == 0;
+        }
+
+        public static bool XinY(int x, int y)
+        {
+            return x <= y || GameLoop.GlobalRand.NextInt(x, y) == x;
         }
     }
 }

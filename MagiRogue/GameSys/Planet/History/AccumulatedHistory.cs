@@ -83,9 +83,22 @@ namespace MagiRogue.GameSys.Planet.History
 
                     season++; // another season passes...
                 }
-
+                AgeEveryone();
                 AllSites.Clear();
                 Year++;
+            }
+        }
+
+        private void AgeEveryone()
+        {
+            foreach (var figure in Figures)
+            {
+                if (figure.Body.Anatomy.CheckIfDiedByAge())
+                {
+                    figure.KillIt(Year);
+                }
+                else
+                    figure.Body.Anatomy.AgeBody();
             }
         }
 
@@ -241,7 +254,7 @@ namespace MagiRogue.GameSys.Planet.History
             site.GenerateMundaneResources();
             site.SimulatePopulationGrowth(tiles[site.WorldPos.X, site.WorldPos.Y]);
             site.SimulateTradeBetweenItsRoads(civ);
-            if (site.CheckIfCurrentLeaderDiedAndRemoveIt(Year))
+            if (site.CheckIfSiteHasCurrentLeaderOrDiedAndRemoveIt(Year))
             {
                 site.AddNewLeader(civ, Year);
             }

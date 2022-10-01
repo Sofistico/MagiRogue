@@ -98,6 +98,11 @@ namespace MagiRogue.GameSys.Planet.History
                     break;
             }
 
+            figure.SpecialFlags.Add(SpecialFlag.MythAge);
+            figure.SpecialFlags.Add(SpecialFlag.Supernatural);
+            figure.SpecialFlags.Add(SpecialFlag.Magical);
+            figure.SpecialFlags.Add(SpecialFlag.Sapient);
+
             return figure;
         }
 
