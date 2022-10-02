@@ -40,6 +40,10 @@ namespace MagiRogue.GameSys.Planet.History
         //public Entity? AssocietedEntity { get; set; }
         public List<CivRelation> RelatedCivs { get; set; } = new();
         public List<SiteRelation> RelatedSites { get; set; } = new();
+
+        /// <summary>
+        /// Should be used by any relation other than familial one, for family you should look for <see cref="FamilyLink"/>
+        /// </summary>
         public List<HfRelation> RelatedHFs { get; set; } = new();
         public List<Discovery> DiscoveriesKnow { get; set; } = new();
         public Body Body { get; set; } = new();
@@ -60,6 +64,12 @@ namespace MagiRogue.GameSys.Planet.History
         /// </summary>
         public bool DoingLongTermActivity { get; set; }
         public AbilityName TrainingFocus { get; private set; }
+        public bool Pregnant { get; private set; }
+
+        /// <summary>
+        /// Family links spans the same instance among many different entities
+        /// </summary>
+        public FamilyLink FamilyLink { get; set; } = new();
 
         #endregion Props
 
@@ -575,17 +585,46 @@ namespace MagiRogue.GameSys.Planet.History
 
         public void Marry(HistoricalFigure randomPerson)
         {
-            AddRelatedHf(randomPerson.Id, HfRelationType.Married);
+            FamilyLink.SetMarriedRelation(this, randomPerson);
         }
 
         public bool IsMarried()
         {
-            return RelatedHFs.Any(i => i.RelationType is HfRelationType.Married);
+            return FamilyLink.GetIfExistsAnyRelationOfType(this, HfRelationType.Married);
         }
 
         public void MakeFriend(HistoricalFigure randomPerson)
         {
             AddRelatedHf(randomPerson.Id, HfRelationType.Friend);
+        }
+
+        public int GetRelatedHfId()
+        {
+            return RelatedHFs.FirstOrDefault(i => i.RelationType is HfRelationType.Married).OtherHfId;
+        }
+
+        public void MakeBabyWith(HistoricalFigure spouse)
+        {
+            int rngChance = Mrn.Normal1D100Dice;
+            if (rngChance >= 90)
+            {
+                if (HFGender is Sex.Female)
+                {
+                    Pregnant = true;
+                }
+                else
+                {
+                    spouse.Pregnant = true;
+                }
+            }
+        }
+
+        public void ConceiveChild(Civilization civBorn, int yearBorn)
+        {
+            Pregnant = false;
+            var hfChild = civBorn.CreateNewHfMemberFromBirth(yearBorn, FamilyLink);
+            // mother child relation
+            FamilyLink.SetMotherChildFatherRelation(this, hfChild);
         }
     }
 }

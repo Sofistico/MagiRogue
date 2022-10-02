@@ -22,6 +22,7 @@ namespace MagiRogue.Data.Enumerators
 
         // unit flag Tbd
         MagicUser,
+        BuiltTower,
 
         // race flags
         Regenerator,

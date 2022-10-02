@@ -43,6 +43,22 @@ namespace MagiRogue.GameSys.Planet.History
                 figure.TrainAbilityFocus();
             }
 
+            //romance and interfigure stuff!
+            if (figure.CheckForRomantic())
+            {
+                RomanceSomeoneInsideSameSite();
+            }
+
+            if (figure.IsMarried())
+            {
+                TryForBaby();
+            }
+
+            if (figure.CheckForFriendship())
+            {
+                GetANewFriend();
+            }
+
             // if from hell!
             if (figure.MythWho != MythWho.None)
             {
@@ -72,22 +88,63 @@ namespace MagiRogue.GameSys.Planet.History
                 }
             }
 
-            //romance and interfigure stuff!
-            if (figure.CheckForRomantic())
-            {
-                RomanceSomeoneInsideSameSite();
-            }
-
-            if (figure.CheckForFriendship())
-            {
-                GetANewFriend();
-            }
-
             // wizardy stuff will be here as well!
             if (figure.SpecialFlags.Contains(SpecialFlag.MagicUser))
             {
+                if (!figure.SpecialFlags.Contains(SpecialFlag.BuiltTower))
+                {
+                    BuildANewTower();
+                }
                 return;
             }
+        }
+
+        private void TryForBaby()
+        {
+            HistoricalFigure spouse = GetSpouse();
+            if (CompatibleGenderForBabies(spouse))
+            {
+                figure.MakeBabyWith(spouse);
+            }
+        }
+
+        private bool CompatibleGenderForBabies(HistoricalFigure spouse)
+        {
+            var allowedGenders = new Sex[]
+            {
+                Sex.Male,
+                Sex.Female
+            };
+            if (allowedGenders.Contains(spouse.HFGender)
+                && allowedGenders.Contains(figure.HFGender))
+            {
+                return spouse.HFGender != figure.HFGender;
+            }
+            return false;
+        }
+
+        private HistoricalFigure GetSpouse()
+        {
+            return otherFigures.FirstOrDefault(i => i.Id == figure.GetRelatedHfId());
+        }
+
+        private void BuildANewTower()
+        {
+            var site = GetCurrentlyStayingSite();
+            if (site is not null)
+            {
+                Point worldPos = site.WorldPos;
+            }
+        }
+
+        private Site GetCurrentlyStayingSite()
+        {
+            int? site = figure.GetCurrentStayingSiteId();
+            if (site.HasValue)
+            {
+                return sites.FirstOrDefault(i => i.Id == site.Value);
+            }
+            return null;
         }
 
         private void GetANewFriend()

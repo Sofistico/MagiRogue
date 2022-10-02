@@ -84,8 +84,19 @@ namespace MagiRogue.GameSys.Planet.History
                     season++; // another season passes...
                 }
                 AgeEveryone();
+                ConceiveAnyChild();
                 AllSites.Clear();
                 Year++;
+            }
+        }
+
+        private void ConceiveAnyChild()
+        {
+            var pregnantFigures = Figures.Where(i => i.Pregnant);
+            foreach (var item in pregnantFigures)
+            {
+                var civ = item.GetRelatedCivFromFigure(RelationType.Member, Civs);
+                item.ConceiveChild(civ, Year);
             }
         }
 

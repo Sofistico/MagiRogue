@@ -161,6 +161,36 @@ namespace MagiRogue.GameSys.Civ
             return figure;
         }
 
+        public HistoricalFigure CreateNewHfMemberFromBirth(int yearBorn, FamilyLink familyLink)
+        {
+            // creating actor
+            string name = Utils.RandomNames.RandomNamesFromLanguage(GetLanguage());
+            Sex sex = PrimaryRace.ReturnRandomSex();
+            List<Legend> legends = new List<Legend>();
+            int age = 0;
+
+            // first legend
+            HistoricalFigure figure = new HistoricalFigure(name, sex, legends,
+                age - yearBorn, null, true, PrimaryRace.Description, PrimaryRace.Id);
+            figure.GenerateRandomPersonality();
+            figure.GenerateRandomSkills();
+            figure.DefineProfession();
+
+            // add to civ
+            figure.AddNewRelationToCiv(Id, RelationType.Member);
+
+            // one in 20 will be an wizard
+            if (Mrn.OneIn(20))
+            {
+                figure.MythWho = MythWho.Wizard;
+                figure.AddNewFlag(SpecialFlag.MagicUser);
+            }
+            figure.SetStandardRaceFlags();
+            figure.FamilyLink = familyLink;
+
+            return figure;
+        }
+
         public void AppointNewNoble(Noble noble,
             HistoricalFigure figureToAdd,
             int yearAdded,

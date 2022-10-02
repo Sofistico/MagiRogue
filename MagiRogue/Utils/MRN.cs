@@ -11,6 +11,8 @@ namespace MagiRogue.Utils
         public static int Exploding2D6Dice => ExplodingDice();
         public static int Normal2D6Dice => Dice.Roll("2d6");
 
+        public static int Normal1D100Dice => Dice.Roll("1d100");
+
         /// <summary>
         /// This uses a similar number
         /// </summary>
