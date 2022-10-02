@@ -12,6 +12,8 @@ namespace MagiRogue.GameSys.Planet.History
 {
     public class HistoryAction
     {
+        #region Properties
+
         private readonly HistoricalFigure figure;
         private readonly int year;
         private readonly List<Civilization> civs;
@@ -19,6 +21,10 @@ namespace MagiRogue.GameSys.Planet.History
         private readonly List<HistoricalFigure> otherFigures;
         private readonly List<Site> sites;
         private readonly AccumulatedHistory history;
+
+        #endregion Properties
+
+        #region Ctor
 
         public HistoryAction(HistoricalFigure historicalFigure,
             int year,
@@ -36,6 +42,10 @@ namespace MagiRogue.GameSys.Planet.History
             this.sites = sites;
             this.history = history;
         }
+
+        #endregion Ctor
+
+        #region Actions
 
         public void Act()
         {
@@ -406,5 +416,7 @@ namespace MagiRogue.GameSys.Planet.History
                 "because it took it's position as the divine ruler of the civilization!");
             figure.AddNewRelationToCiv(civ.Id, RelationType.PatronDeity);
         }
+
+        #endregion Actions
     }
 }
