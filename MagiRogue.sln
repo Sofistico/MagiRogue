@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30611.23
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32922.545
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MagiRogue", "MagiRogue\MagiRogue.csproj", "{07446F58-66E1-4B55-84FB-70C67E6E0BC8}"
 EndProject
@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MagiRogue.Test", "MagiRogue
 	ProjectSection(ProjectDependencies) = postProject
 		{07446F58-66E1-4B55-84FB-70C67E6E0BC8} = {07446F58-66E1-4B55-84FB-70C67E6E0BC8}
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagiRogue.LegendsConsoleViewer", "MagiRogue.LegendsConsoleViewer\MagiRogue.LegendsConsoleViewer.csproj", "{6AA2F259-2D24-4663-B56B-242700954B45}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,6 +26,10 @@ Global
 		{16CADFB2-73B0-4322-B266-0527B9A12B49}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16CADFB2-73B0-4322-B266-0527B9A12B49}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16CADFB2-73B0-4322-B266-0527B9A12B49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AA2F259-2D24-4663-B56B-242700954B45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AA2F259-2D24-4663-B56B-242700954B45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AA2F259-2D24-4663-B56B-242700954B45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AA2F259-2D24-4663-B56B-242700954B45}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

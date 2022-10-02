@@ -163,6 +163,22 @@ namespace MagiRogue.GameSys.Civ
 
         public void CreateNewBuildings()
         {
+            if (SiteType is SiteType.City)
+            {
+                CityBuildings();
+            }
+            if (SiteType is SiteType.Tower)
+            {
+                TowerBuildings();
+            }
+        }
+
+        private void TowerBuildings()
+        {
+        }
+
+        private void CityBuildings()
+        {
             int numberOfNewHouses = Population % 10;
             for (int i = 0; i < numberOfNewHouses; i++)
             {

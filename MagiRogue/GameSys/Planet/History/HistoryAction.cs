@@ -49,6 +49,8 @@ namespace MagiRogue.GameSys.Planet.History
 
         public void Act()
         {
+            #region Non-returning actions
+
             // everyone trains theirs focus!
             // check if unit has any hardworking bone in it's body or just plain old chance!
             if (figure.CheckForHardwork() || Mrn.OneIn(3))
@@ -71,6 +73,10 @@ namespace MagiRogue.GameSys.Planet.History
             {
                 GetANewFriend();
             }
+
+            #endregion Non-returning actions
+
+            #region Returning actions
 
             // if from hell!
             if (figure.MythWho != MythWho.None)
@@ -110,6 +116,8 @@ namespace MagiRogue.GameSys.Planet.History
                 }
                 return;
             }
+
+            #endregion Returning actions
         }
 
         private void TryForBaby()
