@@ -134,22 +134,34 @@ namespace MagiRogue.GameSys.Planet.History
         private void BuildATower()
         {
             int pop = Mrn.Normal2D6Dice;
-            bool colidable = true;
             WorldTile rngTile = new WorldTile();
+            FigureCreatesNewSite(pop, SiteType.Tower, ref rngTile);
+        }
+
+        private void FigureCreatesNewSite(int pop, SiteType siteType, ref WorldTile rngTile)
+        {
+            bool colidable = true;
+
             while (colidable)
             {
                 rngTile = tiles.Transform2DTo1D().GetRandomItemFromList();
                 colidable = !rngTile.Collidable;
             }
-            Site tower = new Site(rngTile.Position, $"Tower of {figure.Name}", pop)
+            Site site = new Site(rngTile.Position, $"Tower of {figure.Name}", pop)
             {
                 SiteLeader = figure,
-                SiteType = SiteType.Tower,
+                SiteType = siteType,
                 DiscoveriesKnow = new List<Discovery>(figure.DiscoveriesKnow),
             };
-            rngTile.SiteInfluence = tower;
-            sites.Add(tower);
-            figure.ChangeLivingSite(tower.Id);
+
+            OnNewSiteCreated(rngTile, site);
+            figure.ChangeLivingSite(site.Id);
+        }
+
+        private void OnNewSiteCreated(WorldTile rngTile, Site site)
+        {
+            rngTile.SiteInfluence = site;
+            sites.Add(site);
         }
 
         private Site GetCurrentlyStayingSite()
