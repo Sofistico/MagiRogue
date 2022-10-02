@@ -48,7 +48,7 @@ namespace MagiRogue.GameSys.Planet.History
         public List<Discovery> DiscoveriesKnow { get; set; } = new();
         public Body Body { get; set; } = new();
         public Mind Mind { get; set; } = new();
-        public Soul Soul { get; set; }
+        public Soul Soul { get; set; } = new();
         public List<SpecialFlag> SpecialFlags { get; set; } = new();
         public List<Noble> NobleTitles { get; set; } = new();
         public ResearchTree ResearchTree { get; set; }
@@ -272,7 +272,7 @@ namespace MagiRogue.GameSys.Planet.History
 
         public void HistoryAct(int year, WorldTile[,] tiles,
             List<Civilization> civs, List<HistoricalFigure> figures, List<Site> sites,
-            AccumulatedHistory accumulatedHistory)
+            AccumulatedHistory accumulatedHistory, List<Item> items)
         {
             // TODO: Calculate the impact of the instantiantion of this object in the future!
             HistoryAction historyAction = new HistoryAction(this,
@@ -281,7 +281,8 @@ namespace MagiRogue.GameSys.Planet.History
                 tiles,
                 figures,
                 sites,
-                accumulatedHistory);
+                accumulatedHistory,
+                items);
             historyAction.Act();
         }
 
@@ -490,7 +491,7 @@ namespace MagiRogue.GameSys.Planet.History
             IsAlive = false;
         }
 
-        internal void CleanupIfNotImportant(int year)
+        public void CleanupIfNotImportant(int year)
         {
             if (YearDeath - year >= 10)
             {
@@ -562,7 +563,7 @@ namespace MagiRogue.GameSys.Planet.History
 
         public void SetStandardRaceFlags()
         {
-            foreach (var flag in Body.Anatomy.GetRace().Flags)
+            foreach (var flag in Body.Anatomy.GetRace()?.Flags)
             {
                 AddNewFlag(flag);
             }

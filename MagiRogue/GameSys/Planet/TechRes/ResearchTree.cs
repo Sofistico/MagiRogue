@@ -80,7 +80,7 @@ namespace MagiRogue.GameSys.Planet.TechRes
         private static bool CheckIfHasAbilityToResearchNode(HistoricalFigure figure, ReserachTreeNode node)
         {
             var abilities = node.GetRequisiteAbilitiesForResearch(figure);
-            return abilities.Count > 0;
+            return abilities is not null && abilities.Count > 0;
         }
 
         private ReserachTreeNode[] GetUnfinishedNodes()

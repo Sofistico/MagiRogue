@@ -241,8 +241,13 @@ namespace MagiRogue.GameSys.Civ
                 MundaneResources -= totalResources;
                 return;
             }
-            Population = (int)MathMagi.Round(Population * result);
-            int totalFoodLost = FoodQuantity % Population;
+            var newPop = Population * result;
+            Population = (int)MathMagi.Round(Population + newPop);
+            int totalFoodLost;
+            if (FoodQuantity != 0)
+                totalFoodLost = Population / FoodQuantity;
+            else
+                totalFoodLost = 0;
             FoodQuantity -= totalFoodLost;
             if (FoodQuantity <= 0)
                 Famine = true;
@@ -252,8 +257,12 @@ namespace MagiRogue.GameSys.Civ
         {
             if (civParent.CivsTradingWith.Count > 0)
             {
-                MundaneResources += (SiteLeader.Mind.GetAbility(AbilityName.Negotiator)
-                    * civParent.CivsTradingWith.Count);
+                int resource = civParent.CivsTradingWith.Count * 5;
+                if (SiteLeader is not null)
+                {
+                    resource *= SiteLeader.Mind.GetAbility(AbilityName.Negotiator);
+                }
+                MundaneResources += resource;
             }
         }
 
@@ -319,7 +328,8 @@ namespace MagiRogue.GameSys.Civ
 
         public void SimulateResearchPropagation(Civilization civ, WorldTile[,] tiles)
         {
-            throw new NotImplementedException();
+            // TODO: Finish this!
+            return;
         }
 
         public void AddLegend(Legend legend)

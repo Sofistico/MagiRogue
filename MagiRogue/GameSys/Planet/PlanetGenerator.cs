@@ -110,7 +110,7 @@ namespace MagiRogue.GameSys.Planet
         /// <param name="width"></param>
         /// <param name="height"></param>
         /// <returns></returns>
-        public PlanetMap CreatePlanet(int width, int height, int nmbCivilizations = 30)
+        public PlanetMap CreatePlanet(int width, int height, int yearsToGenerate = 100, int nmbCivilizations = 30)
         {
             _width = width;
             _height = height;
@@ -143,7 +143,7 @@ namespace MagiRogue.GameSys.Planet
             UpdateBiomeBitmask();
 
             SeedCivilizations();
-            BasicHistory(300);
+            BasicHistory(yearsToGenerate);
 
             // Here will take care of the visualization
             CreateConsole(tiles);

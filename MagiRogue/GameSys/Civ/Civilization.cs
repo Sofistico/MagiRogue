@@ -56,7 +56,9 @@ namespace MagiRogue.GameSys.Civ
         public List<SiteType> PossibleSites { get; set; }
         public Dictionary<string, int> TrackAmountOfNobles { get; set; }
         public List<int> CivsTradingWith { get; private set; }
-        public List<Discovery> Discoveries { get; set; }
+
+        //public List<Discovery> Discoveries { get; set; }
+        public List<Legend> Legends { get; set; }
 
         #endregion Information
 
@@ -72,7 +74,7 @@ namespace MagiRogue.GameSys.Civ
             Relations = new();
             Id = GameLoop.GetCivId();
             CivsTradingWith = new();
-            Discoveries = new();
+            Legends = new();
         }
 
         public void AddSiteToCiv(Site site)
@@ -198,14 +200,17 @@ namespace MagiRogue.GameSys.Civ
         {
             TrackAmountOfNobles ??= new Dictionary<string, int>();
             bool hasAllRequiredsForPos = true;
-            foreach (var flag in noble.RequiredForPos)
+            if (noble.RequiredForPos is not null)
             {
-                if (Enum.TryParse<SpecialFlag>(flag, out var result))
+                foreach (var flag in noble.RequiredForPos)
                 {
-                    if (figureToAdd.SpecialFlags.Contains(result))
-                        continue;
-                    else
-                        hasAllRequiredsForPos = false;
+                    if (Enum.TryParse<SpecialFlag>(flag, out var result))
+                    {
+                        if (figureToAdd.SpecialFlags.Contains(result))
+                            continue;
+                        else
+                            hasAllRequiredsForPos = false;
+                    }
                 }
             }
 
@@ -430,7 +435,7 @@ namespace MagiRogue.GameSys.Civ
             foreach (var civId in CivsTradingWith)
             {
                 Civilization civ = otherCivs.FirstOrDefault(i => i.Id == civId);
-                if (Sites.Any(i => i.Famine))
+                if (civ is not null && Sites.Any(i => i.Famine))
                 {
                     var siteWithMostFood = civ.Sites.MaxBy(i => i.FoodQuantity);
                     int resourceSpent = 100;
@@ -442,6 +447,8 @@ namespace MagiRogue.GameSys.Civ
 
         private int GetPotentialWealthGeneratedFromSimpleTrade(Civilization civ)
         {
+            if (civ is null)
+                return 0;
             return (civ.Sites.Sum(i => i.MundaneResources) / (civ.TotalPopulation))
                 * ((GetRulerNoblePosition().Item2.Mind.GetAbility(AbilityName.Negotiator) + 1 / 100));
         }
@@ -451,12 +458,6 @@ namespace MagiRogue.GameSys.Civ
             siteWithMostFood.FoodQuantity -= resourceSpent;
             siteWithMostFood.MundaneResources += resourceSpent;
             Wealth -= resourceSpent;
-        }
-
-        public void TradeWithOtherCiv(Civilization nextCiv)
-        {
-            // the lazy way!
-            TradeWithOtherCiv(new Civilization[] { nextCiv });
         }
 
         public IEnumerable<Discovery> ListAllKnowDiscoveries()

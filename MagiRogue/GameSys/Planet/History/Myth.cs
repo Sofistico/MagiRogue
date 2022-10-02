@@ -97,7 +97,8 @@ namespace MagiRogue.GameSys.Planet.History
                     figure = null;
                     break;
             }
-
+            if (figure is null)
+                return null;
             figure.SpecialFlags.Add(SpecialFlag.MythAge);
             figure.SpecialFlags.Add(SpecialFlag.Supernatural);
             figure.SpecialFlags.Add(SpecialFlag.Magical);
@@ -125,6 +126,11 @@ namespace MagiRogue.GameSys.Planet.History
         public static MythWhat ToogleFlag(MythWhat a, MythWhat b)
         {
             return a ^ b;
+        }
+
+        public override string ToString()
+        {
+            return $"{MythWho} - {MythAction} - {MythWhat}";
         }
     }
 }

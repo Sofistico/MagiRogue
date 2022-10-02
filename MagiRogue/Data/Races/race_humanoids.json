@@ -33,7 +33,7 @@
     "BroadnessModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "Genders": [ "Male", "Female" ],
     "CreatureClass": [ "Mammal", "General" ],
-    "SpecialFlag": [ "Regenarator", "Sapient", "Diurnal" ]
+    "Flags": [ "Regenerator", "Sapient", "Diurnal" ]
   },
   {
     "Id": "human",
@@ -70,7 +70,7 @@
     "BroadnessModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "Genders": [ "Male", "Female" ],
     "CreatureClass": [ "Mammal", "General" ],
-    "SpecialFlag": [ "Sapient", "Diurnal" ]
+    "Flags": [ "Sapient", "Diurnal" ]
   },
   {
     "Id": "elf",
@@ -105,7 +105,7 @@
     "BroadnessModifier": [ 75, 90, 94, 100, 101, 103, 110 ],
     "Genders": [ "Male", "Female" ],
     "CreatureClass": [ "Mammal", "General" ],
-    "SpecialFlag": [ "Sapient", "Diurnal" ]
+    "Flags": [ "Sapient", "Diurnal" ]
   },
   {
     "Id": "dwarf",
@@ -142,6 +142,6 @@
     "BroadnessModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "Genders": [ "Male", "Female" ],
     "CreatureClass": [ "Mammal", "General" ],
-    "SpecialFlag": [ "Sapient", "Diurnal" ]
+    "Flags": [ "Sapient", "Diurnal" ]
   }
 ]

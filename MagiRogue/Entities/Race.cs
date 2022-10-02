@@ -70,6 +70,7 @@ namespace MagiRogue.Entities
 
         public Race()
         {
+            Flags = new();
         }
 
         public void SetBodyPlan()

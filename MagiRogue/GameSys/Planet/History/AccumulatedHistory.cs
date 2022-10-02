@@ -1,5 +1,6 @@
 ﻿using GoRogue.Pathing;
 using MagiRogue.Data.Enumerators;
+using MagiRogue.Entities;
 using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
@@ -27,6 +28,7 @@ namespace MagiRogue.GameSys.Planet.History
         public List<Civilization> Civs { get; set; }
         public List<Site> AllSites { get; set; } = new();
         public List<Myth> Myths { get; set; } = new();
+        public List<Item> ImportantItems { get; set; } = new();
         public int Year { get; set; }
         public long TicksSinceCreation { get; set; }
 
@@ -129,8 +131,10 @@ namespace MagiRogue.GameSys.Planet.History
 
             foreach (HistoricalFigure figure in Figures)
             {
+                if (figure is null)
+                    continue;
                 if (figure.IsAlive)
-                    figure.HistoryAct(Year, tiles, Civs, Figures, sites, this);
+                    figure.HistoryAct(Year, tiles, Civs, Figures, sites, this, ImportantItems);
                 else
                 {
                     figure.CleanupIfNotImportant(Year);
@@ -167,7 +171,6 @@ namespace MagiRogue.GameSys.Planet.History
                             if (civ[nextCiv.Id].RoadBuilt.HasValue && civ[nextCiv.Id].RoadBuilt.Value)
                             {
                                 civ.AddToTradingList(nextCiv);
-                                civ.TradeWithOtherCiv(nextCiv);
                             }
                         }
 
@@ -176,8 +179,8 @@ namespace MagiRogue.GameSys.Planet.History
                             //do war!
                         }
                     }
+                    civ.TradeWithOtherCiv(otherCivs.ToArray());
                 }
-
                 int totalRevenueYear = 0;
                 if (civ.Wealth > wealthToCreateNewSite)
                     CreateNewSiteIfPossible(tiles, civ);

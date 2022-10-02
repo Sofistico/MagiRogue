@@ -689,5 +689,11 @@ namespace MagiRogue.GameSys.Planet.History
                     break;
             }
         }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder(Happening);
+            return sb.ToString();
+        }
     }
 }

@@ -36,7 +36,7 @@ namespace MagiRogue.GameSys.Planet.History
             foreach (var item in figures)
             {
                 // generate random personality for the various primoridal beings
-                if(item is not null)
+                if (item is not null)
                 {
                     item.GenerateRandomPersonality();
                     item.IsAlive = true;
@@ -46,7 +46,7 @@ namespace MagiRogue.GameSys.Planet.History
             return myths;
         }
 
-        private IEnumerable<Myth> CreateSomeMinorMyths(List<HistoricalFigure> figures,
+        private static IEnumerable<Myth> CreateSomeMinorMyths(List<HistoricalFigure> figures,
             List<Race> races,
             int nmbrOfMythsToCreate)
         {
@@ -74,7 +74,7 @@ namespace MagiRogue.GameSys.Planet.History
             return myths;
         }
 
-        private IEnumerable<Myth> BunchOfMythsInteraction(List<Race> races,
+        private static IEnumerable<Myth> BunchOfMythsInteraction(List<Race> races,
             List<HistoricalFigure> figures, PlanetMap planet, int nmbrOfIterations)
         {
             List<Myth> myths = new();

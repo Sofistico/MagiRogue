@@ -196,13 +196,14 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 ItemDamageType = itemTemplate.DamageType,
                 UseAction = itemTemplate.UseAction,
                 Description = itemTemplate.Description,
-                Traits = itemTemplate.Traits,
                 Qualities = Quality.ReturnQualityList(itemTemplate.Qualities),
                 ItemId = itemTemplate.Id,
                 EquipType = itemTemplate.EquipType,
                 SpeedOfAttack = itemTemplate.SpeedOfAttack,
                 WeaponType = itemTemplate.WeaponType,
             };
+            if (itemTemplate.Traits is not null)
+                item.Traits = itemTemplate.Traits;
             if (itemTemplate.Condition != 100)
             {
                 item.Condition = itemTemplate.Condition;

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using System.Text;
+using MagiRogue.Entities;
 
 namespace MagiRogue.GameSys.Planet.History
 {
@@ -22,6 +23,7 @@ namespace MagiRogue.GameSys.Planet.History
         private readonly List<HistoricalFigure> otherFigures;
         private readonly List<Site> sites;
         private readonly AccumulatedHistory history;
+        private readonly List<Item> items;
 
         #endregion Properties
 
@@ -33,7 +35,8 @@ namespace MagiRogue.GameSys.Planet.History
             WorldTile[,] tiles,
             List<HistoricalFigure> otherFigures,
             List<Site> sites,
-            AccumulatedHistory history)
+            AccumulatedHistory history,
+            List<Entities.Item> items)
         {
             this.figure = historicalFigure;
             this.year = year;
@@ -42,6 +45,7 @@ namespace MagiRogue.GameSys.Planet.History
             this.otherFigures = otherFigures;
             this.sites = sites;
             this.history = history;
+            this.items = items;
         }
 
         #endregion Ctor
