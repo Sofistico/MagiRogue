@@ -1,5 +1,6 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.GameSys.Tiles;
+using MagiRogue.Utils;
 using SadConsole;
 using SadRogue.Primitives;
 using System;
@@ -328,7 +329,7 @@ namespace MagiRogue.GameSys.Planet
             }
         }
 
-        public static void SetCityTiles(int width, int height, WorldTile[,] tiles)
+        public static void SetSiteTiles(int width, int height, WorldTile[,] tiles)
         {
             for (int x = 0; x < width; x++)
             {
@@ -336,11 +337,31 @@ namespace MagiRogue.GameSys.Planet
                 {
                     WorldTile tile = tiles[x, y];
 
-                    if (tile.SiteInfluence is not null)
+                    if (tile.SiteInfluence is null)
+                        continue;
+
+                    if (tile.SiteInfluence.SiteType is SiteType.City)
                     {
                         tile.Glyph = '#';
                         tile.Foreground = Color.White;
                     }
+
+                    if (tile.SiteInfluence.SiteType is SiteType.Camp)
+                    {
+                        tile.Glyph = GlyphHelper.GetGlyph('☼');
+                        tile.Foreground = Color.AnsiYellow;
+                    }
+                    if (tile.SiteInfluence.SiteType is SiteType.Tower)
+                    {
+                        tile.Glyph = GlyphHelper.GetGlyph('T');
+                        tile.Foreground = Color.MediumPurple;
+                    }
+                    if (tile.SiteInfluence.SiteType is SiteType.Dungeon)
+                    {
+                        tile.Glyph = GlyphHelper.GetGlyph('D');
+                        tile.Foreground = Color.MediumPurple;
+                    }
+
                     if (tile.Road != null &&
                         tile.HeightType != HeightType.DeepWater &&
                         tile.HeightType != HeightType.ShallowWater)

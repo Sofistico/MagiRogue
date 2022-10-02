@@ -271,7 +271,8 @@ namespace MagiRogue.GameSys.Planet.History
         }
 
         public void HistoryAct(int year, WorldTile[,] tiles,
-            List<Civilization> civs, List<HistoricalFigure> figures, List<Site> sites)
+            List<Civilization> civs, List<HistoricalFigure> figures, List<Site> sites,
+            AccumulatedHistory accumulatedHistory)
         {
             // TODO: Calculate the impact of the instantiantion of this object in the future!
             HistoryAction historyAction = new HistoryAction(this,
@@ -279,7 +280,8 @@ namespace MagiRogue.GameSys.Planet.History
                 civs,
                 tiles,
                 figures,
-                sites);
+                sites,
+                accumulatedHistory);
             historyAction.Act();
         }
 
@@ -625,6 +627,15 @@ namespace MagiRogue.GameSys.Planet.History
             var hfChild = civBorn.CreateNewHfMemberFromBirth(yearBorn, FamilyLink);
             // mother child relation
             FamilyLink.SetMotherChildFatherRelation(this, hfChild);
+        }
+
+        internal void ChangeLivingSite(int id)
+        {
+            if (RelatedSites.Any(i => i.RelationType is SiteRelationTypes.LivesThere))
+            {
+                var otherSite = RelatedSites.FirstOrDefault(i => i.RelationType is SiteRelationTypes.LivesThere);
+                otherSite.OtherSiteId = id;
+            }
         }
     }
 }

@@ -41,6 +41,7 @@ namespace MagiRogue.GameSys.Civ
 
         public Site()
         {
+            SetId();
         }
 
         public Site(Point pos, string name, int totalPopulation, int? civOwnerIfAny = null)
@@ -49,6 +50,7 @@ namespace MagiRogue.GameSys.Civ
             Name = name;
             Population = totalPopulation;
             CivOwnerIfAny = civOwnerIfAny;
+            SetId();
         }
 
         public void DefineSiteSize()
@@ -156,7 +158,7 @@ namespace MagiRogue.GameSys.Civ
             DefineSiteSize();
         }
 
-        public void SetId()
+        private void SetId()
             => Id = SequentialIdGenerator.SiteId;
 
         public void CreateNewBuildings()

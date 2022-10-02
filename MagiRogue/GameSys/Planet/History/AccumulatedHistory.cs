@@ -130,7 +130,7 @@ namespace MagiRogue.GameSys.Planet.History
             foreach (HistoricalFigure figure in Figures)
             {
                 if (figure.IsAlive)
-                    figure.HistoryAct(Year, tiles, Civs, Figures, sites);
+                    figure.HistoryAct(Year, tiles, Civs, Figures, sites, this);
                 else
                 {
                     figure.CleanupIfNotImportant(Year);
@@ -286,7 +286,6 @@ namespace MagiRogue.GameSys.Planet.History
                     civ.RandomSiteFromLanguageName(),
                     migrants,
                     civ.Id);
-                site.SetId();
                 WorldTile tile = tiles[pos.X, pos.Y];
                 tile.SiteInfluence = site;
                 civ.AddSiteToCiv(site);

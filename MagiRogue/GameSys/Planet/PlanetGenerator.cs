@@ -201,7 +201,6 @@ namespace MagiRogue.GameSys.Planet
                 {
                     MundaneResources = (int)tile.GetResources()
                 };
-                set.SetId();
                 set.DefineSiteSize();
 
                 tile.SiteInfluence = set;
@@ -229,7 +228,7 @@ namespace MagiRogue.GameSys.Planet
             //PlanetGlyphGenerator.GetHeatMap(width, height, tiles);
             //PlanetGlyphGenerator.GetMoistureMap(width, height, tiles);
             PlanetGlyphGenerator.GetBiomeMapTexture(_width, _height, tiles);
-            PlanetGlyphGenerator.SetCityTiles(_width, _height, tiles);
+            PlanetGlyphGenerator.SetSiteTiles(_width, _height, tiles);
 #if DEBUG
             PlanetGlyphGenerator.SetSpecialTiles(_width, _height, tiles);
 #endif

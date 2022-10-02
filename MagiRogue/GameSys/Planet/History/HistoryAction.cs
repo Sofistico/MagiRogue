@@ -18,13 +18,15 @@ namespace MagiRogue.GameSys.Planet.History
         private readonly WorldTile[,] tiles;
         private readonly List<HistoricalFigure> otherFigures;
         private readonly List<Site> sites;
+        private readonly AccumulatedHistory history;
 
         public HistoryAction(HistoricalFigure historicalFigure,
             int year,
             List<Civilization> civs,
             WorldTile[,] tiles,
             List<HistoricalFigure> otherFigures,
-            List<Site> sites)
+            List<Site> sites,
+            AccumulatedHistory history)
         {
             this.figure = historicalFigure;
             this.year = year;
@@ -32,6 +34,7 @@ namespace MagiRogue.GameSys.Planet.History
             this.tiles = tiles;
             this.otherFigures = otherFigures;
             this.sites = sites;
+            this.history = history;
         }
 
         public void Act()
@@ -93,7 +96,7 @@ namespace MagiRogue.GameSys.Planet.History
             {
                 if (!figure.SpecialFlags.Contains(SpecialFlag.BuiltTower))
                 {
-                    BuildANewTower();
+                    BuildATower();
                 }
                 return;
             }
@@ -128,13 +131,25 @@ namespace MagiRogue.GameSys.Planet.History
             return otherFigures.FirstOrDefault(i => i.Id == figure.GetRelatedHfId());
         }
 
-        private void BuildANewTower()
+        private void BuildATower()
         {
-            var site = GetCurrentlyStayingSite();
-            if (site is not null)
+            int pop = Mrn.Normal2D6Dice;
+            bool colidable = true;
+            WorldTile rngTile = new WorldTile();
+            while (colidable)
             {
-                Point worldPos = site.WorldPos;
+                rngTile = tiles.Transform2DTo1D().GetRandomItemFromList();
+                colidable = !rngTile.Collidable;
             }
+            Site tower = new Site(rngTile.Position, $"Tower of {figure.Name}", pop)
+            {
+                SiteLeader = figure,
+                SiteType = SiteType.Tower,
+                DiscoveriesKnow = new List<Discovery>(figure.DiscoveriesKnow),
+            };
+            rngTile.SiteInfluence = tower;
+            sites.Add(tower);
+            figure.ChangeLivingSite(tower.Id);
         }
 
         private Site GetCurrentlyStayingSite()
