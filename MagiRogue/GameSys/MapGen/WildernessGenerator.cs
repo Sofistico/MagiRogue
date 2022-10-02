@@ -341,40 +341,40 @@ namespace MagiRogue.GameSys.MapGen
         {
             if (worldTile.SiteInfluence is not null)
             {
-                CityGenerator city = new();
-                var Site = worldTile.SiteInfluence;
-                if ((int)Site.Size == createdSites)
-                    return (int)Site.Size;
-                switch (Site.Size)
+                SiteGenerator city = new();
+                var site = worldTile.SiteInfluence;
+                if ((int)site.Size == createdSites)
+                    return (int)site.Size;
+                switch (site.Size)
                 {
                     case SiteSize.None:
                         throw new ApplicationException("Room generated was from the default error!");
 
                     case SiteSize.Small:
-                        city.GenerateSmallVillage(completeMap,
+                        city.GenerateSmallSite(completeMap,
                             randNum.NextInt(4, 7),
                             randNum.NextInt(4, 7),
                             randNum.NextInt(8, 12),
-                            Site.Name,
-                            Site.Buildings);
+                            site.Name,
+                            site.Buildings);
                         break;
 
                     case SiteSize.Medium:
-                        city.GenerateMediumTown(completeMap,
+                        city.GenerateMediumSite(completeMap,
                             randNum.NextInt(4, 7),
                             randNum.NextInt(4, 7),
                             randNum.NextInt(8, 12),
-                            Site.Name,
-                            Site.Buildings);
+                            site.Name,
+                            site.Buildings);
                         break;
 
                     case SiteSize.Large:
-                        city.GenerateBigCityFromMapBSP(completeMap,
+                        city.GenerateBigSite(completeMap,
                             randNum.NextInt(17, 30),
                             randNum.NextInt(4, 7),
                             randNum.NextInt(8, 12),
-                            Site.Name,
-                            Site.Buildings);
+                            site.Name,
+                            site.Buildings);
                         break;
 
                     default:

@@ -637,5 +637,12 @@ namespace MagiRogue.GameSys.Planet.History
                 otherSite.OtherSiteId = id;
             }
         }
+
+        public bool CheckForLoneniss()
+        {
+            return GetPersonality().Friendship <= -10
+                || GetPersonality().Tradition <= -10
+                || GetPersonality().Familiy <= -10;
+        }
     }
 }

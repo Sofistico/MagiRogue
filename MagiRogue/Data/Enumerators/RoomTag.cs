@@ -20,6 +20,8 @@ namespace MagiRogue.Data.Enumerators
         GenericWorkshop,
         Dinner,
         DungeonKeeper,
-        Farm
+        Farm,
+        ReserachRoom,
+        EnchantingRoom
     }
 }

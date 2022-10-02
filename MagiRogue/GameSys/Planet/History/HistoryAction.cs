@@ -59,6 +59,11 @@ namespace MagiRogue.GameSys.Planet.History
                 figure.TrainAbilityFocus();
             }
 
+            if (figure.SpecialFlags.Contains(SpecialFlag.MagicUser))
+            {
+                GenerateMagicalResourcesForSite();
+            }
+
             //romance and interfigure stuff!
             if (figure.CheckForRomantic())
             {
@@ -109,16 +114,25 @@ namespace MagiRogue.GameSys.Planet.History
             }
 
             // wizardy stuff will be here as well!
-            if (figure.SpecialFlags.Contains(SpecialFlag.MagicUser))
+            if (figure.SpecialFlags.Contains(SpecialFlag.MagicUser) && figure.CheckForLoneniss())
             {
                 if (!figure.SpecialFlags.Contains(SpecialFlag.BuiltTower))
                 {
                     BuildATower();
+                    return;
                 }
-                return;
             }
 
             #endregion Returning actions
+        }
+
+        private void GenerateMagicalResourcesForSite()
+        {
+            Site site = GetCurrentlyStayingSite();
+            if (site is not null)
+            {
+                site.MagicalResources += 10;
+            }
         }
 
         private void TryForBaby()
@@ -155,6 +169,7 @@ namespace MagiRogue.GameSys.Planet.History
             int pop = Mrn.Normal2D6Dice;
             WorldTile rngTile = new WorldTile();
             FigureCreatesNewSite(pop, SiteType.Tower, ref rngTile);
+            figure.AddNewFlag(SpecialFlag.BuiltTower);
         }
 
         private void FigureCreatesNewSite(int pop, SiteType siteType, ref WorldTile rngTile)

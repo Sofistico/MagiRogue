@@ -9,14 +9,15 @@ using System.Linq;
 
 namespace MagiRogue.GameSys.MapGen
 {
-    public class CityGenerator : MapGenerator
+    public class SiteGenerator : MapGenerator
     {
-        public CityGenerator() : base()
+        // TODO: Refactor this class!
+        public SiteGenerator() : base()
         {
             // empty one
         }
 
-        public void GenerateBigCityFromMapBSP(Map map, int maxRooms,
+        public void GenerateBigSite(Map map, int maxRooms,
             int minRoomSize, int maxRoomSize, string townName, List<Room> buildings)
         {
             _map = map;
@@ -66,7 +67,7 @@ namespace MagiRogue.GameSys.MapGen
             throw new NotImplementedException("GET TO WORK YOU LAZY HORSE 🐎!");
         }
 
-        public void GenerateSmallVillage(Map map, int maxRooms,
+        public void GenerateSmallSite(Map map, int maxRooms,
             int minRoomSize, int maxRoomSize, string townName, List<Room> buildings)
         {
             _map = map;
@@ -81,7 +82,7 @@ namespace MagiRogue.GameSys.MapGen
             buildings.AddRange(rooms);
         }
 
-        public void GenerateMediumTown(Map map, int maxRooms,
+        public void GenerateMediumSite(Map map, int maxRooms,
             int minRoomSize, int maxRoomSize, string townName, List<Room> buildings)
         {
             _map = map;

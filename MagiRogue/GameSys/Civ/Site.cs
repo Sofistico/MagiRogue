@@ -16,6 +16,7 @@ namespace MagiRogue.GameSys.Civ
     {
         #region props
 
+        public int Id { get; set; }
         public Point WorldPos { get; set; }
         public SiteType SiteType { get; set; }
         public string Name { get; set; }
@@ -33,9 +34,8 @@ namespace MagiRogue.GameSys.Civ
         public List<Road> Roads { get; set; } = new();
         public HistoricalFigure SiteLeader { get; set; }
         public List<Legend> SiteLegends { get; set; } = new();
-
         public List<Discovery> DiscoveriesKnow { get; set; } = new();
-        public int Id { get; set; }
+        public bool FitRoomsCloseTogether { get; set; }
 
         #endregion props
 
@@ -175,9 +175,27 @@ namespace MagiRogue.GameSys.Civ
 
         private void TowerBuildings()
         {
+            NewHousesForSite();
+
+            int numberOfNewTowerRooms = MagicalResources % 10;
+            RoomTag[] tags = new RoomTag[]
+            {
+                RoomTag.Blacksmith,
+                RoomTag.Temple,
+                RoomTag.Alchemist,
+                RoomTag.Farm,
+                RoomTag.ReserachRoom,
+                RoomTag.EnchantingRoom,
+            };
+            for (int i = 0; i < numberOfNewTowerRooms; i++)
+            {
+                Room business = new Room(tags.GetRandomItemFromList());
+                Buildings.Add(business);
+            }
+            FitRoomsCloseTogether = true;
         }
 
-        private void CityBuildings()
+        private void NewHousesForSite()
         {
             int numberOfNewHouses = Population % 10;
             for (int i = 0; i < numberOfNewHouses; i++)
@@ -185,21 +203,26 @@ namespace MagiRogue.GameSys.Civ
                 Room house = new Room(RoomTag.House);
                 Buildings.Add(house);
             }
+        }
+
+        private void CityBuildings()
+        {
+            NewHousesForSite();
+            RoomTag[] tags = new RoomTag[]
+            {
+                RoomTag.Inn,
+                RoomTag.Temple,
+                RoomTag.Blacksmith,
+                RoomTag.Clothier,
+                RoomTag.Alchemist,
+                RoomTag.Hovel,
+                RoomTag.GenericWorkshop,
+                RoomTag.Farm
+            };
 
             int numberOfNewBusiness = MundaneResources % 10;
             for (int i = 0; i < numberOfNewBusiness; i++)
             {
-                List<RoomTag> tags = new List<RoomTag>()
-                {
-                    RoomTag.Inn,
-                    RoomTag.Temple,
-                    RoomTag.Blacksmith,
-                    RoomTag.Clothier,
-                    RoomTag.Alchemist,
-                    RoomTag.Hovel,
-                    RoomTag.GenericWorkshop,
-                    RoomTag.Farm
-                };
                 Room business = new Room(tags.GetRandomItemFromList());
                 Buildings.Add(business);
             }
