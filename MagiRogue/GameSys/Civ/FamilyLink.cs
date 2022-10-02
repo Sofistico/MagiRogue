@@ -3,6 +3,7 @@ using MagiRogue.GameSys.Planet.History;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace MagiRogue.GameSys.Civ
 {
@@ -34,13 +35,25 @@ namespace MagiRogue.GameSys.Civ
             return Family.Any(i => i.Figure.Id == figure.Id && i.Relation == toFind);
         }
 
-        public void SetMotherChildFatherRelation(HistoricalFigure hfMother, HistoricalFigure hfChild)
+        public void SetMotherChildFatherRelation(HistoricalFigure hfMother,
+            HistoricalFigure hfChild,
+            int year)
         {
             AddToFamilyLink(hfMother, HfRelationType.OwnChild, hfChild);
             AddToFamilyLink(hfChild, HfRelationType.Mother, hfMother);
             // find the fahter
             var hfFather = GetOtherFamilyNodesByRelations(hfMother, HfRelationType.Married);
             AddToFamilyLink(hfFather[0].Figure, HfRelationType.OwnChild, hfChild);
+
+            // gods why
+            StringBuilder bb = new StringBuilder($"In the year {year} ");
+            string father = $"{bb} the {hfFather[0].Figure.Name} had a child with {hfMother.Name}, the child was named {hfChild.Name}";
+            string mother = $"{bb} the  {hfMother.Name} conceived a child with {hfFather[0].Figure.Name}, the child was named {hfChild.Name}";
+            string child = $"{bb} was born child of {hfMother.Name} and {hfFather[0].Figure.Name}";
+
+            hfChild.AddLegend(child, year);
+            hfFather[0].Figure.AddLegend(father, year);
+            hfMother.AddLegend(mother, year);
         }
 
         public void SetMarriedRelation(HistoricalFigure hfOne, HistoricalFigure hfTwo)

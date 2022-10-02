@@ -626,7 +626,7 @@ namespace MagiRogue.GameSys.Planet.History
             Pregnant = false;
             var hfChild = civBorn.CreateNewHfMemberFromBirth(yearBorn, FamilyLink);
             // mother child relation
-            FamilyLink.SetMotherChildFatherRelation(this, hfChild);
+            FamilyLink.SetMotherChildFatherRelation(this, hfChild, yearBorn);
         }
 
         internal void ChangeLivingSite(int id)

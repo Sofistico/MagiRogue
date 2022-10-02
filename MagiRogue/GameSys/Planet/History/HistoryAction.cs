@@ -7,6 +7,7 @@ using MagiRogue.Utils;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Text;
 
 namespace MagiRogue.GameSys.Planet.History
 {
@@ -230,6 +231,10 @@ namespace MagiRogue.GameSys.Planet.History
                 {
                     var randomPerson = peopleInARangeOfAgeCloseAndPredispost.GetRandomItemFromList();
                     figure.Marry(randomPerson);
+                    StringBuilder anotherB = new StringBuilder($"In the year {year}, the {figure.Name} married with {randomPerson.Name}");
+                    StringBuilder bb = new StringBuilder($"In the year {year}, the {randomPerson.Name} married with {figure.Name}");
+                    figure.AddLegend(anotherB.ToString(), year);
+                    randomPerson.AddLegend(bb.ToString(), year);
                 }
             }
         }
