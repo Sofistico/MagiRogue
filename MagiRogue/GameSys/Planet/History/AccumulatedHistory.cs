@@ -106,7 +106,8 @@ namespace MagiRogue.GameSys.Planet.History
         {
             foreach (var figure in Figures)
             {
-                if (figure.Body.Anatomy.CheckIfDiedByAge())
+                if (figure.Body.Anatomy.CheckIfDiedByAge()
+                    && (figure.MythWho is MythWho.None || figure.MythWho is MythWho.Wizard))
                 {
                     figure.KillIt(Year, $"In the year {Year}, the {figure.Name} died of old age.");
                 }
@@ -211,10 +212,10 @@ namespace MagiRogue.GameSys.Planet.History
 
         private static void ClaimNewTerritory(Civilization civ)
         {
-            IEnumerable<Point> getAllPointsInsideTerritory = civ.Territory.ToList();
+            // this here is making the Civilization grab infinite tiles
             IEnumerable<Point> getAllPointsSites = civ.Sites.Select(o => o.WorldPos);
             int propagationLimit = 10; // the civ can only extend by ten tiles from each site!
-            foreach (Point point in getAllPointsInsideTerritory)
+            foreach (Point point in getAllPointsSites)
             {
                 var directions = point.GetDirectionPoints();
                 for (int i = 0; i < directions.Length; i++)
@@ -224,7 +225,7 @@ namespace MagiRogue.GameSys.Planet.History
 
                     if (distance <= propagationLimit)
                     {
-                        civ.Territory.Add(direction);
+                        civ.AddToTerritory(direction);
                     }
                 }
             }

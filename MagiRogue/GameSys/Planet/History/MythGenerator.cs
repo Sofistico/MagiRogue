@@ -158,12 +158,12 @@ namespace MagiRogue.GameSys.Planet.History
                     createdRace = true;
                     break;
 
-                case MythWho.Gods:
-                    precursorFigure = new HistoricalFigure(
-                       $"The pantheon of {RandomNames.RandomNamesFromRandomLanguage()}",
-                       "The pantheon of the creator gods");
+                //case MythWho.Gods:
+                //    precursorFigure = new HistoricalFigure(
+                //       $"The pantheon of {RandomNames.RandomNamesFromRandomLanguage()}",
+                //       "The pantheon of the creator gods");
 
-                    break;
+                //    break;
 
                 case MythWho.Egg:
                     precursorFigure = new HistoricalFigure($"{adjectives.GetRandomItemFromList()}",
@@ -204,10 +204,10 @@ namespace MagiRogue.GameSys.Planet.History
 
                     break;
 
-                case MythWho.Titans:
-                    precursorFigure = new HistoricalFigure($"{adjectives.GetRandomItemFromList()} Primordial",
-                        "a Primordial titans");
-                    break;
+                //case MythWho.Titans:
+                //    precursorFigure = new HistoricalFigure($"{adjectives.GetRandomItemFromList()} Primordial",
+                //        "a Primordial titans");
+                //    break;
 
                 case MythWho.Precursors:
                     precursorFigure = new HistoricalFigure($"{adjectives.GetRandomItemFromList()}",
@@ -226,10 +226,10 @@ namespace MagiRogue.GameSys.Planet.History
                         "Group of angels");
                     break;
 
-                case MythWho.Spirits:
-                    precursorFigure = new HistoricalFigure($"a {adjectives.GetRandomItemFromList()} group of",
-                        "Group of spirits");
-                    break;
+                //case MythWho.Spirits:
+                //    precursorFigure = new HistoricalFigure($"a {adjectives.GetRandomItemFromList()} group of",
+                //        "Group of spirits");
+                //    break;
 
                 case MythWho.Forces:
                     precursorFigure = new HistoricalFigure($"a {adjectives.GetRandomItemFromList()} group of",

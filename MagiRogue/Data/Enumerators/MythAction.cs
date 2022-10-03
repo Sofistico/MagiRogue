@@ -10,7 +10,6 @@ namespace MagiRogue.Data.Enumerators
     {
         None,
         God,
-        Gods,
         Egg,
         Chaos,
         Chance,
@@ -18,11 +17,9 @@ namespace MagiRogue.Data.Enumerators
         Wizard,
         Magic,
         Titan,
-        Titans,
         Precursors,
         Demons,
         Angels,
-        Spirits,
         Forces
     }
 

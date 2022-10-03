@@ -376,6 +376,8 @@ namespace MagiRogue.GameSys.Civ
         {
             if (!Relations.Any(i => i.CivRelatedId.Equals(civ.Id) && i.Relation == relationType))
                 Relations.Add(new CivRelation(Id, civ.Id, relationType));
+            else
+                Relations.FirstOrDefault(i => i.CivRelatedId == civ.Id).Relation = relationType;
         }
 
         public bool CheckIfCivIsDead()
@@ -472,6 +474,13 @@ namespace MagiRogue.GameSys.Civ
                     yield return site.DiscoveriesKnow[x];
                 }
             }
+        }
+
+        public void AddToTerritory(Point direction)
+        {
+            if (Territory.Contains(direction))
+                return;
+            Territory.Add(direction);
         }
     }
 }
