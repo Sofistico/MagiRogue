@@ -27,7 +27,7 @@ namespace MagiRogue.GameSys.Civ
         public string Name { get; set; }
         public Race PrimaryRace { get; set; }
         public List<string> OtherRaces { get; set; }
-        public int TotalPopulation { get => Sites.Select(i => i.Population).Sum(); }
+        public int TotalPopulation { get => Sites.Select(i => i.Population.Sum(i => i.TotalPopulation)).Sum(); }
         public CivilizationTendency Tendency { get; set; }
         public List<Point> Territory { get; set; }
         public List<Site> Sites { get; set; }

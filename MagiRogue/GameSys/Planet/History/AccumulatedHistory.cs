@@ -108,7 +108,7 @@ namespace MagiRogue.GameSys.Planet.History
             {
                 if (figure.Body.Anatomy.CheckIfDiedByAge())
                 {
-                    figure.KillIt(Year);
+                    figure.KillIt(Year, $"In the year {Year}, the {figure.Name} died of old age.");
                 }
                 else
                     figure.Body.Anatomy.AgeBody();
@@ -281,13 +281,14 @@ namespace MagiRogue.GameSys.Planet.History
             Site site;
             if (civ is not null)
             {
-                int migrants = GameLoop.GlobalRand.NextInt(10, 100);
+                int migrantsNmbr = GameLoop.GlobalRand.NextInt(10, 100);
                 Site rngSettl = civ.Sites.GetRandomItemFromList();
-                rngSettl.Population -= migrants;
+                var pop = rngSettl.Population.GetRandomItemFromList();
+                pop.TotalPopulation -= migrantsNmbr;
                 Point pos = rngSettl.WorldPos.GetPointNextTo();
                 site = new Site(pos,
                     civ.RandomSiteFromLanguageName(),
-                    migrants,
+                    new Population(migrantsNmbr, pop.PopulationRaceId),
                     civ.Id);
                 WorldTile tile = tiles[pos.X, pos.Y];
                 tile.SiteInfluence = site;

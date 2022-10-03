@@ -176,7 +176,7 @@ namespace MagiRogue.GameSys.Planet.History
             figure.AddNewFlag(SpecialFlag.BuiltTower);
         }
 
-        private void FigureCreatesNewSite(int pop, SiteType siteType, ref WorldTile rngTile)
+        private void FigureCreatesNewSite(int popNmbr, SiteType siteType, ref WorldTile rngTile)
         {
             bool colidable = true;
 
@@ -185,7 +185,8 @@ namespace MagiRogue.GameSys.Planet.History
                 rngTile = tiles.Transform2DTo1D().GetRandomItemFromList();
                 colidable = !rngTile.Collidable;
             }
-            Site site = new Site(rngTile.Position, $"Tower of {figure.Name}", pop)
+
+            Site site = new Site(rngTile.Position, $"Tower of {figure.Name}", new Population(popNmbr, figure.Body.Anatomy.Race))
             {
                 SiteLeader = figure,
                 SiteType = siteType,

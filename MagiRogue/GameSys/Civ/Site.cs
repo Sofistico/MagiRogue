@@ -23,7 +23,7 @@ namespace MagiRogue.GameSys.Civ
         public SiteSize Size { get; set; }
         public int MilitaryStrenght { get; set; }
         public int MagicStrenght { get; set; }
-        public int Population { get; set; }
+        public List<Population> Population { get; set; }
         public int MundaneResources { get; set; }
         public int FoodQuantity { get; set; }
         public int MagicalResources { get; set; }
@@ -44,11 +44,12 @@ namespace MagiRogue.GameSys.Civ
             SetId();
         }
 
-        public Site(Point pos, string name, int totalPopulation, int? civOwnerIfAny = null)
+        public Site(Point pos, string name, Population totalPopulation, int? civOwnerIfAny = null)
         {
             WorldPos = pos;
             Name = name;
-            Population = totalPopulation;
+            Population = new List<Population>();
+            Population.Add(totalPopulation);
             CivOwnerIfAny = civOwnerIfAny;
             SetId();
         }
@@ -58,7 +59,7 @@ namespace MagiRogue.GameSys.Civ
             int usableResources = 0;
             try
             {
-                usableResources = Population / MundaneResources;
+                usableResources = ReturnPopNumber() / MundaneResources;
             }
             catch (DivideByZeroException)
             {
@@ -78,9 +79,14 @@ namespace MagiRogue.GameSys.Civ
             }
         }
 
+        public int ReturnPopNumber()
+        {
+            return Population.Select(i => i.TotalPopulation).Sum();
+        }
+
         public void GenerateMundaneResources()
         {
-            if (Population <= 0)
+            if (ReturnPopNumber() <= 0)
             {
                 MundaneResources = 0;
                 Dead = true;
@@ -197,7 +203,7 @@ namespace MagiRogue.GameSys.Civ
 
         private void NewHousesForSite()
         {
-            int numberOfNewHouses = Population % 10;
+            int numberOfNewHouses = ReturnPopNumber() % 10;
             for (int i = 0; i < numberOfNewHouses; i++)
             {
                 Room house = new Room(RoomTag.House);
@@ -236,16 +242,23 @@ namespace MagiRogue.GameSys.Civ
 
             if (Famine)
             {
-                Population = (int)MathMagi.Round(Population / result);
+                foreach (var pop in Population)
+                {
+                    pop.TotalPopulation = (int)MathMagi.Round(pop.TotalPopulation / result);
+                }
                 totalResources -= (int)result;
                 MundaneResources -= totalResources;
                 return;
             }
-            var newPop = Population * result;
-            Population = (int)MathMagi.Round(Population + newPop);
+
+            foreach (var pop in Population)
+            {
+                var newPop = pop.TotalPopulation * result;
+                pop.TotalPopulation = (int)MathMagi.Round(pop.TotalPopulation + newPop);
+            }
             int totalFoodLost;
             if (FoodQuantity != 0)
-                totalFoodLost = Population / FoodQuantity;
+                totalFoodLost = ReturnPopNumber() / FoodQuantity;
             else
                 totalFoodLost = 0;
             FoodQuantity -= totalFoodLost;

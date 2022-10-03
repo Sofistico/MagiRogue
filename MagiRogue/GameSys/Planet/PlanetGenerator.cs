@@ -195,9 +195,8 @@ namespace MagiRogue.GameSys.Planet
 
                 int rng = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(50, 500);
 
-                int pop = (int)(rng * ((int)tile.HeightType * tile.MoistureValue + 1));
-
-                Site set = new Site(tile.Position, civ.RandomSiteFromLanguageName(), pop)
+                int popNmr = (int)(rng * ((int)tile.HeightType * tile.MoistureValue + 1));
+                Site set = new Site(tile.Position, civ.RandomSiteFromLanguageName(), new Population(popNmr, civ.PrimaryRace.Id))
                 {
                     MundaneResources = (int)tile.GetResources()
                 };

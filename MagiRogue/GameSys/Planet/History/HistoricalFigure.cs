@@ -485,10 +485,14 @@ namespace MagiRogue.GameSys.Planet.History
             deadThing.AddLegend(new Legend(victim.ToString(), year));
         }
 
-        public void KillIt(int year)
+        public void KillIt(int year, string whyItDied = "")
         {
             YearDeath = year;
             IsAlive = false;
+            if (!string.IsNullOrEmpty(whyItDied))
+            {
+                AddLegend(whyItDied, year);
+            }
         }
 
         public void CleanupIfNotImportant(int year)
