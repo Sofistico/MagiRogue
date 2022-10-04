@@ -114,6 +114,27 @@ namespace MagiRogue.GameSys.Planet.History
                 else
                     figure.Body.Anatomy.AgeBody();
             }
+
+            AgePopsFromSite();
+        }
+
+        private void AgePopsFromSite()
+        {
+            foreach (Population pop in from site in AllSites
+                                       where site.Population.Count > 0
+                                       from pop in site.Population
+                                       select pop)
+            {
+                pop.TotalPopulation = pop.TotalPopulation <= 0 ? 0 : pop.TotalPopulation;
+                if (pop.PopulationRace().LifespanMin.HasValue
+                    && Year >= pop.PopulationRace().LifespanMin.Value)
+                {
+                    // about 2.5% die to age every year,
+                    // if they age that is and the year is greater than the LifespanMin!
+                    double totalLost = (double)((double)pop.TotalPopulation / (double)0.025);
+                    pop.TotalPopulation = (int)MathMagi.Round(pop.TotalPopulation - totalLost);
+                }
+            }
         }
 
         private void NoCivSitesSimulation(WorldTile[,] tiles)
@@ -213,7 +234,7 @@ namespace MagiRogue.GameSys.Planet.History
             }
         }
 
-        private static void ClaimNewTerritory(Civilization civ)
+        private void ClaimNewTerritory(Civilization civ)
         {
             // this here is making the Civilization grab infinite tiles
             IEnumerable<Point> getAllPointsSites = civ.Sites.Select(o => o.WorldPos);
@@ -225,7 +246,8 @@ namespace MagiRogue.GameSys.Planet.History
                 {
                     Point direction = directions[i];
                     (Point closestPoint, double distance) = direction.FindClosestAndReturnDistance(getAllPointsSites);
-
+                    if (planetData.AssocietatedMap.CheckForIndexOutOfBounds(direction))
+                        continue;
                     if (distance <= propagationLimit)
                     {
                         civ.AddToTerritory(direction);

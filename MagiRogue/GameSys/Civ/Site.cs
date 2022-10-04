@@ -28,7 +28,7 @@ namespace MagiRogue.GameSys.Civ
         public int FoodQuantity { get; set; }
         public int MagicalResources { get; set; }
         public List<Room> Buildings { get; set; } = new();
-        public bool Dead { get; set; }
+        public bool Dead { get => ReturnPopNumber() <= 0; }
         public int? CivOwnerIfAny { get; set; }
         public bool Famine { get; set; }
         public List<Road> Roads { get; set; } = new();
@@ -88,10 +88,9 @@ namespace MagiRogue.GameSys.Civ
         {
             if (ReturnPopNumber() <= 0)
             {
-                MundaneResources = 0;
-                Dead = true;
                 return;
             }
+
             foreach (var room in Buildings)
             {
                 switch (room.Tag)
@@ -160,8 +159,8 @@ namespace MagiRogue.GameSys.Civ
                 if (FoodQuantity >= 0)
                     Famine = false;
             }
-            MundaneResources += 20;
-            FoodQuantity += 20;
+            MundaneResources += 5;
+            FoodQuantity += 5;
             // if the resources got big enough, update!
             DefineSiteSize();
         }
@@ -171,6 +170,9 @@ namespace MagiRogue.GameSys.Civ
 
         public void CreateNewBuildings()
         {
+            // max of 50 buildings
+            if (Buildings.Count >= 50)
+                return;
             if (SiteType is SiteType.City)
             {
                 CityBuildings();
@@ -238,6 +240,11 @@ namespace MagiRogue.GameSys.Civ
 
         public void SimulatePopulationGrowth(WorldTile tile)
         {
+            if (ReturnPopNumber() <= 0)
+            {
+                return;
+            }
+
             int populationCarryngCapacity = (int)tile.BiomeType;
             int totalResources = MundaneResources / 100;
             double result = (double)((double)populationCarryngCapacity / (double)((1 + totalResources))) / 100;
@@ -261,7 +268,7 @@ namespace MagiRogue.GameSys.Civ
             }
             int totalFoodLost;
             if (FoodQuantity != 0)
-                totalFoodLost = (ReturnPopNumber() * 10) / FoodQuantity;
+                totalFoodLost = (ReturnPopNumber() * 25) / FoodQuantity;
             else
                 totalFoodLost = 0;
             FoodQuantity -= totalFoodLost;

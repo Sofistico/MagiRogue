@@ -392,10 +392,6 @@ namespace MagiRogue.GameSys.Civ
             {
                 Dead = true;
                 Territory.Clear();
-                foreach (var site in Sites)
-                {
-                    site.Dead = true;
-                }
                 Relations.Clear();
 
                 return true;
@@ -443,7 +439,7 @@ namespace MagiRogue.GameSys.Civ
                 if (civ is not null && Sites.Any(i => i.Famine))
                 {
                     var siteWithMostFood = civ.Sites.MaxBy(i => i.FoodQuantity);
-                    int resourceSpent = 100;
+                    int resourceSpent = 350;
                     BuyFoodFromOtherCivSite(siteWithMostFood, resourceSpent);
                 }
                 int wealthGeneratedByTrade = GetPotentialWealthGeneratedFromSimpleTrade(civ);
@@ -454,8 +450,12 @@ namespace MagiRogue.GameSys.Civ
         {
             if (civ is null)
                 return 0;
-            return (civ.Sites.Sum(i => i.MundaneResources) / (civ.TotalPopulation))
-                * ((GetRulerNoblePosition().Item2.Mind.GetAbility(AbilityName.Negotiator) + 1 / 100));
+            var civSum = civ.Sites.Sum(i => i.MundaneResources) % (civ.TotalPopulation);
+            var hf = GetRulerNoblePosition().Item2;
+            double nobleInfluence = 1;
+            if(hf is not null)
+                nobleInfluence = (hf.Mind.GetAbility(AbilityName.Negotiator) + 1 / 100);
+            return (int)((civSum) * (nobleInfluence));
         }
 
         private void BuyFoodFromOtherCivSite(Site? siteWithMostFood, int resourceSpent)
