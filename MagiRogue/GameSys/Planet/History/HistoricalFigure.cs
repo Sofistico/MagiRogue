@@ -649,5 +649,14 @@ namespace MagiRogue.GameSys.Planet.History
                 || GetPersonality().Tradition <= -10
                 || GetPersonality().Familiy <= -10;
         }
+
+        public HistoricalFigure GetChildrenIfAny()
+        {
+            var family = FamilyLink.GetOtherFamilyNodesByRelations(this, HfRelationType.OwnChild);
+            if (family.Length <= 0)
+                return null;
+            var child = family.GetRandomItemFromList();
+            return child.Figure;
+        }
     }
 }

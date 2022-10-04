@@ -20,7 +20,7 @@
         "ImportanceLevel": 3,
         "Precedence": 1,
         "Responsabilities": [ "Rule", "LeadArmy" ],
-        "Suscession": {
+        "Succession": {
           "Type": "Heir"
         }
       },
@@ -36,7 +36,7 @@
         "ImportanceLevel": 1,
         "Precedence": 10,
         "Responsabilities": [ "Administrate" ],
-        "Suscession": {
+        "Succession": {
           "Type": "Appoint",
           "AppointedBy": "monarch"
         }
@@ -53,7 +53,7 @@
         "ImportanceLevel": 2,
         "Precedence": 5,
         "Responsabilities": [ "LeadArmy", "AdviseRuler" ],
-        "Suscession": {
+        "Succession": {
           "Type": "Appoint",
           "AppointedBy": "monarch"
         }
@@ -70,7 +70,7 @@
         "ImportanceLevel": 1,
         "Precedence": 6,
         "Responsabilities": [ "LeadArmy" ],
-        "Suscession": {
+        "Succession": {
           "Type": "Appoint",
           "AppointedBy": "general"
         }
@@ -88,7 +88,7 @@
         "Precedence": 10,
         "RequiredForPos": [ "MagicUser" ],
         "Responsabilities": [ "CourtMage" ],
-        "Suscession": {
+        "Succession": {
           "Type": "Appoint",
           "AppointedBy": "monarch"
         }
@@ -116,7 +116,7 @@
         "ImportanceLevel": 3,
         "Precedence": 1,
         "Responsabilities": [ "Rule", "LeadArmy" ],
-        "Suscession": {
+        "Succession": {
           "Type": "Heir"
         }
       },
@@ -132,7 +132,7 @@
         "ImportanceLevel": 1,
         "Precedence": 10,
         "Responsabilities": [ "Administrate" ],
-        "Suscession": {
+        "Succession": {
           "Type": "Appoint",
           "AppointedBy": "monarch"
         }
@@ -150,7 +150,7 @@
         "Precedence": 10,
         "RequiredForPos": [ "MagicUser" ],
         "Responsabilities": [ "CourtMage" ],
-        "Suscession": {
+        "Succession": {
           "Type": "Appoint",
           "AppointedBy": "monarch"
         }
@@ -167,7 +167,7 @@
         "ImportanceLevel": 2,
         "Precedence": 5,
         "Responsabilities": [ "LeadArmy", "AdviseRuler" ],
-        "Suscession": {
+        "Succession": {
           "Type": "Appoint",
           "AppointedBy": "monarch"
         }
@@ -184,7 +184,7 @@
         "ImportanceLevel": 1,
         "Precedence": 6,
         "Responsabilities": [ "LeadArmy" ],
-        "Suscession": {
+        "Succession": {
           "Type": "Appoint",
           "AppointedBy": "general"
         }
@@ -212,7 +212,7 @@
         "ImportanceLevel": 3,
         "Precedence": 1,
         "Responsabilities": [ "Rule", "LeadArmy", "MagicStuff" ],
-        "Suscession": {
+        "Succession": {
           "Type": "Heir"
         }
       },
@@ -229,7 +229,7 @@
         "Precedence": 10,
         "RequiredForPos": [ "MagicUser" ],
         "Responsabilities": [ "CourtMage" ],
-        "Suscession": {
+        "Succession": {
           "Type": "Appoint",
           "AppointedBy": "druid"
         }
@@ -246,7 +246,7 @@
         "ImportanceLevel": 1,
         "Precedence": 10,
         "Responsabilities": [ "Administrate" ],
-        "Suscession": {
+        "Succession": {
           "Type": "Appoint",
           "AppointedBy": "druid"
         }
@@ -263,7 +263,7 @@
         "ImportanceLevel": 2,
         "Precedence": 5,
         "Responsabilities": [ "LeadArmy", "AdviseRuler" ],
-        "Suscession": {
+        "Succession": {
           "Type": "Appoint",
           "AppointedBy": "druid"
         }
@@ -280,7 +280,7 @@
         "ImportanceLevel": 1,
         "Precedence": 6,
         "Responsabilities": [ "LeadArmy" ],
-        "Suscession": {
+        "Succession": {
           "Type": "Appoint",
           "AppointedBy": "general"
         }

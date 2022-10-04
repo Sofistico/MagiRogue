@@ -81,7 +81,7 @@ namespace MagiRogue.GameSys.Civ
         {
             Sites.Add(site);
             site.CivOwnerIfAny = Id;
-            Territory.Add(site.WorldPos);
+            AddToTerritory(site.WorldPos);
             Wealth += site.MundaneResources;
         }
 
@@ -90,6 +90,7 @@ namespace MagiRogue.GameSys.Civ
             // 10% of the population is in anyway important... sadly
             int nmbrOfImportant = (int)(TotalPopulation * 0.08);
             int numberOfNobles = (int)(nmbrOfImportant * 0.1);
+            numberOfNobles = numberOfNobles <= 0 ? 1 : numberOfNobles;
             bool rulerChoosen = false;
             for (int i = 0; i < nmbrOfImportant; i++)
             {
@@ -215,6 +216,8 @@ namespace MagiRogue.GameSys.Civ
             }
 
             if (!hasAllRequiredsForPos)
+                return;
+            if (figureToAdd is null)
                 return;
 
             figureToAdd.AddNewNoblePos(noble,
@@ -481,6 +484,33 @@ namespace MagiRogue.GameSys.Civ
             if (Territory.Contains(direction))
                 return;
             Territory.Add(direction);
+        }
+
+        public bool CheckIfRulerIsDeadAndReplace(int year)
+        {
+            var (noble, hf) = GetRulerNoblePosition();
+            if (hf is null)
+            {
+                var newHf = CreateNewHfMemberFromPop(year);
+                AppointNewNoble(noble, newHf, year);
+                return true;
+            }
+            if (!hf.IsAlive)
+            {
+                if (noble.Succession is not null && noble.Succession.Type is SucessionType.Heir)
+                {
+                    var children = hf.GetChildrenIfAny();
+                    AppointNewNoble(noble, children, year, $" inheirted from {hf.Name}");
+                    return true;
+                }
+                else
+                {
+                    var rngGuy = ImportantPeople.GetRandomItemFromList();
+                    AppointNewNoble(noble, rngGuy, year, $" was appointed by {rngGuy.PronoumPossesive()} group as {noble.Name}");
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

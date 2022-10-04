@@ -20,7 +20,7 @@ namespace MagiRogue.GameSys.Planet.History
         #region Consts
 
         private const int wealthToCreateRoad = 100;
-        private const int wealthToCreateNewSite = 1000;
+        private const int wealthToCreateNewSite = 250;
 
         #endregion Consts
 
@@ -153,9 +153,12 @@ namespace MagiRogue.GameSys.Planet.History
                 if (civ.CheckIfCivIsDead())
                     continue;
 
+                if (civ.CheckIfRulerIsDeadAndReplace(Year))
+                    civ.Legends.Add(new Legend($"The {civ.Name} got a new leader!", Year));
+
                 if (i < Civs.Count - 1)
                 {
-                    var otherCivs = Civs.Where(i => i != civ);
+                    var otherCivs = Civs.Where(i => i != civ && !i.Dead);
                     // interaction between civs here!
                     foreach (Civilization nextCiv in otherCivs)
                     {
@@ -166,7 +169,7 @@ namespace MagiRogue.GameSys.Planet.History
                         }
 
                         if (civ[nextCiv.Id].Relation is not RelationType.Enemy
-                            || civ[nextCiv.Id].Relation is RelationType.War)
+                            || civ[nextCiv.Id].Relation is not RelationType.War)
                         {
                             // trade of various types!!
                             if (civ[nextCiv.Id].RoadBuilt.HasValue && civ[nextCiv.Id].RoadBuilt.Value)
@@ -315,6 +318,7 @@ namespace MagiRogue.GameSys.Planet.History
             if (civ.Relations.Any(i => i.CivRelatedId.Equals(friend.Id)
                 && i.Relation is RelationType.Friendly && i.RoadBuilt.HasValue))
                 return false;
+
             if (civ[friend.Id].RoadBuilt.HasValue)
                 return false;
 

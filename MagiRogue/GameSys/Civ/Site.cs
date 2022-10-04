@@ -148,7 +148,7 @@ namespace MagiRogue.GameSys.Civ
 
                     case RoomTag.Farm:
                         MundaneResources += 10;
-                        FoodQuantity += 50;
+                        FoodQuantity += 100;
                         break;
 
                     default:
@@ -160,6 +160,8 @@ namespace MagiRogue.GameSys.Civ
                 if (FoodQuantity >= 0)
                     Famine = false;
             }
+            MundaneResources += 20;
+            FoodQuantity += 20;
             // if the resources got big enough, update!
             DefineSiteSize();
         }
@@ -245,6 +247,7 @@ namespace MagiRogue.GameSys.Civ
                 foreach (var pop in Population)
                 {
                     pop.TotalPopulation = (int)MathMagi.Round(pop.TotalPopulation / result);
+                    pop.TotalPopulation = pop.TotalPopulation >= 0 ? pop.TotalPopulation : 0;
                 }
                 totalResources -= (int)result;
                 MundaneResources -= totalResources;
@@ -258,7 +261,7 @@ namespace MagiRogue.GameSys.Civ
             }
             int totalFoodLost;
             if (FoodQuantity != 0)
-                totalFoodLost = ReturnPopNumber() / FoodQuantity;
+                totalFoodLost = (ReturnPopNumber() * 10) / FoodQuantity;
             else
                 totalFoodLost = 0;
             FoodQuantity -= totalFoodLost;

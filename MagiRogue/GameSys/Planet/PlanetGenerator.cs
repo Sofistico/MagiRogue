@@ -193,17 +193,20 @@ namespace MagiRogue.GameSys.Planet
                 else
                     continue;
 
-                int rng = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(50, 500);
+                int rng = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(25, 50);
 
                 int popNmr = (int)(rng * ((int)tile.HeightType * tile.MoistureValue + 1));
                 Site set = new Site(tile.Position, civ.RandomSiteFromLanguageName(), new Population(popNmr, civ.PrimaryRace.Id))
                 {
                     MundaneResources = (int)tile.GetResources()
                 };
+                set.Buildings.Add(new Room(RoomTag.Farm));
                 set.DefineSiteSize();
 
                 tile.SiteInfluence = set;
                 civ.AddSiteToCiv(set);
+                if (civ.Territory.Count <= 0)
+                    throw new Exception();
 
                 if (currentCivCount < maxCivsWorld)
                 {
