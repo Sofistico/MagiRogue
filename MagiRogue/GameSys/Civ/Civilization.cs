@@ -450,10 +450,10 @@ namespace MagiRogue.GameSys.Civ
         {
             if (civ is null)
                 return 0;
-            var civSum = civ.Sites.Sum(i => i.MundaneResources) % (civ.TotalPopulation);
+            var civSum = civ.Sites.Where(i => !i.Dead).Sum(i => i.MundaneResources) % (civ.TotalPopulation);
             var hf = GetRulerNoblePosition().Item2;
             double nobleInfluence = 1;
-            if(hf is not null)
+            if (hf is not null)
                 nobleInfluence = (hf.Mind.GetAbility(AbilityName.Negotiator) + 1 / 100);
             return (int)((civSum) * (nobleInfluence));
         }

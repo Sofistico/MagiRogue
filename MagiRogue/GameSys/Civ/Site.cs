@@ -227,15 +227,32 @@ namespace MagiRogue.GameSys.Civ
                 RoomTag.Alchemist,
                 RoomTag.Hovel,
                 RoomTag.GenericWorkshop,
-                RoomTag.Farm
+                RoomTag.Farm,
             };
 
             int numberOfNewBusiness = MundaneResources % 10;
             for (int i = 0; i < numberOfNewBusiness; i++)
             {
                 Room business = new Room(tags.GetRandomItemFromList());
+                MundaneResources -= 15;
                 Buildings.Add(business);
             }
+            if (TotalFoodProductionPerYear() <= TotalFoodProductionNeededToNotStarve())
+            {
+                Room business = new Room(RoomTag.Farm);
+                MundaneResources -= 15;
+                Buildings.Add(business);
+            }
+        }
+
+        private int TotalFoodProductionPerYear()
+        {
+            int foodProduct = 0;
+            foreach (var item in Buildings.Where(i => i.Tag is RoomTag.Farm))
+            {
+                foodProduct += 100;
+            }
+            return foodProduct;
         }
 
         public void SimulatePopulationGrowth(WorldTile tile)
@@ -268,7 +285,7 @@ namespace MagiRogue.GameSys.Civ
             }
             int totalFoodLost;
             if (FoodQuantity != 0)
-                totalFoodLost = (ReturnPopNumber() * 25) / FoodQuantity;
+                totalFoodLost = ReturnPopNumber() / 2;
             else
                 totalFoodLost = 0;
             FoodQuantity -= totalFoodLost;
@@ -358,6 +375,11 @@ namespace MagiRogue.GameSys.Civ
         public void AddLegend(Legend legend)
         {
             SiteLegends.Add(legend);
+        }
+
+        public int TotalFoodProductionNeededToNotStarve()
+        {
+            return ReturnPopNumber() / 2;
         }
     }
 }
