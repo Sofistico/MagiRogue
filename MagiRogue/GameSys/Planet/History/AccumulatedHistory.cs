@@ -264,8 +264,7 @@ namespace MagiRogue.GameSys.Planet.History
                 Figures.AddRange(civ.SetupInitialHistoricalFigures());
                 foreach (var nextCiv in otherCivs)
                 {
-                    Distance dis = new Distance();
-                    var distance = dis.Calculate(civ.Sites[0].WorldPos,
+                    var distance = Distance.Euclidean.Calculate(civ.Sites[0].WorldPos,
                         nextCiv.Sites[0].WorldPos);
                     if (distance <= 10)
                     {

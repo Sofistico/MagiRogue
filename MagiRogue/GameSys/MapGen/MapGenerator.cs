@@ -718,7 +718,8 @@ namespace MagiRogue.GameSys.MapGen
             _map = map;
             List<Room> rooms = new List<Room>();
 
-            Rectangle rec = new Rectangle(map.Positions().First(), map.Positions().Last());
+            Rectangle rec = new Rectangle(map.Positions().ToEnumerable().First(),
+                map.Positions().ToEnumerable().Last());
 
             List<Rectangle> mapPartitions =
                 BisectRecursiveRandom(rec, roomMaxSize).ToList();

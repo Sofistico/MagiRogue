@@ -103,7 +103,7 @@ namespace MagiRogue.GameSys
 
         public Point[] PositionsRoom()
         {
-            var points = RoomRectangle.Positions().ToList();
+            var points = RoomRectangle.Positions().ToEnumerable().ToList();
             foreach (var item in ReturnRecPerimiter())
             {
                 if (!points.Contains(item))
