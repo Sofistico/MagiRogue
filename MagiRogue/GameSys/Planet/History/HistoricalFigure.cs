@@ -306,8 +306,14 @@ namespace MagiRogue.GameSys.Planet.History
 
         public string GetRaceName()
         {
-            Race race = Data.DataManager.QueryRaceInData(Body.Anatomy.Race);
+            Race race = Body.Anatomy.GetRace();
             return race.RaceName;
+        }
+
+        public Race GetRace()
+        {
+            Race race = Body.Anatomy.GetRace();
+            return race;
         }
 
         internal void RemovePreviousSiteRelation(int id)
@@ -657,6 +663,11 @@ namespace MagiRogue.GameSys.Planet.History
                 return null;
             var child = family.GetRandomItemFromList();
             return child.Figure;
+        }
+
+        public bool HasPotentialToBeAWizard()
+        {
+            return Soul.MaxMana > GetRace().GetAverageRacialManaRange();
         }
     }
 }

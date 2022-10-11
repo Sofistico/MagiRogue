@@ -153,12 +153,8 @@ namespace MagiRogue.GameSys.Civ
             // add to civ
             figure.AddNewRelationToCiv(Id, RelationType.Member);
 
-            // one in 20 will be an wizard
-            if (Mrn.OneIn(20))
-            {
-                figure.MythWho = MythWho.Wizard;
-                figure.AddNewFlag(SpecialFlag.MagicUser);
-            }
+            CheckIfGeneratedFigureIsWizard(PrimaryRace, figure);
+
             figure.SetStandardRaceFlags();
 
             return figure;
@@ -183,10 +179,21 @@ namespace MagiRogue.GameSys.Civ
             // add to civ
             figure.AddNewRelationToCiv(Id, RelationType.Member);
 
+            CheckIfGeneratedFigureIsWizard(figureRace, figure);
+
+            figure.SetStandardRaceFlags();
+            figure.FamilyLink = familyLink;
+
+            return figure;
+        }
+
+        private void CheckIfGeneratedFigureIsWizard(Race figureRace, HistoricalFigure figure)
+        {
             // if the creature has more than the average mana for it's race, then the figure will be a wizard!
-            // plus a one in 10 chance of it becoming a wizard, to simulate that it will still need to learn!
+            // plus a one in 10 chance of it becoming a wizard, to simulate that it will still need to learn
+            // and have the willingness to try to learn!
             // with studious civs making it a 1 in 5 chance that the figure will be a wizard
-            if (figure.Soul.MaxMana > figureRace.GetAverageRacialManaRange())
+            if (figure.HasPotentialToBeAWizard())
             {
                 bool chance;
                 if (Tendency is CivilizationTendency.Studious)
@@ -199,10 +206,6 @@ namespace MagiRogue.GameSys.Civ
                     figure.AddNewFlag(SpecialFlag.MagicUser);
                 }
             }
-            figure.SetStandardRaceFlags();
-            figure.FamilyLink = familyLink;
-
-            return figure;
         }
 
         public void AppointNewNoble(Noble noble,

@@ -15,7 +15,7 @@ namespace MagiRogue.GameSys.Planet.History
     public sealed class AccumulatedHistory
     {
         private PlanetMap planetData;
-        private List<Site> sitesWithNoCiv = new();
+        private readonly List<Site> sitesWithNoCiv = new();
 
         #region Consts
 
