@@ -50,6 +50,17 @@ namespace MagiRogue.Entities
         public int BaseWillPower { get; set; }
         public int BasePrecision { get; set; }
         public double BaseManaRegen { get; set; }
+
+        /// <summary>
+        /// The max mana that the species can be born with
+        /// </summary>
+        public int MaxManaRange { get; set; } = 5;
+
+        /// <summary>
+        /// The max mana that the species can be born with
+        /// </summary>
+        public int MinManaRange { get; set; } = 1;
+
         public int BaseMagicResistance { get; set; }
 
         // Body
@@ -186,5 +197,8 @@ namespace MagiRogue.Entities
         }
 
         public bool CanRegenarate() => Flags.Contains(SpecialFlag.Regenerator);
+
+        public int GetAverageRacialManaRange()
+            => (MaxManaRange + MinManaRange) / 2;
     }
 }

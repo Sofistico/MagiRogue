@@ -170,11 +170,12 @@ namespace MagiRogue.GameSys.Civ
             string name = Utils.RandomNames.RandomNamesFromLanguage(GetLanguage());
             Sex sex = PrimaryRace.ReturnRandomSex();
             List<Legend> legends = new List<Legend>();
+            Race figureRace = PrimaryRace;
             int age = 0;
 
             // first legend
             HistoricalFigure figure = new HistoricalFigure(name, sex, legends,
-                age - yearBorn, null, true, PrimaryRace.Description, PrimaryRace.Id);
+                age - yearBorn, null, true, figureRace.Description, figureRace.Id);
             figure.GenerateRandomPersonality();
             figure.GenerateRandomSkills();
             figure.DefineProfession();
@@ -182,11 +183,21 @@ namespace MagiRogue.GameSys.Civ
             // add to civ
             figure.AddNewRelationToCiv(Id, RelationType.Member);
 
-            // one in 20 will be an wizard
-            if (Mrn.OneIn(20))
+            // if the creature has more than the average mana for it's race, then the figure will be a wizard!
+            // plus a one in 10 chance of it becoming a wizard, to simulate that it will still need to learn!
+            // with studious civs making it a 1 in 5 chance that the figure will be a wizard
+            if (figure.Soul.MaxMana > figureRace.GetAverageRacialManaRange())
             {
-                figure.MythWho = MythWho.Wizard;
-                figure.AddNewFlag(SpecialFlag.MagicUser);
+                bool chance;
+                if (Tendency is CivilizationTendency.Studious)
+                    chance = Mrn.OneIn(5);
+                else
+                    chance = Mrn.OneIn(10);
+                if (chance)
+                {
+                    figure.MythWho = MythWho.Wizard;
+                    figure.AddNewFlag(SpecialFlag.MagicUser);
+                }
             }
             figure.SetStandardRaceFlags();
             figure.FamilyLink = familyLink;

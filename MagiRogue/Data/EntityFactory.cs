@@ -89,7 +89,7 @@ namespace MagiRogue.Data
             mind.Precision += scenario.Precision;
 
             soul.WillPower += scenario.WillPower;
-            soul.InitialMana(mind.Inteligence);
+            soul.InitialMana(mind.Inteligence, actor.GetAnatomy().GetRace());
             soul.MaxMana += scenario.MaxMana;
             soul.CurrentMana = soul.MaxMana;
             soul.BaseManaRegen += scenario.ManaRegen;
@@ -140,7 +140,7 @@ namespace MagiRogue.Data
 
             soul.WillPower = race.BaseWillPower;
             soul.BaseManaRegen = race.BaseManaRegen;
-            soul.InitialMana(mind.Inteligence);
+            soul.InitialMana(mind.Inteligence, race);
 
             magic.InnateMagicResistance = race.BaseMagicResistance;
         }
