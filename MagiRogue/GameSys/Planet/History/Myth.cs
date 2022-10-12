@@ -59,29 +59,32 @@ namespace MagiRogue.GameSys.Planet.History
                         race.ReturnRandomSex(),
                         race.Id,
                         true);
+                    figure.MythWho = MythWho.God;
                     break;
 
                 case MythWhat.Demons:
                     figure = new HistoricalFigure($"A group of {creatorName} demons",
                         $"A group of demons created by {creatorName}");
+                    figure.MythWho = MythWho.Demons;
                     break;
 
                 case MythWhat.Angels:
                     figure = new HistoricalFigure($"A group of {creatorName} demons",
                         $"A group of demons created by {creatorName}");
+                    figure.MythWho = MythWho.Angels;
 
                     break;
 
-                case MythWhat.Spirits:
-                    figure = new HistoricalFigure($"A group of {creatorName} demons",
-                        $"A group of demons created by {creatorName}");
-
-                    break;
+                //case MythWhat.Spirits:
+                //    figure = new HistoricalFigure($"A group of {creatorName} demons",
+                //        $"A group of demons created by {creatorName}");
+                //    figure.MythWho = MythWho.Spi;
+                //    break;
 
                 case MythWhat.Forces:
                     figure = new HistoricalFigure($"A group of {creatorName} demons",
                         $"A group of demons created by {creatorName}");
-
+                    figure.MythWho = MythWho.Forces;
                     break;
 
                 case MythWhat.Individual:
@@ -91,6 +94,7 @@ namespace MagiRogue.GameSys.Planet.History
                         race.ReturnRandomSex(),
                         race.Id,
                         true);
+                    figure.MythWho = MythWho.God;
                     break;
 
                 default:
@@ -103,7 +107,6 @@ namespace MagiRogue.GameSys.Planet.History
             figure.SpecialFlags.Add(SpecialFlag.Supernatural);
             figure.SpecialFlags.Add(SpecialFlag.Magical);
             figure.SpecialFlags.Add(SpecialFlag.Sapient);
-
             return figure;
         }
 
