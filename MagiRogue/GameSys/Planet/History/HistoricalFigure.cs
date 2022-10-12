@@ -349,6 +349,8 @@ namespace MagiRogue.GameSys.Planet.History
 
         public Civilization GetRelatedCivFromFigure(RelationType relationType, List<Civilization> civs)
         {
+            if (RelatedCivs.Count <= 0)
+                return null;
             int civId = RelatedCivs.Find(i => i.Relation == relationType).CivRelatedId;
             Civilization civ = civs.Find(i => i.Id == civId);
             return civ;

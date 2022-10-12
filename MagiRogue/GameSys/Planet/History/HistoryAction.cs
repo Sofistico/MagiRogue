@@ -400,6 +400,8 @@ namespace MagiRogue.GameSys.Planet.History
         private void DeityChangesCivTendency(CivilizationTendency tendency)
         {
             Civilization civ = figure.GetRelatedCivFromFigure(RelationType.PatronDeity, civs);
+            if (civ is null || civ.Tendency == tendency)
+                return;
             civ.Tendency = tendency;
 
             figure.AddLegend($"The {figure.Name} changed {figure.PronoumPossesive()} followers to {figure.PronoumPossesive()} own agressive tendencies!", year);

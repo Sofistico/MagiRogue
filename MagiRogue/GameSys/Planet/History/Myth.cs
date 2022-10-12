@@ -47,10 +47,10 @@ namespace MagiRogue.GameSys.Planet.History
 
             switch (MythWhat)
             {
-                case MythWhat.Race:
-                    // in the future, dynamic races will be here!
-                    figure = null;
-                    break;
+                //case MythWhat.Race:
+                //    // in the future, dynamic races will be here!
+                //    //figure = null;
+                //    break;
 
                 case MythWhat.God:
                     race = DataManager.RandomRace();
@@ -107,6 +107,7 @@ namespace MagiRogue.GameSys.Planet.History
             figure.SpecialFlags.Add(SpecialFlag.Supernatural);
             figure.SpecialFlags.Add(SpecialFlag.Magical);
             figure.SpecialFlags.Add(SpecialFlag.Sapient);
+            figure.GetAnatomy().Ages = false;
             return figure;
         }
 

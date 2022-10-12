@@ -311,6 +311,16 @@ namespace MagiRogue.GameSys.Planet.History
                 var pop = rngSettl.Population.GetRandomItemFromList();
                 pop.TotalPopulation -= migrantsNmbr;
                 Point pos = rngSettl.WorldPos.GetPointNextTo();
+                if (planetData.AssocietatedMap.CheckForIndexOutOfBounds(pos))
+                {
+                    int tries = 300;
+                    int currentRty = 0;
+                    while (planetData.AssocietatedMap.CheckForIndexOutOfBounds(pos) || currentRty <= tries)
+                    {
+                        pos = rngSettl.WorldPos.GetPointNextTo();
+                        currentRty++;
+                    }
+                }
                 site = new Site(pos,
                     civ.RandomSiteFromLanguageName(),
                     new Population(migrantsNmbr, pop.PopulationRaceId),

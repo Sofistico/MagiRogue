@@ -65,6 +65,8 @@ namespace MagiRogue.GameSys.Planet.History
                 HistoricalFigure createdFigure = newMyth.CreateFigureFromMyth(figures[0].Name);
                 if (createdFigure is not null)
                 {
+                    createdFigure.GetAnatomy().Ages = false;
+
                     figures[0].AddRelatedHf(createdFigure.Id, HfRelationType.Creator);
                     figures.Add(createdFigure);
                     myths.Add(newMyth);
@@ -105,7 +107,8 @@ namespace MagiRogue.GameSys.Planet.History
                         || myth.MythWhat is MythWhat.Region))
                     {
                         HistoricalFigure createdFigure = myth.CreateFigureFromMyth(figure.Name);
-                        figures.Add(createdFigure);
+                        if (createdFigure is not null)
+                            figures.Add(createdFigure);
                     }
 
                     Legend legend = Legend.CreateLegendFromMyth(myth, ref figure, worldName: planet.Name);
@@ -251,6 +254,7 @@ namespace MagiRogue.GameSys.Planet.History
             Legend legend = Legend.CreateLegendFromMyth(myth, ref precursorFigure, worldName: planetName);
             precursorFigure.AddLegend(legend);
             precursorFigure.MythWho = precursor;
+            precursorFigure.GetAnatomy().Ages = false;
 
             if (createdRace)
             {
