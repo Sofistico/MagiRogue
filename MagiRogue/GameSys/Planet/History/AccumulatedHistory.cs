@@ -289,7 +289,6 @@ namespace MagiRogue.GameSys.Planet.History
             int totalRevenueYear, Site site, Civilization civ)
         {
             site.CreateNewBuildings();
-            totalRevenueYear += site.MundaneResources;
             site.GenerateMundaneResources();
             site.SimulatePopulationGrowth(tiles[site.WorldPos.X, site.WorldPos.Y]);
             site.SimulateTradeBetweenItsRoads(civ);
@@ -298,6 +297,7 @@ namespace MagiRogue.GameSys.Planet.History
                 site.AddNewLeader(civ, Year);
             }
             site.SimulateResearchPropagation(civ, tiles);
+            totalRevenueYear += site.MundaneResources;
             return totalRevenueYear;
         }
 
@@ -360,6 +360,7 @@ namespace MagiRogue.GameSys.Planet.History
             var closestCityTile = tiles[friendTerr.X, friendTerr.Y];
             FindPathToCityAndCreateRoad(tile, closestCityTile);
             civ[friend.Id].RoadBuilt = true;
+            civ[friend.Id].Relation = RelationType.Neutral;
             return true;
         }
 

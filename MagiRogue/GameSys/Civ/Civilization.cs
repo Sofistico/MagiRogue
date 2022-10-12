@@ -135,27 +135,15 @@ namespace MagiRogue.GameSys.Civ
             return ImportantPeople;
         }
 
-        public HistoricalFigure CreateNewHfMemberFromPop(int yearBorn)
+        public HistoricalFigure CreateNewHfMemberFromPop(int currentYear)
         {
             // creating actor
-            string name = Utils.RandomNames.RandomNamesFromLanguage(GetLanguage());
-            Sex sex = PrimaryRace.ReturnRandomSex();
-            List<Legend> legends = new List<Legend>();
+            BasicHFSetup(out string name, out Sex sex, out List<Legend> legends, out Race figureRace);
             int age = PrimaryRace.GetAgeFromAgeGroup(AgeGroup.Adult);
 
             // first legend
-            HistoricalFigure figure = new HistoricalFigure(name, sex, legends,
-                age - yearBorn, null, true, PrimaryRace.Description, PrimaryRace.Id);
-            figure.GenerateRandomPersonality();
-            figure.GenerateRandomSkills();
-            figure.DefineProfession();
-
-            // add to civ
-            figure.AddNewRelationToCiv(Id, RelationType.Member);
-
-            CheckIfGeneratedFigureIsWizard(PrimaryRace, figure);
-
-            figure.SetStandardRaceFlags();
+            HistoricalFigure figure = CreateHfFigure(currentYear, name, sex, legends, figureRace, age);
+            FigureSetupPosCtor(figureRace, figure);
 
             return figure;
         }
@@ -163,28 +151,50 @@ namespace MagiRogue.GameSys.Civ
         public HistoricalFigure CreateNewHfMemberFromBirth(int yearBorn, FamilyLink familyLink)
         {
             // creating actor
-            string name = Utils.RandomNames.RandomNamesFromLanguage(GetLanguage());
-            Sex sex = PrimaryRace.ReturnRandomSex();
-            List<Legend> legends = new List<Legend>();
-            Race figureRace = PrimaryRace;
-            int age = 0;
+            BasicHFSetup(out string name, out Sex sex, out List<Legend> legends, out Race figureRace);
+            HistoricalFigure figure = CreateHfFigure(yearBorn, name, sex, legends, figureRace);
+            FigureSetupPosCtor(figureRace, figure);
+            figure.FamilyLink = familyLink;
 
+            return figure;
+        }
+
+        private static HistoricalFigure CreateHfFigure(int yearBorn,
+            string name,
+            Sex sex,
+            List<Legend> legends,
+            Race figureRace,
+            int age = 0)
+        {
             // first legend
             HistoricalFigure figure = new HistoricalFigure(name, sex, legends,
                 age - yearBorn, null, true, figureRace.Description, figureRace.Id);
+            return figure;
+        }
+
+        private void FigureSetupPosCtor(Race figureRace, HistoricalFigure figure)
+        {
             figure.GenerateRandomPersonality();
-            figure.GenerateRandomSkills();
-            figure.DefineProfession();
+            if (!figure.CheckIfIsChildOrBabyForRace())
+            {
+                figure.GenerateRandomSkills();
+                figure.DefineProfession();
+            }
 
             // add to civ
             figure.AddNewRelationToCiv(Id, RelationType.Member);
 
             CheckIfGeneratedFigureIsWizard(figureRace, figure);
 
-            figure.SetStandardRaceFlags();
-            figure.FamilyLink = familyLink;
+            figure.SetBasicAnatomy();
+        }
 
-            return figure;
+        private void BasicHFSetup(out string name, out Sex sex, out List<Legend> legends, out Race figureRace)
+        {
+            name = Utils.RandomNames.RandomNamesFromLanguage(GetLanguage());
+            sex = PrimaryRace.ReturnRandomSex();
+            legends = new List<Legend>();
+            figureRace = PrimaryRace;
         }
 
         private void CheckIfGeneratedFigureIsWizard(Race figureRace, HistoricalFigure figure)
@@ -410,6 +420,9 @@ namespace MagiRogue.GameSys.Civ
 
                 return true;
             }
+            if (Sites.All(i => i.Dead))
+                Dead = true;
+
             return false;
         }
 
@@ -464,6 +477,8 @@ namespace MagiRogue.GameSys.Civ
         {
             if (civ is null)
                 return 0;
+            if (civ.CheckIfCivIsDead())
+                return 0;
             var civSum = civ.Sites.Where(i => !i.Dead).Sum(i => i.MundaneResources) % (civ.TotalPopulation);
             var hf = GetRulerNoblePosition().Item2;
             double nobleInfluence = 1;
@@ -513,8 +528,9 @@ namespace MagiRogue.GameSys.Civ
             {
                 if (noble.Succession is not null && noble.Succession.Type is SucessionType.Heir)
                 {
-                    var children = hf.GetChildrenIfAny();
-                    AppointNewNoble(noble, children, year, $" inheirted from {hf.Name}");
+                    var inheirt = hf.GetChildrenIfAny();
+                    inheirt ??= CreateNewHfMemberFromPop(year);
+                    AppointNewNoble(noble, inheirt, year, $" inheirted from {hf.Name}");
                     return true;
                 }
                 else

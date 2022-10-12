@@ -9,7 +9,7 @@ namespace MagiRogue.Components
         public const string Tag = "illusion";
 
         public readonly ColoredGlyph FakeAppearence;
-        public IObjectWithComponents Parent { get; set; }
+        public IObjectWithComponents? Parent { get; set; }
 
         public IllusionComponent(TileBase fakeAppearence)
         {

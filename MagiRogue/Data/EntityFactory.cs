@@ -126,7 +126,7 @@ namespace MagiRogue.Data
             int finalVolume = actor.Broadness > 0 ? MathMagi.CalculateVolumeWithModifier(actor.Broadness, volumeWithLenght) : volumeWithLenght;
 
             race.SetBodyPlan();
-            anatomy.Setup(actor, race, actorAge, sex, finalVolume);
+            anatomy.FullSetup(actor, race, actorAge, sex, finalVolume);
 
             body.Endurance = race.BaseEndurance;
             body.Strength = race.BaseStrenght;

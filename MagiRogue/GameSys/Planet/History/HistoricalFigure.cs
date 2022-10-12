@@ -92,7 +92,8 @@ namespace MagiRogue.GameSys.Planet.History
             IsAlive = isAlive;
             Description = desc;
             Id = GameLoop.GetHfId();
-            Body.Anatomy.Race = raceId;
+            GetAnatomy().Race = raceId;
+            GetAnatomy().Gender = hFGender;
         }
 
         public HistoricalFigure(string name, string description, Sex hFGender, string race, bool isAlive)
@@ -100,7 +101,8 @@ namespace MagiRogue.GameSys.Planet.History
             Name = name;
             Description = description;
             HFGender = hFGender;
-            Body.Anatomy.Race = race;
+            GetAnatomy().Race = race;
+            GetAnatomy().Gender = hFGender;
             IsAlive = isAlive;
             Id = GameLoop.GetHfId();
         }
@@ -506,7 +508,15 @@ namespace MagiRogue.GameSys.Planet.History
             if (YearDeath - year >= 10)
             {
                 ForceCleanupResearch();
+                CleanRelations();
             }
+        }
+
+        private void CleanRelations()
+        {
+            RelatedCivs.Clear();
+            RelatedHFs.Clear();
+            RelatedSites.Clear();
         }
 
         public void SetupResearchTree(bool isMagical)
@@ -668,6 +678,25 @@ namespace MagiRogue.GameSys.Planet.History
         public bool HasPotentialToBeAWizard()
         {
             return Soul.MaxMana > GetRace().GetAverageRacialManaRange();
+        }
+
+        internal bool CheckIfIsChildOrBabyForRace()
+        {
+            var group = GetRace().GetAgeGroup(GetAnatomy().CurrentAge, GetAnatomy().Ages);
+            if (group is AgeGroup.Baby || group is AgeGroup.Child)
+                return true;
+            return false;
+        }
+
+        public Anatomy GetAnatomy()
+        {
+            return Body.Anatomy;
+        }
+
+        internal void SetBasicAnatomy()
+        {
+            SetStandardRaceFlags();
+            GetAnatomy().BasicSetup();
         }
     }
 }

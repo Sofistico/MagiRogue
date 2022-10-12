@@ -17,7 +17,12 @@ namespace MagiRogue.Entities
     /// </summary>
     public class Anatomy
     {
+        #region Fields
+
         private Race raceField;
+        private bool basicSetupDone;
+
+        #endregion Fields
 
         #region Properties
 
@@ -193,18 +198,19 @@ namespace MagiRogue.Entities
             }
         }
 
-        public void Setup(Actor actor, Race race, int actorAge, Sex sex, int volume)
+        public void FullSetup(Actor actor, Race race, int actorAge, Sex sex, int volume)
+        {
+            if (!basicSetupDone)
+            {
+                BasicSetup(sex, actorAge, race);
+            }
+
+            SetupActorBodyProperties(actor, volume);
+        }
+
+        private void SetupActorBodyProperties(Actor actor, int volume)
         {
             actor.Volume = volume;
-            if (string.IsNullOrEmpty(Race))
-                Race = race.Id;
-            raceField = race;
-            SetRandomLifespanByRace();
-            Limbs = race.ReturnRaceLimbs();
-            Organs = race.ReturnRaceOrgans();
-            NormalLimbRegen = race.RaceNormalLimbRegen;
-            CurrentAge = actorAge;
-            Gender = sex;
 
             if (Limbs.Count > 0)
             {
@@ -215,6 +221,42 @@ namespace MagiRogue.Entities
                 CalculateBlood(actor.Weight);
             }
         }
+
+        #region BasicSetups
+
+        public void BasicSetup(Sex sex, int actorAge, Race race)
+        {
+            BasicSetup(race);
+            Gender = sex;
+            CurrentAge = actorAge;
+        }
+
+        public void BasicSetup(Race race)
+        {
+            if (string.IsNullOrEmpty(Race))
+                Race = race.Id;
+            raceField = race;
+            SetRandomLifespanByRace();
+            Limbs = race.ReturnRaceLimbs();
+            Organs = race.ReturnRaceOrgans();
+            NormalLimbRegen = race.RaceNormalLimbRegen;
+            basicSetupDone = true;
+        }
+
+        public void BasicSetup()
+        {
+            if (!string.IsNullOrEmpty(Race))
+            {
+                Race race = GetRace();
+                SetRandomLifespanByRace();
+                Limbs = race.ReturnRaceLimbs();
+                Organs = race.ReturnRaceOrgans();
+                NormalLimbRegen = race.RaceNormalLimbRegen;
+                basicSetupDone = true;
+            }
+        }
+
+        #endregion BasicSetups
 
         private void SetMaxStandAndGraspCount()
         {

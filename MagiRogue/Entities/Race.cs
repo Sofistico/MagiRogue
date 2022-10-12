@@ -112,9 +112,20 @@ namespace MagiRogue.Entities
             return color.Color;
         }
 
-        public List<Limb> ReturnRaceLimbs() => bodyParts.Where(i => i is Limb).Cast<Limb>().ToList();
+        public List<Limb> ReturnRaceLimbs()
+        {
+            if (bodyParts is null)
+                SetBodyPlan();
+            return bodyParts.Where(i => i is Limb).Cast<Limb>().ToList();
+        }
 
-        public List<Organ> ReturnRaceOrgans() => bodyParts.Where(i => i is Organ).Cast<Organ>().ToList();
+        public List<Organ> ReturnRaceOrgans()
+        {
+            if (bodyParts is null)
+                SetBodyPlan();
+
+            return bodyParts.Where(i => i is Organ).Cast<Organ>().ToList();
+        }
 
         public int GetRngVolume(int age)
         {

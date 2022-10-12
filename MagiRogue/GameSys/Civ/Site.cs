@@ -117,7 +117,8 @@ namespace MagiRogue.GameSys.Civ
                         break;
 
                     case RoomTag.Abandoned:
-                        MundaneResources -= 20;
+                        if (MundaneResources >= 0)
+                            room.SetPreviousTag();
                         break;
 
                     case RoomTag.House:
@@ -130,14 +131,16 @@ namespace MagiRogue.GameSys.Civ
 
                     case RoomTag.Kitchen:
                         MundaneResources -= 25;
+                        FoodQuantity += 20;
                         break;
 
                     case RoomTag.GenericWorkshop:
-                        MundaneResources += 10;
+                        MundaneResources += 20;
                         break;
 
                     case RoomTag.Dinner:
                         MundaneResources -= 10;
+                        FoodQuantity += 10;
                         break;
 
                     case RoomTag.DungeonKeeper:
@@ -146,7 +149,7 @@ namespace MagiRogue.GameSys.Civ
                         break;
 
                     case RoomTag.Farm:
-                        MundaneResources += 10;
+                        MundaneResources += 20;
                         FoodQuantity += 100;
                         break;
 
@@ -154,8 +157,10 @@ namespace MagiRogue.GameSys.Civ
                         break;
                 }
 
-                if (MundaneResources <= 0)
-                    room.Tag = RoomTag.Abandoned;
+                if (MundaneResources <= 0 && room.Tag is not RoomTag.Abandoned)
+                {
+                    room.AbandonPreviousTag(RoomTag.Abandoned);
+                }
                 if (FoodQuantity >= 0)
                     Famine = false;
             }
@@ -270,7 +275,8 @@ namespace MagiRogue.GameSys.Civ
             {
                 foreach (var pop in Population)
                 {
-                    pop.TotalPopulation = (int)MathMagi.Round(pop.TotalPopulation / result);
+                    var toSum = (double)(pop.TotalPopulation * (result * -100));
+                    pop.TotalPopulation = (int)MathMagi.Round(pop.TotalPopulation  + toSum);
                     pop.TotalPopulation = pop.TotalPopulation >= 0 ? pop.TotalPopulation : 0;
                 }
                 totalResources -= (int)result;
@@ -300,7 +306,7 @@ namespace MagiRogue.GameSys.Civ
                 int resource = civParent.CivsTradingWith.Count * 5;
                 if (SiteLeader is not null)
                 {
-                    resource *= SiteLeader.Mind.GetAbility(AbilityName.Negotiator);
+                    resource *= (SiteLeader.Mind.GetAbility(AbilityName.Negotiator) + 1);
                 }
                 MundaneResources += resource;
             }
