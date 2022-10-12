@@ -317,7 +317,7 @@ namespace MagiRogue.GameSys.Planet.History
                 {
                     int tries = 300;
                     int currentRty = 0;
-                    while (planetData.AssocietatedMap.CheckForIndexOutOfBounds(pos) || currentRty <= tries)
+                    while (planetData.AssocietatedMap.CheckForIndexOutOfBounds(pos) && currentRty <= tries)
                     {
                         pos = rngSettl.WorldPos.GetPointNextTo();
                         currentRty++;
