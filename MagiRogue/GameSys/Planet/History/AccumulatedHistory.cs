@@ -193,7 +193,9 @@ namespace MagiRogue.GameSys.Planet.History
                             || civ[nextCiv.Id].Relation is not RelationType.War)
                         {
                             // trade of various types!!
-                            if (civ[nextCiv.Id].RoadBuilt.HasValue && civ[nextCiv.Id].RoadBuilt.Value)
+                            if (civ[nextCiv.Id].RoadBuilt.HasValue
+                                && civ[nextCiv.Id].RoadBuilt.Value
+                                && civ.CivsTradeContains(nextCiv))
                             {
                                 civ.AddToTradingList(nextCiv);
                             }

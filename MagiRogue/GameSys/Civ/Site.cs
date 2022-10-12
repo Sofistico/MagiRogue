@@ -275,7 +275,7 @@ namespace MagiRogue.GameSys.Civ
             {
                 foreach (var pop in Population)
                 {
-                    var toSum = (double)(pop.TotalPopulation * (result * -100));
+                    var toSum = (double)(pop.TotalPopulation * ((result * -1) + 0.1));
                     pop.TotalPopulation = (int)MathMagi.Round(pop.TotalPopulation  + toSum);
                     pop.TotalPopulation = pop.TotalPopulation >= 0 ? pop.TotalPopulation : 0;
                 }

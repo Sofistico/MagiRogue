@@ -454,8 +454,14 @@ namespace MagiRogue.GameSys.Civ
 
         public void AddToTradingList(Civilization nextCiv)
         {
-            if (!CivsTradingWith.Contains(nextCiv.Id))
+            if (!CivsTradeContains(nextCiv))
                 CivsTradingWith.Add(nextCiv.Id);
+        }
+
+
+        public bool CivsTradeContains(Civilization civ)
+        {
+            return CivsTradingWith.Contains(civ.Id);
         }
 
         public void TradeWithOtherCiv(Civilization[] otherCivs)
