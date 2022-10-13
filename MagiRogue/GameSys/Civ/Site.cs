@@ -269,60 +269,49 @@ namespace MagiRogue.GameSys.Civ
             }
             double totalResources;
             double result;
-            checked
-            {
-                int populationCarryngCapacity = (int)tile.BiomeType;
-                totalResources = (double)MundaneResources / 100;
-                totalResources = totalResources < 0 ? totalResources * -1 : totalResources;
-                result = (double)((double)populationCarryngCapacity / (double)((totalResources + 1))) / 100;
-            }
+
+            int populationCarryngCapacity = (int)tile.BiomeType;
+            totalResources = (double)MundaneResources / 100;
+            totalResources = totalResources < 0 ? totalResources * -1 : totalResources;
+            result = (double)((double)populationCarryngCapacity / (double)((totalResources + 1))) / 100;
 
             if (Famine)
             {
-                checked
-                {
-                    foreach (var pop in Population)
-                    {
-                        var toSum = (double)(pop.TotalPopulation * ((result * -1)));
-                        pop.TotalPopulation = (int)MathMagi.Round(pop.TotalPopulation + toSum);
-                        pop.TotalPopulation = pop.TotalPopulation >= 0 ? pop.TotalPopulation : 0;
-                    }
-                    totalResources -= (int)result;
-                    MundaneResources -= (int)totalResources;
-                    return;
-                }
-            }
-            checked
-            {
                 foreach (var pop in Population)
                 {
-                    var newPop = pop.TotalPopulation * result;
-                    pop.TotalPopulation = (int)MathMagi.Round(pop.TotalPopulation + newPop);
+                    var toSum = (double)(pop.TotalPopulation * ((result * -1)));
+                    pop.TotalPopulation = (int)MathMagi.Round(pop.TotalPopulation + toSum);
+                    pop.TotalPopulation = pop.TotalPopulation >= 0 ? pop.TotalPopulation : 0;
                 }
-                int totalFoodLost;
-                if (FoodQuantity != 0)
-                    totalFoodLost = ReturnPopNumber() / 2;
-                else
-                    totalFoodLost = 0;
-                FoodQuantity -= totalFoodLost;
-                if (FoodQuantity <= 0)
-                    Famine = true;
+                totalResources -= (int)result;
+                MundaneResources -= (int)totalResources;
+                return;
             }
+            foreach (var pop in Population)
+            {
+                var newPop = pop.TotalPopulation * result;
+                pop.TotalPopulation = (int)MathMagi.Round(pop.TotalPopulation + newPop);
+            }
+            int totalFoodLost;
+            if (FoodQuantity != 0)
+                totalFoodLost = ReturnPopNumber() / 2;
+            else
+                totalFoodLost = 0;
+            FoodQuantity -= totalFoodLost;
+            if (FoodQuantity <= 0)
+                Famine = true;
         }
 
         public void SimulateTradeBetweenItsRoads(Civilization civParent)
         {
             if (civParent.CivsTradingWith.Count > 0)
             {
-                checked
+                int resource = civParent.CivsTradingWith.Count * 5;
+                if (SiteLeader is not null)
                 {
-                    int resource = civParent.CivsTradingWith.Count * 5;
-                    if (SiteLeader is not null)
-                    {
-                        resource *= (SiteLeader.Mind.GetAbility(AbilityName.Negotiator) + 1);
-                    }
-                    MundaneResources += resource;
+                    resource *= (SiteLeader.Mind.GetAbility(AbilityName.Negotiator) + 1);
                 }
+                MundaneResources += resource;
             }
         }
 

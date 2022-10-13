@@ -470,17 +470,11 @@ namespace MagiRogue.GameSys.Civ
                 Civilization civ = otherCivs.FirstOrDefault(i => i.Id == civId);
                 if (civ is not null && Sites.Any(i => i.Famine))
                 {
-                    checked
-                    {
-                        var siteWithMostFood = civ.Sites.MaxBy(i => i.FoodQuantity);
-                        int resourceSpent = 350;
-                        BuyFoodFromOtherCivSite(siteWithMostFood, resourceSpent);
-                    }
+                    var siteWithMostFood = civ.Sites.MaxBy(i => i.FoodQuantity);
+                    int resourceSpent = 350;
+                    BuyFoodFromOtherCivSite(siteWithMostFood, resourceSpent);
                 }
-                checked
-                {
-                    int wealthGeneratedByTrade = GetPotentialWealthGeneratedFromSimpleTrade(civ);
-                }
+                int wealthGeneratedByTrade = GetPotentialWealthGeneratedFromSimpleTrade(civ);
             }
         }
 
@@ -500,12 +494,9 @@ namespace MagiRogue.GameSys.Civ
 
         private void BuyFoodFromOtherCivSite(Site? siteWithMostFood, int resourceSpent)
         {
-            checked
-            {
-                siteWithMostFood.FoodQuantity -= resourceSpent;
-                siteWithMostFood.MundaneResources += resourceSpent;
-                Wealth -= resourceSpent;
-            }
+            siteWithMostFood.FoodQuantity -= resourceSpent;
+            siteWithMostFood.MundaneResources += resourceSpent;
+            Wealth -= resourceSpent;
         }
 
         public IEnumerable<Discovery> ListAllKnowDiscoveries()
