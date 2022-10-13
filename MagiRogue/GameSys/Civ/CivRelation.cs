@@ -1,5 +1,6 @@
 ﻿using MagiRogue.Data.Enumerators;
 using Newtonsoft.Json;
+using System;
 
 namespace MagiRogue.GameSys.Civ
 {
@@ -16,6 +17,15 @@ namespace MagiRogue.GameSys.Civ
             ParentId = parentId;
             CivRelatedId = otherCivId;
             Relation = relation;
+        }
+
+        public bool GetIfMember()
+        {
+            return Relation is RelationType.Member
+                || Relation is RelationType.LoyalMember
+                || Relation is RelationType.TraitorousMember
+                || Relation is RelationType.Ruler
+                || Relation is RelationType.Soldier;
         }
     }
 }

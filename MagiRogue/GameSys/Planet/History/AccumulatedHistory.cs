@@ -38,7 +38,9 @@ namespace MagiRogue.GameSys.Planet.History
             Civs = new List<Civilization>();
         }
 
-        public AccumulatedHistory(List<HistoricalFigure> figures, List<Civilization> civs, int year)
+        public AccumulatedHistory(List<HistoricalFigure> figures,
+            List<Civilization> civs,
+            int year)
         {
             Figures = figures;
             Civs = civs;
@@ -63,9 +65,11 @@ namespace MagiRogue.GameSys.Planet.History
                 // after that won't really happen anymore!
                 FirstYearOnlyInteractions(civilizations.ToArray());
                 firstYearOnly = false;
+
+                DefineFiguresToHaveAInitialSite(Figures, Civs);
             }
 
-            while (Year < yearToGameBegin)
+            while (Year <= yearToGameBegin)
             {
                 List<Site> civSite = Civs.Select(i => i.Sites).ToList().ReturnListListTAsListT();
                 AllSites.AddRange(civSite);
@@ -89,6 +93,20 @@ namespace MagiRogue.GameSys.Planet.History
                 ConceiveAnyChild();
                 AllSites.Clear();
                 Year++;
+            }
+        }
+
+        private static void DefineFiguresToHaveAInitialSite(List<HistoricalFigure> figures,
+            List<Civilization> civs)
+        {
+            foreach (HistoricalFigure figure in figures)
+            {
+                if (figure.RelatedCivs.Count > 0)
+                {
+                    var civRelation = figure.RelatedCivs.FirstOrDefault(i => i.GetIfMember());
+                    Civilization civ = civs.FirstOrDefault(i => i.Id == civRelation.CivRelatedId);
+                    figure.AddRelatedSite(civ.Sites[0].Id, SiteRelationTypes.LivesThere);
+                }
             }
         }
 
