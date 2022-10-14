@@ -146,7 +146,20 @@ namespace MagiRogue.GameSys.Planet.History
                 {
                     CivRelation prevRelation = figure.RelatedCivs.FirstOrDefault(i => i.GetIfMember());
                     HistoricalFigure.RemovePreviousCivRelationAndSetNew(prevRelation, RelationType.ExMember);
-                    figure.AddNewRelationToCiv(civs.GetRandomItemFromList().Id, RelationType.Member);
+                    var civ = civs.GetRandomItemFromList();
+                    figure.AddNewRelationToCiv(civ.Id, RelationType.Member);
+                    figure.AddLegend($"the {figure.Name} has migrated to the {civ.Name}", year);
+                }
+                int civId = figure.GetMemberCivId();
+                Civilization currentCiv = civs.FirstOrDefault(i => i.Id == civId);
+                if (currentCiv.Sites.Count > 1)
+                {
+                    var result = currentCiv.Sites
+                        .Where(i => i.Id != figure.GetCurrentStayingSiteId().Value)
+                        .ToList()
+                        .GetRandomItemFromList();
+                    figure.ChangeLivingSite(result.Id);
+                    figure.AddLegend($"the {figure.Name} has changed {figure.PronoumPossesive()} living location to {result.Name}!", year);
                 }
             }
         }
@@ -272,8 +285,8 @@ namespace MagiRogue.GameSys.Planet.History
                 {
                     var randomPerson = peopleInARangeOfAgeCloseAndPredispost.GetRandomItemFromList();
                     figure.Marry(randomPerson);
-                    StringBuilder anotherB = new StringBuilder($"In the year {year}, the {figure.Name} married with {randomPerson.Name}");
-                    StringBuilder bb = new StringBuilder($"In the year {year}, the {randomPerson.Name} married with {figure.Name}");
+                    StringBuilder anotherB = new StringBuilder($"the {figure.Name} married with {randomPerson.Name}");
+                    StringBuilder bb = new StringBuilder($"the {randomPerson.Name} married with {figure.Name}");
                     figure.AddLegend(anotherB.ToString(), year);
                     randomPerson.AddLegend(bb.ToString(), year);
                 }

@@ -206,6 +206,8 @@ namespace MagiRogue.GameSys.Planet.History
 
         public void AddLegend(string legend, int yearWhen)
         {
+            StringBuilder str = new StringBuilder($"In the year of {yearWhen}, ");
+            str.Append(legend);
             Legend newLegend = new Legend(legend, yearWhen);
             Legends.Add(newLegend);
         }
@@ -260,7 +262,7 @@ namespace MagiRogue.GameSys.Planet.History
             }
 
             NobleTitles.Add(noble);
-            StringBuilder initialLegend = new StringBuilder($"In the year {year} ");
+            StringBuilder initialLegend = new StringBuilder();
             initialLegend.Append($"{Name} ascended to the post of {noble.Name} ");
             initialLegend.Append($"with {Body.Anatomy.CurrentAge} years as a member of {civ.Name}");
             AddLegend(initialLegend.ToString(), year);
@@ -358,6 +360,9 @@ namespace MagiRogue.GameSys.Planet.History
             Civilization civ = civs.Find(i => i.Id == civId);
             return civ;
         }
+
+        public int GetMemberCivId()
+            => RelatedCivs.FirstOrDefault(i => i.GetIfMember()).CivRelatedId;
 
         public bool CheckForInsurrection()
             => GetPersonality().Power >= 25;
@@ -655,7 +660,7 @@ namespace MagiRogue.GameSys.Planet.History
             FamilyLink.SetMotherChildFatherRelation(this, hfChild, yearBorn);
         }
 
-        internal void ChangeLivingSite(int id)
+        public void ChangeLivingSite(int id)
         {
             if (RelatedSites.Any(i => i.RelationType is SiteRelationTypes.LivesThere))
             {
