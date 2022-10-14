@@ -264,6 +264,14 @@ namespace MagiRogue.GameSys.Civ
             }
         }
 
+        public void AddLegend(string legend, int yearWhen)
+        {
+            StringBuilder str = new StringBuilder($"In the year of {yearWhen}, ");
+            str.Append(legend);
+            Legend newLegend = new Legend(str.ToString(), yearWhen);
+            Legends.Add(newLegend);
+        }
+
         public void AppointNewNobleFromPops(Noble noble,
             int yearAdded,
             string? whyItHappenead = null)

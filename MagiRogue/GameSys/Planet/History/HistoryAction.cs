@@ -9,6 +9,7 @@ using System.Linq;
 using System;
 using System.Text;
 using MagiRogue.Entities;
+using SadConsole.Renderers;
 
 namespace MagiRogue.GameSys.Planet.History
 {
@@ -141,6 +142,7 @@ namespace MagiRogue.GameSys.Planet.History
             // one in 5 chance to settle somewhere else
             if (Mrn.OneIn(5))
             {
+                bool changedCiv = false;
                 // one in 10 to migrate to another civ
                 if (Mrn.OneIn(10))
                 {
@@ -149,17 +151,22 @@ namespace MagiRogue.GameSys.Planet.History
                     var civ = civs.GetRandomItemFromList();
                     figure.AddNewRelationToCiv(civ.Id, RelationType.Member);
                     figure.AddLegend($"the {figure.Name} has migrated to the {civ.Name}", year);
+                    civ.AddLegend($"{figure.Name} joined as a member of {civ.Name}", year);
+                    changedCiv = true;
                 }
                 int civId = figure.GetMemberCivId();
                 Civilization currentCiv = civs.FirstOrDefault(i => i.Id == civId);
-                if (currentCiv.Sites.Count > 1)
+                if (currentCiv.Sites.Count > 1 || changedCiv)
                 {
-                    var result = currentCiv.Sites
-                        .Where(i => i.Id != figure.GetCurrentStayingSiteId().Value)
+                    var siteId = figure.GetCurrentStayingSiteId();
+                    var result = siteId.HasValue ? currentCiv.Sites
+                        .Where(i => i.Id != siteId.Value)
                         .ToList()
-                        .GetRandomItemFromList();
+                        .GetRandomItemFromList() : currentCiv.Sites.GetRandomItemFromList();
                     figure.ChangeLivingSite(result.Id);
-                    figure.AddLegend($"the {figure.Name} has changed {figure.PronoumPossesive()} living location to {result.Name}!", year);
+                    string changedLoc = $"the {figure.Name} has changed {figure.PronoumPossesive()} living location to {result.Name}!";
+                    figure.AddLegend(changedLoc, year);
+                    result.AddLegend(changedLoc, year);
                 }
             }
         }

@@ -208,7 +208,7 @@ namespace MagiRogue.GameSys.Planet.History
         {
             StringBuilder str = new StringBuilder($"In the year of {yearWhen}, ");
             str.Append(legend);
-            Legend newLegend = new Legend(legend, yearWhen);
+            Legend newLegend = new Legend(str.ToString(), yearWhen);
             Legends.Add(newLegend);
         }
 
@@ -711,8 +711,8 @@ namespace MagiRogue.GameSys.Planet.History
 
         public bool CheckForWanderlust()
         {
-            return GetPersonality().Nature >= 10 || (GetPersonality().Independence >= 15
-                && GetPersonality().Tradition <= 10);
+            return GetPersonality().Nature >= 15 || (GetPersonality().Independence >= 20
+                && GetPersonality().Tradition <= 0);
         }
 
         public static void RemovePreviousCivRelationAndSetNew(CivRelation? prevRelation, RelationType newRelation)

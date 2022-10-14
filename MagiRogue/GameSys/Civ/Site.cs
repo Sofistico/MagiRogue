@@ -386,6 +386,14 @@ namespace MagiRogue.GameSys.Civ
             SiteLegends.Add(legend);
         }
 
+        public void AddLegend(string legend, int yearWhen)
+        {
+            StringBuilder str = new StringBuilder($"In the year of {yearWhen}, ");
+            str.Append(legend);
+            Legend newLegend = new Legend(str.ToString(), yearWhen);
+            SiteLegends.Add(newLegend);
+        }
+
         public int TotalFoodProductionNeededToNotStarve()
         {
             return ReturnPopNumber() / 2;
