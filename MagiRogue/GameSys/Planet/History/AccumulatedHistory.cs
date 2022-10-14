@@ -127,7 +127,7 @@ namespace MagiRogue.GameSys.Planet.History
                 if (figure.Body.Anatomy.CheckIfDiedByAge()
                     && (figure.MythWho is MythWho.None || figure.MythWho is MythWho.Wizard))
                 {
-                    figure.KillIt(Year, $"In the year {Year}, the {figure.Name} died of old age.");
+                    figure.KillIt(Year, $"the {figure.Name} died of old age.");
                 }
                 else
                     figure.Body.Anatomy.AgeBody();

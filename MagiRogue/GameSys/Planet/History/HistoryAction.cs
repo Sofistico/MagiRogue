@@ -139,6 +139,9 @@ namespace MagiRogue.GameSys.Planet.History
 
         private void WanderAndSettleSomewhere()
         {
+            // if figure is a noble somewhere, it shouldn't wander!
+            if (figure.NobleTitles.Count >= 0)
+                return;
             // one in 5 chance to settle somewhere else
             if (Mrn.OneIn(5))
             {

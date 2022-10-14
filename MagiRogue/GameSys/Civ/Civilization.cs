@@ -97,7 +97,7 @@ namespace MagiRogue.GameSys.Civ
                 var hf = CreateNewHfMemberFromPop(0);
                 StringBuilder initialLegend = new StringBuilder("In a time before time, ");
                 initialLegend.Append($"{hf.Name} was created looking like a {hf.HFGender} of the {hf.GetRaceName()} ");
-                initialLegend.Append($"with {hf.Body.Anatomy.CurrentAge} as a member of {Name}");
+                initialLegend.Append($"with {hf.Body.Anatomy.CurrentAge} years as a member of {Name}");
                 hf.Legends.Add(new Legend(initialLegend.ToString(), -1));
 
                 ImportantPeople.Add(hf);
@@ -169,6 +169,7 @@ namespace MagiRogue.GameSys.Civ
             // first legend
             HistoricalFigure figure = new HistoricalFigure(name, sex, legends,
                 age - yearBorn, null, true, figureRace.Description, figureRace.Id);
+            figure.Body.Anatomy.CurrentAge = age;
             return figure;
         }
 
