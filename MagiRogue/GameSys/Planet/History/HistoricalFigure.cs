@@ -695,10 +695,16 @@ namespace MagiRogue.GameSys.Planet.History
             return Body.Anatomy;
         }
 
-        internal void SetBasicAnatomy()
+        public void SetBasicAnatomy()
         {
             SetStandardRaceFlags();
             GetAnatomy().BasicSetup();
+        }
+
+        public bool CheckForWanderlust()
+        {
+            return GetPersonality().Nature >= 10 || (GetPersonality().Independence >= 15
+                && GetPersonality().Tradition <= 10);
         }
     }
 }

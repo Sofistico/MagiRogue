@@ -102,6 +102,12 @@ namespace MagiRogue.GameSys.Planet.History
                 return;
             }
 
+            if (figure.CheckForWanderlust())
+            {
+                WanderAndSettleSomewhere();
+                return;
+            }
+
             if (figure.CheckForProlificStudious())
             {
                 bool willResearchThisSeason = Mrn.OneIn(3);
@@ -128,6 +134,11 @@ namespace MagiRogue.GameSys.Planet.History
             }
 
             #endregion Returning actions
+        }
+
+        private void WanderAndSettleSomewhere()
+        {
+            throw new NotImplementedException();
         }
 
         private void GenerateMagicalResourcesForSite()
