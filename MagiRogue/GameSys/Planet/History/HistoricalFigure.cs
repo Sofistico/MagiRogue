@@ -269,7 +269,10 @@ namespace MagiRogue.GameSys.Planet.History
         public void AddNewRelationToCiv(int civId, RelationType relation)
         {
             CivRelation re = new CivRelation(Id, civId, relation);
-            RelatedCivs.Add(re);
+            if (!RelatedCivs.Any(i => i.CivRelatedId == civId))
+                RelatedCivs.Add(re);
+            else
+                RelatedCivs.FirstOrDefault(i => i.CivRelatedId == civId).Relation = relation;
         }
 
         public void HistoryAct(int year, WorldTile[,] tiles,
@@ -705,6 +708,12 @@ namespace MagiRogue.GameSys.Planet.History
         {
             return GetPersonality().Nature >= 10 || (GetPersonality().Independence >= 15
                 && GetPersonality().Tradition <= 10);
+        }
+
+        public static void RemovePreviousCivRelationAndSetNew(CivRelation? prevRelation, RelationType newRelation)
+        {
+            if (prevRelation is not null)
+                prevRelation.Relation = newRelation;
         }
     }
 }

@@ -138,7 +138,17 @@ namespace MagiRogue.GameSys.Planet.History
 
         private void WanderAndSettleSomewhere()
         {
-            throw new NotImplementedException();
+            // one in 5 chance to settle somewhere else
+            if (Mrn.OneIn(5))
+            {
+                // one in 10 to migrate to another civ
+                if (Mrn.OneIn(10))
+                {
+                    CivRelation prevRelation = figure.RelatedCivs.FirstOrDefault(i => i.GetIfMember());
+                    HistoricalFigure.RemovePreviousCivRelationAndSetNew(prevRelation, RelationType.ExMember);
+                    figure.AddNewRelationToCiv(civs.GetRandomItemFromList().Id, RelationType.Member);
+                }
+            }
         }
 
         private void GenerateMagicalResourcesForSite()
