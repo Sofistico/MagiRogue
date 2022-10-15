@@ -13,7 +13,7 @@ using SadConsole.Renderers;
 
 namespace MagiRogue.GameSys.Planet.History
 {
-    public class HistoryAction
+    public sealed class HistoryAction
     {
         #region Properties
 
@@ -75,7 +75,7 @@ namespace MagiRogue.GameSys.Planet.History
                 RomanceSomeoneInsideSameSite();
             }
 
-            if (figure.IsMarried())
+            if (figure.IsMarried() && Mrn.OneIn(5))
             {
                 TryForBaby();
             }
@@ -111,7 +111,7 @@ namespace MagiRogue.GameSys.Planet.History
 
             if (figure.CheckForProlificStudious())
             {
-                bool willResearchThisSeason = Mrn.OneIn(3);
+                bool willResearchThisSeason = Mrn.OneIn(2);
                 if (willResearchThisSeason)
                 {
                     DecideWhatToResearch();
@@ -149,29 +149,54 @@ namespace MagiRogue.GameSys.Planet.History
                 // one in 10 to migrate to another civ
                 if (Mrn.OneIn(10))
                 {
-                    CivRelation prevRelation = figure.RelatedCivs.FirstOrDefault(i => i.GetIfMember());
-                    HistoricalFigure.RemovePreviousCivRelationAndSetNew(prevRelation, RelationType.ExMember);
-                    var civ = civs.GetRandomItemFromList();
-                    figure.AddNewRelationToCiv(civ.Id, RelationType.Member);
-                    figure.AddLegend($"the {figure.Name} has migrated to the {civ.Name}", year);
-                    civ.AddLegend($"{figure.Name} joined as a member of {civ.Name}", year);
-                    changedCiv = true;
+                    changedCiv = ChangeFigureCiv(figure, year, civs);
                 }
                 int civId = figure.GetMemberCivId();
                 Civilization currentCiv = civs.FirstOrDefault(i => i.Id == civId);
                 if (currentCiv.Sites.Count > 1 || changedCiv)
                 {
-                    var siteId = figure.GetCurrentStayingSiteId();
+                    var siteId = figure.GetCurrentStayingSiteId(currentCiv.Sites);
                     var result = siteId.HasValue ? currentCiv.Sites
                         .Where(i => i.Id != siteId.Value)
                         .ToList()
                         .GetRandomItemFromList() : currentCiv.Sites.GetRandomItemFromList();
-                    figure.ChangeLivingSite(result.Id);
-                    string changedLoc = $"the {figure.Name} has changed {figure.PronoumPossesive()} living location to {result.Name}!";
-                    figure.AddLegend(changedLoc, year);
-                    result.AddLegend(changedLoc, year);
+                    ChangeFigureStayingSite(figure, result, year);
+                    foreach (FamilyNode family in figure.FamilyLink.Family)
+                    {
+                        if (family.IsCloseFamily())
+                        {
+                            var fig = family.Figure;
+                            ChangeFigureStayingSite(fig, result, year);
+                            if (changedCiv)
+                                ChangeFigureCiv(fig, year, civs);
+                        }
+                    }
                 }
             }
+        }
+
+        private static bool ChangeFigureCiv(HistoricalFigure figure, int year, List<Civilization> civs)
+        {
+            CivRelation prevRelation = figure.RelatedCivs.FirstOrDefault(i => i.GetIfMember());
+            HistoricalFigure.RemovePreviousCivRelationAndSetNew(prevRelation, RelationType.ExMember);
+            var civ = civs.GetRandomItemFromList();
+            figure.AddNewRelationToCiv(civ.Id, RelationType.Member);
+            figure.AddLegend($"the {figure.Name} has migrated to the {civ.Name}", year);
+            civ.AddLegend($"{figure.Name} joined as a member of {civ.Name}", year);
+            return true;
+        }
+
+        private static void ChangeFigureStayingSite(HistoricalFigure figure, Site result, int year)
+        {
+            figure.ChangeLivingSite(result.Id);
+            string changedLoc = StringFromChangingSiteLoc(figure, result);
+            figure.AddLegend(changedLoc, year);
+            result.AddLegend(changedLoc, year);
+        }
+
+        private static string StringFromChangingSiteLoc(HistoricalFigure figure, Site result)
+        {
+            return $"the {figure.Name} has changed {figure.PronoumPossesive()} living location to {result.Name}!";
         }
 
         private void GenerateMagicalResourcesForSite()
@@ -186,7 +211,9 @@ namespace MagiRogue.GameSys.Planet.History
         private void TryForBaby()
         {
             HistoricalFigure spouse = GetSpouse();
-            if (CompatibleGenderForBabies(spouse))
+            if (spouse is null)
+                return;
+            if (CompatibleGenderForBabies(spouse) && (!figure.Pregnant || !spouse.Pregnant))
             {
                 figure.MakeBabyWith(spouse);
             }
@@ -209,7 +236,10 @@ namespace MagiRogue.GameSys.Planet.History
 
         private HistoricalFigure GetSpouse()
         {
-            return otherFigures.FirstOrDefault(i => i.Id == figure.GetRelatedHfId());
+            int? idfigure = figure.GetRelatedHfSpouseId();
+            if (!idfigure.HasValue)
+                return null;
+            return otherFigures.FirstOrDefault(i => i.Id == idfigure.Value);
         }
 
         private void BuildATower()
@@ -249,7 +279,7 @@ namespace MagiRogue.GameSys.Planet.History
 
         private Site GetCurrentlyStayingSite()
         {
-            int? site = figure.GetCurrentStayingSiteId();
+            int? site = figure.GetCurrentStayingSiteId(sites);
             if (site.HasValue)
             {
                 return sites.FirstOrDefault(i => i.Id == site.Value);
@@ -278,7 +308,7 @@ namespace MagiRogue.GameSys.Planet.History
             {
                 var peopleInside = GetAllFiguresStayingInSiteIfAny(site.Id);
                 int aceptableDiferenceAge;
-                bool isAdult = figure.Body.GetCurrentAge() >= figure.Body.Anatomy.GetRaceAdulthoodAge();
+                bool isAdult = figure.IsAdult();
                 if (isAdult)
                 {
                     aceptableDiferenceAge = Math.Max(figure.Body.Anatomy.GetRaceAdulthoodAge(),
@@ -317,7 +347,7 @@ namespace MagiRogue.GameSys.Planet.History
                         Civilization civ = GetCivFromSite(site);
                         HistoricalFigure deadThing =
                             civ.ImportantPeople
-                            .Where(i => i.GetCurrentStayingSiteId() == site.Id)
+                            .Where(i => i.GetCurrentStayingSiteId(civ.Sites) == site.Id)
                             .ToList()
                             .GetRandomItemFromList();
                         figure.TryAttackAndMurder(deadThing, year, $", so that {figure.Pronoum} could get inspiration!");
@@ -334,7 +364,7 @@ namespace MagiRogue.GameSys.Planet.History
 
         private void DecideWhatToResearch()
         {
-            bool canMagicalResearch = figure.MythWho is MythWho.Wizard;
+            bool canMagicalResearch = figure.SpecialFlags.Contains(SpecialFlag.MagicUser);
 
             if (figure.ResearchTree is null)
                 figure.SetupResearchTree(canMagicalResearch);
@@ -347,10 +377,10 @@ namespace MagiRogue.GameSys.Planet.History
 
         private void LearnNewDiscoveriesKnowToTheSite()
         {
-            if (figure.GetCurrentStayingSiteId().HasValue)
+            int? currentSiteId = figure.GetCurrentStayingSiteId(sites);
+            if (currentSiteId.HasValue)
             {
                 int familiarityBonus = 0;
-                int currentSiteId = figure.GetCurrentStayingSiteId().Value;
                 Site currentSite = sites.Find(i => i.Id == currentSiteId);
                 if (figure.GetLivingSiteId().HasValue && currentSiteId == figure.GetLivingSiteId().Value)
                     familiarityBonus = Mrn.Exploding2D6Dice * 2;
@@ -386,21 +416,21 @@ namespace MagiRogue.GameSys.Planet.History
 
         private Site GetFigureStayingSiteIfAny()
         {
-            var currentSite = figure.GetCurrentStayingSiteId();
+            var currentSite = figure.GetCurrentStayingSiteId(sites);
             Site site = currentSite.HasValue ? sites.Find(i => i.Id == currentSite.Value) : null;
             return site;
         }
 
         private Site GetFigureStayingSiteIfAny(HistoricalFigure hf)
         {
-            var currentSite = hf.GetCurrentStayingSiteId();
+            var currentSite = hf.GetCurrentStayingSiteId(sites);
             Site site = currentSite.HasValue ? sites.Find(i => i.Id == currentSite.Value) : null;
             return site;
         }
 
-        private static bool GetFigureIsStayingOnSiteId(int siteId, HistoricalFigure hf)
+        private bool GetFigureIsStayingOnSiteId(int siteId, HistoricalFigure hf)
         {
-            var currentSiteId = hf.GetCurrentStayingSiteId();
+            var currentSiteId = hf.GetCurrentStayingSiteId(sites);
             bool isStaying = currentSiteId.HasValue && siteId == currentSiteId.Value;
             return isStaying;
         }

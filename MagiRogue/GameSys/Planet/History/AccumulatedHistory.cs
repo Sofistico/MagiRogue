@@ -106,6 +106,7 @@ namespace MagiRogue.GameSys.Planet.History
                     var civRelation = figure.RelatedCivs.FirstOrDefault(i => i.GetIfMember());
                     Civilization civ = civs.FirstOrDefault(i => i.Id == civRelation.CivRelatedId);
                     figure.AddRelatedSite(civ.Sites[0].Id, SiteRelationTypes.LivesThere);
+                    figure.ChangeStayingSite(civ.Sites[0].WorldPos);
                 }
             }
         }

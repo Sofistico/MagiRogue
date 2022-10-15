@@ -43,7 +43,7 @@ namespace MagiRogue.GameSys.Planet
             _width = width;
             Min = float.MinValue;
             Max = float.MaxValue;
-            AssocietatedMap = new(RandomNames.RandomNamesFromRandomLanguage(), width, height);
+            AssocietatedMap = new(RandomNames.RandomNamesFromRandomLanguage(), width, height, false);
             Civilizations = new List<Civilization>();
             WorldHistory = new();
         }

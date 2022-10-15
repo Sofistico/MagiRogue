@@ -19,6 +19,5 @@ namespace MagiRogue.Data.Enumerators
 
         Rules = 1 << 6,
         Ruled = 1 << 7,
-        IsThere = 1 << 8,
     }
 }

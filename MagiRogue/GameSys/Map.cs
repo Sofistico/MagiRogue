@@ -91,7 +91,7 @@ namespace MagiRogue.GameSys
         /// </summary>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public Map(string mapName, int width = 60, int height = 60) :
+        public Map(string mapName, int width = 60, int height = 60, bool usesWeighEvaluation = true) :
             base(CreateTerrain(width, height), Enum.GetNames(typeof(MapLayer)).Length - 1,
             Distance.Euclidean,
             entityLayersSupportingMultipleItems: LayerMasker.Default.Mask
@@ -108,12 +108,15 @@ namespace MagiRogue.GameSys
             MapZoneConnections = new();
 
             // pathfinding
-            var weights = new LambdaGridView<double>(Width, Height, pos =>
+            if (usesWeighEvaluation)
             {
-                var tile = Tiles[pos.ToIndex(Width)];
-                return tile is not null ? MathMagi.Round(tile.MoveTimeCost / 100) : 0;
-            });
-            AStar = new AStar(WalkabilityView, Distance.Euclidean, weights, 0.01);
+                var weights = new LambdaGridView<double>(Width, Height, pos =>
+                {
+                    var tile = Tiles[pos.ToIndex(Width)];
+                    return tile is not null ? MathMagi.Round(tile.MoveTimeCost / 100) : 0;
+                });
+                AStar = new AStar(WalkabilityView, Distance.Euclidean, weights, 0.01);
+            }
             //Ilumination = new Light[Width * Height];
         }
 

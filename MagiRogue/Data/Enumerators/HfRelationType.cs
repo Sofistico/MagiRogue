@@ -17,6 +17,7 @@ namespace MagiRogue.Data.Enumerators
         Creator,
         Married,
         OwnChild,
-        Mother
+        Mother,
+        Father
     }
 }

@@ -71,6 +71,8 @@ namespace MagiRogue.GameSys.Planet.History
         /// </summary>
         public FamilyLink FamilyLink { get; set; } = new();
 
+        public Point CurrentPos { get; set; }
+
         #endregion Props
 
         #region Ctor
@@ -305,7 +307,15 @@ namespace MagiRogue.GameSys.Planet.History
 
         public void AddRelatedSite(int otherId, SiteRelationTypes relation)
         {
-            RelatedSites.Add(new SiteRelation(Id, otherId, relation));
+            if (!RelatedSites.Any(i => i.OtherSiteId == otherId))
+                RelatedSites.Add(new SiteRelation(Id, otherId, relation));
+            else
+            {
+                var related = RelatedSites.FirstOrDefault(i => i.OtherSiteId == otherId);
+                if (related.RelationType.HasFlag(relation))
+                    return;
+                related.RelationType &= relation;
+            }
         }
 
         public SiteRelation FindSiteRelation(int siteId) =>
@@ -331,11 +341,6 @@ namespace MagiRogue.GameSys.Planet.History
         public int? GetLivingSiteId()
         {
             return RelatedSites.FirstOrDefault(i => i.RelationType.HasFlag(SiteRelationTypes.LivesThere)).OtherSiteId;
-        }
-
-        public int? GetCurrentStayingSiteId()
-        {
-            return RelatedSites.FirstOrDefault(i => i.RelationType.HasFlag(SiteRelationTypes.IsThere))?.OtherSiteId;
         }
 
         public bool CheckForProlificStudious()
@@ -584,6 +589,10 @@ namespace MagiRogue.GameSys.Planet.History
                         TrainingFocus = AbilityName.None;
                 }
             }
+            else
+            {
+                TrainingFocus = Enum.GetValues<AbilityName>().GetRandomItemFromList();
+            }
         }
 
         public bool CheckForHardwork()
@@ -619,6 +628,7 @@ namespace MagiRogue.GameSys.Planet.History
         public void Marry(HistoricalFigure randomPerson)
         {
             FamilyLink.SetMarriedRelation(this, randomPerson);
+            randomPerson.FamilyLink.SetMarriedRelation(randomPerson, this);
         }
 
         public bool IsMarried()
@@ -631,9 +641,9 @@ namespace MagiRogue.GameSys.Planet.History
             AddRelatedHf(randomPerson.Id, HfRelationType.Friend);
         }
 
-        public int GetRelatedHfId()
+        public int? GetRelatedHfSpouseId()
         {
-            return RelatedHFs.FirstOrDefault(i => i.RelationType is HfRelationType.Married).OtherHfId;
+            return FamilyLink.GetSpouseIfAny();
         }
 
         public void MakeBabyWith(HistoricalFigure spouse)
@@ -667,6 +677,8 @@ namespace MagiRogue.GameSys.Planet.History
                 var otherSite = RelatedSites.FirstOrDefault(i => i.RelationType is SiteRelationTypes.LivesThere);
                 otherSite.OtherSiteId = id;
             }
+            else
+                AddRelatedSite(id, SiteRelationTypes.LivesThere);
         }
 
         public bool CheckForLoneniss()
@@ -719,6 +731,21 @@ namespace MagiRogue.GameSys.Planet.History
         {
             if (prevRelation is not null)
                 prevRelation.Relation = newRelation;
+        }
+
+        public void ChangeStayingSite(Point pos)
+        {
+            CurrentPos = pos;
+        }
+
+        public int? GetCurrentStayingSiteId(List<Site> sites)
+        {
+            return sites.FirstOrDefault(i => i.WorldPos == CurrentPos)?.Id;
+        }
+
+        public bool IsAdult()
+        {
+            return Body.GetCurrentAge() >= Body.Anatomy.GetRaceAdulthoodAge();
         }
     }
 }
