@@ -126,7 +126,7 @@ namespace MagiRogue.GameSys.Planet.History
             foreach (var figure in Figures)
             {
                 if (figure.Body.Anatomy.CheckIfDiedByAge()
-                    && (figure.MythWho is MythWho.None || figure.MythWho is MythWho.Wizard))
+                    && (figure.MythWho is MythWho.None))
                 {
                     figure.KillIt(Year, $"the {figure.Name} died of old age.");
                 }

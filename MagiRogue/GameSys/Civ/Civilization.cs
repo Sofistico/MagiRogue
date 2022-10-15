@@ -213,7 +213,6 @@ namespace MagiRogue.GameSys.Civ
                     chance = Mrn.OneIn(10);
                 if (chance)
                 {
-                    figure.MythWho = MythWho.Wizard;
                     figure.AddNewFlag(SpecialFlag.MagicUser);
                 }
             }
