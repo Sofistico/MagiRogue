@@ -14,6 +14,7 @@ namespace MagiRogue.Data.Enumerators
         Chaos,
         Chance,
         Science,
+        Magic,
         Titan,
         Precursors,
         Demons,

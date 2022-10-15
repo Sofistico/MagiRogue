@@ -189,11 +189,11 @@ namespace MagiRogue.GameSys.Planet.History
                         "The Big Bang");
                     break;
 
-                case MythWho.Wizard:
-                    precursorFigure = new HistoricalFigure($"{RandomNames.GiberishFullName(6, 6)}",
-                        "A wizard did it!", race.ReturnRandomSex(), race.Id, alive);
-                    createdRace = true;
-                    break;
+                //case MythWho.Wizard:
+                //    precursorFigure = new HistoricalFigure($"{RandomNames.GiberishFullName(6, 6)}",
+                //        "A wizard did it!", race.ReturnRandomSex(), race.Id, alive);
+                //    createdRace = true;
+                //    break;
 
                 case MythWho.Magic:
                     precursorFigure = new HistoricalFigure($"The Primordial {adjectives.GetRandomItemFromList()}",
