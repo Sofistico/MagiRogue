@@ -20,9 +20,7 @@ namespace MagiRogue.GameSys.Planet.History
     public sealed class HistoricalFigure
     {
         // years that the current long activity started
-        private int yearsOnActivity = 0;
-        // year tht the activited started
-        private int yearCurrentActivityStarted = 0;
+        private int seasonsOnActivity = 0;
         private int whatScoreToSettleForTrainingAbility;
 
         #region Props
@@ -302,7 +300,10 @@ namespace MagiRogue.GameSys.Planet.History
         // maybe some good old OOP
         public void AddRelatedHf(int otherId, HfRelationType relation)
         {
-            RelatedHFs.Add(new HfRelation(Id, otherId, relation));
+            if (RelatedHFs.Any(i => i.OtherHfId == otherId))
+                RelatedHFs.FirstOrDefault(i => i.OtherHfId == otherId).RelationType = relation;
+            else
+                RelatedHFs.Add(new HfRelation(Id, otherId, relation));
         }
 
         public void AddRelatedSite(int otherId, SiteRelationTypes relation)
@@ -372,7 +373,7 @@ namespace MagiRogue.GameSys.Planet.History
         public bool CheckForInsurrection()
             => GetPersonality().Power >= 25;
 
-        public bool DoResearch(double bonusResearchPower = 0, int year = 0)
+        public bool DoResearch(double bonusResearchPower = 0)
         {
             if (ResearchTree.CurrentResearchFocus is null)
                 return false;
@@ -382,7 +383,6 @@ namespace MagiRogue.GameSys.Planet.History
 
             if (abilitiesIntersection is null || abilitiesIntersection.Count <= 0)
                 return false;
-
             double totalRes = bonusResearchPower;
             foreach (AbilityName abiName in abilitiesIntersection)
             {
@@ -390,10 +390,10 @@ namespace MagiRogue.GameSys.Planet.History
                 int abilityScore = Mind.GetAbility(abiName);
                 totalRes += (abilityScore * Mrn.Exploding2D6Dice);
             }
-            CheckForAnxious(year);
+            CheckForAnxious();
 
             ResearchTree.CurrentResearchFocus.CurrentRP += (int)MathMagi.Round(totalRes);
-            yearsOnActivity++;
+            seasonsOnActivity++;
             DoingLongTermActivity = true;
 
             return ResearchTree.CurrentResearchFocus.Finished;
@@ -402,17 +402,18 @@ namespace MagiRogue.GameSys.Planet.History
         public void ClearAnxiousness()
         {
             AnxiousInRegardsToActivity = false;
-            yearCurrentActivityStarted = 0;
-            yearsOnActivity = 0;
+            seasonsOnActivity = 0;
         }
 
-        public void CheckForAnxious(int year)
+        public void CheckForAnxious()
         {
+            if (seasonsOnActivity <= 4)
+                return;
+
             if (GetPersonality().Leisure <= 0
-                && GetPersonality().SelfControl <= 10
-                && GetPersonality().Perseverance <= 0)
+            && GetPersonality().SelfControl <= 10
+            && GetPersonality().Perseverance <= 0)
             {
-                yearCurrentActivityStarted = year;
                 bool sucess = Mrn.OneIn(GetPersonality().Perseverance * -1);
                 if (!sucess)
                 {
@@ -436,7 +437,7 @@ namespace MagiRogue.GameSys.Planet.History
                 return;
             AddLegend(disc.ReturnLegendFromDiscovery(year));
             site.DiscoveriesKnow.Add(disc);
-            site.AddLegend(new Legend($"In the year {year}, the {Name} added a new discovery to the site {site.Name} knowlodge!", year));
+            site.AddLegend($"the {Name} added a new discovery to the site {site.Name} knowlodge!", year);
             ResearchTree.CurrentResearchFocus = null;
             ClearAnxiousness();
             DoingLongTermActivity = false;

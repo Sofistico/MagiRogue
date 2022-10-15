@@ -54,6 +54,8 @@ namespace MagiRogue.GameSys.Planet.TechRes
                             return;
                         }
                         tries++;
+                        if (figure.TrainingFocus is not AbilityName.None)
+                            return;
                     }
                 }
                 // if all roots are researched, then go select any that has all parents researched!

@@ -85,6 +85,11 @@ namespace MagiRogue.GameSys.Planet.History
                 GetANewFriend();
             }
 
+            if (figure.CheckForAnyStudious())
+            {
+                LearnNewDiscoveriesKnowToTheSite();
+            }
+
             #endregion Non-returning actions
 
             #region Returning actions
@@ -96,12 +101,6 @@ namespace MagiRogue.GameSys.Planet.History
                 return;
             }
             // do Pet and animals do stuff?
-
-            if (figure.CheckForAnyStudious())
-            {
-                LearnNewDiscoveriesKnowToTheSite();
-                return;
-            }
 
             if (figure.CheckForWanderlust())
             {
@@ -290,15 +289,22 @@ namespace MagiRogue.GameSys.Planet.History
         private void GetANewFriend()
         {
             Site site = GetFigureStayingSiteIfAny();
-            if (site is not null && !figure.IsMarried())
+            if (site is not null)
             {
                 var peopleInside = GetAllFiguresStayingInSiteIfAny(site.Id);
                 if (peopleInside.Count >= 0)
                 {
                     var randomPerson = peopleInside.GetRandomItemFromList();
                     figure.MakeFriend(randomPerson);
+                    figure.AddLegend(ReturnMadeFriendString(figure, randomPerson), year);
+                    randomPerson.AddLegend(ReturnMadeFriendString(randomPerson, figure), year);
                 }
             }
+        }
+
+        private static string ReturnMadeFriendString(HistoricalFigure figure, HistoricalFigure randomPerson)
+        {
+            return $"the {figure.Name} became friends with {randomPerson.Name}";
         }
 
         private void RomanceSomeoneInsideSameSite()
@@ -317,8 +323,10 @@ namespace MagiRogue.GameSys.Planet.History
                 else
                 {
                     // kids can't marry!
-                    aceptableDiferenceAge = 999;
+                    aceptableDiferenceAge = int.MaxValue;
                 }
+                if (aceptableDiferenceAge == int.MaxValue)
+                    return;
                 var peopleInARangeOfAgeCloseAndPredispost = peopleInside.Where(i =>
                     (i.Body.GetCurrentAge() >= aceptableDiferenceAge) && i.CheckForRomantic()).ToList();
                 if (peopleInARangeOfAgeCloseAndPredispost.Count >= 0)
@@ -405,9 +413,12 @@ namespace MagiRogue.GameSys.Planet.History
                 resarchPower += Mrn.Exploding2D6Dice;
                 if (site is not null)
                 {
-                    resarchPower *= (double)((double)site.MagicalResources / 100);
+                    double modifier = (double)((double)site.MundaneResources + 1) / 100;
+                    modifier = modifier <= 0 ? 1 : modifier;
+                    resarchPower *= modifier;
+                    resarchPower = MathMagi.Round(resarchPower);
                 }
-                if (figure.DoResearch(resarchPower, year))
+                if (figure.DoResearch(resarchPower))
                 {
                     figure.CleanupResearch(site, year);
                 }
