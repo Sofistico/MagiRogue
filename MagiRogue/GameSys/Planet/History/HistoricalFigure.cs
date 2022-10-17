@@ -69,7 +69,7 @@ namespace MagiRogue.GameSys.Planet.History
         /// </summary>
         public FamilyLink FamilyLink { get; set; } = new();
 
-        public Point CurrentPos { get; set; }
+        public Point CurrentPos { get; private set; }
 
         #endregion Props
 
@@ -298,12 +298,24 @@ namespace MagiRogue.GameSys.Planet.History
 
         // see if there is anyway to refactor this to be better!
         // maybe some good old OOP
-        public void AddRelatedHf(int otherId, HfRelationType relation)
+        /// <summary>
+        /// Adds a relation type to another historifacl figure!
+        /// </summary>
+        /// <param name="otherId"></param>
+        /// <param name="relation"></param>
+        /// <returns>true if already had previous relation, false if otherwise</returns>
+        public bool AddRelatedHf(int otherId, HfRelationType relation)
         {
             if (RelatedHFs.Any(i => i.OtherHfId == otherId))
+            {
                 RelatedHFs.FirstOrDefault(i => i.OtherHfId == otherId).RelationType = relation;
+                return true;
+            }
             else
+            {
                 RelatedHFs.Add(new HfRelation(Id, otherId, relation));
+                return false;
+            }
         }
 
         public void AddRelatedSite(int otherId, SiteRelationTypes relation)
@@ -425,7 +437,7 @@ namespace MagiRogue.GameSys.Planet.History
         public Discovery ReturnDiscoveryFromCurrentFocus(Site site)
         {
             return new Discovery(Id,
-                $"{Name} finished reserach on ",
+                $"{Name} finished reserach on {ResearchTree.CurrentResearchFocus.Research.Name}",
                 $"{site.Name}",
                 ResearchTree.CurrentResearchFocus.Research);
         }
@@ -637,9 +649,9 @@ namespace MagiRogue.GameSys.Planet.History
             return FamilyLink.GetIfExistsAnyRelationOfType(this, HfRelationType.Married);
         }
 
-        public void MakeFriend(HistoricalFigure randomPerson)
+        public bool MakeFriend(HistoricalFigure randomPerson)
         {
-            AddRelatedHf(randomPerson.Id, HfRelationType.Friend);
+            return AddRelatedHf(randomPerson.Id, HfRelationType.Friend);
         }
 
         public int? GetRelatedHfSpouseId()

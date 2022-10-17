@@ -55,6 +55,13 @@ namespace MagiRogue.GameSys.Planet.History
 
         public void Act()
         {
+            // if from hell!
+            if (figure.MythWho != MythWho.None)
+            {
+                SimulateMythStuff();
+                return;
+            }
+
             #region Non-returning actions
 
             // everyone trains theirs focus!
@@ -94,15 +101,9 @@ namespace MagiRogue.GameSys.Planet.History
 
             #region Returning actions
 
-            // if from hell!
-            if (figure.MythWho != MythWho.None)
-            {
-                SimulateMythStuff();
-                return;
-            }
             // do Pet and animals do stuff?
 
-            if (figure.CheckForWanderlust())
+            if (figure.CheckForWanderlust() && Mrn.OneIn(10))
             {
                 WanderAndSettleSomewhere();
                 return;
@@ -124,9 +125,9 @@ namespace MagiRogue.GameSys.Planet.History
             }
 
             // wizardy stuff will be here as well!
-            if (figure.SpecialFlags.Contains(SpecialFlag.MagicUser) && figure.CheckForLoneniss())
+            if (figure.SpecialFlags.Contains(SpecialFlag.MagicUser))
             {
-                if (!figure.SpecialFlags.Contains(SpecialFlag.BuiltTower))
+                if (!figure.SpecialFlags.Contains(SpecialFlag.BuiltTower) && figure.CheckForLoneniss())
                 {
                     BuildATower();
                     return;
@@ -159,17 +160,23 @@ namespace MagiRogue.GameSys.Planet.History
                         .Where(i => i.Id != siteId.Value)
                         .ToList()
                         .GetRandomItemFromList() : currentCiv.Sites.GetRandomItemFromList();
-                    ChangeFigureStayingSite(figure, result, year);
-                    foreach (FamilyNode family in figure.FamilyLink.Family)
-                    {
-                        if (family.IsCloseFamily())
-                        {
-                            var fig = family.Figure;
-                            ChangeFigureStayingSite(fig, result, year);
-                            if (changedCiv)
-                                ChangeFigureCiv(fig, year, civs);
-                        }
-                    }
+                    ChangeFigureLivingSite(figure, result, year);
+                    ChangeFigureFamilyLivingSite(figure, changedCiv, result);
+                }
+            }
+        }
+
+        private void ChangeFigureFamilyLivingSite(HistoricalFigure figureToSearch,
+            bool changedCiv, Site result)
+        {
+            foreach (FamilyNode family in figureToSearch.FamilyLink.Family)
+            {
+                if (family.IsCloseFamily())
+                {
+                    var fig = family.Figure;
+                    ChangeFigureLivingSite(fig, result, year);
+                    if (changedCiv)
+                        ChangeFigureCiv(fig, year, civs);
                 }
             }
         }
@@ -185,15 +192,29 @@ namespace MagiRogue.GameSys.Planet.History
             return true;
         }
 
-        private static void ChangeFigureStayingSite(HistoricalFigure figure, Site result, int year)
+        private static void ChangeFigureLivingSite(HistoricalFigure figure, Site result, int year)
         {
             figure.ChangeLivingSite(result.Id);
-            string changedLoc = StringFromChangingSiteLoc(figure, result);
+            string changedLoc = StringFromChangingLivingSiteLoc(figure, result);
+            figure.ChangeStayingSite(result.WorldPos);
             figure.AddLegend(changedLoc, year);
             result.AddLegend(changedLoc, year);
         }
 
-        private static string StringFromChangingSiteLoc(HistoricalFigure figure, Site result)
+        private static void ChangeFigureStayingSite(HistoricalFigure figureToChange, Site site, int year)
+        {
+            string changedLoc = StringFromChangingSiteLoc(figureToChange, site);
+            figureToChange.ChangeStayingSite(site.WorldPos);
+            figureToChange.AddLegend(changedLoc, year);
+            site.AddLegend(changedLoc, year);
+        }
+
+        private static string StringFromChangingSiteLoc(HistoricalFigure figureToChange, Site site)
+        {
+            return $"the {figureToChange.Name} has changed {figureToChange.PronoumPossesive()} location to {site.Name}!";
+        }
+
+        private static string StringFromChangingLivingSiteLoc(HistoricalFigure figure, Site result)
         {
             return $"the {figure.Name} has changed {figure.PronoumPossesive()} living location to {result.Name}!";
         }
@@ -245,11 +266,13 @@ namespace MagiRogue.GameSys.Planet.History
         {
             int pop = Mrn.Normal2D6Dice;
             WorldTile rngTile = new WorldTile();
-            FigureCreatesNewSite(pop, SiteType.Tower, ref rngTile);
+            var site = FigureCreatesNewSite(pop, SiteType.Tower, ref rngTile);
             figure.AddNewFlag(SpecialFlag.BuiltTower);
+            ChangeFigureLivingSite(figure, site, year);
+            ChangeFigureFamilyLivingSite(figure, false, site);
         }
 
-        private void FigureCreatesNewSite(int popNmbr, SiteType siteType, ref WorldTile rngTile)
+        private Site FigureCreatesNewSite(int popNmbr, SiteType siteType, ref WorldTile rngTile)
         {
             bool colidable = true;
 
@@ -268,6 +291,7 @@ namespace MagiRogue.GameSys.Planet.History
 
             OnNewSiteCreated(rngTile, site);
             figure.ChangeLivingSite(site.Id);
+            return site;
         }
 
         private void OnNewSiteCreated(WorldTile rngTile, Site site)
@@ -295,9 +319,12 @@ namespace MagiRogue.GameSys.Planet.History
                 if (peopleInside.Count >= 0)
                 {
                     var randomPerson = peopleInside.GetRandomItemFromList();
-                    figure.MakeFriend(randomPerson);
-                    figure.AddLegend(ReturnMadeFriendString(figure, randomPerson), year);
-                    randomPerson.AddLegend(ReturnMadeFriendString(randomPerson, figure), year);
+                    if (!figure.MakeFriend(randomPerson))
+                    {
+                        randomPerson.MakeFriend(figure);
+                        //figure.AddLegend(ReturnMadeFriendString(figure, randomPerson), year);
+                        //randomPerson.AddLegend(ReturnMadeFriendString(randomPerson, figure), year);
+                    }
                 }
             }
         }
