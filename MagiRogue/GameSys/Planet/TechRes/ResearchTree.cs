@@ -11,8 +11,8 @@ namespace MagiRogue.GameSys.Planet.TechRes
 {
     public class ResearchTree
     {
-        public List<ReserachTreeNode> Nodes { get; set; }
-        public ReserachTreeNode CurrentResearchFocus { get; set; }
+        public List<ResearchTreeNode> Nodes { get; set; }
+        public ResearchTreeNode CurrentResearchFocus { get; set; }
 
         public ResearchTree()
         {
@@ -21,7 +21,7 @@ namespace MagiRogue.GameSys.Planet.TechRes
 
         public void ConfigureNodes()
         {
-            foreach (ReserachTreeNode node in Nodes)
+            foreach (ResearchTreeNode node in Nodes)
             {
                 Research res = node.Research;
                 if (res.RequiredRes.Count > 0)
@@ -38,7 +38,7 @@ namespace MagiRogue.GameSys.Planet.TechRes
         {
             if (Nodes.Any(i => !i.Finished))
             {
-                ReserachTreeNode[] nodes = GetUnfinishedNodes();
+                ResearchTreeNode[] nodes = GetUnfinishedNodes();
                 // priotize by roots first
                 if (nodes.Any(i => i.IsRoot))
                 {
@@ -61,13 +61,13 @@ namespace MagiRogue.GameSys.Planet.TechRes
                 // if all roots are researched, then go select any that has all parents researched!
                 if (nodes.Any(i => i.Parents.All(i => i.Finished)))
                 {
-                    ReserachTreeNode[] nodesWithParentsDone =
+                    ResearchTreeNode[] nodesWithParentsDone =
                         nodes.Where(i => i.Parents.All(i => i.Finished)).ToArray();
-                    List<ReserachTreeNode> nodesWithEnoughAbilitiesForRes
-                        = new List<ReserachTreeNode>();
+                    List<ResearchTreeNode> nodesWithEnoughAbilitiesForRes
+                        = new List<ResearchTreeNode>();
                     for (int i = 0; i < nodesWithParentsDone.Length; i++)
                     {
-                        ReserachTreeNode possibleNode = nodesWithParentsDone[i];
+                        ResearchTreeNode possibleNode = nodesWithParentsDone[i];
                         bool hasAbility = CheckIfHasAbilityToResearchNode(figure, possibleNode);
                         if (hasAbility)
                             nodesWithEnoughAbilitiesForRes.Add(possibleNode);
@@ -79,19 +79,19 @@ namespace MagiRogue.GameSys.Planet.TechRes
             }
         }
 
-        private static bool CheckIfHasAbilityToResearchNode(HistoricalFigure figure, ReserachTreeNode node)
+        private static bool CheckIfHasAbilityToResearchNode(HistoricalFigure figure, ResearchTreeNode node)
         {
             var abilities = node.GetRequisiteAbilitiesForResearch(figure);
             return abilities is not null && abilities.Count > 0;
         }
 
-        private ReserachTreeNode[] GetUnfinishedNodes()
+        private ResearchTreeNode[] GetUnfinishedNodes()
         {
-            ReserachTreeNode[] nodes = Nodes.Where(i => !i.Finished).ToArray();
+            ResearchTreeNode[] nodes = Nodes.Where(i => !i.Finished).ToArray();
             return nodes;
         }
 
-        private void DefineNodeRelation(ReserachTreeNode childNode, string str)
+        private void DefineNodeRelation(ResearchTreeNode childNode, string str)
         {
             var parentNode = Nodes.FirstOrDefault(i => i.Research.Id.Equals(str));
             if (parentNode is not null)
@@ -102,17 +102,17 @@ namespace MagiRogue.GameSys.Planet.TechRes
         }
     }
 
-    public class ReserachTreeNode
+    public class ResearchTreeNode
     {
         public Research Research { get; set; }
-        public List<ReserachTreeNode> Children { get; set; }
-        public List<ReserachTreeNode> Parents { get; set; }
+        public List<ResearchTreeNode> Children { get; set; }
+        public List<ResearchTreeNode> Parents { get; set; }
         public int RequiredRP { get; set; } // RP = Research Points
         public int CurrentRP { get; set; }
         public bool Finished { get => CurrentRP >= RequiredRP; }
         public bool IsRoot { get => Parents.Count <= 0; }
 
-        public ReserachTreeNode(Research research, int currentRpIfAny = 0)
+        public ResearchTreeNode(Research research, int currentRpIfAny = 0)
         {
             Research = research;
             CurrentRP = currentRpIfAny;

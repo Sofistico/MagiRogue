@@ -21,7 +21,7 @@ namespace MagiRogue.Data.Enumerators
         Dinner,
         DungeonKeeper,
         Farm,
-        ReserachRoom,
+        ResearchRoom,
         EnchantingRoom
     }
 }

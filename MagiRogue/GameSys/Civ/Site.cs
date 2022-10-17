@@ -200,7 +200,7 @@ namespace MagiRogue.GameSys.Civ
                 RoomTag.Temple,
                 RoomTag.Alchemist,
                 RoomTag.Farm,
-                RoomTag.ReserachRoom,
+                RoomTag.ResearchRoom,
                 RoomTag.EnchantingRoom,
             };
             for (int i = 0; i < numberOfNewTowerRooms; i++)

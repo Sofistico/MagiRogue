@@ -58,7 +58,7 @@ namespace MagiRogue.GameSys.Planet.History
         public bool AnxiousInRegardsToActivity { get; set; }
 
         /// <summary>
-        /// Flag to check if the figure is doing some long term important stuff like reserach
+        /// Flag to check if the figure is doing some long term important stuff like research
         /// <br>The figure can only do one long term activity</br>
         /// </summary>
         public bool DoingLongTermActivity { get; set; }
@@ -438,7 +438,7 @@ namespace MagiRogue.GameSys.Planet.History
         public Discovery ReturnDiscoveryFromCurrentFocus(Site site)
         {
             return new Discovery(Id,
-                $"{Name} finished reserach on {ResearchTree.CurrentResearchFocus.Research.Name}",
+                $"{Name} finished research on {ResearchTree.CurrentResearchFocus.Research.Name}",
                 $"{site.Name}",
                 ResearchTree.CurrentResearchFocus.Research);
         }
@@ -558,7 +558,7 @@ namespace MagiRogue.GameSys.Planet.History
             ResearchTree = new ResearchTree();
             foreach (Research item in researches)
             {
-                ReserachTreeNode node = new ReserachTreeNode(item);
+                ResearchTreeNode node = new ResearchTreeNode(item);
                 ResearchTree.Nodes.Add(node);
                 if (DiscoveriesKnow.Exists(i => i.WhatWasResearched.Id.Equals(item.Id)))
                     node.ForceFinish();

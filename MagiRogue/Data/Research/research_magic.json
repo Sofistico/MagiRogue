@@ -70,7 +70,7 @@
   },
   {
     "Id": "ritual_magic",
-    "Name": "The use of the aura and the concentration of physical aura as a form of permantent change",
+    "Name": "The use of the aura and the concentration of physical aura as a form of permanent change",
     "Difficulty": 10,
     "IsMagical": true,
     "ValidDeityGift": true,
@@ -127,7 +127,7 @@
   },
   {
     "Id": "gate_portal",
-    "Name": "The cleaving of the physical barrier as a way of achiving translocation using the polynominal equation derived by the Schwarzschild method",
+    "Name": "The cleaving of the physical barrier as a way of achieving translocation using the polynomial equation derived by the Schwarzschild method",
     "Difficulty": 50,
     "IsMagical": true,
     "AbilityRequired": [ "Mathematics", "MagicTheory", "Research", "Concentration", "Astronomer" ],

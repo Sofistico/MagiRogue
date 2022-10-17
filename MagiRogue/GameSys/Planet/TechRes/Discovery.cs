@@ -42,7 +42,7 @@ namespace MagiRogue.GameSys.Planet.TechRes
         public static Discovery ReturnDiscoveryFromResearch(Research res, HistoricalFigure figure, Site site)
         {
             return new Discovery(figure.Id,
-                $"{figure.Name} finished reserach on ",
+                $"{figure.Name} finished research on ",
                 $"in the {site.Name}",
                 res);
         }
