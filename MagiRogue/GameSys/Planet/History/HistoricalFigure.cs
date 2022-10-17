@@ -10,6 +10,7 @@ using System.Text;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.GameSys.Planet.TechRes;
 using MagiRogue.Data.Serialization;
+using MagiRogue.GameSys.Magic;
 
 namespace MagiRogue.GameSys.Planet.History
 {
@@ -697,7 +698,7 @@ namespace MagiRogue.GameSys.Planet.History
         public bool CheckForLoneniss()
         {
             return GetPersonality().Friendship <= -10
-                || GetPersonality().Tradition <= -10
+                || GetPersonality().Tradition <= 0
                 || GetPersonality().Familiy <= -10;
         }
 
@@ -759,6 +760,34 @@ namespace MagiRogue.GameSys.Planet.History
         public bool IsAdult()
         {
             return Body.GetCurrentAge() >= Body.Anatomy.GetRaceAdulthoodAge();
+        }
+
+        public void GenerateRandomStatsSpread()
+        {
+            SetupBodySoulAndMind();
+        }
+
+        private void SetupBodySoulAndMind()
+        {
+            Race race = GetRace();
+            race.SetBodyPlan();
+            SetBasicAnatomy();
+
+            Body.Endurance = race.BaseEndurance;
+            Body.Strength = race.BaseStrenght;
+            Body.Toughness = race.BaseToughness;
+            //Body.GeneralSpeed = race.GeneralSpeed;
+            //Body.ViewRadius = race.RaceViewRadius;
+            //Body.InitialStamina();
+
+            Mind.Inteligence = race.BaseInt;
+            Mind.Precision = race.BasePrecision;
+
+            Soul.WillPower = race.BaseWillPower;
+            Soul.BaseManaRegen = race.BaseManaRegen;
+            Soul.InitialMana(Mind.Inteligence, race);
+
+            //magic.InnateMagicResistance = race.BaseMagicResistance;
         }
     }
 }

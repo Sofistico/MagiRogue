@@ -176,6 +176,7 @@ namespace MagiRogue.GameSys.Civ
         private void FigureSetupPosCtor(Race figureRace, HistoricalFigure figure)
         {
             figure.GenerateRandomPersonality();
+            figure.GenerateRandomStatsSpread();
             if (!figure.CheckIfIsChildOrBabyForRace())
             {
                 figure.GenerateRandomSkills();
@@ -186,8 +187,6 @@ namespace MagiRogue.GameSys.Civ
             figure.AddNewRelationToCiv(Id, RelationType.Member);
 
             CheckIfGeneratedFigureIsWizard(figureRace, figure);
-
-            figure.SetBasicAnatomy();
         }
 
         private void BasicHFSetup(out string name, out Sex sex, out List<Legend> legends, out Race figureRace)

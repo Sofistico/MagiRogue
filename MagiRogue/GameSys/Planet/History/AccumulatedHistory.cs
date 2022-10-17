@@ -15,7 +15,6 @@ namespace MagiRogue.GameSys.Planet.History
     public sealed class AccumulatedHistory
     {
         private PlanetMap planetData;
-        private readonly List<Site> sitesWithNoCiv = new();
 
         #region Consts
 
@@ -67,14 +66,13 @@ namespace MagiRogue.GameSys.Planet.History
                 firstYearOnly = false;
 
                 DefineFiguresToHaveAInitialSite(Figures, Civs);
+
+                List<Site> civSite = Civs.Select(i => i.Sites).ToList().ReturnListListTAsListT();
+                AllSites.AddRange(civSite);
             }
 
             while (Year <= yearToGameBegin)
             {
-                List<Site> civSite = Civs.Select(i => i.Sites).ToList().ReturnListListTAsListT();
-                AllSites.AddRange(civSite);
-                AllSites.AddRange(sitesWithNoCiv);
-
                 int season = 1; // 4 actions per year, representing the four seasons
                 while (season <= 4)
                 {
@@ -91,7 +89,6 @@ namespace MagiRogue.GameSys.Planet.History
                 }
                 AgeEveryone();
                 ConceiveAnyChild();
-                AllSites.Clear();
                 Year++;
             }
         }
@@ -160,7 +157,7 @@ namespace MagiRogue.GameSys.Planet.History
         {
             if (AllSites.Count < 1)
                 return;
-            foreach (Site site in AllSites)
+            foreach (Site site in AllSites.Where(i => i.CivOwnerIfAny is null))
             {
             }
         }
@@ -357,7 +354,6 @@ namespace MagiRogue.GameSys.Planet.History
                 tile.SiteInfluence = site;
                 site.WorldPos = tile.Position;
                 site.MundaneResources = (int)tile.GetResources();
-                sitesWithNoCiv.Add(site);
             }
             AllSites.Add(site);
         }

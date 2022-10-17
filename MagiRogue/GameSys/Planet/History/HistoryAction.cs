@@ -274,30 +274,39 @@ namespace MagiRogue.GameSys.Planet.History
 
         private Site FigureCreatesNewSite(int popNmbr, SiteType siteType, ref WorldTile rngTile)
         {
-            bool colidable = true;
+            bool goodLocation = true;
 
-            while (colidable)
+            while (goodLocation)
             {
                 rngTile = tiles.Transform2DTo1D().GetRandomItemFromList();
-                colidable = !rngTile.Collidable;
+                goodLocation = rngTile.SiteInfluence is null && !rngTile.Collidable;
             }
 
-            Site site = new Site(rngTile.Position, $"Tower of {figure.Name}", new Population(popNmbr, figure.Body.Anatomy.Race))
+            Site site = new Site(rngTile.Position,
+                $"Tower of {figure.Name}",
+                new Population(popNmbr, figure.Body.Anatomy.Race))
             {
                 SiteLeader = figure,
                 SiteType = siteType,
                 DiscoveriesKnow = new List<Discovery>(figure.DiscoveriesKnow),
             };
 
-            OnNewSiteCreated(rngTile, site);
-            figure.ChangeLivingSite(site.Id);
+            OnNewSiteCreated(rngTile,
+                site,
+                $"the {figure.Name} created the {site.Name}, leaving {figure.PronoumPossesive()} previous home to live on it and continue it's research!",
+                $"the {site.Name} was created by {figure.Name} for the continuation of {figure.PronoumPossesive()} research!");
             return site;
         }
 
-        private void OnNewSiteCreated(WorldTile rngTile, Site site)
+        private void OnNewSiteCreated(WorldTile rngTile, Site site,
+            string whyFigure = "", string whySite = "")
         {
             rngTile.SiteInfluence = site;
             sites.Add(site);
+            if (!string.IsNullOrEmpty(whyFigure))
+                figure.AddLegend(whyFigure, year);
+            if (!string.IsNullOrEmpty(whySite))
+                site.AddLegend(whySite, year);
         }
 
         private Site GetCurrentlyStayingSite()
@@ -442,6 +451,9 @@ namespace MagiRogue.GameSys.Planet.History
                 {
                     double modifier = (double)((double)site.MundaneResources + 1) / 100;
                     modifier = modifier <= 0 ? 1 : modifier;
+                    if (site.SiteType is SiteType.Tower)
+                        modifier *= 2; // research is doubly effective on a tower!
+
                     resarchPower *= modifier;
                     resarchPower = MathMagi.Round(resarchPower);
                 }

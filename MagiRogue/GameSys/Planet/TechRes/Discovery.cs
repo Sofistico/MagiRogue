@@ -43,7 +43,7 @@ namespace MagiRogue.GameSys.Planet.TechRes
         {
             return new Discovery(figure.Id,
                 $"{figure.Name} finished reserach on ",
-                $"{site.Name}",
+                $"in the {site.Name}",
                 res);
         }
     }
