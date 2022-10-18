@@ -60,7 +60,7 @@ namespace MagiRogue.GameSys.Civ
             int usableResources = 0;
             try
             {
-                usableResources = ReturnPopNumber() / MundaneResources;
+                usableResources = (ReturnPopNumber() + 1) / (MundaneResources + 1);
             }
             catch (DivideByZeroException)
             {
