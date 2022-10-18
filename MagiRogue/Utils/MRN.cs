@@ -56,5 +56,8 @@ namespace MagiRogue.Utils
         {
             return x <= y || GameLoop.GlobalRand.NextInt(x, y) == x;
         }
+
+        public static int CustomDice(string diceExpression)
+            => Dice.Roll(diceExpression);
     }
 }

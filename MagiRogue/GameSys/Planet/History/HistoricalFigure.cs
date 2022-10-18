@@ -341,6 +341,12 @@ namespace MagiRogue.GameSys.Planet.History
             return race.RaceName;
         }
 
+        public string GetRaceNamePlural()
+        {
+            Race race = Body.Anatomy.GetRace();
+            return race.NamePlural;
+        }
+
         public Race GetRace()
         {
             Race race = Body.Anatomy.GetRace();
