@@ -35,7 +35,9 @@ namespace MagiRogue.GameSys.Civ
 
         public bool GetIfExistsAnyRelationOfType(HistoricalFigure figure, HfRelationType toFind)
         {
-            return Family.Any(i => i.Figure.Id == figure.Id && i.Relation == toFind);
+            return Family.Any(i => i.Figure.Id == figure.Id
+            && i.Relation == toFind
+            && i.Figure.IsAlive);
         }
 
         public void SetMotherChildFatherRelation(HistoricalFigure hfMother,

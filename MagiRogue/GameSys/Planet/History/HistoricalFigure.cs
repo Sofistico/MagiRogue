@@ -647,6 +647,8 @@ namespace MagiRogue.GameSys.Planet.History
 
         public void Marry(HistoricalFigure randomPerson)
         {
+            if (IsMarried())
+                return;
             FamilyLink.SetMarriedRelation(this, randomPerson);
             randomPerson.FamilyLink.SetMarriedRelation(randomPerson, this);
         }
