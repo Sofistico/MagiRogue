@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace MagiRogue.LegendsConsoleViewer
 {
-    internal class Program
+    public class Program
     {
         private static void Main(string[] args)
         {
