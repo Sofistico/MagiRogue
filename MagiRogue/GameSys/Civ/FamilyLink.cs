@@ -1,5 +1,6 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.GameSys.Planet.History;
+using MagiRogue.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,35 +8,35 @@ using System.Text;
 
 namespace MagiRogue.GameSys.Civ
 {
-    public class FamilyLink
+    public class FamilyLink : BasicTreeStructure<FamilyNode>
     {
-        public List<FamilyNode> Family { get; set; }
-
         public FamilyLink()
         {
-            Family = new();
+            Nodes = new();
         }
 
         public FamilyLink(List<FamilyNode> family)
         {
-            Family = family;
+            Nodes = family;
         }
 
-        public void AddToFamilyLink(HistoricalFigure figure, HfRelationType type, HistoricalFigure otherFigure)
+        public void AddToFamilyLink(HistoricalFigure figure,
+            HfRelationType type,
+            HistoricalFigure otherFigure)
         {
-            if (!Family.Any(i => i.OtherFigureId == otherFigure.Id))
-                Family.Add(new FamilyNode(type, figure, otherFigure.Id));
+            if (!Nodes.Any(i => i.OtherFigureId == otherFigure.Id))
+                Nodes.Add(new FamilyNode(type, figure, otherFigure.Id));
         }
 
         public FamilyNode[] GetOtherFamilyNodesByRelations(HistoricalFigure whoToSearchIn, HfRelationType toFind)
         {
-            return Family.Where(i => whoToSearchIn.Id == i.OtherFigureId
+            return Nodes.Where(i => whoToSearchIn.Id == i.OtherFigureId
                 && i.Relation == toFind).ToArray();
         }
 
         public bool GetIfExistsAnyRelationOfType(HistoricalFigure figure, HfRelationType toFind)
         {
-            return Family.Any(i => i.Figure.Id == figure.Id
+            return Nodes.Any(i => i.Figure.Id == figure.Id
             && i.Relation == toFind
             && i.Figure.IsAlive);
         }
@@ -78,11 +79,11 @@ namespace MagiRogue.GameSys.Civ
 
         public int? GetSpouseIfAny()
         {
-            return Family.FirstOrDefault(i => i.Relation is HfRelationType.Married)?.Figure.Id;
+            return Nodes.FirstOrDefault(i => i.Relation is HfRelationType.Married)?.Figure.Id;
         }
     }
 
-    public class FamilyNode
+    public class FamilyNode : BasicTreeNode<FamilyNode>
     {
         public HfRelationType Relation { get; set; }
         public int OtherFigureId { get; set; }

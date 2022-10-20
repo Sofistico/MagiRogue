@@ -169,7 +169,7 @@ namespace MagiRogue.GameSys.Planet.History
         private void ChangeFigureFamilyLivingSite(HistoricalFigure figureToSearch,
             bool changedCiv, Site result)
         {
-            foreach (FamilyNode family in figureToSearch.FamilyLink.Family)
+            foreach (FamilyNode family in figureToSearch.FamilyLink.Nodes)
             {
                 if (family.IsCloseFamily())
                 {

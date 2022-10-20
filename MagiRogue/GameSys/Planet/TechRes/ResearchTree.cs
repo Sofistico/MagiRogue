@@ -9,9 +9,9 @@ using System.Linq;
 
 namespace MagiRogue.GameSys.Planet.TechRes
 {
-    public class ResearchTree
+    public class ResearchTree : BasicTreeStructure<ResearchTreeNode>
     {
-        public List<ResearchTreeNode> Nodes { get; set; }
+        //public List<ResearchTreeNode> Nodes { get; set; }
         public ResearchTreeNode CurrentResearchFocus { get; set; }
 
         public ResearchTree()
@@ -102,15 +102,16 @@ namespace MagiRogue.GameSys.Planet.TechRes
         }
     }
 
-    public class ResearchTreeNode
+    public class ResearchTreeNode : BasicTreeNode<ResearchTreeNode>
     {
         public Research Research { get; set; }
-        public List<ResearchTreeNode> Children { get; set; }
-        public List<ResearchTreeNode> Parents { get; set; }
+
+        //public List<ResearchTreeNode> Children { get; set; }
+        //public List<ResearchTreeNode> Parents { get; set; }
         public int RequiredRP { get; set; } // RP = Research Points
         public int CurrentRP { get; set; }
         public bool Finished { get => CurrentRP >= RequiredRP; }
-        public bool IsRoot { get => Parents.Count <= 0; }
+        //public bool IsRoot { get => Parents.Count <= 0; }
 
         public ResearchTreeNode(Research research, int currentRpIfAny = 0)
         {
