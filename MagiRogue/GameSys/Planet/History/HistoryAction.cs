@@ -431,10 +431,7 @@ namespace MagiRogue.GameSys.Planet.History
                 for (int i = 0; i < currentSite.DiscoveriesKnow.Count; i++)
                 {
                     Discovery disc = currentSite.DiscoveriesKnow[i];
-                    if (!figure.DiscoveriesKnow.Any(i => i.Id == disc.Id))
-                    {
-                        figure.DiscoveriesKnow.Add(disc);
-                    }
+                    figure.AddDiscovery(disc);
                 }
             }
         }
@@ -542,7 +539,7 @@ namespace MagiRogue.GameSys.Planet.History
 
                 Civilization civ = figure.GetRelatedCivFromFigure(RelationType.PatronDeity, civs);
                 Site site = civ.Sites.GetRandomItemFromList();
-                site.DiscoveriesKnow.Add(Discovery.ReturnDiscoveryFromResearch(gift, figure, site));
+                site.AddDiscovery(Discovery.ReturnDiscoveryFromResearch(gift, figure, site));
             }
             if (figure.CheckForGreed())
             {

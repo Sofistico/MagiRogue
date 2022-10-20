@@ -455,7 +455,7 @@ namespace MagiRogue.GameSys.Planet.History
             if (disc is null) // if for some reason dis is null
                 return;
             AddLegend(disc.ReturnLegendFromDiscovery(year));
-            site.DiscoveriesKnow.Add(disc);
+            site.AddDiscovery(disc);
             site.AddLegend($"the {Name} added a new discovery to the site {site.Name} knowlodge!", year);
             ResearchTree.CurrentResearchFocus = null;
             ClearAnxiousness();
@@ -796,6 +796,18 @@ namespace MagiRogue.GameSys.Planet.History
             Soul.InitialMana(Mind.Inteligence, race);
 
             //magic.InnateMagicResistance = race.BaseMagicResistance;
+        }
+
+        public void AddDiscovery(Discovery disc)
+        {
+            if (!DiscoveriesKnow.Any(i => i.WhatWasResearched.Id.Equals(disc.WhatWasResearched.Id)))
+            {
+                if (ResearchTree.CurrentResearchFocus.Research.Id.Equals(disc.WhatWasResearched.Id))
+                {
+                    ForceCleanupResearch(); // clean up reserach, since someone else discovery it before it!
+                }
+                DiscoveriesKnow.Add(disc);
+            }
         }
     }
 }

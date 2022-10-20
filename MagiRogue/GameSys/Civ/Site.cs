@@ -377,8 +377,21 @@ namespace MagiRogue.GameSys.Civ
 
         public void SimulateResearchPropagation(Civilization civ, WorldTile[,] tiles)
         {
-            // TODO: Finish this!
+            var sitesThatAreNotThis = civ.Sites.Where(i => i.Id != Id);
+            foreach (Site siteNotThis in sitesThatAreNotThis)
+            {
+                siteNotThis.AddDiscovery(DiscoveriesKnow.GetRandomItemFromList());
+            }
             return;
+        }
+
+        public void AddDiscovery(Discovery discovery)
+        {
+            if (DiscoveriesKnow.Any(i => i.WhatWasResearched.Id.Equals(discovery.WhatWasResearched.Id)))
+            {
+                return;
+            }
+            DiscoveriesKnow.Add(discovery);
         }
 
         public void AddLegend(Legend legend)
