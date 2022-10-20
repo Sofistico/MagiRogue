@@ -46,7 +46,7 @@ namespace MagiRogue.GameSys.Planet.TechRes
                     int tries = 0;
                     while (tries <= maxTries)
                     {
-                        var getRoot = nodes.GetRandomItemFromList();
+                        var getRoot = nodes.Where(i => i.IsRoot).ToList().GetRandomItemFromList();
                         bool hasAnyAbility = CheckIfHasAbilityToResearchNode(figure, getRoot);
                         if (hasAnyAbility)
                         {
