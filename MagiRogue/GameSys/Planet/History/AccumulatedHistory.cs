@@ -224,7 +224,9 @@ namespace MagiRogue.GameSys.Planet.History
                     }
                     civ.TradeWithOtherCiv(otherCivs.ToArray());
                 }
+
                 int totalRevenueYear = 0;
+
                 if (civ.Wealth > wealthToCreateNewSite)
                     CreateNewSiteIfPossible(tiles, civ);
 
