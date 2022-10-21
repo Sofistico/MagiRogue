@@ -464,7 +464,7 @@ namespace MagiRogue.Entities
                 int rng = GameLoop.GlobalRand.NextInt(2 ^ (CurrentAge - Lifespan));
                 int yRng = GameLoop.GlobalRand.NextInt(Lifespan, CurrentAge);
                 // one in rng. better be lucky!
-                var died = Mrn.XinY(yRng, rng);
+                var died = Mrn.XinY(rng, yRng);
                 return died;
             }
             return false;
