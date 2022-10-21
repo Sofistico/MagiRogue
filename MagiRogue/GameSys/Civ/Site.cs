@@ -57,24 +57,15 @@ namespace MagiRogue.GameSys.Civ
 
         public void DefineSiteSize()
         {
-            int usableResources = 0;
-            try
-            {                    
-                usableResources = (ReturnPopNumber() + 1) / (MundaneResources + 1);
-            }
-            catch (DivideByZeroException)
-            {
-                Size = SiteSize.None;
-            }
-            if (usableResources > 100 && usableResources < 1000)
+            if (Buildings.Count <= 10)
             {
                 Size = SiteSize.Small;
             }
-            if (usableResources > 1000 && usableResources < 10000)
+            if (Buildings.Count > 10 && Buildings.Count <= 30)
             {
                 Size = SiteSize.Medium;
             }
-            if (usableResources > 10000)
+            if (Buildings.Count > 30)
             {
                 Size = SiteSize.Large;
             }
@@ -97,20 +88,20 @@ namespace MagiRogue.GameSys.Civ
                 switch (room.Tag)
                 {
                     case RoomTag.Inn:
-                        MundaneResources += 10;
+                        MundaneResources += 20;
                         break;
 
                     case RoomTag.Blacksmith:
-                        MundaneResources += 50;
+                        MundaneResources += 100;
                         break;
 
                     case RoomTag.Clothier:
-                        MundaneResources += 35;
+                        MundaneResources += 50;
                         break;
 
                     case RoomTag.Alchemist:
-                        MundaneResources += 20;
-                        MagicalResources += 15;
+                        MundaneResources += 50;
+                        MagicalResources += 25;
                         break;
 
                     case RoomTag.Hovel:
@@ -123,34 +114,34 @@ namespace MagiRogue.GameSys.Civ
                         break;
 
                     case RoomTag.House:
-                        MundaneResources -= 10;
+                        MundaneResources -= 2;
                         break;
 
                     case RoomTag.Throne:
-                        MundaneResources -= 50;
+                        MundaneResources -= 10;
                         break;
 
                     case RoomTag.Kitchen:
-                        MundaneResources -= 25;
-                        FoodQuantity += 20;
+                        MundaneResources -= 20;
+                        FoodQuantity += 35;
                         break;
 
                     case RoomTag.GenericWorkshop:
-                        MundaneResources += 20;
+                        MundaneResources += 25;
                         break;
 
                     case RoomTag.Dinner:
-                        MundaneResources -= 10;
-                        FoodQuantity += 10;
+                        MundaneResources -= 5;
+                        FoodQuantity += 25;
                         break;
 
                     case RoomTag.DungeonKeeper:
-                        MundaneResources += 10;
+                        MundaneResources += 15;
                         MagicalResources -= 10;
                         break;
 
                     case RoomTag.Farm:
-                        MundaneResources += 20;
+                        MundaneResources += 25;
                         FoodQuantity += 100;
                         break;
 
@@ -165,8 +156,8 @@ namespace MagiRogue.GameSys.Civ
                 if (FoodQuantity >= 0)
                     Famine = false;
             }
-            MundaneResources += 5;
-            FoodQuantity += 5;
+            MundaneResources += 10;
+            FoodQuantity += 10;
             // if the resources got big enough, update!
             DefineSiteSize();
         }
