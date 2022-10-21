@@ -377,6 +377,8 @@ namespace MagiRogue.GameSys.Civ
 
         public void SimulateResearchPropagation(Civilization civ, WorldTile[,] tiles)
         {
+            if (DiscoveriesKnow.Count <= 0)
+                return;
             var sitesThatAreNotThis = civ.Sites.Where(i => i.Id != Id);
             foreach (Site siteNotThis in sitesThatAreNotThis)
             {
@@ -387,6 +389,8 @@ namespace MagiRogue.GameSys.Civ
 
         public void AddDiscovery(Discovery discovery)
         {
+            if (discovery is null)
+                return;
             if (DiscoveriesKnow.Any(i => i.WhatWasResearched.Id.Equals(discovery.WhatWasResearched.Id)))
             {
                 return;

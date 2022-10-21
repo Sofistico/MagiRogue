@@ -800,11 +800,15 @@ namespace MagiRogue.GameSys.Planet.History
 
         public void AddDiscovery(Discovery disc)
         {
+            if (disc is null)
+                return;
             if (!DiscoveriesKnow.Any(i => i.WhatWasResearched.Id.Equals(disc.WhatWasResearched.Id)))
             {
-                if (ResearchTree.CurrentResearchFocus.Research.Id.Equals(disc.WhatWasResearched.Id))
+                if (ResearchTree is not null)
                 {
-                    ForceCleanupResearch(); // clean up reserach, since someone else discovery it before it!
+                    if (ResearchTree.CurrentResearchFocus is not null
+                        && ResearchTree.CurrentResearchFocus.Research.Id.Equals(disc.WhatWasResearched.Id))
+                        ForceCleanupResearch(); // clean up reserach, since someone else discovery it before it!
                 }
                 DiscoveriesKnow.Add(disc);
             }
