@@ -13,7 +13,7 @@ namespace MagiRogue.LegendsConsoleViewer
             try
             {
                 PlanetGenerator planetGenerator = new PlanetGenerator();
-                int yearsToGenerate = 10;
+                int yearsToGenerate = 100;
                 var planet = planetGenerator.CreatePlanet(100, 100, yearsToGenerate, 15);
                 List<object> legends = new();
                 List<string> stringToAdd = new();
@@ -29,6 +29,7 @@ namespace MagiRogue.LegendsConsoleViewer
                     legends.Add(finalObj);
                     stringToAdd.Clear();
                 }
+
                 foreach (var civ in planet.WorldHistory.Civs)
                 {
                     foreach (var item in civ.Legends)
@@ -70,6 +71,7 @@ namespace MagiRogue.LegendsConsoleViewer
                     Console.WriteLine(myth.ToString());
                     stringToAdd.Add(myth.ToString());
                 }
+
                 legends.Add(new
                 {
                     Myths = new { Legend = new List<string>(stringToAdd) }

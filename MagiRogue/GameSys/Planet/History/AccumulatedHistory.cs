@@ -136,19 +136,23 @@ namespace MagiRogue.GameSys.Planet.History
 
         private void AgePopsFromSite()
         {
-            foreach (Population pop in from site in AllSites
-                                       where site.Population.Count > 0
-                                       from pop in site.Population
-                                       select pop)
+            var sites = AllSites.Where(i => i.Population.Count > 0);
+            var sitesPop = sites.Select(i => i.Population);
+            foreach (var listPops in sitesPop)
             {
-                pop.TotalPopulation = pop.TotalPopulation <= 0 ? 0 : pop.TotalPopulation;
-                if (pop.PopulationRace().LifespanMin.HasValue
-                    && Year >= pop.PopulationRace().LifespanMin.Value)
+                foreach (var pop in listPops)
                 {
-                    // about 2.5% die to age every year,
-                    // if they age that is and the year is greater than the LifespanMin!
-                    double totalLost = (double)((double)pop.TotalPopulation / (double)0.025);
-                    pop.TotalPopulation = (int)MathMagi.Round(pop.TotalPopulation - totalLost);
+                    pop.TotalPopulation = pop.TotalPopulation <= 0 ? 0 : pop.TotalPopulation;
+                    if (pop.TotalPopulation <= 0)
+                        continue;
+                    if (pop.PopulationRace().LifespanMin.HasValue
+                        && Year >= pop.PopulationRace().LifespanMin.Value)
+                    {
+                        // about 2.5% die to age every year,
+                        // if they age that is and the year is greater than the LifespanMin!
+                        double totalLost = (double)((double)pop.TotalPopulation * (double)0.025);
+                        pop.TotalPopulation = (int)MathMagi.Round(pop.TotalPopulation - totalLost);
+                    }
                 }
             }
         }
