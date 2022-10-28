@@ -54,8 +54,13 @@ namespace MagiRogue.Data.Enumerators
         MilitaryTactics,
         Swin,
 
-        // scholary
+        // Magic specific
         MagicTheory,
+        Gestures,
+        Incantation,
+        ManaShaping,
+
+        // scholary
         MagicLore,
         Research,
         Mathematics,
