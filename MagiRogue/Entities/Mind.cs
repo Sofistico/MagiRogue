@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,19 @@ namespace MagiRogue.Entities
             if (ability.ReturnAbilityEnumFromString() is AbilityName.None)
                 return;
             Abilities.TryAdd(ability.Id, ability);
+        }
+
+        public void AddAbilitiesToDictionary(Ability[] abilities, bool randomScore = false)
+        {
+            for (int i = 0; i < abilities.Length; i++)
+            {
+                Ability ability = abilities[i];
+
+                if (randomScore)
+                    ability.Score = Mrn.Exploding2D6Dice;
+
+                AddAbilityToDictionary(ability);
+            }
         }
 
         public bool HasSpecifiedAttackAbility(WeaponType weaponType, out int abilityScore)

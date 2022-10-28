@@ -213,6 +213,7 @@ namespace MagiRogue.GameSys.Civ
                 if (chance)
                 {
                     figure.AddNewFlag(SpecialFlag.MagicUser);
+                    figure.Mind.AddAbilitiesToDictionary(AbilityHelper.GetMagicalAbilities(), true);
                 }
             }
         }
