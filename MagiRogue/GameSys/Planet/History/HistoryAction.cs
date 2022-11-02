@@ -135,6 +135,10 @@ namespace MagiRogue.GameSys.Planet.History
             }
 
             #endregion Returning actions
+
+#if DEBUG
+            figure.DebugNumberOfLostYears++;
+#endif
         }
 
         private void WanderAndSettleSomewhere()

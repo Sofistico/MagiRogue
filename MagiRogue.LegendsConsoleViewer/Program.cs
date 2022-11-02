@@ -13,8 +13,9 @@ namespace MagiRogue.LegendsConsoleViewer
             try
             {
                 PlanetGenerator planetGenerator = new PlanetGenerator();
-                int yearsToGenerate = 100;
+                int yearsToGenerate = InputHandle();
                 var planet = planetGenerator.CreatePlanet(100, 100, yearsToGenerate, 15);
+                List<object> polledObjs = new();
                 List<object> legends = new();
                 List<string> stringToAdd = new();
                 foreach (var site in planet.WorldHistory.AllSites)
@@ -25,10 +26,12 @@ namespace MagiRogue.LegendsConsoleViewer
                         stringToAdd.Add(item.ToString());
                     }
                     object obj = new { SiteName = site.Name, Legends = new List<string>(stringToAdd) };
-                    object finalObj = new { Sites = obj };
-                    legends.Add(finalObj);
+                    polledObjs.Add(obj);
                     stringToAdd.Clear();
                 }
+
+                legends.Add(new { Sites = new List<object>(polledObjs) });
+                polledObjs.Clear();
 
                 foreach (var civ in planet.WorldHistory.Civs)
                 {
@@ -37,10 +40,13 @@ namespace MagiRogue.LegendsConsoleViewer
                         Console.WriteLine(item.ToString());
                         stringToAdd.Add(item.ToString());
                     }
-                    legends.Add(new { Civ = new { CivName = civ.Name, Legends = new List<string>(stringToAdd) } });
-
+                    object obj = new { Civ = new { CivName = civ.Name, Legends = new List<string>(stringToAdd) } };
+                    polledObjs.Add(obj);
                     stringToAdd.Clear();
                 }
+
+                legends.Add(new { Civs = new List<object>(polledObjs) });
+                polledObjs.Clear();
 
                 foreach (var hf in planet.WorldHistory.Figures)
                 {
@@ -49,10 +55,16 @@ namespace MagiRogue.LegendsConsoleViewer
                         Console.WriteLine(item.ToString());
                         stringToAdd.Add(item.ToString());
                     }
-                    legends.Add(new { Hf = new { HistoricalFigure = hf.Name, Legends = new List<string>(stringToAdd) } });
+#if DEBUG
+                    stringToAdd.Add($"The entity spent this amount of years doing nothing = {hf.DebugNumberOfLostYears / 4}");
+#endif
+                    polledObjs.Add(new { Hf = new { HistoricalFigure = hf.Name, Legends = new List<string>(stringToAdd) } });
 
                     stringToAdd.Clear();
                 }
+
+                legends.Add(new { Hfs = new List<object>(polledObjs) });
+                polledObjs.Clear();
 
                 foreach (var item in planet.WorldHistory.ImportantItems)
                 {
@@ -61,10 +73,13 @@ namespace MagiRogue.LegendsConsoleViewer
                         Console.WriteLine(legend.ToString());
                         stringToAdd.Add(item.ToString());
                     }
-                    legends.Add(new { ItemLegends = new { Items = item.Name, Legends = new List<string>(stringToAdd) } });
+                    polledObjs.Add(new { ItemLegends = new { Items = item.Name, Legends = new List<string>(stringToAdd) } });
 
                     stringToAdd.Clear();
                 }
+
+                legends.Add(new { Items = new List<object>(polledObjs) });
+                polledObjs.Clear();
 
                 foreach (var myth in planet.WorldHistory.Myths)
                 {
@@ -86,6 +101,19 @@ namespace MagiRogue.LegendsConsoleViewer
                 Console.WriteLine(ex.Message);
                 throw;
             }
+        }
+
+        private static int InputHandle()
+        {
+            string result;
+            int value;
+            do
+            {
+                Console.WriteLine("Specify the amount of year to generate:");
+                result = Console.ReadLine();
+            } while (!int.TryParse(result, out value));
+
+            return value;
         }
     }
 }

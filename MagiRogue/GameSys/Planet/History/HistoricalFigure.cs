@@ -24,6 +24,10 @@ namespace MagiRogue.GameSys.Planet.History
         private int seasonsOnActivity = 0;
         private int whatScoreToSettleForTrainingAbility;
 
+#if DEBUG
+        public int DebugNumberOfLostYears;
+#endif
+
         #region Props
 
         public int Id { get; set; }
@@ -445,7 +449,7 @@ namespace MagiRogue.GameSys.Planet.History
         {
             return new Discovery(Id,
                 $"{Name} finished research on {ResearchTree.CurrentResearchFocus.Research.Name}",
-                $"{site.Name}",
+                site is null ? "Nowhere" : $"{site.Name}",
                 ResearchTree.CurrentResearchFocus.Research);
         }
 
@@ -455,8 +459,11 @@ namespace MagiRogue.GameSys.Planet.History
             if (disc is null) // if for some reason dis is null
                 return;
             AddLegend(disc.ReturnLegendFromDiscovery(year));
-            site.AddDiscovery(disc);
-            site.AddLegend($"the {Name} added a new discovery to the site {site.Name} knowlodge!", year);
+            if(site is not null)
+            {
+                site.AddDiscovery(disc);
+                site.AddLegend($"the {Name} added a new discovery to the site {site.Name} knowlodge!", year);
+            }
             ResearchTree.CurrentResearchFocus = null;
             ClearAnxiousness();
             DoingLongTermActivity = false;
