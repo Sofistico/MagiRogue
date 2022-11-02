@@ -24,34 +24,30 @@ namespace MagiRogue.GameSys.Civ
             HfRelationType type,
             HistoricalFigure otherFigure)
         {
-            if (!Nodes.Any(i => i.OtherFigureId == otherFigure.Id))
-                Nodes.Add(new FamilyNode(type, figure, otherFigure.Id));
+            if (!Nodes.Any(i => i.OtherFigure.Id == otherFigure.Id))
+                Nodes.Add(new FamilyNode(type, figure, otherFigure));
         }
 
-        public FamilyNode[] GetOtherFamilyNodesByRelations(HistoricalFigure whoToSearchIn, HfRelationType toFind)
+        public FamilyNode[] GetOtherFamilyNodesByRelations(HfRelationType toFind)
         {
-            return Nodes.Where(i => whoToSearchIn.Id == i.OtherFigureId
-                && i.Relation == toFind).ToArray();
+            return Nodes.Where(i => i.Relation == toFind).ToArray();
         }
 
-        public bool GetIfExistsAnyRelationOfType(HistoricalFigure figure, HfRelationType toFind)
+        public bool GetIfExistsAnyRelationOfType(HfRelationType toFind)
         {
-            return Nodes.Any(i => i.Figure.Id == figure.Id
-            && i.Relation == toFind
-            && i.Figure.IsAlive);
+            return Nodes.Any(i => i.Relation == toFind);
         }
 
         public void SetMotherChildFatherRelation(HistoricalFigure hfMother,
             HistoricalFigure hfChild,
             int year)
         {
-            HistoricalFigure hfFather =
-                GetOtherFamilyNodesByRelations(hfMother, HfRelationType.Married)[0].Figure;
+            var hfFather = GetOtherFamilyNodesByRelations(HfRelationType.Married)[0].OtherFigure;
 
             SetChildMotherFather(hfMother, hfChild, hfFather);
 
             // gods why
-            StringBuilder bb = new StringBuilder();
+            StringBuilder bb = new StringBuilder($"In the year {year}");
             string father = $"{bb} the {hfFather.Name} had a child with {hfMother.Name}, the child was named {hfChild.Name}";
             string mother = $"{bb} the  {hfMother.Name} conceived a child with {hfFather.Name}, the child was named {hfChild.Name}";
             string child = $"{bb} was born child of {hfMother.Name} and {hfFather.Name}";
@@ -77,23 +73,23 @@ namespace MagiRogue.GameSys.Civ
             this.AddToFamilyLink(hfOne, HfRelationType.Married, hfTwo);
         }
 
-        public int? GetSpouseIfAny()
+        public HistoricalFigure? GetSpouseIfAny()
         {
-            return Nodes.FirstOrDefault(i => i.Relation is HfRelationType.Married)?.Figure.Id;
+            return Nodes.FirstOrDefault(i => i.Relation is HfRelationType.Married)?.OtherFigure;
         }
     }
 
     public class FamilyNode : BasicTreeNode<FamilyNode>
     {
         public HfRelationType Relation { get; set; }
-        public int OtherFigureId { get; set; }
+        public HistoricalFigure OtherFigure { get; set; }
         public HistoricalFigure Figure { get; set; }
 
-        public FamilyNode(HfRelationType relation, HistoricalFigure figure, int otherFigureId)
+        public FamilyNode(HfRelationType relation, HistoricalFigure figure, HistoricalFigure otherFigure)
         {
             Relation = relation;
             Figure = figure;
-            OtherFigureId = otherFigureId;
+            OtherFigure = otherFigure;
         }
 
         public bool IsCloseFamily()

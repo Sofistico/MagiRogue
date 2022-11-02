@@ -459,7 +459,7 @@ namespace MagiRogue.GameSys.Planet.History
             if (disc is null) // if for some reason dis is null
                 return;
             AddLegend(disc.ReturnLegendFromDiscovery(year));
-            if(site is not null)
+            if (site is not null)
             {
                 site.AddDiscovery(disc);
                 site.AddLegend($"the {Name} added a new discovery to the site {site.Name} knowlodge!", year);
@@ -662,7 +662,7 @@ namespace MagiRogue.GameSys.Planet.History
 
         public bool IsMarried()
         {
-            return FamilyLink.GetIfExistsAnyRelationOfType(this, HfRelationType.Married);
+            return FamilyLink.GetIfExistsAnyRelationOfType(HfRelationType.Married);
         }
 
         public bool MakeFriend(HistoricalFigure randomPerson)
@@ -670,7 +670,7 @@ namespace MagiRogue.GameSys.Planet.History
             return AddRelatedHf(randomPerson.Id, HfRelationType.Friend);
         }
 
-        public int? GetRelatedHfSpouseId()
+        public HistoricalFigure? GetRelatedHfSpouseId()
         {
             return FamilyLink.GetSpouseIfAny();
         }
@@ -719,7 +719,7 @@ namespace MagiRogue.GameSys.Planet.History
 
         public HistoricalFigure GetChildrenIfAny()
         {
-            var family = FamilyLink.GetOtherFamilyNodesByRelations(this, HfRelationType.OwnChild);
+            var family = FamilyLink.GetOtherFamilyNodesByRelations(HfRelationType.OwnChild);
             if (family.Length <= 0)
                 return null;
             var child = family.GetRandomItemFromList();

@@ -260,10 +260,8 @@ namespace MagiRogue.GameSys.Planet.History
 
         private HistoricalFigure GetSpouse()
         {
-            int? idfigure = figure.GetRelatedHfSpouseId();
-            if (!idfigure.HasValue)
-                return null;
-            return otherFigures.FirstOrDefault(i => i.Id == idfigure.Value);
+            HistoricalFigure? figure = this.figure.GetRelatedHfSpouseId();
+            return figure;
         }
 
         private void BuildATower()
@@ -350,7 +348,8 @@ namespace MagiRogue.GameSys.Planet.History
         private void RomanceSomeoneInsideSameSite()
         {
             Site site = GetFigureStayingSiteIfAny();
-            if (site is not null && !figure.IsMarried())
+            if (site is not null
+                && !figure.IsMarried())
             {
                 var peopleInside = GetAllFiguresStayingInSiteIfAny(site.Id);
                 int aceptableDiferenceAge;
@@ -372,6 +371,8 @@ namespace MagiRogue.GameSys.Planet.History
                 if (peopleInARangeOfAgeCloseAndPredispost.Count >= 0)
                 {
                     var randomPerson = peopleInARangeOfAgeCloseAndPredispost.GetRandomItemFromList();
+                    if (randomPerson.IsMarried())
+                        return;
                     figure.Marry(randomPerson);
                     StringBuilder anotherB = new StringBuilder($"the {figure.Name} married with {randomPerson.Name}");
                     StringBuilder bb = new StringBuilder($"the {randomPerson.Name} married with {figure.Name}");
