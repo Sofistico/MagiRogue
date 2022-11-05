@@ -52,6 +52,9 @@
     <None Update="Data\Cultures\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+	<None Update="Data\Reaction\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Data\Descriptors\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

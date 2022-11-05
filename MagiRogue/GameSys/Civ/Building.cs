@@ -11,12 +11,12 @@ namespace MagiRogue.GameSys.Civ
     {
         public string Name { get; set; } // maybe pick the name of the owner? like Tuarval Smithy or somesuch!
         public Room PhysicalRoom { get; set; }
-        public List<Product> Produces { get; set; }
+        public List<Reaction> Produces { get; set; }
         public bool Workshop => Produces.Count > 0;
 
         public Building()
         {
-            Produces = new List<Product>();
+            Produces = new List<Reaction>();
         }
 
         public Building(Room physicalRoom)

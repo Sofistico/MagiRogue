@@ -47,7 +47,7 @@ namespace MagiRogue.GameSys.Civ
             SetChildMotherFather(hfMother, hfChild, hfFather);
 
             // gods why
-            StringBuilder bb = new StringBuilder($"In the year {year}");
+            StringBuilder bb = new StringBuilder();
             string father = $"{bb} the {hfFather.Name} had a child with {hfMother.Name}, the child was named {hfChild.Name}";
             string mother = $"{bb} the  {hfMother.Name} conceived a child with {hfFather.Name}, the child was named {hfChild.Name}";
             string child = $"{bb} was born child of {hfMother.Name} and {hfFather.Name}";

@@ -493,8 +493,8 @@ namespace MagiRogue.GameSys.Planet.History
             var combatAbilityDefender = Mind.CheckForCombatAbilities().GetRandomItemFromList();
             var defensiveAbilyDefender = Mind.CheckForDefensiveAbilities().GetRandomItemFromList();
 
-            StringBuilder killer = new StringBuilder($"In the year of {year} ");
-            StringBuilder victim = new StringBuilder($"In the year of {year} ");
+            StringBuilder killer = new StringBuilder();
+            StringBuilder victim = new StringBuilder();
 
             // TODO: Generalize this in the future
             if (Mind.GetAbility(combatAbilityAttacker) >= deadThing.Mind.GetAbility(defensiveAbilyDefender))

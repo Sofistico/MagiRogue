@@ -64,6 +64,9 @@ namespace MagiRogue.Data
         public static readonly IReadOnlyList<Research> ListOfResearches =
             GetSourceTree<Research>(@".\Data\Research\research_*");
 
+        public static readonly IReadOnlyList<Reaction> ListOfReactions =
+            GetSourceTree<Reaction>(@".\Data\Reaction\reaction_*");
+
         #region Descriptors
 
         public static readonly IReadOnlyList<string> ListOfRealmsName =
@@ -204,9 +207,9 @@ namespace MagiRogue.Data
         public static Research RandomNonMagicalResearch()
             => ListOfResearches.Where(i => !i.IsMagical).ToList().GetRandomItemFromList();
 
-        internal static List<Product> GetProductsByTag(RoomTag tag)
+        public static List<Reaction> GetProductsByTag(RoomTag tag)
         {
-            throw new NotImplementedException();
+            return ListOfReactions.Where(i => i.RoomTag.Contains(tag)).ToList();
         }
     }
 }

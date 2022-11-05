@@ -311,7 +311,7 @@ namespace MagiRogue.GameSys.Civ
 
         public void AddHfAsSiteLeader(HistoricalFigure hf, int currentYear)
         {
-            StringBuilder builder = new($"In the year {currentYear} the {hf.Name} assumed control of the {SiteType} {Name}");
+            StringBuilder builder = new($"the {hf.Name} assumed control of the {SiteType} {Name}");
             if (SiteLeader is not null)
             {
                 builder.Append($" removing the previous leader {SiteLeader.Name} from it's post!");
@@ -332,13 +332,7 @@ namespace MagiRogue.GameSys.Civ
             }
             else
                 hf.AddRelatedSite(Id, SiteRelationTypes.LivesThere | SiteRelationTypes.Rules);
-
-            AddNewSiteLegend(builder.ToString(), currentYear, hf);
-        }
-
-        private void AddNewSiteLegend(string legend, int when, HistoricalFigure? figure = null)
-        {
-            SiteLegends.Add(new Legend(legend, when, figure));
+            AddLegend(builder.ToString(), currentYear);
         }
 
         public bool CheckIfSiteHasCurrentLeaderOrDiedAndRemoveIt(int currentYear)
