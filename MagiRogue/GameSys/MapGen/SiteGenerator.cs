@@ -1,6 +1,7 @@
 ﻿using MagiRogue.Data;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization.MapSerialization;
+using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
 using System;
@@ -18,11 +19,11 @@ namespace MagiRogue.GameSys.MapGen
         }
 
         public void GenerateBigSite(Map map, int maxRooms,
-            int minRoomSize, int maxRoomSize, string townName, List<Room> buildings)
+            int minRoomSize, int maxRoomSize, string townName, List<Building> buildings)
         {
             _map = map;
 
-            List<Room> rooms = BspMapFunction(map, maxRoomSize, minRoomSize, maxRooms);
+            List<Building> rooms = BspMapFunction(map, maxRoomSize, minRoomSize, maxRooms);
 
             map.MapName = townName;
 
@@ -33,11 +34,11 @@ namespace MagiRogue.GameSys.MapGen
             buildings.AddRange(rooms);
         }
 
-        private void PopulateMapWithRooms(List<Room> rooms, TileFloor f, TileWall w)
+        private void PopulateMapWithRooms(List<Building> rooms, TileFloor f, TileWall w)
         {
             for (int i = 0; i < rooms.Count; i++)
             {
-                Room? room = rooms[i];
+                Room? room = rooms[i].PhysicalRoom;
                 if (Mrn.OneIn(10))
                 {
                     if (DataManager.ListOfRooms.Any(r => r.CompareRectanglesSameSize(room.RoomRectangle)))
@@ -45,7 +46,7 @@ namespace MagiRogue.GameSys.MapGen
                         RoomTemplate tempRoom =
                             DataManager.ListOfRooms.First(r => r.CompareRectanglesSameSize(room.RoomRectangle));
                         room = tempRoom.ConfigureRoom(room.RoomRectangle.Position);
-                        _rooms.Add(room);
+                        _rooms.Add(new Building(room));
                         _map.AddRoom(room);
                         _map.SpawnRoomThingsOnMap(room);
                         continue;
@@ -55,20 +56,20 @@ namespace MagiRogue.GameSys.MapGen
                     w, f);
                 CreateDoor(room);
                 room.LockedDoorsRng();
-                _rooms.Add(room);
+                _rooms.Add(new Building(room));
                 _map.AddRoom(room);
             }
             /*_map.AddRooms(_rooms);*/
         }
 
-        private void PopulateMapWithRoomsWithVariableMaterials(List<Room> rooms,
+        private void PopulateMapWithRoomsWithVariableMaterials(List<Building> rooms,
             List<TileFloor> possibleFloors)
         {
             throw new NotImplementedException("GET TO WORK YOU LAZY HORSE 🐎!");
         }
 
         public void GenerateSmallSite(Map map, int maxRooms,
-            int minRoomSize, int maxRoomSize, string townName, List<Room> buildings)
+            int minRoomSize, int maxRoomSize, string townName, List<Building> buildings)
         {
             _map = map;
             _map.MapName = townName;
@@ -83,7 +84,7 @@ namespace MagiRogue.GameSys.MapGen
         }
 
         public void GenerateMediumSite(Map map, int maxRooms,
-            int minRoomSize, int maxRoomSize, string townName, List<Room> buildings)
+            int minRoomSize, int maxRoomSize, string townName, List<Building> buildings)
         {
             _map = map;
             _map.MapName = townName;

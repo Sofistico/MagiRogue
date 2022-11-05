@@ -4,11 +4,13 @@ using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.Entities;
 using MagiRogue.Entities.StarterScenarios;
+using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Magic;
 using MagiRogue.GameSys.Planet.History;
 using MagiRogue.GameSys.Planet.TechRes;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -201,5 +203,10 @@ namespace MagiRogue.Data
 
         public static Research RandomNonMagicalResearch()
             => ListOfResearches.Where(i => !i.IsMagical).ToList().GetRandomItemFromList();
+
+        internal static List<Product> GetProductsByTag(RoomTag tag)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

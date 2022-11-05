@@ -28,7 +28,7 @@ namespace MagiRogue.GameSys.Civ
         public int MundaneResources { get; set; }
         public int FoodQuantity { get; set; }
         public int MagicalResources { get; set; }
-        public List<Room> Buildings { get; set; } = new();
+        public List<Building> Buildings { get; set; } = new();
         public bool Dead { get => ReturnPopNumber() <= 0; }
         public int? CivOwnerIfAny { get; set; }
         public bool Famine { get; set; }
@@ -85,7 +85,7 @@ namespace MagiRogue.GameSys.Civ
 
             foreach (var room in Buildings)
             {
-                switch (room.Tag)
+                switch (room.PhysicalRoom.Tag)
                 {
                     case RoomTag.Inn:
                         MundaneResources += 20;
@@ -110,7 +110,7 @@ namespace MagiRogue.GameSys.Civ
 
                     case RoomTag.Abandoned:
                         if (MundaneResources >= 0)
-                            room.SetPreviousTag();
+                            room.PhysicalRoom.SetPreviousTag();
                         break;
 
                     case RoomTag.House:
@@ -149,9 +149,9 @@ namespace MagiRogue.GameSys.Civ
                         break;
                 }
 
-                if (MundaneResources <= 0 && room.Tag is not RoomTag.Abandoned)
+                if (MundaneResources <= 0 && room.PhysicalRoom.Tag is not RoomTag.Abandoned)
                 {
-                    room.AbandonPreviousTag(RoomTag.Abandoned);
+                    room.PhysicalRoom.AbandonPreviousTag(RoomTag.Abandoned);
                 }
                 if (FoodQuantity >= 0)
                     Famine = false;
@@ -196,8 +196,10 @@ namespace MagiRogue.GameSys.Civ
             };
             for (int i = 0; i < numberOfNewTowerRooms; i++)
             {
-                Room business = new Room(tags.GetRandomItemFromList());
-                Buildings.Add(business);
+                var tag = tags.GetRandomItemFromList();
+                Room business = new Room();
+                Building build = new Building(business);
+                Buildings.Add(build);
             }
             FitRoomsCloseTogether = true;
         }
@@ -208,7 +210,7 @@ namespace MagiRogue.GameSys.Civ
             for (int i = 0; i < numberOfNewHouses; i++)
             {
                 Room house = new Room(RoomTag.House);
-                Buildings.Add(house);
+                Buildings.Add(new Building(house));
             }
         }
 
@@ -230,22 +232,23 @@ namespace MagiRogue.GameSys.Civ
             int numberOfNewBusiness = MundaneResources % 10;
             for (int i = 0; i < numberOfNewBusiness; i++)
             {
-                Room business = new Room(tags.GetRandomItemFromList());
+                var tag = tags.GetRandomItemFromList();
+                Room business = new Room(tag);
                 MundaneResources -= 15;
-                Buildings.Add(business);
+                Buildings.Add(new Building(business));
             }
             if (TotalFoodProductionPerYear() <= TotalFoodProductionNeededToNotStarve())
             {
                 Room business = new Room(RoomTag.Farm);
                 MundaneResources -= 15;
-                Buildings.Add(business);
+                Buildings.Add(new Building(business));
             }
         }
 
         private int TotalFoodProductionPerYear()
         {
             int foodProduct = 0;
-            foreach (var item in Buildings.Where(i => i.Tag is RoomTag.Farm))
+            foreach (var item in Buildings.Where(i => i.PhysicalRoom.Tag is RoomTag.Farm))
             {
                 foodProduct += 100;
             }

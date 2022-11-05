@@ -202,7 +202,8 @@ namespace MagiRogue.GameSys.Planet
                 {
                     MundaneResources = (int)tile.GetResources()
                 };
-                set.Buildings.Add(new Room(RoomTag.Farm));
+                var room = new Room(RoomTag.Farm);
+                set.Buildings.Add(new Building(room));
                 set.DefineSiteSize();
 
                 tile.SiteInfluence = set;

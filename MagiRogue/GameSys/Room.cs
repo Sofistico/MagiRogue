@@ -13,15 +13,20 @@ namespace MagiRogue.GameSys
     public sealed class Room
     {
         #region Fields
+
         private RoomTag previousTag;
-        #endregion
+
+        #endregion Fields
+
         #region Props
+
         public Rectangle RoomRectangle { get; set; }
 
         public RoomTag Tag { get; set; }
 
         [JsonIgnore]
         public List<TileDoor> Doors { get; set; } = new List<TileDoor>();
+
         public List<Point> DoorsPoint { get; set; } = new List<Point>();
 
         [JsonIgnore]
@@ -33,7 +38,7 @@ namespace MagiRogue.GameSys
         [JsonIgnore]
         public RoomTemplate Template { get; set; }
 
-        #endregion
+        #endregion Props
 
         public Room(Rectangle roomRectangle, RoomTag tag)
         {

@@ -503,10 +503,8 @@ namespace MagiRogue.Entities
         }
 
         public void SetCurrentAgeWithingAdulthood()
-        {
-            CurrentAge = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(GetRaceAdulthoodAge(),
+            => CurrentAge = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(GetRaceAdulthoodAge(),
                 GetRaceAdulthoodAge() + 4);
-        }
 
         public bool EnoughBodyToLive()
         {
@@ -524,14 +522,10 @@ namespace MagiRogue.Entities
         }
 
         private bool CheckIfHasHeadAndNeedsOne()
-        {
-            return HasAtLeastOneHead && NeedsHead;
-        }
+            => HasAtLeastOneHead && NeedsHead;
 
-        internal void AgeBody()
-        {
-            CurrentAge++;
-        }
+        public void AgeBody()
+            => CurrentAge++;
 
         #endregion Methods
     }
