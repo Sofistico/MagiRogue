@@ -23,6 +23,7 @@ namespace MagiRogue.GameSys.Planet.History
         // years that the current long activity started
         private int seasonsOnActivity = 0;
         private int whatScoreToSettleForTrainingAbility;
+        private Personality cachedPersonality;
 
 #if DEBUG
         public int DebugNumberOfLostYears;
@@ -282,24 +283,11 @@ namespace MagiRogue.GameSys.Planet.History
                 RelatedCivs.FirstOrDefault(i => i.CivRelatedId == civId).Relation = relation;
         }
 
-        public void HistoryAct(int year, WorldTile[,] tiles,
-            List<Civilization> civs, List<HistoricalFigure> figures, List<Site> sites,
-            AccumulatedHistory accumulatedHistory, List<Item> items)
-        {
-            // TODO: Calculate the impact of the instantiantion of this object in the future!
-            HistoryAction historyAction = new HistoryAction(this,
-                year,
-                civs,
-                tiles,
-                figures,
-                sites,
-                accumulatedHistory,
-                items);
-            historyAction.Act();
-        }
-
         public Personality GetPersonality()
-            => Mind.Personality;
+        {
+            cachedPersonality ??= Mind.Personality;
+            return cachedPersonality;
+        }
 
         // see if there is anyway to refactor this to be better!
         // maybe some good old OOP

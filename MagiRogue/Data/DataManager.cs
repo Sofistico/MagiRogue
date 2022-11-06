@@ -1,4 +1,5 @@
-﻿using MagiRogue.Data.Enumerators;
+﻿using GoRogue.MapGeneration.Steps;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Data.Serialization.MapSerialization;
@@ -18,6 +19,8 @@ namespace MagiRogue.Data
 {
     public static class DataManager
     {
+        #region jsons
+
         public static readonly IReadOnlyList<ItemTemplate> ListOfItems =
             GetSourceTree<ItemTemplate>(@".\Data\Items\items_*");
 
@@ -67,6 +70,9 @@ namespace MagiRogue.Data
         public static readonly IReadOnlyList<Reaction> ListOfReactions =
             GetSourceTree<Reaction>(@".\Data\Reaction\reaction_*");
 
+        public static readonly IReadOnlyList<Ruleset> ListOfRules =
+            GetSourceTree<Ruleset>(@".\Data\Rules\rules_*");
+
         #region Descriptors
 
         public static readonly IReadOnlyList<string> ListOfRealmsName =
@@ -79,6 +85,10 @@ namespace MagiRogue.Data
             GetSourceTree<ShapeDescriptor>(@".\Data\Descriptors\shapes_*.json");
 
         #endregion Descriptors
+
+        #endregion jsons
+
+        public static Find Find { get; }
 
         public static IReadOnlyList<T> GetSourceTree<T>(string wildCard)
         {

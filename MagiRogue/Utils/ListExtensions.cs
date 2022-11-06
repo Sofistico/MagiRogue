@@ -1,4 +1,5 @@
-﻿using ShaiRandom.Distributions.Continuous;
+﻿using MagiRogue.GameSys.Planet.History;
+using ShaiRandom.Distributions.Continuous;
 using System.Collections.Generic;
 using System.Linq;
 using System.Resources;
@@ -66,6 +67,31 @@ namespace MagiRogue.Utils
             list.ShuffleAlgorithm();
 
             return list.Take<T>(howManyToTake).ToList();
+        }
+
+        public static List<Ruleset> AllFulfilled(this List<Ruleset> rules, HistoricalFigure figure)
+        {
+            var list = new List<Ruleset>();
+            foreach (var rule in rules)
+            {
+                bool allFulfilled = false;
+                if (rule.Triggers.Count > 0)
+                {
+                    int triggerCount = 0;
+                    foreach (var item in rule.Triggers)
+                    {
+                        if (item.CheckIfFulfilled(figure))
+                        {
+                            triggerCount++;
+                        }
+                    }
+                    allFulfilled = triggerCount >= rule.Triggers.Count;
+                }
+                if (allFulfilled)
+                    list.Add(rule);
+            }
+
+            return list;
         }
     }
 }

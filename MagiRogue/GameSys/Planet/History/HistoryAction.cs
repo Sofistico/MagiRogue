@@ -10,6 +10,7 @@ using System;
 using System.Text;
 using MagiRogue.Entities;
 using SadConsole.Renderers;
+using System.Data;
 
 namespace MagiRogue.GameSys.Planet.History
 {
@@ -23,7 +24,6 @@ namespace MagiRogue.GameSys.Planet.History
         private readonly WorldTile[,] tiles;
         private readonly List<HistoricalFigure> otherFigures;
         private readonly List<Site> sites;
-        private readonly AccumulatedHistory history;
         private readonly List<Item> items;
 
         #endregion Properties
@@ -36,7 +36,6 @@ namespace MagiRogue.GameSys.Planet.History
             WorldTile[,] tiles,
             List<HistoricalFigure> otherFigures,
             List<Site> sites,
-            AccumulatedHistory history,
             List<Entities.Item> items)
         {
             this.figure = historicalFigure;
@@ -45,7 +44,6 @@ namespace MagiRogue.GameSys.Planet.History
             this.tiles = tiles;
             this.otherFigures = otherFigures;
             this.sites = sites;
-            this.history = history;
             this.items = items;
         }
 
@@ -576,6 +574,23 @@ namespace MagiRogue.GameSys.Planet.History
             civ.AppointNewNoble(ruler, figure, year,
                 "because it took it's position as the divine ruler of the civilization!");
             figure.AddNewRelationToCiv(civ.Id, RelationType.PatronDeity);
+        }
+
+        public static void Act(HistoricalFigure figure)
+        {
+            var rules = DataManager.Find.Rules;
+            var fulfilledRules = rules.AllFulfilled(figure); // some list for every fulfilled rule
+            fulfilledRules.ShuffleAlgorithm();
+            bool acted = false;
+            foreach (var rule in fulfilledRules)
+            {
+                if (rule.AllowMoreThanOneAction || !acted)
+                {
+                    rule.DoAction(figure);
+                    if (!rule.AllowMoreThanOneAction)
+                        acted = true;
+                }
+            }
         }
 
         #endregion Actions

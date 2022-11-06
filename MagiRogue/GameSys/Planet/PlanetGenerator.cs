@@ -160,6 +160,7 @@ namespace MagiRogue.GameSys.Planet
             {
                 TicksSinceCreation = MathMagi.GetTickByYear(yearToGameBegin),
             };
+
             history.RunHistory(_civilizations, yearToGameBegin, planetData, tiles);
             planetData.WorldHistory = history;
         }

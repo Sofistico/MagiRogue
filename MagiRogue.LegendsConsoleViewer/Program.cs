@@ -66,20 +66,20 @@ namespace MagiRogue.LegendsConsoleViewer
                 legends.Add(new { Hfs = new List<object>(polledObjs) });
                 polledObjs.Clear();
 
-                foreach (var item in planet.WorldHistory.ImportantItems)
-                {
-                    foreach (var legend in item.Legends)
-                    {
-                        Console.WriteLine(legend.ToString());
-                        stringToAdd.Add(item.ToString());
-                    }
-                    polledObjs.Add(new { ItemLegends = new { Items = item.Name, Legends = new List<string>(stringToAdd) } });
+                //foreach (var item in planet.WorldHistory.ImportantItems)
+                //{
+                //    foreach (var legend in item.Legends)
+                //    {
+                //        Console.WriteLine(legend.ToString());
+                //        stringToAdd.Add(item.ToString());
+                //    }
+                //    polledObjs.Add(new { ItemLegends = new { Items = item.Name, Legends = new List<string>(stringToAdd) } });
 
-                    stringToAdd.Clear();
-                }
+                //    stringToAdd.Clear();
+                //}
 
-                legends.Add(new { Items = new List<object>(polledObjs) });
-                polledObjs.Clear();
+                //legends.Add(new { Items = new List<object>(polledObjs) });
+                //polledObjs.Clear();
 
                 foreach (var myth in planet.WorldHistory.Myths)
                 {

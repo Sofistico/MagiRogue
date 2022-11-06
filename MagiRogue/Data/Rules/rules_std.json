@@ -1,0 +1,22 @@
+﻿[
+  {
+    "RuleFor": "Marriage",
+    "Triggers": [
+      {
+        "TriggerType": "Personality",
+        "Values": {
+          "Romance": 0
+        },
+        "Comparator": "EqualOrMore"
+      },
+      {
+        "TriggerType": "Flag",
+        "Values": {
+          "Married": false
+        },
+        "Comparator": "Equal"
+      }
+    ],
+    "AllowMoreThanOneAction": true
+  }
+]
