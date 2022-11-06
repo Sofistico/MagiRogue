@@ -1,8 +1,11 @@
-﻿using MagiRogue.Data.Enumerators;
+﻿using GoRogue;
+using MagiRogue.Data.Enumerators;
+using MagiRogue.Entities;
 using MagiRogue.GameSys.Planet.History.HistoryActions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,6 +25,9 @@ namespace MagiRogue.GameSys.Planet.History
 
     public class Trigger
     {
+        private PropertyInfo[] valueProperties;
+        private Type valueType;
+
         public TriggerType TriggerType { get; set; }
         public object Values { get; set; }
         public ComparatorEnum Comparator { get; set; }
@@ -62,7 +68,50 @@ namespace MagiRogue.GameSys.Planet.History
 
         private bool PersonalityLogic(HistoricalFigure figure)
         {
-            throw new NotImplementedException();
+            valueType ??= Values.GetType();
+            valueProperties ??= valueType.GetProperties();
+            var personalityProps = figure.GetPersonality().ReturnAsDictionary();
+
+            foreach (var prop in valueProperties)
+            {
+                if (personalityProps.TryGetValue(
+                    prop.Name, out int personality))
+                {
+                    int value = (int)prop.GetValue(prop);
+                    return CompareIntValue(
+                        personality,
+                        value);
+                }
+            }
+
+            return false;
+        }
+
+        private bool CompareIntValue(int compared, int toCompare)
+        {
+            switch (Comparator)
+            {
+                case ComparatorEnum.NotEqual:
+                    return compared != toCompare;
+
+                case ComparatorEnum.Equal:
+                    return compared == toCompare;
+
+                case ComparatorEnum.EqualOrMore:
+                    return compared >= toCompare;
+
+                case ComparatorEnum.More:
+                    return compared > toCompare;
+
+                case ComparatorEnum.Less:
+                    return compared < toCompare;
+
+                case ComparatorEnum.LessOrEqual:
+                    return compared <= toCompare;
+
+                default:
+                    return false;
+            }
         }
     }
 }

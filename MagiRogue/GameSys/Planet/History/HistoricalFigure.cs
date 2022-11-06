@@ -124,7 +124,7 @@ namespace MagiRogue.GameSys.Planet.History
 
         public void GenerateRandomPersonality()
         {
-            Personality personality = Mind.Personality;
+            Personality personality = GetPersonality();
             // reflection because i'm lazy
             var properties = typeof(Personality).GetProperties();
             foreach (var property in properties)

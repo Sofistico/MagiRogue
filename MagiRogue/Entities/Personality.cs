@@ -13,6 +13,8 @@ namespace MagiRogue.Entities
     /// </summary>
     public class Personality
     {
+        private Dictionary<string, int> cached { get; set; }
+
         public int Anger { get; set; }
         public int Law { get; set; }
         public int Loyalty { get; set; }
@@ -71,6 +73,13 @@ namespace MagiRogue.Entities
             Romance = rommance;
             Leisure = leisure;
             Lazyness = lazyness;
+        }
+
+        public Dictionary<string, int> ReturnAsDictionary(bool cleanCache = false)
+        {
+            if (cleanCache || cached is null)
+                cached = GetType().GetProperties().ToDictionary(p => p.Name, p => (int)p.GetValue(this));
+            return cached;
         }
     }
 }

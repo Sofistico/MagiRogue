@@ -11,9 +11,7 @@
       },
       {
         "TriggerType": "Flag",
-        "Values": {
-          "Married": false
-        },
+        "Values": "Married",
         "Comparator": "Equal"
       }
     ],
