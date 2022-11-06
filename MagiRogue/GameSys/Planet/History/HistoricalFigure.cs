@@ -531,6 +531,12 @@ namespace MagiRogue.GameSys.Planet.History
             {
                 AddLegend(whyItDied, year);
             }
+            if (IsMarried())
+            {
+                SpecialFlags.Remove(SpecialFlag.Married);
+                var node = FamilyLink.GetOtherFamilyNodesByRelations(HfRelationType.Married);
+                node[0].Relation = HfRelationType.ExSpouse;
+            }
         }
 
         public void CleanupIfNotImportant(int year)
@@ -646,11 +652,12 @@ namespace MagiRogue.GameSys.Planet.History
                 return;
             FamilyLink.SetMarriedRelation(this, randomPerson);
             randomPerson.FamilyLink.SetMarriedRelation(randomPerson, this);
+            SpecialFlags.Add(SpecialFlag.Married);
         }
 
         public bool IsMarried()
         {
-            return FamilyLink.GetIfExistsAnyRelationOfType(HfRelationType.Married);
+            return SpecialFlags.Contains(SpecialFlag.Married);
         }
 
         public bool MakeFriend(HistoricalFigure randomPerson)

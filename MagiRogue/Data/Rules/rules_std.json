@@ -12,6 +12,17 @@
       {
         "TriggerType": "Flag",
         "Values": "Married",
+        "Comparator": "NotEqual"
+      }
+    ],
+    "AllowMoreThanOneAction": true
+  },
+  {
+    "RuleFor": "HaveChild",
+    "Triggers": [
+      {
+        "TriggerType": "Flag",
+        "Values": "Married",
         "Comparator": "Equal"
       }
     ],

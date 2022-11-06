@@ -2,6 +2,7 @@
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Planet.History.HistoryActions;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,7 +64,14 @@ namespace MagiRogue.GameSys.Planet.History
 
         private bool FlagLogic(HistoricalFigure figure)
         {
-            throw new NotImplementedException();
+            // do the case where there are more than one flag to check for!
+            string str = Values.ToString();
+
+            if (Enum.TryParse(str, out SpecialFlag result))
+            {
+                return figure.SpecialFlags.Contains(result);
+            }
+            return false;
         }
 
         private bool PersonalityLogic(HistoricalFigure figure)
