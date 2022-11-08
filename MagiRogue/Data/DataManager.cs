@@ -88,8 +88,6 @@ namespace MagiRogue.Data
 
         #endregion jsons
 
-        public static Find Find { get; }
-
         public static IReadOnlyList<T> GetSourceTree<T>(string wildCard)
         {
             string[] files = FileUtils.GetFiles(wildCard);
@@ -98,7 +96,8 @@ namespace MagiRogue.Data
 
             for (int i = 0; i < files.Length; i++)
             {
-                listTList.Add(JsonUtils.JsonDeseralize<List<T>>(files[i]));
+                var t = JsonUtils.JsonDeseralize<List<T>>(files[i]);
+                listTList.Add(t);
             }
             List<T> allTList = new();
 

@@ -12,6 +12,7 @@ namespace MagiRogue.Data.Enumerators
     public enum RuleFor
     {
         Null,
-        Marriage
+        Marriage,
+        HaveChild
     }
 }

@@ -8,18 +8,18 @@ using System.Collections.Generic;
 
 namespace MagiRogue.Data
 {
-    public class Find
+    public static class Find
     {
         // big ass singleton for ease of finding information!
-        public int Year { get; set; }
-        public WorldTile[,] Tiles { get; set; }
-        public List<Civilization> Civs { get; set; }
-        public List<HistoricalFigure> Figures { get; set; }
-        public List<Site> Sites { get; set; }
-        public List<ItemTemplate> Items { get; set; }
-        public List<Ruleset> Rules { get; set; }
+        public static int Year { get; set; }
+        public static WorldTile[,] Tiles { get; set; }
+        public static List<Civilization> Civs { get; set; }
+        public static List<HistoricalFigure> Figures { get; set; }
+        public static List<Site> Sites { get; set; }
+        public static List<ItemTemplate> Items { get; set; }
+        public static List<Ruleset> Rules { get; set; }
 
-        public void PopulateValues(List<HistoricalFigure> figures,
+        public static void PopulateValues(List<HistoricalFigure> figures,
             List<Civilization> civs,
             List<Site> allSites,
             List<ItemTemplate> importantItems,

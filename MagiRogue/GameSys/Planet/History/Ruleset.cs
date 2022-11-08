@@ -2,6 +2,7 @@
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Planet.History.HistoryActions;
+using MagiRogue.Utils;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -26,10 +27,9 @@ namespace MagiRogue.GameSys.Planet.History
 
     public class Trigger
     {
-        private PropertyInfo[] valueProperties;
-        private Type valueType;
-
         public TriggerType TriggerType { get; set; }
+
+        // its a JObject!
         public object Values { get; set; }
         public ComparatorEnum Comparator { get; set; }
 
@@ -43,7 +43,7 @@ namespace MagiRogue.GameSys.Planet.History
                 {
                     TriggerType.Personality => PersonalityLogic(figure),
                     TriggerType.Flag => FlagLogic(figure),
-                    TriggerType.Rng => RngLogic(figure),
+                    TriggerType.DiceRng => DiceRngLogic(figure),
                     TriggerType.OneIn => OneInLogic(figure),
                     _ => false,
                 };
@@ -52,14 +52,22 @@ namespace MagiRogue.GameSys.Planet.History
             return fulfilled;
         }
 
-        private bool RngLogic(HistoricalFigure figure)
+        private bool DiceRngLogic(HistoricalFigure figure)
         {
+            // parser
+            //var str = Values.ToString();
+            //GoRogue.DiceNotation.Dice.R
             throw new NotImplementedException();
         }
 
         private bool OneInLogic(HistoricalFigure figure)
         {
-            throw new NotImplementedException();
+            string str = Values.ToString();
+            if (int.TryParse(str, out int oneIn))
+            {
+                return Mrn.OneIn(oneIn);
+            }
+            return false;
         }
 
         private bool FlagLogic(HistoricalFigure figure)
@@ -76,16 +84,17 @@ namespace MagiRogue.GameSys.Planet.History
 
         private bool PersonalityLogic(HistoricalFigure figure)
         {
-            valueType ??= Values.GetType();
-            valueProperties ??= valueType.GetProperties();
             var personalityProps = figure.GetPersonality().ReturnAsDictionary();
+            var jValue = (JObject)Values;
+            var valueProperties = jValue.ToObject<Dictionary<string, int>>();
 
+            // Values is a json object
             foreach (var prop in valueProperties)
             {
                 if (personalityProps.TryGetValue(
-                    prop.Name, out int personality))
+                    prop.Key, out int personality))
                 {
-                    int value = (int)prop.GetValue(prop);
+                    int value = prop.Value;
                     return CompareIntValue(
                         personality,
                         value);
@@ -97,29 +106,16 @@ namespace MagiRogue.GameSys.Planet.History
 
         private bool CompareIntValue(int compared, int toCompare)
         {
-            switch (Comparator)
+            return Comparator switch
             {
-                case ComparatorEnum.NotEqual:
-                    return compared != toCompare;
-
-                case ComparatorEnum.Equal:
-                    return compared == toCompare;
-
-                case ComparatorEnum.EqualOrMore:
-                    return compared >= toCompare;
-
-                case ComparatorEnum.More:
-                    return compared > toCompare;
-
-                case ComparatorEnum.Less:
-                    return compared < toCompare;
-
-                case ComparatorEnum.LessOrEqual:
-                    return compared <= toCompare;
-
-                default:
-                    return false;
-            }
+                ComparatorEnum.NotEqual => compared != toCompare,
+                ComparatorEnum.Equal => compared == toCompare,
+                ComparatorEnum.EqualOrMore => compared >= toCompare,
+                ComparatorEnum.More => compared > toCompare,
+                ComparatorEnum.Less => compared < toCompare,
+                ComparatorEnum.LessOrEqual => compared <= toCompare,
+                _ => false,
+            };
         }
     }
 }

@@ -99,7 +99,7 @@ namespace MagiRogue.GameSys.Planet.History
 
         private void PopulateFindValues(WorldTile[,] tiles)
         {
-            DataManager.Find.PopulateValues(Figures,
+            Find.PopulateValues(Figures,
                 Civs,
                 AllSites,
                 ImportantItems,

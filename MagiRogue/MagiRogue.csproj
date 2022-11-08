@@ -55,6 +55,9 @@
 	<None Update="Data\Reaction\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+	  	<None Update="Data\Rules\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Data\Descriptors\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -13,7 +13,7 @@ namespace MagiRogue.Data.Enumerators
     {
         Personality,
         Flag,
-        Rng,
+        DiceRng,
         OneIn
     }
 }

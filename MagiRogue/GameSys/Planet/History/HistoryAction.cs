@@ -578,7 +578,7 @@ namespace MagiRogue.GameSys.Planet.History
 
         public static void Act(HistoricalFigure figure)
         {
-            var rules = DataManager.Find.Rules;
+            var rules = Find.Rules;
             var fulfilledRules = rules.AllFulfilled(figure); // some list for every fulfilled rule
             fulfilledRules.ShuffleAlgorithm();
             bool acted = false;
