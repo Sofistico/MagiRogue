@@ -77,9 +77,19 @@ namespace MagiRogue.GameSys.Planet.History
 
             if (Enum.TryParse(str, out SpecialFlag result))
             {
-                return figure.SpecialFlags.Contains(result);
+                return CompareFlagValue(figure.SpecialFlags, result);
             }
             return false;
+        }
+
+        private bool CompareFlagValue(List<SpecialFlag> listToCheck, SpecialFlag toCompare)
+        {
+            return Comparator switch
+            {
+                ComparatorEnum.NotEqual => !listToCheck.Contains(toCompare),
+                ComparatorEnum.Equal => listToCheck.Contains(toCompare),
+                _ => false,
+            };
         }
 
         private bool PersonalityLogic(HistoricalFigure figure)
