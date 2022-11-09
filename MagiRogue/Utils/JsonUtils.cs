@@ -24,17 +24,10 @@ namespace MagiRogue.Utils
                 Converters = { new IsoDateTimeConverter() }
             };
 
-            return JsonConvert.DeserializeObject<T>(File.ReadAllText(path), settings);
+            if (errors.Count > 0)
+                GameLoop.WriteToLog(errors);
 
-            //yield return JsonConvert.DeserializeObject<T>(File.ReadAllText(path));
-            //try
-            //{
-            //    return JsonConvert.DeserializeObject<T>(File.ReadAllText(stream));
-            //}
-            //catch (Exception)
-            //{
-            //    return default;
-            //}
+            return JsonConvert.DeserializeObject<T>(File.ReadAllText(path), settings);
         }
 
         public static List<T> JsonDeseralize<T>(string[] arrayOfStreams)
