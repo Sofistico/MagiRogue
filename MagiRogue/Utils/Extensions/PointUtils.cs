@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MagiRogue.Utils
+namespace MagiRogue.Utils.Extensions
 {
     public static class PointUtils
     {

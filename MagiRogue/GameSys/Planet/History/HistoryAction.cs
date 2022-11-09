@@ -11,6 +11,7 @@ using System.Text;
 using MagiRogue.Entities;
 using SadConsole.Renderers;
 using System.Data;
+using MagiRogue.Utils.Extensions;
 
 namespace MagiRogue.GameSys.Planet.History
 {

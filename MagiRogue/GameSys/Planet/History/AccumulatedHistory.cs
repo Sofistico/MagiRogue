@@ -6,6 +6,7 @@ using MagiRogue.Entities;
 using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
+using MagiRogue.Utils.Extensions;
 using SadConsole;
 using SadRogue.Primitives;
 using System;

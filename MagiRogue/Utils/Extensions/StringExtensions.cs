@@ -2,7 +2,7 @@
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace MagiRogue.Utils
+namespace MagiRogue.Utils.Extensions
 {
     public static class StringExtensions
     {

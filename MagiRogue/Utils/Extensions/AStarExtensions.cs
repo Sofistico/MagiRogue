@@ -1,7 +1,7 @@
 ﻿using GoRogue.Pathing;
 using SadRogue.Primitives;
 
-namespace MagiRogue.Utils
+namespace MagiRogue.Utils.Extensions
 {
     public static class AStarExtensions
     {
