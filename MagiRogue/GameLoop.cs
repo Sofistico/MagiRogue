@@ -113,6 +113,11 @@ namespace MagiRogue
             File.AppendAllText(path, str.ToString());
         }
 
+        public static void WriteToLog(string error)
+        {
+            WriteToLog(new List<string>() { error });
+        }
+
         #endregion IdCounters
     }
 }
