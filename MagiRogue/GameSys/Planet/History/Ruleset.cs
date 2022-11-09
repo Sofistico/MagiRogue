@@ -128,4 +128,32 @@ namespace MagiRogue.GameSys.Planet.History
             };
         }
     }
+
+    public static class ListRuleExtension
+    {
+        public static List<Ruleset> AllFulfilled(this List<Ruleset> rules, HistoricalFigure figure)
+        {
+            var list = new List<Ruleset>();
+            foreach (var rule in rules)
+            {
+                bool allFulfilled = false;
+                if (rule.Triggers.Count > 0)
+                {
+                    int triggerCount = 0;
+                    foreach (var item in rule.Triggers)
+                    {
+                        if (item.CheckIfFulfilled(figure))
+                        {
+                            triggerCount++;
+                        }
+                    }
+                    allFulfilled = triggerCount >= rule.Triggers.Count;
+                }
+                if (allFulfilled)
+                    list.Add(rule);
+            }
+
+            return list;
+        }
+    }
 }
