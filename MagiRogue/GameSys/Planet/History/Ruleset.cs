@@ -43,8 +43,8 @@ namespace MagiRogue.GameSys.Planet.History
                 {
                     TriggerType.Personality => PersonalityLogic(figure),
                     TriggerType.Flag => FlagLogic(figure),
-                    TriggerType.DiceRng => DiceRngLogic(figure),
-                    TriggerType.OneIn => OneInLogic(figure),
+                    TriggerType.DiceRng => DiceRngLogic(),
+                    TriggerType.OneIn => OneInLogic(),
                     _ => false,
                 };
             }
@@ -52,7 +52,7 @@ namespace MagiRogue.GameSys.Planet.History
             return fulfilled;
         }
 
-        private bool DiceRngLogic(HistoricalFigure figure)
+        private bool DiceRngLogic()
         {
             // parser
             //var str = Values.ToString();
@@ -60,7 +60,7 @@ namespace MagiRogue.GameSys.Planet.History
             throw new NotImplementedException();
         }
 
-        private bool OneInLogic(HistoricalFigure figure)
+        private bool OneInLogic()
         {
             string str = Values.ToString();
             if (int.TryParse(str, out int oneIn))

@@ -1,7 +1,7 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.GameSys.Tiles;
-using MagiRogue.Utils;
+using MagiRogue.Utils.Extensions;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System;

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Utils;
 using MagiRogue.Data;
+using MagiRogue.Utils.Extensions;
 
 namespace MagiRogue.GameSys.Planet.History
 {

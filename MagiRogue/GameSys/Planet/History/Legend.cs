@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Linq;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Data.Enumerators;
+using MagiRogue.Utils.Extensions;
 
 namespace MagiRogue.GameSys.Planet.History
 {

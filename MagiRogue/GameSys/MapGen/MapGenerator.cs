@@ -4,6 +4,7 @@ using MagiRogue.Entities;
 using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
+using MagiRogue.Utils.Extensions;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 using ShaiRandom.Generators;

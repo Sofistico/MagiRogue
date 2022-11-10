@@ -7,6 +7,7 @@ using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Planet.History;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
+using MagiRogue.Utils.Extensions;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;

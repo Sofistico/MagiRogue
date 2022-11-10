@@ -11,6 +11,7 @@ using MagiRogue.GameSys.Planet.History;
 using MagiRogue.GameSys.Planet.TechRes;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
+using MagiRogue.Utils.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
