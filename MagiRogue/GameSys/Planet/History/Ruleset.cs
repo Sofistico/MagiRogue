@@ -3,6 +3,7 @@ using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Planet.History.HistoryActions;
 using MagiRogue.Utils;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ namespace MagiRogue.GameSys.Planet.History
         public List<Trigger> Triggers { get; set; }
         public bool AllowMoreThanOneAction { get; set; }
 
+        [JsonConstructor()]
         public Ruleset(RuleFor ruleFor, List<Trigger> triggers, bool allowMoreThanOneAct = false)
         {
             RuleFor = ruleFor;

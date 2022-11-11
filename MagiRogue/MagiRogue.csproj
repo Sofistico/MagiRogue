@@ -13,7 +13,7 @@
     <Win32Resource />
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <Copyright>Sofistico</Copyright>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>C:\Users\joaorodrigues\source\repos\MagiRogue\LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
