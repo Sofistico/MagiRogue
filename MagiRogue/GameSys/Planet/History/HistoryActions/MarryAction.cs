@@ -7,14 +7,13 @@ using System.Threading.Tasks;
 
 namespace MagiRogue.GameSys.Planet.History.HistoryActions
 {
-    public class MarryAction : BaseHistoryAction
+    public class MarryAction : IHistoryAct
     {
-        public MarryAction(int year, WorldTile[,] tiles)
-            : base(year, tiles)
+        public MarryAction()
         {
         }
 
-        public override void Act(HistoricalFigure figure)
+        public void Act(HistoricalFigure figure)
         {
             throw new NotImplementedException();
         }

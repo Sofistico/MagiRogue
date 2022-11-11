@@ -15,11 +15,21 @@ namespace MagiRogue.GameSys.Planet.History
 {
     public class Ruleset
     {
+        private readonly IHistoryAct act;
+
         public RuleFor RuleFor { get; set; }
         public List<Trigger> Triggers { get; set; }
         public bool AllowMoreThanOneAction { get; set; }
 
-        public void DoAction(HistoricalFigure figure)
+        public Ruleset(RuleFor ruleFor, List<Trigger> triggers, bool allowMoreThanOneAct = false)
+        {
+            RuleFor = ruleFor;
+            Triggers = triggers;
+            AllowMoreThanOneAction = allowMoreThanOneAct;
+            act = DetermineWhichActionItIs();
+        }
+
+        private IHistoryAct DetermineWhichActionItIs()
         {
             switch (RuleFor)
             {
@@ -32,6 +42,16 @@ namespace MagiRogue.GameSys.Planet.History
                 default:
                     GameLoop.WriteToLog($"The {RuleFor} is not supported!");
                     break;
+            }
+
+            return default;
+        }
+
+        public void DoAction(HistoricalFigure figure)
+        {
+            if (act is not null)
+            {
+                act.Act(figure);
             }
         }
     }
