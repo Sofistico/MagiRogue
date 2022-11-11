@@ -21,7 +21,18 @@ namespace MagiRogue.GameSys.Planet.History
 
         public void DoAction(HistoricalFigure figure)
         {
-            throw new NotImplementedException();
+            switch (RuleFor)
+            {
+                case RuleFor.Marriage:
+                    break;
+
+                case RuleFor.HaveChild:
+                    break;
+
+                default:
+                    GameLoop.WriteToLog($"The {RuleFor} is not supported!");
+                    break;
+            }
         }
     }
 
