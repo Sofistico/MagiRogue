@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 
 namespace MagiRogue.GameSys.Planet.History.HistoryActions
 {
-    public interface IHistoryAct
+    internal class HaveChildAction : IHistoryAct
     {
-        public bool? Act(HistoricalFigure figure);
+        public bool? Act(HistoricalFigure figure)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

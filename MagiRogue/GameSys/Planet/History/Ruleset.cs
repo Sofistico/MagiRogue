@@ -16,7 +16,7 @@ namespace MagiRogue.GameSys.Planet.History
 {
     public class Ruleset
     {
-        private readonly IHistoryAct act;
+        private IHistoryAct act;
 
         public RuleFor RuleFor { get; set; }
         public List<Trigger> Triggers { get; set; }
@@ -36,9 +36,11 @@ namespace MagiRogue.GameSys.Planet.History
             switch (RuleFor)
             {
                 case RuleFor.Marriage:
+                    act = new MarryAction();
                     break;
 
                 case RuleFor.HaveChild:
+                    act = new HaveChildAction();
                     break;
 
                 default:
@@ -49,12 +51,9 @@ namespace MagiRogue.GameSys.Planet.History
             return default;
         }
 
-        public void DoAction(HistoricalFigure figure)
+        public bool? DoAction(HistoricalFigure figure)
         {
-            if (act is not null)
-            {
-                act.Act(figure);
-            }
+            return act?.Act(figure);
         }
     }
 

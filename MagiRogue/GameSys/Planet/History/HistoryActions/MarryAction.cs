@@ -13,7 +13,7 @@ namespace MagiRogue.GameSys.Planet.History.HistoryActions
         {
         }
 
-        public void Act(HistoricalFigure figure)
+        public bool? Act(HistoricalFigure figure)
         {
             throw new NotImplementedException();
         }

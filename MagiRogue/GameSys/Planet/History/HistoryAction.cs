@@ -587,7 +587,9 @@ namespace MagiRogue.GameSys.Planet.History
             {
                 if (rule.AllowMoreThanOneAction || !acted)
                 {
-                    rule.DoAction(figure);
+                    var act = rule.DoAction(figure);
+                    if (act is null)
+                        GameLoop.WriteToLog($"For some reason the action was null, here is the action: {rule.RuleFor}");
                     if (!rule.AllowMoreThanOneAction)
                         acted = true;
                 }

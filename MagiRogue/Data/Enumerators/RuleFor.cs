@@ -13,6 +13,15 @@ namespace MagiRogue.Data.Enumerators
     {
         Null,
         Marriage,
-        HaveChild
+        HaveChild,
+        TrainAbility,
+        GenerateMagicalResources,
+        GetAFriend,
+        LearnDiscoveriesKnowToSite,
+        WanderAndSettle,
+        ResearchWork,
+        BuildATower,
+        BuildASite,
+        CreateNewCiv
     }
 }
