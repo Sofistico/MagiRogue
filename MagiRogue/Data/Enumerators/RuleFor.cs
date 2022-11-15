@@ -21,7 +21,7 @@ namespace MagiRogue.Data.Enumerators
         WanderAndSettle,
         ResearchWork,
         BuildATower,
-        BuildASite,
+        BuildACity,
         CreateNewCiv
     }
 }

@@ -35,12 +35,52 @@ namespace MagiRogue.GameSys.Planet.History
         {
             switch (RuleFor)
             {
+                case RuleFor.Null:
+                    GameLoop.WriteToLog($"The {RuleFor} is not supported");
+                    throw new ApplicationException($"The rule isn't supported! {Triggers.First()}");
+
                 case RuleFor.Marriage:
                     act = new MarryAction();
                     break;
 
                 case RuleFor.HaveChild:
                     act = new HaveChildAction();
+                    break;
+
+                case RuleFor.TrainAbility:
+                    act = new TrainAbilityAction();
+                    break;
+
+                case RuleFor.GenerateMagicalResources:
+                    act = new GenerateResourcesAction(ResourceType.Magical);
+                    break;
+
+                case RuleFor.GetAFriend:
+                    act = new FriendshipIsMagicAction();
+                    break;
+
+                case RuleFor.LearnDiscoveriesKnowToSite:
+                    act = new LearnNewDiscoveriesAction();
+                    break;
+
+                case RuleFor.WanderAndSettle:
+                    act = new WanderAndSettleAction();
+                    break;
+
+                case RuleFor.ResearchWork:
+                    act = new WorkAction(WorkType.Research);
+                    break;
+
+                case RuleFor.BuildATower:
+                    act = new BuildSiteAction(SiteType.Tower);
+                    break;
+
+                case RuleFor.BuildACity:
+                    act = new BuildSiteAction(SiteType.City);
+                    break;
+
+                case RuleFor.CreateNewCiv:
+                    act = new CreateNewCivAction();
                     break;
 
                 default:
@@ -158,6 +198,11 @@ namespace MagiRogue.GameSys.Planet.History
                 ComparatorEnum.LessOrEqual => compared <= toCompare,
                 _ => false,
             };
+        }
+
+        public override string ToString()
+        {
+            return $"Trigger - {TriggerType} | {Values} | {Comparator}";
         }
     }
 }
