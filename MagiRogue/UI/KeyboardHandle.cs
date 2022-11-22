@@ -293,6 +293,8 @@ namespace MagiRogue.UI
             return false;
         }
 
+#if DEBUG
+
         private static bool HandleDebugActions(Keyboard info, Universe world, UIManager ui)
         {
             if (info.IsKeyPressed(Keys.F10))
@@ -416,6 +418,8 @@ namespace MagiRogue.UI
 
             return false;
         }
+
+#endif
 
         private static bool CurrentMapIsPlanetView(Universe world)
         {
