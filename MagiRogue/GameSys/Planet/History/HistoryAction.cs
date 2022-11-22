@@ -65,36 +65,36 @@ namespace MagiRogue.GameSys.Planet.History
 
             // everyone trains theirs focus!
             // check if unit has any hardworking bone in it's body or just plain old chance!
-            if (figure.CheckForHardwork() || Mrn.OneIn(3))
-            {
-                figure.TrainAbilityFocus();
-            }
+            //if (figure.CheckForHardwork() || Mrn.OneIn(3))
+            //{
+            //    figure.TrainAbilityFocus();
+            //}
 
             if (figure.SpecialFlags.Contains(SpecialFlag.MagicUser))
             {
                 GenerateMagicalResourcesForSite();
             }
 
-            //romance and interfigure stuff!
-            if (figure.CheckForRomantic())
-            {
-                RomanceSomeoneInsideSameSite();
-            }
+            ////romance and interfigure stuff!
+            //if (figure.CheckForRomantic())
+            //{
+            //    RomanceSomeoneInsideSameSite();
+            //}
 
-            if (figure.IsMarried() && Mrn.OneIn(5))
-            {
-                TryForBaby();
-            }
+            //if (figure.IsMarried() && Mrn.OneIn(5))
+            //{
+            //    TryForBaby();
+            //}
 
-            if (figure.CheckForFriendship())
-            {
-                GetANewFriend();
-            }
+            //if (figure.CheckForFriendship())
+            //{
+            //    GetANewFriend();
+            //}
 
-            if (figure.CheckForAnyStudious())
-            {
-                LearnNewDiscoveriesKnowToTheSite();
-            }
+            //if (figure.CheckForAnyStudious())
+            //{
+            //    LearnNewDiscoveriesKnowToTheSite();
+            //}
 
             #endregion Non-returning actions
 

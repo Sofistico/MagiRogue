@@ -168,22 +168,59 @@ namespace MagiRogue.GameSys.Planet.History
         {
             var personalityProps = figure.GetPersonality().ReturnAsDictionary();
             var jValue = (JObject)Values;
-            var valueProperties = jValue.ToObject<Dictionary<string, int>>();
+            var valueProperties = jValue.ToObject<Dictionary<string, object>>();
+            bool result = false;
 
             // Values is a json object
             foreach (var prop in valueProperties)
             {
-                if (personalityProps.TryGetValue(
-                    prop.Key, out int personality))
+                if (prop.Key.Equals("Or"))
                 {
-                    int value = prop.Value;
-                    return CompareIntValue(
-                        personality,
-                        value);
+                    var obj = (JObject)prop.Value;
+                    var valProps = obj.ToObject<Dictionary<string, int>>();
+                    result = CompareIntOrValue(valProps);
+                }
+                else
+                {
+                    if (personalityProps.TryGetValue(
+                        prop.Key,
+                        out int personality))
+                    {
+                        int value = (int)prop.Value;
+                        result = CompareIntValue(
+                            personality,
+                            value);
+                    }
                 }
             }
 
-            return false;
+            return result;
+        }
+
+        private bool CompareIntOrValue(Dictionary<string, int> values)
+        {
+            bool result = false;
+            bool any = false;
+            foreach (var item in values)
+            {
+                if (!any)
+                {
+                    if (values.TryGetValue(
+                        item.Key,
+                        out int personality))
+                    {
+                        int value = (int)item.Value;
+                        any = CompareIntValue(
+                            personality,
+                            value);
+                        break;
+                    }
+                }
+            }
+            if (any)
+                return result;
+
+            return result;
         }
 
         private bool CompareIntValue(int compared, int toCompare)

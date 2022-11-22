@@ -24,8 +24,63 @@
         "TriggerType": "Flag",
         "Values": "Married",
         "Comparator": "Equal"
+      },
+      {
+        "TriggerType": "OneIn",
+        "Values": 5,
+        "Comparator": "None"
       }
     ],
     "AllowMoreThanOneAction": true
+  },
+  {
+    "RuleFor": "GetAFriend",
+    "Triggers": [
+      {
+        "TriggerType": "Personality",
+        "Values": {
+          "Friendship": 0
+        },
+        "Comparator": "EqualOrMore"
+      }
+    ]
+  },
+  {
+    "RuleFor": "LearnDiscoveriesKnowToSite",
+    "Triggers": [
+      {
+        "TriggerType": "Personality",
+        "Values": {
+          "Knowledge": 0,
+          "HardWork": 10
+        },
+        "Comparator": "EqualOrMore"
+      }
+    ]
+  },
+  {
+    "RuleFor": "TrainAbility",
+    "Triggers": [
+      {
+        "TriggerType": "Personality",
+        "Values": {
+          "Or": {
+            "HardWork": 10,
+            "Perseverance": 10
+          }
+        },
+        "Comparator": "EqualOrMore"
+      }
+    ]
+  },
+  {
+    "RuleFor": "TrainAbility",
+    "Triggers": [
+      {
+        "TriggerType": "OneIn",
+        "Values": 3,
+        "Comparator": "None"
+      }
+    ]
   }
 ]
