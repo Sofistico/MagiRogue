@@ -1,7 +1,9 @@
 ﻿using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.GameSys.Civ;
+using MagiRogue.GameSys.Planet.History;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.GameSys.Time;
+using MagiRogue.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -28,7 +30,12 @@ namespace MagiRogue.GameSys.Planet
         [DataMember]
         public Map AssocietatedMap { get; }
 
-        public long TicksSinceCreation { get; set; }
+        public long TicksSinceCreation { get => WorldHistory.TicksSinceCreation; }
+
+        [DataMember]
+        public AccumulatedHistory WorldHistory { get; set; }
+
+        public string Name => AssocietatedMap.MapName;
 
         public PlanetMap(int width, int height)
         {
@@ -36,8 +43,9 @@ namespace MagiRogue.GameSys.Planet
             _width = width;
             Min = float.MinValue;
             Max = float.MaxValue;
-            AssocietatedMap = new("Planet", width, height);
+            AssocietatedMap = new(RandomNames.RandomNamesFromRandomLanguage(), width, height, false);
             Civilizations = new List<Civilization>();
+            WorldHistory = new();
         }
 
         public PlanetMap(float min, float max,

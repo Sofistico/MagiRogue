@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Data;
+using MagiRogue.Utils;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Data.Serialization.EntitySerialization;
@@ -13,12 +14,14 @@ using System.Runtime.Serialization;
 namespace MagiRogue.Entities
 {
     [DebuggerDisplay("{DebuggerDisplay, nq}")]
-    public class Race
+    public sealed class Race
     {
         private List<BodyPart> bodyParts;
 
         public string Id { get; set; }
         public string RaceName { get; set; }
+        public string NamePlural { get; set; }
+        public string Adjective { get; set; }
         public string Description { get; set; }
 
         public char RaceGlyph { get; set; }
@@ -33,6 +36,7 @@ namespace MagiRogue.Entities
         public int? LifespanMax { get; set; }
         public int? LifespanMin { get; set; }
         public int? ChildAge { get; set; }
+        public string? ChildName { get; set; }
         public int? TeenAge { get; set; }
         public int AdulthoodAge { get; set; }
 
@@ -46,25 +50,38 @@ namespace MagiRogue.Entities
         public int BaseWillPower { get; set; }
         public int BasePrecision { get; set; }
         public double BaseManaRegen { get; set; }
+
+        /// <summary>
+        /// The max mana that the species can be born with
+        /// </summary>
+        public int MaxManaRange { get; set; } = 5;
+
+        /// <summary>
+        /// The max mana that the species can be born with
+        /// </summary>
+        public int MinManaRange { get; set; } = 1;
+
         public int BaseMagicResistance { get; set; }
 
         // Body
         public double RaceNormalLimbRegen { get; set; }
         public double BleedRegenaration { get; set; }
-        public bool CanRegenLostLimbs { get; set; }
 
         public string[] BodyPlan { get; set; }
+        public string[] Tissues { get; set; }
         public int[] HeightModifier { get; set; }
         public int[] BroadnessModifier { get; set; }
         public int[] LengthModifier { get; set; }
+        public List<string> Genders { get; set; }
 
-        // Civ tendencies
-        // Temporary
-        public bool ValidCivRace { get; set; }
-        public double BloodMultiplier { get; set; }
+        public double BloodMultiplier { get; set; } = 75; // defaults to 75
+        public bool DeadRace { get; set; }
+        public List<string> CreatureClass { get; set; }
+        public List<SpecialFlag> Flags { get; set; }
 
         public Race()
         {
+            Flags = new();
         }
 
         public void SetBodyPlan()
@@ -75,9 +92,12 @@ namespace MagiRogue.Entities
             }
         }
 
-        private string DebuggerDisplay()
+        private string DebuggerDisplay
         {
-            return string.Format($"{RaceName}");
+            get
+            {
+                return string.Format($"Race : {ToString()}");
+            }
         }
 
         public Color ReturnForegroundColor()
@@ -92,9 +112,20 @@ namespace MagiRogue.Entities
             return color.Color;
         }
 
-        public List<Limb> ReturnRaceLimbs() => bodyParts.Where(i => i is Limb).Cast<Limb>().ToList();
+        public List<Limb> ReturnRaceLimbs()
+        {
+            if (bodyParts is null)
+                SetBodyPlan();
+            return bodyParts.Where(i => i is Limb).Cast<Limb>().ToList();
+        }
 
-        public List<Organ> ReturnRaceOrgans() => bodyParts.Where(i => i is Organ).Cast<Organ>().ToList();
+        public List<Organ> ReturnRaceOrgans()
+        {
+            if (bodyParts is null)
+                SetBodyPlan();
+
+            return bodyParts.Where(i => i is Organ).Cast<Organ>().ToList();
+        }
 
         public int GetRngVolume(int age)
         {
@@ -166,9 +197,19 @@ namespace MagiRogue.Entities
             return value;
         }
 
+        public Sex ReturnRandomSex()
+        {
+            return Enum.Parse<Sex>(Genders.GetRandomItemFromList());
+        }
+
         public override string ToString()
         {
             return RaceName;
         }
+
+        public bool CanRegenarate() => Flags.Contains(SpecialFlag.Regenerator);
+
+        public int GetAverageRacialManaRange()
+            => (MaxManaRange + MinManaRange) / 2;
     }
 }

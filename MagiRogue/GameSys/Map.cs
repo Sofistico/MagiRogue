@@ -25,13 +25,14 @@ namespace MagiRogue.GameSys
     /// </summary>
     [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
     [JsonConverter(typeof(MapJsonConverter))]
-    public class Map : GoRogue.GameFramework.Map
+    public sealed class Map : GoRogue.GameFramework.Map, IDisposable
     {
         #region Properties
 
         private TileBase[] _tiles; // Contains all tiles objects
         private Entity _gameObjectControlled;
         private SadConsole.Entities.Renderer _entityRender;
+        private bool _disposed;
 
         /// <summary>
         /// All cell tiles of the map, it's a TileBase array, should never be directly declared to create new tiles, rather
@@ -67,7 +68,7 @@ namespace MagiRogue.GameSys
 
         public Point LastPlayerPosition { get; set; } = Point.None;
         public string MapName { get; set; }
-        public bool NeedsUpdate { get; internal set; }
+        public bool NeedsUpdate { get; set; }
         public bool IsCurrentMap { get; set; }
         public bool IsActive { get; set; }
         public uint MapId { get; private set; }
@@ -90,7 +91,7 @@ namespace MagiRogue.GameSys
         /// </summary>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public Map(string mapName, int width = 60, int height = 60) :
+        public Map(string mapName, int width = 60, int height = 60, bool usesWeighEvaluation = true) :
             base(CreateTerrain(width, height), Enum.GetNames(typeof(MapLayer)).Length - 1,
             Distance.Euclidean,
             entityLayersSupportingMultipleItems: LayerMasker.Default.Mask
@@ -105,6 +106,17 @@ namespace MagiRogue.GameSys
             _entityRender = new SadConsole.Entities.Renderer();
             MapName = mapName;
             MapZoneConnections = new();
+
+            // pathfinding
+            if (usesWeighEvaluation)
+            {
+                var weights = new LambdaGridView<double>(Width, Height, pos =>
+                {
+                    var tile = Tiles[pos.ToIndex(Width)];
+                    return tile is not null ? MathMagi.Round(tile.MoveTimeCost / 100) : 0;
+                });
+                AStar = new AStar(WalkabilityView, Distance.Euclidean, weights, 0.01);
+            }
             //Ilumination = new Light[Width * Height];
         }
 
@@ -120,7 +132,7 @@ namespace MagiRogue.GameSys
 
         public void RemoveAllEntities()
         {
-            foreach (Entity item in Entities.Items)
+            foreach (Entity item in Entities.Items.Cast<Entity>())
             {
                 Remove(item);
             }
@@ -358,6 +370,8 @@ namespace MagiRogue.GameSys
 
         public void RemoveAllTiles()
         {
+            if (Tiles is null)
+                return;
             foreach (TileBase tile in Tiles)
             {
                 RemoveTerrain(tile);
@@ -681,19 +695,39 @@ namespace MagiRogue.GameSys
             return obj;
         }
 
+        #endregion HelperMethods
+
+        #region Dispose
+
         public void DestroyMap()
         {
             RemoveAllEntities();
             RemoveAllTiles();
-            GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
+            if (GoRogueComponents.Count > 0)
+                GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
             Tiles = null;
             ControlledGameObjectChanged = null;
             this.ControlledEntitiy = null;
             _entityRender = null;
             GoRogueComponents.Clear();
+            _disposed = true;
         }
 
-        #endregion HelperMethods
+        public void Dispose()
+        {
+            if (!_disposed)
+            {
+                DestroyMap();
+                GC.SuppressFinalize(this);
+            }
+        }
+
+        ~Map()
+        {
+            Dispose();
+        }
+
+        #endregion Dispose
     }
 
     #region Event

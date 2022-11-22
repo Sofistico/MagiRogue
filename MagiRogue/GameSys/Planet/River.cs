@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace MagiRogue.GameSys.Planet
 {
     [JsonConverter(typeof(RiverJsonConverter))]
-    public class River
+    public sealed class River
     {
         public int RiverCount { get; }
         public int Length { get; set; }

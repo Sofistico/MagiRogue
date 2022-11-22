@@ -1,6 +1,7 @@
 ﻿using MagiRogue.Data;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
+using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
 using SadRogue.Primitives;
@@ -18,7 +19,7 @@ namespace MagiRogue.GameSys.MapGen
         protected DistinctRandom randNum;
         protected ulong seed;
         protected Map _map; // Temporarily store the map currently worked on
-        protected List<Room> _rooms;
+        protected List<Building> _rooms;
 
         // Empty constructor
         public MapGenerator()
@@ -112,7 +113,7 @@ namespace MagiRogue.GameSys.MapGen
                     break;
                 var step = path.GetStep(i);
                 // road can't enter inside a room.
-                if (_rooms.Any(r => r.RoomRectangle.Contains(step)))
+                if (_rooms.Any(r => r.PhysicalRoom.RoomRectangle.Contains(step)))
                     return;
                 var tile = roadTile.Copy();
                 tile.Position = step;
@@ -120,14 +121,14 @@ namespace MagiRogue.GameSys.MapGen
             }
         }
 
-        protected void ApplyRoads(List<Room> roomsInMap, TileFloor tileToUse)
+        protected void ApplyRoads(List<Building> roomsInMap, TileFloor tileToUse)
         {
             for (int i = 1; i < roomsInMap.Count; i++)
             {
-                if (roomsInMap[i - 1].Doors.Count <= 0 || roomsInMap[i].Doors.Count <= 0)
+                if (roomsInMap[i - 1].PhysicalRoom.Doors.Count <= 0 || roomsInMap[i].PhysicalRoom.Doors.Count <= 0)
                     continue;
-                Point previousRoomDoor = roomsInMap[i - 1].Doors.First().Position;
-                Point currentRoomDoor = roomsInMap[i].Doors.First().Position;
+                Point previousRoomDoor = roomsInMap[i - 1].PhysicalRoom.Doors.First().Position;
+                Point currentRoomDoor = roomsInMap[i].PhysicalRoom.Doors.First().Position;
 
                 CarveRoad(previousRoomDoor, currentRoomDoor, tileToUse);
             }
@@ -713,12 +714,13 @@ namespace MagiRogue.GameSys.MapGen
         /// <param name="roomMinSize"></param>
         /// <param name="maxRooms"></param>
         /// <returns></returns>
-        protected List<Room> BspMapFunction(Map map, int roomMaxSize, int roomMinSize, int maxRooms)
+        protected List<Building> BspMapFunction(Map map, int roomMaxSize, int roomMinSize, int maxRooms)
         {
             _map = map;
-            List<Room> rooms = new List<Room>();
+            List<Building> rooms = new List<Building>();
 
-            Rectangle rec = new Rectangle(map.Positions().First(), map.Positions().Last());
+            Rectangle rec = new Rectangle(map.Positions().ToEnumerable().First(),
+                map.Positions().ToEnumerable().Last());
 
             List<Rectangle> mapPartitions =
                 BisectRecursiveRandom(rec, roomMaxSize).ToList();
@@ -742,9 +744,9 @@ namespace MagiRogue.GameSys.MapGen
                 //Rectangle rectangle = new Rectangle(area.X, area.Y, area.Width, area.Height);
                 Room room = new Room(rectangle);
 
-                if (!rooms.Any(r => r.RoomRectangle.Intersects(room.RoomRectangle)))
+                if (!rooms.Any(r => r.PhysicalRoom.RoomRectangle.Intersects(room.RoomRectangle)))
                 {
-                    rooms.Add(room);
+                    rooms.Add(new Building(room));
                 }
             }
 

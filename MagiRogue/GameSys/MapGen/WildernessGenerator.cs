@@ -30,7 +30,7 @@ namespace MagiRogue.GameSys.MapGen
                 {
                     ApplyModifierToTheMap(completeMap, worldTile, (uint)i);
                     // Revist when the mind is better working! i really need to sleep my little 🐴
-                    settlmentCounter = CreateSettlementsIfAny(completeMap,
+                    settlmentCounter = CreateSitesIfAny(completeMap,
                         worldTile, settlmentCounter);
                     FinishingTouches(completeMap, worldTile);
                     maps[i] = completeMap;
@@ -54,7 +54,7 @@ namespace MagiRogue.GameSys.MapGen
         private static void FinishingTouches(Map completeMap, WorldTile worldTile)
         {
             // here prune trees
-            if (worldTile.CivInfluence is not null)
+            if (worldTile.SiteInfluence is not null)
             {
                 PruneTrees(completeMap, worldTile);
                 MakeRoomUseful(completeMap, worldTile);
@@ -67,6 +67,7 @@ namespace MagiRogue.GameSys.MapGen
             bool oneRulerOnly = false;
             if (mapRooms is null)
                 return;
+            // make so that the list of rooms come from the worldTile.CivInfluence.Sites
             foreach (Room room in mapRooms)
             {
                 if (room.RoomRectangle.Area >= 6)
@@ -171,6 +172,12 @@ namespace MagiRogue.GameSys.MapGen
 
                     break;
 
+                case RoomTag.DungeonKeeper:
+                    AddFurnituresAtRandomPos(DataManager.QueryFurnitureInData("wood_table"), room, map, 2);
+                    AddFurnituresAtRandomPos(DataManager.QueryFurnitureInData("wood_chair"), room, map, 4);
+
+                    break;
+
                 default:
                     throw new ApplicationException("Type of room not defined!");
             }
@@ -187,9 +194,15 @@ namespace MagiRogue.GameSys.MapGen
         private static void AddFurnitureAtRandomPos(Furniture furniture, Room room, Map map)
         {
             Point pos = Point.None;
-            while (!map.IsTileWalkable(pos) || map.EntityIsThere(pos))
+            int tries = 0;
+            while ((!map.IsTileWalkable(pos) || map.EntityIsThere(pos)))
             {
                 pos = room.ReturnRandomPosRoom();
+                if (tries++ <= 100)
+                {
+                    // not found a place, can stop looking
+                    return;
+                }
             }
             furniture.Position = pos;
             map.Add(furniture);
@@ -206,7 +219,7 @@ namespace MagiRogue.GameSys.MapGen
             List<TileBase> trees = completeMap.ReturnAllTrees();
 
             int chanceToRemoveTree = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt
-                ((worldTile.CivInfluence.GetSettlement(worldTile).Population)) / 100;
+                ((worldTile.SiteInfluence.ReturnPopNumber())) / 100;
             for (int i = 0; i < trees.Count; i++)
             {
                 int rng = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, 101);
@@ -321,51 +334,54 @@ namespace MagiRogue.GameSys.MapGen
         /// </summary>
         /// <param name="completeMap"></param>
         /// <param name="worldTile"></param>
-        /// <param name="createdSettlements"></param>
-        /// <returns>Returns the number of settlement already created on the map</returns>
+        /// <param name="createdSites"></param>
+        /// <returns>Returns the number of Site already created on the map</returns>
         /// <exception cref="ApplicationException"></exception>
-        private int CreateSettlementsIfAny(Map completeMap, WorldTile worldTile, int createdSettlements)
+        private int CreateSitesIfAny(Map completeMap, WorldTile worldTile, int createdSites)
         {
-            if (worldTile.CivInfluence is not null)
+            if (worldTile.SiteInfluence is not null)
             {
-                CityGenerator city = new();
-                var settlement = worldTile.CivInfluence.GetSettlement(worldTile);
-                if ((int)settlement.Size == createdSettlements)
-                    return (int)settlement.Size;
-                switch (settlement.Size)
+                SiteGenerator city = new();
+                var site = worldTile.SiteInfluence;
+                if ((int)site.Size == createdSites)
+                    return (int)site.Size;
+                switch (site.Size)
                 {
-                    case SettlementSize.Default:
+                    case SiteSize.None:
                         throw new ApplicationException("Room generated was from the default error!");
 
-                    case SettlementSize.Small:
-                        city.GenerateSmallVillage(completeMap,
+                    case SiteSize.Small:
+                        city.GenerateSmallSite(completeMap,
                             randNum.NextInt(4, 7),
                             randNum.NextInt(4, 7),
                             randNum.NextInt(8, 12),
-                            settlement.Name);
+                            site.Name,
+                            site.Buildings);
                         break;
 
-                    case SettlementSize.Medium:
-                        city.GenerateMediumTown(completeMap,
+                    case SiteSize.Medium:
+                        city.GenerateMediumSite(completeMap,
                             randNum.NextInt(4, 7),
                             randNum.NextInt(4, 7),
                             randNum.NextInt(8, 12),
-                            settlement.Name);
+                            site.Name,
+                            site.Buildings);
                         break;
 
-                    case SettlementSize.Large:
-                        city.GenerateBigCityFromMapBSP(completeMap,
+                    case SiteSize.Large:
+                        city.GenerateBigSite(completeMap,
                             randNum.NextInt(17, 30),
                             randNum.NextInt(4, 7),
                             randNum.NextInt(8, 12),
-                            settlement.Name);
+                            site.Name,
+                            site.Buildings);
                         break;
 
                     default:
                         throw new ApplicationException("There was an error with the room generated!");
                 }
 
-                return ++createdSettlements;
+                return ++createdSites;
             }
 
             return 0;

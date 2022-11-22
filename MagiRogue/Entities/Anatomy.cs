@@ -17,7 +17,12 @@ namespace MagiRogue.Entities
     /// </summary>
     public class Anatomy
     {
+        #region Fields
+
         private Race raceField;
+        private bool basicSetupDone;
+
+        #endregion Fields
 
         #region Properties
 
@@ -44,7 +49,7 @@ namespace MagiRogue.Entities
         {
             get
             {
-                return Limbs.FindAll(l => l.BodyPartFunction is BodyPartFunction.Grasp && l.Working).Count >= 1;
+                return Limbs.Any(l => l.BodyPartFunction is BodyPartFunction.Grasp && l.Working);
             }
         }
 
@@ -61,7 +66,7 @@ namespace MagiRogue.Entities
         public bool HasEnoughWings { get => Limbs.FindAll(l => l.BodyPartFunction is BodyPartFunction.Flier && l.Working).Count >= MaxFlierLimbs; }
 
         [JsonIgnore]
-        public bool HasAtLeastOneHead { get => Limbs.Exists(i => i.TypeLimb is TypeOfLimb.Head && i.BodyPartHp > 0); }
+        public bool HasAtLeastOneHead { get => Limbs.Exists(i => i.LimbType is TypeOfLimb.Head && i.BodyPartHp > 0); }
 
         [JsonIgnore]
         public bool CanSee
@@ -77,7 +82,7 @@ namespace MagiRogue.Entities
         {
             get
             {
-                return Limbs.Exists(l => l.TypeLimb is TypeOfLimb.UpperBody && l.BodyPartHp > 0);
+                return Limbs.Exists(l => l.LimbType is TypeOfLimb.UpperBody && l.BodyPartHp > 0);
             }
         }
 
@@ -110,7 +115,7 @@ namespace MagiRogue.Entities
         public bool NeedsHead { get; set; } = true;
 
         [DataMember]
-        public Gender Gender { get; set; }
+        public Sex Gender { get; set; }
 
         [DataMember]
         public bool Ages { get; set; } = true;
@@ -173,7 +178,7 @@ namespace MagiRogue.Entities
 
                 case >= 1:
                     wound.Severity = bpInjured is Limb ? InjurySeverity.Missing : InjurySeverity.Pulped;
-                    if (wound.DamageSource is DamageType.Blunt)
+                    if (wound.DamageSource is DamageTypes.Blunt)
                         wound.Severity = InjurySeverity.Pulped;
                     break;
 
@@ -181,7 +186,7 @@ namespace MagiRogue.Entities
                     throw new Exception($"Error with getting percentage of the damage done to the body part: {hpLostPercentage}");
             }
 
-            if (wound.DamageSource is DamageType.Sharp || wound.DamageSource is DamageType.Point)
+            if (wound.DamageSource is DamageTypes.Sharp || wound.DamageSource is DamageTypes.Point)
             {
                 wound.Bleeding = ((actorWounded.Weight / bpInjured.BodyPartWeight) * (int)wound.Severity) + 0.1;
             }
@@ -193,17 +198,19 @@ namespace MagiRogue.Entities
             }
         }
 
-        public void Setup(Actor actor, Race race, int actorAge, Gender gender, int volume)
+        public void FullSetup(Actor actor, Race race, int actorAge, Sex sex, int volume)
+        {
+            if (!basicSetupDone)
+            {
+                BasicSetup(sex, actorAge, race);
+            }
+
+            SetupActorBodyProperties(actor, volume);
+        }
+
+        private void SetupActorBodyProperties(Actor actor, int volume)
         {
             actor.Volume = volume;
-            raceField = race;
-            Race = race.Id;
-            SetRandomLifespanByRace();
-            Limbs = race.ReturnRaceLimbs();
-            Organs = race.ReturnRaceOrgans();
-            NormalLimbRegen = race.RaceNormalLimbRegen;
-            CurrentAge = actorAge;
-            Gender = gender;
 
             if (Limbs.Count > 0)
             {
@@ -214,6 +221,42 @@ namespace MagiRogue.Entities
                 CalculateBlood(actor.Weight);
             }
         }
+
+        #region BasicSetups
+
+        public void BasicSetup(Sex sex, int actorAge, Race race)
+        {
+            BasicSetup(race);
+            Gender = sex;
+            CurrentAge = actorAge;
+        }
+
+        public void BasicSetup(Race race)
+        {
+            if (string.IsNullOrEmpty(Race))
+                Race = race.Id;
+            raceField = race;
+            SetRandomLifespanByRace();
+            Limbs = race.ReturnRaceLimbs();
+            Organs = race.ReturnRaceOrgans();
+            NormalLimbRegen = race.RaceNormalLimbRegen;
+            basicSetupDone = true;
+        }
+
+        public void BasicSetup()
+        {
+            if (!string.IsNullOrEmpty(Race))
+            {
+                Race race = GetRace();
+                SetRandomLifespanByRace();
+                Limbs = race.ReturnRaceLimbs();
+                Organs = race.ReturnRaceOrgans();
+                NormalLimbRegen = race.RaceNormalLimbRegen;
+                basicSetupDone = true;
+            }
+        }
+
+        #endregion BasicSetups
 
         private void SetMaxStandAndGraspCount()
         {
@@ -277,7 +320,7 @@ namespace MagiRogue.Entities
             int bodyPartIndex;
             Limb bodyPart;
 
-            if (limb.TypeLimb == TypeOfLimb.Head || limb.TypeLimb == TypeOfLimb.Neck)
+            if (limb.LimbType == TypeOfLimb.Head || limb.LimbType == TypeOfLimb.Neck)
             {
                 bodyParts = Limbs.FindAll(h => h.BodyPartFunction == BodyPartFunction.Thought && NeedsHead);
                 if (bodyParts.Count > 1)
@@ -295,7 +338,7 @@ namespace MagiRogue.Entities
                     return;
                 }
             }
-            else if (limb.TypeLimb == TypeOfLimb.UpperBody || limb.TypeLimb == TypeOfLimb.LowerBody)
+            else if (limb.LimbType == TypeOfLimb.UpperBody || limb.LimbType == TypeOfLimb.LowerBody)
             {
                 DismemberMessage(actor, limb);
                 ActionManager.ResolveDeath(actor);
@@ -308,7 +351,7 @@ namespace MagiRogue.Entities
                 foreach (Limb connectedLimb in connectedParts)
                 {
                     // Here so that the bleeding from a lost part isn't being considered
-                    Wound lostLimb = new Wound(connectedLimb.BodyPartHp, DamageType.Sharp)
+                    Wound lostLimb = new Wound(connectedLimb.BodyPartHp, DamageTypes.Sharp)
                     {
                         Severity = InjurySeverity.Missing
                     };
@@ -414,14 +457,14 @@ namespace MagiRogue.Entities
         /// Checks once a year for aging related stuff and etc...
         /// To be used
         /// </summary>
-        public void CheckAge()
+        public bool CheckIfDiedByAge()
         {
-            if (Ages && CurrentAge > Lifespan)
+            if (Ages && CurrentAge >= Lifespan)
             {
-                int rng = GameLoop.GlobalRand.NextInt(100);
-                // one in rng. better be lucky!
-                Mrn.OneIn(rng);
+                var died = Mrn.CustomDice("1d10"); // sometimes, simple is good!
+                return died > 5;
             }
+            return false;
         }
 
         public int RateOfGrowthPerYear()
@@ -460,10 +503,8 @@ namespace MagiRogue.Entities
         }
 
         public void SetCurrentAgeWithingAdulthood()
-        {
-            CurrentAge = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(GetRaceAdulthoodAge(),
+            => CurrentAge = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(GetRaceAdulthoodAge(),
                 GetRaceAdulthoodAge() + 4);
-        }
 
         public bool EnoughBodyToLive()
         {
@@ -481,9 +522,10 @@ namespace MagiRogue.Entities
         }
 
         private bool CheckIfHasHeadAndNeedsOne()
-        {
-            return HasAtLeastOneHead && NeedsHead;
-        }
+            => HasAtLeastOneHead && NeedsHead;
+
+        public void AgeBody()
+            => CurrentAge++;
 
         #endregion Methods
     }

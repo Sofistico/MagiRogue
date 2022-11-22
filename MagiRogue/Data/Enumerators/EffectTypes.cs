@@ -3,6 +3,8 @@
     public enum EffectTypes
     {
         DAMAGE,
+        DEBUFF,
+        BUFF,
         HASTE,
         MAGESIGHT,
         SEVER,

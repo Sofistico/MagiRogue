@@ -1,0 +1,212 @@
+﻿[
+  {
+    "Id": "magic_teach",
+    "Name": "Mage",
+    "Ability": [ "MagicTheory" ]
+  },
+  {
+    "Id": "magic_teach",
+    "Name": "Academy Mage",
+    "Ability": [ "MagicTheory" ]
+  },
+  {
+    "Id": "magic_teach",
+    "Name": "Apprentice Mage",
+    "Ability": [ "Student", "MagicTheory" ]
+  },
+  {
+    "Id": "magic_teach",
+    "Name": "Magic Teacher",
+    "Ability": [ "MagicTheory", "Teach" ]
+  },
+  {
+    "Id": "basic_lore",
+    "Name": "Magic Knower",
+    "Ability": [ "MagicLore" ]
+  },
+  {
+    "Id": "astro_magery",
+    "Name": "Astrologer",
+    "Ability": [ "MagicLore", "Astronomer" ]
+  },
+  {
+    "Id": "mage_research",
+    "Name": "Magic Researcher",
+    "Ability": [ "MagicTheory", "Research" ]
+  },
+  {
+    "Id": "vagabond",
+    "Name": "Vagabond",
+    "Ability": [ "None" ]
+  },
+  {
+    "Id": "military_tactician",
+    "Name": "Military Tactician",
+    "Ability": [ "MilitaryTactics" ]
+  },
+  {
+    "Id": "military_leader",
+    "Name": "Military Leader",
+    "Ability": [ "MilitaryTactics", "Leader" ]
+  },
+  {
+    "Id": "sword_user",
+    "Name": "Sword User",
+    "Ability": [ "Sword" ]
+  },
+  {
+    "Id": "martial_artist",
+    "Name": "Martial Artist",
+    "Ability": [ "Unarmed" ]
+  },
+  {
+    "Id": "misc_user",
+    "Name": "Improviser Weapon User",
+    "Ability": [ "Misc" ]
+  },
+  {
+    "Id": "staff_user",
+    "Name": "Staff User",
+    "Ability": [ "Staff" ]
+  },
+  {
+    "Id": "hammer",
+    "Name": "Hammer User",
+    "Ability": [ "Hammer" ]
+  },
+  {
+    "Id": "spear_user",
+    "Name": "Spear User",
+    "Ability": [ "Spear" ]
+  },
+  {
+    "Id": "axe_user",
+    "Name": "Axe User",
+    "Ability": [ "Axe" ]
+  },
+  {
+    "Id": "soldier",
+    "Name": "Soldier",
+    "Ability": [ "ArmorUse", "Discipline" ]
+  },
+  {
+    "Id": "soldier",
+    "Name": "Mage Soldier",
+    "Ability": [ "MagicTheory", "Discipline" ]
+  },
+  {
+    "Id": "dodge",
+    "Name": "Dodger",
+    "Ability": [ "Dodge" ]
+  },
+  {
+    "Id": "mason",
+    "Name": "Mason",
+    "Ability": [ "Mason" ]
+  },
+  {
+    "Id": "wood_craft",
+    "Name": "Wood Crafter",
+    "Ability": [ "WoodCraft" ]
+  },
+  {
+    "Id": "forge",
+    "Name": "Blacksmith",
+    "Ability": [ "Forge" ]
+  },
+  {
+    "Id": "furnace_operator",
+    "Name": "Furnace Operator",
+    "Ability": [ "Smelt" ]
+  },
+  {
+    "Id": "weaver",
+    "Name": "Weaver",
+    "Ability": [ "Weaver" ]
+  },
+  {
+    "Id": "alchemist",
+    "Name": "Alchemist",
+    "Ability": [ "Alchemy" ]
+  },
+  {
+    "Id": "enchanter",
+    "Name": "Enchanter",
+    "Ability": [ "Enchantment" ]
+  },
+  {
+    "Id": "farmer",
+    "Name": "Farmer",
+    "Ability": [ "Farm" ]
+  },
+  {
+    "Id": "doc",
+    "Name": "Doctor",
+    "Ability": [ "Medicine" ]
+  },
+  {
+    "Id": "surgeon",
+    "Name": "Surgeon",
+    "Ability": [ "Surgeon" ]
+  },
+  {
+    "Id": "miner",
+    "Name": "Miner",
+    "Ability": [ "Miner" ]
+  },
+  {
+    "Id": "brewer",
+    "Name": "Brewer",
+    "Ability": [ "Brewer" ]
+  },
+  {
+    "Id": "cook",
+    "Name": "Cook",
+    "Ability": [ "Cook" ]
+  },
+  {
+    "Id": "swin",
+    "Name": "Swimmer",
+    "Ability": [ "Swin" ]
+  },
+  {
+    "Id": "scholar",
+    "Name": "Scholar",
+    "Ability": [ "Research" ]
+  },
+  {
+    "Id": "mathematician",
+    "Name": "Mathematician",
+    "Ability": [ "Mathematics" ]
+  },
+  {
+    "Id": "chemist",
+    "Name": "Chemist",
+    "Ability": [ "Chemist" ]
+  },
+  {
+    "Id": "astronomer",
+    "Name": "Astronomer",
+    "Ability": [ "Astronomer" ]
+  },
+  {
+    "Id": "physics",
+    "Name": "Physicist",
+    "Ability": [ "Physics" ]
+  },
+  {
+    "Id": "enginner",
+    "Name": "Enginner",
+    "Ability": [ "Enginner" ]
+  },
+  {
+    "Id": "teacher",
+    "Name": "Teacher",
+    "Ability": [ "Teach" ]
+  },
+  {
+    "Id": "writer",
+    "Name": "Writer",
+    "Ability": [ "Write" ]
+  }
+]

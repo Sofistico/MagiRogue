@@ -10,7 +10,7 @@ namespace MagiRogue.UI
 {
     // Creates/Holds/Destroys all consoles used in the game
     // and makes consoles easily addressable from a central place.
-    public class UIManager : ScreenObject
+    public sealed class UIManager : ScreenObject
     {
         #region Managers
 

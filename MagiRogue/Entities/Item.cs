@@ -1,6 +1,7 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Data.Serialization.EntitySerialization;
+using MagiRogue.GameSys.Planet.History;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
@@ -67,18 +68,19 @@ namespace MagiRogue.Entities
         /// <summary>
         /// The type of damage the item deals, should be default of blunt type
         /// </summary>
-        public DamageType ItemDamageType { get; set; } = DamageType.Blunt;
+        public DamageTypes ItemDamageType { get; set; } = DamageTypes.Blunt;
 
         /// <summary>
         /// Actives that the item can do.
         /// </summary>
         public List<IActivable> UseAction { get; set; }
         public List<Trait> Traits { get; set; }
-        public List<Quality> Qualities { get; internal set; }
+        public List<Quality> Qualities { get; set; }
         public string ItemId { get; set; }
         public WeaponType WeaponType { get; set; }
 
         public MaterialTemplate Material { get; set; }
+        public List<Legend> Legends { get; set; }
 
         // By default, a new Item is sized 1x1, with a weight of 1, and at 100% condition
         public Item(Color foreground, Color background, string name, int glyph, Point coord, int size,
@@ -89,10 +91,11 @@ namespace MagiRogue.Entities
             Volume = size;
             Condition = condition;
             Material = GameSys.Physics.PhysicsManager.SetMaterial(materialId);
-            Name = Material.ReturnNameFromMaterial(name);
+            Name = Material is not null ? Material.ReturnNameFromMaterial(name) : "Bugged!";
             UseAction = new();
             Traits = new();
             Qualities = new();
+            Legends = new();
         }
 
         // removes this object from
@@ -119,7 +122,7 @@ namespace MagiRogue.Entities
             }
 
             if (!actor.GetEquipment().TryAdd(actor.GetAnatomy().Limbs.Find
-                (l => l.TypeLimb.ToString() == EquipType.ToString()).Id, this))
+                (l => l.LimbType.ToString() == EquipType.ToString()).Id, this))
             {
                 GameLoop.AddMessageLog($"{actor.Name} has already an item equiped in addHere!");
                 return false;

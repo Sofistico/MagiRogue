@@ -10,7 +10,7 @@ namespace MagiRogue.Data.Serialization.MapSerialization
 {
     #region Serialization
 
-    public class MapJsonConverter : JsonConverter<Map>
+    public sealed class MapJsonConverter : JsonConverter<Map>
     {
         public override Map ReadJson(JsonReader reader,
             Type objectType, Map? existingValue, bool hasExistingValue,
@@ -267,7 +267,7 @@ namespace MagiRogue.Data.Serialization.MapSerialization
 
     #endregion Serialization
 
-    public class MapTemplate
+    public sealed class MapTemplate
     {
         public string MapName { get; set; }
         public BasicTile[] Tiles { get; set; }

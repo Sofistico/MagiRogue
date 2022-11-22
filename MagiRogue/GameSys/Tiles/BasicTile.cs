@@ -11,7 +11,7 @@ namespace MagiRogue.GameSys.Tiles
 {
     #region Tile Serializer
 
-    public class TileJsonConverter : JsonConverter<TileBase>
+    public sealed class TileJsonConverter : JsonConverter<TileBase>
     {
         public override TileBase ReadJson(JsonReader reader,
             Type objectType, TileBase? existingValue,
@@ -29,7 +29,7 @@ namespace MagiRogue.GameSys.Tiles
 
     #endregion Tile Serializer
 
-    public class BasicTile
+    public sealed class BasicTile
     {
         #region TileBase Properties
 
@@ -56,13 +56,14 @@ namespace MagiRogue.GameSys.Tiles
         [JsonIgnore]
         public static int Layer { get => 0; }
         public TileType TileType { get; set; }
-        public int MoveCost { get; set; }
+        public int MoveCost { get; set; } = 100;
         public int TileHealth { get; set; }
         public uint ForegroundLastSeen { get; set; }
         public uint BackgroundLastSeen { get; set; }
         public char GlyphLastSeen { get; set; }
         public int InfusedMp { get; set; }
         public int BitMask { get; set; }
+        //public int MoveTimeCost { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<Trait> Traits { get; set; }
@@ -92,7 +93,7 @@ namespace MagiRogue.GameSys.Tiles
         public int? RiverSize { get; set; }
         public string? RegionName { get; set; }
         public Road? Road { get; set; }
-        public Civilization? Civ { get; set; }
+        public Site? Site { get; set; }
         public SpecialLandType? SpecialLandType { get; set; }
         public HeatType? HeatType { get; set; }
         public float? HeatValue { get; set; }
@@ -217,7 +218,7 @@ namespace MagiRogue.GameSys.Tiles
                 basic.BiomeType = worldTile.BiomeType;
                 basic.BiomeBitMask = worldTile.BiomeBitmask;
                 //basic.Rivers = worldTile.Rivers;
-                basic.Civ = worldTile.CivInfluence;
+                basic.Site = worldTile.SiteInfluence;
                 basic.RiverSize = worldTile.RiverSize;
                 basic.Road = worldTile.Road;
                 basic.SpecialLandType = worldTile.SpecialLandType;
@@ -328,7 +329,7 @@ namespace MagiRogue.GameSys.Tiles
                         BitMask = basicTile.BitMask,
                         BiomeBitmask = (int)basicTile.BiomeBitMask,
                         BiomeType = (BiomeType)basicTile.BiomeType,
-                        CivInfluence = basicTile.Civ,
+                        SiteInfluence = basicTile.Site,
                         Rivers = basicTile.Rivers,
                         RiverSize = (int)basicTile.RiverSize,
                         RegionName = basicTile.RegionName,
@@ -367,6 +368,7 @@ namespace MagiRogue.GameSys.Tiles
                 tile.TileHealth = basicTile.TileHealth;
 
             tile.Traits = basicTile.Traits is null ? new List<Trait>() : basicTile.Traits;
+            tile.MoveTimeCost = basicTile.MoveCost;
 
             return tile;
         }

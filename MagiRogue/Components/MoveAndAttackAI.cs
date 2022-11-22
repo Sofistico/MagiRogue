@@ -19,7 +19,7 @@ namespace MagiRogue.Components
             perceptionAi = perception;
         }
 
-        public IObjectWithComponents Parent { get; set; }
+        public IObjectWithComponents? Parent { get; set; }
 
         public (bool sucess, long ticks) RunAi(Map map, MessageLogWindow messageLog)
         {

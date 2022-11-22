@@ -1,0 +1,290 @@
+﻿[
+  {
+    "Id": "base_human",
+    "Races": [ "human" ],
+    "LanguageSpoken": "common_language",
+    "PossibleTendencies": [ "Any" ],
+    "PossibleSites": [ "City" ],
+    "PossibleWorldConstructions": [ "Road", "Bridge" ],
+    "StartBiome": "Grassland",
+    "Nobles": [
+      {
+        "Id": "monarch",
+        "Name": "Monarch",
+        "MaleName": "King",
+        "FemaleName": "Queen",
+        "Spouse": "Monarch consort",
+        "SpouseMaleName": "King consort",
+        "SpouseFemaleName": "Queen consort",
+        "MaxAmmount": 1,
+        "ImportanceLevel": 3,
+        "Precedence": 1,
+        "Responsabilities": [ "Rule", "LeadArmy" ],
+        "Succession": {
+          "Type": "Heir"
+        }
+      },
+      {
+        "Id": "administrator",
+        "Name": "Administrator",
+        "MaleName": "Administrator",
+        "FemaleName": "Administrator",
+        "Spouse": "Administrator consort",
+        "SpouseMaleName": "Administrator consort",
+        "SpouseFemaleName": "Administrator consort",
+        "MaxAmmount": 999,
+        "ImportanceLevel": 1,
+        "Precedence": 10,
+        "Responsabilities": [ "Administrate" ],
+        "Succession": {
+          "Type": "Appoint",
+          "AppointedBy": "monarch"
+        }
+      },
+      {
+        "Id": "general",
+        "Name": "General",
+        "MaleName": "General",
+        "FemaleName": "General",
+        "Spouse": "General consort",
+        "SpouseMaleName": "General consort",
+        "SpouseFemaleName": "General consort",
+        "MaxAmmount": 1,
+        "ImportanceLevel": 2,
+        "Precedence": 5,
+        "Responsabilities": [ "LeadArmy", "AdviseRuler" ],
+        "Succession": {
+          "Type": "Appoint",
+          "AppointedBy": "monarch"
+        }
+      },
+      {
+        "Id": "captain",
+        "Name": "Captain",
+        "MaleName": "Captain",
+        "FemaleName": "Captain",
+        "Spouse": "Captain consort",
+        "SpouseMaleName": "Captain consort",
+        "SpouseFemaleName": "Captain consort",
+        "MaxAmmount": 999,
+        "ImportanceLevel": 1,
+        "Precedence": 6,
+        "Responsabilities": [ "LeadArmy" ],
+        "Succession": {
+          "Type": "Appoint",
+          "AppointedBy": "general"
+        }
+      },
+      {
+        "Id": "court_mage",
+        "Name": "Court Mage",
+        "MaleName": "Court Mage",
+        "FemaleName": "Court Mage",
+        "Spouse": "Court Mage consort",
+        "SpouseMaleName": "Court Mage consort",
+        "SpouseFemaleName": "Court Mage consort",
+        "MaxAmmount": 1,
+        "ImportanceLevel": 3,
+        "Precedence": 10,
+        "RequiredForPos": [ "MagicUser" ],
+        "Responsabilities": [ "CourtMage" ],
+        "Succession": {
+          "Type": "Appoint",
+          "AppointedBy": "monarch"
+        }
+      }
+    ]
+  },
+  {
+    "Id": "base_dwarf",
+    "Races": [ "dwarf" ],
+    "LanguageSpoken": "common_language",
+    "PossibleTendencies": [ "Any" ],
+    "PossibleSites": [ "City" ],
+    "PossibleWorldConstructions": [ "Road", "Bridge" ],
+    "StartBiome": "Mountain",
+    "Nobles": [
+      {
+        "Id": "monarch",
+        "Name": "Monarch",
+        "MaleName": "King",
+        "FemaleName": "Queen",
+        "Spouse": "Monarch consort",
+        "SpouseMaleName": "King consort",
+        "SpouseFemaleName": "Queen consort",
+        "MaxAmmount": 1,
+        "ImportanceLevel": 3,
+        "Precedence": 1,
+        "Responsabilities": [ "Rule", "LeadArmy" ],
+        "Succession": {
+          "Type": "Heir"
+        }
+      },
+      {
+        "Id": "administrator",
+        "Name": "Administrator",
+        "MaleName": "Administrator",
+        "FemaleName": "Administrator",
+        "Spouse": "Administrator consort",
+        "SpouseMaleName": "Administrator consort",
+        "SpouseFemaleName": "Administrator consort",
+        "MaxAmmount": 999,
+        "ImportanceLevel": 1,
+        "Precedence": 10,
+        "Responsabilities": [ "Administrate" ],
+        "Succession": {
+          "Type": "Appoint",
+          "AppointedBy": "monarch"
+        }
+      },
+      {
+        "Id": "court_mage",
+        "Name": "Court Mage",
+        "MaleName": "Court Mage",
+        "FemaleName": "Court Mage",
+        "Spouse": "Court Mage consort",
+        "SpouseMaleName": "Court Mage consort",
+        "SpouseFemaleName": "Court Mage consort",
+        "MaxAmmount": 1,
+        "ImportanceLevel": 3,
+        "Precedence": 10,
+        "RequiredForPos": [ "MagicUser" ],
+        "Responsabilities": [ "CourtMage" ],
+        "Succession": {
+          "Type": "Appoint",
+          "AppointedBy": "monarch"
+        }
+      },
+      {
+        "Id": "general",
+        "Name": "General",
+        "MaleName": "General",
+        "FemaleName": "General",
+        "Spouse": "General consort",
+        "SpouseMaleName": "General consort",
+        "SpouseFemaleName": "General consort",
+        "MaxAmmount": 1,
+        "ImportanceLevel": 2,
+        "Precedence": 5,
+        "Responsabilities": [ "LeadArmy", "AdviseRuler" ],
+        "Succession": {
+          "Type": "Appoint",
+          "AppointedBy": "monarch"
+        }
+      },
+      {
+        "Id": "champion",
+        "Name": "Champion",
+        "MaleName": "Champion",
+        "FemaleName": "Championess",
+        "Spouse": "Champion consort",
+        "SpouseMaleName": "Champion consort",
+        "SpouseFemaleName": "Championess consort",
+        "MaxAmmount": 999,
+        "ImportanceLevel": 1,
+        "Precedence": 6,
+        "Responsabilities": [ "LeadArmy" ],
+        "Succession": {
+          "Type": "Appoint",
+          "AppointedBy": "general"
+        }
+      }
+    ]
+  },
+  {
+    "Id": "base_elven",
+    "Races": [ "elf" ],
+    "LanguageSpoken": "common_language",
+    "PossibleTendencies": [ "Any" ],
+    "PossibleSites": [ "City" ],
+    "PossibleWorldConstructions": [ "Road", "Bridge" ],
+    "StartBiome": "Forest",
+    "Nobles": [
+      {
+        "Id": "druid",
+        "Name": "Druid",
+        "MaleName": "Druid",
+        "FemaleName": "Druid",
+        "Spouse": "Druid consort",
+        "SpouseMaleName": "Druid consort",
+        "SpouseFemaleName": "Druid consort",
+        "MaxAmmount": 1,
+        "ImportanceLevel": 3,
+        "Precedence": 1,
+        "Responsabilities": [ "Rule", "LeadArmy", "MagicStuff" ],
+        "Succession": {
+          "Type": "Heir"
+        }
+      },
+      {
+        "Id": "court_mage",
+        "Name": "Court Mage",
+        "MaleName": "Court Mage",
+        "FemaleName": "Court Mage",
+        "Spouse": "Court Mage consort",
+        "SpouseMaleName": "Court Mage consort",
+        "SpouseFemaleName": "Court Mage consort",
+        "MaxAmmount": 1,
+        "ImportanceLevel": 3,
+        "Precedence": 10,
+        "RequiredForPos": [ "MagicUser" ],
+        "Responsabilities": [ "CourtMage" ],
+        "Succession": {
+          "Type": "Appoint",
+          "AppointedBy": "druid"
+        }
+      },
+      {
+        "Id": "prince",
+        "Name": "Prince",
+        "MaleName": "Prince",
+        "FemaleName": "Princess",
+        "Spouse": "Prince consort",
+        "SpouseMaleName": "Prince consort",
+        "SpouseFemaleName": "Princess consort",
+        "MaxAmmount": 999,
+        "ImportanceLevel": 1,
+        "Precedence": 10,
+        "Responsabilities": [ "Administrate" ],
+        "Succession": {
+          "Type": "Appoint",
+          "AppointedBy": "druid"
+        }
+      },
+      {
+        "Id": "general",
+        "Name": "General",
+        "MaleName": "General",
+        "FemaleName": "General",
+        "Spouse": "General consort",
+        "SpouseMaleName": "General consort",
+        "SpouseFemaleName": "General consort",
+        "MaxAmmount": 1,
+        "ImportanceLevel": 2,
+        "Precedence": 5,
+        "Responsabilities": [ "LeadArmy", "AdviseRuler" ],
+        "Succession": {
+          "Type": "Appoint",
+          "AppointedBy": "druid"
+        }
+      },
+      {
+        "Id": "ranger",
+        "Name": "Master Ranger",
+        "MaleName": "Master Ranger",
+        "FemaleName": "Master Ranger",
+        "Spouse": "Master Ranger consort",
+        "SpouseMaleName": "Master Ranger consort",
+        "SpouseFemaleName": "Master Ranger consort",
+        "MaxAmmount": 999,
+        "ImportanceLevel": 1,
+        "Precedence": 6,
+        "Responsabilities": [ "LeadArmy" ],
+        "Succession": {
+          "Type": "Appoint",
+          "AppointedBy": "general"
+        }
+      }
+    ]
+  }
+]

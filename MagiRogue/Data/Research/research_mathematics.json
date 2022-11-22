@@ -1,0 +1,28 @@
+﻿[
+  {
+    "Id": "basic_mathematics",
+    "Name": "The basics of mathematics, trigonometry, polynomials and basic formula",
+    "Difficulty": 10,
+    "IsMagical": false,
+    "IntermediareRes": true,
+    "AbilityRequired": [ "Mathematics" ]
+  },
+  {
+    "Id": "intermediare_mathematics",
+    "Name": "Mathematics that governs the use of polynomials functions, limit of a function, calculus and etc...",
+    "Difficulty": 25,
+    "IsMagical": false,
+    "IntermediareRes": true,
+    "AbilityRequired": [ "Mathematics" ],
+    "RequiredRes": [ "basic_mathematics" ]
+  },
+  {
+    "Id": "advanced_mathematics",
+    "Name": "Mathematics that governs the eldricth properties of mathematical definition, number theory, polynomial factoration, the golden ratio and algorithms",
+    "Difficulty": 25,
+    "IsMagical": false,
+    "IntermediareRes": true,
+    "AbilityRequired": [ "Mathematics" ],
+    "RequiredRes": [ "intermediare_mathematics" ]
+  }
+]

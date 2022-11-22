@@ -1,6 +1,9 @@
 ﻿using MagiRogue.Data.Serialization.MapSerialization;
+using MagiRogue.Entities;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MagiRogue.GameSys
 {
@@ -9,7 +12,7 @@ namespace MagiRogue.GameSys
     /// edges connect the map to each other.
     /// </summary>
     [JsonConverter(typeof(RegionChunkJsonConverter))]
-    public class RegionChunk
+    public sealed class RegionChunk
     {
         /// <summary>
         /// The max amount of local maps the region chunks hold, should be 3*3 = 9 maps.
@@ -68,6 +71,25 @@ namespace MagiRogue.GameSys
             {
                 LocalMaps[i].NeedsUpdate = true;
             }
+        }
+
+        public IEnumerable<Actor> TotalPopulation()
+        {
+            List<Actor> actors = new List<Actor>();
+            foreach (var map in LocalMaps)
+            {
+                foreach (Entity entity in map.Entities.Items.Cast<Entity>())
+                {
+                    if (entity is Actor actor)
+                    {
+                        if (map.ControlledEntitiy is not null && map.ControlledEntitiy.ID == entity.ID)
+                            continue;
+                        actors.Add(actor);
+                    }
+                }
+            }
+
+            return actors;
         }
     }
 }

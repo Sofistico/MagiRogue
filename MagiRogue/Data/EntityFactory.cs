@@ -15,7 +15,7 @@ namespace MagiRogue.Data
     public static class EntityFactory
     {
         public static Actor ActorCreatorFirstStep(Point position, string raceId,
-            string actorName, int actorAge, Gender gender)
+            string actorName, int actorAge, Sex sex)
         {
             Race race = DataManager.QueryRaceInData(raceId);
             int glyph = GlyphHelper.GlyphExistInDictionary(race.RaceGlyph) ?
@@ -29,16 +29,16 @@ namespace MagiRogue.Data
             {
                 Description = race.Description,
             };
-            SetupBodySoulAndMind(race, actor, actorAge, gender);
+            SetupBodySoulAndMind(race, actor, actorAge, sex);
 
             return actor;
         }
 
         public static Player PlayerCreatorFromActor(Actor actor,
-            string scenarioId, Gender gender)
+            string scenarioId, Sex sex)
         {
             Scenario scenario = DataManager.QueryScenarioInData(scenarioId);
-            actor.GetAnatomy().Gender = gender;
+            actor.GetAnatomy().Gender = sex;
             SetupScenarioStats(scenario, actor);
             SetupAbilities(actor, scenario.Abilities);
             SetupScenarioMagic(actor, scenario);
@@ -89,16 +89,16 @@ namespace MagiRogue.Data
             mind.Precision += scenario.Precision;
 
             soul.WillPower += scenario.WillPower;
-            soul.InitialMana(mind.Inteligence);
+            soul.InitialMana(mind.Inteligence, actor.GetAnatomy().GetRace());
             soul.MaxMana += scenario.MaxMana;
             soul.CurrentMana = soul.MaxMana;
             soul.BaseManaRegen += scenario.ManaRegen;
         }
 
         public static Player PlayerCreatorFromActor(Actor actor, Scenario scenario,
-            Gender gender)
+            Sex sex)
         {
-            return PlayerCreatorFromActor(actor, scenario.Id, gender);
+            return PlayerCreatorFromActor(actor, scenario.Id, sex);
         }
 
         private static void SetupAbilities(Actor actor, List<AbilityTemplate> abilities)
@@ -109,7 +109,7 @@ namespace MagiRogue.Data
             }
         }
 
-        private static void SetupBodySoulAndMind(Race race, Actor actor, int actorAge, Gender gender)
+        private static void SetupBodySoulAndMind(Race race, Actor actor, int actorAge, Sex sex)
         {
             Body body = actor.Body;
             Anatomy anatomy = actor.GetAnatomy();
@@ -126,7 +126,7 @@ namespace MagiRogue.Data
             int finalVolume = actor.Broadness > 0 ? MathMagi.CalculateVolumeWithModifier(actor.Broadness, volumeWithLenght) : volumeWithLenght;
 
             race.SetBodyPlan();
-            anatomy.Setup(actor, race, actorAge, gender, finalVolume);
+            anatomy.FullSetup(actor, race, actorAge, sex, finalVolume);
 
             body.Endurance = race.BaseEndurance;
             body.Strength = race.BaseStrenght;
@@ -140,7 +140,7 @@ namespace MagiRogue.Data
 
             soul.WillPower = race.BaseWillPower;
             soul.BaseManaRegen = race.BaseManaRegen;
-            soul.InitialMana(mind.Inteligence);
+            soul.InitialMana(mind.Inteligence, race);
 
             magic.InnateMagicResistance = race.BaseMagicResistance;
         }
@@ -166,22 +166,22 @@ namespace MagiRogue.Data
             return item;
         }
 
-        public static Player PlayerCreatorFromZero(Point pos, string race, string name, Gender gender,
+        public static Player PlayerCreatorFromZero(Point pos, string race, string name, Sex sex,
             string scenarioId)
         {
             var scenario = DataManager.QueryScenarioInData(scenarioId);
             var foundRace = DataManager.QueryRaceInData(race);
             int age = foundRace.GetAgeFromAgeGroup(scenario.AgeGroup);
-            Actor actor = ActorCreatorFirstStep(pos, race, name, age, gender);
-            Player player = PlayerCreatorFromActor(actor, scenarioId, gender);
+            Actor actor = ActorCreatorFirstStep(pos, race, name, age, sex);
+            Player player = PlayerCreatorFromActor(actor, scenarioId, sex);
             return player;
         }
 
-        public static Player PlayerCreatorFromZero(Point pos, string race, string name, int age, Gender gender,
+        public static Player PlayerCreatorFromZero(Point pos, string race, string name, int age, Sex sex,
             string scenarioId)
         {
-            Actor actor = ActorCreatorFirstStep(pos, race, name, age, gender);
-            Player player = PlayerCreatorFromActor(actor, scenarioId, gender);
+            Actor actor = ActorCreatorFirstStep(pos, race, name, age, sex);
+            Player player = PlayerCreatorFromActor(actor, scenarioId, sex);
             return player;
         }
     }

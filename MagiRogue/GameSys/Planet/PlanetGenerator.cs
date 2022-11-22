@@ -1,8 +1,10 @@
 ﻿using GoRogue.DiceNotation;
 using GoRogue.Pathing;
+using MagiRogue.Data;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Civ;
+using MagiRogue.GameSys.Planet.History;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
 using SadRogue.Primitives;
@@ -11,18 +13,21 @@ using System.Collections.Generic;
 using System.Linq;
 using TinkerWorX.AccidentalNoiseLibrary;
 
+// take a look at the historygen-sad, that's quite interesting
 namespace MagiRogue.GameSys.Planet
 {
     /// <summary>
     /// Generates a brand new planet
     /// </summary>
-    public class PlanetGenerator
+    public sealed class PlanetGenerator
     {
         #region Fields
 
+        #region MapGenField
+
         private int _width;
         private int _height;
-        private Civilization[] _civilizations;
+        private List<Civilization> _civilizations;
         private int maxCivsWorld;
 
         private readonly float deepWater = 0.3f;
@@ -96,6 +101,8 @@ namespace MagiRogue.GameSys.Planet
             { BiomeType.Ice, BiomeType.Tundra, BiomeType.BorealForest, BiomeType.TemperateRainforest, BiomeType.TropicalRainforest,  BiomeType.TropicalRainforest }   //WETTEST
             };
 
+        #endregion MapGenField
+
         #endregion Fields
 
         /// <summary>
@@ -104,12 +111,12 @@ namespace MagiRogue.GameSys.Planet
         /// <param name="width"></param>
         /// <param name="height"></param>
         /// <returns></returns>
-        public PlanetMap CreatePlanet(int width, int height, int nmbCivilizations = 30)
+        public PlanetMap CreatePlanet(int width, int height, int yearsToGenerate = 100, int nmbCivilizations = 30)
         {
             _width = width;
             _height = height;
             maxCivsWorld = nmbCivilizations;
-            _civilizations = new Civilization[maxCivsWorld];
+            _civilizations = new();
             HeightData = new float[width, height];
             HeatData = new float[width, height];
             MoistureData = new float[width, height];
@@ -137,7 +144,7 @@ namespace MagiRogue.GameSys.Planet
             UpdateBiomeBitmask();
 
             SeedCivilizations();
-            BasicHistory(550);
+            BasicHistory(yearsToGenerate);
 
             // Here will take care of the visualization
             CreateConsole(tiles);
@@ -149,180 +156,18 @@ namespace MagiRogue.GameSys.Planet
 
         private void BasicHistory(int yearToGameBegin)
         {
-            planetData.TicksSinceCreation = yearToGameBegin / 3155695200;
-            for (int i = 0; i < _civilizations.Length; i++)
+            AccumulatedHistory history = new AccumulatedHistory()
             {
-                var civ = _civilizations[i];
-
-                if (i < _civilizations.Length - 1)
-                {
-                    var nextCiv = _civilizations[i + 1];
-
-                    Path path = planetData.AssocietatedMap.
-                        AStar.ShortestPath(civ.Territory[0],
-                        nextCiv.Territory[0]);
-
-                    //TODO: Make sure that the roads don't colide with water and/or go away from water
-                    if (civ.Tendency == nextCiv.Tendency && path.Length <= 50)
-                    {
-                        BuildRoadsToFriends(civ, nextCiv);
-                    }
-                }
-            }
-        }
-
-        private void BuildRoadsToFriends(Civilization civ, Civilization friend)
-        {
-            var tile = tiles[civ.Territory[0].X, civ.Territory[0].Y];
-            var closestCityTile = tiles[friend.Territory[0].X, friend.Territory[0].Y];
-
-            FindPathToCity(tile, closestCityTile);
-        }
-
-        private void FindPathToCity(WorldTile tile, WorldTile closestCityTile)
-        {
-            Road road = new();
-
-            if (tile.HeightType == HeightType.DeepWater || tile.HeightType == HeightType.ShallowWater)
-                return;
-
-            if (tile.Road != null)
-                road = tile.Road;
-
-            // Found the city
-            if (tile == closestCityTile)
-                return;
-
-            // Shouldn't appear, but who knows
-            // Still need to know what i will do with it
-            /*if (tile.HeightType == HeightType.River)
-                return;*/
-
-            Point cityPoint = closestCityTile.Position;
-            Point roadPoint = tile.Position;
-            var direction = Direction.GetDirection(roadPoint, cityPoint);
-
-            if (direction == Direction.Up)
-            {
-                WorldTile worldTile = tile.Top;
-                if (worldTile.CivInfluence is not null)
-                {
-                    return;
-                }
-                worldTile.Road = road;
-                worldTile.Road.AddTileToList(worldTile);
-                worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.Top);
-
-                FindPathToCity(worldTile, closestCityTile);
-            }
-            if (direction == Direction.Down)
-            {
-                WorldTile worldTile = tile.Bottom;
-                if (worldTile.CivInfluence is not null)
-                {
-                    return;
-                }
-                worldTile.Road = road;
-                worldTile.Road.AddTileToList(worldTile);
-                worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.Bottom);
-
-                FindPathToCity(worldTile, closestCityTile);
-            }
-            if (direction == Direction.Left)
-            {
-                WorldTile worldTile = tile.Left;
-                if (worldTile.CivInfluence is not null)
-                {
-                    return;
-                }
-
-                worldTile.Road = road;
-                worldTile.Road.AddTileToList(worldTile);
-                worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.Left);
-
-                FindPathToCity(worldTile, closestCityTile);
-            }
-            if (direction == Direction.Right)
-            {
-                WorldTile worldTile = tile.Right;
-                if (worldTile.CivInfluence is not null)
-                {
-                    return;
-                }
-
-                worldTile.Road = road;
-                worldTile.Road.AddTileToList(worldTile);
-                worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.Right);
-
-                FindPathToCity(worldTile, closestCityTile);
-            }
-            if (direction == Direction.UpLeft)
-            {
-                WorldTile worldTile = tile.TopLeft;
-                if (worldTile.CivInfluence is not null)
-                {
-                    return;
-                }
-
-                worldTile.Road = road;
-                worldTile.Road.AddTileToList(worldTile);
-                worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.BottomLeft);
-
-                FindPathToCity(worldTile, closestCityTile);
-            }
-            if (direction == Direction.UpRight)
-            {
-                WorldTile worldTile = tile.TopRight;
-                if (worldTile.CivInfluence is not null)
-                {
-                    return;
-                }
-
-                worldTile.Road = road;
-                worldTile.Road.AddTileToList(worldTile);
-                worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.TopRight);
-
-                FindPathToCity(worldTile, closestCityTile);
-            }
-            if (direction == Direction.DownLeft)
-            {
-                WorldTile worldTile = tile.BottomLeft;
-                if (worldTile.CivInfluence is not null)
-                {
-                    return;
-                }
-
-                worldTile.Road = road;
-                worldTile.Road.AddTileToList(worldTile);
-                worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.BottomLeft);
-
-                FindPathToCity(worldTile, closestCityTile);
-            }
-            if (direction == Direction.DownRight)
-            {
-                WorldTile worldTile = tile.BottomRight;
-                if (worldTile.CivInfluence is not null)
-                {
-                    return;
-                }
-
-                worldTile.Road = road;
-                worldTile.Road.AddTileToList(worldTile);
-                worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.BottomRight);
-
-                FindPathToCity(worldTile, closestCityTile);
-            }
-            if (direction == Direction.None)
-            {
-                // Should theoritically never happen, but who knows!
-                return;
-            }
+                TicksSinceCreation = MathMagi.GetTickByYear(yearToGameBegin),
+            };
+            history.RunHistory(_civilizations, yearToGameBegin, planetData, tiles);
+            planetData.WorldHistory = history;
         }
 
         private void SeedCivilizations()
         {
             int tries = 0;
-            int maxTries = 300;
+            int maxTries = 3000;
             int currentCivCount = 0;
 
             while (currentCivCount < maxCivsWorld && tries < maxTries)
@@ -338,48 +183,43 @@ namespace MagiRogue.GameSys.Planet
                 || tile.HeightType == HeightType.River)
                     continue;
 
-                if (tile.CivInfluence != null)
+                if (tile.SiteInfluence != null)
                     continue;
 
-                int rng = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(100, 5000);
-
-                int pop = (int)(rng * ((int)tile.HeightType * tile.MoistureValue + 1));
-
-                Settlement set = new Settlement(tile.Position, RandomNames.SettlementNameGen(), pop)
+                var possibleCivs = DataManager.QueryCultureTemplateFromBiome(tile.BiomeType.ToString());
+                Civilization civ;
+                if (possibleCivs.Count > 0)
                 {
-                    MundaneResources = tile.MineralValue
-                };
-                set.DefineSettlementSize();
-                var nmbrRaces = Data.DataManager.ListOfRaces.Where(i => i.ValidCivRace).Count();
-                Race race = Data.DataManager.ListOfRaces[GameLoop.GlobalRand.NextInt(nmbrRaces)];
-                Civilization civ = new($"Random Name Here {currentCivCount}",
-                    race, RandomCivTendency());
+                    civ = possibleCivs.GetRandomItemFromList().ConvertToCivilization();
+                }
+                else
+                    continue;
 
-                tile.CivInfluence = civ;
-                civ.Territory.Add(tile.Position);
-                civ.AddSettlementToCiv(set);
+                int rng = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(25, 50);
+
+                int popNmr = (int)(rng * ((int)tile.HeightType * tile.MoistureValue + 1));
+                Site set = new Site(tile.Position, civ.RandomSiteFromLanguageName(), new Population(popNmr, civ.PrimaryRace.Id))
+                {
+                    MundaneResources = (int)tile.GetResources()
+                };
+                var room = new Room(RoomTag.Farm);
+                set.Buildings.Add(new Building(room));
+                set.DefineSiteSize();
+
+                tile.SiteInfluence = set;
+                civ.AddSiteToCiv(set);
+                if (civ.Territory.Count <= 0)
+                    throw new Exception();
 
                 if (currentCivCount < maxCivsWorld)
                 {
-                    _civilizations[currentCivCount] = civ;
+                    _civilizations.Add(civ);
                 }
 
                 planetData.Civilizations.Add(civ);
 
                 currentCivCount++;
             }
-        }
-
-        private static CivilizationTendency RandomCivTendency()
-        {
-            int rng = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, 2 + 1);
-            return rng switch
-            {
-                0 => CivilizationTendency.Normal,
-                1 => CivilizationTendency.Aggresive,
-                2 => CivilizationTendency.Studious,
-                _ => throw new ArgumentOutOfRangeException(),
-            };
         }
 
         #endregion Civ
@@ -393,9 +233,10 @@ namespace MagiRogue.GameSys.Planet
             //PlanetGlyphGenerator.GetHeatMap(width, height, tiles);
             //PlanetGlyphGenerator.GetMoistureMap(width, height, tiles);
             PlanetGlyphGenerator.GetBiomeMapTexture(_width, _height, tiles);
-            PlanetGlyphGenerator.SetCityTiles(_width, _height, tiles);
+            PlanetGlyphGenerator.SetSiteTiles(_width, _height, tiles);
+#if DEBUG
             PlanetGlyphGenerator.SetSpecialTiles(_width, _height, tiles);
-
+#endif
             planetData.SetWorldTiles(tiles);
         }
 

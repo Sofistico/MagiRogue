@@ -85,7 +85,7 @@ namespace MagiRogue.GameSys.Tiles
             {
                 int rndDrain = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(actor.Magic.ShapingSkill);
 
-                MpPoints -= rndDrain;
+                //MpPoints -= rndDrain;
 
                 if (MpPoints <= 0)
                 {
@@ -95,7 +95,7 @@ namespace MagiRogue.GameSys.Tiles
 
                 GameLoop.AddMessageLog($"{actor.Name} drained {rndDrain} from node!");
 
-                actor.Soul.WildMana += rndDrain;
+                //actor.Soul.WildMana += rndDrain;
             }
             else
             {

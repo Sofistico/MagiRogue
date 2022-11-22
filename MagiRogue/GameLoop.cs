@@ -2,6 +2,7 @@
 using GoRogue;
 using MagiRogue.GameSys;
 using MagiRogue.UI;
+using System;
 
 namespace MagiRogue
 {
@@ -9,6 +10,9 @@ namespace MagiRogue
     {
         public const int GameWidth = 120;
         public const int GameHeight = 30;
+        private static int hfId = 0;
+        private static int civId;
+        private static int mythId;
 
         // Managers
         public static UIManager UIManager { get; set; }
@@ -78,5 +82,22 @@ namespace MagiRogue
                 return;
             UIManager.MessageLog.Add(message);
         }
+
+        #region IdCounters
+
+        public static int GetHfId()
+        {
+            return hfId++;
+        }
+
+        public static int GetCivId()
+            => civId++;
+
+        public static int GetMythId()
+        {
+            return mythId++;
+        }
+
+        #endregion IdCounters
     }
 }

@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 
 namespace MagiRogue.Entities
 {
-    public class Organ : BodyPart
+    public sealed class Organ : BodyPart
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string? InsideOf { get; set; }
@@ -50,7 +50,7 @@ namespace MagiRogue.Entities
             MaxBodyPartHp = organHp;
         }
 
-        public Organ(string materialId = "flesh") : base(materialId)
+        public Organ(string materialId = "skin") : base(materialId)
         {
             // Empty!
         }

@@ -12,12 +12,13 @@ namespace MagiRogue.Data.Enumerators
         ArmorUse,
         Unarmed,
         Misc,
-        Fist,
         Sword,
         Staff,
         Hammer,
         Spear,
         Axe,
+        Shield,
+        Dodge,
 
         // Craft skills
         Mason,
@@ -44,16 +45,28 @@ namespace MagiRogue.Data.Enumerators
 
         //Misc
         Concentration,
+        Discipline,
         Write,
+        Student,
         Teach,
         Read,
         Leader,
         MilitaryTactics,
         Swin,
 
+        // Magic specific
+        MagicTheory,
+        Gestures,
+        Incantation,
+        ManaShaping,
+
         // scholary
         MagicLore,
-        Mathematician,
+        Research,
+        Mathematics,
         Astronomer,
+        Chemist,
+        Physics,
+        Enginner,
     }
 }

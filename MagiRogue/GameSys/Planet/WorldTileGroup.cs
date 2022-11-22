@@ -5,7 +5,7 @@ using System.Collections.Generic;
 // Used in flood fill algorithm
 namespace MagiRogue.GameSys.Planet
 {
-    public class WorldTileGroup
+    public sealed class WorldTileGroup
     {
         public TileGroupType Type { get; set; }
         public List<WorldTile> WorldTiles { get; set; }

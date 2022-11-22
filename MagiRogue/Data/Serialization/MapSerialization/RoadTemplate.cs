@@ -30,6 +30,7 @@ namespace MagiRogue.Data.Serialization.MapSerialization
         public List<WorldPosDictionary> RoadDirectionInPos { get; set; } = new();
         public List<Point> RoadTiles { get; set; }
         public RoadStatus Status { get; set; }
+        public int RoadId { get; set; }
 
         public RoadTemplate(Dictionary<Point, WorldDirection> roadDirectionInPos,
             List<Point> roadTiles, RoadStatus status)
@@ -67,7 +68,8 @@ namespace MagiRogue.Data.Serialization.MapSerialization
             {
                 RoadTiles = tiles,
                 RoadDirectionInPos = roadDirectoin,
-                Status = template.Status
+                Status = template.Status,
+                RoadId = template.RoadId
             };
             return road;
         }
@@ -86,7 +88,10 @@ namespace MagiRogue.Data.Serialization.MapSerialization
 
                 return new RoadTemplate(road.RoadDirectionInPos,
                 tiles,
-                road.Status);
+                road.Status)
+                {
+                    RoadId = road.RoadId
+                };
             }
             catch (Exception)
             {

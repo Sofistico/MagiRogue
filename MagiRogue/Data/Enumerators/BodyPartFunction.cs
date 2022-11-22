@@ -23,5 +23,6 @@ namespace MagiRogue.Data.Enumerators
         Thought,
         Breath,
         Embedded,
+        Protection // bone, skulls, ribcage and etc
     }
 }

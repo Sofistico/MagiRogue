@@ -10,7 +10,7 @@ namespace MagiRogue.GameSys.Magic.Effects
         private int turnToRemove;
 
         public SpellAreaEffect AreaOfEffect { get; set; }
-        public DamageType SpellDamageType { get; set; }
+        public DamageTypes SpellDamageType { get; set; }
 
         public int Duration { get; set; }
         public int TurnApplied { get; set; }
@@ -22,7 +22,7 @@ namespace MagiRogue.GameSys.Magic.Effects
         public MageSightEffect(int duration)
         {
             Duration = duration;
-            SpellDamageType = DamageType.None;
+            SpellDamageType = DamageTypes.None;
             AreaOfEffect = SpellAreaEffect.Self;
         }
 

@@ -1,4 +1,5 @@
-﻿using SadRogue.Primitives;
+﻿using MagiRogue.Data.Enumerators;
+using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,6 +64,88 @@ namespace MagiRogue.Utils
             borderCells.AddRange(GetTileLocationsAlongLine(xMax, yMin, xMax, yMax));
 
             return borderCells;
+        }
+
+        public static Point GetPointNextTo(this Point point)
+        {
+            Direction[] directions = new Direction[]
+            {
+                Direction.Down,
+                Direction.Up,
+                Direction.Left,
+                Direction.Right,
+            };
+
+            Direction directionToGo = directions.GetRandomItemFromList();
+            Point newPOint = new SadRogue.Primitives.Point(point.X + directionToGo.DeltaX, point.Y + directionToGo.DeltaY);
+
+            return newPOint;
+        }
+
+        public static Point FindClosest(this Point point, Point[] pointsToSearch)
+        {
+            Point closestPoint = Point.None;
+            double previousDistance = 999;
+            for (int i = 0; i < pointsToSearch.Length; i++)
+            {
+                Point possibleClosestPoint = pointsToSearch[i];
+                double distanceBeetweenPoints = Distance.Chebyshev.Calculate(possibleClosestPoint, point);
+                if (distanceBeetweenPoints < previousDistance)
+                {
+                    closestPoint = possibleClosestPoint;
+                    previousDistance = distanceBeetweenPoints;
+                }
+            }
+            return closestPoint;
+        }
+
+        public static Point FindClosest(this Point point, IEnumerable<Point> pointsToSearch)
+        {
+            Point closestPoint = Point.None;
+            double previousDistance = 999;
+            foreach (var possibleClosestPoint in pointsToSearch)
+            {
+                double distanceBeetweenPoints = Distance.Chebyshev.Calculate(possibleClosestPoint, point);
+                if (distanceBeetweenPoints < previousDistance)
+                {
+                    closestPoint = possibleClosestPoint;
+                    previousDistance = distanceBeetweenPoints;
+                }
+            }
+            return closestPoint;
+        }
+
+        public static (Point, double) FindClosestAndReturnDistance(this Point point, Point[] pointsToSearch)
+        {
+            Point closestPoint = Point.None;
+            double previousDistance = 999;
+            for (int i = 0; i < pointsToSearch.Length; i++)
+            {
+                Point possibleClosestPoint = pointsToSearch[i];
+                double distanceBeetweenPoints = Distance.Chebyshev.Calculate(possibleClosestPoint, point);
+                if (distanceBeetweenPoints < previousDistance)
+                {
+                    closestPoint = possibleClosestPoint;
+                    previousDistance = distanceBeetweenPoints;
+                }
+            }
+            return (closestPoint, previousDistance);
+        }
+
+        public static (Point, double) FindClosestAndReturnDistance(this Point point, IEnumerable<Point> pointsToSearch)
+        {
+            Point closestPoint = Point.None;
+            double previousDistance = 999;
+            foreach (var possibleClosestPoint in pointsToSearch)
+            {
+                double distanceBeetweenPoints = Distance.Chebyshev.Calculate(possibleClosestPoint, point);
+                if (distanceBeetweenPoints < previousDistance)
+                {
+                    closestPoint = possibleClosestPoint;
+                    previousDistance = distanceBeetweenPoints;
+                }
+            }
+            return (closestPoint, previousDistance);
         }
     }
 }

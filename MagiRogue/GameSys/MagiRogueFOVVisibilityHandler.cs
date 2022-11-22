@@ -8,7 +8,7 @@ namespace MagiRogue.GameSys
     /// Handler that will make all terrain/entities inside FOV visible as normal, all entities outside of FOV invisible, all
     /// terrain outside of FOV invisible if unexplored, and set its foreground to <see cref="ExploredColorTint"/> if explored but out of FOV.
     /// </summary>
-    public class MagiRogueFOVVisibilityHandler : FOVHandler
+    public sealed class MagiRogueFOVVisibilityHandler : FOVHandler
     {
         private readonly int _ghostLayer;
 

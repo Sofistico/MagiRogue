@@ -6,9 +6,13 @@ using System.Text.Json.Serialization;
 
 namespace MagiRogue.GameSys.Time
 {
+    /// <summary>
+    /// Time system using nodes and a priority queue
+    /// </summary>
     [JsonConverter(typeof(TimeJsonConverter))]
     public class TimeSystem : ITimeSystem
     {
+        // Time system inspired by https://www.gridsagegames.com/blog/2019/04/turn-time-systems/ and https://github.com/AnotherEpigone/moving-castles/tree/master/MovingCastles/GameSystems/Time
         // Add a priority queue to represent the queue that an actor will act, or a linked dictionary, or whatever
         private readonly SimplePriorityQueue<ITimeNode, long> turnQueue = new SimplePriorityQueue<ITimeNode, long>();
         private readonly TimeDefSpan timeSpan;
@@ -57,5 +61,7 @@ namespace MagiRogue.GameSys.Time
         }
 
         public IEnumerable<ITimeNode> Nodes => turnQueue;
+
+        public long GetTimePassed(long time) => TimePassed.Ticks + time;
     }
 }

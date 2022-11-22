@@ -28,21 +28,51 @@
       {
         "AreaOfEffect": "Beam",
         "SpellDamageType": "Fire",
-        "BaseDamage": 2,
+        "BaseDamage": 3,
         "Radius": 0,
         "TargetsTile": false,
         "EffectType": "DAMAGE",
         "IsHealing": false,
-        "CanMiss": false,
+        "CanMiss": true,
         "IsResistable": false
       }
     ],
     "SpellName": "Fire Ray",
-    "Description": null,
+    "Description": "A ray of fire leaves your finger and strikes the opponent!",
     "SpellSchool": "Projection",
     "SpellRange": 5,
-    "ManaCost": 3.0,
+    "ManaCost": 2.5,
     "SpellId": "fire_ray"
+  },
+  {
+    "/": "In the future should have here an effect to represent the increasing of temperature!",
+    "SpellLevel": 3,
+    "Effects": [
+      {
+        "AreaOfEffect": "Beam",
+        "SpellDamageType": "Lighting",
+        "BaseDamage": 6,
+        "Radius": 0,
+        "TargetsTile": true,
+        "EffectType": "DAMAGE",
+        "IsHealing": false,
+        "CanMiss": false,
+        "IsResistable": true
+      },
+      {
+        "/": "Add the code for this in the future!",
+        "AreaOfEffect": "Struck",
+        "EffectType": "DEBUFF",
+        "CauseEffect": [ "Nausea", "Paralyzed" ],
+        "EffectStr": "{0} locks up!"
+      }
+    ],
+    "SpellName": "Bolt of Lighting",
+    "Description": "A bolt of lighting leaves your finger to strike your opponent on a line",
+    "SpellSchool": "Projection",
+    "SpellRange": 6,
+    "ManaCost": 5.5,
+    "SpellId": "lighting_bolt"
   },
   {
     "/": "In the future should have here an effect to represent the increasing of temperature!",
@@ -51,7 +81,7 @@
       {
         "AreaOfEffect": "Ball",
         "SpellDamageType": "Fire",
-        "BaseDamage": 2,
+        "BaseDamage": 6,
         "Radius": 3,
         "TargetsTile": false,
         "EffectType": "DAMAGE",
@@ -61,14 +91,14 @@
       }
     ],
     "SpellName": "Fire Ball",
-    "Description": null,
+    "Description": "A fireball is projected from your hand towards your opponent!",
     "SpellSchool": "Projection",
     "SpellRange": 7,
     "ManaCost": 5.0,
     "SpellId": "fire_ball"
   },
   {
-    "SpellLevel": 3,
+    "SpellLevel": 4,
     "Effects": [
       {
         "AreaOfEffect": "Target",
@@ -76,11 +106,11 @@
         "Radius": 1,
         "TargetsTile": false,
         "EffectType": "SEVER",
-        "BaseDamage": 2
+        "BaseDamage": 5
       }
     ],
     "SpellName": "Sever Whip",
-    "Description": null,
+    "Description": "You project a severing force towards your opponent, to sever it's limb!'",
     "SpellSchool": "Projection",
     "SpellRange": 5,
     "ManaCost": 3.0,
@@ -93,7 +123,7 @@
       {
         "AreaOfEffect": "Cone",
         "SpellDamageType": "Cold",
-        "BaseDamage": 2,
+        "BaseDamage": 5,
         "Radius": 3,
         "TargetsTile": false,
         "EffectType": "DAMAGE",
@@ -103,7 +133,7 @@
       }
     ],
     "SpellName": "Cone of Cold",
-    "Description": null,
+    "Description": "A cone of cold busts forth from your hands!",
     "SpellSchool": "Projection",
     "SpellRange": 1,
     "ManaCost": 8.0,

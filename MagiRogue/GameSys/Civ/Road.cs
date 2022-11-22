@@ -10,9 +10,9 @@ namespace MagiRogue.GameSys.Civ
     public class Road
     {
         public Dictionary<Point, WorldDirection> RoadDirectionInPos { get; set; }
-
         public List<WorldTile> RoadTiles { get; set; }
         public RoadStatus Status { get; set; }
+        public int RoadId { get; set; }
 
         public Road()
         {

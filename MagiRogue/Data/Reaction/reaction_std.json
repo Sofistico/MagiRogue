@@ -1,0 +1,16 @@
+﻿[
+  {
+    "Id": "reaction_wood_coal",
+    "ItemId": "coal_item",
+    "Name": "Produce coal from wood",
+    "Amount": 10,
+    "Material": [ "wood" ],
+    "Quality": [
+      {
+        "QualityType": "Smelt",
+        "QualitySuitabiliy": 1
+      }
+    ],
+    "RoomTag": [ "Blacksmith" ]
+  }
+]

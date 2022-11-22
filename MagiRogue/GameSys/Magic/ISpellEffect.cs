@@ -14,7 +14,7 @@ namespace MagiRogue.GameSys.Magic
         public SpellAreaEffect AreaOfEffect { get; set; }
 
         [JsonConverter(typeof(StringEnumConverter))]
-        public DamageType SpellDamageType { get; set; }
+        public DamageTypes SpellDamageType { get; set; }
         public int Radius { get; set; }
         public bool TargetsTile { get; set; }
         public int BaseDamage { get; set; }

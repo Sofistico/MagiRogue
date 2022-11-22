@@ -10,6 +10,7 @@ namespace MagiRogue.GameSys.Time
         public const int Interact = 50;
         public const int Wear = 200;
         public const int MagicalThings = 250;
+        public const int AiFailed = -1;
 
         public static int GetWalkTime(Actor actor, TileBase tileToMove)
         {

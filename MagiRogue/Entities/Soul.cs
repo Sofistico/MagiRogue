@@ -12,8 +12,13 @@ namespace MagiRogue.Entities
         public int MaxMana { get; set; }
         public double CurrentMana { get; set; }
         public int WillPower { get; set; }
-        public int WildMana { get; set; }
+
+        //public int WildMana { get; set; }
         public double BaseManaRegen { get; set; }
+
+        public Soul()
+        {
+        }
 
         public void ApplyManaRegen(double manaRegen)
         {
@@ -24,9 +29,13 @@ namespace MagiRogue.Entities
             }
         }
 
-        public void InitialMana(int inteligence)
+        public void InitialMana(int inteligence, Race race)
         {
-            MaxMana = (WillPower / 2) + (inteligence / 2) + GameLoop.GlobalRand.NextInt(10);
+            int raceMaxMana = race.MaxManaRange;
+            int raceMinMana = race.MinManaRange;
+            int statsModifier = ((WillPower + 1) / 2) + ((inteligence + 1) / 2);
+            MaxMana = statsModifier + GameLoop.GlobalRand.NextInt(raceMinMana,
+                raceMaxMana + 1);
             CurrentMana = MaxMana;
         }
     }

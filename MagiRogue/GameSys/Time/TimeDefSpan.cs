@@ -5,14 +5,14 @@
     /// </summary>
     public sealed class TimeDefSpan
     {
-        private const int DaysPerMonth = 31;
-        private const int MonthsPerYear = 12;
-        private const int MinutesPerHour = 60;
-        private const int SecondsPerMinute = 60;
-        private const int SecondsPerDay = 86400;
-        private const int CentisecondsPerSecond = 100;
-        private const int SecondsPerMonth = (DaysPerMonth * SecondsPerDay);
-        private const int SecondsPerYear = SecondsPerMonth * MonthsPerYear;
+        public const int DaysPerMonth = 31;
+        public const int MonthsPerYear = 12;
+        public const int MinutesPerHour = 60;
+        public const int SecondsPerMinute = 60;
+        public const int SecondsPerDay = 86400;
+        public const int CentisecondsPerSecond = 100;
+        public const int SecondsPerMonth = (DaysPerMonth * SecondsPerDay);
+        public const int SecondsPerYear = SecondsPerMonth * MonthsPerYear;
 
         private long _centiseconds;
 

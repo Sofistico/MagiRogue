@@ -51,9 +51,6 @@ namespace MagiRogue.Entities
         /// </summary>
         public List<Item> Inventory { get; set; }
 
-        [JsonIgnore]
-        public int XP { get; set; }
-
         public bool IsPlayer { get; set; }
 
         #endregion Properties
@@ -79,8 +76,8 @@ namespace MagiRogue.Entities
             Soul = new Soul();
             Inventory = new List<Item>();
             Name = name;
-            // by default the material of the actor will be mostly flesh
-            //Material = GameSys.Physics.PhysicsManager.SetMaterial("flesh");
+            // by default the material of the actor will be mostly skin
+            //Material = GameSys.Physics.PhysicsManager.SetMaterial("skin");
         }
 
         #endregion Constructor
@@ -200,13 +197,21 @@ namespace MagiRogue.Entities
         public Item WieldedItem()
         {
             return Body.Equipment.GetValueOrDefault(GetAnatomy().Limbs.Find(l =>
-                l.TypeLimb == TypeOfLimb.Hand).Id);
+                l.LimbType == TypeOfLimb.Hand).Id);
         }
 
         public Limb GetAttackingLimb(Item item)
         {
             var key = Body.Equipment.FirstOrDefault(x => x.Value == item).Key;
             var limb = GetAnatomy().Limbs.Find(i => i.Id.Equals(key));
+            if (item is null)
+            {
+                List<Limb> graspersAndStances = GetAnatomy().Limbs.FindAll(i =>
+                    (i.BodyPartFunction is BodyPartFunction.Grasp
+                    || i.BodyPartFunction is BodyPartFunction.Stance)
+                    && i.Working);
+                return graspersAndStances.GetRandomItemFromList();
+            }
             return limb;
         }
 
@@ -267,23 +272,25 @@ namespace MagiRogue.Entities
 
             #endregion Broken dreams lies here....
 
+            bool regens = GetAnatomy().GetRace().CanRegenarate();
+
             foreach (Limb limb in GetAnatomy().Limbs)
             {
                 if (limb.BodyPartHp < limb.MaxBodyPartHp || limb.Wounds.Count > 0)
                 {
                     if (limb.Attached)
                     {
-                        if (limb.CanHeal || GetAnatomy().GetRace().CanRegenLostLimbs)
+                        if (limb.CanHeal || regens)
                         {
                             limb.ApplyHeal(GetNormalLimbRegen() * limb.RateOfHeal);
                         }
                     }
-                    if (!limb.Attached && GetAnatomy().GetRace().CanRegenLostLimbs)
+                    if (!limb.Attached && regens)
                     {
                         List<Limb> connectedLimbs = GetAnatomy().GetAllParentConnectionLimb(limb);
                         if (!connectedLimbs.Any(i => !i.Attached))
                         {
-                            limb.ApplyHeal((GetNormalLimbRegen() * limb.RateOfHeal + 0.5 * 2), GetAnatomy().GetRace().CanRegenLostLimbs);
+                            limb.ApplyHeal((GetNormalLimbRegen() * limb.RateOfHeal + 0.5 * 2), regens);
                             if (!limb.Wounds.Any(i => i.Severity is InjurySeverity.Missing))
                                 limb.Attached = true;
                         }
@@ -357,8 +364,10 @@ namespace MagiRogue.Entities
         public double GetProtection(Limb limb)
         {
             var item = Body.GetArmorOnLimbIfAny(limb);
+            var armorModifier = item is not null ?
+                (item.Material.Hardness * Body.GetArmorOnLimbIfAny(limb).Material.Density) : 0;
             return Body.Toughness +
-                (item.Material.Hardness * Body.GetArmorOnLimbIfAny(limb).Material.Density)
+                armorModifier
                 + GetRelevantAbility(AbilityName.ArmorUse);
         }
 
@@ -369,17 +378,25 @@ namespace MagiRogue.Entities
 
         public int GetDefenseAbility()
         {
-            throw new NotImplementedException();
+            // four different ways to defend
+            int shieldAbility = GetRelevantAbility(AbilityName.Shield);
+            int armorAbility = GetRelevantAbility(AbilityName.ArmorUse);
+            int dodgeAbility = GetRelevantAbility(AbilityName.Dodge);
+            int weaponAbility = GetRelevantAttackAbility();
+
+            if (shieldAbility > weaponAbility)
+                return shieldAbility;
+            if (weaponAbility > armorAbility)
+                return weaponAbility;
+            if (armorAbility > dodgeAbility)
+                return armorAbility;
+
+            return dodgeAbility;
         }
 
         public int GetRelevantAbility(AbilityName ability)
         {
-            if (Mind.Abilities.ContainsKey((int)ability))
-            {
-                return Mind.Abilities[(int)ability].Score;
-            }
-            else
-                return 0;
+            return Mind.GetAbility(ability);
         }
 
         public int GetRelevantAttackAbility()
@@ -429,7 +446,7 @@ namespace MagiRogue.Entities
             return Body.Strength;
         }
 
-        public DamageType GetDamageType()
+        public DamageTypes GetDamageType()
         {
             if (WieldedItem() is not null && WieldedItem() is Item item)
             {
@@ -437,7 +454,7 @@ namespace MagiRogue.Entities
             }
             else
             {
-                return DamageType.Blunt;
+                return DamageTypes.Blunt;
             }
         }
 

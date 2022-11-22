@@ -6,7 +6,12 @@ namespace MagiRogue.Data.Enumerators
     [JsonConverter(typeof(StringEnumConverter))]
     public enum BiomeType
     {
-        Sea,
+        Sea = -3,
+        Mountain = -2,
+        Ice = -1,
+        Null,
+        BorealForest,
+        Tundra,
         Desert,
         Savanna,
         TropicalRainforest,
@@ -14,10 +19,5 @@ namespace MagiRogue.Data.Enumerators
         Woodland,
         SeasonalForest,
         TemperateRainforest,
-        BorealForest,
-        Tundra,
-        Ice,
-        Mountain,
-        Null
     }
 }

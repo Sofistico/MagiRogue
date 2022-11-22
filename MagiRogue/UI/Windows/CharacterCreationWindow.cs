@@ -17,7 +17,7 @@ namespace MagiRogue.UI.Windows
     public class CharacterCreationWindow : MagiBaseWindow
     {
         private Player player;
-        private const string helpText = "\n\rHere we begin the process of creating your player, there is much to be" +
+        private const string helpText = " WARNING! NO LONGER RELEVANT! SUBJECT TO CHANGE\n\rHere we begin the process of creating your player, there is much to be" +
             " done before you can create, you must first decide the 3 most important attributes that determine" +
             " what your character can and can't do. \n\nThese are the Body Stat(Used to determine various effects that" +
             " your body will have, like total hp, how likely you are to dogde or how likely you are to " +
@@ -29,11 +29,19 @@ namespace MagiRogue.UI.Windows
         private TextBox charName;
         private ListBox scenarioChooser;
         private ListBox raceChooser;
-        private ListBox genderChooser;
+        private List<RadioButton> sexChooser;
+
+        // for later, see https://discord.com/channels/501465397518925843/501465397518925850/1010610089939435712
+        private readonly List<Console> consolePatches;
+        private List<RadioButton> raceRadio;
+        private Console basicConsole;
+        private Console raceConsole;
+        private Console scenarioConsole;
 
         public CharacterCreationWindow(int width, int height) : base(width, height, "Character Creation")
         {
             SetUpButtons(width);
+            consolePatches = new();
         }
 
         private void SetUpButtons(int width)
@@ -92,12 +100,13 @@ namespace MagiRogue.UI.Windows
                 pop.SadComponents.Add(typingInstruction);
                 window.Show(true);
             };
+            Point namePoint = new Point(Width / 2 - 9, Height / 2 + 5);
             charName = new(25)
             {
-                Position = new Point(Width / 2 - 9, Height / 2 + 5),
+                Position = namePoint,
                 IsNumeric = false,
+                IsVisible = false
             };
-            PrintUpFromPosition(charName.Position.X, charName.Position.Y, "Name:");
             const string back = "Go Back";
             MagiButton goBack = new(back.Length + 2)
             {
@@ -114,14 +123,15 @@ namespace MagiRogue.UI.Windows
             SetupSelectionButtons(beginGame,
                 helpButton,
                 goBack);
-            SetupListBox();
+            SetupCharCreationButtons();
         }
 
-        private void SetupListBox()
+        private void SetupCharCreationButtons()
         {
+            Point scenarioPoint = new SadRogue.Primitives.Point(Width / 4 - 15, Height / 2 - 10);
             scenarioChooser = new ListBox(30, 10)
             {
-                Position = new SadRogue.Primitives.Point(Width / 4 - 10, Height / 2 - 10),
+                Position = scenarioPoint,
                 Theme = new SadConsole.UI.Themes.ListBoxTheme(new SadConsole.UI.Themes.ScrollBarTheme())
                 {
                     DrawBorder = true,
@@ -134,28 +144,35 @@ namespace MagiRogue.UI.Windows
 
             Controls.Add(scenarioChooser);
             const string scenarioText = "Select your starting scenario:";
-            PrintUpFromPosition(scenarioChooser.Position.X, scenarioChooser.Position.Y, scenarioText);
+            PrintUpFromPosition(scenarioPoint, scenarioText);
 
-            genderChooser = new ListBox(10, 5)
+            sexChooser = new List<RadioButton>();
+            Point starterPosSexRadio = new SadRogue.Primitives.Point(Width / 2 - 10, Height / 2 - 10);
+            foreach (var item in Enum.GetValues(typeof(Sex)))
             {
-                Position = new SadRogue.Primitives.Point(Width / 2 - 5, Height / 2 - 10),
-                Theme = new SadConsole.UI.Themes.ListBoxTheme(new SadConsole.UI.Themes.ScrollBarTheme())
+                string text = item.ToString();
+                RadioButton radio = new RadioButton(text.Length + 4, 1)
                 {
-                    DrawBorder = true,
-                },
-                IsVisible = false
-            };
-
-            foreach (var item in Enum.GetValues(typeof(Gender)))
-            {
-                genderChooser.Items.Add(item.ToString());
+                    Position = starterPosSexRadio,
+                    Text = text,
+                    IsVisible = false
+                };
+                radio.Click += Radio_Click;
+                sexChooser.Add(radio);
             }
 
-            Controls.Add(genderChooser);
+            for (int i = 1; i < sexChooser.Count; i++)
+            {
+                var current = sexChooser[i];
+                var previous = sexChooser[i - 1];
+                Controls.Add(previous);
+                current.PlaceRelativeTo(previous, Direction.Types.Right);
+            }
 
+            Point racePoint = new SadRogue.Primitives.Point(Width / 2 + 20, Height / 2 - 10);
             raceChooser = new ListBox(20, 10)
             {
-                Position = new SadRogue.Primitives.Point(Width / 2 + 20, Height / 2 - 10),
+                Position = racePoint,
                 Theme = new SadConsole.UI.Themes.ListBoxTheme(new SadConsole.UI.Themes.ScrollBarTheme())
                 {
                     DrawBorder = true,
@@ -164,22 +181,32 @@ namespace MagiRogue.UI.Windows
             };
 
             Controls.Add(raceChooser);
-            genderChooser.SelectedItemChanged += (_, __) =>
-            {
-                PrintUpFromPosition(raceChooser.Position, "Now, choose from the available races:");
-                raceChooser.IsVisible = true;
-                raceChooser.Items.Clear();
-                Scenario scenario = (Scenario)scenarioChooser.SelectedItem;
-                foreach (string race in scenario.RacesAllowed)
-                {
-                    raceChooser.Items.Add(DataManager.QueryRaceInData(race));
-                }
-            };
 
             scenarioChooser.SelectedItemChanged += (_, __) =>
             {
-                PrintUpFromPosition(genderChooser.Position, "Choose your gender:");
-                genderChooser.IsVisible = true;
+                PrintUpFromPosition(starterPosSexRadio, "Choose your sex:");
+                foreach (var item in sexChooser)
+                {
+                    item.IsVisible = true;
+                }
+            };
+        }
+
+        private void Radio_Click(object? sender, EventArgs e)
+        {
+            PrintUpFromPosition(raceChooser.Position, "Now, choose from the available races:");
+            raceChooser.IsVisible = true;
+            raceChooser.Items.Clear();
+            Scenario scenario = (Scenario)scenarioChooser.SelectedItem;
+            foreach (string race in scenario.RacesAllowed)
+            {
+                raceChooser.Items.Add(DataManager.QueryRaceInData(race));
+            }
+
+            raceChooser.SelectedItemChanged += (_, __) =>
+            {
+                charName.IsVisible = true;
+                PrintUpFromPosition(charName.Position, "Finally, choose your Name:");
             };
         }
 
@@ -195,9 +222,9 @@ namespace MagiRogue.UI.Windows
                 ShowError("You need to insert a name!");
                 return null;
             }
-            if (genderChooser.SelectedItem is null)
+            if (!sexChooser.Exists(i => i.IsSelected))
             {
-                ShowError("You need to select a gender!");
+                ShowError("You need to select a sex!");
                 return null;
             }
             if (scenarioChooser.SelectedItem is null)
@@ -213,11 +240,11 @@ namespace MagiRogue.UI.Windows
 
             var scenario = (Scenario)scenarioChooser.SelectedItem;
             var race = (Race)raceChooser.SelectedItem;
-
+            var sex = sexChooser.Find(i => i.IsSelected);
             player = EntityFactory.PlayerCreatorFromZero(Point.None,
                 race.Id,
                 charName.Text,
-                Enum.Parse<Gender>(genderChooser.SelectedItem.ToString()),
+                Enum.Parse<Sex>(sex.Text),
                 scenario.Id);
 
             return player;

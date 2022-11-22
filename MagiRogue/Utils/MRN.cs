@@ -1,4 +1,5 @@
 ﻿using GoRogue.DiceNotation;
+using System.Threading.Channels;
 
 namespace MagiRogue.Utils
 {
@@ -8,6 +9,9 @@ namespace MagiRogue.Utils
     public struct Mrn
     {
         public static int Exploding2D6Dice => ExplodingDice();
+        public static int Normal2D6Dice => Dice.Roll("2d6");
+
+        public static int Normal1D100Dice => Dice.Roll("1d100");
 
         /// <summary>
         /// This uses a similar number
@@ -47,5 +51,13 @@ namespace MagiRogue.Utils
         {
             return chance <= 1 || GameLoop.GlobalRand.NextInt(0, chance) == 0;
         }
+
+        public static bool XinY(int x, int y)
+        {
+            return x <= y || GameLoop.GlobalRand.NextInt(x, y) == x;
+        }
+
+        public static int CustomDice(string diceExpression)
+            => Dice.Roll(diceExpression);
     }
 }

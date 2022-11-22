@@ -1,6 +1,7 @@
 ﻿using MagiRogue.GameSys;
 using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Planet;
+using MagiRogue.GameSys.Planet.History;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Runtime.Serialization;
 
 namespace MagiRogue.Data.Serialization.MapSerialization
 {
-    public class PlanetMapJsonConverter : JsonConverter<PlanetMap>
+    public sealed class PlanetMapJsonConverter : JsonConverter<PlanetMap>
     {
         public override PlanetMap? ReadJson(JsonReader reader, Type objectType,
             PlanetMap? existingValue, bool hasExistingValue,
@@ -53,7 +54,7 @@ namespace MagiRogue.Data.Serialization.MapSerialization
         }
     }
 
-    public class PlanetMapTemplate
+    public sealed class PlanetMapTemplate
     {
         [JsonIgnore]
         public float Min { get; set; }
@@ -67,6 +68,12 @@ namespace MagiRogue.Data.Serialization.MapSerialization
         //public uint AssocietatedMapId { get; }
         [DataMember]
         public Map AssocietatedMap { get; set; }
+
+        [DataMember]
+        public long TicksSinceCreation { get; set; }
+
+        [DataMember]
+        public AccumulatedHistory WorldHistory { get; set; }
 
         public PlanetMapTemplate(float min,
             float max,
@@ -99,7 +106,9 @@ namespace MagiRogue.Data.Serialization.MapSerialization
             var template = new PlanetMapTemplate(map.Min, map.Max,
                 map.Civilizations)
             {
-                AssocietatedMap = map.AssocietatedMap
+                AssocietatedMap = map.AssocietatedMap,
+                TicksSinceCreation = map.TicksSinceCreation,
+                WorldHistory = map.WorldHistory
             };
             return template;
         }
@@ -115,7 +124,10 @@ namespace MagiRogue.Data.Serialization.MapSerialization
             map.Min = int.MinValue;
 
             PlanetMap mio = new PlanetMap(map.Min, map.Max,
-                civs, (MapTemplate)map.AssocietatedMap);
+                civs, (MapTemplate)map.AssocietatedMap)
+            {
+                WorldHistory = map.WorldHistory
+            };
             /*PlanetMap mio = new PlanetMap(map.Min, map.Max,
                 civs, (MapTemplate)map.AssocietatedMap);*/
 

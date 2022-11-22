@@ -1,0 +1,31 @@
+﻿[
+  {
+    "Id": "humanoid_limbs",
+    "BodyParts": [ "upper_body", "lower_body", "neck", "head", "l_arm", "r_arm", "r_leg", "l_leg", "l_hand", "r_hand", "r_foot", "l_foot" ]
+    // add some way do dynamically change the way the body part is loaded, connected to
+  },
+  {
+    "Id": "humanoid_organs",
+    "BodyParts": [ "skull", "brain", "heart", "upper_spine", "medium_spine", "lower_spine", "stomach", "intestine", "r_lung", "l_lung", "r_kidney", "l_kidney", "r_eye", "l_eye" ]
+  },
+  {
+    "Id": "5fingers",
+    "BodyParts": [ "finger1", "finger2", "finger3", "finger4", "finger5" ]
+  },
+  {
+    "Id": "5toes",
+    "BodyParts": [ "toe1", "toe2", "toe3", "toe4", "toe5" ]
+  },
+  {
+    "Id": "4toes",
+    "BodyParts": [ "toe1", "toe2", "toe3", "toe4" ]
+  },
+  {
+    "Id": "quadruped_limbs",
+    "BodyParts": [ "upper_body", "lower_body", "neck", "head", "right_f_leg", "right_r_leg", "left_f_leg", "left_r_leg", "right_f_paw", "right_r_paw", "left_f_paw", "left_l_paw" ]
+  },
+  {
+    "Id": "animal_tail",
+    "BodyParts": [ "animal_tail" ]
+  }
+]

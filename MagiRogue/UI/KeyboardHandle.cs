@@ -284,6 +284,17 @@ namespace MagiRogue.UI
             }
 
 #if DEBUG
+            if (HandleDebugActions(info, world, ui))
+            {
+                return true;
+            }
+#endif
+
+            return false;
+        }
+
+        private static bool HandleDebugActions(Keyboard info, Universe world, UIManager ui)
+        {
             if (info.IsKeyPressed(Keys.F10))
             {
                 ActionManager.ToggleFOV();
@@ -293,11 +304,13 @@ namespace MagiRogue.UI
                 {
                     world.CurrentMap.PlayerExplored[i] = true;
                 }
+                return false;
             }
 
             if (info.IsKeyPressed(Keys.F8))
             {
                 GetPlayer.AddComponent(new Components.TestComponent(GetPlayer));
+                return false;
             }
 
             if (info.IsKeyPressed(Keys.F6))
@@ -314,17 +327,37 @@ namespace MagiRogue.UI
                         }
                     }
                 }
+                return false;
             }
 
             if (info.IsKeyPressed(Keys.NumPad0))
             {
                 LookWindow w = new LookWindow(GetPlayer);
                 w.Show();
+                return false;
+            }
+
+            if (info.IsKeyDown(Keys.LeftControl)
+                && info.IsKeyDown(Keys.LeftShift)
+                && info.IsKeyPressed(Keys.O) && targetCursor is not null)
+            {
+                var (_, actor) = ActionManager.CreateTestEntity(targetCursor.Cursor.Position, world);
+                actor.AddComponent(new Components.MoveAndAttackAI(actor.GetViewRadius()));
+                return false;
             }
 
             if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.O) && targetCursor is not null)
             {
-                ActionManager.CreateTestEntity(targetCursor.Cursor.Position, world.CurrentMap);
+                var (_, entity) = ActionManager.CreateTestEntity(targetCursor.Cursor.Position, world);
+                entity.AddComponent(new Components.BasicAi(entity));
+                return false;
+            }
+            if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.P) && targetCursor.EntityInTarget())
+            {
+                Actor actor = (Actor)targetCursor.TargetEntity();
+                actor.AddComponent(new Components.MoveAndAttackAI(actor.GetViewRadius()));
+                GameLoop.AddMessageLog($"Added attack component to {actor.Name}!");
+                return false;
             }
 
             if (info.IsKeyPressed(Keys.T))
@@ -337,11 +370,13 @@ namespace MagiRogue.UI
                     }
                     node.RestoreOriginalAppearence();
                 }
+                return false;
             }
 
             if (info.IsKeyPressed(Keys.Tab))
             {
                 ActionManager.CreateNewMapForTesting();
+                return false;
             }
             if (info.IsKeyPressed(Keys.OemPlus))
             {
@@ -370,14 +405,14 @@ namespace MagiRogue.UI
                 {
                     throw e;
                 }
+                return false;
             }
 
             if (info.IsKeyPressed(Keys.OemMinus))
             {
                 GameLoop.Universe.SaveAndLoad.SaveGameToFolder(GameLoop.Universe, "TestFile");
+                return false;
             }
-
-#endif
 
             return false;
         }

@@ -39,10 +39,10 @@ namespace MagiRogue.Test.Data
         {
             var path = AppDomain.CurrentDomain.BaseDirectory;
 
-            List<LimbTemplate> limb = MagiRogue.Utils.JsonUtils.JsonDeseralize<List<LimbTemplate>>
+            List<Limb> limb = MagiRogue.Utils.JsonUtils.JsonDeseralize<List<Limb>>
                 (path + @"\Data\Bodies\limb_std.json");
 
-            var otherLimb = DataManager.QueryLimbInData("humanoid_upper_body");
+            var otherLimb = DataManager.QueryLimbInData("upper_body");
 
             Assert.Equal(limb[0].Id, otherLimb.Id);
         }
@@ -87,7 +87,7 @@ namespace MagiRogue.Test.Data
             List<Limb> basicHuman = bp.ReturnBodyParts().Where(i => i is Limb).Cast<Limb>().ToList();
             Anatomy ana = new Anatomy();
             ana.Limbs = basicHuman;
-            List<Limb> test = ana.GetAllConnectedLimb(basicHuman.Find(f => f.TypeLimb is TypeOfLimb.Arm));
+            List<Limb> test = ana.GetAllConnectedLimb(basicHuman.Find(f => f.LimbType is TypeOfLimb.Arm));
             Assert.True(test.Count >= 3);
         }
 
@@ -100,14 +100,14 @@ namespace MagiRogue.Test.Data
             List<Limb> basicHuman = bp.ReturnBodyParts().Where(i => i is Limb).Cast<Limb>().ToList();
             Anatomy ana = new Anatomy();
             ana.Limbs = basicHuman;
-            List<Limb> test = ana.GetAllParentConnectionLimb(basicHuman.Find(i => i.TypeLimb is TypeOfLimb.Finger));
+            List<Limb> test = ana.GetAllParentConnectionLimb(basicHuman.Find(i => i.LimbType is TypeOfLimb.Finger));
             Assert.True(test.Count >= 1);
         }
 
         [Fact]
         public void RegenActorLostLimb()
         {
-            Actor actor = EntityFactory.ActorCreatorFirstStep(Point.None, "test_race", "test dummy", 20, Gender.Asexual);
+            Actor actor = EntityFactory.ActorCreatorFirstStep(Point.None, "test_race", "test dummy", 20, Sex.None);
             //Actor actor = new Actor("Test actor", Color.AliceBlue, Color.AliceBlue, '@',
             //    new Point(0, 0));
             //actor.GetAnatomy().Race = "test_race";
@@ -115,10 +115,10 @@ namespace MagiRogue.Test.Data
             //bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5fingers").BodyParts);
             //bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5toes").BodyParts);
             //actor.GetAnatomy().Limbs = bp.ReturnBodyParts().Where(i => i is Limb).Cast<Limb>().ToList();
-            var arms = actor.GetAnatomy().Limbs.FindAll(l => l.TypeLimb is TypeOfLimb.Arm);
+            var arms = actor.GetAnatomy().Limbs.FindAll(l => l.LimbType is TypeOfLimb.Arm);
             foreach (var arm in arms)
             {
-                actor.GetAnatomy().Injury(new Wound(arm.BodyPartHp, DamageType.Sharp), arm, actor);
+                actor.GetAnatomy().Injury(new Wound(arm.BodyPartHp, DamageTypes.Sharp), arm, actor);
             }
             bool healing = true;
             while (healing)

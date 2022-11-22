@@ -4,18 +4,29 @@ using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace MagiRogue.GameSys
 {
-    public class Room
+    public sealed class Room
     {
+        #region Fields
+
+        private RoomTag previousTag;
+
+        #endregion Fields
+
+        #region Props
+
         public Rectangle RoomRectangle { get; set; }
+
         public RoomTag Tag { get; set; }
 
         [JsonIgnore]
         public List<TileDoor> Doors { get; set; } = new List<TileDoor>();
+
         public List<Point> DoorsPoint { get; set; } = new List<Point>();
 
         [JsonIgnore]
@@ -26,6 +37,8 @@ namespace MagiRogue.GameSys
 
         [JsonIgnore]
         public RoomTemplate Template { get; set; }
+
+        #endregion Props
 
         public Room(Rectangle roomRectangle, RoomTag tag)
         {
@@ -50,6 +63,11 @@ namespace MagiRogue.GameSys
 
         public Room()
         {
+        }
+
+        public Room(RoomTag tag)
+        {
+            Tag = tag;
         }
 
         public List<TileDoor> GetAllDoorsInRoom()
@@ -98,7 +116,7 @@ namespace MagiRogue.GameSys
 
         public Point[] PositionsRoom()
         {
-            var points = RoomRectangle.Positions().ToList();
+            var points = RoomRectangle.Positions().ToEnumerable().ToList();
             foreach (var item in ReturnRecPerimiter())
             {
                 if (!points.Contains(item))
@@ -144,6 +162,18 @@ namespace MagiRogue.GameSys
         public void ChangeRoomPos(int newRoomX, int newRoomY)
         {
             ChangeRoomPos(new SadRogue.Primitives.Point(newRoomX, newRoomY));
+        }
+
+        internal void SetPreviousTag()
+        {
+            previousTag = Tag;
+            Tag = previousTag;
+        }
+
+        internal void AbandonPreviousTag(RoomTag newTag)
+        {
+            previousTag = Tag;
+            Tag = newTag;
         }
     }
 }

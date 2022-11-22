@@ -21,7 +21,7 @@ namespace MagiRogue.Entities
         public static Player TestPlayer()
         {
             Player player = EntityFactory.PlayerCreatorFromZero(new Point(), "human", "Playa", 25,
-                MagiRogue.Data.Enumerators.Gender.Female, "new_wiz");
+                MagiRogue.Data.Enumerators.Sex.Female, "new_wiz");
 
             player.Magic.ShapingSkill = 9;
 
@@ -84,7 +84,6 @@ namespace MagiRogue.Entities
                 Magic = actor.Magic,
                 Volume = actor.Volume,
                 Weight = actor.Weight,
-                XP = actor.XP,
                 Body = actor.Body,
                 Mind = actor.Mind,
                 Soul = actor.Soul,

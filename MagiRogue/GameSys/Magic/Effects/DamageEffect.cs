@@ -10,7 +10,7 @@ namespace MagiRogue.GameSys.Magic.Effects
     public class DamageEffect : IDamageSpellEffect
     {
         public SpellAreaEffect AreaOfEffect { get; set; }
-        public DamageType SpellDamageType { get; set; }
+        public DamageTypes SpellDamageType { get; set; }
         public int BaseDamage { get; set; }
         public int Radius { get; set; }
         public bool TargetsTile { get; set; } = false;
@@ -19,7 +19,7 @@ namespace MagiRogue.GameSys.Magic.Effects
         public bool CanMiss { get; set; }
         public bool IsResistable { get; set; }
 
-        public DamageEffect(int dmg, SpellAreaEffect areaOfEffect, DamageType spellDamageType, bool canMiss = false,
+        public DamageEffect(int dmg, SpellAreaEffect areaOfEffect, DamageTypes spellDamageType, bool canMiss = false,
             bool isHeal = false, int radius = 0, bool isResistable = false)
         {
             BaseDamage = dmg;

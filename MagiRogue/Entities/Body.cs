@@ -1,4 +1,5 @@
-﻿using MagiRogue.Data.Serialization;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
 using System;
@@ -32,7 +33,7 @@ namespace MagiRogue.Entities
         [JsonIgnore]
         public double Stamina
         {
-            get => stamina < MaxStamina ? stamina : MaxStamina;
+            get => stamina;
 
             set
             {
@@ -40,12 +41,13 @@ namespace MagiRogue.Entities
                     stamina = value;
                 else
                 {
-                    stamina = MaxStamina;
+                    value = MaxStamina;
+                    stamina = value;
                 }
             }
         }
         public double MaxStamina { get; set; }
-        public double StaminaRegen { get; set; } = 100;
+        public double StaminaRegen { get; set; } = 10;
         public double GeneralSpeed { get; set; }
         public int Toughness { get; set; }
         public int Endurance { get; set; }
@@ -70,13 +72,21 @@ namespace MagiRogue.Entities
 
         public Item GetArmorOnLimbIfAny(Limb limb)
         {
-            return Equipment[limb.Id].EquipType is not Data.Enumerators.EquipType.None ? Equipment[limb.Id] : null;
+            Equipment.TryGetValue(limb.Id, out Item item);
+            if (item is null)
+                return null;
+            return item.EquipType is not EquipType.None ? item : null;
         }
 
         public void InitialStamina()
         {
-            MaxStamina = Endurance * 1000;
+            MaxStamina = Endurance * 100;
             Stamina = MaxStamina;
+        }
+
+        public int GetCurrentAge()
+        {
+            return Anatomy.CurrentAge;
         }
     }
 }

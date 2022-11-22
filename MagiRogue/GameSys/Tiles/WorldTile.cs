@@ -49,7 +49,7 @@ namespace MagiRogue.GameSys.Tiles
         public int RiverSize { get; set; }
         public int BiomeBitmask { get; set; }
 
-        public Civilization? CivInfluence { get; set; }
+        public Site? SiteInfluence { get; set; }
         public Road? Road { get; internal set; }
         public bool Visited { get; internal set; }
 
@@ -173,11 +173,6 @@ namespace MagiRogue.GameSys.Tiles
             }
         }
 
-        public Settlement GetSettlement()
-        {
-            return CivInfluence is not null ? CivInfluence.GetSettlement(this) : null;
-        }
-
         private void SetRiverTile(River river)
         {
             SetRiverPath(river);
@@ -249,6 +244,11 @@ namespace MagiRogue.GameSys.Tiles
                 Top.Top.Right.SetRiverTile(river);
                 Top.Right.Right.SetRiverTile(river);
             }
+        }
+
+        public double GetResources()
+        {
+            return MineralValue;
         }
     }
 }

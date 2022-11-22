@@ -21,6 +21,8 @@ namespace MagiRogue.Commands
     /// </summary>
     public sealed class ActionManager
     {
+        private const int staminaAttackAction = 100;
+
         private ActionManager()
         {
             // makes sure that it's never instantiated
@@ -71,6 +73,12 @@ namespace MagiRogue.Commands
                 return;
             }
 
+            if (attacker.Body.Stamina <= 0)
+            {
+                GameLoop.AddMessageLog($"{attacker.Name} is far too tired to attack!");
+                return;
+            }
+
             // Create two messages that describe the outcome
             // of the attack and defense
             StringBuilder attackMessage = new();
@@ -78,7 +86,7 @@ namespace MagiRogue.Commands
 
             // Count up the amount of attacking damage done
             // and the number of successful blocks
-            (bool hit, Limb limbAttacked, Limb limbAttacking, DamageType dmgType)
+            (bool hit, Limb limbAttacked, Limb limbAttacking, DamageTypes dmgType)
                 = CombatUtils.ResolveHit(attacker, defender, attackMessage);
             double damage = CombatUtils.ResolveDefense(attacker,
                 defender, hit, attackMessage, defenseMessage, limbAttacked, dmgType, limbAttacking);
@@ -90,6 +98,10 @@ namespace MagiRogue.Commands
 
             // The defender now takes damage
             CombatUtils.ResolveDamage(defender, damage, dmgType, limbAttacking, limbAttacked);
+
+            // discount stamina from the attacker
+            attacker.Body.Stamina =
+                MathMagi.Round((attacker.Body.Stamina - staminaAttackAction) * (attacker.Body.Endurance / 100));
         }
 
         /// <summary>
@@ -154,7 +166,7 @@ namespace MagiRogue.Commands
             }
             else
             {
-                GameLoop.AddMessageLog("There is no item here");
+                GameLoop.AddMessageLog("There are no itens here");
                 return false;
             }
         }
@@ -276,12 +288,14 @@ namespace MagiRogue.Commands
             GameLoop.Universe.WorldMap = new PlanetGenerator().CreatePlanet(500, 500);
         }
 
-        public static bool CreateTestEntity(Point pos, Map map)
+        public static (bool, Actor) CreateTestEntity(Point pos, Universe universe)
         {
             Actor found = EntityFactory.ActorCreatorFirstStep(pos,
-                 "human", "Test Person", 25, Gender.Asexual);
-            map.Add(found);
-            return true;
+                 "human", "Test Person", 25, Sex.None);
+
+            universe.AddEntityToCurrentMap(found);
+
+            return (true, found);
         }
 
 #endif
@@ -394,7 +408,7 @@ namespace MagiRogue.Commands
             }
             else if (possibleStairs is null && possibleWorldTileHere is null)
             {
-                GameLoop.AddMessageLog("There is no way to go down here!");
+                GameLoop.AddMessageLog("There is no way to go down from here!");
                 return false;
             }
 

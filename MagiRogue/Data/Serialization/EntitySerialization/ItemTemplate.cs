@@ -114,7 +114,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
         [DataMember]
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public DamageType DamageType { get; private set; }
+        public DamageTypes DamageType { get; private set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<IActivable> UseAction { get; set; }
@@ -196,19 +196,20 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 ItemDamageType = itemTemplate.DamageType,
                 UseAction = itemTemplate.UseAction,
                 Description = itemTemplate.Description,
-                Traits = itemTemplate.Traits,
                 Qualities = Quality.ReturnQualityList(itemTemplate.Qualities),
                 ItemId = itemTemplate.Id,
                 EquipType = itemTemplate.EquipType,
                 SpeedOfAttack = itemTemplate.SpeedOfAttack,
                 WeaponType = itemTemplate.WeaponType,
             };
+            if (itemTemplate.Traits is not null)
+                item.Traits = itemTemplate.Traits;
             if (itemTemplate.Condition != 100)
             {
                 item.Condition = itemTemplate.Condition;
             }
             item.Description = itemTemplate.Description;
-            if (item.Material.ConfersTraits is not null && item.Material.ConfersTraits.Count > 0)
+            if (item.Material is not null && item.Material.ConfersTraits is not null && item.Material.ConfersTraits.Count > 0)
             {
                 item.Traits.AddRange(item.Material.ConfersTraits);
             }
