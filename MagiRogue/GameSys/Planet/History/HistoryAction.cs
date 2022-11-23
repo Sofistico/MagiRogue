@@ -70,10 +70,10 @@ namespace MagiRogue.GameSys.Planet.History
             //    figure.TrainAbilityFocus();
             //}
 
-            if (figure.SpecialFlags.Contains(SpecialFlag.MagicUser))
-            {
-                GenerateMagicalResourcesForSite();
-            }
+            //if (figure.SpecialFlags.Contains(SpecialFlag.MagicUser))
+            //{
+            //    GenerateMagicalResourcesForSite();
+            //}
 
             ////romance and interfigure stuff!
             //if (figure.CheckForRomantic())

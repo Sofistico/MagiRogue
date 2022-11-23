@@ -82,5 +82,15 @@
         "Comparator": "None"
       }
     ]
+  },
+  {
+    "RuleFor": "GenerateMagicalResources",
+    "Triggers": [
+      {
+        "TriggerType": "Flag",
+        "Values": "MagicUser",
+        "Comparator": "Equal"
+      }
+    ]
   }
 ]
