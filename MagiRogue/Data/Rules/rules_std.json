@@ -92,5 +92,25 @@
         "Comparator": "Equal"
       }
     ]
+  },
+  {
+    "RuleFor": "GenerateMagicalResources",
+    "Triggers": [
+      {
+        "TriggerType": "Personality",
+        "Values": {
+          "Or": {
+            "Nature": 15,
+            "Independence": 20
+          }
+        },
+        "Comparator": "EqualOrMore"
+      },
+      {
+        "TriggerType": "OneIn",
+        "Values": 5,
+        "Comparator": "None"
+      }
+    ]
   }
 ]

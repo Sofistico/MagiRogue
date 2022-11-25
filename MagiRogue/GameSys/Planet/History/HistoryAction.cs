@@ -102,11 +102,11 @@ namespace MagiRogue.GameSys.Planet.History
 
             // do Pet and animals do stuff?
 
-            if (figure.CheckForWanderlust() && Mrn.OneIn(10))
-            {
-                WanderAndSettleSomewhere();
-                return;
-            }
+            //if (figure.CheckForWanderlust() && Mrn.OneIn(10))
+            //{
+            //    WanderAndSettleSomewhere();
+            //    return;
+            //}
 
             if (figure.CheckForProlificStudious())
             {
