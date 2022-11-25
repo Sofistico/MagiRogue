@@ -94,7 +94,7 @@
     ]
   },
   {
-    "RuleFor": "GenerateMagicalResources",
+    "RuleFor": "WanderAndSettle",
     "Triggers": [
       {
         "TriggerType": "Personality",
