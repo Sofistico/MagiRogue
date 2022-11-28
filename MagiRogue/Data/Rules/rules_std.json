@@ -112,5 +112,26 @@
         "Comparator": "None"
       }
     ]
+  },
+  {
+    "RuleFor": "ResearchWork",
+    "Triggers": [
+      {
+        "TriggerType": "Personality",
+        "Values": {
+          "Knowledge": 10,
+          "Or": {
+            "Perseverance": 10,
+            "HardWork": 25
+          }
+        },
+        "Comparator": "EqualOrMore"
+      },
+      {
+        "TriggerType": "OneIn",
+        "Values": 5,
+        "Comparator": "None"
+      }
+    ]
   }
 ]

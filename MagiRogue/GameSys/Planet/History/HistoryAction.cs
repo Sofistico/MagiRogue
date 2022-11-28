@@ -108,20 +108,20 @@ namespace MagiRogue.GameSys.Planet.History
             //    return;
             //}
 
-            if (figure.CheckForProlificStudious())
-            {
-                bool willResearchThisSeason = Mrn.OneIn(2);
-                if (willResearchThisSeason)
-                {
-                    DecideWhatToResearch();
-                    DoResearchIfPossible();
-                    if (figure.AnxiousInRegardsToActivity)
-                    {
-                        DoSometingReckless();
-                    }
-                    return;
-                }
-            }
+            //if (figure.CheckForProlificStudious())
+            //{
+            //    bool willResearchThisSeason = Mrn.OneIn(2);
+            //    if (willResearchThisSeason)
+            //    {
+            //        DecideWhatToResearch();
+            //        DoResearchIfPossible();
+            //        if (figure.AnxiousInRegardsToActivity)
+            //        {
+            //            DoSometingReckless();
+            //        }
+            //        return;
+            //    }
+            //}
 
             // wizardy stuff will be here as well!
             if (figure.SpecialFlags.Contains(SpecialFlag.MagicUser))
