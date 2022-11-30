@@ -123,15 +123,15 @@ namespace MagiRogue.GameSys.Planet.History
             //    }
             //}
 
-            // wizardy stuff will be here as well!
-            if (figure.SpecialFlags.Contains(SpecialFlag.MagicUser))
-            {
-                if (!figure.SpecialFlags.Contains(SpecialFlag.BuiltTower) && figure.CheckForLoneniss())
-                {
-                    BuildATower();
-                    return;
-                }
-            }
+            //// wizardy stuff will be here as well!
+            //if (figure.SpecialFlags.Contains(SpecialFlag.MagicUser))
+            //{
+            //    if (!figure.SpecialFlags.Contains(SpecialFlag.BuiltTower) && figure.CheckForLoneniss())
+            //    {
+            //        BuildATower();
+            //        return;
+            //    }
+            //}
 
             #endregion Returning actions
 
