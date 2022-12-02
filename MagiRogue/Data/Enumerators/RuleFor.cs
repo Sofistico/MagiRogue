@@ -22,6 +22,7 @@ namespace MagiRogue.Data.Enumerators
         ResearchWork,
         BuildATower,
         BuildACity,
-        CreateNewCiv
+        CreateNewCiv,
+        MythGenericStuff
     }
 }

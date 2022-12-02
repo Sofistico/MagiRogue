@@ -84,16 +84,6 @@
     ]
   },
   {
-    "RuleFor": "GenerateMagicalResources",
-    "Triggers": [
-      {
-        "TriggerType": "Flag",
-        "Values": "MagicUser",
-        "Comparator": "Equal"
-      }
-    ]
-  },
-  {
     "RuleFor": "WanderAndSettle",
     "Triggers": [
       {
@@ -131,27 +121,6 @@
         "TriggerType": "OneIn",
         "Values": 5,
         "Comparator": "None"
-      }
-    ]
-  },
-  {
-    "RuleFor": "BuildATower",
-    "Triggers": [
-      {
-        "TriggerType": "Flag",
-        "Values": "MagicUser",
-        "Comparator": "None"
-      },
-      {
-        "TriggerType": "Personality",
-        "Values": {
-          "Or": {
-            "Friendship": -10,
-            "Tradition": 0,
-            "Family": -10
-          }
-        },
-        "Comparator": "LessOrEqual"
       }
     ]
   }

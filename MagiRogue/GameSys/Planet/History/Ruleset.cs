@@ -22,7 +22,7 @@ namespace MagiRogue.GameSys.Planet.History
         public List<Trigger> Triggers { get; set; }
         public bool AllowMoreThanOneAction { get; set; }
 
-        [JsonConstructor()]
+        [JsonConstructor]
         public Ruleset(RuleFor ruleFor, List<Trigger> triggers, bool allowMoreThanOneAct = false)
         {
             RuleFor = ruleFor;
@@ -81,6 +81,10 @@ namespace MagiRogue.GameSys.Planet.History
 
                 case RuleFor.CreateNewCiv:
                     act = new CreateNewCivAction();
+                    break;
+
+                case RuleFor.MythGenericStuff:
+                    act = new GenericDeityStuff();
                     break;
 
                 default:

@@ -1,0 +1,14 @@
+﻿[
+  {
+    "//": "Maybe one day i will expand on this! Maybe not, who knows",
+    "RuleFor": "MythGenericStuff",
+    "Triggers": [
+      {
+        "TriggerType": "Flag",
+        "Values": "Deity",
+        "Comparator": "Equal"
+      }
+    ],
+    "AllowMoreThanONeAction": false
+  }
+]
