@@ -42,22 +42,6 @@ namespace MagiRogue.Test.Entities
         }
 
         [Fact]
-        public void ActorDeserializationFromFile()
-        {
-            try
-            {
-                List<ActorTemplate> deserialized = JsonUtils.JsonDeseralize<List<ActorTemplate>>
-                    (Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "Actors", "Humanoids.json"));
-                Actor found = deserialized.FirstOrDefault();
-                Assert.Equal(found.Name, deserialized.FirstOrDefault(i => i.ID == "test_troll").Name);
-            }
-            catch (Exception)
-            {
-                // This is here so that travis stops failing
-            }
-        }
-
-        [Fact]
         public void ActorSerializeBody()
         {
             var playa = EntityFactory.PlayerCreatorFromZero(new Point(0, 0),

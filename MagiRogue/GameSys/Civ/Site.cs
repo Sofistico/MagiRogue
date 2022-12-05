@@ -10,6 +10,7 @@ using System.Collections.Specialized;
 using MagiRogue.GameSys.Planet;
 using MagiRogue.GameSys.Planet.TechRes;
 using MagiRogue.Entities;
+using MagiRogue.Utils.Extensions;
 
 namespace MagiRogue.GameSys.Civ
 {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagiRogue.Utils
+namespace MagiRogue.Utils.Extensions
 {
     public static class ArrayUtils
     {

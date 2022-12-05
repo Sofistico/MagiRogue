@@ -7,6 +7,7 @@ using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Planet.History;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
+using MagiRogue.Utils.Extensions;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
@@ -160,6 +161,7 @@ namespace MagiRogue.GameSys.Planet
             {
                 TicksSinceCreation = MathMagi.GetTickByYear(yearToGameBegin),
             };
+
             history.RunHistory(_civilizations, yearToGameBegin, planetData, tiles);
             planetData.WorldHistory = history;
         }

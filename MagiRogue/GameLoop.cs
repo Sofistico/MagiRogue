@@ -3,6 +3,9 @@ using GoRogue;
 using MagiRogue.GameSys;
 using MagiRogue.UI;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
 
 namespace MagiRogue
 {
@@ -96,6 +99,23 @@ namespace MagiRogue
         public static int GetMythId()
         {
             return mythId++;
+        }
+
+        public static void WriteToLog(List<string> errors)
+        {
+            var path = new StringBuilder(AppDomain.CurrentDomain.BaseDirectory).Append(@"\log.txt").ToString();
+            StringBuilder str = new StringBuilder($"{DateTime.Now:dd/MM/yyyy}");
+            foreach (var item in errors)
+            {
+                str.AppendLine(item);
+            }
+
+            File.AppendAllText(path, str.ToString());
+        }
+
+        public static void WriteToLog(string error)
+        {
+            WriteToLog(new List<string>() { error });
         }
 
         #endregion IdCounters

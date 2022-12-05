@@ -1,0 +1,127 @@
+﻿[
+  {
+    "RuleFor": "Marriage",
+    "Triggers": [
+      {
+        "TriggerType": "Personality",
+        "Values": {
+          "Romance": 0
+        },
+        "Comparator": "EqualOrMore"
+      },
+      {
+        "TriggerType": "Flag",
+        "Values": "Married",
+        "Comparator": "NotEqual"
+      }
+    ],
+    "AllowMoreThanOneAction": true
+  },
+  {
+    "RuleFor": "HaveChild",
+    "Triggers": [
+      {
+        "TriggerType": "Flag",
+        "Values": "Married",
+        "Comparator": "Equal"
+      },
+      {
+        "TriggerType": "OneIn",
+        "Values": 5,
+        "Comparator": "None"
+      }
+    ],
+    "AllowMoreThanOneAction": true
+  },
+  {
+    "RuleFor": "GetAFriend",
+    "Triggers": [
+      {
+        "TriggerType": "Personality",
+        "Values": {
+          "Friendship": 0
+        },
+        "Comparator": "EqualOrMore"
+      }
+    ]
+  },
+  {
+    "RuleFor": "LearnDiscoveriesKnowToSite",
+    "Triggers": [
+      {
+        "TriggerType": "Personality",
+        "Values": {
+          "Knowledge": 0,
+          "HardWork": 10
+        },
+        "Comparator": "EqualOrMore"
+      }
+    ]
+  },
+  {
+    "RuleFor": "TrainAbility",
+    "Triggers": [
+      {
+        "TriggerType": "Personality",
+        "Values": {
+          "Or": {
+            "HardWork": 10,
+            "Perseverance": 10
+          }
+        },
+        "Comparator": "EqualOrMore"
+      }
+    ]
+  },
+  {
+    "RuleFor": "TrainAbility",
+    "Triggers": [
+      {
+        "TriggerType": "OneIn",
+        "Values": 3,
+        "Comparator": "None"
+      }
+    ]
+  },
+  {
+    "RuleFor": "WanderAndSettle",
+    "Triggers": [
+      {
+        "TriggerType": "Personality",
+        "Values": {
+          "Or": {
+            "Nature": 15,
+            "Independence": 20
+          }
+        },
+        "Comparator": "EqualOrMore"
+      },
+      {
+        "TriggerType": "OneIn",
+        "Values": 5,
+        "Comparator": "None"
+      }
+    ]
+  },
+  {
+    "RuleFor": "ResearchWork",
+    "Triggers": [
+      {
+        "TriggerType": "Personality",
+        "Values": {
+          "Knowledge": 10,
+          "Or": {
+            "Perseverance": 10,
+            "HardWork": 25
+          }
+        },
+        "Comparator": "EqualOrMore"
+      },
+      {
+        "TriggerType": "OneIn",
+        "Values": 5,
+        "Comparator": "None"
+      }
+    ]
+  }
+]

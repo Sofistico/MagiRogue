@@ -1,23 +1,33 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace MagiRogue.Utils
 {
     public static class JsonUtils
     {
-        public static T JsonDeseralize<T>(string stream)
+        public static T JsonDeseralize<T>(string path)
         {
-            try
+            List<string> errors = new List<string>();
+
+            var settings = new JsonSerializerSettings()
             {
-                return JsonConvert.DeserializeObject<T>(File.ReadAllText(stream));
-            }
-            catch (Exception)
-            {
-                return default;
-            }
+                Error = delegate (object? sender, Newtonsoft.Json.Serialization.ErrorEventArgs args)
+                {
+                    errors.Add(args.ErrorContext.Error.Message);
+                    args.ErrorContext.Handled = true;
+                },
+                Converters = { new IsoDateTimeConverter() }
+            };
+
+            if (errors.Count > 0)
+                GameLoop.WriteToLog(errors);
+
+            return JsonConvert.DeserializeObject<T>(File.ReadAllText(path), settings);
         }
 
         public static List<T> JsonDeseralize<T>(string[] arrayOfStreams)

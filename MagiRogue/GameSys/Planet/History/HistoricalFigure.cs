@@ -11,6 +11,7 @@ using MagiRogue.GameSys.Tiles;
 using MagiRogue.GameSys.Planet.TechRes;
 using MagiRogue.Data.Serialization;
 using MagiRogue.GameSys.Magic;
+using MagiRogue.Utils.Extensions;
 
 namespace MagiRogue.GameSys.Planet.History
 {
@@ -23,6 +24,7 @@ namespace MagiRogue.GameSys.Planet.History
         // years that the current long activity started
         private int seasonsOnActivity = 0;
         private int whatScoreToSettleForTrainingAbility;
+        private Personality cachedPersonality;
 
 #if DEBUG
         public int DebugNumberOfLostYears;
@@ -123,7 +125,7 @@ namespace MagiRogue.GameSys.Planet.History
 
         public void GenerateRandomPersonality()
         {
-            Personality personality = Mind.Personality;
+            Personality personality = GetPersonality();
             // reflection because i'm lazy
             var properties = typeof(Personality).GetProperties();
             foreach (var property in properties)
@@ -282,24 +284,11 @@ namespace MagiRogue.GameSys.Planet.History
                 RelatedCivs.FirstOrDefault(i => i.CivRelatedId == civId).Relation = relation;
         }
 
-        public void HistoryAct(int year, WorldTile[,] tiles,
-            List<Civilization> civs, List<HistoricalFigure> figures, List<Site> sites,
-            AccumulatedHistory accumulatedHistory, List<Item> items)
-        {
-            // TODO: Calculate the impact of the instantiantion of this object in the future!
-            HistoryAction historyAction = new HistoryAction(this,
-                year,
-                civs,
-                tiles,
-                figures,
-                sites,
-                accumulatedHistory,
-                items);
-            historyAction.Act();
-        }
-
         public Personality GetPersonality()
-            => Mind.Personality;
+        {
+            cachedPersonality ??= Mind.Personality;
+            return cachedPersonality;
+        }
 
         // see if there is anyway to refactor this to be better!
         // maybe some good old OOP
@@ -543,6 +532,12 @@ namespace MagiRogue.GameSys.Planet.History
             {
                 AddLegend(whyItDied, year);
             }
+            if (IsMarried())
+            {
+                SpecialFlags.Remove(SpecialFlag.Married);
+                var node = FamilyLink.GetOtherFamilyNodesByRelations(HfRelationType.Married);
+                node[0].Relation = HfRelationType.ExSpouse;
+            }
         }
 
         public void CleanupIfNotImportant(int year)
@@ -658,11 +653,12 @@ namespace MagiRogue.GameSys.Planet.History
                 return;
             FamilyLink.SetMarriedRelation(this, randomPerson);
             randomPerson.FamilyLink.SetMarriedRelation(randomPerson, this);
+            SpecialFlags.Add(SpecialFlag.Married);
         }
 
         public bool IsMarried()
         {
-            return FamilyLink.GetIfExistsAnyRelationOfType(HfRelationType.Married);
+            return SpecialFlags.Contains(SpecialFlag.Married);
         }
 
         public bool MakeFriend(HistoricalFigure randomPerson)

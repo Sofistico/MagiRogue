@@ -1,0 +1,33 @@
+﻿[
+  {
+    "RuleFor": "BuildATower",
+    "Triggers": [
+      {
+        "TriggerType": "Flag",
+        "Values": "MagicUser",
+        "Comparator": "None"
+      },
+      {
+        "TriggerType": "Personality",
+        "Values": {
+          "Or": {
+            "Friendship": -10,
+            "Tradition": 0,
+            "Family": -10
+          }
+        },
+        "Comparator": "LessOrEqual"
+      }
+    ]
+  },
+  {
+    "RuleFor": "GenerateMagicalResources",
+    "Triggers": [
+      {
+        "TriggerType": "Flag",
+        "Values": "MagicUser",
+        "Comparator": "Equal"
+      }
+    ]
+  }
+]

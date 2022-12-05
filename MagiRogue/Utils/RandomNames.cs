@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MagiRogue.Utils.Extensions;
+using System;
 using System.Text;
 
 namespace MagiRogue.Utils

@@ -18,6 +18,7 @@ namespace MagiRogue.Data.Enumerators
         Married,
         OwnChild,
         Mother,
-        Father
+        Father,
+        ExSpouse
     }
 }

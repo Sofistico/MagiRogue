@@ -3,6 +3,7 @@ using MagiRogue.Entities;
 using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Planet.History;
 using MagiRogue.Utils;
+using MagiRogue.Utils.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -10,6 +10,8 @@ using System.Diagnostics;
 using System.Linq;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Data.Enumerators;
+using MagiRogue.Utils.Extensions;
+using MagiRogue.GameSys.Civ;
 
 namespace MagiRogue.GameSys.Planet.History
 {
@@ -694,6 +696,16 @@ namespace MagiRogue.GameSys.Planet.History
         {
             StringBuilder sb = new StringBuilder(Happening);
             return sb.ToString();
+        }
+
+        public static string StringFromChangingSiteLoc(HistoricalFigure figureToChange, Site site)
+        {
+            return $"the {figureToChange.Name} has changed {figureToChange.PronoumPossesive()} location to {site.Name}!";
+        }
+
+        public static string ReturnMadeFriendString(HistoricalFigure figure, HistoricalFigure randomPerson)
+        {
+            return $"the {figure.Name} became friends with {randomPerson.Name}";
         }
     }
 }

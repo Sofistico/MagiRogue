@@ -1,4 +1,5 @@
-﻿using MagiRogue.Data.Enumerators;
+﻿using GoRogue.MapGeneration.Steps;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Data.Serialization.MapSerialization;
@@ -10,6 +11,7 @@ using MagiRogue.GameSys.Planet.History;
 using MagiRogue.GameSys.Planet.TechRes;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
+using MagiRogue.Utils.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +20,8 @@ namespace MagiRogue.Data
 {
     public static class DataManager
     {
+        #region jsons
+
         public static readonly IReadOnlyList<ItemTemplate> ListOfItems =
             GetSourceTree<ItemTemplate>(@".\Data\Items\items_*");
 
@@ -67,6 +71,9 @@ namespace MagiRogue.Data
         public static readonly IReadOnlyList<Reaction> ListOfReactions =
             GetSourceTree<Reaction>(@".\Data\Reaction\reaction_*");
 
+        public static readonly IReadOnlyList<Ruleset> ListOfRules =
+            GetSourceTree<Ruleset>(@".\Data\Rules\rules_*");
+
         #region Descriptors
 
         public static readonly IReadOnlyList<string> ListOfRealmsName =
@@ -80,6 +87,8 @@ namespace MagiRogue.Data
 
         #endregion Descriptors
 
+        #endregion jsons
+
         public static IReadOnlyList<T> GetSourceTree<T>(string wildCard)
         {
             string[] files = FileUtils.GetFiles(wildCard);
@@ -88,7 +97,8 @@ namespace MagiRogue.Data
 
             for (int i = 0; i < files.Length; i++)
             {
-                listTList.Add(JsonUtils.JsonDeseralize<List<T>>(files[i]));
+                var t = JsonUtils.JsonDeseralize<List<T>>(files[i]);
+                listTList.Add(t);
             }
             List<T> allTList = new();
 

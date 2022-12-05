@@ -3,6 +3,7 @@ using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Civ;
 using MagiRogue.Utils;
+using MagiRogue.Utils.Extensions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

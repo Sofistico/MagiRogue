@@ -1,9 +1,12 @@
 ﻿using GoRogue.Pathing;
+using MagiRogue.Data;
 using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
+using MagiRogue.Utils.Extensions;
 using SadConsole;
 using SadRogue.Primitives;
 using System;
@@ -27,7 +30,7 @@ namespace MagiRogue.GameSys.Planet.History
         public List<Civilization> Civs { get; set; }
         public List<Site> AllSites { get; set; } = new();
         public List<Myth> Myths { get; set; } = new();
-        public List<Item> ImportantItems { get; set; } = new();
+        public List<ItemTemplate> ImportantItems { get; set; } = new();
         public int Year { get; set; }
         public long TicksSinceCreation { get; set; }
 
@@ -49,6 +52,8 @@ namespace MagiRogue.GameSys.Planet.History
         public void RunHistory(List<Civilization> civilizations, int yearToGameBegin,
             PlanetMap planet, WorldTile[,] tiles)
         {
+            PopulateFindValues(tiles);
+
             Civs = civilizations;
             planetData = planet;
             bool firstYearOnly = true;
@@ -73,24 +78,31 @@ namespace MagiRogue.GameSys.Planet.History
 
             while (Year <= yearToGameBegin)
             {
-                int season = 1; // 4 actions per year, representing the four seasons
-                while (season <= 4)
+                for (int season = 1; season <= 4; season++)
                 {
                     // simulate historical figures stuff
-                    HistoricalFigureSimulation(tiles, AllSites);
+                    HistoricalFigureSimulation();
 
                     // simulate civ stuff
                     CivilizationSimulation(tiles);
 
                     // other sites that aren't tied to a Civ/Hf/etc...
                     NoCivSitesSimulation(tiles);
-
-                    season++; // another season passes...
                 }
                 AgeEveryone();
                 ConceiveAnyChild();
                 Year++;
             }
+        }
+
+        private void PopulateFindValues(WorldTile[,] tiles)
+        {
+            Find.PopulateValues(Figures,
+                Civs,
+                AllSites,
+                ImportantItems,
+                Year,
+                tiles);
         }
 
         private static void DefineFiguresToHaveAInitialSite(List<HistoricalFigure> figures,
@@ -167,7 +179,7 @@ namespace MagiRogue.GameSys.Planet.History
             }
         }
 
-        private void HistoricalFigureSimulation(WorldTile[,] tiles, List<Site> sites)
+        private void HistoricalFigureSimulation()
         {
             if (Figures.Count < 1)
                 return;
@@ -177,7 +189,7 @@ namespace MagiRogue.GameSys.Planet.History
                 if (figure is null)
                     continue;
                 if (figure.IsAlive)
-                    figure.HistoryAct(Year, tiles, Civs, Figures, sites, this, ImportantItems);
+                    HistoryAction.Act(figure);
                 else
                 {
                     figure.CleanupIfNotImportant(Year);

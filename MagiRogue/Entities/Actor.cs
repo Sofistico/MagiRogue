@@ -5,6 +5,7 @@ using MagiRogue.GameSys;
 using MagiRogue.GameSys.Physics;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
+using MagiRogue.Utils.Extensions;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System;
