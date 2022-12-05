@@ -36,9 +36,10 @@ namespace MagiRogue.GameSys.Planet.History
                         acted = true;
                 }
             }
-
+#if DEBUG
             if (!acted)
                 figure.DebugNumberOfLostYears++;
+#endif
         }
 
         #endregion Actions

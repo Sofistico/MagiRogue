@@ -57,8 +57,6 @@ namespace MagiRogue.GameSys.Civ
         public List<SiteType> PossibleSites { get; set; }
         public Dictionary<string, int> TrackAmountOfNobles { get; set; }
         public List<int> CivsTradingWith { get; private set; }
-
-        //public List<Discovery> Discoveries { get; set; }
         public List<Legend> Legends { get; set; }
 
         #endregion Information

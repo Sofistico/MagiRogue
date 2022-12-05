@@ -28,10 +28,10 @@ namespace MagiRogue.GameSys.Planet.History
             RuleFor = ruleFor;
             Triggers = triggers;
             AllowMoreThanOneAction = allowMoreThanOneAct;
-            act = DetermineWhichActionItIs();
+            DetermineWhichActionItIs();
         }
 
-        private IHistoryAct DetermineWhichActionItIs()
+        private void DetermineWhichActionItIs()
         {
             switch (RuleFor)
             {
@@ -91,8 +91,6 @@ namespace MagiRogue.GameSys.Planet.History
                     GameLoop.WriteToLog($"The {RuleFor} is not supported!");
                     break;
             }
-
-            return default;
         }
 
         public bool? DoAction(HistoricalFigure figure)
@@ -190,7 +188,7 @@ namespace MagiRogue.GameSys.Planet.History
                         prop.Key,
                         out int personality))
                     {
-                        int value = (int)prop.Value;
+                        int value = Convert.ToInt32((int)(long)prop.Value);
                         result = CompareIntValue(
                             personality,
                             value);
