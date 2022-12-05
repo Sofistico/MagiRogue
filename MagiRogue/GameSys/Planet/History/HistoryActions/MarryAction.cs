@@ -1,4 +1,7 @@
-﻿using MagiRogue.GameSys.Tiles;
+﻿using MagiRogue.Data;
+using MagiRogue.GameSys.Civ;
+using MagiRogue.GameSys.Tiles;
+using MagiRogue.Utils.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +18,48 @@ namespace MagiRogue.GameSys.Planet.History.HistoryActions
 
         public bool? Act(HistoricalFigure figure)
         {
-            throw new NotImplementedException();
+            return RomanceSomeoneInsideSameSite(figure);
+        }
+
+        private bool RomanceSomeoneInsideSameSite(HistoricalFigure figure)
+        {
+            Site site = Find.GetFigureStayingSiteIfAny(figure);
+            int year = Find.Year;
+            if (site is not null
+                && !figure.IsMarried())
+            {
+                var peopleInside = Find.GetAllFiguresStayingInSiteIfAny(site.Id);
+                int aceptableDiferenceAge;
+                bool isAdult = figure.IsAdult();
+                if (isAdult)
+                {
+                    aceptableDiferenceAge = Math.Max(figure.Body.Anatomy.GetRaceAdulthoodAge(),
+                        figure.Body.GetCurrentAge() / 2);
+                }
+                else
+                {
+                    // kids can't marry!
+                    aceptableDiferenceAge = int.MaxValue;
+                }
+                if (aceptableDiferenceAge == int.MaxValue)
+                    return false;
+                var peopleInARangeOfAgeCloseAndPredispost = peopleInside.Where(i =>
+                    (i.Body.GetCurrentAge() >= aceptableDiferenceAge) && i.CheckForRomantic()).ToList();
+                if (peopleInARangeOfAgeCloseAndPredispost?.Count >= 0)
+                {
+                    var randomPerson = peopleInARangeOfAgeCloseAndPredispost.GetRandomItemFromList();
+                    if (randomPerson.IsMarried())
+                        return false;
+                    figure.Marry(randomPerson);
+                    StringBuilder anotherB = new StringBuilder($"the {figure.Name} married with {randomPerson.Name}");
+                    StringBuilder bb = new StringBuilder($"the {randomPerson.Name} married with {figure.Name}");
+                    figure.AddLegend(anotherB.ToString(), year);
+                    randomPerson.AddLegend(bb.ToString(), year);
+
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

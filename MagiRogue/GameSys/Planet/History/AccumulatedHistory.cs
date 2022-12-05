@@ -78,8 +78,7 @@ namespace MagiRogue.GameSys.Planet.History
 
             while (Year <= yearToGameBegin)
             {
-                int season = 1; // 4 actions per year, representing the four seasons
-                while (season <= 4)
+                for (int season = 1; season <= 4; season++)
                 {
                     // simulate historical figures stuff
                     HistoricalFigureSimulation();
@@ -89,8 +88,6 @@ namespace MagiRogue.GameSys.Planet.History
 
                     // other sites that aren't tied to a Civ/Hf/etc...
                     NoCivSitesSimulation(tiles);
-
-                    season++; // another season passes...
                 }
                 AgeEveryone();
                 ConceiveAnyChild();

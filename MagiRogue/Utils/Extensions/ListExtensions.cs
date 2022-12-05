@@ -66,7 +66,7 @@ namespace MagiRogue.Utils.Extensions
 
             list.ShuffleAlgorithm();
 
-            return list.Take<T>(howManyToTake).ToList();
+            return list.Take(howManyToTake).ToList();
         }
 
         public static List<Ruleset> AllFulfilled(this List<Ruleset> rules, HistoricalFigure figure)

@@ -10,7 +10,8 @@ namespace MagiRogue.GameSys.Planet.History.HistoryActions
     {
         public bool? Act(HistoricalFigure figure)
         {
-            throw new NotImplementedException();
+            figure.TrainAbilityFocus();
+            return true;
         }
     }
 }

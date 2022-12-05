@@ -55,58 +55,20 @@ namespace MagiRogue.GameSys.Planet.History
         public void Act()
         {
             // if from hell!
-            if (figure.MythWho != MythWho.None)
-            {
-                SimulateMythStuff();
-                return;
-            }
+            //if (figure.MythWho != MythWho.None)
+            //{
+            //    SimulateMythStuff();
+            //    return;
+            //}
 
             #region Non-returning actions
 
             // everyone trains theirs focus!
             // check if unit has any hardworking bone in it's body or just plain old chance!
-            //if (figure.CheckForHardwork() || Mrn.OneIn(3))
-            //{
-            //    figure.TrainAbilityFocus();
-            //}
-
-            //if (figure.SpecialFlags.Contains(SpecialFlag.MagicUser))
-            //{
-            //    GenerateMagicalResourcesForSite();
-            //}
-
-            ////romance and interfigure stuff!
-            //if (figure.CheckForRomantic())
-            //{
-            //    RomanceSomeoneInsideSameSite();
-            //}
-
-            //if (figure.IsMarried() && Mrn.OneIn(5))
-            //{
-            //    TryForBaby();
-            //}
-
-            //if (figure.CheckForFriendship())
-            //{
-            //    GetANewFriend();
-            //}
-
-            //if (figure.CheckForAnyStudious())
-            //{
-            //    LearnNewDiscoveriesKnowToTheSite();
-            //}
 
             #endregion Non-returning actions
 
             #region Returning actions
-
-            // do Pet and animals do stuff?
-
-            //if (figure.CheckForWanderlust() && Mrn.OneIn(10))
-            //{
-            //    WanderAndSettleSomewhere();
-            //    return;
-            //}
 
             //if (figure.CheckForProlificStudious())
             //{
@@ -140,70 +102,6 @@ namespace MagiRogue.GameSys.Planet.History
 #endif
         }
 
-        private void WanderAndSettleSomewhere()
-        {
-            // if figure is a noble somewhere, it shouldn't wander!
-            if (figure.NobleTitles.Count >= 0)
-                return;
-            // one in 5 chance to settle somewhere else
-            if (Mrn.OneIn(5))
-            {
-                bool changedCiv = false;
-                // one in 10 to migrate to another civ
-                if (Mrn.OneIn(10))
-                {
-                    changedCiv = ChangeFigureCiv(figure, year, civs);
-                }
-                int civId = figure.GetMemberCivId();
-                Civilization currentCiv = civs.FirstOrDefault(i => i.Id == civId);
-                if (currentCiv.Sites.Count > 1 || changedCiv)
-                {
-                    var siteId = figure.GetCurrentStayingSiteId(currentCiv.Sites);
-                    var result = siteId.HasValue ? currentCiv.Sites
-                        .Where(i => i.Id != siteId.Value)
-                        .ToList()
-                        .GetRandomItemFromList() : currentCiv.Sites.GetRandomItemFromList();
-                    ChangeFigureLivingSite(figure, result, year);
-                    ChangeFigureFamilyLivingSite(figure, changedCiv, result);
-                }
-            }
-        }
-
-        private void ChangeFigureFamilyLivingSite(HistoricalFigure figureToSearch,
-            bool changedCiv, Site result)
-        {
-            foreach (FamilyNode family in figureToSearch.FamilyLink.Nodes)
-            {
-                if (family.IsCloseFamily())
-                {
-                    var fig = family.Figure;
-                    ChangeFigureLivingSite(fig, result, year);
-                    if (changedCiv)
-                        ChangeFigureCiv(fig, year, civs);
-                }
-            }
-        }
-
-        private static bool ChangeFigureCiv(HistoricalFigure figure, int year, List<Civilization> civs)
-        {
-            CivRelation prevRelation = figure.RelatedCivs.FirstOrDefault(i => i.GetIfMember());
-            HistoricalFigure.RemovePreviousCivRelationAndSetNew(prevRelation, RelationType.ExMember);
-            var civ = civs.GetRandomItemFromList();
-            figure.AddNewRelationToCiv(civ.Id, RelationType.Member);
-            figure.AddLegend($"the {figure.Name} has migrated to the {civ.Name}", year);
-            civ.AddLegend($"{figure.Name} joined as a member of {civ.Name}", year);
-            return true;
-        }
-
-        private static void ChangeFigureLivingSite(HistoricalFigure figure, Site result, int year)
-        {
-            figure.ChangeLivingSite(result.Id);
-            string changedLoc = StringFromChangingLivingSiteLoc(figure, result);
-            figure.ChangeStayingSite(result.WorldPos);
-            figure.AddLegend(changedLoc, year);
-            result.AddLegend(changedLoc, year);
-        }
-
         private static void ChangeFigureStayingSite(HistoricalFigure figureToChange, Site site, int year)
         {
             string changedLoc = StringFromChangingSiteLoc(figureToChange, site);
@@ -212,55 +110,9 @@ namespace MagiRogue.GameSys.Planet.History
             site.AddLegend(changedLoc, year);
         }
 
-        private static string StringFromChangingSiteLoc(HistoricalFigure figureToChange, Site site)
-        {
-            return $"the {figureToChange.Name} has changed {figureToChange.PronoumPossesive()} location to {site.Name}!";
-        }
-
         private static string StringFromChangingLivingSiteLoc(HistoricalFigure figure, Site result)
         {
             return $"the {figure.Name} has changed {figure.PronoumPossesive()} living location to {result.Name}!";
-        }
-
-        private void GenerateMagicalResourcesForSite()
-        {
-            Site site = GetCurrentlyStayingSite();
-            if (site is not null)
-            {
-                site.MagicalResources += 10;
-            }
-        }
-
-        private void TryForBaby()
-        {
-            HistoricalFigure spouse = GetSpouse();
-            if (spouse is null)
-                return;
-            if (CompatibleGenderForBabies(spouse) && (!figure.Pregnant || !spouse.Pregnant))
-            {
-                figure.MakeBabyWith(spouse);
-            }
-        }
-
-        private bool CompatibleGenderForBabies(HistoricalFigure spouse)
-        {
-            var allowedGenders = new Sex[]
-            {
-                Sex.Male,
-                Sex.Female
-            };
-            if (allowedGenders.Contains(spouse.HFGender)
-                && allowedGenders.Contains(figure.HFGender))
-            {
-                return spouse.HFGender != figure.HFGender;
-            }
-            return false;
-        }
-
-        private HistoricalFigure GetSpouse()
-        {
-            HistoricalFigure? figure = this.figure.GetRelatedHfSpouseId();
-            return figure;
         }
 
         private void BuildATower()
@@ -310,75 +162,9 @@ namespace MagiRogue.GameSys.Planet.History
                 site.AddLegend(whySite, year);
         }
 
-        private Site GetCurrentlyStayingSite()
-        {
-            int? site = figure.GetCurrentStayingSiteId(sites);
-            if (site.HasValue)
-            {
-                return sites.FirstOrDefault(i => i.Id == site.Value);
-            }
-            return null;
-        }
-
-        private void GetANewFriend()
-        {
-            Site site = GetFigureStayingSiteIfAny();
-            if (site is not null)
-            {
-                var peopleInside = GetAllFiguresStayingInSiteIfAny(site.Id);
-                if (peopleInside.Count >= 0)
-                {
-                    var randomPerson = peopleInside.GetRandomItemFromList();
-                    if (!figure.MakeFriend(randomPerson))
-                    {
-                        randomPerson.MakeFriend(figure);
-                        //figure.AddLegend(ReturnMadeFriendString(figure, randomPerson), year);
-                        //randomPerson.AddLegend(ReturnMadeFriendString(randomPerson, figure), year);
-                    }
-                }
-            }
-        }
-
         private static string ReturnMadeFriendString(HistoricalFigure figure, HistoricalFigure randomPerson)
         {
             return $"the {figure.Name} became friends with {randomPerson.Name}";
-        }
-
-        private void RomanceSomeoneInsideSameSite()
-        {
-            Site site = GetFigureStayingSiteIfAny();
-            if (site is not null
-                && !figure.IsMarried())
-            {
-                var peopleInside = GetAllFiguresStayingInSiteIfAny(site.Id);
-                int aceptableDiferenceAge;
-                bool isAdult = figure.IsAdult();
-                if (isAdult)
-                {
-                    aceptableDiferenceAge = Math.Max(figure.Body.Anatomy.GetRaceAdulthoodAge(),
-                        figure.Body.GetCurrentAge() / 2);
-                }
-                else
-                {
-                    // kids can't marry!
-                    aceptableDiferenceAge = int.MaxValue;
-                }
-                if (aceptableDiferenceAge == int.MaxValue)
-                    return;
-                var peopleInARangeOfAgeCloseAndPredispost = peopleInside.Where(i =>
-                    (i.Body.GetCurrentAge() >= aceptableDiferenceAge) && i.CheckForRomantic()).ToList();
-                if (peopleInARangeOfAgeCloseAndPredispost.Count >= 0)
-                {
-                    var randomPerson = peopleInARangeOfAgeCloseAndPredispost.GetRandomItemFromList();
-                    if (randomPerson.IsMarried())
-                        return;
-                    figure.Marry(randomPerson);
-                    StringBuilder anotherB = new StringBuilder($"the {figure.Name} married with {randomPerson.Name}");
-                    StringBuilder bb = new StringBuilder($"the {randomPerson.Name} married with {figure.Name}");
-                    figure.AddLegend(anotherB.ToString(), year);
-                    randomPerson.AddLegend(bb.ToString(), year);
-                }
-            }
         }
 
         private void DoSometingReckless()
@@ -423,23 +209,6 @@ namespace MagiRogue.GameSys.Planet.History
             figure.ResearchTree.GetNodeForResearch(figure);
         }
 
-        private void LearnNewDiscoveriesKnowToTheSite()
-        {
-            int? currentSiteId = figure.GetCurrentStayingSiteId(sites);
-            if (currentSiteId.HasValue)
-            {
-                int familiarityBonus = 0;
-                Site currentSite = sites.Find(i => i.Id == currentSiteId);
-                if (figure.GetLivingSiteId().HasValue && currentSiteId == figure.GetLivingSiteId().Value)
-                    familiarityBonus = Mrn.Exploding2D6Dice * 2;
-                for (int i = 0; i < currentSite.DiscoveriesKnow.Count; i++)
-                {
-                    Discovery disc = currentSite.DiscoveriesKnow[i];
-                    figure.AddDiscovery(disc);
-                }
-            }
-        }
-
         private void DoResearchIfPossible()
         {
             double resarchPower = 0;
@@ -465,38 +234,11 @@ namespace MagiRogue.GameSys.Planet.History
             }
         }
 
-        private Site GetFigureStayingSiteIfAny()
-        {
-            var currentSite = figure.GetCurrentStayingSiteId(sites);
-            Site site = currentSite.HasValue ? sites.Find(i => i.Id == currentSite.Value) : null;
-            return site;
-        }
-
-        private Site GetFigureStayingSiteIfAny(HistoricalFigure hf)
-        {
-            var currentSite = hf.GetCurrentStayingSiteId(sites);
-            Site site = currentSite.HasValue ? sites.Find(i => i.Id == currentSite.Value) : null;
-            return site;
-        }
-
         private bool GetFigureIsStayingOnSiteId(int siteId, HistoricalFigure hf)
         {
             var currentSiteId = hf.GetCurrentStayingSiteId(sites);
             bool isStaying = currentSiteId.HasValue && siteId == currentSiteId.Value;
             return isStaying;
-        }
-
-        private List<HistoricalFigure> GetAllFiguresStayingInSiteIfAny(int figureSiteId)
-        {
-            var list = new List<HistoricalFigure>();
-            foreach (var item in otherFigures)
-            {
-                if (GetFigureIsStayingOnSiteId(figureSiteId, item))
-                {
-                    list.Add(item);
-                }
-            }
-            return list;
         }
 
         private void SimulateMythStuff()
@@ -590,7 +332,7 @@ namespace MagiRogue.GameSys.Planet.History
                     var act = rule.DoAction(figure);
                     if (act is null)
                         GameLoop.WriteToLog($"For some reason the action was null, here is the action: {rule.RuleFor}");
-                    if (!rule.AllowMoreThanOneAction)
+                    if (!rule.AllowMoreThanOneAction && act.GetValueOrDefault())
                         acted = true;
                 }
             }
