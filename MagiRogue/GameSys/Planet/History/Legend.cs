@@ -702,5 +702,10 @@ namespace MagiRogue.GameSys.Planet.History
         {
             return $"the {figureToChange.Name} has changed {figureToChange.PronoumPossesive()} location to {site.Name}!";
         }
+
+        public static string ReturnMadeFriendString(HistoricalFigure figure, HistoricalFigure randomPerson)
+        {
+            return $"the {figure.Name} became friends with {randomPerson.Name}";
+        }
     }
 }

@@ -22,14 +22,14 @@ namespace MagiRogue.GameSys.Planet.History.HistoryActions
             if (site is not null)
             {
                 var peopleInside = Find.GetAllFiguresStayingInSiteIfAny(site.Id);
-                if (peopleInside.Count >= 0)
+                if (peopleInside.Count > 0)
                 {
                     var randomPerson = peopleInside.GetRandomItemFromList();
                     if (!figure.MakeFriend(randomPerson))
                     {
                         randomPerson.MakeFriend(figure);
-                        //figure.AddLegend(ReturnMadeFriendString(figure, randomPerson), year);
-                        //randomPerson.AddLegend(ReturnMadeFriendString(randomPerson, figure), year);
+                        figure.AddLegend(Legend.ReturnMadeFriendString(figure, randomPerson), Find.Year);
+                        randomPerson.AddLegend(Legend.ReturnMadeFriendString(randomPerson, figure), Find.Year);
                         return true;
                     }
                 }

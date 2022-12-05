@@ -107,5 +107,10 @@ namespace MagiRogue.Data
             figure.AddLegend(changedLoc, Year);
             result.AddLegend(changedLoc, Year);
         }
+
+        public static Civilization GetCivFromSite(Site site)
+        {
+            return site is null ? Civs.Find(i => i.Id == site.CivOwnerIfAny.Value) : null;
+        }
     }
 }
