@@ -160,13 +160,13 @@ namespace MagiRogue.GameSys.Planet.History
 
                 case Data.Enumerators.MythAction.Ascended:
                     happening.Append(" ascended as a god");
-                    figure.SpecialFlags.Add(SpecialFlag.Deity);
+                    figure.SpecialFlags.Add(SpecialFlag.Myth);
 
                     break;
 
                 case Data.Enumerators.MythAction.Descended:
                     happening.Append(" descended to the world");
-                    figure.SpecialFlags.Add(SpecialFlag.DeityDescended);
+                    figure.SpecialFlags.Add(SpecialFlag.MythDescended);
 
                     break;
 
@@ -414,7 +414,7 @@ namespace MagiRogue.GameSys.Planet.History
             {
                 case Data.Enumerators.MythWhat.Race:
                     happening.Append($"the {race.RaceName}");
-                    figure.SpecialFlags.Add(SpecialFlag.RaceCreator);
+                    //figure.SpecialFlags.Add(SpecialFlag.RaceCreator);
                     break;
 
                 case Data.Enumerators.MythWhat.OriginMagic:

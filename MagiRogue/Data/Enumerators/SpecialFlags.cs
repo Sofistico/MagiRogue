@@ -7,16 +7,15 @@ namespace MagiRogue.Data.Enumerators
     public enum SpecialFlag
     {
         // hf flags
-        Deity,
-        DeityDescended,
-        MythAge,
+        Myth,
+        DemiMyth,
+        MythDescended,
         Supernatural,
         Magical,
         MagicCreator,
         OpenedPortal,
         GaveMagicToCreation,
         Antagonist,
-        RaceCreator,
         WorldCreator,
         MagicKiller,
 
@@ -41,6 +40,8 @@ namespace MagiRogue.Data.Enumerators
         CommonDomestic, // the race is a common domestic animal
         CommonPet, // the animal is easily adopted by civ race
         Pet, // the animal can be adopted
+
+        //Civ stuff:
         Married,
     }
 }

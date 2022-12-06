@@ -52,6 +52,11 @@ namespace MagiRogue.GameSys.Civ
             {
                 string father = $"{bb} the {hfFather.Name} had a child with {hfMother.Name}, the child was named {hfChild.Name}";
                 hfFather.AddLegend(father, year);
+                if (hfFather.SpecialFlags.Contains(SpecialFlag.Myth))
+                {
+                    hfChild.SpecialFlags.Add(SpecialFlag.Supernatural);
+                    hfChild.SpecialFlags.Add(SpecialFlag.DemiMyth);
+                }
             }
             string mother;
             string child;
@@ -77,7 +82,7 @@ namespace MagiRogue.GameSys.Civ
             AddToFamilyLink(hfMother, HfRelationType.OwnChild, hfChild);
             AddToFamilyLink(hfChild, HfRelationType.Mother, hfMother);
             // find the fahter
-            if(hfFather is null)
+            if (hfFather is null)
             {
                 AddToFamilyLink(hfFather, HfRelationType.OwnChild, hfChild);
                 AddToFamilyLink(hfChild, HfRelationType.Father, hfFather);

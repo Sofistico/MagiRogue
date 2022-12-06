@@ -5,7 +5,7 @@
     "Triggers": [
       {
         "TriggerType": "Flag",
-        "Values": "Deity",
+        "Values": "Myth",
         "Comparator": "Equal"
       }
     ],

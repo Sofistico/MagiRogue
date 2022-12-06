@@ -153,6 +153,7 @@ namespace MagiRogue.GameSys.Planet.History
             {
                 return CompareFlagValue(figure.SpecialFlags, result);
             }
+
             return false;
         }
 
@@ -220,7 +221,7 @@ namespace MagiRogue.GameSys.Planet.History
                 }
             }
             if (any)
-                return any;
+                return result;
 
             return result;
         }

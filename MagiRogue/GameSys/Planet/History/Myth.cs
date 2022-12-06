@@ -117,7 +117,7 @@ namespace MagiRogue.GameSys.Planet.History
             }
             if (figure is null)
                 return null;
-            figure.SpecialFlags.Add(SpecialFlag.MythAge);
+            figure.SpecialFlags.Add(SpecialFlag.Myth);
             figure.SpecialFlags.Add(SpecialFlag.Supernatural);
             figure.SpecialFlags.Add(SpecialFlag.Magical);
             figure.SpecialFlags.Add(SpecialFlag.Sapient);
