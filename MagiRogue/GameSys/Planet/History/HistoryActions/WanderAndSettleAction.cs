@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace MagiRogue.GameSys.Planet.History.HistoryActions
 {
-    internal class WanderAndSettleAction : IHistoryAct
+    internal sealed class WanderAndSettleAction : IHistoryAct
     {
         public bool? Act(HistoricalFigure figure)
         {

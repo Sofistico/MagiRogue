@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MagiRogue.GameSys.Planet.History.HistoryActions
 {
-    internal class CreateNewCivAction : IHistoryAct
+    public sealed class CreateNewCivAction : IHistoryAct
     {
         public bool? Act(HistoricalFigure figure)
         {

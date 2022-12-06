@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MagiRogue.GameSys.Planet.History.HistoryActions
 {
-    internal class FriendshipIsMagicAction : IHistoryAct
+    public sealed class FriendshipIsMagicAction : IHistoryAct
     {
         public bool? Act(HistoricalFigure figure)
         {

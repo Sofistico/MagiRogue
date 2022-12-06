@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace MagiRogue.GameSys.Planet.History.HistoryActions
 {
-    internal class WorkAction : IHistoryAct
+    internal sealed class WorkAction : IHistoryAct
     {
         private readonly WorkType work;
 

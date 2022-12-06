@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace MagiRogue.GameSys.Planet.History.HistoryActions
 {
-    internal class GenericDeityStuff : IHistoryAct
+    internal sealed class GenericDeityStuff : IHistoryAct
     {
         private HistoricalFigure figure;
 

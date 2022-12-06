@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MagiRogue.GameSys.Planet.History.HistoryActions
 {
-    internal class GenerateResourcesAction : IHistoryAct
+    internal sealed class GenerateResourcesAction : IHistoryAct
     {
         private readonly ResourceType resource;
 

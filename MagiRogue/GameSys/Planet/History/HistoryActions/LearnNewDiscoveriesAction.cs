@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MagiRogue.GameSys.Planet.History.HistoryActions
 {
-    internal class LearnNewDiscoveriesAction : IHistoryAct
+    internal sealed class LearnNewDiscoveriesAction : IHistoryAct
     {
         public bool? Act(HistoricalFigure figure)
         {

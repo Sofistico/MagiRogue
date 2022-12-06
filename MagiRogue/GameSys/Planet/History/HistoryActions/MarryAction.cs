@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MagiRogue.GameSys.Planet.History.HistoryActions
 {
-    public class MarryAction : IHistoryAct
+    public sealed class MarryAction : IHistoryAct
     {
         public MarryAction()
         {
@@ -21,7 +21,7 @@ namespace MagiRogue.GameSys.Planet.History.HistoryActions
             return RomanceSomeoneInsideSameSite(figure);
         }
 
-        private bool RomanceSomeoneInsideSameSite(HistoricalFigure figure)
+        private static bool RomanceSomeoneInsideSameSite(HistoricalFigure figure)
         {
             Site site = Find.GetFigureStayingSiteIfAny(figure);
             int year = Find.Year;
