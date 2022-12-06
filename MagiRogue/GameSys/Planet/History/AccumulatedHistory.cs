@@ -55,12 +55,12 @@ namespace MagiRogue.GameSys.Planet.History
             Civs = civilizations;
             planetData = planet;
             bool firstYearOnly = true;
-            PopulateFindValues(tiles);
             MythGenerator mythGenerator = new MythGenerator();
             Myths = mythGenerator.GenerateMyths(
                 Data.DataManager.ListOfRaces.ToList(),
                 Figures,
                 planet);
+            PopulateFindValues(tiles);
 
             if (firstYearOnly)
             {
@@ -96,11 +96,13 @@ namespace MagiRogue.GameSys.Planet.History
 
         private void PopulateFindValues(WorldTile[,] tiles)
         {
-            Find.PopulateValues(Figures,
-                Civs,
-                AllSites,
-                ImportantItems,
-                Year,
+            //Find.PopulateValues(Figures,
+            //    Civs,
+            //    AllSites,
+            //    ImportantItems,
+            //    this,
+            //    tiles);
+            Find.PopulateValues(this,
                 tiles);
         }
 

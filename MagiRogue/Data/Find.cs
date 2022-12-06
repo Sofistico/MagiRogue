@@ -13,27 +13,24 @@ namespace MagiRogue.Data
 {
     public static class Find
     {
-        // big ass singleton for ease of finding information!
-        public static int Year { get; set; }
-        public static WorldTile[,] Tiles { get; set; }
-        public static List<Civilization> Civs { get; set; }
-        public static List<HistoricalFigure> Figures { get; set; }
-        public static List<Site> Sites { get; set; }
-        public static List<ItemTemplate> Items { get; set; }
-        public static List<Ruleset> Rules { get; set; }
+        private static AccumulatedHistory history;
 
-        public static void PopulateValues(List<HistoricalFigure> figures,
-            List<Civilization> civs,
-            List<Site> allSites,
-            List<ItemTemplate> importantItems,
-            int year,
-            WorldTile[,] tiles)
+        // big ass singleton for ease of finding information!
+        public static int Year { get => history.Year; }
+        public static WorldTile[,] Tiles { get; private set; }
+        public static List<Civilization> Civs { get => history.Civs; }
+        public static List<HistoricalFigure> Figures { get => history.Figures; }
+        public static List<Site> Sites { get => history.AllSites; }
+        public static List<ItemTemplate> Items { get => history.ImportantItems; }
+        public static List<Ruleset> Rules { get; private set; }
+
+        public static void PopulateValues(AccumulatedHistory h, WorldTile[,] tiles)
         {
-            Year = year;
-            Figures = figures;
-            Civs = civs;
-            Sites = allSites;
-            Items = importantItems;
+            history = h;
+            //Figures = figures;
+            //Civs = civs;
+            //Sites = allSites;
+            //Items = importantItems;
             Tiles = tiles;
             Rules ??= new(DataManager.ListOfRules);
         }
