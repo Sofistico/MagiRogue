@@ -30,7 +30,9 @@ namespace MagiRogue.GameSys.Planet.History.HistoryActions
             {
                 changedCiv = Find.ChangeFigureCiv(figure);
             }
-            int civId = figure.GetMemberCivId();
+            int? civId = figure.GetMemberCivId();
+            if (!civId.HasValue)
+                return false;
             Civilization currentCiv = Find.Civs.Find(i => i.Id == civId);
             if (currentCiv.Sites.Count > 1 || changedCiv)
             {

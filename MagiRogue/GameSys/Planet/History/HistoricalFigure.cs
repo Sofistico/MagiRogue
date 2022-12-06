@@ -379,8 +379,8 @@ namespace MagiRogue.GameSys.Planet.History
             return civ;
         }
 
-        public int GetMemberCivId()
-            => RelatedCivs.FirstOrDefault(i => i.GetIfMember()).CivRelatedId;
+        public int? GetMemberCivId()
+            => RelatedCivs.Find(i => i.GetIfMember())?.CivRelatedId;
 
         public bool CheckForInsurrection()
             => GetPersonality().Power >= 25;
