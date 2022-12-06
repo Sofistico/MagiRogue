@@ -220,7 +220,7 @@ namespace MagiRogue.GameSys.Planet.History
                 }
             }
             if (any)
-                return result;
+                return any;
 
             return result;
         }
