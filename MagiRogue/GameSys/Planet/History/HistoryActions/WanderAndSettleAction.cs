@@ -34,7 +34,7 @@ namespace MagiRogue.GameSys.Planet.History.HistoryActions
             if (!civId.HasValue)
                 return false;
             Civilization currentCiv = Find.Civs.Find(i => i.Id == civId);
-            if (currentCiv.Sites.Count > 1 || changedCiv)
+            if (currentCiv?.Sites.Count > 1 || changedCiv)
             {
                 var siteId = figure.GetCurrentStayingSiteId(currentCiv.Sites);
                 var result = siteId.HasValue ? currentCiv.Sites

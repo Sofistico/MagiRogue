@@ -374,7 +374,9 @@ namespace MagiRogue.GameSys.Planet.History
         {
             if (RelatedCivs.Count <= 0)
                 return null;
-            int civId = RelatedCivs.Find(i => i.Relation == relationType).CivRelatedId;
+            int? civId = RelatedCivs.Find(i => i.Relation == relationType)?.CivRelatedId;
+            if (!civId.HasValue)
+                return null;
             Civilization civ = civs.Find(i => i.Id == civId);
             return civ;
         }
