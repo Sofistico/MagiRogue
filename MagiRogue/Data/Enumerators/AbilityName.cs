@@ -21,6 +21,7 @@ namespace MagiRogue.Data.Enumerators
         Dodge,
 
         // Craft skills
+        GlassMaking,
         Mason,
         WoodCraft,
         Forge,

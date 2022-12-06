@@ -35,6 +35,7 @@ namespace MagiRogue.Data.Enumerators
         Gunpowder,
         SteamPower,
         Electricity,
+        BasicMetalsmithing,
         Metalsmithing,
         Woodcrafting,
         Glassmaking,
