@@ -22,17 +22,12 @@ namespace MagiRogue.GameSys.Planet.History.HistoryActions
 
         public bool? Act(HistoricalFigure figure)
         {
-            switch (work)
+            return work switch
             {
-                case WorkType.None:
-                    return false;
-
-                case WorkType.Research:
-                    return ResearchActiviy(figure);
-
-                default:
-                    return false;
-            }
+                WorkType.None => false,
+                WorkType.Research => ResearchActiviy(figure),
+                _ => false,
+            };
         }
 
         private static bool? ResearchActiviy(HistoricalFigure figure)
