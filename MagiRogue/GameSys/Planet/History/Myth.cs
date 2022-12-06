@@ -62,16 +62,26 @@ namespace MagiRogue.GameSys.Planet.History
                     figure.MythWho = MythWho.God;
                     break;
 
-                case MythWhat.Demons:
-                    figure = new HistoricalFigure($"A group of {creatorName} demons",
-                        $"A group of demons created by {creatorName}");
-                    figure.MythWho = MythWho.Demons;
+                case MythWhat.Demon:
+                    race = DataManager.RandomRace();
+
+                    figure = new HistoricalFigure($"{RandomNames.RandomNamesFromRandomLanguage()} {creatorName} demon",
+                        $"A demon created by {creatorName}",
+                        race.ReturnRandomSex(),
+                        race.Id,
+                        true);
+                    figure.MythWho = MythWho.Demon;
                     break;
 
-                case MythWhat.Angels:
-                    figure = new HistoricalFigure($"A group of {creatorName} demons",
-                        $"A group of demons created by {creatorName}");
-                    figure.MythWho = MythWho.Angels;
+                case MythWhat.Angel:
+                    race = DataManager.RandomRace();
+
+                    figure = new HistoricalFigure($"{RandomNames.RandomNamesFromRandomLanguage()} {creatorName} angel",
+                        $"A angel created by {creatorName}",
+                        race.ReturnRandomSex(),
+                        race.Id,
+                        true);
+                    figure.MythWho = MythWho.Angel;
 
                     break;
 
@@ -81,10 +91,14 @@ namespace MagiRogue.GameSys.Planet.History
                 //    figure.MythWho = MythWho.Spi;
                 //    break;
 
-                case MythWhat.Forces:
-                    figure = new HistoricalFigure($"A group of {creatorName} demons",
-                        $"A group of demons created by {creatorName}");
-                    figure.MythWho = MythWho.Forces;
+                case MythWhat.Force:
+                    race = DataManager.RandomRace();
+                    figure = new HistoricalFigure($"{RandomNames.RandomNamesFromRandomLanguage()}  {creatorName} force",
+                        $"A force created by {creatorName}",
+                        race.ReturnRandomSex(),
+                        race.Id,
+                        true);
+                    figure.MythWho = MythWho.Force;
                     break;
 
                 case MythWhat.Individual:

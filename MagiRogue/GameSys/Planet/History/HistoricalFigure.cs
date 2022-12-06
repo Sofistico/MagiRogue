@@ -765,7 +765,7 @@ namespace MagiRogue.GameSys.Planet.History
 
         public int? GetCurrentStayingSiteId(List<Site> sites)
         {
-            return sites.FirstOrDefault(i => i.WorldPos == CurrentPos)?.Id;
+            return sites.Find(i => i.WorldPos == CurrentPos)?.Id;
         }
 
         public bool IsAdult()

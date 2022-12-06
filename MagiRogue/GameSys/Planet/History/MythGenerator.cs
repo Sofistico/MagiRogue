@@ -56,10 +56,10 @@ namespace MagiRogue.GameSys.Planet.History
             {
                 var num = new MythWhat[]{
                     MythWhat.God,
-                    MythWhat.Forces,
+                    MythWhat.Force,
                     MythWhat.Race,
-                    MythWhat.Spirits,
-                    MythWhat.Forces,
+                    MythWhat.Spirit,
+                    MythWhat.Force,
                 };
                 Myth newMyth = new Myth(figures[0].Name, figures[0].MythWho,
                     MythAction.Created, num.GetRandomItemFromList());
@@ -99,12 +99,12 @@ namespace MagiRogue.GameSys.Planet.History
 
                     if (myth.MythAction is MythAction.Created &&
                         (myth.MythWhat is MythWhat.Race
-                        || myth.MythWhat is MythWhat.Angels
-                        || myth.MythWhat is MythWhat.Demons
-                        || myth.MythWhat is MythWhat.Forces
+                        || myth.MythWhat is MythWhat.Angel
+                        || myth.MythWhat is MythWhat.Demon
+                        || myth.MythWhat is MythWhat.Force
                         || myth.MythWhat is MythWhat.God
                         || myth.MythWhat is MythWhat.Individual
-                        || myth.MythWhat is MythWhat.Spirits
+                        || myth.MythWhat is MythWhat.Spirit
                         || myth.MythWhat is MythWhat.Region))
                     {
                         HistoricalFigure createdFigure = myth.CreateFigureFromMyth(figure.Name);
@@ -162,25 +162,18 @@ namespace MagiRogue.GameSys.Planet.History
                     createdRace = true;
                     break;
 
-                //case MythWho.Gods:
-                //    precursorFigure = new HistoricalFigure(
-                //       $"The pantheon of {RandomNames.RandomNamesFromRandomLanguage()}",
-                //       "The pantheon of the creator gods");
-
-                //    break;
-
                 case MythWho.Egg:
-                    precursorFigure = new HistoricalFigure($"{adjectives.GetRandomItemFromList()}",
+                    precursorFigure = new HistoricalFigure($"{adjectives.GetRandomItemFromList()} egg",
                         "A cosmic egg");
                     break;
 
                 case MythWho.Chaos:
-                    precursorFigure = new HistoricalFigure($"{adjectives.GetRandomItemFromList()}",
+                    precursorFigure = new HistoricalFigure($"{adjectives.GetRandomItemFromList()} chaos",
                         $"A primordial chaos in the shape of a {DataManager.ListOfShapes.GetRandomItemFromList().Name[0]}");
                     break;
 
                 case MythWho.Chance:
-                    precursorFigure = new HistoricalFigure($"{adjectives.GetRandomItemFromList()}",
+                    precursorFigure = new HistoricalFigure($"{adjectives.GetRandomItemFromList()} chance",
                         "Pure cosmic chance");
 
                     break;
@@ -190,59 +183,59 @@ namespace MagiRogue.GameSys.Planet.History
                         "The Big Bang");
                     break;
 
-                //case MythWho.Wizard:
-                //    precursorFigure = new HistoricalFigure($"{RandomNames.GiberishFullName(6, 6)}",
-                //        "A wizard did it!", race.ReturnRandomSex(), race.Id, alive);
-                //    createdRace = true;
-                //    break;
-
                 case MythWho.Magic:
-                    precursorFigure = new HistoricalFigure($"The Primordial {adjectives.GetRandomItemFromList()}",
+                    precursorFigure = new HistoricalFigure($"the {adjectives.GetRandomItemFromList()} magic",
                         "Primordial magic");
 
                     break;
 
                 case MythWho.Titan:
-                    precursorFigure = new HistoricalFigure($"The Primordial {adjectives.GetRandomItemFromList()}",
-                        "a Primordial titan");
+                    precursorFigure = new HistoricalFigure($"primordial {adjectives.GetRandomItemFromList()} titan",
+                        "a Primordial titan",
+                        race.ReturnRandomSex(),
+                        race.Id,
+                        alive // needs to be alive to create the universe after all! unleass the creation killed him...
+                        );
 
                     break;
 
-                //case MythWho.Titans:
-                //    precursorFigure = new HistoricalFigure($"{adjectives.GetRandomItemFromList()} Primordial",
-                //        "a Primordial titans");
-                //    break;
-
-                case MythWho.Precursors:
+                case MythWho.Precursor:
                     precursorFigure = new HistoricalFigure($"{adjectives.GetRandomItemFromList()}",
-                        "Precursors");
+                        "Precursor",
+                        race.ReturnRandomSex(),
+                        race.Id,
+                        alive);
 
                     break;
 
-                case MythWho.Demons:
-                    precursorFigure = new HistoricalFigure($"a {adjectives.GetRandomItemFromList()} group of",
-                        "Group of demons");
+                case MythWho.Demon:
+                    precursorFigure = new HistoricalFigure($"{adjectives.GetRandomItemFromList()} {RandomNames.RandomNamesFromRandomLanguage()}",
+                        "a demon",
+                        race.ReturnRandomSex(),
+                        race.Id,
+                        alive);
 
                     break;
 
-                case MythWho.Angels:
-                    precursorFigure = new HistoricalFigure($"a {adjectives.GetRandomItemFromList()} group of",
-                        "Group of angels");
+                case MythWho.Angel:
+                    precursorFigure = new HistoricalFigure($"{adjectives.GetRandomItemFromList()} {RandomNames.RandomNamesFromRandomLanguage()}",
+                        "an angel",
+                        race.ReturnRandomSex(),
+                        race.Id,
+                        alive);
                     break;
 
-                //case MythWho.Spirits:
-                //    precursorFigure = new HistoricalFigure($"a {adjectives.GetRandomItemFromList()} group of",
-                //        "Group of spirits");
-                //    break;
-
-                case MythWho.Forces:
-                    precursorFigure = new HistoricalFigure($"a {adjectives.GetRandomItemFromList()} group of",
-                        "Group of forces");
+                case MythWho.Force:
+                    precursorFigure = new HistoricalFigure($"{adjectives.GetRandomItemFromList()} {RandomNames.RandomNamesFromRandomLanguage()}",
+                        "a force",
+                        race.ReturnRandomSex(),
+                        race.Id,
+                        alive);
                     break;
 
                 default:
-                    precursorFigure = new HistoricalFigure($"a {adjectives.GetRandomItemFromList()} group of {DataManager.ListOfShapes.GetRandomItemFromList().Name[0]}",
-                        $"Group of {DataManager.ListOfShapes.GetRandomItemFromList().Name[0]}");
+                    precursorFigure = new HistoricalFigure($"{adjectives.GetRandomItemFromList()} {RandomNames.RandomNamesFromRandomLanguage()}",
+                        $"A figure shaped like {DataManager.ListOfShapes.GetRandomItemFromList().Name[0]}");
 
                     break;
             }
