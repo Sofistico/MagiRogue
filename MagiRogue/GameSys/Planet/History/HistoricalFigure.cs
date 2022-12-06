@@ -281,7 +281,7 @@ namespace MagiRogue.GameSys.Planet.History
             if (!RelatedCivs.Any(i => i.CivRelatedId == civId))
                 RelatedCivs.Add(re);
             else
-                RelatedCivs.FirstOrDefault(i => i.CivRelatedId == civId).Relation = relation;
+                RelatedCivs.Find(i => i.CivRelatedId == civId).Relation = relation;
         }
 
         public Personality GetPersonality()

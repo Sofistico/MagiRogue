@@ -76,10 +76,11 @@ namespace MagiRogue.Data
         public static bool ChangeFigureCiv(HistoricalFigure figure)
         {
             CivRelation prevRelation = figure.RelatedCivs.Find(i => i.GetIfMember());
-            HistoricalFigure.RemovePreviousCivRelationAndSetNew(prevRelation, RelationType.ExMember);
             var civ = Civs.GetRandomItemFromList();
             if (civ is null)
                 return false;
+
+            HistoricalFigure.RemovePreviousCivRelationAndSetNew(prevRelation, RelationType.ExMember);
             figure.AddNewRelationToCiv(civ.Id, RelationType.Member);
             figure.AddLegend($"the {figure.Name} has migrated to the {civ.Name}", Year);
             civ.AddLegend($"{figure.Name} joined as a member of {civ.Name}", Year);
