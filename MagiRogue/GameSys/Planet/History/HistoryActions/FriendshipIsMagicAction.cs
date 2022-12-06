@@ -21,7 +21,7 @@ namespace MagiRogue.GameSys.Planet.History.HistoryActions
             Site site = Find.GetFigureStayingSiteIfAny(figure);
             if (site is not null)
             {
-                var peopleInside = Find.GetAllFiguresStayingInSiteIfAny(site.Id);
+                var peopleInside = Find.GetAllFiguresStayingInSiteIfAny(site.Id, new() { figure.Id });
                 if (peopleInside.Count > 0)
                 {
                     var randomPerson = peopleInside.GetRandomItemFromList();

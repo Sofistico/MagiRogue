@@ -28,7 +28,7 @@ namespace MagiRogue.GameSys.Planet.History.HistoryActions
             if (site is not null
                 && !figure.IsMarried())
             {
-                var peopleInside = Find.GetAllFiguresStayingInSiteIfAny(site.Id);
+                var peopleInside = Find.GetAllFiguresStayingInSiteIfAny(site.Id, new() { figure.Id });
                 int aceptableDiferenceAge;
                 bool isAdult = figure.IsAdult();
                 if (isAdult)

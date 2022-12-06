@@ -44,12 +44,12 @@ namespace MagiRogue.Data
             return currentSite.HasValue ? Sites.Find(i => i.Id == currentSite.Value) : null;
         }
 
-        public static List<HistoricalFigure> GetAllFiguresStayingInSiteIfAny(int figureSiteId)
+        public static List<HistoricalFigure> GetAllFiguresStayingInSiteIfAny(int figureSiteId, List<int>? excludeWhatId = null)
         {
             var list = new List<HistoricalFigure>();
             foreach (var item in Figures)
             {
-                if (GetFigureIsStayingOnSiteId(figureSiteId, item))
+                if (GetFigureIsStayingOnSiteId(figureSiteId, item) && excludeWhatId?.Contains(item.Id) == false)
                 {
                     list.Add(item);
                 }

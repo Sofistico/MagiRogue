@@ -300,9 +300,10 @@ namespace MagiRogue.GameSys.Planet.History
         /// <returns>true if already had previous relation, false if otherwise</returns>
         public bool AddRelatedHf(int otherId, HfRelationType relation)
         {
+            if (otherId == Id) return false;
             if (RelatedHFs.Any(i => i.OtherHfId == otherId))
             {
-                RelatedHFs.FirstOrDefault(i => i.OtherHfId == otherId).RelationType = relation;
+                RelatedHFs.Find(i => i.OtherHfId == otherId).RelationType = relation;
                 return true;
             }
             else

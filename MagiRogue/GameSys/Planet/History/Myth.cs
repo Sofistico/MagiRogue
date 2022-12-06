@@ -93,7 +93,7 @@ namespace MagiRogue.GameSys.Planet.History
 
                 case MythWhat.Force:
                     race = DataManager.RandomRace();
-                    figure = new HistoricalFigure($"{RandomNames.RandomNamesFromRandomLanguage()}  {creatorName} force",
+                    figure = new HistoricalFigure($"{RandomNames.RandomNamesFromRandomLanguage()} {creatorName} force",
                         $"A force created by {creatorName}",
                         race.ReturnRandomSex(),
                         race.Id,

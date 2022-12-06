@@ -52,11 +52,10 @@ namespace MagiRogue.GameSys.Planet.History
         public void RunHistory(List<Civilization> civilizations, int yearToGameBegin,
             PlanetMap planet, WorldTile[,] tiles)
         {
-            PopulateFindValues(tiles);
-
             Civs = civilizations;
             planetData = planet;
             bool firstYearOnly = true;
+            PopulateFindValues(tiles);
             MythGenerator mythGenerator = new MythGenerator();
             Myths = mythGenerator.GenerateMyths(
                 Data.DataManager.ListOfRaces.ToList(),
