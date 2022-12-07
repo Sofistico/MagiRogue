@@ -1,0 +1,16 @@
+﻿[
+  {
+    "Id": "moon_travel",
+    "Name": "Traveling to the moon via portals",
+    "Difficulty": 25,
+    "AbilityRequired": [ "Research", "Astronomer", "MagicLore" ],
+    "RequiredRes": [ "geo_centrisn", "gate_portal" ]
+  },
+  {
+    "Id": "magic_prosthetics",
+    "Name": "Magical Prosthetics",
+    "Difficulty": 15,
+    "AbilityRequired": [ "Research", "Medicine", "MagicLore" ],
+    "RequiredRes": [ "prosthetics", "enchanting" ]
+  }
+]

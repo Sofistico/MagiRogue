@@ -49,18 +49,14 @@ namespace MagiRogue.Data.Enumerators
         PhysicsConstants,
 
         ChemicalProperties,
-        MaterialAnalyses,
 
         BasicAstronomy,
-        Geocentrism,
-        Heliocentrism,
+        BasicSpaceTravel,
 
         FolkMedicine,
-        LeechDraining,
+        AlchemicalMedicine,
         BasicAnatomy,
-        WoundDressing,
         WoundCleaning,
-        MedicinalRoutines,
         AdvancedAnatomy,
         Prosthetics,
     }
