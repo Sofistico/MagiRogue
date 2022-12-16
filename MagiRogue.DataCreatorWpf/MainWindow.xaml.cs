@@ -24,5 +24,10 @@ namespace MagiRogue.DataCreatorWpf
         {
             InitializeComponent();
         }
+
+        private void Research_Click(object sender, RoutedEventArgs e)
+        {
+            Hide();
+        }
     }
 }
