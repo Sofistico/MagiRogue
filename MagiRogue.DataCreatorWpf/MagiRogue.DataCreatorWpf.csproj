@@ -7,8 +7,4 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="View\" />
-  </ItemGroup>
-
 </Project>

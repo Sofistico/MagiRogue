@@ -1,18 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace MagiRogue
 {
     public static class SequentialIdGenerator
     {
-        private static int siteId;
-        private static int roadId;
+        #region Ids
 
-        public static int SiteId { get => siteId++; }
+        private const int siteId = 0;
+        private const int roadId = 1;
 
-        public static int RoadId { get => roadId++; }
+        #endregion Ids
+
+        private static readonly Dictionary<int, int> idsDirectory;
+
+        public static int SiteId { get => idsDirectory[siteId]++; }
+
+        public static int RoadId { get => idsDirectory[roadId]++; }
+
+        static SequentialIdGenerator()
+        {
+            // Here it must be defined any new ids, to properly initialize itself!
+            idsDirectory = new Dictionary<int, int>
+            {
+                { siteId, 0 },
+                { roadId, 0 }
+            };
+        }
     }
 }

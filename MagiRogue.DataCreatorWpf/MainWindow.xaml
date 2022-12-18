@@ -3,10 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MagiRogue.DataCreatorWpf"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <Button Content="Research" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Click="Research_Click" />
+        xmlns:local="clr-namespace:MagiRogue.DataCreatorWpf" xmlns:sys="clr-namespace:System;assembly=netstandard"
+        Title="MainWindow" Height="450" Width="800"
+        Background="{DynamicResource WindowBackgroundBrush}">
+    <Grid Name="MainGrid">
     </Grid>
 </Window>

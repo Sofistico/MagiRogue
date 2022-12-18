@@ -4,6 +4,9 @@
              xmlns:local="clr-namespace:MagiRogue.DataCreatorWpf"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <LinearGradientBrush x:Key="WindowBackgroundBrush">
+            <GradientStop Offset="0" Color="Silver" />
+            <GradientStop Offset="1" Color="White" />
+        </LinearGradientBrush>
     </Application.Resources>
 </Application>
