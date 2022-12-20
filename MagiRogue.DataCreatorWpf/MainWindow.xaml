@@ -7,8 +7,11 @@
         Title="MainWindow" Height="450" Width="800"
         Background="{DynamicResource WindowBackgroundBrush}">
     <Grid Name="MainGrid">
-        <StackPanel Name="MenuButtons" HorizontalAlignment="Left">
-            <Button >Teste</Button>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="23*" />
+            <ColumnDefinition Width="377*" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Name="MenuButtons" HorizontalAlignment="Center">
         </StackPanel>
     </Grid>
 </Window>
