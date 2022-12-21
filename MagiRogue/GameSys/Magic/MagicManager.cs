@@ -82,7 +82,7 @@ namespace MagiRogue.GameSys.Magic
             {
                 return false;
             }
-            KnowSpells.Add(spell);
+            AddToSpellList(spell);
             int count = spell.Effects.Count;
             for (int i = 0; i < count; i++)
             {

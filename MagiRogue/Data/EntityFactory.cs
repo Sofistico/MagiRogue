@@ -62,7 +62,7 @@ namespace MagiRogue.Data
             actor.Magic.ShapingSkill += scenario.ShapingSkill;
             foreach (var str in scenario.SpellsKnow)
             {
-                actor.Magic.KnowSpells.Add(DataManager.QuerySpellInData(str));
+                actor.Magic.AddToSpellList(DataManager.QuerySpellInData(str));
             }
         }
 
