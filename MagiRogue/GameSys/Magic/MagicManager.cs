@@ -87,6 +87,11 @@ namespace MagiRogue.GameSys.Magic
             for (int i = 0; i < count; i++)
             {
                 var sp = spell.Effects[i];
+                if (sp is not null)
+                {
+                    GameLoop.WriteToLog($"Spell effect is null! Something went wrong \nSpell Name: {spell.SpellName} \nSpell Id: {spell.SpellId} \nSpell effects: {spell.Effects}");
+                    continue;
+                }
                 if (!KnowEffects.Contains(sp.EffectType))
                     KnowEffects.Add(sp.EffectType);
                 if (!KnowArea.Contains(sp.AreaOfEffect))
