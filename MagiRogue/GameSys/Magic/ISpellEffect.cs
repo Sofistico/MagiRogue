@@ -20,7 +20,7 @@ namespace MagiRogue.GameSys.Magic
         public int BaseDamage { get; set; }
 
         [JsonConverter(typeof(StringEnumConverter))]
-        public EffectTypes EffectType { get; set; }
+        public EffectType EffectType { get; set; }
 
         public void ApplyEffect(Point target, Actor caster, SpellBase spellCasted);
     }

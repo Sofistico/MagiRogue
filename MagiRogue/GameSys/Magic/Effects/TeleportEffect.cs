@@ -10,7 +10,7 @@ namespace MagiRogue.GameSys.Magic.Effects
         public int Radius { get; set; }
         public bool TargetsTile { get; set; } = true;
 
-        public EffectTypes EffectType { get; set; } = EffectTypes.TELEPORT;
+        public EffectType EffectType { get; set; } = EffectType.TELEPORT;
         public int BaseDamage { get; set; } = 0;
 
         public TeleportEffect(SpellAreaEffect areaOfEffect = SpellAreaEffect.Target,

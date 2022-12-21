@@ -10,7 +10,7 @@ namespace MagiRogue.GameSys.Magic.Effects
         // private const int _totalTime = Time.TimeHelper.Year;
 
         public int NodeCost { get; set; }
-        public EffectTypes EffectType { get; set; }
+        public EffectType EffectType { get; set; }
         public ISpellEffect Enchantment { get; set; }
         public Actor Caster { get; set; }
         public string EnchantName { get; set; }

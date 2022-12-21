@@ -8,7 +8,7 @@
         Background="{DynamicResource WindowBackgroundBrush}">
     <Grid Name="MainGrid">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="23*" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="377*" />
         </Grid.ColumnDefinitions>
         <StackPanel Name="MenuButtons" HorizontalAlignment="Center">

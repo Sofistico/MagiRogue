@@ -19,7 +19,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
             foreach (JToken token in listEffectsJson)
             {
-                EffectTypes effect = StringToEnumEffectType((string)token["EffectType"]);
+                EffectType effect = StringToEnumEffectType((string)token["EffectType"]);
                 effectsList.Add(EnumToEffect(effect, token));
             }
 
@@ -48,21 +48,21 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         }
 
         /// <summary>
-        /// This is used to convert a string to an enum of <see cref="EffectTypes">EffectType</see>
+        /// This is used to convert a string to an enum of <see cref="EffectType">EffectType</see>
         /// </summary>
         /// <param name="st"></param>
         /// <returns></returns>
-        private static EffectTypes StringToEnumEffectType(string st)
+        private static EffectType StringToEnumEffectType(string st)
         {
             return st switch
             {
-                "DAMAGE" => EffectTypes.DAMAGE,
-                "HASTE" => EffectTypes.HASTE,
-                "MAGESIGHT" => EffectTypes.MAGESIGHT,
-                "SEVER" => EffectTypes.SEVER,
-                "TELEPORT" => EffectTypes.TELEPORT,
-                "DEBUFF" => EffectTypes.DEBUFF,
-                "BUFF" => EffectTypes.BUFF,
+                "DAMAGE" => EffectType.DAMAGE,
+                "HASTE" => EffectType.HASTE,
+                "MAGESIGHT" => EffectType.MAGESIGHT,
+                "SEVER" => EffectType.SEVER,
+                "TELEPORT" => EffectType.TELEPORT,
+                "DEBUFF" => EffectType.DEBUFF,
+                "BUFF" => EffectType.BUFF,
                 _ => throw new ApplicationException($"It wasn't possible to convert the effect, " +
                     $"please use only the provided effects types.\nEffect used: {st}"),
             };
@@ -110,24 +110,24 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         /// <param name="effect"></param>
         /// <param name="jToken"></param>
         /// <returns></returns>
-        private static ISpellEffect EnumToEffect(EffectTypes effect, JToken jToken)
+        private static ISpellEffect EnumToEffect(EffectType effect, JToken jToken)
         {
             return effect switch
             {
-                EffectTypes.DAMAGE => new DamageEffect
+                EffectType.DAMAGE => new DamageEffect
                     ((int)jToken["BaseDamage"], StringToAreaEffect((string)jToken["AreaOfEffect"]),
                     StringToDamageType((string)jToken["SpellDamageType"]),
                     (bool)jToken["CanMiss"], (bool)jToken["IsHealing"], (int)jToken["Radius"],
                     isResistable: (bool)jToken["IsResistable"]),
-                EffectTypes.HASTE => new HasteEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]),
+                EffectType.HASTE => new HasteEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]),
                     (int)jToken["HastePower"],
                     (int)jToken["Duration"],
                     StringToDamageType((string)jToken["SpellDamageType"])),
-                EffectTypes.MAGESIGHT => new MageSightEffect((int)jToken["Duration"]),
-                EffectTypes.SEVER => new SeverEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]),
+                EffectType.MAGESIGHT => new MageSightEffect((int)jToken["Duration"]),
+                EffectType.SEVER => new SeverEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]),
                     StringToDamageType((string)jToken["SpellDamageType"]),
                     (int)jToken["Radius"], (int)jToken["BaseDamage"]),
-                EffectTypes.TELEPORT => new TeleportEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]),
+                EffectType.TELEPORT => new TeleportEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]),
                     StringToDamageType((string)jToken["SpellDamageType"]),
                     (int)jToken["Radius"]),
                 _ => null,

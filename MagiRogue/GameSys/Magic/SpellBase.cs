@@ -272,13 +272,16 @@ namespace MagiRogue.GameSys.Magic
 
         public override string ToString()
         {
-            string bobBuilder = new StringBuilder().Append(SpellName).Append(": ").Append(SpellLevel)
-                .Append($", Range: {SpellRange}")
-                .Append($", Proficiency: {Proficiency} \r\n")
-                .Append($"Required shape skills: {RequiredShapingSkill}")
+            return new StringBuilder().Append(SpellName).Append(": ").Append(SpellLevel)
+                .Append(", Range: ").Append(SpellRange)
+                .Append(", Proficiency: ").Append(Proficiency).Append(" \r\n")
+                .Append("Required shape skills: ").Append(RequiredShapingSkill)
                 .AppendLine(SpellSchool.ToString()).ToString();
+        }
 
-            return bobBuilder;
+        public override int GetHashCode()
+        {
+            return SpellId.GetHashCode();
         }
     }
 }

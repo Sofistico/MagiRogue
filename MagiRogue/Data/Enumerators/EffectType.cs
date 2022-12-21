@@ -1,6 +1,6 @@
 ﻿namespace MagiRogue.Data.Enumerators
 {
-    public enum EffectTypes
+    public enum EffectType
     {
         DAMAGE,
         DEBUFF,

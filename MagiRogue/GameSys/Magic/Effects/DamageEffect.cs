@@ -14,7 +14,7 @@ namespace MagiRogue.GameSys.Magic.Effects
         public int BaseDamage { get; set; }
         public int Radius { get; set; }
         public bool TargetsTile { get; set; } = false;
-        public EffectTypes EffectType { get; set; } = EffectTypes.DAMAGE;
+        public EffectType EffectType { get; set; } = EffectType.DAMAGE;
         public bool IsHealing { get; set; }
         public bool CanMiss { get; set; }
         public bool IsResistable { get; set; }
