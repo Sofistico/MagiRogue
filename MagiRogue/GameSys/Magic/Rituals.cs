@@ -16,7 +16,7 @@ namespace MagiRogue.GameSys.Magic
         public string RitualDescription { get; set; }
         public int MpNodeCost { get; set; }
         public string RitualId { get; set; }
-        public MagicSchool RitualSchool { get; set; }
+        public ArtMagic RitualSchool { get; set; }
         public int DurationOfRitual { get; set; }
         public int RitualRange { get; set; }
 
@@ -26,7 +26,7 @@ namespace MagiRogue.GameSys.Magic
             string ritualDescription,
             int mpNodeCost,
             string ritualId,
-            MagicSchool ritualSchool,
+            ArtMagic ritualSchool,
             int durationRitual,
             int ritualRange)
         {

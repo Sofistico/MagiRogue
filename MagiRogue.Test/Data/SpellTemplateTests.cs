@@ -14,7 +14,7 @@ namespace MagiRogue.Test.Data
     public class SpellTemplateTests
     {
         private readonly SpellBase missile = new SpellBase("magic_missile",
-            "Magic Missile", MagicSchool.Projection, 5, manaCost: 1.0f)
+            "Magic Missile", ArtMagic.Projection, 5, manaCost: 1.0f)
         { Proficiency = 1 };
 
         [Fact()]

@@ -4,10 +4,10 @@ using Newtonsoft.Json.Converters;
 namespace MagiRogue.Data.Enumerators
 {
     /// <summary>
-    /// Scholls of magic
+    /// The arts of magic
     /// </summary>
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum MagicSchool
+    public enum ArtMagic
     {
         ///<summary>projects mana into different forms, mainly made for combat magic</summary>
         Projection,

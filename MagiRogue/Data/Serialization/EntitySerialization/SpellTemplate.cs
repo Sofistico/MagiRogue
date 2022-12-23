@@ -26,7 +26,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             SpellBase createdSpell = new(
                 (string)spell["SpellId"],
                 (string)spell["SpellName"],
-                StringToSchool((string)spell["SpellSchool"]),
+                StringToSchool((string)spell["MagicArt"]),
                 (int)spell["SpellRange"],
                 (int)spell["SpellLevel"],
                 (double)spell["ManaCost"]);
@@ -134,23 +134,23 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             };
         }
 
-        private static MagicSchool StringToSchool(string st)
+        private static ArtMagic StringToSchool(string st)
         {
             return st switch
             {
-                "Projection" => MagicSchool.Projection, // 1
-                "Negation" => MagicSchool.Negation, // 2
-                "Animation" => MagicSchool.Animation, // 3
-                "Divination" => MagicSchool.Divination, // 4
-                "Alteration" => MagicSchool.Alteration, // 5
-                "Wards" => MagicSchool.Wards, // 6
-                "Dimensionalism" => MagicSchool.Dimensionalism, // 7
-                "Conjuration" => MagicSchool.Conjuration, // 8
-                "Illuminism" => MagicSchool.Illuminism, // 9
-                "MedicalMagic" => MagicSchool.MedicalMagic, // 10
-                "MindMagic" => MagicSchool.MindMagic, // 11
-                "SoulMagic" => MagicSchool.SoulMagic, // 12
-                "BloodMagic" => MagicSchool.BloodMagic, // 13
+                "Projection" => ArtMagic.Projection, // 1
+                "Negation" => ArtMagic.Negation, // 2
+                "Animation" => ArtMagic.Animation, // 3
+                "Divination" => ArtMagic.Divination, // 4
+                "Alteration" => ArtMagic.Alteration, // 5
+                "Wards" => ArtMagic.Wards, // 6
+                "Dimensionalism" => ArtMagic.Dimensionalism, // 7
+                "Conjuration" => ArtMagic.Conjuration, // 8
+                "Illuminism" => ArtMagic.Illuminism, // 9
+                "MedicalMagic" => ArtMagic.MedicalMagic, // 10
+                "MindMagic" => ArtMagic.MindMagic, // 11
+                "SoulMagic" => ArtMagic.SoulMagic, // 12
+                "BloodMagic" => ArtMagic.BloodMagic, // 13
                 _ => throw new Exception($"Are you sure the school is correct? it must be a valid one./n School used: {st}")
             };
         }
@@ -172,7 +172,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
         public string Description { get; set; }
 
-        public MagicSchool SpellSchool { get; set; }
+        public ArtMagic MagicArt { get; set; }
 
         public int SpellRange { get; set; }
 
@@ -180,13 +180,13 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         public string SpellId { get; set; }
 
         public SpellTemplate(int spellLevel, List<ISpellEffect> effects, string spellName, string description,
-            MagicSchool spellSchool, int spellRange, double manaCost, string spellId)
+            ArtMagic magicArt, int spellRange, double manaCost, string spellId)
         {
             SpellLevel = spellLevel;
             Effects = effects;
             SpellName = spellName;
             Description = description;
-            SpellSchool = spellSchool;
+            MagicArt = magicArt;
             SpellRange = spellRange;
             ManaCost = manaCost;
             SpellId = spellId;
@@ -195,7 +195,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         public static implicit operator SpellBase(SpellTemplate spellTemplate)
         {
             SpellBase spell = new SpellBase(spellTemplate.SpellId, spellTemplate.SpellName,
-                spellTemplate.SpellSchool, spellTemplate.SpellRange, spellTemplate.SpellLevel,
+                spellTemplate.MagicArt, spellTemplate.SpellRange, spellTemplate.SpellLevel,
                 spellTemplate.ManaCost)
             {
                 Proficiency =
@@ -213,7 +213,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         {
             SpellTemplate template =
                 new SpellTemplate(spell.SpellLevel, spell.Effects, spell.SpellName,
-                spell.Description, spell.SpellSchool, spell.SpellRange, spell.ManaCost, spell.SpellId)
+                spell.Description, spell.MagicArt, spell.SpellRange, spell.ManaCost, spell.SpellId)
                 {
                     Proficiency = spell.Proficiency
                 };

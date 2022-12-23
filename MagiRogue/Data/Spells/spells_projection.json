@@ -5,7 +5,7 @@
     "Description": "Magic missile, the first real combat magic any prospecting wizard will learn, it's many use will carry you for a long time.\r\nIt's said that the greatest of training in this magic permits one to shape it as a piercer or as a cutter, make it invisible or add a homing function to it.",
     "SpellLevel": 1,
     "ManaCost": 1.0,
-    "SpellSchool": "Projection",
+    "MagicArt": "Projection",
     "SpellRange": 5,
     "Effects": [
       {
@@ -39,7 +39,7 @@
     ],
     "SpellName": "Fire Ray",
     "Description": "A ray of fire leaves your finger and strikes the opponent!",
-    "SpellSchool": "Projection",
+    "MagicArt": "Projection",
     "SpellRange": 5,
     "ManaCost": 2.5,
     "SpellId": "fire_ray"
@@ -69,7 +69,7 @@
     ],
     "SpellName": "Bolt of Lighting",
     "Description": "A bolt of lighting leaves your finger to strike your opponent on a line",
-    "SpellSchool": "Projection",
+    "MagicArt": "Projection",
     "SpellRange": 6,
     "ManaCost": 5.5,
     "SpellId": "lighting_bolt"
@@ -92,7 +92,7 @@
     ],
     "SpellName": "Fire Ball",
     "Description": "A fireball is projected from your hand towards your opponent!",
-    "SpellSchool": "Projection",
+    "MagicArt": "Projection",
     "SpellRange": 7,
     "ManaCost": 5.0,
     "SpellId": "fire_ball"
@@ -111,7 +111,7 @@
     ],
     "SpellName": "Sever Whip",
     "Description": "You project a severing force towards your opponent, to sever it's limb!'",
-    "SpellSchool": "Projection",
+    "MagicArt": "Projection",
     "SpellRange": 5,
     "ManaCost": 3.0,
     "SpellId": "sever_whip"
@@ -134,7 +134,7 @@
     ],
     "SpellName": "Cone of Cold",
     "Description": "A cone of cold busts forth from your hands!",
-    "SpellSchool": "Projection",
+    "MagicArt": "Projection",
     "SpellRange": 1,
     "ManaCost": 8.0,
     "SpellId": "cone_cold"
