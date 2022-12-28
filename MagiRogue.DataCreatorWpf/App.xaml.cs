@@ -13,6 +13,15 @@ namespace MagiRogue.DataCreatorWpf
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+
+            MainWindow window = new MainWindow();
+            window.DataContext = new MainWindowViewModel();
+            window.Show();
+        }
+
         private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
             // Generic exception handling

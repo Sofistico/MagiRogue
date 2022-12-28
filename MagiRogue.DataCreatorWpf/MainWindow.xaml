@@ -13,11 +13,16 @@
         </Grid.ColumnDefinitions>
         <StackPanel Name="MenuButtons" HorizontalAlignment="Center">
             <ItemsControl>
-                <Button Content="{Binding Name}"
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Content="{Binding Name}"
                         Command="{Binding DataContext.ChangePageCommand}"
                         CommandParameter="{Binding }"
                         Margin="2,5" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
             </ItemsControl>
         </StackPanel>
+        <ContentControl Content="{Binding CurrentPageView}" />
     </Grid>
 </Window>
