@@ -103,14 +103,21 @@ namespace MagiRogue
 
         public static void WriteToLog(List<string> errors)
         {
-            var path = new StringBuilder(AppDomain.CurrentDomain.BaseDirectory).Append(@"\log.txt").ToString();
-            StringBuilder str = new StringBuilder($"{DateTime.Now:dd/MM/yyyy}");
-            foreach (var item in errors)
+            try
             {
-                str.AppendLine(item);
-            }
+                var path = new StringBuilder(AppDomain.CurrentDomain.BaseDirectory).Append(@"\log.txt").ToString();
+                StringBuilder str = new StringBuilder($"{DateTime.Now:dd/MM/yyyy}");
+                foreach (var item in errors)
+                {
+                    str.AppendLine(item);
+                }
 
-            File.AppendAllText(path, str.ToString());
+                File.AppendAllText(path, str.ToString());
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public static void WriteToLog(string error)
