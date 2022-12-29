@@ -475,7 +475,12 @@ namespace MagiRogue.Entities
 
         public (int?, int?) GetMinMaxLifespan() => (GetRace().LifespanMin, GetRace().LifespanMax);
 
-        public int GetRaceAdulthoodAge() => GetRace().AdulthoodAge;
+        public int GetRaceAdulthoodAge()
+        {
+            if (GetRace() is not null)
+                return GetRace().AdulthoodAge;
+            return 0;
+        }
 
         public void SetRandomLifespanByRace()
         {
@@ -485,7 +490,9 @@ namespace MagiRogue.Entities
                 Lifespan = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(min.Value, max.Value);
             }
             else
+            {
                 Ages = false; // else is immortal
+            }
         }
 
         public List<Wound> GetAllWounds()

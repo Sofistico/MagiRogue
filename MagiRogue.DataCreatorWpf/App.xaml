@@ -1,0 +1,12 @@
+﻿<Application x:Class="MagiRogue.DataCreatorWpf.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:MagiRogue.DataCreatorWpf"
+             DispatcherUnhandledException="Application_DispatcherUnhandledException">
+    <Application.Resources>
+        <LinearGradientBrush x:Key="WindowBackgroundBrush">
+            <GradientStop Offset="0" Color="Silver" />
+            <GradientStop Offset="1" Color="White" />
+        </LinearGradientBrush>
+    </Application.Resources>
+</Application>

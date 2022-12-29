@@ -1,0 +1,48 @@
+﻿[
+  {
+    "Id": "folk_medicine",
+    "Name": "Folk medicine",
+    "Difficulty": 2,
+    "AbilityRequired": [ "Medicine" ],
+    "TechResearched": [ "FolkMedicine" ]
+  },
+  {
+    "Id": "basic_anatomy",
+    "Name": "Basic know of the body",
+    "Difficulty": 6,
+    "AbilityRequired": [ "Medicine" ],
+    "TechResearched": [ "BasicAnatomy" ]
+  },
+  {
+    "Id": "advanced_anatomy",
+    "Name": "Anatomy of the body",
+    "Difficulty": 8,
+    "AbilityRequired": [ "Medicine", "Research" ],
+    "TechResearched": [ "AdvancedAnatomy" ],
+    "RequiredRes": [ "basic_anatomy" ]
+  },
+  {
+    "Id": "clean_wounds",
+    "Name": "Anatomy of the body",
+    "Difficulty": 5,
+    "AbilityRequired": [ "Medicine", "Research" ],
+    "TechResearched": [ "WoundCleaning" ],
+    "RequiredRes": [ "advanced_anatomy", "folk_medicine" ]
+  },
+  {
+    "Id": "alchemical_medicine",
+    "Name": "Anatomy of the body",
+    "Difficulty": 15,
+    "AbilityRequired": [ "Medicine", "Research" ],
+    "TechResearched": [ "AlchemicalMedicine" ],
+    "RequiredRes": [ "alchemy", "folk_medicine" ]
+  }
+  {
+    "Id": "prosthetics",
+    "Name": "Anatomy of the body",
+    "Difficulty": 15,
+    "AbilityRequired": [ "Medicine", "Research" ],
+    "TechResearched": [ "Prosthetics" ],
+    "RequiredRes": [ "advanced_anatomy", "alchemical_medicine" ]
+  },
+]

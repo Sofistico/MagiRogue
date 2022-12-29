@@ -19,14 +19,14 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
             foreach (JToken token in listEffectsJson)
             {
-                EffectTypes effect = StringToEnumEffectType((string)token["EffectType"]);
+                EffectType effect = StringToEnumEffectType((string)token["EffectType"]);
                 effectsList.Add(EnumToEffect(effect, token));
             }
 
             SpellBase createdSpell = new(
                 (string)spell["SpellId"],
                 (string)spell["SpellName"],
-                StringToSchool((string)spell["SpellSchool"]),
+                StringToSchool((string)spell["MagicArt"]),
                 (int)spell["SpellRange"],
                 (int)spell["SpellLevel"],
                 (double)spell["ManaCost"]);
@@ -48,21 +48,21 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         }
 
         /// <summary>
-        /// This is used to convert a string to an enum of <see cref="EffectTypes">EffectType</see>
+        /// This is used to convert a string to an enum of <see cref="EffectType">EffectType</see>
         /// </summary>
         /// <param name="st"></param>
         /// <returns></returns>
-        private static EffectTypes StringToEnumEffectType(string st)
+        private static EffectType StringToEnumEffectType(string st)
         {
             return st switch
             {
-                "DAMAGE" => EffectTypes.DAMAGE,
-                "HASTE" => EffectTypes.HASTE,
-                "MAGESIGHT" => EffectTypes.MAGESIGHT,
-                "SEVER" => EffectTypes.SEVER,
-                "TELEPORT" => EffectTypes.TELEPORT,
-                "DEBUFF" => EffectTypes.DEBUFF,
-                "BUFF" => EffectTypes.BUFF,
+                "DAMAGE" => EffectType.DAMAGE,
+                "HASTE" => EffectType.HASTE,
+                "MAGESIGHT" => EffectType.MAGESIGHT,
+                "SEVER" => EffectType.SEVER,
+                "TELEPORT" => EffectType.TELEPORT,
+                "DEBUFF" => EffectType.DEBUFF,
+                "BUFF" => EffectType.BUFF,
                 _ => throw new ApplicationException($"It wasn't possible to convert the effect, " +
                     $"please use only the provided effects types.\nEffect used: {st}"),
             };
@@ -110,47 +110,47 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         /// <param name="effect"></param>
         /// <param name="jToken"></param>
         /// <returns></returns>
-        private static ISpellEffect EnumToEffect(EffectTypes effect, JToken jToken)
+        private static ISpellEffect EnumToEffect(EffectType effect, JToken jToken)
         {
             return effect switch
             {
-                EffectTypes.DAMAGE => new DamageEffect
+                EffectType.DAMAGE => new DamageEffect
                     ((int)jToken["BaseDamage"], StringToAreaEffect((string)jToken["AreaOfEffect"]),
                     StringToDamageType((string)jToken["SpellDamageType"]),
                     (bool)jToken["CanMiss"], (bool)jToken["IsHealing"], (int)jToken["Radius"],
                     isResistable: (bool)jToken["IsResistable"]),
-                EffectTypes.HASTE => new HasteEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]),
+                EffectType.HASTE => new HasteEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]),
                     (int)jToken["HastePower"],
                     (int)jToken["Duration"],
                     StringToDamageType((string)jToken["SpellDamageType"])),
-                EffectTypes.MAGESIGHT => new MageSightEffect((int)jToken["Duration"]),
-                EffectTypes.SEVER => new SeverEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]),
+                EffectType.MAGESIGHT => new MageSightEffect((int)jToken["Duration"]),
+                EffectType.SEVER => new SeverEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]),
                     StringToDamageType((string)jToken["SpellDamageType"]),
                     (int)jToken["Radius"], (int)jToken["BaseDamage"]),
-                EffectTypes.TELEPORT => new TeleportEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]),
+                EffectType.TELEPORT => new TeleportEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]),
                     StringToDamageType((string)jToken["SpellDamageType"]),
                     (int)jToken["Radius"]),
                 _ => null,
             };
         }
 
-        private static MagicSchool StringToSchool(string st)
+        private static ArtMagic StringToSchool(string st)
         {
             return st switch
             {
-                "Projection" => MagicSchool.Projection, // 1
-                "Negation" => MagicSchool.Negation, // 2
-                "Animation" => MagicSchool.Animation, // 3
-                "Divination" => MagicSchool.Divination, // 4
-                "Alteration" => MagicSchool.Alteration, // 5
-                "Wards" => MagicSchool.Wards, // 6
-                "Dimensionalism" => MagicSchool.Dimensionalism, // 7
-                "Conjuration" => MagicSchool.Conjuration, // 8
-                "Illuminism" => MagicSchool.Illuminism, // 9
-                "MedicalMagic" => MagicSchool.MedicalMagic, // 10
-                "MindMagic" => MagicSchool.MindMagic, // 11
-                "SoulMagic" => MagicSchool.SoulMagic, // 12
-                "BloodMagic" => MagicSchool.BloodMagic, // 13
+                "Projection" => ArtMagic.Projection, // 1
+                "Negation" => ArtMagic.Negation, // 2
+                "Animation" => ArtMagic.Animation, // 3
+                "Divination" => ArtMagic.Divination, // 4
+                "Alteration" => ArtMagic.Alteration, // 5
+                "Wards" => ArtMagic.Wards, // 6
+                "Dimensionalism" => ArtMagic.Dimensionalism, // 7
+                "Conjuration" => ArtMagic.Conjuration, // 8
+                "Illuminism" => ArtMagic.Illuminism, // 9
+                "MedicalMagic" => ArtMagic.MedicalMagic, // 10
+                "MindMagic" => ArtMagic.MindMagic, // 11
+                "SoulMagic" => ArtMagic.SoulMagic, // 12
+                "BloodMagic" => ArtMagic.BloodMagic, // 13
                 _ => throw new Exception($"Are you sure the school is correct? it must be a valid one./n School used: {st}")
             };
         }
@@ -172,7 +172,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
         public string Description { get; set; }
 
-        public MagicSchool SpellSchool { get; set; }
+        public ArtMagic MagicArt { get; set; }
 
         public int SpellRange { get; set; }
 
@@ -180,13 +180,13 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         public string SpellId { get; set; }
 
         public SpellTemplate(int spellLevel, List<ISpellEffect> effects, string spellName, string description,
-            MagicSchool spellSchool, int spellRange, double manaCost, string spellId)
+            ArtMagic magicArt, int spellRange, double manaCost, string spellId)
         {
             SpellLevel = spellLevel;
             Effects = effects;
             SpellName = spellName;
             Description = description;
-            SpellSchool = spellSchool;
+            MagicArt = magicArt;
             SpellRange = spellRange;
             ManaCost = manaCost;
             SpellId = spellId;
@@ -195,7 +195,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         public static implicit operator SpellBase(SpellTemplate spellTemplate)
         {
             SpellBase spell = new SpellBase(spellTemplate.SpellId, spellTemplate.SpellName,
-                spellTemplate.SpellSchool, spellTemplate.SpellRange, spellTemplate.SpellLevel,
+                spellTemplate.MagicArt, spellTemplate.SpellRange, spellTemplate.SpellLevel,
                 spellTemplate.ManaCost)
             {
                 Proficiency =
@@ -213,7 +213,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         {
             SpellTemplate template =
                 new SpellTemplate(spell.SpellLevel, spell.Effects, spell.SpellName,
-                spell.Description, spell.SpellSchool, spell.SpellRange, spell.ManaCost, spell.SpellId)
+                spell.Description, spell.MagicArt, spell.SpellRange, spell.ManaCost, spell.SpellId)
                 {
                     Proficiency = spell.Proficiency
                 };

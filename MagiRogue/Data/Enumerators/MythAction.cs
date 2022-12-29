@@ -16,10 +16,10 @@ namespace MagiRogue.Data.Enumerators
         Science,
         Magic,
         Titan,
-        Precursors,
-        Demons,
-        Angels,
-        Forces
+        Precursor,
+        Demon,
+        Angel,
+        Force
     }
 
     public enum MythAction
@@ -55,10 +55,10 @@ namespace MagiRogue.Data.Enumerators
         OuterRealm = 1 << 10,
         Space = 1 << 11,
         Death = 1 << 12,
-        Demons = 1 << 13,
-        Angels = 1 << 14,
-        Spirits = 1 << 15,
-        Forces = 1 << 16,
+        Demon = 1 << 13,
+        Angel = 1 << 14,
+        Spirit = 1 << 15,
+        Force = 1 << 16,
         Individual = 1 << 17
     }
 }

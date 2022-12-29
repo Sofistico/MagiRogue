@@ -64,8 +64,11 @@ namespace MagiRogue.Entities
                 coneOfCold,
                 fingerOfDeath
             };
-
-            player.Magic.KnowSpells.AddRange(testSpells);
+            int co = testSpells.Count;
+            for (int i = 0; i < co; i++)
+            {
+                player.Magic.AddToSpellList(testSpells[i]);
+            }
 
             return player;
         }

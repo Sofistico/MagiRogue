@@ -1,0 +1,32 @@
+﻿[
+  {
+    "Id": "chemicals",
+    "Name": "Chemical properties of materials",
+    "Difficulty": 15,
+    "AbilityRequired": [ "Research", "Chemist" ],
+    "TechResearched": [ "ChemicalProperties" ],
+    "RequiredRes": [ "intermediare_mathematics" ]
+  },
+  {
+    "Id": "basic_astronomy",
+    "Name": "Basic astronomy",
+    "Difficulty": 5,
+    "AbilityRequired": [ "Research", "Astronomer" ],
+    "TechResearched": [ "BasicAstronomy" ],
+    "RequiredRes": [ "intermediare_mathematics" ]
+  },
+  {
+    "Id": "geo_centrisn",
+    "Name": "The world is at the center of everything",
+    "Difficulty": 5,
+    "AbilityRequired": [ "Research", "Astronomer" ],
+    "RequiredRes": [ "basic_astronomy" ]
+  },
+  {
+    "Id": "helio_centrism",
+    "Name": "The sun actually is at the center of everything",
+    "Difficulty": 5,
+    "AbilityRequired": [ "Research", "Astronomer" ],
+    "RequiredRes": [ "geo_centrisn" ]
+  },
+]

@@ -52,8 +52,6 @@ namespace MagiRogue.GameSys.Planet.History
         public void RunHistory(List<Civilization> civilizations, int yearToGameBegin,
             PlanetMap planet, WorldTile[,] tiles)
         {
-            PopulateFindValues(tiles);
-
             Civs = civilizations;
             planetData = planet;
             bool firstYearOnly = true;
@@ -62,6 +60,7 @@ namespace MagiRogue.GameSys.Planet.History
                 Data.DataManager.ListOfRaces.ToList(),
                 Figures,
                 planet);
+            PopulateFindValues(tiles);
 
             if (firstYearOnly)
             {
@@ -97,11 +96,13 @@ namespace MagiRogue.GameSys.Planet.History
 
         private void PopulateFindValues(WorldTile[,] tiles)
         {
-            Find.PopulateValues(Figures,
-                Civs,
-                AllSites,
-                ImportantItems,
-                Year,
+            //Find.PopulateValues(Figures,
+            //    Civs,
+            //    AllSites,
+            //    ImportantItems,
+            //    this,
+            //    tiles);
+            Find.PopulateValues(this,
                 tiles);
         }
 
@@ -112,8 +113,8 @@ namespace MagiRogue.GameSys.Planet.History
             {
                 if (figure.RelatedCivs.Count > 0)
                 {
-                    var civRelation = figure.RelatedCivs.FirstOrDefault(i => i.GetIfMember());
-                    Civilization civ = civs.FirstOrDefault(i => i.Id == civRelation.CivRelatedId);
+                    var civRelation = figure.RelatedCivs.Find(i => i.GetIfMember());
+                    Civilization civ = civs.Find(i => i.Id == civRelation.CivRelatedId);
                     figure.AddRelatedSite(civ.Sites[0].Id, SiteRelationTypes.LivesThere);
                     figure.ChangeStayingSite(civ.Sites[0].WorldPos);
                 }

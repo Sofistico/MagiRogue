@@ -15,7 +15,7 @@
 		],
 		"SpellName": "Mage Sight",
 		"Description": "The first thing taught to any prospecting student of magic, and right after that is learning how to dispel their own mana.",
-		"SpellSchool": "Divination",
+		"MagicArt": "Divination",
 		"SpellRange": 0,
 		"ManaCost": 0.5,
 		"SpellId": "mage_sight"

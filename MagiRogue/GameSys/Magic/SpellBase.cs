@@ -46,10 +46,10 @@ namespace MagiRogue.GameSys.Magic
         public string Description { get; private set; }
 
         /// <summary>
-        /// What school the spell is
+        /// What art of magic the spell is
         /// </summary>
         [JsonProperty(Order = 6)]
-        public MagicSchool SpellSchool { get; set; }
+        public ArtMagic MagicArt { get; set; }
 
         /// <summary>
         /// The range that the spell can act, can be anything from 0 - self to 999 - map
@@ -122,20 +122,20 @@ namespace MagiRogue.GameSys.Magic
         /// </summary>
         /// <param name="spellId">Should be something unique with spaces separated by _</param>
         /// <param name="spellName">The name of the spell</param>
-        /// <param name="spellSchool">What school is this spell part of?</param>
+        /// <param name="magicArt">What school is this spell part of?</param>
         /// <param name="spellRange">The range of the spell</param>
         /// <param name="spellLevel">The level of the spell, going from 1 to 9</param>
         /// <param name="manaCost">The mana cost of the spell, should be more than 0.1</param>
         public SpellBase(string spellId,
             string spellName,
-            MagicSchool spellSchool,
+            ArtMagic magicArt,
             int spellRange,
             int spellLevel = 1,
             double manaCost = 0.1)
         {
             SpellId = spellId;
             SpellName = spellName;
-            SpellSchool = spellSchool;
+            MagicArt = magicArt;
             SpellRange = spellRange;
             SpellLevel = spellLevel;
             ManaCost = manaCost;
@@ -262,7 +262,7 @@ namespace MagiRogue.GameSys.Magic
                 SpellLevel = this.SpellLevel,
                 SpellName = this.SpellName,
                 SpellRange = this.SpellRange,
-                SpellSchool = this.SpellSchool
+                MagicArt = this.MagicArt
             };
 
             return copy;
@@ -272,13 +272,16 @@ namespace MagiRogue.GameSys.Magic
 
         public override string ToString()
         {
-            string bobBuilder = new StringBuilder().Append(SpellName).Append(": ").Append(SpellLevel)
-                .Append($", Range: {SpellRange}")
-                .Append($", Proficiency: {Proficiency} \r\n")
-                .Append($"Required shape skills: {RequiredShapingSkill}")
-                .AppendLine(SpellSchool.ToString()).ToString();
+            return new StringBuilder().Append(SpellName).Append(": ").Append(SpellLevel)
+                .Append(", Range: ").Append(SpellRange)
+                .Append(", Proficiency: ").Append(Proficiency).Append(" \r\n")
+                .Append("Required shape skills: ").Append(RequiredShapingSkill)
+                .AppendLine(MagicArt.ToString()).ToString();
+        }
 
-            return bobBuilder;
+        public override int GetHashCode()
+        {
+            return SpellId.GetHashCode();
         }
     }
 }

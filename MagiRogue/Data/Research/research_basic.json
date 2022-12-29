@@ -1,0 +1,93 @@
+﻿[
+  {
+    "Id": "basic_craft",
+    "Name": "Crafting basics",
+    "Difficulty": 2,
+    "IntermediareRes": true,
+    "AbilityRequired": [ "AnyCraft" ]
+  },
+  {
+    "Id": "basic_forge",
+    "Name": "Forging basics",
+    "Difficulty": 4,
+    "ValidDeityGift": true,
+    "AbilityRequired": [ "Forge" ],
+    "RequiredRes": [ "basic_craft" ],
+    "TechResearched": [ "BasicMetalsmithing" ]
+  },
+  {
+    "Id": "forge",
+    "Name": "Forging intermedire",
+    "Difficulty": 10,
+    "ValidDeityGift": true,
+    "AbilityRequired": [ "Forge", "Discipline" ],
+    "RequiredRes": [ "basic_forge" ],
+    "TechResearched": [ "BasicMetalsmithing" ]
+  },
+  {
+    "Id": "wood_craft",
+    "Name": "Wood working",
+    "Difficulty": 4,
+    "ValidDeityGift": true,
+    "AbilityRequired": [ "WoodCraft" ],
+    "RequiredRes": [ "basic_craft" ],
+    "TechResearched": [ "Woodcrafting" ]
+  },
+  {
+    "Id": "glass_making",
+    "Name": "Glass making",
+    "Difficulty": 6,
+    "ValidDeityGift": true,
+    "AbilityRequired": [ "GlassMaking" ],
+    "RequiredRes": [ "forge" ],
+    "TechResearched": [ "Glassmaking" ]
+  },
+  {
+    "Id": "engineering",
+    "Name": "Basic Engineering",
+    "Difficulty": 10,
+    "AbilityRequired": [ "AnyCraft", "Enginner" ],
+    "RequiredRes": [ "forge", "steel_making", "intermediare_mathematics" ],
+    "TechResearched": [ "Engineering" ]
+  },
+  {
+    "Id": "steel_making",
+    "Name": "Steel Making",
+    "Difficulty": 6,
+    "AbilityRequired": [ "Smelt", "Forge" ],
+    "RequiredRes": [ "forge" ],
+    "TechResearched": [ "Steelmaking" ]
+  },
+  {
+    "Id": "blast_furnace",
+    "Name": "Blast Furnace",
+    "Difficulty": 20,
+    "AbilityRequired": [ "Enginner", "Smelt" ],
+    "RequiredRes": [ "forge", "steel_making", "engineering" ],
+    "TechResearched": [ "BlastFurnace" ]
+  },
+  {
+    "Id": "steam_power",
+    "Name": "SteamPower",
+    "Difficulty": 20,
+    "AbilityRequired": [ "Enginner", "Physics" ],
+    "RequiredRes": [ "forge", "steel_making", "engineering", "intermediare_mathematics" ],
+    "TechResearched": [ "SteamPower" ]
+  },
+  {
+    "Id": "gun_powder",
+    "Name": "Gunpowder",
+    "Difficulty": 15,
+    "AbilityRequired": [ "Enginner", "Chemist" ],
+    "RequiredRes": [ "forge", "steel_making", "engineering", "intermediare_mathematics" ],
+    "TechResearched": [ "Gunpowder" ]
+  },
+  {
+    "Id": "electricity",
+    "Name": "Electricity",
+    "Difficulty": 35,
+    "AbilityRequired": [ "Enginner", "Physics" ],
+    "RequiredRes": [ "steam_power", "advanced_mathematics" ],
+    "TechResearched": [ "Electricity" ]
+  }
+]

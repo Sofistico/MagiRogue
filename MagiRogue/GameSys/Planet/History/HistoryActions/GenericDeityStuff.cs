@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace MagiRogue.GameSys.Planet.History.HistoryActions
 {
-    internal class GenericDeityStuff : IHistoryAct
+    internal sealed class GenericDeityStuff : IHistoryAct
     {
         private HistoricalFigure figure;
 
@@ -24,7 +24,7 @@ namespace MagiRogue.GameSys.Planet.History.HistoryActions
         private bool? MythStuff(HistoricalFigure figure)
         {
             // fuck deities!
-            if (figure.SpecialFlags.Contains(Data.Enumerators.SpecialFlag.DeityDescended))
+            if (figure.SpecialFlags.Contains(Data.Enumerators.SpecialFlag.Myth))
             {
                 if (figure.CheckForInsurrection())
                 {

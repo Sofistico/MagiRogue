@@ -13,7 +13,7 @@ namespace MagiRogue.GameSys.Magic.Effects
         public int Radius { get; set; }
 
         public bool TargetsTile { get; set; } = false;
-        public EffectTypes EffectType { get; set; } = EffectTypes.SEVER;
+        public EffectType EffectType { get; set; } = EffectType.SEVER;
         public int BaseDamage { get; set; }
 
         public SeverEffect(SpellAreaEffect areaOfEffect, DamageTypes spellDamageType, int radius, int dmg)

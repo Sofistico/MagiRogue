@@ -281,7 +281,7 @@ namespace MagiRogue.GameSys.Planet.History
             if (!RelatedCivs.Any(i => i.CivRelatedId == civId))
                 RelatedCivs.Add(re);
             else
-                RelatedCivs.FirstOrDefault(i => i.CivRelatedId == civId).Relation = relation;
+                RelatedCivs.Find(i => i.CivRelatedId == civId).Relation = relation;
         }
 
         public Personality GetPersonality()
@@ -300,9 +300,10 @@ namespace MagiRogue.GameSys.Planet.History
         /// <returns>true if already had previous relation, false if otherwise</returns>
         public bool AddRelatedHf(int otherId, HfRelationType relation)
         {
+            if (otherId == Id) return false;
             if (RelatedHFs.Any(i => i.OtherHfId == otherId))
             {
-                RelatedHFs.FirstOrDefault(i => i.OtherHfId == otherId).RelationType = relation;
+                RelatedHFs.Find(i => i.OtherHfId == otherId).RelationType = relation;
                 return true;
             }
             else
@@ -374,13 +375,15 @@ namespace MagiRogue.GameSys.Planet.History
         {
             if (RelatedCivs.Count <= 0)
                 return null;
-            int civId = RelatedCivs.Find(i => i.Relation == relationType).CivRelatedId;
+            int? civId = RelatedCivs.Find(i => i.Relation == relationType)?.CivRelatedId;
+            if (!civId.HasValue)
+                return null;
             Civilization civ = civs.Find(i => i.Id == civId);
             return civ;
         }
 
-        public int GetMemberCivId()
-            => RelatedCivs.FirstOrDefault(i => i.GetIfMember()).CivRelatedId;
+        public int? GetMemberCivId()
+            => RelatedCivs.Find(i => i.GetIfMember())?.CivRelatedId;
 
         public bool CheckForInsurrection()
             => GetPersonality().Power >= 25;
@@ -765,7 +768,7 @@ namespace MagiRogue.GameSys.Planet.History
 
         public int? GetCurrentStayingSiteId(List<Site> sites)
         {
-            return sites.FirstOrDefault(i => i.WorldPos == CurrentPos)?.Id;
+            return sites.Find(i => i.WorldPos == CurrentPos)?.Id;
         }
 
         public bool IsAdult()

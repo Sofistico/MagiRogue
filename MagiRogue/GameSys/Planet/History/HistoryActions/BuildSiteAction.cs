@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace MagiRogue.GameSys.Planet.History.HistoryActions
 {
-    public class BuildSiteAction : IHistoryAct
+    public sealed class BuildSiteAction : IHistoryAct
     {
         private readonly SiteType site;
 

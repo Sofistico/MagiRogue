@@ -57,8 +57,6 @@ namespace MagiRogue.GameSys.Civ
         public List<SiteType> PossibleSites { get; set; }
         public Dictionary<string, int> TrackAmountOfNobles { get; set; }
         public List<int> CivsTradingWith { get; private set; }
-
-        //public List<Discovery> Discoveries { get; set; }
         public List<Legend> Legends { get; set; }
 
         #endregion Information
@@ -97,8 +95,8 @@ namespace MagiRogue.GameSys.Civ
             {
                 var hf = CreateNewHfMemberFromPop(0);
                 StringBuilder initialLegend = new StringBuilder("In a time before time, ");
-                initialLegend.Append($"{hf.Name} was created looking like a {hf.HFGender} of the {hf.GetRaceNamePlural()} race ");
-                initialLegend.Append($"with {hf.Body.Anatomy.CurrentAge} years as a member of {Name}");
+                initialLegend.Append(hf.Name).Append(" was created looking like a ").Append(hf.HFGender).Append(" of the ").Append(hf.GetRaceNamePlural()).Append(" race ");
+                initialLegend.Append("with ").Append(hf.Body.Anatomy.CurrentAge).Append(" years as a member of ").Append(Name);
                 hf.Legends.Add(new Legend(initialLegend.ToString(), -1));
 
                 ImportantPeople.Add(hf);
@@ -106,11 +104,11 @@ namespace MagiRogue.GameSys.Civ
 
             List<HistoricalFigure> nobles = ImportantPeople.ShuffleAlgorithmAndTakeN(numberOfNobles);
             // in here we can already say that it's not in the time before time period
-            int year = 1;
+            const int year = 1;
             var noblesPos = NoblesPosition.Where(
                     i => !i.Responsabilities.Contains(Responsability.Rule))
                     .ToList();
-            var rulerPos = NoblesPosition.FirstOrDefault(
+            var rulerPos = NoblesPosition.Find(
                         i => i.Responsabilities.Contains(Responsability.Rule));
 
             for (int i = 0; i < numberOfNobles; i++)

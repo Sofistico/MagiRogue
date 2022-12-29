@@ -149,7 +149,8 @@ namespace MagiRogue.GameSys.Planet.TechRes
                             AbilityName.Smelt,
                             AbilityName.Weaver,
                             AbilityName.Alchemy,
-                            AbilityName.Enchantment
+                            AbilityName.Enchantment,
+                            AbilityName.GlassMaking
                         });
                         break;
 

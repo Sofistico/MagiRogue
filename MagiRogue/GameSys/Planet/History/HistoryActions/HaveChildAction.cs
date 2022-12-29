@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MagiRogue.GameSys.Planet.History.HistoryActions
 {
-    internal class HaveChildAction : IHistoryAct
+    internal sealed class HaveChildAction : IHistoryAct
     {
         public bool? Act(HistoricalFigure figure)
         {

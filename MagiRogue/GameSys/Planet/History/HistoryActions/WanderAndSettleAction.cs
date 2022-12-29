@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace MagiRogue.GameSys.Planet.History.HistoryActions
 {
-    internal class WanderAndSettleAction : IHistoryAct
+    internal sealed class WanderAndSettleAction : IHistoryAct
     {
         public bool? Act(HistoricalFigure figure)
         {
@@ -24,27 +24,26 @@ namespace MagiRogue.GameSys.Planet.History.HistoryActions
             if (figure.NobleTitles.Count > 0)
                 return false;
             // one in 5 chance to settle somewhere else
-            if (Mrn.OneIn(5))
+            bool changedCiv = false;
+            // one in 10 to migrate to another civ
+            if (Mrn.OneIn(10))
             {
-                bool changedCiv = false;
-                // one in 10 to migrate to another civ
-                if (Mrn.OneIn(10))
-                {
-                    changedCiv = Find.ChangeFigureCiv(figure);
-                }
-                int civId = figure.GetMemberCivId();
-                Civilization currentCiv = Find.Civs.Find(i => i.Id == civId);
-                if (currentCiv.Sites.Count > 1 || changedCiv)
-                {
-                    var siteId = figure.GetCurrentStayingSiteId(currentCiv.Sites);
-                    var result = siteId.HasValue ? currentCiv.Sites
-                        .Where(i => i.Id != siteId.Value)
-                        .ToList()
-                        .GetRandomItemFromList() : currentCiv.Sites.GetRandomItemFromList();
-                    Find.ChangeFigureLivingSite(figure, result);
-                    Find.ChangeFigureFamilyLivingSite(figure, changedCiv, result);
-                    return true;
-                }
+                changedCiv = Find.ChangeFigureCiv(figure);
+            }
+            int? civId = figure.GetMemberCivId();
+            if (!civId.HasValue)
+                return false;
+            Civilization currentCiv = Find.Civs.Find(i => i.Id == civId);
+            if (currentCiv?.Sites.Count > 1 || changedCiv)
+            {
+                var siteId = figure.GetCurrentStayingSiteId(currentCiv.Sites);
+                var result = siteId.HasValue ? currentCiv.Sites
+                    .Where(i => i.Id != siteId.Value)
+                    .ToList()
+                    .GetRandomItemFromList() : currentCiv.Sites.GetRandomItemFromList();
+                Find.ChangeFigureLivingSite(figure, result);
+                Find.ChangeFigureFamilyLivingSite(figure, changedCiv, result);
+                return true;
             }
             return false;
         }

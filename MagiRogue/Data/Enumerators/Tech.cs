@@ -35,6 +35,7 @@ namespace MagiRogue.Data.Enumerators
         Gunpowder,
         SteamPower,
         Electricity,
+        BasicMetalsmithing,
         Metalsmithing,
         Woodcrafting,
         Glassmaking,
@@ -48,18 +49,14 @@ namespace MagiRogue.Data.Enumerators
         PhysicsConstants,
 
         ChemicalProperties,
-        MaterialAnalyses,
 
         BasicAstronomy,
-        Geocentrism,
-        Heliocentrism,
+        BasicSpaceTravel,
 
         FolkMedicine,
-        LeechDraining,
+        AlchemicalMedicine,
         BasicAnatomy,
-        WoundDressing,
         WoundCleaning,
-        MedicinalRoutines,
         AdvancedAnatomy,
         Prosthetics,
     }

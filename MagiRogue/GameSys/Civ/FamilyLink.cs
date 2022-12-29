@@ -42,18 +42,36 @@ namespace MagiRogue.GameSys.Civ
             HistoricalFigure hfChild,
             int year)
         {
-            var hfFather = GetOtherFamilyNodesByRelations(HfRelationType.Married)[0].OtherFigure;
+            var hfFather = GetOtherFamilyNodesByRelations(HfRelationType.Married)[0]?.OtherFigure;
 
             SetChildMotherFather(hfMother, hfChild, hfFather);
 
             // gods why
             StringBuilder bb = new StringBuilder();
-            string father = $"{bb} the {hfFather.Name} had a child with {hfMother.Name}, the child was named {hfChild.Name}";
-            string mother = $"{bb} the  {hfMother.Name} conceived a child with {hfFather.Name}, the child was named {hfChild.Name}";
-            string child = $"{bb} was born child of {hfMother.Name} and {hfFather.Name}";
+            if (hfFather is not null)
+            {
+                string father = $"{bb} the {hfFather.Name} had a child with {hfMother.Name}, the child was named {hfChild.Name}";
+                hfFather.AddLegend(father, year);
+                if (hfFather.SpecialFlags.Contains(SpecialFlag.Myth))
+                {
+                    hfChild.SpecialFlags.Add(SpecialFlag.Supernatural);
+                    hfChild.SpecialFlags.Add(SpecialFlag.DemiMyth);
+                }
+            }
+            string mother;
+            string child;
+            if (hfFather is null)
+            {
+                mother = $"{bb} the {hfMother.Name} conceived a child with an unknow father, the child was named {hfChild.Name}";
+                child = $"{bb} was born child of {hfMother.Name} and an unknow father";
+            }
+            else
+            {
+                mother = $"{bb} the {hfMother.Name} conceived a child with {hfFather.Name}, the child was named {hfChild.Name}";
+                child = $"{bb} was born child of {hfMother.Name} and {hfFather.Name}";
+            }
 
             hfChild.AddLegend(child, year);
-            hfFather.AddLegend(father, year);
             hfMother.AddLegend(mother, year);
         }
 
@@ -64,8 +82,11 @@ namespace MagiRogue.GameSys.Civ
             AddToFamilyLink(hfMother, HfRelationType.OwnChild, hfChild);
             AddToFamilyLink(hfChild, HfRelationType.Mother, hfMother);
             // find the fahter
-            AddToFamilyLink(hfFather, HfRelationType.OwnChild, hfChild);
-            AddToFamilyLink(hfChild, HfRelationType.Father, hfFather);
+            if (hfFather is null)
+            {
+                AddToFamilyLink(hfFather, HfRelationType.OwnChild, hfChild);
+                AddToFamilyLink(hfChild, HfRelationType.Father, hfFather);
+            }
         }
 
         public void SetMarriedRelation(HistoricalFigure hfOne, HistoricalFigure hfTwo)

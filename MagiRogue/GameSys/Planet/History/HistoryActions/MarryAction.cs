@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MagiRogue.GameSys.Planet.History.HistoryActions
 {
-    public class MarryAction : IHistoryAct
+    public sealed class MarryAction : IHistoryAct
     {
         public MarryAction()
         {
@@ -21,14 +21,14 @@ namespace MagiRogue.GameSys.Planet.History.HistoryActions
             return RomanceSomeoneInsideSameSite(figure);
         }
 
-        private bool RomanceSomeoneInsideSameSite(HistoricalFigure figure)
+        private static bool RomanceSomeoneInsideSameSite(HistoricalFigure figure)
         {
             Site site = Find.GetFigureStayingSiteIfAny(figure);
             int year = Find.Year;
             if (site is not null
                 && !figure.IsMarried())
             {
-                var peopleInside = Find.GetAllFiguresStayingInSiteIfAny(site.Id);
+                var peopleInside = Find.GetAllFiguresStayingInSiteIfAny(site.Id, new() { figure.Id });
                 int aceptableDiferenceAge;
                 bool isAdult = figure.IsAdult();
                 if (isAdult)

@@ -12,6 +12,7 @@ using MagiRogue.Entities;
 using SadConsole.Renderers;
 using System.Data;
 using MagiRogue.Utils.Extensions;
+using System.Threading.Tasks;
 
 namespace MagiRogue.GameSys.Planet.History
 {
@@ -24,21 +25,36 @@ namespace MagiRogue.GameSys.Planet.History
             var rules = Find.Rules;
             var fulfilledRules = rules.AllFulfilled(figure); // some list for every fulfilled rule
             fulfilledRules.ShuffleAlgorithm();
-            bool acted = false;
-            foreach (var rule in fulfilledRules)
+            var moreThanOneActRules = fulfilledRules.FindAll(i => i.AllowMoreThanOneAction);
+            var onlyOneAct = fulfilledRules.FindAll(i => !i.AllowMoreThanOneAction);
+
+            Parallel.ForEach(moreThanOneActRules, rule =>
             {
-                if (rule.AllowMoreThanOneAction || !acted)
+                var act = rule.DoAction(figure);
+                if (act is null)
+                    GameLoop.WriteToLog($"For some reason the action was null, here is the action: {rule.RuleFor}");
+            });
+
+            bool acted = false;
+            foreach (var rule in onlyOneAct)
+            {
+                if (!acted)
                 {
                     var act = rule.DoAction(figure);
                     if (act is null)
                         GameLoop.WriteToLog($"For some reason the action was null, here is the action: {rule.RuleFor}");
-                    if (!rule.AllowMoreThanOneAction && act.GetValueOrDefault())
+                    if (act.GetValueOrDefault())
                         acted = true;
                 }
+                else
+                {
+                    break;
+                }
             }
-
+#if DEBUG
             if (!acted)
                 figure.DebugNumberOfLostYears++;
+#endif
         }
 
         #endregion Actions

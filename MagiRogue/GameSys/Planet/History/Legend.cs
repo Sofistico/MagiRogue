@@ -160,13 +160,13 @@ namespace MagiRogue.GameSys.Planet.History
 
                 case Data.Enumerators.MythAction.Ascended:
                     happening.Append(" ascended as a god");
-                    figure.SpecialFlags.Add(SpecialFlag.Deity);
+                    figure.SpecialFlags.Add(SpecialFlag.Myth);
 
                     break;
 
                 case Data.Enumerators.MythAction.Descended:
                     happening.Append(" descended to the world");
-                    figure.SpecialFlags.Add(SpecialFlag.DeityDescended);
+                    figure.SpecialFlags.Add(SpecialFlag.MythDescended);
 
                     break;
 
@@ -268,21 +268,21 @@ namespace MagiRogue.GameSys.Planet.History
                 case Data.Enumerators.MythWhat.Death:
                     return;
 
-                case Data.Enumerators.MythWhat.Demons:
+                case Data.Enumerators.MythWhat.Demon:
                     happening.Append("away something to the demons!");
                     break;
 
-                case Data.Enumerators.MythWhat.Angels:
+                case Data.Enumerators.MythWhat.Angel:
                     happening.Append("away something to the angels!");
 
                     break;
 
-                case Data.Enumerators.MythWhat.Spirits:
+                case Data.Enumerators.MythWhat.Spirit:
                     happening.Append("away something to the spirits!");
 
                     break;
 
-                case Data.Enumerators.MythWhat.Forces:
+                case Data.Enumerators.MythWhat.Force:
                     happening.Append("away something to the forces!");
 
                     break;
@@ -376,21 +376,21 @@ namespace MagiRogue.GameSys.Planet.History
                     happening.Append("death");
                     break;
 
-                case Data.Enumerators.MythWhat.Demons:
+                case Data.Enumerators.MythWhat.Demon:
                     happening.Append("the demons");
                     break;
 
-                case Data.Enumerators.MythWhat.Angels:
+                case Data.Enumerators.MythWhat.Angel:
                     happening.Append("the angels");
 
                     break;
 
-                case Data.Enumerators.MythWhat.Spirits:
+                case Data.Enumerators.MythWhat.Spirit:
                     happening.Append("the spirits");
 
                     break;
 
-                case Data.Enumerators.MythWhat.Forces:
+                case Data.Enumerators.MythWhat.Force:
                     happening.Append("the forces");
 
                     break;
@@ -414,7 +414,7 @@ namespace MagiRogue.GameSys.Planet.History
             {
                 case Data.Enumerators.MythWhat.Race:
                     happening.Append($"the {race.RaceName}");
-                    figure.SpecialFlags.Add(SpecialFlag.RaceCreator);
+                    //figure.SpecialFlags.Add(SpecialFlag.RaceCreator);
                     break;
 
                 case Data.Enumerators.MythWhat.OriginMagic:
@@ -573,22 +573,22 @@ namespace MagiRogue.GameSys.Planet.History
                     happening.Append("death, so that none may die");
                     return;
 
-                case Data.Enumerators.MythWhat.Demons:
+                case Data.Enumerators.MythWhat.Demon:
                     happening.Append($"the {myth.MythWhat.ToString().ToLower()}");
 
                     break;
 
-                case Data.Enumerators.MythWhat.Angels:
+                case Data.Enumerators.MythWhat.Angel:
                     happening.Append($"the {myth.MythWhat.ToString().ToLower()}");
 
                     break;
 
-                case Data.Enumerators.MythWhat.Spirits:
+                case Data.Enumerators.MythWhat.Spirit:
                     happening.Append($"the {myth.MythWhat.ToString().ToLower()}");
 
                     break;
 
-                case Data.Enumerators.MythWhat.Forces:
+                case Data.Enumerators.MythWhat.Force:
                     happening.Append($"the {myth.MythWhat.ToString().ToLower()}");
 
                     break;
@@ -666,19 +666,19 @@ namespace MagiRogue.GameSys.Planet.History
                 case Data.Enumerators.MythWhat.Death:
                     return; //you can't kill death
 
-                case Data.Enumerators.MythWhat.Demons:
+                case Data.Enumerators.MythWhat.Demon:
                     happening.Append("the demons, so none remains");
                     break;
 
-                case Data.Enumerators.MythWhat.Angels:
+                case Data.Enumerators.MythWhat.Angel:
                     happening.Append("the angels, so none remains");
                     break;
 
-                case Data.Enumerators.MythWhat.Spirits:
+                case Data.Enumerators.MythWhat.Spirit:
                     happening.Append("the spirits, so none remains");
                     break;
 
-                case Data.Enumerators.MythWhat.Forces:
+                case Data.Enumerators.MythWhat.Force:
                     happening.Append("the forces, so none remains");
                     break;
 
