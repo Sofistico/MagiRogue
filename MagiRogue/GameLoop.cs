@@ -110,6 +110,7 @@ namespace MagiRogue
                 foreach (var item in errors)
                 {
                     str.AppendLine(item);
+                    str.AppendLine();
                 }
                 if (!File.Exists(path))
                 {
