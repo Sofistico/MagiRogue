@@ -6,23 +6,27 @@
         xmlns:local="clr-namespace:MagiRogue.DataCreatorWpf" xmlns:sys="clr-namespace:System;assembly=netstandard"
         Title="MainWindow" Height="450" Width="800"
         Background="{DynamicResource WindowBackgroundBrush}">
-    <Grid Name="MainGrid">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="377*" />
-        </Grid.ColumnDefinitions>
-        <StackPanel Name="MenuButtons" HorizontalAlignment="Center">
-            <ItemsControl>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Button Content="{Binding Name}"
-                        Command="{Binding DataContext.ChangePageCommand}"
-                        CommandParameter="{Binding }"
+
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type local:ResearchView}">
+            <local:ResearchCU />
+        </DataTemplate>
+    </Window.Resources>
+    <DockPanel>
+        <Border DockPanel.Dock="Left" Grid.Column="0" BorderBrush="Blue" BorderThickness="0,0,1,0">
+            <StackPanel HorizontalAlignment="Center" Grid.Column="0">
+
+                <ItemsControl ItemsSource="{Binding Pages}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Content="{Binding Name}"
                         Margin="2,5" />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </StackPanel>
-        <ContentControl Content="{Binding CurrentPageView}" />
-    </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Border>
+
+        <ContentControl Content="{Binding CurrentPageView}" Grid.Column="1" />
+    </DockPanel>
 </Window>

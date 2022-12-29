@@ -17,9 +17,10 @@ namespace MagiRogue.DataCreatorWpf
         {
             base.OnStartup(e);
 
-            MainWindow window = new MainWindow();
-            window.DataContext = new MainWindowViewModel();
-            window.Show();
+            new MainWindow()
+            {
+                DataContext = new MainWindowViewModel()
+            }.Show();
         }
 
         private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)

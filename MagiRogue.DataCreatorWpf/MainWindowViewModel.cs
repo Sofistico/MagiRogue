@@ -8,10 +8,10 @@ namespace MagiRogue.DataCreatorWpf
 {
     public class MainWindowViewModel : ObservableObject
     {
-        private IPageView _currentPageView;
+        private IPageView? _currentPageView;
         private List<IPageView> pages;
 
-        public IPageView CurrentPageView
+        public IPageView? CurrentPageView
         {
             get
             {
@@ -40,6 +40,9 @@ namespace MagiRogue.DataCreatorWpf
 
         public MainWindowViewModel()
         {
+            Pages.Add(new ResearchView());
+
+            CurrentPageView = Pages[0];
         }
     }
 }

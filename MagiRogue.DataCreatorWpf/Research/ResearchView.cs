@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagiRogue.DataCreatorWpf.Research
+namespace MagiRogue.DataCreatorWpf
 {
-    internal class ResearchView : ObservableObject, IPageView
+    public class ResearchView : ObservableObject, IPageView
     {
         public string Name { get => "Research"; }
     }
