@@ -111,6 +111,10 @@ namespace MagiRogue
                 {
                     str.AppendLine(item);
                 }
+                if (!File.Exists(path))
+                {
+                    File.Create(path).Close();
+                }
 
                 File.AppendAllText(path, str.ToString());
             }
