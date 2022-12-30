@@ -5,8 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:MagiRogue.DataCreatorWpf"
              mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <TextBlock>TESTE I LIVE</TextBlock>
-    </Grid>
+              d:DesignHeight="300" d:DesignWidth="300">
+    <StackPanel>
+        <Label Content="Reserach _Id:" Target="{Binding ElementName= resId}" />
+        <TextBox Name="resId" Width="97" HorizontalAlignment="Left" />
+    </StackPanel>
 </UserControl>
