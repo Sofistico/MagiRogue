@@ -25,9 +25,9 @@ namespace MagiRogue.GameSys.Planet.TechRes
         public List<string> AbilityRequired { get; set; }
         public List<Tech> TechResearched { get; set; }
 
-        // Which research id this is an upgrade from!
-        // example: wound leech draining -> wound cleaning
-        public string UpgradeFrom { get; set; }
+        //// Which research id this is an upgrade from!
+        //// example: wound leech draining -> wound cleaning
+        //public string UpgradeFrom { get; set; }
         public List<string> RequiredRes { get; set; }
 
         // you can only research one or the other!
