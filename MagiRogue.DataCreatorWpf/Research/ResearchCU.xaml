@@ -6,45 +6,48 @@
              xmlns:local="clr-namespace:MagiRogue.DataCreatorWpf"
              mc:Ignorable="d"
               d:DesignHeight= "400" d:DesignWidth="300">
-    <StackPanel>
-        <Label Content="Reserach _Id:" Target="{Binding ElementName= resId}" />
-        <TextBox Name="resId" Width="97" HorizontalAlignment="Left" />
+    <ScrollViewer>
+        <StackPanel>
 
-        <Label Content="Research _Name:" Target="{Binding ElementName=resName}" />
-        <TextBox Name="resName" Width="97" HorizontalAlignment="Left" />
+            <Label Content="Reserach _Id:" Target="{Binding ElementName= resId}" />
+            <TextBox Name="resId" Width="97" HorizontalAlignment="Left" />
 
-        <Label Content="Reserach _Difficulty" Target="{Binding ElementName=resDiffic}" />
-        <TextBox Name="resDiffic" Width="97" HorizontalAlignment="Left" />
+            <Label Content="Research _Name:" Target="{Binding ElementName=resName}" />
+            <TextBox Name="resName" Width="97" HorizontalAlignment="Left" />
 
-        <Label Content="_Is Magical" />
-        <WrapPanel>
-            <RadioButton GroupName="magical">Yes</RadioButton>
-            <RadioButton GroupName="magical">No</RadioButton>
-        </WrapPanel>
-        <Label Content="Is i_ntermediare?" />
-        <WrapPanel>
-            <RadioButton GroupName="intemediarie">Yes</RadioButton>
-            <RadioButton GroupName="intemediarie">No</RadioButton>
-        </WrapPanel>
-        <Label Content="Can be found in the world?" />
-        <WrapPanel>
-            <RadioButton GroupName="explore">Yes</RadioButton>
-            <RadioButton GroupName="explore">No</RadioButton>
-        </WrapPanel>
-        <Label Content="Can be given by a deity?" />
-        <WrapPanel>
-            <RadioButton GroupName="deityGiving">Yes</RadioButton>
-            <RadioButton GroupName="deityGiving">No</RadioButton>
-        </WrapPanel>
-        <Label Content="List of _abilities needed" Target="{Binding ElementName=abilities}" />
-        <TextBox Name="abilities" />
+            <Label Content="Reserach _Difficulty" Target="{Binding ElementName=resDiffic}" />
+            <TextBox Name="resDiffic" Width="97" HorizontalAlignment="Left" />
 
-        <Label Content="Teach researched, is a enum" />
-        <TextBox Name="techRes" />
+            <Label Content="_Is Magical" />
+            <WrapPanel>
+                <RadioButton GroupName="magical">Yes</RadioButton>
+                <RadioButton GroupName="magical">No</RadioButton>
+            </WrapPanel>
+            <Label Content="Is i_ntermediare?" />
+            <WrapPanel>
+                <RadioButton GroupName="intemediarie">Yes</RadioButton>
+                <RadioButton GroupName="intemediarie">No</RadioButton>
+            </WrapPanel>
+            <Label />
+            <WrapPanel>
+                <RadioButton GroupName="explore">Yes</RadioButton>
+                <RadioButton GroupName="explore">No</RadioButton>
+            </WrapPanel>
+            <Label Content="Can be given by a deity?" />
+            <WrapPanel>
+                <RadioButton GroupName="deityGiving">Yes</RadioButton>
+                <RadioButton GroupName="deityGiving">No</RadioButton>
+            </WrapPanel>
+            <Label Content="List of _abilities needed" Target="{Binding ElementName=abilities}" />
+            <TextBox Name="abilities" />
 
-        <Label Content="Teach needed as a prerequisite" />
-        <TextBox Name="techPre" />
+            <Label Content="Teach researched, is a enum" />
+            <TextBox Name="techRes" />
 
-        <Button Click="Button_Click" Margin="10" HorizontalAlignment="Center">Send</Button>
-    </StackPanel>
+            <Label Content="Teach needed as a prerequisite" />
+            <TextBox Name="techPre" />
+
+            <Button Click="Button_Click" Margin="10" HorizontalAlignment="Center">Send</Button>
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>

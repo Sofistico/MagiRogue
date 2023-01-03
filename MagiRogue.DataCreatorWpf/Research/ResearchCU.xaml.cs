@@ -27,7 +27,7 @@ namespace MagiRogue.DataCreatorWpf
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Hello!");
+            string id = resId.Text;
         }
     }
 }
