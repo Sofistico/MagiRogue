@@ -141,7 +141,7 @@ namespace MagiRogue.Data
             => (T)ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId))?.Copy();
 
         public static T QueryTileInData<T>(string tileId, Point pos) where T : TileBase
-            => (T)ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId)).Copy(pos);
+            => (T)ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId))?.Copy(pos);
 
         public static Item QueryItemInData(string itemId)
             => ListOfItems.FirstOrDefault(i => i.Id.Equals(itemId));
