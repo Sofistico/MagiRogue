@@ -136,12 +136,29 @@ namespace MagiRogue.GameSys
         {
             if (player != null)
             {
-                Civilization startTown = WorldMap.Civilizations
-                    .FirstOrDefault(a => a.Tendency == CivilizationTendency.Neutral);
-                player.Position = startTown.ReturnAllLandTerritory(WorldMap.AssocietatedMap)[0].Position;
-                Player = player;
+                try
+                {
+                    Civilization startTown = WorldMap.Civilizations
+                        .Find(a => a.Tendency == CivilizationTendency.Neutral);
+                    if (startTown is not null)
+                        player.Position = startTown.ReturnAllLandTerritory(WorldMap.AssocietatedMap)[0].Position;
+                    else
+                        throw new ApplicationException("There was an error on trying to find the start town to place the player!");
+                    Player = player;
 
-                CurrentMap.Add(Player);
+                    CurrentMap.Add(Player);
+                }
+                catch (ApplicationException ex)
+                {
+                    GameLoop.WriteToLog(ex.Message);
+                    throw;
+                }
+                catch (Exception e)
+                {
+                    GameLoop.WriteToLog(e.Message);
+
+                    throw;
+                }
             }
         }
 

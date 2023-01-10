@@ -409,9 +409,17 @@ namespace MagiRogue.GameSys.Civ
         public void AddCivToRelations(Civilization civ, RelationType relationType)
         {
             if (!Relations.Any(i => i.CivRelatedId.Equals(civ.Id) && i.Relation == relationType))
+            {
                 Relations.Add(new CivRelation(Id, civ.Id, relationType));
+            }
             else
-                Relations.FirstOrDefault(i => i.CivRelatedId == civ.Id).Relation = relationType;
+            {
+                var rel = Relations.Find(i => i.CivRelatedId == civ.Id);
+                if (rel is not null)
+                {
+                    rel.Relation = relationType;
+                }
+            }
         }
 
         public bool CheckIfCivIsDead()

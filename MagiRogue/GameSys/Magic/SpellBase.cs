@@ -283,5 +283,10 @@ namespace MagiRogue.GameSys.Magic
         {
             return SpellId.GetHashCode();
         }
+
+        public override bool Equals(object? obj)
+        {
+            return GetHashCode() == obj.GetHashCode();
+        }
     }
 }

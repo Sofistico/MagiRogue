@@ -284,8 +284,10 @@ namespace MagiRogue.Commands
             {
                 if (SpellSelected.Effects.Any(a => a.AreaOfEffect is SpellAreaEffect.Ball))
                 {
+                    var eff = GetSpellAreaEffect(SpellAreaEffect.Ball);
+                    if (eff is null) { return; }
                     RadiusLocationContext radiusLocation =
-                       new RadiusLocationContext(Cursor.Position, SpellSelected.Effects.FirstOrDefault().Radius);
+                       new RadiusLocationContext(Cursor.Position, eff.Radius);
 
                     foreach (Point point in radius.PositionsInRadius(radiusLocation))
                     {
@@ -336,12 +338,8 @@ namespace MagiRogue.Commands
 
         public bool SpellTargetsTile()
         {
-            if (SpellSelected is not null && (SpellSelected.Effects.Any(a => a.TargetsTile)
-                || SpellSelected.Effects.Any(a => a.AreaOfEffect is not SpellAreaEffect.Target)))
-            {
-                return true;
-            }
-            return false;
+            return SpellSelected is not null && (SpellSelected.Effects.Any(a => a.TargetsTile)
+                || SpellSelected.Effects.Any(a => a.AreaOfEffect is not SpellAreaEffect.Target));
         }
 
         /// <summary>
