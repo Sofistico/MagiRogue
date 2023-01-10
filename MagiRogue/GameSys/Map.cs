@@ -377,7 +377,8 @@ namespace MagiRogue.GameSys
             {
                 foreach (TileBase tile in Tiles)
                 {
-                    RemoveTerrain(tile);
+                    if (tile != null)
+                        RemoveTerrain(tile);
                 }
             }
             catch (Exception)

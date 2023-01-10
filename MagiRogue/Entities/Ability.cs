@@ -34,7 +34,7 @@ namespace MagiRogue.Entities
         private static string ReturnEnumString(Enum name)
         {
             string tempName = name.ToString();
-            return string.Join(" ", Regex.Split(tempName, @"(?<!^)(?=[A-Z](?![A-Z]|$))"));
+            return string.Join(" ", Regex.Split(tempName, "(?<!^)(?=[A-Z](?![A-Z]|$))", RegexOptions.None, TimeSpan.FromSeconds(10)));
         }
 
         public AbilityName ReturnAbilityEnumFromString()
