@@ -30,7 +30,7 @@ namespace MagiRogue.Utils.Extensions
 
         public static string SeparateByUpperLetter(this string text)
         {
-            return Regex.Replace(text, @"(\p{Lu})(?<=\p{Ll}\1|(\p{Lu}|\p{Ll})\1(?=\p{Ll}))", " $1").Trim();
+            return Regex.Replace(text, @"(\p{Lu})(?<=\p{Ll}\1|(\p{Lu}|\p{Ll})\1(?=\p{Ll}))", " $1", RegexOptions.None, TimeSpan.FromSeconds(10)).Trim();
         }
 
         public static string FirstLetterUpper(this string input) =>

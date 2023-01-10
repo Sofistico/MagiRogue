@@ -79,25 +79,25 @@ namespace MagiRogue.Test.System
             Assert.True(obj.PossibleChangeMap);
         }
 
-        // CODE DEAD END, MAYBE KEEP FOR A FUTURE PROJECT
-        // SINCE IT SEEMS THAT FOR LARGE AMOUNT OF DATA THIS IS FASTER
-        [Fact]
-        public void ChunkSerializeJWriterTest()
-        {
-            PrepareForChunkTest();
+        //// CODE DEAD END, MAYBE KEEP FOR A FUTURE PROJECT
+        //// SINCE IT SEEMS THAT FOR LARGE AMOUNT OF DATA THIS IS FASTER
+        //[Fact]
+        //public void ChunkSerializeJWriterTest()
+        //{
+        //    PrepareForChunkTest();
 
-            using MemoryStream ms = new MemoryStream();
-            using StreamWriter wr = new StreamWriter(ms);
-            using JsonTextWriter jw = new JsonTextWriter(wr);
-            jw.WriteStartArray();
-            var json = JsonConvert.SerializeObject(uni.CurrentChunk);
-            jw.WriteValue(json);
-            jw.WriteEndArray();
-            /*JsonTextReader reader = new JsonTextReader(new StreamReader(ms));
-            Newtonsoft.Json.Linq.JObject j = Newtonsoft.Json.Linq.JObject.Load(reader);*/
-            jw.Flush();
-            wr.Flush();
-        }
+        //    using MemoryStream ms = new MemoryStream();
+        //    using StreamWriter wr = new StreamWriter(ms);
+        //    using JsonTextWriter jw = new JsonTextWriter(wr);
+        //    jw.WriteStartArray();
+        //    var json = JsonConvert.SerializeObject(uni.CurrentChunk);
+        //    jw.WriteValue(json);
+        //    jw.WriteEndArray();
+        //    /*JsonTextReader reader = new JsonTextReader(new StreamReader(ms));
+        //    Newtonsoft.Json.Linq.JObject j = Newtonsoft.Json.Linq.JObject.Load(reader);*/
+        //    jw.Flush();
+        //    wr.Flush();
+        //}
 
         private void PrepareForChunkTest()
         {
