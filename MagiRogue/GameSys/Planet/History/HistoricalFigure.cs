@@ -82,6 +82,10 @@ namespace MagiRogue.GameSys.Planet.History
 
         #region Ctor
 
+        public HistoricalFigure()
+        {
+        }
+
         public HistoricalFigure(string name,
             Sex hFGender,
             List<Legend> legends,
