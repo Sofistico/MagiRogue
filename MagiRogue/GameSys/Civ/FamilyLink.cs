@@ -1,6 +1,8 @@
-﻿using MagiRogue.Data.Enumerators;
+﻿using MagiRogue.Data;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.GameSys.Planet.History;
 using MagiRogue.Utils;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,13 +26,13 @@ namespace MagiRogue.GameSys.Civ
             HfRelationType type,
             HistoricalFigure otherFigure)
         {
-            if (!Nodes.Any(i => i.OtherFigure.Id == otherFigure.Id))
+            if (!Nodes.Any(i => i.OtherFigureId == otherFigure.Id))
                 Nodes.Add(new FamilyNode(type, figure, otherFigure));
         }
 
         public FamilyNode[] GetOtherFamilyNodesByRelations(HfRelationType toFind)
         {
-            return Nodes.Where(i => i.Relation == toFind).ToArray();
+            return Nodes.FindAll(i => i.Relation == toFind).ToArray();
         }
 
         public bool GetIfExistsAnyRelationOfType(HfRelationType toFind)
@@ -42,37 +44,44 @@ namespace MagiRogue.GameSys.Civ
             HistoricalFigure hfChild,
             int year)
         {
-            var hfFather = GetOtherFamilyNodesByRelations(HfRelationType.Married)[0]?.OtherFigure;
-
-            SetChildMotherFather(hfMother, hfChild, hfFather);
-
-            // gods why
-            StringBuilder bb = new StringBuilder();
-            if (hfFather is not null)
+            try
             {
-                string father = $"{bb} the {hfFather.Name} had a child with {hfMother.Name}, the child was named {hfChild.Name}";
-                hfFather.AddLegend(father, year);
-                if (hfFather.SpecialFlags.Contains(SpecialFlag.Myth))
+                var hfFather = GetOtherFamilyNodesByRelations(HfRelationType.Married)?[0]?.OtherFigure;
+
+                SetChildMotherFather(hfMother, hfChild, hfFather);
+
+                // gods why
+                StringBuilder bb = new StringBuilder();
+                if (hfFather is not null)
                 {
-                    hfChild.SpecialFlags.Add(SpecialFlag.Supernatural);
-                    hfChild.SpecialFlags.Add(SpecialFlag.DemiMyth);
+                    string father = $"{bb} the {hfFather.Name} had a child with {hfMother.Name}, the child was named {hfChild.Name}";
+                    hfFather.AddLegend(father, year);
+                    if (hfFather.SpecialFlags.Contains(SpecialFlag.Myth))
+                    {
+                        hfChild.SpecialFlags.Add(SpecialFlag.Supernatural);
+                        hfChild.SpecialFlags.Add(SpecialFlag.DemiMyth);
+                    }
                 }
-            }
-            string mother;
-            string child;
-            if (hfFather is null)
-            {
-                mother = $"{bb} the {hfMother.Name} conceived a child with an unknow father, the child was named {hfChild.Name}";
-                child = $"{bb} was born child of {hfMother.Name} and an unknow father";
-            }
-            else
-            {
-                mother = $"{bb} the {hfMother.Name} conceived a child with {hfFather.Name}, the child was named {hfChild.Name}";
-                child = $"{bb} was born child of {hfMother.Name} and {hfFather.Name}";
-            }
+                string mother;
+                string child;
+                if (hfFather is null)
+                {
+                    mother = $"{bb} the {hfMother.Name} conceived a child with an unknow father, the child was named {hfChild.Name}";
+                    child = $"{bb} was born child of {hfMother.Name} and an unknow father";
+                }
+                else
+                {
+                    mother = $"{bb} the {hfMother.Name} conceived a child with {hfFather.Name}, the child was named {hfChild.Name}";
+                    child = $"{bb} was born child of {hfMother.Name} and {hfFather.Name}";
+                }
 
-            hfChild.AddLegend(child, year);
-            hfMother.AddLegend(mother, year);
+                hfChild.AddLegend(child, year);
+                hfMother.AddLegend(mother, year);
+            }
+            catch (Exception)
+            {
+                GameLoop.WriteToLog($"Something went wrong in the creation of children! Mother: {hfMother.Id} Child: {hfChild.Id}");
+            }
         }
 
         private void SetChildMotherFather(HistoricalFigure hfMother,
@@ -96,21 +105,27 @@ namespace MagiRogue.GameSys.Civ
 
         public HistoricalFigure? GetSpouseIfAny()
         {
-            return Nodes.FirstOrDefault(i => i.Relation is HfRelationType.Married)?.OtherFigure;
+            return Nodes.Find(i => i.Relation is HfRelationType.Married)?.OtherFigure;
         }
     }
 
     public class FamilyNode : BasicTreeNode<FamilyNode>
     {
         public HfRelationType Relation { get; set; }
-        public HistoricalFigure OtherFigure { get; set; }
-        public HistoricalFigure Figure { get; set; }
+
+        [JsonIgnore]
+        public HistoricalFigure OtherFigure => Find.Figures.Find(i => i.Id == OtherFigureId);
+
+        [JsonIgnore]
+        public HistoricalFigure Figure => Find.Figures.Find(i => i.Id == FigureId);
+        public int OtherFigureId { get; set; }
+        public int FigureId { get; set; }
 
         public FamilyNode(HfRelationType relation, HistoricalFigure figure, HistoricalFigure otherFigure)
         {
             Relation = relation;
-            Figure = figure;
-            OtherFigure = otherFigure;
+            FigureId = figure.Id;
+            OtherFigureId = otherFigure.Id;
         }
 
         public bool IsCloseFamily()

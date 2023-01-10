@@ -41,13 +41,13 @@ namespace MagiRogue.GameSys.Planet.TechRes
             {
                 ResearchTreeNode[] nodes = GetUnfinishedNodes();
                 // priotize by roots first
-                if (nodes.Any(i => i.IsRoot))
+                if (nodes.Any(i => i?.IsRoot == true))
                 {
                     int maxTries = 30;
                     int tries = 0;
                     while (tries <= maxTries)
                     {
-                        var getRoot = nodes.Where(i => i.IsRoot).ToList().GetRandomItemFromList();
+                        var getRoot = nodes.Where(i => i?.IsRoot == true).ToList().GetRandomItemFromList();
                         bool hasAnyAbility = CheckIfHasAbilityToResearchNode(figure, getRoot);
                         if (hasAnyAbility)
                         {

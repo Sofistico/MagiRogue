@@ -1,6 +1,7 @@
 ﻿global using Point = SadRogue.Primitives.Point;
 using GoRogue;
 using MagiRogue.GameSys;
+using MagiRogue.GameSys.Planet.History;
 using MagiRogue.UI;
 using System;
 using System.Collections.Generic;
@@ -13,9 +14,6 @@ namespace MagiRogue
     {
         public const int GameWidth = 120;
         public const int GameHeight = 30;
-        private static int hfId = 0;
-        private static int civId;
-        private static int mythId;
 
         // Managers
         public static UIManager UIManager { get; set; }
@@ -90,23 +88,32 @@ namespace MagiRogue
 
         public static int GetHfId()
         {
-            return hfId++;
+            return SequentialIdGenerator.HistoricalFigureId;
         }
 
         public static int GetCivId()
-            => civId++;
+            => SequentialIdGenerator.CivId;
 
         public static int GetMythId()
         {
-            return mythId++;
+            return SequentialIdGenerator.MythId;
         }
+
+        public static int GetAbilityId()
+        {
+            return SequentialIdGenerator.AbilityId;
+        }
+
+        #endregion IdCounters
+
+        #region Logs
 
         public static void WriteToLog(List<string> errors)
         {
             try
             {
                 var path = new StringBuilder(AppDomain.CurrentDomain.BaseDirectory).Append(@"\log.txt").ToString();
-                StringBuilder str = new StringBuilder($"{DateTime.Now:dd/MM/yyyy}");
+                StringBuilder str = new StringBuilder($"{DateTime.Now:dd/MM/yyyy} ");
                 foreach (var item in errors)
                 {
                     str.AppendLine(item);
@@ -130,6 +137,6 @@ namespace MagiRogue
             WriteToLog(new List<string>() { error });
         }
 
-        #endregion IdCounters
+        #endregion Logs
     }
 }

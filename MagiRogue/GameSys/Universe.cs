@@ -298,8 +298,8 @@ namespace MagiRogue.GameSys
 #endif
                 // makes sure that any entity that exists but has no AI, or the AI failed, get's a turn.
                 GetEntitiesIdsToRegisterToTime();
-                if (WorldMap is not null)
-                    WorldMap.WorldHistory.TicksSinceCreation = Time.TimePassed.Ticks;
+                //if (WorldMap is not null)
+                //    WorldMap.WorldHistory.TicksSinceCreation = Time.TimePassed.Ticks;
             }
         }
 

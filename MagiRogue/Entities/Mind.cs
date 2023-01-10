@@ -5,10 +5,10 @@ using System.Linq;
 
 namespace MagiRogue.Entities
 {
-    public class Mind
+    public class Mind : IStat
     {
-        public int Inteligence { get; set; }
-        public int Precision { get; set; }
+        public int Inteligence { get => Stats["Inteligence"]; set => Stats["Inteligence"] = value; }
+        public int Precision { get => Stats["Precision"]; set => Stats["Precision"] = value; }
 
         /// <summary>
         /// Dictionary of the Abilities of an actor.
@@ -17,11 +17,13 @@ namespace MagiRogue.Entities
         public Dictionary<int, Ability> Abilities { get; set; }
         public Personality Personality { get; set; }
         public Profession Profession { get; set; }
+        public Dictionary<string, int> Stats { get; set; }
 
         public Mind()
         {
             Abilities = new();
             Personality = new Personality();
+            Stats = new Dictionary<string, int>() { { "Inteligence", 0 }, { "Precision", 0 } };
         }
 
         public void AddAbilityToDictionary(Ability ability)

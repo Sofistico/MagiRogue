@@ -64,22 +64,22 @@ namespace MagiRogue.UI
 
                 if (info.IsKeyDown(Keys.Left))
                 {
-                    console.ViewPosition = console.ViewPosition.Translate((-1, 0));
+                    console.Surface.ViewPosition = console.Surface.ViewPosition.Translate((-1, 0));
                 }
 
                 if (info.IsKeyDown(Keys.Right))
                 {
-                    console.ViewPosition = console.ViewPosition.Translate((1, 0));
+                    console.Surface.ViewPosition = console.Surface.ViewPosition.Translate((1, 0));
                 }
 
                 if (info.IsKeyDown(Keys.Up))
                 {
-                    console.ViewPosition = console.ViewPosition.Translate((0, -1));
+                    console.Surface.ViewPosition = console.Surface.ViewPosition.Translate((0, -1));
                 }
 
                 if (info.IsKeyDown(Keys.Down))
                 {
-                    console.ViewPosition = console.ViewPosition.Translate((0, +1));
+                    console.Surface.ViewPosition = console.Surface.ViewPosition.Translate((0, +1));
                 }
                 // Must return false, because there isn't any movement of the actor
                 return false;

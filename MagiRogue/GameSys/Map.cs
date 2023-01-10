@@ -9,6 +9,7 @@ using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SadConsole;
 using SadConsole.Entities;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
@@ -398,7 +399,7 @@ namespace MagiRogue.GameSys
             return null;
         }
 
-        public void ConfigureRender(SadConsole.Console renderer)
+        public void ConfigureRender(ScreenSurface renderer)
         {
             if (renderer.SadComponents.Contains(_entityRender))
             {
@@ -407,10 +408,7 @@ namespace MagiRogue.GameSys
             _entityRender = new();
             renderer.SadComponents.Add(_entityRender);
             _entityRender.DoEntityUpdate = true;
-            foreach (Entity item in Entities.Items)
-            {
-                _entityRender.Add(item);
-            }
+            _entityRender.AddRange(Entities.Items.Cast<Entity>());
             renderer.IsDirty = true;
         }
 

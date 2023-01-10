@@ -30,7 +30,7 @@ namespace MagiRogue.Test.System
             Palette.AddToColorDictionary();
             var chunck = new RegionChunk(new Point(0, 0));
             uni = new(new PlanetMap(50, 50), null, null,
-                new MagiRogue.GameSys.Time.TimeSystem(500), true,
+                new MagiRogue.GameSys.Time.TimeSystem(10), true,
                 SeasonType.Spring, new(), chunck);
             PrepareForChunkTest();
         }

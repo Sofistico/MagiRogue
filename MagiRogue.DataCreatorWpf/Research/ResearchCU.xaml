@@ -5,18 +5,22 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:MagiRogue.DataCreatorWpf"
              mc:Ignorable="d"
-              d:DesignHeight= "400" d:DesignWidth="300">
+             d:DesignHeight= "400" d:DesignWidth="300">
+    <UserControl.Resources>
+        <local:ResearchViewModel x:Key="resModel" />
+    </UserControl.Resources>
+
     <ScrollViewer>
-        <StackPanel>
+        <StackPanel DataContext="{StaticResource resModel}">
 
             <Label Content="Reserach _Id:" Target="{Binding ElementName= resId}" />
-            <TextBox Name="resId" Width="97" HorizontalAlignment="Left" />
+            <TextBox Name="resId" Width="97" HorizontalAlignment="Left" Text="{Binding Id}" />
 
             <Label Content="Research _Name:" Target="{Binding ElementName=resName}" />
-            <TextBox Name="resName" Width="97" HorizontalAlignment="Left" />
+            <TextBox Name="resName" Width="97" HorizontalAlignment="Left" Text="{Binding Name}" />
 
             <Label Content="Reserach _Difficulty" Target="{Binding ElementName=resDiffic}" />
-            <TextBox Name="resDiffic" Width="97" HorizontalAlignment="Left" />
+            <TextBox Name="resDiffic" Width="97" HorizontalAlignment="Left" Text="{Binding Difficulty}" />
 
             <Label Content="_Is Magical" />
             <WrapPanel>
@@ -39,13 +43,13 @@
                 <RadioButton GroupName="deityGiving">No</RadioButton>
             </WrapPanel>
             <Label Content="List of _abilities needed" Target="{Binding ElementName=abilities}" />
-            <TextBox Name="abilities" />
+            <TextBox Name="abilities" Text="{Binding AbilityRequired}" />
 
             <Label Content="Teach researched, is a enum" />
-            <TextBox Name="techRes" />
+            <TextBox Name="techRes" Text="{Binding TechResearched}" />
 
             <Label Content="Teach needed as a prerequisite" />
-            <TextBox Name="techPre" />
+            <TextBox Name="techPre" Text="{Binding RequiredRes}" />
 
             <Button Click="Button_Click" Margin="10" HorizontalAlignment="Center">Send</Button>
         </StackPanel>

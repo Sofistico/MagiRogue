@@ -26,7 +26,7 @@ namespace MagiRogue.GameSys.Planet.History.HistoryActions
             Site site = Find.GetFigureStayingSiteIfAny(figure);
             int year = Find.Year;
             if (site is not null
-                && !figure.IsMarried())
+                && figure?.IsMarried() != true)
             {
                 var peopleInside = Find.GetAllFiguresStayingInSiteIfAny(site.Id, new() { figure.Id });
                 int aceptableDiferenceAge;
@@ -48,7 +48,7 @@ namespace MagiRogue.GameSys.Planet.History.HistoryActions
                 if (peopleInARangeOfAgeCloseAndPredispost?.Count >= 0)
                 {
                     var randomPerson = peopleInARangeOfAgeCloseAndPredispost.GetRandomItemFromList();
-                    if (randomPerson.IsMarried())
+                    if (randomPerson?.IsMarried() == true)
                         return false;
                     figure.Marry(randomPerson);
                     StringBuilder anotherB = new StringBuilder($"the {figure.Name} married with {randomPerson.Name}");

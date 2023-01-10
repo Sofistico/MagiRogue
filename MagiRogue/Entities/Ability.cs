@@ -20,7 +20,15 @@ namespace MagiRogue.Entities
             Name = ReturnEnumString(name);
             Score = abilityScore;
             Id = (int)name;
-            XpTotal = (abilityScore) * 1000;
+            XpTotal = abilityScore * 1000;
+        }
+
+        public Ability(string name, int abilityScore)
+        {
+            Name = name;
+            Score = abilityScore;
+            Id = GameLoop.GetAbilityId();
+            XpTotal = abilityScore * 1000;
         }
 
         private static string ReturnEnumString(Enum name)
