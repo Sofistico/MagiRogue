@@ -121,6 +121,17 @@ namespace MagiRogue.GameSys.Civ
         public int OtherFigureId { get; set; }
         public int FigureId { get; set; }
 
+        public FamilyNode()
+        {
+        }
+
+        public FamilyNode(HfRelationType relation, int figure, int otherFigure)
+        {
+            Relation = relation;
+            FigureId = figure;
+            OtherFigureId = otherFigure;
+        }
+
         public FamilyNode(HfRelationType relation, HistoricalFigure figure, HistoricalFigure otherFigure)
         {
             Relation = relation;

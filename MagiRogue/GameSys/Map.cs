@@ -373,9 +373,16 @@ namespace MagiRogue.GameSys
         {
             if (Tiles is null)
                 return;
-            foreach (TileBase tile in Tiles)
+            try
             {
-                RemoveTerrain(tile);
+                foreach (TileBase tile in Tiles)
+                {
+                    RemoveTerrain(tile);
+                }
+            }
+            catch (Exception)
+            {
+                GameLoop.WriteToLog("Tried to destroy a tile that didn't exist!");
             }
         }
 
