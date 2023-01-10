@@ -48,6 +48,10 @@ namespace MagiRogue.GameSys.Planet.History.HistoryActions
                 if (peopleInARangeOfAgeCloseAndPredispost?.Count >= 0)
                 {
                     var randomPerson = peopleInARangeOfAgeCloseAndPredispost.GetRandomItemFromList();
+                    if (randomPerson == null)
+                    {
+                        return false;
+                    }
                     if (randomPerson?.IsMarried() == true)
                         return false;
                     figure.Marry(randomPerson);

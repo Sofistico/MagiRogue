@@ -36,12 +36,7 @@ namespace MagiRogue.Entities
 
             set
             {
-                if (value > MaxBodyPartHp)
-                {
-                    bodyPartHp = MaxBodyPartHp;
-                }
-                else
-                    bodyPartHp = value;
+                bodyPartHp = value > MaxBodyPartHp ? MaxBodyPartHp : value;
             }
         }
 
@@ -95,6 +90,7 @@ namespace MagiRogue.Entities
 
         // TODO: FOR THE FUTURE!
         public List<Tissue> Tissues { get; set; }
+        public bool NeedsHeal => BodyPartHp < MaxBodyPartHp || Wounds.Count > 0;
 
         [JsonConstructor()]
         public BodyPart(string materialId)
@@ -114,9 +110,13 @@ namespace MagiRogue.Entities
                 if (!regenLostLimb && !wound.Treated
                     && (wound.Severity is not InjurySeverity.Bruise
                     || wound.Severity is not InjurySeverity.Minor))
+                {
                     continue;
+                }
 
-                if (regenLostLimb || (wound.Severity is not InjurySeverity.Missing || wound.Severity is not InjurySeverity.Pulped))
+                if (regenLostLimb
+                    || (wound.Severity is not InjurySeverity.Missing
+                    && wound.Severity is not InjurySeverity.Pulped))
                 {
                     wound.Recovery = MathMagi.Round(rateOfHeal + wound.Recovery);
                     if (wound.Recovery >= MathMagi.ReturnPositive(wound.HpLost))
@@ -130,7 +130,10 @@ namespace MagiRogue.Entities
                     }
                 }
             }
-            Wounds.RemoveAll(a => a.Recovered);
+            if (Wounds.Count > 0)
+                Wounds.RemoveAll(a => a.Recovered);
+            if (NeedsHeal)
+                BodyPartHp += rateOfHeal;
         }
 
         private string DebuggerDisplay

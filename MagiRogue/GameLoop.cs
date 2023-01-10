@@ -72,7 +72,7 @@ namespace MagiRogue
         /// <returns></returns>
         public static Map GetCurrentMap()
         {
-            return Universe.CurrentMap;
+            return Universe?.CurrentMap;
         }
 
         public static void SetIdGen(uint lastId) => IdGen = new IDGenerator(lastId + 1);

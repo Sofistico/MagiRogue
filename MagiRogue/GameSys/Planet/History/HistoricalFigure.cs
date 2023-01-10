@@ -358,7 +358,7 @@ namespace MagiRogue.GameSys.Planet.History
 
         public int? GetLivingSiteId()
         {
-            return RelatedSites.FirstOrDefault(i => i.RelationType.HasFlag(SiteRelationTypes.LivesThere)).OtherSiteId;
+            return RelatedSites.Find(i => i.RelationType.HasFlag(SiteRelationTypes.LivesThere))?.OtherSiteId;
         }
 
         public bool CheckForProlificStudious()
@@ -656,6 +656,8 @@ namespace MagiRogue.GameSys.Planet.History
 
         public void Marry(HistoricalFigure randomPerson)
         {
+            if (randomPerson is null)
+                return;
             if (IsMarried()!.Value)
                 return;
             FamilyLink.SetMarriedRelation(this, randomPerson);

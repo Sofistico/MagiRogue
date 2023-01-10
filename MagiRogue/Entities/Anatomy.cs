@@ -415,7 +415,7 @@ namespace MagiRogue.Entities
                 //if (totalDmg > 0)
                 //    GameLoop.AddMessageLog($"and took {totalDmg} damage!");
 
-                GameLoop.GetCurrentMap().Add(limb.ReturnLimbAsItem(actor));
+                GameLoop.GetCurrentMap()?.Add(limb.ReturnLimbAsItem(actor));
             }
             catch (Exception)
             {

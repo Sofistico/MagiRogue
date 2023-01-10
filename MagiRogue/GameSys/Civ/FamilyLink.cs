@@ -136,7 +136,8 @@ namespace MagiRogue.GameSys.Civ
         {
             Relation = relation;
             FigureId = figure.Id;
-            OtherFigureId = otherFigure.Id;
+            if (otherFigure is not null)
+                OtherFigureId = otherFigure.Id;
         }
 
         public bool IsCloseFamily()

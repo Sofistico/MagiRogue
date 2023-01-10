@@ -274,27 +274,26 @@ namespace MagiRogue.Entities
             #endregion Broken dreams lies here....
 
             bool regens = GetAnatomy().GetRace().CanRegenarate();
-
-            foreach (Limb limb in GetAnatomy().Limbs)
+            var limbsHeal = GetAnatomy().Limbs.FindAll(i => i.NeedsHeal || (regens && !i.Attached));
+            int limbCount = limbsHeal.Count;
+            for (int i = 0; i < limbCount; i++)
             {
-                if (limb.BodyPartHp < limb.MaxBodyPartHp || limb.Wounds.Count > 0)
+                Limb limb = limbsHeal[i];
+                if (limb.Attached)
                 {
-                    if (limb.Attached)
+                    if (limb.CanHeal || regens)
                     {
-                        if (limb.CanHeal || regens)
-                        {
-                            limb.ApplyHeal(GetNormalLimbRegen() * limb.RateOfHeal);
-                        }
+                        limb.ApplyHeal(GetNormalLimbRegen() * limb.RateOfHeal);
                     }
-                    if (!limb.Attached && regens)
+                }
+                if (!limb.Attached && regens)
+                {
+                    List<Limb> connectedLimbs = GetAnatomy().GetAllParentConnectionLimb(limb);
+                    if (connectedLimbs.All(i => i.Attached))
                     {
-                        List<Limb> connectedLimbs = GetAnatomy().GetAllParentConnectionLimb(limb);
-                        if (!connectedLimbs.Any(i => !i.Attached))
-                        {
-                            limb.ApplyHeal((GetNormalLimbRegen() * limb.RateOfHeal + 0.5 * 2), regens);
-                            if (!limb.Wounds.Any(i => i.Severity is InjurySeverity.Missing))
-                                limb.Attached = true;
-                        }
+                        limb.ApplyHeal((GetNormalLimbRegen() * limb.RateOfHeal) + (0.5 * 2), regens);
+                        if (!limb.Wounds.Any(i => i.Severity is InjurySeverity.Missing))
+                            limb.Attached = true;
                     }
                 }
             }
