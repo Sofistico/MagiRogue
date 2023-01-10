@@ -21,7 +21,12 @@
             _centiseconds = centiseconds;
         }
 
-        public int Year => (int)(Seconds / SecondsPerYear);
+        public TimeDefSpan(int startYear)
+        {
+            Year = startYear;
+        }
+
+        public int Year { get; set; }
         public int Session => (int)((Month / 3) + 0.5f);
         public int Month => ((int)(Seconds % SecondsPerYear) / SecondsPerMonth) + 1;
         public int Day => ((int)(Seconds % SecondsPerMonth) / SecondsPerDay) + 1;

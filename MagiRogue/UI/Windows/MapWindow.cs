@@ -1,5 +1,6 @@
 ﻿using MagiRogue.Entities;
 using MagiRogue.GameSys;
+using SadConsole;
 using SadRogue.Primitives;
 using Console = SadConsole.Console;
 using Rectangle = SadRogue.Primitives.Rectangle;
@@ -10,7 +11,7 @@ namespace MagiRogue.UI.Windows
     {
         private Map _mapDisplayed;
         private SadConsole.Components.SurfaceComponentFollowTarget followComponent;
-        public Console MapConsole { get; set; }
+        public ScreenSurface MapConsole { get; set; }
 
         public MapWindow(int width, int height, string title) : base(width, height, title)
         {

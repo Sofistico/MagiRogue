@@ -70,7 +70,7 @@ namespace MagiRogue.Data.Serialization.MapSerialization
         public Map AssocietatedMap { get; set; }
 
         [DataMember]
-        public long TicksSinceCreation { get; set; }
+        public long YearSinceCreation { get; set; }
 
         [DataMember]
         public AccumulatedHistory WorldHistory { get; set; }
@@ -107,7 +107,7 @@ namespace MagiRogue.Data.Serialization.MapSerialization
                 map.Civilizations)
             {
                 AssocietatedMap = map.AssocietatedMap,
-                TicksSinceCreation = map.TicksSinceCreation,
+                YearSinceCreation = map.YearSinceCreation,
                 WorldHistory = map.WorldHistory
             };
             return template;

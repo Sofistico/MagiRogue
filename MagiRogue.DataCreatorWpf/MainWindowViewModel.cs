@@ -40,7 +40,7 @@ namespace MagiRogue.DataCreatorWpf
 
         public MainWindowViewModel()
         {
-            Pages.Add(new ResearchView());
+            Pages.Add(new ResearchViewModel());
 
             CurrentPageView = Pages[0];
         }

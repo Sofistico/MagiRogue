@@ -8,6 +8,6 @@ namespace MagiRogue.DataCreatorWpf
 {
     public interface IPageView
     {
-        string Name { get; }
+        string PageName { get; }
     }
 }

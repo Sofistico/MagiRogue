@@ -31,6 +31,12 @@ namespace MagiRogue.GameSys.Time
             turnQueue = new SimplePriorityQueue<ITimeNode, long>();
         }
 
+        public TimeSystem(int initialYear)
+        {
+            timeSpan = new TimeDefSpan(initialYear);
+            turnQueue = new SimplePriorityQueue<ITimeNode, long>();
+        }
+
         public void RegisterEntity(ITimeNode node)
         {
             if (!turnQueue.Contains(node))

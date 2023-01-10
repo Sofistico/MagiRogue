@@ -7,17 +7,19 @@ using System.Threading.Tasks;
 
 namespace MagiRogue.Entities
 {
-    public class Soul
+    public class Soul : IStat
     {
         public int MaxMana { get; set; }
         public double CurrentMana { get; set; }
-        public int WillPower { get; set; }
+        public int WillPower { get => Stats["WillPower"]; set => Stats["WillPower"] = value; }
 
         //public int WildMana { get; set; }
         public double BaseManaRegen { get; set; }
+        public Dictionary<string, int> Stats { get; set; }
 
         public Soul()
         {
+            Stats = new Dictionary<string, int>() { { "WillPower", 0 } };
         }
 
         public void ApplyManaRegen(double manaRegen)

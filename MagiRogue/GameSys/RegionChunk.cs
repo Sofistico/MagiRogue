@@ -1,6 +1,8 @@
-﻿using MagiRogue.Data.Serialization.MapSerialization;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.Entities;
 using Newtonsoft.Json;
+using SadConsole.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,13 +78,15 @@ namespace MagiRogue.GameSys
         public IEnumerable<Actor> TotalPopulation()
         {
             List<Actor> actors = new List<Actor>();
-            foreach (var map in LocalMaps)
+            for (int m = 0; m < LocalMaps.Length; m++)
             {
-                foreach (Entity entity in map.Entities.Items.Cast<Entity>())
+                Map? map = LocalMaps[m];
+                var ac = map.Entities.GetLayer((int)MapLayer.ACTORS).Items.ToArray();
+                for (int i = 0; i < ac.Length; i++)
                 {
-                    if (entity is Actor actor)
+                    if (ac[i] is Actor actor)
                     {
-                        if (map.ControlledEntitiy is not null && map.ControlledEntitiy.ID == entity.ID)
+                        if (map.ControlledEntitiy is not null && map.ControlledEntitiy.ID == actor.ID)
                             continue;
                         actors.Add(actor);
                     }

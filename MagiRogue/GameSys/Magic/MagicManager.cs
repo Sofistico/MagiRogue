@@ -53,6 +53,8 @@ namespace MagiRogue.GameSys.Magic
         {
             KnowSpells = new List<SpellBase>();
             KnowEffects = new();
+            KnowArea = new();
+            KnowDamageTypes = new();
         }
 
         public static int CalculateSpellDamage(Actor entityStats, SpellBase spellCasted)
@@ -82,12 +84,12 @@ namespace MagiRogue.GameSys.Magic
             {
                 return false;
             }
-            AddToSpellList(spell);
+            KnowSpells.Add(spell);
             int count = spell.Effects.Count;
             for (int i = 0; i < count; i++)
             {
                 var sp = spell.Effects[i];
-                if (sp is not null)
+                if (sp is null)
                 {
                     GameLoop.WriteToLog($"Spell effect is null! Something went wrong \nSpell Name: {spell.SpellName} \nSpell Id: {spell.SpellId} \nSpell effects: {spell.Effects}");
                     continue;

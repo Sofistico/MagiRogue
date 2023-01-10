@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using MagiRogue.Data.Enumerators;
+using System;
+using System.Collections.Generic;
 
 namespace MagiRogue
 {
@@ -8,6 +10,10 @@ namespace MagiRogue
 
         private const int siteId = 0;
         private const int roadId = 1;
+        private const int hfId = 2;
+        private const int civId = 3;
+        private const int mythId = 4;
+        private const int abilityId = 5;
 
         #endregion Ids
 
@@ -17,13 +23,23 @@ namespace MagiRogue
 
         public static int RoadId { get => idsDirectory[roadId]++; }
 
+        public static int HistoricalFigureId { get => idsDirectory[hfId]++; }
+        public static int CivId { get => idsDirectory[civId]++; }
+        public static int MythId { get => idsDirectory[mythId]++; }
+        public static int AbilityId { get => idsDirectory[abilityId]++; }
+
         static SequentialIdGenerator()
         {
+            int totalAbilityEnum = Enum.GetNames<AbilityName>().Length;
             // Here it must be defined any new ids, to properly initialize itself!
             idsDirectory = new Dictionary<int, int>
             {
                 { siteId, 0 },
-                { roadId, 0 }
+                { roadId, 0 },
+                { hfId, 0 },
+                { civId, 0 },
+                { mythId, 0 },
+                { abilityId, totalAbilityEnum },
             };
         }
     }

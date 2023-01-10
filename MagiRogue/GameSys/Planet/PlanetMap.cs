@@ -30,7 +30,7 @@ namespace MagiRogue.GameSys.Planet
         [DataMember]
         public Map AssocietatedMap { get; }
 
-        public long TicksSinceCreation { get => WorldHistory.TicksSinceCreation; }
+        public int YearSinceCreation { get => WorldHistory.CreationYear; }
 
         [DataMember]
         public AccumulatedHistory WorldHistory { get; set; }
@@ -76,7 +76,7 @@ namespace MagiRogue.GameSys.Planet
 
         public TimeSystem GetTimePassed()
         {
-            return new TimeSystem(TicksSinceCreation);
+            return new TimeSystem(YearSinceCreation);
         }
     }
 }

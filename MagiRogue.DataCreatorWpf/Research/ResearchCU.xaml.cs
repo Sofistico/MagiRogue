@@ -24,5 +24,10 @@ namespace MagiRogue.DataCreatorWpf
         {
             InitializeComponent();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            string id = resId.Text;
+        }
     }
 }

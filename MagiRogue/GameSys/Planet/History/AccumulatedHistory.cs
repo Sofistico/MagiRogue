@@ -12,6 +12,7 @@ using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MagiRogue.GameSys.Planet.History
 {
@@ -32,7 +33,7 @@ namespace MagiRogue.GameSys.Planet.History
         public List<Myth> Myths { get; set; } = new();
         public List<ItemTemplate> ImportantItems { get; set; } = new();
         public int Year { get; set; }
-        public long TicksSinceCreation { get; set; }
+        public int CreationYear { get; set; }
 
         public AccumulatedHistory()
         {
@@ -213,23 +214,22 @@ namespace MagiRogue.GameSys.Planet.History
 
                 if (i < Civs.Count - 1)
                 {
-                    var otherCivs = Civs.Where(i => i != civ && !i.Dead);
+                    var otherCivs = Civs.FindAll(i => i != civ && !i.Dead);
+                    int otherCivsCount = otherCivs.Count;
                     // interaction between civs here!
-                    foreach (Civilization nextCiv in otherCivs)
+                    for (int x = 0; i < otherCivsCount; i++)
                     {
-                        if (civ.Wealth > wealthToCreateRoad)
+                        var nextCiv = otherCivs[x];
+                        if (civ.Wealth > wealthToCreateRoad && BuildRoadsToFriends(civ, nextCiv, tiles))
                         {
-                            if (BuildRoadsToFriends(civ, nextCiv, tiles))
-                                civ.Wealth -= wealthToCreateRoad;
+                            civ.Wealth -= wealthToCreateRoad;
                         }
 
                         if (civ[nextCiv.Id].Relation is not RelationType.Enemy
                             || civ[nextCiv.Id].Relation is not RelationType.War)
                         {
                             // trade of various types!!
-                            if (civ[nextCiv.Id].RoadBuilt.HasValue
-                                && civ[nextCiv.Id].RoadBuilt.Value
-                                && civ.CivsTradeContains(nextCiv))
+                            if (civ[nextCiv.Id].RoadBuilt == true && civ.CivsTradeContains(nextCiv))
                             {
                                 civ.AddToTradingList(nextCiv);
                             }
@@ -385,24 +385,29 @@ namespace MagiRogue.GameSys.Planet.History
 
             if (civ.Relations.Any(i => i.CivRelatedId.Equals(friend.Id)
                 && i.Relation is RelationType.Friendly && i.RoadBuilt.HasValue))
+            {
                 return false;
+            }
 
             if (civ[friend.Id].RoadBuilt.HasValue)
                 return false;
 
             var territory = civ.Territory[0];
             var friendTerr = friend.Territory[0];
-            if (tiles.Length < 0)
+            if (tiles.Length == 0)
                 return false;
+            int totalLineLength = (int)Math.Sqrt(Math.Pow(friendTerr.Y - territory.Y, 2)
+                + Math.Pow(friendTerr.X - territory.X, 2));
+            //TODO: Make sure that the roads don't colide with water and/or go away from water
+            if (totalLineLength > 50)
+            {
+                return false;
+            }
+
             Path path = planetData.AssocietatedMap.
                         AStar.ShortestPath(territory,
                         friendTerr);
 
-            //TODO: Make sure that the roads don't colide with water and/or go away from water
-            if (path.Length > 50)
-            {
-                return false;
-            }
             var tile = tiles[territory.X, territory.Y];
             var closestCityTile = tiles[friendTerr.X, friendTerr.Y];
             FindPathToCityAndCreateRoad(tile, closestCityTile);

@@ -5,8 +5,53 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:MagiRogue.DataCreatorWpf"
              mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <TextBlock>TESTE I LIVE</TextBlock>
-    </Grid>
+             d:DesignHeight= "400" d:DesignWidth="300">
+    <UserControl.Resources>
+        <local:ResearchViewModel x:Key="resModel" />
+    </UserControl.Resources>
+
+    <ScrollViewer>
+        <StackPanel DataContext="{StaticResource resModel}">
+
+            <Label Content="Reserach _Id:" Target="{Binding ElementName= resId}" />
+            <TextBox Name="resId" Width="97" HorizontalAlignment="Left" Text="{Binding Id}" />
+
+            <Label Content="Research _Name:" Target="{Binding ElementName=resName}" />
+            <TextBox Name="resName" Width="97" HorizontalAlignment="Left" Text="{Binding Name}" />
+
+            <Label Content="Reserach _Difficulty" Target="{Binding ElementName=resDiffic}" />
+            <TextBox Name="resDiffic" Width="97" HorizontalAlignment="Left" Text="{Binding Difficulty}" />
+
+            <Label Content="_Is Magical" />
+            <WrapPanel>
+                <RadioButton GroupName="magical">Yes</RadioButton>
+                <RadioButton GroupName="magical">No</RadioButton>
+            </WrapPanel>
+            <Label Content="Is i_ntermediare?" />
+            <WrapPanel>
+                <RadioButton GroupName="intemediarie">Yes</RadioButton>
+                <RadioButton GroupName="intemediarie">No</RadioButton>
+            </WrapPanel>
+            <Label />
+            <WrapPanel>
+                <RadioButton GroupName="explore">Yes</RadioButton>
+                <RadioButton GroupName="explore">No</RadioButton>
+            </WrapPanel>
+            <Label Content="Can be given by a deity?" />
+            <WrapPanel>
+                <RadioButton GroupName="deityGiving">Yes</RadioButton>
+                <RadioButton GroupName="deityGiving">No</RadioButton>
+            </WrapPanel>
+            <Label Content="List of _abilities needed" Target="{Binding ElementName=abilities}" />
+            <TextBox Name="abilities" Text="{Binding AbilityRequired}" />
+
+            <Label Content="Teach researched, is a enum" />
+            <TextBox Name="techRes" Text="{Binding TechResearched}" />
+
+            <Label Content="Teach needed as a prerequisite" />
+            <TextBox Name="techPre" Text="{Binding RequiredRes}" />
+
+            <Button Click="Button_Click" Margin="10" HorizontalAlignment="Center">Send</Button>
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>

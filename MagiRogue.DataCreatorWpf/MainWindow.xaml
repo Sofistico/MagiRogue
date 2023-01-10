@@ -8,12 +8,12 @@
         Background="{DynamicResource WindowBackgroundBrush}">
 
     <Window.Resources>
-        <DataTemplate DataType="{x:Type local:ResearchView}">
+        <DataTemplate DataType="{x:Type local:ResearchViewModel}">
             <local:ResearchCU />
         </DataTemplate>
     </Window.Resources>
     <DockPanel>
-        <Border DockPanel.Dock="Left" Grid.Column="0" BorderBrush="Blue" BorderThickness="0,0,1,0">
+        <Border DockPanel.Dock="Left" BorderBrush="Blue" BorderThickness="0,0,1,0">
             <StackPanel HorizontalAlignment="Center" Grid.Column="0">
 
                 <ItemsControl ItemsSource="{Binding Pages}">
@@ -27,6 +27,6 @@
             </StackPanel>
         </Border>
 
-        <ContentControl Content="{Binding CurrentPageView}" Grid.Column="1" />
+        <ContentControl DockPanel.Dock="Right" Content="{Binding CurrentPageView}" />
     </DockPanel>
 </Window>

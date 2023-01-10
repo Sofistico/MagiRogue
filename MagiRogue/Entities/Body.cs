@@ -13,7 +13,7 @@ namespace MagiRogue.Entities
     /// <summary>
     /// Stats of the body... how strong, your equip, and etc...
     /// </summary>
-    public class Body
+    public class Body : IStat
     {
         [JsonProperty("Stamina")]
         private double stamina;
@@ -38,7 +38,9 @@ namespace MagiRogue.Entities
             set
             {
                 if (value < MaxStamina)
+                {
                     stamina = value;
+                }
                 else
                 {
                     value = MaxStamina;
@@ -49,16 +51,18 @@ namespace MagiRogue.Entities
         public double MaxStamina { get; set; }
         public double StaminaRegen { get; set; } = 10;
         public double GeneralSpeed { get; set; }
-        public int Toughness { get; set; }
-        public int Endurance { get; set; }
-        public int Strength { get; set; }
+        public int Toughness { get => Stats["Toughness"]; set => Stats["Toughness"] = value; }
+        public int Endurance { get => Stats["Endurance"]; set => Stats["Endurance"] = value; }
+        public int Strength { get => Stats["Strength"]; set => Stats["Strength"] = value; }
         public List<string> MaterialsId { get; set; }
+        public Dictionary<string, int> Stats { get; set; }
 
         public Body()
         {
             Equipment = new Dictionary<string, Item>();
             MaterialsId = new();
             Anatomy = new();
+            Stats = new Dictionary<string, int>() { { "Strength", 0 }, { "Toughness", 0 }, { "Endurance", 0 } };
         }
 
         public void ApplyStaminaRegen(double staminaRegen)

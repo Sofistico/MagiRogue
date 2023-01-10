@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,8 @@ namespace MagiRogue.Utils
     {
         public List<T> Parents { get; set; }
         public List<T> Children { get; set; }
-        public bool IsRoot { get => Parents.Count <= 0; }
+
+        [JsonIgnore]
+        public bool? IsRoot { get => Parents?.Count <= 0; }
     }
 }
