@@ -26,6 +26,8 @@ namespace MagiRogue.GameSys.Civ
             HfRelationType type,
             HistoricalFigure otherFigure)
         {
+            if (otherFigure is null)
+                return;
             if (!Nodes.Any(i => i.OtherFigureId == otherFigure.Id))
                 Nodes.Add(new FamilyNode(type, figure, otherFigure));
         }

@@ -40,7 +40,7 @@ namespace MagiRogue.Test.Data
             var path = AppDomain.CurrentDomain.BaseDirectory;
 
             List<Limb> limb = MagiRogue.Utils.JsonUtils.JsonDeseralize<List<Limb>>
-                (path + @"\Data\Bodies\limb_std.json");
+                (path + @"\Data\Bodies\limbs_std.json");
 
             var otherLimb = DataManager.QueryLimbInData("upper_body");
 
