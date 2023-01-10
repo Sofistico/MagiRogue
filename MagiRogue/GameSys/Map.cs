@@ -114,7 +114,7 @@ namespace MagiRogue.GameSys
                 var weights = new LambdaGridView<double>(Width, Height, pos =>
                 {
                     var tile = Tiles[pos.ToIndex(Width)];
-                    return tile is not null ? MathMagi.Round(tile.MoveTimeCost / 100) : 0;
+                    return tile is not null ? MathMagi.Round((double)((double)tile.MoveTimeCost / 100)) : 0;
                 });
                 AStar = new AStar(WalkabilityView, Distance.Euclidean, weights, 0.01);
             }

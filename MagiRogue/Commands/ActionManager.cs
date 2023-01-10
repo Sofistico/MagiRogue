@@ -412,7 +412,7 @@ namespace MagiRogue.Commands
                 return false;
             }
 
-            if (possibleWorldTileHere is not null && !possibleWorldTileHere.Visited)
+            if (possibleWorldTileHere?.Visited == false)
             {
                 possibleWorldTileHere.Visited = true;
 
@@ -422,7 +422,7 @@ namespace MagiRogue.Commands
                     chunk.LocalMaps[0].GetRandomWalkableTile(), currentMap);
                 return true;
             }
-            else if (possibleWorldTileHere.Visited)
+            else if (possibleWorldTileHere?.Visited == true)
             {
                 RegionChunk chunk = GameLoop.Universe.GetChunckByPos(playerPoint);
                 GameLoop.Universe.CurrentChunk = chunk;

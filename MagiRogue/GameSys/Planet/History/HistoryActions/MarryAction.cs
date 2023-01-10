@@ -45,7 +45,7 @@ namespace MagiRogue.GameSys.Planet.History.HistoryActions
                     return false;
                 var peopleInARangeOfAgeCloseAndPredispost = peopleInside.Where(i =>
                     (i.Body.GetCurrentAge() >= aceptableDiferenceAge) && i.CheckForRomantic()).ToList();
-                if (peopleInARangeOfAgeCloseAndPredispost?.Count >= 0)
+                if (peopleInARangeOfAgeCloseAndPredispost.Any())
                 {
                     var randomPerson = peopleInARangeOfAgeCloseAndPredispost.GetRandomItemFromList();
                     if (randomPerson == null)

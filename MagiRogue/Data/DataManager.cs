@@ -47,8 +47,8 @@ namespace MagiRogue.Data
             GetSourceTree<RoomTemplate>(@".\Data\Rooms\room_*");
 
         // races can be dynamically generated ingame
-        public static readonly List<Race> ListOfRaces =
-            GetSourceTree<Race>(@".\Data\Races\race_*").ToList();
+        public static readonly IReadOnlyList<Race> ListOfRaces =
+            GetSourceTree<Race>(@".\Data\Races\race_*");
 
         public static readonly IReadOnlyList<Scenario> ListOfScenarios =
             GetSourceTree<Scenario>(@".\Data\Scenarios\scenarios_*");
@@ -120,7 +120,7 @@ namespace MagiRogue.Data
         #region Queryes
 
         public static SpellBase QuerySpellInData(string spellId) => ListOfSpells.FirstOrDefault
-                (m => m.SpellId.Equals(spellId)).Copy();
+                (m => m.SpellId.Equals(spellId))?.Copy();
 
         public static Limb QueryLimbInData(string limbId)
         {
@@ -135,10 +135,10 @@ namespace MagiRogue.Data
         }
 
         public static TileBase QueryTileInData(string tileId)
-            => ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId)).Copy();
+            => ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId))?.Copy();
 
         public static T QueryTileInData<T>(string tileId) where T : TileBase
-            => (T)ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId)).Copy();
+            => (T)ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId))?.Copy();
 
         public static T QueryTileInData<T>(string tileId, Point pos) where T : TileBase
             => (T)ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId)).Copy(pos);
@@ -147,7 +147,7 @@ namespace MagiRogue.Data
             => ListOfItems.FirstOrDefault(i => i.Id.Equals(itemId));
 
         public static Furniture QueryFurnitureInData(string furnitureId)
-            => ListOfFurnitures.FirstOrDefault(i => i.FurId.Equals(furnitureId)).Copy();
+            => ListOfFurnitures.FirstOrDefault(i => i.FurId.Equals(furnitureId))?.Copy();
 
         public static RoomTemplate QueryRoomInData(string roomId)
             => ListOfRooms.FirstOrDefault(i => i.Id.Equals(roomId));

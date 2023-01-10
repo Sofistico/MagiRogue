@@ -391,7 +391,7 @@ namespace MagiRogue.GameSys.MapGen
         {
             if (worldTile is null)
                 return null;
-            Map map = worldTile.BiomeType switch
+            return worldTile.BiomeType switch
             {
                 BiomeType.Sea => GenericSeaMap(worldTile),
                 BiomeType.Desert => GenericDesertMap(worldTile),
@@ -407,7 +407,6 @@ namespace MagiRogue.GameSys.MapGen
                 BiomeType.Mountain => GenericMountainMap(worldTile),
                 _ => throw new Exception("Cound't find the biome to generate a map!"),
             };
-            return map;
         }
 
         #region BiomeMaps

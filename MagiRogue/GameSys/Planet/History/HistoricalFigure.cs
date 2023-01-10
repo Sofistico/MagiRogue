@@ -323,8 +323,8 @@ namespace MagiRogue.GameSys.Planet.History
                 RelatedSites.Add(new SiteRelation(Id, otherId, relation));
             else
             {
-                var related = RelatedSites.FirstOrDefault(i => i.OtherSiteId == otherId);
-                if (related.RelationType.HasFlag(relation))
+                var related = RelatedSites.Find(i => i.OtherSiteId == otherId);
+                if (related?.RelationType.HasFlag(relation) == true)
                     return;
                 related.RelationType &= relation;
             }
@@ -708,11 +708,14 @@ namespace MagiRogue.GameSys.Planet.History
         {
             if (RelatedSites.Any(i => i.RelationType is SiteRelationTypes.LivesThere))
             {
-                var otherSite = RelatedSites.FirstOrDefault(i => i.RelationType is SiteRelationTypes.LivesThere);
-                otherSite.OtherSiteId = id;
+                var otherSite = RelatedSites.Find(i => i.RelationType is SiteRelationTypes.LivesThere);
+                if (otherSite != null)
+                    otherSite.OtherSiteId = id;
             }
             else
+            {
                 AddRelatedSite(id, SiteRelationTypes.LivesThere);
+            }
         }
 
         public bool CheckForLoneniss()
