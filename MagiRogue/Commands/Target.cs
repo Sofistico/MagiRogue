@@ -300,7 +300,7 @@ namespace MagiRogue.Commands
                 {
                     ISpellEffect effect = GetSpellAreaEffect(SpellAreaEffect.Cone);
                     foreach (Point point in
-                        GeometryUtils.Cone(OriginCoord, effect.Radius, this).Points)
+                        GeometryUtils.Cone(OriginCoord, effect.Radius, this, effect.ConeCircleSpan).Points)
                     {
                         AddTileToDictionary(point);
                         AddEntityToList(point);
