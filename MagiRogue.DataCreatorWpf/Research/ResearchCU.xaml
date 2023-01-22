@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:MagiRogue.DataCreatorWpf"
+             d:DataContext="{d:DesignInstance Type=local:ResearchViewModel}"
              mc:Ignorable="d"
              d:DesignHeight= "400" d:DesignWidth="300">
     <UserControl.Resources>
@@ -51,7 +52,7 @@
             <Label Content="Teach needed as a prerequisite" />
             <TextBox Name="techPre" Text="{Binding RequiredRes}" />
 
-            <Button Click="Button_Click" Margin="10" HorizontalAlignment="Center">Send</Button>
+            <Button Margin="10" HorizontalAlignment="Center" CommandParameter="{Binding}" Command="{Binding NewResCommand}">Send</Button>
         </StackPanel>
     </ScrollViewer>
 </UserControl>
