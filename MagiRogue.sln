@@ -20,13 +20,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Test", "3 - Test", "{CE
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MagiRogue.DataCreatorWpf", "MagiRogue.DataCreatorWpf\MagiRogue.DataCreatorWpf.csproj", "{B940E972-FE1A-4EF0-9DEB-F1D9B3E18D45}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MagiRogue.WebClient.Server", "MagiRogue.WebClient\Server\MagiRogue.WebClient.Server.csproj", "{24A99FDD-293A-4E71-9154-29601E492D61}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MagiRogue.WebClient.Client", "MagiRogue.WebClient\Client\MagiRogue.WebClient.Client.csproj", "{C87274C9-CB66-4E61-B71B-AFBD9E055BC1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MagiRogue.WebClient.Shared", "MagiRogue.WebClient\Shared\MagiRogue.WebClient.Shared.csproj", "{E454CF8F-14CF-4868-A7C4-7CD6B9894CBA}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 - Web", "4 - Web", "{28A5723E-D360-48B3-9D6C-0D1BFFE2C059}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagiRogue.WebClient.Server", "MagiRogue.WebClient\Server\MagiRogue.WebClient.Server.csproj", "{24A99FDD-293A-4E71-9154-29601E492D61}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagiRogue.WebClient.Client", "MagiRogue.WebClient\Client\MagiRogue.WebClient.Client.csproj", "{C87274C9-CB66-4E61-B71B-AFBD9E055BC1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagiRogue.WebClient.Shared", "MagiRogue.WebClient\Shared\MagiRogue.WebClient.Shared.csproj", "{E454CF8F-14CF-4868-A7C4-7CD6B9894CBA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

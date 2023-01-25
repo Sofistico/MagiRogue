@@ -76,6 +76,7 @@ namespace MagiRogue.Entities
         #endregion BackingField fields
 
         private IGameObject backingField;
+        private bool disposedValue;
 
         #endregion Fields
 
