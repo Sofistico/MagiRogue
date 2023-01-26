@@ -10,7 +10,7 @@ using System.Collections.Generic;
 namespace MagiRogue.Entities
 {
     [JsonConverter(typeof(FurnitureJsonConverter))]
-    public class Furniture : Entities.Entity
+    public class Furniture : Entities.MagiEntity
     {
         public FurnitureType FurnitureType { get; set; }
         public int? MapIdConnection { get; set; }

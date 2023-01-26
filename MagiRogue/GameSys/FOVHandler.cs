@@ -116,7 +116,7 @@ namespace MagiRogue.GameSys
                         else if (terrain != null)
                             UpdateTerrainUnseen(terrain);
                     }
-                    foreach (Entity entity in Map.Entities.Items.Cast<Entity>())
+                    foreach (MagiEntity entity in Map.Entities.Items.Cast<MagiEntity>())
                     {
                         if (Map.PlayerFOV.BooleanResultView[entity.Position])
                             UpdateEntitySeen(entity);
@@ -138,7 +138,7 @@ namespace MagiRogue.GameSys
                             UpdateTerrainSeen(terrain);
                     }
 
-                    foreach (Entity entity in Map.Entities.Items.Cast<Entity>())
+                    foreach (MagiEntity entity in Map.Entities.Items.Cast<MagiEntity>())
                     {
                         UpdateEntitySeen(entity);
                     }
@@ -179,22 +179,22 @@ namespace MagiRogue.GameSys
         /// Implement to make appropriate changes to an entity that is now inside FOV.
         /// </summary>
         /// <param name="entity">Entity to modify.</param>
-        protected abstract void UpdateEntitySeen(Entity entity);
+        protected abstract void UpdateEntitySeen(MagiEntity entity);
 
         /// <summary>
         /// Implement to make appropriate changes to an entity that is now outside FOV.
         /// </summary>
         /// <param name="entity">Entity to modify.</param>
-        protected abstract void UpdateEntityUnseen(Entity entity);
+        protected abstract void UpdateEntityUnseen(MagiEntity entity);
 
         private void Map_ObjectMoved(object sender, ItemMovedEventArgs<IGameObject> e)
         {
             if (!IsEnabled) return;
 
             if (Map.PlayerFOV.BooleanResultView[e.NewPosition])
-                UpdateEntitySeen((Entity)(e.Item));
+                UpdateEntitySeen((MagiEntity)(e.Item));
             else
-                UpdateEntityUnseen((Entity)(e.Item));
+                UpdateEntityUnseen((MagiEntity)(e.Item));
         }
 
         private void Map_ObjectAdded(object sender, ItemEventArgs<IGameObject> e)
@@ -211,9 +211,9 @@ namespace MagiRogue.GameSys
             else // Entities
             {
                 if (Map.PlayerFOV.BooleanResultView[e.Position])
-                    UpdateEntitySeen((Entity)e.Item);
+                    UpdateEntitySeen((MagiEntity)e.Item);
                 else
-                    UpdateEntityUnseen((Entity)e.Item);
+                    UpdateEntityUnseen((MagiEntity)e.Item);
             }
         }
 
@@ -227,7 +227,7 @@ namespace MagiRogue.GameSys
                 if (terrain != null)
                     UpdateTerrainSeen(terrain);
 
-                foreach (Entity entity in Map.GetEntitiesAt<Entity>(position))
+                foreach (MagiEntity entity in Map.GetEntitiesAt<MagiEntity>(position))
                     UpdateEntitySeen(entity);
             }
 
@@ -237,7 +237,7 @@ namespace MagiRogue.GameSys
                 if (terrain != null)
                     UpdateTerrainUnseen(terrain);
 
-                foreach (Entity entity in Map.GetEntitiesAt<Entity>(position))
+                foreach (MagiEntity entity in Map.GetEntitiesAt<MagiEntity>(position))
                     UpdateEntityUnseen(entity);
             }
         }

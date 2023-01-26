@@ -328,7 +328,7 @@ namespace MagiRogue.Data.Serialization.MapSerialization
 
             for (int i = 0; i < map.Entities.Count; i++)
             {
-                Entity entity = (Entity)map.Entities.Items.ToArray()[i];
+                MagiEntity entity = (MagiEntity)map.Entities.Items.ToArray()[i];
                 if (entity is Actor actor) { actors.Add(actor); }
                 if (entity is Item item) { items.Add(item); }
                 if (entity is Player player) { map.LastPlayerPosition = player.Position; }

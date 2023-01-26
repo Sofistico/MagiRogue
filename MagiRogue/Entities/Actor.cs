@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace MagiRogue.Entities
 {
     [JsonConverter(typeof(Data.Serialization.EntitySerialization.ActorJsonConverter))]
-    public class Actor : Entity
+    public class Actor : MagiEntity
     {
         #region Properties
 

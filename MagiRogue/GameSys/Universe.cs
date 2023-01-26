@@ -206,13 +206,13 @@ namespace MagiRogue.GameSys
                 return; // Do nothing
         }
 
-        public void AddEntityToCurrentMap(Entity entity)
+        public void AddEntityToCurrentMap(MagiEntity entity)
         {
             CurrentMap.Add(entity);
             AddEntityToTime(entity);
         }
 
-        public static void ChangeActorMap(Entity entity, Map mapToGo, Point pos, Map previousMap)
+        public static void ChangeActorMap(MagiEntity entity, Map mapToGo, Point pos, Map previousMap)
         {
             previousMap.Remove(entity);
             entity.Position = pos;
@@ -252,7 +252,7 @@ namespace MagiRogue.GameSys
             for (int i = 0; i < CurrentMap.Tiles.Length; i++)
             {
                 if (!CurrentMap.Tiles[i].IsBlockingMove && CurrentMap.Tiles[i] is not NodeTile
-                    && !CurrentMap.GetEntitiesAt<Entity>(Point.FromIndex(i, CurrentMap.Width)).Any())
+                    && !CurrentMap.GetEntitiesAt<MagiEntity>(Point.FromIndex(i, CurrentMap.Width)).Any())
                 {
                     // Set the player's position to the index of the current map position
                     var pos = Point.FromIndex(i, CurrentMap.Width);
@@ -273,7 +273,7 @@ namespace MagiRogue.GameSys
             return WorldMap.AssocietatedMap;
         }
 
-        public void AddEntityToTime(Entity entity)
+        public void AddEntityToTime(MagiEntity entity)
         {
             // register to next turn
             if (!Time.Nodes.Cast<EntityTimeNode>().Any(i => i.EntityId.Equals(entity.ID)))
@@ -395,7 +395,7 @@ namespace MagiRogue.GameSys
             }
         }
 
-        public void ChangeControlledEntity(Entity entity)
+        public void ChangeControlledEntity(MagiEntity entity)
         {
             CurrentMap.ControlledEntitiy = entity;
             GameLoop.UIManager.MapWindow.CenterOnActor(entity);

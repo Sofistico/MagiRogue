@@ -14,10 +14,10 @@ namespace MagiRogue.Components
 {
     public class BasicAi : IAiComponent
     {
-        private readonly Entity _entity;
+        private readonly MagiEntity _entity;
         public IObjectWithComponents? Parent { get; set; }
 
-        public BasicAi(Entity entity)
+        public BasicAi(MagiEntity entity)
         {
             _entity = entity;
         }

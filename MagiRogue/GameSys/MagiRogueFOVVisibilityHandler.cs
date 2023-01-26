@@ -58,7 +58,7 @@ namespace MagiRogue.GameSys
         /// Makes entity visible.
         /// </summary>
         /// <param name="entity">Entity to modify.</param>
-        protected override void UpdateEntitySeen(Entity entity)
+        protected override void UpdateEntitySeen(MagiEntity entity)
         {
             //Map.EntityRender.DoEntityUpdate = true;
             if (entity.Layer == _ghostLayer)
@@ -75,14 +75,14 @@ namespace MagiRogue.GameSys
         /// Makes entity invisible and add a ghost like entity containing its appearence and last know position
         /// </summary>
         /// <param name="entity">Entity to modify.</param>
-        protected override void UpdateEntityUnseen(Entity entity)
+        protected override void UpdateEntityUnseen(MagiEntity entity)
         {
             if (entity.Layer == _ghostLayer || entity.AlwaySeen == true)
                 return;
 
             if (entity.Layer != _ghostLayer && Map.PlayerExplored[entity.Position] && entity.LeavesGhost)
             {
-                Entity ghost = new Entity(ExploredColorTint,
+                MagiEntity ghost = new MagiEntity(ExploredColorTint,
                     entity.Appearance.Background,
                     entity.Appearance.Glyph,
                     entity.Position,

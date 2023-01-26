@@ -51,7 +51,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         public int GlyphInt { get; set; }
 
         /// <summary>
-        /// <inheritdoc cref="Entity.Volume"/>
+        /// <inheritdoc cref="MagiEntity.Volume"/>
         /// </summary>
         [DataMember]
         public int Volume { get; set; }

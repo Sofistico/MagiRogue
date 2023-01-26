@@ -6,11 +6,11 @@ namespace MagiRogue.UI.Windows
 {
     public class LookWindow : PopWindow
     {
-        private readonly Entity entityLooked;
+        private readonly MagiEntity entityLooked;
         private readonly TileBase tileLooked;
         private readonly Console lookConsole;
 
-        public LookWindow(Entity entity) : base(entity.Name)
+        public LookWindow(MagiEntity entity) : base(entity.Name)
         {
             entityLooked = entity;
 

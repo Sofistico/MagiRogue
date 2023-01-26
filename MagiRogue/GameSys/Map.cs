@@ -17,7 +17,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Entity = MagiRogue.Entities.Entity;
 
 namespace MagiRogue.GameSys
 {
@@ -31,7 +30,7 @@ namespace MagiRogue.GameSys
         #region Properties
 
         private TileBase[] _tiles; // Contains all tiles objects
-        private Entity _gameObjectControlled;
+        private MagiEntity _gameObjectControlled;
         private SadConsole.Entities.Renderer _entityRender;
         private bool _disposed;
 
@@ -52,7 +51,7 @@ namespace MagiRogue.GameSys
         /// </summary>
         public event EventHandler<ControlledGameObjectChangedArgs> ControlledGameObjectChanged;
 
-        public Entity ControlledEntitiy
+        public MagiEntity ControlledEntitiy
         {
             get => _gameObjectControlled;
 
@@ -60,7 +59,7 @@ namespace MagiRogue.GameSys
             {
                 if (_gameObjectControlled != value)
                 {
-                    Entity oldObject = _gameObjectControlled;
+                    MagiEntity oldObject = _gameObjectControlled;
                     _gameObjectControlled = value;
                     ControlledGameObjectChanged?.Invoke(this, new ControlledGameObjectChangedArgs(oldObject));
                 }
@@ -133,7 +132,7 @@ namespace MagiRogue.GameSys
 
         public void RemoveAllEntities()
         {
-            foreach (Entity item in Entities.Items.Cast<Entity>())
+            foreach (MagiEntity item in Entities.Items.Cast<MagiEntity>())
             {
                 Remove(item);
             }
@@ -212,17 +211,17 @@ namespace MagiRogue.GameSys
         /// <typeparam name="T"></typeparam>
         /// <param name="location"></param>
         /// <returns></returns>
-        public T GetEntityAt<T>(Point location) where T : Entity
+        public T GetEntityAt<T>(Point location) where T : MagiEntity
         {
             return Entities.GetItemsAt(location).OfType<T>().FirstOrDefault(e => e.CanInteract);
         }
 
-        public Entity GetClosestEntity(Point originPos, int range)
+        public MagiEntity GetClosestEntity(Point originPos, int range)
         {
-            Entity closest = null;
+            MagiEntity closest = null;
             double bestDistance = double.MaxValue;
 
-            foreach (Entity entity in Entities.Items)
+            foreach (MagiEntity entity in Entities.Items)
             {
                 if (entity is not Player)
                 {
@@ -241,7 +240,7 @@ namespace MagiRogue.GameSys
 
         public bool EntityIsThere(Point pos)
         {
-            Entity? entity = GetEntityAt<Entity>(pos);
+            MagiEntity? entity = GetEntityAt<MagiEntity>(pos);
             if (entity is not null)
                 return true;
             else
@@ -252,7 +251,7 @@ namespace MagiRogue.GameSys
         /// Removes an Entity from the Entities Field
         /// </summary>
         /// <param name="entity"></param>
-        public void Remove(Entity entity)
+        public void Remove(MagiEntity entity)
         {
             if (Entities.Contains(entity))
             {
@@ -271,7 +270,7 @@ namespace MagiRogue.GameSys
         /// Adds an Entity to the Entities field
         /// </summary>
         /// <param name="entity"></param>
-        public void Add(Entity entity)
+        public void Add(MagiEntity entity)
         {
             /*if (entity.CurrentMap is not null)
             {
@@ -393,7 +392,7 @@ namespace MagiRogue.GameSys
         /// <typeparam name="T">Any type of entity</typeparam>
         /// <param name="id">The id of the entity to find</param>
         /// <returns>Returns the entity owner of the id</returns>
-        public Entity GetEntityById(uint id)
+        public MagiEntity GetEntityById(uint id)
         {
             // TODO: this shit is wonky, need to do something about it
             var filter = from entity in Entities.Items
@@ -402,7 +401,7 @@ namespace MagiRogue.GameSys
 
             if (filter.Any())
             {
-                return (Entity)filter.FirstOrDefault();
+                return (MagiEntity)filter.FirstOrDefault();
             }
             return null;
         }
@@ -416,7 +415,7 @@ namespace MagiRogue.GameSys
             _entityRender = new();
             renderer.SadComponents.Add(_entityRender);
             _entityRender.DoEntityUpdate = true;
-            _entityRender.AddRange(Entities.Items.Cast<Entity>());
+            _entityRender.AddRange(Entities.Items.Cast<MagiEntity>());
             renderer.IsDirty = true;
         }
 
@@ -740,13 +739,13 @@ namespace MagiRogue.GameSys
 
     public class ControlledGameObjectChangedArgs : EventArgs
     {
-        public Entity OldObject;
+        public MagiEntity OldObject;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="oldObject"/>
-        public ControlledGameObjectChangedArgs(Entity oldObject) => OldObject = oldObject;
+        public ControlledGameObjectChangedArgs(MagiEntity oldObject) => OldObject = oldObject;
     }
 
     #endregion Event

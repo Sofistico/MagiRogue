@@ -54,7 +54,7 @@ namespace MagiRogue.GameSys.Magic.Effects
         {
             BaseDamage = MagicManager.CalculateSpellDamage(caster, spellCasted);
 
-            Entity poorGuy = GameLoop.GetCurrentMap().GetEntityAt<Entity>(target);
+            MagiEntity poorGuy = GameLoop.GetCurrentMap().GetEntityAt<MagiEntity>(target);
 
             if ((poorGuy == GameLoop.GetCurrentMap().ControlledEntitiy || poorGuy is Player)
                 && AreaOfEffect is not SpellAreaEffect.Ball)

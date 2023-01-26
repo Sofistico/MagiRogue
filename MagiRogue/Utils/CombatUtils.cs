@@ -28,7 +28,7 @@ namespace MagiRogue.Utils
             return a ^ b;
         }
 
-        public static void DealDamage(double dmg, Entity entity, DamageTypes dmgType,
+        public static void DealDamage(double dmg, MagiEntity entity, DamageTypes dmgType,
             Limb? limbAttacking = null, Limb? limbAttacked = null)
         {
             if (entity is Actor actor)
@@ -157,7 +157,7 @@ namespace MagiRogue.Utils
             }
         }
 
-        private static void ResolveResist(Entity poorGuy, Actor caster, SpellBase spellCasted, ISpellEffect effect)
+        private static void ResolveResist(MagiEntity poorGuy, Actor caster, SpellBase spellCasted, ISpellEffect effect)
         {
             int luck = Mrn.Exploding2D6Dice;
             if (MagicManager.PenetrateResistance(spellCasted, caster, poorGuy, luck))
@@ -168,7 +168,7 @@ namespace MagiRogue.Utils
                 GameLoop.AddMessageLog($"{poorGuy.Name} resisted the effects of {spellCasted.SpellName}");
         }
 
-        public static void ResolveSpellHit(Entity poorGuy, Actor caster, SpellBase spellCasted, IDamageSpellEffect effect)
+        public static void ResolveSpellHit(MagiEntity poorGuy, Actor caster, SpellBase spellCasted, IDamageSpellEffect effect)
         {
             if (!effect.CanMiss)
             {

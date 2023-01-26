@@ -1,5 +1,7 @@
 ﻿@page "/resview"
 @using MagiRogue.WebClient.Shared.Models;
+@using MagiRogue.WebClient.Shared.Data;
+@inject IJSRuntime JS
 
 <h3>ResView</h3>
 
@@ -67,11 +69,24 @@
     <button type="submit">Submit</button>
 
 </EditForm>
+
+<button @onclick="DowloadFile">
+    Download File as Json
+</button>
 @code {
     private ResearchModel resModel = new();
+    private string json = "";
 
     private void HandleSubmit()
     {
+        json = JsonShared.ToJson(resModel);
+    }
 
+    private async void DowloadFile()
+    {
+        const string fileName = "res.json";
+        using var stream = JsonShared.GenerateStreamFromJson(json);
+        using var streamRef = new DotNetStreamReference(stream);
+        await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
     }
 }

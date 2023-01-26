@@ -21,9 +21,9 @@ namespace MagiRogue.Commands
         private readonly Dictionary<Point, TileBase> tileDictionary;
         private static readonly Radius radius = Radius.Circle;
 
-        public Entity Cursor { get; set; }
+        public MagiEntity Cursor { get; set; }
 
-        public IList<Entity> TargetList { get; set; }
+        public IList<MagiEntity> TargetList { get; set; }
 
         public Point OriginCoord { get; set; }
 
@@ -66,14 +66,14 @@ namespace MagiRogue.Commands
 
             State = TargetState.Resting;
 
-            TargetList = new List<Entity>();
+            TargetList = new List<MagiEntity>();
             tileDictionary = new Dictionary<Point, TileBase>();
         }
 
         public bool EntityInTarget()
         {
             if (GameLoop.GetCurrentMap().GetEntitiesAt
-                <Entity>(Cursor.Position).Any(e => e.ID != Cursor.ID))
+                <MagiEntity>(Cursor.Position).Any(e => e.ID != Cursor.ID))
             //&& GameLoop.World.CurrentMap.GetEntityAt<Entity>(Cursor.Position) is not Player)
             {
                 State = TargetState.Targeting;
@@ -348,9 +348,9 @@ namespace MagiRogue.Commands
         /// <param name="point"></param>
         private void AddEntityToList(Point point)
         {
-            var entity = GameLoop.GetCurrentMap().GetEntityAt<Entity>(point);
+            var entity = GameLoop.GetCurrentMap().GetEntityAt<MagiEntity>(point);
             if (entity is not null && !TargetList.Contains(entity))
-                TargetList.Add(GameLoop.GetCurrentMap().GetEntityAt<Entity>(point));
+                TargetList.Add(GameLoop.GetCurrentMap().GetEntityAt<MagiEntity>(point));
         }
 
         private ISpellEffect GetSpellAreaEffect(SpellAreaEffect areaEffect) =>
@@ -362,7 +362,7 @@ namespace MagiRogue.Commands
             w.Show();
         }
 
-        public Entity TargetEntity() => GameLoop.GetCurrentMap().GetEntityAt<Entity>(Cursor.Position);
+        public MagiEntity TargetEntity() => GameLoop.GetCurrentMap().GetEntityAt<MagiEntity>(Cursor.Position);
 
         public TileBase TargetAtTile() => GameLoop.GetCurrentMap().GetTileAt<TileBase>(Cursor.Position);
 

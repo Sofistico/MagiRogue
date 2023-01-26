@@ -33,7 +33,7 @@ namespace MagiRogue.UI.Windows
         /// centers the viewport camera on an Entity
         /// </summary>
         /// <param name="entity"></param>
-        public void CenterOnActor(Entity entity)
+        public void CenterOnActor(MagiEntity entity)
         {
             followComponent.Target = entity;
         }
