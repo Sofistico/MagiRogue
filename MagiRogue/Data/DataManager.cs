@@ -106,15 +106,10 @@ namespace MagiRogue.Data
             {
                 if (tList is null)
                     continue;
-                foreach (T t in tList)
-                {
-                    allTList.Add(t);
-                }
+                allTList.AddRange(tList);
             }
 
-            IReadOnlyList<T> readOnlyList = allTList.AsReadOnly();
-
-            return readOnlyList;
+            return allTList.AsReadOnly();
         }
 
         #region Queryes
@@ -160,13 +155,13 @@ namespace MagiRogue.Data
                 && i.Traits.Contains(trait)).ToList();
 
         public static Race QueryRaceInData(string raceId)
-            => ListOfRaces.Where(c => c.Id.Equals(raceId)).FirstOrDefault();
+            => ListOfRaces.FirstOrDefault(c => c.Id.Equals(raceId));
 
         public static Scenario QueryScenarioInData(string scenarioId)
-            => ListOfScenarios.Where(c => c.Id.Equals(scenarioId)).FirstOrDefault();
+            => ListOfScenarios.FirstOrDefault(c => c.Id.Equals(scenarioId));
 
         public static BodyPlan QueryBpPlanInData(string bpPlanId)
-            => ListOfBpPlan.Where(c => c.Id.Equals(bpPlanId)).FirstOrDefault();
+            => ListOfBpPlan.FirstOrDefault(c => c.Id.Equals(bpPlanId));
 
         public static List<BodyPart> QueryBpsPlansInDataAndReturnBodyParts(string[] bpPlansId)
         {

@@ -25,29 +25,29 @@
     <div>
         <label for="resMagic">Research is magical?</label>
         <InputRadioGroup Name="IsMagical" @bind-Value="@resModel.IsMagical">
-            <InputRadio Name="IsMagical" Value="@true" />Yes<br />
-            <InputRadio Name="IsMagical" Value="@false" />No<br />
+            <label><InputRadio Name="IsMagical" Value="@true" />Yes</label>
+            <label><InputRadio Name="IsMagical" Value="@false" />No</label>
         </InputRadioGroup>
     </div>
     <div>
         <label for="interMagic">Research is intermediare?</label>
         <InputRadioGroup Name="IntermediareRes" @bind-Value="@resModel.IntermediareRes">
-            <InputRadio Name="IntermediareRes" Value="@true" />
-            <InputRadio Name="IntermediareRes" Value="@false" />
+            <label><InputRadio Name="IntermediareRes" Value="@true" />Yes</label>
+            <label><InputRadio Name="IntermediareRes" Value="@false" />No</label>
         </InputRadioGroup>
     </div>
     <div>
         <label for="validFind">Research is intermediare?</label>
         <InputRadioGroup Name="ValidFindInExploration" @bind-Value="@resModel.ValidFindInExploration">
-            <InputRadio Name="ValidFindInExploration" Value="@true" />
-            <InputRadio Name="ValidFindInExploration" Value="@false" />
+            <label><InputRadio Name="ValidFindInExploration" Value="@true" />Yes</label>
+            <label><InputRadio Name="ValidFindInExploration" Value="@false" />No</label>
         </InputRadioGroup>
     </div>
     <div>
         <label for="validGift">Research can be given by deity?</label>
         <InputRadioGroup Name="ValidDeityGift" @bind-Value="@resModel.ValidDeityGift">
-            <InputRadio Name="ValidDeityGift" Value="@true" />
-            <InputRadio Name="ValidDeityGift" Value="@false" />
+            <label><InputRadio Name="ValidDeityGift" Value="@true" />Yes</label>
+            <label><InputRadio Name="ValidDeityGift" Value="@false" />No</label>
         </InputRadioGroup>
     </div>
     <div>
