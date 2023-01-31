@@ -19,8 +19,8 @@ namespace MagiRogue.Components
         // 9 = at the very least 3 times per day.
         // 8 = every day at least once.
         // 7 to less, need to do only some times
-        // in special, 0 means that at the least once in it's life it must do it if given the opportunity, to represent once in a life
-        // time risk behavior
+        // in special, 0 means special circustances, like a fight or demon pacts or whatever, things that need imediate action rather than a constant need.
+        // means that creatures with the fight need set to 0 will only fight in response to fighting
         public int Priority { get; set; } // what is the priority of the need? how many times must it be fulfilled?
         public Actions ActionToFulfillNeed { get; set; }
         public string PersonalityTrait { get; set; }
@@ -45,7 +45,8 @@ namespace MagiRogue.Components
         {
             new Need("Eat", true, 9, Actions.Eat, "SelfControl", "food" ),
             new Need("Drink", true, 10, Actions.Drink, "Temperance", "drink" ),
-            new Need("Sleep", true, 8, Actions.Sleep, "Temperance", "rest" ),
+            new Need("Sleep", true, 8, Actions.Sleep, "Lazyness", "rest" ),
+            new Need("Fight", false, 0, Actions.Fight, "Peace", "battle" ),
         };
     }
 }

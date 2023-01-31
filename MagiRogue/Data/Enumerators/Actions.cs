@@ -21,5 +21,7 @@ namespace MagiRogue.Data.Enumerators
         Study,
         Teach,
         Craft,
+        Fight,
+        Bully,
     }
 }
