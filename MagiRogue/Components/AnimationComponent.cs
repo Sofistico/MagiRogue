@@ -34,7 +34,9 @@ namespace MagiRogue.Components
                 return;
 
             if (animationIndex >= _animationFrames.Length)
+            {
                 Stop();
+            }
             else
             {
                 var parent = Parent;

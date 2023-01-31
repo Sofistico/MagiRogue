@@ -8,7 +8,7 @@ using SadRogue.Primitives;
 using System;
 using System.Linq;
 
-namespace MagiRogue.Components
+namespace MagiRogue.Components.Ai
 {
     public class MoveAndAttackAI : IAiComponent
     {

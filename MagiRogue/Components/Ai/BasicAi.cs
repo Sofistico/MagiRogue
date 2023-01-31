@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagiRogue.Components
+namespace MagiRogue.Components.Ai
 {
     public class BasicAi : IAiComponent
     {
