@@ -2,7 +2,6 @@
 using MagiRogue.GameSys.Magic;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
-using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
