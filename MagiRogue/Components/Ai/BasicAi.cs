@@ -22,7 +22,7 @@ namespace MagiRogue.Components.Ai
             _entity = entity;
         }
 
-        public (bool sucess, long ticks) RunAi(Map map, MessageLogWindow messageLog)
+        public virtual (bool sucess, long ticks) RunAi(Map map, MessageLogWindow messageLog)
         {
             bool rng = Mrn.OneIn(10);
             if (rng)
@@ -31,7 +31,9 @@ namespace MagiRogue.Components.Ai
                 return (true, TimeHelper.Wait);
             }
             else
+            {
                 return (false, TimeHelper.AiFailed);
+            }
         }
     }
 }

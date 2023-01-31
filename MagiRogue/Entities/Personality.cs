@@ -13,7 +13,7 @@ namespace MagiRogue.Entities
     /// </summary>
     public class Personality
     {
-        private Dictionary<string, int> cached { get; set; }
+        private Dictionary<string, int> cached;
 
         public int Anger { get; set; }
         public int Law { get; set; }
@@ -78,7 +78,7 @@ namespace MagiRogue.Entities
         public Dictionary<string, int> ReturnAsDictionary(bool cleanCache = false)
         {
             if (cleanCache || cached is null)
-                cached = GetType().GetProperties().ToDictionary(p => p.Name, p => (int)p.GetValue(this));
+                cached = GetType().GetProperties().ToDictionary(p => p.Name, p => (int)p?.GetValue(this));
             return cached;
         }
     }
