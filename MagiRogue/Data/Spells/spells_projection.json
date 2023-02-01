@@ -125,7 +125,7 @@
         "SpellDamageType": "Cold",
         "BaseDamage": 5,
         "Radius": 3,
-        "ConeCircleSpan": 90,
+        "ConeCircleSpan": 90.5,
         "TargetsTile": false,
         "EffectType": "DAMAGE",
         "IsHealing": false,

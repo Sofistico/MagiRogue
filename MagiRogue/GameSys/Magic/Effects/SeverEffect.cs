@@ -11,7 +11,7 @@ namespace MagiRogue.GameSys.Magic.Effects
         public SpellAreaEffect AreaOfEffect { get; set; }
         public DamageTypes SpellDamageType { get; set; }
         public int Radius { get; set; }
-        public int ConeCircleSpan { get; set; }
+        public double ConeCircleSpan { get; set; }
 
         public bool TargetsTile { get; set; } = false;
         public EffectType EffectType { get; set; } = EffectType.SEVER;

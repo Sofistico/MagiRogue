@@ -15,7 +15,7 @@ namespace MagiRogue.GameSys.Magic.Effects
         public int Duration { get; set; }
         public int TurnApplied { get; set; }
         public int Radius { get; set; } = 0;
-        public int ConeCircleSpan { get; set; }
+        public double ConeCircleSpan { get; set; }
 
         public bool TargetsTile { get; set; } = false;
         public EffectType EffectType { get; set; } = EffectType.MAGESIGHT;

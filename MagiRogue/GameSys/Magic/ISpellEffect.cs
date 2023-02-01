@@ -16,7 +16,7 @@ namespace MagiRogue.GameSys.Magic
         [JsonConverter(typeof(StringEnumConverter))]
         public DamageTypes SpellDamageType { get; set; }
         public int Radius { get; set; }
-        public int ConeCircleSpan { get; set; }
+        public double ConeCircleSpan { get; set; }
         public bool TargetsTile { get; set; }
         public int BaseDamage { get; set; }
 

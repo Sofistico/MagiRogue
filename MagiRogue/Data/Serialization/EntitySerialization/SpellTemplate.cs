@@ -20,7 +20,10 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             foreach (JToken token in listEffectsJson)
             {
                 EffectType effect = StringToEnumEffectType((string)token["EffectType"]);
-                effectsList.Add(EnumToEffect(effect, token));
+                var eff = EnumToEffect(effect, token);
+                if (token["ConeCircleSpan"] != null)
+                    eff.ConeCircleSpan = (double)token["ConeCircleSpan"];
+                effectsList.Add(eff);
             }
 
             SpellBase createdSpell = new(
