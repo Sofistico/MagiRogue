@@ -12,17 +12,21 @@ namespace MagiRogue.Components.Ai
 {
     public class NeedDrivenAi : IAiComponent
     {
-        public List<Need> Needs { get; }
         public IObjectWithComponents? Parent { get; set; }
-
-        public NeedDrivenAi(List<Need> needs)
-        {
-            Needs = needs;
-        }
 
         public (bool sucess, long ticks) RunAi(Map map, MessageLogWindow messageLog)
         {
-            throw new NotImplementedException();
+            if (Parent.GoRogueComponents.Contains(typeof(NeedCollection)))
+            {
+                var needs = Parent.GoRogueComponents.GetFirstOrDefault<NeedCollection>();
+                messageLog.PrintMessage("The needs are:");
+                foreach (var item in needs?.Needs)
+                {
+                    messageLog.PrintMessage(item.ToString());
+                }
+                return (true, 100);
+            }
+            return (false, -1);
         }
     }
 }

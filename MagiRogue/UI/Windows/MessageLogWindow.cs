@@ -11,7 +11,7 @@ namespace MagiRogue.UI.Windows
     public class MessageLogWindow : MagiBaseWindow
     {
         //max number of lines to store in message log
-        private static readonly int maxLines = 100;
+        private const int maxLines = 100;
 
         // a Queue works using a FIFO structure, where the first line added
         // is the first line removed when we exceed the max number of lines
@@ -27,7 +27,7 @@ namespace MagiRogue.UI.Windows
         private int scrollBarCurrentPosition;
 
         // account for the thickness of the window border to prevent UI element spillover
-        private static readonly int windowBorderThickness = 2;
+        private const int windowBorderThickness = 2;
 
         // Create a new window with the title centered
         // the window is draggable by default
@@ -59,7 +59,7 @@ namespace MagiRogue.UI.Windows
             Children.Add(messageConsole);
         }
 
-        public void Add(string message)
+        public void PrintMessage(string message)
         {
             lines.Enqueue(message);
 
@@ -87,7 +87,7 @@ namespace MagiRogue.UI.Windows
 
         // Controls the position of the messagelog viewport
         // based on the scrollbar position using an event handler
-        private void MessageScrollBarValueChanged(object sender, EventArgs e)
+        private void MessageScrollBarValueChanged(object? sender, EventArgs e)
         {
             messageConsole.View = new Rectangle(0,
                 messageScrollBar.Value

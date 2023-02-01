@@ -2,6 +2,7 @@
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -48,5 +49,30 @@ namespace MagiRogue.Components
             new Need("Sleep", true, 8, Actions.Sleep, "Lazyness", "rest" ),
             new Need("Fight", false, 0, Actions.Fight, "Peace", "battle" ),
         };
+
+        public override string ToString()
+        {
+            return $"Need: {Name} Vital: {Vital} Priority: {Priority} Action: {ActionToFulfillNeed} Persona: {PersonalityTrait} Hint: {HintFulfill}";
+        }
+    }
+
+    public class NeedCollection : IEnumerable
+    {
+        public List<Need> Needs { get; }
+
+        public NeedCollection(List<Need> needs)
+        {
+            Needs = needs;
+        }
+
+        public static NeedCollection WithCommonNeeds() => new NeedCollection(Need.CommonNeeds());
+
+        public IEnumerator GetEnumerator()
+        {
+            foreach (var item in Needs)
+            {
+                yield return item;
+            }
+        }
     }
 }

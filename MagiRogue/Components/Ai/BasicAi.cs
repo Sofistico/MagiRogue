@@ -27,7 +27,7 @@ namespace MagiRogue.Components.Ai
             bool rng = Mrn.OneIn(10);
             if (rng)
             {
-                messageLog.Add($"The {_entity.Name} waits doing nothing...");
+                messageLog.PrintMessage($"The {_entity.Name} waits doing nothing...");
                 return (true, TimeHelper.Wait);
             }
             else

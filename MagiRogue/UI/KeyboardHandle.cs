@@ -271,7 +271,7 @@ namespace MagiRogue.UI
                 }
                 else
                 {
-                    ui.MessageLog.Add("Invalid target!");
+                    ui.MessageLog.PrintMessage("Invalid target!");
                     return false;
                 }
             }
@@ -370,7 +370,8 @@ namespace MagiRogue.UI
                 && targetCursor.EntityInTarget())
             {
                 Actor actor = (Actor)targetCursor.TargetEntity();
-                actor.AddComponent(new NeedDrivenAi(Need.CommonNeeds()));
+                actor.AddComponent(new NeedDrivenAi());
+                actor.AddComponent(NeedCollection.WithCommonNeeds());
                 GameLoop.AddMessageLog($"Added need component to {actor.Name}!");
                 return false;
             }

@@ -40,7 +40,7 @@ namespace MagiRogue.GameSys.Magic.Effects
             }
             else
                 GameLoop.UIManager.MessageLog
-                    .Add($"{Caster.Name} does not have enough nodes for the enchantment");
+                    .PrintMessage($"{Caster.Name} does not have enough nodes for the enchantment");
         }
     }
 }
