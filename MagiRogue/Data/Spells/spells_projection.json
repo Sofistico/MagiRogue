@@ -13,11 +13,10 @@
         "SpellDamageType": "Force",
         "BaseDamage": 2,
         "Radius": 0,
-        "TargetsTile": false,
+
         "EffectType": "DAMAGE",
-        "IsHealing": false,
+
         "CanMiss": true,
-        "IsResistable": false
       }
     ]
   },
@@ -30,11 +29,10 @@
         "SpellDamageType": "Fire",
         "BaseDamage": 3,
         "Radius": 0,
-        "TargetsTile": false,
+
         "EffectType": "DAMAGE",
-        "IsHealing": false,
+
         "CanMiss": true,
-        "IsResistable": false
       }
     ],
     "SpellName": "Fire Ray",
@@ -55,8 +53,7 @@
         "Radius": 0,
         "TargetsTile": true,
         "EffectType": "DAMAGE",
-        "IsHealing": false,
-        "CanMiss": false,
+
         "IsResistable": true
       },
       {
@@ -83,11 +80,8 @@
         "SpellDamageType": "Fire",
         "BaseDamage": 6,
         "Radius": 3,
-        "TargetsTile": false,
-        "EffectType": "DAMAGE",
-        "IsHealing": false,
-        "CanMiss": false,
-        "IsResistable": false
+
+        "EffectType": "DAMAGE"
       }
     ],
     "SpellName": "Fire Ball",
@@ -104,7 +98,7 @@
         "AreaOfEffect": "Target",
         "SpellDamageType": "Sharp",
         "Radius": 1,
-        "TargetsTile": false,
+
         "EffectType": "SEVER",
         "BaseDamage": 5
       }
@@ -124,13 +118,10 @@
         "AreaOfEffect": "Cone",
         "SpellDamageType": "Cold",
         "BaseDamage": 5,
-        "Radius": 3,
-        "ConeCircleSpan": 90.5,
-        "TargetsTile": false,
-        "EffectType": "DAMAGE",
-        "IsHealing": false,
-        "CanMiss": false,
-        "IsResistable": false
+        "Radius": 8,
+        "ConeCircleSpan": 90,
+        "TargetsTile": true,
+        "EffectType": "DAMAGE"
       }
     ],
     "SpellName": "Cone of Cold",

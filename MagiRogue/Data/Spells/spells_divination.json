@@ -8,7 +8,7 @@
 				"Duration": 5,
 				"TurnApplied": 0,
 				"Radius": 0,
-				"TargetsTile": false,
+				
 				"EffectType": "MAGESIGHT",
 				"BaseDamage": 0
 			}

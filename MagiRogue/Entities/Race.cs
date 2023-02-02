@@ -80,6 +80,11 @@ namespace MagiRogue.Entities
         public List<string> CreatureClass { get; set; }
         public List<SpecialFlag> Flags { get; set; }
 
+        /// <summary>
+        /// select various aspect of a creature and change it's body and other stuff!
+        /// </summary>
+        public object[]? Select { get; set; }
+
         public Race()
         {
             Flags = new();
