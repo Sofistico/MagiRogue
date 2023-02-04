@@ -57,6 +57,8 @@ namespace MagiRogue.Entities
         public List<string> MaterialsId { get; set; }
         public Dictionary<string, int> Stats { get; set; }
 
+        public List<Scar> Scars { get; set; }
+
         public Body()
         {
             Equipment = new Dictionary<string, Item>();

@@ -155,7 +155,7 @@ namespace MagiRogue.Data
                 && i.Traits.Contains(trait)).ToList();
 
         public static Race QueryRaceInData(string raceId)
-            => ListOfRaces.FirstOrDefault(c => c.Id.Equals(raceId));
+            => (Race)(ListOfRaces.FirstOrDefault(c => c.Id.Equals(raceId))?.Clone());
 
         public static Scenario QueryScenarioInData(string scenarioId)
             => ListOfScenarios.FirstOrDefault(c => c.Id.Equals(scenarioId));

@@ -11,11 +11,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
 using MagiRogue.Utils.Extensions;
+using Newtonsoft.Json.Linq;
 
 namespace MagiRogue.Entities
 {
     [DebuggerDisplay("{DebuggerDisplay, nq}")]
-    public sealed class Race
+    public sealed class Race : ICloneable
     {
         private List<BodyPart> bodyParts;
 
@@ -83,17 +84,34 @@ namespace MagiRogue.Entities
         /// <summary>
         /// select various aspect of a creature and change it's body and other stuff!
         /// </summary>
-        public object[]? Select { get; set; }
+        public JArray? Select { get; set; }
 
         public Race()
         {
             Flags = new();
         }
 
+        private void MakeChangesToTemplate()
+        {
+            foreach (var item in Select)
+            {
+                if (item is JObject obj)
+                {
+                    var selector = obj["Selector"].ToArray();
+                    var change = obj["Change"].ToArray();
+                    var to = obj["To"].ToArray();
+                }
+            }
+        }
+
         public void SetBodyPlan()
         {
-            if (BodyPlan is not null && BodyPlan.Length > 0)
+            if (BodyPlan?.Length > 0)
             {
+                if (Select is not null)
+                {
+                    var bpWithoutMod = bodyParts;
+                }
                 bodyParts = DataManager.QueryBpsPlansInDataAndReturnBodyParts(BodyPlan);
             }
         }
@@ -130,7 +148,7 @@ namespace MagiRogue.Entities
             if (bodyParts is null)
                 SetBodyPlan();
 
-            return bodyParts.Where(i => i is Organ).Cast<Organ>().ToList();
+            return bodyParts.OfType<Organ>().ToList();
         }
 
         public int GetRngVolume(int age)
@@ -217,5 +235,13 @@ namespace MagiRogue.Entities
 
         public int GetAverageRacialManaRange()
             => (MaxManaRange + MinManaRange) / 2;
+
+        public object Clone()
+        {
+            var race = (Race)MemberwiseClone();
+            race.Flags = new List<SpecialFlag>(Flags);
+
+            return race;
+        }
     }
 }

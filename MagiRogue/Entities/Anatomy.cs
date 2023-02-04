@@ -19,7 +19,6 @@ namespace MagiRogue.Entities
     {
         #region Fields
 
-        private Race raceField;
         private bool basicSetupDone;
 
         #endregion Fields
@@ -33,7 +32,7 @@ namespace MagiRogue.Entities
         public List<Organ> Organs { get; set; }
 
         [DataMember]
-        public string Race { get; set; }
+        public Race Race { get; set; }
 
         /// <summary>
         /// It uses an aproximation of blood count equal to 75 ml/kg for an adult male
@@ -128,6 +127,7 @@ namespace MagiRogue.Entities
 
         [DataMember]
         public int MaxFlierLimbs { get; set; }
+        public string RaceId { get; set; }
 
         #endregion Properties
 
@@ -145,13 +145,7 @@ namespace MagiRogue.Entities
         public void CalculateBlood(double weight)
         {
             if (HasBlood)
-                BloodCount = MathMagi.Round(weight * raceField.BloodMultiplier);
-        }
-
-        public Race GetRace()
-        {
-            raceField ??= DataManager.QueryRaceInData(Race);
-            return raceField;
+                BloodCount = MathMagi.Round(weight * Race.BloodMultiplier);
         }
 
         public void Injury(Wound wound, BodyPart bpInjured, Actor actorWounded)
@@ -212,6 +206,10 @@ namespace MagiRogue.Entities
         {
             actor.Volume = volume;
 
+            if (Race is not null)
+            {
+            }
+
             if (Limbs.Count > 0)
             {
                 CalculateRelativeLimbVolume(actor.Volume);
@@ -231,28 +229,25 @@ namespace MagiRogue.Entities
             CurrentAge = actorAge;
         }
 
-        public void BasicSetup(Race race)
+        public void BasicSetup(Race? race = null)
         {
-            if (string.IsNullOrEmpty(Race))
-                Race = race.Id;
-            raceField = race;
-            SetRandomLifespanByRace();
-            Limbs = race.ReturnRaceLimbs();
-            Organs = race.ReturnRaceOrgans();
-            NormalLimbRegen = race.RaceNormalLimbRegen;
-            basicSetupDone = true;
-        }
-
-        public void BasicSetup()
-        {
-            if (!string.IsNullOrEmpty(Race))
+            try
             {
-                Race race = GetRace();
+                if (race is not null)
+                    Race ??= race;
+                if (Race is null && !string.IsNullOrEmpty(RaceId))
+                    Race = Data.DataManager.QueryRaceInData(RaceId);
+                if (Race is null)
+                    throw new ApplicationException("Something went wrong, the race is null!");
                 SetRandomLifespanByRace();
-                Limbs = race.ReturnRaceLimbs();
-                Organs = race.ReturnRaceOrgans();
-                NormalLimbRegen = race.RaceNormalLimbRegen;
+                Limbs = Race.ReturnRaceLimbs();
+                Organs = Race.ReturnRaceOrgans();
+                NormalLimbRegen = Race.RaceNormalLimbRegen;
                 basicSetupDone = true;
+            }
+            catch (Exception ex)
+            {
+                GameLoop.WriteToLog(ex.Message);
             }
         }
 
@@ -469,16 +464,16 @@ namespace MagiRogue.Entities
 
         public int RateOfGrowthPerYear()
         {
-            var race = GetRace();
+            var race = Race;
             return race.MaxVolume / race.AdulthoodAge;
         }
 
-        public (int?, int?) GetMinMaxLifespan() => (GetRace().LifespanMin, GetRace().LifespanMax);
+        public (int?, int?) GetMinMaxLifespan() => (Race.LifespanMin, Race.LifespanMax);
 
         public int GetRaceAdulthoodAge()
         {
-            if (GetRace() is not null)
-                return GetRace().AdulthoodAge;
+            if (Race is not null)
+                return Race.AdulthoodAge;
             return 0;
         }
 

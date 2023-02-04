@@ -267,7 +267,7 @@ namespace MagiRogue.Entities
 
             #endregion Broken dreams lies here....
 
-            bool regens = GetAnatomy().GetRace().CanRegenarate();
+            bool regens = GetAnatomy().Race.CanRegenarate();
             var limbsHeal = GetAnatomy().Limbs.FindAll(i => i.NeedsHeal || (regens && !i.Attached));
             int limbCount = limbsHeal.Count;
             for (int i = 0; i < limbCount; i++)
@@ -321,7 +321,7 @@ namespace MagiRogue.Entities
         {
             if (GetAnatomy().HasBlood)
             {
-                return GetAnatomy().GetRace().BleedRegenaration + (Body.Toughness * 0.2);
+                return GetAnatomy().Race.BleedRegenaration + (Body.Toughness * 0.2);
             }
             return 0;
         }

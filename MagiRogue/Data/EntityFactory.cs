@@ -83,13 +83,13 @@ namespace MagiRogue.Data
 
             anatomy.FitLevel += scenario.FitLevel;
             anatomy.NormalLimbRegen += scenario.LimbRegen;
-            anatomy.CurrentAge = anatomy.GetRace().GetAgeFromAgeGroup(scenario.AgeGroup);
+            anatomy.CurrentAge = anatomy.Race.GetAgeFromAgeGroup(scenario.AgeGroup);
 
             mind.Inteligence += scenario.Inteligence;
             mind.Precision += scenario.Precision;
 
             soul.WillPower += scenario.WillPower;
-            soul.InitialMana(mind.Inteligence, actor.GetAnatomy().GetRace());
+            soul.InitialMana(mind.Inteligence, actor.GetAnatomy().Race);
             soul.MaxMana += scenario.MaxMana;
             soul.CurrentMana = soul.MaxMana;
             soul.BaseManaRegen += scenario.ManaRegen;

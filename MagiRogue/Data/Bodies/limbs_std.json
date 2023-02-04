@@ -342,6 +342,50 @@
     "ConnectedTo": "left_r_leg"
   },
   {
+    "Id": "right_f_hoof",
+    "LimbType": "Foot",
+    "RelativeVolume": 0.022,
+    "BodyPartName": "Right Front Hoof",
+    "Orientation": "Right",
+    "MaterialId": "skin",
+    "RateOfHeal": 0.9,
+    "BodyPartFunction": "Stance",
+    "ConnectedTo": "right_f_leg"
+  },
+  {
+    "Id": "right_r_hoof",
+    "LimbType": "Foot",
+    "RelativeVolume": 0.022,
+    "BodyPartName": "Right Rear Hoof",
+    "Orientation": "Right",
+    "MaterialId": "skin",
+    "RateOfHeal": 0.9,
+    "BodyPartFunction": "Stance",
+    "ConnectedTo": "right_r_leg"
+  },
+  {
+    "Id": "left_f_hoof",
+    "LimbType": "Foot",
+    "RelativeVolume": 0.022,
+    "BodyPartName": "Left Front Hoof",
+    "Orientation": "Left",
+    "MaterialId": "skin",
+    "RateOfHeal": 0.9,
+    "BodyPartFunction": "Stance",
+    "ConnectedTo": "left_f_leg"
+  },
+  {
+    "Id": "left_r_hoof",
+    "LimbType": "Foot",
+    "RelativeVolume": 0.022,
+    "BodyPartName": "Left Rear Hoof",
+    "Orientation": "Left",
+    "MaterialId": "skin",
+    "RateOfHeal": 0.8,
+    "BodyPartFunction": "Stance",
+    "ConnectedTo": "left_r_leg"
+  },
+  {
     "Id": "animal_tail",
     "LimbType": "Tail",
     "RelativeVolume": 0.065,
