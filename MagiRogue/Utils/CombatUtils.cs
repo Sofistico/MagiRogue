@@ -168,7 +168,8 @@ namespace MagiRogue.Utils
                 GameLoop.AddMessageLog($"{poorGuy.Name} resisted the effects of {spellCasted.SpellName}");
         }
 
-        public static void ResolveSpellHit(MagiEntity poorGuy, Actor caster, SpellBase spellCasted, IDamageSpellEffect effect)
+        public static void ResolveSpellHit(MagiEntity poorGuy, Actor caster, SpellBase spellCasted,
+            ISpellEffect effect)
         {
             if (!effect.CanMiss)
             {

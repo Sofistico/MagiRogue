@@ -30,6 +30,10 @@
   },
   {
     "Id": "quadruped_hoof",
-    "BodyParts": [ "upper_body", "lower_body", "neck", "head", "right_f_leg", "right_r_leg", "left_f_leg", "left_r_leg", "right_f_hoof", "right_r_hoof", "left_f_hoof", "left_l_hoof" ]
+    "BodyParts": [ "upper_body", "lower_body", "neck", "head", "right_f_leg", "right_r_leg", "left_f_leg", "left_r_leg", "right_f_hoof", "right_r_hoof", "left_f_hoof", "left_r_hoof" ]
+  },
+  {
+    "Id": "2head_horns",
+    "BodyParts": [ "horn_right", "horn_left" ]
   }
 ]

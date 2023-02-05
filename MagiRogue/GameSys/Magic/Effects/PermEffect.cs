@@ -1,5 +1,6 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
+using Newtonsoft.Json;
 
 namespace MagiRogue.GameSys.Magic.Effects
 {
@@ -16,12 +17,7 @@ namespace MagiRogue.GameSys.Magic.Effects
         public string EnchantName { get; set; }
         public string EnchantDesc { get; set; }
 
-        /// <summary>
-        /// Defines an enchantment that will be applied yearly, you can't have more than one type at the same time
-        /// </summary>
-        /// <param name="caster">Who will cast the enchantmente</param>
-        /// <param name="enchantment">The enchantment that will be applied</param>
-        /// <param name="nodeCost">How many node will cost for the enchant</param>
+        [JsonConstructor]
         public PermEffect(Actor caster, ISpellEffect enchantment, int nodeCost, string enchantName,
             string enchantDesc)
         {

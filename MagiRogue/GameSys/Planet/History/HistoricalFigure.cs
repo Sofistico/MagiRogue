@@ -794,7 +794,6 @@ namespace MagiRogue.GameSys.Planet.History
         private void SetupBodySoulAndMind()
         {
             Race race = GetRace();
-            race.SetBodyPlan();
             SetBasicAnatomy();
 
             Body.Endurance = race.BaseEndurance;

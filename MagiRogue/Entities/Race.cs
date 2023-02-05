@@ -91,27 +91,10 @@ namespace MagiRogue.Entities
             Flags = new();
         }
 
-        private void MakeChangesToTemplate()
-        {
-            foreach (var item in Select)
-            {
-                if (item is JObject obj)
-                {
-                    var selector = obj["Selector"].ToArray();
-                    var change = obj["Change"].ToArray();
-                    var to = obj["To"].ToArray();
-                }
-            }
-        }
-
-        public void SetBodyPlan()
+        private void SetBodyPlan()
         {
             if (BodyPlan?.Length > 0)
             {
-                if (Select is not null)
-                {
-                    var bpWithoutMod = bodyParts;
-                }
                 bodyParts = DataManager.QueryBpsPlansInDataAndReturnBodyParts(BodyPlan);
             }
         }
@@ -138,15 +121,13 @@ namespace MagiRogue.Entities
 
         public List<Limb> ReturnRaceLimbs()
         {
-            if (bodyParts is null)
-                SetBodyPlan();
-            return bodyParts.Where(i => i is Limb).Cast<Limb>().ToList();
+            SetBodyPlan();
+            return bodyParts.OfType<Limb>().ToList();
         }
 
         public List<Organ> ReturnRaceOrgans()
         {
-            if (bodyParts is null)
-                SetBodyPlan();
+            SetBodyPlan();
 
             return bodyParts.OfType<Organ>().ToList();
         }
@@ -242,6 +223,75 @@ namespace MagiRogue.Entities
             race.Flags = new List<SpecialFlag>(Flags);
 
             return race;
+        }
+
+        public void CustomBPSelect(Actor actor)
+        {
+            SetBodyPlan();
+            foreach (var item in Select)
+            {
+                if (item is JObject obj)
+                {
+                    var selector = obj["Selector"].ToArray();
+                    var change = obj["Change"];
+                    var to = obj["To"].ToArray();
+                    if (ActorSatisfiesSelector(actor, selector, out var context))
+                    {
+                        SatisfyChange(change, to, context);
+                    }
+                }
+            }
+        }
+
+        private void SatisfyChange(JToken? change, JToken[] to, string? context)
+        {
+            if (change.ToString().Equals("BodyPlan"))
+            {
+                var strs = new string[to.Length];
+                for (int i = 0; i < to.Length; i++)
+                {
+                    JToken? item = to[i];
+                    strs[i] = item.ToString();
+                }
+                BodyPlan = strs.ToArray();
+                SetBodyPlan();
+                return;
+            }
+            if (change.ToString().Equals("LastBodyPartName")
+                && !string.IsNullOrEmpty(context))
+            {
+                var limbs = bodyParts.OfType<Limb>().Where(i => i.LimbType == Enum.Parse<TypeOfLimb>(context)).ToArray();
+                for (int i = 0; i < limbs.Length; i++)
+                {
+                    limbs[i].BodyPartName = string.Format(to[0].ToString(), limbs[i].BodyPartName.Split(" ")[0]);
+                }
+                return;
+            }
+        }
+
+        private bool ActorSatisfiesSelector(Actor actor, JToken[] selector, out string? context)
+        {
+            int satisfyCount = 0;
+            context = null;
+
+            foreach (var item in selector)
+            {
+                if (item["Genders"]?.ToString().Equals(actor.GetGender().ToString()) == true)
+                {
+                    satisfyCount++;
+                    continue;
+                }
+                if (item["LimbType"] is not null
+                    && Enum.TryParse<TypeOfLimb>(item["LimbType"].ToString(), out var resut)
+                    && bodyParts.OfType<Limb>().Any(i => i.LimbType == resut))
+                {
+                    satisfyCount++;
+                    context = resut.ToString();
+                    continue;
+                }
+            }
+
+            return satisfyCount == selector.Length;
         }
     }
 }

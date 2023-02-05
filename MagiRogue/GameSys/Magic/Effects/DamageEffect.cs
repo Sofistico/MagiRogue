@@ -1,13 +1,14 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.Utils;
+using Newtonsoft.Json;
 
 namespace MagiRogue.GameSys.Magic.Effects
 {
     /// <summary>
     /// Basic damage effect, can determine if it auto hits or if it heals
     /// </summary>
-    public class DamageEffect : IDamageSpellEffect
+    public class DamageEffect : ISpellEffect
     {
         public SpellAreaEffect AreaOfEffect { get; set; }
         public DamageTypes SpellDamageType { get; set; }
@@ -20,8 +21,14 @@ namespace MagiRogue.GameSys.Magic.Effects
         public bool CanMiss { get; set; }
         public bool IsResistable { get; set; }
 
-        public DamageEffect(int dmg, SpellAreaEffect areaOfEffect, DamageTypes spellDamageType, bool canMiss = false,
-            bool isHeal = false, int radius = 0, bool isResistable = false)
+        [JsonConstructor]
+        public DamageEffect(int dmg,
+            SpellAreaEffect areaOfEffect,
+            DamageTypes spellDamageType,
+            bool canMiss = false,
+            bool isHeal = false,
+            int radius = 0,
+            bool isResistable = false)
         {
             BaseDamage = dmg;
             AreaOfEffect = areaOfEffect;

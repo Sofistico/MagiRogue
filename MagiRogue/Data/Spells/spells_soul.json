@@ -12,9 +12,7 @@
         "AreaOfEffect": "Target",
         "SpellDamageType": "Soul",
         "BaseDamage": 999,
-        
         "EffectType": "DAMAGE",
-
         "CanMiss": true,
         "IsResistable": true,
         "Radius": 0

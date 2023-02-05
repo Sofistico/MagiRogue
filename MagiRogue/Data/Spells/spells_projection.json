@@ -12,11 +12,8 @@
         "AreaOfEffect": "Target",
         "SpellDamageType": "Force",
         "BaseDamage": 2,
-        "Radius": 0,
-
         "EffectType": "DAMAGE",
-
-        "CanMiss": true,
+        "CanMiss": true
       }
     ]
   },
@@ -98,7 +95,6 @@
         "AreaOfEffect": "Target",
         "SpellDamageType": "Sharp",
         "Radius": 1,
-
         "EffectType": "SEVER",
         "BaseDamage": 5
       }

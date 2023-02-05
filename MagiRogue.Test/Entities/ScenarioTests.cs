@@ -17,7 +17,7 @@ namespace MagiRogue.Test.Entities
         {
             var scenario = DataManager.QueryScenarioInData("new_wiz");
 
-            Actor test = EntityFactory.ActorCreatorFirstStep(Point.None,
+            Actor test = EntityFactory.ActorCreator(Point.None,
                 scenario.RacesAllowed[0],
                 "Test",
                 25,

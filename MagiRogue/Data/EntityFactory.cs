@@ -14,7 +14,7 @@ namespace MagiRogue.Data
     /// </summary>
     public static class EntityFactory
     {
-        public static Actor ActorCreatorFirstStep(Point position, string raceId,
+        public static Actor ActorCreator(Point position, string raceId,
             string actorName, int actorAge, Sex sex)
         {
             Race race = DataManager.QueryRaceInData(raceId);
@@ -34,7 +34,7 @@ namespace MagiRogue.Data
             return actor;
         }
 
-        public static Player PlayerCreatorFromActor(Actor actor,
+        private static Player PlayerCreatorFromActor(Actor actor,
             string scenarioId, Sex sex)
         {
             Scenario scenario = DataManager.QueryScenarioInData(scenarioId);
@@ -125,7 +125,6 @@ namespace MagiRogue.Data
             int volumeWithLenght = actor.Length > 0 ? MathMagi.CalculateVolumeWithModifier(actor.Length, volumeWithHeight) : volumeWithHeight;
             int finalVolume = actor.Broadness > 0 ? MathMagi.CalculateVolumeWithModifier(actor.Broadness, volumeWithLenght) : volumeWithLenght;
 
-            race.SetBodyPlan();
             anatomy.FullSetup(actor, race, actorAge, sex, finalVolume);
 
             body.Endurance = race.BaseEndurance;
@@ -172,17 +171,15 @@ namespace MagiRogue.Data
             var scenario = DataManager.QueryScenarioInData(scenarioId);
             var foundRace = DataManager.QueryRaceInData(race);
             int age = foundRace.GetAgeFromAgeGroup(scenario.AgeGroup);
-            Actor actor = ActorCreatorFirstStep(pos, race, name, age, sex);
-            Player player = PlayerCreatorFromActor(actor, scenarioId, sex);
-            return player;
+            Actor actor = ActorCreator(pos, race, name, age, sex);
+            return PlayerCreatorFromActor(actor, scenarioId, sex);
         }
 
-        public static Player PlayerCreatorFromZero(Point pos, string race, string name, int age, Sex sex,
+        public static Player PlayerCreatorFromZeroForTest(Point pos, string race, string name, int age, Sex sex,
             string scenarioId)
         {
-            Actor actor = ActorCreatorFirstStep(pos, race, name, age, sex);
-            Player player = PlayerCreatorFromActor(actor, scenarioId, sex);
-            return player;
+            Actor actor = ActorCreator(pos, race, name, age, sex);
+            return PlayerCreatorFromActor(actor, scenarioId, sex);
         }
     }
 }

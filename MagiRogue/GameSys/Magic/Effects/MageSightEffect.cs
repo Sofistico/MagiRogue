@@ -1,10 +1,11 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
+using Newtonsoft.Json;
 using System.Linq;
 
 namespace MagiRogue.GameSys.Magic.Effects
 {
-    public class MageSightEffect : ITimedEffect
+    public class MageSightEffect : ISpellEffect
     {
         private bool hasMageSight;
         private int turnToRemove;
@@ -20,7 +21,9 @@ namespace MagiRogue.GameSys.Magic.Effects
         public bool TargetsTile { get; set; } = false;
         public EffectType EffectType { get; set; } = EffectType.MAGESIGHT;
         public int BaseDamage { get; set; } = 0;
+        public bool CanMiss { get; set; }
 
+        [JsonConstructor]
         public MageSightEffect(int duration)
         {
             Duration = duration;

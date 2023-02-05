@@ -115,13 +115,21 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         /// <returns></returns>
         private static ISpellEffect EnumToEffect(EffectType effect, JToken jToken)
         {
+            bool? canMiss = (bool?)jToken["CanMiss"];
+            bool? isHealing = (bool?)jToken["IsHealing"];
+            int? raidus = (int?)jToken["Radius"];
+            bool? resistable = (bool?)jToken["IsResistable"];
             return effect switch
             {
                 EffectType.DAMAGE => new DamageEffect
                     ((int)jToken["BaseDamage"], StringToAreaEffect((string)jToken["AreaOfEffect"]),
-                    StringToDamageType((string)jToken["SpellDamageType"]),
-                    (bool)jToken["CanMiss"], (bool)jToken["IsHealing"], (int)jToken["Radius"],
-                    isResistable: (bool)jToken["IsResistable"]),
+                    StringToDamageType((string)jToken["SpellDamageType"]))
+                {
+                    CanMiss = canMiss ?? false,
+                    IsHealing = isHealing ?? false,
+                    Radius = raidus ?? 0,
+                    IsResistable = resistable ?? false,
+                },
                 EffectType.HASTE => new HasteEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]),
                     (int)jToken["HastePower"],
                     (int)jToken["Duration"],

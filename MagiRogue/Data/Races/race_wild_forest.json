@@ -39,12 +39,17 @@
     "Select": [
       {
         "Selector": [ { "Genders": "Male" } ],
-        "Change": [ "BodyPlan" ],
-        "To": [ "quadruped_hoof", "animal_tail", "humanoid_organs", "2head_antlers" ]
+        "Change": "BodyPlan",
+        "To": [ "quadruped_hoof", "animal_tail", "humanoid_organs", "2head_horns" ]
       },
       {
-        "Selector": [ { "Limbtype": "Foot" } ],
-        "Change": [ "Material" ],
+        "Selector": [ { "LimbType": "Horn" } ],
+        "Change": "LastBodyPartName",
+        "To": [ "{0} Antler" ]
+      },
+      {
+        "Selector": [ { "LimbType": "Foot" } ],
+        "Change": "Material",
         "To": [ "hoof_mat" ]
       }
     ]

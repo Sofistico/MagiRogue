@@ -452,6 +452,11 @@ namespace MagiRogue.Entities
             }
         }
 
+        public Sex GetGender()
+        {
+            return GetAnatomy().Gender;
+        }
+
         #endregion GetProperties
 
         #endregion Methods

@@ -37,7 +37,7 @@ namespace MagiRogue.Utils
         }
     }
 
-    public struct Shape
+    public readonly struct Shape
     {
         public readonly Point[] Points { get; }
 

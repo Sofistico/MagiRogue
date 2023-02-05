@@ -1,9 +1,10 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
+using Newtonsoft.Json;
 
 namespace MagiRogue.GameSys.Magic.Effects
 {
-    public class HasteEffect : IHasteEffect
+    public class HasteEffect : ISpellEffect
     {
         private double previousSpeed;
         private double currentSpeed;
@@ -21,7 +22,9 @@ namespace MagiRogue.GameSys.Magic.Effects
         public double ConeCircleSpan { get; set; }
         public bool TargetsTile { get; set; } = false;
         public EffectType EffectType { get; set; } = EffectType.HASTE;
+        public bool CanMiss { get; set; }
 
+        [JsonConstructor]
         public HasteEffect(SpellAreaEffect areaOfEffect, float hastePower, int duration,
             DamageTypes spellDamageType = DamageTypes.Force)
         {

@@ -206,9 +206,14 @@ namespace MagiRogue.Entities
         {
             actor.Volume = volume;
 
-            if (Race is not null)
+            if (Race?.Select is not null)
             {
+                Race.CustomBPSelect(actor);
             }
+
+            Limbs = Race.ReturnRaceLimbs();
+            Organs = Race.ReturnRaceOrgans();
+            NormalLimbRegen = Race.RaceNormalLimbRegen;
 
             if (Limbs.Count > 0)
             {
@@ -234,15 +239,15 @@ namespace MagiRogue.Entities
             try
             {
                 if (race is not null)
+                {
                     Race ??= race;
+                    RaceId = race.Id;
+                }
                 if (Race is null && !string.IsNullOrEmpty(RaceId))
                     Race = Data.DataManager.QueryRaceInData(RaceId);
                 if (Race is null)
                     throw new ApplicationException("Something went wrong, the race is null!");
                 SetRandomLifespanByRace();
-                Limbs = Race.ReturnRaceLimbs();
-                Organs = Race.ReturnRaceOrgans();
-                NormalLimbRegen = Race.RaceNormalLimbRegen;
                 basicSetupDone = true;
             }
             catch (Exception ex)

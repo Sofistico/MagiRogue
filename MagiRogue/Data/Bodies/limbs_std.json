@@ -395,5 +395,27 @@
     "RateOfHeal": 0.9,
     "BodyPartFunction": "Limb",
     "ConnectedTo": "lower_body"
+  },
+  {
+    "Id": "horn_left",
+    "LimbType": "Horn",
+    "RelativeVolume": 0.065,
+    "BodyPartName": "Left Horn",
+    "Orientation": "Left",
+    "MaterialId": "skin",
+    "RateOfHeal": 0.1,
+    "BodyPartFunction": "Limb",
+    "ConnectedTo": "head"
+  },
+  {
+    "Id": "horn_right",
+    "LimbType": "Horn",
+    "RelativeVolume": 0.065,
+    "BodyPartName": "Right Horn",
+    "Orientation": "Left",
+    "MaterialId": "skin",
+    "RateOfHeal": 0.1,
+    "BodyPartFunction": "Limb",
+    "ConnectedTo": "head"
   }
 ]
