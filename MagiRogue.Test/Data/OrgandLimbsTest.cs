@@ -107,7 +107,7 @@ namespace MagiRogue.Test.Data
         [Fact]
         public void RegenActorLostLimb()
         {
-            Actor actor = EntityFactory.ActorCreatorFirstStep(Point.None, "test_race", "test dummy", 20, Sex.None);
+            Actor actor = EntityFactory.ActorCreator(Point.None, "test_race", "test dummy", 20, Sex.None);
             //Actor actor = new Actor("Test actor", Color.AliceBlue, Color.AliceBlue, '@',
             //    new Point(0, 0));
             //actor.GetAnatomy().Race = "test_race";
@@ -139,6 +139,13 @@ namespace MagiRogue.Test.Data
             bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5toes").BodyParts);
             var seeWhatHappens = bp.ReturnBodyParts();
             Assert.DoesNotContain(seeWhatHappens, i => i.BodyPartName.Contains("{0}"));
+        }
+
+        [Fact]
+        public void CustomSelectorCode()
+        {
+            var wildMaleDeer = EntityFactory.ActorCreator(Point.Zero, "deer", "Test Deer", 10, Sex.Male);
+            Assert.Contains(wildMaleDeer.GetAnatomy().Limbs, i => i.BodyPartName.Contains("Horn"));
         }
     }
 }

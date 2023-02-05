@@ -1,4 +1,6 @@
 ﻿using MagiRogue.Commands;
+using MagiRogue.Components;
+using MagiRogue.Components.Ai;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.Entities;
@@ -269,7 +271,7 @@ namespace MagiRogue.UI
                 }
                 else
                 {
-                    ui.MessageLog.Add("Invalid target!");
+                    ui.MessageLog.PrintMessage("Invalid target!");
                     return false;
                 }
             }
@@ -344,21 +346,33 @@ namespace MagiRogue.UI
                 && info.IsKeyPressed(Keys.O) && targetCursor is not null)
             {
                 var (_, actor) = ActionManager.CreateTestEntity(targetCursor.Cursor.Position, world);
-                actor.AddComponent(new Components.MoveAndAttackAI(actor.GetViewRadius()));
+                actor.AddComponent(new MoveAndAttackAI(actor.GetViewRadius()));
                 return false;
             }
 
             if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.O) && targetCursor is not null)
             {
                 var (_, entity) = ActionManager.CreateTestEntity(targetCursor.Cursor.Position, world);
-                entity.AddComponent(new Components.BasicAi(entity));
+                entity.AddComponent(new BasicAi(entity));
                 return false;
             }
             if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.P) && targetCursor.EntityInTarget())
             {
                 Actor actor = (Actor)targetCursor.TargetEntity();
-                actor.AddComponent(new Components.MoveAndAttackAI(actor.GetViewRadius()));
+                actor.AddComponent(new MoveAndAttackAI(actor.GetViewRadius()));
                 GameLoop.AddMessageLog($"Added attack component to {actor.Name}!");
+                return false;
+            }
+
+            if (info.IsKeyDown(Keys.LeftShift)
+                && info.IsKeyDown(Keys.LeftControl)
+                && info.IsKeyPressed(Keys.P)
+                && targetCursor.EntityInTarget())
+            {
+                Actor actor = (Actor)targetCursor.TargetEntity();
+                actor.AddComponent(new NeedDrivenAi());
+                actor.AddComponent(NeedCollection.WithCommonNeeds());
+                GameLoop.AddMessageLog($"Added need component to {actor.Name}!");
                 return false;
             }
 

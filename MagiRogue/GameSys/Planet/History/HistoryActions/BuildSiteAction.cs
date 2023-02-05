@@ -71,7 +71,7 @@ namespace MagiRogue.GameSys.Planet.History.HistoryActions
             }
 
             Site site = new Site(rngTile.Position, $"Tower of {figure.Name}",
-                new Population(popNmbr, figure.Body.Anatomy.Race))
+                new Population(popNmbr, figure.GetRaceId()))
             {
                 SiteLeader = figure,
                 SiteType = siteType,

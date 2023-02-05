@@ -7,11 +7,8 @@
         "SpellDamageType": "Force",
         "BaseDamage": 2,
         "Radius": 0,
-        "TargetsTile": false,
         "EffectType": "DAMAGE",
-        "IsHealing": true,
-        "CanMiss": false,
-        "IsResistable": false
+        "IsHealing": true
       }
     ],
     "SpellName": "Minor Cure",

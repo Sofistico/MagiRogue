@@ -16,7 +16,7 @@ namespace MagiRogue.Entities
     /// </summary>
     // TODO: Remove inherting from entity and add as a component.
     [JsonConverter(typeof(ItemJsonConverter))]
-    public class Item : Entity
+    public class Item : MagiEntity
     {
         // backing field for Condition
         private int condition;

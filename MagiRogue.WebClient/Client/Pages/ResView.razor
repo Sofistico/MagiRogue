@@ -1,0 +1,92 @@
+﻿@page "/resview"
+@using MagiRogue.WebClient.Shared.Models;
+@using MagiRogue.WebClient.Shared.Data;
+@inject IJSRuntime JS
+
+<h3>ResView</h3>
+
+<p>
+    Hello, it's me!
+</p>
+
+<EditForm Model="@resModel" OnSubmit="@HandleSubmit">
+    <div>
+        <label for="resId">Research id</label>
+        <InputText @bind-Value="@resModel.Id" id="resId" />
+    </div>
+    <div>
+        <label for="resName">Research name</label>
+        <InputText @bind-Value="@resModel.Name" id="resName" />
+    </div>
+    <div>
+        <label for="resDiff">Research difficulty</label>
+        <InputNumber @bind-Value="@resModel.Difficulty" id="resDiff" />
+    </div>
+    <div>
+        <label for="resMagic">Research is magical?</label>
+        <InputRadioGroup Name="IsMagical" @bind-Value="@resModel.IsMagical">
+            <label><InputRadio Name="IsMagical" Value="@true" />Yes</label>
+            <label><InputRadio Name="IsMagical" Value="@false" />No</label>
+        </InputRadioGroup>
+    </div>
+    <div>
+        <label for="interMagic">Research is intermediare?</label>
+        <InputRadioGroup Name="IntermediareRes" @bind-Value="@resModel.IntermediareRes">
+            <label><InputRadio Name="IntermediareRes" Value="@true" />Yes</label>
+            <label><InputRadio Name="IntermediareRes" Value="@false" />No</label>
+        </InputRadioGroup>
+    </div>
+    <div>
+        <label for="validFind">Research is intermediare?</label>
+        <InputRadioGroup Name="ValidFindInExploration" @bind-Value="@resModel.ValidFindInExploration">
+            <label><InputRadio Name="ValidFindInExploration" Value="@true" />Yes</label>
+            <label><InputRadio Name="ValidFindInExploration" Value="@false" />No</label>
+        </InputRadioGroup>
+    </div>
+    <div>
+        <label for="validGift">Research can be given by deity?</label>
+        <InputRadioGroup Name="ValidDeityGift" @bind-Value="@resModel.ValidDeityGift">
+            <label><InputRadio Name="ValidDeityGift" Value="@true" />Yes</label>
+            <label><InputRadio Name="ValidDeityGift" Value="@false" />No</label>
+        </InputRadioGroup>
+    </div>
+    <div>
+        <label for="resAb">Research ability required(use ; to separete abilities)</label>
+        <InputText @bind-Value="@resModel.AbilityRequired" id="resAb" />
+    </div>
+    <div>
+        <label for="techRes">What teach is being researched, if any</label>
+        <InputText @bind-Value="@resModel.RequiredRes" id="techRes" />
+    </div>
+    <div>
+        <label for="techRes">What teach is being researched, if any</label>
+        <InputText @bind-Value="@resModel.TechResearched" id="techRes" />
+    </div>
+    <div>
+        <label for="exclusive">Is it exclusive with what research, if any</label>
+        <InputText @bind-Value="@resModel.ExclusiveOr" id="exclusive" />
+    </div>
+    <button type="submit">Submit</button>
+
+</EditForm>
+
+<button @onclick="DowloadFile">
+    Download File as Json
+</button>
+@code {
+    private ResearchModel resModel = new();
+    private string json = "";
+
+    private void HandleSubmit()
+    {
+        json = JsonShared.ToJson(resModel);
+    }
+
+    private async void DowloadFile()
+    {
+        const string fileName = "res.json";
+        using var stream = JsonShared.GenerateStreamFromJson(json);
+        using var streamRef = new DotNetStreamReference(stream);
+        await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+    }
+}

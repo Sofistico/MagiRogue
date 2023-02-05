@@ -29,7 +29,7 @@ namespace MagiRogue.Entities
             }
         }
 
-        public bool Broken { get; set; } = false;
+        public bool Broken { get; set; }
 
         public bool Attached { get; set; } = true;
 
@@ -92,7 +92,7 @@ namespace MagiRogue.Entities
 
         public Limb Copy()
         {
-            Limb copy = new Limb(MaterialId)
+            return new Limb(MaterialId)
             {
                 Attached = this.Attached,
                 Broken = this.Broken,
@@ -112,8 +112,6 @@ namespace MagiRogue.Entities
                 Working = this.Working,
                 Wounds = this.Wounds,
             };
-
-            return copy;
         }
 
         public override void CalculateWound(Wound wound)

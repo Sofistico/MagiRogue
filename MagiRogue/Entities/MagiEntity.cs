@@ -15,7 +15,7 @@ namespace MagiRogue.Entities
     // Extends the SadConsole.Entities.Entity class
     // by adding an ID to it using GoRogue's ID system
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public class Entity : SadConsole.Entities.Entity, IGameObject
+    public class MagiEntity : SadConsole.Entities.Entity, IGameObject
     {
         #region Fields
 
@@ -76,12 +76,13 @@ namespace MagiRogue.Entities
         #endregion BackingField fields
 
         private IGameObject backingField;
+        private bool disposedValue;
 
         #endregion Fields
 
         #region Constructor
 
-        public Entity(Color foreground, Color background,
+        public MagiEntity(Color foreground, Color background,
             int glyph, Point coord, int layer) : base(foreground, background, glyph, layer)
         {
             InitializeObject(foreground, background, glyph, coord, layer);
@@ -120,7 +121,7 @@ namespace MagiRogue.Entities
         {
             get
             {
-                return string.Format($"{nameof(Entity)} : {Name}");
+                return string.Format($"{nameof(MagiEntity)} : {Name}");
             }
         }
 
@@ -130,9 +131,9 @@ namespace MagiRogue.Entities
 
         #region Overload Methods
 
-        public virtual Entity Copy()
+        public virtual MagiEntity Copy()
         {
-            var entity = new Entity(this.Appearance.Foreground,
+            var entity = new MagiEntity(this.Appearance.Foreground,
                 Appearance.Background, Appearance.Glyph, Position, Layer)
             {
                 Magic = this.Magic,

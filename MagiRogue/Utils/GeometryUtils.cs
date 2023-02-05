@@ -13,23 +13,21 @@ namespace MagiRogue.Utils
         /// <param name="radius">The radius of the cone</param>
         /// <param name="target">The target that is creating the cone</param>
         /// <returns></returns>
-        public static Shape Cone(Point originCoordinate, double radius, Target target)
+        public static Shape Cone(Point originCoordinate, double radius, Target target, double coneSpan = 90)
         {
             var map = GameLoop.GetCurrentMap();
             Point[] points;
             double angle = 0;
             if (target.TravelPath.Length > 0)
             {
-                angle = Point.BearingOfLine(originCoordinate, target.TravelPath.GetStep(0));
-                // Is a hacky way to ensure the angle goes from right from 0, cince bearing of line considers
-                // up as the 0 point.
-                angle = (angle + 90) % 360;
+                angle = Point.BearingOfLine(target.TravelPath.GetStep(0) - originCoordinate);
             }
 
             GoRogue.FOV.RecursiveShadowcastingFOV coneFov =
                 new(map.TransparencyView);
+
             coneFov.Calculate(originCoordinate.X, originCoordinate.Y,
-                radius, map.DistanceMeasurement, angle, 160);
+                angle, map.DistanceMeasurement, angle, coneSpan);
 
             points = coneFov.CurrentFOV.ToArray();
 #if DEBUG
@@ -39,7 +37,7 @@ namespace MagiRogue.Utils
         }
     }
 
-    public struct Shape
+    public readonly struct Shape
     {
         public readonly Point[] Points { get; }
 

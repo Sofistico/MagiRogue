@@ -41,9 +41,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="GoRogue" Version="3.0.0-beta01" />
+    <PackageReference Include="GoRogue" Version="3.0.0-beta02" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="SadConsole" Version="9.2.2" />
     <PackageReference Include="SadConsole.Host.MonoGame" Version="9.2.2" />
   </ItemGroup>
@@ -55,7 +55,7 @@
 	<None Update="Data\Reaction\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-	  	<None Update="Data\Rules\*">
+	<None Update="Data\Rules\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Data\Descriptors\*">
@@ -100,7 +100,7 @@
     <None Update="Fonts\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-      <None Update="Settings\*.json">
+    <None Update="Settings\*.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

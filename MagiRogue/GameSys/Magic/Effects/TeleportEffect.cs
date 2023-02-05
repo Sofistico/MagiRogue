@@ -1,5 +1,6 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
+using Newtonsoft.Json;
 
 namespace MagiRogue.GameSys.Magic.Effects
 {
@@ -8,11 +9,14 @@ namespace MagiRogue.GameSys.Magic.Effects
         public SpellAreaEffect AreaOfEffect { get; set; }
         public DamageTypes SpellDamageType { get; set; }
         public int Radius { get; set; }
+        public double ConeCircleSpan { get; set; }
         public bool TargetsTile { get; set; } = true;
 
         public EffectType EffectType { get; set; } = EffectType.TELEPORT;
         public int BaseDamage { get; set; } = 0;
+        public bool CanMiss { get; set; }
 
+        [JsonConstructor]
         public TeleportEffect(SpellAreaEffect areaOfEffect = SpellAreaEffect.Target,
             DamageTypes spellDamageType = DamageTypes.None, int radius = 0)
         {

@@ -81,7 +81,7 @@ namespace MagiRogue
         {
             if (UIManager is null)
                 return;
-            UIManager.MessageLog.Add(message);
+            UIManager.MessageLog.PrintMessage(message);
         }
 
         #region IdCounters

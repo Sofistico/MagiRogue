@@ -19,7 +19,7 @@
                 <ItemsControl ItemsSource="{Binding Pages}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Button Content="{Binding Name}"
+                            <Button Content="{Binding PageName}"
                         Margin="2,5" />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

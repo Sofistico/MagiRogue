@@ -4,7 +4,7 @@ using SadConsole.Components;
 
 namespace MagiRogue.Components
 {
-    public class AnimationComponent : GoRogue.Components.ParentAware.ParentAwareComponentBase<Entity>
+    public class AnimationComponent : GoRogue.Components.ParentAware.ParentAwareComponentBase<MagiEntity>
     {
         private readonly ColoredGlyph[] _animationFrames;
         private readonly Timer _timer;
@@ -34,7 +34,9 @@ namespace MagiRogue.Components
                 return;
 
             if (animationIndex >= _animationFrames.Length)
+            {
                 Stop();
+            }
             else
             {
                 var parent = Parent;

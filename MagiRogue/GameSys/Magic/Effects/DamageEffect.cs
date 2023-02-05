@@ -1,26 +1,34 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.Utils;
+using Newtonsoft.Json;
 
 namespace MagiRogue.GameSys.Magic.Effects
 {
     /// <summary>
     /// Basic damage effect, can determine if it auto hits or if it heals
     /// </summary>
-    public class DamageEffect : IDamageSpellEffect
+    public class DamageEffect : ISpellEffect
     {
         public SpellAreaEffect AreaOfEffect { get; set; }
         public DamageTypes SpellDamageType { get; set; }
         public int BaseDamage { get; set; }
         public int Radius { get; set; }
+        public double ConeCircleSpan { get; set; }
         public bool TargetsTile { get; set; } = false;
         public EffectType EffectType { get; set; } = EffectType.DAMAGE;
         public bool IsHealing { get; set; }
         public bool CanMiss { get; set; }
         public bool IsResistable { get; set; }
 
-        public DamageEffect(int dmg, SpellAreaEffect areaOfEffect, DamageTypes spellDamageType, bool canMiss = false,
-            bool isHeal = false, int radius = 0, bool isResistable = false)
+        [JsonConstructor]
+        public DamageEffect(int dmg,
+            SpellAreaEffect areaOfEffect,
+            DamageTypes spellDamageType,
+            bool canMiss = false,
+            bool isHeal = false,
+            int radius = 0,
+            bool isResistable = false)
         {
             BaseDamage = dmg;
             AreaOfEffect = areaOfEffect;
@@ -52,7 +60,7 @@ namespace MagiRogue.GameSys.Magic.Effects
         {
             BaseDamage = MagicManager.CalculateSpellDamage(caster, spellCasted);
 
-            Entity poorGuy = GameLoop.GetCurrentMap().GetEntityAt<Entity>(target);
+            MagiEntity poorGuy = GameLoop.GetCurrentMap().GetEntityAt<MagiEntity>(target);
 
             if ((poorGuy == GameLoop.GetCurrentMap().ControlledEntitiy || poorGuy is Player)
                 && AreaOfEffect is not SpellAreaEffect.Ball)

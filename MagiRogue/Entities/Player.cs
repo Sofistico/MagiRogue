@@ -20,7 +20,7 @@ namespace MagiRogue.Entities
 
         public static Player TestPlayer()
         {
-            Player player = EntityFactory.PlayerCreatorFromZero(new Point(), "human", "Playa", 25,
+            Player player = EntityFactory.PlayerCreatorFromZeroForTest(new Point(), "human", "Playa", 25,
                 MagiRogue.Data.Enumerators.Sex.Female, "new_wiz");
 
             player.Magic.ShapingSkill = 9;

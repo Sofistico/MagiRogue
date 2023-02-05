@@ -2,7 +2,6 @@
 using MagiRogue.GameSys.Magic;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
-using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -51,7 +50,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         public int GlyphInt { get; set; }
 
         /// <summary>
-        /// <inheritdoc cref="Entity.Volume"/>
+        /// <inheritdoc cref="MagiEntity.Volume"/>
         /// </summary>
         [DataMember]
         public int Volume { get; set; }

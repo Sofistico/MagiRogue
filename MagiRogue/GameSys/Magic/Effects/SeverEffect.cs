@@ -1,5 +1,6 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
+using Newtonsoft.Json;
 
 namespace MagiRogue.GameSys.Magic.Effects
 {
@@ -11,11 +12,14 @@ namespace MagiRogue.GameSys.Magic.Effects
         public SpellAreaEffect AreaOfEffect { get; set; }
         public DamageTypes SpellDamageType { get; set; }
         public int Radius { get; set; }
+        public double ConeCircleSpan { get; set; }
 
         public bool TargetsTile { get; set; } = false;
         public EffectType EffectType { get; set; } = EffectType.SEVER;
         public int BaseDamage { get; set; }
+        public bool CanMiss { get; set; }
 
+        [JsonConstructor]
         public SeverEffect(SpellAreaEffect areaOfEffect, DamageTypes spellDamageType, int radius, int dmg)
         {
             AreaOfEffect = areaOfEffect;

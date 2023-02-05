@@ -8,7 +8,7 @@ using SadRogue.Primitives;
 using System;
 using System.Linq;
 
-namespace MagiRogue.Components
+namespace MagiRogue.Components.Ai
 {
     public class MoveAndAttackAI : IAiComponent
     {
@@ -19,7 +19,7 @@ namespace MagiRogue.Components
             perceptionAi = perception;
         }
 
-        public IObjectWithComponents? Parent { get; set; }
+        public IObjectWithComponents? Parent { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public (bool sucess, long ticks) RunAi(Map map, MessageLogWindow messageLog)
         {

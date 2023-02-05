@@ -8,7 +8,7 @@ namespace MagiRogue.Entities
     [JsonConverter(typeof(ActivableJsonConverter))]
     public interface IActivable
     {
-        public void Activate(Entity entity);
+        public void Activate(MagiEntity entity);
     }
 
     #endregion Interface
@@ -18,7 +18,7 @@ namespace MagiRogue.Entities
     // TODO: Take a look later of what will do with these activable types.
     public struct Sit : IActivable
     {
-        public void Activate(Entity entity)
+        public void Activate(MagiEntity entity)
         {
             throw new System.NotImplementedException();
         }
@@ -26,7 +26,7 @@ namespace MagiRogue.Entities
 
     public struct Study : IActivable
     {
-        public void Activate(Entity entity)
+        public void Activate(MagiEntity entity)
         {
             throw new System.NotImplementedException();
         }
@@ -34,7 +34,7 @@ namespace MagiRogue.Entities
 
     public struct Craft : IActivable
     {
-        public void Activate(Entity entity)
+        public void Activate(MagiEntity entity)
         {
             throw new System.NotImplementedException();
         }
@@ -42,7 +42,7 @@ namespace MagiRogue.Entities
 
     public struct Enchant : IActivable
     {
-        public void Activate(Entity entity)
+        public void Activate(MagiEntity entity)
         {
             throw new System.NotImplementedException();
         }
@@ -50,7 +50,7 @@ namespace MagiRogue.Entities
 
     public struct Rest : IActivable
     {
-        public void Activate(Entity entity)
+        public void Activate(MagiEntity entity)
         {
             throw new System.NotImplementedException();
         }
@@ -58,7 +58,7 @@ namespace MagiRogue.Entities
 
     public struct Lockpick : IActivable
     {
-        public void Activate(Entity entity)
+        public void Activate(MagiEntity entity)
         {
             throw new System.NotImplementedException();
         }
@@ -66,7 +66,7 @@ namespace MagiRogue.Entities
 
     public struct VisExtract : IActivable
     {
-        public void Activate(Entity entity)
+        public void Activate(MagiEntity entity)
         {
             throw new System.NotImplementedException();
         }
@@ -74,7 +74,7 @@ namespace MagiRogue.Entities
 
     public struct Hammer : IActivable
     {
-        public void Activate(Entity entity)
+        public void Activate(MagiEntity entity)
         {
             throw new System.NotImplementedException();
         }
@@ -82,7 +82,7 @@ namespace MagiRogue.Entities
 
     public struct Pry : IActivable
     {
-        public void Activate(Entity entity)
+        public void Activate(MagiEntity entity)
         {
             throw new System.NotImplementedException();
         }
@@ -90,7 +90,7 @@ namespace MagiRogue.Entities
 
     public struct Distill : IActivable
     {
-        public void Activate(Entity entity)
+        public void Activate(MagiEntity entity)
         {
             throw new System.NotImplementedException();
         }
@@ -98,7 +98,7 @@ namespace MagiRogue.Entities
 
     public struct Alchemy : IActivable
     {
-        public void Activate(Entity entity)
+        public void Activate(MagiEntity entity)
         {
             throw new System.NotImplementedException();
         }
@@ -106,7 +106,7 @@ namespace MagiRogue.Entities
 
     public struct Store : IActivable
     {
-        public void Activate(Entity entity)
+        public void Activate(MagiEntity entity)
         {
             throw new System.NotImplementedException();
         }
@@ -114,7 +114,7 @@ namespace MagiRogue.Entities
 
     public struct Unlight : IActivable
     {
-        public void Activate(Entity entity)
+        public void Activate(MagiEntity entity)
         {
             throw new System.NotImplementedException();
         }

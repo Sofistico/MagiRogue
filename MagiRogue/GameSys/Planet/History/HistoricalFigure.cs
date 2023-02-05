@@ -25,6 +25,7 @@ namespace MagiRogue.GameSys.Planet.History
         private int seasonsOnActivity = 0;
         private int whatScoreToSettleForTrainingAbility;
         private Personality cachedPersonality;
+        private Race raceField;
 
 #if DEBUG
         public int DebugNumberOfLostYears;
@@ -103,7 +104,7 @@ namespace MagiRogue.GameSys.Planet.History
             IsAlive = isAlive;
             Description = desc;
             Id = GameLoop.GetHfId();
-            GetAnatomy().Race = raceId;
+            GetAnatomy().RaceId = raceId;
             GetAnatomy().Gender = hFGender;
         }
 
@@ -112,7 +113,7 @@ namespace MagiRogue.GameSys.Planet.History
             Name = name;
             Description = description;
             HFGender = hFGender;
-            GetAnatomy().Race = race;
+            GetAnatomy().RaceId = race;
             GetAnatomy().Gender = hFGender;
             IsAlive = isAlive;
             Id = GameLoop.GetHfId();
@@ -331,24 +332,24 @@ namespace MagiRogue.GameSys.Planet.History
         }
 
         public SiteRelation FindSiteRelation(int siteId) =>
-            RelatedSites.FirstOrDefault(i => i.OtherSiteId == siteId);
+            RelatedSites.Find(i => i.OtherSiteId == siteId);
 
         public string GetRaceName()
         {
-            Race race = Body.Anatomy.GetRace();
+            Race race = GetRace();
             return race.RaceName;
         }
 
         public string GetRaceNamePlural()
         {
-            Race race = Body.Anatomy.GetRace();
+            Race race = GetRace();
             return race.NamePlural;
         }
 
         public Race GetRace()
         {
-            Race race = Body.Anatomy.GetRace();
-            return race;
+            raceField ??= Body.Anatomy.Race;
+            return raceField;
         }
 
         internal void RemovePreviousSiteRelation(int id)
@@ -631,7 +632,7 @@ namespace MagiRogue.GameSys.Planet.History
 
         public void SetStandardRaceFlags()
         {
-            foreach (var flag in Body.Anatomy.GetRace()?.Flags)
+            foreach (var flag in Body.Anatomy.Race?.Flags)
             {
                 AddNewFlag(flag);
             }
@@ -793,7 +794,6 @@ namespace MagiRogue.GameSys.Planet.History
         private void SetupBodySoulAndMind()
         {
             Race race = GetRace();
-            race.SetBodyPlan();
             SetBasicAnatomy();
 
             Body.Endurance = race.BaseEndurance;
@@ -828,5 +828,7 @@ namespace MagiRogue.GameSys.Planet.History
                 DiscoveriesKnow.Add(disc);
             }
         }
+
+        public string GetRaceId() => GetAnatomy().RaceId;
     }
 }

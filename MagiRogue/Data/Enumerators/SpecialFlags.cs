@@ -40,6 +40,10 @@ namespace MagiRogue.Data.Enumerators
         CommonDomestic, // the race is a common domestic animal
         CommonPet, // the animal is easily adopted by civ race
         Pet, // the animal can be adopted
+        Wild, // this animal can be found in the wild
+        Grazer, // eats grass from the ground
+        Hunter, // animal hunts for meat
+        PackAimal, // animal forms packs
 
         //Civ stuff:
         Married,

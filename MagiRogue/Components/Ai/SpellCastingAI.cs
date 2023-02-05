@@ -4,7 +4,7 @@ using MagiRogue.GameSys.Magic;
 using MagiRogue.UI.Windows;
 using System;
 
-namespace MagiRogue.Components
+namespace MagiRogue.Components.Ai
 {
     public class SpellCastingAI : IAiComponent
     {

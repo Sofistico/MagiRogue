@@ -16,38 +16,15 @@ namespace MagiRogue.GameSys.Magic
         [JsonConverter(typeof(StringEnumConverter))]
         public DamageTypes SpellDamageType { get; set; }
         public int Radius { get; set; }
+        public double ConeCircleSpan { get; set; }
         public bool TargetsTile { get; set; }
         public int BaseDamage { get; set; }
 
         [JsonConverter(typeof(StringEnumConverter))]
         public EffectType EffectType { get; set; }
+        bool CanMiss { get; set; }
 
         public void ApplyEffect(Point target, Actor caster, SpellBase spellCasted);
-    }
-
-    public interface IDamageSpellEffect : ISpellEffect
-    {
-        public bool IsHealing { get; set; }
-        public bool CanMiss { get; set; }
-        public bool IsResistable { get; set; }
-    }
-
-    public interface IHasteEffect : ITimedEffect
-    {
-        public float HastePower { get; set; }
-    }
-
-    public interface ITimedEffect : ISpellEffect
-    {
-        /// <summary>
-        /// When in the time has the effect been applied
-        /// </summary>
-        public int TurnApplied { get; }
-
-        /// <summary>
-        /// How many turns this effect will be applied to
-        /// </summary>
-        public int Duration { get; }
     }
 
     public interface IPermEffect

@@ -186,7 +186,7 @@ namespace MagiRogue.GameSys.Magic
         {
             if (CanCast(caster.Magic, caster) && target != Point.None)
             {
-                Entity entity = GameLoop.GetCurrentMap().GetEntityAt<Entity>(target);
+                MagiEntity entity = GameLoop.GetCurrentMap().GetEntityAt<MagiEntity>(target);
 
                 GameLoop.AddMessageLog($"{caster.Name} casted {SpellName}");
 
@@ -225,7 +225,7 @@ namespace MagiRogue.GameSys.Magic
 
                 foreach (var pos in target)
                 {
-                    Entity entity = GameLoop.GetCurrentMap().GetEntityAt<Entity>(pos);
+                    MagiEntity entity = GameLoop.GetCurrentMap().GetEntityAt<MagiEntity>(pos);
                     foreach (ISpellEffect effect in Effects)
                     {
                         if (entity is not null && entity.CanBeAttacked)

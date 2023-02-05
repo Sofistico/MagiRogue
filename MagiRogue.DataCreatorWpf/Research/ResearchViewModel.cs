@@ -26,15 +26,30 @@ namespace MagiRogue.DataCreatorWpf
         public bool ValidDeityGift { get; set; }
 
         // values: Any from AbilityName.cs and any from AnyCraft, AnyResearch, AnyMagic, AnyCombat and AnyJob
-        public List<string> AbilityRequired { get; set; } = null!;
-        public List<Tech> TechResearched { get; set; } = null!;
+        public string AbilityRequired { get; set; } = null!;
+        public Tech TechResearched { get; set; }
 
         //// Which research id this is an upgrade from!
         //// example: wound leech draining -> wound cleaning
         //public string UpgradeFrom { get; set; }
-        public List<string> RequiredRes { get; set; } = null!;
+        public string RequiredRes { get; set; } = null!;
 
         // you can only research one or the other!
-        public List<string> ExclusiveOr { get; set; } = null!;
+        public string ExclusiveOr { get; set; } = null!;
+
+        public NewResCommand NewResCommand { get; set; } = new NewResCommand();
+    }
+
+    public class NewResCommand : BaseCommand
+    {
+        public override bool CanExecute(object parameter)
+        {
+            return parameter is ResearchViewModel;
+        }
+
+        public override void Execute(object parameter)
+        {
+            var res = (ResearchViewModel)parameter;
+        }
     }
 }

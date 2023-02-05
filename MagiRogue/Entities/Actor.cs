@@ -16,14 +16,8 @@ using System.Threading.Tasks;
 namespace MagiRogue.Entities
 {
     [JsonConverter(typeof(Data.Serialization.EntitySerialization.ActorJsonConverter))]
-    public class Actor : Entity
+    public class Actor : MagiEntity
     {
-        #region Fields
-
-        private bool bumped = false;
-
-        #endregion Fields
-
         #region Properties
 
         /// <summary>
@@ -44,7 +38,7 @@ namespace MagiRogue.Entities
         /// <summary>
         /// Sets if the char has bumbed in something
         /// </summary>
-        public bool Bumped { get => bumped; set => bumped = value; }
+        public bool Bumped { get; set; }
 
         // TODO: change inventory...
         /// <summary>
@@ -273,7 +267,7 @@ namespace MagiRogue.Entities
 
             #endregion Broken dreams lies here....
 
-            bool regens = GetAnatomy().GetRace().CanRegenarate();
+            bool regens = GetAnatomy().Race.CanRegenarate();
             var limbsHeal = GetAnatomy().Limbs.FindAll(i => i.NeedsHeal || (regens && !i.Attached));
             int limbCount = limbsHeal.Count;
             for (int i = 0; i < limbCount; i++)
@@ -327,7 +321,7 @@ namespace MagiRogue.Entities
         {
             if (GetAnatomy().HasBlood)
             {
-                return GetAnatomy().GetRace().BleedRegenaration + (Body.Toughness * 0.2);
+                return GetAnatomy().Race.BleedRegenaration + (Body.Toughness * 0.2);
             }
             return 0;
         }
@@ -456,6 +450,11 @@ namespace MagiRogue.Entities
             {
                 return DamageTypes.Blunt;
             }
+        }
+
+        public Sex GetGender()
+        {
+            return GetAnatomy().Gender;
         }
 
         #endregion GetProperties
