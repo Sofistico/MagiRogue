@@ -830,5 +830,11 @@ namespace MagiRogue.GameSys.Planet.History
         }
 
         public string GetRaceId() => GetAnatomy().RaceId;
+
+        internal void SetRace(Race figureRace)
+        {
+            GetAnatomy().Race = figureRace;
+            GetAnatomy().RaceId = figureRace.Id;
+        }
     }
 }

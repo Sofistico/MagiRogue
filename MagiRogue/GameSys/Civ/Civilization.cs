@@ -174,6 +174,7 @@ namespace MagiRogue.GameSys.Civ
 
         private void FigureSetupPosCtor(Race figureRace, HistoricalFigure figure)
         {
+            figure.SetRace(figureRace);
             figure.GenerateRandomPersonality();
             figure.GenerateRandomStatsSpread();
             if (!figure.CheckIfIsChildOrBabyForRace())

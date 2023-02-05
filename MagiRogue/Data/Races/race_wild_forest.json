@@ -46,11 +46,6 @@
         "Selector": [ { "LimbType": "Horn" } ],
         "Change": "LastBodyPartName",
         "To": [ "{0} Antler" ]
-      },
-      {
-        "Selector": [ { "LimbType": "Foot" } ],
-        "Change": "Material",
-        "To": [ "hoof_mat" ]
       }
     ]
   },

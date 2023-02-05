@@ -39,18 +39,17 @@ namespace MagiRogue.GameSys.MapGen
             for (int i = 0; i < rooms.Count; i++)
             {
                 Room? room = rooms[i].PhysicalRoom;
-                if (Mrn.OneIn(10))
+                if (Mrn.OneIn(10)
+                    && DataManager.ListOfRooms.Any(r => r.CompareRectanglesSameSize(room.RoomRectangle)
+                    && r.Obj.Tag is not RoomTag.Debug))
                 {
-                    if (DataManager.ListOfRooms.Any(r => r.CompareRectanglesSameSize(room.RoomRectangle)))
-                    {
-                        RoomTemplate tempRoom =
-                            DataManager.ListOfRooms.First(r => r.CompareRectanglesSameSize(room.RoomRectangle));
-                        room = tempRoom.ConfigureRoom(room.RoomRectangle.Position);
-                        _rooms.Add(new Building(room));
-                        _map.AddRoom(room);
-                        _map.SpawnRoomThingsOnMap(room);
-                        continue;
-                    }
+                    RoomTemplate tempRoom =
+                        DataManager.ListOfRooms.First(r => r.CompareRectanglesSameSize(room.RoomRectangle));
+                    room = tempRoom.ConfigureRoom(room.RoomRectangle.Position);
+                    _rooms.Add(new Building(room));
+                    _map.AddRoom(room);
+                    _map.SpawnRoomThingsOnMap(room);
+                    continue;
                 }
                 CreateRoom(room,
                     w, f);

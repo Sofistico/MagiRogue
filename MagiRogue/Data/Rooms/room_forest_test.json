@@ -1,0 +1,24 @@
+﻿[
+  {
+    "Id": "forest_test",
+    "Obj": {
+      "EmptyFill": "t_grass",
+      "Tag": "Debug",
+      "Rows": [
+        "        T  ",
+        "  T        ",
+        "          ",
+        "       T   ",
+        "   T       ",
+        "    T    T  ",
+        "          ",
+        " T    T     ",
+        "     T    T ",
+        "     T     "
+      ],
+      "Terrain": {
+        "T": "debug_tree"
+      }
+    }
+  }
+]
