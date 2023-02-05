@@ -1,4 +1,7 @@
-﻿namespace MagiRogue.GameSys.MapGen
+﻿using MagiRogue.Data;
+using System;
+
+namespace MagiRogue.GameSys.MapGen
 {
     public class MiscMapGen : MapGenerator
     {
@@ -9,12 +12,22 @@
 
         public Map GenerateTestMap()
         {
-            _map = new Map("Test Map");
+            _map = new Map("Test Map", 180, 180);
 
             PrepareForFloors();
             PrepareForOuterWalls();
+            AppendForestTestMap();
 
             return _map;
+        }
+
+        private void AppendForestTestMap()
+        {
+            var r = DataManager.QueryRoomInData("forest_test");
+
+            var pointBegin = new Point(_map.Width / 2, _map.Height / 2);
+
+            _map.AddRoom(r, pointBegin);
         }
 
         public Map GenerateStoneFloorMap()

@@ -542,8 +542,7 @@ namespace MagiRogue.GameSys
         /// <param name="r"></param>
         public void AddRoom(Room r)
         {
-            if (Rooms is null)
-                Rooms = new List<Room>();
+            Rooms ??= new List<Room>();
             if (!CheckIfRoomFitsInsideMap(r))
             {
                 try
@@ -556,6 +555,13 @@ namespace MagiRogue.GameSys
                 }
             }
             Rooms.Add(r);
+        }
+
+        public void AddRoom(RoomTemplate template, Point pointBegin)
+        {
+            var r = template.ConfigureRoom(pointBegin);
+            AddRoom(r);
+            SpawnRoomThingsOnMap(r);
         }
 
         public bool CheckIfRoomFitsInsideMap(Room r)
@@ -607,9 +613,12 @@ namespace MagiRogue.GameSys
                         continue;
                     }
                     r.Terrain.TryGetValue(c.ToString(), out var ter);
-                    r.Furniture.TryGetValue(c.ToString(), out var fur);
                     TryToPutTerrain(pos, ter);
-                    TryToPutFurniture(pos, fur);
+                    if (r.Furniture is not null)
+                    {
+                        r.Furniture.TryGetValue(c.ToString(), out var fur);
+                        TryToPutFurniture(pos, fur);
+                    }
                 }
             }
         }
@@ -656,8 +665,16 @@ namespace MagiRogue.GameSys
                 }
                 try
                 {
-                    TileBase tile = DataManager.QueryTileInData(str);
-                    tile.Position = pos;
+                    TileBase tile;
+                    if (str.Equals("debug_tree"))
+                    {
+                        tile = TileEncyclopedia.GenericTree(pos);
+                    }
+                    else
+                    {
+                        tile = DataManager.QueryTileInData(str);
+                        tile.Position = pos;
+                    }
                     SetTerrain(tile);
                 }
                 catch (NullReferenceException ex)
