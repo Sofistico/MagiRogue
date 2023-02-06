@@ -81,6 +81,7 @@ namespace MagiRogue.GameSys
             for (int m = 0; m < LocalMaps.Length; m++)
             {
                 Map? map = LocalMaps[m];
+                if (map is null) continue;
                 var ac = map.Entities.GetLayer((int)MapLayer.ACTORS).Items.ToArray();
                 for (int i = 0; i < ac.Length; i++)
                 {

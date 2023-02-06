@@ -22,7 +22,7 @@
   },
   {
     "Id": "quadruped_limbs",
-    "BodyParts": [ "upper_body", "lower_body", "neck", "head", "right_f_leg", "right_r_leg", "left_f_leg", "left_r_leg", "right_f_paw", "right_r_paw", "left_f_paw", "left_l_paw" ]
+    "BodyParts": [ "upper_body", "lower_body", "neck", "head", "right_f_leg", "right_r_leg", "left_f_leg", "left_r_leg", "right_f_paw", "right_r_paw", "left_f_paw", "left_r_paw" ]
   },
   {
     "Id": "animal_tail",

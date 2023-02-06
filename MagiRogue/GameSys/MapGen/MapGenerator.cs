@@ -50,7 +50,7 @@ namespace MagiRogue.GameSys.MapGen
             // debug to unlock the room
             //room.ForceUnlock();
 
-            _map.Add(stairsDown);
+            _map.AddMagiEntity(stairsDown);
         }
 
         /// <summary>

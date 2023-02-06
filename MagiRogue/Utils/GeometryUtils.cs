@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Commands;
+using SadRogue.Primitives;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -27,7 +28,7 @@ namespace MagiRogue.Utils
                 new(map.TransparencyView);
 
             coneFov.Calculate(originCoordinate.X, originCoordinate.Y,
-                angle, map.DistanceMeasurement, angle, coneSpan);
+                radius, Distance.Chebyshev, angle, coneSpan);
 
             points = coneFov.CurrentFOV.ToArray();
 #if DEBUG

@@ -1,4 +1,5 @@
-﻿using MagiRogue.Data.Enumerators;
+﻿using MagiRogue.Components;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Entities;
 using MagiRogue.Entities.StarterScenarios;
@@ -14,6 +15,8 @@ namespace MagiRogue.Data
     /// </summary>
     public static class EntityFactory
     {
+        private static Actor actorField;
+
         public static Actor ActorCreator(Point position, string raceId,
             string actorName, int actorAge, Sex sex)
         {
@@ -29,6 +32,47 @@ namespace MagiRogue.Data
             {
                 Description = race.Description,
             };
+            actorField = actor;
+            SetupBodySoulAndMind(race, actor, actorAge, sex);
+
+            return actor;
+        }
+
+        public static Actor ActorCreator(Point position, string raceId, Sex sex, AgeGroup age)
+        {
+            Race race = DataManager.QueryRaceInData(raceId);
+            int glyph = GlyphHelper.GlyphExistInDictionary(race.RaceGlyph) ?
+                GlyphHelper.GetGlyph(race.RaceGlyph) : race.RaceGlyph;
+
+            Actor actor = new Actor(race.RaceName,
+                race.ReturnForegroundColor(),
+                race.ReturnBackgroundColor(),
+                glyph,
+                position)
+            {
+                Description = race.Description,
+            };
+            actorField = actor;
+            SetupBodySoulAndMind(race, actor, race.GetAgeFromAgeGroup(age), sex);
+
+            return actor;
+        }
+
+        public static Actor ActorCreator(Point position, string raceId, int actorAge, Sex sex)
+        {
+            Race race = DataManager.QueryRaceInData(raceId);
+            int glyph = GlyphHelper.GlyphExistInDictionary(race.RaceGlyph) ?
+                GlyphHelper.GetGlyph(race.RaceGlyph) : race.RaceGlyph;
+
+            Actor actor = new Actor(race.RaceName,
+                race.ReturnForegroundColor(),
+                race.ReturnBackgroundColor(),
+                glyph,
+                position)
+            {
+                Description = race.Description,
+            };
+            actorField = actor;
             SetupBodySoulAndMind(race, actor, actorAge, sex);
 
             return actor;

@@ -173,7 +173,7 @@ namespace MagiRogue.GameSys.Tiles
             LastSeenAppereance = changeTile;
             if (itemDropped is not null)
             {
-                GameLoop.GetCurrentMap().Add(itemDropped);
+                GameLoop.GetCurrentMap().AddMagiEntity(itemDropped);
             }
         }
 

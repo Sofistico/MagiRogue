@@ -29,7 +29,7 @@
 
         "EffectType": "DAMAGE",
 
-        "CanMiss": true,
+        "CanMiss": true
       }
     ],
     "SpellName": "Fire Ray",
@@ -114,8 +114,8 @@
         "AreaOfEffect": "Cone",
         "SpellDamageType": "Cold",
         "BaseDamage": 5,
-        "Radius": 8,
-        "ConeCircleSpan": 90,
+        "Radius": 10,
+        "ConeCircleSpan": 95,
         "TargetsTile": true,
         "EffectType": "DAMAGE"
       }

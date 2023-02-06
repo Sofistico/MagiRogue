@@ -66,7 +66,7 @@ namespace MagiRogue.Test.System
                 (new TileFloor(new SadRogue.Primitives.Point(0, 0)));
             Player player = Player.TestPlayer();
             player.Position = new SadRogue.Primitives.Point(0, 0);
-            uni.WorldMap.AssocietatedMap.Add(player);
+            uni.WorldMap.AssocietatedMap.AddMagiEntity(player);
             uni.Player = player;
             var json = JsonConvert.SerializeObject(uni, Formatting.Indented,
                 new JsonSerializerSettings()

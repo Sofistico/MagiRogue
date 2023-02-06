@@ -235,7 +235,7 @@ namespace MagiRogue.Commands
                 Item item = inv.Inventory.First();
                 inv.Inventory.Remove(item);
                 item.Position = inv.Position;
-                GameLoop.GetCurrentMap().Add(item);
+                GameLoop.GetCurrentMap().AddMagiEntity(item);
                 GameLoop.AddMessageLog($"{inv.Name} dropped {item.Name}");
                 return true;
             }

@@ -95,7 +95,7 @@ namespace MagiRogue.GameSys
                 //ghost.OnCalculateRenderPosition();
                 //Map.EntityRender.Add(entity);
 
-                Map.Add(ghost);
+                Map.AddMagiEntity(ghost);
             }
             //Map.EntityRender.Remove(entity);
             entity.IsVisible = false;

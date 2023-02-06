@@ -30,7 +30,7 @@ namespace MagiRogue.Test.System
         {
             Assert.True(map.Tiles.Length == 20 * 20);
             Actor actor = new Actor("Test", Color.Black, Color.Black, '3', new Point(1, 1));
-            map.Add(actor);
+            map.AddMagiEntity(actor);
             Assert.True(map.Entities.Contains(actor));
         }
 
@@ -38,7 +38,7 @@ namespace MagiRogue.Test.System
         public void ChangeEntityCurrentMap()
         {
             var actor = new Actor("Test", Color.Black, Color.Black, '@', new Point(1, 1));
-            map.Add(actor);
+            map.AddMagiEntity(actor);
             var newMap = new Map("MapTest", 1, 1);
             newMap.Tiles[0] = new TileFloor(new Point(0, 0));
             Universe.ChangeActorMap(actor, newMap, new Point(0, 0), map);
@@ -58,7 +58,7 @@ namespace MagiRogue.Test.System
         {
             map.SetTerrain(new TileFloor(new Point(0, 0)));
             Actor actor = new Actor("Test", Color.Black, Color.Black, '@', new Point(0, 0));
-            map.Add(actor);
+            map.AddMagiEntity(actor);
             var json = JsonConvert.SerializeObject((MapTemplate)map);
 
             Assert.Contains(actor.Name, json);
@@ -70,7 +70,7 @@ namespace MagiRogue.Test.System
             PlanetMap planet = new PlanetGenerator().CreatePlanet(150, 150, 30);
             Player playa = EntityFactory.PlayerCreatorFromZeroForTest(new Point(), "human", "Playa", 25,
                 MagiRogue.Data.Enumerators.Sex.Female, "new_wiz");
-            planet.AssocietatedMap.Add(playa);
+            planet.AssocietatedMap.AddMagiEntity(playa);
 
             PlanetMapTemplate planetMapTemplate = planet;
 
@@ -101,9 +101,9 @@ namespace MagiRogue.Test.System
             Player player = Player.TestPlayer();
             player.AddToEquipment(item);
 
-            map.Add(actor);
-            map.Add(item);
-            map.Add(player);
+            map.AddMagiEntity(actor);
+            map.AddMagiEntity(item);
+            map.AddMagiEntity(player);
             var json = JsonConvert.SerializeObject((MapTemplate)map, Formatting.Indented,
                 new JsonSerializerSettings
                 {
@@ -129,7 +129,7 @@ namespace MagiRogue.Test.System
         {
             var fur = DataManager.QueryFurnitureInData("wood_table");
             fur.Position = new Point();
-            map.Add(fur);
+            map.AddMagiEntity(fur);
             var item = DataManager.QueryItemInData("coal_item");
             item.Position = new Point();
             Assert.True(map.CanAddEntity(item));

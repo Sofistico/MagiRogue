@@ -109,7 +109,7 @@ namespace MagiRogue.Commands
                  GameLoop.GetCurrentMap().ControlledEntitiy.Position.X,
                  GameLoop.GetCurrentMap().ControlledEntitiy.Position.Y);
             GameLoop.Universe.ChangeControlledEntity(Cursor);
-            GameLoop.GetCurrentMap().Add(Cursor);
+            GameLoop.GetCurrentMap().AddMagiEntity(Cursor);
             Cursor.Moved += Cursor_Moved;
 
             State = TargetState.Targeting;

@@ -270,7 +270,7 @@ namespace MagiRogue.GameSys
         /// Adds an Entity to the Entities field
         /// </summary>
         /// <param name="entity"></param>
-        public void Add(MagiEntity entity)
+        public void AddMagiEntity(MagiEntity entity)
         {
             /*if (entity.CurrentMap is not null)
             {
@@ -557,11 +557,12 @@ namespace MagiRogue.GameSys
             Rooms.Add(r);
         }
 
-        public void AddRoom(RoomTemplate template, Point pointBegin)
+        public Room AddRoom(RoomTemplate template, Point pointBegin)
         {
             var r = template.ConfigureRoom(pointBegin);
             AddRoom(r);
             SpawnRoomThingsOnMap(r);
+            return r;
         }
 
         public bool CheckIfRoomFitsInsideMap(Room r)
@@ -640,7 +641,7 @@ namespace MagiRogue.GameSys
                 {
                     Furniture furniture = DataManager.QueryFurnitureInData(str);
                     furniture.Position = pos;
-                    Add(furniture);
+                    AddMagiEntity(furniture);
                 }
                 catch (NullReferenceException ex)
                 {

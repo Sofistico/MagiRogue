@@ -370,12 +370,12 @@ namespace MagiRogue.Data.Serialization.MapSerialization
                 if (!map.Actors[x].IsPlayer)
                 {
                     //objMap.Add(Player.ReturnPlayerFromActor(map.Actors[x]));
-                    objMap.Add(map.Actors[x]);
+                    objMap.AddMagiEntity(map.Actors[x]);
                 }
             }
             for (int x = 0; x < map.Items.Count; x++)
             {
-                objMap.Add(map.Items[x]);
+                objMap.AddMagiEntity(map.Items[x]);
             }
             objMap.SetId(map.MapId);
             objMap.LastPlayerPosition = map.LastPlayerPosition;

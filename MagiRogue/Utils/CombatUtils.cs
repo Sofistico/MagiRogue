@@ -363,7 +363,7 @@ namespace MagiRogue.Utils
                     item.Position = defender.Position;
 
                     // Now let the MultiSpatialMap know that the Item is visible
-                    GameLoop.GetCurrentMap().Add(item);
+                    GameLoop.GetCurrentMap().AddMagiEntity(item);
                 }
 
                 // Clear the actor's inventory. Not strictly

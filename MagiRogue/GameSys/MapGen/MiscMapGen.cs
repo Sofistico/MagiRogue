@@ -1,4 +1,6 @@
-﻿using MagiRogue.Data;
+﻿using MagiRogue.Components;
+using MagiRogue.Components.Ai;
+using MagiRogue.Data;
 using System;
 
 namespace MagiRogue.GameSys.MapGen
@@ -27,7 +29,33 @@ namespace MagiRogue.GameSys.MapGen
 
             var pointBegin = new Point(_map.Width / 2, _map.Height / 2);
 
-            _map.AddRoom(r, pointBegin);
+            var room = _map.AddRoom(r, pointBegin);
+            PlaceUnitsInForest(room);
+        }
+
+        private void PlaceUnitsInForest(Room room)
+        {
+            int count = 6;
+            for (int i = 0; i < count; i++)
+            {
+                var pos = room.ReturnRandomPosRoom();
+                if (i % count == 0)
+                {
+                    _map.AddMagiEntity(EntityFactory.ActorCreator(pos,
+                        "deer",
+                        Data.Enumerators.Sex.Male,
+                        Data.Enumerators.AgeGroup.Adult)
+                        .WithComponents(new NeedDrivenAi(), NeedCollection.WithCommonNeeds()));
+                }
+                else
+                {
+                    _map.AddMagiEntity(EntityFactory.ActorCreator(pos,
+                        "wolf",
+                        Data.Enumerators.Sex.Male,
+                        Data.Enumerators.AgeGroup.Adult)
+                        .WithComponents(new NeedDrivenAi(), NeedCollection.WithCommonNeeds()));
+                }
+            }
         }
 
         public Map GenerateStoneFloorMap()

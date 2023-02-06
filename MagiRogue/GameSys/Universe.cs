@@ -120,7 +120,7 @@ namespace MagiRogue.GameSys
                 CurrentMap = currentChunk.LocalMaps.FirstOrDefault(i => i.MapId == currentMap.MapId);
             else
             {
-                CurrentMap = currentMap;
+                CurrentMap = currentMap!;
             }
 
             if (CurrentMap is not null)
@@ -146,7 +146,7 @@ namespace MagiRogue.GameSys
                         throw new ApplicationException("There was an error on trying to find the start town to place the player!");
                     Player = player;
 
-                    CurrentMap.Add(Player);
+                    CurrentMap.AddMagiEntity(Player);
                 }
                 catch (ApplicationException ex)
                 {
@@ -170,7 +170,7 @@ namespace MagiRogue.GameSys
                 CurrentMap.NeedsUpdate = true;
                 Player.Position = CurrentMap.LastPlayerPosition;
                 UpdateIfNeedTheMap(CurrentMap);
-                CurrentMap.Add(Player);
+                CurrentMap.AddMagiEntity(Player);
             }
             else
             {
@@ -185,7 +185,7 @@ namespace MagiRogue.GameSys
             ChangeActorMap(Player, mapToGo, pos, previousMap);
             UpdateIfNeedTheMap(mapToGo);
             CurrentMap = mapToGo;
-            previousMap.ControlledEntitiy = null;
+            previousMap.ControlledEntitiy = null!;
             GameLoop.UIManager.MapWindow.LoadMap(CurrentMap);
             GameLoop.UIManager.MapWindow.CenterOnActor(Player);
         }
@@ -208,7 +208,7 @@ namespace MagiRogue.GameSys
 
         public void AddEntityToCurrentMap(MagiEntity entity)
         {
-            CurrentMap.Add(entity);
+            CurrentMap.AddMagiEntity(entity);
             AddEntityToTime(entity);
         }
 
@@ -216,7 +216,7 @@ namespace MagiRogue.GameSys
         {
             previousMap.Remove(entity);
             entity.Position = pos;
-            mapToGo.Add(entity);
+            mapToGo.AddMagiEntity(entity);
         }
 
         public void SaveGame(string saveName)
@@ -242,6 +242,8 @@ namespace MagiRogue.GameSys
             MiscMapGen generalMapGenerator = new();
             Map map = generalMapGenerator.GenerateTestMap();
             CurrentMap = map;
+            CurrentChunk = new RegionChunk(0, 0);
+            CurrentChunk.LocalMaps[0] = map;
         }
 
         // Create a player using the Player class
@@ -265,7 +267,7 @@ namespace MagiRogue.GameSys
             }
 
             // add the player to the Map's collection of Entities
-            CurrentMap.Add(Player);
+            CurrentMap.AddMagiEntity(Player);
         }
 
         public Map GetWorldMap()
@@ -368,10 +370,10 @@ namespace MagiRogue.GameSys
                 Map maps = CurrentChunk.LocalMaps[i];
                 maps.DestroyMap();
             }
-            CurrentMap = null;
-            Player = null;
-            CurrentChunk = null;
-            WorldMap = null;
+            CurrentMap = null!;
+            Player = null!;
+            CurrentChunk = null!;
+            WorldMap = null!;
 
             GameLoop.UIManager.MainMenu.RestartGame();
         }

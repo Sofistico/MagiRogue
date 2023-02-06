@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Commands;
+using MagiRogue.Components;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
 using MagiRogue.GameSys;
@@ -455,6 +456,15 @@ namespace MagiRogue.Entities
         public Sex GetGender()
         {
             return GetAnatomy().Gender;
+        }
+
+        public MagiEntity WithComponents(params object[] objs)
+        {
+            for (int i = 0; i < objs.Length; i++)
+            {
+                AddComponent(objs[i]);
+            }
+            return this;
         }
 
         #endregion GetProperties

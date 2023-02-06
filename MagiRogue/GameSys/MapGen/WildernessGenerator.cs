@@ -205,7 +205,7 @@ namespace MagiRogue.GameSys.MapGen
                 }
             }
             furniture.Position = pos;
-            map.Add(furniture);
+            map.AddMagiEntity(furniture);
             //furniture.Position = Point.None;
 
             //while (!map.CanAddEntity(furniture))
