@@ -3,7 +3,7 @@ using SadRogue.Primitives;
 
 namespace MagiRogue.Data.Serialization
 {
-    public struct MagiColorSerialization
+    public readonly struct MagiColorSerialization
     {
         [JsonIgnore]
         public readonly Color Color { get; }

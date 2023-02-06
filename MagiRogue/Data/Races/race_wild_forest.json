@@ -57,7 +57,7 @@
     "Adjective": "cunning",
     "Description": "A large canine found in temperate regions. It is territorial and hunts in packs.",
     "RaceGlyph": "w",
-    "RaceForeground": "Brown",
+    "RaceForeground": "Gray",
     "RaceBackground": "Black",
     "ChildVolume": 4000,
     "MidVolume": 20000,
