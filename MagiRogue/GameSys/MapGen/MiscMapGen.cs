@@ -45,7 +45,7 @@ namespace MagiRogue.GameSys.MapGen
                         "deer",
                         Data.Enumerators.Sex.Male,
                         Data.Enumerators.AgeGroup.Adult)
-                        .WithComponents(new NeedDrivenAi(), NeedCollection.WithCommonNeeds()));
+                        .WithComponents(new NeedDrivenAi()));
                 }
                 else
                 {
@@ -53,7 +53,7 @@ namespace MagiRogue.GameSys.MapGen
                         "wolf",
                         Data.Enumerators.Sex.Male,
                         Data.Enumerators.AgeGroup.Adult)
-                        .WithComponents(new NeedDrivenAi(), NeedCollection.WithCommonNeeds()));
+                        .WithComponents(new NeedDrivenAi()));
                 }
             }
         }
