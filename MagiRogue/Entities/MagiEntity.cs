@@ -76,7 +76,6 @@ namespace MagiRogue.Entities
         #endregion BackingField fields
 
         private IGameObject backingField;
-        private bool disposedValue;
 
         #endregion Fields
 
@@ -256,6 +255,9 @@ namespace MagiRogue.Entities
             foreach (object component in components)
                 backingField.GoRogueComponents.Add(component);
         }
+
+        public T GetComponent<T>() where T : class
+            => backingField.GoRogueComponents.GetFirstOrDefault<T>();
 
         #endregion IGameObject Interface
     }

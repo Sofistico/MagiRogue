@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Commands;
+using MagiRogue.Components;
 using MagiRogue.Data;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Utils;
@@ -200,6 +201,29 @@ namespace MagiRogue.Entities
             }
 
             SetupActorBodyProperties(actor, volume);
+            SetupActorNeedsIfAny(actor);
+        }
+
+        private static void SetupActorNeedsIfAny(Actor actor)
+        {
+            var flags = actor.Flags;
+            var needs = NeedCollection.WithCommonNeeds();
+            actor.AddComponent(needs);
+            if (flags.Contains(SpecialFlag.NoSleep))
+            {
+                var sleep = needs.FirstOrDefault(i => i.ActionToFulfillNeed is Actions.Sleep);
+                needs.Remove(sleep);
+            }
+            if (flags.Contains(SpecialFlag.NoEat))
+            {
+                var eat = needs.FirstOrDefault(i => i.ActionToFulfillNeed is Actions.Eat);
+                needs.Remove(eat);
+            }
+            if (flags.Contains(SpecialFlag.NoDrink))
+            {
+                var drink = needs.FirstOrDefault(i => i.ActionToFulfillNeed is Actions.Drink);
+                needs.Remove(drink);
+            }
         }
 
         private void SetupActorBodyProperties(Actor actor, int volume)
@@ -447,7 +471,7 @@ namespace MagiRogue.Entities
                         if (wound.Treated)
                             wound.Bleeding -= actor.GetBloodCoagulation();
                         else
-                            wound.Bleeding -= (actor.GetBloodCoagulation() / (int)wound.Severity + 1);
+                            wound.Bleeding -= (actor.GetBloodCoagulation() / (int)wound.Severity) + 1;
                     }
                 }
             }

@@ -43,11 +43,11 @@ namespace MagiRogue.GameSys.Civ
 
         public CivRelation this[int otherCivId]
         {
-            get => Relations.FirstOrDefault(i => i.CivRelatedId == otherCivId);
+            get => Relations.Find(i => i.CivRelatedId == otherCivId);
 
             set
             {
-                var relation = Relations.FirstOrDefault(i => i.CivRelatedId == otherCivId);
+                var relation = Relations.Find(i => i.CivRelatedId == otherCivId);
                 relation = value;
             }
         }

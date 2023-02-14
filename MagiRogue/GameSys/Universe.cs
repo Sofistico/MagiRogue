@@ -200,7 +200,8 @@ namespace MagiRogue.GameSys
                 mapToGo.NeedsUpdate = false;
                 mapToGo.UpdateRooms();
                 //mapToGo.UpdatePathfinding();
-                GetEntitiesIdsToRegisterToTime();
+                var ids = GetEntitiesIds();
+                RegisterInTime(ids);
             }
             else
                 return; // Do nothing
@@ -316,15 +317,18 @@ namespace MagiRogue.GameSys
                 GameLoop.AddMessageLog($"Turns: {Time.Turns}, Tick: {Time.TimePassed.Ticks}");
 #endif
                 // makes sure that any entity that exists but has no AI, or the AI failed, get's a turn.
-                GetEntitiesIdsToRegisterToTime();
-                //if (WorldMap is not null)
-                //    WorldMap.WorldHistory.TicksSinceCreation = Time.TimePassed.Ticks;
+                var ids = GetEntitiesIds();
+                RegisterInTime(ids);
             }
         }
 
-        private void GetEntitiesIdsToRegisterToTime()
+        private IEnumerable<Actor> GetEntitiesIds()
         {
-            IEnumerable<Actor>? population = CurrentChunk?.TotalPopulation();
+            return CurrentChunk?.TotalPopulation();
+        }
+
+        private void RegisterInTime(IEnumerable<Actor> population)
+        {
             // called only once, to properly register the entity
             if (population is null)
                 return;
@@ -348,6 +352,7 @@ namespace MagiRogue.GameSys
                 return false;
             }
 
+            Player.ProcessNeeds();
             PlayerTimeNode playerTurn = new PlayerTimeNode(Time.GetTimePassed(playerTime));
             Time.RegisterEntity(playerTurn);
             Player.GetAnatomy().UpdateBody(Player);
@@ -387,6 +392,7 @@ namespace MagiRogue.GameSys
                 IAiComponent ai = entity.GoRogueComponents.GetFirstOrDefault<IAiComponent>();
                 (bool sucess, long tick) = ai?.RunAi(CurrentMap, GameLoop.UIManager.MessageLog)
                     ?? (false, -1);
+                entity.ProcessNeeds();
                 entity.GetAnatomy().UpdateBody(entity);
 
                 if (!sucess || tick < -1)

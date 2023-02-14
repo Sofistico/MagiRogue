@@ -82,5 +82,10 @@ namespace MagiRogue.Utils
         {
             return yearToGameBegin * 3214080000;
         }
+
+        public static double GetPercentage(int current, int max)
+        {
+            return Math.Round((double)(current / max * 100));
+        }
     }
 }

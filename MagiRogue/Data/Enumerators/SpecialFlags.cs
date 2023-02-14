@@ -44,6 +44,9 @@ namespace MagiRogue.Data.Enumerators
         Grazer, // eats grass from the ground
         Hunter, // animal hunts for meat
         PackAimal, // animal forms packs
+        NoSleep,
+        NoEat,
+        NoDrink,
 
         //Civ stuff:
         Married,

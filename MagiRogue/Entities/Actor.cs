@@ -48,6 +48,7 @@ namespace MagiRogue.Entities
         public List<Item> Inventory { get; set; }
 
         public bool IsPlayer { get; set; }
+        public List<SpecialFlag> Flags { get => GetAnatomy().Race.Flags; }
 
         #endregion Properties
 
@@ -468,6 +469,25 @@ namespace MagiRogue.Entities
         }
 
         #endregion GetProperties
+
+        #region Needs
+
+        public void ProcessNeeds()
+        {
+            if (GoRogueComponents.Contains(typeof(NeedCollection)))
+            {
+                NeedCollection needs = GetComponent<NeedCollection>();
+                int count = needs.Count;
+                for (int i = 0; i < count; i++)
+                {
+                    Need need = needs[i];
+                    if (need.TickNeed())
+                        GameLoop.AddMessageLog("Need is in dire need!");
+                }
+            }
+        }
+
+        #endregion Needs
 
         #endregion Methods
     }

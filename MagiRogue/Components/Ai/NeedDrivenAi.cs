@@ -16,11 +16,11 @@ namespace MagiRogue.Components.Ai
 
         public (bool sucess, long ticks) RunAi(Map map, MessageLogWindow messageLog)
         {
-            if (Parent.GoRogueComponents.Contains(typeof(NeedCollection)))
+            if (Parent.GoRogueComponents.Contains(typeof(NeedCollection)) && Parent is Actor actor)
             {
-                var needs = Parent.GoRogueComponents.GetFirstOrDefault<NeedCollection>();
+                var needs = actor.GetComponent<NeedCollection>();
                 messageLog.PrintMessage("The needs are:");
-                foreach (var item in needs?.Needs)
+                foreach (var item in needs)
                 {
                     messageLog.PrintMessage(item.ToString());
                 }

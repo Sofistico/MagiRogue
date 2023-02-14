@@ -370,8 +370,7 @@ namespace MagiRogue.UI
                 && targetCursor.EntityInTarget())
             {
                 Actor actor = (Actor)targetCursor.TargetEntity();
-                actor.AddComponent(new NeedDrivenAi());
-                actor.AddComponent(NeedCollection.WithCommonNeeds());
+                actor.AddComponent(new NeedDrivenAi(), NeedCollection.WithCommonNeeds());
                 GameLoop.AddMessageLog($"Added need component to {actor.Name}!");
                 return false;
             }

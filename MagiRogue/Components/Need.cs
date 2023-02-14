@@ -1,6 +1,8 @@
-﻿using GoRogue.Components.ParentAware;
+﻿using GoRogue.Components;
+using GoRogue.Components.ParentAware;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
+using MagiRogue.Utils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,21 +17,31 @@ namespace MagiRogue.Components
         public string Name { get; set; }
         public bool Vital { get; set; }
 
-        // Should be roughly
-        // 10 = pretty much everyday to maintain 3~4 times per day.
-        // 9 = at the very least 3 times per day.
+        // Should be roughly, less means that it has a higher priority
+        // 10 = should be at least once per week or stuff like that.
+        // 9 = at the very least 3 times per week.
         // 8 = every day at least once.
-        // 7 to less, need to do only some times
+        // 7 to less, progessive less time till the next
         // in special, 0 means special circustances, like a fight or demon pacts or whatever, things that need imediate action rather than a constant need.
         // means that creatures with the fight need set to 0 will only fight in response to fighting
-        public int Priority { get; set; } // what is the priority of the need? how many times must it be fulfilled?
+        public double Priority { get; set; } // what is the priority of the need? how many times must it be fulfilled?
+        public int PerceivedPriority { get; set; }
         public Actions ActionToFulfillNeed { get; set; }
         public string PersonalityTrait { get; set; }
         public string HintFulfill { get; set; }
 
+        public int TurnCounter { get; set; }
+
+        public int? MaxTurnCounter { get => Priority == 0 ? null : (int)(Priority * 100000); }
+
+        /// <summary>
+        /// Percent of how much it's fulfilled
+        /// </summary>
+        public double? PercentFulfilled { get => MaxTurnCounter.HasValue ? MathMagi.GetPercentage(TurnCounter, MaxTurnCounter.Value) : null; }
+
         public Need(string name,
             bool vital,
-            int priority,
+            double priority,
             Actions actionsToFulfillNeed,
             string personalityTrait,
             string hintFulfill)
@@ -44,35 +56,74 @@ namespace MagiRogue.Components
 
         public static List<Need> CommonNeeds() => new()
         {
-            new Need("Eat", true, 9, Actions.Eat, "SelfControl", "food" ),
-            new Need("Drink", true, 10, Actions.Drink, "Temperance", "drink" ),
-            new Need("Sleep", true, 8, Actions.Sleep, "Lazyness", "rest" ),
+            new Need("Eat", true, 1, Actions.Eat, "SelfControl", "food" ),
+            new Need("Drink", true, 0.75, Actions.Drink, "Temperance", "drink" ),
+            new Need("Sleep", true, 2, Actions.Sleep, "Lazyness", "rest" ),
             new Need("Fight", false, 0, Actions.Fight, "Peace", "battle" ),
         };
 
+        public bool TickNeed() => TurnCounter++ >= MaxTurnCounter;
+
         public override string ToString()
         {
-            return $"Need: {Name} Vital: {Vital} Priority: {Priority} Action: {ActionToFulfillNeed} Persona: {PersonalityTrait} Hint: {HintFulfill}";
+            return $"Need: {Name} Vital: {Vital} Priority: {Priority} Action: {ActionToFulfillNeed} Persona: {PersonalityTrait} Hint: {HintFulfill} Percent fulfill: {PercentFulfilled}";
         }
     }
 
-    public class NeedCollection : IEnumerable
+    public class NeedCollection : ICollection<Need>
     {
-        public List<Need> Needs { get; }
+        private readonly List<Need> needs;
+
+        public int Count => needs.Count;
+
+        public bool IsReadOnly => ((ICollection<Need>)needs).IsReadOnly;
+
+        public Need this[int index]
+        {
+            get => needs[index];
+            set => needs[index] = value;
+        }
 
         public NeedCollection(List<Need> needs)
         {
-            Needs = needs;
+            this.needs = needs;
         }
 
         public static NeedCollection WithCommonNeeds() => new NeedCollection(Need.CommonNeeds());
 
-        public IEnumerator GetEnumerator()
+        public void Add(Need item)
         {
-            foreach (var item in Needs)
-            {
-                yield return item;
-            }
+            ((ICollection<Need>)needs).Add(item);
+        }
+
+        public void Clear()
+        {
+            ((ICollection<Need>)needs).Clear();
+        }
+
+        public bool Contains(Need item)
+        {
+            return ((ICollection<Need>)needs).Contains(item);
+        }
+
+        public void CopyTo(Need[] array, int arrayIndex)
+        {
+            ((ICollection<Need>)needs).CopyTo(array, arrayIndex);
+        }
+
+        public bool Remove(Need item)
+        {
+            return ((ICollection<Need>)needs).Remove(item);
+        }
+
+        public IEnumerator<Need> GetEnumerator()
+        {
+            return ((IEnumerable<Need>)needs).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable)needs).GetEnumerator();
         }
     }
 }
