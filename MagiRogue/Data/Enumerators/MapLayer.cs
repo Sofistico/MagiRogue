@@ -8,6 +8,7 @@
     public enum MapLayer
     {
         TERRAIN,
+        VEGETATION,
         GHOSTS,
         ITEMS,
         ACTORS,

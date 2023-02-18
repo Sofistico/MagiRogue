@@ -558,6 +558,16 @@ namespace MagiRogue.Entities
         public void AgeBody()
             => CurrentAge++;
 
+        public Food WhatToEat()
+        {
+            if (Race.Flags.Contains(SpecialFlag.Grazer))
+                return Food.Herbivore;
+            if (Race.Flags.Contains(SpecialFlag.Hunter))
+                return Food.Carnivore;
+
+            return Food.Omnivere;
+        }
+
         #endregion Methods
     }
 }

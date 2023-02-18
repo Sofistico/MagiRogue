@@ -10,6 +10,7 @@ using MagiRogue.GameSys.Magic;
 using MagiRogue.GameSys.Planet.History;
 using MagiRogue.GameSys.Planet.TechRes;
 using MagiRogue.GameSys.Tiles;
+using MagiRogue.GameSys.Veggies;
 using MagiRogue.Utils;
 using MagiRogue.Utils.Extensions;
 using System;
@@ -73,6 +74,9 @@ namespace MagiRogue.Data
 
         public static readonly IReadOnlyList<Ruleset> ListOfRules =
             GetSourceTree<Ruleset>(@".\Data\Rules\rules_*");
+
+        public static readonly IReadOnlyList<Vegetation> ListOfPlants =
+            GetSourceTree<Vegetation>(@".\Data\Plant\plant_*");
 
         #region Descriptors
 
@@ -194,6 +198,9 @@ namespace MagiRogue.Data
 
         public static Research QueryResearchInData(string researchId)
             => ListOfResearches.FirstOrDefault(i => i.Id.Equals(researchId));
+
+        public static Vegetation QueryPlantInData(string plantId)
+            => ListOfPlants.FirstOrDefault(i => i.Id.Equals(plantId));
 
         #endregion Queryes
 

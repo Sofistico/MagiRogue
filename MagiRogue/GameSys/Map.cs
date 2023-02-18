@@ -6,6 +6,7 @@ using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Tiles;
+using MagiRogue.GameSys.Veggies;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -27,19 +28,23 @@ namespace MagiRogue.GameSys
     [JsonConverter(typeof(MapJsonConverter))]
     public sealed class Map : GoRogue.GameFramework.Map, IDisposable
     {
-        #region Properties
+        #region Fields
 
-        private TileBase[] _tiles; // Contains all tiles objects
         private MagiEntity _gameObjectControlled;
         private SadConsole.Entities.Renderer _entityRender;
         private bool _disposed;
+
+        #endregion Fields
+
+        #region Properties
 
         /// <summary>
         /// All cell tiles of the map, it's a TileBase array, should never be directly declared to create new tiles, rather
         /// it must use <see cref="Map.SetTerrain(IGameObject)"/>.
         /// </summary>
-        public TileBase[] Tiles
-        { get { return _tiles; } private set { _tiles = value; } }
+        public TileBase[] Tiles { get; private set; }
+
+        public LayeredSpatialMap<Vegetation> Vegetations { get; private set; }
 
         /// <summary>
         /// Fires whenever FOV is recalculated.
@@ -95,7 +100,7 @@ namespace MagiRogue.GameSys
             base(CreateTerrain(width, height), Enum.GetNames(typeof(MapLayer)).Length - 1,
             Distance.Euclidean,
             entityLayersSupportingMultipleItems: LayerMasker.Default.Mask
-            ((int)MapLayer.ITEMS, (int)MapLayer.GHOSTS, (int)MapLayer.PLAYER))
+            ((int)MapLayer.VEGETATION, (int)MapLayer.ITEMS, (int)MapLayer.GHOSTS, (int)MapLayer.PLAYER))
         {
             Tiles = (ArrayView<TileBase>)((LambdaSettableTranslationGridView<TileBase, IGameObject>)Terrain).BaseGrid;
 
@@ -118,6 +123,9 @@ namespace MagiRogue.GameSys
                 AStar = new AStar(WalkabilityView, Distance.Euclidean, weights, 0.01);
             }
             //Ilumination = new Light[Width * Height];
+
+            // each tile can contains at most 4 versions of vegetation
+            Vegetations = new LayeredSpatialMap<Vegetation>(4);
         }
 
         #endregion Constructor
@@ -160,7 +168,7 @@ namespace MagiRogue.GameSys
                 return false;
 
             // then return whether the tile is walkable
-            return !_tiles[location.Y * Width + location.X].IsBlockingMove;
+            return !Tiles[location.Y * Width + location.X].IsBlockingMove;
         }
 
         /// <summary>
@@ -182,7 +190,7 @@ namespace MagiRogue.GameSys
                 return true;
 
             // then return whether the tile is walkable
-            return !_tiles[location.Y * Width + location.X].IsBlockingMove;
+            return !Tiles[location.Y * Width + location.X].IsBlockingMove;
         }
 
         /// <summary>
@@ -744,6 +752,16 @@ namespace MagiRogue.GameSys
                 GC.SuppressFinalize(this);
             }
         }
+
+        //public MagiEntity[] FindTypeOfFood(Food whatToEat)
+        //{
+        //    var entities = Entities.OfType<MagiEntity>().ToList();
+        //    var tiles = Tiles.OfType<TileFloor>.Wh
+
+        //    foreach (var item in collection)
+        //    {
+        //    }
+        //}
 
         ~Map()
         {

@@ -77,9 +77,7 @@ namespace MagiRogue.Utils.Extensions
             };
 
             Direction directionToGo = directions.GetRandomItemFromList();
-            Point newPOint = new SadRogue.Primitives.Point(point.X + directionToGo.DeltaX, point.Y + directionToGo.DeltaY);
-
-            return newPOint;
+            return new SadRogue.Primitives.Point(point.X + directionToGo.DeltaX, point.Y + directionToGo.DeltaY);
         }
 
         public static Point FindClosest(this Point point, Point[] pointsToSearch)
@@ -146,6 +144,21 @@ namespace MagiRogue.Utils.Extensions
                 }
             }
             return (closestPoint, previousDistance);
+        }
+
+        public static Point GetRandomCoordinateWithinSquareRadius(this Point center, int squareSize, bool matchXLength = true)
+        {
+            int halfSquareSize = squareSize / 2;
+            int x;
+            var rand = GameLoop.GlobalRand;
+            int y = rand.NextInt(center.Y - halfSquareSize, center.Y + halfSquareSize);
+
+            if (matchXLength)
+                x = rand.NextInt(center.X - squareSize, center.X + squareSize);
+            else
+                x = rand.NextInt(center.X - halfSquareSize, center.X + halfSquareSize);
+
+            return new Point(x, y);
         }
     }
 }
