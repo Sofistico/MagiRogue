@@ -70,8 +70,14 @@ namespace MagiRogue.Data.Serialization
                     timeMaster.RegisterEntity(node);
                 }
             }*/
+            var time = new TimeSystem(serialized.Ticks);
 
-            return new TimeSystem(serialized.Ticks);
+            foreach (var item in serialized.Nodes)
+            {
+                time.RegisterEntity(item);
+            }
+
+            return time;
         }
     }
 }
