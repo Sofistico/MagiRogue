@@ -7,14 +7,14 @@ namespace MagiRogue.Data
     {
         public static TileFloor GenericGrass(Point pos)
         {
-            int rng = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(1, 3 + 1);
-            return rng switch
+            var tile = DataManager.QueryTileInData<TileFloor>("t_soil", pos);
+
+            for (int i = 0; i < tile.Vegetations.Length; i++)
             {
-                1 => DataManager.QueryTileInData<TileFloor>("t_grass", pos),
-                2 => DataManager.QueryTileInData<TileFloor>("t_grass_long", pos),
-                3 => DataManager.QueryTileInData<TileFloor>("t_grass_short", pos),
-                _ => null,
-            };
+                tile.AddVegetation(DataManager.QueryPlantInData("grass"), i);
+            }
+
+            return tile;
         }
 
         public static TileFloor GenericDirtRoad(Point pos)

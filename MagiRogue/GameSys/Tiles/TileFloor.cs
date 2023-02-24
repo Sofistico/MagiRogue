@@ -1,5 +1,7 @@
 ﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.GameSys.Veggies;
 using SadRogue.Primitives;
+using System;
 
 namespace MagiRogue.GameSys.Tiles
 {

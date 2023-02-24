@@ -2,6 +2,7 @@
 using MagiRogue.Data.Serialization;
 using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Planet;
+using MagiRogue.GameSys.Veggies;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System;
@@ -17,8 +18,7 @@ namespace MagiRogue.GameSys.Tiles
             Type objectType, TileBase? existingValue,
             bool hasExistingValue, JsonSerializer serializer)
         {
-            var value = (TileBase)serializer.Deserialize<BasicTile>(reader);
-            return value;
+            return (TileBase)serializer.Deserialize<BasicTile>(reader);
         }
 
         public override void WriteJson(JsonWriter writer, TileBase? value, JsonSerializer serializer)
@@ -67,6 +67,10 @@ namespace MagiRogue.GameSys.Tiles
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<Trait> Traits { get; set; }
+
+        public Plant[] Vegetations { get; set; } = new Plant[4];
+
+        public bool HoldsVegetation { get; set; }
 
         #endregion TileBase Properties
 
@@ -176,8 +180,7 @@ namespace MagiRogue.GameSys.Tiles
             if (tile is null)
                 return null;
 
-            if (tile.MaterialOfTile is null)
-                tile.MaterialOfTile = Physics.PhysicsManager.SetMaterial("null");
+            tile.MaterialOfTile ??= Physics.PhysicsManager.SetMaterial("null");
 
             BasicTile basic = new BasicTile(tile.Position, tile.Foreground.PackedValue,
                 tile.Background.PackedValue, tile.Glyph, tile.IsWalkable,
@@ -193,9 +196,13 @@ namespace MagiRogue.GameSys.Tiles
                 basic.Description = tile.Description;
 
             if (tile is TileWall)
+            {
                 type = TileType.Wall;
+            }
             else if (tile is TileFloor)
+            {
                 type = TileType.Floor;
+            }
             else if (tile is NodeTile node)
             {
                 type = TileType.Node;
@@ -240,7 +247,9 @@ namespace MagiRogue.GameSys.Tiles
                 basic.Locked = door.Locked;
             }
             else
+            {
                 type = TileType.Null;
+            }
 
             basic.TileType = type;
             basic.InfusedMp = tile.InfusedMp;
@@ -248,6 +257,8 @@ namespace MagiRogue.GameSys.Tiles
             basic.TileHealth = tile.TileHealth;
             basic.BitMask = tile.BitMask;
             basic.Traits = tile.Traits;
+            basic.HoldsVegetation = tile.HoldsVegetation;
+            basic.Vegetations = tile.Vegetations;
 
             return basic;
         }
@@ -262,8 +273,8 @@ namespace MagiRogue.GameSys.Tiles
 
             TileBase tile;
             // Keep a lookout if this part of the code will stop working
-            int charToUse = basicTile.GlyphChar is null ? basicTile.Glyph : basicTile.GlyphChar.Value;
-            basicTile.BackgroundStr = basicTile.BackgroundStr is null ? "Transparent" : basicTile.BackgroundStr;
+            int charToUse = basicTile.GlyphChar ?? basicTile.Glyph;
+            basicTile.BackgroundStr ??= "Transparent";
             Color foreground;
             Color background;
             if (!string.IsNullOrEmpty(basicTile.BackgroundStr) && !string.IsNullOrEmpty(basicTile.ForegroundStr))
@@ -279,7 +290,7 @@ namespace MagiRogue.GameSys.Tiles
             switch (basicTile.TileType)
             {
                 case TileType.Null:
-                    throw new Exception($"Tried to instantiete a tile which is null! " +
+                    throw new Exception("Tried to instantiete a tile which is null! " +
                         $"Tile: {basicTile.TileType} / {basicTile.Name}");
 
                 case TileType.Floor:
@@ -367,8 +378,10 @@ namespace MagiRogue.GameSys.Tiles
             if (basicTile.TileHealth > 0)
                 tile.TileHealth = basicTile.TileHealth;
 
-            tile.Traits = basicTile.Traits is null ? new List<Trait>() : basicTile.Traits;
+            tile.Traits = basicTile.Traits ?? new List<Trait>();
             tile.MoveTimeCost = basicTile.MoveCost;
+            tile.HoldsVegetation = basicTile.HoldsVegetation;
+            tile.Vegetations = basicTile.Vegetations;
 
             return tile;
         }

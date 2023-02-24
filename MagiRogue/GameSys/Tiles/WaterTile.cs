@@ -42,5 +42,10 @@ namespace MagiRogue.GameSys.Tiles
         {
             return new WaterTile(Palette.DeepWaterColor, Color.Transparent, '~', pos, true);
         }
+
+        public override TileBase Copy()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -35,7 +35,7 @@ namespace MagiRogue.Entities
         {
             int raceMaxMana = race.MaxManaRange;
             int raceMinMana = race.MinManaRange;
-            int statsModifier = ((WillPower + 1) / 2) + ((inteligence + 1) / 2);
+            int statsModifier = (int)(((WillPower + 1) * 0.3) + ((inteligence + 1) * 0.2));
             MaxMana = statsModifier + GameLoop.GlobalRand.NextInt(raceMinMana,
                 raceMaxMana + 1);
             CurrentMana = MaxMana;

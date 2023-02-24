@@ -40,35 +40,20 @@
     "TileType": "Floor"
   },
   {
-    "TileId": "t_grass_short",
-    "Name": "Short Grass",
-    "IdMaterial": "grass",
-    "GlyphChar": ".",
-    "ForegroundStr": "GrassColor",
-    "TileType": "Floor"
-  },
-  {
-    "TileId": "t_grass",
-    "Name": "Grass",
-    "IdMaterial": "grass",
-    "GlyphChar": ",",
-    "ForegroundStr": "GrassColor",
-    "TileType": "Floor"
-  },
-  {
-    "TileId": "t_grass_long",
-    "Name": "Long Grass",
-    "IdMaterial": "grass",
-    "GlyphChar": "'",
-    "ForegroundStr": "GrassColor",
-    "TileType": "Floor"
-  },
-  {
     "TileId": "t_sand",
     "Name": "Sand",
     "IdMaterial": "sand",
     "GlyphChar": ".",
     "ForegroundStr": "Desert",
     "TileType": "Floor"
+  },
+  {
+    "TileId": "t_soil",
+    "Name": "Soil",
+    "IdMaterial": "dirt",
+    "GlyphChar": ".",
+    "ForegroundStr": "Brown",
+    "TileType": "Floor",
+    "HoldsVegetation": true
   }
 ]

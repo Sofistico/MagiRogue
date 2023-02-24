@@ -148,5 +148,10 @@ namespace MagiRogue.GameSys.Tiles
 
             return null;
         }
+
+        public override TileBase Copy()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

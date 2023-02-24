@@ -42,13 +42,10 @@ namespace MagiRogue.GameSys
             {
                 for (int y = 0; y < Map.Height; y++)
                 {
-                    if (Map.PlayerExplored[x, y])
+                    if (Map.PlayerExplored[x, y] && Map.Terrain[x, y] is TileBase tile)
                     {
-                        if (Map.Terrain[x, y] is TileBase tile)
-                        {
-                            UpdateTerrainSeen(tile);
-                            UpdateTerrainUnseen(tile);
-                        }
+                        UpdateTerrainSeen(tile);
+                        UpdateTerrainUnseen(tile);
                     }
                 }
             }

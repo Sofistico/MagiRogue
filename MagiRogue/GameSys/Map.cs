@@ -44,8 +44,6 @@ namespace MagiRogue.GameSys
         /// </summary>
         public TileBase[] Tiles { get; private set; }
 
-        public LayeredSpatialMap<Vegetation> Vegetations { get; private set; }
-
         /// <summary>
         /// Fires whenever FOV is recalculated.
         /// </summary>
@@ -123,9 +121,6 @@ namespace MagiRogue.GameSys
                 AStar = new AStar(WalkabilityView, Distance.Euclidean, weights, 0.01);
             }
             //Ilumination = new Light[Width * Height];
-
-            // each tile can contains at most 4 versions of vegetation
-            Vegetations = new LayeredSpatialMap<Vegetation>(4);
         }
 
         #endregion Constructor
@@ -678,6 +673,10 @@ namespace MagiRogue.GameSys
                     if (str.Equals("debug_tree"))
                     {
                         tile = TileEncyclopedia.GenericTree(pos);
+                    }
+                    else if (str.Equals("t_grass"))
+                    {
+                        tile = TileEncyclopedia.GenericGrass(pos);
                     }
                     else
                     {

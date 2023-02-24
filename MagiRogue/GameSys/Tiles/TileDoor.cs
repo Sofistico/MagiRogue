@@ -46,6 +46,11 @@ namespace MagiRogue.GameSys.Tiles
             LastSeenAppereance.Glyph = Glyph;
         }
 
+        public override TileBase Copy()
+        {
+            throw new System.NotImplementedException();
+        }
+
         // opens a door
         public void Open()
         {

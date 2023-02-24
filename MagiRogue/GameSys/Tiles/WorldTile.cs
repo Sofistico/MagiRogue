@@ -80,7 +80,7 @@ namespace MagiRogue.GameSys.Tiles
             int count = 0;
 
             if (Collidable && Top != null && Top.BiomeType == BiomeType)
-                count += 1;
+                count++;
             if (Collidable && Bottom != null && Bottom.BiomeType == BiomeType)
                 count += 4;
             if (Collidable && Left != null && Left.BiomeType == BiomeType)
@@ -96,7 +96,7 @@ namespace MagiRogue.GameSys.Tiles
             int count = 0;
 
             if (Top.HeightType == HeightType)
-                count += 1;
+                count++;
             if (Right.HeightType == HeightType)
                 count += 2;
             if (Left.HeightType == HeightType)
@@ -249,6 +249,11 @@ namespace MagiRogue.GameSys.Tiles
         public double GetResources()
         {
             return MineralValue;
+        }
+
+        public override TileBase Copy()
+        {
+            throw new NotImplementedException();
         }
     }
 }

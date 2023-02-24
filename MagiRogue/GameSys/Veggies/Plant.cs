@@ -3,6 +3,7 @@ using GoRogue.Components;
 using GoRogue.Components.ParentAware;
 using GoRogue.GameFramework;
 using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization;
 using MagiRogue.Utils.Extensions;
 using Newtonsoft.Json;
 using SadConsole;
@@ -15,10 +16,12 @@ using System.Threading.Tasks;
 
 namespace MagiRogue.GameSys.Veggies
 {
-    public class Vegetation : IGameObject
+    public class Plant : IGameObject
     {
         private readonly GameObject backiendField = new GameObject((int)MapLayer.VEGETATION);
         private ColoredGlyph sadGlyph;
+        private MagiColorSerialization fore;
+        private MagiColorSerialization back;
 
         #region Properties
 
@@ -135,38 +138,67 @@ namespace MagiRogue.GameSys.Veggies
         public string Id { get; set; }
 
         [JsonRequired]
-        public Color Foreground { get; set; }
+        public string Fore
+        {
+            get
+            {
+                return fore.ColorName;
+            }
+
+            set
+            {
+                fore = new MagiColorSerialization(value);
+            }
+        }
 
         [JsonRequired]
-        public Color Background { get; set; }
+        public string Back
+        {
+            get
+            {
+                return back.ColorName;
+            }
+
+            set
+            {
+                back = new MagiColorSerialization(value);
+            }
+        }
 
         [JsonRequired]
-        public int[] Glyphs { get; set; }
+        public char[] Glyphs { get; set; }
 
         public ColoredGlyph SadGlyph => sadGlyph ??= new ColoredGlyph(Foreground, Background, Glyphs.GetRandomItemFromList());
+        public Color Foreground => fore.Color;
+        public Color Background => back.Color;
 
         [JsonConstructor]
-        public Vegetation()
+        public Plant()
         {
         }
 
-        public Vegetation(ColoredGlyph glyph)
+        public Plant(ColoredGlyph glyph)
         {
-            Foreground = glyph.Foreground;
-            Background = glyph.Background;
-            Glyphs = new int[] { glyph.Glyph };
+            fore = new(glyph.Foreground);
+            back = new(glyph.Background);
+            Glyphs = new char[] { (char)glyph.Glyph };
         }
 
-        public Vegetation(Color foreground, Color background, int[] glyphs)
+        public Plant(Color foreground, Color background, char[] glyphs)
         {
-            Foreground = foreground;
-            Background = background;
+            fore = new(foreground);
+            back = new(background);
             Glyphs = glyphs;
         }
 
         public void OnMapChanged(GoRogue.GameFramework.Map? newMap)
         {
             ((IGameObject)backiendField).OnMapChanged(newMap);
+        }
+
+        public Plant Copy()
+        {
+            return MemberwiseClone() as Plant;
         }
     }
 }

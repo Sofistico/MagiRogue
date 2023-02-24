@@ -75,8 +75,8 @@ namespace MagiRogue.Data
         public static readonly IReadOnlyList<Ruleset> ListOfRules =
             GetSourceTree<Ruleset>(@".\Data\Rules\rules_*");
 
-        public static readonly IReadOnlyList<Vegetation> ListOfPlants =
-            GetSourceTree<Vegetation>(@".\Data\Plant\plant_*");
+        public static readonly IReadOnlyList<Plant> ListOfPlants =
+            GetSourceTree<Plant>(@".\Data\Plant\plant_*");
 
         #region Descriptors
 
@@ -199,8 +199,8 @@ namespace MagiRogue.Data
         public static Research QueryResearchInData(string researchId)
             => ListOfResearches.FirstOrDefault(i => i.Id.Equals(researchId));
 
-        public static Vegetation QueryPlantInData(string plantId)
-            => ListOfPlants.FirstOrDefault(i => i.Id.Equals(plantId));
+        public static Plant QueryPlantInData(string plantId)
+            => ListOfPlants.FirstOrDefault(i => i.Id.Equals(plantId)).Copy();
 
         #endregion Queryes
 
