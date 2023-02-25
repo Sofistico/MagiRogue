@@ -219,21 +219,21 @@ namespace MagiRogue.GameSys
             return Entities.GetItemsAt(location).OfType<T>().FirstOrDefault(e => e.CanInteract);
         }
 
-        public MagiEntity GetClosestEntity(Point originPos, int range)
+        public static T? GetClosestT<T>(Point originPos, int range, ReadOnlySpan<T> listT) where T : IGameObject
         {
-            MagiEntity closest = null;
+            T closest = default;
             double bestDistance = double.MaxValue;
 
-            foreach (MagiEntity entity in Entities.Items)
+            foreach (T t in listT)
             {
-                if (entity is not Player)
+                if (t is not Player)
                 {
-                    double distance = Point.EuclideanDistanceMagnitude(originPos, entity.Position);
+                    double distance = Point.EuclideanDistanceMagnitude(originPos, t.Position);
 
                     if (distance < bestDistance && (distance <= range || range == 0))
                     {
                         bestDistance = distance;
-                        closest = entity;
+                        closest = t;
                     }
                 }
             }
@@ -244,10 +244,7 @@ namespace MagiRogue.GameSys
         public bool EntityIsThere(Point pos)
         {
             MagiEntity? entity = GetEntityAt<MagiEntity>(pos);
-            if (entity is not null)
-                return true;
-            else
-                return false;
+            return entity is not null;
         }
 
         /// <summary>
@@ -752,15 +749,54 @@ namespace MagiRogue.GameSys
             }
         }
 
-        //public MagiEntity[] FindTypeOfFood(Food whatToEat)
-        //{
-        //    var entities = Entities.OfType<MagiEntity>().ToList();
-        //    var tiles = Tiles.OfType<TileFloor>.Wh
+        public object FindTypeOfFood(Food whatToEat, Point entityPos)
+        {
+            const int defaultSearchRange = 25;
+            switch (whatToEat)
+            {
+                case Food.Omnivere:
 
-        //    foreach (var item in collection)
-        //    {
-        //    }
-        //}
+                    break;
+
+                case Food.Carnivore:
+                    var meat = GetClosestT<MagiEntity>(entityPos, defaultSearchRange, GetAllMeatsEvenAlive());
+                    break;
+
+                case Food.Herbivore:
+                    var plant = GetClosestT<Plant>(entityPos, defaultSearchRange, GetAllPlants());
+                    if (plant is not null)
+                    {
+                        return plant;
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+            return null;
+        }
+
+        private ReadOnlySpan<MagiEntity> GetAllMeatsEvenAlive()
+        {
+            var span = new Span<MagiEntity>();
+            return span;
+        }
+
+        public ReadOnlySpan<Plant> GetAllPlants()
+        {
+            Plant[] plants = new Plant[Tiles.Length * 4];
+            var memory = new Memory<Plant>(plants);
+            var tilesWithVeggies = Array.FindAll(Tiles, i => i.HoldsVegetation && i.Vegetations.Length > 0).AsSpan();
+            for (int i = 0; i < tilesWithVeggies.Length; i++)
+            {
+                TileBase? item = Tiles[i];
+                for (int x = 0; x < item.Vegetations.Length; x++)
+                {
+                    memory.Span[x] = item.Vegetations[x];
+                }
+            }
+            return memory.Span;
+        }
 
         ~Map()
         {

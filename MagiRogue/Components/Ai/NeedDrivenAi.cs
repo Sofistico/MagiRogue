@@ -29,7 +29,7 @@ namespace MagiRogue.Components.Ai
                 {
                     case Data.Enumerators.Actions.Eat:
                         var whatToEat = actor.GetAnatomy().WhatToEat();
-                        //var foodItem = map.FindTypeOfFood(whatToEat);
+                        var foodItem = map.FindTypeOfFood(whatToEat, actor.Position);
                         break;
 
                     case Data.Enumerators.Actions.Sleep:
