@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace MagiRogue.GameSys
 {
@@ -163,7 +164,7 @@ namespace MagiRogue.GameSys
                 return false;
 
             // then return whether the tile is walkable
-            return !Tiles[location.Y * Width + location.X].IsBlockingMove;
+            return !Tiles[(location.Y * Width) + location.X].IsBlockingMove;
         }
 
         /// <summary>
@@ -185,7 +186,7 @@ namespace MagiRogue.GameSys
                 return true;
 
             // then return whether the tile is walkable
-            return !Tiles[location.Y * Width + location.X].IsBlockingMove;
+            return !Tiles[(location.Y * Width) + location.X].IsBlockingMove;
         }
 
         /// <summary>
@@ -333,16 +334,13 @@ namespace MagiRogue.GameSys
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
+
         public T GetTileAt<T>(int x, int y) where T : TileBase
         {
             int locationIndex = Point.ToIndex(x, y, Width);
 
             // make sure the index is within the boundaries of the map!
-            if (locationIndex <= Width * Height && locationIndex >= 0)
-            {
-                return Tiles[locationIndex] is T t ? t : null;
-            }
-            else return null;
+            return locationIndex <= Width * Height && locationIndex >= 0 ? Tiles[locationIndex] is T t ? t : null : null;
         }
 
         public TileBase GetTileAt(int x, int y)
@@ -392,6 +390,7 @@ namespace MagiRogue.GameSys
         /// <typeparam name="T">Any type of entity</typeparam>
         /// <param name="id">The id of the entity to find</param>
         /// <returns>Returns the entity owner of the id</returns>
+
         public MagiEntity GetEntityById(uint id)
         {
             // TODO: this shit is wonky, need to do something about it
@@ -485,15 +484,11 @@ namespace MagiRogue.GameSys
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
+
         public bool CheckForIndexOutOfBounds(Point point)
         {
-            if (point.X < 0 || point.Y < 0
-                || point.X >= Width || point.Y >= Height)
-            {
-                return true;
-            }
-
-            return false;
+            return point.X < 0 || point.Y < 0
+                || point.X >= Width || point.Y >= Height;
         }
 
         private string GetDebuggerDisplay()
@@ -511,15 +506,14 @@ namespace MagiRogue.GameSys
             {
                 mapView[i] = true;
             }
-            FastAStar astar = new FastAStar(mapView, DistanceMeasurement);
-
-            return astar;
+            return new FastAStar(mapView, DistanceMeasurement);
         }
 
         /// <summary>
         /// Returns the rectangle containing the bounds of the map
         /// </summary>
         /// <returns></returns>
+
         public Rectangle MapBounds() => Terrain.Bounds();
 
         public List<TileBase> ReturnAllTrees()
@@ -549,9 +543,9 @@ namespace MagiRogue.GameSys
                 {
                     FindOtherPlaceForRoom(r);
                 }
-                catch (ApplicationException ex)
+                catch (ApplicationException)
                 {
-                    throw ex;
+                    throw;
                 }
             }
             Rooms.Add(r);
@@ -580,7 +574,7 @@ namespace MagiRogue.GameSys
             {
                 throw new ApplicationException("Tried to place a room inside a map that cound't fit it!");
             }
-            if (r.PositionsRoom().Any(p => CheckForIndexOutOfBounds(p)))
+            if (r.PositionsRoom().Any(CheckForIndexOutOfBounds))
             {
                 throw new ApplicationException("Tried to place a room inside a map that cound't fit it!");
             }
@@ -590,10 +584,10 @@ namespace MagiRogue.GameSys
         /// Adds a list of rooms to the map.
         /// </summary>
         /// <param name="r"></param>
+
         public void AddRooms(List<Room> r)
         {
-            if (Rooms is null)
-                Rooms = new List<Room>();
+            Rooms ??= new List<Room>();
             Rooms.AddRange(r);
         }
 
@@ -779,6 +773,9 @@ namespace MagiRogue.GameSys
         private ReadOnlySpan<MagiEntity> GetAllMeatsEvenAlive()
         {
             var span = new Span<MagiEntity>();
+
+            var meats = Entities.GetLayersInMask(LayerMasker.Mask((int)MapLayer.ACTORS, (int)MapLayer.ITEMS));
+
             return span;
         }
 
