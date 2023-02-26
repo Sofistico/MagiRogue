@@ -8,6 +8,7 @@ using MagiRogue.Entities;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.GameSys.Veggies;
 using MagiRogue.Utils;
+using Microsoft.Toolkit.HighPerformance;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SadConsole;
@@ -220,7 +221,7 @@ namespace MagiRogue.GameSys
             return Entities.GetItemsAt(location).OfType<T>().FirstOrDefault(e => e.CanInteract);
         }
 
-        public static T? GetClosestT<T>(Point originPos, int range, ReadOnlySpan<T> listT) where T : IGameObject
+        public static T? GetClosest<T>(Point originPos, int range, ReadOnlySpan<T> listT) where T : IGameObject
         {
             T closest = default;
             double bestDistance = double.MaxValue;
@@ -746,25 +747,30 @@ namespace MagiRogue.GameSys
         public object FindTypeOfFood(Food whatToEat, Point entityPos)
         {
             const int defaultSearchRange = 25;
+
             switch (whatToEat)
             {
-                case Food.Omnivere:
-
-                    break;
-
                 case Food.Carnivore:
-                    var meat = GetClosestT<MagiEntity>(entityPos, defaultSearchRange, GetAllMeatsEvenAlive());
+                    var meat = GetClosest(entityPos, defaultSearchRange, GetAllMeatsEvenAlive());
+                    if (meat is not null)
+                    {
+                        return meat;
+                    }
                     break;
 
                 case Food.Herbivore:
-                    var plant = GetClosestT<Plant>(entityPos, defaultSearchRange, GetAllPlants());
+                    var plant = GetClosest(entityPos, defaultSearchRange, GetAllPlants());
                     if (plant is not null)
                     {
                         return plant;
                     }
                     break;
 
+                case Food.Omnivere:
+                    break;
+
                 default:
+
                     break;
             }
             return null;
@@ -772,14 +778,22 @@ namespace MagiRogue.GameSys
 
         private ReadOnlySpan<MagiEntity> GetAllMeatsEvenAlive()
         {
-            var span = new Span<MagiEntity>();
-
             var meats = Entities.GetLayersInMask(LayerMasker.Mask((int)MapLayer.ACTORS, (int)MapLayer.ITEMS));
+            var list = new List<MagiEntity>();
+            foreach (var item in meats)
+            {
+                if (item is Item deadMeat && deadMeat.Material.Type == MaterialType.Meat)
+                {
+                    list.Add(deadMeat);
+                    continue;
+                }
+                list.Add((MagiEntity)item);
+            }
 
-            return span;
+            return list.AsSpan();
         }
 
-        public ReadOnlySpan<Plant> GetAllPlants()
+        private ReadOnlySpan<Plant> GetAllPlants()
         {
             Plant[] plants = new Plant[Tiles.Length * 4];
             var memory = new Memory<Plant>(plants);
