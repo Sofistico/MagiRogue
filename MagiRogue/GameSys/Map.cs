@@ -8,6 +8,7 @@ using MagiRogue.Entities;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.GameSys.Veggies;
 using MagiRogue.Utils;
+using MagiRogue.Utils.Extensions;
 using Microsoft.Toolkit.HighPerformance;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -744,7 +745,7 @@ namespace MagiRogue.GameSys
             }
         }
 
-        public object FindTypeOfFood(Food whatToEat, Point entityPos)
+        public IGameObject FindTypeOfFood(Food whatToEat, Point entityPos)
         {
             const int defaultSearchRange = 25;
 
@@ -767,11 +768,22 @@ namespace MagiRogue.GameSys
                     break;
 
                 case Food.Omnivere:
-                    break;
+                    // well if it works...
+                    var objList = new List<IGameObject>();
+                    var meatO = GetClosest(entityPos, defaultSearchRange, GetAllMeatsEvenAlive());
+                    if (meatO is not null)
+                    {
+                        objList.Add(meatO);
+                    }
+                    var plantO = GetClosest(entityPos, defaultSearchRange, GetAllPlants());
+                    if (plantO is not null)
+                    {
+                        objList.Add(plantO);
+                    }
+                    return objList.GetRandomItemFromList();
 
                 default:
-
-                    break;
+                    return null;
             }
             return null;
         }
