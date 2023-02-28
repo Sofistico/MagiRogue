@@ -1,17 +1,18 @@
 ﻿using GoRogue.Components.ParentAware;
+using GoRogue.Pathing;
 using MagiRogue.Entities;
 using MagiRogue.GameSys;
+using MagiRogue.GameSys.Veggies;
 using MagiRogue.UI.Windows;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MagiRogue.Components.Ai
 {
     public class NeedDrivenAi : IAiComponent
     {
+        private Path previousKnowPath;
+        private Need? commitedToNeed;
+
         public IObjectWithComponents? Parent { get; set; }
 
         public (bool sucess, long ticks) RunAi(Map map, MessageLogWindow messageLog)
@@ -22,14 +23,31 @@ namespace MagiRogue.Components.Ai
 
                 if (needs is null)
                     return (false, -1);
+                if (!needs.GetPriority(out Need need) && commitedToNeed is null)
+                    need = needs.FirstOrDefault(i => i.PercentFulfilled <= 25);
+                if (commitedToNeed is not null)
+                    need = commitedToNeed.Value;
 
-                var lowestNeed = needs.FirstOrDefault(i => i.PercentFulfilled <= 25);
-
-                switch (lowestNeed.ActionToFulfillNeed)
+                switch (need.ActionToFulfillNeed)
                 {
                     case Data.Enumerators.Actions.Eat:
                         var whatToEat = actor.GetAnatomy().WhatToEat();
                         var foodItem = map.FindTypeOfFood(whatToEat, actor.Position);
+                        if (foodItem is Actor victim)
+                        {
+                            var killStuff = new Need($"Kill {victim}", false, 10, Data.Enumerators.Actions.Fight, "Peace", "battle")
+                            {
+                                Objective = actor,
+                            };
+                            needs.Add(killStuff);
+                            commitedToNeed = need;
+                        }
+                        if (foodItem is Item item)
+                        {
+                        }
+                        if (foodItem is Plant plant)
+                        {
+                        }
                         break;
 
                     case Data.Enumerators.Actions.Sleep:
@@ -70,5 +88,7 @@ namespace MagiRogue.Components.Ai
             }
             return (false, -1);
         }
+
+        private void ClearCommit() => commitedToNeed = null;
     }
 }

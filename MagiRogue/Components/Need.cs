@@ -39,6 +39,8 @@ namespace MagiRogue.Components
         /// </summary>
         public double? PercentFulfilled { get => MaxTurnCounter.HasValue ? MathMagi.GetPercentage(TurnCounter, MaxTurnCounter.Value) : null; }
 
+        public object Objective { get; set; }
+
         public Need(string name,
             bool vital,
             double priority,
@@ -59,7 +61,7 @@ namespace MagiRogue.Components
             new Need("Eat", true, 1, Actions.Eat, "SelfControl", "food" ),
             new Need("Drink", true, 0.75, Actions.Drink, "Temperance", "drink" ),
             new Need("Sleep", true, 2, Actions.Sleep, "Lazyness", "rest" ),
-            new Need("Fight", false, 0, Actions.Fight, "Peace", "battle" ),
+            //new Need("Fight", false, 0, Actions.Fight, "Peace", "battle" ),
         };
 
         public bool TickNeed() => TurnCounter++ >= MaxTurnCounter;
@@ -73,6 +75,7 @@ namespace MagiRogue.Components
     public class NeedCollection : ICollection<Need>
     {
         private readonly List<Need> needs;
+        private readonly Queue<Need> prioQueue;
 
         public int Count => needs.Count;
 
@@ -94,6 +97,16 @@ namespace MagiRogue.Components
         public void Add(Need item)
         {
             ((ICollection<Need>)needs).Add(item);
+        }
+
+        public void AddPriority(Need item)
+        {
+            prioQueue.Enqueue(item);
+        }
+
+        public bool GetPriority(out Need item)
+        {
+            return prioQueue.TryDequeue(out item);
         }
 
         public void Clear()
