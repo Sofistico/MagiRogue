@@ -7,6 +7,7 @@ using MagiRogue.Utils.Extensions;
 using MagiRogue.UI.Windows;
 using System;
 using System.Linq;
+using MagiRogue.Data.Enumerators;
 
 namespace MagiRogue.Components.Ai
 {
@@ -39,16 +40,17 @@ namespace MagiRogue.Components.Ai
                             Wander(map, actor);
                         if (foodItem is Actor victim)
                         {
-                            var killStuff = new Need($"Kill {victim}", false, 10, Data.Enumerators.Actions.Fight, "Peace", "battle")
+                            commitedToNeed = new Need($"Kill {victim}", false, 0, Data.Enumerators.Actions.Fight, "Peace", "battle")
                             {
                                 Objective = actor,
                             };
-                            needs.Add(killStuff);
-                            commitedToNeed = need;
                         }
                         if (foodItem is Item item)
                         {
-                            var pickUp = new Need();
+                            commitedToNeed = new Need($"Pickup {item.Name}", false, 0, Actions.PickUp, "Greed", $"{item.ItemType}")
+                            {
+                                Objective = foodItem
+                            };
                         }
                         if (foodItem is Plant plant)
                         {

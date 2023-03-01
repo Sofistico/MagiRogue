@@ -760,7 +760,7 @@ namespace MagiRogue.GameSys
                     break;
 
                 case Food.Herbivore:
-                    var plant = GetClosest(entityPos, defaultSearchRange, GetAllPlants());
+                    var plant = GetClosest(entityPos, defaultSearchRange, GetAllPlantsEvenItem());
                     if (plant is not null)
                     {
                         return plant;
@@ -775,7 +775,7 @@ namespace MagiRogue.GameSys
                     {
                         objList.Add(meatO);
                     }
-                    var plantO = GetClosest(entityPos, defaultSearchRange, GetAllPlants());
+                    var plantO = GetClosest(entityPos, defaultSearchRange, GetAllPlantsEvenItem());
                     if (plantO is not null)
                     {
                         objList.Add(plantO);
@@ -805,19 +805,28 @@ namespace MagiRogue.GameSys
             return list.AsSpan();
         }
 
-        private ReadOnlySpan<Plant> GetAllPlants()
+        private ReadOnlySpan<IGameObject> GetAllPlantsEvenItem()
         {
-            Plant[] plants = new Plant[Tiles.Length * 4];
-            var memory = new Memory<Plant>(plants);
+            var items = Entities.GetLayer((int)MapLayer.ITEMS).Where(i => i.Item is Item item && (item.ItemType == ItemType.PlantFood)).Select(i => i.Item).ToArray();
+            IGameObject[] result = new IGameObject[(Tiles.Length * 4) + items.Length];
             var tilesWithVeggies = Array.FindAll(Tiles, i => i.HoldsVegetation && i.Vegetations.Length > 0).AsSpan();
+            int offSet = 0;
             for (int i = 0; i < tilesWithVeggies.Length; i++)
             {
                 TileBase? item = Tiles[i];
                 for (int x = 0; x < item.Vegetations.Length; x++)
                 {
-                    memory.Span[x] = item.Vegetations[x];
+                    result[x] = item.Vegetations[x];
+                    offSet++;
                 }
             }
+            // this smells like good stuff!
+            // TODO: Great stuff here!
+            for (int i = 0; i < items.Length; i++)
+            {
+                result[i + offSet] = items[i];
+            }
+            var memory = new Memory<IGameObject>(result);
             return memory.Span;
         }
 

@@ -125,6 +125,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<List<string>> Qualities { get; set; }
         public EquipType EquipType { get; set; }
+        public ItemType ItemType { get; set; }
 
         [DataMember]
         public int SpeedOfAttack { get; set; }
@@ -163,6 +164,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 Traits = item.Traits,
                 Qualities = Quality.ReturnQualityListAsString(item.Qualities),
                 EquipType = item.EquipType,
+                ItemType = item.ItemType,
                 SpeedOfAttack = item.SpeedOfAttack,
                 WeaponType = item.WeaponType,
             };
@@ -199,6 +201,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 Qualities = Quality.ReturnQualityList(itemTemplate.Qualities),
                 ItemId = itemTemplate.Id,
                 EquipType = itemTemplate.EquipType,
+                ItemType = itemTemplate.ItemType,
                 SpeedOfAttack = itemTemplate.SpeedOfAttack,
                 WeaponType = itemTemplate.WeaponType,
             };
