@@ -48,6 +48,7 @@ namespace MagiRogue.Components.Ai
                         }
                         if (foodItem is Item item)
                         {
+                            var pickUp = new Need();
                         }
                         if (foodItem is Plant plant)
                         {
@@ -82,6 +83,9 @@ namespace MagiRogue.Components.Ai
                         break;
 
                     case Data.Enumerators.Actions.Bully:
+                        break;
+
+                    case Data.Enumerators.Actions.PickUp:
                         break;
 
                     default:

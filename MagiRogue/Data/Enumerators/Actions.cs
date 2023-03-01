@@ -23,5 +23,6 @@ namespace MagiRogue.Data.Enumerators
         Craft,
         Fight,
         Bully,
+        PickUp
     }
 }
