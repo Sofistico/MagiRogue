@@ -3,7 +3,9 @@ using GoRogue.Pathing;
 using MagiRogue.Entities;
 using MagiRogue.GameSys;
 using MagiRogue.GameSys.Veggies;
+using MagiRogue.Utils.Extensions;
 using MagiRogue.UI.Windows;
+using System;
 using System.Linq;
 
 namespace MagiRogue.Components.Ai
@@ -33,6 +35,8 @@ namespace MagiRogue.Components.Ai
                     case Data.Enumerators.Actions.Eat:
                         var whatToEat = actor.GetAnatomy().WhatToEat();
                         var foodItem = map.FindTypeOfFood(whatToEat, actor.Position);
+                        if (foodItem is null)
+                            Wander(map, actor);
                         if (foodItem is Actor victim)
                         {
                             var killStuff = new Need($"Kill {victim}", false, 10, Data.Enumerators.Actions.Fight, "Peace", "battle")
@@ -87,6 +91,17 @@ namespace MagiRogue.Components.Ai
                 return (true, 100);
             }
             return (false, -1);
+        }
+
+        private void Wander(Map map, Actor actor)
+        {
+            int tries = 0;
+            int maxTries = 10;
+            bool tileIsInvalid = true;
+            do
+            {
+                var posToGo = actor.Position.GetPointNextToWithCardinals();
+            } while (tileIsInvalid);
         }
 
         private void ClearCommit() => commitedToNeed = null;
