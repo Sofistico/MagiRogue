@@ -138,6 +138,9 @@ namespace MagiRogue.GameSys.Veggies
         public string Id { get; set; }
 
         [JsonRequired]
+        public string Name { get; set; }
+
+        [JsonRequired]
         public string Fore
         {
             get

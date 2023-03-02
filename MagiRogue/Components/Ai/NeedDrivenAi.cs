@@ -54,6 +54,10 @@ namespace MagiRogue.Components.Ai
                         }
                         if (foodItem is Plant plant)
                         {
+                            commitedToNeed = new Need($"Pickup {plant.Name}", false, 0, Actions.PickUp, "Greed", $"{plant.Name}")
+                            {
+                                Objective = foodItem
+                            };
                         }
                         break;
 
