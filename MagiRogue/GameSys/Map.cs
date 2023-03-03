@@ -222,6 +222,12 @@ namespace MagiRogue.GameSys
             return Entities.GetItemsAt(location).OfType<T>().FirstOrDefault(e => e.CanInteract);
         }
 
+        public WaterTile GetClosestWaterTile(int range, Point position)
+        {
+            var waters = GetAllTilesOfType<WaterTile>();
+            return GetClosest<WaterTile>(position, range, waters.AsSpan());
+        }
+
         public static T? GetClosest<T>(Point originPos, int range, ReadOnlySpan<T> listT) where T : IGameObject
         {
             T closest = default;
@@ -828,6 +834,11 @@ namespace MagiRogue.GameSys
             }
             var memory = new Memory<IGameObject>(result);
             return memory.Span;
+        }
+
+        public TFind[] GetAllTilesOfType<TFind>()
+        {
+            return Tiles.OfType<TFind>().ToArray();
         }
 
         ~Map()

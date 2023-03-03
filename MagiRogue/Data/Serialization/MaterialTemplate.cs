@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Data.Enumerators;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
@@ -112,6 +113,16 @@ namespace MagiRogue.Data.Serialization
         private string GetDebuggerDisplay()
         {
             return $"{Name} - {Id}";
+        }
+
+        public MaterialState GetState(int temperature)
+        {
+            if (MeltingPoint is not null && MeltingPoint > temperature)
+                return MaterialState.Liquid;
+            else if (BoilingPoint is not null && BoilingPoint > temperature)
+                return MaterialState.Gas;
+            else
+                return MaterialState.Solid;
         }
     }
 }

@@ -47,6 +47,7 @@ namespace MagiRogue.Data.Enumerators
         NoSleep,
         NoEat,
         NoDrink,
+        NeedsConfortToSleep,
 
         //Civ stuff:
         Married,

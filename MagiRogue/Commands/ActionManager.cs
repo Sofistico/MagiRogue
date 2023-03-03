@@ -2,6 +2,7 @@
 using MagiRogue.Components;
 using MagiRogue.Data;
 using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys;
 using MagiRogue.GameSys.Planet;
@@ -501,6 +502,11 @@ namespace MagiRogue.Commands
         {
             if (actor.State != ActorState.Sleeping)
             {
+                if (actor.Flags.Contains(SpecialFlag.NeedsConfortToSleep))
+                {
+                    // define behavior for civilized races here in the future!
+                    //map.GetFurnitureTypeClosest()
+                }
                 actor.State = ActorState.Sleeping;
             }
             else
@@ -555,6 +561,19 @@ namespace MagiRogue.Commands
                 tileIsInvalid = !ActionManager.MoveActorBy(actor, posToGo);
                 tries++;
             } while (tileIsInvalid || tries <= maxTries);
+        }
+
+        public static void Drink(Actor actor,
+            MaterialTemplate material,
+            int temperature,
+            Need? needSatisfied = null)
+        {
+            if (material.GetState(temperature) == MaterialState.Liquid)
+            {
+                if (needSatisfied != null)
+                    needSatisfied?.Fulfill();
+                GameLoop.AddMessageLog($"The {actor.Name} drank {material.Name}");
+            }
         }
     }
 }

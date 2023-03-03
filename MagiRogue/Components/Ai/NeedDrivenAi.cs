@@ -9,6 +9,8 @@ using System;
 using System.Linq;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Commands;
+using MagiRogue.GameSys.Tiles;
+using SadRogue.Primitives;
 
 namespace MagiRogue.Components.Ai
 {
@@ -48,6 +50,18 @@ namespace MagiRogue.Components.Ai
                         break;
 
                     case Data.Enumerators.Actions.Drink:
+                        var water = map.GetClosestWaterTile(actor.Body.ViewRadius, actor.Position);
+                        if (map.DistanceMeasurement.Calculate(actor.Position - water.Position) <= 1) // right next to the water tile or in it
+                        {
+                            ActionManager.Drink(actor, water.MaterialOfTile, 25, need);
+                        }
+                        else
+                        {
+                            commitedToNeed = new Need("Drink Water", false, 0, Actions.GoTo, "Temperance", $"drink {water.ID}")
+                            {
+                                Objective = water
+                            };
+                        }
                         break;
 
                     case Data.Enumerators.Actions.Fun:

@@ -70,6 +70,11 @@ namespace MagiRogue.Components
         {
             return $"Need: {Name} Vital: {Vital} Priority: {Priority} Action: {ActionToFulfillNeed} Persona: {PersonalityTrait} Hint: {HintFulfill} Percent fulfill: {PercentFulfilled}";
         }
+
+        public void Fulfill()
+        {
+            TurnCounter = 0;
+        }
     }
 
     public class NeedCollection : ICollection<Need>
