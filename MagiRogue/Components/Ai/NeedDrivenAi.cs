@@ -8,6 +8,7 @@ using MagiRogue.UI.Windows;
 using System;
 using System.Linq;
 using MagiRogue.Data.Enumerators;
+using MagiRogue.Commands;
 
 namespace MagiRogue.Components.Ai
 {
@@ -34,34 +35,16 @@ namespace MagiRogue.Components.Ai
                 switch (need.ActionToFulfillNeed)
                 {
                     case Data.Enumerators.Actions.Eat:
-                        var whatToEat = actor.GetAnatomy().WhatToEat();
-                        var foodItem = map.FindTypeOfFood(whatToEat, actor.Position);
-                        if (foodItem is null)
-                            Wander(map, actor);
-                        if (foodItem is Actor victim)
-                        {
-                            commitedToNeed = new Need($"Kill {victim}", false, 0, Data.Enumerators.Actions.Fight, "Peace", "battle")
-                            {
-                                Objective = actor,
-                            };
-                        }
-                        if (foodItem is Item item)
-                        {
-                            commitedToNeed = new Need($"Pickup {item.Name}", false, 0, Actions.PickUp, "Greed", $"{item.ItemType}")
-                            {
-                                Objective = foodItem
-                            };
-                        }
-                        if (foodItem is Plant plant)
-                        {
-                            commitedToNeed = new Need($"Pickup {plant.Name}", false, 0, Actions.PickUp, "Greed", $"{plant.Name}")
-                            {
-                                Objective = foodItem
-                            };
-                        }
+                        commitedToNeed = ActionManager.FindFood(actor, map);
                         break;
 
                     case Data.Enumerators.Actions.Sleep:
+                        commitedToNeed = ActionManager.Sleep(actor, need);
+                        if (commitedToNeed?.TurnCounter == 0)
+                        {
+                            ClearCommit();
+                        }
+
                         break;
 
                     case Data.Enumerators.Actions.Drink:
@@ -101,17 +84,6 @@ namespace MagiRogue.Components.Ai
                 return (true, 100);
             }
             return (false, -1);
-        }
-
-        private void Wander(Map map, Actor actor)
-        {
-            int tries = 0;
-            int maxTries = 10;
-            bool tileIsInvalid = true;
-            do
-            {
-                var posToGo = actor.Position.GetPointNextToWithCardinals();
-            } while (tileIsInvalid);
         }
 
         private void ClearCommit() => commitedToNeed = null;

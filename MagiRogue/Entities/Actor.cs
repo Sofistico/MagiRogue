@@ -50,6 +50,11 @@ namespace MagiRogue.Entities
         public bool IsPlayer { get; set; }
         public List<SpecialFlag> Flags { get => GetAnatomy().Race.Flags; }
 
+        /// <summary>
+        /// The current state of the actor, should be usd to track multi turns stuff
+        /// </summary>
+        public ActorState State { get; set; }
+
         #endregion Properties
 
         #region Constructor

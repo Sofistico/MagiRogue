@@ -15,7 +15,7 @@ namespace MagiRogue.Entities
     /// </summary>
     public class Body : IStat
     {
-        [JsonProperty("Stamina")]
+        [JsonProperty(nameof(Stamina))]
         private double stamina;
 
         /// <summary>

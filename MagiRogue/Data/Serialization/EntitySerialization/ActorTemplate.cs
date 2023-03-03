@@ -1,4 +1,5 @@
-﻿using MagiRogue.Entities;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Entities;
 using MagiRogue.GameSys.Magic;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
@@ -26,7 +27,6 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             => serializer.Deserialize<ActorTemplate>(reader);
     }
 
-    [DataContract]
     [Serializable]
     public class ActorTemplate
     {
@@ -34,37 +34,28 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         /// Different from the id of GoRogue, this is for easy acess and navigation in the json, should be unique for
         /// each actor and human redable.
         /// </summary>
-        [DataMember]
         public string ID { get; set; }
 
-        [DataMember]
         public string Name { get; set; }
 
-        [DataMember]
         public string Description { get; set; }
 
-        [DataMember]
         public char Glyph { get; set; }
 
-        [DataMember]
         public int GlyphInt { get; set; }
 
         /// <summary>
         /// <inheritdoc cref="MagiEntity.Volume"/>
         /// </summary>
-        [DataMember]
+
         public int Volume { get; set; }
 
-        [DataMember]
         public int Height { get; set; }
 
-        [DataMember]
         public int Length { get; set; }
 
-        [DataMember]
         public int Broadness { get; set; }
 
-        [DataMember]
         public double Weight { get; set; }
 
         [DataMember(EmitDefaultValue = false, IsRequired = false)]
@@ -76,47 +67,35 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         [JsonIgnore]
         public MagiColorSerialization BackgroundBackingField { get; internal set; }
 
-        [DataMember]
         public string Foreground { get; internal set; }
 
-        [DataMember]
         public uint ForegroundPackedValue { get; internal set; }
 
-        [DataMember]
         public string Background { get; internal set; }
 
-        [DataMember]
         public uint BackgroundPackedValue { get; internal set; }
 
-        [DataMember]
         public List<AbilityTemplate> Abilities { get; set; } = new();
 
-        [DataMember]
         public List<ItemTemplate> Inventory { get; set; } = new();
 
-        [DataMember]
         public const string EntityType = "Actor";
 
-        [DataMember]
         public Point Position { get; set; }
 
-        [DataMember]
         public bool? IsPlayer { get; set; }
 
-        [DataMember]
         public MagicManager MagicStuff { get; set; }
 
-        [DataMember]
         public List<EquipTemplate> Equip { get; set; }
 
-        [DataMember]
         public Mind Mind { get; set; }
 
-        [DataMember]
         public Soul Soul { get; set; }
 
-        [DataMember]
         public Body Body { get; set; }
+
+        public ActorState State { get; set; }
 
         /// <summary>
         /// Is used in the serialization of the actor.
@@ -191,12 +170,10 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         {
         }
 
-        public Actor Copy()
-        {
-            Actor actor = this;
-
-            return actor;
-        }
+        //public Actor Copy()
+        //{
+        //    return new Actor();
+        //}
 
         public static implicit operator Actor(ActorTemplate actorTemplate)
         {
@@ -214,8 +191,9 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                     Body = actorTemplate.Body,
                     Volume = actorTemplate.Volume,
                     Weight = actorTemplate.Weight,
+                    State = actorTemplate.State
                 };
-            if (actorTemplate.Abilities is not null && actorTemplate.Abilities.Count > 0)
+            if (actorTemplate.Abilities?.Count > 0)
             {
                 for (int i = 0; i < actorTemplate.Abilities.Count; i++)
                 {
@@ -273,7 +251,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         {
             var abilitylist = new List<AbilityTemplate>();
 
-            if (actor.Mind.Abilities is not null && actor.Mind.Abilities.Count > 0)
+            if (actor.Mind.Abilities?.Count > 0)
             {
                 foreach (var item in actor.Mind.Abilities.Values)
                 {
@@ -296,12 +274,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             if (!string.IsNullOrWhiteSpace(actor.Description))
                 actorTemplate.Description = actor.Description;
 
-            if (actor is Player)
-            {
-                actorTemplate.IsPlayer = true;
-            }
-            else
-                actorTemplate.IsPlayer = null;
+            actorTemplate.IsPlayer = actor is Player ? true : null;
 
             actorTemplate.Position = actor.Position;
             for (int a = 0; a < actor.Inventory.Count; a++)
@@ -318,7 +291,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             actorTemplate.Length = actor.Length;
             actorTemplate.Height = actor.Height;
             actorTemplate.Broadness = actor.Broadness;
-
+            actorTemplate.State = actor.State;
             return actorTemplate;
         }
     }

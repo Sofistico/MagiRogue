@@ -1,4 +1,5 @@
 ﻿using GoRogue.DiceNotation;
+using MagiRogue.Components;
 using MagiRogue.Data;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
@@ -6,8 +7,11 @@ using MagiRogue.GameSys;
 using MagiRogue.GameSys.Planet;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.GameSys.Time;
+using MagiRogue.GameSys.Veggies;
 using MagiRogue.Utils;
+using MagiRogue.Utils.Extensions;
 using SadConsole;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -22,6 +26,7 @@ namespace MagiRogue.Commands
     public sealed class ActionManager
     {
         private const int staminaAttackAction = 100;
+        private const int maxTries = 10;
 
         private ActionManager()
         {
@@ -490,6 +495,66 @@ namespace MagiRogue.Commands
                 GameLoop.AddMessageLog("You can't change the map right now!");
                 return false;
             }
+        }
+
+        public static Need Sleep(Actor actor, Need need)
+        {
+            if (actor.State != ActorState.Sleeping)
+            {
+                actor.State = ActorState.Sleeping;
+            }
+            else
+            {
+                int turns = need.TurnCounter;
+                if (turns-- == 0)
+                {
+                    actor.State = ActorState.Normal;
+                }
+            }
+            return need;
+        }
+
+        public static Need? FindFood(Actor actor, Map map)
+        {
+            var whatToEat = actor.GetAnatomy().WhatToEat();
+            var foodItem = map.FindTypeOfFood(whatToEat, actor.Position);
+            Need? commitedToNeed = null;
+            if (foodItem is null)
+                Wander(actor);
+            if (foodItem is Actor victim)
+            {
+                commitedToNeed = new Need($"Kill {victim}", false, 0, Data.Enumerators.Actions.Fight, "Peace", $"eat {victim.ID}")
+                {
+                    Objective = actor,
+                };
+            }
+            if (foodItem is Item item)
+            {
+                commitedToNeed = new Need($"Pickup {item.Name}", false, 0, Actions.PickUp, "Greed", $"eat {item.ID}")
+                {
+                    Objective = foodItem
+                };
+            }
+            if (foodItem is Plant plant)
+            {
+                commitedToNeed = new Need($"Pickup {plant.Name}", false, 0, Actions.PickUp, "Greed", $"eat {plant.ID}")
+                {
+                    Objective = foodItem
+                };
+            }
+            return commitedToNeed;
+        }
+
+        public static void Wander(Actor actor)
+        {
+            int tries = 0;
+            bool tileIsInvalid;
+            do
+            {
+                var posToGo = actor.Position.GetPointNextToWithCardinals();
+                tileIsInvalid = !ActionManager.MoveActorBy(actor, posToGo);
+                tries++;
+            } while (tileIsInvalid || tries <= maxTries);
         }
     }
 }
