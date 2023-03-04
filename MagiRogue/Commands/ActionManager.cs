@@ -1,5 +1,4 @@
-﻿using GoRogue.DiceNotation;
-using MagiRogue.Components;
+﻿using MagiRogue.Components;
 using MagiRogue.Data;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
@@ -12,9 +11,7 @@ using MagiRogue.GameSys.Veggies;
 using MagiRogue.Utils;
 using MagiRogue.Utils.Extensions;
 using SadConsole;
-using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -573,6 +570,20 @@ namespace MagiRogue.Commands
                 if (needSatisfied != null)
                     needSatisfied?.Fulfill();
                 GameLoop.AddMessageLog($"The {actor.Name} drank {material.Name}");
+            }
+        }
+
+        public static void Eat(Actor actor, Item item, Need? need = null)
+        {
+            if (actor.CanInteract
+                && (item.ItemType is ItemType.Food
+                || item.ItemType is ItemType.Corpse
+                || item.ItemType is ItemType.PlantFood))
+            {
+                if (need is not null)
+                    need?.Fulfill();
+                item.Condition -= 100;
+                GameLoop.AddMessageLog($"The {actor.Name} ate {item.Name}");
             }
         }
     }

@@ -16,7 +16,7 @@ namespace MagiRogue.Components.Ai
 {
     public class NeedDrivenAi : IAiComponent
     {
-        private Path previousKnowPath;
+        private Path? previousKnowPath;
         private Need? commitedToNeed;
         private int step;
 
@@ -41,6 +41,7 @@ namespace MagiRogue.Components.Ai
                 else
                 {
                     step = 0;
+                    previousKnowPath = null;
                     switch (need.ActionToFulfillNeed)
                     {
                         case Data.Enumerators.Actions.Eat:
@@ -103,6 +104,17 @@ namespace MagiRogue.Components.Ai
                             break;
 
                         case Data.Enumerators.Actions.PickUp:
+                            Item item = (Item)need.Objective;
+                            if (item is null) { break; }
+                            if (map.DistanceMeasurement.Calculate(actor.Position, item.Position) <= 1)
+                            {
+                                ActionManager.PickUp(actor, item);
+                                ActionManager.Eat(actor, item, need);
+                            }
+                            else
+                            {
+                                previousKnowPath = map.AStar.ShortestPath(actor.Position, item.Position)!;
+                            }
                             break;
 
                         default:
