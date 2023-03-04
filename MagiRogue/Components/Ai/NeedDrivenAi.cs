@@ -1,16 +1,10 @@
 ﻿using GoRogue.Components.ParentAware;
 using GoRogue.Pathing;
+using MagiRogue.Commands;
 using MagiRogue.Entities;
 using MagiRogue.GameSys;
-using MagiRogue.GameSys.Veggies;
-using MagiRogue.Utils.Extensions;
 using MagiRogue.UI.Windows;
-using System;
 using System.Linq;
-using MagiRogue.Data.Enumerators;
-using MagiRogue.Commands;
-using MagiRogue.GameSys.Tiles;
-using SadRogue.Primitives;
 
 namespace MagiRogue.Components.Ai
 {
