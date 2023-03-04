@@ -18,6 +18,7 @@ namespace MagiRogue.Components.Ai
     {
         private Path previousKnowPath;
         private Need? commitedToNeed;
+        private int step;
 
         public IObjectWithComponents? Parent { get; set; }
 
@@ -33,66 +34,80 @@ namespace MagiRogue.Components.Ai
                     need = needs.FirstOrDefault(i => i.PercentFulfilled <= 25);
                 if (commitedToNeed is not null)
                     need = commitedToNeed.Value;
-
-                switch (need.ActionToFulfillNeed)
+                if (previousKnowPath is not null)
                 {
-                    case Data.Enumerators.Actions.Eat:
-                        commitedToNeed = ActionManager.FindFood(actor, map);
-                        break;
+                    ActionManager.MoveActorBy(actor, previousKnowPath.GetStep(step++));
+                }
+                else
+                {
+                    step = 0;
+                    switch (need.ActionToFulfillNeed)
+                    {
+                        case Data.Enumerators.Actions.Eat:
+                            commitedToNeed = ActionManager.FindFood(actor, map);
+                            break;
 
-                    case Data.Enumerators.Actions.Sleep:
-                        commitedToNeed = ActionManager.Sleep(actor, need);
-                        if (commitedToNeed?.TurnCounter == 0)
-                        {
-                            ClearCommit();
-                        }
-
-                        break;
-
-                    case Data.Enumerators.Actions.Drink:
-                        var water = map.GetClosestWaterTile(actor.Body.ViewRadius, actor.Position);
-                        if (map.DistanceMeasurement.Calculate(actor.Position - water.Position) <= 1) // right next to the water tile or in it
-                        {
-                            ActionManager.Drink(actor, water.MaterialOfTile, 25, need);
-                        }
-                        else
-                        {
-                            commitedToNeed = new Need("Drink Water", false, 0, Actions.GoTo, "Temperance", $"drink {water.ID}")
+                        case Data.Enumerators.Actions.Sleep:
+                            commitedToNeed = ActionManager.Sleep(actor, need);
+                            if (commitedToNeed?.TurnCounter == 0)
                             {
-                                Objective = water
-                            };
-                        }
-                        break;
+                                ClearCommit();
+                            }
 
-                    case Data.Enumerators.Actions.Fun:
-                        break;
+                            break;
 
-                    case Data.Enumerators.Actions.Train:
-                        break;
+                        case Data.Enumerators.Actions.Drink:
+                            var water = map.GetClosestWaterTile(actor.Body.ViewRadius, actor.Position);
+                            if (map.DistanceMeasurement.Calculate(actor.Position - water.Position) <= 1) // right next to the water tile or in it
+                            {
+                                ActionManager.Drink(actor, water.MaterialOfTile, 25, need);
+                            }
+                            else
+                            {
+                                previousKnowPath = map.AStar.ShortestPath(actor.Position, water.Position)!;
+                            }
+                            break;
 
-                    case Data.Enumerators.Actions.Pray:
-                        break;
+                        case Data.Enumerators.Actions.Fun:
+                            break;
 
-                    case Data.Enumerators.Actions.Study:
-                        break;
+                        case Data.Enumerators.Actions.Train:
+                            break;
 
-                    case Data.Enumerators.Actions.Teach:
-                        break;
+                        case Data.Enumerators.Actions.Pray:
+                            break;
 
-                    case Data.Enumerators.Actions.Craft:
-                        break;
+                        case Data.Enumerators.Actions.Study:
+                            break;
 
-                    case Data.Enumerators.Actions.Fight:
-                        break;
+                        case Data.Enumerators.Actions.Teach:
+                            break;
 
-                    case Data.Enumerators.Actions.Bully:
-                        break;
+                        case Data.Enumerators.Actions.Craft:
+                            break;
 
-                    case Data.Enumerators.Actions.PickUp:
-                        break;
+                        case Data.Enumerators.Actions.Fight:
+                            var enemy = (Actor)need.Objective;
+                            if (enemy is null) { break; }
+                            if (map.DistanceMeasurement.Calculate(actor.Position - enemy.Position) <= actor.AttackRange())
+                            {
+                                ActionManager.MeleeAttack(actor, enemy);
+                            }
+                            else
+                            {
+                                previousKnowPath = map.AStar.ShortestPath(actor.Position, enemy.Position)!;
+                            }
+                            break;
 
-                    default:
-                        break;
+                        case Data.Enumerators.Actions.Bully:
+                            break;
+
+                        case Data.Enumerators.Actions.PickUp:
+                            break;
+
+                        default:
+                            break;
+                    }
                 }
 
                 return (true, 100);

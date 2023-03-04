@@ -179,12 +179,12 @@ namespace MagiRogue.UI
                 return true;
             }
 
-            if (info.IsKeyPressed(Keys.A))
-            {
-                bool sucess = ActionManager.DirectAttack(world.Player);
-                world.ProcessTurn(TimeHelper.GetAttackTime(world.Player), sucess);
-                return sucess;
-            }
+            //if (info.IsKeyPressed(Keys.A))
+            //{
+            //    bool sucess = ActionManager.DirectAttack(world.Player);
+            //    world.ProcessTurn(TimeHelper.GetAttackTime(world.Player), sucess);
+            //    return sucess;
+            //} // some other thing will be in here!
             if (info.IsKeyPressed(Keys.G))
             {
                 Item item = world.CurrentMap.GetEntityAt<Item>(world.Player.Position);

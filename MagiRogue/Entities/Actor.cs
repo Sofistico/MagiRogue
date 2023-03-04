@@ -1,18 +1,14 @@
 ﻿using MagiRogue.Commands;
 using MagiRogue.Components;
 using MagiRogue.Data.Enumerators;
-using MagiRogue.Data.Serialization;
 using MagiRogue.GameSys;
 using MagiRogue.GameSys.Physics;
 using MagiRogue.GameSys.Tiles;
-using MagiRogue.Utils;
 using MagiRogue.Utils.Extensions;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace MagiRogue.Entities
 {
@@ -490,6 +486,16 @@ namespace MagiRogue.Entities
                         GameLoop.AddMessageLog("Need is in dire need!");
                 }
             }
+        }
+
+        public double AttackRange()
+        {
+            var item = WieldedItem();
+            if (item is null)
+            {
+                return 1; // punch and stuff distance!
+            }
+            return 1; // to be implemented item range that permits attacking and stuff!
         }
 
         #endregion Needs

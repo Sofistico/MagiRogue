@@ -24,6 +24,5 @@ namespace MagiRogue.Data.Enumerators
         Fight,
         Bully,
         PickUp,
-        GoTo
     }
 }
