@@ -2,6 +2,7 @@
 using GoRogue;
 using MagiRogue.GameSys;
 using MagiRogue.GameSys.Planet.History;
+using MagiRogue.GameSys.Time;
 using MagiRogue.UI;
 using Microsoft.Toolkit.HighPerformance;
 using System;
@@ -84,6 +85,13 @@ public static class GameLoop
         if (UIManager is null)
             return;
         UIManager.MessageLog.PrintMessage(message);
+    }
+
+    public static int GetNHoursFromTurn(int hours)
+    {
+        int turn = Universe.Time.Turns;
+        int turnInNHours = turn * TimeDefSpan.SecondsPerHour * hours;
+        return turnInNHours;
     }
 
     #region IdCounters

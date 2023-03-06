@@ -7,6 +7,7 @@ using MagiRogue.Entities;
 using MagiRogue.GameSys;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.GameSys.Time;
+using MagiRogue.UI.Enums;
 using MagiRogue.UI.Windows;
 using Newtonsoft.Json;
 using SadConsole.Input;
@@ -250,8 +251,19 @@ namespace MagiRogue.UI
                 return true;
             }
 
-            if (info.IsKeyPressed(Keys.Enter) && targetCursor is not null
-                && targetCursor.State == TargetState.Targeting)
+            if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.R))
+            {
+                var wait = ui.GetWindow<WaitWindow>(WindowTag.Wait);
+                if (wait is null)
+                {
+                    wait = new();
+                    ui.AddWindowToList(wait);
+                }
+                wait.Show(true);
+                return true;
+            }
+
+            if (info.IsKeyPressed(Keys.Enter) && targetCursor?.State == TargetState.Targeting)
             {
                 if ((targetCursor.EntityInTarget() || targetCursor.TileInTarget()) && targetCursor.SpellSelected is null)
                 {

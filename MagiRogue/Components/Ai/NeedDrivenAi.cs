@@ -13,21 +13,27 @@ namespace MagiRogue.Components.Ai
         private Path? previousKnowPath;
         private Need? commitedToNeed;
         private int step;
+        private GoRogue.GameFramework.IGameObject? parent;
+        private NeedCollection? needs;
 
         public IObjectWithComponents? Parent { get; set; }
 
         public (bool sucess, long ticks) RunAi(Map map, MessageLogWindow messageLog)
         {
-            if (Parent.GoRogueComponents.Contains(typeof(NeedCollection)) && Parent is Actor actor)
+            parent ??= (GoRogue.GameFramework.IGameObject)Parent;
+            if (Parent.GoRogueComponents.Contains(typeof(NeedCollection))
+                && map.GetEntityById(parent.ID) is Actor actor)
             {
-                var needs = actor.GetComponent<NeedCollection>();
+                needs ??= actor.GetComponent<NeedCollection>();
 
                 if (needs is null)
                     return (false, -1);
                 if (!needs.GetPriority(out Need need) && commitedToNeed is null)
                     need = needs.FirstOrDefault(i => i.PercentFulfilled <= 25);
                 if (commitedToNeed is not null)
-                    need = commitedToNeed.Value;
+                    need = commitedToNeed;
+                if (need is null)
+                    return (true, 100); //check if there will be a need next turn
                 if (previousKnowPath is not null)
                 {
                     ActionManager.MoveActorBy(actor, previousKnowPath.GetStep(step++));
@@ -109,9 +115,6 @@ namespace MagiRogue.Components.Ai
                             {
                                 previousKnowPath = map.AStar.ShortestPath(actor.Position, item.Position)!;
                             }
-                            break;
-
-                        default:
                             break;
                     }
                 }

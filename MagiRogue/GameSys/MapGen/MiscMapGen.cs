@@ -35,7 +35,7 @@ namespace MagiRogue.GameSys.MapGen
 
         private void PlaceUnitsInForest(Room room)
         {
-            int count = 6;
+            const int count = 10;
             for (int i = 0; i < count; i++)
             {
                 var pos = room.ReturnRandomPosRoom();

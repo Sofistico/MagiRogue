@@ -1,5 +1,6 @@
 ﻿using GoRogue.Components;
 using GoRogue.Components.ParentAware;
+using GoRogue.GameFramework;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.Utils;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace MagiRogue.Components
 {
-    public struct Need
+    public class Need
     {
         public string Name { get; set; }
         public bool Vital { get; set; }
@@ -37,9 +38,9 @@ namespace MagiRogue.Components
         /// <summary>
         /// Percent of how much it's fulfilled
         /// </summary>
-        public double? PercentFulfilled { get => MaxTurnCounter.HasValue ? MathMagi.GetPercentage(TurnCounter, MaxTurnCounter.Value) : null; }
+        public double? PercentFulfilled { get => MaxTurnCounter.HasValue ? MathMagi.GetPercentageBasedOnMax(TurnCounter, MaxTurnCounter.Value) : null; }
 
-        public object Objective { get; set; }
+        public IGameObject Objective { get; set; }
 
         public Need(string name,
             bool vital,
@@ -64,7 +65,10 @@ namespace MagiRogue.Components
             //new Need("Fight", false, 0, Actions.Fight, "Peace", "battle" ),
         };
 
-        public bool TickNeed() => TurnCounter++ >= MaxTurnCounter;
+        public bool TickNeed()
+        {
+            return TurnCounter++ >= MaxTurnCounter;
+        }
 
         public override string ToString()
         {
@@ -95,6 +99,7 @@ namespace MagiRogue.Components
         public NeedCollection(List<Need> needs)
         {
             this.needs = needs;
+            prioQueue = new();
         }
 
         public static NeedCollection WithCommonNeeds() => new NeedCollection(Need.CommonNeeds());

@@ -83,9 +83,12 @@ namespace MagiRogue.Utils
             return yearToGameBegin * 3214080000;
         }
 
-        public static double GetPercentage(int current, int max)
+        public static double GetPercentageBasedOnMax(int current, int max)
         {
-            return Math.Round((double)(current / max * 100));
+            if (current == 0)
+                return 100;
+            var val = Math.Round((double)(((double)current / (double)max) * 100), 3, MidpointRounding.AwayFromZero) ;
+            return 100 - val;
         }
     }
 }

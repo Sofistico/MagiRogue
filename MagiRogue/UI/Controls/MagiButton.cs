@@ -1,5 +1,6 @@
 ﻿using SadConsole.Input;
 using SadConsole.UI.Controls;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -21,13 +22,38 @@ namespace MagiRogue.UI.Controls
         /// </summary>
         public MagiButton NextSelection { get; set; }
 
+        public Action Action { get; set; }
+
         /// <summary>
         /// Creates a new Selection Button with a specific width and height.
         /// </summary>
         /// <param name="width">The width of the selection button.</param>
         public MagiButton(int width, int height = 1) : base(width, height)
         {
-            //ThemeColors = GameLoop.UIManager.CustomColors;
+        }
+
+        /// <summary>
+        /// Creates a new Selection Button with a specific text.
+        /// </summary>
+        /// <param name="text">The text of the selection button.</param>
+        public MagiButton(string text, int height = 1) : this(text.Length + 2, height)
+        {
+            Text = text;
+        }
+
+        /// <summary>
+        /// Creates a new Selection Button with a specific text and click action.
+        /// </summary>
+        /// <param name="text">The text of the selection button.</param>
+        /// <param name="action">The action of the button</param>
+        /// <param name="pos">The position in the console</param>
+        /// <param name="height">The height of the button</param>
+        public MagiButton(string text, Action action, Point pos, int height = 1) : this(text, height)
+        {
+            Text = text;
+            Action = action;
+            Click += (_, __) => { action?.Invoke(); };
+            Position = pos;
         }
 
         /// <summary>

@@ -194,8 +194,8 @@ namespace MagiRogue.Entities
 
         public Item WieldedItem()
         {
-            return Body.Equipment.GetValueOrDefault(GetAnatomy().Limbs.Find(l =>
-                l.LimbType == TypeOfLimb.Hand).Id);
+            return Body.Equipment?.GetValueOrDefault(GetAnatomy().Limbs.Find(l =>
+                l.LimbType == TypeOfLimb.Hand).Id, null);
         }
 
         public Limb GetAttackingLimb(Item item)

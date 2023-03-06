@@ -1,9 +1,13 @@
 ﻿using MagiRogue.Entities;
 using MagiRogue.GameSys;
+using MagiRogue.UI.Enums;
+using MagiRogue.UI.Interfaces;
 using MagiRogue.UI.Windows;
 using SadConsole;
 using SadConsole.Input;
+using SadConsole.UI;
 using System;
+using System.Collections.Generic;
 using Color = SadConsole.UI.AdjustableColor;
 
 namespace MagiRogue.UI
@@ -12,9 +16,12 @@ namespace MagiRogue.UI
     // and makes consoles easily addressable from a central place.
     public sealed class UIManager : ScreenObject
     {
+        private readonly Dictionary<WindowTag, IWindowTagContract> windows
+            = new Dictionary<WindowTag, IWindowTagContract>();
+
         #region Managers
 
-        // Here are the managers
+        // Here are the managers, in the future will be a dictionary
         public MapWindow MapWindow { get; set; }
 
         public MessageLogWindow MessageLog { get; set; }
@@ -210,6 +217,21 @@ namespace MagiRogue.UI
 
             // Now set all of these colours as default for SC's default theme.
             SadConsole.UI.Themes.Library.Default.Colors = CustomColors;
+        }
+
+        public T GetWindow<T>(WindowTag tag) where T : IWindowTagContract
+        {
+            windows.TryGetValue(tag, out var window);
+            return (T)window;
+        }
+
+        public void AddWindowToList(IWindowTagContract window)
+        {
+            if (window.Tag == WindowTag.Undefined)
+            {
+                throw new UndefinedWindowTagException($"The tag for the window was undefined! Window: {window}");
+            }
+            windows.Add(window.Tag, window);
         }
 
         #endregion HelperMethods

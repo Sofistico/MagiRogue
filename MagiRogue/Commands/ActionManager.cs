@@ -21,15 +21,10 @@ namespace MagiRogue.Commands
     /// Contains all generic actions performed on entities and tiles
     /// including combat, movement, and so on.
     /// </summary>
-    public sealed class ActionManager
+    public static class ActionManager
     {
         private const int staminaAttackAction = 100;
         private const int maxTries = 10;
-
-        private ActionManager()
-        {
-            // makes sure that it's never instantiated
-        }
 
         /// <summary>
         /// Move the actor BY +/- X&Y coordinates
@@ -129,7 +124,7 @@ namespace MagiRogue.Commands
             List<Actor> monsterClose = new List<Actor>();
 
             // Saves all Points directions of the attacker.
-            Point[] directions = SadConsole.PointExtensions.GetDirectionPoints(attacker.Position);
+            Point[] directions = attacker.Position.GetDirectionPoints();
 
             foreach (Point direction in directions)
             {
@@ -337,24 +332,11 @@ namespace MagiRogue.Commands
 
                 double totalTurnsWait = staminaDif + manaDif;
 
-                for (int i = 0; i < totalTurnsWait + 1; i++)
-                {
-                    foreach (Point p in GameLoop.GetCurrentMap().PlayerFOV.CurrentFOV)
-                    {
-                        Actor possibleActor = GameLoop.GetCurrentMap().GetEntityAt<Actor>(p);
-                        if (possibleActor is not null && !possibleActor.Equals(actor))
-                        {
-                            GameLoop.AddMessageLog("There is an enemy in view, stop resting!");
-                            return false;
-                        }
-                    }
-
-                    GameLoop.Universe.ProcessTurn(TimeHelper.Wait, true);
-                }
+                bool sus = WaitForNTurns((int)totalTurnsWait, actor);
 
                 GameLoop.AddMessageLog($"You have rested for {totalTurnsWait} turns");
 
-                return true;
+                return sus;
             }
 
             GameLoop.AddMessageLog("You have no need to rest");
@@ -515,6 +497,27 @@ namespace MagiRogue.Commands
                 }
             }
             return need;
+        }
+
+        public static bool WaitForNTurns(int turns, Actor actor, bool canBeInterrupted = true)
+        {
+            if (turns < 0)
+                return false;
+            for (int i = 0; i < turns; i++)
+            {
+                foreach (Point p in GameLoop.GetCurrentMap().PlayerFOV.NewlySeen)
+                {
+                    Actor possibleActor = GameLoop.GetCurrentMap().GetEntityAt<Actor>(p);
+                    if (possibleActor?.Equals(actor) == false && canBeInterrupted)
+                    {
+                        GameLoop.AddMessageLog("There is an enemy in view, stop resting!");
+                        return false;
+                    }
+                }
+
+                GameLoop.Universe.ProcessTurn(TimeHelper.Wait, true);
+            }
+            return true;
         }
 
         public static Need? FindFood(Actor actor, Map map)

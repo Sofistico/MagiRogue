@@ -70,44 +70,42 @@ namespace MagiRogue.UI.Windows
             base.Show(true);
         }
 
-        private Dictionary<MagiButton, Action> BuildSpellsControls(List<SpellBase> listSpells)
+        private List<MagiButton> BuildSpellsControls(List<SpellBase> listSpells)
         {
             _hotKeys.Clear();
 
             int yCount = 1;
 
-            var controlDictionary = listSpells
+            var spellOrdered = listSpells
                 .OrderBy(s => s.SpellName)
-                .ToDictionary
-                (s =>
-                    {
-                        var hotkeyLetter = (char)(96 + yCount);
-                        _hotKeys.Add(hotkeyLetter, s);
-
-                        var spellButton = new MagiButton(ButtonWidth - 2)
-                        {
-                            Text = $"{hotkeyLetter}. {s.SpellName}",
-                            Position = new Point(1, yCount++),
-                            IsEnabled = _currentMana >= s.ManaCost
-                        };
-                        spellButton.Click += (_, __) =>
-                        {
-                            _onCast(s);
-                            Hide();
-                        };
-
-                        return spellButton;
-                    },
-                    s => (Action)(() => OnSpellSelected(s)));
-
-            var buttons = controlDictionary.Keys.ToArray();
-            for (int i = 1; i < buttons.Length; i++)
+                .ToArray();
+            var list = new List<MagiButton>(spellOrdered.Length);
+            for (int i = 0; i < spellOrdered.Length; i++)
             {
-                buttons[i - 1].NextSelection = buttons[i];
-                buttons[i].PreviousSelection = buttons[i - 1];
+                var hotkeyLetter = (char)(96 + yCount);
+                var s = spellOrdered[i];
+                _hotKeys.Add(hotkeyLetter, s);
+                var spellButton = new MagiButton(ButtonWidth - 2)
+                {
+                    Text = $"{hotkeyLetter}. {s.SpellName}",
+                    Position = new Point(1, yCount++),
+                    IsEnabled = _currentMana >= s.ManaCost,
+                    Action = () => OnSpellSelected(s)
+                };
+                spellButton.Click += (_, __) =>
+                {
+                    _onCast(s);
+                    Hide();
+                };
+                list.Add(spellButton);
+            }
+            for (int i = 1; i < list.Count; i++)
+            {
+                list[i - 1].NextSelection = list[i];
+                list[i].PreviousSelection = list[i - 1];
             }
 
-            return controlDictionary;
+            return list;
         }
 
         public void OnSpellSelected(SpellBase spell)

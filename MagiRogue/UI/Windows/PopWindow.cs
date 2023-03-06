@@ -4,7 +4,7 @@ using SadConsole.UI.Controls;
 namespace MagiRogue.UI.Windows
 {
     /// <summary>
-    /// This creates a base pop window, keep in mind to create a console in the right plae the math is
+    /// This creates a base pop window, keep in mind to create a console in the right place the math is
     /// Width - ButtonWidth - 3, Height - 4, for the position = ButtonWidth + 2, 1
     /// </summary>
     public class PopWindow : MagiBaseWindow
@@ -16,7 +16,7 @@ namespace MagiRogue.UI.Windows
         protected readonly Console DescriptionArea;
 
         /// <summary>
-        /// This creates a base pop window, keep in mind to create a console in the right plae the math is
+        /// This creates a base pop window, keep in mind to create a console in the right place the math is
         /// Width - ButtonWidth - 3, Height - 4, for the position = ButtonWidth + 2, 1
         /// </summary>
         /// <param name="title"></param>
