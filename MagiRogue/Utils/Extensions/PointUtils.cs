@@ -80,7 +80,7 @@ namespace MagiRogue.Utils.Extensions
             return new SadRogue.Primitives.Point(point.X + directionToGo.DeltaX, point.Y + directionToGo.DeltaY);
         }
 
-        public static Point GetPointNextToWithCardinals(this Point point)
+        public static Point GetPointNextToWithCardinals()
         {
             Direction[] directions = new Direction[]
             {
@@ -95,7 +95,7 @@ namespace MagiRogue.Utils.Extensions
             };
 
             Direction directionToGo = directions.GetRandomItemFromList();
-            return new SadRogue.Primitives.Point(point.X + directionToGo.DeltaX, point.Y + directionToGo.DeltaY);
+            return new SadRogue.Primitives.Point(directionToGo.DeltaX, directionToGo.DeltaY);
         }
 
         public static Point FindClosest(this Point point, Point[] pointsToSearch)

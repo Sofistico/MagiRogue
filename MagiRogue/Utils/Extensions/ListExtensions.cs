@@ -1,5 +1,6 @@
 ﻿using MagiRogue.GameSys.Planet.History;
 using ShaiRandom.Distributions.Continuous;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Resources;

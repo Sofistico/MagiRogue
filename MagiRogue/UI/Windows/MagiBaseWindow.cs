@@ -46,14 +46,6 @@ namespace MagiRogue.UI.Windows
             Title = title;
         }
 
-        public void AddToDictionary(MagiButton[] buttons)
-        {
-            foreach (MagiButton button in buttons)
-            {
-                AddToDictionary(button);
-            }
-        }
-
         public void AddToDictionary(MagiButton button)
         {
             SetupSelectionButtons(new List<MagiButton>() { button });

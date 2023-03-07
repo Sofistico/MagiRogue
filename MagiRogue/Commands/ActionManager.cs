@@ -557,8 +557,8 @@ namespace MagiRogue.Commands
             bool tileIsInvalid;
             do
             {
-                var posToGo = actor.Position.GetPointNextToWithCardinals();
-                tileIsInvalid = !ActionManager.MoveActorBy(actor, posToGo);
+                var posToGo = PointUtils.GetPointNextToWithCardinals();
+                tileIsInvalid = !MoveActorBy(actor, posToGo);
                 tries++;
             } while (tileIsInvalid || tries <= maxTries);
         }

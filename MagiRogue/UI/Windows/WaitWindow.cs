@@ -27,8 +27,24 @@ namespace MagiRogue.UI.Windows
                         (Actor)GameLoop.GetCurrentMap()?.ControlledEntitiy);
                     Hide();
                 }, new SadRogue.Primitives.Point(ButtonWidth, yCount));
+            var wait3Hour = new MagiButton(string.Format(wait, CharExtension.GetCharHotkey(yCount++), 3, "hours"),
+                () =>
+                {
+                    ActionManager.WaitForNTurns(GameLoop.GetNHoursFromTurn(3),
+                        (Actor)GameLoop.GetCurrentMap()?.ControlledEntitiy);
+                    Hide();
+                }, new SadRogue.Primitives.Point(ButtonWidth, yCount));
+            var wait6Hour = new MagiButton(string.Format(wait, CharExtension.GetCharHotkey(yCount++), 6, "hours"),
+                () =>
+                {
+                    ActionManager.WaitForNTurns(GameLoop.GetNHoursFromTurn(6),
+                        (Actor)GameLoop.GetCurrentMap()?.ControlledEntitiy);
+                    Hide();
+                }, new SadRogue.Primitives.Point(ButtonWidth, yCount));
             hotKeys.Add('a', wait1Hour);
-            AddToDictionary(wait1Hour);
+            hotKeys.Add('b', wait3Hour);
+            hotKeys.Add('c', wait6Hour);
+            SetupSelectionButtons(wait1Hour, wait3Hour, wait6Hour);
             Tag = Enums.WindowTag.Wait;
         }
 

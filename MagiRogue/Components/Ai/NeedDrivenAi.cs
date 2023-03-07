@@ -59,6 +59,8 @@ namespace MagiRogue.Components.Ai
 
                         case Data.Enumerators.Actions.Drink:
                             var water = map.GetClosestWaterTile(actor.Body.ViewRadius, actor.Position);
+                            if (water is null)
+                                ActionManager.Wander(actor);
                             if (map.DistanceMeasurement.Calculate(actor.Position - water.Position) <= 1) // right next to the water tile or in it
                             {
                                 ActionManager.Drink(actor, water.MaterialOfTile, 25, need);
