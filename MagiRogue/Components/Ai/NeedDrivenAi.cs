@@ -5,6 +5,7 @@ using MagiRogue.Entities;
 using MagiRogue.GameSys;
 using MagiRogue.UI.Windows;
 using System.Linq;
+using MagiRogue.Data.Enumerators;
 
 namespace MagiRogue.Components.Ai
 {
@@ -44,11 +45,11 @@ namespace MagiRogue.Components.Ai
                     previousKnowPath = null;
                     switch (need.ActionToFulfillNeed)
                     {
-                        case Data.Enumerators.Actions.Eat:
+                        case Actions.Eat:
                             commitedToNeed = ActionManager.FindFood(actor, map);
                             break;
 
-                        case Data.Enumerators.Actions.Sleep:
+                        case Actions.Sleep:
                             commitedToNeed = ActionManager.Sleep(actor, need);
                             if (commitedToNeed?.TurnCounter == 0)
                             {
@@ -57,7 +58,7 @@ namespace MagiRogue.Components.Ai
 
                             break;
 
-                        case Data.Enumerators.Actions.Drink:
+                        case Actions.Drink:
                             var water = map.GetClosestWaterTile(actor.Body.ViewRadius, actor.Position);
                             if (water is null)
                                 ActionManager.Wander(actor);
@@ -71,25 +72,25 @@ namespace MagiRogue.Components.Ai
                             }
                             break;
 
-                        case Data.Enumerators.Actions.Fun:
+                        case Actions.Fun:
                             break;
 
-                        case Data.Enumerators.Actions.Train:
+                        case Actions.Train:
                             break;
 
-                        case Data.Enumerators.Actions.Pray:
+                        case Actions.Pray:
                             break;
 
-                        case Data.Enumerators.Actions.Study:
+                        case Actions.Study:
                             break;
 
-                        case Data.Enumerators.Actions.Teach:
+                        case Actions.Teach:
                             break;
 
-                        case Data.Enumerators.Actions.Craft:
+                        case Actions.Craft:
                             break;
 
-                        case Data.Enumerators.Actions.Fight:
+                        case Actions.Fight:
                             var enemy = (Actor)need.Objective;
                             if (enemy is null) { break; }
                             if (map.DistanceMeasurement.Calculate(actor.Position - enemy.Position) <= actor.AttackRange())
@@ -102,10 +103,10 @@ namespace MagiRogue.Components.Ai
                             }
                             break;
 
-                        case Data.Enumerators.Actions.Bully:
+                        case Actions.Bully:
                             break;
 
-                        case Data.Enumerators.Actions.PickUp:
+                        case Actions.PickUp:
                             Item item = (Item)need.Objective;
                             if (item is null) { break; }
                             if (map.DistanceMeasurement.Calculate(actor.Position, item.Position) <= 1)
