@@ -311,12 +311,13 @@ namespace MagiRogue.GameSys.Tiles
                     break;
 
                 case TileType.Water:
+                    var isSea = basicTile.IsSea ?? false;
                     tile = new WaterTile(foreground,
                         background,
                         charToUse,
                         basicTile.Position,
 #pragma warning disable CS8629 // O tipo de valor de nulidade pode ser nulo.
-                        (bool)basicTile.IsSea);
+                        isSea);
 #pragma warning restore CS8629 // O tipo de valor de nulidade pode ser nulo.
                     break;
 

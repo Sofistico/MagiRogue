@@ -210,7 +210,7 @@ namespace MagiRogue.Utils
             Item wieldedItem = attacker.WieldedItem();
             Limb limbAttacking = attacker.GetAttackingLimb(wieldedItem);
 
-            if (attacker.GetRelevantAttackAbility() + Mrn.Exploding2D6Dice
+            if (attacker.GetRelevantAttackAbility(wieldedItem) + Mrn.Exploding2D6Dice
                 > defender.GetDefenseAbility() + Mrn.Exploding2D6Dice)
             {
                 var attackType = attacker.GetDamageType();

@@ -195,7 +195,7 @@ namespace MagiRogue.Entities
         public Item WieldedItem()
         {
             return Body.Equipment?.GetValueOrDefault(GetAnatomy().Limbs.Find(l =>
-                l.LimbType == TypeOfLimb.Hand).Id, null);
+                l.LimbType == TypeOfLimb.Hand)?.Id, null);
         }
 
         public Limb GetAttackingLimb(Item item)
@@ -379,7 +379,7 @@ namespace MagiRogue.Entities
             int shieldAbility = GetRelevantAbility(AbilityName.Shield);
             int armorAbility = GetRelevantAbility(AbilityName.ArmorUse);
             int dodgeAbility = GetRelevantAbility(AbilityName.Dodge);
-            int weaponAbility = GetRelevantAttackAbility();
+            int weaponAbility = GetRelevantAttackAbility(WieldedItem());
 
             if (shieldAbility > weaponAbility)
                 return shieldAbility;
@@ -396,9 +396,9 @@ namespace MagiRogue.Entities
             return Mind.GetAbility(ability);
         }
 
-        public int GetRelevantAttackAbility()
+        public int GetRelevantAttackAbility(Item? item = null)
         {
-            if (WieldedItem() is not null && WieldedItem() is Item item)
+            if (item is not null)
             {
                 return GetRelevantAttackAbility(item.WeaponType);
             }

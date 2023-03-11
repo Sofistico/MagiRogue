@@ -55,5 +55,13 @@
     "ForegroundStr": "Brown",
     "TileType": "Floor",
     "HoldsVegetation": true
+  },
+  {
+    "TileId": "t_water",
+    "Name": "Water",
+    "IdMaterial": "h2o",
+    "GlyphChar": "~",
+    "ForegroundStr": "Blue",
+    "TileType": "Water"
   }
 ]
