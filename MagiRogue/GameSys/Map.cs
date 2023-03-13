@@ -235,6 +235,7 @@ namespace MagiRogue.GameSys
 
             foreach (T t in listT)
             {
+                if(t is null) continue;
                 if (t is not Player)
                 {
                     double distance = Point.EuclideanDistanceMagnitude(originPos, t.Position);
@@ -814,15 +815,15 @@ namespace MagiRogue.GameSys
         private ReadOnlySpan<IGameObject> GetAllPlantsEvenItem()
         {
             var items = Entities.GetLayer((int)MapLayer.ITEMS).Where(i => i.Item is Item item && (item.ItemType == ItemType.PlantFood)).Select(i => i.Item).ToArray();
-            IGameObject[] result = new IGameObject[(Tiles.Length * 4) + items.Length];
-            var tilesWithVeggies = Array.FindAll(Tiles, i => i.HoldsVegetation && i.Vegetations.Length > 0).AsSpan();
+            var tilesWithVeggies = Array.FindAll(Tiles, i => i.HoldsVegetation && i.Vegetations.Any()).AsSpan();
+            IGameObject[] result = new IGameObject[tilesWithVeggies.Length + items.Length];
             int offSet = 0;
             for (int i = 0; i < tilesWithVeggies.Length; i++)
             {
-                TileBase? item = Tiles[i];
+                TileBase? item = tilesWithVeggies[i];
                 for (int x = 0; x < item.Vegetations.Length; x++)
                 {
-                    result[x] = item.Vegetations[x];
+                    result[offSet] = item.Vegetations[x];
                     offSet++;
                 }
             }

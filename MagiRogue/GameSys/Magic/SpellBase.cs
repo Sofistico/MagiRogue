@@ -110,6 +110,8 @@ namespace MagiRogue.GameSys.Magic
             get => (int)(SpellLevel + ManaCost);
         }
 
+        public List<string> Keywords { get; set; } = new();
+
         /// <summary>
         /// Empty constructor, a waste of space
         /// </summary>

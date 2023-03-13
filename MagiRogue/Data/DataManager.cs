@@ -200,7 +200,7 @@ namespace MagiRogue.Data
             => ListOfResearches.FirstOrDefault(i => i.Id.Equals(researchId));
 
         public static Plant QueryPlantInData(string plantId)
-            => ListOfPlants.FirstOrDefault(i => i.Id.Equals(plantId)).Copy();
+            => ListOfPlants.FirstOrDefault(i => i.Id.Equals(plantId))?.Clone();
 
         #endregion Queryes
 

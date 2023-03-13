@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MagiRogue.Data.Serialization.EntitySerialization
 {
@@ -38,6 +39,10 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             if (spell.ContainsKey("Proficiency"))
             {
                 createdSpell.Proficiency = (double)spell["Proficiency"];
+            }
+            if (spell.ContainsKey("Keywords"))
+            {
+                createdSpell.Keywords = JsonConvert.DeserializeObject<List<string>>(spell["Keywords"].ToString())!;
             }
 
             return createdSpell;
@@ -189,9 +194,11 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
         public double ManaCost { get; set; }
         public string SpellId { get; set; }
+        public List<string> Keywords { get; set; } = new();
 
         public SpellTemplate(int spellLevel, List<ISpellEffect> effects, string spellName, string description,
-            ArtMagic magicArt, int spellRange, double manaCost, string spellId)
+            ArtMagic magicArt, int spellRange, double manaCost, string spellId,
+            List<string> keywords)
         {
             SpellLevel = spellLevel;
             Effects = effects;
@@ -201,6 +208,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             SpellRange = spellRange;
             ManaCost = manaCost;
             SpellId = spellId;
+            Keywords = keywords;
         }
 
         public static implicit operator SpellBase(SpellTemplate spellTemplate)
@@ -212,10 +220,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 Proficiency =
                 spellTemplate.Proficiency is null ? 0 : (double)spellTemplate.Proficiency
             };
-            foreach (var item in spellTemplate.Effects)
-            {
-                spell.Effects.Add(item);
-            }
+            spell.Effects.AddRange(spellTemplate.Effects);
             spell.SetDescription(spellTemplate.Description);
             return spell;
         }
@@ -224,7 +229,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         {
             SpellTemplate template =
                 new SpellTemplate(spell.SpellLevel, spell.Effects, spell.SpellName,
-                spell.Description, spell.MagicArt, spell.SpellRange, spell.ManaCost, spell.SpellId)
+                spell.Description, spell.MagicArt, spell.SpellRange, spell.ManaCost, spell.SpellId, spell.Keywords)
                 {
                     Proficiency = spell.Proficiency
                 };

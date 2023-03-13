@@ -199,9 +199,16 @@ namespace MagiRogue.GameSys.Veggies
             ((IGameObject)backiendField).OnMapChanged(newMap);
         }
 
-        public Plant Copy()
+        public Plant Clone()
         {
-            return MemberwiseClone() as Plant;
+            return new Plant(Foreground, Background, Glyphs)
+            {
+                Id = Id,
+                Name = Name,
+                Position = Position,
+                IsWalkable = IsWalkable,
+                IsTransparent = IsTransparent,
+            };
         }
     }
 }

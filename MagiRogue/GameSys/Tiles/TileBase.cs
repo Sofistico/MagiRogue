@@ -197,6 +197,7 @@ namespace MagiRogue.GameSys.Tiles
                 CopyAppearanceFrom(plant.SadGlyph);
                 LastSeenAppereance.CopyAppearanceFrom(plant.SadGlyph);
                 IsDirty = true;
+                plant.Position = Position;
             }
         }
 
