@@ -205,7 +205,7 @@ namespace MagiRogue.GameSys.Veggies
             {
                 Id = Id,
                 Name = Name,
-                Position = Position,
+                Position = new SadRogue.Primitives.Point(Position.X, Position.Y),
                 IsWalkable = IsWalkable,
                 IsTransparent = IsTransparent,
             };

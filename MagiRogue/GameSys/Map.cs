@@ -225,7 +225,53 @@ namespace MagiRogue.GameSys
         public WaterTile GetClosestWaterTile(int range, Point position)
         {
             var waters = GetAllTilesOfType<WaterTile>();
-            return GetClosest<WaterTile>(position, range, waters.AsSpan());
+            return GetClosest<WaterTile>(position, range, waters);
+        }
+
+        public static T? GetClosest<T>(Point originPos, int range, List<T> listT) where T : IGameObject
+        {
+            T closest = default;
+            double bestDistance = double.MaxValue;
+
+            foreach (T t in listT)
+            {
+                if (t is null) continue;
+                if (t is not Player)
+                {
+                    double distance = Point.EuclideanDistanceMagnitude(originPos, t.Position);
+
+                    if (distance < bestDistance && (distance <= range || range == 0))
+                    {
+                        bestDistance = distance;
+                        closest = t;
+                    }
+                }
+            }
+
+            return closest;
+        }
+
+        public static T? GetClosest<T>(Point originPos, int range, T[] listT) where T : IGameObject
+        {
+            T closest = default;
+            double bestDistance = double.MaxValue;
+
+            foreach (T t in listT)
+            {
+                if (t is null) continue;
+                if (t is not Player)
+                {
+                    double distance = Point.EuclideanDistanceMagnitude(originPos, t.Position);
+
+                    if (distance < bestDistance && (distance <= range || range == 0))
+                    {
+                        bestDistance = distance;
+                        closest = t;
+                    }
+                }
+            }
+
+            return closest;
         }
 
         public static T? GetClosest<T>(Point originPos, int range, ReadOnlySpan<T> listT) where T : IGameObject
@@ -235,7 +281,7 @@ namespace MagiRogue.GameSys
 
             foreach (T t in listT)
             {
-                if(t is null) continue;
+                if (t is null) continue;
                 if (t is not Player)
                 {
                     double distance = Point.EuclideanDistanceMagnitude(originPos, t.Position);
@@ -812,10 +858,10 @@ namespace MagiRogue.GameSys
             return list.AsSpan();
         }
 
-        private ReadOnlySpan<IGameObject> GetAllPlantsEvenItem()
+        private IGameObject[] GetAllPlantsEvenItem()
         {
             var items = Entities.GetLayer((int)MapLayer.ITEMS).Where(i => i.Item is Item item && (item.ItemType == ItemType.PlantFood)).Select(i => i.Item).ToArray();
-            var tilesWithVeggies = Array.FindAll(Tiles, i => i.HoldsVegetation && i.Vegetations.Any()).AsSpan();
+            var tilesWithVeggies = Array.FindAll(Tiles, i => i.HoldsVegetation && i.Vegetations.Any());
             IGameObject[] result = new IGameObject[tilesWithVeggies.Length + items.Length];
             int offSet = 0;
             for (int i = 0; i < tilesWithVeggies.Length; i++)
@@ -823,7 +869,8 @@ namespace MagiRogue.GameSys
                 TileBase? item = tilesWithVeggies[i];
                 for (int x = 0; x < item.Vegetations.Length; x++)
                 {
-                    result[offSet] = item.Vegetations[x];
+                    result[i] = item.Vegetations[x];
+                    item.Vegetations[x].Position = item.Position;
                     offSet++;
                 }
             }
@@ -833,8 +880,7 @@ namespace MagiRogue.GameSys
             {
                 result[i + offSet] = items[i];
             }
-            var memory = new Memory<IGameObject>(result);
-            return memory.Span;
+            return result;
         }
 
         public TFind[] GetAllTilesOfType<TFind>()
