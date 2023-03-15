@@ -1,6 +1,7 @@
 ﻿using MagiRogue.Entities;
 using MagiRogue.GameSys.Tiles;
 using SadRogue.Primitives;
+using System.Collections.Generic;
 
 namespace MagiRogue.GameSys
 {
@@ -11,6 +12,7 @@ namespace MagiRogue.GameSys
     public sealed class MagiRogueFOVVisibilityHandler : FOVHandler
     {
         private readonly int _ghostLayer;
+        private readonly Dictionary<uint, MagiEntity> ghosts = new();
 
         /// <summary>
         /// Foreground color to set to all terrain that is outside of FOV but has been explored.
@@ -57,15 +59,25 @@ namespace MagiRogue.GameSys
         /// <param name="entity">Entity to modify.</param>
         protected override void UpdateEntitySeen(MagiEntity entity)
         {
-            //Map.EntityRender.DoEntityUpdate = true;
             if (entity.Layer == _ghostLayer)
             {
-                //Map.EntityRender.Remove(entity);
                 Map.Remove(entity);
+
                 return;
+            }
+            if (ghosts.ContainsKey(entity.ID))
+            {
+                RemoveEntityGhost(entity);
             }
             //Map.EntityRender.Add(entity);
             entity.IsVisible = true;
+        }
+
+        private void RemoveEntityGhost(MagiEntity entity)
+        {
+            var value = ghosts[entity.ID];
+            ghosts.Remove(entity.ID);
+            Map.Remove(value);
         }
 
         /// <summary>
@@ -74,10 +86,13 @@ namespace MagiRogue.GameSys
         /// <param name="entity">Entity to modify.</param>
         protected override void UpdateEntityUnseen(MagiEntity entity)
         {
-            if (entity.Layer == _ghostLayer || entity.AlwaySeen == true)
+            if (entity.Layer == _ghostLayer || entity.AlwaySeen)
                 return;
 
-            if (entity.Layer != _ghostLayer && Map.PlayerExplored[entity.Position] && entity.LeavesGhost)
+            if (entity.Layer != _ghostLayer
+                && Map.PlayerExplored[entity.Position]
+                && entity.LeavesGhost
+                && !ghosts.ContainsKey(entity.ID))
             {
                 MagiEntity ghost = new MagiEntity(ExploredColorTint,
                     entity.Appearance.Background,
@@ -88,13 +103,9 @@ namespace MagiRogue.GameSys
                     IsVisible = true,
                     Name = $"Ghost {entity.Name}"
                 };
-
-                //ghost.OnCalculateRenderPosition();
-                //Map.EntityRender.Add(entity);
-
-                Map.AddMagiEntity(ghost);
+                if (ghosts.TryAdd(entity.ID, ghost))
+                    Map.AddMagiEntity(ghost);
             }
-            //Map.EntityRender.Remove(entity);
             entity.IsVisible = false;
         }
 

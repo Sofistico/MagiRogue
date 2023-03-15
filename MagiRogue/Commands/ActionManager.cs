@@ -15,6 +15,7 @@ using SadConsole;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Map = MagiRogue.GameSys.Map;
 
 namespace MagiRogue.Commands
 {
@@ -561,7 +562,7 @@ namespace MagiRogue.Commands
                 var posToGo = PointUtils.GetPointNextToWithCardinals();
                 tileIsInvalid = !MoveActorBy(actor, posToGo);
                 tries++;
-            } while (tileIsInvalid || tries <= maxTries);
+            } while (tileIsInvalid && tries <= maxTries);
         }
 
         public static void Drink(Actor actor,

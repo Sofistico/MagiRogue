@@ -6,6 +6,9 @@ using MagiRogue.GameSys;
 using MagiRogue.UI.Windows;
 using System.Linq;
 using MagiRogue.Data.Enumerators;
+using System;
+using GoRogue.GameFramework;
+using Map = MagiRogue.GameSys.Map;
 
 namespace MagiRogue.Components.Ai
 {
@@ -31,11 +34,14 @@ namespace MagiRogue.Components.Ai
                     return (false, -1);
                 if (!needs.GetPriority(out Need need) && commitedToNeed is null)
                     need = needs.FirstOrDefault(i => i.PercentFulfilled <= 25);
+                //if (IsThereDanger(actor, map, out var danger))
+                //{
+                //}
                 if (commitedToNeed is not null)
                     need = commitedToNeed;
                 if (need is null)
                     return (true, 100); //check if there will be a need next turn
-                if (previousKnowPath is not null)
+                if (previousKnowPath is not null && step < previousKnowPath.Length)
                 {
                     ActionManager.MoveActorBy(actor, previousKnowPath.GetStep(step++));
                 }
@@ -52,11 +58,13 @@ namespace MagiRogue.Components.Ai
                                 var obj = commitedToNeed.Objective;
                                 if (map.DistanceMeasurement.Calculate(actor.Position - obj.Position) <= 1) // right next to the water tile or in it
                                 {
-                                    ActionManager.Eat(actor, obj.MaterialOfTile, 25, need);
+                                    ActionManager.Eat(actor, obj, need);
+                                    ClearCommit();
                                 }
                                 else
                                 {
-                                    previousKnowPath = map.AStar.ShortestPath(actor.Position, water.Position)!;
+                                    previousKnowPath = map.AStar.ShortestPath(actor.Position, obj.Position)!;
+                                    ActionManager.MoveActorBy(actor, previousKnowPath.GetStep(step++) - actor.Position);
                                 }
                             }
                             break;
@@ -131,6 +139,17 @@ namespace MagiRogue.Components.Ai
                                 previousKnowPath = map.AStar.ShortestPath(actor.Position, item.Position)!;
                             }
                             break;
+
+                        case Actions.Wander:
+                            ActionManager.Wander(actor);
+#if DEBUG
+                            GameLoop.AddMessageLog($"{actor.Name} wanders");
+#endif
+                            need?.Fulfill();
+                            break;
+
+                        case Actions.Flee:
+                            break;
                     }
                 }
 
@@ -138,6 +157,10 @@ namespace MagiRogue.Components.Ai
             }
             return (false, -1);
         }
+
+        //private bool IsThereDanger(Actor actor, Map map, out IGameObject danger)
+        //{
+        //}
 
         private void ClearCommit() => commitedToNeed = null;
     }
