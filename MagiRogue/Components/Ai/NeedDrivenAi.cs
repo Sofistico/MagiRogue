@@ -46,7 +46,19 @@ namespace MagiRogue.Components.Ai
                     switch (need.ActionToFulfillNeed)
                     {
                         case Actions.Eat:
-                            commitedToNeed = ActionManager.FindFood(actor, map);
+                            commitedToNeed ??= ActionManager.FindFood(actor, map);
+                            if (commitedToNeed is not null)
+                            {
+                                var obj = commitedToNeed.Objective;
+                                if (map.DistanceMeasurement.Calculate(actor.Position - obj.Position) <= 1) // right next to the water tile or in it
+                                {
+                                    ActionManager.Eat(actor, obj.MaterialOfTile, 25, need);
+                                }
+                                else
+                                {
+                                    previousKnowPath = map.AStar.ShortestPath(actor.Position, water.Position)!;
+                                }
+                            }
                             break;
 
                         case Actions.Sleep:

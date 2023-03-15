@@ -469,7 +469,19 @@ namespace MagiRogue.GameSys
             _entityRender = new();
             renderer.SadComponents.Add(_entityRender);
             _entityRender.DoEntityUpdate = true;
-            _entityRender.AddRange(Entities.Items.Cast<MagiEntity>());
+
+            var layerMask = Entities.CorrectGetLayersInMask(LayerMasker.Mask(
+                (int)MapLayer.PLAYER,
+                (int)MapLayer.ITEMS,
+                (int)MapLayer.GHOSTS,
+                (int)MapLayer.FURNITURE,
+                (int)MapLayer.ACTORS));
+
+            foreach (var spatialMap in layerMask)
+            {
+                _entityRender.AddRange(spatialMap.Items.Cast<MagiEntity>());
+            }
+            //_entityRender.AddRange(Entities.Items.Cast<MagiEntity>());
             renderer.IsDirty = true;
         }
 
@@ -722,7 +734,7 @@ namespace MagiRogue.GameSys
                     }
                     else if (str.Equals("t_grass"))
                     {
-                        tile = TileEncyclopedia.GenericGrass(pos);
+                        tile = TileEncyclopedia.GenericGrass(pos, this);
                     }
                     else
                     {
@@ -780,7 +792,7 @@ namespace MagiRogue.GameSys
             RemoveAllEntities();
             RemoveAllTiles();
             if (GoRogueComponents.Count > 0)
-                GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
+                GoRogueComponents.GetFirstOrDefault<FOVHandler>()?.DisposeMap();
             Tiles = null;
             ControlledGameObjectChanged = null;
             this.ControlledEntitiy = null;
@@ -860,27 +872,10 @@ namespace MagiRogue.GameSys
 
         private IGameObject[] GetAllPlantsEvenItem()
         {
-            var items = Entities.GetLayer((int)MapLayer.ITEMS).Where(i => i.Item is Item item && (item.ItemType == ItemType.PlantFood)).Select(i => i.Item).ToArray();
-            var tilesWithVeggies = Array.FindAll(Tiles, i => i.HoldsVegetation && i.Vegetations.Any());
-            IGameObject[] result = new IGameObject[tilesWithVeggies.Length + items.Length];
-            int offSet = 0;
-            for (int i = 0; i < tilesWithVeggies.Length; i++)
-            {
-                TileBase? item = tilesWithVeggies[i];
-                for (int x = 0; x < item.Vegetations.Length; x++)
-                {
-                    result[i] = item.Vegetations[x];
-                    item.Vegetations[x].Position = item.Position;
-                    offSet++;
-                }
-            }
-            // this smells like good stuff!
-            // TODO: Great stuff here!
-            for (int i = 0; i < items.Length; i++)
-            {
-                result[i + offSet] = items[i];
-            }
-            return result;
+            var layer = Entities.GetLayer((int)MapLayer.ITEMS).Where(i => i.Item is Item item && (item.ItemType == ItemType.PlantFood)).Select(i => i.Item).ToList();
+            layer.AddRange(Entities.GetLayer((int)MapLayer.VEGETATION).Select(i => i.Item));
+            var item = layer.ToArray();
+            return item;
         }
 
         public TFind[] GetAllTilesOfType<TFind>()

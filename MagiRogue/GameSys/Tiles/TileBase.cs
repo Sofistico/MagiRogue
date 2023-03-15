@@ -189,7 +189,7 @@ namespace MagiRogue.GameSys.Tiles
             return MaterialOfTile.ConfersTraits;
         }
 
-        public void AddVegetation(Plant plant, int index)
+        public void AddVegetation(Plant plant, int index, Map? map = null)
         {
             if (index < Vegetations.Length && HoldsVegetation)
             {
@@ -198,6 +198,7 @@ namespace MagiRogue.GameSys.Tiles
                 LastSeenAppereance.CopyAppearanceFrom(plant.SadGlyph);
                 IsDirty = true;
                 plant.Position = Position;
+                map?.AddEntity(plant);
             }
         }
 

@@ -1,17 +1,18 @@
-﻿using MagiRogue.GameSys.Tiles;
+﻿using GoRogue.GameFramework;
+using MagiRogue.GameSys.Tiles;
 using SadRogue.Primitives;
 
 namespace MagiRogue.Data
 {
     public static class TileEncyclopedia
     {
-        public static TileFloor GenericGrass(Point pos)
+        public static TileFloor GenericGrass(Point pos, Map? map = null)
         {
             var tile = DataManager.QueryTileInData<TileFloor>("t_soil", pos);
 
             for (int i = 0; i < tile.Vegetations.Length; i++)
             {
-                tile.AddVegetation(DataManager.QueryPlantInData("grass"), i);
+                tile.AddVegetation(DataManager.QueryPlantInData("grass"), i, (GameSys.Map?)map);
             }
 
             return tile;

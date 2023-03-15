@@ -1,5 +1,6 @@
 ﻿using GoRogue.GameFramework;
 using GoRogue.SpatialMaps;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Tiles;
 using SadRogue.Primitives.GridViews;
@@ -200,8 +201,8 @@ namespace MagiRogue.GameSys
         private void Map_ObjectAdded(object sender, ItemEventArgs<IGameObject> e)
         {
             if (!IsEnabled) return;
-
-            if (e.Item.Layer == 0) // terrain
+            if (e.Item.Layer == (int)MapLayer.VEGETATION) return;
+            if (e.Item.Layer == (int)MapLayer.TERRAIN) // terrain
             {
                 if (Map.PlayerFOV.BooleanResultView[e.Position])
                     UpdateTerrainSeen((TileBase)(e.Item));

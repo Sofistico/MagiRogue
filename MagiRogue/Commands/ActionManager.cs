@@ -1,4 +1,5 @@
-﻿using MagiRogue.Components;
+﻿using GoRogue.GameFramework;
+using MagiRogue.Components;
 using MagiRogue.Data;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
@@ -543,7 +544,7 @@ namespace MagiRogue.Commands
             }
             if (foodItem is Plant plant)
             {
-                commitedToNeed = new Need($"Pickup {plant.Name}", false, 0, Actions.PickUp, "Greed", $"eat {plant.ID}")
+                commitedToNeed = new Need($"Eat {plant.Name}", false, 0, Actions.Eat, "Greed", $"eat {plant.ID}")
                 {
                     Objective = foodItem
                 };
@@ -576,17 +577,23 @@ namespace MagiRogue.Commands
             }
         }
 
-        public static void Eat(Actor actor, Item item, Need? need = null)
+        public static void Eat(Actor actor, IGameObject whatToEat, Need? need = null)
         {
-            if (actor.CanInteract
-                && (item.ItemType is ItemType.Food
-                || item.ItemType is ItemType.Corpse
-                || item.ItemType is ItemType.PlantFood))
+            if (!actor.CanInteract)
+                return;
+            if (whatToEat is Item item)
             {
                 if (need is not null)
                     need?.Fulfill();
                 item.Condition -= 100;
                 GameLoop.AddMessageLog($"The {actor.Name} ate {item.Name}");
+            }
+            if (whatToEat is Plant plant)
+            {
+                if (need is not null)
+                    need?.Fulfill();
+                plant.RemoveThisFromMap();
+                GameLoop.AddMessageLog($"The {actor.Name} ate {plant.Name}");
             }
         }
     }

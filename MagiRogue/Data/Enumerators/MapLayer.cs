@@ -7,12 +7,12 @@
     /// </summary>
     public enum MapLayer
     {
-        TERRAIN,
-        VEGETATION,
-        GHOSTS,
-        ITEMS,
-        ACTORS,
-        FURNITURE,
-        PLAYER
+        TERRAIN, // does not support more than one
+        VEGETATION, // supports more than one
+        GHOSTS, // supports more than one
+        ITEMS, // supports more than one
+        ACTORS, // supports more than one
+        FURNITURE, // supports more than one
+        PLAYER // supports more than one
     }
 }
