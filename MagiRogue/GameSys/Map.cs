@@ -6,7 +6,6 @@ using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Tiles;
-using MagiRogue.GameSys.Veggies;
 using MagiRogue.Utils;
 using MagiRogue.Utils.Extensions;
 using Microsoft.Toolkit.HighPerformance;
@@ -20,7 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace MagiRogue.GameSys
 {
@@ -228,6 +226,14 @@ namespace MagiRogue.GameSys
             return GetClosest<WaterTile>(position, range, waters);
         }
 
+        public Actor[] GetAllActors(Func<Actor, bool>? actionToRunInActors = null)
+        {
+            if (actionToRunInActors is null)
+                return Entities.GetLayer((int)MapLayer.ACTORS).Items.Cast<Actor>().ToArray();
+
+            return Entities.GetLayer((int)MapLayer.ACTORS).Items.Cast<Actor>().Where(actionToRunInActors).ToArray();
+        }
+
         public static T? GetClosest<T>(Point originPos, int range, List<T> listT) where T : IGameObject
         {
             T closest = default;
@@ -328,13 +334,6 @@ namespace MagiRogue.GameSys
         /// <param name="entity"></param>
         public void AddMagiEntity(MagiEntity entity)
         {
-            /*if (entity.CurrentMap is not null)
-            {
-                Map map = (Map)entity.CurrentMap;
-                map.ControlledEntitiy = null;
-                map.Remove(entity);
-            }*/
-
             try
             {
                 AddEntity(entity);

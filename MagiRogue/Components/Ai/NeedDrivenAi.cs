@@ -1,13 +1,12 @@
 ﻿using GoRogue.Components.ParentAware;
+using GoRogue.DiceNotation.Terms;
+using GoRogue.GameFramework;
 using GoRogue.Pathing;
 using MagiRogue.Commands;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
-using MagiRogue.GameSys;
 using MagiRogue.UI.Windows;
 using System.Linq;
-using MagiRogue.Data.Enumerators;
-using System;
-using GoRogue.GameFramework;
 using Map = MagiRogue.GameSys.Map;
 
 namespace MagiRogue.Components.Ai
@@ -34,9 +33,13 @@ namespace MagiRogue.Components.Ai
                     return (false, -1);
                 if (!needs.GetPriority(out Need need) && commitedToNeed is null)
                     need = needs.FirstOrDefault(i => i.PercentFulfilled <= 25);
-                //if (IsThereDanger(actor, map, out var danger))
-                //{
-                //}
+                if (IsThereDanger(actor, map, out var dangers))
+                {
+                    foreach (var item in dangers)
+                    {
+                        GameLoop.AddMessageLog($"{actor.Name} considers {item.Name} dangerous!");
+                    }
+                }
                 if (commitedToNeed is not null)
                     need = commitedToNeed;
                 if (need is null)
@@ -158,9 +161,22 @@ namespace MagiRogue.Components.Ai
             return (false, -1);
         }
 
-        //private bool IsThereDanger(Actor actor, Map map, out IGameObject danger)
-        //{
-        //}
+        private static bool IsThereDanger(Actor actor, Map map, out Actor[] dangers)
+        {
+            dangers = map.GetAllActors(i =>
+            {
+                if (i.ID == actor.ID) // ignore if it's the same actor
+                    return false;
+                // ignore if it's the same species
+                // TODO: Implement eater of same species
+                if (i.GetAnatomy().RaceId.Equals(actor.GetAnatomy().RaceId))
+                    return false;
+                var dis = map.DistanceMeasurement.Calculate(actor.Position, i.Position);
+                return i.Flags.Contains(SpecialFlag.Hunter)
+                    && (dis <= 15 || dis <= actor.GetViewRadius()); // 15 or view radius, whatever is lower.
+            });
+            return dangers.Length > 0;
+        }
 
         private void ClearCommit() => commitedToNeed = null;
     }
