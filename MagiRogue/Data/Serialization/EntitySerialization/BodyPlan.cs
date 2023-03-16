@@ -1,10 +1,8 @@
-﻿using MagiRogue.Entities;
-using MagiRogue.Data.Enumerators;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MagiRogue.Data.Serialization.EntitySerialization
 {
@@ -12,16 +10,17 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
     {
         public string Id { get; set; }
         public List<string> BodyParts { get; set; }
-        public List<Tissue> Tissues { get; set; }
+        //public List<Tissue> Tissues { get; set; }
 
         public BodyPlan()
         {
             BodyParts = new();
         }
 
-        public List<BodyPart> ReturnBodyParts()
+        public List<BodyPart> ReturnBodyParts(Race race = null!)
         {
             List<BodyPart> returnParts = new List<BodyPart>();
+            string[] tissues = race?.Tissues;
 
             foreach (string bp in BodyParts)
             {
@@ -30,6 +29,32 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 if (limb is not null)
                 {
                     returnParts.Add(limb);
+                    if (tissues?.Length > 0)
+                    {
+                        for (int i = 0; i < tissues.Length; i++)
+                        {
+                            var str = tissues[i].Split(";");
+                            if (str.Length >= 3)
+                            {
+                                var tissue = new Tissue(str[0], str[1], int.Parse(str[2]));
+                                if (str.Length > 3)
+                                {
+                                    var flags = str[3].Split(",");
+
+                                    for (int f = 0; f < flags.Length; f++)
+                                    {
+                                        if (Enum.TryParse<TissueFlag>(flags[f].Trim(), true, out var res))
+                                            tissue.Flags.Add(res);
+                                    }
+                                }
+                                limb.Tissues.Add(tissue);
+                            }
+                            else
+                            {
+                                GameLoop.WriteToLog($"Something went wrong in creating the tissue for BP {limb.Id} and Race {race.Id}");
+                            }
+                        }
+                    }
                 }
                 if (organ is not null)
                 {

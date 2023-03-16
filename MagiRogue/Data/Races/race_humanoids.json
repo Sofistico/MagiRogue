@@ -29,7 +29,14 @@
     "RaceNormalLimbRegen": 1.0,
     "BleedRegenaration": 1.0,
     "BodyPlan": [ "humanoid_limbs", "humanoid_organs", "5fingers", "5toes" ],
-    "Tissues": [ "skin", "fat", "muscle", "bone" ],
+    // From the outermost, to the innermost
+    // following name;material;relative_thickness;FlagsIfAny
+    "Tissues": [
+      "skin;base_skin;1;ConnectiveTissueAnchor,Scars",
+      "fat;base_fat;1;ConnectiveTissueAnchor,Scars,ThickensOnEnergyStore",
+      "muscle;meat;3;ConnectiveTissueAnchor,ThickensOnStrTraining,Scars",
+      "bone;base_bone;2;ConnectiveTissueAnchor,Structural"
+    ],
     // lowest, lower, low, median, high, higher, highest
     "HeightModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "BroadnessModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
@@ -68,8 +75,18 @@
     "MaxManaRange": 34,
     "RaceNormalLimbRegen": 0.8,
     "BleedRegenaration": 0.7,
-    "BodyPlan": [ "humanoid_limbs", "humanoid_organs", "5fingers", "5toes" ],
-    "Tissues": [ "skin", "fat", "muscle", "bone" ],
+    "BodyPlan": [
+      "humanoid_limbs",
+      "humanoid_organs",
+      "5fingers",
+      "5toes"
+    ],
+    "Tissues": [
+      "skin;base_skin;1;ConnectiveTissueAnchor,Scars",
+      "fat;base_fat;1;ConnectiveTissueAnchor,Scars,ThickensOnEnergyStore",
+      "muscle;meat;3;ConnectiveTissueAnchor,ThickensOnStrTraining,Scars",
+      "bone;base_bone;2;ConnectiveTissueAnchor,Structural"
+    ],
     "HeightModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "BroadnessModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "Genders": [ "Male", "Female" ],
@@ -105,8 +122,18 @@
     "MaxManaRange": 31,
     "RaceNormalLimbRegen": 0.7,
     "BleedRegenaration": 0.6,
-    "BodyPlan": [ "humanoid_limbs", "humanoid_organs", "5fingers", "5toes" ],
-    "Tissues": [ "skin", "fat", "muscle", "bone" ],
+    "BodyPlan": [
+      "humanoid_limbs",
+      "humanoid_organs",
+      "5fingers",
+      "5toes"
+    ],
+    "Tissues": [
+      "skin;base_skin;1;ConnectiveTissueAnchor,Scars",
+      "fat;base_fat;1;ConnectiveTissueAnchor,Scars,ThickensOnEnergyStore",
+      "muscle;meat;3;ConnectiveTissueAnchor,ThickensOnStrTraining,Scars",
+      "bone;base_bone;2;ConnectiveTissueAnchor,Structural"
+    ],
     "HeightModifier": [ 90, 95, 98, 100, 112, 115, 125 ],
     "BroadnessModifier": [ 75, 90, 94, 100, 101, 103, 110 ],
     "Genders": [ "Male", "Female" ],
@@ -145,7 +172,12 @@
     "RaceNormalLimbRegen": 0.8,
     "BleedRegenaration": 0.8,
     "BodyPlan": [ "humanoid_limbs", "humanoid_organs", "5fingers", "5toes" ],
-    "Tissues": [ "skin", "fat", "muscle", "bone" ],
+    "Tissues": [
+      "skin;base_skin;1;ConnectiveTissueAnchor,Scars",
+      "fat;base_fat;1;ConnectiveTissueAnchor,Scars,ThickensOnEnergyStore",
+      "muscle;meat;3;ConnectiveTissueAnchor,ThickensOnStrTraining,Scars",
+      "bone;base_bone;2;ConnectiveTissueAnchor,Structural"
+    ],
     "HeightModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "BroadnessModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "Genders": [ "Male", "Female" ],

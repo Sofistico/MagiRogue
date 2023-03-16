@@ -176,7 +176,8 @@ namespace MagiRogue.Components.Ai
                 if (!actor.CanSee(i.Position))
                     return false;
                 var dis = map.DistanceMeasurement.Calculate(actor.Position, i.Position);
-                return i.Flags.Contains(SpecialFlag.Hunter)
+                return i.Flags.Contains(SpecialFlag.Predator)
+                    && actor.Volume < (i.Volume * 4)
                     && (dis <= 15 || dis <= actor.GetViewRadius()); // 15 or view radius, whatever is lower.
             });
             return dangers.Length > 0;

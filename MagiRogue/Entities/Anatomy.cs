@@ -562,7 +562,7 @@ namespace MagiRogue.Entities
         {
             if (Race.Flags.Contains(SpecialFlag.Grazer))
                 return Food.Herbivore;
-            if (Race.Flags.Contains(SpecialFlag.Hunter))
+            if (Race.Flags.Contains(SpecialFlag.Predator))
                 return Food.Carnivore;
 
             return Food.Omnivere;
