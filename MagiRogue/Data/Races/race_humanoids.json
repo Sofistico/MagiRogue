@@ -32,8 +32,8 @@
     // From the outermost, to the innermost
     // following name;material;relative_thickness;FlagsIfAny
     "Tissues": [
-      "skin;base_skin;1;ConnectiveTissueAnchor,Scars",
-      "fat;base_fat;1;ConnectiveTissueAnchor,Scars,ThickensOnEnergyStore",
+      "skin;skin;1;ConnectiveTissueAnchor,Scars",
+      "fat;fat;1;ConnectiveTissueAnchor,Scars,ThickensOnEnergyStore",
       "muscle;meat;3;ConnectiveTissueAnchor,ThickensOnStrTraining,Scars",
       "bone;base_bone;2;ConnectiveTissueAnchor,Structural"
     ],
@@ -82,8 +82,8 @@
       "5toes"
     ],
     "Tissues": [
-      "skin;base_skin;1;ConnectiveTissueAnchor,Scars",
-      "fat;base_fat;1;ConnectiveTissueAnchor,Scars,ThickensOnEnergyStore",
+      "skin;skin;1;ConnectiveTissueAnchor,Scars",
+      "fat;fat;1;ConnectiveTissueAnchor,Scars,ThickensOnEnergyStore",
       "muscle;meat;3;ConnectiveTissueAnchor,ThickensOnStrTraining,Scars",
       "bone;base_bone;2;ConnectiveTissueAnchor,Structural"
     ],
@@ -129,8 +129,8 @@
       "5toes"
     ],
     "Tissues": [
-      "skin;base_skin;1;ConnectiveTissueAnchor,Scars",
-      "fat;base_fat;1;ConnectiveTissueAnchor,Scars,ThickensOnEnergyStore",
+      "skin;skin;1;ConnectiveTissueAnchor,Scars",
+      "fat;fat;1;ConnectiveTissueAnchor,Scars,ThickensOnEnergyStore",
       "muscle;meat;3;ConnectiveTissueAnchor,ThickensOnStrTraining,Scars",
       "bone;base_bone;2;ConnectiveTissueAnchor,Structural"
     ],
@@ -173,8 +173,8 @@
     "BleedRegenaration": 0.8,
     "BodyPlan": [ "humanoid_limbs", "humanoid_organs", "5fingers", "5toes" ],
     "Tissues": [
-      "skin;base_skin;1;ConnectiveTissueAnchor,Scars",
-      "fat;base_fat;1;ConnectiveTissueAnchor,Scars,ThickensOnEnergyStore",
+      "skin;skin;1;ConnectiveTissueAnchor,Scars",
+      "fat;fat;1;ConnectiveTissueAnchor,Scars,ThickensOnEnergyStore",
       "muscle;meat;3;ConnectiveTissueAnchor,ThickensOnStrTraining,Scars",
       "bone;base_bone;2;ConnectiveTissueAnchor,Structural"
     ],

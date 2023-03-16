@@ -29,7 +29,7 @@
     "RaceNormalLimbRegen": 0.7,
     "BleedRegenaration": 0.7,
     "BodyPlan": [ "quadruped_limbs", "animal_tail", "humanoid_organs", "4toes" ],
-    "Tissues": [ "skin;base_skin;1;ConnectiveTissueAnchor,Scars", "fat;base_fat;1;ConnectiveTissueAnchor,Scars,ThickensOnEnergyStore", "muscle;meat;3;ConnectiveTissueAnchor,ThickensOnStrTraining,Scars", "bone;base_bone;2;ConnectiveTissueAnchor,Structural" ],
+    "Tissues": [ "skin;skin;1;ConnectiveTissueAnchor,Scars", "fat;fat;1;ConnectiveTissueAnchor,Scars,ThickensOnEnergyStore", "muscle;meat;3;ConnectiveTissueAnchor,ThickensOnStrTraining,Scars", "bone;base_bone;2;ConnectiveTissueAnchor,Structural" ],
     "HeightModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "BroadnessModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "Genders": [ "Male", "Female" ],
