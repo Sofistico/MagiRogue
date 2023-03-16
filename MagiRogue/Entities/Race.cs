@@ -95,7 +95,7 @@ namespace MagiRogue.Entities
         {
             if (BodyPlan?.Length > 0)
             {
-                bodyParts = DataManager.QueryBpsPlansInDataAndReturnBodyParts(BodyPlan);
+                bodyParts = DataManager.QueryBpsPlansInDataAndReturnBodyParts(BodyPlan, this);
             }
         }
 

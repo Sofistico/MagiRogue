@@ -167,7 +167,7 @@ namespace MagiRogue.Data
         public static BodyPlan QueryBpPlanInData(string bpPlanId)
             => ListOfBpPlan.FirstOrDefault(c => c.Id.Equals(bpPlanId));
 
-        public static List<BodyPart> QueryBpsPlansInDataAndReturnBodyParts(string[] bpPlansId)
+        public static List<BodyPart> QueryBpsPlansInDataAndReturnBodyParts(string[] bpPlansId, Race race = null!)
         {
             List<BodyPart> bps = new();
             BodyPlan bodyPlan = new();
@@ -176,7 +176,7 @@ namespace MagiRogue.Data
                 BodyPlan bp = QueryBpPlanInData(ids);
                 bodyPlan.BodyParts.AddRange(bp.BodyParts);
             }
-            bps.AddRange(bodyPlan.ReturnBodyParts());
+            bps.AddRange(bodyPlan.ReturnBodyParts(race));
 
             return bps;
         }
