@@ -1,4 +1,5 @@
-﻿using MagiRogue.Commands;
+﻿using GoRogue.FOV;
+using MagiRogue.Commands;
 using MagiRogue.Components;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.GameSys;
@@ -15,6 +16,13 @@ namespace MagiRogue.Entities
     [JsonConverter(typeof(Data.Serialization.EntitySerialization.ActorJsonConverter))]
     public class Actor : MagiEntity
     {
+        #region Fields
+
+        private RecursiveShadowcastingBooleanBasedFOV actorFov;
+        private int? viewRadius;
+
+        #endregion Fields
+
         #region Properties
 
         /// <summary>
@@ -312,7 +320,8 @@ namespace MagiRogue.Entities
 
         public int GetViewRadius()
         {
-            return Body.ViewRadius;
+            viewRadius ??= Body.ViewRadius;
+            return viewRadius.Value;
         }
 
         public double GetNormalLimbRegen()
@@ -496,6 +505,13 @@ namespace MagiRogue.Entities
                 return 1; // punch and stuff distance!
             }
             return 1; // to be implemented item range that permits attacking and stuff!
+        }
+
+        public bool CanSee(Point pos)
+        {
+            actorFov ??= new RecursiveShadowcastingBooleanBasedFOV(CurrentMap.TransparencyView);
+            actorFov.Calculate(Position, GetViewRadius());
+            return actorFov.BooleanResultView[pos];
         }
 
         #endregion Needs

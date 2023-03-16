@@ -85,6 +85,8 @@ namespace MagiRogue.Components.Ai
                             var water = map.GetClosestWaterTile(actor.Body.ViewRadius, actor.Position);
                             if (water is null)
                                 ActionManager.Wander(actor);
+                            if (!actor.CanSee(water.Position))
+                                break;
                             if (map.DistanceMeasurement.Calculate(actor.Position - water.Position) <= 1) // right next to the water tile or in it
                             {
                                 ActionManager.Drink(actor, water.MaterialOfTile, 25, need);
@@ -170,6 +172,8 @@ namespace MagiRogue.Components.Ai
                 // ignore if it's the same species
                 // TODO: Implement eater of same species
                 if (i.GetAnatomy().RaceId.Equals(actor.GetAnatomy().RaceId))
+                    return false;
+                if (!actor.CanSee(i.Position))
                     return false;
                 var dis = map.DistanceMeasurement.Calculate(actor.Position, i.Position);
                 return i.Flags.Contains(SpecialFlag.Hunter)

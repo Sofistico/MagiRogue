@@ -111,9 +111,7 @@ namespace MagiRogue.GameSys
                         TileBase terrain = Map.GetTerrainAt<TileBase>(pos);
                         if (terrain == null) continue;
                         if (terrain != null && Map.PlayerFOV.BooleanResultView[pos])
-                        {
                             UpdateTerrainSeen(terrain);
-                        }
                         else if (terrain != null)
                             UpdateTerrainUnseen(terrain);
                     }
