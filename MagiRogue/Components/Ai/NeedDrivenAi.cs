@@ -1,16 +1,16 @@
 ﻿using GoRogue.Components.ParentAware;
-using GoRogue.DiceNotation.Terms;
-using GoRogue.GameFramework;
 using GoRogue.Pathing;
 using MagiRogue.Commands;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.UI.Windows;
+using MagiRogue.Utils.Extensions;
 using System.Linq;
 using Map = MagiRogue.GameSys.Map;
 
 namespace MagiRogue.Components.Ai
 {
+    // refactor the shit out of this class when i'm done with it!
     public class NeedDrivenAi : IAiComponent
     {
         private Path? previousKnowPath;
@@ -39,14 +39,23 @@ namespace MagiRogue.Components.Ai
                     {
                         GameLoop.AddMessageLog($"{actor.Name} considers {item.Name} dangerous!");
                     }
+                    Point rngPoint = default;
+                    Actor close = null;
+                    int tries = 0;
+                    const int maxTries = 50;
+                    do
+                    {
+                        rngPoint = map.GetRandomWalkableTile();
+                        close = actor.Position.GetClosest(actor.GetViewRadius(), dangers);
+                        tries++;
+                    } while (close != null || tries <= maxTries);
+                    previousKnowPath = map.AStar.ShortestPath(actor.Position, rngPoint);
                 }
                 if (commitedToNeed is not null)
                     need = commitedToNeed;
-                if (need is null)
-                    return (true, 100); //check if there will be a need next turn
                 if (previousKnowPath is not null && step < previousKnowPath.Length)
                 {
-                    ActionManager.MoveActorBy(actor, previousKnowPath.GetStep(step++));
+                    MoveActorAStep(actor);
                 }
                 else
                 {
@@ -163,6 +172,11 @@ namespace MagiRogue.Components.Ai
             return (false, -1);
         }
 
+        private void MoveActorAStep(Actor actor)
+        {
+            ActionManager.MoveActorBy(actor, previousKnowPath.GetStep(step++));
+        }
+
         private static bool IsThereDanger(Actor actor, Map map, out Actor[] dangers)
         {
             dangers = map.GetAllActors(i =>
@@ -176,8 +190,9 @@ namespace MagiRogue.Components.Ai
                 if (!actor.CanSee(i.Position))
                     return false;
                 var dis = map.DistanceMeasurement.Calculate(actor.Position, i.Position);
-                return i.Flags.Contains(SpecialFlag.Predator)
-                    && actor.Volume < (i.Volume * 4)
+                return ((i.Flags.Contains(SpecialFlag.Predator)
+                    && actor.Volume < (i.Volume * 4))
+                    || (actor.Volume < (i.Volume * 2)))
                     && (dis <= 15 || dis <= actor.GetViewRadius()); // 15 or view radius, whatever is lower.
             });
             return dangers.Length > 0;

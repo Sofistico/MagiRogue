@@ -98,8 +98,11 @@ namespace MagiRogue.GameSys
         public Map(string mapName, int width = 60, int height = 60, bool usesWeighEvaluation = true) :
             base(CreateTerrain(width, height), Enum.GetNames(typeof(MapLayer)).Length - 1,
             Distance.Euclidean,
-            entityLayersSupportingMultipleItems: LayerMasker.Default.Mask
-            ((int)MapLayer.VEGETATION, (int)MapLayer.ITEMS, (int)MapLayer.GHOSTS, (int)MapLayer.PLAYER))
+            entityLayersSupportingMultipleItems: LayerMasker.Default.Mask((int)MapLayer.VEGETATION,
+                (int)MapLayer.ITEMS,
+                (int)MapLayer.GHOSTS,
+                (int)MapLayer.ACTORS,
+                (int)MapLayer.SPECIAL))
         {
             Tiles = (ArrayView<TileBase>)((LambdaSettableTranslationGridView<TileBase, IGameObject>)Terrain).BaseGrid;
 
@@ -223,84 +226,17 @@ namespace MagiRogue.GameSys
         public WaterTile GetClosestWaterTile(int range, Point position)
         {
             var waters = GetAllTilesOfType<WaterTile>();
-            return GetClosest<WaterTile>(position, range, waters);
+            return position.GetClosest<WaterTile>(range, waters);
         }
 
         public Actor[] GetAllActors(Func<Actor, bool>? actionToRunInActors = null)
         {
             if (actionToRunInActors is null)
+            {
                 return Entities.GetLayer((int)MapLayer.ACTORS).Items.Cast<Actor>().ToArray();
+            }
 
             return Entities.GetLayer((int)MapLayer.ACTORS).Items.Cast<Actor>().Where(actionToRunInActors).ToArray();
-        }
-
-        public static T? GetClosest<T>(Point originPos, int range, List<T> listT) where T : IGameObject
-        {
-            T closest = default;
-            double bestDistance = double.MaxValue;
-
-            foreach (T t in listT)
-            {
-                if (t is null) continue;
-                if (t is not Player)
-                {
-                    double distance = Point.EuclideanDistanceMagnitude(originPos, t.Position);
-
-                    if (distance < bestDistance && (distance <= range || range == 0))
-                    {
-                        bestDistance = distance;
-                        closest = t;
-                    }
-                }
-            }
-
-            return closest;
-        }
-
-        public static T? GetClosest<T>(Point originPos, int range, T[] listT) where T : IGameObject
-        {
-            T closest = default;
-            double bestDistance = double.MaxValue;
-
-            foreach (T t in listT)
-            {
-                if (t is null) continue;
-                if (t is not Player)
-                {
-                    double distance = Point.EuclideanDistanceMagnitude(originPos, t.Position);
-
-                    if (distance < bestDistance && (distance <= range || range == 0))
-                    {
-                        bestDistance = distance;
-                        closest = t;
-                    }
-                }
-            }
-
-            return closest;
-        }
-
-        public static T? GetClosest<T>(Point originPos, int range, ReadOnlySpan<T> listT) where T : IGameObject
-        {
-            T closest = default;
-            double bestDistance = double.MaxValue;
-
-            foreach (T t in listT)
-            {
-                if (t is null) continue;
-                if (t is not Player)
-                {
-                    double distance = Point.EuclideanDistanceMagnitude(originPos, t.Position);
-
-                    if (distance < bestDistance && (distance <= range || range == 0))
-                    {
-                        bestDistance = distance;
-                        closest = t;
-                    }
-                }
-            }
-
-            return closest;
         }
 
         public bool EntityIsThere(Point pos)
@@ -444,19 +380,34 @@ namespace MagiRogue.GameSys
         /// <typeparam name="T">Any type of entity</typeparam>
         /// <param name="id">The id of the entity to find</param>
         /// <returns>Returns the entity owner of the id</returns>
-
         public MagiEntity GetEntityById(uint id)
         {
             // TODO: this shit is wonky, need to do something about it
-            var filter = from entity in Entities.Items
-                         where entity.ID == id
-                         select entity;
+            var filter = Entities.FirstOrDefault(i => i.Item.ID == id);
 
-            if (filter.Any())
+            if (filter != default)
             {
-                return (MagiEntity)filter.FirstOrDefault();
+                return (MagiEntity)filter.Item;
             }
             return null;
+        }
+
+        /// <summary>
+        /// Gets the entity by it's id
+        /// </summary>
+        /// <typeparam name="T">Any type of entity</typeparam>
+        /// <param name="id">The id of the entity to find</param>
+        /// <returns>Returns the entity owner of the id</returns>
+        public T SafeGetEntityById<T>(uint id) where T : IGameObject
+        {
+            // TODO: this shit is wonky, need to do something about it
+            var filter = Entities.FirstOrDefault(i => i.Item.ID == id);
+
+            if (filter != default)
+            {
+                return (T)filter.Item;
+            }
+            return default;
         }
 
         public void ConfigureRender(ScreenSurface renderer)
@@ -470,7 +421,6 @@ namespace MagiRogue.GameSys
             _entityRender.DoEntityUpdate = true;
 
             var layerMask = Entities.CorrectGetLayersInMask(LayerMasker.Mask(
-                (int)MapLayer.PLAYER,
                 (int)MapLayer.ITEMS,
                 (int)MapLayer.GHOSTS,
                 (int)MapLayer.FURNITURE,
@@ -816,7 +766,7 @@ namespace MagiRogue.GameSys
             switch (whatToEat)
             {
                 case Food.Carnivore:
-                    var meat = GetClosest(entityPos, defaultSearchRange, GetAllMeatsEvenAlive());
+                    var meat = entityPos.GetClosest(defaultSearchRange, GetAllMeatsEvenAlive());
                     if (meat is not null)
                     {
                         return meat;
@@ -824,7 +774,7 @@ namespace MagiRogue.GameSys
                     break;
 
                 case Food.Herbivore:
-                    var plant = GetClosest(entityPos, defaultSearchRange, GetAllPlantsEvenItem());
+                    var plant = entityPos.GetClosest(defaultSearchRange, GetAllPlantsEvenItem());
                     if (plant is not null)
                     {
                         return plant;
@@ -834,12 +784,12 @@ namespace MagiRogue.GameSys
                 case Food.Omnivere:
                     // well if it works...
                     var objList = new List<IGameObject>();
-                    var meatO = GetClosest(entityPos, defaultSearchRange, GetAllMeatsEvenAlive());
+                    var meatO = entityPos.GetClosest(defaultSearchRange, GetAllMeatsEvenAlive());
                     if (meatO is not null)
                     {
                         objList.Add(meatO);
                     }
-                    var plantO = GetClosest(entityPos, defaultSearchRange, GetAllPlantsEvenItem());
+                    var plantO = entityPos.GetClosest(defaultSearchRange, GetAllPlantsEvenItem());
                     if (plantO is not null)
                     {
                         objList.Add(plantO);
@@ -852,7 +802,7 @@ namespace MagiRogue.GameSys
             return null;
         }
 
-        private ReadOnlySpan<MagiEntity> GetAllMeatsEvenAlive()
+        private List<MagiEntity> GetAllMeatsEvenAlive()
         {
             var meats = Entities.GetLayersInMask(LayerMasker.Mask((int)MapLayer.ACTORS, (int)MapLayer.ITEMS));
             var list = new List<MagiEntity>();
@@ -866,7 +816,7 @@ namespace MagiRogue.GameSys
                 list.Add((MagiEntity)item);
             }
 
-            return list.AsSpan();
+            return list;
         }
 
         private IGameObject[] GetAllPlantsEvenItem()

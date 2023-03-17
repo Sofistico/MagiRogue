@@ -1,4 +1,5 @@
-﻿using MagiRogue.Data.Enumerators;
+﻿using GoRogue.GameFramework;
+using MagiRogue.Entities;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
@@ -177,6 +178,75 @@ namespace MagiRogue.Utils.Extensions
                 x = rand.NextInt(center.X - halfSquareSize, center.X + halfSquareSize);
 
             return new Point(x, y);
+        }
+
+        public static T? GetClosest<T>(this Point originPos, int range, List<T> listT) where T : IGameObject
+        {
+            T closest = default;
+            double bestDistance = double.MaxValue;
+
+            foreach (T t in listT)
+            {
+                if (t is null) continue;
+                if (t is not Player)
+                {
+                    double distance = Point.EuclideanDistanceMagnitude(originPos, t.Position);
+
+                    if (distance < bestDistance && (distance <= range || range == 0))
+                    {
+                        bestDistance = distance;
+                        closest = t;
+                    }
+                }
+            }
+
+            return closest;
+        }
+
+        public static T? GetClosest<T>(this Point originPos, int range, T[] listT) where T : IGameObject
+        {
+            T closest = default;
+            double bestDistance = double.MaxValue;
+
+            foreach (T t in listT)
+            {
+                if (t is null) continue;
+                if (t is not Player)
+                {
+                    double distance = Point.EuclideanDistanceMagnitude(originPos, t.Position);
+
+                    if (distance < bestDistance && (distance <= range || range == 0))
+                    {
+                        bestDistance = distance;
+                        closest = t;
+                    }
+                }
+            }
+
+            return closest;
+        }
+
+        public static (T?, double) GetClosestAndDistance<T>(this Point originPos, int range, T[] listT) where T : IGameObject
+        {
+            T closest = default;
+            double bestDistance = double.MaxValue;
+            double finalDistance = 0;
+            foreach (T t in listT)
+            {
+                if (t is null) continue;
+                if (t is not Player)
+                {
+                    double distance = Point.EuclideanDistanceMagnitude(originPos, t.Position);
+                    finalDistance = distance;
+                    if (distance < bestDistance && (distance <= range || range == 0))
+                    {
+                        bestDistance = distance;
+                        closest = t;
+                    }
+                }
+            }
+
+            return (closest, finalDistance);
         }
     }
 }

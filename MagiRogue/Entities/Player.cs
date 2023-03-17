@@ -12,9 +12,8 @@ namespace MagiRogue.Entities
     // Default glyph is @
     public class Player : Actor
     {
-        public Player(string name, Color foreground, Color background, Point position,
-             int layer = (int)MapLayer.PLAYER) :
-            base(name, foreground, background, '@', position, layer)
+        public Player(string name, Color foreground, Color background, Point position) :
+            base(name, foreground, background, '@', position)
         {
         }
 

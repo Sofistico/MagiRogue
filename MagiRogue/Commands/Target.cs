@@ -44,7 +44,7 @@ namespace MagiRogue.Commands
             OriginCoord = spawnCoord;
 
             Cursor = new Actor("Target Cursor",
-                targetColor, Color.AnsiYellow, 'X', spawnCoord, (int)MapLayer.PLAYER)
+                targetColor, Color.AnsiYellow, 'X', spawnCoord, (int)MapLayer.SPECIAL)
             {
                 IsWalkable = true,
                 CanBeKilled = false,
