@@ -1,5 +1,6 @@
 ﻿using GoRogue;
 using GoRogue.SpatialMaps;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,18 +15,18 @@ namespace MagiRogue.Utils.Extensions
                 yield return self.GetLayer(num + self.StartingLayer);
         }
 
-        public static IReadOnlySpatialMap<T> UnrollSpatialMap<T>(this IEnumerable<IReadOnlySpatialMap<T>> self)
-            where T : class, IHasID
+        public static IEnumerable<T> UnrollSpatialMap<T>(this IEnumerable<IReadOnlySpatialMap<T>> self)
         {
-            var map = new SpatialMap<T>();
+            if (self is null)
+            {
+                throw new ArgumentNullException(nameof(self));
+            }
+
             foreach (var layer in self)
             {
                 foreach (var item in layer)
-                {
-                    map.Add(item.Item, item.Position);
-                }
+                    yield return item.Item;
             }
-            return map;
         }
     }
 }

@@ -8,7 +8,6 @@ using MagiRogue.Entities;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
 using MagiRogue.Utils.Extensions;
-using Microsoft.Toolkit.HighPerformance;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SadConsole;
@@ -34,6 +33,8 @@ namespace MagiRogue.GameSys
         private MagiEntity _gameObjectControlled;
         private SadConsole.Entities.Renderer _entityRender;
         private bool _disposed;
+        private Dictionary<Func<Actor, bool>, Actor[]> lastCalledActors = new();
+        private bool needsToUpdateActorsDict;
 
         #endregion Fields
 
@@ -231,17 +232,36 @@ namespace MagiRogue.GameSys
 
         public Actor[] GetAllActors(Func<Actor, bool>? actionToRunInActors = null)
         {
+            if (lastCalledActors.TryGetValue(actionToRunInActors, out Actor[] value)
+                && !needsToUpdateActorsDict)
+            {
+                return value;
+            }
+            lastCalledActors.Clear();
+            needsToUpdateActorsDict = false;
+            Actor[] search;
             if (actionToRunInActors is null)
             {
-                return Entities.GetLayer((int)MapLayer.ACTORS).Items.Cast<Actor>().ToArray();
+                search = Entities.GetLayer((int)MapLayer.ACTORS).Items.Cast<Actor>().ToArray();
             }
+            else
+            {
+                search = Entities.GetLayer((int)MapLayer.ACTORS).Items.Cast<Actor>().Where(actionToRunInActors).ToArray();
+            }
+            lastCalledActors.TryAdd(actionToRunInActors, search);
 
-            return Entities.GetLayer((int)MapLayer.ACTORS).Items.Cast<Actor>().Where(actionToRunInActors).ToArray();
+            return search;
         }
 
         public bool EntityIsThere(Point pos)
         {
             MagiEntity? entity = GetEntityAt<MagiEntity>(pos);
+            return entity is not null;
+        }
+
+        public bool EntityIsThere<T>(Point pos, out T? entity) where T : MagiEntity
+        {
+            entity = GetEntityAt<T>(pos);
             return entity is not null;
         }
 
@@ -261,6 +281,7 @@ namespace MagiRogue.GameSys
                 entity.Moved -= OnEntityMoved;
 
                 _entityRender.IsDirty = true;
+                needsToUpdateActorsDict = true;
             }
         }
 
@@ -295,6 +316,7 @@ namespace MagiRogue.GameSys
 
             // Link up the entity's Moved event to a new handler
             entity.Moved += OnEntityMoved;
+            needsToUpdateActorsDict = true;
         }
 
         /// <summary>
@@ -742,6 +764,8 @@ namespace MagiRogue.GameSys
             RemoveAllTiles();
             if (GoRogueComponents.Count > 0)
                 GoRogueComponents.GetFirstOrDefault<FOVHandler>()?.DisposeMap();
+            lastCalledActors.Clear();
+            lastCalledActors = null;
             Tiles = null;
             ControlledGameObjectChanged = null;
             this.ControlledEntitiy = null;

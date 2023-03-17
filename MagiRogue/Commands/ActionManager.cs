@@ -1,4 +1,5 @@
 ﻿using GoRogue.GameFramework;
+using GoRogue.Pathing;
 using MagiRogue.Components;
 using MagiRogue.Data;
 using MagiRogue.Data.Enumerators;
@@ -596,6 +597,50 @@ namespace MagiRogue.Commands
                 plant.RemoveThisFromMap();
                 GameLoop.AddMessageLog($"The {actor.Name} ate {plant.Name}");
             }
+        }
+
+        public static Path FindFleeAction(Map map, Actor actor, Actor? danger)
+        {
+#if DEBUG
+            GameLoop.AddMessageLog($"{actor.Name} considers {danger.Name} dangerous!");
+#endif
+            int tries = 0;
+            const int maxTries = 50;
+
+            Point rngPoint;
+            do
+            {
+                rngPoint = map.GetRandomWalkableTile();
+                tries++;
+            } while (/*isDangerNow ||*/ tries <= maxTries);
+            return map.AStar.ShortestPath(actor.Position, rngPoint);
+        }
+
+        public static bool SearchForDangerAction(Actor actor, Map map, out Actor? danger)
+        {
+            danger = null;
+            foreach (var item in actor.AllThatCanSee())
+            {
+                if (map.EntityIsThere(item, out danger))
+                {
+                    if (danger is null)
+                        continue;
+                    if (danger.ID == actor.ID) // ignore if it's the same actor
+                        continue;
+                    // ignore if it's the same species
+                    // TODO: Implement eater of same species
+                    if (danger.GetAnatomy().RaceId.Equals(actor.GetAnatomy().RaceId))
+                        continue;
+                    if (!actor.CanSee(danger.Position))
+                        continue;
+                    var dis = map.DistanceMeasurement.Calculate(actor.Position, danger.Position);
+                    return ((danger.Flags.Contains(SpecialFlag.Predator)
+                        && actor.Volume < danger.Volume * 4)
+                        || actor.Volume < (danger.Volume * 2) - actor.Soul.WillPower)
+                        && (dis <= 15 || dis <= actor.GetViewRadius()); // 15 or view radius, whatever is lower.
+                }
+            }
+            return false;
         }
     }
 }

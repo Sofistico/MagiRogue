@@ -33,23 +33,9 @@ namespace MagiRogue.Components.Ai
                     return (false, -1);
                 if (!needs.GetPriority(out Need need) && commitedToNeed is null)
                     need = needs.FirstOrDefault(i => i.PercentFulfilled <= 25);
-                if (IsThereDanger(actor, map, out var dangers))
+                if (ActionManager.SearchForDangerAction(actor, map, out var danger))
                 {
-                    foreach (var item in dangers)
-                    {
-                        GameLoop.AddMessageLog($"{actor.Name} considers {item.Name} dangerous!");
-                    }
-                    Point rngPoint = default;
-                    Actor close = null;
-                    int tries = 0;
-                    const int maxTries = 50;
-                    do
-                    {
-                        rngPoint = map.GetRandomWalkableTile();
-                        close = actor.Position.GetClosest(actor.GetViewRadius(), dangers);
-                        tries++;
-                    } while (close != null || tries <= maxTries);
-                    previousKnowPath = map.AStar.ShortestPath(actor.Position, rngPoint);
+                    previousKnowPath = ActionManager.FindFleeAction(map, actor, danger);
                 }
                 if (commitedToNeed is not null)
                     need = commitedToNeed;
@@ -175,27 +161,6 @@ namespace MagiRogue.Components.Ai
         private void MoveActorAStep(Actor actor)
         {
             ActionManager.MoveActorBy(actor, previousKnowPath.GetStep(step++));
-        }
-
-        private static bool IsThereDanger(Actor actor, Map map, out Actor[] dangers)
-        {
-            dangers = map.GetAllActors(i =>
-            {
-                if (i.ID == actor.ID) // ignore if it's the same actor
-                    return false;
-                // ignore if it's the same species
-                // TODO: Implement eater of same species
-                if (i.GetAnatomy().RaceId.Equals(actor.GetAnatomy().RaceId))
-                    return false;
-                if (!actor.CanSee(i.Position))
-                    return false;
-                var dis = map.DistanceMeasurement.Calculate(actor.Position, i.Position);
-                return ((i.Flags.Contains(SpecialFlag.Predator)
-                    && actor.Volume < (i.Volume * 4))
-                    || (actor.Volume < (i.Volume * 2)))
-                    && (dis <= 15 || dis <= actor.GetViewRadius()); // 15 or view radius, whatever is lower.
-            });
-            return dangers.Length > 0;
         }
 
         private void ClearCommit() => commitedToNeed = null;

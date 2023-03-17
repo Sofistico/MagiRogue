@@ -514,6 +514,13 @@ namespace MagiRogue.Entities
             return actorFov.BooleanResultView[pos];
         }
 
+        public IEnumerable<Point> AllThatCanSee()
+        {
+            actorFov ??= new RecursiveShadowcastingBooleanBasedFOV(CurrentMap.TransparencyView);
+            actorFov.Calculate(Position, GetViewRadius());
+            return actorFov.CurrentFOV;
+        }
+
         #endregion Needs
 
         #endregion Methods
