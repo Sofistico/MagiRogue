@@ -47,7 +47,7 @@ namespace MagiRogue.Components.Ai
                 {
                     step = 0;
                     previousKnowPath = null;
-                    switch (need.ActionToFulfillNeed)
+                    switch (need?.ActionToFulfillNeed)
                     {
                         case Actions.Eat:
                             commitedToNeed ??= ActionManager.FindFood(actor, map);

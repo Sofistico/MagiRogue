@@ -47,13 +47,15 @@ namespace MagiRogue.UI.Windows
             messageScrollBar = new SadConsole.UI.Controls.ScrollBar(Orientation.Vertical, height - windowBorderThickness)
             {
                 Position = new Point(messageConsole.Width + 1, messageConsole.Position.X),
-                IsEnabled = false
+                IsEnabled = false,
+                FocusOnClick = false
             };
+            FocusedMode = FocusBehavior.None;
             messageScrollBar.ValueChanged += MessageScrollBarValueChanged;
             Controls.Add(messageScrollBar);
 
             // enable mouse input
-            UseMouse = true;
+            //UseMouse = true;
 
             // Add the child consoles to the window
             Children.Add(messageConsole);
@@ -99,6 +101,7 @@ namespace MagiRogue.UI.Windows
         public override void Update(TimeSpan time)
         {
             base.Update(time);
+            //var focus = Game.Instance.FocusedScreenObjects;
 
             // Ensure that the scrollbar tracks the current position of the messageConsole.
             if (messageConsole.TimesShiftedUp != 0 ||

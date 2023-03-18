@@ -604,15 +604,8 @@ namespace MagiRogue.Commands
 #if DEBUG
             GameLoop.AddMessageLog($"{actor.Name} considers {danger.Name} dangerous!");
 #endif
-            int tries = 0;
-            const int maxTries = 50;
 
-            Point rngPoint;
-            do
-            {
-                rngPoint = map.GetRandomWalkableTile();
-                tries++;
-            } while (/*isDangerNow ||*/ tries <= maxTries);
+            Point rngPoint = map.GetRandomWalkableTile();
             return map.AStar.ShortestPath(actor.Position, rngPoint);
         }
 

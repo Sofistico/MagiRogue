@@ -166,6 +166,16 @@ namespace MagiRogue.UI
 
         #endregion Input
 
+        #region Update
+
+        //public override void OnFocusLost()
+        //{
+        //    base.OnFocusLost();
+        //    IsFocused = true;
+        //}
+
+        #endregion Update
+
         #endregion Overrides
 
         #region HelperMethods
