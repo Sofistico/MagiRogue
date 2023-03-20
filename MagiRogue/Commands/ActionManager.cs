@@ -629,7 +629,7 @@ namespace MagiRogue.Commands
                     var dis = map.DistanceMeasurement.Calculate(actor.Position, danger.Position);
                     return ((danger.Flags.Contains(SpecialFlag.Predator)
                         && actor.Volume < danger.Volume * 4)
-                        || actor.Volume < (danger.Volume * 2) - actor.Soul.WillPower)
+                        || actor.Volume < (danger.Volume * 2) - (actor.Soul.WillPower * actor.Body.Strength))
                         && (dis <= 15 || dis <= actor.GetViewRadius()); // 15 or view radius, whatever is lower.
                 }
             }
