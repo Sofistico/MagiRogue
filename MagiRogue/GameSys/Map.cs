@@ -332,10 +332,6 @@ namespace MagiRogue.GameSys
                 FovCalculate(player);
                 LastPlayerPosition = player.Position;
             }
-            if (sender is Actor actor)
-            {
-                actor.UpdateFov();
-            }
             _entityRender.IsDirty = true;
         }
 
