@@ -1,10 +1,7 @@
 ﻿using GoRogue.Components;
 using GoRogue.GameFramework;
-using MagiRogue.Data.Serialization;
 using MagiRogue.GameSys.Magic;
-using MagiRogue.GameSys.Physics;
-using MagiRogue.Utils;
-using SadConsole;
+using Microsoft.Xna.Framework.Graphics;
 using SadRogue.Primitives;
 using System;
 using System.Diagnostics;
@@ -13,7 +10,7 @@ using System.Runtime.Serialization;
 namespace MagiRogue.Entities
 {
     // Extends the SadConsole.Entities.Entity class
-    // by adding an ID to it using GoRogue's ID system
+    // by adding the IGameObject of SadConsole
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public class MagiEntity : SadConsole.Entities.Entity, IGameObject
     {
@@ -64,6 +61,7 @@ namespace MagiRogue.Entities
         /// Defines if the entity ignores wall and can phase though
         /// </summary>
         public bool IgnoresWalls { get; set; }
+        public bool AlwaySeen { get; set; }
 
         #region BackingField fields
 
@@ -102,19 +100,10 @@ namespace MagiRogue.Entities
             backingField = new GameObject(coord, layer);
             Position = backingField.Position;
 
-            PositionChanged += Position_Changed;
+            //PositionChanged += Position_Changed;
 
             Magic = new MagicManager();
-
-            //IsWalkable = false;
         }
-
-#nullable enable
-
-        private void Position_Changed(object? sender, ValueChangedEventArgs<Point> e)
-            => Moved?.Invoke(sender, new GameObjectPropertyChanged<Point>(this, e.OldValue, e.NewValue));
-
-#nullable disable
 
         private string DebuggerDisplay
         {
@@ -124,7 +113,18 @@ namespace MagiRogue.Entities
             }
         }
 
-        public bool AlwaySeen { get; internal set; }
+        #region temporary
+
+        protected override void OnPositionChanged(Point oldPosition, Point newPosition)
+        {
+            var args = new ValueChangedEventArgs<Point>(oldPosition, newPosition);
+
+            PositionablePositionChanging?.Invoke(this, args);
+            base.OnPositionChanged(oldPosition, newPosition);
+            PositionablePositionChanged?.Invoke(this, args);
+        }
+
+        #endregion temporary
 
         #endregion Helper Methods
 
@@ -161,11 +161,26 @@ namespace MagiRogue.Entities
 
         #region IGameObject Interface
 
-#nullable enable
+        #region temporary
 
-        public event EventHandler<GameObjectPropertyChanged<Point>>? Moved;
+        private event EventHandler<ValueChangedEventArgs<Point>>? PositionablePositionChanging;
 
-#nullable disable
+        event EventHandler<ValueChangedEventArgs<Point>>? IPositionable.PositionChanging
+        {
+            add => PositionablePositionChanging += value;
+            remove => PositionablePositionChanging -= value;
+        }
+
+        private event EventHandler<ValueChangedEventArgs<Point>>? PositionablePositionChanged;
+
+        /// <inheritdoc />
+        event EventHandler<ValueChangedEventArgs<Point>>? IPositionable.PositionChanged
+        {
+            add => PositionablePositionChanged += value;
+            remove => PositionablePositionChanged -= value;
+        }
+
+        #endregion temporary
 
         public event EventHandler<GameObjectCurrentMapChanged> AddedToMap
         {
@@ -193,7 +208,7 @@ namespace MagiRogue.Entities
             }
         }
 
-        public event EventHandler<GameObjectPropertyChanged<bool>> TransparencyChanging
+        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<bool>> TransparencyChanging
         {
             add
             {
@@ -206,7 +221,7 @@ namespace MagiRogue.Entities
             }
         }
 
-        public event EventHandler<GameObjectPropertyChanged<bool>> TransparencyChanged
+        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<bool>> TransparencyChanged
         {
             add
             {
@@ -219,7 +234,7 @@ namespace MagiRogue.Entities
             }
         }
 
-        public event EventHandler<GameObjectPropertyChanged<bool>> WalkabilityChanging
+        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<bool>> WalkabilityChanging
         {
             add
             {
@@ -232,7 +247,7 @@ namespace MagiRogue.Entities
             }
         }
 
-        public event EventHandler<GameObjectPropertyChanged<bool>> WalkabilityChanged
+        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<bool>> WalkabilityChanged
         {
             add
             {

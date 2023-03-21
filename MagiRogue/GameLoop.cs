@@ -5,6 +5,7 @@ using MagiRogue.GameSys.Planet.History;
 using MagiRogue.GameSys.Time;
 using MagiRogue.UI;
 using Microsoft.Toolkit.HighPerformance;
+using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using System.IO;

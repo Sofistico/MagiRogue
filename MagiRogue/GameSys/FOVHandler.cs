@@ -1,5 +1,5 @@
 ﻿using GoRogue.GameFramework;
-using GoRogue.SpatialMaps;
+using SadRogue.Primitives.SpatialMaps;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Tiles;

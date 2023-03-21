@@ -8,6 +8,7 @@ using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils.Extensions;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -509,16 +510,20 @@ namespace MagiRogue.Entities
 
         public bool CanSee(Point pos)
         {
-            actorFov ??= new RecursiveShadowcastingBooleanBasedFOV(CurrentMap.TransparencyView);
-            actorFov.Calculate(Position, GetViewRadius());
+            UpdateFov();
             return actorFov.BooleanResultView[pos];
         }
 
         public IEnumerable<Point> AllThatCanSee()
         {
+            UpdateFov();
+            return actorFov.CurrentFOV;
+        }
+
+        public void UpdateFov()
+        {
             actorFov ??= new RecursiveShadowcastingBooleanBasedFOV(CurrentMap.TransparencyView);
             actorFov.Calculate(Position, GetViewRadius());
-            return actorFov.CurrentFOV;
         }
 
         #endregion Needs

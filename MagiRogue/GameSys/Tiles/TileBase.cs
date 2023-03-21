@@ -207,7 +207,7 @@ namespace MagiRogue.GameSys.Tiles
         /// <summary>
         /// Fired when <see cref="P:GoRogue.GameFramework.IGameObject.IsTransparent" /> is changed.
         /// </summary>
-        public event EventHandler<GameObjectPropertyChanged<bool>> TransparencyChanged
+        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<bool>> TransparencyChanged
         {
             add
             {
@@ -223,7 +223,7 @@ namespace MagiRogue.GameSys.Tiles
         /// <summary>
         /// Fired when <see cref="P:GoRogue.GameFramework.IGameObject.IsWalkable" /> is changed.
         /// </summary>
-        public event EventHandler<GameObjectPropertyChanged<bool>> WalkabilityChanged
+        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<bool>> WalkabilityChanged
         {
             add
             {
@@ -233,23 +233,6 @@ namespace MagiRogue.GameSys.Tiles
             remove
             {
                 backingField.WalkabilityChanged -= value;
-            }
-        }
-
-        /// <summary>
-        /// Event fired whenever this object's grid position is successfully changed.  Fired regardless of whether
-        /// the object is part of a <see cref="GoRogue.GameFramework.Map" />.
-        /// </summary>
-        event EventHandler<GameObjectPropertyChanged<Point>> IGameObject.Moved
-        {
-            add
-            {
-                backingField.Moved += value;
-            }
-
-            remove
-            {
-                backingField.Moved -= value;
             }
         }
 
@@ -288,7 +271,7 @@ namespace MagiRogue.GameSys.Tiles
         /// <summary>
         /// Fired when <see cref="P:GoRogue.GameFramework.IGameObject.IsTransparent" /> is about to be changed.
         /// </summary>
-        public event EventHandler<GameObjectPropertyChanged<bool>> TransparencyChanging
+        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<bool>> TransparencyChanging
         {
             add
             {
@@ -304,7 +287,7 @@ namespace MagiRogue.GameSys.Tiles
         /// <summary>
         /// Fired when <see cref="P:GoRogue.GameFramework.IGameObject.IsWalkable" /> is about to changed.
         /// </summary>
-        public event EventHandler<GameObjectPropertyChanged<bool>> WalkabilityChanging
+        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<bool>> WalkabilityChanging
         {
             add
             {
@@ -314,6 +297,32 @@ namespace MagiRogue.GameSys.Tiles
             remove
             {
                 backingField.WalkabilityChanging -= value;
+            }
+        }
+
+        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<Point>>? PositionChanging
+        {
+            add
+            {
+                backingField.PositionChanging += value;
+            }
+
+            remove
+            {
+                backingField.PositionChanging -= value;
+            }
+        }
+
+        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<Point>>? PositionChanged
+        {
+            add
+            {
+                backingField.PositionChanged += value;
+            }
+
+            remove
+            {
+                backingField.PositionChanged -= value;
             }
         }
 

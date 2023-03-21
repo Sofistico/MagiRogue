@@ -1,6 +1,6 @@
 ﻿using GoRogue.GameFramework;
 using GoRogue.Pathing;
-using GoRogue.SpatialMaps;
+using SadRogue.Primitives.SpatialMaps;
 using MagiRogue.Data;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization.MapSerialization;
@@ -278,7 +278,7 @@ namespace MagiRogue.GameSys
                 _entityRender.Remove(entity);
 
                 // Link up the entity's Moved event to a new handler
-                entity.Moved -= OnEntityMoved;
+                entity.PositionChanged -= OnPositionChanged;
 
                 _entityRender.IsDirty = true;
                 needsToUpdateActorsDict = true;
@@ -315,7 +315,7 @@ namespace MagiRogue.GameSys
             _entityRender.Add(entity);
 
             // Link up the entity's Moved event to a new handler
-            entity.Moved += OnEntityMoved;
+            entity.PositionChanged += OnPositionChanged;
             needsToUpdateActorsDict = true;
         }
 
@@ -325,14 +325,17 @@ namespace MagiRogue.GameSys
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        private void OnEntityMoved(object? sender, GameObjectPropertyChanged<Point>? args)
+        private void OnPositionChanged(object? sender, SadConsole.ValueChangedEventArgs<Point>? args)
         {
-            if (args.Item is Player player)
+            if (sender is Player player)
             {
                 FovCalculate(player);
                 LastPlayerPosition = player.Position;
             }
-
+            if (sender is Actor actor)
+            {
+                actor.UpdateFov();
+            }
             _entityRender.IsDirty = true;
         }
 
@@ -442,7 +445,7 @@ namespace MagiRogue.GameSys
             renderer.SadComponents.Add(_entityRender);
             _entityRender.DoEntityUpdate = true;
 
-            var layerMask = Entities.CorrectGetLayersInMask(LayerMasker.Mask(
+            var layerMask = Entities.GetLayersInMask(LayerMasker.Mask(
                 (int)MapLayer.ITEMS,
                 (int)MapLayer.GHOSTS,
                 (int)MapLayer.FURNITURE,

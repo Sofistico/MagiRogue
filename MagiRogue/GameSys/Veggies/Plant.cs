@@ -1,5 +1,4 @@
-﻿using GoRogue;
-using GoRogue.Components;
+﻿using GoRogue.Components;
 using GoRogue.Components.ParentAware;
 using GoRogue.GameFramework;
 using MagiRogue.Data.Enumerators;
@@ -61,7 +60,7 @@ namespace MagiRogue.GameSys.Veggies
             }
         }
 
-        public event EventHandler<GameObjectPropertyChanged<bool>>? TransparencyChanging
+        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<bool>>? TransparencyChanging
         {
             add
             {
@@ -74,7 +73,7 @@ namespace MagiRogue.GameSys.Veggies
             }
         }
 
-        public event EventHandler<GameObjectPropertyChanged<bool>>? TransparencyChanged
+        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<bool>>? TransparencyChanged
         {
             add
             {
@@ -87,7 +86,7 @@ namespace MagiRogue.GameSys.Veggies
             }
         }
 
-        public event EventHandler<GameObjectPropertyChanged<bool>>? WalkabilityChanging
+        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<bool>>? WalkabilityChanging
         {
             add
             {
@@ -100,7 +99,7 @@ namespace MagiRogue.GameSys.Veggies
             }
         }
 
-        public event EventHandler<GameObjectPropertyChanged<bool>>? WalkabilityChanged
+        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<bool>>? WalkabilityChanged
         {
             add
             {
@@ -113,16 +112,42 @@ namespace MagiRogue.GameSys.Veggies
             }
         }
 
-        public event EventHandler<GameObjectPropertyChanged<Point>>? Moved
+        /*public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<Point>>? Moved
         {
             add
             {
-                ((IGameObject)backiendField).Moved += value;
+                ((IGameObject)backiendField).PositionChanged += value;
             }
 
             remove
             {
-                ((IGameObject)backiendField).Moved -= value;
+                ((IGameObject)backiendField).PositionChanged -= value;
+            }
+        }*/
+
+        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<Point>>? PositionChanging
+        {
+            add
+            {
+                ((IPositionable)backiendField).PositionChanging += value;
+            }
+
+            remove
+            {
+                ((IPositionable)backiendField).PositionChanging -= value;
+            }
+        }
+
+        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<Point>>? PositionChanged
+        {
+            add
+            {
+                ((IPositionable)backiendField).PositionChanged += value;
+            }
+
+            remove
+            {
+                ((IPositionable)backiendField).PositionChanged -= value;
             }
         }
 

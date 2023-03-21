@@ -110,7 +110,7 @@ namespace MagiRogue.Commands
                  GameLoop.GetCurrentMap().ControlledEntitiy.Position.Y);
             GameLoop.Universe.ChangeControlledEntity(Cursor);
             GameLoop.GetCurrentMap().AddMagiEntity(Cursor);
-            Cursor.Moved += Cursor_Moved;
+            Cursor.PositionChanged += Cursor_Moved;
 
             State = TargetState.Targeting;
         }
@@ -171,7 +171,7 @@ namespace MagiRogue.Commands
                 if (TravelPath is not null)
                 {
                     ClearTileDictionary();
-                    Cursor.Moved -= Cursor_Moved;
+                    Cursor.PositionChanged -= Cursor_Moved;
                     TravelPath = null;
                 }
 
@@ -236,14 +236,14 @@ namespace MagiRogue.Commands
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Cursor_Moved(object sender, GoRogue.GameFramework.GameObjectPropertyChanged<Point> e)
+        private void Cursor_Moved(object sender, SadConsole.ValueChangedEventArgs<Point> e)
         {
             TargetList.Clear();
-            TravelPath = GameLoop.GetCurrentMap().AStar.ShortestPath(OriginCoord, e.NewValue);
+            TravelPath = GameLoop.GetCurrentMap().AStar.ShortestPath(OriginCoord, e.NewValue)!;
             if (LookMode || TravelPath is null)
             {
                 TravelPath = GameLoop.GetCurrentMap()
-                    .AStarWithAllWalkable().ShortestPath(OriginCoord, e.NewValue);
+                    .AStarWithAllWalkable().ShortestPath(OriginCoord, e.NewValue)!;
                 ClearTileDictionary();
                 return;
             }
