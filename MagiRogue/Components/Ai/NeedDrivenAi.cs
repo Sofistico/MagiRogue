@@ -29,6 +29,16 @@ namespace MagiRogue.Components.Ai
             {
                 needs ??= actor.GetComponent<NeedCollection>();
 
+                if (previousKnowPath is not null && step < previousKnowPath.Length)
+                {
+                    MoveActorAStep(actor);
+                }
+                else
+                {
+                    previousKnowPath = ActionManager.FindFleeAction(map, actor, actor);
+                    step = 0;
+                }
+                return (true, 100);
                 if (needs is null)
                     return (false, -1);
                 if (!needs.GetPriority(out Need need) && commitedToNeed is null)
@@ -160,7 +170,7 @@ namespace MagiRogue.Components.Ai
 
         private void MoveActorAStep(Actor actor)
         {
-            ActionManager.MoveActorBy(actor, previousKnowPath.GetStep(step++));
+            ActionManager.MoveActorBy(actor, actor.Position - previousKnowPath.GetStep(step++));
         }
 
         private void ClearCommit() => commitedToNeed = null;

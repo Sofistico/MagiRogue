@@ -62,7 +62,7 @@ namespace MagiRogue.Components
             new Need("Eat", true, 1, Actions.Eat, "SelfControl", "food" ),
             new Need("Drink", true, 0.75, Actions.Drink, "Temperance", "drink" ),
             new Need("Sleep", true, 2, Actions.Sleep, "Lazyness", "rest" ),
-            new Need("Restlessness", false, 0.00007, Actions.Wander, "Patience", "wander"),
+            //new Need("Restlessness", false, 0.00007, Actions.Wander, "Patience", "wander"),
             //new Need("Fight", false, 0, Actions.Fight, "Peace", "battle" ),
         };
 

@@ -1,26 +1,15 @@
-﻿using MagiRogue.Data.Serialization;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys;
 using MagiRogue.GameSys.Planet;
 using MagiRogue.GameSys.Tiles;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
-using BenchmarkDotNet;
-using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Running;
-using Newtonsoft.Json.Linq;
-using MagiRogue.Data.Enumerators;
 
 namespace MagiRogue.Test.System
 {
-    [MemoryDiagnoser]
     public class UniverseTests
     {
         private Universe uni;

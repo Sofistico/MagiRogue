@@ -140,9 +140,12 @@ namespace MagiRogue.GameSys
 
         public void RemoveAllEntities()
         {
-            foreach (MagiEntity item in Entities.Items.Cast<MagiEntity>())
+            foreach (IGameObject item in Entities.Items)
             {
-                Remove(item);
+                if (item is MagiEntity entity)
+                    Remove(entity);
+                else
+                    RemoveEntity(item);
             }
         }
 
@@ -310,12 +313,11 @@ namespace MagiRogue.GameSys
                 ControlledEntitiy = player;
                 ForceFovCalculation();
                 LastPlayerPosition = player.Position;
+                entity.PositionChanged += OnPositionChanged;
             }
 
             _entityRender.Add(entity);
 
-            // Link up the entity's Moved event to a new handler
-            entity.PositionChanged += OnPositionChanged;
             needsToUpdateActorsDict = true;
         }
 
