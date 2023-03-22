@@ -320,8 +320,8 @@ namespace MagiRogue.GameSys
                 ControlledEntitiy = player;
                 ForceFovCalculation();
                 LastPlayerPosition = player.Position;
+                entity.PositionChanged += OnPositionChanged;
             }
-            entity.PositionChanged += OnPositionChanged;
 
             _entityRender.Add(entity);
 

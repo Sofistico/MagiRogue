@@ -4,7 +4,7 @@ using MagiRogue.Commands;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.UI.Windows;
-using MagiRogue.Utils.Extensions;
+using SadRogue.Primitives;
 using System.Linq;
 using Map = MagiRogue.GameSys.Map;
 
@@ -171,7 +171,7 @@ namespace MagiRogue.Components.Ai
 
         private void MoveActorAStep(Actor actor)
         {
-            ActionManager.MoveActorBy(actor, actor.Position - previousKnowPath.GetStep(step++));
+            ActionManager.MoveActorBy(actor, previousKnowPath.GetStep(step++).Subtract(actor.Position));
         }
 
         private void ClearCommit() => commitedToNeed = null;
