@@ -34,10 +34,10 @@ namespace MagiRogue.GameSys
         private SadConsole.Entities.Renderer _entityRender;
         private bool _disposed;
         private Dictionary<Func<Actor, bool>, Actor[]> lastCalledActors = new();
-        private Dictionary<uint, MagiEntity> idMap;
+        private readonly Dictionary<uint, MagiEntity> idMap;
         private bool needsToUpdateActorsDict;
-        private BitArrayView _walkabilityViewCached;
-        private BitArrayView _transparencyViewCached;
+        private readonly BitArrayView _walkabilityViewCached;
+        private readonly BitArrayView _transparencyViewCached;
 
         #endregion Fields
 
