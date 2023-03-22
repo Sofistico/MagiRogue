@@ -631,6 +631,7 @@ namespace MagiRogue.Commands
                         && actor.Volume < danger.Volume * 4)
                         || actor.Volume < (danger.Volume * 2) - (actor.Soul.WillPower * actor.Body.Strength))
                         && (dis <= 15 || dis <= actor.GetViewRadius()); // 15 or view radius, whatever is lower.
+                    // right now it doesn't works as expected, it takes the greater beetwen 15 or view radius.
                 }
             }
             return false;

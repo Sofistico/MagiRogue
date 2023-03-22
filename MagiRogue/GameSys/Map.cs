@@ -34,7 +34,10 @@ namespace MagiRogue.GameSys
         private SadConsole.Entities.Renderer _entityRender;
         private bool _disposed;
         private Dictionary<Func<Actor, bool>, Actor[]> lastCalledActors = new();
+        private Dictionary<uint, MagiEntity> idMap;
         private bool needsToUpdateActorsDict;
+        private BitArrayView _walkabilityViewCached;
+        private BitArrayView _transparencyViewCached;
 
         #endregion Fields
 
@@ -83,7 +86,7 @@ namespace MagiRogue.GameSys
         public List<Room> Rooms { get; set; }
 
         public Renderer EntityRender { get => _entityRender; }
-        //public Light[] Ilumination { get; set; }
+        public IGridView<bool> TransparencyViewCached => _transparencyViewCached;
 
         #endregion Properties
 
@@ -125,7 +128,11 @@ namespace MagiRogue.GameSys
                 });
                 AStar = new AStar(WalkabilityView, Distance.Euclidean, weights, 0.01);
             }
-            //Ilumination = new Light[Width * Height];
+
+            idMap = new();
+            ObjectAdded += OnObjectAdded;
+            ObjectRemoved += OnObjectRemoved;
+            ObjectMoved += OnObjectMoved;
         }
 
         #endregion Constructor
@@ -313,8 +320,8 @@ namespace MagiRogue.GameSys
                 ControlledEntitiy = player;
                 ForceFovCalculation();
                 LastPlayerPosition = player.Position;
-                entity.PositionChanged += OnPositionChanged;
             }
+            entity.PositionChanged += OnPositionChanged;
 
             _entityRender.Add(entity);
 
@@ -403,17 +410,7 @@ namespace MagiRogue.GameSys
         /// <typeparam name="T">Any type of entity</typeparam>
         /// <param name="id">The id of the entity to find</param>
         /// <returns>Returns the entity owner of the id</returns>
-        public MagiEntity GetEntityById(uint id)
-        {
-            // TODO: this shit is wonky, need to do something about it
-            var filter = Entities.FirstOrDefault(i => i.Item.ID == id);
-
-            if (filter != default)
-            {
-                return (MagiEntity)filter.Item;
-            }
-            return null;
-        }
+        public MagiEntity GetEntityById(uint id) => idMap[id];
 
         /// <summary>
         /// Gets the entity by it's id
@@ -753,6 +750,45 @@ namespace MagiRogue.GameSys
             }
 
             return obj;
+        }
+
+        private void OnObjectAdded(object? sender, ItemEventArgs<IGameObject> e)
+        {
+            if (e.Item is MagiEntity entity)
+                idMap.Remove(entity.ID);
+
+            if (!e.Item.IsWalkable)
+                _walkabilityViewCached[e.Position] = WalkabilityView[e.Position];
+
+            if (!e.Item.IsTransparent)
+                _transparencyViewCached[e.Position] = TransparencyView[e.Position];
+        }
+
+        private void OnObjectMoved(object? sender, ItemMovedEventArgs<IGameObject> e)
+        {
+            if (!e.Item.IsWalkable)
+            {
+                _walkabilityViewCached[e.OldPosition] = WalkabilityView[e.OldPosition];
+                _walkabilityViewCached[e.NewPosition] = false;
+            }
+
+            if (!e.Item.IsTransparent)
+            {
+                _transparencyViewCached[e.OldPosition] = TransparencyView[e.OldPosition];
+                _transparencyViewCached[e.NewPosition] = false;
+            }
+        }
+
+        private void OnObjectRemoved(object? sender, ItemEventArgs<IGameObject> e)
+        {
+            if (e.Item is MagiEntity entity)
+                idMap[entity.ID] = entity;
+
+            if (!e.Item.IsWalkable)
+                _walkabilityViewCached[e.Position] = WalkabilityView[e.Position];
+
+            if (!e.Item.IsTransparent)
+                _transparencyViewCached[e.Position] = TransparencyView[e.Position];
         }
 
         #endregion HelperMethods

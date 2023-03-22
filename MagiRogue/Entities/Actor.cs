@@ -522,7 +522,7 @@ namespace MagiRogue.Entities
 
         private void UpdateFov()
         {
-            actorFov ??= new RecursiveShadowcastingBooleanBasedFOV(CurrentMap.TransparencyView);
+            actorFov ??= new RecursiveShadowcastingBooleanBasedFOV(((Map)CurrentMap).TransparencyViewCached);
             actorFov.Calculate(Position, GetViewRadius());
         }
 

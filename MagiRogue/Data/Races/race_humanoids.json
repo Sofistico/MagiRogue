@@ -34,7 +34,7 @@
     "Tissues": [
       "skin;skin;1;ConnectiveTissueAnchor,Scars",
       "fat;fat;1;ConnectiveTissueAnchor,Scars,ThickensOnEnergyStore",
-      "muscle;meat;3;ConnectiveTissueAnchor,ThickensOnStrTraining,Scars",
+      "muscle;muscle;3;ConnectiveTissueAnchor,ThickensOnStrTraining,Scars",
       "bone;base_bone;2;ConnectiveTissueAnchor,Structural"
     ],
     // lowest, lower, low, median, high, higher, highest
@@ -84,7 +84,7 @@
     "Tissues": [
       "skin;skin;1;ConnectiveTissueAnchor,Scars",
       "fat;fat;1;ConnectiveTissueAnchor,Scars,ThickensOnEnergyStore",
-      "muscle;meat;3;ConnectiveTissueAnchor,ThickensOnStrTraining,Scars",
+      "muscle;muscle;3;ConnectiveTissueAnchor,ThickensOnStrTraining,Scars",
       "bone;base_bone;2;ConnectiveTissueAnchor,Structural"
     ],
     "HeightModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
@@ -131,7 +131,7 @@
     "Tissues": [
       "skin;skin;1;ConnectiveTissueAnchor,Scars",
       "fat;fat;1;ConnectiveTissueAnchor,Scars,ThickensOnEnergyStore",
-      "muscle;meat;3;ConnectiveTissueAnchor,ThickensOnStrTraining,Scars",
+      "muscle;muscle;3;ConnectiveTissueAnchor,ThickensOnStrTraining,Scars",
       "bone;base_bone;2;ConnectiveTissueAnchor,Structural"
     ],
     "HeightModifier": [ 90, 95, 98, 100, 112, 115, 125 ],
@@ -175,7 +175,7 @@
     "Tissues": [
       "skin;skin;1;ConnectiveTissueAnchor,Scars",
       "fat;fat;1;ConnectiveTissueAnchor,Scars,ThickensOnEnergyStore",
-      "muscle;meat;3;ConnectiveTissueAnchor,ThickensOnStrTraining,Scars",
+      "muscle;muscle;3;ConnectiveTissueAnchor,ThickensOnStrTraining,Scars",
       "bone;base_bone;2;ConnectiveTissueAnchor,Structural"
     ],
     "HeightModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
