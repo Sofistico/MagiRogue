@@ -29,16 +29,17 @@ namespace MagiRogue.Components.Ai
             {
                 needs ??= actor.GetComponent<NeedCollection>();
 
-                if (previousKnowPath is not null && step < previousKnowPath.Length)
-                {
-                    MoveActorAStep(actor);
-                }
-                else
-                {
-                    previousKnowPath = ActionManager.FindFleeAction(map, actor, actor);
-                    step = 0;
-                }
-                return (true, 100);
+                // test code!!
+                //if (previousKnowPath is not null && step < previousKnowPath.Length)
+                //{
+                //    MoveActorAStep(actor);
+                //}
+                //else
+                //{
+                //    previousKnowPath = ActionManager.FindFleeAction(map, actor, actor);
+                //    step = 0;
+                //}
+                //return (true, 100);
                 if (needs is null)
                     return (false, -1);
                 if (!needs.GetPriority(out Need need) && commitedToNeed is null)
