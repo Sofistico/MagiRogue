@@ -1,6 +1,5 @@
 ﻿using GoRogue.GameFramework;
 using GoRogue.Pathing;
-using SadRogue.Primitives.SpatialMaps;
 using MagiRogue.Data;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization.MapSerialization;
@@ -14,6 +13,7 @@ using SadConsole;
 using SadConsole.Entities;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
+using SadRogue.Primitives.SpatialMaps;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
