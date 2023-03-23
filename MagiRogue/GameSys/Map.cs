@@ -130,6 +130,8 @@ namespace MagiRogue.GameSys
             }
 
             idMap = new();
+            _transparencyViewCached = new(Width, Height);
+            _walkabilityViewCached = new(Width, Height);
             ObjectAdded += OnObjectAdded;
             ObjectRemoved += OnObjectRemoved;
             ObjectMoved += OnObjectMoved;
@@ -410,7 +412,7 @@ namespace MagiRogue.GameSys
         /// <typeparam name="T">Any type of entity</typeparam>
         /// <param name="id">The id of the entity to find</param>
         /// <returns>Returns the entity owner of the id</returns>
-        public MagiEntity GetEntityById(uint id) => idMap[id];
+        public MagiEntity GetEntityById(uint id) => (MagiEntity)idMap[id];
 
         /// <summary>
         /// Gets the entity by it's id
@@ -752,7 +754,7 @@ namespace MagiRogue.GameSys
             return obj;
         }
 
-        private void OnObjectAdded(object? sender, ItemEventArgs<IGameObject> e)
+        private void OnObjectRemoved(object? sender, ItemEventArgs<IGameObject> e)
         {
             if (e.Item is MagiEntity entity)
                 idMap.Remove(entity.ID);
@@ -779,7 +781,7 @@ namespace MagiRogue.GameSys
             }
         }
 
-        private void OnObjectRemoved(object? sender, ItemEventArgs<IGameObject> e)
+        private void OnObjectAdded(object? sender, ItemEventArgs<IGameObject> e)
         {
             if (e.Item is MagiEntity entity)
                 idMap[entity.ID] = entity;
