@@ -67,7 +67,7 @@ namespace MagiRogue.Commands
             if (!defender.CanBeAttacked)
                 return;
 
-            if (!attacker.GetAnatomy().HasEnoughArms)
+            if (!attacker.GetAnatomy().HasAnyHands)
             {
                 GameLoop.AddMessageLog
                     ($"The {attacker.Name} doesn't have enough arms to hit {defender.Name}");
@@ -554,7 +554,7 @@ namespace MagiRogue.Commands
             return commitedToNeed;
         }
 
-        public static void Wander(Actor actor)
+        public static int Wander(Actor actor)
         {
             int tries = 0;
             bool tileIsInvalid;
@@ -564,6 +564,7 @@ namespace MagiRogue.Commands
                 tileIsInvalid = !MoveActorBy(actor, posToGo);
                 tries++;
             } while (tileIsInvalid && tries <= maxTries);
+            return TimeHelper.GetWalkTime(actor, actor.Position);
         }
 
         public static void Drink(Actor actor,

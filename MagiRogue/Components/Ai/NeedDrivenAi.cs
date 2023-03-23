@@ -1,8 +1,10 @@
 ﻿using GoRogue.Components.ParentAware;
+using GoRogue.GameFramework;
 using GoRogue.Pathing;
 using MagiRogue.Commands;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
+using MagiRogue.GameSys.Time;
 using MagiRogue.UI.Windows;
 using SadRogue.Primitives;
 using System.Linq;
@@ -40,6 +42,7 @@ namespace MagiRogue.Components.Ai
                 //    step = 0;
                 //}
                 //return (true, 100);
+                int timeTakenAction = 0;
                 if (needs is null)
                     return (false, -1);
                 if (!needs.GetPriority(out Need need) && commitedToNeed is null)
@@ -52,7 +55,7 @@ namespace MagiRogue.Components.Ai
                     need = commitedToNeed;
                 if (previousKnowPath is not null && step < previousKnowPath.Length)
                 {
-                    MoveActorAStep(actor);
+                    timeTakenAction = MoveActorAStep(actor, map);
                 }
                 else
                 {
@@ -72,8 +75,7 @@ namespace MagiRogue.Components.Ai
                                 }
                                 else
                                 {
-                                    previousKnowPath = map.AStar.ShortestPath(actor.Position, obj.Position)!;
-                                    ActionManager.MoveActorBy(actor, previousKnowPath.GetStep(step++) - actor.Position);
+                                    timeTakenAction = FindPathAndMoveOneStep(map, actor, obj);
                                 }
                             }
                             break;
@@ -90,7 +92,7 @@ namespace MagiRogue.Components.Ai
                         case Actions.Drink:
                             var water = map.GetClosestWaterTile(actor.Body.ViewRadius, actor.Position);
                             if (water is null)
-                                ActionManager.Wander(actor);
+                                timeTakenAction = ActionManager.Wander(actor);
                             if (!actor.CanSee(water.Position))
                                 break;
                             if (map.DistanceMeasurement.Calculate(actor.Position - water.Position) <= 1) // right next to the water tile or in it
@@ -99,7 +101,7 @@ namespace MagiRogue.Components.Ai
                             }
                             else
                             {
-                                previousKnowPath = map.AStar.ShortestPath(actor.Position, water.Position)!;
+                                timeTakenAction = FindPathAndMoveOneStep(map, actor, water);
                             }
                             break;
 
@@ -130,7 +132,7 @@ namespace MagiRogue.Components.Ai
                             }
                             else
                             {
-                                previousKnowPath = map.AStar.ShortestPath(actor.Position, enemy.Position)!;
+                                timeTakenAction = FindPathAndMoveOneStep(map, actor, enemy);
                             }
                             break;
 
@@ -147,12 +149,12 @@ namespace MagiRogue.Components.Ai
                             }
                             else
                             {
-                                previousKnowPath = map.AStar.ShortestPath(actor.Position, item.Position)!;
+                                timeTakenAction = FindPathAndMoveOneStep(map, actor, item);
                             }
                             break;
 
                         case Actions.Wander:
-                            ActionManager.Wander(actor);
+                            timeTakenAction = ActionManager.Wander(actor);
 #if DEBUG
                             GameLoop.AddMessageLog($"{actor.Name} wanders");
 #endif
@@ -164,14 +166,21 @@ namespace MagiRogue.Components.Ai
                     }
                 }
 
-                return (true, 100);
+                return (true, need is null ? 100 : timeTakenAction); // if need is null, then it must check next turn again!
             }
             return (false, -1);
         }
 
-        private void MoveActorAStep(Actor actor)
+        private int FindPathAndMoveOneStep(Map map, Actor actor, IGameObject item)
+        {
+            previousKnowPath = map.AStar.ShortestPath(actor.Position, item.Position)!;
+            return MoveActorAStep(actor, map);
+        }
+
+        private int MoveActorAStep(Actor actor, Map map)
         {
             ActionManager.MoveActorBy(actor, previousKnowPath.GetStep(step++).Subtract(actor.Position));
+            return TimeHelper.GetWalkTime(actor, map.GetTileAt(actor.Position));
         }
 
         private void ClearCommit() => commitedToNeed = null;

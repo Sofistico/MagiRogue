@@ -23,6 +23,12 @@ namespace MagiRogue.GameSys.Time
             return GetWalkTime(actor, tile);
         }
 
+        public static int GetWalkTime(Actor actor)
+        {
+            var tile = ((Map)actor.CurrentMap).GetTileAt<TileBase>(actor.Position);
+            return GetWalkTime(actor, tile);
+        }
+
         public static int GetWorldWalkTime(Actor actor, WorldTile tile)
         {
             // TODO: Need to fix this time to represent how slow it is to move on the overmap based

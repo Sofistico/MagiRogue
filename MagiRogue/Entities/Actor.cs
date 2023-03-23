@@ -203,6 +203,8 @@ namespace MagiRogue.Entities
 
         public Item WieldedItem()
         {
+            if (!Body.Anatomy.HasAnyHands)
+                return null;
             return Body.Equipment?.GetValueOrDefault(GetAnatomy().Limbs.Find(l =>
                 l.LimbType == TypeOfLimb.Hand)?.Id, null);
         }

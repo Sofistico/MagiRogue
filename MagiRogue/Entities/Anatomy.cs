@@ -45,7 +45,7 @@ namespace MagiRogue.Entities
         public bool HasBlood { get; set; } = true;
 
         [JsonIgnore]
-        public bool HasEnoughArms
+        public bool HasAnyHands
         {
             get
             {
