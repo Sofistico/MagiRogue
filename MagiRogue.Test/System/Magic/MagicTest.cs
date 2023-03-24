@@ -15,11 +15,6 @@ namespace MagiRogue.Test.System.Magic
         private MagiRogue.GameSys.Magic.MagicManager mediumMagic;
         private MagiRogue.GameSys.Magic.MagicManager strongMagic;
 
-        public MagicTest()
-        {
-            Game.Create(1, 1);
-        }
-
         [Fact]
         public void TestCasting()
         {

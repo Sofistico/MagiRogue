@@ -31,17 +31,6 @@ namespace MagiRogue.Components.Ai
             {
                 needs ??= actor.GetComponent<NeedCollection>();
 
-                // test code!!
-                //if (previousKnowPath is not null && step < previousKnowPath.Length)
-                //{
-                //    MoveActorAStep(actor);
-                //}
-                //else
-                //{
-                //    previousKnowPath = ActionManager.FindFleeAction(map, actor, actor);
-                //    step = 0;
-                //}
-                //return (true, 100);
                 int timeTakenAction = 0;
                 if (needs is null)
                     return (false, -1);
@@ -65,7 +54,7 @@ namespace MagiRogue.Components.Ai
                     {
                         case Actions.Eat:
                             commitedToNeed ??= ActionManager.FindFood(actor, map);
-                            if (commitedToNeed is not null)
+                            if (commitedToNeed?.Objective is not null)
                             {
                                 var obj = commitedToNeed.Objective;
                                 if (map.DistanceMeasurement.Calculate(actor.Position - obj.Position) <= 1) // right next to the water tile or in it
