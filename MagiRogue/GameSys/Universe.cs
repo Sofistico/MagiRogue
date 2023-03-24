@@ -428,9 +428,7 @@ namespace MagiRogue.GameSys
 
         public RegionChunk GetChunckByPos(Point playerPoint)
         {
-            var chunk = SaveAndLoad.GetChunkAtIndex(Point.ToIndex(playerPoint.X, playerPoint.Y, planetWidth), planetWidth);
-
-            return chunk;
+            return SaveAndLoad.GetChunkAtIndex(Point.ToIndex(playerPoint.X, playerPoint.Y, planetWidth), planetWidth);
         }
 
         public static Map GetMapById(int id)

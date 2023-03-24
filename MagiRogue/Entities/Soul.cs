@@ -15,11 +15,18 @@ namespace MagiRogue.Entities
 
         //public int WildMana { get; set; }
         public double BaseManaRegen { get; set; }
+
+        /// <summary>
+        /// The sense of self of the entity, is a percentage.
+        /// For a future working in the rituals and pact update....
+        /// </summary>
+        public int SenseOfSelf { get => Stats["SenseOfSelf"]; set => Stats["SenseOfSelf"] = value; }
+
         public Dictionary<string, int> Stats { get; set; }
 
         public Soul()
         {
-            Stats = new Dictionary<string, int>() { { "WillPower", 0 } };
+            Stats = new Dictionary<string, int>() { { "WillPower", 0 }, { "SenseOfSelf", 100 } };
         }
 
         public void ApplyManaRegen(double manaRegen)

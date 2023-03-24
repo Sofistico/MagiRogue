@@ -500,6 +500,8 @@ namespace MagiRogue.Entities
             }
         }
 
+        #endregion Needs
+
         public double AttackRange()
         {
             var item = WieldedItem();
@@ -524,11 +526,9 @@ namespace MagiRogue.Entities
 
         private void UpdateFov()
         {
-            actorFov ??= new RecursiveShadowcastingBooleanBasedFOV(((Map)CurrentMap).TransparencyViewCached);
+            actorFov ??= new RecursiveShadowcastingBooleanBasedFOV(CurrentMap.TransparencyView);
             actorFov.Calculate(Position, GetViewRadius());
         }
-
-        #endregion Needs
 
         #endregion Methods
     }

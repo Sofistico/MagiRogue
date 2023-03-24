@@ -36,8 +36,6 @@ namespace MagiRogue.GameSys
         private Dictionary<Func<Actor, bool>, Actor[]> lastCalledActors = new();
         private readonly Dictionary<uint, MagiEntity> idMap;
         private bool needsToUpdateActorsDict;
-        private readonly BitArrayView _walkabilityViewCached;
-        private readonly BitArrayView _transparencyViewCached;
 
         #endregion Fields
 
@@ -86,7 +84,6 @@ namespace MagiRogue.GameSys
         public List<Room> Rooms { get; set; }
 
         public Renderer EntityRender { get => _entityRender; }
-        public IGridView<bool> TransparencyViewCached => _transparencyViewCached;
 
         #endregion Properties
 
@@ -130,11 +127,8 @@ namespace MagiRogue.GameSys
             }
 
             idMap = new();
-            _transparencyViewCached = new(Width, Height);
-            _walkabilityViewCached = new(Width, Height);
             ObjectAdded += OnObjectAdded;
             ObjectRemoved += OnObjectRemoved;
-            ObjectMoved += OnObjectMoved;
         }
 
         #endregion Constructor
@@ -758,39 +752,12 @@ namespace MagiRogue.GameSys
         {
             if (e.Item is MagiEntity entity)
                 idMap.Remove(entity.ID);
-
-            if (!e.Item.IsWalkable)
-                _walkabilityViewCached[e.Position] = WalkabilityView[e.Position];
-
-            if (!e.Item.IsTransparent)
-                _transparencyViewCached[e.Position] = TransparencyView[e.Position];
-        }
-
-        private void OnObjectMoved(object? sender, ItemMovedEventArgs<IGameObject> e)
-        {
-            if (!e.Item.IsWalkable)
-            {
-                _walkabilityViewCached[e.OldPosition] = WalkabilityView[e.OldPosition];
-                _walkabilityViewCached[e.NewPosition] = false;
-            }
-
-            if (!e.Item.IsTransparent)
-            {
-                _transparencyViewCached[e.OldPosition] = TransparencyView[e.OldPosition];
-                _transparencyViewCached[e.NewPosition] = false;
-            }
         }
 
         private void OnObjectAdded(object? sender, ItemEventArgs<IGameObject> e)
         {
             if (e.Item is MagiEntity entity)
                 idMap[entity.ID] = entity;
-
-            if (!e.Item.IsWalkable)
-                _walkabilityViewCached[e.Position] = WalkabilityView[e.Position];
-
-            if (!e.Item.IsTransparent)
-                _transparencyViewCached[e.Position] = TransparencyView[e.Position];
         }
 
         #endregion HelperMethods
