@@ -16,7 +16,7 @@
     "TileType": "Floor"
   },
   {
-    "TileId": "stone_floor",
+    "TileId": "t_stone",
     "Name": "Stone floor",
     "IdMaterial": "stone",
     "GlyphChar": ".",
@@ -63,5 +63,13 @@
     "GlyphChar": "~",
     "ForegroundStr": "Blue",
     "TileType": "Water"
+  },
+  {
+    "TileId": "t_chalk",
+    "Name": "Chalk",
+    "IdMaterial": "chalk",
+    "GlyphChar": ".",
+    "ForegroundStr": "BlueViolet",
+    "TileType": "Floor"
   }
 ]

@@ -19,8 +19,17 @@ namespace MagiRogue.GameSys.MapGen
             PrepareForFloors();
             PrepareForOuterWalls();
             AppendForestTestMap();
+            AppendRitualFloor();
 
             return _map;
+        }
+
+        private void AppendRitualFloor()
+        {
+            var r = DataManager.QueryRoomInData("ritual_simple");
+
+            var pointBegin = new Point(25, 25);
+            _map.AddRoom(r, pointBegin);
         }
 
         private void AppendForestTestMap()

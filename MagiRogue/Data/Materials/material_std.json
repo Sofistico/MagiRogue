@@ -237,6 +237,19 @@
     "MeltingPoint": 1250,
     "BoilingPoint": 3000,
     "ConfersTraits": [ "Inexpensive" ],
-    "Color": "Brown"
+    "Color": "Brown",
+    "Type": ""
+  },
+  {
+    "Id": "chalk",
+    "Name": "Chalk",
+    "Hardness": 0,
+    "MPInfusionLimit": 5,
+    "Density": 1.4,
+    "MeltingPoint": 1339,
+    "BoilingPoint": 3005,
+    "ConfersTraits": [ "Inexpensive", "Powders" ],
+    "Color": "White",
+    "Type": "Stone"
   }
 ]

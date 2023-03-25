@@ -75,5 +75,9 @@ namespace MagiRogue.Data.Enumerators
         Inexpensive,
         Expensive,
         Opulent,
+        /// <summary>
+        /// material easily powders
+        /// </summary>
+        Powders,
     }
 }

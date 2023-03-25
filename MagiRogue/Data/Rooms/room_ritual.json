@@ -1,0 +1,21 @@
+[
+  {
+    "Id": "ritual_simple",
+    "Obj": {
+      "Tag": "Ritual",
+      "InsideAnotherRoom": true,
+      "Rows": [
+        ".    .",
+        "....",
+        ".  .",
+        ".  .",
+        "....",
+        ".    ."
+      ],
+      "Terrain": {
+        ".": "t_chalk",
+        " ": "t_stone"
+      }
+    }
+  }
+]

@@ -45,12 +45,12 @@ namespace MagiRogue.Data
 
         internal static TileFloor GenericStoneFloor()
         {
-            return DataManager.QueryTileInData<TileFloor>("stone_floor");
+            return DataManager.QueryTileInData<TileFloor>("t_stone");
         }
 
         internal static TileFloor GenericStoneFloor(Point pos)
         {
-            return DataManager.QueryTileInData<TileFloor>("stone_floor", pos);
+            return DataManager.QueryTileInData<TileFloor>("t_stone", pos);
         }
 
         public static TileFloor GenericTreeTrunk(Point pos)

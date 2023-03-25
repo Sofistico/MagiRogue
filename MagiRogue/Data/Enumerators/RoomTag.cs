@@ -23,6 +23,7 @@ namespace MagiRogue.Data.Enumerators
         DungeonKeeper,
         Farm,
         ResearchRoom,
-        EnchantingRoom
+        EnchantingRoom,
+        Ritual
     }
 }

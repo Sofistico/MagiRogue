@@ -566,10 +566,10 @@ namespace MagiRogue.GameSys
         /// Adds the room to the map.
         /// </summary>
         /// <param name="r"></param>
-        public void AddRoom(Room r)
+        public void AddRoom(Room r, bool insideAnotherRoom = false)
         {
             Rooms ??= new List<Room>();
-            if (!CheckIfRoomFitsInsideMap(r))
+            if (!CheckIfRoomFitsInsideMap(r) || !insideAnotherRoom)
             {
                 try
                 {
@@ -586,7 +586,7 @@ namespace MagiRogue.GameSys
         public Room AddRoom(RoomTemplate template, Point pointBegin)
         {
             var r = template.ConfigureRoom(pointBegin);
-            AddRoom(r);
+            AddRoom(r, template.Obj.InsideAnotherRoom);
             SpawnRoomThingsOnMap(r);
             return r;
         }
