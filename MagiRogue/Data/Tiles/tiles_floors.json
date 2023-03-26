@@ -69,7 +69,7 @@
     "Name": "Chalk",
     "IdMaterial": "chalk",
     "GlyphChar": ".",
-    "ForegroundStr": "BlueViolet",
+    "ForegroundStr": "DarkViolet",
     "TileType": "Floor"
   }
 ]
