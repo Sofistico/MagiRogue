@@ -1,4 +1,5 @@
-﻿using GoRogue.Pathing;
+﻿using GoRogue.GameFramework;
+using GoRogue.Pathing;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Magic;
@@ -36,6 +37,8 @@ namespace MagiRogue.Commands
         public SpellBase SpellSelected { get; set; }
 
         public bool LookMode { get; set; }
+
+        public Point Position => Cursor.Position;
 
         public Target(Point spawnCoord)
         {
@@ -113,6 +116,8 @@ namespace MagiRogue.Commands
             Cursor.PositionChanged += Cursor_Moved;
 
             State = TargetState.Targeting;
+            LookMode = true;
+            Cursor.IgnoresWalls = true;
         }
 
         // TODO: Customize who should you target
@@ -193,9 +198,9 @@ namespace MagiRogue.Commands
             tileDictionary.Clear();
         }
 
-        private (bool, SpellBase) AffectPath()
+        private (bool, SpellBase?) AffectPath()
         {
-            if (TravelPath is not null && TravelPath.Length >= 1)
+            if (TravelPath?.Length >= 1)
             {
                 bool sucess = SpellSelected.CastSpell(TravelPath.Steps.ToList(), _caster);
 
@@ -209,7 +214,7 @@ namespace MagiRogue.Commands
             return (false, null);
         }
 
-        private (bool, SpellBase) AffectArea()
+        private (bool, SpellBase?) AffectArea()
         {
             if (SpellSelected.Effects.Any(e => e.Radius > 0))
             {
@@ -358,15 +363,18 @@ namespace MagiRogue.Commands
 
         public void LookTarget()
         {
-            LookWindow w = new(DetermineWhatToLook());
-            w.Show();
+            if (DetermineWhatToLook() is MagiEntity entity)
+            {
+                LookWindow w = new(entity);
+                w.Show();
+            }
         }
 
         public MagiEntity TargetEntity() => GameLoop.GetCurrentMap().GetEntityAt<MagiEntity>(Cursor.Position);
 
-        public TileBase TargetAtTile() => GameLoop.GetCurrentMap().GetTileAt<TileBase>(Cursor.Position);
+        private TileBase TargetAtTile() => GameLoop.GetCurrentMap().GetTileAt<TileBase>(Cursor.Position);
 
-        private dynamic DetermineWhatToLook()
+        public IGameObject DetermineWhatToLook()
         {
             if (EntityInTarget())
             {

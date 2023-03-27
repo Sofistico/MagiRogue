@@ -219,8 +219,7 @@ namespace MagiRogue.UI
             }
             if (info.IsKeyPressed(Keys.L))
             {
-                if (targetCursor is null)
-                    targetCursor = new Target(GetPlayer.Position);
+                targetCursor ??= new Target(GetPlayer.Position);
 
                 if (world.CurrentMap.ControlledEntitiy is not Player
                     && !targetCursor.EntityInTarget())
@@ -230,8 +229,6 @@ namespace MagiRogue.UI
                 }
 
                 targetCursor.StartTargetting();
-                targetCursor.LookMode = true;
-                targetCursor.Cursor.IgnoresWalls = true;
 
                 return true;
             }
@@ -292,7 +289,7 @@ namespace MagiRogue.UI
             {
                 targetCursor.EndTargetting();
 
-                targetCursor = null;
+                targetCursor = null!;
 
                 return true;
             }
@@ -331,7 +328,7 @@ namespace MagiRogue.UI
 
             if (info.IsKeyPressed(Keys.F6))
             {
-                if (world.CurrentMap.Rooms is not null && world.CurrentMap.Rooms.Count > 0)
+                if (world.CurrentMap.Rooms?.Count > 0)
                 {
                     foreach (Room room in world.CurrentMap.Rooms)
                     {
@@ -438,6 +435,20 @@ namespace MagiRogue.UI
             if (info.IsKeyPressed(Keys.OemMinus))
             {
                 GameLoop.Universe.SaveAndLoad.SaveGameToFolder(GameLoop.Universe, "TestFile");
+                return false;
+            }
+
+            if (info.IsKeyPressed(Keys.P) && (targetCursor?.EntityInTarget()) == true)
+            {
+                var target = targetCursor.TargetEntity();
+                var needs = target.GetComponent<NeedCollection>();
+                for (int i = 0; i < needs.Count; i++)
+                {
+                    var need = needs[i];
+                    need.TurnCounter = need.MaxTurnCounter.HasValue
+                        ? need.MaxTurnCounter.Value - 1
+                        : (int)((need.Priority + 1) * 1000);
+                }
                 return false;
             }
 
