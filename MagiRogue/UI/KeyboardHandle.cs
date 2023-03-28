@@ -449,6 +449,7 @@ namespace MagiRogue.UI
                         ? need.MaxTurnCounter.Value - 1
                         : (int)((need.Priority + 1) * 1000);
                 }
+                GameLoop.AddMessageLog($"{target.Name} is stuck with strange needs!");
                 return false;
             }
 

@@ -526,7 +526,7 @@ namespace MagiRogue.Commands
         public static Need? FindFood(Actor actor, Map map)
         {
             var whatToEat = actor.GetAnatomy().WhatToEat();
-            var foodItem = map.FindTypeOfFood(whatToEat, actor.Position);
+            var foodItem = map.FindTypeOfFood(whatToEat, actor);
             Need? commitedToNeed = null;
             if (foodItem is null)
                 Wander(actor);

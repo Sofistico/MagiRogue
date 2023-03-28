@@ -1,5 +1,6 @@
 ﻿using GoRogue.GameFramework;
 using MagiRogue.Entities;
+using MonoGame.Framework.Utilities.Deflate;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
@@ -180,38 +181,27 @@ namespace MagiRogue.Utils.Extensions
             return new Point(x, y);
         }
 
-        public static T? GetClosest<T>(this Point originPos, int range, List<T> listT) where T : IGameObject
+        public static T? GetClosest<T>(this Point originPos, int range, List<T> listT, IGameObject? caller) where T : IGameObject
         {
             T closest = default;
             double bestDistance = double.MaxValue;
 
-            foreach (T t in listT)
-            {
-                if (t is null) continue;
-                if (t is not Player)
-                {
-                    double distance = Point.EuclideanDistanceMagnitude(originPos, t.Position);
-
-                    if (distance < bestDistance && (distance <= range || range == 0))
-                    {
-                        bestDistance = distance;
-                        closest = t;
-                    }
-                }
-            }
+            IGameObjIterator(originPos, range, listT, caller, ref closest, ref bestDistance);
 
             return closest;
         }
 
-        public static T? GetClosest<T>(this Point originPos, int range, T[] listT) where T : IGameObject
+        private static void IGameObjIterator<T>(Point originPos,
+            int range,
+            ICollection<T> listT,
+            IGameObject? caller,
+            ref T closest,
+            ref double bestDistance) where T : IGameObject
         {
-            T closest = default;
-            double bestDistance = double.MaxValue;
-
             foreach (T t in listT)
             {
                 if (t is null) continue;
-                if (t is not Player)
+                if (caller != null && t.ID != caller.ID)
                 {
                     double distance = Point.EuclideanDistanceMagnitude(originPos, t.Position);
 
@@ -222,31 +212,26 @@ namespace MagiRogue.Utils.Extensions
                     }
                 }
             }
+        }
+
+        public static T? GetClosest<T>(this Point originPos, int range, T[] listT, IGameObject? caller) where T : IGameObject
+        {
+            T closest = default;
+            double bestDistance = double.MaxValue;
+
+            IGameObjIterator(originPos, range, listT, caller, ref closest, ref bestDistance);
 
             return closest;
         }
 
-        public static (T?, double) GetClosestAndDistance<T>(this Point originPos, int range, T[] listT) where T : IGameObject
+        public static (T?, double) GetClosestAndDistance<T>(this Point originPos, int range, T[] listT, IGameObject? caller) where T : IGameObject
         {
             T closest = default;
             double bestDistance = double.MaxValue;
-            double finalDistance = 0;
-            foreach (T t in listT)
-            {
-                if (t is null) continue;
-                if (t is not Player)
-                {
-                    double distance = Point.EuclideanDistanceMagnitude(originPos, t.Position);
-                    finalDistance = distance;
-                    if (distance < bestDistance && (distance <= range || range == 0))
-                    {
-                        bestDistance = distance;
-                        closest = t;
-                    }
-                }
-            }
 
-            return (closest, finalDistance);
+            IGameObjIterator(originPos, range, listT, caller, ref closest, ref bestDistance);
+
+            return (closest, bestDistance);
         }
     }
 }

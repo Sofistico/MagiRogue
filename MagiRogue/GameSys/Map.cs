@@ -233,7 +233,7 @@ namespace MagiRogue.GameSys
         public WaterTile GetClosestWaterTile(int range, Point position)
         {
             var waters = GetAllTilesOfType<WaterTile>();
-            return position.GetClosest<WaterTile>(range, waters);
+            return position.GetClosest<WaterTile>(range, waters, null);
         }
 
         public Actor[] GetAllActors(Func<Actor, bool>? actionToRunInActors = null)
@@ -789,14 +789,14 @@ namespace MagiRogue.GameSys
             }
         }
 
-        public IGameObject FindTypeOfFood(Food whatToEat, Point entityPos)
+        public IGameObject FindTypeOfFood(Food whatToEat, IGameObject entity)
         {
             const int defaultSearchRange = 25;
 
             switch (whatToEat)
             {
                 case Food.Carnivore:
-                    var meat = entityPos.GetClosest(defaultSearchRange, GetAllMeatsEvenAlive());
+                    var meat = entity.Position.GetClosest(defaultSearchRange, GetAllMeatsEvenAlive(), entity);
                     if (meat is not null)
                     {
                         return meat;
@@ -804,7 +804,7 @@ namespace MagiRogue.GameSys
                     break;
 
                 case Food.Herbivore:
-                    var plant = entityPos.GetClosest(defaultSearchRange, GetAllPlantsEvenItem());
+                    var plant = entity.Position.GetClosest(defaultSearchRange, GetAllPlantsEvenItem(), entity);
                     if (plant is not null)
                     {
                         return plant;
@@ -814,12 +814,12 @@ namespace MagiRogue.GameSys
                 case Food.Omnivere:
                     // well if it works...
                     var objList = new List<IGameObject>();
-                    var meatO = entityPos.GetClosest(defaultSearchRange, GetAllMeatsEvenAlive());
+                    var meatO = entity.Position.GetClosest(defaultSearchRange, GetAllMeatsEvenAlive(), entity);
                     if (meatO is not null)
                     {
                         objList.Add(meatO);
                     }
-                    var plantO = entityPos.GetClosest(defaultSearchRange, GetAllPlantsEvenItem());
+                    var plantO = entity.Position.GetClosest(defaultSearchRange, GetAllPlantsEvenItem(), entity);
                     if (plantO is not null)
                     {
                         objList.Add(plantO);
@@ -834,16 +834,20 @@ namespace MagiRogue.GameSys
 
         private List<MagiEntity> GetAllMeatsEvenAlive()
         {
-            var meats = Entities.GetLayersInMask(LayerMasker.Mask((int)MapLayer.ACTORS, (int)MapLayer.ITEMS));
+            var meats = Entities.GetLayersInMask(LayerMasker.Mask((int)MapLayer.ACTORS, (int)MapLayer.ITEMS))
+                .Select(i => i.Items);
             var list = new List<MagiEntity>();
             foreach (var item in meats)
             {
-                if (item is Item deadMeat && deadMeat.Material.Type == MaterialType.Meat)
+                foreach (var meat in item)
                 {
-                    list.Add(deadMeat);
-                    continue;
+                    if (meat is Item deadMeat && deadMeat.Material.Type == MaterialType.Meat)
+                    {
+                        list.Add(deadMeat);
+                        continue;
+                    }
+                    list.Add((MagiEntity)meat);
                 }
-                list.Add((MagiEntity)item);
             }
 
             return list;
