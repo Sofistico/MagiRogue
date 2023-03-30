@@ -529,7 +529,10 @@ namespace MagiRogue.Commands
             var foodItem = map.FindTypeOfFood(whatToEat, actor);
             Need? commitedToNeed = null;
             if (foodItem is null)
+            {
                 Wander(actor);
+                return null;
+            }
             if (foodItem is Actor victim)
             {
                 commitedToNeed = new Need($"Kill {victim}", false, 0, Data.Enumerators.Actions.Fight, "Peace", $"eat {victim.ID}")

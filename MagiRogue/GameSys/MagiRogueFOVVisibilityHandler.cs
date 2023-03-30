@@ -1,6 +1,7 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Tiles;
+using MagiRogue.Utils.Extensions;
 using SadRogue.Primitives;
 using System.Collections.Generic;
 using System.Linq;
@@ -132,7 +133,7 @@ namespace MagiRogue.GameSys
             }
             if (terrain.Vegetations.All(i => i is not null))
             {
-                terrain.CopyAppearanceFrom(terrain.Vegetations.Last().SadGlyph);
+                terrain.CopyAppearanceFrom(terrain.Vegetations.GetRandomItemFromList().SadGlyph);
             }
         }
 
