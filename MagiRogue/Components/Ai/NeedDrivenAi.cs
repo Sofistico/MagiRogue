@@ -137,7 +137,7 @@ namespace MagiRogue.Components.Ai
                             if (map.DistanceMeasurement.Calculate(actor.Position, item.Position) <= 1)
                             {
                                 ActionManager.PickUp(actor, item);
-                                ActionManager.Eat(actor, item, need);
+                                timeTakenAction = ActionManager.Eat(actor, item, need);
                             }
                             else
                             {
