@@ -59,7 +59,7 @@ namespace MagiRogue.Components.Ai
                                 var obj = commitedToNeed.Objective;
                                 if (map.DistanceMeasurement.Calculate(actor.Position - obj.Position) <= 1) // right next to the water tile or in it
                                 {
-                                    ActionManager.Eat(actor, obj, need);
+                                    timeTakenAction = ActionManager.Eat(actor, obj, need);
                                     ClearCommit();
                                 }
                                 else
@@ -89,7 +89,7 @@ namespace MagiRogue.Components.Ai
                                 break;
                             if (map.DistanceMeasurement.Calculate(actor.Position - water.Position) <= 1) // right next to the water tile or in it
                             {
-                                ActionManager.Drink(actor, water.MaterialOfTile, 25, need);
+                                timeTakenAction = ActionManager.Drink(actor, water.MaterialOfTile, 25, need);
                             }
                             else
                             {

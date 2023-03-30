@@ -62,22 +62,22 @@ namespace MagiRogue.Commands
         /// </summary>
         /// <param name="attacker"></param>
         /// <param name="defender"></param>
-        public static void MeleeAttack(Actor attacker, Actor defender)
+        public static int MeleeAttack(Actor attacker, Actor defender)
         {
             if (!defender.CanBeAttacked)
-                return;
+                return 0;
 
             if (!attacker.GetAnatomy().HasAnyHands)
             {
                 GameLoop.AddMessageLog
                     ($"The {attacker.Name} doesn't have enough arms to hit {defender.Name}");
-                return;
+                return 0;
             }
 
             if (attacker.Body.Stamina <= 0)
             {
                 GameLoop.AddMessageLog($"{attacker.Name} is far too tired to attack!");
-                return;
+                return TimeHelper.Wait;
             }
 
             // Create two messages that describe the outcome
@@ -103,6 +103,8 @@ namespace MagiRogue.Commands
             // discount stamina from the attacker
             attacker.Body.Stamina =
                 MathMagi.Round((attacker.Body.Stamina - staminaAttackAction) * (attacker.Body.Endurance / 100));
+
+            return TimeHelper.GetAttackTime(attacker);
         }
 
         /// <summary>
@@ -141,7 +143,7 @@ namespace MagiRogue.Commands
                         // add logic for attack here
                         // TODO: make it possible to choose which monster to strike and test what happens when there is more
                         // than one monster nearby.
-                        Actor closestMonster = monsterClose.First();
+                        Actor closestMonster = monsterClose[0];
                         MeleeAttack(attacker, closestMonster);
                         return true;
                     }
@@ -570,7 +572,7 @@ namespace MagiRogue.Commands
             return TimeHelper.GetWalkTime(actor, actor.Position);
         }
 
-        public static void Drink(Actor actor,
+        public static int Drink(Actor actor,
             MaterialTemplate material,
             int temperature,
             Need? needSatisfied = null)
@@ -580,13 +582,15 @@ namespace MagiRogue.Commands
                 if (needSatisfied != null)
                     needSatisfied?.Fulfill();
                 GameLoop.AddMessageLog($"The {actor.Name} drank {material.Name}");
+                return TimeHelper.Interact;
             }
+            return 0;
         }
 
-        public static void Eat(Actor actor, IGameObject whatToEat, Need? need = null)
+        public static int Eat(Actor actor, IGameObject whatToEat, Need? need = null)
         {
             if (!actor.CanInteract)
-                return;
+                return 0;
             if (whatToEat is Item item)
             {
                 if (need is not null)
@@ -601,6 +605,7 @@ namespace MagiRogue.Commands
                 plant.RemoveThisFromMap();
                 GameLoop.AddMessageLog($"The {actor.Name} ate {plant.Name}");
             }
+            return TimeHelper.Interact;
         }
 
         public static Path FindFleeAction(Map map, Actor actor, Actor? danger)

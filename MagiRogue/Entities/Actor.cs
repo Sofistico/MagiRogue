@@ -160,6 +160,7 @@ namespace MagiRogue.Entities
 
             if (actor != null && CanBeAttacked)
             {
+                // TODO: Make sure that the time to attack is properly added here!
                 ActionManager.MeleeAttack(this, actor);
                 Bumped = true;
                 return Bumped;
