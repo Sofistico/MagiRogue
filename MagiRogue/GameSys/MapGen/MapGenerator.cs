@@ -701,6 +701,14 @@ namespace MagiRogue.GameSys.MapGen
             map.MapZoneConnections.Add(di, maps[endIdx]);
         }
 
+        protected static void FillMapWithGrass(Map map)
+        {
+            foreach (var item in map.Tiles.OfType<TileFloor>())
+            {
+                item.AddVegetations(DataManager.QueryPlantInData("grass"), map);
+            }
+        }
+
         #endregion GeneralMapGen
 
         #region MapGenAlgorithms

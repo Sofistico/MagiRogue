@@ -3,6 +3,7 @@ using MagiRogue.Entities;
 using MagiRogue.GameSys.Tiles;
 using SadRogue.Primitives;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MagiRogue.GameSys
 {
@@ -128,6 +129,10 @@ namespace MagiRogue.GameSys
             if (!terrain.LastSeenAppereance.Matches(terrain))
             {
                 terrain.CopyAppearanceFrom(terrain.LastSeenAppereance);
+            }
+            if (terrain.Vegetations.All(i => i is not null))
+            {
+                terrain.CopyAppearanceFrom(terrain.Vegetations.Last().SadGlyph);
             }
         }
 

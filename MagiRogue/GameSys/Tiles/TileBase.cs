@@ -194,11 +194,22 @@ namespace MagiRogue.GameSys.Tiles
             if (index < Vegetations.Length && HoldsVegetation)
             {
                 Vegetations[index] = plant;
+
                 CopyAppearanceFrom(plant.SadGlyph);
                 LastSeenAppereance.CopyAppearanceFrom(plant.SadGlyph);
                 IsDirty = true;
                 plant.Position = Position;
                 map?.AddEntity(plant);
+            }
+        }
+
+        public void AddVegetations(Plant plant, Map? map = null)
+        {
+            if (!HoldsVegetation)
+                return;
+            for (int i = 0; i < Vegetations.Length; i++)
+            {
+                AddVegetation(plant.Clone(), i, map);
             }
         }
 

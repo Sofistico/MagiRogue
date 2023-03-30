@@ -20,6 +20,7 @@ namespace MagiRogue.GameSys.MapGen
             PrepareForOuterWalls();
             AppendForestTestMap();
             AppendRitualFloor();
+            FillMapWithGrass(_map);
 
             return _map;
         }
