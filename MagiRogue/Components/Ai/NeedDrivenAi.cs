@@ -120,7 +120,7 @@ namespace MagiRogue.Components.Ai
                             if (enemy is null) { break; }
                             if (map.DistanceMeasurement.Calculate(actor.Position - enemy.Position) <= actor.AttackRange())
                             {
-                                ActionManager.MeleeAttack(actor, enemy);
+                                timeTakenAction = ActionManager.MeleeAttack(actor, enemy);
                             }
                             else
                             {
