@@ -18,13 +18,13 @@ namespace MagiRogue.Data
         private const string _folderName = "Saves";
         private const int chunkPartition = 500;
         private static readonly string dir = AppDomain.CurrentDomain.BaseDirectory;
+        private readonly JsonSerializerSettings settings;
 
         [DataMember]
         public string SaveDir { get; set; }
 
         [DataMember]
         public string SavePathName { get; set; }
-        private JsonSerializerSettings settings;
 
         [JsonConstructor]
         public SaveAndLoad()
@@ -79,7 +79,7 @@ namespace MagiRogue.Data
         /// <param name="saveName"></param>
         private void CreateSaveNameFolder(string saveName)
         {
-            if (SavePathName is not null && SavePathName.Equals(saveName)) return;
+            if (SavePathName?.Equals(saveName) == true) return;
             SavePathName = saveName;
             string path = dir + $@"{_folderName}\{saveName}";
 
@@ -290,12 +290,12 @@ namespace MagiRogue.Data
 
             var regions = LoadChunks(file);
 
-            return regions.FirstOrDefault(i => i.ToIndex(mapWidth) == index);
+            return Array.Find(regions, i => i.ToIndex(mapWidth) == index);
         }
 
         public static Map LoadMapById(int id)
         {
-            string pathWildcard = @$"SaveDir\Chunks_*.mr";
+            const string pathWildcard = @"SaveDir\Chunks_*.mr";
             string[] list = FileUtils.GetFiles(pathWildcard);
 
             for (int i = 0; i < list.Length; i++)
@@ -303,7 +303,7 @@ namespace MagiRogue.Data
                 RegionChunk[] chunks = LoadChunks(list[i]);
                 for (int y = 0; y < chunks.Length; y++)
                 {
-                    var m = chunks[i].LocalMaps.FirstOrDefault(i => i.MapId == id);
+                    var m = Array.Find(chunks[i].LocalMaps, i => i.MapId == id);
                     if (m != null)
                         return m;
                 }

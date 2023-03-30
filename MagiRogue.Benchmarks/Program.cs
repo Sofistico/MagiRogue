@@ -8,7 +8,8 @@ namespace MagiRogue.Benchmarks
         private static readonly string[] names = new[]
         {
             "Turn",
-            "Map"
+            "Map",
+            "Save"
         };
 
         private static void Main()
@@ -34,6 +35,10 @@ namespace MagiRogue.Benchmarks
 
                 case 1:
                     BenchmarkRunner.Run<MapBenchmarks>();
+                    break;
+
+                case 2:
+                    BenchmarkRunner.Run<SaveBenchs>();
                     break;
 
                 default:

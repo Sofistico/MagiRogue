@@ -105,12 +105,8 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         /// <param name="background"></param>
         /// <param name="glyph"></param>
         /// <param name="layer"></param>
-        /// <param name="stats"></param>
-        /// <param name="anatomy"></param>
-        /// <param name="description"></param>
         /// <param name="size"></param>
         /// <param name="weight"></param>
-        /// <param name="materialId"></param>
         public ActorTemplate(string name, uint foreground, uint background, int glyph,
             int layer, Body body, int size, double weight,
             List<AbilityTemplate> abilities, MagicManager magic, Soul soul, Mind mind)
