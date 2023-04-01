@@ -18,14 +18,14 @@ namespace MagiRogue.Components.Ai
         private Path? previousKnowPath;
         private Need? commitedToNeed;
         private int step;
-        private GoRogue.GameFramework.IGameObject? parent;
+        private IGameObject? parent;
         private NeedCollection? needs;
 
         public IObjectWithComponents? Parent { get; set; }
 
         public (bool sucess, long ticks) RunAi(Map map, MessageLogWindow messageLog)
         {
-            parent ??= (GoRogue.GameFramework.IGameObject)Parent;
+            parent ??= (IGameObject)Parent;
             if (Parent.GoRogueComponents.Contains(typeof(NeedCollection))
                 && map.GetEntityById(parent.ID) is Actor actor)
             {
