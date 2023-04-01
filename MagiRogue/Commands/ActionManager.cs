@@ -13,6 +13,7 @@ using MagiRogue.GameSys.Veggies;
 using MagiRogue.Utils;
 using MagiRogue.Utils.Extensions;
 using SadConsole;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -644,6 +645,18 @@ namespace MagiRogue.Commands
                 }
             }
             return false;
+        }
+
+        public static bool FindWater(Actor actor, Map map, out WaterTile water)
+        {
+            water = map.GetClosestWaterTile(actor.Body.ViewRadius, actor.Position);
+
+            if (water is null)
+                return false;
+
+            if (!actor.CanSee(water.Position))
+                return false;
+            return true;
         }
     }
 }

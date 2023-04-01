@@ -79,21 +79,20 @@ namespace MagiRogue.Components.Ai
                             break;
 
                         case Actions.Drink:
-                            var water = map.GetClosestWaterTile(actor.Body.ViewRadius, actor.Position);
-                            if (water is null)
+                            if (ActionManager.FindWater(actor, map, out var water))
                             {
-                                timeTakenAction = ActionManager.Wander(actor);
-                                break;
-                            }
-                            if (!actor.CanSee(water.Position))
-                                break;
-                            if (map.DistanceMeasurement.Calculate(actor.Position - water.Position) <= 1) // right next to the water tile or in it
-                            {
-                                timeTakenAction = ActionManager.Drink(actor, water.MaterialOfTile, 25, need);
+                                if (map.DistanceMeasurement.Calculate(actor.Position - water.Position) <= 1) // right next to the water tile or in it
+                                {
+                                    timeTakenAction = ActionManager.Drink(actor, water.MaterialOfTile, 25, need);
+                                }
+                                else
+                                {
+                                    timeTakenAction = FindPathAndMoveOneStep(map, actor, water);
+                                }
                             }
                             else
                             {
-                                timeTakenAction = FindPathAndMoveOneStep(map, actor, water);
+                                timeTakenAction = ActionManager.Wander(actor);
                             }
                             break;
 
