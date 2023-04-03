@@ -18,14 +18,14 @@ namespace MagiRogue.Entities
         public Personality Personality { get; set; }
         public Profession Profession { get; set; }
         public Dictionary<string, int> Stats { get; set; }
-        public List<Memory> Memories { get; set; }
+        public List<IMemory> Memories { get; set; }
 
         public Mind()
         {
             Abilities = new();
             Personality = new Personality();
             Stats = new Dictionary<string, int>() { { "Inteligence", 0 }, { "Precision", 0 } };
-            Memories = new List<Memory>();
+            Memories = new List<IMemory>();
         }
 
         public void AddAbilityToDictionary(Ability ability)

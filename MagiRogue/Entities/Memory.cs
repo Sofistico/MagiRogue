@@ -1,17 +1,13 @@
 ﻿using MagiRogue.Data.Enumerators;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MagiRogue.Entities
 {
-    public class Memory
+    public class Memory<T> : IMemory
     {
         public Point LastSeen { get; set; }
         public MemoryType MemoryType { get; set; }
-        public object? ObjToRemember { get; set; }
+        public T? ObjToRemember { get; set; }
+        public bool Valid { get; set; }
 
         public Memory()
         {
@@ -19,11 +15,19 @@ namespace MagiRogue.Entities
 
         public Memory(Point lastSeen,
             MemoryType memoryType,
-            object? objToRemember)
+            T? objToRemember)
         {
             LastSeen = lastSeen;
             MemoryType = memoryType;
             ObjToRemember = objToRemember;
+            Valid = true;
         }
+    }
+
+    public interface IMemory
+    {
+        public Point LastSeen { get; set; }
+        public MemoryType MemoryType { get; set; }
+        public bool Valid { get; set; }
     }
 }

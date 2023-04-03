@@ -531,9 +531,37 @@ namespace MagiRogue.Entities
             actorFov.Calculate(Position, GetViewRadius());
         }
 
-        public void AddMemory(Point lastSeen, MemoryType memoryType, object obj)
+        public void AddMemory<T>(Point lastSeen, MemoryType memoryType, T obj)
         {
-            Mind.Memories.Add(new Memory(lastSeen, memoryType, obj));
+            Mind.Memories.Add(new Memory<T>(lastSeen, memoryType, obj));
+        }
+
+        public bool HasMemory<T>(MemoryType memoryType, T obj)
+        {
+            foreach (var item in Mind.Memories)
+            {
+                if (item.MemoryType == memoryType)
+                {
+                    var mem = item as Memory<T>;
+                    if (mem.ObjToRemember.Equals(obj))
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        public bool GetMemory<T>(MemoryType type, out Memory<T>? memory)
+        {
+            foreach (var item in Mind.Memories)
+            {
+                if (item.MemoryType == type)
+                {
+                    memory = (Memory<T>?)item;
+                    return true;
+                }
+            }
+            memory = null;
+            return false;
         }
 
         #endregion Methods

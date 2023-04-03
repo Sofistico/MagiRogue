@@ -13,7 +13,6 @@ using MagiRogue.GameSys.Veggies;
 using MagiRogue.Utils;
 using MagiRogue.Utils.Extensions;
 using SadConsole;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -652,10 +651,21 @@ namespace MagiRogue.Commands
             water = map.GetClosestWaterTile(actor.Body.ViewRadius, actor.Position);
 
             if (water is null)
+            {
+                if (actor.GetMemory<WaterTile>(MemoryType.WaterLoc, out var memory))
+                {
+                    water = memory.ObjToRemember!;
+                    return true;
+                }
                 return false;
+            }
 
             if (!actor.CanSee(water.Position))
                 return false;
+
+            if (!actor.HasMemory(MemoryType.WaterLoc, water))
+                actor.AddMemory(water.Position, MemoryType.WaterLoc, water);
+
             return true;
         }
     }
