@@ -1,12 +1,15 @@
 ﻿using MagiRogue.Components;
 using MagiRogue.Components.Ai;
 using MagiRogue.Data;
+using MagiRogue.GameSys.Tiles;
 using System;
 
 namespace MagiRogue.GameSys.MapGen
 {
     public class MiscMapGen : MapGenerator
     {
+        private WaterTile waterTile;
+
         public MiscMapGen()
         {
             // empty
@@ -40,6 +43,15 @@ namespace MagiRogue.GameSys.MapGen
             var pointBegin = new Point(_map.Width / 2, _map.Height / 2);
 
             var room = _map.AddRoom(r, pointBegin);
+            foreach (var item in room.RoomRectangle.Positions())
+            {
+                var water = _map.GetTileAt<WaterTile>(item);
+                if (water is not null)
+                {
+                    waterTile = water;
+                    break;
+                }
+            }
             PlaceUnitsInForest(room);
         }
 
@@ -51,19 +63,27 @@ namespace MagiRogue.GameSys.MapGen
                 var pos = room.ReturnRandomPosRoom();
                 if (i % count == 0)
                 {
-                    _map.AddMagiEntity(EntityFactory.ActorCreator(pos,
+                    var actor = EntityFactory.ActorCreator(pos,
                         "deer",
                         Data.Enumerators.Sex.Male,
                         Data.Enumerators.AgeGroup.Adult)
-                        .WithComponents(new NeedDrivenAi()));
+                        .WithComponents(new NeedDrivenAi());
+                    actor.AddMemory(waterTile.Position,
+                        Data.Enumerators.MemoryType.WaterLoc,
+                        waterTile);
+                    _map.AddMagiEntity(actor);
                 }
                 else
                 {
-                    _map.AddMagiEntity(EntityFactory.ActorCreator(pos,
+                    var actor = EntityFactory.ActorCreator(pos,
                         "wolf",
                         Data.Enumerators.Sex.Male,
                         Data.Enumerators.AgeGroup.Adult)
-                        .WithComponents(new NeedDrivenAi()));
+                        .WithComponents(new NeedDrivenAi());
+                    actor.AddMemory(waterTile.Position,
+                        Data.Enumerators.MemoryType.WaterLoc,
+                        waterTile);
+                    _map.AddMagiEntity(actor);
                 }
             }
         }

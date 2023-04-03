@@ -473,7 +473,7 @@ namespace MagiRogue.Entities
             return GetAnatomy().Gender;
         }
 
-        public MagiEntity WithComponents(params object[] objs)
+        public Actor WithComponents(params object[] objs)
         {
             for (int i = 0; i < objs.Length; i++)
             {
@@ -529,6 +529,11 @@ namespace MagiRogue.Entities
         {
             actorFov ??= new RecursiveShadowcastingBooleanBasedFOV(CurrentMap.TransparencyView);
             actorFov.Calculate(Position, GetViewRadius());
+        }
+
+        public void AddMemory(Point lastSeen, MemoryType memoryType, object obj)
+        {
+            Mind.Memories.Add(new Memory(lastSeen, memoryType, obj));
         }
 
         #endregion Methods

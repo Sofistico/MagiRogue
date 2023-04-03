@@ -350,13 +350,14 @@ namespace MagiRogue.GameSys
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-
         public T GetTileAt<T>(int x, int y) where T : TileBase
         {
             int locationIndex = Point.ToIndex(x, y, Width);
 
             // make sure the index is within the boundaries of the map!
-            return locationIndex <= Width * Height && locationIndex >= 0 ? Tiles[locationIndex] is T t ? t : null : null;
+            return locationIndex <= Width * Height && locationIndex >= 0
+                ? Tiles[locationIndex] is T t ? t : null
+                : null;
         }
 
         public TileBase GetTileAt(int x, int y)
@@ -406,7 +407,7 @@ namespace MagiRogue.GameSys
         /// <typeparam name="T">Any type of entity</typeparam>
         /// <param name="id">The id of the entity to find</param>
         /// <returns>Returns the entity owner of the id</returns>
-        public MagiEntity GetEntityById(uint id) => (MagiEntity)idMap[id];
+        public MagiEntity GetEntityById(uint id) => idMap[id];
 
         /// <summary>
         /// Gets the entity by it's id

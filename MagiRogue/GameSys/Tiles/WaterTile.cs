@@ -1,4 +1,5 @@
-﻿using MagiRogue.Data.Enumerators;
+﻿using GoRogue.SenseMapping;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using SadRogue.Primitives;
 
