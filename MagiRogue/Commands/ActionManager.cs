@@ -208,19 +208,15 @@ namespace MagiRogue.Commands
         /// <param name="door">Door that wil be closed></param>
         public static bool CloseDoor(Actor actor)
         {
-            Point[] allDirections = SadConsole.PointExtensions.GetDirectionPoints(actor.Position);
-            foreach (Point points in allDirections)
+            foreach (Point points in actor.Position.GetDirectionPoints())
             {
                 TileDoor possibleDoor = GameLoop.GetCurrentMap().GetTileAt<TileDoor>(points);
-                if (possibleDoor != null)
+                if (possibleDoor?.IsOpen == true)
                 {
-                    if (possibleDoor.IsOpen)
-                    {
-                        possibleDoor.Close();
-                        GameLoop.AddMessageLog($"{actor.Name} closed a {possibleDoor.Name}");
-                        GameLoop.GetCurrentMap().ForceFovCalculation();
-                        return true;
-                    }
+                    possibleDoor.Close();
+                    GameLoop.AddMessageLog($"{actor.Name} closed a {possibleDoor.Name}");
+                    GameLoop.GetCurrentMap().ForceFovCalculation();
+                    return true;
                 }
             }
             return false;
@@ -235,7 +231,7 @@ namespace MagiRogue.Commands
             }
             else
             {
-                Item item = inv.Inventory.First();
+                Item item = inv.Inventory[0];
                 inv.Inventory.Remove(item);
                 item.Position = inv.Position;
                 GameLoop.GetCurrentMap().AddMagiEntity(item);
@@ -266,10 +262,12 @@ namespace MagiRogue.Commands
         {
             if (GameLoop.GetCurrentMap().GoRogueComponents.GetFirstOrDefault<FOVHandler>().IsEnabled)
             {
-                GameLoop.GetCurrentMap().GoRogueComponents.GetFirstOrDefault<FOVHandler>().Disable(false);
+                GameLoop.GetCurrentMap().GoRogueComponents.GetFirstOrDefault<FOVHandler>()?.Disable(false);
             }
             else
-                GameLoop.GetCurrentMap().GoRogueComponents.GetFirstOrDefault<FOVHandler>().Enable();
+            {
+                GameLoop.GetCurrentMap().GoRogueComponents.GetFirstOrDefault<FOVHandler>()?.Enable();
+            }
         }
 
         public static void CreateNewMapForTesting()
@@ -324,10 +322,10 @@ namespace MagiRogue.Commands
         public static bool RestTillFull(Actor actor)
         {
             Body bodyStats = actor.Body;
-            Mind mindStats = actor.Mind;
+            //Mind mindStats = actor.Mind;
             Soul soulStats = actor.Soul;
 
-            if ((bodyStats.Stamina < bodyStats.MaxStamina || soulStats.CurrentMana < soulStats.MaxMana))
+            if (bodyStats.Stamina < bodyStats.MaxStamina || soulStats.CurrentMana < soulStats.MaxMana)
             {
                 // calculate here the amount of time that it will take in turns to rest to full
                 double staminaDif, manaDif;
@@ -358,10 +356,7 @@ namespace MagiRogue.Commands
         public static bool EquipItem(Actor actor, Item item)
         {
             item.Equip(actor);
-            if (actor.GetEquipment().ContainsValue(item))
-                return true;
-            else
-                return false;
+            return actor.GetEquipment().ContainsValue(item);
         }
 
         /// <summary>
@@ -373,10 +368,7 @@ namespace MagiRogue.Commands
         public static bool UnequipItem(Actor actor, Item item)
         {
             item.Unequip(actor);
-            if (!actor.GetEquipment().ContainsValue(item))
-                return true;
-            else
-                return false;
+            return !actor.GetEquipment().ContainsValue(item);
         }
 
         public static bool EnterDownMovement(Point playerPoint)
@@ -386,8 +378,7 @@ namespace MagiRogue.Commands
             WorldTile? possibleWorldTileHere =
                 GameLoop.GetCurrentMap().GetTileAt<WorldTile>(playerPoint);
             Map currentMap = GameLoop.GetCurrentMap();
-            if (possibleStairs is not null
-                && possibleStairs.MapIdConnection.HasValue)
+            if (possibleStairs?.MapIdConnection.HasValue == true)
             {
                 Map map = Universe.GetMapById(possibleStairs.MapIdConnection.Value);
                 // TODO: For now it's just a test, need to work out a better way to do it.
@@ -456,7 +447,7 @@ namespace MagiRogue.Commands
                     GameLoop.Universe.ChangePlayerMap(map, playerLastPos, currentMap);
                     GameLoop.Universe.SaveAndLoad.SaveChunkInPos(GameLoop.Universe.CurrentChunk,
                         GameLoop.Universe.CurrentChunk.ToIndex(map.Width));
-                    GameLoop.Universe.CurrentChunk = null;
+                    GameLoop.Universe.CurrentChunk = null!;
                     return true;
                 }
                 else if (GameLoop.Universe.MapIsWorld())
