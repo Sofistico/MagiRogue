@@ -1,8 +1,8 @@
-﻿using MagiRogue.Components;
-using MagiRogue.Components.Ai;
+﻿using MagiRogue.Components.Ai;
 using MagiRogue.Data;
 using MagiRogue.GameSys.Tiles;
-using System;
+using MagiRogue.Utils;
+using MagiRogue.Utils.Extensions;
 
 namespace MagiRogue.GameSys.MapGen
 {
@@ -24,8 +24,22 @@ namespace MagiRogue.GameSys.MapGen
             AppendForestTestMap();
             AppendRitualFloor();
             FillMapWithGrass(_map);
+            PutCircularRoom();
 
             return _map;
+        }
+
+        private void PutCircularRoom()
+        {
+            //var poitns = _map.GetRandomWalkableTile();
+            var poitns = new Point(10, 10);
+            Shape circle = poitns.HollowCircleFromOriginPoint(5);
+
+            foreach (var point in circle.Points)
+            {
+                var tile = TileEncyclopedia.GenericStoneWall(point);
+                _map.SetTerrain(tile);
+            }
         }
 
         private void AppendRitualFloor()

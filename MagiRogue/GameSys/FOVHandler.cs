@@ -1,9 +1,9 @@
 ﻿using GoRogue.GameFramework;
-using SadRogue.Primitives.SpatialMaps;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Tiles;
 using SadRogue.Primitives.GridViews;
+using SadRogue.Primitives.SpatialMaps;
 using System;
 using System.Linq;
 
@@ -49,11 +49,14 @@ namespace MagiRogue.GameSys
         /// on each possible value.
         /// </summary>
         /// <remarks>
+        /// <para>
         /// If the component has been added to a map, setting this value will set all values in
         /// the map according to the new state.
-        ///
+        /// </para>
+        /// <para>
         /// When the component is added to a map, the visibility of all values in that map will
         /// be set according to this value.
+        /// </para>
         /// </remarks>
         public FovState CurrentState
         {
@@ -137,9 +140,10 @@ namespace MagiRogue.GameSys
                             UpdateTerrainSeen(terrain);
                     }
 
-                    foreach (MagiEntity entity in Map.Entities.Items.Cast<MagiEntity>())
+                    foreach (IGameObject obj in Map.Entities.Items)
                     {
-                        UpdateEntitySeen(entity);
+                        if (obj is MagiEntity entity)
+                            UpdateEntitySeen(entity);
                     }
 
                     break;

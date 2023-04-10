@@ -1,5 +1,6 @@
 ﻿using MagiRogue.Commands;
 using SadRogue.Primitives;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,7 +15,7 @@ namespace MagiRogue.Utils
         /// <param name="radius">The radius of the cone</param>
         /// <param name="target">The target that is creating the cone</param>
         /// <returns></returns>
-        public static Shape Cone(Point originCoordinate, double radius, Target target, double coneSpan = 90)
+        public static Shape Cone(this Point originCoordinate, in double radius, Target target, in double coneSpan = 90)
         {
             var map = GameLoop.GetCurrentMap();
             Point[] points;
@@ -34,7 +35,32 @@ namespace MagiRogue.Utils
 #if DEBUG
             GameLoop.AddMessageLog(angle.ToString());
 #endif
-            return new Shape(points, radius);
+            return new Shape(points);
+        }
+
+        public static Shape HollowCircleFromOriginPoint(this in Point origin, in int radius)
+        {
+            int centerX = origin.X;
+            int centerY = origin.Y;
+
+            List<Point> points = new List<Point>();
+
+            for (int angle = 0; angle < 360; angle++)
+            {
+                int x = (int)(centerX + (radius * Math.Cos(angle)));
+                int y = (int)(centerY + (radius * Math.Sin(angle)));
+                var point = new SadRogue.Primitives.Point(x, y);
+                if (points.Contains(point))
+                    continue;
+                points.Add(point);
+            }
+
+            return new Shape(points.ToArray());
+        }
+
+        public static Shape CircleFromOriginPoint(this in Point origin, in int radius)
+        {
+            return new Shape(Radius.Circle.PositionsInRadius(origin, radius).ToArray());
         }
     }
 
@@ -42,12 +68,9 @@ namespace MagiRogue.Utils
     {
         public readonly Point[] Points { get; }
 
-        public readonly double Radius { get; }
-
-        public Shape(Point[] points, double radius)
+        public Shape(Point[] points)
         {
             Points = points;
-            Radius = radius;
         }
     }
 

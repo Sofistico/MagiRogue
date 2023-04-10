@@ -52,9 +52,9 @@ namespace MagiRogue.Entities
         {
             int possibleId = (int)Ability.ReturnAbilityEnumFromString(weaponType.ToString());
             abilityScore = 0;
-            if (Abilities.ContainsKey(possibleId))
+            if (Abilities.TryGetValue(possibleId, out Ability value))
             {
-                abilityScore = Abilities[possibleId].Score;
+                abilityScore = value.Score;
                 return true;
             }
             else
@@ -67,9 +67,9 @@ namespace MagiRogue.Entities
         {
             int possibleId = (int)Ability.ReturnAbilityEnumFromString(ability.ToString());
             int abilityScore = 0;
-            if (Abilities.ContainsKey(possibleId))
+            if (Abilities.TryGetValue(possibleId, out Ability value))
             {
-                abilityScore = Abilities[possibleId].Score;
+                abilityScore = value.Score;
             }
 
             return abilityScore;
@@ -78,12 +78,7 @@ namespace MagiRogue.Entities
         public Ability ReturnAbilityFromName(AbilityName ability)
         {
             int possibleId = (int)Ability.ReturnAbilityEnumFromString(ability.ToString());
-            if (Abilities.ContainsKey(possibleId))
-            {
-                return Abilities[possibleId];
-            }
-            else
-                return new Ability();
+            return Abilities.TryGetValue(possibleId, out Ability value) ? value : new Ability();
         }
 
         public List<AbilityName> CheckForCombatAbilities()

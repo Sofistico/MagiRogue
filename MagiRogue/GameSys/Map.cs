@@ -513,6 +513,15 @@ namespace MagiRogue.GameSys
         }
 
         /// <summary>
+        /// This is used to get a random point that is random inside the map.
+        /// </summary>
+        /// <returns>Returns an Point that is random inside the map</returns>
+        public Point GetRandomPos()
+        {
+            return new Point(GameLoop.GlobalRand.NextInt(Width - 1), GameLoop.GlobalRand.NextInt(Height - 1));
+        }
+
+        /// <summary>
         /// Returns if the Point is inside the index of the map, makes sure that nothing tries to go outside the map.
         /// </summary>
         /// <param name="point"></param>

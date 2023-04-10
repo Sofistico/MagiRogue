@@ -45,7 +45,7 @@ namespace MagiRogue.GameSys.Time
         {
             return (int)
                 ((MagicalThings * (spellCasted.SpellLevel + spellCasted.ManaCost))
-                    / (actor.GetActorCastingSpeed()));
+                    / (actor.GetActorBaseCastingSpeed()));
         }
     }
 }

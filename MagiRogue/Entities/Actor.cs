@@ -8,7 +8,6 @@ using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils.Extensions;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -130,10 +129,10 @@ namespace MagiRogue.Entities
         private bool CheckForChangeMapChunk(Point pos, Point positionChange)
         {
             Direction dir = Direction.GetCardinalDirection(positionChange);
-            if (GameLoop.GetCurrentMap().MapZoneConnections.ContainsKey(dir) &&
+            if (GameLoop.GetCurrentMap().MapZoneConnections.TryGetValue(dir, out Map value) &&
                 GameLoop.GetCurrentMap().CheckForIndexOutOfBounds(pos + positionChange))
             {
-                Map mapToGo = GameLoop.GetCurrentMap().MapZoneConnections[dir];
+                Map mapToGo = value;
                 Point actorPosInChunk = GetNextMapPos(mapToGo, pos + positionChange);
                 // if tile in the other map isn't walkable, then it should't be possible to go there!
                 if (!mapToGo.IsTileWalkable(actorPosInChunk, this))
@@ -142,7 +141,9 @@ namespace MagiRogue.Entities
                 return true;
             }
             else
+            {
                 return false;
+            }
         }
 
         private static Point GetNextMapPos(Map map, Point pos)
@@ -361,9 +362,9 @@ namespace MagiRogue.Entities
             return Body.GeneralSpeed;
         }
 
-        public double GetActorCastingSpeed()
+        public double GetActorBaseCastingSpeed()
         {
-            return GetActorBaseSpeed() + ((Magic.ShapingSkill * 0.7) * (Soul.WillPower * 0.3));
+            return GetActorBaseSpeed() + (Magic.ShapingSkill * 0.7 * (Soul.WillPower * 0.3));
         }
 
         public double GetAttackVelocity()
@@ -423,32 +424,17 @@ namespace MagiRogue.Entities
 
         public int GetRelevantAttackAbility(WeaponType weaponType)
         {
-            if (Mind.HasSpecifiedAttackAbility(weaponType, out int abilityScore))
-            {
-                return abilityScore;
-            }
-            else
-                return 0;
+            return Mind.HasSpecifiedAttackAbility(weaponType, out int abilityScore) ? abilityScore : 0;
         }
 
         public double GetRelevantAttackAbilityMultiplier(WeaponType weaponType)
         {
-            if (Mind.HasSpecifiedAttackAbility(weaponType, out int abilityScore))
-            {
-                return abilityScore * 0.3;
-            }
-            else
-                return 0;
+            return Mind.HasSpecifiedAttackAbility(weaponType, out int abilityScore) ? abilityScore * 0.3 : 0;
         }
 
         public double GetRelevantAbilityMultiplier(AbilityName ability)
         {
-            if (Mind.Abilities.ContainsKey((int)ability))
-            {
-                return Mind.Abilities[(int)ability].Score * 0.3;
-            }
-            else
-                return 0;
+            return Mind.Abilities.TryGetValue((int)ability, out Ability value) ? value.Score * 0.3 : 0;
         }
 
         public int GetStrenght()
@@ -496,7 +482,11 @@ namespace MagiRogue.Entities
                 {
                     Need need = needs[i];
                     if (need.TickNeed())
+                    {
+#if DEBUG
                         GameLoop.AddMessageLog("Need is in dire need!");
+#endif
+                    }
                 }
             }
         }

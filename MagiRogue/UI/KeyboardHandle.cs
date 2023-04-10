@@ -322,7 +322,7 @@ namespace MagiRogue.UI
 
             if (info.IsKeyPressed(Keys.F8))
             {
-                GetPlayer.AddComponent(new Components.TestComponent(GetPlayer));
+                world.CurrentMap.ControlledEntitiy.AddComponent(new Components.TestComponent(GetPlayer));
                 return false;
             }
 
