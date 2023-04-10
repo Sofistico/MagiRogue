@@ -1,6 +1,5 @@
 ﻿using MagiRogue.Commands;
 using SadRogue.Primitives;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -40,27 +39,21 @@ namespace MagiRogue.Utils
 
         public static Shape HollowCircleFromOriginPoint(this in Point origin, in int radius)
         {
-            int centerX = origin.X;
-            int centerY = origin.Y;
-
-            List<Point> points = new List<Point>();
-
-            for (int angle = 0; angle < 360; angle++)
-            {
-                int x = (int)(centerX + (radius * Math.Cos(angle)));
-                int y = (int)(centerY + (radius * Math.Sin(angle)));
-                var point = new SadRogue.Primitives.Point(x, y);
-                if (points.Contains(point))
-                    continue;
-                points.Add(point);
-            }
-
-            return new Shape(points.ToArray());
+            return new Shape(Shapes.GetCircle(origin, radius).ToArray());
         }
 
         public static Shape CircleFromOriginPoint(this in Point origin, in int radius)
         {
             return new Shape(Radius.Circle.PositionsInRadius(origin, radius).ToArray());
+        }
+
+        public static bool PointInsideACircle(this in Point center, Point point, in double radius)
+        {
+            double dx = center.X - point.X;
+            double dy = center.Y - point.Y;
+            double distance = (dx * dx) + (dy * dy); // little optmization, rather than get the square root, i just put
+            // distance^2<=radius^2
+            return distance <= (radius * radius);
         }
     }
 
