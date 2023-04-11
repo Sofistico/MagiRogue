@@ -1,4 +1,5 @@
-﻿using MagiRogue.Entities;
+﻿using GoRogue.Messaging;
+using MagiRogue.Entities;
 using SadConsole;
 using SadConsole.UI.Controls;
 using SadRogue.Primitives;
@@ -18,6 +19,7 @@ namespace MagiRogue.UI.Windows
         public StatusWindow(int width, int heigth, string title) : base(width, heigth, title)
         {
             player = GameLoop.Universe.Player;
+            MessageBus bus = new MessageBus();
 
             statsConsole = new Console(width - windowBorderThickness, heigth - windowBorderThickness)
             {
@@ -33,7 +35,7 @@ namespace MagiRogue.UI.Windows
 
                 //IsEnabled = false
             };
-            statusScroll.ValueChanged += StatusScroll_ValueChanged; ;
+            statusScroll.ValueChanged += StatusScroll_ValueChanged;
             Controls.Add(statusScroll);
 
             // enable mouse input
@@ -42,7 +44,7 @@ namespace MagiRogue.UI.Windows
             Children.Add(statsConsole);
         }
 
-        private void StatusScroll_ValueChanged(object sender, EventArgs e)
+        private void StatusScroll_ValueChanged(object? sender, EventArgs? e)
         {
             statsConsole.View = new Rectangle(0, statusScroll.Value + windowBorderThickness,
                 statsConsole.Width, statsConsole.View.Height);
@@ -52,8 +54,9 @@ namespace MagiRogue.UI.Windows
         public override void Update(TimeSpan time)
         {
             statsConsole.Print(0, 0, $"{player.Name}");
-            statsConsole.Print(0, 2, $"Stamina: {(int)player.Body.Stamina} / {player.Body.MaxStamina}   ", Color.Red);
-            statsConsole.Print(0, 3, $"Mana: {(int)player.Soul.CurrentMana} / {player.Soul.MaxMana}     ", Color.LightBlue);
+            statsConsole.Print(0, 2, $"Stamina: {player.GetStaminaStatus()}   ", Color.Red);
+            statsConsole.Print(0, 3, $"Mana: {player.GetManaStatus()}     ", Color.LightBlue);
+
             base.Update(time);
         }
     }

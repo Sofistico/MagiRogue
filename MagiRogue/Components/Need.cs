@@ -115,9 +115,12 @@ namespace MagiRogue.Components
             prioQueue.Enqueue(item);
         }
 
-        public bool GetPriority(out Need item)
+        public bool GetPriority(out Need? item)
         {
-            return prioQueue.TryDequeue(out item);
+            if (prioQueue.TryDequeue(out item))
+                return true;
+            item = needs.Find(i => i.PercentFulfilled <= 25);
+            return item is not null;
         }
 
         public void Clear()

@@ -1,9 +1,7 @@
 ﻿using MagiRogue.Data;
-using MagiRogue.Data.Enumerators;
-using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.GameSys.Magic;
+using MagiRogue.Utils;
 using SadRogue.Primitives;
-using System;
 using System.Collections.Generic;
 
 namespace MagiRogue.Entities
@@ -99,6 +97,43 @@ namespace MagiRogue.Entities
             };
 
             return player;
+        }
+
+        public string GetStaminaStatus()
+        {
+            double percent = MathMagi.GetPercentageBasedOnMax(Body.Stamina, Body.MaxStamina);
+
+            if (percent > 50)
+                return "Fine";
+            if (percent <= 50 && percent > 25)
+                return "Tired";
+            if (percent <= 25 && percent > 1)
+                return "Winded";
+            if (percent <= 1)
+                return "Spent";
+
+            return "Should not see this!";
+        }
+
+        public string GetManaStatus()
+        {
+            double percent = MathMagi.GetPercentageBasedOnMax(Soul.CurrentMana, Soul.MaxMana);
+            if (percent >= 95)
+                return "Full";
+            if (percent >= 60)
+                return "Fine";
+            if (percent <= 60 && percent >= 50)
+                return "Half";
+            if (percent <= 50 && percent > 25)
+                return "Low";
+            if (percent <= 25 && percent > 9)
+                return "Spent";
+            if (percent <= 9 && percent > 1)
+                return "Fumes";
+            if (percent <= 1)
+                return "Empty";
+
+            return "Should not see this!";
         }
     }
 }

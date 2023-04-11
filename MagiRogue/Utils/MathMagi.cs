@@ -6,32 +6,19 @@ namespace MagiRogue.Utils
     {
         public static float ReturnPositive(float nmb)
         {
-            float positive;
-            if (nmb < 0)
-                positive = nmb * -1;
-            else
-                positive = nmb;
+            float positive = nmb < 0 ? nmb * -1 : nmb;
             return positive;
         }
 
         public static double ReturnPositive(double nmb)
         {
-            double positive;
-            if (nmb < 0)
-                positive = nmb * -1;
-            else
-                positive = nmb;
+            double positive = nmb < 0 ? nmb * -1 : nmb;
             return positive;
         }
 
         public static int ReturnPositive(int nmb)
         {
-            int positive;
-            if (nmb < 0)
-                positive = nmb * -1;
-            else
-                positive = nmb;
-            return positive;
+            return nmb < 0 ? nmb * -1 : nmb;
         }
 
         /// <summary>
@@ -75,7 +62,7 @@ namespace MagiRogue.Utils
 
         public static int CalculateVolumeWithModifier(int modifier, int volume)
         {
-            return (int)((volume) * (modifier / (double)100));
+            return (int)(volume * (modifier / (double)100));
         }
 
         public static long GetTickByYear(int yearToGameBegin)
@@ -87,7 +74,15 @@ namespace MagiRogue.Utils
         {
             if (current == 0)
                 return 100;
-            var val = Math.Round((double)(((double)current / (double)max) * 100), 3, MidpointRounding.AwayFromZero) ;
+            var val = Math.Round((double)(((double)current / (double)max) * 100), 3, MidpointRounding.AwayFromZero);
+            return 100 - val;
+        }
+
+        public static double GetPercentageBasedOnMax(double current, double max)
+        {
+            if (current == 0)
+                return 100;
+            var val = Math.Round((double)((double)current / (double)max * 100), 3, MidpointRounding.AwayFromZero);
             return 100 - val;
         }
     }

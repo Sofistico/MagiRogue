@@ -34,8 +34,7 @@ namespace MagiRogue.Components.Ai
                 int timeTakenAction = 0;
                 if (needs is null)
                     return (false, -1);
-                if (!needs.GetPriority(out Need need) && commitedToNeed is null)
-                    need = needs.FirstOrDefault(i => i.PercentFulfilled <= 25);
+                needs.GetPriority(out Need need);
                 if (ActionManager.SearchForDangerAction(actor, map, out var danger))
                 {
                     previousKnowPath = ActionManager.FindFleeAction(map, actor, danger);
