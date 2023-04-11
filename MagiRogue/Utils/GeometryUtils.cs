@@ -98,4 +98,40 @@ namespace MagiRogue.Utils
             Points = points;
         }
     }
+
+    /// <summary>
+    /// Represents a simple 3d grid, does not hold any kind of objects and is there just to represent
+    /// the space
+    /// </summary>
+    public struct Simple3DGrid
+    {
+        /// <summary>
+        /// Also know as the rows
+        /// </summary>
+        public int Width { get; set; }
+
+        /// <summary>
+        /// Also know as the columns
+        /// </summary>
+        public int Height { get; set; }
+
+        public int Depth { get; set; }
+
+        /// <summary>
+        /// The total size of the grid
+        /// </summary>
+        public int Size { get; set; }
+
+        public Simple3DGrid(int width, int height, int depth)
+        {
+            Width = width;
+            Height = height;
+            Size = width * height * depth;
+        }
+
+        public int ToIndex(int y, int x, int z)
+        {
+            return z + (y * Depth) + (x * Height * Depth);
+        }
+    }
 }
