@@ -14,7 +14,7 @@ namespace MagiRogue.Utils
         /// <param name="radius">The radius of the cone</param>
         /// <param name="target">The target that is creating the cone</param>
         /// <returns></returns>
-        public static Shape Cone(this Point originCoordinate, in double radius, Target target, in double coneSpan = 90)
+        public static Shape Cone(this Point originCoordinate, double radius, Target target, double coneSpan = 90)
         {
             var map = GameLoop.GetCurrentMap();
             Point[] points;
@@ -37,17 +37,17 @@ namespace MagiRogue.Utils
             return new Shape(points);
         }
 
-        public static Shape HollowCircleFromOriginPoint(this in Point origin, in int radius)
+        public static Shape HollowCircleFromOriginPoint(this Point origin, int radius)
         {
             return new Shape(Shapes.GetCircle(origin, radius).ToArray());
         }
 
-        public static Shape CircleFromOriginPoint(this in Point origin, in int radius)
+        public static Shape CircleFromOriginPoint(this Point origin, int radius)
         {
             return new Shape(Radius.Circle.PositionsInRadius(origin, radius).ToArray());
         }
 
-        public static bool PointInsideACircle(this in Point center, Point point, in double radius)
+        public static bool PointInsideACircle(this Point center, Point point, double radius)
         {
             double dx = center.X - point.X;
             double dy = center.Y - point.Y;
