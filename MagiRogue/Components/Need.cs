@@ -38,7 +38,7 @@ namespace MagiRogue.Components
         /// <summary>
         /// Percent of how much it's fulfilled
         /// </summary>
-        public double? PercentFulfilled { get => MaxTurnCounter.HasValue ? MathMagi.GetPercentageBasedOnMax(TurnCounter, MaxTurnCounter.Value) : null; }
+        public double? PercentFulfilled { get => MaxTurnCounter.HasValue ? MathMagi.GetInversePercentageBasedOnMax(TurnCounter, MaxTurnCounter.Value) : null; }
 
         public IGameObject Objective { get; set; }
 

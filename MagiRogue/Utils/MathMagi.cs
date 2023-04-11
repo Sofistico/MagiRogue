@@ -70,11 +70,11 @@ namespace MagiRogue.Utils
             return yearToGameBegin * 3214080000;
         }
 
-        public static double GetPercentageBasedOnMax(int current, int max)
+        public static double GetInversePercentageBasedOnMax(int current, int max)
         {
             if (current == 0)
                 return 100;
-            var val = (double)(current / (double)max * 100);
+            var val = (double)(100 - (current / (double)max * 100));
             if (val >= 0)
             {
                 return val + 0.5d;
