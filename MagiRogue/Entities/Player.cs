@@ -10,6 +10,10 @@ namespace MagiRogue.Entities
     // Default glyph is @
     public class Player : Actor
     {
+        // types: 0 - stamina
+        // 1 - mana
+        private readonly Dictionary<int, double> statusPercent = new Dictionary<int, double>();
+
         public Player(string name, Color foreground, Color background, Point position) :
             base(name, foreground, background, '@', position)
         {
@@ -101,7 +105,11 @@ namespace MagiRogue.Entities
 
         public string GetStaminaStatus()
         {
-            double percent = MathMagi.GetPercentageBasedOnMax(Body.Stamina, Body.MaxStamina);
+            double percent;
+            if (Body.Stamina == Body.MaxStamina)
+                percent = 100;
+            else
+                percent = MathMagi.GetPercentageBasedOnMax(Body.Stamina, Body.MaxStamina);
 
             if (percent > 50)
                 return "Fine";
@@ -117,7 +125,12 @@ namespace MagiRogue.Entities
 
         public string GetManaStatus()
         {
-            double percent = MathMagi.GetPercentageBasedOnMax(Soul.CurrentMana, Soul.MaxMana);
+            double percent;
+            if (Soul.CurrentMana == Soul.MaxMana)
+                percent = 100;
+            else
+                percent = MathMagi.GetPercentageBasedOnMax(Soul.CurrentMana, Soul.MaxMana);
+
             if (percent >= 95)
                 return "Full";
             if (percent >= 60)

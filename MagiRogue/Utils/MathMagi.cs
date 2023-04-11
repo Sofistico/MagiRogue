@@ -74,16 +74,25 @@ namespace MagiRogue.Utils
         {
             if (current == 0)
                 return 100;
-            var val = Math.Round((double)(((double)current / (double)max) * 100), 3, MidpointRounding.AwayFromZero);
-            return 100 - val;
+            var val = (double)(current / (double)max * 100);
+            if (val >= 0)
+            {
+                return val + 0.5d;
+            }
+            return val - 0.5d;
+            //return 100 - val;
         }
 
         public static double GetPercentageBasedOnMax(double current, double max)
         {
             if (current == 0)
                 return 100;
-            var val = Math.Round((double)((double)current / (double)max * 100), 3, MidpointRounding.AwayFromZero);
-            return 100 - val;
+            var val = (double)(current / (double)max * 100);
+            if (val >= 0)
+            {
+                return val + 0.5d;
+            }
+            return val - 0.5d;
         }
     }
 }

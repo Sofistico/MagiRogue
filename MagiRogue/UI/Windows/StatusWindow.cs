@@ -54,8 +54,8 @@ namespace MagiRogue.UI.Windows
         public override void Update(TimeSpan time)
         {
             statsConsole.Print(0, 0, $"{player.Name}");
-            statsConsole.Print(0, 2, $"Stamina: {player.GetStaminaStatus()}   ", Color.Red);
-            statsConsole.Print(0, 3, $"Mana: {player.GetManaStatus()}     ", Color.LightBlue);
+            statsConsole.Print(0, 2, ColoredString.Parser.Parse(player.GetStaminaStatus()));
+            statsConsole.Print(0, 3, ColoredString.Parser.Parse(player.GetManaStatus()));
 
             base.Update(time);
         }
