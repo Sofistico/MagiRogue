@@ -1,7 +1,6 @@
 ﻿using GoRogue.Components;
 using GoRogue.GameFramework;
 using MagiRogue.GameSys.Magic;
-using Microsoft.Xna.Framework.Graphics;
 using SadRogue.Primitives;
 using System;
 using System.Diagnostics;
@@ -273,6 +272,16 @@ namespace MagiRogue.Entities
 
         public T GetComponent<T>() where T : class
             => backingField.GoRogueComponents.GetFirstOrDefault<T>();
+
+        public virtual string GetDescriptor()
+        {
+            throw new ApplicationException("Must define the get descriptor for the class!");
+        }
+
+        public virtual string GetCurrentStatus()
+        {
+            throw new ApplicationException("Must define the get status for the class!");
+        }
 
         #endregion IGameObject Interface
     }

@@ -70,6 +70,7 @@ namespace MagiRogue.Components.Ai
 
                         case Actions.Sleep:
                             commitedToNeed = ActionManager.Sleep(actor, need);
+                            timeTakenAction = 100;
                             if (commitedToNeed?.TurnCounter == 0)
                             {
                                 ClearCommit();

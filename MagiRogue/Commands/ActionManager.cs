@@ -486,8 +486,7 @@ namespace MagiRogue.Commands
             }
             else
             {
-                int turns = need.TurnCounter;
-                if (turns-- == 0)
+                if (need.TurnCounter-- == 0)
                 {
                     actor.State = ActorState.Normal;
                 }

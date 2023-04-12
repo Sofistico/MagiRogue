@@ -77,10 +77,9 @@ namespace MagiRogue.Utils
             var val = (double)(100 - (current / (double)max * 100));
             if (val >= 0)
             {
-                return val + 0.5d;
+                return val + 0.5d > 100 ? 100 : val + 0.5d;
             }
             return val - 0.5d;
-            //return 100 - val;
         }
 
         public static double GetPercentageBasedOnMax(double current, double max)
@@ -90,7 +89,7 @@ namespace MagiRogue.Utils
             var val = (double)(current / (double)max * 100);
             if (val >= 0)
             {
-                return val + 0.5d;
+                return val + 0.5d > 100 ? 100 : val + 0.5d;
             }
             return val - 0.5d;
         }

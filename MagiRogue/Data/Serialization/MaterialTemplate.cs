@@ -117,9 +117,9 @@ namespace MagiRogue.Data.Serialization
 
         public MaterialState GetState(int temperature)
         {
-            if (MeltingPoint is not null && MeltingPoint > temperature)
+            if (MeltingPoint is not null && temperature > MeltingPoint)
                 return MaterialState.Liquid;
-            else if (BoilingPoint is not null && BoilingPoint > temperature)
+            else if (BoilingPoint is not null && temperature > BoilingPoint)
                 return MaterialState.Gas;
             else
                 return MaterialState.Solid;
