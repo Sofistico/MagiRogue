@@ -163,10 +163,9 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 "Dimensionalism" => ArtMagic.Dimensionalism, // 7
                 "Conjuration" => ArtMagic.Conjuration, // 8
                 "Illuminism" => ArtMagic.Illuminism, // 9
-                "MedicalMagic" => ArtMagic.MedicalMagic, // 10
-                "MindMagic" => ArtMagic.MindMagic, // 11
-                "SoulMagic" => ArtMagic.SoulMagic, // 12
-                "BloodMagic" => ArtMagic.BloodMagic, // 13
+                "MindMagic" => ArtMagic.MindMagic, // 10
+                "SoulMagic" => ArtMagic.SoulMagic, // 11
+                "BloodMagic" => ArtMagic.BloodMagic, // 12
                 _ => throw new Exception($"Are you sure the school is correct? it must be a valid one./n School used: {st}")
             };
         }

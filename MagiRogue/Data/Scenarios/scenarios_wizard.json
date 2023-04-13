@@ -39,9 +39,9 @@
         "Score": 5
       }
     ],
-    "Inventory": [ "Book on Magic" ],
+    "Inventory": [ [ "read_item", "magical", "subject:random_level_spell:1:5" ] ],
     "Equipment": [ "cap", "robe", "leather_shoe", "leather_shoe" ],
     "RacesAllowed": [ "human", "elf", "dwarf" ],
-    "SpellsKnow": [ "magic_missile" ]
+    "SpellsKnow": [ "any_offensive" ]
   }
 ]

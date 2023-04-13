@@ -94,7 +94,7 @@ namespace MagiRogue.Test.System.Magic
             { Proficiency = 1 };
 
             SpellBase cure = new SpellBase("cure_test", "Cure Test",
-                ArtMagic.MedicalMagic, 0, 1, 4)
+                ArtMagic.BloodMagic, 0, 1, 4)
             { Proficiency = 1 };
 
             SpellBase haste = new SpellBase("haste_self", "Haste",
