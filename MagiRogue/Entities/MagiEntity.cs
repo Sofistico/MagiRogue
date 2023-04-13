@@ -275,7 +275,7 @@ namespace MagiRogue.Entities
 
         public virtual string GetDescriptor()
         {
-            throw new ApplicationException("Must define the get descriptor for the class!");
+            return Description;
         }
 
         public virtual string GetCurrentStatus()

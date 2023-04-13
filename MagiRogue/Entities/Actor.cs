@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace MagiRogue.Entities
 {
@@ -552,6 +553,13 @@ namespace MagiRogue.Entities
             }
             memory = null;
             return false;
+        }
+
+        public override string GetCurrentStatus()
+        {
+            StringBuilder bobBuilder = new();
+            bobBuilder.Append(State.ToString());
+            return bobBuilder.ToString();
         }
 
         #endregion Methods

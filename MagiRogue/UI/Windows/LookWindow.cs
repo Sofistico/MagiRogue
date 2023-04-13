@@ -24,9 +24,9 @@ namespace MagiRogue.UI.Windows
             StringBuilder desc = new StringBuilder();
             if (entity.Description is not null)
             {
-                desc.Append(entity.Description);
+                desc.Append(entity.GetDescriptor());
                 desc.AppendLine();
-                desc.Append(entity.GetDescriptor()).Append(": ").Append(entity.GetCurrentStatus());
+                desc.Append(entity.GetCurrentStatus());
                 lookConsole.Cursor.Print(entity.Description);
             }
             Children.Add(lookConsole);
