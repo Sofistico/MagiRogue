@@ -4,7 +4,6 @@ using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils.Extensions;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -21,6 +20,8 @@ namespace MagiRogue.GameSys
         #region Props
 
         public Rectangle RoomRectangle { get; set; }
+        public Point[] RoomPoints { get; set; }
+        public bool NonRectangleRoom => RoomRectangle == Rectangle.Empty;
 
         public RoomTag Tag { get; set; }
 
@@ -43,6 +44,18 @@ namespace MagiRogue.GameSys
         public Room(Rectangle roomRectangle, RoomTag tag)
         {
             RoomRectangle = roomRectangle;
+            RoomPoints = roomRectangle.Positions().ToArray();
+            Tag = tag;
+        }
+
+        public Room(Point[] points)
+        {
+            RoomPoints = points;
+        }
+
+        public Room(Point[] points, RoomTag tag)
+        {
+            RoomPoints = points;
             Tag = tag;
         }
 
@@ -58,6 +71,7 @@ namespace MagiRogue.GameSys
         public Room(Rectangle roomRectangle)
         {
             RoomRectangle = roomRectangle;
+            RoomPoints = roomRectangle.Positions().ToArray();
             Tag = RoomTag.Generic;
         }
 
@@ -112,19 +126,6 @@ namespace MagiRogue.GameSys
             {
                 door.Locked = false;
             }
-        }
-
-        public Point[] PositionsRoom()
-        {
-            var points = RoomRectangle.Positions().ToEnumerable().ToList();
-            foreach (var item in ReturnRecPerimiter())
-            {
-                if (!points.Contains(item))
-                {
-                    points.Add(item);
-                }
-            }
-            return points.ToArray();
         }
 
         public List<Point> ReturnRecPerimiter()

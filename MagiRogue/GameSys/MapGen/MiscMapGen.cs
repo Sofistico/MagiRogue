@@ -1,8 +1,8 @@
 ﻿using MagiRogue.Components.Ai;
 using MagiRogue.Data;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
-using MagiRogue.Utils.Extensions;
 
 namespace MagiRogue.GameSys.MapGen
 {
@@ -25,8 +25,18 @@ namespace MagiRogue.GameSys.MapGen
             AppendRitualFloor();
             FillMapWithGrass(_map);
             PutCircularRoom();
+            PutFurnitureInCircularRoom();
 
             return _map;
+        }
+
+        private void PutFurnitureInCircularRoom()
+        {
+            var r = _map.FindRoomsByTag(RoomTag.Blacksmith);
+            for (int i = 0; i < r.Count; i++)
+            {
+                var room = r[i];
+            }
         }
 
         private void PutCircularRoom()
@@ -34,12 +44,15 @@ namespace MagiRogue.GameSys.MapGen
             //var poitns = _map.GetRandomWalkableTile();
             var poitns = new Point(10, 10);
             Shape circle = poitns.HollowCircleFromOriginPoint(5);
+            var r = new Room(poitns.CircleFromOriginPoint(5).Points, Data.Enumerators.RoomTag.Blacksmith);
 
             foreach (var point in circle.Points)
             {
                 var tile = TileEncyclopedia.GenericStoneWall(point);
                 _map.SetTerrain(tile);
             }
+
+            _map.AddRoom(r);
         }
 
         private void AppendRitualFloor()

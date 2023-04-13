@@ -526,7 +526,6 @@ namespace MagiRogue.GameSys
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-
         public bool CheckForIndexOutOfBounds(Point point)
         {
             return point.X < 0 || point.Y < 0
@@ -555,7 +554,6 @@ namespace MagiRogue.GameSys
         /// Returns the rectangle containing the bounds of the map
         /// </summary>
         /// <returns></returns>
-
         public Rectangle MapBounds() => Terrain.Bounds();
 
         public List<TileBase> ReturnAllTrees()
@@ -616,7 +614,7 @@ namespace MagiRogue.GameSys
             {
                 throw new ApplicationException("Tried to place a room inside a map that cound't fit it!");
             }
-            if (r.PositionsRoom().Any(CheckForIndexOutOfBounds))
+            if (r.RoomPoints.Any(CheckForIndexOutOfBounds))
             {
                 throw new ApplicationException("Tried to place a room inside a map that cound't fit it!");
             }
@@ -626,7 +624,6 @@ namespace MagiRogue.GameSys
         /// Adds a list of rooms to the map.
         /// </summary>
         /// <param name="r"></param>
-
         public void AddRooms(List<Room> r)
         {
             Rooms ??= new List<Room>();
@@ -635,7 +632,7 @@ namespace MagiRogue.GameSys
 
         public void SpawnRoomThingsOnMap(Room r)
         {
-            Point[] posRoom = r.PositionsRoom();
+            Point[] posRoom = r.RoomPoints;
 
             for (int x = 0; x < r.Template.Obj.Rows.Length; x++)
             {
@@ -681,7 +678,7 @@ namespace MagiRogue.GameSys
                 }
                 catch (NullReferenceException ex)
                 {
-                    throw new NullReferenceException($"Tried to create a room with a non existent furniture! \n" +
+                    throw new NullReferenceException("Tried to create a room with a non existent furniture! \n" +
                         $"Furniture: {str}, Exception: {ex}");
                 }
             }
@@ -720,7 +717,7 @@ namespace MagiRogue.GameSys
                 }
                 catch (NullReferenceException ex)
                 {
-                    throw new NullReferenceException($"Tried to create a room with a non existent tile! \n" +
+                    throw new NullReferenceException("Tried to create a room with a non existent tile! \n" +
                         $"Tile: {str}, Exception: {ex}");
                 }
             }
@@ -781,11 +778,11 @@ namespace MagiRogue.GameSys
             if (GoRogueComponents.Count > 0)
                 GoRogueComponents.GetFirstOrDefault<FOVHandler>()?.DisposeMap();
             lastCalledActors.Clear();
-            lastCalledActors = null;
-            Tiles = null;
-            ControlledGameObjectChanged = null;
-            this.ControlledEntitiy = null;
-            _entityRender = null;
+            lastCalledActors = null!;
+            Tiles = null!;
+            ControlledGameObjectChanged = null!;
+            this.ControlledEntitiy = null!;
+            _entityRender = null!;
             GoRogueComponents.Clear();
             _disposed = true;
         }
@@ -875,6 +872,8 @@ namespace MagiRogue.GameSys
         {
             return Tiles.OfType<TFind>().ToArray();
         }
+
+        public List<Room> FindRoomsByTag(RoomTag tag) => Rooms.FindAll(i => i.Tag == tag);
 
         ~Map()
         {

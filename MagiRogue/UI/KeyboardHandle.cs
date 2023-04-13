@@ -332,8 +332,7 @@ namespace MagiRogue.UI
                 {
                     foreach (Room room in world.CurrentMap.Rooms)
                     {
-                        var pos = room.PositionsRoom();
-                        foreach (Point point in pos)
+                        foreach (Point point in room.RoomPoints)
                         {
                             world.CurrentMap.SetTerrain(new TileFloor("Test Room Tile", point,
                                 "stone", '$', Color.ForestGreen, Color.FloralWhite));
