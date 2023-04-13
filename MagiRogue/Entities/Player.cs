@@ -112,14 +112,13 @@ namespace MagiRogue.Entities
                 percent = MathMagi.GetPercentageBasedOnMax(Body.Stamina, Body.MaxStamina);
 
             if (percent > 50)
-                return "Fine";
+                return "[c:r f:Green]Fine";
             if (percent <= 50 && percent > 25)
-                return "Tired";
+                return "[c:r f:Yellow]Tired";
             if (percent <= 25 && percent > 1)
-                return "Winded";
+                return "[c:r f:Yellow][c:b]Winded";
             if (percent <= 1)
-                return "Spent";
-
+                return "[c:r f:Red]Spent";
             return "Should not see this!";
         }
 
@@ -132,20 +131,19 @@ namespace MagiRogue.Entities
                 percent = MathMagi.GetPercentageBasedOnMax(Soul.CurrentMana, Soul.MaxMana);
 
             if (percent >= 95)
-                return "Full";
+                return "[c:r f:DarkBlue]Full";
             if (percent >= 60)
-                return "Fine";
+                return "[c:r f:MediumBlue]Fine";
             if (percent <= 60 && percent >= 50)
-                return "Half";
+                return "[c:r f:MediumBlue]Half";
             if (percent <= 50 && percent > 25)
-                return "Low";
+                return "[c:r f:SkyBlue]Low";
             if (percent <= 25 && percent > 9)
-                return "Spent";
+                return "[c:r f:LightBlue]Spent";
             if (percent <= 9 && percent > 1)
-                return "Fumes";
+                return "[c:r f:220,239,247]Fumes";
             if (percent <= 1)
-                return "Empty";
-
+                return "[c:r b:220,239,247]Empty";
             return "Should not see this!";
         }
     }
