@@ -36,6 +36,7 @@ namespace MagiRogue.GameSys.MapGen
             for (int i = 0; i < r.Count; i++)
             {
                 var room = r[i];
+                MakeRoomWithTagUseful(room, _map);
             }
         }
 

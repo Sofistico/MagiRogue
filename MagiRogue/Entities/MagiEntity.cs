@@ -127,6 +127,20 @@ namespace MagiRogue.Entities
 
         #endregion Helper Methods
 
+        #region Virtual Methods
+
+        public virtual string GetDescriptor()
+        {
+            return Description;
+        }
+
+        public virtual string GetCurrentStatus()
+        {
+            throw new ApplicationException("Must define the get status for the class!");
+        }
+
+        #endregion Virtual Methods
+
         #region Overload Methods
 
         public virtual MagiEntity Copy()
@@ -272,16 +286,6 @@ namespace MagiRogue.Entities
 
         public T GetComponent<T>() where T : class
             => backingField.GoRogueComponents.GetFirstOrDefault<T>();
-
-        public virtual string GetDescriptor()
-        {
-            return Description;
-        }
-
-        public virtual string GetCurrentStatus()
-        {
-            throw new ApplicationException("Must define the get status for the class!");
-        }
 
         #endregion IGameObject Interface
     }
