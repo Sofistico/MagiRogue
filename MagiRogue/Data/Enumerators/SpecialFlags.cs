@@ -43,7 +43,7 @@ namespace MagiRogue.Data.Enumerators
         Wild, // this animal can be found in the wild
         Grazer, // eats grass from the ground
         Predator, // animal hunts for meat
-        PackAimal, // animal forms packs
+        PackAnimal, // animal forms packs
         NoSleep,
         NoEat,
         NoDrink,

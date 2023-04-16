@@ -193,11 +193,11 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
         public double ManaCost { get; set; }
         public string SpellId { get; set; }
-        public List<string> Keywords { get; set; } = new();
+        public List<SpellContext> Context { get; set; } = new();
 
         public SpellTemplate(int spellLevel, List<ISpellEffect> effects, string spellName, string description,
             ArtMagic magicArt, int spellRange, double manaCost, string spellId,
-            List<string> keywords)
+            List<SpellContext> context)
         {
             SpellLevel = spellLevel;
             Effects = effects;
@@ -207,7 +207,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             SpellRange = spellRange;
             ManaCost = manaCost;
             SpellId = spellId;
-            Keywords = keywords;
+            Context = context;
         }
 
         public static implicit operator SpellBase(SpellTemplate spellTemplate)
@@ -217,7 +217,8 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 spellTemplate.ManaCost)
             {
                 Proficiency =
-                spellTemplate.Proficiency is null ? 0 : (double)spellTemplate.Proficiency
+                spellTemplate.Proficiency is null ? 0 : (double)spellTemplate.Proficiency,
+                Context = spellTemplate.Context,
             };
             spell.Effects.AddRange(spellTemplate.Effects);
             spell.SetDescription(spellTemplate.Description);
@@ -230,7 +231,8 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 new SpellTemplate(spell.SpellLevel, spell.Effects, spell.SpellName,
                 spell.Description, spell.MagicArt, spell.SpellRange, spell.ManaCost, spell.SpellId, spell.Keywords)
                 {
-                    Proficiency = spell.Proficiency
+                    Proficiency = spell.Proficiency,
+                    Context = spell.Context
                 };
 
             return template;

@@ -16,7 +16,7 @@ namespace MagiRogue.Utils
 
             var settings = new JsonSerializerSettings()
             {
-                Error = delegate (object? sender, Newtonsoft.Json.Serialization.ErrorEventArgs args)
+                Error = (object? sender, Newtonsoft.Json.Serialization.ErrorEventArgs args) =>
                 {
                     errors.Add(args.ErrorContext.Error.Message);
                     args.ErrorContext.Handled = true;

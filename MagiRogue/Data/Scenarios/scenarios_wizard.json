@@ -11,7 +11,7 @@
     "Precision": 1,
     "WillPower": 0,
     "MaxMana": 2,
-    "MaxStamina": -2,
+    "MaxStamina": -200,
     "StaminaRegen": 0.0,
     "ManaRegen": 0.0,
     "LimbRegen": 0.0,
@@ -40,8 +40,12 @@
       }
     ],
     "Inventory": [ [ "read_item", "magical", "subject:random_level_spell:1:5" ] ],
-    "Equipment": [ "cap", "robe", "leather_shoe", "leather_shoe" ],
+    "Equipment": [
+      [ "cap", "plant" ],
+      [ "robe", "plant" ],
+      [ "shoes", "leather" ]
+    ],
     "RacesAllowed": [ "human", "elf", "dwarf" ],
-    "SpellsKnow": [ "any_offensive" ]
+    "SpellsKnow": [ "any_offensive:1" ]
   }
 ]

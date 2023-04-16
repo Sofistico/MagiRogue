@@ -111,6 +111,7 @@ namespace MagiRogue.GameSys.Magic
         }
 
         public List<string> Keywords { get; set; } = new();
+        public List<SpellContext> Context { get; set; }
 
         /// <summary>
         /// Empty constructor, a waste of space

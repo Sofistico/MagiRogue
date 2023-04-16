@@ -86,6 +86,6 @@
     "LenghtModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "Genders": [ "Male", "Female" ],
     "CreatureClass": [ "Mammal", "General" ],
-    "Flags": [ "Diurnal", "Wild", "Pet", "Hunter", "PackAnimal" ]
+    "Flags": [ "Diurnal", "Wild", "Pet", "Predator", "PackAnimal" ]
   }
 ]

@@ -1,12 +1,13 @@
-﻿using MagiRogue.Components;
-using MagiRogue.Data.Enumerators;
+﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Entities;
 using MagiRogue.Entities.StarterScenarios;
 using MagiRogue.GameSys.Magic;
 using MagiRogue.Utils;
+using MagiRogue.Utils.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MagiRogue.Data
 {
@@ -81,7 +82,8 @@ namespace MagiRogue.Data
         private static Player PlayerCreatorFromActor(Actor actor,
             string scenarioId, Sex sex)
         {
-            Scenario scenario = DataManager.QueryScenarioInData(scenarioId);
+            Scenario scenario = DataManager.QueryScenarioInData(scenarioId)
+                ?? throw new ApplicationException($"Scenario {scenarioId} was null!");
             actor.GetAnatomy().Gender = sex;
             SetupScenarioStats(scenario, actor);
             SetupAbilities(actor, scenario.Abilities);
@@ -106,7 +108,21 @@ namespace MagiRogue.Data
             actor.Magic.ShapingSkill += scenario.ShapingSkill;
             foreach (var str in scenario.SpellsKnow)
             {
-                actor.Magic.AddToSpellList(DataManager.QuerySpellInData(str));
+                var queriedSpell = DataManager.QuerySpellInData(str);
+                if (queriedSpell is null)
+                {
+                    var strArray = str.Split('_', ':');
+                    if (strArray[0].Contains("any"))
+                    {
+                        var enumConverted = Enum.Parse<SpellContext>(strArray[1].FirstLetterUpper());
+                        var levelOfSpell = int.Parse(strArray[2]);
+
+                        var spells = DataManager.ListOfSpells.Where(i =>
+                            i.Context.Contains(enumConverted) && i.SpellLevel == levelOfSpell).ToList();
+                        queriedSpell = spells.GetRandomItemFromList();
+                    }
+                }
+                actor.Magic.AddToSpellList(queriedSpell);
             }
         }
 

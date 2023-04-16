@@ -16,7 +16,8 @@
     "MagicArt": "Dimensionalism",
     "SpellRange": 5,
     "ManaCost": 8.0,
-    "SpellId": "teleport"
+    "SpellId": "teleport",
+    "Context": [ "Teleport" ]
   },
   {
     "SpellLevel": 5,
@@ -29,7 +30,6 @@
         "Duration": 5,
         "TurnApplied": 0,
         "Radius": 0,
-
         "EffectType": "HASTE"
       }
     ],
@@ -38,6 +38,7 @@
     "MagicArt": "Dimensionalism",
     "SpellRange": 0,
     "ManaCost": 10.0,
-    "SpellId": "haste_self"
+    "SpellId": "haste_self",
+    "Context": [ "Buff" ]
   }
 ]

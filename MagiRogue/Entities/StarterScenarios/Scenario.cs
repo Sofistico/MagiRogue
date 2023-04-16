@@ -56,9 +56,9 @@ namespace MagiRogue.Entities.StarterScenarios
 
         #region itens
 
-        public List<string> Inventory { get; set; }
+        public List<string[]> Inventory { get; set; }
 
-        public List<string> Equipment { get; set; }
+        public List<string[]> Equipment { get; set; }
 
         #endregion itens
 

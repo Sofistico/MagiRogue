@@ -237,8 +237,7 @@
     "MeltingPoint": 1250,
     "BoilingPoint": 3000,
     "ConfersTraits": [ "Inexpensive" ],
-    "Color": "Brown",
-    "Type": ""
+    "Color": "Brown"
   },
   {
     "Id": "chalk",
