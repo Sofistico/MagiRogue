@@ -5,7 +5,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace MagiRogue.Data.Serialization.EntitySerialization
 {
@@ -43,6 +42,10 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             if (spell.ContainsKey("Keywords"))
             {
                 createdSpell.Keywords = JsonConvert.DeserializeObject<List<string>>(spell["Keywords"].ToString())!;
+            }
+            if (spell.ContainsKey("Context"))
+            {
+                createdSpell.Context = JsonConvert.DeserializeObject<List<SpellContext>>(spell["Context"].ToString())!;
             }
 
             return createdSpell;
@@ -194,6 +197,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         public double ManaCost { get; set; }
         public string SpellId { get; set; }
         public List<SpellContext> Context { get; set; } = new();
+        public List<string> Keywords { get; set; } = new();
 
         public SpellTemplate(int spellLevel, List<ISpellEffect> effects, string spellName, string description,
             ArtMagic magicArt, int spellRange, double manaCost, string spellId,
@@ -219,6 +223,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 Proficiency =
                 spellTemplate.Proficiency is null ? 0 : (double)spellTemplate.Proficiency,
                 Context = spellTemplate.Context,
+                Keywords = spellTemplate.Keywords,
             };
             spell.Effects.AddRange(spellTemplate.Effects);
             spell.SetDescription(spellTemplate.Description);
@@ -229,10 +234,10 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         {
             SpellTemplate template =
                 new SpellTemplate(spell.SpellLevel, spell.Effects, spell.SpellName,
-                spell.Description, spell.MagicArt, spell.SpellRange, spell.ManaCost, spell.SpellId, spell.Keywords)
+                spell.Description, spell.MagicArt, spell.SpellRange, spell.ManaCost, spell.SpellId, spell.Context)
                 {
                     Proficiency = spell.Proficiency,
-                    Context = spell.Context
+                    Keywords = spell.Keywords,
                 };
 
             return template;

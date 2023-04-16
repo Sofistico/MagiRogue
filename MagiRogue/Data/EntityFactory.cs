@@ -118,7 +118,7 @@ namespace MagiRogue.Data
                         var levelOfSpell = int.Parse(strArray[2]);
 
                         var spells = DataManager.ListOfSpells.Where(i =>
-                            i.Context.Contains(enumConverted) && i.SpellLevel == levelOfSpell).ToList();
+                            i.Context?.Contains(enumConverted) == true && i.SpellLevel == levelOfSpell).ToList();
                         queriedSpell = spells.GetRandomItemFromList();
                     }
                 }

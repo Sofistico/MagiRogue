@@ -71,15 +71,7 @@ namespace MagiRogue.GameSys.MapGen
             var pointBegin = new Point(_map.Width / 2, _map.Height / 2);
 
             var room = _map.AddRoom(r, pointBegin);
-            foreach (var item in room.RoomRectangle.Positions())
-            {
-                var water = _map.GetTileAt<WaterTile>(item);
-                if (water is not null)
-                {
-                    waterTile = water;
-                    break;
-                }
-            }
+            waterTile = _map.GetAllTilesOfType<WaterTile>()[0];
             PlaceUnitsInForest(room);
         }
 

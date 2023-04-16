@@ -17,6 +17,7 @@
         "IsResistable": true,
         "Radius": 0
       }
-    ]
+    ],
+    "Context": [ "Offensive" ]
   }
 ]
