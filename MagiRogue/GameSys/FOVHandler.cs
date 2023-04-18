@@ -118,7 +118,7 @@ namespace MagiRogue.GameSys
                         else if (terrain != null)
                             UpdateTerrainUnseen(terrain);
                     }
-                    foreach (MagiEntity entity in Map.Entities.Items.Cast<MagiEntity>())
+                    foreach (MagiEntity entity in Map.Entities.Items.OfType<MagiEntity>())
                     {
                         if (Map.PlayerFOV.BooleanResultView[entity.Position])
                             UpdateEntitySeen(entity);

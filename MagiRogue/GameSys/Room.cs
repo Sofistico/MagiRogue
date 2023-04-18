@@ -146,13 +146,9 @@ namespace MagiRogue.GameSys
             return borderCells;
         }
 
-        internal Point ReturnRandomPosRoom()
+        public Point ReturnRandomPosRoom()
         {
-            int x = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(RoomRectangle.MinExtentX, RoomRectangle.MaxExtentX + 1);
-            int y = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(RoomRectangle.MinExtentY, RoomRectangle.MaxExtentY + 1);
-
-            Point pos = new SadRogue.Primitives.Point(x, y);
-            return pos;
+            return RoomPoints.GetRandomItemFromList();
         }
 
         public void ChangeRoomPos(Point point)
@@ -175,6 +171,12 @@ namespace MagiRogue.GameSys
         {
             previousTag = Tag;
             Tag = newTag;
+        }
+
+        public Point GetCenter()
+        {
+            return new Point((int)RoomPoints.Average(x => x.X),
+                (int)RoomPoints.Average(y => y.Y));
         }
     }
 }

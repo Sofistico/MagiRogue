@@ -241,5 +241,11 @@ namespace MagiRogue.Data
             Actor actor = ActorCreator(pos, race, name, age, sex);
             return PlayerCreatorFromActor(actor, scenarioId, sex);
         }
+
+        public static Sex GetRandomSex()
+        {
+            var sexs = new Sex[] { Sex.Male, Sex.Female };
+            return sexs.GetRandomItemFromList();
+        }
     }
 }

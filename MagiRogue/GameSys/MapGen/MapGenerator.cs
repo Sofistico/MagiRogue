@@ -860,7 +860,7 @@ namespace MagiRogue.GameSys.MapGen
             while (!map.IsTileWalkable(pos) || map.EntityIsThere(pos))
             {
                 pos = room.ReturnRandomPosRoom();
-                if (tries++ <= 100)
+                if (tries++ >= 100)
                     return; // not found a place, can stop looking
             }
             furniture.Position = pos;

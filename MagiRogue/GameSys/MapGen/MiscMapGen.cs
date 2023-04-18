@@ -1,4 +1,5 @@
-﻿using MagiRogue.Components.Ai;
+﻿using MagiRogue.Components;
+using MagiRogue.Components.Ai;
 using MagiRogue.Data;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.GameSys.Tiles;
@@ -26,8 +27,22 @@ namespace MagiRogue.GameSys.MapGen
             FillMapWithGrass(_map);
             PutCircularRoom();
             PutFurnitureInCircularRoom();
+            PutDwarfInCenterOfCircularRoom();
 
             return _map;
+        }
+
+        private void PutDwarfInCenterOfCircularRoom()
+        {
+            var r = _map.FindRoomsByTag(RoomTag.Blacksmith)[0];
+            var point = r.GetCenter();
+            var actor = EntityFactory.ActorCreator(point,
+                "dwarf",
+                "Blacksmith",
+                25,
+                EntityFactory.GetRandomSex()).WithComponents(new NeedDrivenAi());
+
+            _map.AddMagiEntity(actor);
         }
 
         private void PutFurnitureInCircularRoom()
