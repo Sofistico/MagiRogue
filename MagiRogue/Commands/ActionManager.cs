@@ -629,11 +629,13 @@ namespace MagiRogue.Commands
                     if (danger.Flags.Contains(SpecialFlag.Sapient)) // will need another method to identify sapient creatures
                         continue;
                     var dis = map.DistanceMeasurement.Calculate(actor.Position, danger.Position);
-                    return ((danger.Flags.Contains(SpecialFlag.Predator)
+
+                    bool considersDangerBasedOnSize = (danger.Flags.Contains(SpecialFlag.Predator)
                         && actor.Volume < danger.Volume * 4)
-                        || actor.Volume < (danger.Volume * 2) - (actor.Soul.WillPower * actor.Body.Strength))
-                        && (dis <= 15 || dis <= actor.GetViewRadius()); // 15 or view radius, whatever is lower.
-                                                                        // right now it doesn't works as expected, it takes the greater beetwen 15 or view radius.
+                        || actor.Volume < (danger.Volume * 2) - (actor.Soul.WillPower * actor.Body.Strength);
+                    bool getifDangerOnViewNecessaryToworry = dis <= 15 && dis <= actor.GetViewRadius(); // 15 or view radius, whatever is lower.
+
+                    return considersDangerBasedOnSize && getifDangerOnViewNecessaryToworry;
                 }
             }
             return false;
