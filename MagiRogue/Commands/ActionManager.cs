@@ -14,7 +14,6 @@ using MagiRogue.Utils;
 using MagiRogue.Utils.Extensions;
 using SadConsole;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using Map = MagiRogue.GameSys.Map;
 
@@ -611,6 +610,8 @@ namespace MagiRogue.Commands
         public static bool SearchForDangerAction(Actor actor, Map map, out Actor? danger)
         {
             danger = null;
+            if (actor.Mind.Personality.Anger > 20 || actor.Mind.Personality.Peace <= 15)
+                return false;
             foreach (var item in actor.AllThatCanSee())
             {
                 if (map.EntityIsThere(item, out danger))
@@ -625,12 +626,14 @@ namespace MagiRogue.Commands
                         continue;
                     if (!actor.CanSee(danger.Position))
                         continue;
+                    if (danger.Flags.Contains(SpecialFlag.Sapient)) // will need another method to identify sapient creatures
+                        continue;
                     var dis = map.DistanceMeasurement.Calculate(actor.Position, danger.Position);
                     return ((danger.Flags.Contains(SpecialFlag.Predator)
                         && actor.Volume < danger.Volume * 4)
                         || actor.Volume < (danger.Volume * 2) - (actor.Soul.WillPower * actor.Body.Strength))
                         && (dis <= 15 || dis <= actor.GetViewRadius()); // 15 or view radius, whatever is lower.
-                    // right now it doesn't works as expected, it takes the greater beetwen 15 or view radius.
+                                                                        // right now it doesn't works as expected, it takes the greater beetwen 15 or view radius.
                 }
             }
             return false;
