@@ -8,7 +8,7 @@ namespace MagiRogue.Data.Enumerators
     [JsonConverter(typeof(StringEnumConverter))]
     public enum DamageTypes
     {
-        None = 1 << 0,
+        None = 0,
         Blunt = 1 << 1,
         Sharp = 1 << 2,
         Point = 1 << 3,
@@ -20,8 +20,10 @@ namespace MagiRogue.Data.Enumerators
         Shock = 1 << 9,
         Soul = 1 << 10,
         Mind = 1 << 11,
-        Ligthing = 1 << 12,
+        Lightning = 1 << 12,
 
-        Steam = Fire & Cold
+        Steam = Fire | Cold,
+        Frostbite = Sharp | Cold | Poison,
+        Thunderstorm = Shock | Lightning | Force,
     }
 }

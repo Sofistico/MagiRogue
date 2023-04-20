@@ -1,17 +1,13 @@
 ﻿using MagiRogue.Data;
-using MagiRogue.Utils;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
-using MagiRogue.Data.Serialization.EntitySerialization;
-using Newtonsoft.Json;
+using MagiRogue.Utils.Extensions;
+using Newtonsoft.Json.Linq;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.Serialization;
-using MagiRogue.Utils.Extensions;
-using Newtonsoft.Json.Linq;
 
 namespace MagiRogue.Entities
 {
@@ -80,6 +76,8 @@ namespace MagiRogue.Entities
         public bool DeadRace { get; set; }
         public List<string> CreatureClass { get; set; }
         public List<SpecialFlag> Flags { get; set; }
+
+        public List<BodyPartAttack> Attacks { get; set; }
 
         /// <summary>
         /// select various aspect of a creature and change it's body and other stuff!

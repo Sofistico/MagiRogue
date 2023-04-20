@@ -105,7 +105,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 "Force" => DamageTypes.Force,
                 "Fire" => DamageTypes.Fire,
                 "Cold" => DamageTypes.Cold,
-                "Lighting" => DamageTypes.Ligthing,
+                "Lighting" => DamageTypes.Lightning,
                 "Poison" => DamageTypes.Poison,
                 "Acid" => DamageTypes.Acid,
                 "Shock" => DamageTypes.Shock,
