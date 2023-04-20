@@ -82,6 +82,7 @@ namespace MagiRogue.Entities
         public MaterialTemplate Material { get; set; }
         public List<Legend> Legends { get; set; }
         public ItemType ItemType { get; set; }
+        public List<Attack> Attacks { get; set; }
 
         // By default, a new Item is sized 1x1, with a weight of 1, and at 100% condition
         public Item(Color foreground, Color background, string name, int glyph, Point coord, int size,
@@ -97,6 +98,7 @@ namespace MagiRogue.Entities
             Traits = new();
             Qualities = new();
             Legends = new();
+            Attacks = new();
         }
 
         // removes this object from
