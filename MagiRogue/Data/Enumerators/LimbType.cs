@@ -6,7 +6,7 @@ namespace MagiRogue.Data.Enumerators
 {
     [DataContract]
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum TypeOfLimb
+    public enum LimbType
     {
         Head,
         UpperBody,

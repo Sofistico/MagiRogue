@@ -64,8 +64,8 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                     throw new ApplicationException($"Coudn't find a valid body part! bodypart id: {bp}");
             }
 
-            var bodyParts = returnParts.Where(i => i is Limb lim && (lim.LimbType is TypeOfLimb.Finger
-                || lim.LimbType is TypeOfLimb.Toe)).ToList();
+            var bodyParts = returnParts.Where(i => i is Limb lim && (lim.LimbType is LimbType.Finger
+                || lim.LimbType is LimbType.Toe)).ToList();
             var connectorLimbs = returnParts.Where(i => i.BodyPartFunction is BodyPartFunction.Grasp
                 || i.BodyPartFunction is BodyPartFunction.Stance).ToList();
 
@@ -82,11 +82,11 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             returnParts.Remove(smallBp);
             foreach (Limb limb in connectorLimbs.Cast<Limb>())
             {
-                if (smallBp.LimbType is TypeOfLimb.Finger && limb.BodyPartFunction is BodyPartFunction.Grasp)
+                if (smallBp.LimbType is LimbType.Finger && limb.BodyPartFunction is BodyPartFunction.Grasp)
                 {
                     CreateNewDigitAndAdd(returnParts, smallBp, limb);
                 }
-                if (smallBp.LimbType is TypeOfLimb.Toe && limb.BodyPartFunction is BodyPartFunction.Stance)
+                if (smallBp.LimbType is LimbType.Toe && limb.BodyPartFunction is BodyPartFunction.Stance)
                 {
                     CreateNewDigitAndAdd(returnParts, smallBp, limb);
                 }

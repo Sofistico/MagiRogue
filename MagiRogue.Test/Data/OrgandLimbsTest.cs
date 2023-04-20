@@ -65,7 +65,7 @@ namespace MagiRogue.Test.Data
         [Fact]
         public void SerializeLimbs()
         {
-            Limb limb = new Limb("head_test", TypeOfLimb.Head,
+            Limb limb = new Limb("head_test", LimbType.Head,
                 12,
                 12,
                 "Test",
@@ -87,7 +87,7 @@ namespace MagiRogue.Test.Data
             List<Limb> basicHuman = bp.ReturnBodyParts().Where(i => i is Limb).Cast<Limb>().ToList();
             Anatomy ana = new Anatomy();
             ana.Limbs = basicHuman;
-            List<Limb> test = ana.GetAllConnectedLimb(basicHuman.Find(f => f.LimbType is TypeOfLimb.Arm));
+            List<Limb> test = ana.GetAllConnectedLimb(basicHuman.Find(f => f.LimbType is LimbType.Arm));
             Assert.True(test.Count >= 3);
         }
 
@@ -100,7 +100,7 @@ namespace MagiRogue.Test.Data
             List<Limb> basicHuman = bp.ReturnBodyParts().Where(i => i is Limb).Cast<Limb>().ToList();
             Anatomy ana = new Anatomy();
             ana.Limbs = basicHuman;
-            List<Limb> test = ana.GetAllParentConnectionLimb(basicHuman.Find(i => i.LimbType is TypeOfLimb.Finger));
+            List<Limb> test = ana.GetAllParentConnectionLimb(basicHuman.Find(i => i.LimbType is LimbType.Finger));
             Assert.True(test.Count >= 1);
         }
 
@@ -115,7 +115,7 @@ namespace MagiRogue.Test.Data
             //bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5fingers").BodyParts);
             //bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5toes").BodyParts);
             //actor.GetAnatomy().Limbs = bp.ReturnBodyParts().Where(i => i is Limb).Cast<Limb>().ToList();
-            var arms = actor.GetAnatomy().Limbs.FindAll(l => l.LimbType is TypeOfLimb.Arm);
+            var arms = actor.GetAnatomy().Limbs.FindAll(l => l.LimbType is LimbType.Arm);
             foreach (var arm in arms)
             {
                 actor.GetAnatomy().Injury(new Wound(arm.BodyPartHp, DamageTypes.Sharp), arm, actor);

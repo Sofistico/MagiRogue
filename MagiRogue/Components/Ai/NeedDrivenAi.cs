@@ -188,7 +188,11 @@ namespace MagiRogue.Components.Ai
 
         private void ClearCommit() => commitedToNeed = null;
 
+        /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+#pragma warning disable CA1816 // Dispose methods should call SuppressFinalize
+
         public void Dispose()
+#pragma warning restore CA1816 // Dispose methods should call SuppressFinalize
         {
             Parent.GoRogueComponents.Remove(this);
             ClearCommit();

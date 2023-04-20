@@ -13,7 +13,7 @@ namespace MagiRogue.Entities
         [JsonProperty("ConnectedTo")]
         private string? _connectedLimb;
 
-        public TypeOfLimb LimbType { get; set; }
+        public LimbType LimbType { get; set; }
 
         [JsonIgnore]
         public string? ConnectedTo
@@ -46,7 +46,7 @@ namespace MagiRogue.Entities
         /// <param name="orientation">If it's in the center, left or right of the body</param>
         /// <param name="materialID">The id to define the material, if needeed look at the material definition json\n
         /// Defaults to "skin"</param>
-        public Limb(TypeOfLimb limbType, string limbName,
+        public Limb(LimbType limbType, string limbName,
             BodyPartOrientation orientation, string connectedTo,
             string materialID = "skin", BodyPartFunction bodyPartFunction = BodyPartFunction.Limb) : base(materialID)
         {
@@ -58,7 +58,7 @@ namespace MagiRogue.Entities
             BodyPartFunction = bodyPartFunction;
         }
 
-        public Limb(string id, TypeOfLimb limbType, int limbHp, int maxLimbHp,
+        public Limb(string id, LimbType limbType, int limbHp, int maxLimbHp,
             string limbName, BodyPartOrientation orientation, string connectedTo,
            string materialID = "skin") : base(materialID)
         {

@@ -260,7 +260,7 @@ namespace MagiRogue.Entities
             if (change.ToString().Equals("LastBodyPartName")
                 && !string.IsNullOrEmpty(context))
             {
-                var limbs = bodyParts.OfType<Limb>().Where(i => i.LimbType == Enum.Parse<TypeOfLimb>(context)).ToArray();
+                var limbs = bodyParts.OfType<Limb>().Where(i => i.LimbType == Enum.Parse<LimbType>(context)).ToArray();
                 for (int i = 0; i < limbs.Length; i++)
                 {
                     limbs[i].BodyPartName = string.Format(to[0].ToString(), limbs[i].BodyPartName.Split(" ")[0]);
@@ -282,7 +282,7 @@ namespace MagiRogue.Entities
                     continue;
                 }
                 if (item["LimbType"] is not null
-                    && Enum.TryParse<TypeOfLimb>(item["LimbType"].ToString(), out var resut)
+                    && Enum.TryParse<LimbType>(item["LimbType"].ToString(), out var resut)
                     && bodyParts.OfType<Limb>().Any(i => i.LimbType == resut))
                 {
                     satisfyCount++;
