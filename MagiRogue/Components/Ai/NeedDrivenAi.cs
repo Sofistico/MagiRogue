@@ -7,12 +7,13 @@ using MagiRogue.Entities;
 using MagiRogue.GameSys.Time;
 using MagiRogue.UI.Windows;
 using SadRogue.Primitives;
+using System;
 using Map = MagiRogue.GameSys.Map;
 
 namespace MagiRogue.Components.Ai
 {
     // refactor the shit out of this class when i'm done with it!
-    public class NeedDrivenAi : IAiComponent
+    public class NeedDrivenAi : IAiComponent, IDisposable
     {
         private Path? previousKnowPath;
         private Need? commitedToNeed;
@@ -186,5 +187,12 @@ namespace MagiRogue.Components.Ai
         }
 
         private void ClearCommit() => commitedToNeed = null;
+
+        public void Dispose()
+        {
+            Parent.GoRogueComponents.Remove(this);
+            ClearCommit();
+            needs = null;
+        }
     }
 }
