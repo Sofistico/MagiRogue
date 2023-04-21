@@ -12,7 +12,7 @@
         GHOSTS, // supports more than one
         ITEMS, // supports more than one
         FURNITURE, // supports more than one
-        SPECIAL, // supports more than one
         ACTORS, // supports more than one
+        SPECIAL, // supports more than one, should be always the last layer!
     }
 }
