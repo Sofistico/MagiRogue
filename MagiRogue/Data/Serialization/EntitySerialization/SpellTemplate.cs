@@ -74,7 +74,9 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 "TELEPORT" => EffectType.TELEPORT,
                 "DEBUFF" => EffectType.DEBUFF,
                 "BUFF" => EffectType.BUFF,
-                _ => throw new ApplicationException($"It wasn't possible to convert the effect, " +
+                "LIGHT" => EffectType.LIGHT,
+                "KNOCKBACK" => EffectType.KNOCKBACK,
+                _ => throw new ApplicationException("It wasn't possible to convert the effect, " +
                     $"please use only the provided effects types.\nEffect used: {st}"),
             };
         }

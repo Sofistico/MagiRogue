@@ -203,12 +203,13 @@ namespace MagiRogue.Utils
         /// <param name="attackMessage"></param>
         /// <returns></returns>
         public static (bool, Limb?, Limb, DamageTypes) ResolveHit(Actor attacker,
-            Actor defender, StringBuilder attackMessage)
+            Actor defender, StringBuilder attackMessage, Attack attack)
         {
             // Create a string that expresses the attacker and defender's names
             attackMessage.AppendFormat("{0} attacks {1}", attacker.Name, defender.Name);
             Item wieldedItem = attacker.WieldedItem();
-            Limb limbAttacking = attacker.GetAttackingLimb(wieldedItem);
+            Limb limbAttacking = attacker.GetAttackingLimb(attack);
+            var items = attacker.ItemsInLimb();
 
             if (attacker.GetRelevantAttackAbility(wieldedItem) + Mrn.Exploding2D6Dice
                 > defender.GetDefenseAbility() + Mrn.Exploding2D6Dice)
@@ -235,7 +236,7 @@ namespace MagiRogue.Utils
         /// <param name="defenseMessage"></param>
         /// <returns></returns>
         public static double ResolveDefense(Actor attacker, Actor defender, bool hit, StringBuilder attackMessage,
-            StringBuilder defenseMessage, Limb limbToHit, DamageTypes damageType, Limb limbAttacking)
+            StringBuilder defenseMessage, Limb limbToHit, DamageTypes damageType, Limb limbAttacking, Attack attack)
         {
             double totalDamage = 0;
 
@@ -297,11 +298,11 @@ namespace MagiRogue.Utils
         /// <returns></returns>
         public static double GetAttackMomentumWithItem(Actor attacker, Item wieldedItem)
         {
-            return MathMagi.Round(
-                (attacker.GetStrenght() + wieldedItem.BaseDmg + Mrn.Exploding2D6Dice)
-                * attacker.GetRelevantAttackAbilityMultiplier(wieldedItem.WeaponType)
-                + (10 + 2 * wieldedItem.QualityMultiplier())) * attacker.GetAttackVelocity()
-                + (1 + attacker.Volume / (wieldedItem.Material.Density * wieldedItem.Volume));
+            return (MathMagi.Round(
+                ((attacker.GetStrenght() + wieldedItem.BaseDmg + Mrn.Exploding2D6Dice)
+                * attacker.GetRelevantAttackAbilityMultiplier(wieldedItem.WeaponType))
+                + (10 + (2 * wieldedItem.QualityMultiplier()))) * attacker.GetAttackVelocity())
+                + (1 + (attacker.Volume / (wieldedItem.Material.Density * wieldedItem.Volume)));
         }
 
         /// <summary>
@@ -314,10 +315,10 @@ namespace MagiRogue.Utils
         public static double GetAttackMomentum(Actor attacker, Limb limbAttacking)
         {
             return MathMagi.Round(
-                (attacker.GetStrenght() + Mrn.Exploding2D6Dice)
+                ((attacker.GetStrenght() + Mrn.Exploding2D6Dice)
                 * (attacker.GetRelevantAbilityMultiplier(AbilityName.Unarmed) + 1)
-                * attacker.GetAttackVelocity()
-                + (1 + attacker.Volume / (limbAttacking.BodyPartMaterial.Density * limbAttacking.Volume)));
+                * attacker.GetAttackVelocity())
+                + (1 + (attacker.Volume / (limbAttacking.BodyPartMaterial.Density * limbAttacking.Volume))));
         }
 
         /// <summary>
@@ -328,14 +329,16 @@ namespace MagiRogue.Utils
         /// <param name="defender"></param>
         /// <param name="damage"></param>
         public static void ResolveDamage(Actor defender, double damage, DamageTypes dmgType,
-            Limb limbAttacked, Limb limbAttacking)
+            Limb limbAttacked, Limb limbAttacking, Attack attack)
         {
             if (damage > 0)
             {
                 DealDamage(damage, defender, dmgType, limbAttacking, limbAttacked);
             }
             else
+            {
                 GameLoop.AddMessageLog($"{defender.Name} blocked all damage!");
+            }
         }
 
         /// <summary>

@@ -11,6 +11,7 @@ namespace MagiRogue.Data.Enumerators
         // Combat skills
         ArmorUse,
         Unarmed,
+        Bite,
         Misc,
         Sword,
         Staff,

@@ -204,26 +204,52 @@ namespace MagiRogue.Entities
             }
         }
 
-        public Item WieldedItem()
+        public Item? WieldedItem()
         {
             if (!Body.Anatomy.HasAnyHands)
                 return null;
-            return Body.Equipment?.GetValueOrDefault(GetAnatomy().Limbs.Find(l =>
-                l.LimbType == LimbType.Hand)?.Id, null);
+            return Body?.Equipment?.GetValueOrDefault(GetAnatomy().Limbs.Find(l =>
+                l.BodyPartFunction == BodyPartFunction.Grasp)?.Id, null);
         }
 
-        public Limb GetAttackingLimb(Item item)
+        public Item[] GetAllWieldedItems()
         {
-            var key = Body.Equipment.FirstOrDefault(x => x.Value == item).Key;
-            var limb = GetAnatomy().Limbs.Find(i => i.Id.Equals(key));
-            if (item is null)
+            if (!Body.Anatomy.HasAnyHands)
+                return null;
+            foreach (var item in Body.Equipment)
             {
-                List<Limb> graspersAndStances = GetAnatomy().Limbs.FindAll(i =>
-                    (i.BodyPartFunction is BodyPartFunction.Grasp
-                    || i.BodyPartFunction is BodyPartFunction.Stance)
-                    && i.Working);
-                return graspersAndStances.GetRandomItemFromList();
+                var limb = GetAnatomy().Limbs.Find(i => i.Id.Equals(item.Key));
+                if (limb.BodyPartFunction == BodyPartFunction.Grasp)
+                {
+                }
             }
+        }
+
+        public List<Item> ItemsInLimb(Limb limb)
+        {
+            var list = new List<Item>
+            {
+                Body.Equipment[limb.Id]
+            };
+            list.RemoveAll(i => i is null);
+            return list;
+        }
+
+        public Limb GetAttackingLimb(Attack attack)
+        {
+            Limb limb = null;
+            if (attack.LimbFunction is not null)
+            {
+                limb = GetAnatomy().Limbs.FindAll(i =>
+                    i.BodyPartFunction == attack.LimbFunction)
+                    .GetRandomItemFromList();
+            }
+            else
+            {
+                var item = WieldedItem();
+                Body.Equipment.
+            }
+
             return limb;
         }
 
@@ -560,6 +586,11 @@ namespace MagiRogue.Entities
             StringBuilder bobBuilder = new();
             bobBuilder.Append(State.ToString());
             return bobBuilder.ToString();
+        }
+
+        public List<Attack> GetRaceAttacks()
+        {
+            return GetAnatomy().Race.Attacks;
         }
 
         #endregion Methods

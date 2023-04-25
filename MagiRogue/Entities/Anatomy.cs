@@ -1,12 +1,10 @@
 ﻿using MagiRogue.Commands;
 using MagiRogue.Components;
-using MagiRogue.Data;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -129,6 +127,15 @@ namespace MagiRogue.Entities
         [DataMember]
         public int MaxFlierLimbs { get; set; }
         public string RaceId { get; set; }
+
+        public bool HasAnyAttack
+        {
+            get
+            {
+                if (Race.Attacks.Count < 1) return false;
+                return Race.Attacks.Any(i => Limbs.Any(z => z.BodyPartFunction == i?.LimbFunction));
+            }
+        }
 
         #endregion Properties
 

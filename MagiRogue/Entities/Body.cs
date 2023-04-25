@@ -1,12 +1,7 @@
 ﻿using MagiRogue.Data.Enumerators;
-using MagiRogue.Data.Serialization;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MagiRogue.Entities
 {

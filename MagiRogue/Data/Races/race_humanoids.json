@@ -42,7 +42,33 @@
     "BroadnessModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "Genders": [ "Male", "Female" ],
     "CreatureClass": [ "Mammal", "General" ],
-    "Flags": [ "Regenerator", "Sapient", "Diurnal", "NeedsConfortToSleep" ]
+    "Flags": [ "Regenerator", "Sapient", "Diurnal", "NeedsConfortToSleep" ],
+    "Attacks": [
+      {
+        "LimbFunction": "Grasp",
+        "Main": true,
+        "AttacksUsesLimbName": true,
+        "Name": "Punch",
+        "AttackVerb": [ "punch", "punches" ],
+        "AttackAbility": "Unarmed",
+        "PrepareVelocity": 3,
+        "RecoverVelocity": 3,
+        "DamageTypes": [ "Blunt" ],
+        "ContactArea": 100
+      },
+      {
+        "LimbFunction": "Stance",
+        "Main": false,
+        "AttacksUsesLimbName": true,
+        "Name": "Kick",
+        "AttackVerb": [ "kick", "kickes" ],
+        "AttackAbility": "Unarmed",
+        "PrepareVelocity": 5,
+        "RecoverVelocity": 5,
+        "DamageTypes": [ "Blunt" ],
+        "ContactArea": 100
+      }
+    ]
   },
   {
     "Id": "human",
@@ -91,7 +117,33 @@
     "BroadnessModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "Genders": [ "Male", "Female" ],
     "CreatureClass": [ "Mammal", "General" ],
-    "Flags": [ "Sapient", "Diurnal", "NeedsConfortToSleep" ]
+    "Flags": [ "Sapient", "Diurnal", "NeedsConfortToSleep" ],
+    "Attacks": [
+      {
+        "LimbFunction": "Grasp",
+        "Main": true,
+        "AttacksUsesLimbName": true,
+        "Name": "Punch",
+        "AttackVerb": [ "punch", "punches" ],
+        "AttackAbility": "Unarmed",
+        "PrepareVelocity": 3,
+        "RecoverVelocity": 3,
+        "DamageTypes": [ "Blunt" ],
+        "ContactArea": 100
+      },
+      {
+        "LimbFunction": "Stance",
+        "Main": false,
+        "AttacksUsesLimbName": true,
+        "Name": "Kick",
+        "AttackVerb": [ "kick", "kickes" ],
+        "AttackAbility": "Unarmed",
+        "PrepareVelocity": 5,
+        "RecoverVelocity": 5,
+        "DamageTypes": [ "Blunt" ],
+        "ContactArea": 100
+      }
+    ]
   },
   {
     "Id": "elf",
@@ -138,7 +190,33 @@
     "BroadnessModifier": [ 75, 90, 94, 100, 101, 103, 110 ],
     "Genders": [ "Male", "Female" ],
     "CreatureClass": [ "Mammal", "General" ],
-    "Flags": [ "Sapient", "Diurnal", "NeedsConfortToSleep" ]
+    "Flags": [ "Sapient", "Diurnal", "NeedsConfortToSleep" ],
+    "Attacks": [
+      {
+        "LimbFunction": "Grasp",
+        "Main": true,
+        "AttacksUsesLimbName": true,
+        "Name": "Punch",
+        "AttackVerb": [ "punch", "punches" ],
+        "AttackAbility": "Unarmed",
+        "PrepareVelocity": 3,
+        "RecoverVelocity": 3,
+        "DamageTypes": [ "Blunt" ],
+        "ContactArea": 100
+      },
+      {
+        "LimbFunction": "Stance",
+        "Main": false,
+        "AttacksUsesLimbName": true,
+        "Name": "Kick",
+        "AttackVerb": [ "kick", "kickes" ],
+        "AttackAbility": "Unarmed",
+        "PrepareVelocity": 5,
+        "RecoverVelocity": 5,
+        "DamageTypes": [ "Blunt" ],
+        "ContactArea": 100
+      }
+    ]
   },
   {
     "Id": "dwarf",
@@ -182,6 +260,32 @@
     "BroadnessModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "Genders": [ "Male", "Female" ],
     "CreatureClass": [ "Mammal", "General" ],
-    "Flags": [ "Sapient", "Diurnal" ]
+    "Flags": [ "Sapient", "Diurnal" ],
+    "Attacks": [
+      {
+        "LimbFunction": "Grasp",
+        "Main": true,
+        "AttacksUsesLimbName": true,
+        "Name": "Punch",
+        "AttackVerb": [ "punch", "punches" ],
+        "AttackAbility": "Unarmed",
+        "PrepareVelocity": 3,
+        "RecoverVelocity": 3,
+        "DamageTypes": [ "Blunt" ],
+        "ContactArea": 100
+      },
+      {
+        "LimbFunction": "Stance",
+        "Main": false,
+        "AttacksUsesLimbName": true,
+        "Name": "Kick",
+        "AttackVerb": [ "kick", "kickes" ],
+        "AttackAbility": "Unarmed",
+        "PrepareVelocity": 5,
+        "RecoverVelocity": 5,
+        "DamageTypes": [ "Blunt" ],
+        "ContactArea": 100
+      }
+    ]
   }
 ]

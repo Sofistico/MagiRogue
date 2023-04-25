@@ -77,7 +77,7 @@ namespace MagiRogue.Entities
         public List<string> CreatureClass { get; set; }
         public List<SpecialFlag> Flags { get; set; }
 
-        public List<BodyPartAttack> Attacks { get; set; }
+        public List<Attack> Attacks { get; set; }
 
         /// <summary>
         /// select various aspect of a creature and change it's body and other stuff!

@@ -61,17 +61,18 @@ namespace MagiRogue.Commands
         /// </summary>
         /// <param name="attacker"></param>
         /// <param name="defender"></param>
-        public static int MeleeAttack(Actor attacker, Actor defender)
+        public static int MeleeAttack(Actor attacker,
+            Actor defender,
+            Attack? attack = null)
         {
             if (!defender.CanBeAttacked)
                 return 0;
 
-            if (!attacker.GetAnatomy().HasAnyHands)
+            if (!attacker.GetAnatomy().HasAnyAttack)
             {
-                GameLoop.AddMessageLog
-                    ($"The {attacker.Name} doesn't have enough arms to hit {defender.Name}");
-                return 0;
+                attack = Attack.PushAttack();
             }
+            attack ??= attacker.GetRaceAttacks().GetRandomItemFromList();
 
             if (attacker.Body.Stamina <= 0)
             {
@@ -84,12 +85,10 @@ namespace MagiRogue.Commands
             StringBuilder attackMessage = new();
             StringBuilder defenseMessage = new();
 
-            // Count up the amount of attacking damage done
-            // and the number of successful blocks
             (bool hit, Limb limbAttacked, Limb limbAttacking, DamageTypes dmgType)
-                = CombatUtils.ResolveHit(attacker, defender, attackMessage);
+                = CombatUtils.ResolveHit(attacker, defender, attackMessage, attack);
             double damage = CombatUtils.ResolveDefense(attacker,
-                defender, hit, attackMessage, defenseMessage, limbAttacked, dmgType, limbAttacking);
+                defender, hit, attackMessage, defenseMessage, limbAttacked, dmgType, limbAttacking, attack);
 
             // Display the outcome of the attack & defense
             GameLoop.AddMessageLog(attackMessage.ToString());
@@ -97,7 +96,7 @@ namespace MagiRogue.Commands
                 GameLoop.AddMessageLog(defenseMessage.ToString());
 
             // The defender now takes damage
-            CombatUtils.ResolveDamage(defender, damage, dmgType, limbAttacking, limbAttacked);
+            CombatUtils.ResolveDamage(defender, damage, dmgType, limbAttacking, limbAttacked, attack);
 
             // discount stamina from the attacker
             attacker.Body.Stamina =
