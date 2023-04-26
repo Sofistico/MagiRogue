@@ -202,25 +202,24 @@ namespace MagiRogue.Utils
         /// <param name="defender"></param>
         /// <param name="attackMessage"></param>
         /// <returns></returns>
-        public static (bool, Limb?, Limb, DamageTypes) ResolveHit(Actor attacker,
-            Actor defender, StringBuilder attackMessage, Attack attack)
+        public static (bool, Limb?, Limb, DamageTypes, Item?) ResolveHit(Actor attacker,
+            Actor defender, StringBuilder attackMessage, Attack attack, Limb? limbAttacked = null)
         {
             // Create a string that expresses the attacker and defender's names
             attackMessage.AppendFormat("{0} attacks {1}", attacker.Name, defender.Name);
             Item wieldedItem = attacker.WieldedItem();
             Limb limbAttacking = attacker.GetAttackingLimb(attack);
-            var items = attacker.ItemsInLimb();
 
             if (attacker.GetRelevantAttackAbility(wieldedItem) + Mrn.Exploding2D6Dice
                 > defender.GetDefenseAbility() + Mrn.Exploding2D6Dice)
             {
                 var attackType = attacker.GetDamageType();
-                Limb limbAttacked = defender.GetAnatomy().GetRandomLimb();
-                return (true, limbAttacked, limbAttacking, attackType);
+                limbAttacked ??= defender.GetAnatomy().GetRandomLimb();
+                return (true, limbAttacked, limbAttacking, attackType, wieldedItem);
             }
             else
             {
-                return (false, null, limbAttacking, attacker.GetDamageType());
+                return (false, null, limbAttacking, attacker.GetDamageType(), wieldedItem);
             }
         }
 

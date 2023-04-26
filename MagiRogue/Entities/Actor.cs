@@ -212,17 +212,21 @@ namespace MagiRogue.Entities
                 l.BodyPartFunction == BodyPartFunction.Grasp)?.Id, null);
         }
 
-        public Item[] GetAllWieldedItems()
+        public List<Item> GetAllWieldedItems()
         {
             if (!Body.Anatomy.HasAnyHands)
                 return null;
+            List<Item> items = new();
             foreach (var item in Body.Equipment)
             {
                 var limb = GetAnatomy().Limbs.Find(i => i.Id.Equals(item.Key));
-                if (limb.BodyPartFunction == BodyPartFunction.Grasp)
+                if (limb.BodyPartFunction == BodyPartFunction.Grasp
+                    && item.Value.EquipType == EquipType.Held)
                 {
+                    items.Add(item.Value);
                 }
             }
+            return items;
         }
 
         public List<Item> ItemsInLimb(Limb limb)
@@ -237,20 +241,17 @@ namespace MagiRogue.Entities
 
         public Limb GetAttackingLimb(Attack attack)
         {
-            Limb limb = null;
             if (attack.LimbFunction is not null)
             {
-                limb = GetAnatomy().Limbs.FindAll(i =>
+                return GetAnatomy().Limbs.FindAll(i =>
                     i.BodyPartFunction == attack.LimbFunction)
                     .GetRandomItemFromList();
             }
             else
             {
-                var item = WieldedItem();
-                Body.Equipment.
+                var items = GetAllWieldedItems();
+                return items.Find(i => i.Attacks.Contains(attack)).HeldLimb;
             }
-
-            return limb;
         }
 
         public void AddToEquipment(Item item)

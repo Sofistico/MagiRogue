@@ -68,7 +68,7 @@ namespace MagiRogue.Commands
             if (!defender.CanBeAttacked)
                 return 0;
 
-            if (!attacker.GetAnatomy().HasAnyAttack)
+            if (!attacker.GetAnatomy().HasAnyRaceAttack)
             {
                 attack = Attack.PushAttack();
             }
@@ -85,7 +85,7 @@ namespace MagiRogue.Commands
             StringBuilder attackMessage = new();
             StringBuilder defenseMessage = new();
 
-            (bool hit, Limb limbAttacked, Limb limbAttacking, DamageTypes dmgType)
+            (bool hit, Limb limbAttacked, Limb limbAttacking, DamageTypes dmgType, Item? itemUsed)
                 = CombatUtils.ResolveHit(attacker, defender, attackMessage, attack);
             double damage = CombatUtils.ResolveDefense(attacker,
                 defender, hit, attackMessage, defenseMessage, limbAttacked, dmgType, limbAttacking, attack);

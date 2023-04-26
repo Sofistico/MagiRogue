@@ -128,7 +128,7 @@ namespace MagiRogue.Entities
         public int MaxFlierLimbs { get; set; }
         public string RaceId { get; set; }
 
-        public bool HasAnyAttack
+        public bool HasAnyRaceAttack
         {
             get
             {

@@ -83,6 +83,7 @@ namespace MagiRogue.Entities
         public List<Legend> Legends { get; set; }
         public ItemType ItemType { get; set; }
         public List<Attack> Attacks { get; set; }
+        public Limb HeldLimb { get; set; }
 
         // By default, a new Item is sized 1x1, with a weight of 1, and at 100% condition
         public Item(Color foreground, Color background, string name, int glyph, Point coord, int size,
