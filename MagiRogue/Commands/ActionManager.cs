@@ -63,7 +63,8 @@ namespace MagiRogue.Commands
         /// <param name="defender"></param>
         public static int MeleeAttack(Actor attacker,
             Actor defender,
-            Attack? attack = null)
+            Attack? attack = null,
+            Limb? limbChoosen = null)
         {
             if (!defender.CanBeAttacked)
                 return 0;
@@ -84,9 +85,9 @@ namespace MagiRogue.Commands
             // of the attack and defense
             StringBuilder attackMessage = new();
             StringBuilder defenseMessage = new();
-
+            bool isPlayer = attacker is Player;
             (bool hit, Limb limbAttacked, Limb limbAttacking, DamageTypes dmgType, Item? itemUsed)
-                = CombatUtils.ResolveHit(attacker, defender, attackMessage, attack);
+                = CombatUtils.ResolveHit(attacker, defender, attackMessage, attack, isPlayer, limbChoosen);
             double damage = CombatUtils.ResolveDefense(attacker,
                 defender, hit, attackMessage, defenseMessage, limbAttacked, dmgType, limbAttacking, attack);
 

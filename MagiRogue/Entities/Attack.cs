@@ -6,7 +6,9 @@ namespace MagiRogue.Entities
     {
         public string Name { get; set; }
 
-        // 0 = fist person, 1 = third person
+        /// <summary>
+        /// 0 = fist person, 1 = third person
+        /// </summary>
         public string[] AttackVerb { get; set; }
         public AbilityName AttackAbility { get; set; }
         public int PrepareVelocity { get; set; }

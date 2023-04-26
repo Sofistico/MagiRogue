@@ -203,10 +203,15 @@ namespace MagiRogue.Utils
         /// <param name="attackMessage"></param>
         /// <returns></returns>
         public static (bool, Limb?, Limb, DamageTypes, Item?) ResolveHit(Actor attacker,
-            Actor defender, StringBuilder attackMessage, Attack attack, Limb? limbAttacked = null)
+            Actor defender, StringBuilder attackMessage, Attack attack, bool firstPerson = false, Limb? limbAttacked = null)
         {
-            // Create a string that expresses the attacker and defender's names
-            attackMessage.AppendFormat("{0} attacks {1}", attacker.Name, defender.Name);
+            // Create a string that expresses the attacker and defender's names as well as the attack verb
+            if (!firstPerson)
+                attackMessage.AppendFormat("{0} {1}", attacker.Name, attack.AttackVerb[1]);
+            else
+                attackMessage.AppendFormat("You {1}", attack.AttackVerb[0]);
+            attackMessage.AppendFormat(" {0}", defender.Name);
+
             Item wieldedItem = attacker.WieldedItem();
             Limb limbAttacking = attacker.GetAttackingLimb(attack);
 
