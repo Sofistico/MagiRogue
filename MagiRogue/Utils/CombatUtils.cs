@@ -28,8 +28,8 @@ namespace MagiRogue.Utils
             return a ^ b;
         }
 
-        public static void DealDamage(double dmg, MagiEntity entity, DamageTypes dmgType, Attack? attack = null,
-            Limb? limbAttacking = null, Limb? limbAttacked = null, Item? itemUsed = null)
+        public static void DealDamage(double dmg, MagiEntity entity, DamageTypes dmgType,
+            Limb? limbAttacking = null, Limb? limbAttacked = null)
         {
             if (entity is Actor actor)
             {
@@ -341,13 +341,11 @@ namespace MagiRogue.Utils
             double damage,
             DamageTypes dmgType,
             Limb limbAttacked,
-            Limb limbAttacking,
-            Attack attack,
-            Item? itemUsed = null)
+            Limb limbAttacking)
         {
             if (damage > 0)
             {
-                DealDamage(damage, defender, dmgType, attack, limbAttacking, limbAttacked, itemUsed);
+                DealDamage(damage, defender, dmgType, limbAttacking, limbAttacked);
             }
             else
             {
