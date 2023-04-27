@@ -395,9 +395,9 @@ namespace MagiRogue.Entities
             return GetActorBaseSpeed() + (Magic.ShapingSkill * 0.7 * (Soul.WillPower * 0.3));
         }
 
-        public double GetAttackVelocity()
+        public double GetAttackVelocity(Attack attack)
         {
-            return PhysicsManager.GetAttackVelocity(this);
+            return PhysicsManager.GetAttackVelocity(this, attack);
         }
 
         public double GetProtection(Limb limb)

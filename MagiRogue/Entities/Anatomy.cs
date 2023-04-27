@@ -575,6 +575,24 @@ namespace MagiRogue.Entities
             return Food.Omnivere;
         }
 
+        public string Pronoum()
+        {
+            if (Gender == Sex.Male)
+                return "him";
+            if (Gender == Sex.Female)
+                return "her";
+            return "it";
+        }
+
+        public string PronoumPossesive()
+        {
+            if (Gender == Sex.Male)
+                return "his";
+            if (Gender == Sex.Female)
+                return "hers";
+            return "it's";
+        }
+
         #endregion Methods
     }
 }

@@ -36,9 +36,9 @@ namespace MagiRogue.GameSys.Time
             return (int)((tile.MoveTimeCost * 100) / actor.GetActorBaseSpeed());
         }
 
-        public static int GetAttackTime(Actor actor)
+        public static int GetAttackTime(Actor actor, Attack attack)
         {
-            return (int)actor.GetAttackVelocity();
+            return (int)actor.GetAttackVelocity(attack) / attack.RecoverVelocity;
         }
 
         public static int GetCastingTime(Actor actor, SpellBase spellCasted)

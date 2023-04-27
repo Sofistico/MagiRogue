@@ -2,7 +2,6 @@
 using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
 using MagiRogue.Utils;
-using System;
 
 namespace MagiRogue.GameSys.Physics
 {
@@ -26,22 +25,24 @@ namespace MagiRogue.GameSys.Physics
             return (int)MathMagi.Round(weight * actorStrikeForce);
         }
 
-        public static double GetAttackVelocity(Actor actor)
+        public static double GetAttackVelocity(Actor actor, Attack attack)
         {
             var itemHeld = actor.WieldedItem();
-            int ability = 0;
-            double finalSpeed = 0;
+            int ability;
+            double finalSpeed;
             if (itemHeld is not null)
             {
-                var speed = ((itemHeld.SpeedOfAttack + itemHeld.Weight * itemHeld.Volume)
+                var speed = ((itemHeld.SpeedOfAttack + (itemHeld.Weight * itemHeld.Volume))
                     / actor.GetActorBaseSpeed());
                 ability = actor.GetRelevantAttackAbility(itemHeld.WeaponType);
                 finalSpeed = ability != 0 ? speed / ability : speed;
-                return finalSpeed * 100;
+                return (finalSpeed * attack.VelocityMultiplier) * 100;
             }
             ability = actor.GetRelevantAbility(Data.Enumerators.AbilityName.Unarmed);
-            finalSpeed = ability != 0 ? actor.GetActorBaseSpeed() / ability : actor.GetActorBaseSpeed();
-            return finalSpeed * 100;
+            finalSpeed = ability != 0 ?
+                actor.GetActorBaseSpeed() / ability
+                : actor.GetActorBaseSpeed();
+            return (finalSpeed * attack.VelocityMultiplier) * 100;
         }
     }
 }

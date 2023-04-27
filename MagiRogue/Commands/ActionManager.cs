@@ -97,7 +97,7 @@ namespace MagiRogue.Commands
                 limbAttacked,
                 dmgType,
                 limbAttacking,
-                //attack,
+                attack,
                 itemUsed);
 
             // Display the outcome of the attack & defense
@@ -112,7 +112,7 @@ namespace MagiRogue.Commands
             attacker.Body.Stamina =
                 MathMagi.Round((attacker.Body.Stamina - staminaAttackAction) * (attacker.Body.Endurance / 100));
 
-            return TimeHelper.GetAttackTime(attacker);
+            return TimeHelper.GetAttackTime(attacker, attack);
         }
 
         /// <summary>
