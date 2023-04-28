@@ -220,28 +220,14 @@ namespace MagiRogue.Utils
             Limb limbAttacking = attacker.GetAttackingLimb(attack);
 
             // Create a string that expresses the attacker and defender's names as well as the attack verb
-            if (!firstPerson)
-            {
-                if (attack.AttacksUsesLimbName == true)
-                {
-                    attackMessage.AppendFormat("{0} {1}", attacker.Name, attack.AttackVerb[1]);
-                }
-                else
-                {
-                    attackMessage.AppendFormat("{0} {1} {2}",
-                        attacker.Name,
-                        attacker.GetAnatomy().Pronoum(),
-                        attack.AttackVerb[1]);
-                }
-            }
-            else
-            {
-                if (attack.AttacksUsesLimbName == true)
-                    attackMessage.AppendFormat("You {0} with your {1}", attack.AttackVerb[0], limbAttacking.BodyPartName);
-                else
-                    attackMessage.AppendFormat("You {0}", attack.AttackVerb[0]);
-            }
-            attackMessage.AppendFormat(" the {0}", defender.Name);
+            string person = firstPerson ? "You" : attacker.Name;
+            string verb = firstPerson ? attack.AttackVerb[0] : attack.AttackVerb[1];
+            string with = attack?.AttacksUsesLimbName == true ? firstPerson
+                    ? $" with your {limbAttacking.BodyPartName}"
+                    : $" with {attacker.GetAnatomy().Pronoum()} {limbAttacking.BodyPartName}"
+                : "";
+
+            attackMessage.AppendFormat("{0} {1} the {2}{3}", person, verb, defender.Name, with);
 
             if (attacker.GetRelevantAttackAbility(wieldedItem) + Mrn.Exploding2D6Dice
                 > defender.GetDefenseAbility() + Mrn.Exploding2D6Dice)
