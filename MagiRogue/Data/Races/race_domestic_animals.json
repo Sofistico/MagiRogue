@@ -48,7 +48,7 @@
         "RecoverVelocity": 3,
         "DamageTypes": [ "Pierce" ],
         "ContactArea": 100,
-        "PenetrationPercentage": 100
+        "PenetrationPercentage": 1
       }
     ]
   }

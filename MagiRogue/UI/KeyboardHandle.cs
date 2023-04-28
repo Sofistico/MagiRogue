@@ -9,6 +9,7 @@ using MagiRogue.GameSys.Tiles;
 using MagiRogue.GameSys.Time;
 using MagiRogue.UI.Enums;
 using MagiRogue.UI.Windows;
+using MagiRogue.Utils.Extensions;
 using Newtonsoft.Json;
 using SadConsole.Input;
 using SadRogue.Primitives;
@@ -161,10 +162,16 @@ namespace MagiRogue.UI
             if (HandleMove(info, world))
             {
                 if (!GetPlayer.Bumped && world.CurrentMap.ControlledEntitiy is Player)
+                {
                     world.ProcessTurn(TimeHelper.GetWalkTime(GetPlayer,
                         world.CurrentMap.GetTileAt<TileBase>(GetPlayer.Position)), true);
+                }
                 else if (world.CurrentMap.ControlledEntitiy is Player)
-                    world.ProcessTurn(TimeHelper.GetAttackTime(GetPlayer), true);
+                {
+                    world.ProcessTurn(TimeHelper.GetAttackTime(GetPlayer,
+                        GetPlayer.GetAttacks().GetRandomItemFromList()),
+                        true);
+                }
 
                 return true;
             }

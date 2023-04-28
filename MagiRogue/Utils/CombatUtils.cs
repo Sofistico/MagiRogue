@@ -241,7 +241,7 @@ namespace MagiRogue.Utils
                 else
                     attackMessage.AppendFormat("You {0}", attack.AttackVerb[0]);
             }
-            attackMessage.AppendFormat(" {0}", defender.Name);
+            attackMessage.AppendFormat(" the {0}", defender.Name);
 
             if (attacker.GetRelevantAttackAbility(wieldedItem) + Mrn.Exploding2D6Dice
                 > defender.GetDefenseAbility() + Mrn.Exploding2D6Dice)
@@ -311,7 +311,10 @@ namespace MagiRogue.Utils
                         protection = 0;
                         break;
                 }
-                var damage = loopDamage - (protection + Mrn.Exploding2D6Dice) + (defender.Body.Endurance * 0.5);
+                var damage =
+                    loopDamage
+                    - ((protection + Mrn.Exploding2D6Dice) * attack.PenetrationPercentage)
+                    + (defender.Body.Endurance * 0.5);
                 loopDamage = MathMagi.Round(damage);
 
                 totalDamage += loopDamage;
@@ -371,7 +374,7 @@ namespace MagiRogue.Utils
             }
             else
             {
-                GameLoop.AddMessageLog($"{defender.Name} blocked all damage!");
+                GameLoop.AddMessageLog($"{defender.Name} received no damage!");
             }
         }
 

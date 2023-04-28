@@ -158,7 +158,7 @@ namespace MagiRogue.Entities
 
         public void Injury(Wound wound, BodyPart bpInjured, Actor actorWounded)
         {
-            double hpLostPercentage = wound.HpLost / bpInjured.MaxBodyPartHp;
+            double hpLostPercentage = MathMagi.GetPercentageBasedOnMax(wound.HpLost, bpInjured.MaxBodyPartHp);
 
             switch (hpLostPercentage)
             {
@@ -180,7 +180,7 @@ namespace MagiRogue.Entities
 
                 case >= 1:
                     wound.Severity = bpInjured is Limb ? InjurySeverity.Missing : InjurySeverity.Pulped;
-                    if (wound.DamageSource is DamageTypes.Blunt)
+                    if (wound.DamageSource is DamageTypes.Blunt || hpLostPercentage < 2)
                         wound.Severity = InjurySeverity.Pulped;
                     break;
 
@@ -190,7 +190,7 @@ namespace MagiRogue.Entities
 
             if (wound.DamageSource is DamageTypes.Sharp || wound.DamageSource is DamageTypes.Point)
             {
-                wound.Bleeding = ((actorWounded.Weight / bpInjured.BodyPartWeight) * (int)wound.Severity) + 0.1;
+                wound.Bleeding = (actorWounded.Weight / bpInjured.BodyPartWeight * (int)wound.Severity) + 0.1;
             }
 
             bpInjured.CalculateWound(wound);

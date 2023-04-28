@@ -496,6 +496,17 @@ namespace MagiRogue.Entities
             return this;
         }
 
+        public List<Attack> GetAttacks()
+        {
+            List<Attack> list = new List<Attack>();
+            foreach (var item in GetAllWieldedItems().Select(i => i.Attacks))
+            {
+                list.AddRange(item);
+            }
+            list.AddRange(GetRaceAttacks());
+            return list;
+        }
+
         #endregion GetProperties
 
         #region Needs

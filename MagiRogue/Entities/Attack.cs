@@ -15,7 +15,7 @@ namespace MagiRogue.Entities
         public int RecoverVelocity { get; set; }
         public DamageTypes DamageTypes { get; set; }
         public int ContactArea { get; set; }
-        public int PenetrationPercentage { get; set; }
+        public double PenetrationPercentage { get; set; }
         public int VelocityMultiplier { get; set; }
 
         public BodyPartFunction? LimbFunction { get; set; }
