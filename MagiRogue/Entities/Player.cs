@@ -118,7 +118,7 @@ namespace MagiRogue.Entities
             if (percent <= 25 && percent > 1)
                 return "[c:r f:Yellow][c:b]Winded";
             if (percent <= 1)
-                return "[c:r f:Red]Spent";
+                return "[c:r f:Red][c:b]Spent";
             return "Should not see this!";
         }
 

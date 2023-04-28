@@ -25,7 +25,6 @@ namespace MagiRogue.Commands
     /// </summary>
     public static class ActionManager
     {
-        private const int staminaAttackAction = 100;
         private const int maxTries = 10;
 
         /// <summary>
@@ -107,10 +106,9 @@ namespace MagiRogue.Commands
 
             // The defender now takes damage
             CombatUtils.ResolveDamage(defender, damage, dmgType, limbAttacking, limbAttacked);
-
+            var staminaDiscount = (attacker.Body.Stamina - (attack.PrepareVelocity * 10)) + (attacker.Body.Endurance * 0.5);
             // discount stamina from the attacker
-            attacker.Body.Stamina =
-                MathMagi.Round((attacker.Body.Stamina - staminaAttackAction) * (attacker.Body.Endurance / 100));
+            attacker.Body.Stamina = MathMagi.Round(staminaDiscount);
 
             return TimeHelper.GetAttackTime(attacker, attack);
         }

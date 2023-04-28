@@ -53,6 +53,7 @@ namespace MagiRogue.UI.Windows
         // Probably needs to create a way to make it update only when needed, by an event.
         public override void Update(TimeSpan time)
         {
+            statsConsole.Clear();
             statsConsole.Print(0, 0, $"{player.Name}");
             statsConsole.Print(0, 2, ColoredString.Parser.Parse(player.GetStaminaStatus()));
             statsConsole.Print(0, 3, ColoredString.Parser.Parse(player.GetManaStatus()));
