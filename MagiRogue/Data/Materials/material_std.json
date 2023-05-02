@@ -85,6 +85,20 @@
     "Type": "Bone"
   },
   {
+    "Id": "teeth",
+    "Name": "Teeth",
+    "IgnationPoint": 124,
+    "Flamability": false,
+    "Hardness": 1,
+    "MPInfusionLimit": 3,
+    "CanRegen": false,
+    "HeatDamageTemp": 139,
+    "ColdDamageTemp": -56,
+    "Density": 0.6,
+    "Color": "White",
+    "Type": "Teeth"
+  },
+  {
     "Id": "stone",
     "Name": "Stone",
     "Flamability": false,

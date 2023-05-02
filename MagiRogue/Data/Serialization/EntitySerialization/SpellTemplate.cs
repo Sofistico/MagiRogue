@@ -103,7 +103,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 "None" => DamageTypes.None,
                 "Blunt" => DamageTypes.Blunt,
                 "Sharp" => DamageTypes.Sharp,
-                "Point" => DamageTypes.Point,
+                "Point" => DamageTypes.Pierce,
                 "Force" => DamageTypes.Force,
                 "Fire" => DamageTypes.Fire,
                 "Cold" => DamageTypes.Cold,

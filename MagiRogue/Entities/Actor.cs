@@ -239,11 +239,11 @@ namespace MagiRogue.Entities
             return list;
         }
 
-        public Limb GetAttackingLimb(Attack attack)
+        public BodyPart GetAttackingLimb(Attack attack)
         {
             if (attack.LimbFunction is not null)
             {
-                return GetAnatomy().Limbs.FindAll(i =>
+                return GetAnatomy().AllBPs.FindAll(i =>
                     i.BodyPartFunction == attack.LimbFunction)
                     .GetRandomItemFromList();
             }
@@ -400,7 +400,7 @@ namespace MagiRogue.Entities
             return PhysicsManager.GetAttackVelocity(this, attack);
         }
 
-        public double GetProtection(Limb limb)
+        public double GetProtection(BodyPart limb)
         {
             var item = Body.GetArmorOnLimbIfAny(limb);
             var armorModifier = item is not null ?
@@ -468,18 +468,6 @@ namespace MagiRogue.Entities
         public int GetStrenght()
         {
             return Body.Strength;
-        }
-
-        public DamageTypes GetDamageType()
-        {
-            if (WieldedItem() is not null && WieldedItem() is Item item)
-            {
-                return item.ItemDamageType;
-            }
-            else
-            {
-                return DamageTypes.Blunt;
-            }
         }
 
         public Sex GetGender()

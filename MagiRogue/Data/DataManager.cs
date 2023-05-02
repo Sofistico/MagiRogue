@@ -170,13 +170,13 @@ namespace MagiRogue.Data
         public static List<BodyPart> QueryBpsPlansInDataAndReturnBodyParts(string[] bpPlansId, Race race = null!)
         {
             List<BodyPart> bps = new();
-            BodyPlan bodyPlan = new();
-            foreach (var ids in bpPlansId)
+            BodyPlanCollection collection = new();
+            foreach (var id in bpPlansId)
             {
-                BodyPlan bp = QueryBpPlanInData(ids);
-                bodyPlan.BodyParts.AddRange(bp.BodyParts);
+                BodyPlan bp = QueryBpPlanInData(id);
+                collection.BodyPlans.Add(bp);
             }
-            bps.AddRange(bodyPlan.ReturnBodyParts(race));
+            bps.AddRange(collection.ExecuteAllBodyPlans(race));
 
             return bps;
         }

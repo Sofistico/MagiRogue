@@ -71,7 +71,7 @@ namespace MagiRogue.Entities
             }
         }
 
-        public Item GetArmorOnLimbIfAny(Limb limb)
+        public Item GetArmorOnLimbIfAny(BodyPart limb)
         {
             Equipment.TryGetValue(limb.Id, out Item item);
             if (item is null)

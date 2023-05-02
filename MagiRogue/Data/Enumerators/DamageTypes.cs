@@ -11,7 +11,7 @@ namespace MagiRogue.Data.Enumerators
         None = 0,
         Blunt = 1 << 1,
         Sharp = 1 << 2,
-        Point = 1 << 3,
+        Pierce = 1 << 3,
         Force = 1 << 4,
         Fire = 1 << 5,
         Cold = 1 << 6,

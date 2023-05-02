@@ -6,6 +6,26 @@ using System.Linq;
 
 namespace MagiRogue.Data.Serialization.EntitySerialization
 {
+    public class BodyPlanCollection
+    {
+        public List<BodyPlan> BodyPlans { get; set; }
+
+        public BodyPlanCollection()
+        {
+            BodyPlans = new();
+        }
+
+        public List<BodyPart> ExecuteAllBodyPlans(Race race = null!)
+        {
+            var list = new List<BodyPart>();
+            foreach (var plan in BodyPlans)
+            {
+                list.AddRange(plan.ReturnBodyParts(race));
+            }
+            return list;
+        }
+    }
+
     public class BodyPlan
     {
         public string Id { get; set; }
@@ -91,9 +111,10 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 int originalIndex = i / Numbers;
                 BodyPart originalPart = returnParts[originalIndex];
                 BodyPart copy = originalPart.Copy();
-                copy.BodyPartName = string.Format(copy.BodyPartName, i);
+                copy.BodyPartName = string.Format(copy.BodyPartName, i + 1);
                 returnParts.Add(copy);
             }
+            returnParts.RemoveRange(0, originalCount);
         }
 
         private static void DealWithDigits(List<BodyPart> returnParts,

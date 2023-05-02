@@ -51,13 +51,12 @@
             "LimbFunction": "Horn",
             "Main": true,
             "AttacksUsesLimbName": false,
-            "UseAllLimbs": true,
             "Name": "Gore",
             "AttackVerb": [ "gore", "gores" ],
             "AttackAbility": "Bite",
             "PrepareVelocity": 3,
             "RecoverVelocity": 3,
-            "DamageTypes": [ "Pierce" ],
+            "DamageTypes": "Pierce",
             "ContactArea": 100,
             "PenetrationPercentage": 1.5
           }
@@ -74,13 +73,12 @@
         "LimbFunction": "Teeth",
         "Main": true,
         "AttacksUsesLimbName": false,
-        "UseAllLimbs": true,
         "Name": "Bite",
         "AttackVerb": [ "bite", "bites" ],
         "AttackAbility": "Bite",
         "PrepareVelocity": 3,
         "RecoverVelocity": 3,
-        "DamageTypes": [ "Pierce" ],
+        "DamageTypes": "Pierce",
         "ContactArea": 100,
         "PenetrationPercentage": 1
       },
@@ -93,7 +91,7 @@
         "AttackAbility": "Unarmed",
         "PrepareVelocity": 4,
         "RecoverVelocity": 4,
-        "DamageTypes": [ "Blunt" ],
+        "DamageTypes": "Blunt",
         "ContactArea": 100
       }
     ]
@@ -140,13 +138,12 @@
         "LimbFunction": "Teeth",
         "Main": true,
         "AttacksUsesLimbName": false,
-        "UseAllLimbs": true,
         "Name": "Bite",
         "AttackVerb": [ "bite", "bites" ],
         "AttackAbility": "Bite",
         "PrepareVelocity": 3,
         "RecoverVelocity": 3,
-        "DamageTypes": [ "Pierce" ],
+        "DamageTypes": "Pierce",
         "ContactArea": 100,
         "PenetrationPercentage": 1
       }

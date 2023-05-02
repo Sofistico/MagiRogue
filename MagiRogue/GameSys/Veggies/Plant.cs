@@ -175,7 +175,6 @@ namespace MagiRogue.GameSys.Veggies
             }
         }
 
-        [JsonRequired]
         public string Back
         {
             get

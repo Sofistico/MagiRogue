@@ -86,7 +86,7 @@ namespace MagiRogue.Commands
             StringBuilder defenseMessage = new();
             bool isPlayer = attacker is Player;
 
-            (bool hit, Limb limbAttacked, Limb limbAttacking, DamageTypes dmgType, Item? itemUsed)
+            (bool hit, BodyPart limbAttacked, BodyPart limbAttacking, DamageTypes dmgType, Item? itemUsed)
                 = CombatUtils.ResolveHit(attacker, defender, attackMessage, attack, isPlayer, limbChoosen);
             double damage = CombatUtils.ResolveDefense(attacker,
                 defender,

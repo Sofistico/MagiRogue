@@ -40,13 +40,12 @@
         "LimbFunction": "Teeth",
         "Main": true,
         "AttacksUsesLimbName": false,
-        "UseAllLimbs": true,
         "Name": "Bite",
         "AttackVerb": [ "bite", "bites" ],
         "AttackAbility": "Bite",
         "PrepareVelocity": 3,
         "RecoverVelocity": 3,
-        "DamageTypes": [ "Pierce" ],
+        "DamageTypes": "Pierce",
         "ContactArea": 100,
         "PenetrationPercentage": 1
       }

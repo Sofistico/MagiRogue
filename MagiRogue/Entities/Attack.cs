@@ -14,6 +14,10 @@ namespace MagiRogue.Entities
         public int PrepareVelocity { get; set; }
         public int RecoverVelocity { get; set; }
         public DamageTypes DamageTypes { get; set; }
+
+        /// <summary>
+        /// Determines the surface area hit by the weapon.
+        /// </summary>
         public int ContactArea { get; set; }
         public double PenetrationPercentage { get; set; }
         public int VelocityMultiplier { get; set; }
@@ -21,7 +25,6 @@ namespace MagiRogue.Entities
         public BodyPartFunction? LimbFunction { get; set; }
         public bool Main { get; set; }
         public bool? AttacksUsesLimbName { get; set; }
-        public bool? UseAllLimbs { get; set; }
 
         /// <summary>
         /// The pitful kind of attack that all entities have if they don't have ANY other form of attack

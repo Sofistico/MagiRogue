@@ -53,7 +53,7 @@
         "AttackAbility": "Unarmed",
         "PrepareVelocity": 3,
         "RecoverVelocity": 3,
-        "DamageTypes": [ "Blunt" ],
+        "DamageTypes": "Blunt",
         "ContactArea": 100
       },
       {
@@ -65,7 +65,7 @@
         "AttackAbility": "Unarmed",
         "PrepareVelocity": 5,
         "RecoverVelocity": 5,
-        "DamageTypes": [ "Blunt" ],
+        "DamageTypes": "Blunt",
         "ContactArea": 100
       }
     ]
@@ -129,7 +129,7 @@
         "AttackAbility": "Unarmed",
         "PrepareVelocity": 3,
         "RecoverVelocity": 3,
-        "DamageTypes": [ "Blunt" ],
+        "DamageTypes": "Blunt",
         "ContactArea": 100
       },
       {
@@ -141,8 +141,21 @@
         "AttackAbility": "Unarmed",
         "PrepareVelocity": 5,
         "RecoverVelocity": 5,
-        "DamageTypes": [ "Blunt" ],
+        "DamageTypes": "Blunt",
         "ContactArea": 100
+      },
+      {
+        "LimbFunction": "Teeth",
+        "Main": true,
+        "AttacksUsesLimbName": false,
+        "Name": "Bite",
+        "AttackVerb": [ "bite", "bites" ],
+        "AttackAbility": "Bite",
+        "PrepareVelocity": 3,
+        "RecoverVelocity": 3,
+        "DamageTypes": "Pierce",
+        "ContactArea": 100,
+        "PenetrationPercentage": 1
       }
     ]
   },
@@ -203,7 +216,7 @@
         "AttackAbility": "Unarmed",
         "PrepareVelocity": 3,
         "RecoverVelocity": 3,
-        "DamageTypes": [ "Blunt" ],
+        "DamageTypes": "Blunt",
         "ContactArea": 100
       },
       {
@@ -215,8 +228,21 @@
         "AttackAbility": "Unarmed",
         "PrepareVelocity": 5,
         "RecoverVelocity": 5,
-        "DamageTypes": [ "Blunt" ],
+        "DamageTypes": "Blunt",
         "ContactArea": 100
+      },
+      {
+        "LimbFunction": "Teeth",
+        "Main": true,
+        "AttacksUsesLimbName": false,
+        "Name": "Bite",
+        "AttackVerb": [ "bite", "bites" ],
+        "AttackAbility": "Bite",
+        "PrepareVelocity": 3,
+        "RecoverVelocity": 3,
+        "DamageTypes": "Pierce",
+        "ContactArea": 100,
+        "PenetrationPercentage": 1
       }
     ]
   },
@@ -273,7 +299,7 @@
         "AttackAbility": "Unarmed",
         "PrepareVelocity": 3,
         "RecoverVelocity": 3,
-        "DamageTypes": [ "Blunt" ],
+        "DamageTypes": "Blunt",
         "ContactArea": 100
       },
       {
@@ -285,8 +311,21 @@
         "AttackAbility": "Unarmed",
         "PrepareVelocity": 5,
         "RecoverVelocity": 5,
-        "DamageTypes": [ "Blunt" ],
+        "DamageTypes": "Blunt",
         "ContactArea": 100
+      },
+      {
+        "LimbFunction": "Teeth",
+        "Main": true,
+        "AttacksUsesLimbName": false,
+        "Name": "Bite",
+        "AttackVerb": [ "bite", "bites" ],
+        "AttackAbility": "Bite",
+        "PrepareVelocity": 3,
+        "RecoverVelocity": 3,
+        "DamageTypes": "Pierce",
+        "ContactArea": 100,
+        "PenetrationPercentage": 1
       }
     ]
   }

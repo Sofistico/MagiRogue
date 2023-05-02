@@ -29,7 +29,7 @@ namespace MagiRogue.Utils
         }
 
         public static void DealDamage(double dmg, MagiEntity entity, DamageTypes dmgType,
-            Limb? limbAttacking = null, Limb? limbAttacked = null)
+            BodyPart? limbAttacking = null, BodyPart? limbAttacked = null)
         {
             if (entity is Actor actor)
             {
@@ -208,7 +208,7 @@ namespace MagiRogue.Utils
         /// <param name="defender"></param>
         /// <param name="attackMessage"></param>
         /// <returns></returns>
-        public static (bool, Limb?, Limb, DamageTypes, Item?) ResolveHit(
+        public static (bool, BodyPart?, BodyPart, DamageTypes, Item?) ResolveHit(
             Actor attacker,
             Actor defender,
             StringBuilder attackMessage,
@@ -217,28 +217,29 @@ namespace MagiRogue.Utils
             Limb? limbAttacked = null)
         {
             Item wieldedItem = attacker.WieldedItem();
-            Limb limbAttacking = attacker.GetAttackingLimb(attack);
+            BodyPart bpAttacking = attacker.GetAttackingLimb(attack);
 
             // Create a string that expresses the attacker and defender's names as well as the attack verb
             string person = firstPerson ? "You" : attacker.Name;
             string verb = firstPerson ? attack.AttackVerb[0] : attack.AttackVerb[1];
             string with = attack?.AttacksUsesLimbName == true ? firstPerson
-                    ? $" with your {limbAttacking.BodyPartName}"
-                    : $" with {attacker.GetAnatomy().Pronoum()} {limbAttacking.BodyPartName}"
+                    ? $" with your {bpAttacking.BodyPartName}"
+                    : $" with {attacker.GetAnatomy().Pronoum()} {bpAttacking.BodyPartName}"
                 : "";
 
             attackMessage.AppendFormat("{0} {1} the {2}{3}", person, verb, defender.Name, with);
 
-            if (attacker.GetRelevantAttackAbility(wieldedItem) + Mrn.Exploding2D6Dice
-                > defender.GetDefenseAbility() + Mrn.Exploding2D6Dice)
+            // TODO: Granularize this more!
+            if (attacker.GetRelevantAttackAbility(wieldedItem) + Mrn.Exploding2D6Dice >
+                defender.GetDefenseAbility()
+                + Mrn.Exploding2D6Dice)
             {
-                var attackType = attacker.GetDamageType();
                 limbAttacked ??= defender.GetAnatomy().GetRandomLimb();
-                return (true, limbAttacked, limbAttacking, attackType, wieldedItem);
+                return (true, limbAttacked, bpAttacking, attack.DamageTypes, wieldedItem);
             }
             else
             {
-                return (false, null, limbAttacking, attacker.GetDamageType(), wieldedItem);
+                return (false, null, bpAttacking, attack.DamageTypes, wieldedItem);
             }
         }
 
@@ -258,9 +259,9 @@ namespace MagiRogue.Utils
             bool hit,
             //StringBuilder attackMessage,
             //StringBuilder defenseMessage,
-            Limb limbToHit,
+            BodyPart limbToHit,
             DamageTypes damageType,
-            Limb limbAttacking,
+            BodyPart limbAttacking,
             Attack attack,
             Item? wieldedItem = null)
         {
@@ -288,7 +289,7 @@ namespace MagiRogue.Utils
                         protection *= 0.8;
                         break;
 
-                    case DamageTypes.Point:
+                    case DamageTypes.Pierce:
                         protection *= 0.5;
                         break;
 
@@ -332,7 +333,7 @@ namespace MagiRogue.Utils
         /// <param name="attacker"></param>
         /// <param name="wieldedItem"></param>
         /// <returns></returns>
-        public static double GetAttackMomentum(Actor attacker, Limb limbAttacking, Attack attack)
+        public static double GetAttackMomentum(Actor attacker, BodyPart limbAttacking, Attack attack)
         {
             return MathMagi.Round(
                 ((attacker.GetStrenght() + Mrn.Exploding2D6Dice)
@@ -351,8 +352,8 @@ namespace MagiRogue.Utils
         public static void ResolveDamage(Actor defender,
             double damage,
             DamageTypes dmgType,
-            Limb limbAttacked,
-            Limb limbAttacking)
+            BodyPart limbAttacked,
+            BodyPart limbAttacking)
         {
             if (damage > 0)
             {

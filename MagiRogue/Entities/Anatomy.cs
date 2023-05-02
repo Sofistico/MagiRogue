@@ -19,6 +19,7 @@ namespace MagiRogue.Entities
         #region Fields
 
         private bool basicSetupDone;
+        private List<BodyPart> bps;
 
         #endregion Fields
 
@@ -29,6 +30,24 @@ namespace MagiRogue.Entities
 
         [DataMember]
         public List<Organ> Organs { get; set; }
+
+        public List<BodyPart> AllBPs
+        {
+            get
+            {
+                bps ??= new();
+                if (bps[0] != null && bps[0] == Limbs[0])
+                {
+                    return bps;
+                }
+                else
+                {
+                    bps.InsertRange(0, Limbs);
+                    bps.InsertRange(bps.Count, Organs);
+                    return bps;
+                }
+            }
+        }
 
         [DataMember]
         public Race Race { get; set; }
@@ -188,7 +207,7 @@ namespace MagiRogue.Entities
                     throw new Exception($"Error with getting percentage of the damage done to the body part: {hpLostPercentage}");
             }
 
-            if (wound.DamageSource is DamageTypes.Sharp || wound.DamageSource is DamageTypes.Point)
+            if (wound.DamageSource is DamageTypes.Sharp || wound.DamageSource is DamageTypes.Pierce)
             {
                 wound.Bleeding = (actorWounded.Weight / bpInjured.BodyPartWeight * (int)wound.Severity) + 0.1;
             }

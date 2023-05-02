@@ -3,20 +3,15 @@ using MagiRogue.Data.Serialization;
 using MagiRogue.GameSys.Physics;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MagiRogue.Entities
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public abstract class BodyPart
     {
-        [JsonProperty("BodyPartHp")]
+        [JsonProperty(nameof(BodyPartHp))]
         private double bodyPartHp;
 
         public string Id { get; set; }
@@ -26,12 +21,7 @@ namespace MagiRogue.Entities
         {
             get
             {
-                if (bodyPartHp > MaxBodyPartHp)
-                {
-                    return MaxBodyPartHp;
-                }
-                else
-                    return bodyPartHp;
+                return bodyPartHp > MaxBodyPartHp ? MaxBodyPartHp : bodyPartHp;
             }
 
             set
@@ -43,13 +33,7 @@ namespace MagiRogue.Entities
         public int MaxBodyPartHp { get; set; }
 
         public double BodyPartWeight
-        {
-            get
-            {
-                double finalResult = MathMagi.ReturnPositive(MathMagi.GetWeightWithDensity(BodyPartMaterial.Density, Volume));
-                return finalResult;
-            }
-        }
+            => (double)MathMagi.ReturnPositive(MathMagi.GetWeightWithDensity(BodyPartMaterial.Density, Volume));
 
         /// <summary>
         /// The size of the bodypart in cm³
@@ -93,7 +77,7 @@ namespace MagiRogue.Entities
         public bool NeedsHeal => BodyPartHp < MaxBodyPartHp || Wounds.Count > 0;
 
         [JsonConstructor()]
-        public BodyPart(string materialId)
+        protected BodyPart(string materialId)
         {
             Wounds = new();
             MaterialId = materialId;

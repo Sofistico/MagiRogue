@@ -38,7 +38,7 @@
   },
   {
     "Id": "generic_teeth",
-    "BodyParts": [ "teeth" ],
+    "BodyParts": [ "tooth" ],
     "Numbers": 38
   }
 ]
