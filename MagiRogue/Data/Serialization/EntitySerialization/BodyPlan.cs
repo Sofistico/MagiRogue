@@ -10,7 +10,9 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
     {
         public string Id { get; set; }
         public List<string> BodyParts { get; set; }
+
         //public List<Tissue> Tissues { get; set; }
+        public int Numbers { get; set; }
 
         public BodyPlan()
         {
@@ -64,16 +66,34 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                     throw new ApplicationException($"Coudn't find a valid body part! bodypart id: {bp}");
             }
 
-            var bodyParts = returnParts.Where(i => i is Limb lim && (lim.LimbType is LimbType.Finger
+            var fingerBodyParts = returnParts.Where(i => i is Limb lim && (lim.LimbType is LimbType.Finger
                 || lim.LimbType is LimbType.Toe)).ToList();
             var connectorLimbs = returnParts.Where(i => i.BodyPartFunction is BodyPartFunction.Grasp
                 || i.BodyPartFunction is BodyPartFunction.Stance).ToList();
 
-            foreach (Limb smallBp in bodyParts.Cast<Limb>())
+            foreach (Limb smallBp in fingerBodyParts.Cast<Limb>())
             {
                 DealWithDigits(returnParts, connectorLimbs, smallBp);
             }
+
+            if (Numbers > 0)
+                DealWithMoreThanOnePart(returnParts);
+
             return returnParts;
+        }
+
+        private void DealWithMoreThanOnePart(List<BodyPart> returnParts)
+        {
+            int originalCount = returnParts.Count;
+            int copiesToAdd = Numbers * originalCount;
+            for (int i = 0; i < copiesToAdd; i++)
+            {
+                int originalIndex = i / Numbers;
+                BodyPart originalPart = returnParts[originalIndex];
+                BodyPart copy = originalPart.Copy();
+                copy.BodyPartName = string.Format(copy.BodyPartName, i);
+                returnParts.Add(copy);
+            }
         }
 
         private static void DealWithDigits(List<BodyPart> returnParts,

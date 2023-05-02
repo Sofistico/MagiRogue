@@ -320,7 +320,7 @@ namespace MagiRogue.Utils
         {
             return (MathMagi.Round(
                 ((attacker.GetStrenght() + wieldedItem.BaseDmg + Mrn.Exploding2D6Dice)
-                * attacker.GetRelevantAttackAbilityMultiplier(wieldedItem.WeaponType))
+                * attacker.GetRelevantAttackAbilityMultiplier(attack.AttackAbility))
                 + (10 + (2 * wieldedItem.QualityMultiplier()))) * attacker.GetAttackVelocity(attack))
                 + (1 + (attacker.Volume / (wieldedItem.Material.Density * wieldedItem.Volume)));
         }
@@ -336,7 +336,7 @@ namespace MagiRogue.Utils
         {
             return MathMagi.Round(
                 ((attacker.GetStrenght() + Mrn.Exploding2D6Dice)
-                * (attacker.GetRelevantAbilityMultiplier(AbilityName.Unarmed) + 1)
+                * (attacker.GetRelevantAbilityMultiplier(attack.AttackAbility) + 1)
                 * attacker.GetAttackVelocity(attack))
                 + (1 + (attacker.Volume / (limbAttacking.BodyPartMaterial.Density * limbAttacking.Volume))));
         }

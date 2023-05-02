@@ -10,6 +10,8 @@ namespace MagiRogue.Data.Enumerators
         Heart,
         Brain,
         Digestive,
+        Mouth,
+        Teeth,
         Filtering,
         Breather,
         Protective,

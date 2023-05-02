@@ -18,6 +18,7 @@ namespace MagiRogue.Data.Enumerators
         Flier,
         Digit,
         Aperture,
+        Horn,
 
         Vital,
         Thought,

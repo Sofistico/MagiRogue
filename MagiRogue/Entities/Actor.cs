@@ -446,7 +446,7 @@ namespace MagiRogue.Entities
             }
             else
             {
-                return GetRelevantAbility(AbilityName.Unarmed);
+                return 0;
             }
         }
 
@@ -455,9 +455,9 @@ namespace MagiRogue.Entities
             return Mind.HasSpecifiedAttackAbility(weaponType, out int abilityScore) ? abilityScore : 0;
         }
 
-        public double GetRelevantAttackAbilityMultiplier(WeaponType weaponType)
+        public double GetRelevantAttackAbilityMultiplier(AbilityName ability)
         {
-            return Mind.HasSpecifiedAttackAbility(weaponType, out int abilityScore) ? abilityScore * 0.3 : 0;
+            return Mind.HasSpecifiedAttackAbility(ability, out int abilityScore) ? abilityScore * 0.3 : 0;
         }
 
         public double GetRelevantAbilityMultiplier(AbilityName ability)

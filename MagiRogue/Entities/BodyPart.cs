@@ -149,5 +149,7 @@ namespace MagiRogue.Entities
             BodyPartHp -= wound.HpLost;
             Wounds.Add(wound);
         }
+
+        public abstract BodyPart Copy();
     }
 }

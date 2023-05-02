@@ -2,6 +2,7 @@
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Utils.Extensions;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SadRogue.Primitives;
 using System;
@@ -263,6 +264,11 @@ namespace MagiRogue.Entities
                 {
                     limbs[i].BodyPartName = string.Format(to[0].ToString(), limbs[i].BodyPartName.Split(" ")[0]);
                 }
+                return;
+            }
+            if (change.ToString().Equals("Attacks") && !string.IsNullOrEmpty(context))
+            {
+                Attacks.AddRange(JsonConvert.DeserializeObject<List<Attack>>(context));
                 return;
             }
         }

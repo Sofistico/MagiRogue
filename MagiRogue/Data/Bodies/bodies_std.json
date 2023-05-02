@@ -35,5 +35,10 @@
   {
     "Id": "2head_horns",
     "BodyParts": [ "horn_right", "horn_left" ]
+  },
+  {
+    "Id": "generic_teeth",
+    "BodyParts": [ "teeth" ],
+    "Numbers": 38
   }
 ]

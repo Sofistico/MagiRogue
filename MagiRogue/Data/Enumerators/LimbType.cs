@@ -21,6 +21,6 @@ namespace MagiRogue.Data.Enumerators
         Finger,
         Toe,
         Misc,
-        Horn
+        Horn,
     }
 }

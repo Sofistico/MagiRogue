@@ -1,5 +1,7 @@
-﻿using MagiRogue.Data.Enumerators;
+﻿using GoRogue;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -48,9 +50,9 @@ namespace MagiRogue.Entities
             }
         }
 
-        public bool HasSpecifiedAttackAbility(WeaponType weaponType, out int abilityScore)
+        public bool HasSpecifiedAttackAbility(AbilityName ability, out int abilityScore)
         {
-            int possibleId = (int)Ability.ReturnAbilityEnumFromString(weaponType.ToString());
+            int possibleId = (int)ability;
             abilityScore = 0;
             if (Abilities.TryGetValue(possibleId, out Ability value))
             {
@@ -109,6 +111,21 @@ namespace MagiRogue.Entities
         public List<AbilityName> ReturnIntersectionAbilities(IEnumerable<AbilityName> abilitiesNeeded)
         {
             return abilitiesNeeded.Where(i => Abilities.ContainsKey((int)i)).ToList();
+        }
+
+        public bool HasSpecifiedAttackAbility(WeaponType weaponType, out int abilityScore)
+        {
+            int possibleId = (int)Ability.ReturnAbilityEnumFromString(weaponType.ToString());
+            abilityScore = 0;
+            if (Abilities.TryGetValue(possibleId, out Ability value))
+            {
+                abilityScore = value.Score;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

@@ -404,7 +404,7 @@
     "Orientation": "Left",
     "MaterialId": "skin",
     "RateOfHeal": 0.1,
-    "BodyPartFunction": "Limb",
+    "BodyPartFunction": "Horn",
     "ConnectedTo": "head"
   },
   {
@@ -415,7 +415,7 @@
     "Orientation": "Left",
     "MaterialId": "skin",
     "RateOfHeal": 0.1,
-    "BodyPartFunction": "Limb",
+    "BodyPartFunction": "Horn",
     "ConnectedTo": "head"
   }
 ]

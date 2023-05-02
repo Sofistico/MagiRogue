@@ -55,7 +55,7 @@ namespace MagiRogue.Entities
             // Empty!
         }
 
-        public Organ Copy()
+        public override Organ Copy()
         {
             Organ copy = new Organ()
             {

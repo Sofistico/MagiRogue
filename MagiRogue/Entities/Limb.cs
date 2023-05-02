@@ -90,7 +90,7 @@ namespace MagiRogue.Entities
                 );
         }
 
-        public Limb Copy()
+        public override Limb Copy()
         {
             return new Limb(MaterialId)
             {

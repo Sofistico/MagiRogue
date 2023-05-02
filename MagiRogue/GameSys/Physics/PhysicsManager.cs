@@ -34,11 +34,11 @@ namespace MagiRogue.GameSys.Physics
             {
                 var speed = ((itemHeld.SpeedOfAttack + (itemHeld.Weight * itemHeld.Volume))
                     / actor.GetActorBaseSpeed());
-                ability = actor.GetRelevantAttackAbility(itemHeld.WeaponType);
+                ability = actor.GetRelevantAbility(attack.AttackAbility);
                 finalSpeed = ability != 0 ? speed / ability : speed;
                 return finalSpeed * attack.VelocityMultiplier * 100;
             }
-            ability = actor.GetRelevantAbility(Data.Enumerators.AbilityName.Unarmed);
+            ability = actor.GetRelevantAbility(attack.AttackAbility);
             finalSpeed = ability != 0 ?
                 actor.GetActorBaseSpeed() / ability
                 : actor.GetActorBaseSpeed();

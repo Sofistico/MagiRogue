@@ -28,7 +28,7 @@
     "BaseMagicResistance": 10,
     "RaceNormalLimbRegen": 1.0,
     "BleedRegenaration": 1.0,
-    "BodyPlan": [ "humanoid_limbs", "humanoid_organs", "5fingers", "5toes" ],
+    "BodyPlan": [ "humanoid_limbs", "humanoid_organs", "5fingers", "5toes", "generic_teeth" ],
     // From the outermost, to the innermost
     // following name;material;relative_thickness;FlagsIfAny
     "Tissues": [
@@ -105,7 +105,8 @@
       "humanoid_limbs",
       "humanoid_organs",
       "5fingers",
-      "5toes"
+      "5toes",
+      "generic_teeth"
     ],
     "Tissues": [
       "skin;skin;1;ConnectiveTissueAnchor,Scars",
@@ -178,7 +179,8 @@
       "humanoid_limbs",
       "humanoid_organs",
       "5fingers",
-      "5toes"
+      "5toes",
+      "generic_teeth"
     ],
     "Tissues": [
       "skin;skin;1;ConnectiveTissueAnchor,Scars",
@@ -249,7 +251,7 @@
     "MaxManaRange": 35,
     "RaceNormalLimbRegen": 0.8,
     "BleedRegenaration": 0.8,
-    "BodyPlan": [ "humanoid_limbs", "humanoid_organs", "5fingers", "5toes" ],
+    "BodyPlan": [ "humanoid_limbs", "humanoid_organs", "5fingers", "5toes", "generic_teeth" ],
     "Tissues": [
       "skin;skin;1;ConnectiveTissueAnchor,Scars",
       "fat;fat;1;ConnectiveTissueAnchor,Scars,ThickensOnEnergyStore",
