@@ -36,7 +36,7 @@ namespace MagiRogue.Entities
             get
             {
                 bps ??= new();
-                if (bps[0] != null && bps[0] == Limbs[0])
+                if (bps.Count > 0 && bps[0] == Limbs[0])
                 {
                     return bps;
                 }
@@ -181,23 +181,23 @@ namespace MagiRogue.Entities
 
             switch (hpLostPercentage)
             {
-                case > 0 and <= 0.15:
+                case > 0 and <= 15:
                     wound.Severity = InjurySeverity.Bruise;
                     break;
 
-                case > 0.15 and <= 0.25:
+                case > 15 and <= 25:
                     wound.Severity = InjurySeverity.Minor;
                     break;
 
-                case > 0.25 and <= 0.75:
+                case > 25 and <= 75:
                     wound.Severity = InjurySeverity.Inhibited;
                     break;
 
-                case > 0.75 and < 1:
+                case > 75 and < 100:
                     wound.Severity = InjurySeverity.Broken;
                     break;
 
-                case >= 1:
+                case >= 100:
                     wound.Severity = bpInjured is Limb ? InjurySeverity.Missing : InjurySeverity.Pulped;
                     if (wound.DamageSource is DamageTypes.Blunt || hpLostPercentage < 2)
                         wound.Severity = InjurySeverity.Pulped;
