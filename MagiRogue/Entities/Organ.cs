@@ -67,7 +67,15 @@ namespace MagiRogue.Entities
                 MaterialId = this.MaterialId,
                 BodyPartMaterial = this.BodyPartMaterial,
                 MaxBodyPartHp = this.MaxBodyPartHp,
-                OrganType = this.OrganType
+                OrganType = this.OrganType,
+                BodyPartFunction = this.BodyPartFunction,
+                CanHeal = this.CanHeal,
+                RateOfHeal = this.RateOfHeal,
+                RelativeVolume = this.RelativeVolume,
+                Tissues = this.Tissues,
+                Volume = this.Volume,
+                Working = this.Working,
+                Wounds = this.Wounds,
             };
 
             return copy;

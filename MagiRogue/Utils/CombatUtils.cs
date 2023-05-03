@@ -1,6 +1,7 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Magic;
+using System;
 using System.Text;
 
 namespace MagiRogue.Utils
@@ -408,6 +409,111 @@ namespace MagiRogue.Utils
 
             // Now show the deathMessage in the messagelog
             GameLoop.AddMessageLog(deathMessage.ToString());
+        }
+
+        public static int CalculateNumTissueLayersPenetrated(double attackMomentum,
+            double attackerMass,
+            DamageTypes damage,
+            Tissue[] tissues,
+            Item[] targetArmor)
+        {
+            double remainingEnergy = 0.5 * attackMomentum * attackerMass;
+
+            foreach (var pieceArmor in targetArmor)
+            {
+                double armorEffectiveness = CalculateArmorEffectiveness(pieceArmor,
+                    remainingEnergy,
+                    damage);
+                remainingEnergy *= armorEffectiveness;
+            }
+
+            for (int i = 0; i < tissues.Length; i++)
+            {
+                Tissue tissue = tissues[i];
+
+                // Calculate the thickness of the tissue,
+                // taking into account its relative thickness and the thickness of all other tissues
+                //int thickness = tissue.RelativeThickness * (tissues.Length / (i + 1));
+
+                // Calculate the amount of energy required to penetrate the tissue
+                double energyToPenetrate = CalculateEnergyToPenetrateTissue(tissue,
+                    tissue.RelativeThickness,
+                    damage);
+
+                if (remainingEnergy > energyToPenetrate)
+                {
+                    remainingEnergy -= energyToPenetrate;
+                }
+                else
+                {
+                    // The projectile has lost all of its energy and stopped in this tissue layer
+                    return i;
+                }
+            }
+
+            // The projectile has penetrated all tissue layers
+            return tissues.Length;
+        }
+
+        private static double CalculateArmorEffectiveness(Item armor, double attackEnergy, DamageTypes attackDamageType)
+        {
+            double armorEffectiveness;
+            switch (armor.ArmorType)
+            {
+                case ArmorType.None:
+                    armorEffectiveness = 0;
+                    break;
+
+                case ArmorType.Rigid:
+                    armorEffectiveness = Math.Exp(-(attackEnergy / armor.Material.Hardness));
+                    break;
+
+                case ArmorType.Flexible:
+                    armorEffectiveness = armor.Material.Hardness / attackEnergy;
+                    break;
+
+                case ArmorType.Plate:
+                    if (attackDamageType == DamageTypes.Sharp)
+                    {
+                        armorEffectiveness = Math.Exp(-Math.Pow(attackEnergy / armor.Material.Hardness, 2));
+                    }
+                    else
+                    {
+                        armorEffectiveness = armor.Material.Hardness / attackEnergy;
+                    }
+                    break;
+
+                case ArmorType.Leather:
+                    if (attackDamageType == DamageTypes.Blunt)
+                    {
+                        armorEffectiveness = armor.Material.Hardness / attackEnergy;
+                    }
+                    else
+                    {
+                        armorEffectiveness = Math.Exp(-(attackEnergy / armor.Material.Hardness));
+                    }
+                    break;
+
+                case ArmorType.Clothing:
+                    armorEffectiveness = armor.Material.Hardness / attackEnergy;
+                    break;
+
+                default:
+                    throw new ArgumentException("Invalid armor type", nameof(armor.ArmorType));
+            }
+
+            return armorEffectiveness;
+        }
+
+        private static double CalculateEnergyToPenetrateTissue(Tissue tissue, int thickness, DamageTypes damageType)
+        {
+            return (double)(damageType switch
+            {
+                DamageTypes.Pierce => tissue.Material.Hardness * thickness * 0.75,
+                DamageTypes.Sharp => tissue.Material.Hardness * thickness * 0.5,
+                DamageTypes.Blunt => tissue.Material.Hardness * thickness * 0.25,
+                _ => tissue.Material.Hardness * thickness * 0.9,// some of these stuff will use other properties, but this is a good default!
+            });
         }
     }
 }
