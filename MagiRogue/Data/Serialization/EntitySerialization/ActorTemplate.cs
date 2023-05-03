@@ -96,6 +96,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         public Body Body { get; set; }
 
         public ActorState State { get; set; }
+        public List<ActorSituationalFlags> SituationalFlags { get; set; }
 
         /// <summary>
         /// Is used in the serialization of the actor.

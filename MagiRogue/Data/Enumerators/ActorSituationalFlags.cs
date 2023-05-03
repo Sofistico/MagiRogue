@@ -9,10 +9,8 @@ using System.Threading.Tasks;
 namespace MagiRogue.Data.Enumerators
 {
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum ActorState
+    public enum ActorSituationalFlags
     {
-        Normal,
-        Sleeping,
         Prone,
     }
 }

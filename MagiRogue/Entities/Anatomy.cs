@@ -99,7 +99,7 @@ namespace MagiRogue.Entities
         {
             get
             {
-                return Limbs.Exists(l => l.LimbType is LimbType.UpperBody && l.BodyPartHp > 0);
+                return Limbs.Exists(l => l.LimbType is LimbType.UpperBody && l.Attached);
             }
         }
 
@@ -177,7 +177,7 @@ namespace MagiRogue.Entities
 
         public void Injury(Wound wound, BodyPart bpInjured, Actor actorWounded)
         {
-            double injureSeverity = (MathMagi.GetPercentageBasedOnMax(wound.VolumeInjury, bpInjured.MaxBodyPartHp)) / 100;
+            double injureSeverity = (MathMagi.GetPercentageBasedOnMax(wound.VolumeInjury, bpInjured.Volume)) / 100;
 
             switch (injureSeverity)
             {
@@ -355,8 +355,8 @@ namespace MagiRogue.Entities
             {
                 bp.Volume = MathMagi.ReturnPositive((int)(volume * (bp.RelativeVolume
                     + GameLoop.GlobalRand.NextInclusiveDouble(-0.01, 0.01))));
-                bp.MaxBodyPartHp = (int)((bp.Volume + 1) / (bp.BodyPartWeight + 1));
-                bp.BodyPartHp = bp.MaxBodyPartHp;
+                //bp.MaxBodyPartHp = (int)((bp.Volume + 1) / (bp.BodyPartWeight + 1));
+                //bp.BodyPartHp = bp.MaxBodyPartHp;
             }
         }
 
@@ -402,7 +402,7 @@ namespace MagiRogue.Entities
                 foreach (Limb connectedLimb in connectedParts)
                 {
                     // Here so that the bleeding from a lost part isn't being considered
-                    Wound lostLimb = new Wound(connectedLimb.BodyPartHp, DamageTypes.Sharp)
+                    Wound lostLimb = new Wound(connectedLimb.Volume, DamageTypes.Sharp)
                     {
                         Severity = InjurySeverity.Missing
                     };
