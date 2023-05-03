@@ -88,13 +88,9 @@ namespace MagiRogue.Commands
 
             (bool hit, BodyPart limbAttacked, BodyPart limbAttacking, DamageTypes dmgType, Item? itemUsed)
                 = CombatUtils.ResolveHit(attacker, defender, attackMessage, attack, isPlayer, limbChoosen);
-            double damage = CombatUtils.ResolveDefense(attacker,
+            double finalMomentum = CombatUtils.ResolveDefenseAndGetAttackMomentum(attacker,
                 defender,
                 hit,
-                //attackMessage,
-                //defenseMessage,
-                limbAttacked,
-                dmgType,
                 limbAttacking,
                 attack,
                 itemUsed);
@@ -105,7 +101,7 @@ namespace MagiRogue.Commands
                 GameLoop.AddMessageLog(defenseMessage.ToString());
 
             // The defender now takes damage
-            CombatUtils.ResolveDamage(defender, damage, dmgType, limbAttacking, limbAttacked);
+            CombatUtils.ResolveDamage(defender, finalMomentum, dmgType, limbAttacking, limbAttacked);
             var staminaDiscount = (attacker.Body.Stamina
                 - (attack.PrepareVelocity * 10)) + (attacker.Body.Endurance * 0.5);
             // discount stamina from the attacker

@@ -2,6 +2,7 @@
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Magic;
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace MagiRogue.Utils
@@ -29,63 +30,57 @@ namespace MagiRogue.Utils
             return a ^ b;
         }
 
-        public static void DealDamage(double dmg, MagiEntity entity, DamageTypes dmgType,
-            BodyPart? limbAttacking = null, BodyPart? limbAttacked = null)
+        public static void DealDamage(double attackMomentum, MagiEntity entity, DamageTypes dmgType,
+            BodyPart? limbAttacking = null, BodyPart? limbAttacked = null, MagiEntity? attacker = null)
         {
             if (entity is Actor actor)
             {
-                if (!actor.CanBeAttacked)
-                {
-                    GameLoop.AddMessageLog("Can't hit your target");
-                    return;
-                }
-
-                // the stamina takes the hit first
-                // decide to take only half of the damage,
-                // since the stamina right now protects everything!
-                double defenseFromStamina = MathMagi.Round(actor.Body.Stamina * actor.GetAnatomy().FitLevel * 0.5);
-                dmg = MathMagi.Round(dmg - defenseFromStamina);
-                //actor.Body.Stamina = actor.Body.Stamina < 0 ? 0 : actor.Body.Stamina;
+                var tissuesPenetrated = CalculateNumTissueLayersPenetrated(attackMomentum,
+                    attacker is null ? 0 : attacker.Weight,
+                    dmgType,
+                    limbAttacked.Tissues,
+                    actor.Body.GetArmorOnLimbIfAny(limbAttacked));
 
                 // any remaining dmg goes to create a wound
-                if (dmg > 0)
+                if (tissuesPenetrated > 0)
                 {
-                    Wound woundTaken = new Wound(dmg, dmgType);
+                    // need to redo this to take into account the new tissue based wound!
+                    //Wound woundTaken = new Wound(attackMomentum, dmgType);
 
-                    actor.GetAnatomy().Injury(woundTaken, limbAttacked, actor);
+                    //actor.GetAnatomy().Injury(woundTaken, limbAttacked, actor);
 
-                    if (actor.CheckIfDed())
-                    {
-                        Commands.ActionManager.ResolveDeath(actor);
-                    }
+                    //if (actor.CheckIfDed())
+                    //{
+                    //    Commands.ActionManager.ResolveDeath(actor);
+                    //}
 
-                    //GameLoop.AddMessageLog($"   The {entity.Name} took {dmg} {dmgType} total damage in the {limbAttacking.BodyPartName}!");
-                    StringBuilder woundString = new($"   The {entity.Name} received ");
-                    switch (woundTaken.Severity)
-                    {
-                        case InjurySeverity.Inhibited:
-                            woundString.Append("an ");
-                            break;
+                    ////GameLoop.AddMessageLog($"   The {entity.Name} took {dmg} {dmgType} total damage in the {limbAttacking.BodyPartName}!");
+                    //StringBuilder woundString = new($"   The {entity.Name} received ");
+                    //switch (woundTaken.Severity)
+                    //{
+                    //    case InjurySeverity.Inhibited:
+                    //        woundString.Append("an ");
+                    //        break;
 
-                        default:
-                            woundString.Append("a ");
-                            break;
-                    }
-                    woundString.Append(woundTaken.Severity).Append(" wound in the ").Append(limbAttacking.BodyPartName);
+                    //    default:
+                    //        woundString.Append("a ");
+                    //        break;
+                    //}
+                    //woundString.Append(woundTaken.Severity).Append(" wound in the ").Append(limbAttacking.BodyPartName);
 
-                    GameLoop.AddMessageLog(woundString.ToString());
-                    return;
+                    //GameLoop.AddMessageLog(woundString.ToString());
+                    //return;
                 }
                 else
                 {
-                    GameLoop.AddMessageLog($"   The attack glances {entity.Name}!");
+                    GameLoop.AddMessageLog($"The attack glances {entity.Name}!");
                     return;
                 }
             }
 
             if (entity is Item item)
             {
-                item.Condition -= (int)dmg;
+                item.Condition -= (int)attackMomentum;
             }
         }
 
@@ -251,17 +246,10 @@ namespace MagiRogue.Utils
         /// in the MessageLog, expressing the number of hits blocked.
         /// </summary>
         /// <param name="defender"></param>
-        /// <param name="hits"></param>
-        /// <param name="attackMessage"></param>
-        /// <param name="defenseMessage"></param>
         /// <returns></returns>
-        public static double ResolveDefense(Actor attacker,
+        public static double ResolveDefenseAndGetAttackMomentum(Actor attacker,
             Actor defender,
             bool hit,
-            //StringBuilder attackMessage,
-            //StringBuilder defenseMessage,
-            BodyPart limbToHit,
-            DamageTypes damageType,
             BodyPart limbAttacking,
             Attack attack,
             Item? wieldedItem = null)
@@ -270,36 +258,16 @@ namespace MagiRogue.Utils
 
             if (hit)
             {
-                // Create a string that displays the defender's name and outcomes
-
-                double loopDamage;
-                // TODO: adds a way to get the attack of the weapon or fist or something else
+                double attackMomentum;
                 if (wieldedItem is null)
-                    loopDamage = GetAttackMomentum(attacker, limbAttacking, attack);
+                    attackMomentum = GetAttackMomentum(attacker, limbAttacking, attack);
                 else
-                    loopDamage = GetAttackMomentumWithItem(attacker, wieldedItem, attack);
+                    attackMomentum = GetAttackMomentumWithItem(attacker, wieldedItem, attack);
 
                 // some moar randomness!
-                loopDamage += Mrn.Exploding2D6Dice;
+                attackMomentum += Mrn.Exploding2D6Dice;
 
-                double protection = defender.GetProtection(limbToHit);
-
-                switch (damageType)
-                {
-                    case DamageTypes.Blunt:
-                        protection *= 0.8;
-                        break;
-
-                    case DamageTypes.Pierce:
-                        protection *= 0.5;
-                        break;
-
-                    case DamageTypes.Soul:
-                    case DamageTypes.Mind:
-                        protection = 0;
-                        break;
-                }
-                var damageWithoutPenetration = loopDamage - (protection + Mrn.Exploding2D6Dice) + (defender.Body.Endurance * 0.5);
+                var damageWithoutPenetration = attackMomentum - (Mrn.Exploding2D6Dice) + (defender.Body.Endurance * 0.5);
                 var penetrationDamage = damageWithoutPenetration * attack.PenetrationPercentage;
                 var finalDamage = damageWithoutPenetration + penetrationDamage;
                 finalDamage = MathMagi.Round(finalDamage);
@@ -348,16 +316,16 @@ namespace MagiRogue.Utils
         /// Then displays the outcome in the MessageLog.
         /// </summary>
         /// <param name="defender"></param>
-        /// <param name="damage"></param>
+        /// <param name="momentum"></param>
         public static void ResolveDamage(Actor defender,
-            double damage,
+            double momentum,
             DamageTypes dmgType,
             BodyPart limbAttacked,
             BodyPart limbAttacking)
         {
-            if (damage > 0)
+            if (momentum > 0)
             {
-                DealDamage(damage, defender, dmgType, limbAttacking, limbAttacked);
+                DealDamage(momentum, defender, dmgType, limbAttacking, limbAttacked);
             }
             else
             {
@@ -413,20 +381,17 @@ namespace MagiRogue.Utils
         public static int CalculateNumTissueLayersPenetrated(double attackMomentum,
             double attackerMass,
             DamageTypes damage,
-            Tissue[] tissues,
-            Item[] targetArmor)
+            List<Tissue> tissues,
+            Item targetArmor)
         {
-            double remainingEnergy = 0.5 * attackMomentum * attackerMass;
+            double remainingEnergy = 0.5 * attackMomentum * (attackerMass + 1);
 
-            foreach (var pieceArmor in targetArmor)
-            {
-                double armorEffectiveness = CalculateArmorEffectiveness(pieceArmor,
-                    remainingEnergy,
-                    damage);
-                remainingEnergy *= armorEffectiveness;
-            }
+            double armorEffectiveness = CalculateArmorEffectiveness(targetArmor,
+                remainingEnergy,
+                damage);
+            remainingEnergy *= armorEffectiveness;
 
-            for (int i = 0; i < tissues.Length; i++)
+            for (int i = 0; i < tissues.Count; i++)
             {
                 Tissue tissue = tissues[i];
 
@@ -451,7 +416,7 @@ namespace MagiRogue.Utils
             }
 
             // The projectile has penetrated all tissue layers
-            return tissues.Length;
+            return tissues.Count;
         }
 
         private static double CalculateArmorEffectiveness(Item armor, double attackEnergy, DamageTypes attackDamageType)

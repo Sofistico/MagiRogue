@@ -83,14 +83,14 @@ namespace MagiRogue.Entities
         public bool HasEnoughWings { get => Limbs.FindAll(l => l.BodyPartFunction is BodyPartFunction.Flier && l.Working).Count >= MaxFlierLimbs; }
 
         [JsonIgnore]
-        public bool HasAtLeastOneHead { get => Limbs.Exists(i => i.LimbType is LimbType.Head && i.BodyPartHp > 0); }
+        public bool HasAtLeastOneHead { get => Limbs.Exists(i => i.LimbType is LimbType.Head && i.Attached); }
 
         [JsonIgnore]
         public bool CanSee
         {
             get
             {
-                return Organs.Exists(o => o.OrganType is OrganType.Visual && (!o.Destroyed || o.Working));
+                return Organs.Exists(o => o.OrganType is OrganType.Visual && (o.Working));
             }
         }
 
@@ -177,9 +177,9 @@ namespace MagiRogue.Entities
 
         public void Injury(Wound wound, BodyPart bpInjured, Actor actorWounded)
         {
-            double hpLostPercentage = (MathMagi.GetPercentageBasedOnMax(wound.HpLost, bpInjured.MaxBodyPartHp)) / 100;
+            double injureSeverity = (MathMagi.GetPercentageBasedOnMax(wound.VolumeInjury, bpInjured.MaxBodyPartHp)) / 100;
 
-            switch (hpLostPercentage)
+            switch (injureSeverity)
             {
                 case > 0 and <= 0.15:
                     wound.Severity = InjurySeverity.Bruise;
@@ -199,12 +199,12 @@ namespace MagiRogue.Entities
 
                 case >= 1:
                     wound.Severity = bpInjured is Limb ? InjurySeverity.Missing : InjurySeverity.Pulped;
-                    if (wound.DamageSource is DamageTypes.Blunt || hpLostPercentage < 2)
+                    if (wound.DamageSource is DamageTypes.Blunt || injureSeverity < 2)
                         wound.Severity = InjurySeverity.Pulped;
                     break;
 
                 default:
-                    throw new Exception($"Error with getting percentage of the damage done to the body part: {hpLostPercentage}");
+                    throw new Exception($"Error with getting percentage of the damage done to the body part: {injureSeverity}");
             }
 
             if (wound.DamageSource is DamageTypes.Sharp

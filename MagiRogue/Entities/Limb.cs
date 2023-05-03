@@ -58,14 +58,12 @@ namespace MagiRogue.Entities
             BodyPartFunction = bodyPartFunction;
         }
 
-        public Limb(string id, LimbType limbType, int limbHp, int maxLimbHp,
+        public Limb(string id, LimbType limbType,
             string limbName, BodyPartOrientation orientation, string connectedTo,
-           string materialID = "skin") : base(materialID)
+            string materialID = "skin") : base(materialID)
         {
             Id = id;
             LimbType = limbType;
-            MaxBodyPartHp = maxLimbHp;
-            BodyPartHp = limbHp;
             //BodyPartWeight = limbWeight;
             // Defaults to true
             Attached = true;
@@ -98,11 +96,9 @@ namespace MagiRogue.Entities
                 Broken = this.Broken,
                 ConnectedTo = this.ConnectedTo,
                 Id = this.Id,
-                BodyPartHp = this.BodyPartHp,
                 BodyPartName = this.BodyPartName,
                 Orientation = this.Orientation,
                 LimbType = this.LimbType,
-                MaxBodyPartHp = this.MaxBodyPartHp,
                 BodyPartFunction = this.BodyPartFunction,
                 RateOfHeal = this.RateOfHeal,
                 RelativeVolume = this.RelativeVolume,

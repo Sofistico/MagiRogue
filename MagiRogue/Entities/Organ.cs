@@ -14,22 +14,16 @@ namespace MagiRogue.Entities
         [DataMember]
         public OrganType OrganType { get; set; }
 
-        [DataMember]
-        public bool Destroyed { get => BodyPartHp <= 0; }
-
         public Organ(string name,
             string? connectedTo,
             BodyPartOrientation orientation,
             OrganType organType,
-            int organHp,
             string materialId) : base(materialId)
         {
             BodyPartName = name;
             InsideOf = connectedTo;
             Orientation = orientation;
             OrganType = organType;
-            BodyPartHp = organHp;
-            MaxBodyPartHp = organHp;
         }
 
         [JsonConstructor()]
@@ -38,7 +32,6 @@ namespace MagiRogue.Entities
            string? connectedTo,
            BodyPartOrientation orientation,
            OrganType organType,
-           int organHp,
            string materialId) : base(materialId)
         {
             Id = id;
@@ -46,8 +39,6 @@ namespace MagiRogue.Entities
             InsideOf = connectedTo;
             Orientation = orientation;
             OrganType = organType;
-            BodyPartHp = organHp;
-            MaxBodyPartHp = organHp;
         }
 
         public Organ(string materialId = "skin") : base(materialId)
@@ -63,10 +54,8 @@ namespace MagiRogue.Entities
                 BodyPartName = this.BodyPartName,
                 InsideOf = this.InsideOf,
                 Orientation = this.Orientation,
-                BodyPartHp = this.BodyPartHp,
                 MaterialId = this.MaterialId,
                 BodyPartMaterial = this.BodyPartMaterial,
-                MaxBodyPartHp = this.MaxBodyPartHp,
                 OrganType = this.OrganType,
                 BodyPartFunction = this.BodyPartFunction,
                 CanHeal = this.CanHeal,
@@ -87,18 +76,12 @@ namespace MagiRogue.Entities
             switch (wound.Severity)
             {
                 case InjurySeverity.Inhibited:
-                    Working = false;
-                    break;
-
                 case InjurySeverity.Broken:
                     Working = false;
                     break;
 
                 case InjurySeverity.Pulped:
                     Working = true;
-                    break;
-
-                default:
                     break;
             }
         }

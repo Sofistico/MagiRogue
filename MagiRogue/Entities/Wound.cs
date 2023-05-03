@@ -1,17 +1,23 @@
 ﻿using MagiRogue.Data.Enumerators;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MagiRogue.Entities
 {
     public sealed class Wound
     {
         public double Bleeding { get; set; }
-        public double HpLost { get; set; }
+
+        /// <summary>
+        /// The total area of the wound in cm3
+        /// </summary>
+        public int VolumeInjury { get; set; }
+
+        // to be decided if is a wound object per tissue
+        // or one wound object for each injury
+        /// <summary>
+        /// In what tissue the wound occured?
+        /// </summary>
+        public Tissue Tissue { get; set; }
+
         public InjurySeverity Severity { get; set; }
         public bool Infected { get; set; }
         public bool Treated { get; set; }
@@ -23,16 +29,16 @@ namespace MagiRogue.Entities
         {
         }
 
-        public Wound(double hpLost, DamageTypes damageSource)
+        public Wound(int volumyInjury, DamageTypes damageSource)
         {
-            HpLost = hpLost;
+            VolumeInjury = volumyInjury;
             DamageSource = damageSource;
         }
 
-        public Wound(double bleeding, double hpLost, InjurySeverity severity)
+        public Wound(double bleeding, int volumyInjury, InjurySeverity severity)
         {
             Bleeding = bleeding;
-            HpLost = hpLost;
+            VolumeInjury = volumyInjury;
             Severity = severity;
         }
     }

@@ -401,16 +401,6 @@ namespace MagiRogue.Entities
             return PhysicsManager.GetAttackVelocity(this, attack);
         }
 
-        public double GetProtection(BodyPart limb)
-        {
-            var item = Body.GetArmorOnLimbIfAny(limb);
-            var armorModifier = item is not null ?
-                (item.Material.Hardness * Body.GetArmorOnLimbIfAny(limb).Material.Density) : 0;
-            return Body.Toughness +
-                armorModifier
-                + GetRelevantAbility(AbilityName.ArmorUse);
-        }
-
         public int GetPrecision()
         {
             return Mind.Precision;

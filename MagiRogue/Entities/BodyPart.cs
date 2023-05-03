@@ -3,34 +3,17 @@ using MagiRogue.Data.Serialization;
 using MagiRogue.GameSys.Physics;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace MagiRogue.Entities
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public abstract class BodyPart
     {
-        [JsonProperty(nameof(BodyPartHp))]
-        private double bodyPartHp;
-
         public string Id { get; set; }
-
-        [JsonIgnore]
-        public double BodyPartHp
-        {
-            get
-            {
-                return bodyPartHp > MaxBodyPartHp ? MaxBodyPartHp : bodyPartHp;
-            }
-
-            set
-            {
-                bodyPartHp = value > MaxBodyPartHp ? MaxBodyPartHp : value;
-            }
-        }
-
-        public int MaxBodyPartHp { get; set; }
 
         public double BodyPartWeight
             => (double)MathMagi.ReturnPositive(MathMagi.GetWeightWithDensity(BodyPartMaterial.Density, Volume));
@@ -68,18 +51,19 @@ namespace MagiRogue.Entities
 
         public bool CanHeal { get; set; } = true;
         public BodyPartFunction BodyPartFunction { get; set; }
-        public List<Wound> Wounds { get; set; }
 
         public bool Working { get; set; } = true;
 
         // TODO: FOR THE FUTURE!
         public List<Tissue> Tissues { get; set; }
-        public bool NeedsHeal => BodyPartHp < MaxBodyPartHp || Wounds.Count > 0;
+
+        public List<Wound> Wounds { get; set; }
+
+        public bool NeedsHeal => Wounds.Count > 0;
 
         [JsonConstructor()]
         protected BodyPart(string materialId)
         {
-            Wounds = new();
             MaterialId = materialId;
             Tissues = new();
             BodyPartMaterial = PhysicsManager.SetMaterial(materialId);
@@ -103,7 +87,7 @@ namespace MagiRogue.Entities
                     && wound.Severity is not InjurySeverity.Pulped))
                 {
                     wound.Recovery = MathMagi.Round(rateOfHeal + wound.Recovery);
-                    if (wound.Recovery >= MathMagi.ReturnPositive(wound.HpLost))
+                    if (wound.Recovery >= MathMagi.ReturnPositive(wound.VolumeInjury))
                     {
                         wound.Recovered = true;
                     }
@@ -130,7 +114,7 @@ namespace MagiRogue.Entities
 
         public virtual void CalculateWound(Wound wound)
         {
-            BodyPartHp -= wound.HpLost;
+            // will be calculated by how big the wound was made into the specified tissue
             Wounds.Add(wound);
         }
 
