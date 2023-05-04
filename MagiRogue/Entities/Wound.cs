@@ -14,10 +14,8 @@ namespace MagiRogue.Entities
         /// </summary>
         public int VolumeInjury { get; set; }
 
-        // to be decided if is a wound object per tissue
-        // or one wound object for each injury
         /// <summary>
-        /// In what tissue the wound occured?
+        /// In what tissues the wound occured?
         /// </summary>
         public List<Tissue> Tissues { get; set; }
 
@@ -36,8 +34,8 @@ namespace MagiRogue.Entities
         public int ContactArea { get; set; }
 
         /// <summary>
-        /// This is strain. For skin/muscle/fat it is usually around 50000, and for
-        /// bone 100-113. This number heals over time towards 0. A wound that only
+        /// This is strain. For skin/muscle/fat it is usually around 50, and for
+        /// bone 10-11.3. This number heals over time towards 0. A wound that only
         /// has strain is called "dented".
         /// </summary>
         public int Strain { get; set; }

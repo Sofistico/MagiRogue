@@ -1,7 +1,7 @@
 ﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Magic;
-using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -31,7 +31,11 @@ namespace MagiRogue.Utils
         }
 
         public static void DealDamage(double attackMomentum, MagiEntity entity, DamageTypes dmgType,
-            BodyPart? limbAttacking = null, BodyPart? limbAttacked = null, MagiEntity? attacker = null)
+            MaterialTemplate? attackMaterial = null,
+            Attack? attack = null,
+            BodyPart? limbAttacking = null,
+            BodyPart? limbAttacked = null,
+            MagiEntity? attacker = null)
         {
             if (entity is Actor actor)
             {
@@ -39,37 +43,40 @@ namespace MagiRogue.Utils
                     attacker is null ? 0 : attacker.Weight,
                     dmgType,
                     limbAttacked.Tissues,
-                    actor.Body.GetArmorOnLimbIfAny(limbAttacked));
+                    actor.Body.GetArmorOnLimbIfAny(limbAttacked),
+                    attackMaterial,
+                    attack,
+                    attacker.Volume);
 
                 // any remaining dmg goes to create a wound
-                if (tissuesPenetrated > 0)
+                if (tissuesPenetrated.Count > 0)
                 {
                     // need to redo this to take into account the new tissue based wound!
-                    //Wound woundTaken = new Wound(attackMomentum, dmgType);
+                    Wound woundTaken = new Wound(attackMomentum, dmgType, limbAttacked);
 
-                    //actor.GetAnatomy().Injury(woundTaken, limbAttacked, actor);
+                    actor.GetAnatomy().Injury(woundTaken, limbAttacked, actor);
 
-                    //if (actor.CheckIfDed())
-                    //{
-                    //    Commands.ActionManager.ResolveDeath(actor);
-                    //}
+                    if (actor.CheckIfDed())
+                    {
+                        Commands.ActionManager.ResolveDeath(actor);
+                    }
 
-                    ////GameLoop.AddMessageLog($"   The {entity.Name} took {dmg} {dmgType} total damage in the {limbAttacking.BodyPartName}!");
-                    //StringBuilder woundString = new($"   The {entity.Name} received ");
-                    //switch (woundTaken.Severity)
-                    //{
-                    //    case InjurySeverity.Inhibited:
-                    //        woundString.Append("an ");
-                    //        break;
+                    //GameLoop.AddMessageLog($"   The {entity.Name} took {dmg} {dmgType} total damage in the {limbAttacking.BodyPartName}!");
+                    StringBuilder woundString = new($"   The {entity.Name} received ");
+                    switch (woundTaken.Severity)
+                    {
+                        case InjurySeverity.Inhibited:
+                            woundString.Append("an ");
+                            break;
 
-                    //    default:
-                    //        woundString.Append("a ");
-                    //        break;
-                    //}
-                    //woundString.Append(woundTaken.Severity).Append(" wound in the ").Append(limbAttacking.BodyPartName);
+                        default:
+                            woundString.Append("a ");
+                            break;
+                    }
+                    woundString.Append(woundTaken.Severity).Append(" wound in the ").Append(limbAttacking.BodyPartName);
 
-                    //GameLoop.AddMessageLog(woundString.ToString());
-                    //return;
+                    GameLoop.AddMessageLog(woundString.ToString());
+                    return;
                 }
                 else
                 {
@@ -204,7 +211,7 @@ namespace MagiRogue.Utils
         /// <param name="defender"></param>
         /// <param name="attackMessage"></param>
         /// <returns></returns>
-        public static (bool, BodyPart?, BodyPart, DamageTypes, Item?) ResolveHit(
+        public static (bool, BodyPart?, BodyPart, DamageTypes, Item?, MaterialTemplate?) ResolveHit(
             Actor attacker,
             Actor defender,
             StringBuilder attackMessage,
@@ -224,18 +231,18 @@ namespace MagiRogue.Utils
                 : "";
 
             attackMessage.AppendFormat("{0} {1} the {2}{3}", person, verb, defender.Name, with);
-
+            var materialUsed = wieldedItem is null ? bpAttacking.BodyPartMaterial : wieldedItem.Material;
             // TODO: Granularize this more!
             if (attacker.GetRelevantAttackAbility(wieldedItem) + Mrn.Exploding2D6Dice >
                 defender.GetDefenseAbility()
                 + Mrn.Exploding2D6Dice)
             {
                 limbAttacked ??= defender.GetAnatomy().GetRandomLimb();
-                return (true, limbAttacked, bpAttacking, attack.DamageTypes, wieldedItem);
+                return (true, limbAttacked, bpAttacking, attack.DamageTypes, wieldedItem, materialUsed);
             }
             else
             {
-                return (false, null, bpAttacking, attack.DamageTypes, wieldedItem);
+                return (false, null, bpAttacking, attack.DamageTypes, wieldedItem, materialUsed);
             }
         }
 
@@ -271,6 +278,9 @@ namespace MagiRogue.Utils
                 var penetrationDamage = damageWithoutPenetration * attack.PenetrationPercentage;
                 var finalDamage = damageWithoutPenetration + penetrationDamage;
                 finalDamage = MathMagi.Round(finalDamage);
+
+                if (defender.SituationalFlags.Contains(ActorSituationalFlags.Prone))
+                    finalDamage *= 2;
 
                 totalDamage += finalDamage;
             }
@@ -321,11 +331,13 @@ namespace MagiRogue.Utils
             double momentum,
             DamageTypes dmgType,
             BodyPart limbAttacked,
-            BodyPart limbAttacking)
+            BodyPart limbAttacking,
+            MaterialTemplate attackMaterial,
+            Attack attack)
         {
             if (momentum > 0)
             {
-                DealDamage(momentum, defender, dmgType, limbAttacking, limbAttacked);
+                DealDamage(momentum, defender, dmgType, attackMaterial, attack, limbAttacking, limbAttacked);
             }
             else
             {
@@ -378,106 +390,178 @@ namespace MagiRogue.Utils
             GameLoop.AddMessageLog(deathMessage.ToString());
         }
 
-        public static int CalculateNumTissueLayersPenetrated(double attackMomentum,
-            double attackerMass,
+        private static List<Tissue> CalculateNumTissueLayersPenetrated(double attackMomentum,
             DamageTypes damage,
             List<Tissue> tissues,
-            Item targetArmor)
+            Item targetArmor,
+            MaterialTemplate attackMaterial,
+            Attack attack,
+            int attackSize)
         {
-            double remainingEnergy = 0.5 * attackMomentum * (attackerMass + 1);
+            var list = new List<Tissue>();
+            double remainingEnergy = attackMomentum;
 
             double armorEffectiveness = CalculateArmorEffectiveness(targetArmor,
+                attackSize,
+                attackMaterial,
                 remainingEnergy,
-                damage);
-            remainingEnergy *= armorEffectiveness;
+                attack);
 
+            remainingEnergy *= armorEffectiveness;
+            if (remainingEnergy <= 0)
+                return list;
             for (int i = 0; i < tissues.Count; i++)
             {
+                if (remainingEnergy <= 0)
+                    return list;
+
                 Tissue tissue = tissues[i];
 
-                // Calculate the thickness of the tissue,
-                // taking into account its relative thickness and the thickness of all other tissues
-                //int thickness = tissue.RelativeThickness * (tissues.Length / (i + 1));
-
                 // Calculate the amount of energy required to penetrate the tissue
-                double energyToPenetrate = CalculateEnergyToPenetrateTissue(tissue,
-                    tissue.RelativeThickness,
-                    damage);
+                double energyToPenetrate = CalculateEnergyCostToPenetrateMaterial(tissue.Material,
+                    tissue.Volume,
+                    attackMaterial,
+                    attack,
+                    attackMomentum,
+                    attackSize);
 
                 if (remainingEnergy > energyToPenetrate)
                 {
-                    remainingEnergy -= energyToPenetrate;
+                    remainingEnergy *= 0.95;
+                    list.Add(tissue);
                 }
                 else
                 {
-                    // The projectile has lost all of its energy and stopped in this tissue layer
-                    return i;
+                    // The attack has lost all of its energy and stopped in this tissue layer, doing blunt damage
+                    break;
                 }
             }
 
             // The projectile has penetrated all tissue layers
-            return tissues.Count;
+            return list;
         }
 
-        private static double CalculateArmorEffectiveness(Item armor, double attackEnergy, DamageTypes attackDamageType)
+        private static double CalculateArmorEffectiveness(Item armor,
+            int attackSize,
+            MaterialTemplate attackMaterial,
+            double attackMomentum,
+            Attack attack)
         {
-            double armorEffectiveness;
+            double momentumAfterArmor = attackMomentum;
             switch (armor.ArmorType)
             {
-                case ArmorType.None:
-                    armorEffectiveness = 0;
-                    break;
-
-                case ArmorType.Rigid:
-                    armorEffectiveness = Math.Exp(-(attackEnergy / armor.Material.Hardness));
-                    break;
-
-                case ArmorType.Flexible:
-                    armorEffectiveness = armor.Material.Hardness / attackEnergy;
-                    break;
-
-                case ArmorType.Plate:
-                    if (attackDamageType == DamageTypes.Sharp)
-                    {
-                        armorEffectiveness = Math.Exp(-Math.Pow(attackEnergy / armor.Material.Hardness, 2));
-                    }
-                    else
-                    {
-                        armorEffectiveness = armor.Material.Hardness / attackEnergy;
-                    }
-                    break;
-
                 case ArmorType.Leather:
-                    if (attackDamageType == DamageTypes.Blunt)
-                    {
-                        armorEffectiveness = armor.Material.Hardness / attackEnergy;
-                    }
-                    else
-                    {
-                        armorEffectiveness = Math.Exp(-(attackEnergy / armor.Material.Hardness));
-                    }
-                    break;
+                case ArmorType.Chain:
+                case ArmorType.Plate:
+                    momentumAfterArmor = CalculateEnergyCostToPenetrateMaterial(armor.Material,
+                        armor.Volume,
+                        attackMaterial,
+                        attack,
+                        attackMomentum,
+                        attackSize);
 
-                case ArmorType.Clothing:
-                    armorEffectiveness = armor.Material.Hardness / attackEnergy;
                     break;
 
                 default:
-                    throw new ArgumentException("Invalid armor type", nameof(armor.ArmorType));
+                    break;
             }
 
-            return armorEffectiveness;
+            return momentumAfterArmor;
         }
 
-        private static double CalculateEnergyToPenetrateTissue(Tissue tissue, int thickness, DamageTypes damageType)
+        private static double CalculateEnergyCostToPenetrateMaterial(MaterialTemplate material,
+            double materialVolume,
+            MaterialTemplate attackMaterial,
+            Attack attack,
+            double originalMomentum,
+            int attackSize)
         {
-            return (double)(damageType switch
+            return attack.DamageTypes switch
             {
-                DamageTypes.Pierce => tissue.Material.Hardness * thickness * 0.75,
-                DamageTypes.Sharp => tissue.Material.Hardness * thickness * 0.5,
-                DamageTypes.Blunt => tissue.Material.Hardness * thickness * 0.25,
-                _ => tissue.Material.Hardness * thickness * 0.9,// some of these stuff will use other properties, but this is a good default!
-            });
+                DamageTypes.Blunt => CalculateBluntDefenseCost(attackMaterial.ShearYield,
+                                        material.ImpactYieldMpa,
+                                        material.ImpactFractureMpa,
+                                        materialVolume,
+                                        originalMomentum,
+                                        attack.ContactArea,
+                                        attackSize,
+                                        material.Density),
+                DamageTypes.Pierce or DamageTypes.Sharp => CalculateEdgedDefenseCost(attackMaterial.ShearYield,
+                                        material.ShearYield,
+                                        attackMaterial.ShearFracture,
+                                        material.ShearFracture,
+                                        attackMaterial.MaxEdge,
+                                        materialVolume,
+                                        attack.ContactArea),
+                _ => material.Hardness * 0.9,
+            };
+        }
+
+        // Edged defense calculations
+        public static double CalculateEdgedDefenseCost(double weaponShearYield,
+            double layerShearYield,
+            double weaponShearFracture,
+            double layerShearFracture,
+            double weaponSharpness,
+            double layerVolume,
+            int attackContactArea)
+        {
+            double momentumCost = 0;
+
+            // Check if weapon can dent the layer
+            if (weaponShearYield > layerShearYield)
+            {
+                momentumCost += 0.1 * layerVolume;
+            }
+
+            // Check if weapon can cut the layer
+            if (weaponShearFracture > layerShearFracture)
+            {
+                momentumCost += 0.1 * layerVolume;
+            }
+
+            // Calculate momentum cost to cut through the layer
+            double shearRatio = weaponShearFracture / layerShearFracture;
+            momentumCost += (layerVolume * (shearRatio * shearRatio) * weaponSharpness) / attackContactArea;
+
+            return momentumCost;
+        }
+
+        // Blunt defense calculations
+        public static double CalculateBluntDefenseCost(double weaponShearYield,
+            double layerImpactYield,
+            double layerImpactFracture,
+            double layerVolume,
+            double originalMomentum,
+            int attackContactArea,
+            double attackSize,
+            double defenseMaterialDensity)
+        {
+            double momentumCost = 0;
+            var bluntDeflection = 2 * attackSize * layerImpactYield
+                < attackContactArea * defenseMaterialDensity;
+            if (bluntDeflection)
+                return momentumCost;
+
+            // Check if weapon can dent the layer
+            if (weaponShearYield < originalMomentum)
+            {
+                momentumCost += 0.1 * layerVolume;
+            }
+
+            // Check if layer can fracture from impact
+            if (layerImpactYield < originalMomentum && layerImpactFracture > originalMomentum)
+            {
+                momentumCost += 0.2 * layerVolume;
+            }
+
+            // Add momentum cost for complete fracture
+            if (layerImpactFracture < originalMomentum)
+            {
+                momentumCost += layerVolume;
+            }
+
+            return momentumCost * (double)((double)attackContactArea / 100);
         }
     }
 }

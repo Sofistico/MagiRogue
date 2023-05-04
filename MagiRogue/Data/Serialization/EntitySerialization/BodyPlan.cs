@@ -1,5 +1,6 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
+using MagiRogue.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,6 +77,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                                 GameLoop.WriteToLog($"Something went wrong in creating the tissue for BP {limb.Id} and Race {race.Id}");
                             }
                         }
+                        CalculateTissueVolume(limb);
                     }
                 }
                 if (organ is not null)
@@ -100,6 +102,17 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 DealWithMoreThanOnePart(returnParts);
 
             return returnParts;
+        }
+
+        private static void CalculateTissueVolume(Limb limb)
+        {
+            int totalVolume = limb.Volume;
+            int totalThickness = limb.Tissues.Sum(t => t.RelativeThickness);
+
+            foreach (var tissue in limb.Tissues)
+            {
+                tissue.Volume = (int)MathMagi.FastRound((double)totalVolume * tissue.RelativeThickness / totalThickness);
+            }
         }
 
         private void DealWithMoreThanOnePart(List<BodyPart> returnParts)

@@ -6,11 +6,9 @@ namespace MagiRogue.Data.Enumerators
     [JsonConverter(typeof(StringEnumConverter))]
     public enum ArmorType
     {
-        None,
-        Flexible,
-        Rigid,
-        Plate,
+        Clothing,
         Leather,
-        Clothing
+        Chain,
+        Plate,
     }
 }

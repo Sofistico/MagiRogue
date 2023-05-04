@@ -6,65 +6,83 @@ using System.Runtime.Serialization;
 
 namespace MagiRogue.Data.Serialization
 {
-    [DataContract]
     [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
     public class MaterialTemplate
     {
         // Only putting in here for the sake of future me, only need to use JsonProperty if the name will be diferrent
         // than whats in the json.
-        //[JsonProperty("Id")]
 
-        [DataMember]
         public string Id { get; set; }
 
-        [DataMember]
         public string? InheirtFrom { get; set; }
 
-        [DataMember]
         public string Name { get; set; }
 
-        [DataMember]
         public bool Flamability { get; set; }
 
-        [DataMember]
         public int? IgnationPoint { get; set; }
 
-        [DataMember]
         public int Hardness { get; set; }
 
-        [DataMember]
         public int? MPInfusionLimit { get; set; }
 
-        [DataMember]
         public bool CanRegen { get; set; }
 
-        [DataMember]
         public double Density { get; set; }
 
-        [DataMember]
         public int? MeltingPoint { get; set; }
 
-        [DataMember]
         public int? BoilingPoint { get; set; }
 
         // Will be removed!
-        [DataMember]
         public string LiquidTurnsInto { get; set; }
 
-        [DataMember]
         public List<Trait> ConfersTraits { get; set; }
 
-        [DataMember]
         public string Color { get; set; }
 
-        [DataMember]
         public MaterialType Type { get; set; }
 
-        [DataMember]
         public int? HeatDamageTemp { get; set; }
 
-        [DataMember]
         public int? ColdDamageTemp { get; set; }
+
+        /// <summary>
+        /// How much force is needed for the material to be damaged?
+        /// The deformation limit!
+        /// More means it's more elastic, less means it's more rigid
+        /// affects in combat whether the corresponding tissue
+        /// is bruised (value >= 50), torn (value between 25 and 49.999), or fractured (value <= 24.999)
+        /// </summary>
+        public double StrainsAtYield { get; set; } = 0;
+
+        /// <summary>
+        /// How sharp the material is. Used in cutting calculations. Does not allow an inferior metal to penetrate superior armor.
+        /// Applying a value of at least 100 to a stone will allow weapons to be made from that stone.
+        /// Defaults to 100.
+        /// </summary>
+        public double MaxEdge { get; set; } = 100;
+
+        public int ShearYield { get; set; }
+        public int ShearFracture { get; set; }
+
+        /// <summary>
+        /// Specifies how hard of an impact (in kilopascals)
+        /// the material can withstand before it will start deforming permanently.
+        /// Used for blunt-force combat. Defaults to 10000.
+        /// </summary>
+        public int ImpactYield { get; set; } = 10000;
+
+        // the same as above, but in mpa
+        public double ImpactYieldMpa => (double)ImpactYield / 1000;
+
+        /// <summary>
+        /// Specifies how hard of an impact the material can withstand before it will fail entirely.
+        /// Used for blunt-force combat. Defaults to 10000.
+        /// </summary>
+        public int ImpactFracture { get; set; } = 10000;
+
+        public double ImpactFractureMpa => (double)ImpactFracture / 1000;
 
         public MaterialTemplate Copy()
         {
@@ -80,6 +98,19 @@ namespace MagiRogue.Data.Serialization
                 MPInfusionLimit = this.MPInfusionLimit,
                 Name = this.Name,
                 Color = this.Color,
+                StrainsAtYield = this.StrainsAtYield,
+                ColdDamageTemp = this.ColdDamageTemp,
+                ConfersTraits = this.ConfersTraits,
+                HeatDamageTemp = this.HeatDamageTemp,
+                IgnationPoint = this.IgnationPoint,
+                InheirtFrom = this.InheirtFrom,
+                LiquidTurnsInto = this.LiquidTurnsInto,
+                MaxEdge = this.MaxEdge,
+                Type = this.Type,
+                ImpactFracture = this.ImpactFracture,
+                ImpactYield = this.ImpactYield,
+                ShearFracture = this.ShearFracture,
+                ShearYield = this.ShearYield,
             };
         }
 
@@ -89,8 +120,7 @@ namespace MagiRogue.Data.Serialization
             {
                 return objectName;
             }
-            string v = $"{materialName} {objectName}";
-            return v;
+            return $"{materialName} {objectName}";
         }
 
         public string ReturnNameFromMaterial(string objectName)

@@ -39,7 +39,8 @@
     "HeatDamageTemp": 139,
     "ColdDamageTemp": -56,
     "Color": "Gray",
-    "Type": "Skin"
+    "Type": "Skin",
+    "StrainsAtYield": 50
   },
   {
     "Id": "fat",
@@ -54,7 +55,8 @@
     "HeatDamageTemp": 139,
     "ColdDamageTemp": -56,
     "Color": "Yellow",
-    "Type": "Fat"
+    "Type": "Fat",
+    "StrainsAtYield": 50
   },
   {
     "Id": "muscle",
@@ -68,7 +70,8 @@
     "HeatDamageTemp": 139,
     "ColdDamageTemp": -56,
     "Color": "Red",
-    "Type": "Meat"
+    "Type": "Meat",
+    "StrainsAtYield": 50
   },
   {
     "Id": "bone",
@@ -82,7 +85,8 @@
     "ColdDamageTemp": -56,
     "Density": 0.5,
     "Color": "White",
-    "Type": "Bone"
+    "Type": "Bone",
+    "StrainsAtYield": 10
   },
   {
     "Id": "teeth",
@@ -96,7 +100,8 @@
     "ColdDamageTemp": -56,
     "Density": 0.6,
     "Color": "White",
-    "Type": "Teeth"
+    "Type": "Teeth",
+    "StrainsAtYield": 10
   },
   {
     "Id": "stone",
@@ -109,7 +114,8 @@
     "MeltingPoint": 1200,
     "ConfersTraits": [ "Durable", "MagicallyWeak" ],
     "Color": "DarkGray",
-    "Type": "Stone"
+    "Type": "Stone",
+    "StrainsAtYield": 10
   },
   {
     "Id": "iron",
@@ -123,7 +129,8 @@
     "BoilingPoint": 2862,
     "ConfersTraits": [ "Durable", "MagicallyWeak" ],
     "Color": "Gray",
-    "Type": "Metal"
+    "Type": "Metal",
+    "StrainsAtYield": 3.19
   },
   {
     "Id": "wood",
@@ -136,7 +143,8 @@
     "Density": 0.9,
     "ConfersTraits": [ "Inexpensive" ],
     "Color": "Wood",
-    "Type": "Wood"
+    "Type": "Wood",
+    "StrainsAtYield": 5
   },
   {
     "Id": "grass",
@@ -147,7 +155,8 @@
     "CanRegen": true,
     "Density": 1.4,
     "Color": "GrassColor",
-    "Type": "Plant"
+    "Type": "Plant",
+    "StrainsAtYield": 100
   },
   {
     "Id": "h2o",
@@ -159,7 +168,8 @@
     "Density": 1.1,
     "MeltingPoint": 0,
     "BoilingPoint": 100,
-    "Color": "RiverWater"
+    "Color": "RiverWater",
+    "StrainsAtYield": 500
   },
   {
     "Id": "pure_magic",
@@ -170,7 +180,8 @@
     "CanRegen": true,
     "Density": 0.85,
     "ConfersTraits": [ "Magical" ],
-    "Color": "Blue"
+    "Color": "Blue",
+    "StrainsAtYield": 100
   },
   {
     "Id": "gold",
@@ -181,7 +192,8 @@
     "MeltingPoint": 1064,
     "ConfersTraits": [ "Magical", "MagicallyPotent", "Opulent" ],
     "Color": "Gold",
-    "Type": "Metal"
+    "Type": "Metal",
+    "StrainsAtYield": 17.5
   },
   {
     "Id": "null",
@@ -206,7 +218,8 @@
     "Density": 1.22,
     "MeltingPoint": 1196,
     "ConfersTraits": [ "Inexpensive" ],
-    "Color": "Dirt"
+    "Color": "Dirt",
+    "StrainsAtYield": 15
   },
   {
     "Id": "sand",
@@ -216,7 +229,8 @@
     "Density": 1.6,
     "MeltingPoint": 1700,
     "LiquidTurnsInto": "glass",
-    "Color": "Desert"
+    "Color": "Desert",
+    "StrainsAtYield": 100
   },
   {
     "Id": "carbon_coal",
@@ -228,7 +242,8 @@
     "Flamability": true,
     "IgnationPoint": 300,
     "Color": "DarkGray",
-    "Type": "Fuel"
+    "Type": "Fuel",
+    "StrainsAtYield": 19
   },
   {
     "Id": "glass",
@@ -240,7 +255,8 @@
     "BoilingPoint": 2230,
     "ConfersTraits": [ "Fragile" ],
     "Color": "UnclearGlass",
-    "Type": "Glass"
+    "Type": "Glass",
+    "StrainsAtYield": 19
   },
   {
     "Id": "mud",
@@ -251,7 +267,8 @@
     "MeltingPoint": 1250,
     "BoilingPoint": 3000,
     "ConfersTraits": [ "Inexpensive" ],
-    "Color": "Brown"
+    "Color": "Brown",
+    "StrainsAtYield": 15
   },
   {
     "Id": "chalk",
@@ -263,6 +280,7 @@
     "BoilingPoint": 3005,
     "ConfersTraits": [ "Inexpensive", "Powders" ],
     "Color": "White",
-    "Type": "Stone"
+    "Type": "Stone",
+    "StrainsAtYield": 15
   }
 ]

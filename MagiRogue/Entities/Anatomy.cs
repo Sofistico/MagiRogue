@@ -402,7 +402,7 @@ namespace MagiRogue.Entities
                 foreach (Limb connectedLimb in connectedParts)
                 {
                     // Here so that the bleeding from a lost part isn't being considered
-                    Wound lostLimb = new Wound(connectedLimb.Volume, DamageTypes.Sharp)
+                    Wound lostLimb = new Wound(connectedLimb.Volume, DamageTypes.Sharp, connectedLimb.Tissues)
                     {
                         Severity = InjurySeverity.Missing
                     };

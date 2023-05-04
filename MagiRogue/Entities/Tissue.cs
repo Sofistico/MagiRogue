@@ -41,6 +41,7 @@ namespace MagiRogue.Entities
         public int RelativeThickness { get; set; }
 
         public List<TissueFlag> Flags { get; set; } = new();
+        public double Volume { get; set; }
 
         [JsonConstructor()]
         public Tissue(string name, string materialId, int thickness)
