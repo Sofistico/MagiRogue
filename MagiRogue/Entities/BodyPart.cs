@@ -71,37 +71,37 @@ namespace MagiRogue.Entities
 
         public void ApplyHeal(double rateOfHeal, bool regenLostLimb = false)
         {
-            foreach (Wound wound in Wounds)
-            {
-                // if the wound is festering and the injury is that bad, then no need to check if it will heal
-                // cuz it will not!
-                if (!regenLostLimb && !wound.Treated
-                    && (wound.Severity is not InjurySeverity.Bruise
-                    || wound.Severity is not InjurySeverity.Minor))
-                {
-                    continue;
-                }
+            //foreach (Wound wound in Wounds)
+            //{
+            //    // if the wound is festering and the injury is that bad, then no need to check if it will heal
+            //    // cuz it will not!
+            //    if (!regenLostLimb && !wound.Treated
+            //        && (wound.Severity is not InjurySeverity.Bruise
+            //        || wound.Severity is not InjurySeverity.Minor))
+            //    {
+            //        continue;
+            //    }
 
-                if (regenLostLimb
-                    || (wound.Severity is not InjurySeverity.Missing
-                    && wound.Severity is not InjurySeverity.Pulped))
-                {
-                    wound.Recovery = MathMagi.Round(rateOfHeal + wound.Recovery);
-                    if (wound.Recovery >= MathMagi.ReturnPositive(wound.VolumeInjury))
-                    {
-                        wound.Recovered = true;
-                    }
-                    if (wound.Recovery > 0)
-                    {
-                        double newHp = MathMagi.Round(BodyPartHp + rateOfHeal);
-                        BodyPartHp = newHp;
-                    }
-                }
-            }
-            if (Wounds.Count > 0)
-                Wounds.RemoveAll(a => a.Recovered);
-            if (NeedsHeal)
-                BodyPartHp += rateOfHeal;
+            //    if (regenLostLimb
+            //        || (wound.Severity is not InjurySeverity.Missing
+            //        && wound.Severity is not InjurySeverity.Pulped))
+            //    {
+            //        wound.Recovery = MathMagi.Round(rateOfHeal + wound.Recovery);
+            //        if (wound.Recovery >= MathMagi.ReturnPositive(wound.VolumeInjury))
+            //        {
+            //            wound.Recovered = true;
+            //        }
+            //        if (wound.Recovery > 0)
+            //        {
+            //            double newHp = MathMagi.Round(BodyPartHp + rateOfHeal);
+            //            BodyPartHp = newHp;
+            //        }
+            //    }
+            //}
+            //if (Wounds.Count > 0)
+            //    Wounds.RemoveAll(a => a.Recovered);
+            //if (NeedsHeal)
+            //    BodyPartHp += rateOfHeal;
         }
 
         private string DebuggerDisplay

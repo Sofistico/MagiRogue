@@ -53,7 +53,6 @@ namespace MagiRogue.Test.Data
             Organ organ = new Organ("organ_test", "Test", null,
                 BodyPartOrientation.Center,
                 OrganType.Misc,
-                15,
                 "null");
 
             string json = JsonConvert.SerializeObject(organ);
@@ -66,8 +65,6 @@ namespace MagiRogue.Test.Data
         public void SerializeLimbs()
         {
             Limb limb = new Limb("head_test", LimbType.Head,
-                12,
-                12,
                 "Test",
                 BodyPartOrientation.Center,
                 "humanoid_torso");
@@ -118,7 +115,7 @@ namespace MagiRogue.Test.Data
             var arms = actor.GetAnatomy().Limbs.FindAll(l => l.LimbType is LimbType.Arm);
             foreach (var arm in arms)
             {
-                actor.GetAnatomy().Injury(new Wound(arm.BodyPartHp, DamageTypes.Sharp), arm, actor);
+                actor.GetAnatomy().Injury(new Wound(arm.Volume, DamageTypes.Sharp, arm.Tissues), arm, actor);
             }
             bool healing = true;
             while (healing)

@@ -47,7 +47,7 @@ namespace MagiRogue.GameSys.Magic.Effects
 
                 Limb limbToLose = poorGuy.GetAnatomy().Limbs[i];
 
-                Wound injury = new Wound(limbToLose.Volume, DamageTypes.Sharp, limbToLose.Tissues);
+                Wound injury = new Wound(DamageTypes.Sharp, limbToLose.Tissues);
                 poorGuy.GetAnatomy().Injury(injury, limbToLose, poorGuy);
 
                 if (poorGuy is not null)

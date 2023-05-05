@@ -30,29 +30,32 @@ namespace MagiRogue.Utils
             return a ^ b;
         }
 
-        public static void DealDamage(double attackMomentum, MagiEntity entity, DamageTypes dmgType,
+        public static void DealDamage(double attackMomentum,
+            MagiEntity entity,
+            DamageTypes dmgType,
             MaterialTemplate? attackMaterial = null,
             Attack? attack = null,
             BodyPart? limbAttacking = null,
             BodyPart? limbAttacked = null,
-            MagiEntity? attacker = null)
+            MagiEntity? attacker = null,
+            Item? weapon = null)
         {
             if (entity is Actor actor)
             {
                 var tissuesPenetrated = CalculateNumTissueLayersPenetrated(attackMomentum,
-                    attacker is null ? 0 : attacker.Weight,
-                    dmgType,
                     limbAttacked.Tissues,
                     actor.Body.GetArmorOnLimbIfAny(limbAttacked),
                     attackMaterial,
                     attack,
-                    attacker.Volume);
+                    attacker.Volume,
+                    weapon);
 
                 // any remaining dmg goes to create a wound
                 if (tissuesPenetrated.Count > 0)
                 {
                     // need to redo this to take into account the new tissue based wound!
-                    Wound woundTaken = new Wound(attackMomentum, dmgType, limbAttacked);
+                    Wound woundTaken = new Wound(dmgType,
+                        tissuesPenetrated);
 
                     actor.GetAnatomy().Injury(woundTaken, limbAttacked, actor);
 
@@ -61,8 +64,7 @@ namespace MagiRogue.Utils
                         Commands.ActionManager.ResolveDeath(actor);
                     }
 
-                    //GameLoop.AddMessageLog($"   The {entity.Name} took {dmg} {dmgType} total damage in the {limbAttacking.BodyPartName}!");
-                    StringBuilder woundString = new($"   The {entity.Name} received ");
+                    StringBuilder woundString = new($"The {entity.Name} received ");
                     switch (woundTaken.Severity)
                     {
                         case InjurySeverity.Inhibited:
@@ -328,16 +330,18 @@ namespace MagiRogue.Utils
         /// <param name="defender"></param>
         /// <param name="momentum"></param>
         public static void ResolveDamage(Actor defender,
+            Actor attacker,
             double momentum,
             DamageTypes dmgType,
             BodyPart limbAttacked,
             BodyPart limbAttacking,
             MaterialTemplate attackMaterial,
-            Attack attack)
+            Attack attack,
+            Item? weapon = null)
         {
             if (momentum > 0)
             {
-                DealDamage(momentum, defender, dmgType, attackMaterial, attack, limbAttacking, limbAttacked);
+                DealDamage(momentum, defender, dmgType, attackMaterial, attack, limbAttacking, limbAttacked, attacker, weapon);
             }
             else
             {
@@ -391,25 +395,25 @@ namespace MagiRogue.Utils
         }
 
         private static List<Tissue> CalculateNumTissueLayersPenetrated(double attackMomentum,
-            DamageTypes damage,
             List<Tissue> tissues,
             Item targetArmor,
             MaterialTemplate attackMaterial,
             Attack attack,
-            int attackSize)
+            int attackVolume,
+            Item? weapon = null)
         {
+            // TODO: One day take a reaaaaaaalllllllly long look at this method!
             var list = new List<Tissue>();
             double remainingEnergy = attackMomentum;
 
             double armorEffectiveness = CalculateArmorEffectiveness(targetArmor,
-                attackSize,
+                attackVolume,
                 attackMaterial,
                 remainingEnergy,
-                attack);
+                attack,
+                weapon);
 
-            remainingEnergy *= armorEffectiveness;
-            if (remainingEnergy <= 0)
-                return list;
+            remainingEnergy -= armorEffectiveness;
             for (int i = 0; i < tissues.Count; i++)
             {
                 if (remainingEnergy <= 0)
@@ -423,11 +427,13 @@ namespace MagiRogue.Utils
                     attackMaterial,
                     attack,
                     attackMomentum,
-                    attackSize);
+                    attackVolume,
+                    0,
+                    weapon is null ? 0 : weapon.QualityMultiplier());
 
                 if (remainingEnergy > energyToPenetrate)
                 {
-                    remainingEnergy *= 0.95;
+                    remainingEnergy -= energyToPenetrate;
                     list.Add(tissue);
                 }
                 else
@@ -445,7 +451,8 @@ namespace MagiRogue.Utils
             int attackSize,
             MaterialTemplate attackMaterial,
             double attackMomentum,
-            Attack attack)
+            Attack attack,
+            Item? weapon)
         {
             double momentumAfterArmor = attackMomentum;
             switch (armor.ArmorType)
@@ -458,7 +465,9 @@ namespace MagiRogue.Utils
                         attackMaterial,
                         attack,
                         attackMomentum,
-                        attackSize);
+                        attackSize,
+                        armor.QualityMultiplier(),
+                        weapon is not null ? weapon.QualityMultiplier() : 0);
 
                     break;
 
@@ -469,99 +478,129 @@ namespace MagiRogue.Utils
             return momentumAfterArmor;
         }
 
-        private static double CalculateEnergyCostToPenetrateMaterial(MaterialTemplate material,
-            double materialVolume,
+        private static double CalculateEnergyCostToPenetrateMaterial(MaterialTemplate defenseMaterial,
+            double defenseMaterialVolume,
             MaterialTemplate attackMaterial,
             Attack attack,
             double originalMomentum,
-            int attackSize)
+            int attackVolume,
+            double armorQualityMultiplier = 0,
+            double weaponQualityModifier = 0)
         {
             return attack.DamageTypes switch
             {
-                DamageTypes.Blunt => CalculateBluntDefenseCost(attackMaterial.ShearYield,
-                                        material.ImpactYieldMpa,
-                                        material.ImpactFractureMpa,
-                                        materialVolume,
+                DamageTypes.Blunt => CalculateBluntDefenseCost(defenseMaterial,
+                                        attackMaterial,
                                         originalMomentum,
                                         attack.ContactArea,
-                                        attackSize,
-                                        material.Density),
-                DamageTypes.Pierce or DamageTypes.Sharp => CalculateEdgedDefenseCost(attackMaterial.ShearYield,
-                                        material.ShearYield,
-                                        attackMaterial.ShearFracture,
-                                        material.ShearFracture,
-                                        attackMaterial.MaxEdge,
-                                        materialVolume,
-                                        attack.ContactArea),
-                _ => material.Hardness * 0.9,
+                                        attackVolume,
+                                        armorQualityMultiplier,
+                                        defenseMaterialVolume,
+                                        weaponQualityModifier),
+                DamageTypes.Pierce or DamageTypes.Sharp => CalculateEdgedDefenseCost(defenseMaterial,
+                                        attackMaterial,
+                                        defenseMaterialVolume,
+                                        attack.ContactArea,
+                                        originalMomentum,
+                                        armorQualityMultiplier,
+                                        weaponQualityModifier,
+                                        attackVolume),
+                _ => defenseMaterial.Hardness * 0.9,
             };
         }
 
         // Edged defense calculations
-        public static double CalculateEdgedDefenseCost(double weaponShearYield,
-            double layerShearYield,
-            double weaponShearFracture,
-            double layerShearFracture,
-            double weaponSharpness,
+        public static double CalculateEdgedDefenseCost(MaterialTemplate defenseMaterial,
+            MaterialTemplate attackMaterial,
             double layerVolume,
-            int attackContactArea)
+            int attackContactArea,
+            double originalMomentum,
+            double armorQualityModifier,
+            double weaponQualityModifier,
+            double attackVolume)
         {
-            double momentumCost = 0;
-
-            // Check if weapon can dent the layer
-            if (weaponShearYield > layerShearYield)
+            double shearFRatio = attackMaterial.ShearFracture / defenseMaterial.ShearFracture;
+            double shearYRatio = attackMaterial.ShearYield / defenseMaterial.ShearYield;
+            var momentumReq = (shearYRatio + ((attackContactArea + 1) * shearFRatio))
+                * (10 + (2 * armorQualityModifier)) / (attackMaterial.MaxEdge * weaponQualityModifier);
+            if (originalMomentum >= momentumReq)
             {
-                momentumCost += 0.1 * layerVolume;
-            }
+                double momentumCost = 0;
 
-            // Check if weapon can cut the layer
-            if (weaponShearFracture > layerShearFracture)
+                // Check if weapon can dent the layer
+                if (attackMaterial.ShearYield > defenseMaterial.ShearYield)
+                {
+                    momentumCost += 0.1 * layerVolume;
+                }
+
+                // Check if weapon can cut the layer
+                if (attackMaterial.ShearFracture > defenseMaterial.ShearFracture)
+                {
+                    momentumCost += 0.1 * layerVolume;
+                }
+
+                return (originalMomentum - momentumCost) * 0.95;
+            }
+            else
             {
-                momentumCost += 0.1 * layerVolume;
+                // damage is converted to blunt!
+                return CalculateBluntDefenseCost(defenseMaterial,
+                    attackMaterial,
+                    originalMomentum,
+                    attackContactArea,
+                    attackVolume,
+                    armorQualityModifier,
+                    layerVolume,
+                    weaponQualityModifier);
             }
-
-            // Calculate momentum cost to cut through the layer
-            double shearRatio = weaponShearFracture / layerShearFracture;
-            momentumCost += (layerVolume * (shearRatio * shearRatio) * weaponSharpness) / attackContactArea;
-
-            return momentumCost;
         }
 
         // Blunt defense calculations
-        public static double CalculateBluntDefenseCost(double weaponShearYield,
-            double layerImpactYield,
-            double layerImpactFracture,
-            double layerVolume,
+        public static double CalculateBluntDefenseCost(MaterialTemplate defenseMaterial,
+            MaterialTemplate attackMaterial,
             double originalMomentum,
             int attackContactArea,
             double attackSize,
-            double defenseMaterialDensity)
+            double armorQualityMultiplier,
+            double layerVolume,
+            double weaponQualityModifier)
         {
-            double momentumCost = 0;
-            var bluntDeflection = 2 * attackSize * layerImpactYield
-                < attackContactArea * defenseMaterialDensity;
-            if (bluntDeflection)
-                return momentumCost;
-
-            // Check if weapon can dent the layer
-            if (weaponShearYield < originalMomentum)
+            var bluntDeflection = 2 * attackSize * defenseMaterial.ImpactYield
+                < attackContactArea * defenseMaterial.Density;
+            if (bluntDeflection && defenseMaterial.StrainsAtYield < 50)
             {
-                momentumCost += 0.1 * layerVolume;
+                return 0;
+            }
+            else
+            {
+                var minimumMomentum = ((2 * defenseMaterial.ImpactFracture) - defenseMaterial.ImpactYield)
+                    * (2 + (0.4 * armorQualityMultiplier)) * (attackContactArea * (weaponQualityModifier + 1));
+                if (originalMomentum >= minimumMomentum)
+                {
+                    double momentumCost = 0;
+                    // Check if weapon can dent the layer
+                    if (attackMaterial.ShearYield + originalMomentum < defenseMaterial.ShearFracture)
+                    {
+                        momentumCost += 0.1 * layerVolume;
+                    }
+
+                    // Check if layer can fracture from impact
+                    if (defenseMaterial.ImpactYield < originalMomentum
+                        && defenseMaterial.ImpactFracture > originalMomentum)
+                    {
+                        momentumCost += 0.2 * layerVolume;
+                    }
+
+                    // Add momentum cost for complete fracture
+                    if (defenseMaterial.ImpactFracture < originalMomentum)
+                    {
+                        momentumCost += layerVolume;
+                    }
+                    return (originalMomentum - momentumCost) * 0.95;
+                }
             }
 
-            // Check if layer can fracture from impact
-            if (layerImpactYield < originalMomentum && layerImpactFracture > originalMomentum)
-            {
-                momentumCost += 0.2 * layerVolume;
-            }
-
-            // Add momentum cost for complete fracture
-            if (layerImpactFracture < originalMomentum)
-            {
-                momentumCost += layerVolume;
-            }
-
-            return momentumCost * (double)((double)attackContactArea / 100);
+            return originalMomentum * 0.01;
         }
     }
 }

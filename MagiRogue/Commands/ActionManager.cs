@@ -102,7 +102,15 @@ namespace MagiRogue.Commands
                 GameLoop.AddMessageLog(defenseMessage.ToString());
 
             // The defender now takes damage
-            CombatUtils.ResolveDamage(defender, finalMomentum, dmgType, limbAttacking, limbAttacked, attackMaterial, attack);
+            CombatUtils.ResolveDamage(defender,
+                attacker,
+                finalMomentum,
+                dmgType,
+                limbAttacking,
+                limbAttacked,
+                attackMaterial,
+                attack,
+                itemUsed);
             var staminaDiscount = (attacker.Body.Stamina
                 - (attack.PrepareVelocity * 10)) + (attacker.Body.Endurance * 0.5);
             // discount stamina from the attacker

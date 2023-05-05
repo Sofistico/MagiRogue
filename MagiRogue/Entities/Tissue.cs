@@ -24,8 +24,6 @@ namespace MagiRogue.Entities
             get
             {
                 material ??= PhysicsManager.SetMaterial(MaterialId);
-                if (material.Id.Equals(MaterialId))
-                    material = PhysicsManager.SetMaterial(MaterialId);
                 return material;
             }
         }

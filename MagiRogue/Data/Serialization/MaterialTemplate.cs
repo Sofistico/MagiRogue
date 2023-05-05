@@ -54,7 +54,7 @@ namespace MagiRogue.Data.Serialization
         /// affects in combat whether the corresponding tissue
         /// is bruised (value >= 50), torn (value between 25 and 49.999), or fractured (value <= 24.999)
         /// </summary>
-        public double StrainsAtYield { get; set; } = 0;
+        public double StrainsAtYield { get; set; }
 
         /// <summary>
         /// How sharp the material is. Used in cutting calculations. Does not allow an inferior metal to penetrate superior armor.
