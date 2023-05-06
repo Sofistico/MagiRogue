@@ -42,7 +42,7 @@ namespace MagiRogue.Utils
         {
             if (entity is Actor actor)
             {
-                var tissuesPenetrated = CalculateNumTissueLayersPenetrated(attackMomentum,
+                var tissuesPenetrated = CalculatePartWounddsReceived(attackMomentum,
                     limbAttacked.Tissues,
                     actor.Body.GetArmorOnLimbIfAny(limbAttacked),
                     attackMaterial,
@@ -394,7 +394,7 @@ namespace MagiRogue.Utils
             GameLoop.AddMessageLog(deathMessage.ToString());
         }
 
-        private static List<Tissue> CalculateNumTissueLayersPenetrated(double attackMomentum,
+        private static List<PartWound> CalculatePartWounddsReceived(double attackMomentum,
             List<Tissue> tissues,
             Item targetArmor,
             MaterialTemplate attackMaterial,
@@ -403,7 +403,7 @@ namespace MagiRogue.Utils
             Item? weapon = null)
         {
             // TODO: One day take a reaaaaaaalllllllly long look at this method!
-            var list = new List<Tissue>();
+            var list = new List<PartWound>();
             double remainingEnergy = attackMomentum;
 
             double armorEffectiveness = CalculateArmorEffectiveness(targetArmor,
@@ -423,7 +423,7 @@ namespace MagiRogue.Utils
 
                 // Calculate the amount of energy required to penetrate the tissue
                 double energyToPenetrate = CalculateEnergyCostToPenetrateMaterial(tissue.Material,
-                    tissue.Volume,
+                    //tissue.Volume,
                     attackMaterial,
                     attack,
                     attackMomentum,
@@ -431,10 +431,14 @@ namespace MagiRogue.Utils
                     0,
                     weapon is null ? 0 : weapon.QualityMultiplier());
 
+                var attackTotalContactArea = (attackVolume * (double)((double)attack.ContactArea / 100));
+                double woundVolume = attackTotalContactArea <= tissue.Volume ? attackTotalContactArea : tissue.Volume;
+
+                PartWound partWound = new PartWound((int)woundVolume,, tissue);
                 if (remainingEnergy > energyToPenetrate)
                 {
                     remainingEnergy -= energyToPenetrate;
-                    list.Add(tissue);
+                    list.Add(partWound);
                 }
                 else
                 {
@@ -461,7 +465,7 @@ namespace MagiRogue.Utils
                 case ArmorType.Chain:
                 case ArmorType.Plate:
                     momentumAfterArmor = CalculateEnergyCostToPenetrateMaterial(armor.Material,
-                        armor.Volume,
+                        //armor.Volume,
                         attackMaterial,
                         attack,
                         attackMomentum,
@@ -479,7 +483,7 @@ namespace MagiRogue.Utils
         }
 
         private static double CalculateEnergyCostToPenetrateMaterial(MaterialTemplate defenseMaterial,
-            double defenseMaterialVolume,
+            //double defenseMaterialVolume,
             MaterialTemplate attackMaterial,
             Attack attack,
             double originalMomentum,
@@ -490,16 +494,16 @@ namespace MagiRogue.Utils
             return attack.DamageTypes switch
             {
                 DamageTypes.Blunt => CalculateBluntDefenseCost(defenseMaterial,
-                                        attackMaterial,
+                                        //attackMaterial,
                                         originalMomentum,
                                         attack.ContactArea,
                                         attackVolume,
                                         armorQualityMultiplier,
-                                        defenseMaterialVolume,
+                                        //defenseMaterialVolume,
                                         weaponQualityModifier),
                 DamageTypes.Pierce or DamageTypes.Sharp => CalculateEdgedDefenseCost(defenseMaterial,
                                         attackMaterial,
-                                        defenseMaterialVolume,
+                                        //defenseMaterialVolume,
                                         attack.ContactArea,
                                         originalMomentum,
                                         armorQualityMultiplier,
@@ -512,7 +516,7 @@ namespace MagiRogue.Utils
         // Edged defense calculations
         public static double CalculateEdgedDefenseCost(MaterialTemplate defenseMaterial,
             MaterialTemplate attackMaterial,
-            double layerVolume,
+            //double layerVolume,
             int attackContactArea,
             double originalMomentum,
             double armorQualityModifier,
@@ -525,44 +529,44 @@ namespace MagiRogue.Utils
                 * (10 + (2 * armorQualityModifier)) / (attackMaterial.MaxEdge * weaponQualityModifier);
             if (originalMomentum >= momentumReq)
             {
-                double momentumCost = 0;
+                //double momentumCost = 0;
 
-                // Check if weapon can dent the layer
-                if (attackMaterial.ShearYield > defenseMaterial.ShearYield)
-                {
-                    momentumCost += 0.1 * layerVolume;
-                }
+                //// Check if weapon can dent the layer
+                //if (attackMaterial.ShearYield > defenseMaterial.ShearYield)
+                //{
+                //    momentumCost += 0.1 * layerVolume;
+                //}
 
-                // Check if weapon can cut the layer
-                if (attackMaterial.ShearFracture > defenseMaterial.ShearFracture)
-                {
-                    momentumCost += 0.1 * layerVolume;
-                }
+                //// Check if weapon can cut the layer
+                //if (attackMaterial.ShearFracture > defenseMaterial.ShearFracture)
+                //{
+                //    momentumCost += 0.1 * layerVolume;
+                //}
 
-                return (originalMomentum - momentumCost) * 0.95;
+                return (originalMomentum) * 0.95;
             }
             else
             {
                 // damage is converted to blunt!
                 return CalculateBluntDefenseCost(defenseMaterial,
-                    attackMaterial,
+                    //attackMaterial,
                     originalMomentum,
                     attackContactArea,
                     attackVolume,
                     armorQualityModifier,
-                    layerVolume,
+                    //layerVolume,
                     weaponQualityModifier);
             }
         }
 
         // Blunt defense calculations
         public static double CalculateBluntDefenseCost(MaterialTemplate defenseMaterial,
-            MaterialTemplate attackMaterial,
+            //MaterialTemplate attackMaterial,
             double originalMomentum,
             int attackContactArea,
             double attackSize,
             double armorQualityMultiplier,
-            double layerVolume,
+            //double layerVolume,
             double weaponQualityModifier)
         {
             var bluntDeflection = 2 * attackSize * defenseMaterial.ImpactYield
@@ -577,26 +581,7 @@ namespace MagiRogue.Utils
                     * (2 + (0.4 * armorQualityMultiplier)) * (attackContactArea * (weaponQualityModifier + 1));
                 if (originalMomentum >= minimumMomentum)
                 {
-                    double momentumCost = 0;
-                    // Check if weapon can dent the layer
-                    if (attackMaterial.ShearYield + originalMomentum < defenseMaterial.ShearFracture)
-                    {
-                        momentumCost += 0.1 * layerVolume;
-                    }
-
-                    // Check if layer can fracture from impact
-                    if (defenseMaterial.ImpactYield < originalMomentum
-                        && defenseMaterial.ImpactFracture > originalMomentum)
-                    {
-                        momentumCost += 0.2 * layerVolume;
-                    }
-
-                    // Add momentum cost for complete fracture
-                    if (defenseMaterial.ImpactFracture < originalMomentum)
-                    {
-                        momentumCost += layerVolume;
-                    }
-                    return (originalMomentum - momentumCost) * 0.95;
+                    return originalMomentum * 0.95;
                 }
             }
 

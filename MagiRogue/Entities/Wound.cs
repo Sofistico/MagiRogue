@@ -64,6 +64,13 @@ namespace MagiRogue.Entities
 
     public class PartWound
     {
+        /// <summary>
+        /// The total area of the wound in cm3
+        /// Is initially the lesser of the weapon or body
+        /// part contact areas. It grows with cumulative hits.
+        /// Body parts and non-weapon
+        /// items have contact = (size / 10) ^ (2 / 3).
+        /// </summary>
         public double VolumeFraction { get; set; }
 
         // determines how dented the material is, slowly heals to 0
