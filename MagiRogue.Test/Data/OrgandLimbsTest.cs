@@ -115,7 +115,7 @@ namespace MagiRogue.Test.Data
             var arms = actor.GetAnatomy().Limbs.FindAll(l => l.LimbType is LimbType.Arm);
             foreach (var arm in arms)
             {
-                actor.GetAnatomy().Injury(new Wound(arm.Volume, DamageTypes.Sharp, arm.Tissues), arm, actor);
+                actor.GetAnatomy().Injury(new Wound(DamageTypes.Sharp, arm.Tissues), arm, actor);
             }
             bool healing = true;
             while (healing)

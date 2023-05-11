@@ -57,7 +57,7 @@ namespace MagiRogue.Entities
             InitialDamageSource = damageSource;
             foreach (var tissue in tissues)
             {
-                Parts.Add(new PartWound(tissue.Volume, tissue.Material.StrainsAtYield, tissue));
+                Parts.Add(new PartWound(tissue.Volume, tissue.Material.StrainsAtYield, tissue, damageSource));
             }
         }
     }
@@ -76,18 +76,19 @@ namespace MagiRogue.Entities
         // determines how dented the material is, slowly heals to 0
         public double Strain { get; set; } = 0;
 
-        public double? TotalVolume => Tissue?.Volume;
-        public bool WholeTissue => VolumeFraction >= TotalVolume;
-
         public DamageTypes PartDamage { get; set; }
-
         public Tissue Tissue { get; set; }
 
-        public PartWound(double volume, double strain, Tissue tissue)
+        public double? TotalVolume => Tissue?.Volume;
+        public bool WholeTissue => VolumeFraction >= TotalVolume;
+        public bool IsOnlyDented => VolumeFraction <= 0 && Strain > 0;
+
+        public PartWound(double volume, double strain, Tissue tissue, DamageTypes damageTypes)
         {
             VolumeFraction = volume;
             Strain = strain;
             Tissue = tissue;
+            PartDamage = damageTypes;
         }
     }
 }

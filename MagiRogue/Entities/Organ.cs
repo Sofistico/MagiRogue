@@ -70,9 +70,9 @@ namespace MagiRogue.Entities
             return copy;
         }
 
-        public override void CalculateWound(Wound wound)
+        public override void AddWound(Wound wound)
         {
-            base.CalculateWound(wound);
+            base.AddWound(wound);
             switch (wound.Severity)
             {
                 case InjurySeverity.Inhibited:

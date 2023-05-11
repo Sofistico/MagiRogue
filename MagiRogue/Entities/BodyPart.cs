@@ -112,9 +112,10 @@ namespace MagiRogue.Entities
             }
         }
 
-        public virtual void CalculateWound(Wound wound)
+        public virtual void AddWound(Wound wound)
         {
             // will be calculated by how big the wound was made into the specified tissue
+            // the wound size is calculated in CombatUtils.cs
             Wounds.Add(wound);
         }
 

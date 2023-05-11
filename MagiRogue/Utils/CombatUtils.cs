@@ -42,13 +42,14 @@ namespace MagiRogue.Utils
         {
             if (entity is Actor actor)
             {
-                var tissuesPenetrated = CalculatePartWounddsReceived(attackMomentum,
+                var tissuesPenetrated = CalculatePartWoundsReceived(attackMomentum,
                     limbAttacked.Tissues,
                     actor.Body.GetArmorOnLimbIfAny(limbAttacked),
                     attackMaterial,
                     attack,
                     attacker.Volume,
-                    weapon);
+                    weapon,
+                    actor.Body.Anatomy.GetAllWounds());
 
                 // any remaining dmg goes to create a wound
                 if (tissuesPenetrated.Count > 0)
@@ -394,13 +395,14 @@ namespace MagiRogue.Utils
             GameLoop.AddMessageLog(deathMessage.ToString());
         }
 
-        private static List<PartWound> CalculatePartWounddsReceived(double attackMomentum,
+        private static List<PartWound> CalculatePartWoundsReceived(double attackMomentum,
             List<Tissue> tissues,
             Item targetArmor,
             MaterialTemplate attackMaterial,
             Attack attack,
             int attackVolume,
-            Item? weapon = null)
+            Item? weapon = null,
+            List<Wound>? preExistingWounds = null)
         {
             // TODO: One day take a reaaaaaaalllllllly long look at this method!
             var list = new List<PartWound>();
@@ -433,8 +435,8 @@ namespace MagiRogue.Utils
 
                 var attackTotalContactArea = (attackVolume * (double)((double)attack.ContactArea / 100));
                 double woundVolume = attackTotalContactArea <= tissue.Volume ? attackTotalContactArea : tissue.Volume;
-
-                PartWound partWound = new PartWound((int)woundVolume,, tissue);
+                double strain = attackMomentum / attackTotalContactArea;
+                PartWound partWound = new PartWound(woundVolume, strain, tissue, attack.DamageTypes);
                 if (remainingEnergy > energyToPenetrate)
                 {
                     remainingEnergy -= energyToPenetrate;
@@ -443,6 +445,7 @@ namespace MagiRogue.Utils
                 else
                 {
                     // The attack has lost all of its energy and stopped in this tissue layer, doing blunt damage
+                    partWound.PartDamage = DamageTypes.Blunt;
                     break;
                 }
             }

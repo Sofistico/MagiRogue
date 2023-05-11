@@ -213,7 +213,7 @@ namespace MagiRogue.Entities
                 wound.Bleeding = (actorWounded.Weight / bpInjured.BodyPartWeight * (int)wound.Severity) + 0.1;
             }
 
-            bpInjured.CalculateWound(wound);
+            bpInjured.AddWound(wound);
             if (wound.Severity is InjurySeverity.Missing && bpInjured is Limb limb)
             {
                 Dismember(limb, actorWounded);
@@ -406,7 +406,7 @@ namespace MagiRogue.Entities
                     {
                         Severity = InjurySeverity.Missing
                     };
-                    connectedLimb.CalculateWound(lostLimb);
+                    connectedLimb.AddWound(lostLimb);
                     actor.Weight -= connectedLimb.BodyPartWeight;
                 }
             }
@@ -549,10 +549,7 @@ namespace MagiRogue.Entities
         public List<Wound> GetAllWounds()
         {
             List<Wound> list = new List<Wound>();
-            List<BodyPart> bps = new List<BodyPart>();
-            bps.AddRange(Limbs);
-            bps.AddRange(Organs);
-            foreach (BodyPart item in bps)
+            foreach (BodyPart item in AllBPs)
             {
                 if (item.Wounds.Count > 0)
                     list.AddRange(item.Wounds);
