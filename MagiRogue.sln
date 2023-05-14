@@ -28,7 +28,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MagiRogue.WebClient.Server"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MagiRogue.WebClient.Shared", "MagiRogue.WebClient\Shared\MagiRogue.WebClient.Shared.csproj", "{25E979E7-4E82-4F1A-A549-9D4550C4D64F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagiRogue.Benchmarks", "MagiRogue.Benchmarks\MagiRogue.Benchmarks.csproj", "{ABB63633-6A69-4AB2-AC9B-A81B0D6D5C48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MagiRogue.Benchmarks", "MagiRogue.Benchmarks\MagiRogue.Benchmarks.csproj", "{ABB63633-6A69-4AB2-AC9B-A81B0D6D5C48}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,6 +1,7 @@
 ﻿using MagiRogue.Data.Enumerators;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace MagiRogue.Entities
 {
@@ -59,6 +60,17 @@ namespace MagiRogue.Entities
             {
                 Parts.Add(new PartWound(tissue.Volume, tissue.Material.StrainsAtYield, tissue, damageSource));
             }
+        }
+
+        public string ReturnWoundStatus()
+        {
+            // TODO: Finish this
+            var bobBuilder = new StringBuilder();
+            foreach (var part in Parts)
+            {
+                bobBuilder.Append(part);
+            }
+            return bobBuilder.ToString();
         }
     }
 

@@ -42,7 +42,8 @@ namespace MagiRogue.Utils
         {
             if (entity is Actor actor)
             {
-                var tissuesPenetrated = CalculatePartWoundsReceived(attackMomentum,
+                // calculate how many part wounds the actor will receive!
+                var woundParts = CalculatePartWoundsReceived(attackMomentum,
                     limbAttacked.Tissues,
                     actor.Body.GetArmorOnLimbIfAny(limbAttacked),
                     attackMaterial,
@@ -51,12 +52,11 @@ namespace MagiRogue.Utils
                     weapon,
                     actor.Body.Anatomy.GetAllWounds());
 
-                // any remaining dmg goes to create a wound
-                if (tissuesPenetrated.Count > 0)
+                if (woundParts.Count > 0)
                 {
                     // need to redo this to take into account the new tissue based wound!
                     Wound woundTaken = new Wound(dmgType,
-                        tissuesPenetrated);
+                        woundParts);
 
                     actor.GetAnatomy().Injury(woundTaken, limbAttacked, actor);
 
@@ -83,6 +83,8 @@ namespace MagiRogue.Utils
                 }
                 else
                 {
+                    // no wound was received!
+                    // either the armor or the tissue absorbed all damage.
                     GameLoop.AddMessageLog($"The attack glances {entity.Name}!");
                     return;
                 }
