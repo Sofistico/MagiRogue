@@ -9,6 +9,8 @@ namespace MagiRogue.Utils
 {
     public static class CombatUtils
     {
+        #region Flags
+
         public static DamageTypes SetFlag(DamageTypes a, DamageTypes b)
         {
             return a | b;
@@ -29,6 +31,10 @@ namespace MagiRogue.Utils
         {
             return a ^ b;
         }
+
+        #endregion Flags
+
+        #region Damage
 
         public static void DealDamage(double attackMomentum,
             MagiEntity entity,
@@ -88,6 +94,92 @@ namespace MagiRogue.Utils
             {
                 item.Condition -= (int)attackMomentum;
             }
+        }
+
+        /// <summary>
+        /// Calculates the damage a defender takes after a successful hit
+        /// and subtracts it from its Health
+        /// Then displays the outcome in the MessageLog.
+        /// </summary>
+        /// <param name="defender"></param>
+        /// <param name="momentum"></param>
+        public static void ResolveDamage(Actor defender,
+            Actor attacker,
+            double momentum,
+            DamageTypes dmgType,
+            BodyPart limbAttacked,
+            BodyPart limbAttacking,
+            MaterialTemplate attackMaterial,
+            Attack attack,
+            Item? weapon = null)
+        {
+            if (momentum > 0)
+            {
+                DealDamage(momentum, defender, dmgType, attackMaterial, attack, limbAttacking, limbAttacked, attacker, weapon);
+            }
+            else
+            {
+                GameLoop.AddMessageLog($"{defender.Name} received no damage!");
+            }
+        }
+
+        private static List<PartWound> CalculatePartWoundsReceived(double attackMomentum,
+    List<Tissue> tissues,
+    Item targetArmor,
+    MaterialTemplate attackMaterial,
+    Attack attack,
+    int attackVolume,
+    Item? weapon = null,
+    List<Wound>? preExistingWounds = null)
+        {
+            // TODO: One day take a reaaaaaaalllllllly long look at this method!
+            var list = new List<PartWound>();
+            double remainingEnergy = attackMomentum;
+
+            double armorEffectiveness = CalculateArmorEffectiveness(targetArmor,
+                attackVolume,
+                attackMaterial,
+                remainingEnergy,
+                attack,
+                weapon);
+
+            remainingEnergy -= armorEffectiveness;
+            for (int i = 0; i < tissues.Count; i++)
+            {
+                if (remainingEnergy <= 0)
+                    return list;
+
+                Tissue tissue = tissues[i];
+
+                // Calculate the amount of energy required to penetrate the tissue
+                double energyToPenetrate = CalculateEnergyCostToPenetrateMaterial(tissue.Material,
+                    //tissue.Volume,
+                    attackMaterial,
+                    attack,
+                    attackMomentum,
+                    attackVolume,
+                    0,
+                    weapon is null ? 0 : weapon.QualityMultiplier());
+
+                var attackTotalContactArea = (attackVolume * (double)((double)attack.ContactArea / 100));
+                double woundVolume = attackTotalContactArea <= tissue.Volume ? attackTotalContactArea : tissue.Volume;
+                double strain = attackMomentum / attackTotalContactArea;
+                PartWound partWound = new PartWound(woundVolume, strain, tissue, attack.DamageTypes);
+                if (remainingEnergy > energyToPenetrate)
+                {
+                    remainingEnergy -= energyToPenetrate;
+                    list.Add(partWound);
+                }
+                else
+                {
+                    // The attack has lost all of its energy and stopped in this tissue layer, doing blunt damage
+                    partWound.PartDamage = DamageTypes.Blunt;
+                    break;
+                }
+            }
+
+            // The projectile has penetrated all tissue layers
+            return list;
         }
 
         private static string DetermineDamageMessage(DamageTypes partDamage, PartWound wound)
@@ -192,6 +284,10 @@ namespace MagiRogue.Utils
             }
         }
 
+        #endregion Damage
+
+        #region SpellDmg
+
         private static void ResolveResist(MagiEntity poorGuy,
             Actor caster,
             SpellBase spellCasted,
@@ -230,6 +326,10 @@ namespace MagiRogue.Utils
                 }
             }
         }
+
+        #endregion SpellDmg
+
+        #region Melee hit
 
         /// <summary>
         /// Calculates the outcome of an attacker's attempt
@@ -351,32 +451,9 @@ namespace MagiRogue.Utils
                 + (1 + (attacker.Volume / (limbAttacking.BodyPartMaterial.Density * limbAttacking.Volume))));
         }
 
-        /// <summary>
-        /// Calculates the damage a defender takes after a successful hit
-        /// and subtracts it from its Health
-        /// Then displays the outcome in the MessageLog.
-        /// </summary>
-        /// <param name="defender"></param>
-        /// <param name="momentum"></param>
-        public static void ResolveDamage(Actor defender,
-            Actor attacker,
-            double momentum,
-            DamageTypes dmgType,
-            BodyPart limbAttacked,
-            BodyPart limbAttacking,
-            MaterialTemplate attackMaterial,
-            Attack attack,
-            Item? weapon = null)
-        {
-            if (momentum > 0)
-            {
-                DealDamage(momentum, defender, dmgType, attackMaterial, attack, limbAttacking, limbAttacked, attacker, weapon);
-            }
-            else
-            {
-                GameLoop.AddMessageLog($"{defender.Name} received no damage!");
-            }
-        }
+        #endregion Melee hit
+
+        #region Death Resolve
 
         /// <summary>
         /// Removes an Actor that has died
@@ -423,64 +500,9 @@ namespace MagiRogue.Utils
             GameLoop.AddMessageLog(deathMessage.ToString());
         }
 
-        private static List<PartWound> CalculatePartWoundsReceived(double attackMomentum,
-            List<Tissue> tissues,
-            Item targetArmor,
-            MaterialTemplate attackMaterial,
-            Attack attack,
-            int attackVolume,
-            Item? weapon = null,
-            List<Wound>? preExistingWounds = null)
-        {
-            // TODO: One day take a reaaaaaaalllllllly long look at this method!
-            var list = new List<PartWound>();
-            double remainingEnergy = attackMomentum;
+        #endregion Death Resolve
 
-            double armorEffectiveness = CalculateArmorEffectiveness(targetArmor,
-                attackVolume,
-                attackMaterial,
-                remainingEnergy,
-                attack,
-                weapon);
-
-            remainingEnergy -= armorEffectiveness;
-            for (int i = 0; i < tissues.Count; i++)
-            {
-                if (remainingEnergy <= 0)
-                    return list;
-
-                Tissue tissue = tissues[i];
-
-                // Calculate the amount of energy required to penetrate the tissue
-                double energyToPenetrate = CalculateEnergyCostToPenetrateMaterial(tissue.Material,
-                    //tissue.Volume,
-                    attackMaterial,
-                    attack,
-                    attackMomentum,
-                    attackVolume,
-                    0,
-                    weapon is null ? 0 : weapon.QualityMultiplier());
-
-                var attackTotalContactArea = (attackVolume * (double)((double)attack.ContactArea / 100));
-                double woundVolume = attackTotalContactArea <= tissue.Volume ? attackTotalContactArea : tissue.Volume;
-                double strain = attackMomentum / attackTotalContactArea;
-                PartWound partWound = new PartWound(woundVolume, strain, tissue, attack.DamageTypes);
-                if (remainingEnergy > energyToPenetrate)
-                {
-                    remainingEnergy -= energyToPenetrate;
-                    list.Add(partWound);
-                }
-                else
-                {
-                    // The attack has lost all of its energy and stopped in this tissue layer, doing blunt damage
-                    partWound.PartDamage = DamageTypes.Blunt;
-                    break;
-                }
-            }
-
-            // The projectile has penetrated all tissue layers
-            return list;
-        }
+        #region Physics
 
         private static double CalculateArmorEffectiveness(Item armor,
             int attackSize,
@@ -618,5 +640,7 @@ namespace MagiRogue.Utils
 
             return originalMomentum * 0.01;
         }
+
+        #endregion Physics
     }
 }
