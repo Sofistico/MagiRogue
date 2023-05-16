@@ -41,7 +41,6 @@ namespace MagiRogue.Utils
             DamageTypes dmgType,
             MaterialTemplate? attackMaterial = null,
             Attack? attack = null,
-            BodyPart? limbAttacking = null,
             BodyPart? limbAttacked = null,
             MagiEntity? attacker = null,
             Item? weapon = null)
@@ -108,14 +107,13 @@ namespace MagiRogue.Utils
             double momentum,
             DamageTypes dmgType,
             BodyPart limbAttacked,
-            BodyPart limbAttacking,
             MaterialTemplate attackMaterial,
             Attack attack,
             Item? weapon = null)
         {
             if (momentum > 0)
             {
-                DealDamage(momentum, defender, dmgType, attackMaterial, attack, limbAttacking, limbAttacked, attacker, weapon);
+                DealDamage(momentum, defender, dmgType, attackMaterial, attack, limbAttacked, attacker, weapon);
             }
             else
             {
@@ -419,38 +417,6 @@ namespace MagiRogue.Utils
             return totalDamage;
         }
 
-        /// <summary>
-        /// Gets the momentum of the attack, based partially on the Dwarf Fortress math on attack momentum calculation
-        /// <para><seealso href="https://dwarffortresswiki.org/index.php/DF2014:Weapon">Link to DF wiki article</seealso></para>
-        /// </summary>
-        /// <param name="attacker"></param>
-        /// <param name="wieldedItem"></param>
-        /// <returns></returns>
-        public static double GetAttackMomentumWithItem(Actor attacker, Item wieldedItem, Attack attack)
-        {
-            return (MathMagi.Round(
-                ((attacker.GetStrenght() + wieldedItem.BaseDmg + Mrn.Exploding2D6Dice)
-                * attacker.GetRelevantAttackAbilityMultiplier(attack.AttackAbility))
-                + (10 + (2 * wieldedItem.QualityMultiplier()))) * attacker.GetAttackVelocity(attack))
-                + (1 + (attacker.Volume / (wieldedItem.Material.Density * wieldedItem.Volume)));
-        }
-
-        /// <summary>
-        /// Gets the momentum of the attack, based partially on the Dwarf Fortress math on attack momentum calculation
-        /// <para><seealso href="https://dwarffortresswiki.org/index.php/DF2014:Weapon">Link to DF wiki article</seealso></para>
-        /// </summary>
-        /// <param name="attacker"></param>
-        /// <param name="wieldedItem"></param>
-        /// <returns></returns>
-        public static double GetAttackMomentum(Actor attacker, BodyPart limbAttacking, Attack attack)
-        {
-            return MathMagi.Round(
-                ((attacker.GetStrenght() + Mrn.Exploding2D6Dice)
-                * (attacker.GetRelevantAbilityMultiplier(attack.AttackAbility) + 1)
-                * attacker.GetAttackVelocity(attack))
-                + (1 + (attacker.Volume / (limbAttacking.BodyPartMaterial.Density * limbAttacking.Volume))));
-        }
-
         #endregion Melee hit
 
         #region Death Resolve
@@ -639,6 +605,35 @@ namespace MagiRogue.Utils
             }
 
             return originalMomentum * 0.01;
+        }
+
+        /// <summary>
+        /// Gets the momentum of the attack, based partially on the Dwarf Fortress math on attack momentum calculation
+        /// <para><seealso href="https://dwarffortresswiki.org/index.php/DF2014:Weapon">Link to DF wiki article</seealso></para>
+        /// </summary>
+        /// <param name="attacker"></param>
+        /// <param name="wieldedItem"></param>
+        public static double GetAttackMomentumWithItem(Actor attacker, Item wieldedItem, Attack attack)
+        {
+            return (MathMagi.Round(
+                ((attacker.GetStrenght() + wieldedItem.BaseDmg + Mrn.Exploding2D6Dice)
+                * attacker.GetRelevantAttackAbilityMultiplier(attack.AttackAbility))
+                + (10 + (2 * wieldedItem.QualityMultiplier()))) * attacker.GetAttackVelocity(attack))
+                + (1 + (attacker.Volume / (wieldedItem.Material.Density * wieldedItem.Volume)));
+        }
+
+        /// <summary>
+        /// Gets the momentum of the attack, based partially on the Dwarf Fortress math on attack momentum calculation
+        /// <para><seealso href="https://dwarffortresswiki.org/index.php/DF2014:Weapon">Link to DF wiki article</seealso></para>
+        /// </summary>
+        /// <param name="attacker"></param>
+        public static double GetAttackMomentum(Actor attacker, BodyPart limbAttacking, Attack attack)
+        {
+            return MathMagi.Round(
+                ((attacker.GetStrenght() + Mrn.Exploding2D6Dice)
+                * (attacker.GetRelevantAbilityMultiplier(attack.AttackAbility) + 1)
+                * attacker.GetAttackVelocity(attack))
+                + (1 + (attacker.Volume / (limbAttacking.BodyPartMaterial.Density * limbAttacking.Volume))));
         }
 
         #endregion Physics

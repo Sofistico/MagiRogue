@@ -106,7 +106,6 @@ namespace MagiRogue.Commands
                 attacker,
                 finalMomentum,
                 dmgType,
-                limbAttacking,
                 limbAttacked,
                 attackMaterial,
                 attack,
