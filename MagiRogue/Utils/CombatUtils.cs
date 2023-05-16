@@ -64,19 +64,13 @@ namespace MagiRogue.Utils
                     {
                         Commands.ActionManager.ResolveDeath(actor);
                     }
+                    StringBuilder woundString = new(" ");
 
-                    StringBuilder woundString = new($"The {entity.Name} received ");
-                    switch (woundTaken.Severity)
+                    for (int i = 0; i < woundParts.Count; i++)
                     {
-                        case InjurySeverity.Inhibited:
-                            woundString.Append("an ");
-                            break;
-
-                        default:
-                            woundString.Append("a ");
-                            break;
+                        var partWound = woundParts[i];
+                        woundString.Append(DetermineDamageMessage(partWound.PartDamage));
                     }
-                    woundString.Append(woundTaken.Severity).Append(" wound in the ").Append(limbAttacking.BodyPartName);
 
                     GameLoop.AddMessageLog(woundString.ToString());
                     return;
@@ -94,6 +88,23 @@ namespace MagiRogue.Utils
             {
                 item.Condition -= (int)attackMomentum;
             }
+        }
+
+        private static string DetermineDamageMessage(DamageTypes partDamage, PartWound wound)
+        {
+            StringBuilder baseMessage = new();
+            if (partDamage is DamageTypes.Blunt)
+            {
+                baseMessage.Append("bruising");
+            }
+            else if (partDamage is DamageTypes.Sharp || partDamage is DamageTypes.Pierce)
+            {
+                baseMessage.Append("tearing");
+                if (wound.WholeTissue)
+                    baseMessage.Append(" apart");
+            }
+
+            return baseMessage.ToString();
         }
 
         public static void ApplyHealing(int dmg, Actor stats, DamageTypes healingType)

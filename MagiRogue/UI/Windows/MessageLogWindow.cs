@@ -61,7 +61,7 @@ namespace MagiRogue.UI.Windows
             Children.Add(messageConsole);
         }
 
-        public void PrintMessage(string message)
+        public void PrintMessage(string message, bool newLine = true)
         {
             lines.Enqueue(message);
 
@@ -72,8 +72,10 @@ namespace MagiRogue.UI.Windows
             }
 
             // This here says that there will be a new line, so i don't need position the cursor:
-            messageConsole.Cursor.Print(message).NewLine();
-
+            if (newLine)
+                messageConsole.Cursor.Print(message).NewLine();
+            else
+                messageConsole.Cursor.Print(message);
             // unashamed code stealing to make the same message collapsible
             /*if (newMessage == _lastMessage)
             {

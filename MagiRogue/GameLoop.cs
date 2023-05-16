@@ -81,11 +81,11 @@ public static class GameLoop
 
     public static void SetIdGen(uint lastId) => IdGen = new IDGenerator(lastId + 1);
 
-    public static void AddMessageLog(string message)
+    public static void AddMessageLog(string message, bool newLine = true)
     {
         if (UIManager is null)
             return;
-        UIManager.MessageLog.PrintMessage(message);
+        UIManager.MessageLog.PrintMessage(message, newLine);
     }
 
     public static int GetNHoursFromTurn(int hours)

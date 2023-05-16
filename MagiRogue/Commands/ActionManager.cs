@@ -97,9 +97,9 @@ namespace MagiRogue.Commands
                 itemUsed);
 
             // Display the outcome of the attack & defense
-            GameLoop.AddMessageLog(attackMessage.ToString());
+            GameLoop.AddMessageLog(attackMessage.ToString(), false);
             if (!string.IsNullOrWhiteSpace(defenseMessage.ToString()))
-                GameLoop.AddMessageLog(defenseMessage.ToString());
+                GameLoop.AddMessageLog(defenseMessage.ToString(), false);
 
             // The defender now takes damage
             CombatUtils.ResolveDamage(defender,
