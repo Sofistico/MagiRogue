@@ -69,7 +69,7 @@ namespace MagiRogue.Utils
                     for (int i = 0; i < woundParts.Count; i++)
                     {
                         var partWound = woundParts[i];
-                        woundString.Append(DetermineDamageMessage(partWound.PartDamage));
+                        woundString.Append(DetermineDamageMessage(partWound.PartDamage, partWound));
                     }
 
                     GameLoop.AddMessageLog(woundString.ToString());
@@ -95,7 +95,20 @@ namespace MagiRogue.Utils
             StringBuilder baseMessage = new();
             if (partDamage is DamageTypes.Blunt)
             {
-                baseMessage.Append("bruising");
+                if (wound.Tissue.Material.StrainsAtYield <= 24.999
+                    && wound.Strain >= wound.Tissue.Material.StrainsAtYield)
+                {
+                    baseMessage.Append("fracturating");
+                }
+                else if (wound.Tissue.Material.StrainsAtYield <= 49.999
+                    && wound.Strain >= wound.Tissue.Material.StrainsAtYield)
+                {
+                    baseMessage.Append("torn");
+                }
+                else
+                {
+                    baseMessage.Append("bruising");
+                }
             }
             else if (partDamage is DamageTypes.Sharp || partDamage is DamageTypes.Pierce)
             {
@@ -103,6 +116,8 @@ namespace MagiRogue.Utils
                 if (wound.WholeTissue)
                     baseMessage.Append(" apart");
             }
+
+            baseMessage.Append(" the ").Append(wound.Tissue.Name);
 
             return baseMessage.ToString();
         }
