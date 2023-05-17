@@ -485,7 +485,7 @@ namespace MagiRogue.Utils
             {
                 // chain converts the attack damage to blunt!
                 case ArmorType.Chain:
-                    attack.DamageTypes = DamageTypes.Blunt;
+                    attackMaterial.StrainsAtYield = 50;
                     momentumAfterArmor = CalculateEnergyCostToPenetrateMaterial(armor.Material,
                         //armor.Volume,
                         attackMaterial,
@@ -577,7 +577,7 @@ namespace MagiRogue.Utils
                 //    momentumCost += 0.1 * layerVolume;
                 //}
 
-                return (originalMomentum) * 0.95;
+                return originalMomentum * 0.95;
             }
             else
             {
