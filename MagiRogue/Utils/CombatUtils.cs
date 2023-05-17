@@ -122,13 +122,13 @@ namespace MagiRogue.Utils
         }
 
         private static List<PartWound> CalculatePartWoundsReceived(double attackMomentum,
-    List<Tissue> tissues,
-    Item targetArmor,
-    MaterialTemplate attackMaterial,
-    Attack attack,
-    int attackVolume,
-    Item? weapon = null,
-    List<Wound>? preExistingWounds = null)
+            List<Tissue> tissues,
+            Item targetArmor,
+            MaterialTemplate attackMaterial,
+            Attack attack,
+            int attackVolume,
+            Item? weapon = null,
+            List<Wound>? preExistingWounds = null)
         {
             // TODO: One day take a reaaaaaaalllllllly long look at this method!
             var list = new List<PartWound>();
@@ -212,16 +212,19 @@ namespace MagiRogue.Utils
             return baseMessage.ToString();
         }
 
-        public static void ApplyHealing(int dmg, Actor stats, DamageTypes healingType)
+        public static void ApplyHealing(int dmg, Actor stats, DamageTypes healingType, bool healsStamina = false)
         {
-            // Recovr stamina first
-            stats.Body.Stamina += dmg;
-
-            if (stats.Body.Stamina >= stats.Body.MaxStamina)
+            if (healsStamina)
             {
-                stats.Body.Stamina = stats.Body.MaxStamina;
+                // Recovr stamina first
+                stats.Body.Stamina += dmg;
 
-                GameLoop.AddMessageLog("You feel your inner fire full");
+                if (stats.Body.Stamina >= stats.Body.MaxStamina)
+                {
+                    stats.Body.Stamina = stats.Body.MaxStamina;
+
+                    GameLoop.AddMessageLog("You feel your inner fire full");
+                }
             }
 
             // then here heal the limbs
@@ -480,8 +483,20 @@ namespace MagiRogue.Utils
             double momentumAfterArmor = attackMomentum;
             switch (armor.ArmorType)
             {
-                case ArmorType.Leather:
+                // chain converts the attack damage to blunt!
                 case ArmorType.Chain:
+                    attack.DamageTypes = DamageTypes.Blunt;
+                    momentumAfterArmor = CalculateEnergyCostToPenetrateMaterial(armor.Material,
+                        //armor.Volume,
+                        attackMaterial,
+                        attack,
+                        attackMomentum,
+                        attackSize,
+                        armor.QualityMultiplier(),
+                        weapon is not null ? weapon.QualityMultiplier() : 0);
+                    break;
+
+                case ArmorType.Leather:
                 case ArmorType.Plate:
                     momentumAfterArmor = CalculateEnergyCostToPenetrateMaterial(armor.Material,
                         //armor.Volume,
