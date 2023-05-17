@@ -48,23 +48,15 @@ namespace MagiRogue.Data.Serialization
         public int? ColdDamageTemp { get; set; }
 
         /// <summary>
-        /// How much force is needed for the material to be damaged?
-        /// The deformation limit!
-        /// More means it's more elastic, less means it's more rigid
-        /// affects in combat whether the corresponding tissue
-        /// is bruised (value >= 50), torn (value between 25 and 49.999), or fractured (value <= 24.999)
-        /// </summary>
-        public double StrainsAtYield { get; set; }
-
-        /// <summary>
         /// How sharp the material is. Used in cutting calculations. Does not allow an inferior metal to penetrate superior armor.
         /// Applying a value of at least 100 to a stone will allow weapons to be made from that stone.
         /// Defaults to 100.
         /// </summary>
         public double MaxEdge { get; set; } = 100;
 
-        public int ShearYield { get; set; }
-        public int ShearFracture { get; set; }
+        public int ShearYield { get; set; } = 10000;
+        public int ShearFracture { get; set; } = 10000;
+        public double ShearStrainAtYield { get; set; }
 
         /// <summary>
         /// Specifies how hard of an impact (in kilopascals)
@@ -84,6 +76,15 @@ namespace MagiRogue.Data.Serialization
 
         public double ImpactFractureMpa => (double)ImpactFracture / 1000;
 
+        /// <summary>
+        /// How much force is needed for the material to be damaged?
+        /// The deformation limit!
+        /// More means it's more elastic, less means it's more rigid
+        /// affects in combat whether the corresponding tissue
+        /// is bruised (value >= 50), torn (value between 25 and 49.999), or fractured (value <= 24.999)
+        /// </summary>
+        public double ImpactStrainsAtYield { get; set; }
+
         public MaterialTemplate Copy()
         {
             return new MaterialTemplate()
@@ -98,7 +99,7 @@ namespace MagiRogue.Data.Serialization
                 MPInfusionLimit = this.MPInfusionLimit,
                 Name = this.Name,
                 Color = this.Color,
-                StrainsAtYield = this.StrainsAtYield,
+                ImpactStrainsAtYield = this.ImpactStrainsAtYield,
                 ColdDamageTemp = this.ColdDamageTemp,
                 ConfersTraits = this.ConfersTraits,
                 HeatDamageTemp = this.HeatDamageTemp,

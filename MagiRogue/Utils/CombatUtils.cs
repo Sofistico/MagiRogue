@@ -185,13 +185,13 @@ namespace MagiRogue.Utils
             StringBuilder baseMessage = new();
             if (partDamage is DamageTypes.Blunt)
             {
-                if (wound.Tissue.Material.StrainsAtYield <= 24.999
-                    && wound.Strain >= wound.Tissue.Material.StrainsAtYield)
+                if (wound.Tissue.Material.ImpactStrainsAtYield <= 24.999
+                    && wound.Strain >= wound.Tissue.Material.ImpactStrainsAtYield)
                 {
                     baseMessage.Append("fracturating");
                 }
-                else if (wound.Tissue.Material.StrainsAtYield <= 49.999
-                    && wound.Strain >= wound.Tissue.Material.StrainsAtYield)
+                else if (wound.Tissue.Material.ImpactStrainsAtYield <= 49.999
+                    && wound.Strain >= wound.Tissue.Material.ImpactStrainsAtYield)
                 {
                     baseMessage.Append("torn");
                 }
@@ -481,37 +481,39 @@ namespace MagiRogue.Utils
             Item? weapon)
         {
             double momentumAfterArmor = attackMomentum;
-            switch (armor.ArmorType)
-            {
-                // chain converts the attack damage to blunt!
-                case ArmorType.Chain:
-                    attackMaterial.StrainsAtYield = 50;
-                    momentumAfterArmor = CalculateEnergyCostToPenetrateMaterial(armor.Material,
-                        //armor.Volume,
-                        attackMaterial,
-                        attack,
-                        attackMomentum,
-                        attackSize,
-                        armor.QualityMultiplier(),
-                        weapon is not null ? weapon.QualityMultiplier() : 0);
-                    break;
+            var percentileRoll = Mrn.Normal1D100Dice;
+            if (percentileRoll == armor.Coverage)
+                switch (armor.ArmorType)
+                {
+                    // chain converts the attack damage to blunt!
+                    case ArmorType.Chain:
+                        attackMaterial.ImpactStrainsAtYield = 50;
+                        momentumAfterArmor = CalculateEnergyCostToPenetrateMaterial(armor.Material,
+                            //armor.Volume,
+                            attackMaterial,
+                            attack,
+                            attackMomentum,
+                            attackSize,
+                            armor.QualityMultiplier(),
+                            weapon is not null ? weapon.QualityMultiplier() : 0);
+                        break;
 
-                case ArmorType.Leather:
-                case ArmorType.Plate:
-                    momentumAfterArmor = CalculateEnergyCostToPenetrateMaterial(armor.Material,
-                        //armor.Volume,
-                        attackMaterial,
-                        attack,
-                        attackMomentum,
-                        attackSize,
-                        armor.QualityMultiplier(),
-                        weapon is not null ? weapon.QualityMultiplier() : 0);
+                    case ArmorType.Leather:
+                    case ArmorType.Plate:
+                        momentumAfterArmor = CalculateEnergyCostToPenetrateMaterial(armor.Material,
+                            //armor.Volume,
+                            attackMaterial,
+                            attack,
+                            attackMomentum,
+                            attackSize,
+                            armor.QualityMultiplier(),
+                            weapon is not null ? weapon.QualityMultiplier() : 0);
 
-                    break;
+                        break;
 
-                default:
-                    break;
-            }
+                    default:
+                        break;
+                }
 
             return momentumAfterArmor;
         }
@@ -563,21 +565,7 @@ namespace MagiRogue.Utils
                 * (10 + (2 * armorQualityModifier)) / (attackMaterial.MaxEdge * weaponQualityModifier);
             if (originalMomentum >= momentumReq)
             {
-                //double momentumCost = 0;
-
-                //// Check if weapon can dent the layer
-                //if (attackMaterial.ShearYield > defenseMaterial.ShearYield)
-                //{
-                //    momentumCost += 0.1 * layerVolume;
-                //}
-
-                //// Check if weapon can cut the layer
-                //if (attackMaterial.ShearFracture > defenseMaterial.ShearFracture)
-                //{
-                //    momentumCost += 0.1 * layerVolume;
-                //}
-
-                return originalMomentum * 0.95;
+                return originalMomentum * (defenseMaterial.ShearStrainAtYield / 50000);
             }
             else
             {
@@ -605,7 +593,7 @@ namespace MagiRogue.Utils
         {
             var bluntDeflection = 2 * attackSize * defenseMaterial.ImpactYield
                 < attackContactArea * defenseMaterial.Density;
-            if (bluntDeflection && defenseMaterial.StrainsAtYield < 50)
+            if (bluntDeflection && defenseMaterial.ImpactStrainsAtYield < 50)
             {
                 return 0;
             }
@@ -615,7 +603,7 @@ namespace MagiRogue.Utils
                     * (2 + (0.4 * armorQualityMultiplier)) * (attackContactArea * (weaponQualityModifier + 1));
                 if (originalMomentum >= minimumMomentum)
                 {
-                    return originalMomentum * 0.95;
+                    return originalMomentum * (defenseMaterial.ImpactStrainsAtYield / 50000);
                 }
             }
 

@@ -146,6 +146,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
         [DataMember]
         public ArmorType ArmorType { get; set; }
+        public int Coverage { get; set; }
 
         // Will need to see if it works, but so far the logic seems to check
         public static implicit operator ItemTemplate(Item item)
@@ -178,6 +179,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 Length = item.Length,
                 Id = item.ItemId,
                 ArmorType = item.ArmorType,
+                Coverage = item.Coverage,
             };
 
             return itemSerialized;
@@ -212,6 +214,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 WeaponType = itemTemplate.WeaponType,
                 Attacks = itemTemplate.Attacks,
                 ArmorType = itemTemplate.ArmorType,
+                Coverage = itemTemplate.Coverage,
             };
             if (itemTemplate.Traits is not null)
                 item.Traits = itemTemplate.Traits;

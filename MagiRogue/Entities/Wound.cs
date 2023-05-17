@@ -58,7 +58,7 @@ namespace MagiRogue.Entities
             InitialDamageSource = damageSource;
             foreach (var tissue in tissues)
             {
-                Parts.Add(new PartWound(tissue.Volume, tissue.Material.StrainsAtYield, tissue, damageSource));
+                Parts.Add(new PartWound(tissue.Volume, tissue.Material.ImpactStrainsAtYield, tissue, damageSource));
             }
         }
 
