@@ -2,6 +2,7 @@
 using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Magic;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -43,17 +44,19 @@ namespace MagiRogue.Utils
             Attack? attack = null,
             BodyPart? limbAttacked = null,
             MagiEntity? attacker = null,
-            Item? weapon = null)
+            Item? weapon = null,
+            BodyPart? limbAttacking = null)
         {
             if (entity is Actor actor)
             {
+                double attackVolume = weapon is null ? limbAttacking.Volume : weapon.Volume;
                 // calculate how many part wounds the actor will receive!
                 var woundParts = CalculatePartWoundsReceived(attackMomentum,
                     limbAttacked.Tissues,
                     actor.Body.GetArmorOnLimbIfAny(limbAttacked),
                     attackMaterial,
                     attack,
-                    attacker.Volume,
+                    attackVolume,
                     weapon,
                     actor.Body.Anatomy.GetAllWounds());
 
@@ -109,15 +112,16 @@ namespace MagiRogue.Utils
             BodyPart limbAttacked,
             MaterialTemplate attackMaterial,
             Attack attack,
-            Item? weapon = null)
+            Item? weapon = null,
+            BodyPart? limbAttacking = null)
         {
             if (momentum > 0)
             {
-                DealDamage(momentum, defender, dmgType, attackMaterial, attack, limbAttacked, attacker, weapon);
+                DealDamage(momentum, defender, dmgType, attackMaterial, attack, limbAttacked, attacker, weapon, limbAttacking);
             }
             else
             {
-                GameLoop.AddMessageLog($"{defender.Name} received no damage!");
+                GameLoop.AddMessageLog($"{defender.Name} received no damage!", true);
             }
         }
 
@@ -126,22 +130,23 @@ namespace MagiRogue.Utils
             Item targetArmor,
             MaterialTemplate attackMaterial,
             Attack attack,
-            int attackVolume,
+            double attackVolume,
             Item? weapon = null,
             List<Wound>? preExistingWounds = null)
         {
             // TODO: One day take a reaaaaaaalllllllly long look at this method!
             var list = new List<PartWound>();
             double remainingEnergy = attackMomentum;
-
-            double armorEffectiveness = CalculateArmorEffectiveness(targetArmor,
-                attackVolume,
-                attackMaterial,
-                remainingEnergy,
-                attack,
-                weapon);
-
-            remainingEnergy -= armorEffectiveness;
+            if (targetArmor is not null)
+            {
+                double armorEffectiveness = CalculateArmorEffectiveness(targetArmor,
+                    attackVolume,
+                    attackMaterial,
+                    remainingEnergy,
+                    attack,
+                    weapon);
+                remainingEnergy -= armorEffectiveness;
+            }
             for (int i = 0; i < tissues.Count; i++)
             {
                 if (remainingEnergy <= 0)
@@ -160,10 +165,16 @@ namespace MagiRogue.Utils
                     weapon is null ? 0 : weapon.QualityMultiplier());
 
                 var attackTotalContactArea = (attackVolume * (double)((double)attack.ContactArea / 100));
-                double woundVolume = attackTotalContactArea <= tissue.Volume ? attackTotalContactArea : tissue.Volume;
-                double strain = attackMomentum / attackTotalContactArea;
+
+                // let's see if it will just be better to use the tissue.volume!
+                var tissueContactArea = Math.Pow(tissue.Volume, 2 / 3);
+                double woundVolume = attackTotalContactArea <= tissueContactArea
+                    ? (double)((tissue.Volume) * (double)(attackTotalContactArea) / (double)(tissueContactArea)) 
+                    : tissue.Volume;
+
+                double strain = attackTotalContactArea / attackMomentum;
                 PartWound partWound = new PartWound(woundVolume, strain, tissue, attack.DamageTypes);
-                if (remainingEnergy > energyToPenetrate)
+                if (remainingEnergy >= energyToPenetrate)
                 {
                     remainingEnergy -= energyToPenetrate;
                     list.Add(partWound);
@@ -172,6 +183,7 @@ namespace MagiRogue.Utils
                 {
                     // The attack has lost all of its energy and stopped in this tissue layer, doing blunt damage
                     partWound.PartDamage = DamageTypes.Blunt;
+                    list.Add(partWound);
                     break;
                 }
             }
@@ -474,7 +486,7 @@ namespace MagiRogue.Utils
         #region Physics
 
         private static double CalculateArmorEffectiveness(Item armor,
-            int attackSize,
+            double attackSize,
             MaterialTemplate attackMaterial,
             double attackMomentum,
             Attack attack,
@@ -482,7 +494,8 @@ namespace MagiRogue.Utils
         {
             double momentumAfterArmor = attackMomentum;
             var percentileRoll = Mrn.Normal1D100Dice;
-            if (percentileRoll == armor.Coverage)
+            if (percentileRoll >= armor.Coverage)
+            {
                 switch (armor.ArmorType)
                 {
                     // chain converts the attack damage to blunt!
@@ -514,6 +527,7 @@ namespace MagiRogue.Utils
                     default:
                         break;
                 }
+            }
 
             return momentumAfterArmor;
         }
@@ -523,7 +537,7 @@ namespace MagiRogue.Utils
             MaterialTemplate attackMaterial,
             Attack attack,
             double originalMomentum,
-            int attackVolume,
+            double attackVolume,
             double armorQualityMultiplier = 0,
             double weaponQualityModifier = 0)
         {
@@ -559,13 +573,13 @@ namespace MagiRogue.Utils
             double weaponQualityModifier,
             double attackVolume)
         {
-            double shearFRatio = attackMaterial.ShearFracture / defenseMaterial.ShearFracture;
-            double shearYRatio = attackMaterial.ShearYield / defenseMaterial.ShearYield;
+            double shearFRatio = (double)((double)attackMaterial.ShearFracture / (double)defenseMaterial.ShearFracture);
+            double shearYRatio = (double)((double)attackMaterial.ShearYield / (double)defenseMaterial.ShearYield);
             var momentumReq = (shearYRatio + ((attackContactArea + 1) * shearFRatio))
-                * (10 + (2 * armorQualityModifier)) / (attackMaterial.MaxEdge * weaponQualityModifier);
+                * (10 + (2 * armorQualityModifier)) / (attackMaterial.MaxEdge * (weaponQualityModifier + 1));
             if (originalMomentum >= momentumReq)
             {
-                return originalMomentum * (defenseMaterial.ShearStrainAtYield / 50000);
+                return (double)((double)originalMomentum * (double)(defenseMaterial.ShearStrainAtYield / 50000));
             }
             else
             {
@@ -592,7 +606,7 @@ namespace MagiRogue.Utils
             double weaponQualityModifier)
         {
             var bluntDeflection = 2 * attackSize * defenseMaterial.ImpactYield
-                < attackContactArea * defenseMaterial.Density;
+                < attackContactArea * defenseMaterial.DensityKgM3;
             if (bluntDeflection && defenseMaterial.ImpactStrainsAtYield < 50)
             {
                 return 0;
@@ -622,7 +636,7 @@ namespace MagiRogue.Utils
                 ((attacker.GetStrenght() + wieldedItem.BaseDmg + Mrn.Exploding2D6Dice)
                 * attacker.GetRelevantAttackAbilityMultiplier(attack.AttackAbility))
                 + (10 + (2 * wieldedItem.QualityMultiplier()))) * attacker.GetAttackVelocity(attack))
-                + (1 + (attacker.Volume / (wieldedItem.Material.Density * wieldedItem.Volume)));
+                + (1 + (attacker.Volume / (wieldedItem.Material.DensityKgM3 * wieldedItem.Volume)));
         }
 
         /// <summary>
@@ -636,7 +650,7 @@ namespace MagiRogue.Utils
                 ((attacker.GetStrenght() + Mrn.Exploding2D6Dice)
                 * (attacker.GetRelevantAbilityMultiplier(attack.AttackAbility) + 1)
                 * attacker.GetAttackVelocity(attack))
-                + (1 + (attacker.Volume / (limbAttacking.BodyPartMaterial.Density * limbAttacking.Volume))));
+                + (1 + (attacker.Volume / (limbAttacking.BodyPartMaterial.DensityKgM3 * limbAttacking.Volume))));
         }
 
         #endregion Physics

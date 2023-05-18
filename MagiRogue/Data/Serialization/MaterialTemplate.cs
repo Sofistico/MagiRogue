@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -29,6 +30,7 @@ namespace MagiRogue.Data.Serialization
         public bool CanRegen { get; set; }
 
         public double Density { get; set; }
+        public double DensityKgM3 => MathMagi.GetDensityInKgM(Density);
 
         public int? MeltingPoint { get; set; }
 
@@ -81,7 +83,7 @@ namespace MagiRogue.Data.Serialization
         /// The deformation limit!
         /// More means it's more elastic, less means it's more rigid
         /// affects in combat whether the corresponding tissue
-        /// is bruised (value >= 50), torn (value between 25 and 49.999), or fractured (value <= 24.999)
+        /// is bruised (value >= 50000), torn (value between 25000 and 49999), or fractured (value <= 24999)
         /// </summary>
         public double ImpactStrainsAtYield { get; set; }
 

@@ -355,8 +355,19 @@ namespace MagiRogue.Entities
             {
                 bp.Volume = MathMagi.ReturnPositive((int)(volume * (bp.RelativeVolume
                     + GameLoop.GlobalRand.NextInclusiveDouble(-0.01, 0.01))));
-                //bp.MaxBodyPartHp = (int)((bp.Volume + 1) / (bp.BodyPartWeight + 1));
-                //bp.BodyPartHp = bp.MaxBodyPartHp;
+
+                CalculateTissueVolume(bp);
+            }
+        }
+
+        private static void CalculateTissueVolume(BodyPart bp)
+        {
+            int totalVolume = bp.Volume;
+            int totalThickness = bp.Tissues.Sum(t => t.RelativeThickness);
+
+            foreach (var tissue in bp.Tissues)
+            {
+                tissue.Volume = (int)MathMagi.FastRound((double)totalVolume * tissue.RelativeThickness / totalThickness);
             }
         }
 

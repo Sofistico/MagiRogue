@@ -109,7 +109,8 @@ namespace MagiRogue.Commands
                 limbAttacked,
                 attackMaterial,
                 attack,
-                itemUsed);
+                itemUsed,
+                limbAttacking);
             var staminaDiscount = (attacker.Body.Stamina
                 - (attack.PrepareVelocity * 10)) + (attacker.Body.Endurance * 0.5);
             // discount stamina from the attacker

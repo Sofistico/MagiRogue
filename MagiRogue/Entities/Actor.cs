@@ -60,7 +60,7 @@ namespace MagiRogue.Entities
         /// </summary>
         public ActorState State { get; set; }
 
-        public List<ActorSituationalFlags> SituationalFlags { get; set; }
+        public List<ActorSituationalFlags> SituationalFlags { get; set; } = new();
 
         #endregion Properties
 

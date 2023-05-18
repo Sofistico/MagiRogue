@@ -57,7 +57,7 @@ namespace MagiRogue.Entities
         // TODO: FOR THE FUTURE!
         public List<Tissue> Tissues { get; set; }
 
-        public List<Wound> Wounds { get; set; }
+        public List<Wound> Wounds { get; set; } = new();
 
         public bool NeedsHeal => Wounds.Count > 0;
 

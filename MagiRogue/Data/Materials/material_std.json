@@ -40,7 +40,12 @@
     "ColdDamageTemp": -56,
     "Color": "Gray",
     "Type": "Skin",
-    "StrainsAtYield": 50
+    "ShearYield": 20000,
+    "ShearFracture": 20000,
+    "ShearStrainAtYield": 50000,
+    "ImpactYield": 10000,
+    "ImpactFracture": 10000,
+    "ImpactStrainsAtYield": 50000
   },
   {
     "Id": "fat",
