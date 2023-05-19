@@ -93,9 +93,9 @@ namespace MagiRogue.UI
             }
 
             //Message Log initialization
-            MessageLog = new MessageLogWindow(GameLoop.GameWidth, 7, "Message Log")
+            MessageLog = new MessageLogWindow(GameLoop.GameWidth, GameLoop.GameHeight - 23, "Message Log")
             {
-                Position = new Point(0, 20)
+                Position = new Point(0, GameLoop.GameHeight - 10)
             };
             MessageLog.Hide();
 #if DEBUG
@@ -106,9 +106,9 @@ namespace MagiRogue.UI
             Children.Add(InventoryScreen);
             InventoryScreen.Hide();
 
-            StatusWindow = new StatusWindow(GameLoop.GameWidth, 3, "Status Window")
+            StatusWindow = new StatusWindow(GameLoop.GameWidth, GameLoop.GameHeight - 27, "Status Window")
             {
-                Position = new Point(0, 27)
+                Position = new Point(0, GameLoop.GameHeight - 3)
             };
             StatusWindow.Show();
 
