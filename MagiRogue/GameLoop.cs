@@ -1,10 +1,9 @@
 ﻿global using Point = SadRogue.Primitives.Point;
-using GoRogue;
 using MagiRogue.GameSys;
-using MagiRogue.GameSys.Planet.History;
 using MagiRogue.GameSys.Time;
+using MagiRogue.Settings;
 using MagiRogue.UI;
-using Microsoft.Toolkit.HighPerformance;
+using MagiRogue.Utils;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
@@ -16,8 +15,10 @@ namespace MagiRogue;
 
 public static class GameLoop
 {
-    public const int GameWidth = 120;
-    public const int GameHeight = 30;
+    private static GlobalSettings settings;
+
+    public static int GameWidth { get; private set; }
+    public static int GameHeight { get; private set; }
 
     // Managers
     public static UIManager UIManager { get; set; }
@@ -53,6 +54,11 @@ public static class GameLoop
         SadConsole.Settings.ResizeMode = SadConsole.Settings.WindowResizeOptions.Stretch;
         // Let's see how this one can be done, will be used in a future serialization work
         SadConsole.Settings.AutomaticAddColorsToMappings = true;
+
+        settings = JsonUtils.JsonDeseralize<GlobalSettings>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+            "Settings", "global_setting.json"));
+        GameHeight = settings.ScreenHeight;
+        GameWidth = settings.ScreenWidth;
     }
 
     private static void Init()
