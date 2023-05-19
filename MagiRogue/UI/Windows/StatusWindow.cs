@@ -28,15 +28,15 @@ namespace MagiRogue.UI.Windows
                 DefaultBackground = Color.Black
             };
 
-            statusScroll = new ScrollBar
-                (Orientation.Vertical, heigth - windowBorderThickness)
-            {
-                Position = new Point(statsConsole.Width + 1, statsConsole.Position.X)
+            //statusScroll = new ScrollBar
+            //    (Orientation.Vertical, heigth - windowBorderThickness)
+            //{
+            //    Position = new Point(statsConsole.Width + 1, statsConsole.Position.X)
 
-                //IsEnabled = false
-            };
-            statusScroll.ValueChanged += StatusScroll_ValueChanged;
-            Controls.Add(statusScroll);
+            //    //IsEnabled = false
+            //};
+            //statusScroll.ValueChanged += StatusScroll_ValueChanged;
+            //Controls.Add(statusScroll);
 
             // enable mouse input
             UseMouse = true;
@@ -44,19 +44,19 @@ namespace MagiRogue.UI.Windows
             Children.Add(statsConsole);
         }
 
-        private void StatusScroll_ValueChanged(object? sender, EventArgs? e)
+        /*private void StatusScroll_ValueChanged(object? sender, EventArgs? e)
         {
             statsConsole.View = new Rectangle(0, statusScroll.Value + windowBorderThickness,
                 statsConsole.Width, statsConsole.View.Height);
-        }
+        }*/
 
         // Probably needs to create a way to make it update only when needed, by an event.
         public override void Update(TimeSpan time)
         {
             statsConsole.Clear();
             statsConsole.Print(0, 0, $"{player.Name}");
-            statsConsole.Print(0, 2, ColoredString.Parser.Parse(player.GetStaminaStatus()));
-            statsConsole.Print(0, 3, ColoredString.Parser.Parse(player.GetManaStatus()));
+            statsConsole.Print(2, 0, ColoredString.Parser.Parse(player.GetStaminaStatus()));
+            statsConsole.Print(3, 0, ColoredString.Parser.Parse(player.GetManaStatus()));
 
             base.Update(time);
         }

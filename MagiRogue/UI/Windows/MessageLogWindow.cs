@@ -29,6 +29,8 @@ namespace MagiRogue.UI.Windows
         // account for the thickness of the window border to prevent UI element spillover
         private const int windowBorderThickness = 2;
 
+        public bool MessageSent { get; set; }
+
         // Create a new window with the title centered
         // the window is draggable by default
         public MessageLogWindow(int width, int height, string title) : base(width, height, title)
@@ -87,6 +89,9 @@ namespace MagiRogue.UI.Windows
                 _lastMessage = newMessage;
                 _messageCounter = 1;
             }*/
+
+            Show();
+            MessageSent = true;
         }
 
         // Controls the position of the messagelog viewport
@@ -129,6 +134,13 @@ namespace MagiRogue.UI.Windows
                 // Reset the shift amount.
                 messageConsole.TimesShiftedUp = 0;
             }
+        }
+
+        public void HideIfNoMessageThisTurn()
+        {
+            if (MessageSent)
+                return;
+            Hide();
         }
     }
 }

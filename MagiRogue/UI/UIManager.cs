@@ -5,7 +5,6 @@ using MagiRogue.UI.Interfaces;
 using MagiRogue.UI.Windows;
 using SadConsole;
 using SadConsole.Input;
-using SadConsole.UI;
 using System;
 using System.Collections.Generic;
 using Color = SadConsole.UI.AdjustableColor;
@@ -26,7 +25,7 @@ namespace MagiRogue.UI
 
         public MessageLogWindow MessageLog { get; set; }
         public InventoryWindow InventoryScreen { get; set; }
-        public StatusWindow StatusConsole { get; set; }
+        public StatusWindow StatusWindow { get; set; }
         public MainMenuWindow MainMenu { get; set; }
         public CharacterCreationWindow CharCreationWindow { get; set; }
 
@@ -94,10 +93,11 @@ namespace MagiRogue.UI
             }
 
             //Message Log initialization
-            MessageLog = new MessageLogWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Message Log");
-            Children.Add(MessageLog);
-            MessageLog.Show();
-            MessageLog.Position = new Point(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2);
+            MessageLog = new MessageLogWindow(GameLoop.GameWidth, 7, "Message Log")
+            {
+                Position = new Point(0, 20)
+            };
+            MessageLog.Hide();
 #if DEBUG
             MessageLog.PrintMessage("Test message log works");
 #endif
@@ -106,19 +106,22 @@ namespace MagiRogue.UI
             Children.Add(InventoryScreen);
             InventoryScreen.Hide();
 
-            StatusConsole = new StatusWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Status Window");
-            Children.Add(StatusConsole);
-            StatusConsole.Position = new Point(GameLoop.GameWidth / 2, 0);
-            StatusConsole.Show();
+            StatusWindow = new StatusWindow(GameLoop.GameWidth, 3, "Status Window")
+            {
+                Position = new Point(0, 27)
+            };
+            StatusWindow.Show();
 
             // Build the Window
-            CreateMapWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight, "Game Map");
+            CreateMapWindow(GameLoop.GameWidth, GameLoop.GameHeight, "Game Map");
 
             // Then load the map into the MapConsole
             MapWindow.LoadMap(GameLoop.GetCurrentMap());
-
             // Start the game with the camera focused on the player
             MapWindow.CenterOnActor(GameLoop.Universe.Player);
+
+            Children.Add(StatusWindow);
+            Children.Add(MessageLog);
         }
 
         /// <summary>

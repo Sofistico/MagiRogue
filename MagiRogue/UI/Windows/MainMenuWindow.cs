@@ -221,7 +221,7 @@ namespace MagiRogue.UI.Windows
 
             GameLoop.UIManager.MessageLog = null;
             GameLoop.UIManager.MapWindow = null;
-            GameLoop.UIManager.StatusConsole = null;
+            GameLoop.UIManager.StatusWindow = null;
             GameLoop.UIManager.InventoryScreen = null;
             GameLoop.UIManager.CharCreationWindow = null;
             GameLoop.UIManager.Children.Clear();

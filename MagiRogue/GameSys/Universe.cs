@@ -27,7 +27,6 @@ namespace MagiRogue.GameSys
         private readonly int planetWidth = 257;
         private readonly int planetHeight = 257;
         private readonly int planetMaxCivs = 30;
-        private readonly Random rndNum = new();
 
         /// <summary>
         /// The World map, contains the map data and the Planet data
@@ -54,17 +53,10 @@ namespace MagiRogue.GameSys
         /// </summary>
         public Point AbsolutePlayerPos { get; set; }
 
-        public TimeSystem Time { get; private set; }
+        public TimeSystem Time { get; }
         public bool PossibleChangeMap { get; internal set; } = true;
 
         public SeasonType CurrentSeason { get; set; }
-
-        /*/// <summary>
-        /// All the maps and chunks of the game
-        /// NOTE WILL BE SLOWLEY REMOVED FROM CODE!!
-        /// TO BE REPLACED WITH AN ARRAY THAT CONTAINS FEWR CHUNKS!
-        /// </summary>
-        public RegionChunk[] AllChunks { get; set; }*/
 
         public SaveAndLoad SaveAndLoad { get; set; }
         public int ZLevel { get; set; }
@@ -85,8 +77,6 @@ namespace MagiRogue.GameSys
                     planetMaxCivs);
                 Time = WorldMap.GetTimePassed();
                 WorldMap.AssocietatedMap.IsActive = true;
-                //maxChunks = planetWidth * planetHeight;
-                //AllChunks = new RegionChunk[maxChunks];
                 CurrentMap = WorldMap.AssocietatedMap;
                 PlacePlayerOnWorld(player);
                 SaveAndLoad = new();
@@ -114,10 +104,14 @@ namespace MagiRogue.GameSys
             CurrentChunk = currentChunk;
 
             if (currentMap is not null && worldMap.AssocietatedMap.MapName.Equals(currentMap.MapName))
+            {
                 CurrentMap = worldMap.AssocietatedMap;
+            }
             else if (currentMap is not null && currentChunk.LocalMaps.All(i => i is not null)
                 && currentChunk.LocalMaps.Any(i => i.MapId == currentMap.MapId))
-                CurrentMap = currentChunk.LocalMaps.FirstOrDefault(i => i.MapId == currentMap.MapId);
+            {
+                CurrentMap = Array.Find(currentChunk.LocalMaps, i => i.MapId == currentMap.MapId)!;
+            }
             else
             {
                 CurrentMap = currentMap!;
@@ -203,8 +197,6 @@ namespace MagiRogue.GameSys
                 var ids = GetEntitiesIds();
                 RegisterInTime(ids);
             }
-            else
-                return; // Do nothing
         }
 
         public void AddEntityToCurrentMap(MagiEntity entity)
@@ -287,6 +279,10 @@ namespace MagiRogue.GameSys
         {
             if (sucess)
             {
+                // hud action before any action!
+                if (GameLoop.UIManager.MessageLog.MessageSent)
+                    GameLoop.UIManager.MessageLog.MessageSent = false;
+
                 bool playerActionWorked = ProcessPlayerTurn(playerTime);
 
                 if (!playerActionWorked)
@@ -312,13 +308,15 @@ namespace MagiRogue.GameSys
                 }
 
                 GameLoop.UIManager.MapWindow.MapConsole.IsDirty = true;
-
 #if DEBUG
                 GameLoop.AddMessageLog($"Turns: {Time.Turns}, Tick: {Time.TimePassed.Ticks}");
 #endif
                 // makes sure that any entity that exists but has no AI, or the AI failed, get's a turn.
                 var ids = GetEntitiesIds();
                 RegisterInTime(ids);
+
+                // if there is the need to update any screen or console or window for last!
+                GameLoop.UIManager.MessageLog.HideIfNoMessageThisTurn();
             }
         }
 
