@@ -19,7 +19,6 @@ namespace MagiRogue.UI.Windows
         public StatusWindow(int width, int heigth, string title) : base(width, heigth, title)
         {
             player = GameLoop.Universe.Player;
-            MessageBus bus = new MessageBus();
 
             statsConsole = new Console(width - windowBorderThickness, heigth - windowBorderThickness)
             {

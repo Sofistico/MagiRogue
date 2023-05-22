@@ -93,9 +93,9 @@ namespace MagiRogue.UI
             }
 
             //Message Log initialization
-            MessageLog = new MessageLogWindow(GameLoop.GameWidth, GameLoop.GameHeight - 23, "Message Log")
+            MessageLog = new MessageLogWindow(GameLoop.GameWidth, GameLoop.GameHeight - 25, "Message Log")
             {
-                Position = new Point(0, GameLoop.GameHeight - 10)
+                Position = new Point(0, GameLoop.GameHeight - 11)
             };
             MessageLog.Hide();
 #if DEBUG
