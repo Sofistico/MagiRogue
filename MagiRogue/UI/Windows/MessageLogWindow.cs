@@ -141,6 +141,7 @@ namespace MagiRogue.UI.Windows
             if (MessageSent)
                 return;
             Hide();
+            GameLoop.UIManager.StatusWindow.ChangePositionToBottomPage();
         }
     }
 }

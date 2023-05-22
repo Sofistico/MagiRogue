@@ -59,5 +59,9 @@ namespace MagiRogue.UI.Windows
 
             base.Update(time);
         }
+
+        public void ChangePositionToBottomPage() => Position = new Point(0, GameLoop.GameHeight - 3);
+
+        public void ChangePositionToUpMessageLog() => Position = new SadRogue.Primitives.Point(0, GameLoop.GameHeight - 12);
     }
 }

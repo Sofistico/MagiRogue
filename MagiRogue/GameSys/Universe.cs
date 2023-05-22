@@ -281,7 +281,9 @@ namespace MagiRogue.GameSys
             {
                 // hud action before any action!
                 if (GameLoop.UIManager.MessageLog.MessageSent)
+                {
                     GameLoop.UIManager.MessageLog.MessageSent = false;
+                }
 
                 bool playerActionWorked = ProcessPlayerTurn(playerTime);
 

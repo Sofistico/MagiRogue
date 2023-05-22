@@ -92,6 +92,7 @@ public static class GameLoop
         if (UIManager is null)
             return;
         UIManager.MessageLog.PrintMessage(message, newLine);
+        UIManager.StatusWindow.ChangePositionToUpMessageLog();
     }
 
     public static int GetNHoursFromTurn(int hours)
