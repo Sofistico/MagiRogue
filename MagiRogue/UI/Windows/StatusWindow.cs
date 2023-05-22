@@ -27,18 +27,8 @@ namespace MagiRogue.UI.Windows
                 DefaultBackground = Color.Black
             };
 
-            //statusScroll = new ScrollBar
-            //    (Orientation.Vertical, heigth - windowBorderThickness)
-            //{
-            //    Position = new Point(statsConsole.Width + 1, statsConsole.Position.X)
-
-            //    //IsEnabled = false
-            //};
-            //statusScroll.ValueChanged += StatusScroll_ValueChanged;
-            //Controls.Add(statusScroll);
-
             // enable mouse input
-            UseMouse = true;
+            UseMouse = false;
 
             Children.Add(statsConsole);
         }

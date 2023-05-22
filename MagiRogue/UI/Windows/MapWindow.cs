@@ -10,7 +10,7 @@ namespace MagiRogue.UI.Windows
     public class MapWindow : MagiBaseWindow
     {
         private Map _mapDisplayed;
-        private SadConsole.Components.SurfaceComponentFollowTarget followComponent;
+        private readonly SadConsole.Components.SurfaceComponentFollowTarget followComponent;
         public ScreenSurface MapConsole { get; set; }
 
         public MapWindow(int width, int height, string title) : base(width, height, title)

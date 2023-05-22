@@ -174,7 +174,6 @@ namespace MagiRogue.UI
         //public override void OnFocusLost()
         //{
         //    base.OnFocusLost();
-        //    IsFocused = true;
         //}
 
         #endregion Update
