@@ -10,7 +10,7 @@ namespace MagiRogue.Components.Ai
     {
         private readonly MagicManager _spellsKnow;
 
-        public IObjectWithComponents Parent { get; set; }
+        public object Parent { get; set; }
 
         public SpellCastingAI(MagicManager spellsKnow)
         {

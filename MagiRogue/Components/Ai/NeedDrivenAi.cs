@@ -1,5 +1,4 @@
-﻿using GoRogue.Components.ParentAware;
-using GoRogue.GameFramework;
+﻿using GoRogue.GameFramework;
 using GoRogue.Pathing;
 using MagiRogue.Commands;
 using MagiRogue.Data.Enumerators;
@@ -21,12 +20,17 @@ namespace MagiRogue.Components.Ai
         private IGameObject? parent;
         private NeedCollection? needs;
 
-        public IObjectWithComponents? Parent { get; set; }
+        public object? Parent { get; set; }
 
         public (bool sucess, long ticks) RunAi(Map map, MessageLogWindow messageLog)
         {
+            if (Parent is not IGameObject)
+            {
+                return (false, -1);
+            }
+
             parent ??= (IGameObject)Parent;
-            if (Parent.GoRogueComponents.Contains(typeof(NeedCollection))
+            if (parent.GoRogueComponents.Contains(typeof(NeedCollection))
                 && map.GetEntityById(parent.ID) is Actor actor)
             {
                 needs ??= actor.GetComponent<NeedCollection>();
@@ -194,7 +198,7 @@ namespace MagiRogue.Components.Ai
         public void Dispose()
 #pragma warning restore CA1816 // Dispose methods should call SuppressFinalize
         {
-            Parent.GoRogueComponents.Remove(this);
+            parent?.GoRogueComponents.Remove(this);
             ClearCommit();
             needs = null;
         }

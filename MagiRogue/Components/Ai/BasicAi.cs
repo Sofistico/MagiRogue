@@ -15,7 +15,7 @@ namespace MagiRogue.Components.Ai
     public class BasicAi : IAiComponent
     {
         private readonly MagiEntity _entity;
-        public IObjectWithComponents? Parent { get; set; }
+        public object? Parent { get; set; }
 
         public BasicAi(MagiEntity entity)
         {
