@@ -47,7 +47,7 @@ public static class GameLoop
 
     private static void ConfigureBeforeCreateGame(string[] args)
     {
-        foreach (var str in args)
+        foreach (var _ in args)
         {
             // TODO!
         }
