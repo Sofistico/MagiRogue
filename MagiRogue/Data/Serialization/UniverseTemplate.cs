@@ -140,7 +140,7 @@ namespace MagiRogue.Data.Serialization
             if (currentMap is not null && worldMap.AssocietatedMap.MapId == currentMap.MapId)
                 CurrentMap = worldMap.AssocietatedMap;
             else
-                CurrentMap = currentMap;
+                CurrentMap = currentMap!;
 
             Player = player;
             Time = time;
@@ -167,7 +167,7 @@ namespace MagiRogue.Data.Serialization
 
         public static implicit operator UniverseTemplate(Universe uni)
         {
-            UniverseTemplate universe = new UniverseTemplate(
+            return new UniverseTemplate(
                 uni.WorldMap, uni.CurrentMap, uni.Player,
                 uni.Time, uni.PossibleChangeMap,
                 uni.CurrentSeason)
@@ -177,7 +177,6 @@ namespace MagiRogue.Data.Serialization
                 LastIdAssigned = GameLoop.IdGen.CurrentInteger,
                 ZLevel = uni.ZLevel,
             };
-            return universe;
         }
 
         public static implicit operator Universe(UniverseTemplate uni)

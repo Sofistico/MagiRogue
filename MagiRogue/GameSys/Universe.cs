@@ -369,7 +369,7 @@ namespace MagiRogue.GameSys
         private void RestartGame()
         {
             CurrentMap.DestroyMap();
-            int chunckLenght = CurrentChunk is not null ? CurrentChunk.LocalMaps.Length : 0;
+            int chunckLenght = (CurrentChunk?.LocalMaps.Length) ?? 0;
             for (int i = 0; i < chunckLenght; i++)
             {
                 Map maps = CurrentChunk.LocalMaps[i];
@@ -421,8 +421,6 @@ namespace MagiRogue.GameSys
                 newChunck.LocalMaps[i].SetId(GameLoop.IdGen.UseID());
             }
 
-            //AllChunks[Point.ToIndex(posGenerated.X, posGenerated.Y, planetWidth)] = newChunck;
-
             return newChunck;
         }
 
@@ -438,18 +436,12 @@ namespace MagiRogue.GameSys
 
         public bool MapIsWorld()
         {
-            if (CurrentMap == WorldMap.AssocietatedMap)
-                return true;
-            else
-                return false;
+            return CurrentMap == WorldMap.AssocietatedMap;
         }
 
         public bool MapIsWorld(Map map)
         {
-            if (map == WorldMap.AssocietatedMap)
-                return true;
-            else
-                return false;
+            return map == WorldMap.AssocietatedMap;
         }
 
         public void ForceChangeCurrentMap(Map map) => CurrentMap = map;

@@ -1,5 +1,4 @@
-﻿global using Point = SadRogue.Primitives.Point;
-using MagiRogue.GameSys;
+﻿using MagiRogue.GameSys;
 using MagiRogue.GameSys.Time;
 using MagiRogue.Settings;
 using MagiRogue.UI;

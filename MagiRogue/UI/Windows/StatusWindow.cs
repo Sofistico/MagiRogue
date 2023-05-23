@@ -50,8 +50,16 @@ namespace MagiRogue.UI.Windows
             base.Update(time);
         }
 
-        public void ChangePositionToBottomPage() => Position = new Point(0, GameLoop.GameHeight - 3);
+        public void ChangePositionToBottomPage()
+        {
+            Position = new Point(0, GameLoop.GameHeight - 3);
+            BorderLineStyle = ICellSurface.ConnectedLineEmpty;
+        }
 
-        public void ChangePositionToUpMessageLog() => Position = new SadRogue.Primitives.Point(0, GameLoop.GameHeight - 12);
+        public void ChangePositionToUpMessageLog()
+        {
+            Position = new Point(0, GameLoop.GameHeight - 12);
+            BorderLineStyle = ICellSurface.ConnectedLineThin;
+        }
     }
 }
