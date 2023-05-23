@@ -30,7 +30,7 @@ public static class GameLoop
 
     private static void Main(string[] args)
     {
-        ConfigureBeforeCreateGame();
+        ConfigureBeforeCreateGame(args);
 
         // Setup the engine and creat the main window.
         SadConsole.Game.Create(GameWidth, GameHeight);
@@ -45,8 +45,12 @@ public static class GameLoop
         SadConsole.Game.Instance.Dispose();
     }
 
-    private static void ConfigureBeforeCreateGame()
+    private static void ConfigureBeforeCreateGame(string[] args)
     {
+        foreach (var str in args)
+        {
+            // TODO!
+        }
         // Pre options before creating the game, defines the title and if can resize
         SadConsole.Settings.WindowTitle = "MagiRogue";
         SadConsole.Settings.AllowWindowResize = true;
