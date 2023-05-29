@@ -44,7 +44,9 @@ namespace MagiRogue.UI.Windows
             statsConsole.Clear();
             xOffSet += player.Name.Length;
             statsConsole.Print(xOffSet, 0, player.Name);
+            xOffSet += player.GetStaminaStatus().Length;
             statsConsole.Print(xOffSet, 0, ColoredString.Parser.Parse(player.GetStaminaStatus()));
+            xOffSet += player.GetManaStatus().Length;
             statsConsole.Print(xOffSet, 0, ColoredString.Parser.Parse(player.GetManaStatus()));
 
             base.Update(time);
@@ -52,14 +54,12 @@ namespace MagiRogue.UI.Windows
 
         public void ChangePositionToBottomPage()
         {
-            Position = new Point(0, GameLoop.GameHeight - 3);
-            BorderLineStyle = ICellSurface.ConnectedLineEmpty;
+            Position = new Point(1, GameLoop.GameHeight - 3);
         }
 
         public void ChangePositionToUpMessageLog()
         {
-            Position = new Point(0, GameLoop.GameHeight - 12);
-            BorderLineStyle = ICellSurface.ConnectedLineThin;
+            Position = new Point(1, GameLoop.GameHeight - 12);
         }
     }
 }
