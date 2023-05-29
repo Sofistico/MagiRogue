@@ -5,6 +5,7 @@
     "IdMaterial": "stone",
     "GlyphChar": "#",
     "ForegroundStr": "LightGray",
+    "ConnectedTilesType": "Thick",
     "TileType": "Wall"
   },
   {
@@ -13,6 +14,7 @@
     "IdMaterial": "wood",
     "GlyphChar": "#",
     "ForegroundStr": "Wood",
+    "ConnectedTilesType": "Thin",
     "TileType": "Wall"
   },
   {
@@ -20,6 +22,7 @@
     "Name": "Wood Door",
     "IdMaterial": "wood",
     "ForegroundStr": "Wood",
+    "ConnectedTilesType": "None",
     "TileType": "Door"
   },
   {
@@ -27,6 +30,7 @@
     "Name": "Mud Wall",
     "IdMaterial": "mud",
     "GlyphChar": "#",
+    "ConnectedTilesType": "Thin",
     "ForegroundStr": "Brown",
     "TileType": "Wall"
   }

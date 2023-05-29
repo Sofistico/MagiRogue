@@ -1,5 +1,4 @@
-﻿using GoRogue.Messaging;
-using MagiRogue.Entities;
+﻿using MagiRogue.Entities;
 using SadConsole;
 using SadConsole.UI.Controls;
 using SadRogue.Primitives;
@@ -12,7 +11,6 @@ namespace MagiRogue.UI.Windows
     {
         private readonly Player player;
         private readonly Console statsConsole;
-        private readonly ScrollBar statusScroll;
 
         private const int windowBorderThickness = 2;
 
@@ -42,10 +40,12 @@ namespace MagiRogue.UI.Windows
         // Probably needs to create a way to make it update only when needed, by an event.
         public override void Update(TimeSpan time)
         {
+            int xOffSet = 0;
             statsConsole.Clear();
-            statsConsole.Print(0, 0, $"{player.Name}");
-            statsConsole.Print(2, 0, ColoredString.Parser.Parse(player.GetStaminaStatus()));
-            statsConsole.Print(3, 0, ColoredString.Parser.Parse(player.GetManaStatus()));
+            xOffSet += player.Name.Length;
+            statsConsole.Print(xOffSet, 0, player.Name);
+            statsConsole.Print(xOffSet, 0, ColoredString.Parser.Parse(player.GetStaminaStatus()));
+            statsConsole.Print(xOffSet, 0, ColoredString.Parser.Parse(player.GetManaStatus()));
 
             base.Update(time);
         }

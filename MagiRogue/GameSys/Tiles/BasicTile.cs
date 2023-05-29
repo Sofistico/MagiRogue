@@ -72,6 +72,8 @@ namespace MagiRogue.GameSys.Tiles
 
         public bool HoldsVegetation { get; set; }
 
+        public ConnectedTilesType ConnectedTilesType { get; set; }
+
         #endregion TileBase Properties
 
         #region NodeTile properties
@@ -259,6 +261,7 @@ namespace MagiRogue.GameSys.Tiles
             basic.Traits = tile.Traits;
             basic.HoldsVegetation = tile.HoldsVegetation;
             basic.Vegetations = tile.Vegetations;
+            basic.ConnectedTilesType = tile.ConnectedTilesType;
 
             return basic;
         }
@@ -383,6 +386,7 @@ namespace MagiRogue.GameSys.Tiles
             tile.MoveTimeCost = basicTile.MoveCost;
             tile.HoldsVegetation = basicTile.HoldsVegetation;
             tile.Vegetations = basicTile.Vegetations;
+            tile.ConnectedTilesType = basicTile.ConnectedTilesType;
 
             return tile;
         }

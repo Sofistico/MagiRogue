@@ -108,6 +108,8 @@ namespace MagiRogue.GameSys.Tiles
         public int MoveTimeCost { get; set; } = 100;
         public string Description { get; internal set; }
 
+        public ConnectedTilesType ConnectedTilesType { get; set; }
+
         #endregion backingField Data
 
         /// <summary>
