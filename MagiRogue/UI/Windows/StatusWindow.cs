@@ -1,6 +1,5 @@
 ﻿using MagiRogue.Entities;
 using SadConsole;
-using SadConsole.UI.Controls;
 using SadRogue.Primitives;
 using System;
 using Console = SadConsole.Console;
@@ -30,12 +29,6 @@ namespace MagiRogue.UI.Windows
 
             Children.Add(statsConsole);
         }
-
-        /*private void StatusScroll_ValueChanged(object? sender, EventArgs? e)
-        {
-            statsConsole.View = new Rectangle(0, statusScroll.Value + windowBorderThickness,
-                statsConsole.Width, statsConsole.View.Height);
-        }*/
 
         // Probably needs to create a way to make it update only when needed, by an event.
         public override void Update(TimeSpan time)
