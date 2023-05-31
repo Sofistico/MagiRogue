@@ -268,7 +268,7 @@ namespace MagiRogue.Entities
 
             if (Limbs.Count > 0)
             {
-                CalculateRelativeLimbVolume(actor.Volume);
+                ConfigureLimbs(actor.Volume);
                 SetMaxStandAndGraspCount();
                 FindAllMaterials(actor);
                 CalculateWeight(actor);
@@ -346,17 +346,23 @@ namespace MagiRogue.Entities
             }
         }
 
-        private void CalculateRelativeLimbVolume(int volume)
+        private void ConfigureLimbs(int volume)
         {
-            List<BodyPart> bps = new();
-            bps.AddRange(Limbs);
-            bps.AddRange(Organs);
-            foreach (BodyPart bp in bps)
+            foreach (BodyPart bp in AllBPs)
             {
                 bp.Volume = MathMagi.ReturnPositive((int)(volume * (bp.RelativeVolume
                     + GameLoop.GlobalRand.NextInclusiveDouble(-0.01, 0.01))));
 
                 CalculateTissueVolume(bp);
+            }
+
+            foreach (var organ in Organs)
+            {
+                if (!string.IsNullOrEmpty(organ.InsideOf))
+                {
+                    var limb = AllBPs.Find(i => i.Id.Equals(organ.InsideOf));
+                    limb.Insides.Add(organ);
+                }
             }
         }
 

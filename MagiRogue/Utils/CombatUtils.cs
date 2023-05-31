@@ -53,6 +53,7 @@ namespace MagiRogue.Utils
                 // calculate how many part wounds the actor will receive!
                 var woundParts = CalculatePartWoundsReceived(attackMomentum,
                     limbAttacked.Tissues,
+                    limbAttacked,
                     actor.Body.GetArmorOnLimbIfAny(limbAttacked),
                     attackMaterial,
                     attack,
@@ -127,6 +128,7 @@ namespace MagiRogue.Utils
 
         private static List<PartWound> CalculatePartWoundsReceived(double attackMomentum,
             List<Tissue> tissues,
+            BodyPart partInjured,
             Item targetArmor,
             MaterialTemplate attackMaterial,
             Attack attack,
@@ -169,7 +171,7 @@ namespace MagiRogue.Utils
                 // let's see if it will just be better to use the tissue.volume!
                 var tissueContactArea = Math.Pow(tissue.Volume, 2 / 3);
                 double woundVolume = attackTotalContactArea <= tissueContactArea
-                    ? (double)((tissue.Volume) * (double)(attackTotalContactArea) / (double)(tissueContactArea)) 
+                    ? (double)((tissue.Volume) * (double)(attackTotalContactArea) / (double)(tissueContactArea))
                     : tissue.Volume;
 
                 double strain = attackTotalContactArea / attackMomentum;

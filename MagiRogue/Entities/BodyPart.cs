@@ -61,6 +61,8 @@ namespace MagiRogue.Entities
 
         public bool NeedsHeal => Wounds.Count > 0;
 
+        public List<BodyPart> Insides { get; set; } = new();
+
         [JsonConstructor()]
         protected BodyPart(string materialId)
         {

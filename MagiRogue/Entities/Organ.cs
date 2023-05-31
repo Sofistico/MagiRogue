@@ -65,6 +65,7 @@ namespace MagiRogue.Entities
                 Volume = this.Volume,
                 Working = this.Working,
                 Wounds = this.Wounds,
+                Insides = this.Insides
             };
 
             return copy;
