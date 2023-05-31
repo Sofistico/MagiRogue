@@ -87,6 +87,13 @@ namespace MagiRogue.Entities
                     && wound.Severity is not InjurySeverity.Pulped))
                 {
                     wound.Recovery = MathMagi.Round(rateOfHeal + wound.Recovery);
+                    wound.Parts.ForEach(i =>
+                    {
+                        i.Strain -= rateOfHeal;
+                        i.VolumeFraction -= rateOfHeal;
+                        if (i.VolumeFraction < 0)
+                            i.VolumeFraction = 0;
+                    });
                     if (wound.Recovery >= MathMagi.ReturnPositive(wound.VolumeInjury))
                     {
                         wound.Recovered = true;
