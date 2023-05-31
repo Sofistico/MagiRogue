@@ -149,8 +149,15 @@ namespace MagiRogue.Utils
                     weapon);
                 remainingEnergy -= armorEffectiveness;
             }
+#if DEBUG
+            int loopAmount = 0;
+#endif
             while (true) // be realllllllllly careful about this loop...
             {
+#if DEBUG
+                if (++loopAmount == 1000)
+                    GameLoop.WriteToLog("Something went really wrong...");
+#endif
                 if (remainingEnergy <= 0)
                     return list;
 

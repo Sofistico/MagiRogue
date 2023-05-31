@@ -147,6 +147,9 @@ public static class GameLoop
             }
 
             File.AppendAllText(path, str.ToString());
+#if DEBUG
+            AddMessageLog("Logged an error in the logs file!");
+#endif
         });
     }
 
