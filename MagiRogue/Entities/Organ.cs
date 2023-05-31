@@ -1,8 +1,5 @@
 ﻿using MagiRogue.Data.Enumerators;
-using MagiRogue.Data.Serialization;
-using MagiRogue.GameSys.Physics;
 using Newtonsoft.Json;
-using System.Runtime.Serialization;
 
 namespace MagiRogue.Entities
 {
@@ -11,8 +8,9 @@ namespace MagiRogue.Entities
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string? InsideOf { get; set; }
 
-        [DataMember]
         public OrganType OrganType { get; set; }
+
+        public bool Embedded { get; set; }
 
         public Organ(string name,
             string? connectedTo,
@@ -32,13 +30,15 @@ namespace MagiRogue.Entities
            string? connectedTo,
            BodyPartOrientation orientation,
            OrganType organType,
-           string materialId) : base(materialId)
+           string materialId,
+           bool embedded = false) : base(materialId)
         {
             Id = id;
             BodyPartName = name;
             InsideOf = connectedTo;
             Orientation = orientation;
             OrganType = organType;
+            Embedded = embedded;
         }
 
         public Organ(string materialId = "skin") : base(materialId)
@@ -65,7 +65,8 @@ namespace MagiRogue.Entities
                 Volume = this.Volume,
                 Working = this.Working,
                 Wounds = this.Wounds,
-                Insides = this.Insides
+                Insides = this.Insides,
+                Embedded = this.Embedded,
             };
 
             return copy;
@@ -78,11 +79,8 @@ namespace MagiRogue.Entities
             {
                 case InjurySeverity.Inhibited:
                 case InjurySeverity.Broken:
-                    Working = false;
-                    break;
-
                 case InjurySeverity.Pulped:
-                    Working = true;
+                    Working = false;
                     break;
             }
         }

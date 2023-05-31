@@ -23,7 +23,8 @@ namespace MagiRogue.Data.Enumerators
         Vital,
         Thought,
         Breath,
-        Embedded,
+        Mouth,
+        Visual,
         Protection, // bone, skulls, ribcage and etc
         Teeth,
     }

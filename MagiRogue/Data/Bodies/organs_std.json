@@ -43,7 +43,7 @@
   },
   {
     "Id": "lower_spine",
-    "Name": "Low Spine",
+    "Name": "Lower Spine",
     "MaterialId": "skin",
     "RelativeVolume": 0.15,
     "InsideOf": "lower_body",
@@ -120,7 +120,8 @@
     "RelativeVolume": 0.05,
     "InsideOf": "head",
     "Orientation": "Right",
-    "BodyPartFunction": "Embedded",
+    "BodyPartFunction": "Visual",
+    "Embedded": true,
     "OrganType": "Visual",
     "RateOfHeal": 0.25
   },
@@ -131,18 +132,20 @@
     "RelativeVolume": 0.05,
     "InsideOf": "head",
     "Orientation": "Left",
-    "BodyPartFunction": "Embedded",
+    "BodyPartFunction": "Visual",
+    "Embedded": true,
     "OrganType": "Visual",
     "RateOfHeal": 0.25
   },
   {
     "Id": "mouth",
-    "Name": "Left Eye",
+    "Name": "Mouth",
     "MaterialId": "skin",
     "RelativeVolume": 0.05,
     "InsideOf": "head",
     "Orientation": "Center",
-    "BodyPartFunction": "Embedded",
+    "BodyPartFunction": "Mouth",
+    "Embedded": true,
     "OrganType": "Mouth",
     "RateOfHeal": 0.25
   },

@@ -2,6 +2,7 @@
 using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Magic;
+using MagiRogue.Utils.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -52,7 +53,6 @@ namespace MagiRogue.Utils
                 double attackVolume = weapon is null ? limbAttacking.Volume : weapon.Volume;
                 // calculate how many part wounds the actor will receive!
                 var woundParts = CalculatePartWoundsReceived(attackMomentum,
-                    limbAttacked.Tissues,
                     limbAttacked,
                     actor.Body.GetArmorOnLimbIfAny(limbAttacked),
                     attackMaterial,
@@ -127,7 +127,6 @@ namespace MagiRogue.Utils
         }
 
         private static List<PartWound> CalculatePartWoundsReceived(double attackMomentum,
-            List<Tissue> tissues,
             BodyPart partInjured,
             Item targetArmor,
             MaterialTemplate attackMaterial,
@@ -138,6 +137,7 @@ namespace MagiRogue.Utils
         {
             // TODO: One day take a reaaaaaaalllllllly long look at this method!
             var list = new List<PartWound>();
+            Queue<Tissue> tissues = new(partInjured.Tissues);
             double remainingEnergy = attackMomentum;
             if (targetArmor is not null)
             {
@@ -149,12 +149,22 @@ namespace MagiRogue.Utils
                     weapon);
                 remainingEnergy -= armorEffectiveness;
             }
-            for (int i = 0; i < tissues.Count; i++)
+            while (true) // be realllllllllly careful about this loop...
             {
                 if (remainingEnergy <= 0)
                     return list;
 
-                Tissue tissue = tissues[i];
+                if (!tissues.TryDequeue(out Tissue tissue))
+                {
+                    if (partInjured.Insides.Count == 0)
+                        break; // even if there is energy, there is no more tissue to penetrate... might do some stuff ltr
+                    var rngInside = partInjured.Insides.GetRandomItemFromList();
+                    foreach (var tis in rngInside.Tissues)
+                    {
+                        tissues.Enqueue(tis);
+                    }
+                    continue;
+                }
 
                 // Calculate the amount of energy required to penetrate the tissue
                 double energyToPenetrate = CalculateEnergyCostToPenetrateMaterial(tissue.Material,
