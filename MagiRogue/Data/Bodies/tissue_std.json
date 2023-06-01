@@ -1,0 +1,13 @@
+[
+  {
+    "Id": "standard_tissues",
+    // From the outermost, to the innermost
+    // following name;material;relative_thickness;FlagsIfAny,SeparatedByComma
+    "Tissues": [
+      "skin;skin;1;ConnectiveTissueAnchor,Scars",
+      "fat;fat;1;ConnectiveTissueAnchor,Scars,ThickensOnEnergyStore",
+      "muscle;muscle;3;ConnectiveTissueAnchor,ThickensOnStrTraining,Scars",
+      "bone;bone;2;ConnectiveTissueAnchor,Structural"
+    ]
+  }
+]

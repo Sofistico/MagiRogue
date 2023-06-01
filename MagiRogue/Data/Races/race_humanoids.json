@@ -29,13 +29,8 @@
     "RaceNormalLimbRegen": 1.0,
     "BleedRegenaration": 1.0,
     "BodyPlan": [ "humanoid_limbs", "humanoid_organs", "5fingers", "5toes", "generic_teeth" ],
-    // From the outermost, to the innermost
-    // following name;material;relative_thickness;FlagsIfAny
     "Tissues": [
-      "skin;skin;1;ConnectiveTissueAnchor,Scars",
-      "fat;fat;1;ConnectiveTissueAnchor,Scars,ThickensOnEnergyStore",
-      "muscle;muscle;3;ConnectiveTissueAnchor,ThickensOnStrTraining,Scars",
-      "bone;bone;2;ConnectiveTissueAnchor,Structural"
+      "standard_tissues"
     ],
     // lowest, lower, low, median, high, higher, highest
     "HeightModifier": [ 75, 95, 98, 100, 102, 105, 125 ],

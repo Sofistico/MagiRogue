@@ -1,5 +1,4 @@
-﻿using GoRogue.MapGeneration.Steps;
-using MagiRogue.Data.Enumerators;
+﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Data.Serialization.MapSerialization;
@@ -13,7 +12,6 @@ using MagiRogue.GameSys.Tiles;
 using MagiRogue.GameSys.Veggies;
 using MagiRogue.Utils;
 using MagiRogue.Utils.Extensions;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -77,6 +75,9 @@ namespace MagiRogue.Data
 
         public static readonly IReadOnlyList<Plant> ListOfPlants =
             GetSourceTree<Plant>(@".\Data\Plant\plant_*");
+
+        public static readonly IReadOnlyList<TissuePlanTemplate> ListOfTissuePlans =
+            GetSourceTree<TissuePlanTemplate>(@".\Data\Body\tissue_*");
 
         #region Descriptors
 
@@ -201,6 +202,9 @@ namespace MagiRogue.Data
 
         public static Plant QueryPlantInData(string plantId)
             => ListOfPlants.FirstOrDefault(i => i.Id.Equals(plantId))?.Clone();
+
+        public static TissuePlanTemplate QueryTissuePlanInData(string tissuePlanId)
+            => ListOfTissuePlans.FirstOrDefault(i => i.Id.Equals(tissuePlanId));
 
         #endregion Queryes
 
