@@ -100,7 +100,7 @@ namespace MagiRogue.Entities
                 Orientation = this.Orientation,
                 LimbType = this.LimbType,
                 BodyPartFunction = this.BodyPartFunction,
-                RateOfHeal = this.RateOfHeal,
+                HealingRate = this.HealingRate,
                 RelativeVolume = this.RelativeVolume,
                 CanHeal = this.CanHeal,
                 Tissues = new(Tissues),

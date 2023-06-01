@@ -59,7 +59,7 @@
     "InsideOf": "lower_body",
     "Orientation": "Center",
     "OrganType": "Digestive",
-    "RateOfHeal": 0.5
+    "HealingRate": 0.5
   },
   {
     "Id": "intestine",
@@ -69,7 +69,7 @@
     "InsideOf": "lower_body",
     "Orientation": "Center",
     "OrganType": "Digestive",
-    "RateOfHeal": 0.4
+    "HealingRate": 0.4
   },
   {
     "Id": "r_lung",
@@ -80,7 +80,7 @@
     "Orientation": "Right",
     "BodyPartFunction": "Breath",
     "OrganType": "Breather",
-    "RateOfHeal": 0.3
+    "HealingRate": 0.3
   },
   {
     "Id": "l_lung",
@@ -91,7 +91,7 @@
     "Orientation": "Left",
     "BodyPartFunction": "Breath",
     "OrganType": "Breather",
-    "RateOfHeal": 0.3
+    "HealingRate": 0.3
   },
   {
     "Id": "r_kidney",
@@ -101,7 +101,7 @@
     "InsideOf": "lower_body",
     "Orientation": "Right",
     "OrganType": "Filtering",
-    "RateOfHeal": 0.6
+    "HealingRate": 0.6
   },
   {
     "Id": "l_kidney",
@@ -111,7 +111,7 @@
     "InsideOf": "lower_body",
     "Orientation": "Left",
     "OrganType": "Filtering",
-    "RateOfHeal": 0.6
+    "HealingRate": 0.6
   },
   {
     "Id": "r_eye",
@@ -123,7 +123,7 @@
     "BodyPartFunction": "Visual",
     "Embedded": true,
     "OrganType": "Visual",
-    "RateOfHeal": 0.25
+    "HealingRate": 0.25
   },
   {
     "Id": "l_eye",
@@ -135,7 +135,7 @@
     "BodyPartFunction": "Visual",
     "Embedded": true,
     "OrganType": "Visual",
-    "RateOfHeal": 0.25
+    "HealingRate": 0.25
   },
   {
     "Id": "mouth",
@@ -147,7 +147,7 @@
     "BodyPartFunction": "Mouth",
     "Embedded": true,
     "OrganType": "Mouth",
-    "RateOfHeal": 0.25
+    "HealingRate": 0.25
   },
   {
     "Id": "tooth",
@@ -155,7 +155,7 @@
     "BodyPartName": "{0} Tooth",
     "Orientation": "Center",
     "MaterialId": "teeth",
-    "RateOfHeal": 0,
+    "HealingRate": 0,
     "BodyPartFunction": "Teeth",
     "InsideOf": "mouth"
   },
@@ -168,6 +168,6 @@
     "Orientation": "Center",
     "BodyPartFunction": "Protection",
     "OrganType": "Protective",
-    "RateOfHeal": 0.1
+    "HealingRate": 0.1
   }
 ]

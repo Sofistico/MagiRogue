@@ -59,7 +59,7 @@ namespace MagiRogue.Entities
                 OrganType = this.OrganType,
                 BodyPartFunction = this.BodyPartFunction,
                 CanHeal = this.CanHeal,
-                RateOfHeal = this.RateOfHeal,
+                HealingRate = this.HealingRate,
                 RelativeVolume = this.RelativeVolume,
                 Tissues = new(Tissues),
                 Volume = this.Volume,

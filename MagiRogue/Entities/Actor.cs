@@ -296,7 +296,7 @@ namespace MagiRogue.Entities
             //        {
             //            if (limb.CanHeal || GetAnatomy().GetActorRace().CanRegenLostLimbs)
             //            {
-            //                limb.ApplyHeal(GetNormalLimbRegen() * limb.RateOfHeal);
+            //                limb.ApplyHeal(GetNormalLimbRegen() * limb.HealingRate);
             //            }
             //        }
             //        if (!limb.Attached && GetAnatomy().GetActorRace().CanRegenLostLimbs)
@@ -304,7 +304,7 @@ namespace MagiRogue.Entities
             //            List<Limb> connectedLimbs = GetAnatomy().GetAllParentConnectionLimb(limb);
             //            if (!connectedLimbs.Any(i => !i.Attached))
             //            {
-            //                limb.ApplyHeal(GetNormalLimbRegen() * limb.RateOfHeal + 0.5);
+            //                limb.ApplyHeal(GetNormalLimbRegen() * limb.HealingRate + 0.5);
             //                if (!limb.Wounds.Any(i => i.Severity is InjurySeverity.Missing))
             //                    limb.Attached = true;
             //            }
@@ -324,7 +324,7 @@ namespace MagiRogue.Entities
                 {
                     if (limb.CanHeal || regens)
                     {
-                        limb.ApplyHeal(GetNormalLimbRegen() * limb.RateOfHeal);
+                        limb.ApplyHeal(GetNormalLimbRegen() * limb.HealingRate);
                     }
                 }
                 if (!limb.Attached && regens)
@@ -332,7 +332,7 @@ namespace MagiRogue.Entities
                     List<Limb> connectedLimbs = GetAnatomy().GetAllParentConnectionLimb(limb);
                     if (connectedLimbs.All(i => i.Attached))
                     {
-                        limb.ApplyHeal((GetNormalLimbRegen() * limb.RateOfHeal) + (0.5 * 2), regens);
+                        limb.ApplyHeal((GetNormalLimbRegen() * limb.HealingRate) + (0.5 * 2), regens);
                         if (!limb.Wounds.Any(i => i.Severity is InjurySeverity.Missing))
                             limb.Attached = true;
                     }

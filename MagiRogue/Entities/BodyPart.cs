@@ -43,7 +43,7 @@ namespace MagiRogue.Entities
         /// Determines how effective the races regen is...
         /// Values are between 0 and 1, where 0 is no regen for the limb and 1 is full regen.
         /// </summary>
-        public double RateOfHeal { get; set; }
+        public double HealingRate { get; set; }
 
         public bool CanHeal { get; set; } = true;
         public BodyPartFunction BodyPartFunction { get; set; }
@@ -67,7 +67,7 @@ namespace MagiRogue.Entities
             BodyPartMaterial = PhysicsManager.SetMaterial(materialId);
         }
 
-        public void ApplyHeal(double rateOfHeal, bool regenLostLimb = false)
+        public void ApplyHeal(double HealingRate, bool regenLostLimb = false)
         {
             foreach (Wound wound in Wounds)
             {
@@ -84,11 +84,11 @@ namespace MagiRogue.Entities
                     || (wound.Severity is not InjurySeverity.Missing
                     && wound.Severity is not InjurySeverity.Pulped))
                 {
-                    wound.Recovery = MathMagi.Round(rateOfHeal + wound.Recovery);
+                    wound.Recovery = MathMagi.Round(HealingRate + wound.Recovery);
                     wound.Parts.ForEach(i =>
                     {
-                        i.Strain -= rateOfHeal;
-                        i.VolumeFraction -= rateOfHeal;
+                        i.Strain -= HealingRate;
+                        i.VolumeFraction -= HealingRate;
                         if (i.VolumeFraction < 0)
                             i.VolumeFraction = 0;
                     });

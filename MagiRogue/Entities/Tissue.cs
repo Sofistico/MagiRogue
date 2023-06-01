@@ -40,6 +40,7 @@ namespace MagiRogue.Entities
 
         public List<TissueFlag> Flags { get; set; } = new();
         public double Volume { get; set; }
+        public double HealingRate { get; set; }
 
         [JsonConstructor()]
         public Tissue(string name, string materialId, int thickness)
