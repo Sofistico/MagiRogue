@@ -44,7 +44,6 @@ namespace MagiRogue.Utils
             MaterialTemplate? attackMaterial = null,
             Attack? attack = null,
             BodyPart? limbAttacked = null,
-            MagiEntity? attacker = null,
             Item? weapon = null,
             BodyPart? limbAttacking = null)
         {
@@ -107,7 +106,6 @@ namespace MagiRogue.Utils
         /// <param name="defender"></param>
         /// <param name="momentum"></param>
         public static void ResolveDamage(Actor defender,
-            Actor attacker,
             double momentum,
             DamageTypes dmgType,
             BodyPart limbAttacked,
@@ -118,7 +116,7 @@ namespace MagiRogue.Utils
         {
             if (momentum > 0)
             {
-                DealDamage(momentum, defender, dmgType, attackMaterial, attack, limbAttacked, attacker, weapon, limbAttacking);
+                DealDamage(momentum, defender, dmgType, attackMaterial, attack, limbAttacked, weapon, limbAttacking);
             }
             else
             {

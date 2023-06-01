@@ -48,7 +48,7 @@ namespace MagiRogue.Entities
 
         public override Organ Copy()
         {
-            Organ copy = new Organ()
+            return new Organ()
             {
                 Id = this.Id,
                 BodyPartName = this.BodyPartName,
@@ -61,15 +61,13 @@ namespace MagiRogue.Entities
                 CanHeal = this.CanHeal,
                 RateOfHeal = this.RateOfHeal,
                 RelativeVolume = this.RelativeVolume,
-                Tissues = this.Tissues,
+                Tissues = new(Tissues),
                 Volume = this.Volume,
                 Working = this.Working,
-                Wounds = this.Wounds,
-                Insides = this.Insides,
+                Wounds = new(Wounds),
+                Insides = new(Insides),
                 Embedded = this.Embedded,
             };
-
-            return copy;
         }
 
         public override void AddWound(Wound wound)

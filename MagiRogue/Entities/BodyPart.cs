@@ -19,7 +19,6 @@ namespace MagiRogue.Entities
         /// <summary>
         /// The size of the bodypart in cm³
         /// </summary>
-
         public int Volume { get; set; }
 
         /// <summary>
@@ -31,7 +30,6 @@ namespace MagiRogue.Entities
         /// <summary>
         /// Marks if the BP is right, left, or center, this is the property.
         /// </summary>
-
         public BodyPartOrientation Orientation { get; set; }
 
         public string BodyPartName { get; set; }
@@ -52,20 +50,20 @@ namespace MagiRogue.Entities
 
         public bool Working { get; set; } = true;
 
-        // TODO: FOR THE FUTURE!
         public List<Tissue> Tissues { get; set; }
 
         public List<Wound> Wounds { get; set; } = new();
 
         public bool NeedsHeal => Wounds.Count > 0;
 
-        public List<BodyPart> Insides { get; set; } = new();
+        public List<BodyPart> Insides { get; set; }
 
         [JsonConstructor()]
         protected BodyPart(string materialId)
         {
             MaterialId = materialId;
             Tissues = new();
+            Insides = new();
             BodyPartMaterial = PhysicsManager.SetMaterial(materialId);
         }
 

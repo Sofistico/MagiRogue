@@ -103,7 +103,6 @@ namespace MagiRogue.Commands
 
             // The defender now takes damage
             CombatUtils.ResolveDamage(defender,
-                attacker,
                 finalMomentum,
                 dmgType,
                 limbAttacked,

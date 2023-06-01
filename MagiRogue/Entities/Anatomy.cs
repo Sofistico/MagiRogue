@@ -360,7 +360,8 @@ namespace MagiRogue.Entities
             {
                 if (!string.IsNullOrEmpty(organ.InsideOf))
                 {
-                    var limb = AllBPs.Find(i => i.Id.Equals(organ.InsideOf));
+                    var limb = AllBPs.Find(i => i.Id.Equals(organ.InsideOf))
+                        ?? throw new ApplicationException($"Something went really wrong! Cound't find the limb for organ {organ.Id} with insides {organ.InsideOf}");
                     limb.Insides.Add(organ);
                 }
             }

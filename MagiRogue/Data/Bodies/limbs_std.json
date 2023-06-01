@@ -41,7 +41,6 @@
     "Orientation": "Center",
     "MaterialId": "skin",
     "RateOfHeal": 0.9,
-
     "BodyPartFunction": "Thought",
     "ConnectedTo": "neck"
   },

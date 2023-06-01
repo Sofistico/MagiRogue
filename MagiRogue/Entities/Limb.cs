@@ -103,11 +103,11 @@ namespace MagiRogue.Entities
                 RateOfHeal = this.RateOfHeal,
                 RelativeVolume = this.RelativeVolume,
                 CanHeal = this.CanHeal,
-                Tissues = this.Tissues,
+                Tissues = new(Tissues),
                 Volume = this.Volume,
                 Working = this.Working,
-                Wounds = this.Wounds,
-                Insides = this.Insides,
+                Wounds = new(Wounds),
+                Insides = new(Insides),
             };
         }
 
