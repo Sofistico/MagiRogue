@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Data.Enumerators;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -71,6 +72,16 @@ namespace MagiRogue.Entities
                 bobBuilder.Append(part);
             }
             return bobBuilder.ToString();
+        }
+
+        public double GetBaseBleedingRate()
+        {
+            double result = 0;
+            for (int i = 0; i < Parts.Count; i++)
+            {
+                result += Parts[i].Tissue.BleedingRate;
+            }
+            return result;
         }
     }
 

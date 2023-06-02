@@ -35,7 +35,7 @@
         "MaterialId": "bone",
         "RelativeThickness": 2,
         "Flags": [ "Scars", "Connects", "Structural" ],
-        "HealingRate": 100.0,
+        "HealingRate": 1.0,
         "BleedingRate": 2
       }
     ]
