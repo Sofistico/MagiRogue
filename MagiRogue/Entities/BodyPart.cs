@@ -67,7 +67,7 @@ namespace MagiRogue.Entities
             BodyPartMaterial = PhysicsManager.SetMaterial(materialId);
         }
 
-        public void ApplyHeal(double HealingRate, bool regenLostLimb = false)
+        public void ApplyHeal(double raceHealingRate, bool regenLostLimb = false)
         {
             foreach (Wound wound in Wounds)
             {
@@ -84,11 +84,12 @@ namespace MagiRogue.Entities
                     || (wound.Severity is not InjurySeverity.Missing
                     && wound.Severity is not InjurySeverity.Pulped))
                 {
-                    wound.Recovery = MathMagi.Round(HealingRate + wound.Recovery);
+                    wound.Recovery = MathMagi.Round(raceHealingRate + wound.Recovery);
                     wound.Parts.ForEach(i =>
                     {
-                        i.Strain -= HealingRate;
-                        i.VolumeFraction -= HealingRate;
+                        raceHealingRate += i.Tissue.HealingRate;
+                        i.Strain -= raceHealingRate;
+                        i.VolumeFraction -= raceHealingRate;
                         if (i.VolumeFraction < 0)
                             i.VolumeFraction = 0;
                     });

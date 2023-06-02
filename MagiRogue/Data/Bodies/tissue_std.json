@@ -1,13 +1,43 @@
 [
   {
     "Id": "standard_tissues",
-    // From the outermost, to the innermost
-    // following name;material;relative_thickness;FlagsIfAny,SeparatedByComma
     "Tissues": [
-      "skin;skin;1;ConnectiveTissueAnchor,Scars",
-      "fat;fat;1;ConnectiveTissueAnchor,Scars,ThickensOnEnergyStore",
-      "muscle;muscle;3;ConnectiveTissueAnchor,ThickensOnStrTraining,Scars",
-      "bone;bone;2;ConnectiveTissueAnchor,Structural"
+      {
+        "Id": "skin",
+        "Name": "skin",
+        "MaterialId": "skin",
+        "RelativeThickness": 1,
+        "Flags": [ "Scars", "Connects" ],
+        "HealingRate": 10.0,
+        "BleedingRate": 1
+      },
+      {
+        "Id": "fat",
+        "Name": "fat",
+        "MaterialId": "fat",
+        "RelativeThickness": 1,
+        "Flags": [ "Scars", "ThickensOnEnergyStore", "Connects" ],
+        "HealingRate": 10.0,
+        "BleedingRate": 3
+      },
+      {
+        "Id": "muscle",
+        "Name": "muscle",
+        "MaterialId": "muscle",
+        "RelativeThickness": 3,
+        "Flags": [ "Scars", "Artery", "ThickensOnStrTraining", "Muscular", "Connects" ],
+        "HealingRate": 10.0,
+        "BleedingRate": 5
+      },
+      {
+        "Id": "bone",
+        "Name": "bone",
+        "MaterialId": "bone",
+        "RelativeThickness": 2,
+        "Flags": [ "Scars", "Connects", "Structural" ],
+        "HealingRate": 100.0,
+        "BleedingRate": 2
+      }
     ]
   }
 ]

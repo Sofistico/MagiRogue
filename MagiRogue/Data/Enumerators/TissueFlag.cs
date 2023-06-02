@@ -16,6 +16,7 @@ namespace MagiRogue.Data.Enumerators
         Muscular,
         Structural,
         ConnectiveTissueAnchor,
-        Scars
+        Scars,
+        Artery
     }
 }

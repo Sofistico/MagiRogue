@@ -11,6 +11,8 @@ namespace MagiRogue.Entities
     {
         private MaterialTemplate material;
 
+        public string Id { get; set; }
+
         /// <summary>
         /// The name of the tissue
         /// </summary>
@@ -39,8 +41,10 @@ namespace MagiRogue.Entities
         public int RelativeThickness { get; set; }
 
         public List<TissueFlag> Flags { get; set; } = new();
+
         public double Volume { get; set; }
         public double HealingRate { get; set; }
+        public double BleedingRate { get; set; }
 
         [JsonConstructor()]
         public Tissue(string name, string materialId, int thickness)
