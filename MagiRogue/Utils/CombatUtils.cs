@@ -1,4 +1,5 @@
-﻿using MagiRogue.Data.Enumerators;
+﻿using MagiRogue.Data;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Magic;
@@ -392,7 +393,14 @@ namespace MagiRogue.Utils
                 : "";
 
             attackMessage.AppendFormat("{0} {1} the {2}{3}", person, verb, defender.Name, with);
-            var materialUsed = wieldedItem is null ? bpAttacking.BodyPartMaterial : wieldedItem.Material;
+            var materialUsed = wieldedItem is null
+                ? bpAttacking.Tissues.Find(i => i.Flags.Contains(TissueFlag.Structural)).Material
+                : wieldedItem.Material;
+            if (materialUsed is null)
+            {
+                GameLoop.WriteToLog("Material was null!");
+                materialUsed = bpAttacking.Tissues[0].Material;
+            }
             // TODO: Granularize this more!
             if (attacker.GetRelevantAttackAbility(wieldedItem) + Mrn.Exploding2D6Dice >
                 defender.GetDefenseAbility()
@@ -667,7 +675,7 @@ namespace MagiRogue.Utils
                 ((attacker.GetStrenght() + Mrn.Exploding2D6Dice)
                 * (attacker.GetRelevantAbilityMultiplier(attack.AttackAbility) + 1)
                 * attacker.GetAttackVelocity(attack))
-                + (1 + (attacker.Volume / (limbAttacking.BodyPartMaterial.DensityKgM3 * limbAttacking.Volume))));
+                + (1 + (attacker.Volume / (limbAttacking.GetStructuralMaterial().DensityKgM3 * limbAttacking.Volume))));
         }
 
         #endregion Physics

@@ -2,7 +2,6 @@
   {
     "Id": "brain",
     "Name": "Brain",
-    "MaterialId": "skin",
     "RelativeVolume": 0.1,
     "InsideOf": "skull",
     "Orientation": "Center",
@@ -13,7 +12,6 @@
   {
     "Id": "heart",
     "Name": "Heart",
-    "MaterialId": "skin",
     "RelativeVolume": 0.05,
     "InsideOf": "upper_body",
     "Orientation": "Center",
@@ -24,7 +22,6 @@
   {
     "Id": "upper_spine",
     "Name": "Upper Spine",
-    "MaterialId": "skin",
     "RelativeVolume": 0.10,
     "InsideOf": "neck",
     "Orientation": "Center",
@@ -34,7 +31,6 @@
   {
     "Id": "medium_spine",
     "Name": "Medium Spine",
-    "MaterialId": "skin",
     "RelativeVolume": 0.15,
     "InsideOf": "upper_body",
     "Orientation": "Center",
@@ -44,7 +40,6 @@
   {
     "Id": "lower_spine",
     "Name": "Lower Spine",
-    "MaterialId": "skin",
     "RelativeVolume": 0.15,
     "InsideOf": "lower_body",
     "Orientation": "Center",
@@ -54,7 +49,6 @@
   {
     "Id": "stomach",
     "Name": "Stomach",
-    "MaterialId": "skin",
     "RelativeVolume": 0.1,
     "InsideOf": "lower_body",
     "Orientation": "Center",
@@ -64,7 +58,6 @@
   {
     "Id": "intestine",
     "Name": "Guts",
-    "MaterialId": "skin",
     "RelativeVolume": 0.2,
     "InsideOf": "lower_body",
     "Orientation": "Center",
@@ -74,7 +67,6 @@
   {
     "Id": "r_lung",
     "Name": "Right Lung",
-    "MaterialId": "skin",
     "RelativeVolume": 0.1,
     "InsideOf": "upper_body",
     "Orientation": "Right",
@@ -85,7 +77,6 @@
   {
     "Id": "l_lung",
     "Name": "Left Lung",
-    "MaterialId": "skin",
     "RelativeVolume": 0.1,
     "InsideOf": "upper_body",
     "Orientation": "Left",
@@ -96,7 +87,6 @@
   {
     "Id": "r_kidney",
     "Name": "Right Kidney",
-    "MaterialId": "skin",
     "RelativeVolume": 0.02,
     "InsideOf": "lower_body",
     "Orientation": "Right",
@@ -106,7 +96,6 @@
   {
     "Id": "l_kidney",
     "Name": "Left Kidney",
-    "MaterialId": "skin",
     "RelativeVolume": 0.02,
     "InsideOf": "lower_body",
     "Orientation": "Left",
@@ -116,7 +105,6 @@
   {
     "Id": "r_eye",
     "Name": "Right Eye",
-    "MaterialId": "skin",
     "RelativeVolume": 0.05,
     "InsideOf": "head",
     "Orientation": "Right",
@@ -128,7 +116,6 @@
   {
     "Id": "l_eye",
     "Name": "Left Eye",
-    "MaterialId": "skin",
     "RelativeVolume": 0.05,
     "InsideOf": "head",
     "Orientation": "Left",
@@ -140,7 +127,6 @@
   {
     "Id": "mouth",
     "Name": "Mouth",
-    "MaterialId": "skin",
     "RelativeVolume": 0.05,
     "InsideOf": "head",
     "Orientation": "Center",
@@ -154,7 +140,6 @@
     "RelativeVolume": 0.01,
     "BodyPartName": "{0} Tooth",
     "Orientation": "Center",
-    "MaterialId": "teeth",
     "HealingRate": 0,
     "BodyPartFunction": "Teeth",
     "InsideOf": "mouth"
@@ -162,12 +147,12 @@
   {
     "Id": "skull",
     "Name": "Skull",
-    "MaterialId": "bone",
     "RleativeSize": 0.10,
     "InsideOf": "head",
     "Orientation": "Center",
     "BodyPartFunction": "Protection",
     "OrganType": "Protective",
-    "HealingRate": 0.1
+    "HealingRate": 0.1,
+    "Category": "bones"
   }
 ]

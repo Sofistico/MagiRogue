@@ -1,10 +1,11 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
-using MagiRogue.GameSys.Physics;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace MagiRogue.Entities
 {
@@ -14,7 +15,7 @@ namespace MagiRogue.Entities
         public string Id { get; set; }
 
         public double BodyPartWeight
-            => (double)MathMagi.ReturnPositive(MathMagi.GetWeightWithDensity(BodyPartMaterial.Density, Volume));
+            => (double)MathMagi.ReturnPositive(MathMagi.GetWeightWithDensity(GetBodyPartDensity(), Volume));
 
         /// <summary>
         /// The size of the bodypart in cm³
@@ -33,11 +34,6 @@ namespace MagiRogue.Entities
         public BodyPartOrientation Orientation { get; set; }
 
         public string BodyPartName { get; set; }
-
-        [JsonIgnore]
-        public MaterialTemplate BodyPartMaterial { get; set; }
-
-        public string MaterialId { get; set; }
 
         /// <summary>
         /// Determines how effective the races regen is...
@@ -58,13 +54,13 @@ namespace MagiRogue.Entities
 
         public List<BodyPart> Insides { get; set; }
 
+        public string? Category { get; set; }
+
         [JsonConstructor()]
-        protected BodyPart(string materialId)
+        protected BodyPart()
         {
-            MaterialId = materialId;
             Tissues = new();
             Insides = new();
-            BodyPartMaterial = PhysicsManager.SetMaterial(materialId);
         }
 
         public void ApplyHeal(double raceHealingRate, bool regenLostLimb = false)
@@ -121,5 +117,15 @@ namespace MagiRogue.Entities
         }
 
         public abstract BodyPart Copy();
+
+        private double GetBodyPartDensity()
+        {
+            return Tissues.ConvertAll(i => i.Material).Sum(i => i.Density);
+        }
+
+        public MaterialTemplate GetStructuralMaterial()
+        {
+            return Tissues.Find(i => i.Flags.Contains(TissueFlag.Structural)).Material;
+        }
     }
 }

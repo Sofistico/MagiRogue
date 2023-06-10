@@ -49,7 +49,6 @@ namespace MagiRogue.Entities
         public int Toughness { get => Stats["Toughness"]; set => Stats["Toughness"] = value; }
         public int Endurance { get => Stats["Endurance"]; set => Stats["Endurance"] = value; }
         public int Strength { get => Stats["Strength"]; set => Stats["Strength"] = value; }
-        public List<string> MaterialsId { get; set; }
         public Dictionary<string, int> Stats { get; set; }
 
         public List<Scar> Scars { get; set; }
@@ -57,7 +56,6 @@ namespace MagiRogue.Entities
         public Body()
         {
             Equipment = new Dictionary<string, Item>();
-            MaterialsId = new();
             Anatomy = new();
             Stats = new Dictionary<string, int>() { { "Strength", 0 }, { "Toughness", 0 }, { "Endurance", 0 } };
         }

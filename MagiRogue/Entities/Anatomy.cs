@@ -271,7 +271,6 @@ namespace MagiRogue.Entities
             {
                 ConfigureLimbs(actor.Volume);
                 SetMaxStandAndGraspCount();
-                FindAllMaterials(actor);
                 CalculateWeight(actor);
                 CalculateBlood(actor.Weight);
             }
@@ -331,19 +330,6 @@ namespace MagiRogue.Entities
                     default:
                         break;
                 }
-            }
-        }
-
-        private void FindAllMaterials(Actor actor)
-        {
-            List<BodyPart> bps = new();
-            bps.AddRange(Limbs);
-            bps.AddRange(Organs);
-
-            foreach (BodyPart bp in bps)
-            {
-                if (!actor.Body.MaterialsId.Contains(bp.MaterialId))
-                    actor.Body.MaterialsId.Add(bp.MaterialId);
             }
         }
 

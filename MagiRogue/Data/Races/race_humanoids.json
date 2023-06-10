@@ -104,10 +104,7 @@
       "generic_teeth"
     ],
     "Tissues": [
-      "skin;skin;1;ConnectiveTissueAnchor,Scars",
-      "fat;fat;1;ConnectiveTissueAnchor,Scars,ThickensOnEnergyStore",
-      "muscle;muscle;3;ConnectiveTissueAnchor,ThickensOnStrTraining,Scars",
-      "bone;bone;2;ConnectiveTissueAnchor,Structural"
+      "standard_tissues"
     ],
     "HeightModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "BroadnessModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
@@ -191,10 +188,7 @@
       "generic_teeth"
     ],
     "Tissues": [
-      "skin;skin;1;ConnectiveTissueAnchor,Scars",
-      "fat;fat;1;ConnectiveTissueAnchor,Scars,ThickensOnEnergyStore",
-      "muscle;muscle;3;ConnectiveTissueAnchor,ThickensOnStrTraining,Scars",
-      "bone;bone;2;ConnectiveTissueAnchor,Structural"
+      "standard_tissues"
     ],
     "HeightModifier": [ 90, 95, 98, 100, 112, 115, 125 ],
     "BroadnessModifier": [ 75, 90, 94, 100, 101, 103, 110 ],
@@ -274,10 +268,7 @@
     "BleedRegenaration": 0.8,
     "BodyPlan": [ "humanoid_limbs", "humanoid_organs", "5fingers", "5toes", "generic_teeth" ],
     "Tissues": [
-      "skin;skin;1;ConnectiveTissueAnchor,Scars",
-      "fat;fat;1;ConnectiveTissueAnchor,Scars,ThickensOnEnergyStore",
-      "muscle;muscle;3;ConnectiveTissueAnchor,ThickensOnStrTraining,Scars",
-      "bone;bone;2;ConnectiveTissueAnchor,Structural"
+      "standard_tissues"
     ],
     "HeightModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "BroadnessModifier": [ 75, 95, 98, 100, 102, 105, 125 ],

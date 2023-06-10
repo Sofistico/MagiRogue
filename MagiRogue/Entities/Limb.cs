@@ -1,16 +1,11 @@
 ﻿using MagiRogue.Data.Enumerators;
-using MagiRogue.Data.Serialization;
-using MagiRogue.Utils;
 using Newtonsoft.Json;
-using System;
-using System.Diagnostics;
-using System.Runtime.Serialization;
 
 namespace MagiRogue.Entities
 {
     public sealed class Limb : BodyPart
     {
-        [JsonProperty("ConnectedTo")]
+        [JsonProperty(nameof(ConnectedTo))]
         private string? _connectedLimb;
 
         public LimbType LimbType { get; set; }
@@ -34,7 +29,7 @@ namespace MagiRogue.Entities
         public bool Attached { get; set; } = true;
 
         [JsonConstructor()]
-        public Limb(string materialId) : base(materialId)
+        public Limb() : base()
         {
         }
 
@@ -48,7 +43,7 @@ namespace MagiRogue.Entities
         /// Defaults to "skin"</param>
         public Limb(LimbType limbType, string limbName,
             BodyPartOrientation orientation, string connectedTo,
-            string materialID = "skin", BodyPartFunction bodyPartFunction = BodyPartFunction.Limb) : base(materialID)
+            BodyPartFunction bodyPartFunction = BodyPartFunction.Limb) : base()
         {
             LimbType = limbType;
             Attached = true;
@@ -59,12 +54,10 @@ namespace MagiRogue.Entities
         }
 
         public Limb(string id, LimbType limbType,
-            string limbName, BodyPartOrientation orientation, string connectedTo,
-            string materialID = "skin") : base(materialID)
+            string limbName, BodyPartOrientation orientation, string connectedTo)
         {
             Id = id;
             LimbType = limbType;
-            //BodyPartWeight = limbWeight;
             // Defaults to true
             Attached = true;
             BodyPartName = limbName;
@@ -84,13 +77,13 @@ namespace MagiRogue.Entities
                 253,
                 actor.Position,
                 size,
-                materialId: MaterialId
+                materialId: Tissues.Find(i => i.Flags.Contains(TissueFlag.Structural)).MaterialId
                 );
         }
 
         public override Limb Copy()
         {
-            return new Limb(MaterialId)
+            return new Limb()
             {
                 Attached = this.Attached,
                 Broken = this.Broken,
@@ -108,6 +101,7 @@ namespace MagiRogue.Entities
                 Working = this.Working,
                 Wounds = new(Wounds),
                 Insides = new(Insides),
+                Category = Category,
             };
         }
 

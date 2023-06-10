@@ -15,8 +15,7 @@ namespace MagiRogue.Entities
         public Organ(string name,
             string? connectedTo,
             BodyPartOrientation orientation,
-            OrganType organType,
-            string materialId) : base(materialId)
+            OrganType organType) : base()
         {
             BodyPartName = name;
             InsideOf = connectedTo;
@@ -30,8 +29,7 @@ namespace MagiRogue.Entities
            string? connectedTo,
            BodyPartOrientation orientation,
            OrganType organType,
-           string materialId,
-           bool embedded = false) : base(materialId)
+           bool embedded = false) : base()
         {
             Id = id;
             BodyPartName = name;
@@ -41,7 +39,7 @@ namespace MagiRogue.Entities
             Embedded = embedded;
         }
 
-        public Organ(string materialId = "skin") : base(materialId)
+        public Organ() : base()
         {
             // Empty!
         }
@@ -54,8 +52,6 @@ namespace MagiRogue.Entities
                 BodyPartName = this.BodyPartName,
                 InsideOf = this.InsideOf,
                 Orientation = this.Orientation,
-                MaterialId = this.MaterialId,
-                BodyPartMaterial = this.BodyPartMaterial,
                 OrganType = this.OrganType,
                 BodyPartFunction = this.BodyPartFunction,
                 CanHeal = this.CanHeal,
@@ -67,6 +63,7 @@ namespace MagiRogue.Entities
                 Wounds = new(Wounds),
                 Insides = new(Insides),
                 Embedded = this.Embedded,
+                Category = Category,
             };
         }
 

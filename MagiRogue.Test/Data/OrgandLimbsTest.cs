@@ -52,8 +52,7 @@ namespace MagiRogue.Test.Data
         {
             Organ organ = new Organ("organ_test", "Test", null,
                 BodyPartOrientation.Center,
-                OrganType.Misc,
-                "null");
+                OrganType.Auditory);
 
             string json = JsonConvert.SerializeObject(organ);
             JObject jOrgan = JObject.Parse(json);

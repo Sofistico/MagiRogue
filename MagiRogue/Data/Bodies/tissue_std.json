@@ -38,6 +38,54 @@
         "HealingRate": 1.0,
         "BleedingRate": 2
       }
+    ],
+    "TissueLayering": [
+      {
+        "Select": "LimbType",
+        "Tissues": [ "skin", "fat", "muscle", "bone" ],
+        "BodyParts": [
+          "Arm:1:5:25:25",
+          "Hand:1:5:25:25",
+          "Finger:1:5:25:25",
+          "Toe:1:5:25:25",
+          "Leg:1:5:25:25",
+          "Foot:1:5:25:25",
+          "Toe:1:5:25:25",
+          "Tail:1:5:25:25",
+          "Wing:1:5:25:25"
+        ]
+      },
+      {
+        "Select": "LimbType",
+        "Tissues": [ "hoof" ],
+        "BodyParts": [
+        ]
+      },
+      {
+        "Select": "LimbType",
+        "Tissues": [ "skin", "fat", "muscle" ],
+        "BodyParts": [
+          "LowerBody:1:5:50",
+          "UpperBody:1:5:50",
+          "Head:1:5:50",
+          "Neck:1:5:50"
+        ]
+      },
+      {
+        "Select": "LimbType",
+        "Tissues": [ "horn", "bone" ],
+        "BodyParts": [ "Horn:2:2" ]
+      },
+      {
+        "Select": "Category",
+        "Tissues": [ "bone" ],
+        "BodyParts": [ "bones:100" ]
+      },
+      {
+        "Select": "OrganType",
+        "Tissues": [ "nerve", "bone" ],
+        "BodyParts": [ "Nerve:2:2" ]
+      }
     ]
   }
 ]

@@ -9,18 +9,18 @@ namespace MagiRogue.Data.Enumerators
     public enum LimbType
     {
         Head,
+        Neck,
         UpperBody,
         LowerBody,
         Arm,
         Leg,
-        Foot,
         Hand,
+        Finger,
+        Foot,
+        Toe,
         Tail,
         Wing,
-        Neck,
-        Finger,
-        Toe,
-        Misc,
         Horn,
+        Hoof,
     }
 }
