@@ -9,7 +9,8 @@
         "RelativeThickness": 1,
         "Flags": [ "Scars", "Connects" ],
         "HealingRate": 10.0,
-        "BleedingRate": 1
+        "BleedingRate": 1,
+        "PainReceptor": 5
       },
       {
         "Id": "fat",
@@ -27,7 +28,8 @@
         "RelativeThickness": 3,
         "Flags": [ "Scars", "Artery", "ThickensOnStrTraining", "Muscular", "Connects" ],
         "HealingRate": 10.0,
-        "BleedingRate": 5
+        "BleedingRate": 5,
+        "PainReceptor": 7
       },
       {
         "Id": "bone",
@@ -36,7 +38,63 @@
         "RelativeThickness": 2,
         "Flags": [ "Scars", "Connects", "Structural" ],
         "HealingRate": 1.0,
+        "BleedingRate": 2,
+        "PainReceptor": 50
+      },
+      {
+        "Id": "nerve",
+        "Name": "Nervous Tissue",
+        "MaterialId": "nerve",
+        "RelativeThickness": 2,
+        "Flags": [ "Scars", "Connects", "Structural", "Functional" ],
+        "HealingRate": 1.0,
+        "BleedingRate": 2,
+        "PainReceptor": 1
+      },
+      {
+        "Id": "hoof",
+        "Name": "Hoof",
+        "MaterialId": "hoof",
+        "RelativeThickness": 2,
+        "Flags": [ "Scars", "Connects", "Structural" ],
+        "HealingRate": 1.0,
         "BleedingRate": 2
+      },
+      {
+        "Id": "horn",
+        "Name": "Horn",
+        "MaterialId": "horn",
+        "RelativeThickness": 2,
+        "Flags": [ "Scars", "Connects", "Structural" ],
+        "HealingRate": 1.0,
+        "BleedingRate": 2
+      },
+      {
+        "Id": "nail",
+        "Name": "Nail",
+        "MaterialId": "nail",
+        "RelativeThickness": 2,
+        "Flags": [ "Connects", "Structural" ],
+        "HealingRate": 10,
+        "BleedingRate": 2
+      },
+      {
+        "Id": "tooth",
+        "Name": "Tooth",
+        "MaterialId": "tooth",
+        "RelativeThickness": 2,
+        "Flags": [ "Connects", "Structural" ],
+        "HealingRate": 0.0,
+        "BleedingRate": 2
+      },
+      {
+        "Id": "hair",
+        "Name": "Hair",
+        "MaterialId": "hair",
+        "RelativeThickness": 2,
+        "Flags": [ "Connects", "Stylable" ],
+        "HealingRate": 0.1,
+        "Shape": "Strand"
       }
     ],
     "TissueLayering": [
@@ -59,6 +117,7 @@
         "Select": "LimbType",
         "Tissues": [ "hoof" ],
         "BodyParts": [
+          "Hoof"
         ]
       },
       {

@@ -38,6 +38,14 @@ namespace MagiRogue.Data.Enumerators
         /// <summary>
         /// has artery that when struck duplicates bleeding potentially
         /// </summary>
-        Artery
+        Artery,
+        /// <summary>
+        /// Wheter damage will render the BP useless
+        /// </summary>
+        Functional,
+        /// <summary>
+        /// Wheterer the tissue is stylesed by civilization
+        /// </summary>
+        Stylable,
     }
 }

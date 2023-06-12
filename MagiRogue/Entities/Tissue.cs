@@ -45,6 +45,8 @@ namespace MagiRogue.Entities
         public double Volume { get; set; }
         public double HealingRate { get; set; }
         public double BleedingRate { get; set; }
+        public int PainReceptor { get; set; }
+        public TissueShape Shape { get; set; } = TissueShape.Layer;
 
         [JsonConstructor()]
         public Tissue(string name, string materialId, int thickness)
