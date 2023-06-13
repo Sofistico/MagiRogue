@@ -83,7 +83,7 @@ namespace MagiRogue.Entities
                     wound.Recovery = MathMagi.Round(raceHealingRate + wound.Recovery);
                     wound.Parts.ForEach(i =>
                     {
-                        raceHealingRate += i.Tissue.HealingRate;
+                        raceHealingRate *= i.Tissue.HealingRate;
                         i.Strain -= raceHealingRate;
                         i.VolumeFraction -= raceHealingRate;
                         if (i.VolumeFraction < 0)

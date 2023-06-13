@@ -8,7 +8,7 @@
         "MaterialId": "skin",
         "RelativeThickness": 1,
         "Flags": [ "Scars", "Connects" ],
-        "HealingRate": 10.0,
+        "HealingRate": 0.9,
         "BleedingRate": 1,
         "PainReceptor": 5
       },
@@ -18,7 +18,7 @@
         "MaterialId": "fat",
         "RelativeThickness": 1,
         "Flags": [ "Scars", "ThickensOnEnergyStore", "Connects" ],
-        "HealingRate": 10.0,
+        "HealingRate": 0.9,
         "BleedingRate": 3
       },
       {
@@ -27,7 +27,7 @@
         "MaterialId": "muscle",
         "RelativeThickness": 3,
         "Flags": [ "Scars", "Artery", "ThickensOnStrTraining", "Muscular", "Connects" ],
-        "HealingRate": 10.0,
+        "HealingRate": 0.9,
         "BleedingRate": 5,
         "PainReceptor": 7
       },
@@ -37,7 +37,7 @@
         "MaterialId": "bone",
         "RelativeThickness": 2,
         "Flags": [ "Scars", "Connects", "Structural" ],
-        "HealingRate": 1.0,
+        "HealingRate": 0.65,
         "BleedingRate": 2,
         "PainReceptor": 50
       },
@@ -47,9 +47,7 @@
         "MaterialId": "nerve",
         "RelativeThickness": 2,
         "Flags": [ "Scars", "Connects", "Structural", "Functional" ],
-        "HealingRate": 1.0,
-        "BleedingRate": 2,
-        "PainReceptor": 1
+        "BleedingRate": 2
       },
       {
         "Id": "hoof",
@@ -57,7 +55,7 @@
         "MaterialId": "hoof",
         "RelativeThickness": 2,
         "Flags": [ "Scars", "Connects", "Structural" ],
-        "HealingRate": 1.0,
+        "HealingRate": 0.3,
         "BleedingRate": 2
       },
       {
@@ -66,7 +64,7 @@
         "MaterialId": "horn",
         "RelativeThickness": 2,
         "Flags": [ "Scars", "Connects", "Structural" ],
-        "HealingRate": 1.0,
+        "HealingRate": 0.3,
         "BleedingRate": 2
       },
       {
@@ -75,8 +73,9 @@
         "MaterialId": "nail",
         "RelativeThickness": 2,
         "Flags": [ "Connects", "Structural" ],
-        "HealingRate": 10,
-        "BleedingRate": 2
+        "HealingRate": 0.35,
+        "BleedingRate": 2,
+        "PainReceptor": 5
       },
       {
         "Id": "tooth",
@@ -95,8 +94,21 @@
         "Flags": [ "Connects", "Stylable" ],
         "HealingRate": 0.1,
         "Shape": "Strand"
+      },
+      {
+        "Id": "eye",
+        "Name": "Eye tissue",
+        "MaterialId": "eye",
+        "RelativeThickness": 2,
+        "Flags": [ "Connects", "Functional", "Structural" ],
+        "HealingRate": 0.2,
+        "BleedingRate": 2,
+        "PainReceptor": 10
       }
-    ],
+    ]
+  },
+  {
+    "Id": "standard_tissues_layering",
     "TissueLayering": [
       {
         "Select": "LimbType",
@@ -144,6 +156,16 @@
         "Select": "OrganType",
         "Tissues": [ "nerve", "bone" ],
         "BodyParts": [ "Nerve:2:2" ]
+      },
+      {
+        "Select": "OrganType",
+        "Tissues": [ "tooth" ],
+        "BodyParts": [ "Teeth" ]
+      },
+      {
+        "Select": "OrganType",
+        "Tissues": [ "eye" ],
+        "BodyParts": [ "Visual" ]
       }
     ]
   }

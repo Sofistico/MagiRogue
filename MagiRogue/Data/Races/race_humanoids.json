@@ -30,7 +30,8 @@
     "BleedRegenaration": 1.0,
     "BodyPlan": [ "humanoid_limbs", "humanoid_organs", "5fingers", "5toes", "generic_teeth" ],
     "Tissues": [
-      "standard_tissues"
+      "standard_tissues",
+      "standard_tissues_layering"
     ],
     // lowest, lower, low, median, high, higher, highest
     "HeightModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
@@ -104,7 +105,8 @@
       "generic_teeth"
     ],
     "Tissues": [
-      "standard_tissues"
+      "standard_tissues",
+      "standard_tissues_layering"
     ],
     "HeightModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "BroadnessModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
@@ -188,7 +190,8 @@
       "generic_teeth"
     ],
     "Tissues": [
-      "standard_tissues"
+      "standard_tissues",
+      "standard_tissues_layering"
     ],
     "HeightModifier": [ 90, 95, 98, 100, 112, 115, 125 ],
     "BroadnessModifier": [ 75, 90, 94, 100, 101, 103, 110 ],
@@ -268,7 +271,8 @@
     "BleedRegenaration": 0.8,
     "BodyPlan": [ "humanoid_limbs", "humanoid_organs", "5fingers", "5toes", "generic_teeth" ],
     "Tissues": [
-      "standard_tissues"
+      "standard_tissues",
+      "standard_tissues_layering"
     ],
     "HeightModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "BroadnessModifier": [ 75, 95, 98, 100, 102, 105, 125 ],

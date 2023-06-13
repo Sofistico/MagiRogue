@@ -1,5 +1,5 @@
 ﻿[
-  /*Example: {
+  /*Example: { // not up to date!
     "Id": "idOfMaterial" // Id of the material, it must be unique
     "InheirtFrom": "idOfOtherMaterial" // makes so that you can inheirt from another material and still make changes
     "Name": "nameOfMaterial" // Dont need any extra comment
