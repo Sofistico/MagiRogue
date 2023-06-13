@@ -2,7 +2,6 @@
 using MagiRogue.Data.Serialization;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -35,13 +34,6 @@ namespace MagiRogue.Entities
 
         public string BodyPartName { get; set; }
 
-        /// <summary>
-        /// Determines how effective the races regen is...
-        /// Values are between 0 and 1, where 0 is no regen for the limb and 1 is full regen.
-        /// </summary>
-        public double HealingRate { get; set; }
-
-        public bool CanHeal { get; set; } = true;
         public BodyPartFunction BodyPartFunction { get; set; }
 
         public bool Working { get; set; } = true;
@@ -69,7 +61,8 @@ namespace MagiRogue.Entities
             {
                 // if the wound is festering and the injury is that bad, then no need to check if it will heal
                 // cuz it will not!
-                if (!regenLostLimb && !wound.Treated
+                if (!wound.Treated
+                    && !regenLostLimb
                     && (wound.Severity is not InjurySeverity.Bruise
                     || wound.Severity is not InjurySeverity.Minor))
                 {

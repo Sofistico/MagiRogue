@@ -320,19 +320,15 @@ namespace MagiRogue.Entities
             for (int i = 0; i < limbCount; i++)
             {
                 Limb limb = limbsHeal[i];
+
                 if (limb.Attached)
-                {
-                    if (limb.CanHeal || regens)
-                    {
-                        limb.ApplyHeal(GetNormalLimbRegen() * limb.HealingRate);
-                    }
-                }
-                if (!limb.Attached && regens)
+                    limb.ApplyHeal(GetNormalLimbRegen(), regens);
+                if (regens && !limb.Attached)
                 {
                     List<Limb> connectedLimbs = GetAnatomy().GetAllParentConnectionLimb(limb);
                     if (connectedLimbs.All(i => i.Attached))
                     {
-                        limb.ApplyHeal((GetNormalLimbRegen() * limb.HealingRate) + (0.5 * 2), regens);
+                        limb.ApplyHeal(GetNormalLimbRegen(), regens);
                         if (!limb.Wounds.Any(i => i.Severity is InjurySeverity.Missing))
                             limb.Attached = true;
                     }

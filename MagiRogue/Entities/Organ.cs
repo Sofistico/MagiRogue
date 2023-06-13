@@ -54,8 +54,6 @@ namespace MagiRogue.Entities
                 Orientation = this.Orientation,
                 OrganType = this.OrganType,
                 BodyPartFunction = this.BodyPartFunction,
-                CanHeal = this.CanHeal,
-                HealingRate = this.HealingRate,
                 RelativeVolume = this.RelativeVolume,
                 Tissues = new(Tissues),
                 Volume = this.Volume,
