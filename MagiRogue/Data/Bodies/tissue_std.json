@@ -8,7 +8,7 @@
         "MaterialId": "skin",
         "RelativeThickness": 1,
         "Flags": [ "Scars", "Connects" ],
-        "HealingRate": 0.9,
+        "HealingRate": 1,
         "BleedingRate": 1,
         "PainReceptor": 5
       },
@@ -18,7 +18,7 @@
         "MaterialId": "fat",
         "RelativeThickness": 1,
         "Flags": [ "Scars", "ThickensOnEnergyStore", "Connects" ],
-        "HealingRate": 0.9,
+        "HealingRate": 1,
         "BleedingRate": 3
       },
       {
@@ -27,7 +27,7 @@
         "MaterialId": "muscle",
         "RelativeThickness": 3,
         "Flags": [ "Scars", "Artery", "ThickensOnStrTraining", "Muscular", "Connects" ],
-        "HealingRate": 0.9,
+        "HealingRate": 1,
         "BleedingRate": 5,
         "PainReceptor": 7
       },
@@ -37,21 +37,21 @@
         "MaterialId": "bone",
         "RelativeThickness": 2,
         "Flags": [ "Scars", "Connects", "Structural" ],
-        "HealingRate": 0.65,
+        "HealingRate": 0.5,
         "BleedingRate": 2,
         "PainReceptor": 50
       },
       {
         "Id": "nerve",
-        "Name": "Nervous Tissue",
+        "Name": "nervous tissue",
         "MaterialId": "nerve",
         "RelativeThickness": 2,
         "Flags": [ "Scars", "Connects", "Structural", "Functional" ],
-        "BleedingRate": 2
+        "BleedingRate": 6
       },
       {
         "Id": "hoof",
-        "Name": "Hoof",
+        "Name": "hoof",
         "MaterialId": "hoof",
         "RelativeThickness": 2,
         "Flags": [ "Scars", "Connects", "Structural" ],
@@ -60,7 +60,7 @@
       },
       {
         "Id": "horn",
-        "Name": "Horn",
+        "Name": "horn",
         "MaterialId": "horn",
         "RelativeThickness": 2,
         "Flags": [ "Scars", "Connects", "Structural" ],
@@ -69,7 +69,7 @@
       },
       {
         "Id": "nail",
-        "Name": "Nail",
+        "Name": "nail",
         "MaterialId": "nail",
         "RelativeThickness": 2,
         "Flags": [ "Connects", "Structural" ],
@@ -78,17 +78,17 @@
         "PainReceptor": 5
       },
       {
-        "Id": "tooth",
-        "Name": "Tooth",
-        "MaterialId": "tooth",
-        "RelativeThickness": 2,
+        "Id": "teeth",
+        "Name": "tooth",
+        "MaterialId": "teeth",
+        "RelativeThickness": 1,
         "Flags": [ "Connects", "Structural" ],
         "HealingRate": 0.0,
         "BleedingRate": 2
       },
       {
         "Id": "hair",
-        "Name": "Hair",
+        "Name": "hair",
         "MaterialId": "hair",
         "RelativeThickness": 2,
         "Flags": [ "Connects", "Stylable" ],
@@ -97,13 +97,72 @@
       },
       {
         "Id": "eye",
-        "Name": "Eye tissue",
+        "Name": "eye tissue",
         "MaterialId": "eye",
-        "RelativeThickness": 2,
-        "Flags": [ "Connects", "Functional", "Structural" ],
+        "RelativeThickness": 1,
+        "Flags": [ "Connects", "Functional", "Structural", "Scars" ],
         "HealingRate": 0.2,
         "BleedingRate": 2,
         "PainReceptor": 10
+      },
+      {
+        "Id": "lung",
+        "Name": "lung tissue",
+        "MaterialId": "lung",
+        "RelativeThickness": 1,
+        "Flags": [ "Connects", "Functional", "Structural", "Scars" ],
+        "HealingRate": 0.2,
+        "BleedingRate": 2,
+        "PainReceptor": 10
+      },
+      {
+        "Id": "brain",
+        "Name": "brain tissue",
+        "MaterialId": "brain",
+        "RelativeThickness": 1,
+        "Flags": [ "Connects", "Functional", "Structural", "Scars" ],
+        "BleedingRate": 2,
+        "PainReceptor": 10
+      },
+      {
+        "Id": "stomach",
+        "Name": "stomach tissue",
+        "MaterialId": "stomach",
+        "RelativeThickness": 1,
+        "Flags": [ "Connects", "Functional", "Structural", "Scars" ],
+        "BleedingRate": 6,
+        "HealingRate": 0.3,
+        "PainReceptor": 15
+      },
+      {
+        "Id": "guts",
+        "Name": "gut",
+        "MaterialId": "gut",
+        "RelativeThickness": 1,
+        "Flags": [ "Connects", "Functional", "Structural", "Scars" ],
+        "BleedingRate": 6,
+        "HealingRate": 0.3,
+        "PainReceptor": 15
+      },
+      {
+        "Id": "kidney",
+        "Name": "kidney tissue",
+        "MaterialId": "kidney",
+        "RelativeThickness": 1,
+        "Flags": [ "Connects", "Functional", "Structural", "Scars" ],
+        "BleedingRate": 6,
+        "HealingRate": 0.3,
+        "PainReceptor": 15
+      },
+      {
+        "Id": "heart",
+        "Name": "heart tissue",
+        "MaterialId": "heart",
+        "RelativeThickness": 1,
+        "Flags": [ "Connects", "Functional", "Structural", "Scars" ],
+        "HealingRate": 0.1,
+        "BleedingRate": 50,
+        "PainReceptor": 20
       }
     ]
   },
@@ -159,7 +218,7 @@
       },
       {
         "Select": "OrganType",
-        "Tissues": [ "tooth" ],
+        "Tissues": [ "teeth" ],
         "BodyParts": [ "Teeth" ]
       },
       {
