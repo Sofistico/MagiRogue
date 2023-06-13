@@ -286,34 +286,6 @@ namespace MagiRogue.Entities
 
         public void ApplyBodyRegen()
         {
-            #region Broken dreams lies here....
-
-            //Parallel.ForEach(GetAnatomy().Limbs, limb =>
-            //{
-            //    if (limb.BodyPartHp < limb.MaxBodyPartHp)
-            //    {
-            //        if (limb.Attached)
-            //        {
-            //            if (limb.CanHeal || GetAnatomy().GetActorRace().CanRegenLostLimbs)
-            //            {
-            //                limb.ApplyHeal(GetNormalLimbRegen() * limb.HealingRate);
-            //            }
-            //        }
-            //        if (!limb.Attached && GetAnatomy().GetActorRace().CanRegenLostLimbs)
-            //        {
-            //            List<Limb> connectedLimbs = GetAnatomy().GetAllParentConnectionLimb(limb);
-            //            if (!connectedLimbs.Any(i => !i.Attached))
-            //            {
-            //                limb.ApplyHeal(GetNormalLimbRegen() * limb.HealingRate + 0.5);
-            //                if (!limb.Wounds.Any(i => i.Severity is InjurySeverity.Missing))
-            //                    limb.Attached = true;
-            //            }
-            //        }
-            //    }
-            //});
-
-            #endregion Broken dreams lies here....
-
             bool regens = GetAnatomy().Race.CanRegenarate();
             var limbsHeal = GetAnatomy().Limbs.FindAll(i => i.NeedsHeal || (regens && !i.Attached));
             int limbCount = limbsHeal.Count;
