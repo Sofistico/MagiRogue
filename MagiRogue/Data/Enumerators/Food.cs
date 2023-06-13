@@ -8,6 +8,7 @@ namespace MagiRogue.Data.Enumerators
 {
     public enum Food
     {
+        None,
         Omnivere,
         Carnivore,
         Herbivore

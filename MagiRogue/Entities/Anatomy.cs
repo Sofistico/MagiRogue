@@ -464,7 +464,7 @@ namespace MagiRogue.Entities
         {
             StringBuilder dismemberMessage = new StringBuilder();
 
-            dismemberMessage.Append($"{actor.Name} lost {limb.BodyPartName}");
+            dismemberMessage.Append(actor.Name).Append(" lost ").Append(limb.BodyPartName);
             try
             {
                 GameLoop.AddMessageLog(dismemberMessage.ToString());
@@ -589,6 +589,8 @@ namespace MagiRogue.Entities
 
         public Food WhatToEat()
         {
+            if (Race.Flags.Contains(SpecialFlag.NoEat))
+                return Food.None;
             if (Race.Flags.Contains(SpecialFlag.Grazer))
                 return Food.Herbivore;
             if (Race.Flags.Contains(SpecialFlag.Predator))
