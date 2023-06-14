@@ -14,8 +14,8 @@ namespace MagiRogue.UI.Windows
 
         private readonly MagiButton startGame;
         private readonly MagiButton testMap;
-        private readonly MagiButton continueGame;
-        private readonly MagiButton saveGame;
+        private readonly MagiButton continueGame; // this doesn't work
+        private readonly MagiButton saveGame; // neither does this
         private ListBox savesBox;
         private PopWindow loadPop;
 
