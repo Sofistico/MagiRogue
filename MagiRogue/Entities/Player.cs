@@ -80,8 +80,8 @@ namespace MagiRogue.Entities
                 return null;
 
             Player player = new Player(actor.Name,
-                actor.Appearance.Foreground,
-                actor.Appearance.Background,
+                actor.AppearanceSingle.Appearance.Foreground,
+                actor.AppearanceSingle.Appearance.Background,
                 actor.Position)
             {
                 Inventory = actor.Inventory,

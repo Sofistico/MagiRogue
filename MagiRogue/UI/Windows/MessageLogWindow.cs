@@ -42,8 +42,8 @@ namespace MagiRogue.UI.Windows
             {
                 Position = new Point(1, 1)
             };
-            messageConsole.View = new Rectangle(0, 0, width - 1, height - windowBorderThickness);
-            messageConsole.DefaultBackground = Color.Black;
+            messageConsole.Surface.View = new Rectangle(0, 0, width - 1, height - windowBorderThickness);
+            messageConsole.Surface.DefaultBackground = Color.Black;
 
             // create a scrollbar and attach it to an event handler, then add it to the Window
             messageScrollBar = new SadConsole.UI.Controls.ScrollBar(Orientation.Vertical, height - windowBorderThickness)
@@ -98,11 +98,11 @@ namespace MagiRogue.UI.Windows
         // based on the scrollbar position using an event handler
         private void MessageScrollBarValueChanged(object? sender, EventArgs e)
         {
-            messageConsole.View = new Rectangle(0,
+            messageConsole.Surface.View = new Rectangle(0,
                 messageScrollBar.Value
                 + windowBorderThickness,
                 messageConsole.Width,
-                messageConsole.View.Height);
+                messageConsole.Surface.View.Height);
         }
 
         public override void Update(TimeSpan time)
@@ -111,17 +111,18 @@ namespace MagiRogue.UI.Windows
             //var focus = Game.Instance.FocusedScreenObjects;
 
             // Ensure that the scrollbar tracks the current position of the messageConsole.
-            if (messageConsole.TimesShiftedUp != 0 ||
-                messageConsole.Cursor.Position.Y >= messageConsole.View.Height + scrollBarCurrentPosition)
+            if (messageConsole.Surface.TimesShiftedUp != 0 ||
+                messageConsole.Cursor.Position.Y >= messageConsole.Surface.View.Height + scrollBarCurrentPosition)
             {
                 //enable the scrollbar once the messagelog has filled up with enough text to warrant scrolling
                 messageScrollBar.IsEnabled = true;
 
                 // Make sure we've never scrolled the entire size of the buffer
-                if (scrollBarCurrentPosition < messageConsole.Height - messageConsole.View.Height)
+                if (scrollBarCurrentPosition < messageConsole.Height - messageConsole.Surface.View.Height)
                 {
                     // Record how much we've scrolled to enable how far back the bar can see
-                    scrollBarCurrentPosition += messageConsole.TimesShiftedUp != 0 ? messageConsole.TimesShiftedUp : 1;
+                    scrollBarCurrentPosition += messageConsole.Surface.TimesShiftedUp != 0
+                        ? messageConsole.Surface.TimesShiftedUp : 1;
                 }
 
                 // Determines the scrollbar's max vertical position
@@ -132,7 +133,7 @@ namespace MagiRogue.UI.Windows
                 messageScrollBar.Value = scrollBarCurrentPosition;
 
                 // Reset the shift amount.
-                messageConsole.TimesShiftedUp = 0;
+                messageConsole.Surface.TimesShiftedUp = 0;
             }
         }
 

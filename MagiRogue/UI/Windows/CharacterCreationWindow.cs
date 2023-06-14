@@ -77,7 +77,7 @@ namespace MagiRogue.UI.Windows
                 pop.Cursor.UseLinuxLineEndings = true;
                 var typingInstruction = new DrawString(ColoredString.Parser.Parse(helpText))
                 {
-                    TotalTimeToPrint = 5, // 0.5 seconds per line of text
+                    TotalTimeToPrint = TimeSpan.FromSeconds(3), // 0.5 seconds per line of text
                     RemoveOnFinished = true
                 };
 
@@ -91,8 +91,8 @@ namespace MagiRogue.UI.Windows
                 // It's bugged, need to fix
                 scrollBar.ValueChanged += (_, __) =>
                 {
-                    pop.View = new Rectangle(0, scrollBar.Value + WindowBorderThickness,
-                        pop.Width, pop.View.Height);
+                    pop.Surface.View = new Rectangle(0, scrollBar.Value + WindowBorderThickness,
+                        pop.Width, pop.ViewHeight);
                 };
                 window.Children.Add(pop);
                 window.Controls.Add(scrollBar);
@@ -100,11 +100,10 @@ namespace MagiRogue.UI.Windows
                 pop.SadComponents.Add(typingInstruction);
                 window.Show(true);
             };
-            Point namePoint = new Point(Width / 2 - 9, Height / 2 + 5);
+            Point namePoint = new Point((Width / 2) - 9, (Height / 2) + 5);
             charName = new(25)
             {
                 Position = namePoint,
-                IsNumeric = false,
                 IsVisible = false
             };
             const string back = "Go Back";
@@ -132,7 +131,7 @@ namespace MagiRogue.UI.Windows
             scenarioChooser = new ListBox(30, 10)
             {
                 Position = scenarioPoint,
-                Theme = new SadConsole.UI.Themes.ListBoxTheme(new SadConsole.UI.Themes.ScrollBarTheme())
+                Theme = new SadConsole.UI.Themes.ListBoxTheme()
                 {
                     DrawBorder = true,
                 }
@@ -173,7 +172,7 @@ namespace MagiRogue.UI.Windows
             raceChooser = new ListBox(20, 10)
             {
                 Position = racePoint,
-                Theme = new SadConsole.UI.Themes.ListBoxTheme(new SadConsole.UI.Themes.ScrollBarTheme())
+                Theme = new SadConsole.UI.Themes.ListBoxTheme()
                 {
                     DrawBorder = true,
                 },

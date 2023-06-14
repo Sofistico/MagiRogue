@@ -50,8 +50,8 @@ namespace MagiRogue.Entities
         public override Furniture Copy()
         {
             var baseEntity = base.Copy();
-            Furniture fur = new Furniture(baseEntity.Appearance.Foreground,
-                baseEntity.Appearance.Background, baseEntity.Appearance.Glyph,
+            Furniture fur = new Furniture(baseEntity.AppearanceSingle.Appearance.Foreground,
+                baseEntity.AppearanceSingle.Appearance.Background, baseEntity.AppearanceSingle.Appearance.Glyph,
                 baseEntity.Position,
                 FurnitureType, Material.Id, Name, FurId, Durability)
             {

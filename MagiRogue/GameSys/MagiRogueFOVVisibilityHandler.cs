@@ -98,8 +98,8 @@ namespace MagiRogue.GameSys
                 && !ghosts.ContainsKey(entity.ID))
             {
                 MagiEntity ghost = new MagiEntity(ExploredColorTint,
-                    entity.Appearance.Background,
-                    entity.Appearance.Glyph,
+                    entity.AppearanceSingle.Appearance.Background,
+                    entity.AppearanceSingle.Appearance.Glyph,
                     entity.Position,
                     _ghostLayer)
                 {

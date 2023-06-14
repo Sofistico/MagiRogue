@@ -20,10 +20,9 @@ namespace MagiRogue.UI.Windows
             statsConsole = new Console(width - windowBorderThickness, heigth - windowBorderThickness)
             {
                 Position = new Point(1, 1),
-                View = new Rectangle(0, 0, width - 1, heigth - windowBorderThickness),
-                DefaultBackground = Color.Black
             };
-
+            statsConsole.Surface.View = new Rectangle(0, 0, width - 1, heigth - windowBorderThickness);
+            statsConsole.Surface.DefaultBackground = Color.Black;
             // enable mouse input
             UseMouse = false;
 

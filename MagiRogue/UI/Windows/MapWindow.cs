@@ -75,13 +75,11 @@ namespace MagiRogue.UI.Windows
                 map.Height, map.Width,
                 map.Height, map.Tiles)
             {
-                View = rec,
-
                 //reposition the MapConsole so it doesnt overlap with the left/top window edges
                 Position = new Point(1, 1),
-
-                DefaultBackground = Color.Black
             };
+            MapConsole.Surface.View = rec;
+            MapConsole.Surface.DefaultBackground = Color.Black;
 
             // Adds the console to the children list of the window
             Children.Add(MapConsole);

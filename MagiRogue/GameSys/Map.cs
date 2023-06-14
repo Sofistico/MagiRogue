@@ -330,7 +330,7 @@ namespace MagiRogue.GameSys
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        private void OnPositionChanged(object? sender, SadConsole.ValueChangedEventArgs<Point>? args)
+        private void OnPositionChanged(object? sender, ValueChangedEventArgs<Point>? args)
         {
             if (sender is Player player)
             {

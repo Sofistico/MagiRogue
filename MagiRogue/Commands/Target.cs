@@ -64,7 +64,7 @@ namespace MagiRogue.Commands
                 BlinkOutColor = Color.Aquamarine,
                 UseCellBackgroundColor = false,
             };
-            Cursor.Effect = blink;
+            Cursor.AppearanceSingle.Effect = blink;
             blink.Restart();
 
             State = TargetState.Resting;
@@ -241,7 +241,7 @@ namespace MagiRogue.Commands
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Cursor_Moved(object sender, SadConsole.ValueChangedEventArgs<Point> e)
+        private void Cursor_Moved(object sender, ValueChangedEventArgs<Point> e)
         {
             TargetList.Clear();
             TravelPath = GameLoop.GetCurrentMap().AStar.ShortestPath(OriginCoord, e.NewValue)!;

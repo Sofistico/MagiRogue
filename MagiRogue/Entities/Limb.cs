@@ -71,8 +71,8 @@ namespace MagiRogue.Entities
             int size = Volume;
             //Attached = false;
 
-            return new Item(actor.Appearance.Foreground,
-                actor.Appearance.Background,
+            return new Item(actor.AppearanceSingle.Appearance.Foreground,
+                actor.AppearanceSingle.Appearance.Background,
                 limbName,
                 253,
                 actor.Position,

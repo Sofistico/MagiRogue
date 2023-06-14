@@ -91,9 +91,9 @@ namespace MagiRogue.Entities
         private void InitializeObject(
             Color foreground, Color background, int glyph, Point coord, int layer)
         {
-            Appearance.Foreground = foreground;
-            Appearance.Background = background;
-            Appearance.Glyph = glyph;
+            AppearanceSingle.Appearance.Foreground = foreground;
+            AppearanceSingle.Appearance.Background = background;
+            AppearanceSingle.Appearance.Glyph = glyph;
             Layer = layer;
 
             backingField = new GameObject(coord, layer);
@@ -145,8 +145,8 @@ namespace MagiRogue.Entities
 
         public virtual MagiEntity Copy()
         {
-            var entity = new MagiEntity(this.Appearance.Foreground,
-                Appearance.Background, Appearance.Glyph, Position, Layer)
+            var entity = new MagiEntity(AppearanceSingle.Appearance.Foreground,
+                AppearanceSingle.Appearance.Background, AppearanceSingle.Appearance.Glyph, Position, Layer)
             {
                 Magic = this.Magic,
                 AlwaySeen = this.AlwaySeen,

@@ -43,16 +43,7 @@ namespace MagiRogue.UI
 
         public UIManager()
         {
-            // must be set to true
-            // or will not call each child's Draw method
-            IsVisible = true;
-            IsFocused = true;
-
             UseMouse = false;
-
-            // The UIManager becomes the only
-            // screen that SadConsole processes
-            Parent = GameHost.Instance.Screen;
         }
 
         // Initiates the game by means of going to the menu first

@@ -22,7 +22,7 @@ namespace MagiRogue.Test.System
 
         public MapTests()
         {
-            Game.Create(20, 20);
+            //Game.Create(20, 20);
         }
 
         [Fact]

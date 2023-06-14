@@ -3,6 +3,7 @@ using MagiRogue.GameSys.Time;
 using MagiRogue.Settings;
 using MagiRogue.UI;
 using MagiRogue.Utils;
+using SadConsole;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
@@ -27,23 +28,29 @@ public static class GameLoop
     public static IDGenerator IdGen { get; private set; } = new(1);
     public static ShaiRandom.Generators.IEnhancedRandom GlobalRand { get; } = GoRogue.Random.GlobalRandom.DefaultRNG;
 
+    #region configuration
+
     private static void Main(string[] args)
     {
         ConfigureBeforeCreateGame(args);
 
-        // Setup the engine and creat the main window.
-        SadConsole.Game.Create(GameWidth, GameHeight);
+        // Setup the engine and create the main window.
+        Game.Configuration gameStartup = new Game.Configuration()
+            .SetScreenSize(GameWidth, GameHeight)
+            .OnStart(Init) // Hook the start event so we can add consoles to the system.
+            .UseFrameUpdateEvent(OnFrameUpdate) // some frame update that maybe not necessary, who knows!
+            .SetStartingScreen<UIManager>()
+            .IsStartingScreenFocused(true)
+            .ConfigureFonts((f) => f.UseBuiltinFontExtended());
 
-        // Hook the start event so we can add consoles to the system.
-        SadConsole.Game.Instance.OnStart = Init;
-
+        Game.Create(gameStartup);
         //Start the game.
-        SadConsole.Game.Instance.Run();
-
+        Game.Instance.Run();
         // Code here will not run until the game window closes.
-        SadConsole.Game.Instance.Dispose();
+        Game.Instance.Dispose();
     }
 
+    // runs each frame
     private static void ConfigureBeforeCreateGame(string[] args)
     {
         foreach (var _ in args)
@@ -69,15 +76,24 @@ public static class GameLoop
         Palette.AddToColorDictionary();
         // Makes so that no excpetion happens for a custom control
         SadConsole.UI.Themes.Library.Default.SetControlTheme(typeof(UI.Controls.MagiButton),
-            new SadConsole.UI.Themes.ButtonTheme());
+           typeof(SadConsole.UI.Themes.ButtonTheme));
 
         //Instantiate the UIManager
-        UIManager = new UIManager();
+        UIManager = (UIManager)GameHost.Instance.Screen!;
 
         // Now let the UIManager create its consoles
         // so they can use the World data
         UIManager.InitMainMenu();
     }
+
+    private static void OnFrameUpdate(object? sender, GameHost e)
+    {
+        //empty for now
+    }
+
+    #endregion configuration
+
+    #region global methods
 
     /// <summary>
     /// Gets the current map, a shorthand for GameLoop.Universe.CurrentMap
@@ -159,4 +175,6 @@ public static class GameLoop
     }
 
     #endregion Logs
+
+    #endregion global methods
 }

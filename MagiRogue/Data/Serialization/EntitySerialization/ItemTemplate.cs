@@ -152,9 +152,9 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         public static implicit operator ItemTemplate(Item item)
         {
             ItemTemplate itemSerialized = new(item.Name,
-                item.Appearance.Foreground.PackedValue,
-                item.Appearance.Background.PackedValue,
-                item.Appearance.Glyph,
+                item.AppearanceSingle.Appearance.Foreground.PackedValue,
+                item.AppearanceSingle.Appearance.Background.PackedValue,
+                item.AppearanceSingle.Appearance.Glyph,
                 item.Weight,
                 item.Volume,
                 item.Material.Id,

@@ -34,7 +34,7 @@ namespace MagiRogue.UI.Windows
             {
                 Position = new Point(1, WindowBorderThickness)
             };
-            inventoryConsole.View = new Rectangle(0, 0, width - 1, heigth - WindowBorderThickness);
+            inventoryConsole.Surface.View = new Rectangle(0, 0, width - 1, heigth - WindowBorderThickness);
 
             invScrollBar = new ScrollBar(Orientation.Vertical, heigth - WindowBorderThickness)
             {
@@ -65,8 +65,8 @@ namespace MagiRogue.UI.Windows
 
         private void InvScrollBar_ValueChanged(object sender, EventArgs e)
         {
-            inventoryConsole.View = new Rectangle(0, invScrollBar.Value + WindowBorderThickness,
-                    inventoryConsole.Width, inventoryConsole.View.Height);
+            inventoryConsole.Surface.Surface.View = new Rectangle(0, invScrollBar.Value + WindowBorderThickness,
+                    inventoryConsole.Width, inventoryConsole.ViewHeight);
         }
 
         public void ShowItems(Actor actorInventory)
