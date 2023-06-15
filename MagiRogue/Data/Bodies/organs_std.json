@@ -55,7 +55,7 @@
     "RelativeVolume": 0.2,
     "InsideOf": "lower_body",
     "Orientation": "Center",
-    "OrganType": "Digestive"
+    "OrganType": "Intestine"
   },
   {
     "Id": "r_lung",

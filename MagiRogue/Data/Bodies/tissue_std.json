@@ -163,6 +163,16 @@
         "HealingRate": 0.1,
         "BleedingRate": 50,
         "PainReceptor": 20
+      },
+      {
+        "Id": "cartilage",
+        "Name": "cartilage tissue",
+        "MaterialId": "cartilage",
+        "RelativeThickness": 2,
+        "Flags": [ "Connects", "Structural" ],
+        "HealingRate": 0.2,
+        "BleedingRate": 1,
+        "PainReceptor": 7
       }
     ]
   },
@@ -224,6 +234,51 @@
         "Select": "OrganType",
         "Tissues": [ "eye" ],
         "BodyParts": [ "Visual" ]
+      },
+      {
+        "Select": "OrganType",
+        "Tissues": [ "brain" ],
+        "BodyParts": [ "Brain" ]
+      },
+      {
+        "Select": "OrganType",
+        "Tissues": [ "heart" ],
+        "BodyParts": [ "Heart" ]
+      },
+      {
+        "Select": "OrganType",
+        "Tissues": [ "stomach" ],
+        "BodyParts": [ "Digestive" ]
+      },
+      {
+        "Select": "OrganType",
+        "Tissues": [ "muscle" ],
+        "BodyParts": [ "Tongue" ]
+      },
+      {
+        "Select": "OrganType",
+        "Tissues": [ "skin:muscle" ],
+        "BodyParts": [ "Mouth:1:2" ]
+      },
+      {
+        "Select": "OrganType",
+        "Tissues": [ "skin", "muscle", "cartilage" ],
+        "BodyParts": [ "Nose:1:2:5", "Auditory:1:2:5" ]
+      },
+      {
+        "Select": "OrganType",
+        "Tissues": [ "kidney" ],
+        "BodyParts": [ "Filtering" ]
+      },
+      {
+        "Select": "OrganType",
+        "Tissues": [ "guts" ],
+        "BodyParts": [ "Intestine" ]
+      },
+      {
+        "Select": "OrganType",
+        "Tissues": [ "lung" ],
+        "BodyParts": [ "Breather" ]
       }
     ]
   }
