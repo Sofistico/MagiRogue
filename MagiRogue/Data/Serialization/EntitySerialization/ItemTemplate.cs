@@ -1,4 +1,5 @@
-﻿using MagiRogue.Data.Enumerators;
+﻿using GoRogue.Components;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.Entities.Core;
 using MagiRogue.Entities.Interfaces;
@@ -148,6 +149,8 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
         [DataMember]
         public ArmorType ArmorType { get; set; }
+
+        [DataMember]
         public int Coverage { get; set; }
 
         // Will need to see if it works, but so far the logic seems to check
@@ -183,7 +186,6 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 ArmorType = item.ArmorType,
                 Coverage = item.Coverage,
             };
-
             return itemSerialized;
         }
 

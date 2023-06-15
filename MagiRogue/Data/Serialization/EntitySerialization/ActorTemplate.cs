@@ -1,4 +1,5 @@
-﻿using MagiRogue.Data.Enumerators;
+﻿using GoRogue.Components;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.Entities.Core;
 using MagiRogue.GameSys.Magic;
@@ -48,7 +49,6 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         /// <summary>
         /// <inheritdoc cref="MagiEntity.Volume"/>
         /// </summary>
-
         public int Volume { get; set; }
 
         public int Height { get; set; }
@@ -98,6 +98,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
         public ActorState State { get; set; }
         public List<ActorSituationalFlags> SituationalFlags { get; set; }
+        public IComponentCollection Component { get; set; }
 
         /// <summary>
         /// Is used in the serialization of the actor.
@@ -241,6 +242,8 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             actor.Height = actorTemplate.Height;
             actor.Broadness = actorTemplate.Broadness;
             actor.Length = actorTemplate.Length;
+            actor.SituationalFlags = actorTemplate.SituationalFlags;
+            actor.AddComponent(actorTemplate.Component);
 
             return actor;
         }
@@ -290,6 +293,8 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             actorTemplate.Height = actor.Height;
             actorTemplate.Broadness = actor.Broadness;
             actorTemplate.State = actor.State;
+            actorTemplate.SituationalFlags = actor.SituationalFlags;
+            actorTemplate.Component = actor.GoRogueComponents;
             return actorTemplate;
         }
     }
