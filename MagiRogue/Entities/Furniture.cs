@@ -1,6 +1,7 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Data.Serialization.EntitySerialization;
+using MagiRogue.Entities.Core;
 using MagiRogue.GameSys.Physics;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
@@ -10,7 +11,7 @@ using System.Collections.Generic;
 namespace MagiRogue.Entities
 {
     [JsonConverter(typeof(FurnitureJsonConverter))]
-    public class Furniture : Entities.MagiEntity
+    public class Furniture : MagiEntity
     {
         public FurnitureType FurnitureType { get; set; }
         public int? MapIdConnection { get; set; }

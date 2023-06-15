@@ -3,7 +3,7 @@ using MagiRogue.Utils;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace MagiRogue.Entities
+namespace MagiRogue.Entities.Core
 {
     /// <summary>
     /// Stats of the body... how strong, your equip, and etc...

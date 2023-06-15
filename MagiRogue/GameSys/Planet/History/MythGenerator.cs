@@ -1,5 +1,4 @@
-﻿using MagiRogue.Entities;
-using MagiRogue.GameSys.Civ;
+﻿using MagiRogue.GameSys.Civ;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +8,7 @@ using MagiRogue.Data.Enumerators;
 using MagiRogue.Utils;
 using MagiRogue.Data;
 using MagiRogue.Utils.Extensions;
+using MagiRogue.Entities.Core;
 
 namespace MagiRogue.GameSys.Planet.History
 {

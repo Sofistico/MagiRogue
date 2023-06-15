@@ -1,4 +1,4 @@
-﻿using MagiRogue.Entities;
+﻿using MagiRogue.Entities.Core;
 using SadConsole;
 using SadConsole.Components;
 

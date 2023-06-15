@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace MagiRogue.Entities
+namespace MagiRogue.Entities.Core
 {
     [DebuggerDisplay("{DebuggerDisplay, nq}")]
     public sealed class Race : ICloneable

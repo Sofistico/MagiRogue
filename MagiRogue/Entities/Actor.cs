@@ -2,6 +2,7 @@
 using MagiRogue.Commands;
 using MagiRogue.Components;
 using MagiRogue.Data.Enumerators;
+using MagiRogue.Entities.Core;
 using MagiRogue.GameSys;
 using MagiRogue.GameSys.Physics;
 using MagiRogue.GameSys.Tiles;

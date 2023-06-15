@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Entities;
+using MagiRogue.Entities.Core;
 using MagiRogue.GameSys.Magic;
 using MagiRogue.GameSys.Tiles;
 

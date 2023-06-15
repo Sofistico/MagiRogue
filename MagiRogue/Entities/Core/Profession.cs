@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagiRogue.Entities
+namespace MagiRogue.Entities.Core
 {
     public class Profession
     {

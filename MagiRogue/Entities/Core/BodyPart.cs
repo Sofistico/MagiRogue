@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace MagiRogue.Entities
+namespace MagiRogue.Entities.Core
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public abstract class BodyPart
@@ -70,8 +70,8 @@ namespace MagiRogue.Entities
                 }
 
                 if (regenLostLimb
-                    || (wound.Severity is not InjurySeverity.Missing
-                    && wound.Severity is not InjurySeverity.Pulped))
+                    || wound.Severity is not InjurySeverity.Missing
+                    && wound.Severity is not InjurySeverity.Pulped)
                 {
                     wound.Recovery = MathMagi.Round(raceHealingRate + wound.Recovery);
                     wound.Parts.ForEach(i =>

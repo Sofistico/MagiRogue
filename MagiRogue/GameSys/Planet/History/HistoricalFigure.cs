@@ -12,6 +12,7 @@ using MagiRogue.GameSys.Planet.TechRes;
 using MagiRogue.Data.Serialization;
 using MagiRogue.GameSys.Magic;
 using MagiRogue.Utils.Extensions;
+using MagiRogue.Entities.Core;
 
 namespace MagiRogue.GameSys.Planet.History
 {

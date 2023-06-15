@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Entities;
+using MagiRogue.Entities.Core;
 using MagiRogue.GameSys;
 using SadConsole;
 using SadRogue.Primitives;

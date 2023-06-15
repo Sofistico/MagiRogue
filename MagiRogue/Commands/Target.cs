@@ -2,6 +2,7 @@
 using GoRogue.Pathing;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
+using MagiRogue.Entities.Core;
 using MagiRogue.GameSys.Magic;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.UI.Windows;

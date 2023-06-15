@@ -1,7 +1,7 @@
 ﻿using GoRogue;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
-using MagiRogue.Entities;
+using MagiRogue.Entities.Core;
 using MagiRogue.GameSys.Planet;
 using MagiRogue.GameSys.Planet.History;
 using MagiRogue.GameSys.Planet.TechRes;

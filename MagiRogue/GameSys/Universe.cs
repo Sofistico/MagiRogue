@@ -3,6 +3,7 @@ using MagiRogue.Data;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
+using MagiRogue.Entities.Core;
 using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.MapGen;
 using MagiRogue.GameSys.Planet;

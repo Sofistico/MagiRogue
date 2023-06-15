@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MagiRogue.Entities
+namespace MagiRogue.Entities.Core
 {
     /// <summary>
     /// Is anything that can be interacted with.

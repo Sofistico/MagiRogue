@@ -1,6 +1,7 @@
 ﻿using GoRogue.DiceNotation.Terms;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
+using MagiRogue.Entities.Core;
 using MagiRogue.GameSys.Magic;
 using MagiRogue.GameSys.Physics;
 using MagiRogue.Utils;

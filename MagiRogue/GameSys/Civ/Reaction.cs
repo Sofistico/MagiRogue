@@ -1,7 +1,7 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Data.Serialization.EntitySerialization;
-using MagiRogue.Entities;
+using MagiRogue.Entities.Core;
 using System.Collections.Generic;
 using System.Data;
 

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagiRogue.Entities
+namespace MagiRogue.Entities.Core
 {
     public class Soul : IStat
     {
@@ -33,7 +33,7 @@ namespace MagiRogue.Entities
         {
             if (CurrentMana < MaxMana)
             {
-                double newMana = (manaRegen + CurrentMana);
+                double newMana = manaRegen + CurrentMana;
                 CurrentMana = MathMagi.Round(newMana);
             }
         }
@@ -42,7 +42,7 @@ namespace MagiRogue.Entities
         {
             int raceMaxMana = race.MaxManaRange;
             int raceMinMana = race.MinManaRange;
-            int statsModifier = (int)(((WillPower + 1) * 0.3) + ((inteligence + 1) * 0.2));
+            int statsModifier = (int)((WillPower + 1) * 0.3 + (inteligence + 1) * 0.2);
             MaxMana = statsModifier + GameLoop.GlobalRand.NextInt(raceMinMana,
                 raceMaxMana + 1);
             CurrentMana = MaxMana;

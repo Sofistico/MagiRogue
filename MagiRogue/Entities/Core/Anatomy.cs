@@ -9,7 +9,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 
-namespace MagiRogue.Entities
+namespace MagiRogue.Entities.Core
 {
     /// <summary>
     /// Your body characteristics, what race you are, if you are an undead or alive, if you are okay and etc
@@ -90,7 +90,7 @@ namespace MagiRogue.Entities
         {
             get
             {
-                return Organs.Exists(o => o.OrganType is OrganType.Visual && (o.Working));
+                return Organs.Exists(o => o.OrganType is OrganType.Visual && o.Working);
             }
         }
 
@@ -177,7 +177,7 @@ namespace MagiRogue.Entities
 
         public void Injury(Wound wound, BodyPart bpInjured, Actor actorWounded)
         {
-            double injureSeverity = (MathMagi.GetPercentageBasedOnMax(wound.VolumeInjury, bpInjured.Volume)) / 100;
+            double injureSeverity = MathMagi.GetPercentageBasedOnMax(wound.VolumeInjury, bpInjured.Volume) / 100;
 
             switch (injureSeverity)
             {
@@ -210,7 +210,7 @@ namespace MagiRogue.Entities
             if (wound.InitialDamageSource is DamageTypes.Sharp
                 || wound.InitialDamageSource is DamageTypes.Pierce)
             {
-                wound.Bleeding = (actorWounded.Weight / bpInjured.BodyPartWeight * (int)wound.Severity)
+                wound.Bleeding = actorWounded.Weight / bpInjured.BodyPartWeight * (int)wound.Severity
                     + wound.GetBaseBleedingRate();
             }
 
@@ -367,7 +367,7 @@ namespace MagiRogue.Entities
 
         private void CalculateWeight(Actor actor)
         {
-            actor.Weight = (Limbs.Sum(w => w.BodyPartWeight) + Organs.Sum(w => w.BodyPartWeight));
+            actor.Weight = Limbs.Sum(w => w.BodyPartWeight) + Organs.Sum(w => w.BodyPartWeight);
         }
 
         private void Dismember(Limb limb, Actor actor)
@@ -382,7 +382,7 @@ namespace MagiRogue.Entities
                 if (bodyParts.Count > 1)
                 {
                     DismemberMessage(actor, bodyParts[0]);
-                    Commands.ActionManager.ResolveDeath(actor);
+                    ActionManager.ResolveDeath(actor);
                     return;
                 }
                 else
@@ -390,7 +390,7 @@ namespace MagiRogue.Entities
                     bodyPartIndex = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(bodyParts.Count);
                     bodyPart = bodyParts[bodyPartIndex];
                     DismemberMessage(actor, bodyPart);
-                    Commands.ActionManager.ResolveDeath(actor);
+                    ActionManager.ResolveDeath(actor);
                     return;
                 }
             }
@@ -503,7 +503,7 @@ namespace MagiRogue.Entities
                         if (wound.Treated)
                             wound.Bleeding -= actor.GetBloodCoagulation();
                         else
-                            wound.Bleeding -= (actor.GetBloodCoagulation() / (int)wound.Severity) + 1;
+                            wound.Bleeding -= actor.GetBloodCoagulation() / (int)wound.Severity + 1;
                     }
                 }
             }

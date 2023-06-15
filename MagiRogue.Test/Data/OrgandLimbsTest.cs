@@ -13,6 +13,7 @@ using Newtonsoft.Json.Linq;
 using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Data.Enumerators;
 using SadRogue.Primitives;
+using MagiRogue.Entities.Core;
 
 namespace MagiRogue.Test.Data
 {

@@ -1,4 +1,4 @@
-﻿using MagiRogue.Entities;
+﻿using MagiRogue.Entities.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;

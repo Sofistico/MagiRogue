@@ -1,6 +1,6 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization.EntitySerialization;
-using MagiRogue.Entities;
+using MagiRogue.Entities.Core;
 using MagiRogue.GameSys.Civ;
 using MagiRogue.Utils;
 using MagiRogue.Utils.Extensions;

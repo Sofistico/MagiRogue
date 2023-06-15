@@ -1,10 +1,10 @@
 ﻿using MagiRogue.Data;
 using MagiRogue.Utils;
 using MagiRogue.Data.Enumerators;
-using MagiRogue.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using MagiRogue.Entities.Core;
 
 namespace MagiRogue.GameSys.Planet.History
 {

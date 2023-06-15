@@ -1,6 +1,6 @@
 ﻿using MagiRogue.Data.Enumerators;
 
-namespace MagiRogue.Entities
+namespace MagiRogue.Entities.Core
 {
     public class Attack
     {

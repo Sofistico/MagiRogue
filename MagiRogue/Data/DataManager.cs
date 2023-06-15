@@ -3,6 +3,7 @@ using MagiRogue.Data.Serialization;
 using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.Entities;
+using MagiRogue.Entities.Core;
 using MagiRogue.Entities.StarterScenarios;
 using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Magic;

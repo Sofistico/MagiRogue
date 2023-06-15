@@ -4,6 +4,7 @@ using MagiRogue.Data;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.Entities;
+using MagiRogue.Entities.Core;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
 using MagiRogue.Utils.Extensions;

@@ -1,5 +1,5 @@
 ﻿using GoRogue.Components.ParentAware;
-using MagiRogue.Entities;
+using MagiRogue.Entities.Core;
 using MagiRogue.GameSys;
 using MagiRogue.GameSys.Time;
 using MagiRogue.UI.Windows;

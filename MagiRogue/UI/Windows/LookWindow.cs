@@ -1,4 +1,4 @@
-﻿using MagiRogue.Entities;
+﻿using MagiRogue.Entities.Core;
 using MagiRogue.GameSys.Tiles;
 using System.Text;
 using Console = SadConsole.Console;

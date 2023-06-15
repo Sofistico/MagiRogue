@@ -5,6 +5,7 @@ using MagiRogue.Data;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
+using MagiRogue.Entities.Core;
 using MagiRogue.GameSys;
 using MagiRogue.GameSys.Planet;
 using MagiRogue.GameSys.Tiles;

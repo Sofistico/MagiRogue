@@ -1,6 +1,6 @@
 ﻿using GoRogue.GameFramework;
 using MagiRogue.Data.Enumerators;
-using MagiRogue.Entities;
+using MagiRogue.Entities.Core;
 using MagiRogue.GameSys.Tiles;
 using SadRogue.Primitives.GridViews;
 using SadRogue.Primitives.SpatialMaps;

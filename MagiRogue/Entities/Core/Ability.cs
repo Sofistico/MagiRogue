@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 
-namespace MagiRogue.Entities
+namespace MagiRogue.Entities.Core
 {
     public struct Ability
     {
@@ -13,7 +13,7 @@ namespace MagiRogue.Entities
         public int Score { get; set; }
         public int Id { get; }
         public int XpTotal { get; set; }
-        public int XpRequiredForNextLevel { get => ((Score + 1) * 1000) * 2; }
+        public int XpRequiredForNextLevel { get => (Score + 1) * 1000 * 2; }
 
         public Ability(AbilityName name, int abilityScore)
         {

@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MagiRogue.Entities
+namespace MagiRogue.Entities.Core
 {
     public class Mind : IStat
     {

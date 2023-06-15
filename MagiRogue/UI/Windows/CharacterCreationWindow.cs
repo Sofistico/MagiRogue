@@ -1,6 +1,7 @@
 ﻿using MagiRogue.Data;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
+using MagiRogue.Entities.Core;
 using MagiRogue.Entities.StarterScenarios;
 using MagiRogue.UI.Controls;
 using MagiRogue.Utils;

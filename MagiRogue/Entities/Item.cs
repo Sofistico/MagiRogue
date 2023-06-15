@@ -1,6 +1,7 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Data.Serialization.EntitySerialization;
+using MagiRogue.Entities.Core;
 using MagiRogue.GameSys.Planet.History;
 using MagiRogue.Utils;
 using Newtonsoft.Json;

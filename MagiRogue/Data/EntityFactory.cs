@@ -1,6 +1,7 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Entities;
+using MagiRogue.Entities.Core;
 using MagiRogue.Entities.StarterScenarios;
 using MagiRogue.GameSys.Magic;
 using MagiRogue.Utils;

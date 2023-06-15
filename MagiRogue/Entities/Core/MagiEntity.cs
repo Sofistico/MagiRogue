@@ -6,7 +6,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 
-namespace MagiRogue.Entities
+namespace MagiRogue.Entities.Core
 {
     // Extends the SadConsole.Entities.Entity class
     // by adding the IGameObject of SadConsole
@@ -148,8 +148,8 @@ namespace MagiRogue.Entities
             var entity = new MagiEntity(AppearanceSingle.Appearance.Foreground,
                 AppearanceSingle.Appearance.Background, AppearanceSingle.Appearance.Glyph, Position, Layer)
             {
-                Magic = this.Magic,
-                AlwaySeen = this.AlwaySeen,
+                Magic = Magic,
+                AlwaySeen = AlwaySeen,
                 CanBeAttacked = CanBeAttacked,
                 CanBeKilled = CanBeKilled,
                 CanInteract = CanInteract,
@@ -162,7 +162,7 @@ namespace MagiRogue.Entities
                 Name = Name,
             };
 
-            foreach (var item in this.GoRogueComponents)
+            foreach (var item in GoRogueComponents)
             {
                 entity.GoRogueComponents.Add(item.Component, item.Tag);
             }
@@ -221,7 +221,7 @@ namespace MagiRogue.Entities
             }
         }
 
-        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<bool>> TransparencyChanging
+        public event EventHandler<ValueChangedEventArgs<bool>> TransparencyChanging
         {
             add
             {
@@ -234,7 +234,7 @@ namespace MagiRogue.Entities
             }
         }
 
-        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<bool>> TransparencyChanged
+        public event EventHandler<ValueChangedEventArgs<bool>> TransparencyChanged
         {
             add
             {
@@ -247,7 +247,7 @@ namespace MagiRogue.Entities
             }
         }
 
-        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<bool>> WalkabilityChanging
+        public event EventHandler<ValueChangedEventArgs<bool>> WalkabilityChanging
         {
             add
             {
@@ -260,7 +260,7 @@ namespace MagiRogue.Entities
             }
         }
 
-        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<bool>> WalkabilityChanged
+        public event EventHandler<ValueChangedEventArgs<bool>> WalkabilityChanged
         {
             add
             {
