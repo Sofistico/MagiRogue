@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MagiRogue.Entities
+namespace MagiRogue.Entities.Interfaces
 {
     public interface IStat
     {

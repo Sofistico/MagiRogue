@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Entities.Interfaces;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
 using System.Collections.Generic;

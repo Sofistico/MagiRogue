@@ -2,7 +2,7 @@
 using MagiRogue.Entities.Core;
 using Newtonsoft.Json;
 
-namespace MagiRogue.Entities
+namespace MagiRogue.Entities.Interfaces
 {
     #region Interface
 

@@ -1,4 +1,5 @@
-﻿using MagiRogue.Utils;
+﻿using MagiRogue.Entities.Interfaces;
+using MagiRogue.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;

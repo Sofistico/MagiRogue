@@ -1,5 +1,6 @@
 ﻿using GoRogue;
 using MagiRogue.Data.Enumerators;
+using MagiRogue.Entities.Interfaces;
 using MagiRogue.Utils;
 using System;
 using System.Collections.Generic;
