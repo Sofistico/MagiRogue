@@ -4,6 +4,7 @@ using MagiRogue.GameSys.Magic;
 using SadRogue.Primitives;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace MagiRogue.Entities.Core
@@ -286,6 +287,9 @@ namespace MagiRogue.Entities.Core
 
         public T GetComponent<T>() where T : class
             => backingField.GoRogueComponents.GetFirstOrDefault<T>();
+
+        public T[] GetComponents<T>() where T : class
+            => backingField.GoRogueComponents.OfType<T>().ToArray();
 
         #endregion IGameObject Interface
     }

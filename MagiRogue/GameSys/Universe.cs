@@ -390,16 +390,28 @@ namespace MagiRogue.GameSys
 
             if (entity != null)
             {
-                IAiComponent ai = entity.GetComponent<IAiComponent>();
-                (bool sucess, long tick) = ai?.RunAi(CurrentMap, GameLoop.UIManager.MessageLog)
-                    ?? (false, -1);
+                IAiComponent[] ais = entity.GetComponents<IAiComponent>();
+                // sucess and failure will have to have some sort of aggregate function made later!
+                int sucesses = 0;
+                long totalTicks = 0;
+                for (int i = 0; i < ais.Length; i++)
+                {
+                    IAiComponent? ai = ais[i];
+                    (bool sucess, long tick) = ai?.RunAi(CurrentMap, GameLoop.UIManager.MessageLog)
+                        ?? (false, -1);
+                    if (sucess)
+                    {
+                        sucesses++;
+                        totalTicks += tick;
+                    }
+                }
                 entity.ProcessNeeds();
                 entity.GetAnatomy().UpdateBody(entity);
 
-                if (!sucess || tick < -1)
+                if (sucesses > 0 && totalTicks < -1)
                     return;
 
-                EntityTimeNode nextTurnNode = new EntityTimeNode(entityId, Time.GetTimePassed(tick));
+                EntityTimeNode nextTurnNode = new EntityTimeNode(entityId, Time.GetTimePassed(totalTicks));
                 Time.RegisterEntity(nextTurnNode);
             }
         }
