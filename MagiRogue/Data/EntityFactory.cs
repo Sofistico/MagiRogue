@@ -4,6 +4,7 @@ using MagiRogue.Entities;
 using MagiRogue.Entities.Core;
 using MagiRogue.Entities.StarterScenarios;
 using MagiRogue.GameSys.Magic;
+using MagiRogue.GameSys.Planet.History;
 using MagiRogue.Utils;
 using MagiRogue.Utils.Extensions;
 using System;
@@ -18,6 +19,17 @@ namespace MagiRogue.Data
     public static class EntityFactory
     {
         private static Actor actorField;
+
+        public static Actor ActorCreator(HistoricalFigure figure, Point pos)
+        {
+            var actor = ActorCreator(pos,
+                figure.GetRaceId(),
+                figure.Body.GetCurrentAge(),
+                figure.Body.Anatomy.Gender);
+            actor.HistoryId = figure.Id;
+
+            return actor;
+        }
 
         public static Actor ActorCreator(Point position, string raceId,
             string actorName, int actorAge, Sex sex)

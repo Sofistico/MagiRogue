@@ -23,7 +23,7 @@ namespace MagiRogue.GameSys.Planet.History
     public sealed class HistoricalFigure
     {
         // years that the current long activity started
-        private int seasonsOnActivity = 0;
+        private int seasonsOnActivity;
         private int whatScoreToSettleForTrainingAbility;
         private Personality cachedPersonality;
         private Race raceField;

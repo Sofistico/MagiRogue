@@ -19,6 +19,8 @@ namespace MagiRogue.Entities.Core
         public uint ID => backingField.ID; // stores the entity's unique identification number
         public int Layer { get; set; } // stores and sets the layer that the entity is rendered
 
+        public int HistoryId { get; set; } // stores the history id of the entitiy
+
         [DataMember]
         public virtual double Weight { get; set; }
 

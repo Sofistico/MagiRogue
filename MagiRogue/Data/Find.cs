@@ -1,13 +1,10 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization.EntitySerialization;
-using MagiRogue.Entities;
 using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Planet.History;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils.Extensions;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace MagiRogue.Data
 {
@@ -23,6 +20,7 @@ namespace MagiRogue.Data
         public static List<Site> Sites { get => history.AllSites; }
         public static List<ItemTemplate> Items { get => history.ImportantItems; }
         public static List<Ruleset> Rules { get; private set; }
+        public static string PlayerDeathReason { get; set; } = "undefined!";
 
         public static void PopulateValues(AccumulatedHistory h, WorldTile[,] tiles)
         {
@@ -110,7 +108,12 @@ namespace MagiRogue.Data
 
         public static Civilization GetCivFromSite(Site site)
         {
-            return site is null ? Civs.Find(i => i.Id == site.CivOwnerIfAny.Value) : null;
+            return site is null ? Civs.Find(i => i.Id == site?.CivOwnerIfAny.Value!) : null;
+        }
+
+        public static HistoricalFigure GetFigureById(int id)
+        {
+            return Figures.Find(i => i.Id == id);
         }
     }
 }

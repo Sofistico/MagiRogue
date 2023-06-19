@@ -348,7 +348,7 @@ namespace MagiRogue.GameSys
         {
             if (Player.CheckIfDed())
             {
-                DeleteSave();
+                KillPlayer();
                 RestartGame();
                 return false;
             }
@@ -362,9 +362,10 @@ namespace MagiRogue.GameSys
             return true;
         }
 
-        private void DeleteSave()
+        private void KillPlayer()
         {
-            SaveAndLoad.DeleteSave(Player.Name);
+            var figure = Find.GetFigureById(Player.HistoryId);
+            figure.KillIt(WorldMap.WorldHistory.Year, Find.PlayerDeathReason);
         }
 
         private void RestartGame()
