@@ -197,7 +197,7 @@ namespace MagiRogue.UI
         private void SetUpCustomColors()
         {
             // Create a set of default colours that we will modify
-            CustomColors = SadConsole.UI.Themes.Library.Default.Colors.Clone();
+            //CustomColors = SadConsole.UI.Library.Default.Colors.Clone();
 
             // Pick a couple of background colours that we will apply to all consoles.
             Color backgroundColor = new Color(CustomColors.Black, "Black");
@@ -219,7 +219,7 @@ namespace MagiRogue.UI
             CustomColors.RebuildAppearances();
 
             // Now set all of these colours as default for SC's default theme.
-            SadConsole.UI.Themes.Library.Default.Colors = CustomColors;
+            //SadConsole.UI.Themes.Library.Default.Colors = CustomColors;
         }
 
         public T GetWindow<T>(WindowTag tag) where T : IWindowTagContract

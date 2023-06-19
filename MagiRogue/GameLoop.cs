@@ -75,8 +75,8 @@ public static class GameLoop
     {
         Palette.AddToColorDictionary();
         // Makes so that no excpetion happens for a custom control
-        SadConsole.UI.Themes.Library.Default.SetControlTheme(typeof(UI.Controls.MagiButton),
-           typeof(SadConsole.UI.Themes.ButtonTheme));
+        //SadConsole.UI.Themes.Library.Default.SetControlTheme(typeof(UI.Controls.MagiButton),
+        //   typeof(SadConsole.UI.Themes.ButtonTheme));
 
         //Instantiate the UIManager
         UIManager = (UIManager)GameHost.Instance.Screen!;

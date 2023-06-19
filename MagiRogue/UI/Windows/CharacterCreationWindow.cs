@@ -4,7 +4,6 @@ using MagiRogue.Entities;
 using MagiRogue.Entities.Core;
 using MagiRogue.Entities.StarterScenarios;
 using MagiRogue.UI.Controls;
-using MagiRogue.Utils;
 using SadConsole;
 using SadConsole.Instructions;
 using SadConsole.UI.Controls;
@@ -132,10 +131,7 @@ namespace MagiRogue.UI.Windows
             scenarioChooser = new ListBox(30, 10)
             {
                 Position = scenarioPoint,
-                Theme = new SadConsole.UI.Themes.ListBoxTheme()
-                {
-                    DrawBorder = true,
-                }
+                DrawBorder = true,
             };
             foreach (var item in DataManager.ListOfScenarios)
             {
@@ -173,10 +169,7 @@ namespace MagiRogue.UI.Windows
             raceChooser = new ListBox(20, 10)
             {
                 Position = racePoint,
-                Theme = new SadConsole.UI.Themes.ListBoxTheme()
-                {
-                    DrawBorder = true,
-                },
+                DrawBorder = true,
                 IsVisible = false
             };
 
