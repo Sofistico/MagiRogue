@@ -218,7 +218,7 @@ namespace MagiRogue.GameSys
             SaveAndLoad.SaveGameToFolder(this, saveName);
         }
 
-        /// <summary>
+        /*/// <summary>
         /// Sets up anything that needs to be set up after map gen
         /// and after placing entities, like the nodes turn
         /// system
@@ -229,7 +229,7 @@ namespace MagiRogue.GameSys
             {
                 node.SetUpNodeTurn(this);
             }
-        }
+        }*/
 
         private void CreateTestMap()
         {
