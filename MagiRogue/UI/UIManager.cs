@@ -197,7 +197,7 @@ namespace MagiRogue.UI
         private void SetUpCustomColors()
         {
             // Create a set of default colours that we will modify
-            //CustomColors = SadConsole.UI.Library.Default.Colors.Clone();
+            CustomColors = new SadConsole.UI.Colors();
 
             // Pick a couple of background colours that we will apply to all consoles.
             Color backgroundColor = new Color(CustomColors.Black, "Black");
