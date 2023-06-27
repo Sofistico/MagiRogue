@@ -61,7 +61,12 @@
     "ColdDamageTemp": -56,
     "Color": "Yellow",
     "Type": "Fat",
-    "StrainsAtYield": 50
+    "ShearYield": 10000,
+    "ShearFracture": 10000,
+    "ShearStrainAtYield": 50000,
+    "ImpactYield": 10000,
+    "ImpactFracture": 10000,
+    "ImpactStrainsAtYield": 50000
   },
   {
     "Id": "muscle",
@@ -76,54 +81,8 @@
     "ColdDamageTemp": -56,
     "Color": "Red",
     "Type": "Meat",
-    "StrainsAtYield": 50
-  },
-  {
-    "Id": "bone",
-    "Name": "bone",
-    "IgnationPoint": 124,
-    "Flamability": true,
-    "Hardness": 2,
-    "MPInfusionLimit": 5,
-    "CanRegen": true,
-    "HeatDamageTemp": 139,
-    "ColdDamageTemp": -56,
-    "Density": 0.5,
-    "Color": "White",
-    "Type": "Bone",
-    "StrainsAtYield": 10
-  },
-  {
-    "Id": "teeth",
-    "Name": "teeth",
-    "IgnationPoint": 124,
-    "Flamability": false,
-    "Hardness": 1,
-    "MPInfusionLimit": 3,
-    "CanRegen": false,
-    "HeatDamageTemp": 139,
-    "ColdDamageTemp": -56,
-    "Density": 0.6,
-    "Color": "White",
-    "Type": "Teeth",
-    "StrainsAtYield": 10
-  },
-  {
-    "Id": "nerve",
-    "Name": "nerve material",
-    "IgnationPoint": 105,
-    "Flamability": false,
-    "Hardness": 1,
-    "MPInfusionLimit": 5,
-    "CanRegen": false,
-    "HeatDamageTemp": 105,
-    "ColdDamageTemp": -25,
-    "Density": 0.5,
-    "Color": "Grey",
-    "Type": "None",
-    "StrainsAtYield": 10,
-    "ShearYield": 20000,
-    "ShearFracture": 20000,
+    "ShearYield": 10000,
+    "ShearFracture": 10000,
     "ShearStrainAtYield": 50000,
     "ImpactYield": 10000,
     "ImpactFracture": 10000,
@@ -142,7 +101,95 @@
     "Density": 0.5,
     "Color": "White",
     "Type": "Bone",
-    "StrainsAtYield": 10
+    "ShearYield": 115000,
+    "ShearFracture": 130000,
+    "ShearStrainAtYield": 100,
+    "ImpactYield": 20000,
+    "ImpactFracture": 20000,
+    "ImpactStrainsAtYield": 100,
+    "MaxEdge": 100
+  },
+  {
+    "Id": "teeth",
+    "InheirtFrom": "bone",
+    "Name": "teeth",
+    "IgnationPoint": 124,
+    "Flamability": false,
+    "Hardness": 1,
+    "MPInfusionLimit": 3,
+    "CanRegen": false,
+    "HeatDamageTemp": 139,
+    "ColdDamageTemp": -56,
+    "Density": 0.6,
+    "Color": "White",
+    "Type": "Teeth",
+    // same from bone
+    "MaxEdge": 1000
+  },
+  {
+    "Id": "nerve",
+    "Name": "nerve material",
+    "InheirtFrom": "skin",
+    "IgnationPoint": 105,
+    "Flamability": false,
+    "Hardness": 1,
+    "MPInfusionLimit": 5,
+    "CanRegen": false,
+    "HeatDamageTemp": 105,
+    "ColdDamageTemp": -25,
+    "Density": 0.5,
+    "Color": "Grey",
+    "Type": "None"
+  },
+  {
+    "Id": "hoof",
+    "InheirtFrom": "bone",
+    "Name": "hoof",
+    "IgnationPoint": 124,
+    "Flamability": true,
+    "Hardness": 2,
+    "MPInfusionLimit": 5,
+    "CanRegen": true,
+    "HeatDamageTemp": 139,
+    "ColdDamageTemp": -56,
+    "Density": 0.5,
+    "Color": "Gray",
+    "Type": "Bone"
+  },
+  {
+    "Id": "horn",
+    "InheirtFrom": "bone",
+    "Name": "horn",
+    "IgnationPoint": 124,
+    "Flamability": true,
+    "Hardness": 2,
+    "MPInfusionLimit": 5,
+    "CanRegen": true,
+    "HeatDamageTemp": 139,
+    "ColdDamageTemp": -56,
+    "Density": 0.5,
+    "Color": "Gray",
+    "Type": "Bone"
+  },
+  {
+    "Id": "nail",
+    "InheirtFrom": "bone",
+    "Name": "nail",
+    "IgnationPoint": 124,
+    "Flamability": true,
+    "Hardness": 2,
+    "MPInfusionLimit": 5,
+    "CanRegen": true,
+    "HeatDamageTemp": 139,
+    "ColdDamageTemp": -56,
+    "Density": 0.5,
+    "Color": "Gray",
+    "Type": "Bone",
+    // more elastic than bone
+    "ImpactYield": 200000,
+    "ImpactFracture": 200000,
+    "ImpactStrainsAtYield": 5000,
+    "MaxEdge": 1000
   },
   {
     "Id": "stone",
@@ -156,7 +203,14 @@
     "ConfersTraits": [ "Durable", "MagicallyWeak" ],
     "Color": "DarkGray",
     "Type": "Stone",
-    "StrainsAtYield": 10
+    // generic values
+    "ShearYield": 115000,
+    "ShearFracture": 130000,
+    "ShearStrainAtYield": 100,
+    "ImpactYield": 20000,
+    "ImpactFracture": 20000,
+    "ImpactStrainsAtYield": 100,
+    "MaxEdge": 100
   },
   {
     "Id": "iron",
@@ -170,8 +224,7 @@
     "BoilingPoint": 2862,
     "ConfersTraits": [ "Durable", "MagicallyWeak" ],
     "Color": "Gray",
-    "Type": "Metal",
-    "StrainsAtYield": 3.19
+    "Type": "Metal"
   },
   {
     "Id": "wood",
@@ -184,8 +237,7 @@
     "Density": 0.9,
     "ConfersTraits": [ "Inexpensive" ],
     "Color": "Wood",
-    "Type": "Wood",
-    "StrainsAtYield": 5
+    "Type": "Wood"
   },
   {
     "Id": "grass",
@@ -196,8 +248,7 @@
     "CanRegen": true,
     "Density": 1.4,
     "Color": "GrassColor",
-    "Type": "Plant",
-    "StrainsAtYield": 100
+    "Type": "Plant"
   },
   {
     "Id": "h2o",
@@ -208,9 +259,11 @@
     "CanRegen": true,
     "Density": 1.1,
     "MeltingPoint": 0,
+    "LiquidTurnsInto": "ice",
     "BoilingPoint": 100,
-    "Color": "RiverWater",
-    "StrainsAtYield": 500
+    "SolidTurnsInto": "gas",
+    "GasTurnsInto": "h2o",
+    "Color": "RiverWater"
   },
   {
     "Id": "pure_magic",
@@ -221,8 +274,7 @@
     "CanRegen": true,
     "Density": 0.85,
     "ConfersTraits": [ "Magical" ],
-    "Color": "Blue",
-    "StrainsAtYield": 100
+    "Color": "Blue"
   },
   {
     "Id": "gold",
@@ -233,24 +285,23 @@
     "MeltingPoint": 1064,
     "ConfersTraits": [ "Magical", "MagicallyPotent", "Opulent" ],
     "Color": "Gold",
-    "Type": "Metal",
-    "StrainsAtYield": 17.5
+    "Type": "Metal"
   },
   {
     "Id": "null",
     "Name": "null",
     "Density": 1
   },
-  //{ // Transfer over to the water material
-  //  "Id": "ice",
-  //  "Name": "Ice",
-  //  "Hardness": 1,
-  //  "MPInfusionLimit": 5,
-  //  "Density": 0.917,
-  //  "MeltingPoint": 0,
-  //  "ConfersTraits": [ "Fragile" ],
-  //  "Color": "Ice"
-  //},
+  { // Transfer over to the water material
+    "Id": "ice",
+    "Name": "Ice",
+    "Hardness": 1,
+    "MPInfusionLimit": 5,
+    "Density": 0.917,
+    "MeltingPoint": 0,
+    "ConfersTraits": [ "Fragile" ],
+    "Color": "Ice"
+  },
   {
     "Id": "dirt",
     "Name": "dirt",
@@ -259,8 +310,7 @@
     "Density": 1.22,
     "MeltingPoint": 1196,
     "ConfersTraits": [ "Inexpensive" ],
-    "Color": "Dirt",
-    "StrainsAtYield": 15
+    "Color": "Dirt"
   },
   {
     "Id": "sand",
@@ -270,8 +320,7 @@
     "Density": 1.6,
     "MeltingPoint": 1700,
     "LiquidTurnsInto": "glass",
-    "Color": "Desert",
-    "StrainsAtYield": 100
+    "Color": "Desert"
   },
   {
     "Id": "carbon_coal",
@@ -283,8 +332,7 @@
     "Flamability": true,
     "IgnationPoint": 300,
     "Color": "DarkGray",
-    "Type": "Fuel",
-    "StrainsAtYield": 19
+    "Type": "Fuel"
   },
   {
     "Id": "glass",
@@ -296,8 +344,7 @@
     "BoilingPoint": 2230,
     "ConfersTraits": [ "Fragile" ],
     "Color": "UnclearGlass",
-    "Type": "Glass",
-    "StrainsAtYield": 19
+    "Type": "Glass"
   },
   {
     "Id": "mud",
@@ -308,20 +355,15 @@
     "MeltingPoint": 1250,
     "BoilingPoint": 3000,
     "ConfersTraits": [ "Inexpensive" ],
-    "Color": "Brown",
-    "StrainsAtYield": 15
+    "Color": "Brown"
   },
   {
     "Id": "chalk",
     "Name": "chalk",
-    "Hardness": 0,
+    "InheirtFrom": "stone",
     "MPInfusionLimit": 5,
     "Density": 1.4,
-    "MeltingPoint": 1339,
-    "BoilingPoint": 3005,
     "ConfersTraits": [ "Inexpensive", "Powders" ],
-    "Color": "White",
-    "Type": "Stone",
-    "StrainsAtYield": 15
+    "Color": "White"
   }
 ]

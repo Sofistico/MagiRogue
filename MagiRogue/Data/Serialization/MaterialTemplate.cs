@@ -1,9 +1,7 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Utils;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Runtime.Serialization;
 
 namespace MagiRogue.Data.Serialization
 {
@@ -36,8 +34,9 @@ namespace MagiRogue.Data.Serialization
 
         public int? BoilingPoint { get; set; }
 
-        // Will be removed!
         public string LiquidTurnsInto { get; set; }
+        public string SolidTurnsInto { get; set; }
+        public string GasTurnsInto { get; set; }
 
         public List<Trait> ConfersTraits { get; set; }
 
@@ -114,6 +113,9 @@ namespace MagiRogue.Data.Serialization
                 ImpactYield = this.ImpactYield,
                 ShearFracture = this.ShearFracture,
                 ShearYield = this.ShearYield,
+                ShearStrainAtYield = this.ShearStrainAtYield,
+                GasTurnsInto = GasTurnsInto,
+                SolidTurnsInto = SolidTurnsInto,
             };
         }
 
@@ -131,7 +133,7 @@ namespace MagiRogue.Data.Serialization
             return ReturnNameFromMaterial(Name, objectName);
         }
 
-        internal MagiColorSerialization ReturnMagiColor()
+        public MagiColorSerialization ReturnMagiColor()
         {
             return new MagiColorSerialization(Color);
         }
