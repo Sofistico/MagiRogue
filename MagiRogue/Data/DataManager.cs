@@ -20,6 +20,9 @@ namespace MagiRogue.Data
 {
     public static class DataManager
     {
+        // TODO: change all IReadOnlyList to dictionaries!
+        // and make it all private
+
         #region jsons
 
         public static readonly IReadOnlyList<ItemTemplate> ListOfItems =

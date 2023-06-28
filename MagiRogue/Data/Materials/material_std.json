@@ -138,7 +138,7 @@
     "HeatDamageTemp": 105,
     "ColdDamageTemp": -25,
     "Density": 0.5,
-    "Color": "Grey",
+    "Color": "Gray",
     "Type": "None"
   },
   {
@@ -200,31 +200,47 @@
     "CanRegen": false,
     "Density": 2.6,
     "MeltingPoint": 1200,
+    "LiquidTurnsInto": "magma",
+    "SolidTurnsInto": "self",
+    "GasTurnsInto": "boiling magma", // when there isn't an id to it, it will just copy all properties and change the material name and state
     "ConfersTraits": [ "Durable", "MagicallyWeak" ],
     "Color": "DarkGray",
     "Type": "Stone",
     // generic values
-    "ShearYield": 115000,
-    "ShearFracture": 130000,
+    "ShearYield": 15000,
+    "ShearFracture": 15000,
     "ShearStrainAtYield": 100,
-    "ImpactYield": 20000,
-    "ImpactFracture": 20000,
+    "ImpactYield": 120000,
+    "ImpactFracture": 120000,
     "ImpactStrainsAtYield": 100,
-    "MaxEdge": 100
+    "MaxEdge": 1000
   },
+  {
+    "Id": "generic_metal",
+    "Name": "metal",
+    "Hardness": 10,
+    "MPInfusionLimit": 2,
+    "LiquidTurnsInto": "molten self",
+    "SolidTurnsInto": "boiling self",
+    "Color": "Gray",
+    "Type": "Metal"
+  }
   {
     "Id": "iron",
     "Name": "iron",
-    "Flamability": false,
-    "Hardness": 10,
-    "MPInfusionLimit": 2,
-    "CanRegen": false,
+    "InheirtFrom": "generic_metal",
+    "MPInfusionLimit": 4,
     "Density": 7.8,
     "MeltingPoint": 1538,
     "BoilingPoint": 2862,
     "ConfersTraits": [ "Durable", "MagicallyWeak" ],
-    "Color": "Gray",
-    "Type": "Metal"
+    "ShearYield": 15000,
+    "ShearFracture": 15000,
+    "ShearStrainAtYield": 100,
+    "ImpactYield": 120000,
+    "ImpactFracture": 120000,
+    "ImpactStrainsAtYield": 100,
+    "MaxEdge": 1000
   },
   {
     "Id": "wood",
@@ -237,18 +253,39 @@
     "Density": 0.9,
     "ConfersTraits": [ "Inexpensive" ],
     "Color": "Wood",
-    "Type": "Wood"
+    "Type": "Wood",
+    "ShearYield": 40000,
+    "ShearFracture": 40000,
+    "ShearStrainAtYield": 1000,
+    "ImpactYield": 10000,
+    "ImpactFracture": 10000,
+    "ImpactStrainsAtYield": 1000,
+    "MaxEdge": 1000
+  },
+  {
+    // based on grass and stuff, for greeny stuff
+    "Id": "generic_plant_matter",
+    "Name": "plant stuff",
+    "Flamability": true,
+    "CanRegen": true,
+    "Hardness": 0,
+    "IgnationPoint": 105,
+    "MPInfusionLimit": 0,
+    "Density": 1.4,
+    "Type": "Plant",
+    "ShearYield": 40000,
+    "ShearFracture": 40000,
+    "ShearStrainAtYield": 1000,
+    "ImpactYield": 10000,
+    "ImpactFracture": 10000,
+    "ImpactStrainsAtYield": 1000,
+    "MaxEdge": 1000
   },
   {
     "Id": "grass",
+    "InheirtFrom": "generic_soft_plant_matter",
     "Name": "grass",
-    "Flamability": false,
-    "Hardness": 1,
-    "MPInfusionLimit": 0,
-    "CanRegen": true,
-    "Density": 1.4,
-    "Color": "GrassColor",
-    "Type": "Plant"
+    "Color": "GrassColor"
   },
   {
     "Id": "h2o",
@@ -266,11 +303,13 @@
     "Color": "RiverWater"
   },
   {
+    // does pure magic is matter?
+    // does it need any special properties?
     "Id": "pure_magic",
     "Name": "magic energy",
     "Flamability": false,
     "Hardness": 1,
-    "MPInfusionLimit": 100,
+    "MPInfusionLimit": 999,
     "CanRegen": true,
     "Density": 0.85,
     "ConfersTraits": [ "Magical" ],
@@ -278,6 +317,7 @@
   },
   {
     "Id": "gold",
+    "InheirtFrom": "generic_metal",
     "Name": "gold",
     "Hardness": 1,
     "MPInfusionLimit": 10,
@@ -292,18 +332,22 @@
     "Name": "null",
     "Density": 1
   },
-  { // Transfer over to the water material
+  {
     "Id": "ice",
+    "InheirtFrom": "stone",
     "Name": "Ice",
     "Hardness": 1,
     "MPInfusionLimit": 5,
     "Density": 0.917,
     "MeltingPoint": 0,
     "ConfersTraits": [ "Fragile" ],
-    "Color": "Ice"
+    "Color": "Ice",
+    "ImpactYield": 1000,
+    "ImpactFracture": 1000
   },
   {
     "Id": "dirt",
+    "InheirtFrom": "stone",
     "Name": "dirt",
     "Hardness": 1,
     "MPInfusionLimit": 1,
@@ -315,6 +359,7 @@
   {
     "Id": "sand",
     "Name": "sand",
+    "InheirtFrom": "dirt",
     "Hardeness": 1,
     "MPInfusionLimit": 2,
     "Density": 1.6,
@@ -324,6 +369,7 @@
   },
   {
     "Id": "carbon_coal",
+    "InheirtFrom": "stone",
     "Name": "coal",
     "Hardeness": 2,
     "MPInfusionLimit": 1,
@@ -348,6 +394,7 @@
   },
   {
     "Id": "mud",
+    "InheirtFrom": "dirt",
     "Name": "mud",
     "Hardness": 0,
     "MPInfusionLimit": 1,
