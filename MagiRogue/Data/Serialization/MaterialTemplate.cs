@@ -159,5 +159,25 @@ namespace MagiRogue.Data.Serialization
             else
                 return MaterialState.Solid;
         }
+
+        public void CopyTo(MaterialTemplate mat)
+        {
+            var props = this.GetType().GetProperties();
+            var sourceProps = GetType().GetProperties();
+            for (int i = 0; i < props.Length; i++)
+            {
+                var prop = props[i];
+                var sourceProp = sourceProps[i];
+                if (!prop.CanRead && !sourceProp.CanWrite)
+                    continue;
+                var propVal = prop.GetValue(this, null);
+                var sourceVal = prop.GetValue(mat, null);
+                if (propVal is null)
+                    continue;
+                if (sourceVal is not null)
+                    continue;
+                prop.SetValue(mat, propVal);
+            }
+        }
     }
 }

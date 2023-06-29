@@ -7,12 +7,8 @@ using MagiRogue.Utils;
 namespace MagiRogue.GameSys.Physics
 {
     // For now it just deals with the list material, but in the future all interactions will go here
-    public class PhysicsManager
+    public static class PhysicsManager
     {
-        protected PhysicsManager()
-        {
-        }
-
         /// <summary>
         /// Sets the material of the object by the id of the material
         /// </summary>

@@ -13,6 +13,7 @@ using MagiRogue.GameSys.Tiles;
 using MagiRogue.GameSys.Veggies;
 using MagiRogue.Utils;
 using MagiRogue.Utils.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -22,6 +23,7 @@ namespace MagiRogue.Data
     {
         // TODO: change all IReadOnlyList to dictionaries!
         // and make it all private
+        private static bool firstLoad = true;
 
         #region jsons
 
@@ -98,7 +100,7 @@ namespace MagiRogue.Data
 
         #endregion jsons
 
-        public static IReadOnlyList<T> GetSourceTree<T>(string wildCard)
+        public static IReadOnlyList<T> GetSourceTree<T>(string wildCard, Action<T>? executeOnList = null)
         {
             string[] files = FileUtils.GetFiles(wildCard);
 
@@ -118,10 +120,15 @@ namespace MagiRogue.Data
                 allTList.AddRange(tList);
             }
 
+            if (executeOnList is not null)
+            {
+                allTList.ForEach(executeOnList);
+            }
+
             return allTList.AsReadOnly();
         }
 
-        #region Queryes
+        #region Query
 
         public static SpellBase QuerySpellInData(string spellId) => ListOfSpells.FirstOrDefault
                 (m => m.SpellId.Equals(spellId))?.Copy();
@@ -157,7 +164,26 @@ namespace MagiRogue.Data
             => ListOfRooms.FirstOrDefault(i => i.Id.Equals(roomId));
 
         public static MaterialTemplate QueryMaterial(string id)
-            => ListOfMaterials.FirstOrDefault(a => a.Id.Equals(id));
+        {
+            if (firstLoad)
+            {
+                firstLoad = false;
+                var list = ListOfMaterials.Where(i => !string.IsNullOrEmpty(i.InheirtFrom)).ToArray();
+                for (int i = 0; i < list.Length; i++)
+                {
+                    var mat = list[i];
+                    var inheirtFrom = ListOfMaterials.FirstOrDefault(i => i.Id.Equals(mat.InheirtFrom));
+                    if (inheirtFrom is null)
+                    {
+                        GameLoop.WriteToLog($"Material to inheirt from was null! Id: {mat.InheirtFrom}");
+                        continue;
+                    }
+
+                    inheirtFrom.CopyTo(mat);
+                }
+            }
+            return ListOfMaterials.FirstOrDefault(a => a.Id.Equals(id));
+        }
 
         public static List<BasicTile> QueryTilesInDataWithTrait(Trait trait)
             => ListOfTiles.Where(i => i.HasAnyTrait()
@@ -210,7 +236,9 @@ namespace MagiRogue.Data
         public static TissuePlanTemplate QueryTissuePlanInData(string tissuePlanId)
             => ListOfTissuePlans.FirstOrDefault(i => i.Id.Equals(tissuePlanId));
 
-        #endregion Queryes
+        #endregion Query
+
+        #region rng
 
         public static Language RandomLangugage()
             => ListOfLanguages.GetRandomItemFromList();
@@ -227,9 +255,15 @@ namespace MagiRogue.Data
         public static Research RandomNonMagicalResearch()
             => ListOfResearches.Where(i => !i.IsMagical).ToList().GetRandomItemFromList();
 
+        #endregion rng
+
+        #region helper methods
+
         public static List<Reaction> GetProductsByTag(RoomTag tag)
         {
             return ListOfReactions.Where(i => i.RoomTag.Contains(tag)).ToList();
         }
+
+        #endregion helper methods
     }
 }
