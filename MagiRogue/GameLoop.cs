@@ -150,6 +150,8 @@ public static class GameLoop
         // so that it doesn't block the main thread!
         Task.Run(() =>
         {
+            if (errors.Count == 0)
+                return;
             var path = new StringBuilder(AppDomain.CurrentDomain.BaseDirectory).Append(@"\log.txt").ToString();
             StringBuilder str = new StringBuilder($"{DateTime.Now:dd/MM/yyyy} ");
             foreach (var item in errors)

@@ -28,73 +28,73 @@ namespace MagiRogue.Data
         #region jsons
 
         public static readonly IReadOnlyList<ItemTemplate> ListOfItems =
-            GetSourceTree<ItemTemplate>(@".\Data\*\items_*");
+            GetSourceTree<ItemTemplate>(@".\Data\Items\items_*");
 
         public static readonly IReadOnlyList<MaterialTemplate> ListOfMaterials =
-            GetSourceTree<MaterialTemplate>(@".\Data\*\material_*");
+            GetSourceTree<MaterialTemplate>(@".\Data\Materials\material_*");
 
         public static readonly IReadOnlyList<SpellBase> ListOfSpells =
-            GetSourceTree<SpellBase>(@".\Data\*\spells_*");
+            GetSourceTree<SpellBase>(@".\Data\Spells\spells_*");
 
         public static readonly IReadOnlyList<Organ> ListOfOrgans =
-            GetSourceTree<Organ>(@".\Data\*\organs_*");
+            GetSourceTree<Organ>(@".\Data\Bodies\organs_*");
 
         public static readonly IReadOnlyList<Limb> ListOfLimbs =
-            GetSourceTree<Limb>(@".\Data\*\limbs_*");
+            GetSourceTree<Limb>(@".\Data\Bodies\limbs_*");
 
         public static readonly IReadOnlyList<BasicTile> ListOfTiles =
-            GetSourceTree<BasicTile>(@".\Data\*\tiles_*");
+            GetSourceTree<BasicTile>(@".\Data\Tiles\tiles_*");
 
         public static readonly IReadOnlyList<Furniture> ListOfFurnitures =
-            GetSourceTree<Furniture>(@".\Data\*\fur_*");
+            GetSourceTree<Furniture>(@".\Data\Furniture\fur_*");
 
         public static readonly IReadOnlyList<RoomTemplate> ListOfRooms =
-            GetSourceTree<RoomTemplate>(@".\Data\*\room_*");
+            GetSourceTree<RoomTemplate>(@".\Data\Rooms\room_*");
 
         // races can be dynamically generated ingame
         public static readonly IReadOnlyList<Race> ListOfRaces =
-            GetSourceTree<Race>(@".\Data\*\race_*");
+            GetSourceTree<Race>(@".\Data\Races\race_*");
 
         public static readonly IReadOnlyList<Scenario> ListOfScenarios =
-            GetSourceTree<Scenario>(@".\Data\*\scenarios_*");
+            GetSourceTree<Scenario>(@".\Data\Scenarios\scenarios_*");
 
         public static readonly IReadOnlyList<BodyPlan> ListOfBpPlan =
-            GetSourceTree<BodyPlan>(@".\Data\*\bodies_*.json");
+            GetSourceTree<BodyPlan>(@".\Data\Bodies\bodies_*.json");
 
         public static readonly IReadOnlyList<Language> ListOfLanguages =
-            GetSourceTree<Language>(@".\Data\*\language_*");
+            GetSourceTree<Language>(@".\Data\Language\language_*");
 
         public static readonly IReadOnlyList<Profession> ListOfProfessions =
-            GetSourceTree<Profession>(@".\Data\*\profession_*");
+            GetSourceTree<Profession>(@".\Data\Professions\profession_*");
 
         public static readonly IReadOnlyList<CultureTemplate> ListOfCultures =
-            GetSourceTree<CultureTemplate>(@".\Data\*\cultures_*");
+            GetSourceTree<CultureTemplate>(@".\Data\Cultures\cultures_*");
 
         public static readonly IReadOnlyList<Research> ListOfResearches =
-            GetSourceTree<Research>(@".\Data\*\research_*");
+            GetSourceTree<Research>(@".\Data\Research\research_*");
 
         public static readonly IReadOnlyList<Reaction> ListOfReactions =
-            GetSourceTree<Reaction>(@".\Data\*\reaction_*");
+            GetSourceTree<Reaction>(@".\Data\Reaction\reaction_*");
 
         public static readonly IReadOnlyList<Ruleset> ListOfRules =
-            GetSourceTree<Ruleset>(@".\Data\*\rules_*");
+            GetSourceTree<Ruleset>(@".\Data\Rules\rules_*");
 
         public static readonly IReadOnlyList<Plant> ListOfPlants =
-            GetSourceTree<Plant>(@".\Data\*\plant_*");
+            GetSourceTree<Plant>(@".\Data\Plant\plant_*");
 
         public static readonly IReadOnlyList<TissuePlanTemplate> ListOfTissuePlans =
-            GetSourceTree<TissuePlanTemplate>(@".\Data\*\tissue_*");
+            GetSourceTree<TissuePlanTemplate>(@".\Data\Bodies\tissue_*");
 
         #region Descriptors
 
         public static readonly IReadOnlyList<string> ListOfRealmsName =
-            GetSourceTree<string>(@".\Data\*\realms_*.json");
+            GetSourceTree<string>(@".\Data\Descriptors\realms_*.json");
         public static readonly IReadOnlyList<string> ListOfMagicFounts =
-            GetSourceTree<string>(@".\Data\*\magic_fount_*.json");
+            GetSourceTree<string>(@".\Data\Descriptors\magic_fount_*.json");
         public static readonly IReadOnlyList<string> ListOfAdjectives =
-            GetSourceTree<string>(@".\Data\*\adjectives_*.json");
+            GetSourceTree<string>(@".\Data\Descriptors\adjectives_*.json");
         public static readonly IReadOnlyList<ShapeDescriptor> ListOfShapes =
-            GetSourceTree<ShapeDescriptor>(@".\Data\*\shapes_*.json");
+            GetSourceTree<ShapeDescriptor>(@".\Data\Descriptors\shapes_*.json");
 
         #endregion Descriptors
 

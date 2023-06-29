@@ -51,20 +51,19 @@ namespace MagiRogue.Data.Serialization
         /// <summary>
         /// How sharp the material is. Used in cutting calculations. Does not allow an inferior metal to penetrate superior armor.
         /// Applying a value of at least 100 to a stone will allow weapons to be made from that stone.
-        /// Defaults to 100.
         /// </summary>
-        public double MaxEdge { get; set; } = 100;
+        public double MaxEdge { get; set; }
 
-        public int ShearYield { get; set; } = 10000;
-        public int ShearFracture { get; set; } = 10000;
+        public int ShearYield { get; set; }
+        public int ShearFracture { get; set; }
         public double ShearStrainAtYield { get; set; }
 
         /// <summary>
         /// Specifies how hard of an impact (in kilopascals)
         /// the material can withstand before it will start deforming permanently.
-        /// Used for blunt-force combat. Defaults to 10000.
+        /// Used for blunt-force combat.
         /// </summary>
-        public int ImpactYield { get; set; } = 10000;
+        public int ImpactYield { get; set; }
 
         // the same as above, but in mpa
         public double ImpactYieldMpa => (double)ImpactYield / 1000;
@@ -73,7 +72,7 @@ namespace MagiRogue.Data.Serialization
         /// Specifies how hard of an impact the material can withstand before it will fail entirely.
         /// Used for blunt-force combat. Defaults to 10000.
         /// </summary>
-        public int ImpactFracture { get; set; } = 10000;
+        public int ImpactFracture { get; set; }
 
         public double ImpactFractureMpa => (double)ImpactFracture / 1000;
 

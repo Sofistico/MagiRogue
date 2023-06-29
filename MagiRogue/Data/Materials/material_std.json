@@ -224,7 +224,7 @@
     "SolidTurnsInto": "boiling self",
     "Color": "Gray",
     "Type": "Metal"
-  }
+  },
   {
     "Id": "iron",
     "Name": "iron",
