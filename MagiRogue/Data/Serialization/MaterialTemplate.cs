@@ -173,9 +173,10 @@ namespace MagiRogue.Data.Serialization
                 var sourceVal = prop.GetValue(mat, null);
                 if (propVal is null)
                     continue;
-                if (sourceVal is not null)
-                    continue;
-                prop.SetValue(mat, propVal);
+                if (sourceVal is null || propVal != sourceVal)
+                {
+                    prop.SetValue(mat, propVal);
+                }
             }
         }
     }
