@@ -63,33 +63,11 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
             foreach (string bp in BodyParts)
             {
-                Limb limb = DataManager.QueryLimbInData(bp);
-                Organ organ = DataManager.QueryOrganInData(bp);
+                Limb? limb = DataManager.QueryLimbInData(bp);
+                Organ? organ = DataManager.QueryOrganInData(bp);
                 if (limb is not null)
                 {
                     returnParts.Add(limb);
-                    if (raceTissueLayering.Count > 0 && raceTissue.Count > 0)
-                    {
-                        for (int i = 0; i < tissues.Length; i++)
-                        {
-                            var tissueStr = tissues[i].Split(";");
-                            if (tissueStr.Length >= 3)
-                            {
-                                var tissue = new Tissue(tissueStr[0], tissueStr[1], int.Parse(tissueStr[2]));
-                                if (tissueStr.Length > 3)
-                                {
-                                    var flags = tissueStr[3].Split(",");
-
-                                    for (int f = 0; f < flags.Length; f++)
-                                    {
-                                        if (Enum.TryParse<TissueFlag>(flags[f].Trim(), true, out var res))
-                                            tissue.Flags.Add(res);
-                                    }
-                                }
-                                limb.Tissues.Add(tissue);
-                            }
-                        }
-                    }
                 }
                 if (organ is not null)
                 {
@@ -97,10 +75,11 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 }
                 if (limb is null && organ is null)
                     throw new ApplicationException($"Coudn't find a valid body part! bodypart id: {bp}");
-            }
 
-            for (int i = 0; i < raceTissueLayering.Count; i++)
-            {
+                if (raceTissueLayering.Count > 0 && raceTissue.Count > 0)
+                {
+                    SetBodyPartTissueLayering(limb, organ);
+                }
             }
 
             var fingerBodyParts = returnParts.Where(i => i is Limb lim && (lim.LimbType is LimbType.Finger
@@ -117,6 +96,38 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 DealWithMoreThanOnePart(returnParts);
 
             return returnParts;
+        }
+
+        private void SetBodyPartTissueLayering(Limb limb, Organ organ)
+        {
+            // this is bad!
+            for (int i = 0; i < raceTissueLayering.Count; i++)
+            {
+                var tisLayer = raceTissueLayering[i];
+                var tisLimbs = new List<string>();
+                switch (tisLayer.Select)
+                {
+                    case SelectContext.LimbType:
+                        var tis = Array.FindAll(tisLayer.BodyParts,
+                            i => Enum.Parse<LimbType>(i) == limb.LimbType);
+                        break;
+
+                    case SelectContext.OrganType:
+                        break;
+
+                    case SelectContext.BodyPartFunction:
+                        break;
+
+                    case SelectContext.Id:
+                        break;
+
+                    case SelectContext.Category:
+                        break;
+
+                    default:
+                        break;
+                }
+            }
         }
 
         private void DealWithMoreThanOnePart(List<BodyPart> returnParts)
