@@ -1,7 +1,6 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.Entities.Core;
-using MagiRogue.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +29,9 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
     public class BodyPlan
     {
+        private readonly List<Tissue> raceTissue = new();
+        private readonly List<TissueLayeringTemplate> raceTissueLayering = new();
+
         public string Id { get; set; }
         public List<string> BodyParts { get; set; }
 
@@ -45,6 +47,19 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         {
             List<BodyPart> returnParts = new List<BodyPart>();
             string[] tissues = race?.Tissues;
+            if (tissues?.Length > 0)
+            {
+                for (int i = 0; i < tissues.Length; i++)
+                {
+                    var tissueGroup = DataManager.QueryTissuePlanInData(tissues[0]);
+                    if (tissueGroup.Tissues is not null)
+                    {
+                        raceTissue.AddRange(tissueGroup.Tissues);
+                    }
+                    if (tissueGroup.TissueLayering is not null)
+                        raceTissueLayering.AddRange(tissueGroup.TissueLayering);
+                }
+            }
 
             foreach (string bp in BodyParts)
             {
@@ -53,17 +68,17 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 if (limb is not null)
                 {
                     returnParts.Add(limb);
-                    if (tissues?.Length > 0)
+                    if (raceTissueLayering.Count > 0 && raceTissue.Count > 0)
                     {
                         for (int i = 0; i < tissues.Length; i++)
                         {
-                            var str = tissues[i].Split(";");
-                            if (str.Length >= 3)
+                            var tissueStr = tissues[i].Split(";");
+                            if (tissueStr.Length >= 3)
                             {
-                                var tissue = new Tissue(str[0], str[1], int.Parse(str[2]));
-                                if (str.Length > 3)
+                                var tissue = new Tissue(tissueStr[0], tissueStr[1], int.Parse(tissueStr[2]));
+                                if (tissueStr.Length > 3)
                                 {
-                                    var flags = str[3].Split(",");
+                                    var flags = tissueStr[3].Split(",");
 
                                     for (int f = 0; f < flags.Length; f++)
                                     {
@@ -72,10 +87,6 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                                     }
                                 }
                                 limb.Tissues.Add(tissue);
-                            }
-                            else
-                            {
-                                GameLoop.WriteToLog($"Something went wrong in creating the tissue for BP {limb.Id} and Race {race.Id}");
                             }
                         }
                     }
@@ -86,6 +97,10 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 }
                 if (limb is null && organ is null)
                     throw new ApplicationException($"Coudn't find a valid body part! bodypart id: {bp}");
+            }
+
+            for (int i = 0; i < raceTissueLayering.Count; i++)
+            {
             }
 
             var fingerBodyParts = returnParts.Where(i => i is Limb lim && (lim.LimbType is LimbType.Finger

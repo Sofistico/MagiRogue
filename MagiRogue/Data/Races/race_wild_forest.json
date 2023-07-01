@@ -31,7 +31,8 @@
     "BleedRegenaration": 0.6,
     "BodyPlan": [ "quadruped_hoof", "animal_tail", "humanoid_organs", "generic_teeth" ],
     "Tissues": [
-      "standard_tissues"
+      "standard_tissues",
+      "standard_tissues_layering"
     ],
     "HeightModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "BroadnessModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
@@ -129,7 +130,8 @@
     "BleedRegenaration": 0.7,
     "BodyPlan": [ "quadruped_limbs", "animal_tail", "humanoid_organs", "4toes", "generic_teeth" ],
     "Tissues": [
-      "standard_tissues"
+      "standard_tissues",
+      "standard_tissues_layering"
     ],
     "HeightModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "BroadnessModifier": [ 75, 95, 98, 100, 102, 105, 125 ],

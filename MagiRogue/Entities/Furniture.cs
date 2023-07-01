@@ -28,7 +28,7 @@ namespace MagiRogue.Entities
         {
             get
             {
-                return MathMagi.GetWeightWithDensity(Material.Density, Volume);
+                return MathMagi.GetWeightWithDensity(Material.Density ?? 0, Volume);
             }
         }
 

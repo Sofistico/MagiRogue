@@ -283,7 +283,7 @@
   },
   {
     "Id": "grass",
-    "InheirtFrom": "generic_soft_plant_matter",
+    "InheirtFrom": "generic_plant_matter",
     "Name": "grass",
     "Color": "GrassColor"
   },

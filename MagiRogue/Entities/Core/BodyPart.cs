@@ -113,7 +113,7 @@ namespace MagiRogue.Entities.Core
 
         private double GetBodyPartDensity()
         {
-            return Tissues.ConvertAll(i => i.Material).Sum(i => i.Density);
+            return Tissues.ConvertAll(i => i.Material).Sum(i => i.Density ?? 0);
         }
 
         public MaterialTemplate GetStructuralMaterial()

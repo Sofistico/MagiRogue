@@ -108,7 +108,7 @@ public static class GameLoop
 
     public static void AddMessageLog(string message, bool newLine = true)
     {
-        if (UIManager is null)
+        if (UIManager is null && UIManager.MessageLog is null)
             return;
         UIManager.MessageLog.PrintMessage(message, newLine);
         UIManager.StatusWindow.ChangePositionToUpMessageLog();

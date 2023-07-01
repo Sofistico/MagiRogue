@@ -47,5 +47,9 @@ namespace MagiRogue.Data.Enumerators
         /// Wheterer the tissue is stylesed by civilization
         /// </summary>
         Stylable,
+        /// <summary>
+        /// Connects the tissue to other tissues, the limb is only lost when all connects parts are severed
+        /// </summary>
+        Connects,
     }
 }

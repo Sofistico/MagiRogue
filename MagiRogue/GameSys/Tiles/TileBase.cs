@@ -3,12 +3,10 @@ using GoRogue.GameFramework;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
 using MagiRogue.GameSys.Veggies;
-using MagiRogue.Utils.Extensions;
 using SadConsole;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace MagiRogue.GameSys.Tiles
 {
@@ -172,7 +170,10 @@ namespace MagiRogue.GameSys.Tiles
             };
         }
 
-        protected void CalculateTileHealth() => _tileHealth = (int)MaterialOfTile.Density * MaterialOfTile.Hardness <= 0 ? 10 : _tileHealth = (int)MaterialOfTile.Density * MaterialOfTile.Hardness;
+        protected void CalculateTileHealth() =>
+            _tileHealth = MaterialOfTile.Density * MaterialOfTile.Hardness <= 0 ?
+            10
+            : _tileHealth = (int)(MaterialOfTile.Density * MaterialOfTile.Hardness)!;
 
         public virtual void DestroyTile(TileBase changeTile, Entities.Item? itemDropped = null)
         {

@@ -1,5 +1,4 @@
-﻿using MagiRogue.Data;
-using MagiRogue.Data.Enumerators;
+﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
 using MagiRogue.Entities.Core;
@@ -585,7 +584,7 @@ namespace MagiRogue.Utils
                                         armorQualityMultiplier,
                                         weaponQualityModifier,
                                         attackVolume),
-                _ => defenseMaterial.Hardness * 0.9,
+                _ => (defenseMaterial.Hardness ?? 1) * 0.9,
             };
         }
 
@@ -643,7 +642,7 @@ namespace MagiRogue.Utils
                     * (2 + (0.4 * armorQualityMultiplier)) * (attackContactArea * (weaponQualityModifier + 1));
                 if (originalMomentum >= minimumMomentum)
                 {
-                    return originalMomentum * (defenseMaterial.ImpactStrainsAtYield / 50000);
+                    return originalMomentum * ((defenseMaterial.ImpactStrainsAtYield ?? 1) / 50000);
                 }
             }
 
@@ -662,7 +661,7 @@ namespace MagiRogue.Utils
                 ((attacker.GetStrenght() + wieldedItem.BaseDmg + Mrn.Exploding2D6Dice)
                 * attacker.GetRelevantAttackAbilityMultiplier(attack.AttackAbility))
                 + (10 + (2 * wieldedItem.QualityMultiplier()))) * attacker.GetAttackVelocity(attack))
-                + (1 + (attacker.Volume / (wieldedItem.Material.DensityKgM3 * wieldedItem.Volume)));
+                + (1 + (attacker.Volume / ((wieldedItem.Material.DensityKgM3 ?? 1) * wieldedItem.Volume)));
         }
 
         /// <summary>
@@ -676,7 +675,7 @@ namespace MagiRogue.Utils
                 ((attacker.GetStrenght() + Mrn.Exploding2D6Dice)
                 * (attacker.GetRelevantAbilityMultiplier(attack.AttackAbility) + 1)
                 * attacker.GetAttackVelocity(attack))
-                + (1 + (attacker.Volume / (limbAttacking.GetStructuralMaterial().DensityKgM3 * limbAttacking.Volume))));
+                + (1 + (attacker.Volume / ((limbAttacking.GetStructuralMaterial().DensityKgM3 ?? 1) * limbAttacking.Volume))));
         }
 
         #endregion Physics

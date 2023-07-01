@@ -1,6 +1,5 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities.Core;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -60,7 +59,7 @@ namespace MagiRogue.Entities
             InitialDamageSource = damageSource;
             foreach (var tissue in tissues)
             {
-                Parts.Add(new PartWound(tissue.Volume, tissue.Material.ImpactStrainsAtYield, tissue, damageSource));
+                Parts.Add(new PartWound(tissue.Volume, tissue.Material.ImpactStrainsAtYield ?? 0, tissue, damageSource));
             }
         }
 
