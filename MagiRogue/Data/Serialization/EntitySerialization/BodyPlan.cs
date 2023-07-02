@@ -29,7 +29,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
     public class BodyPlan
     {
-        private readonly List<Tissue> raceTissue = new();
+        private readonly Dictionary<string, Tissue> raceTissue = new();
         private readonly List<TissueLayeringTemplate> raceTissueLayering = new();
 
         public string Id { get; set; }
@@ -52,10 +52,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 for (int i = 0; i < tissues.Length; i++)
                 {
                     var tissueGroup = DataManager.QueryTissuePlanInData(tissues[0]);
-                    if (tissueGroup.Tissues is not null)
-                    {
-                        raceTissue.AddRange(tissueGroup.Tissues);
-                    }
+                    tissueGroup.Tissues?.ForEach(i => raceTissue.Add(i.Id, i));
                     if (tissueGroup.TissueLayering is not null)
                         raceTissueLayering.AddRange(tissueGroup.TissueLayering);
                 }
@@ -100,16 +97,16 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
         private void SetBodyPartTissueLayering(Limb limb, Organ organ)
         {
+            var tissueIds = new List<string>();
+            var tisLimbs = new List<BodyPart>();
             // this is bad!
             for (int i = 0; i < raceTissueLayering.Count; i++)
             {
                 var tisLayer = raceTissueLayering[i];
-                var tisLimbs = new List<string>();
+                tissueIds.AddRange(tisLayer.Tissues);
                 switch (tisLayer.Select)
                 {
                     case SelectContext.LimbType:
-                        var tis = Array.FindAll(tisLayer.BodyParts,
-                            i => Enum.Parse<LimbType>(i) == limb.LimbType);
                         break;
 
                     case SelectContext.OrganType:
