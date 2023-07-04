@@ -75,7 +75,9 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
                 if (raceTissueLayering.Count > 0 && raceTissue.Count > 0)
                 {
-                    SetBodyPartTissueLayering(limb, organ);
+#pragma warning disable RCS1084 // Use coalesce expression instead of conditional expression.
+                    SetBodyPartTissueLayering(limb is null ? organ : limb);
+#pragma warning restore RCS1084 // Use coalesce expression instead of conditional expression.
                 }
             }
 
@@ -95,10 +97,10 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             return returnParts;
         }
 
-        private void SetBodyPartTissueLayering(Limb limb, Organ organ)
+        private void SetBodyPartTissueLayering(BodyPart bp)
         {
             var tissueIds = new List<string>();
-            var tisLimbs = new List<BodyPart>();
+            string[]? finalList = null;
             // this is bad!
             for (int i = 0; i < raceTissueLayering.Count; i++)
             {
@@ -107,22 +109,51 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 switch (tisLayer.Select)
                 {
                     case SelectContext.LimbType:
+                        var limb = (Limb)bp;
+                        finalList = Array.FindAll(tisLayer.BodyParts,
+                            i => i.Contains(limb.LimbType.ToString()));
                         break;
 
                     case SelectContext.OrganType:
+                        var organ = (Organ)bp;
+                        finalList = Array.FindAll(tisLayer.BodyParts,
+                            i => i.Contains(organ.OrganType.ToString()));
                         break;
 
                     case SelectContext.BodyPartFunction:
+                        finalList = Array.FindAll(tisLayer.BodyParts,
+                            i => i.Contains(bp.ToString()));
                         break;
 
                     case SelectContext.Id:
+                        finalList = Array.FindAll(tisLayer.BodyParts,
+                            i => i.Contains(bp.Id));
                         break;
 
                     case SelectContext.Category:
+                        finalList = Array.FindAll(tisLayer.BodyParts,
+                            i => i.Contains(bp.Category));
                         break;
 
                     default:
-                        break;
+                        GameLoop.WriteToLog("No select context found!");
+                        throw new ApplicationException("No select context found!");
+                }
+            }
+            if (finalList is null)
+            {
+                GameLoop.WriteToLog("No final list for layering tissue found!");
+                throw new ApplicationException("No final list for layering tissue found!");
+            }
+
+            for (int i = 0; i < finalList.Length; i++)
+            {
+                var layer = finalList[i].Split(':');
+                if (layer.Length == 0)
+                    continue;
+                foreach (var tissueId in tissueIds)
+                {
+                    var tissue = raceTissue[tissueId];
                 }
             }
         }
