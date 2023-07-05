@@ -51,8 +51,8 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             {
                 for (int i = 0; i < tissues.Length; i++)
                 {
-                    var tissueGroup = DataManager.QueryTissuePlanInData(tissues[0]);
-                    tissueGroup.Tissues?.ForEach(i => raceTissue.Add(i.Id, i));
+                    var tissueGroup = DataManager.QueryTissuePlanInData(tissues[i]);
+                    tissueGroup.Tissues?.ForEach(i => raceTissue.TryAdd(i.Id, i));
                     if (tissueGroup.TissueLayering is not null)
                         raceTissueLayering.AddRange(tissueGroup.TissueLayering);
                 }
@@ -99,23 +99,25 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
         private void SetBodyPartTissueLayering(BodyPart bp)
         {
-            var tissueIds = new List<string>();
+            TissueLayeringTemplate? tisLayer = default;
             string[]? finalList = null;
             // this is bad!
             for (int i = 0; i < raceTissueLayering.Count; i++)
             {
-                var tisLayer = raceTissueLayering[i];
-                tissueIds.AddRange(tisLayer.Tissues);
+                tisLayer = raceTissueLayering[i];
                 switch (tisLayer.Select)
                 {
                     case SelectContext.LimbType:
-                        var limb = (Limb)bp;
+                        if (bp is not Limb limb)
+                            continue;
+
                         finalList = Array.FindAll(tisLayer.BodyParts,
                             i => i.Contains(limb.LimbType.ToString()));
                         break;
 
                     case SelectContext.OrganType:
-                        var organ = (Organ)bp;
+                        if (bp is not Organ organ)
+                            continue;
                         finalList = Array.FindAll(tisLayer.BodyParts,
                             i => i.Contains(organ.OrganType.ToString()));
                         break;
@@ -132,13 +134,15 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
                     case SelectContext.Category:
                         finalList = Array.FindAll(tisLayer.BodyParts,
-                            i => i.Contains(bp.Category));
+                            i => !string.IsNullOrEmpty(bp.Category) && i.Contains(bp?.Category));
                         break;
 
                     default:
                         GameLoop.WriteToLog("No select context found!");
                         throw new ApplicationException("No select context found!");
                 }
+                if (finalList.Length > 0)
+                    break;
             }
             if (finalList is null)
             {
@@ -151,9 +155,18 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 var layer = finalList[i].Split(':');
                 if (layer.Length == 0)
                     continue;
-                foreach (var tissueId in tissueIds)
+                foreach (var tissueId in tisLayer.Tissues)
                 {
                     var tissue = raceTissue[tissueId];
+                    if (layer.Length > 1)
+                    {
+                        for (int z = 1; z < layer.Length; z++)
+                        {
+                            if (int.TryParse(layer[z], out int thicc))
+                                tissue.RelativeThickness = thicc;
+                        }
+                    }
+                    bp.Tissues.Add(tissue);
                 }
             }
         }

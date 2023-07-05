@@ -257,7 +257,7 @@
       },
       {
         "Select": "OrganType",
-        "Tissues": [ "skin:muscle" ],
+        "Tissues": [ "skin", "muscle" ],
         "BodyParts": [ "Mouth:1:2" ]
       },
       {

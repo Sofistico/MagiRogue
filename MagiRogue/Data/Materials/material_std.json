@@ -142,6 +142,107 @@
     "Type": "None"
   },
   {
+    "Id": "brain",
+    "Name": "brain material",
+    "InheirtFrom": "skin",
+    "MPInfusionLimit": 5,
+    "HeatDamageTemp": 105,
+    "ColdDamageTemp": -25,
+    "Density": 0.5,
+    "Color": "Gray",
+    "Type": "None"
+  },
+  {
+    "Id": "heart",
+    "Name": "heart material",
+    "InheirtFrom": "skin",
+    "MPInfusionLimit": 5,
+    "HeatDamageTemp": 105,
+    "ColdDamageTemp": -25,
+    "Density": 0.5,
+    "Color": "Gray",
+    "Type": "None"
+  },
+  {
+    "Id": "stomach",
+    "Name": "stomach material",
+    "InheirtFrom": "skin",
+    "MPInfusionLimit": 5,
+    "HeatDamageTemp": 105,
+    "ColdDamageTemp": -25,
+    "Density": 0.5,
+    "Color": "Gray",
+    "Type": "None"
+  },
+  {
+    "Id": "gut",
+    "Name": "intestine material",
+    "InheirtFrom": "skin",
+    "MPInfusionLimit": 5,
+    "HeatDamageTemp": 105,
+    "ColdDamageTemp": -25,
+    "Density": 0.5,
+    "Color": "Gray",
+    "Type": "None"
+  },
+  {
+    "Id": "kidney",
+    "Name": "kidney material",
+    "InheirtFrom": "skin",
+    "MPInfusionLimit": 5,
+    "HeatDamageTemp": 105,
+    "ColdDamageTemp": -25,
+    "Density": 0.5,
+    "Color": "Gray",
+    "Type": "None"
+  },
+  {
+    "Id": "lung",
+    "Name": "lung material",
+    "InheirtFrom": "skin",
+    "MPInfusionLimit": 5,
+    "HeatDamageTemp": 105,
+    "ColdDamageTemp": -25,
+    "Density": 0.5,
+    "Color": "Gray",
+    "Type": "None"
+  },
+  {
+    "Id": "eye",
+    "Name": "eye material",
+    "InheirtFrom": "skin",
+    "MPInfusionLimit": 5,
+    "HeatDamageTemp": 105,
+    "ColdDamageTemp": -25,
+    "Density": 0.5,
+    "Color": "Gray",
+    "Type": "None"
+  },
+  {
+    // todo: Fix these values
+    "Id": "hair",
+    "Name": "hair material",
+    "InheirtFrom": "skin",
+    "MPInfusionLimit": 5,
+    "HeatDamageTemp": 105,
+    "ColdDamageTemp": -25,
+    "Density": 0.5,
+    "Color": "Gray",
+    "Type": "None"
+  },
+  {
+    // TODO: to fix this layer
+    "Id": "cartilage",
+    "Name": "cartilage material",
+    "InheirtFrom": "skin",
+    "MPInfusionLimit": 5,
+    "HeatDamageTemp": 105,
+    "ColdDamageTemp": -25,
+    "Density": 0.5,
+    "Color": "Gray",
+    "Type": "None"
+  },
+  {
     "Id": "hoof",
     "InheirtFrom": "bone",
     "Name": "hoof",
