@@ -112,7 +112,7 @@ namespace MagiRogue.GameSys.Tiles
 
         /// <summary>
         /// TileBase is an abstract base class
-        /// representing the most basic form of of all Tiles used.
+        /// representing the most basic form of all Tiles used.
         /// Every TileBase has a Foreground Colour, Background Colour, and Glyph
         /// isBlockingMove and isBlockingSight are optional parameters, set to false by default
         /// </summary>
@@ -221,7 +221,7 @@ namespace MagiRogue.GameSys.Tiles
         /// <summary>
         /// Fired when <see cref="P:GoRogue.GameFramework.IGameObject.IsTransparent" /> is changed.
         /// </summary>
-        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<bool>> TransparencyChanged
+        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<bool>>? TransparencyChanged
         {
             add
             {
@@ -237,7 +237,7 @@ namespace MagiRogue.GameSys.Tiles
         /// <summary>
         /// Fired when <see cref="P:GoRogue.GameFramework.IGameObject.IsWalkable" /> is changed.
         /// </summary>
-        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<bool>> WalkabilityChanged
+        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<bool>>? WalkabilityChanged
         {
             add
             {
@@ -253,7 +253,7 @@ namespace MagiRogue.GameSys.Tiles
         /// <summary>
         /// Fired when the object is added to a map.
         /// </summary>
-        public event EventHandler<GameObjectCurrentMapChanged> AddedToMap
+        public event EventHandler<GameObjectCurrentMapChanged>? AddedToMap
         {
             add
             {
@@ -269,7 +269,7 @@ namespace MagiRogue.GameSys.Tiles
         /// <summary>
         /// Fired when the object is removed from a map.
         /// </summary>
-        public event EventHandler<GameObjectCurrentMapChanged> RemovedFromMap
+        public event EventHandler<GameObjectCurrentMapChanged>? RemovedFromMap
         {
             add
             {
@@ -285,7 +285,7 @@ namespace MagiRogue.GameSys.Tiles
         /// <summary>
         /// Fired when <see cref="P:GoRogue.GameFramework.IGameObject.IsTransparent" /> is about to be changed.
         /// </summary>
-        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<bool>> TransparencyChanging
+        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<bool>>? TransparencyChanging
         {
             add
             {
@@ -301,7 +301,7 @@ namespace MagiRogue.GameSys.Tiles
         /// <summary>
         /// Fired when <see cref="P:GoRogue.GameFramework.IGameObject.IsWalkable" /> is about to changed.
         /// </summary>
-        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<bool>> WalkabilityChanging
+        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<bool>>? WalkabilityChanging
         {
             add
             {
@@ -346,7 +346,7 @@ namespace MagiRogue.GameSys.Tiles
         /// added/removed events as appropriate (or provide equivalent functionality).
         /// </summary>
         /// <param name="newMap">New map to which the IGameObject has been added.</param>
-        public void OnMapChanged(GoRogue.GameFramework.Map newMap) => backingField.OnMapChanged(newMap);
+        public void OnMapChanged(GoRogue.GameFramework.Map? newMap) => backingField.OnMapChanged(newMap);
 
         #endregion IGameObject Interface
     }

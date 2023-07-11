@@ -9,9 +9,12 @@ using MagiRogue.GameSys.MapGen;
 using MagiRogue.GameSys.Planet;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.GameSys.Time;
+using MagiRogue.Settings;
+using MagiRogue.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace MagiRogue.GameSys
@@ -24,11 +27,6 @@ namespace MagiRogue.GameSys
     [JsonConverter(typeof(UniverseJsonConverter))]
     public sealed class Universe
     {
-        // map creation and storage data
-        private readonly int planetWidth = 257;
-        private readonly int planetHeight = 257;
-        private readonly int planetMaxCivs = 30;
-
         /// <summary>
         /// The World map, contains the map data and the Planet data
         /// </summary>
@@ -62,6 +60,9 @@ namespace MagiRogue.GameSys
         public SaveAndLoad SaveAndLoad { get; set; }
         public int ZLevel { get; set; }
 
+        public EntityRegistry Registry { get; set; }
+        public PlanetGenSettings PlanetSettings { get; set; }
+
         /// <summary>
         /// Creates a new game world and stores it in a
         /// publicly accessible constructor.
@@ -70,12 +71,15 @@ namespace MagiRogue.GameSys
         {
             Time = new TimeSystem();
             CurrentSeason = SeasonType.Spring;
+            Registry = new EntityRegistry();
+            PlanetSettings = JsonUtils.JsonDeseralize<PlanetGenSettings>(
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Settings", "planet_gen_setting.json"));
 
             if (!testGame)
             {
-                WorldMap = new PlanetGenerator().CreatePlanet(planetWidth,
-                    planetHeight,
-                    planetMaxCivs);
+                WorldMap = new PlanetGenerator().CreatePlanet(PlanetSettings.PlanetWidth,
+                    PlanetSettings.PlanetHeight,
+                    PlanetSettings.PlanetMaxInitialCivs);
                 Time = WorldMap.GetTimePassed();
                 WorldMap.AssocietatedMap.IsActive = true;
                 CurrentMap = WorldMap.AssocietatedMap;
@@ -99,10 +103,12 @@ namespace MagiRogue.GameSys
             bool possibleChangeMap,
             SeasonType currentSeason,
             SaveAndLoad loadSave,
-            RegionChunk currentChunk)
+            RegionChunk currentChunk,
+            EntityRegistry registry)
         {
             WorldMap = worldMap;
             CurrentChunk = currentChunk;
+            Registry = registry;
 
             if (currentMap is not null && worldMap.AssocietatedMap.MapName.Equals(currentMap.MapName))
             {
@@ -440,7 +446,7 @@ namespace MagiRogue.GameSys
 
         public RegionChunk GetChunckByPos(Point playerPoint)
         {
-            return SaveAndLoad.GetChunkAtIndex(Point.ToIndex(playerPoint.X, playerPoint.Y, planetWidth), planetWidth);
+            return SaveAndLoad.GetChunkAtIndex(playerPoint, PlanetSettings.PlanetWidth);
         }
 
         public static Map GetMapById(int id)

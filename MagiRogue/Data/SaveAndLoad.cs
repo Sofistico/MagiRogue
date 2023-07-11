@@ -60,8 +60,10 @@ namespace MagiRogue.Data
 
             //SaveChuncksToFile(gameState.AllChunks);
             if (gameState.CurrentChunk is not null)
-                SaveChunkInPos(gameState.CurrentChunk, gameState.CurrentChunk.ToIndex(
-                   gameState.GetWorldMap().Width));
+            {
+                SaveChunkInPos(gameState.CurrentChunk, gameState.CurrentChunk.ToIndex(gameState.GetWorldMap().Width));
+            }
+
             try
             {
                 Serializer.Save(gameState, @$"{_folderName}\{saveName}\GameState.mr", true);
@@ -265,7 +267,9 @@ namespace MagiRogue.Data
                 return files.Any(s => saveName.Equals(s));
             }
             else
+            {
                 return false;
+            }
         }
 
         /// <summary>
@@ -291,6 +295,11 @@ namespace MagiRogue.Data
             var regions = LoadChunks(file);
 
             return Array.Find(regions, i => i.ToIndex(mapWidth) == index);
+        }
+
+        public RegionChunk GetChunkAtIndex(Point point, int mapWidth)
+        {
+            return GetChunkAtIndex(point.ToIndex(mapWidth), mapWidth);
         }
 
         public static Map LoadMapById(int id)

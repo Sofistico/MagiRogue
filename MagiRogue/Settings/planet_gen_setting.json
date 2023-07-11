@@ -1,1 +1,5 @@
-﻿{}
+﻿{
+  "PlanetWidth": 257,
+  "PlanetHeight": 257,
+  "PlanetMaxInitialCivs": 30
+}
