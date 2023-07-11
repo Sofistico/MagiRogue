@@ -54,7 +54,7 @@ namespace MagiRogue.GameSys.Tiles
             LastSeenAppereance.CopyAppearanceFrom(TrueAppearence);
             if (GoRogueComponents.Contains<Components.IllusionComponent>())
             {
-                illusion = GoRogueComponents.GetFirstOrDefault<Components.IllusionComponent>();
+                illusion = GoRogueComponents.GetFirstOrDefault<Components.IllusionComponent>()!;
                 GoRogueComponents.Remove(Components.IllusionComponent.Tag);
             }
         }
@@ -76,7 +76,9 @@ namespace MagiRogue.GameSys.Tiles
                 MpPoints = MathMagi.Round(MpPoints + MpRecovering);
             }
             else
+            {
                 DestroyTile(BecomeNextTile());
+            }
         }
 
         public void DrainNode(Actor actor)

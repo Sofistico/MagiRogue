@@ -100,10 +100,6 @@ namespace MagiRogue.Components.Ai
                                 timeTakenAction = FindPathAndMoveOneStep(map, actor, water);
                             }
                         }
-                        else
-                        {
-                            timeTakenAction = ActionManager.Wander(actor);
-                        }
                         break;
 
                     case Actions.Fun:

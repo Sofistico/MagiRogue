@@ -1,15 +1,10 @@
-﻿using GoRogue.Components;
-using GoRogue.Components.ParentAware;
-using GoRogue.GameFramework;
+﻿using GoRogue.GameFramework;
 using MagiRogue.Data.Enumerators;
-using MagiRogue.Entities;
 using MagiRogue.Utils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MagiRogue.Components
 {
@@ -26,7 +21,7 @@ namespace MagiRogue.Components
         // in special, 0 means special circustances, like a fight or demon pacts or whatever, things that need imediate action rather than a constant need.
         // means that creatures with the fight need set to 0 will only fight in response to fighting
         public double Priority { get; set; } // what is the priority of the need? how many times must it be fulfilled?
-        public int PerceivedPriority { get; set; }
+        public double PerceivedPriority => PercentFulfilled.HasValue ? Math.Pow(1 - PercentFulfilled.Value, Priority + 1) : (int)Priority;
         public Actions ActionToFulfillNeed { get; set; }
         public string PersonalityTrait { get; set; }
         public string HintFulfill { get; set; }
@@ -119,7 +114,8 @@ namespace MagiRogue.Components
         {
             if (prioQueue.TryDequeue(out item))
                 return true;
-            item = needs.Find(i => i.PercentFulfilled <= 25);
+            var list = needs.FindAll(i => i.PercentFulfilled <= 25);
+            item = list.MaxBy(i => i.PerceivedPriority);
             return item is not null;
         }
 
@@ -152,5 +148,11 @@ namespace MagiRogue.Components
         {
             return ((IEnumerable)needs).GetEnumerator();
         }
+    }
+
+    public class NeedFulfill
+    {
+        public int FulfillPower { get; set; }
+        public Actions AssocietedAction { get; set; }
     }
 }

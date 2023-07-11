@@ -38,7 +38,6 @@ public static class GameLoop
         Game.Configuration gameStartup = new Game.Configuration()
             .SetScreenSize(GameWidth, GameHeight)
             .OnStart(Init) // Hook the start event so we can add consoles to the system.
-            .UseFrameUpdateEvent(OnFrameUpdate) // some frame update that maybe not necessary, who knows!
             .SetStartingScreen<UIManager>()
             .IsStartingScreenFocused(true)
             .ConfigureFonts((f) => f.UseBuiltinFontExtended());
@@ -84,11 +83,6 @@ public static class GameLoop
         // Now let the UIManager create its consoles
         // so they can use the World data
         UIManager.InitMainMenu();
-    }
-
-    private static void OnFrameUpdate(object? sender, GameHost e)
-    {
-        //empty for now
     }
 
     #endregion configuration

@@ -1,5 +1,4 @@
-﻿using GoRogue.SenseMapping;
-using MagiRogue.Data.Enumerators;
+﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using SadRogue.Primitives;
 
@@ -10,12 +9,17 @@ namespace MagiRogue.GameSys.Tiles
         public bool IsSea { get; set; }
         public int SwinDifficulty { get; } = 2;
 
-        public WaterTile(Color foregroud, Color background, int glyph, Point position,
-            bool isSea, int layer = (int)MapLayer.TERRAIN,
-            string idOfMaterial = "h2o", bool blocksMove = false, bool isTransparent = true,
+        public WaterTile(Color foregroud,
+            Color background,
+            int glyph,
+            Point position,
+            bool isSea,
+            int layer = (int)MapLayer.TERRAIN,
+            string idOfMaterial = "h2o",
+            bool blocksMove = false,
+            bool isTransparent = true,
             string name = "Water")
-            : base(foregroud, background, glyph, layer, position, idOfMaterial,
-                  blocksMove, isTransparent, name)
+            : base(foregroud, background, glyph, layer, position, idOfMaterial, blocksMove, isTransparent, name)
         {
             IsSea = isSea;
             if (IsSea)
@@ -24,14 +28,7 @@ namespace MagiRogue.GameSys.Tiles
 
         public bool CanSwinThere(Actor actor)
         {
-            if (actor.Mind.Abilities[((int)AbilityName.Swin)].Score > SwinDifficulty)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return actor.Mind.Abilities[(int)AbilityName.Swin].Score > SwinDifficulty;
         }
 
         public static WaterTile NormalRiverWater(Point pos)
@@ -46,7 +43,20 @@ namespace MagiRogue.GameSys.Tiles
 
         public override TileBase Copy()
         {
-            throw new System.NotImplementedException();
+            WaterTile copy = new WaterTile(Foreground, Background, Glyph, Position, IsSea)
+            {
+                MoveTimeCost = MoveTimeCost,
+                LastSeenAppereance = LastSeenAppereance,
+                BitMask = BitMask,
+                Description = Description,
+                Decorators = Decorators,
+                IsDirty = IsDirty,
+                InfusedMp = InfusedMp,
+                IsVisible = IsVisible,
+                TileHealth = TileHealth,
+                Traits = Traits
+            };
+            return copy;
         }
     }
 }
