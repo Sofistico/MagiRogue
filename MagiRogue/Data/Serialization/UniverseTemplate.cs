@@ -66,8 +66,6 @@ namespace MagiRogue.Data.Serialization
 
         public int ZLevel { get; set; }
 
-        public EntityRegistry Registry { get; set; }
-
         public PlanetGenSettings PlanetSettings { get; set; }
 
         public UniverseTemplate(PlanetMap worldMap,
@@ -117,7 +115,6 @@ namespace MagiRogue.Data.Serialization
                 SaveAndLoad = uni.SaveAndLoad,
                 LastIdAssigned = GameLoop.IdGen.CurrentInteger,
                 ZLevel = uni.ZLevel,
-                Registry = uni.Registry,
                 PlanetSettings = uni.PlanetSettings,
             };
         }
@@ -127,7 +124,7 @@ namespace MagiRogue.Data.Serialization
             Universe universe = new Universe(uni.WorldMap, uni.CurrentMap,
                 Entities.Player.ReturnPlayerFromActor(uni.Player),
                 uni.Time, uni.PossibleChangeMap,
-                SeasonEnumToString(uni.CurrentSeason), uni.SaveAndLoad, uni.CurrentChunk, uni.Registry)
+                SeasonEnumToString(uni.CurrentSeason), uni.SaveAndLoad, uni.CurrentChunk)
             {
                 ZLevel = uni.ZLevel,
                 PlanetSettings = uni.PlanetSettings,

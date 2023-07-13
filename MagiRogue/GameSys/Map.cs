@@ -1,5 +1,6 @@
 ﻿using GoRogue.GameFramework;
 using GoRogue.Pathing;
+using MagiRogue.Components;
 using MagiRogue.Data;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization.MapSerialization;
@@ -34,9 +35,12 @@ namespace MagiRogue.GameSys
         private MagiEntity _gameObjectControlled;
         private SadConsole.Entities.Renderer _entityRender;
         private bool _disposed;
-        private Dictionary<Func<Actor, bool>, Actor[]> lastCalledActors = new();
-        private readonly Dictionary<uint, MagiEntity> idMap;
-        private bool needsToUpdateActorsDict;
+        private Dictionary<Func<Actor, bool>, Actor[]> _lastCalledActors = new();
+        private bool _needsToUpdateActorsDict;
+
+        private readonly Dictionary<uint, IGameObject> _idMap;
+        private const int maxComponents = 100;
+        private readonly EntityRegistry _registry = new EntityRegistry(maxComponents);
 
         #endregion Fields
 
@@ -127,7 +131,7 @@ namespace MagiRogue.GameSys
                 AStar = new AStar(WalkabilityView, Distance.Euclidean, weights, 0.01);
             }
 
-            idMap = new();
+            _idMap = new();
             ObjectAdded += OnObjectAdded;
             ObjectRemoved += OnObjectRemoved;
         }
@@ -239,13 +243,13 @@ namespace MagiRogue.GameSys
 
         public Actor[] GetAllActors(Func<Actor, bool>? actionToRunInActors = null)
         {
-            if (lastCalledActors.TryGetValue(actionToRunInActors, out Actor[] value)
-                && !needsToUpdateActorsDict)
+            if (_lastCalledActors.TryGetValue(actionToRunInActors, out Actor[] value)
+                && !_needsToUpdateActorsDict)
             {
                 return value;
             }
-            lastCalledActors.Clear();
-            needsToUpdateActorsDict = false;
+            _lastCalledActors.Clear();
+            _needsToUpdateActorsDict = false;
             Actor[] search;
             if (actionToRunInActors is null)
             {
@@ -255,7 +259,7 @@ namespace MagiRogue.GameSys
             {
                 search = Entities.GetLayer((int)MapLayer.ACTORS).Items.Cast<Actor>().Where(actionToRunInActors).ToArray();
             }
-            lastCalledActors.TryAdd(actionToRunInActors, search);
+            _lastCalledActors.TryAdd(actionToRunInActors, search);
 
             return search;
         }
@@ -288,7 +292,7 @@ namespace MagiRogue.GameSys
                 entity.PositionChanged -= OnPositionChanged;
 
                 _entityRender.IsDirty = true;
-                needsToUpdateActorsDict = true;
+                _needsToUpdateActorsDict = true;
             }
         }
 
@@ -322,7 +326,7 @@ namespace MagiRogue.GameSys
 
             _entityRender.Add(entity);
 
-            needsToUpdateActorsDict = true;
+            _needsToUpdateActorsDict = true;
         }
 
         /// <summary>
@@ -408,7 +412,7 @@ namespace MagiRogue.GameSys
         /// <typeparam name="T">Any type of entity</typeparam>
         /// <param name="id">The id of the entity to find</param>
         /// <returns>Returns the entity owner of the id</returns>
-        public MagiEntity GetEntityById(uint id) => idMap[id];
+        public MagiEntity GetEntityById(uint id) => (MagiEntity)_idMap[id];
 
         /// <summary>
         /// Gets the entity by it's id
@@ -759,13 +763,12 @@ namespace MagiRogue.GameSys
         private void OnObjectRemoved(object? sender, ItemEventArgs<IGameObject> e)
         {
             if (e.Item is MagiEntity entity)
-                idMap.Remove(entity.ID);
+                _idMap.Remove(entity.ID);
         }
 
         private void OnObjectAdded(object? sender, ItemEventArgs<IGameObject> e)
         {
-            if (e.Item is MagiEntity entity)
-                idMap[entity.ID] = entity;
+            _idMap[e.Item.ID] = e.Item;
         }
 
         #endregion HelperMethods
@@ -778,8 +781,8 @@ namespace MagiRogue.GameSys
             RemoveAllTiles();
             if (GoRogueComponents.Count > 0)
                 GoRogueComponents.GetFirstOrDefault<FOVHandler>()?.DisposeMap();
-            lastCalledActors.Clear();
-            lastCalledActors = null!;
+            _lastCalledActors.Clear();
+            _lastCalledActors = null!;
             Tiles = null!;
             ControlledGameObjectChanged = null!;
             this.ControlledEntitiy = null!;
@@ -801,7 +804,18 @@ namespace MagiRogue.GameSys
         {
             const int defaultSearchRange = 25;
 
-            switch (whatToEat)
+            foreach (var objId in _registry.CompView<NeedFulfill, FoodComponent>())
+            {
+                var searchEntity = _idMap[objId];
+                var foodComp = _registry.GetComponent<FoodComponent>(searchEntity);
+                if (foodComp.FoodType.HasFlag(whatToEat)
+                    && searchEntity.Position.GetDistance(entity.Position) <= defaultSearchRange)
+                {
+                    return searchEntity;
+                }
+            }
+
+            /*switch (whatToEat)
             {
                 case Food.Carnivore:
                     var meat = entity.Position.GetClosest(defaultSearchRange, GetAllMeatsEvenAlive(), entity);
@@ -836,7 +850,7 @@ namespace MagiRogue.GameSys
 
                 default:
                     return null;
-            }
+            }*/
             return null;
         }
 
@@ -865,8 +879,7 @@ namespace MagiRogue.GameSys
         {
             var layer = Entities.GetLayer((int)MapLayer.ITEMS).Where(i => i.Item is Item item && (item.ItemType == ItemType.PlantFood)).Select(i => i.Item).ToList();
             layer.AddRange(Entities.GetLayer((int)MapLayer.VEGETATION).Select(i => i.Item));
-            var item = layer.ToArray();
-            return item;
+            return layer.ToArray();
         }
 
         public TFind[] GetAllTilesOfType<TFind>()

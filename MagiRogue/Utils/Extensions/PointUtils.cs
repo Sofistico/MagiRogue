@@ -1,6 +1,4 @@
 ﻿using GoRogue.GameFramework;
-using MagiRogue.Entities;
-using MonoGame.Framework.Utilities.Deflate;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
@@ -232,6 +230,11 @@ namespace MagiRogue.Utils.Extensions
             IGameObjIterator(originPos, range, listT, caller, ref closest, ref bestDistance);
 
             return (closest, bestDistance);
+        }
+
+        public static double GetDistance(this Point originPos, Point posToCompare)
+        {
+            return Distance.Chebyshev.Calculate(originPos, posToCompare);
         }
     }
 }

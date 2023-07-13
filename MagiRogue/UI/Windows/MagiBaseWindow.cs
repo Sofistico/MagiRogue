@@ -1,7 +1,7 @@
-﻿using MagiRogue.UI.Controls;
+﻿using CommunityToolkit.HighPerformance;
+using MagiRogue.UI.Controls;
 using MagiRogue.UI.Enums;
 using MagiRogue.UI.Interfaces;
-using Microsoft.Toolkit.HighPerformance;
 using SadConsole;
 using SadConsole.UI;
 using System;

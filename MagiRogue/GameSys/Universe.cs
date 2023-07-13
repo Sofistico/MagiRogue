@@ -60,7 +60,6 @@ namespace MagiRogue.GameSys
         public SaveAndLoad SaveAndLoad { get; set; }
         public int ZLevel { get; set; }
 
-        public EntityRegistry Registry { get; set; }
         public PlanetGenSettings PlanetSettings { get; set; }
 
         /// <summary>
@@ -71,7 +70,6 @@ namespace MagiRogue.GameSys
         {
             Time = new TimeSystem();
             CurrentSeason = SeasonType.Spring;
-            Registry = new EntityRegistry();
             PlanetSettings = JsonUtils.JsonDeseralize<PlanetGenSettings>(
                 Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Settings", "planet_gen_setting.json"));
 
@@ -103,12 +101,10 @@ namespace MagiRogue.GameSys
             bool possibleChangeMap,
             SeasonType currentSeason,
             SaveAndLoad loadSave,
-            RegionChunk currentChunk,
-            EntityRegistry registry)
+            RegionChunk currentChunk)
         {
             WorldMap = worldMap;
             CurrentChunk = currentChunk;
-            Registry = registry;
 
             if (currentMap is not null && worldMap.AssocietatedMap.MapName.Equals(currentMap.MapName))
             {

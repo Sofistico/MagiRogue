@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MagiRogue.Data.Enumerators
 {
+    [Flags]
     public enum Food
     {
-        None,
-        Omnivere,
-        Carnivore,
-        Herbivore
+        None = 0,
+        Carnivore = 1 << 0,
+        Herbivore = 1 << 1,
+        Omnivere = Carnivore | Herbivore,
     }
 }
