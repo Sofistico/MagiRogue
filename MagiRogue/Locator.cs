@@ -18,10 +18,10 @@ namespace MagiRogue
             return GetService(typeof(T));
         }
 
-        public static bool AddService<T>(T instance) where T : IService
+        public static void AddService<T>(T instance) where T : IService
         {
             var type = typeof(T);
-            return _services.TryAdd(type, instance);
+            _services[type] = instance;
         }
     }
 }

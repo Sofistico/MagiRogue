@@ -1,10 +1,12 @@
-﻿using MagiRogue.GameSys;
+﻿using GoRogue.Random;
+using MagiRogue.GameSys;
 using MagiRogue.GameSys.Time;
 using MagiRogue.Settings;
 using MagiRogue.UI;
 using MagiRogue.Utils;
 using SadConsole;
 using SadRogue.Primitives;
+using ShaiRandom.Generators;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,7 +28,7 @@ public static class GameLoop
     public static Universe Universe { get; set; }
 
     public static IDGenerator IdGen { get; private set; } = new(1);
-    public static ShaiRandom.Generators.IEnhancedRandom GlobalRand { get; } = GoRogue.Random.GlobalRandom.DefaultRNG;
+    public static IEnhancedRandom GlobalRand { get; } = GlobalRandom.DefaultRNG;
 
     #region configuration
 
