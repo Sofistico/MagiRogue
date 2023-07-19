@@ -1,4 +1,5 @@
-﻿using MagiRogue.Data.Enumerators;
+﻿using MagiRogue.Components;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Entities;
 using MagiRogue.Entities.Core;
@@ -215,6 +216,11 @@ namespace MagiRogue.Data
             soul.InitialMana(mind.Inteligence, race);
 
             magic.InnateMagicResistance = race.BaseMagicResistance;
+
+            if (anatomy.AllBPs.Any(i => i.Tissues.Any(i => i.Material.Type == MaterialType.Meat)))
+            {
+                actor.AddComponent(new FoodComponent(Food.Carnivore));
+            }
         }
 
         public static Item ItemCreator(Point position, ItemTemplate itemTemplate)

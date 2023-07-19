@@ -10,7 +10,7 @@ using MagiRogue.GameSys.Magic;
 using MagiRogue.GameSys.Planet.History;
 using MagiRogue.GameSys.Planet.TechRes;
 using MagiRogue.GameSys.Tiles;
-using MagiRogue.GameSys.Veggies;
+using MagiRogue.Entities.Veggies;
 using MagiRogue.Utils;
 using MagiRogue.Utils.Extensions;
 using System;

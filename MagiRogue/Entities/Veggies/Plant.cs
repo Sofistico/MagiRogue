@@ -1,6 +1,7 @@
 ﻿using GoRogue.Components;
 using GoRogue.Components.ParentAware;
 using GoRogue.GameFramework;
+using MagiRogue.Components;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Utils.Extensions;
@@ -9,7 +10,7 @@ using SadConsole;
 using SadRogue.Primitives;
 using System;
 
-namespace MagiRogue.GameSys.Veggies
+namespace MagiRogue.Entities.Veggies
 {
     public class Plant : IGameObject
     {
@@ -221,7 +222,7 @@ namespace MagiRogue.GameSys.Veggies
 
         public Plant Clone()
         {
-            return new Plant(Foreground, Background, Glyphs)
+            var plant = new Plant(Foreground, Background, Glyphs)
             {
                 Id = Id,
                 Name = Name,
@@ -229,6 +230,12 @@ namespace MagiRogue.GameSys.Veggies
                 IsWalkable = IsWalkable,
                 IsTransparent = IsTransparent,
             };
+            foreach (var item in GoRogueComponents)
+            {
+                plant.GoRogueComponents.Add(item.Component);
+            }
+
+            return plant;
         }
     }
 }

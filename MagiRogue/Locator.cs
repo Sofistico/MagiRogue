@@ -13,15 +13,20 @@ namespace MagiRogue
             return _services[serviceType];
         }
 
-        public static IService GetService<T>() where T : IService
+        public static T GetService<T>()
         {
-            return GetService(typeof(T));
+            return (T)GetService(typeof(T));
         }
 
         public static void AddService<T>(T instance) where T : IService
         {
             var type = typeof(T);
             _services[type] = instance;
+        }
+
+        public static void InitializeCommonServices()
+        {
+            AddService<MessageBusService>(new());
         }
     }
 }

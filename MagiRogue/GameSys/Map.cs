@@ -138,7 +138,7 @@ namespace MagiRogue.GameSys
 
         #endregion Constructor
 
-        #region HelperMethods
+        #region Methods
 
         private static ISettableGridView<IGameObject?> CreateTerrain(int width, int heigth)
         {
@@ -155,6 +155,8 @@ namespace MagiRogue.GameSys
                 else
                     RemoveEntity(item);
             }
+
+            _registry.RemoveComponentAll();
         }
 
         public void SetSeed(ulong seed, uint x, uint y, uint i)
@@ -324,9 +326,19 @@ namespace MagiRogue.GameSys
                 entity.PositionChanged += OnPositionChanged;
             }
 
+            foreach (var item in entity.GoRogueComponents)
+            {
+                _registry.AddComponent(entity, item);
+            }
+
             _entityRender.Add(entity);
 
             _needsToUpdateActorsDict = true;
+        }
+
+        public void AddComponentToEntity(uint id, object component)
+        {
+            _registry.AddComponent(id, component);
         }
 
         /// <summary>
@@ -771,7 +783,7 @@ namespace MagiRogue.GameSys
             _idMap[e.Item.ID] = e.Item;
         }
 
-        #endregion HelperMethods
+        #endregion Methods
 
         #region Dispose
 
@@ -854,7 +866,7 @@ namespace MagiRogue.GameSys
             return null;
         }
 
-        private List<MagiEntity> GetAllMeatsEvenAlive()
+        /*private List<MagiEntity> GetAllMeatsEvenAlive()
         {
             var meats = Entities.GetLayersInMask(LayerMasker.Mask((int)MapLayer.ACTORS, (int)MapLayer.ITEMS))
                 .Select(i => i.Items);
@@ -880,7 +892,7 @@ namespace MagiRogue.GameSys
             var layer = Entities.GetLayer((int)MapLayer.ITEMS).Where(i => i.Item is Item item && (item.ItemType == ItemType.PlantFood)).Select(i => i.Item).ToList();
             layer.AddRange(Entities.GetLayer((int)MapLayer.VEGETATION).Select(i => i.Item));
             return layer.ToArray();
-        }
+        }*/
 
         public TFind[] GetAllTilesOfType<TFind>()
         {

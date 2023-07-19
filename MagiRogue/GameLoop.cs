@@ -1,6 +1,7 @@
 ﻿using GoRogue.Random;
 using MagiRogue.GameSys;
 using MagiRogue.GameSys.Time;
+using MagiRogue.Services;
 using MagiRogue.Settings;
 using MagiRogue.UI;
 using MagiRogue.Utils;
@@ -36,6 +37,8 @@ public static class GameLoop
     {
         ConfigureBeforeCreateGame(args);
 
+        ConfigureServices();
+
         // Setup the engine and create the main window.
         Game.Configuration gameStartup = new Game.Configuration()
             .SetScreenSize(GameWidth, GameHeight)
@@ -49,6 +52,11 @@ public static class GameLoop
         Game.Instance.Run();
         // Code here will not run until the game window closes.
         Game.Instance.Dispose();
+    }
+
+    private static void ConfigureServices()
+    {
+        Locator.InitializeCommonServices();
     }
 
     // runs each frame

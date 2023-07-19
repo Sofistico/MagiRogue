@@ -1,8 +1,9 @@
 ﻿using GoRogue.Components;
 using GoRogue.GameFramework;
+using MagiRogue.Components;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
-using MagiRogue.GameSys.Veggies;
+using MagiRogue.Entities.Veggies;
 using SadConsole;
 using SadRogue.Primitives;
 using System;
@@ -202,6 +203,7 @@ namespace MagiRogue.GameSys.Tiles
                 LastSeenAppereance.CopyAppearanceFrom(plant.SadGlyph);
                 IsDirty = true;
                 plant.Position = Position;
+                plant.GoRogueComponents.Add(new FoodComponent(Food.Herbivore));
                 map?.AddEntity(plant);
             }
         }

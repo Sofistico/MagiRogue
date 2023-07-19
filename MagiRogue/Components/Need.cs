@@ -75,6 +75,11 @@ namespace MagiRogue.Components
         {
             TurnCounter = 0;
         }
+
+        public void Fulfill(int fulfillPower)
+        {
+            TurnCounter -= fulfillPower;
+        }
     }
 
     public class NeedCollection : ICollection<Need>
@@ -152,7 +157,13 @@ namespace MagiRogue.Components
 
     public class NeedFulfill
     {
-        public int FulfillPower { get; set; }
+        public double FulfillPercent { get; set; }
         public Actions AssocietedAction { get; set; }
+
+        public NeedFulfill(double fulfill, Actions actions)
+        {
+            FulfillPercent = fulfill;
+            AssocietedAction = actions;
+        }
     }
 }

@@ -10,7 +10,7 @@ using MagiRogue.GameSys;
 using MagiRogue.GameSys.Planet;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.GameSys.Time;
-using MagiRogue.GameSys.Veggies;
+using MagiRogue.Entities.Veggies;
 using MagiRogue.Utils;
 using MagiRogue.Utils.Extensions;
 using SadConsole;

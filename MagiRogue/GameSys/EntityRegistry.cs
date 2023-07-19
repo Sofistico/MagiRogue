@@ -17,6 +17,8 @@ namespace MagiRogue.GameSys
 
         public void AddComponent<T>(IGameObject obj, T component) => Assure<T>().Add(obj.ID, component);
 
+        public void AddComponent<T>(uint id, T component) => Assure<T>().Add(id, component);
+
         public ComponentStore<T> Assure<T>()
         {
             Type type = typeof(T);
@@ -55,6 +57,11 @@ namespace MagiRogue.GameSys
         public CompView<T, U> CompView<T, U>() => new CompView<T, U>(this);
 
         public CompView<T, U, V> CompView<T, U, V>() => new CompView<T, U, V>(this);
+
+        public void RemoveComponentAll()
+        {
+            _data.Clear();
+        }
     }
 
     public class ComponentStore<T> : IComponentStore

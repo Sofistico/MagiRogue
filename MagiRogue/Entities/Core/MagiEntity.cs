@@ -284,7 +284,10 @@ namespace MagiRogue.Entities.Core
         public void AddComponent(params object[] components)
         {
             foreach (object component in components)
+            {
                 backingField.GoRogueComponents.Add(component);
+                //Locator.GetService<MessageBusService>().SendMessage(component);
+            }
         }
 
         public T GetComponent<T>() where T : class

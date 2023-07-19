@@ -1,5 +1,5 @@
 ﻿using MagiRogue.Data.Enumerators;
-using MagiRogue.GameSys.Veggies;
+using MagiRogue.Entities.Veggies;
 using SadRogue.Primitives;
 using System;
 

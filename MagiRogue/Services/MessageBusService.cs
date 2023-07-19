@@ -10,5 +10,20 @@ namespace MagiRogue.Services
         {
             _messageBus = new();
         }
+
+        public void SendMessage(object obj)
+        {
+            _messageBus.Send(obj);
+        }
+
+        public void RegisterSubscriber<T>(ISubscriber<T> subscriber)
+        {
+            _messageBus.RegisterSubscriber(subscriber);
+        }
+
+        public void UnRegisterSubscriber<T>(ISubscriber<T> subscriber)
+        {
+            _messageBus.UnregisterSubscriber(subscriber);
+        }
     }
 }

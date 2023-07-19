@@ -2,7 +2,7 @@
 using MagiRogue.Data.Serialization;
 using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Planet;
-using MagiRogue.GameSys.Veggies;
+using MagiRogue.Entities.Veggies;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System;
