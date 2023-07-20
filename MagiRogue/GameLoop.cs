@@ -18,6 +18,7 @@ namespace MagiRogue;
 public static class GameLoop
 {
     private static GlobalSettings settings;
+    private static bool beginTest;
 
     public static int GameWidth { get; private set; }
     public static int GameHeight { get; private set; }
@@ -60,9 +61,11 @@ public static class GameLoop
     // runs each frame
     private static void ConfigureBeforeCreateGame(string[] args)
     {
-        foreach (var _ in args)
+        foreach (var arg in args)
         {
             // TODO!
+            if (arg.Equals("test"))
+                beginTest = true;
         }
         // Pre options before creating the game, defines the title and if can resize
         SadConsole.Settings.WindowTitle = "MagiRogue";
@@ -90,7 +93,7 @@ public static class GameLoop
 
         // Now let the UIManager create its consoles
         // so they can use the World data
-        UIManager.InitMainMenu();
+        UIManager.InitMainMenu(beginTest);
     }
 
     #endregion configuration

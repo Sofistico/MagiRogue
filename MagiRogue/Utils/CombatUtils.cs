@@ -383,7 +383,7 @@ namespace MagiRogue.Utils
             Limb? limbAttacked = null)
         {
             Item wieldedItem = attacker.WieldedItem();
-            BodyPart bpAttacking = attacker.GetAttackingLimb(attack) ?? throw new ArgumentNullException(nameof(attack.LimbFunction));
+            BodyPart bpAttacking = attacker.GetAttackingLimb(attack) ?? throw new ArgumentNullException(nameof(attack));
 
             // Create a string that expresses the attacker and defender's names as well as the attack verb
             string person = firstPerson ? "You" : attacker.Name;

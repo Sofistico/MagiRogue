@@ -324,10 +324,9 @@ namespace MagiRogue.GameSys
                 LastPlayerPosition = player.Position;
                 entity.PositionChanged += OnPositionChanged;
             }
-
             foreach (var item in entity.GoRogueComponents)
             {
-                _registry.AddComponent(entity, item);
+                _registry.AddComponent(entity, item.Component);
             }
 
             _entityRender.Add(entity);
@@ -816,7 +815,7 @@ namespace MagiRogue.GameSys
         {
             const int defaultSearchRange = 25;
 
-            foreach (var objId in _registry.CompView<NeedFulfill, FoodComponent>())
+            foreach (var objId in _registry.CompView<FoodComponent>())
             {
                 var searchEntity = _idMap[objId];
                 var foodComp = _registry.GetComponent<FoodComponent>(searchEntity);

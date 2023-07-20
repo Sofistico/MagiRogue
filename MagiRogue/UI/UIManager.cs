@@ -47,7 +47,7 @@ namespace MagiRogue.UI
         }
 
         // Initiates the game by means of going to the menu first
-        public void InitMainMenu()
+        public void InitMainMenu(bool beginOnTestMap = false)
         {
             SetUpCustomColors();
 
@@ -58,6 +58,8 @@ namespace MagiRogue.UI
             Children.Add(MainMenu);
             MainMenu.Show();
             MainMenu.Position = new Point(0, 0);
+            if (beginOnTestMap)
+                StartGame(Player.TestPlayer(), null, true);
         }
 
         public void StartGame(Player player, Universe? uni = null, bool testGame = false)

@@ -3,6 +3,11 @@
     "MagiRogue": {
       "commandName": "Project",
       "nativeDebugging": false
+    },
+    "MagiRogue-TestMap": {
+      "commandName": "Project",
+      "nativeDebugging": false,
+      "commandLineArgs": "test"
     }
   }
 }
