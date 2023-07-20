@@ -5,6 +5,7 @@ using MagiRogue.GameSys;
 using MagiRogue.GameSys.Planet;
 using MagiRogue.Settings;
 using Newtonsoft.Json;
+using SadRogue.Primitives;
 using System;
 
 namespace MagiRogue.Data.Serialization
@@ -113,7 +114,7 @@ namespace MagiRogue.Data.Serialization
             {
                 CurrentChunk = uni.CurrentChunk,
                 SaveAndLoad = uni.SaveAndLoad,
-                LastIdAssigned = GameLoop.IdGen.CurrentInteger,
+                LastIdAssigned = Locator.GetService<IDGenerator>().CurrentInteger,
                 ZLevel = uni.ZLevel,
                 PlanetSettings = uni.PlanetSettings,
             };

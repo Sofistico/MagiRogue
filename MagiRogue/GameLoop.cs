@@ -1,7 +1,6 @@
 ﻿using GoRogue.Random;
 using MagiRogue.GameSys;
 using MagiRogue.GameSys.Time;
-using MagiRogue.Services;
 using MagiRogue.Settings;
 using MagiRogue.UI;
 using MagiRogue.Utils;
@@ -28,7 +27,6 @@ public static class GameLoop
 
     public static Universe Universe { get; set; }
 
-    public static IDGenerator IdGen { get; private set; } = new(1);
     public static IEnhancedRandom GlobalRand { get; } = GlobalRandom.DefaultRNG;
 
     #region configuration
@@ -108,7 +106,7 @@ public static class GameLoop
         return Universe?.CurrentMap;
     }
 
-    public static void SetIdGen(uint lastId) => IdGen = new IDGenerator(lastId + 1);
+    public static void SetIdGen(uint lastId) => Locator.AddService<IDGenerator>(new(lastId + 1));
 
     public static void AddMessageLog(string message, bool newLine = true)
     {

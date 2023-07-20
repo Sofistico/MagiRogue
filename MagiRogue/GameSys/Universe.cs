@@ -12,6 +12,7 @@ using MagiRogue.GameSys.Time;
 using MagiRogue.Settings;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
+using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -434,7 +435,7 @@ namespace MagiRogue.GameSys
 
             for (int i = 0; i < newChunck.LocalMaps.Length; i++)
             {
-                newChunck.LocalMaps[i].SetId(GameLoop.IdGen.UseID());
+                newChunck.LocalMaps[i].SetId(Locator.GetService<IDGenerator>().UseID());
             }
 
             return newChunck;

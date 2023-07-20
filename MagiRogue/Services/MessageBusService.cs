@@ -2,7 +2,7 @@
 
 namespace MagiRogue.Services
 {
-    public class MessageBusService : IService
+    public class MessageBusService
     {
         private readonly MessageBus _messageBus;
 
