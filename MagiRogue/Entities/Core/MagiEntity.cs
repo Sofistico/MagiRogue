@@ -99,7 +99,7 @@ namespace MagiRogue.Entities.Core
             AppearanceSingle.Appearance.Glyph = glyph;
             Layer = layer;
 
-            backingField = new GameObject(coord, layer);
+            backingField = new GameObject(coord, layer, idGenerator: Locator.GetService<IDGenerator>().UseID);
             Position = backingField.Position;
 
             //PositionChanged += Position_Changed;
