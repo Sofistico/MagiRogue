@@ -246,10 +246,9 @@ namespace MagiRogue.Entities
         {
             if (attack.LimbFunction is not null)
             {
-                var result = GetAnatomy().AllBPs.FindAll(i =>
+                return GetAnatomy().AllBPs.FindAll(i =>
                     i.BodyPartFunction == attack.LimbFunction)
                     .GetRandomItemFromList();
-                return result;
             }
             else
             {

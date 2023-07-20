@@ -773,13 +773,14 @@ namespace MagiRogue.GameSys
 
         private void OnObjectRemoved(object? sender, ItemEventArgs<IGameObject> e)
         {
-            if (e.Item is MagiEntity entity)
-                _idMap.Remove(entity.ID);
+            if (e.Item is not TileBase)
+                _idMap.Remove(e.Item.ID);
         }
 
         private void OnObjectAdded(object? sender, ItemEventArgs<IGameObject> e)
         {
-            _idMap[e.Item.ID] = e.Item;
+            if (e.Item is not TileBase)
+                _idMap[e.Item.ID] = e.Item;
         }
 
         #endregion Methods

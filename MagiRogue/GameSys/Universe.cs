@@ -297,7 +297,8 @@ namespace MagiRogue.GameSys
                 // here the player has done it's turn, so let's go to the next one
                 var turnNode = Time.NextNode();
                 // put here terrrain effect
-
+                const int maxTries = 1000;
+                int tries = 0;
                 while (turnNode is not PlayerTimeNode)
                 {
                     switch (turnNode)
@@ -311,6 +312,8 @@ namespace MagiRogue.GameSys
                     }
 
                     turnNode = Time.NextNode();
+                    if (tries++ > maxTries)
+                        break;
                 }
 
                 GameLoop.UIManager.MapWindow.MapConsole.IsDirty = true;
@@ -394,13 +397,12 @@ namespace MagiRogue.GameSys
 
             if (entity != null)
             {
-                IAiComponent[] ais = entity.GetComponents<IAiComponent>();
+                var ais = entity.GetComponents<IAiComponent>();
                 // sucess and failure will have to have some sort of aggregate function made later!
                 int sucesses = 0;
                 long totalTicks = 0;
-                for (int i = 0; i < ais.Length; i++)
+                foreach (var ai in ais)
                 {
-                    IAiComponent? ai = ais[i];
                     (bool sucess, long tick) = ai?.RunAi(CurrentMap, GameLoop.UIManager.MessageLog)
                         ?? (false, -1);
                     if (sucess)
@@ -409,6 +411,7 @@ namespace MagiRogue.GameSys
                         totalTicks += tick;
                     }
                 }
+
                 entity.ProcessNeeds();
                 entity.GetAnatomy().UpdateBody(entity);
 

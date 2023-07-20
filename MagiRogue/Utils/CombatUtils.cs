@@ -78,7 +78,7 @@ namespace MagiRogue.Utils
                     for (int i = 0; i < woundParts.Count; i++)
                     {
                         var partWound = woundParts[i];
-                        woundString.Append(DetermineDamageMessage(partWound.PartDamage, partWound));
+                        woundString.AppendLine(DetermineDamageMessage(partWound.PartDamage, partWound));
                     }
 
                     GameLoop.AddMessageLog(woundString.ToString());
@@ -373,6 +373,7 @@ namespace MagiRogue.Utils
         /// <param name="defender"></param>
         /// <param name="attackMessage"></param>
         /// <returns></returns>
+        /// <exception cref="ArgumentNullException">throws if the attack is null</exception>
         public static (bool, BodyPart?, BodyPart, DamageTypes, Item?, MaterialTemplate?) ResolveHit(
             Actor attacker,
             Actor defender,
@@ -382,7 +383,7 @@ namespace MagiRogue.Utils
             Limb? limbAttacked = null)
         {
             Item wieldedItem = attacker.WieldedItem();
-            BodyPart bpAttacking = attacker.GetAttackingLimb(attack);
+            BodyPart bpAttacking = attacker.GetAttackingLimb(attack) ?? throw new ArgumentNullException(nameof(attack.LimbFunction));
 
             // Create a string that expresses the attacker and defender's names as well as the attack verb
             string person = firstPerson ? "You" : attacker.Name;
@@ -394,7 +395,8 @@ namespace MagiRogue.Utils
 
             attackMessage.AppendFormat("{0} {1} the {2}{3}", person, verb, defender.Name, with);
             var materialUsed = wieldedItem is null
-                ? bpAttacking.Tissues.Find(i => i.Flags.Contains(TissueFlag.Structural)).Material
+                ? bpAttacking.Tissues.Find(i => i.Flags.Contains(TissueFlag.Structural)
+                    || i.Flags.Contains(TissueFlag.Muscular))?.Material
                 : wieldedItem.Material;
             if (materialUsed is null)
             {
@@ -646,7 +648,7 @@ namespace MagiRogue.Utils
                 }
             }
 
-            return originalMomentum * 0.01;
+            return originalMomentum * 0.9;
         }
 
         /// <summary>
@@ -675,7 +677,7 @@ namespace MagiRogue.Utils
                 ((attacker.GetStrenght() + Mrn.Exploding2D6Dice)
                 * (attacker.GetRelevantAbilityMultiplier(attack.AttackAbility) + 1)
                 * attacker.GetAttackVelocity(attack))
-                + (1 + (attacker.Volume / ((limbAttacking.GetStructuralMaterial().DensityKgM3 ?? 1) * limbAttacking.Volume))));
+                + (1 + (attacker.Volume / ((limbAttacking.GetStructuralMaterial()?.DensityKgM3 ?? 1) * limbAttacking.Volume))));
         }
 
         #endregion Physics

@@ -118,7 +118,7 @@ namespace MagiRogue.Entities.Core
 
         public MaterialTemplate GetStructuralMaterial()
         {
-            return Tissues.Find(i => i.Flags.Contains(TissueFlag.Structural)).Material;
+            return Tissues.Find(i => i.Flags.Contains(TissueFlag.Structural))?.Material;
         }
     }
 }
