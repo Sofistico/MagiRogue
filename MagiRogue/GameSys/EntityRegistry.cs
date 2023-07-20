@@ -8,9 +8,9 @@ namespace MagiRogue.GameSys
     public sealed class EntityRegistry
     {
         private readonly Dictionary<Type, IComponentStore> _data = new();
-        private readonly int _maxComponents;
+        private readonly uint _maxComponents;
 
-        public EntityRegistry(int maxComponents)
+        public EntityRegistry(uint maxComponents)
         {
             _maxComponents = maxComponents;
         }
@@ -71,7 +71,7 @@ namespace MagiRogue.GameSys
         public SparseSet Set { get; }
         public int Count => Set.Count;
 
-        public ComponentStore(int maxComponents)
+        public ComponentStore(uint maxComponents)
         {
             Set = new SparseSet(maxComponents);
             instances = new T[maxComponents];
@@ -97,27 +97,25 @@ namespace MagiRogue.GameSys
 
     public class SparseSet : IEnumerable
     {
-        private readonly int max;
         private int size;
         private readonly uint[] dense;
-        private readonly uint[] sparse;
+        private readonly int[] sparse;
 
         public int Count => size;
 
-        public SparseSet(int maxValue)
+        public SparseSet(uint maxValue)
         {
-            max = maxValue + 1;
             size = 0;
-            dense = new uint[max];
-            sparse = new uint[max];
+            dense = new uint[maxValue];
+            sparse = new int[maxValue];
         }
 
         public void Add(uint value)
         {
-            if (value < max && !Contains(value))
+            if (!Contains(value))
             {
                 dense[size] = value;
-                sparse[value] = (uint)size;
+                sparse[value] = size;
                 size++;
             }
         }
@@ -132,14 +130,11 @@ namespace MagiRogue.GameSys
             }
         }
 
-        public uint Index(uint value) => sparse[value];
+        public int Index(uint value) => sparse[value];
 
         public bool Contains(uint value)
         {
-            if (value >= max)
-                return false;
-            else
-                return sparse[value] < size && dense[sparse[value]] == value;
+            return sparse[value] < size && dense[sparse[value]] == value;
         }
 
         public void Clear() => size = 0;
@@ -156,7 +151,7 @@ namespace MagiRogue.GameSys
 
         public override bool Equals(object obj) => throw new Exception("Why are you comparing SparseSets?");
 
-        public override int GetHashCode() => System.HashCode.Combine(max, size, dense, sparse, Count);
+        public override int GetHashCode() => System.HashCode.Combine(size, dense, sparse, Count);
     }
 
     public interface IComponentStore

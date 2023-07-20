@@ -39,8 +39,7 @@ namespace MagiRogue.GameSys
         private bool _needsToUpdateActorsDict;
 
         private readonly Dictionary<uint, IGameObject> _idMap;
-        private const int maxComponents = 100;
-        private readonly EntityRegistry _registry = new EntityRegistry(maxComponents);
+        private readonly EntityRegistry _registry = new EntityRegistry(5000);
 
         #endregion Fields
 
