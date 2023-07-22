@@ -324,10 +324,6 @@ namespace MagiRogue.GameSys
                 LastPlayerPosition = player.Position;
                 entity.PositionChanged += OnPositionChanged;
             }
-            foreach (var item in entity.GoRogueComponents)
-            {
-                _registry.AddComponent(entity, item.Component);
-            }
 
             _entityRender.Add(entity);
 
