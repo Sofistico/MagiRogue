@@ -39,7 +39,7 @@ namespace MagiRogue.GameSys
         private bool _needsToUpdateActorsDict;
 
         private readonly Dictionary<uint, IGameObject> _idMap;
-        private readonly EntityRegistry _registry = new EntityRegistry(5000);
+        private readonly EntityRegistry _registry = new EntityRegistry(500);
 
         #endregion Fields
 
@@ -330,7 +330,7 @@ namespace MagiRogue.GameSys
             _needsToUpdateActorsDict = true;
         }
 
-        public void AddComponentToEntity(uint id, object component)
+        public void AddComponentToEntity<T>(uint id, T component)
         {
             _registry.AddComponent(id, component);
         }

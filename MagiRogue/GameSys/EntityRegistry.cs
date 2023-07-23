@@ -1,5 +1,4 @@
 ﻿using GoRogue.GameFramework;
-using MagiRogue.Entities.Core;
 using System;
 using System.Collections;
 using System.Collections.Generic;
