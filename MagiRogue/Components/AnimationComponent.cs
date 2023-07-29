@@ -1,4 +1,4 @@
-﻿using MagiRogue.Entities;
+﻿using MagiRogue.Entities.Core;
 using SadConsole;
 using SadConsole.Components;
 
@@ -24,7 +24,7 @@ namespace MagiRogue.Components
         {
             Animating = false;
             var parent = Parent;
-            parent.Appearance.Glyph = _animationFrames[0].Glyph;
+            parent.AppearanceSingle.Appearance.Glyph = _animationFrames[0].Glyph;
             animationIndex = 0;
         }
 
@@ -40,7 +40,7 @@ namespace MagiRogue.Components
             else
             {
                 var parent = Parent;
-                parent.Appearance.CopyAppearanceFrom(_animationFrames[animationIndex]);
+                parent.AppearanceSingle.Appearance.CopyAppearanceFrom(_animationFrames[animationIndex]);
                 animationIndex++;
             }
         }

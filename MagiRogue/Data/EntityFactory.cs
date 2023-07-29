@@ -1,11 +1,16 @@
-﻿using MagiRogue.Data.Enumerators;
+﻿using MagiRogue.Components;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Entities;
+using MagiRogue.Entities.Core;
 using MagiRogue.Entities.StarterScenarios;
 using MagiRogue.GameSys.Magic;
+using MagiRogue.GameSys.Planet.History;
 using MagiRogue.Utils;
+using MagiRogue.Utils.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MagiRogue.Data
 {
@@ -14,6 +19,19 @@ namespace MagiRogue.Data
     /// </summary>
     public static class EntityFactory
     {
+        private static Actor actorField;
+
+        public static Actor ActorCreator(HistoricalFigure figure, Point pos)
+        {
+            var actor = ActorCreator(pos,
+                figure.GetRaceId(),
+                figure.Body.GetCurrentAge(),
+                figure.Body.Anatomy.Gender);
+            actor.HistoryId = figure.Id;
+
+            return actor;
+        }
+
         public static Actor ActorCreator(Point position, string raceId,
             string actorName, int actorAge, Sex sex)
         {
@@ -29,6 +47,47 @@ namespace MagiRogue.Data
             {
                 Description = race.Description,
             };
+            actorField = actor;
+            SetupBodySoulAndMind(race, actor, actorAge, sex);
+
+            return actor;
+        }
+
+        public static Actor ActorCreator(Point position, string raceId, Sex sex, AgeGroup age)
+        {
+            Race race = DataManager.QueryRaceInData(raceId);
+            int glyph = GlyphHelper.GlyphExistInDictionary(race.RaceGlyph) ?
+                GlyphHelper.GetGlyph(race.RaceGlyph) : race.RaceGlyph;
+
+            Actor actor = new Actor(race.RaceName,
+                race.ReturnForegroundColor(),
+                race.ReturnBackgroundColor(),
+                glyph,
+                position)
+            {
+                Description = race.Description,
+            };
+            actorField = actor;
+            SetupBodySoulAndMind(race, actor, race.GetAgeFromAgeGroup(age), sex);
+
+            return actor;
+        }
+
+        public static Actor ActorCreator(Point position, string raceId, int actorAge, Sex sex)
+        {
+            Race race = DataManager.QueryRaceInData(raceId);
+            int glyph = GlyphHelper.GlyphExistInDictionary(race.RaceGlyph) ?
+                GlyphHelper.GetGlyph(race.RaceGlyph) : race.RaceGlyph;
+
+            Actor actor = new Actor(race.RaceName,
+                race.ReturnForegroundColor(),
+                race.ReturnBackgroundColor(),
+                glyph,
+                position)
+            {
+                Description = race.Description,
+            };
+            actorField = actor;
             SetupBodySoulAndMind(race, actor, actorAge, sex);
 
             return actor;
@@ -37,7 +96,8 @@ namespace MagiRogue.Data
         private static Player PlayerCreatorFromActor(Actor actor,
             string scenarioId, Sex sex)
         {
-            Scenario scenario = DataManager.QueryScenarioInData(scenarioId);
+            Scenario scenario = DataManager.QueryScenarioInData(scenarioId)
+                ?? throw new ApplicationException($"Scenario {scenarioId} was null!");
             actor.GetAnatomy().Gender = sex;
             SetupScenarioStats(scenario, actor);
             SetupAbilities(actor, scenario.Abilities);
@@ -62,7 +122,21 @@ namespace MagiRogue.Data
             actor.Magic.ShapingSkill += scenario.ShapingSkill;
             foreach (var str in scenario.SpellsKnow)
             {
-                actor.Magic.AddToSpellList(DataManager.QuerySpellInData(str));
+                var queriedSpell = DataManager.QuerySpellInData(str);
+                if (queriedSpell is null)
+                {
+                    var strArray = str.Split('_', ':');
+                    if (strArray[0].Contains("any"))
+                    {
+                        var enumConverted = Enum.Parse<SpellContext>(strArray[1].FirstLetterUpper());
+                        var levelOfSpell = int.Parse(strArray[2]);
+
+                        var spells = DataManager.ListOfSpells.Where(i =>
+                            i.Context?.Contains(enumConverted) == true && i.SpellLevel == levelOfSpell).ToList();
+                        queriedSpell = spells.GetRandomItemFromList();
+                    }
+                }
+                actor.Magic.AddToSpellList(queriedSpell);
             }
         }
 
@@ -142,6 +216,11 @@ namespace MagiRogue.Data
             soul.InitialMana(mind.Inteligence, race);
 
             magic.InnateMagicResistance = race.BaseMagicResistance;
+
+            if (anatomy.AllBPs.Any(i => i.Tissues.Any(i => i.Material.Type == MaterialType.Meat)))
+            {
+                actor.AddComponent(new FoodComponent(Food.Carnivore));
+            }
         }
 
         public static Item ItemCreator(Point position, ItemTemplate itemTemplate)
@@ -180,6 +259,12 @@ namespace MagiRogue.Data
         {
             Actor actor = ActorCreator(pos, race, name, age, sex);
             return PlayerCreatorFromActor(actor, scenarioId, sex);
+        }
+
+        public static Sex GetRandomSex()
+        {
+            var sexs = new Sex[] { Sex.Male, Sex.Female };
+            return sexs.GetRandomItemFromList();
         }
     }
 }

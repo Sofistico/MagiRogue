@@ -5,8 +5,6 @@
     "RelativeVolume": 0.18,
     "BodyPartName": "Upper Body",
     "Orientation": "Center",
-    "RateOfHeal": 0.9,
-    "MaterialId": "skin",
     "BodyPartFunction": "Root",
     "Attached": true
   },
@@ -16,8 +14,6 @@
     "RelativeVolume": 0.18,
     "BodyPartName": "Lower Body",
     "Orientation": "Center",
-    "RateOfHeal": 0.9,
-    "MaterialId": "skin",
     "BodyPartFunction": "Vital",
     "ConnectedTo": "upper_body",
     "Attached": true
@@ -28,8 +24,6 @@
     "RelativeVolume": 0.018,
     "BodyPartName": "Neck",
     "Orientation": "Center",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.9,
     "BodyPartFunction": "Vital",
     "ConnectedTo": "upper_body"
   },
@@ -39,9 +33,6 @@
     "RelativeVolume": 0.054,
     "BodyPartName": "Head",
     "Orientation": "Center",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.9,
-
     "BodyPartFunction": "Thought",
     "ConnectedTo": "neck"
   },
@@ -51,9 +42,6 @@
     "RelativeVolume": 0.072,
     "BodyPartName": "Left Arm",
     "Orientation": "Left",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.9,
-
     "BodyPartFunction": "Limb",
     "ConnectedTo": "upper_body"
   },
@@ -63,9 +51,6 @@
     "RelativeVolume": 0.072,
     "BodyPartName": "Right Arm",
     "Orientation": "Right",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.9,
-
     "BodyPartFunction": "Limb",
     "ConnectedTo": "upper_body"
   },
@@ -75,9 +60,6 @@
     "RelativeVolume": 0.163,
     "BodyPartName": "Right Leg",
     "Orientation": "Right",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.9,
-
     "BodyPartFunction": "Limb",
     "ConnectedTo": "lower_body"
   },
@@ -87,9 +69,6 @@
     "RelativeVolume": 0.163,
     "BodyPartName": "Left Leg",
     "Orientation": "Left",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.9,
-
     "BodyPartFunction": "Limb",
     "ConnectedTo": "lower_body"
   },
@@ -99,9 +78,6 @@
     "RelativeVolume": 0.014,
     "BodyPartName": "Left Hand",
     "Orientation": "Left",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.9,
-
     "BodyPartFunction": "Grasp",
     "ConnectedTo": "l_arm"
   },
@@ -111,9 +87,6 @@
     "RelativeVolume": 0.014,
     "BodyPartName": "Right Hand",
     "Orientation": "Right",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.9,
-
     "BodyPartFunction": "Grasp",
     "ConnectedTo": "r_arm"
   },
@@ -123,9 +96,6 @@
     "RelativeVolume": 0.022,
     "BodyPartName": "Right Foot",
     "Orientation": "Right",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.9,
-
     "BodyPartFunction": "Stance",
     "ConnectedTo": "r_leg"
   },
@@ -135,9 +105,6 @@
     "RelativeVolume": 0.022,
     "BodyPartName": "Left Foot",
     "Orientation": "Left",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.9,
-
     "BodyPartFunction": "Stance",
     "ConnectedTo": "l_leg"
   },
@@ -147,9 +114,6 @@
     "RelativeVolume": 0.015,
     "BodyPartName": "{0} Thumb",
     "Orientation": "Tbd",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.9,
-
     "BodyPartFunction": "Digit",
     "ConnectedTo": "{0}"
   },
@@ -159,9 +123,6 @@
     "RelativeVolume": 0.021,
     "BodyPartName": "{0} First Finger",
     "Orientation": "Tbd",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.9,
-
     "BodyPartFunction": "Digit",
     "ConnectedTo": "{0}"
   },
@@ -171,8 +132,6 @@
     "RelativeVolume": 0.023,
     "BodyPartName": "{0} Second Finger",
     "Orientation": "Tbd",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.9,
     "BodyPartFunction": "Digit",
     "ConnectedTo": "{0}"
   },
@@ -182,8 +141,6 @@
     "RelativeVolume": 0.021,
     "BodyPartName": "{0} Third Finger",
     "Orientation": "Tbd",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.9,
     "BodyPartFunction": "Digit",
     "ConnectedTo": "{0}"
   },
@@ -193,8 +150,6 @@
     "RelativeVolume": 0.012,
     "BodyPartName": "{0} Fourth Finger",
     "Orientation": "Tbd",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.9,
     "BodyPartFunction": "Digit",
     "ConnectedTo": "{0}"
   },
@@ -204,8 +159,6 @@
     "RelativeVolume": 0.017,
     "BodyPartName": "{0} First Thumb",
     "Orientation": "Tbd",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.9,
     "BodyPartFunction": "Digit",
     "ConnectedTo": "{0}"
   },
@@ -215,8 +168,6 @@
     "RelativeVolume": 0.011,
     "BodyPartName": "{0} Second Toe",
     "Orientation": "Tbd",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.9,
     "BodyPartFunction": "Digit",
     "ConnectedTo": "{0}"
   },
@@ -226,8 +177,6 @@
     "RelativeVolume": 0.011,
     "BodyPartName": "{0} Third Toe",
     "Orientation": "Tbd",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.9,
     "BodyPartFunction": "Digit",
     "ConnectedTo": "{0}"
   },
@@ -237,8 +186,6 @@
     "RelativeVolume": 0.011,
     "BodyPartName": "{0} Fourth Toe",
     "Orientation": "Tbd",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.9,
     "BodyPartFunction": "Digit",
     "ConnectedTo": "{0}"
   },
@@ -248,8 +195,6 @@
     "RelativeVolume": 0.008,
     "BodyPartName": "{0} Fifth Toe",
     "Orientation": "Tbd",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.9,
     "BodyPartFunction": "Digit",
     "ConnectedTo": "{0}"
   },
@@ -259,8 +204,6 @@
     "RelativeVolume": 0.072,
     "BodyPartName": "Right Front Leg",
     "Orientation": "Right",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.9,
     "BodyPartFunction": "Limb",
     "ConnectedTo": "upper_body"
   },
@@ -270,8 +213,6 @@
     "RelativeVolume": 0.072,
     "BodyPartName": "Right Rear Leg",
     "Orientation": "Right",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.9,
     "BodyPartFunction": "Limb",
     "ConnectedTo": "lower_body"
   },
@@ -281,8 +222,6 @@
     "RelativeVolume": 0.072,
     "BodyPartName": "Left Front Leg",
     "Orientation": "Left",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.9,
     "BodyPartFunction": "Limb",
     "ConnectedTo": "upper_body"
   },
@@ -292,8 +231,6 @@
     "RelativeVolume": 0.072,
     "BodyPartName": "Left Rear Leg",
     "Orientation": "Left",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.9,
     "BodyPartFunction": "Limb",
     "ConnectedTo": "lower_body"
   },
@@ -303,8 +240,6 @@
     "RelativeVolume": 0.022,
     "BodyPartName": "Right Front Paw",
     "Orientation": "Right",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.9,
     "BodyPartFunction": "Stance",
     "ConnectedTo": "right_f_leg"
   },
@@ -314,8 +249,6 @@
     "RelativeVolume": 0.022,
     "BodyPartName": "Right Rear Paw",
     "Orientation": "Right",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.9,
     "BodyPartFunction": "Stance",
     "ConnectedTo": "right_r_leg"
   },
@@ -325,8 +258,6 @@
     "RelativeVolume": 0.022,
     "BodyPartName": "Left Front Paw",
     "Orientation": "Left",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.9,
     "BodyPartFunction": "Stance",
     "ConnectedTo": "left_f_leg"
   },
@@ -336,52 +267,42 @@
     "RelativeVolume": 0.022,
     "BodyPartName": "Left Rear Paw",
     "Orientation": "Left",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.9,
     "BodyPartFunction": "Stance",
     "ConnectedTo": "left_r_leg"
   },
   {
     "Id": "right_f_hoof",
-    "LimbType": "Foot",
+    "LimbType": "Hoof",
     "RelativeVolume": 0.022,
     "BodyPartName": "Right Front Hoof",
     "Orientation": "Right",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.9,
     "BodyPartFunction": "Stance",
     "ConnectedTo": "right_f_leg"
   },
   {
     "Id": "right_r_hoof",
-    "LimbType": "Foot",
+    "LimbType": "Hoof",
     "RelativeVolume": 0.022,
     "BodyPartName": "Right Rear Hoof",
     "Orientation": "Right",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.9,
     "BodyPartFunction": "Stance",
     "ConnectedTo": "right_r_leg"
   },
   {
     "Id": "left_f_hoof",
-    "LimbType": "Foot",
+    "LimbType": "Hoof",
     "RelativeVolume": 0.022,
     "BodyPartName": "Left Front Hoof",
     "Orientation": "Left",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.9,
     "BodyPartFunction": "Stance",
     "ConnectedTo": "left_f_leg"
   },
   {
     "Id": "left_r_hoof",
-    "LimbType": "Foot",
+    "LimbType": "Hoof",
     "RelativeVolume": 0.022,
     "BodyPartName": "Left Rear Hoof",
     "Orientation": "Left",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.8,
     "BodyPartFunction": "Stance",
     "ConnectedTo": "left_r_leg"
   },
@@ -391,8 +312,6 @@
     "RelativeVolume": 0.065,
     "BodyPartName": "Tail",
     "Orientation": "Center",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.9,
     "BodyPartFunction": "Limb",
     "ConnectedTo": "lower_body"
   },
@@ -402,9 +321,7 @@
     "RelativeVolume": 0.065,
     "BodyPartName": "Left Horn",
     "Orientation": "Left",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.1,
-    "BodyPartFunction": "Limb",
+    "BodyPartFunction": "Horn",
     "ConnectedTo": "head"
   },
   {
@@ -413,9 +330,16 @@
     "RelativeVolume": 0.065,
     "BodyPartName": "Right Horn",
     "Orientation": "Left",
-    "MaterialId": "skin",
-    "RateOfHeal": 0.1,
-    "BodyPartFunction": "Limb",
+    "BodyPartFunction": "Horn",
+    "ConnectedTo": "head"
+  },
+  {
+    "Id": "horn_center",
+    "LimbType": "Horn",
+    "RelativeVolume": 0.065,
+    "BodyPartName": "Horn",
+    "Orientation": "Center",
+    "BodyPartFunction": "Horn",
     "ConnectedTo": "head"
   }
 ]

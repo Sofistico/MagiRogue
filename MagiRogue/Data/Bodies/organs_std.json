@@ -2,148 +2,163 @@
   {
     "Id": "brain",
     "Name": "Brain",
-    "MaterialId": "skin",
-    "RelativeSize": 0.1,
+    "RelativeVolume": 0.1,
     "InsideOf": "skull",
     "Orientation": "Center",
     "BodyPartFunction": "Thought",
-    "OrganType": "Brain",
-    "CanHeal": false
+    "OrganType": "Brain"
   },
   {
     "Id": "heart",
     "Name": "Heart",
-    "MaterialId": "skin",
-    "RelativeSize": 0.05,
+    "RelativeVolume": 0.05,
     "InsideOf": "upper_body",
     "Orientation": "Center",
     "BodyPartFunction": "Vital",
-    "OrganType": "Heart",
-    "CanHeal": false
+    "OrganType": "Heart"
   },
   {
     "Id": "upper_spine",
     "Name": "Upper Spine",
-    "MaterialId": "skin",
-    "RelativeSize": 0.10,
+    "RelativeVolume": 0.10,
     "InsideOf": "neck",
     "Orientation": "Center",
-    "OrganType": "Nerve",
-    "CanHeal": false
+    "OrganType": "Nerve"
   },
   {
     "Id": "medium_spine",
     "Name": "Medium Spine",
-    "MaterialId": "skin",
-    "RelativeSize": 0.15,
+    "RelativeVolume": 0.15,
     "InsideOf": "upper_body",
     "Orientation": "Center",
-    "OrganType": "Nerve",
-    "CanHeal": false
+    "OrganType": "Nerve"
   },
   {
     "Id": "lower_spine",
-    "Name": "Low Spine",
-    "MaterialId": "skin",
-    "RelativeSize": 0.15,
+    "Name": "Lower Spine",
+    "RelativeVolume": 0.15,
     "InsideOf": "lower_body",
     "Orientation": "Center",
-    "OrganType": "Nerve",
-    "CanHeal": false
+    "OrganType": "Nerve"
   },
   {
     "Id": "stomach",
     "Name": "Stomach",
-    "MaterialId": "skin",
-    "RelativeSize": 0.1,
+    "RelativeVolume": 0.1,
     "InsideOf": "lower_body",
     "Orientation": "Center",
-    "OrganType": "Digestive",
-    "RateOfHeal": 0.5
+    "OrganType": "Digestive"
   },
   {
     "Id": "intestine",
     "Name": "Guts",
-    "MaterialId": "skin",
-    "RelativeSize": 0.2,
+    "RelativeVolume": 0.2,
     "InsideOf": "lower_body",
     "Orientation": "Center",
-    "OrganType": "Digestive",
-    "RateOfHeal": 0.4
+    "OrganType": "Intestine"
   },
   {
     "Id": "r_lung",
     "Name": "Right Lung",
-    "MaterialId": "skin",
-    "RelativeSize": 0.1,
+    "RelativeVolume": 0.1,
     "InsideOf": "upper_body",
     "Orientation": "Right",
     "BodyPartFunction": "Breath",
-    "OrganType": "Breather",
-    "RateOfHeal": 0.3
+    "OrganType": "Breather"
   },
   {
     "Id": "l_lung",
     "Name": "Left Lung",
-    "MaterialId": "skin",
-    "RelativeSize": 0.1,
+    "RelativeVolume": 0.1,
     "InsideOf": "upper_body",
     "Orientation": "Left",
     "BodyPartFunction": "Breath",
-    "OrganType": "Breather",
-    "RateOfHeal": 0.3
+    "OrganType": "Breather"
   },
   {
     "Id": "r_kidney",
     "Name": "Right Kidney",
-    "MaterialId": "skin",
-    "RelativeSize": 0.02,
+    "RelativeVolume": 0.02,
     "InsideOf": "lower_body",
     "Orientation": "Right",
-    "OrganType": "Filtering",
-    "RateOfHeal": 0.6
+    "OrganType": "Filtering"
   },
   {
     "Id": "l_kidney",
     "Name": "Left Kidney",
-    "MaterialId": "skin",
-    "RelativeSize": 0.02,
+    "RelativeVolume": 0.02,
     "InsideOf": "lower_body",
     "Orientation": "Left",
-    "OrganType": "Filtering",
-    "RateOfHeal": 0.6
+    "OrganType": "Filtering"
   },
   {
     "Id": "r_eye",
     "Name": "Right Eye",
-    "MaterialId": "skin",
-    "RelativeSize": 0.05,
+    "RelativeVolume": 0.05,
     "InsideOf": "head",
     "Orientation": "Right",
-    "BodyPartFunction": "Embedded",
-    "OrganType": "Visual",
-    "RateOfHeal": 0.25
+    "BodyPartFunction": "Visual",
+    "Embedded": true,
+    "OrganType": "Visual"
   },
   {
     "Id": "l_eye",
     "Name": "Left Eye",
-    "MaterialId": "skin",
-    "RelativeSize": 0.05,
+    "RelativeVolume": 0.05,
     "InsideOf": "head",
     "Orientation": "Left",
-    "BodyPartFunction": "Embedded",
-    "OrganType": "Visual",
-    "RateOfHeal": 0.25
+    "BodyPartFunction": "Visual",
+    "Embedded": true,
+    "OrganType": "Visual"
+  },
+  {
+    "Id": "mouth",
+    "Name": "Mouth",
+    "RelativeVolume": 0.05,
+    "InsideOf": "head",
+    "Orientation": "Center",
+    "BodyPartFunction": "Mouth",
+    "Embedded": true,
+    "OrganType": "Mouth"
+  },
+  {
+    "Id": "nose",
+    "Name": "Nose",
+    "RelativeVolume": 0.04,
+    "InsideOf": "head",
+    "Orientation": "Center",
+    "BodyPartFunction": "Breath",
+    "Embedded": true,
+    "OrganType": "Nose"
+  },
+  {
+    "Id": "tooth",
+    "RelativeVolume": 0.01,
+    "BodyPartName": "{0} Tooth",
+    "Orientation": "Center",
+    "HealingRate": 0,
+    "BodyPartFunction": "Teeth",
+    "InsideOf": "mouth"
+  },
+  {
+    "Id": "tongue",
+    "RelativeVolume": 0.01,
+    "BodyPartName": "Tongue",
+    "Orientation": "Center",
+    "HealingRate": 0,
+    "BodyPartFunction": "Tongue",
+    "OrganType": "Tongue",
+    "InsideOf": "mouth"
   },
   {
     "Id": "skull",
     "Name": "Skull",
-    "MaterialId": "bone",
     "RleativeSize": 0.10,
     "InsideOf": "head",
     "Orientation": "Center",
     "BodyPartFunction": "Protection",
     "OrganType": "Protective",
-    "RateOfHeal": 0.1
+    "HealingRate": 0.1,
+    "Category": "bones"
   }
 ]

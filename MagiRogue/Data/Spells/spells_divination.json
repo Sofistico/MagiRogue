@@ -1,23 +1,24 @@
 ﻿[
-	{
-		"SpellLevel": 1,
-		"Effects": [
-			{
-				"AreaOfEffect": "Self",
-				"SpellDamageType": "None",
-				"Duration": 5,
-				"TurnApplied": 0,
-				"Radius": 0,
-				
-				"EffectType": "MAGESIGHT",
-				"BaseDamage": 0
-			}
-		],
-		"SpellName": "Mage Sight",
-		"Description": "The first thing taught to any prospecting student of magic, and right after that is learning how to dispel their own mana.",
-		"MagicArt": "Divination",
-		"SpellRange": 0,
-		"ManaCost": 0.5,
-		"SpellId": "mage_sight"
-	}
+  {
+    "SpellLevel": 1,
+    "Effects": [
+      {
+        "AreaOfEffect": "Self",
+        "SpellDamageType": "None",
+        "Duration": 5,
+        "TurnApplied": 0,
+        "Radius": 0,
+
+        "EffectType": "MAGESIGHT",
+        "BaseDamage": 0
+      }
+    ],
+    "SpellName": "Mage Sight",
+    "Description": "The first thing taught to any prospecting student of magic, and right after that is learning how to dispel their own mana.",
+    "MagicArt": "Divination",
+    "SpellRange": 0,
+    "ManaCost": 0.5,
+    "SpellId": "mage_sight",
+    "Context": [ "Perception" ]
+  }
 ]

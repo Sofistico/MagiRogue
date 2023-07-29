@@ -18,7 +18,7 @@ namespace MagiRogue.GameSys.Magic.Effects
         public float HastePower { get; set; }
         public int Duration { get; set; }
         public int TurnApplied { get; private set; }
-        public int Radius { get; set; } = 0;
+        public int Radius { get; set; }
         public double ConeCircleSpan { get; set; }
         public bool TargetsTile { get; set; } = false;
         public EffectType EffectType { get; set; } = EffectType.HASTE;

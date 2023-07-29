@@ -1,7 +1,7 @@
 ﻿using GoRogue;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
-using MagiRogue.Entities;
+using MagiRogue.Entities.Core;
 using MagiRogue.GameSys.Planet;
 using MagiRogue.GameSys.Planet.History;
 using MagiRogue.GameSys.Planet.TechRes;
@@ -43,11 +43,11 @@ namespace MagiRogue.GameSys.Civ
 
         public CivRelation this[int otherCivId]
         {
-            get => Relations.FirstOrDefault(i => i.CivRelatedId == otherCivId);
+            get => Relations.Find(i => i.CivRelatedId == otherCivId);
 
             set
             {
-                var relation = Relations.FirstOrDefault(i => i.CivRelatedId == otherCivId);
+                var relation = Relations.Find(i => i.CivRelatedId == otherCivId);
                 relation = value;
             }
         }
@@ -174,6 +174,7 @@ namespace MagiRogue.GameSys.Civ
 
         private void FigureSetupPosCtor(Race figureRace, HistoricalFigure figure)
         {
+            figure.SetRace(figureRace);
             figure.GenerateRandomPersonality();
             figure.GenerateRandomStatsSpread();
             if (!figure.CheckIfIsChildOrBabyForRace())

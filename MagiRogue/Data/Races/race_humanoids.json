@@ -28,14 +28,43 @@
     "BaseMagicResistance": 10,
     "RaceNormalLimbRegen": 1.0,
     "BleedRegenaration": 1.0,
-    "BodyPlan": [ "humanoid_limbs", "humanoid_organs", "5fingers", "5toes" ],
-    "Tissues": [ "skin", "fat", "muscle", "bone" ],
+    "BodyPlan": [ "humanoid_limbs", "humanoid_organs", "5fingers", "5toes", "generic_teeth" ],
+    "Tissues": [
+      "standard_tissues",
+      "standard_tissues_layering"
+    ],
     // lowest, lower, low, median, high, higher, highest
     "HeightModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "BroadnessModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "Genders": [ "Male", "Female" ],
     "CreatureClass": [ "Mammal", "General" ],
-    "Flags": [ "Regenerator", "Sapient", "Diurnal" ]
+    "Flags": [ "Regenerator", "Sapient", "Diurnal", "NeedsConfortToSleep" ],
+    "Attacks": [
+      {
+        "LimbFunction": "Grasp",
+        "Main": true,
+        "AttacksUsesLimbName": true,
+        "Name": "Punch",
+        "AttackVerb": [ "punch", "punches" ],
+        "AttackAbility": "Unarmed",
+        "PrepareVelocity": 3,
+        "RecoverVelocity": 3,
+        "DamageTypes": "Blunt",
+        "ContactArea": 100
+      },
+      {
+        "LimbFunction": "Stance",
+        "Main": false,
+        "AttacksUsesLimbName": true,
+        "Name": "Kick",
+        "AttackVerb": [ "kick", "kickes" ],
+        "AttackAbility": "Unarmed",
+        "PrepareVelocity": 5,
+        "RecoverVelocity": 5,
+        "DamageTypes": "Blunt",
+        "ContactArea": 100
+      }
+    ]
   },
   {
     "Id": "human",
@@ -68,13 +97,61 @@
     "MaxManaRange": 34,
     "RaceNormalLimbRegen": 0.8,
     "BleedRegenaration": 0.7,
-    "BodyPlan": [ "humanoid_limbs", "humanoid_organs", "5fingers", "5toes" ],
-    "Tissues": [ "skin", "fat", "muscle", "bone" ],
+    "BodyPlan": [
+      "humanoid_limbs",
+      "humanoid_organs",
+      "5fingers",
+      "5toes",
+      "generic_teeth"
+    ],
+    "Tissues": [
+      "standard_tissues",
+      "standard_tissues_layering"
+    ],
     "HeightModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "BroadnessModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "Genders": [ "Male", "Female" ],
     "CreatureClass": [ "Mammal", "General" ],
-    "Flags": [ "Sapient", "Diurnal" ]
+    "Flags": [ "Sapient", "Diurnal", "NeedsConfortToSleep" ],
+    "Attacks": [
+      {
+        "LimbFunction": "Grasp",
+        "Main": true,
+        "AttacksUsesLimbName": true,
+        "Name": "Punch",
+        "AttackVerb": [ "punch", "punches" ],
+        "AttackAbility": "Unarmed",
+        "PrepareVelocity": 3,
+        "RecoverVelocity": 3,
+        "DamageTypes": "Blunt",
+        "ContactArea": 100
+      },
+      {
+        "LimbFunction": "Stance",
+        "Main": false,
+        "AttacksUsesLimbName": true,
+        "Name": "Kick",
+        "AttackVerb": [ "kick", "kickes" ],
+        "AttackAbility": "Unarmed",
+        "PrepareVelocity": 5,
+        "RecoverVelocity": 5,
+        "DamageTypes": "Blunt",
+        "ContactArea": 100
+      },
+      {
+        "LimbFunction": "Teeth",
+        "Main": true,
+        "AttacksUsesLimbName": false,
+        "Name": "Bite",
+        "AttackVerb": [ "bite", "bites" ],
+        "AttackAbility": "Bite",
+        "PrepareVelocity": 3,
+        "RecoverVelocity": 3,
+        "DamageTypes": "Pierce",
+        "ContactArea": 100,
+        "PenetrationPercentage": 1
+      }
+    ]
   },
   {
     "Id": "elf",
@@ -105,13 +182,61 @@
     "MaxManaRange": 31,
     "RaceNormalLimbRegen": 0.7,
     "BleedRegenaration": 0.6,
-    "BodyPlan": [ "humanoid_limbs", "humanoid_organs", "5fingers", "5toes" ],
-    "Tissues": [ "skin", "fat", "muscle", "bone" ],
+    "BodyPlan": [
+      "humanoid_limbs",
+      "humanoid_organs",
+      "5fingers",
+      "5toes",
+      "generic_teeth"
+    ],
+    "Tissues": [
+      "standard_tissues",
+      "standard_tissues_layering"
+    ],
     "HeightModifier": [ 90, 95, 98, 100, 112, 115, 125 ],
     "BroadnessModifier": [ 75, 90, 94, 100, 101, 103, 110 ],
     "Genders": [ "Male", "Female" ],
     "CreatureClass": [ "Mammal", "General" ],
-    "Flags": [ "Sapient", "Diurnal" ]
+    "Flags": [ "Sapient", "Diurnal", "NeedsConfortToSleep" ],
+    "Attacks": [
+      {
+        "LimbFunction": "Grasp",
+        "Main": true,
+        "AttacksUsesLimbName": true,
+        "Name": "Punch",
+        "AttackVerb": [ "punch", "punches" ],
+        "AttackAbility": "Unarmed",
+        "PrepareVelocity": 3,
+        "RecoverVelocity": 3,
+        "DamageTypes": "Blunt",
+        "ContactArea": 100
+      },
+      {
+        "LimbFunction": "Stance",
+        "Main": false,
+        "AttacksUsesLimbName": true,
+        "Name": "Kick",
+        "AttackVerb": [ "kick", "kickes" ],
+        "AttackAbility": "Unarmed",
+        "PrepareVelocity": 5,
+        "RecoverVelocity": 5,
+        "DamageTypes": "Blunt",
+        "ContactArea": 100
+      },
+      {
+        "LimbFunction": "Teeth",
+        "Main": true,
+        "AttacksUsesLimbName": false,
+        "Name": "Bite",
+        "AttackVerb": [ "bite", "bites" ],
+        "AttackAbility": "Bite",
+        "PrepareVelocity": 3,
+        "RecoverVelocity": 3,
+        "DamageTypes": "Pierce",
+        "ContactArea": 100,
+        "PenetrationPercentage": 1
+      }
+    ]
   },
   {
     "Id": "dwarf",
@@ -144,12 +269,54 @@
     "MaxManaRange": 35,
     "RaceNormalLimbRegen": 0.8,
     "BleedRegenaration": 0.8,
-    "BodyPlan": [ "humanoid_limbs", "humanoid_organs", "5fingers", "5toes" ],
-    "Tissues": [ "skin", "fat", "muscle", "bone" ],
+    "BodyPlan": [ "humanoid_limbs", "humanoid_organs", "5fingers", "5toes", "generic_teeth" ],
+    "Tissues": [
+      "standard_tissues",
+      "standard_tissues_layering"
+    ],
     "HeightModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "BroadnessModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "Genders": [ "Male", "Female" ],
     "CreatureClass": [ "Mammal", "General" ],
-    "Flags": [ "Sapient", "Diurnal" ]
+    "Flags": [ "Sapient", "Diurnal" ],
+    "Attacks": [
+      {
+        "LimbFunction": "Grasp",
+        "Main": true,
+        "AttacksUsesLimbName": true,
+        "Name": "Punch",
+        "AttackVerb": [ "punch", "punches" ],
+        "AttackAbility": "Unarmed",
+        "PrepareVelocity": 3,
+        "RecoverVelocity": 3,
+        "DamageTypes": "Blunt",
+        "ContactArea": 100
+      },
+      {
+        "LimbFunction": "Stance",
+        "Main": false,
+        "AttacksUsesLimbName": true,
+        "Name": "Kick",
+        "AttackVerb": [ "kick", "kickes" ],
+        "AttackAbility": "Unarmed",
+        "PrepareVelocity": 5,
+        "RecoverVelocity": 5,
+        "DamageTypes": "Blunt",
+        "ContactArea": 100
+      },
+      {
+        "LimbFunction": "Teeth",
+        "Main": true,
+        "AttacksUsesLimbName": false,
+        "Name": "Bite",
+        "AttackVerb": [ "bite", "bites" ],
+        "AttackAbility": "Bite",
+        "PrepareVelocity": 3,
+        "RecoverVelocity": 3,
+        "DamageTypes": "Pierce",
+        "ContactArea": 100,
+        "PenetrationPercentage": 1
+      }
+    ]
   }
 ]

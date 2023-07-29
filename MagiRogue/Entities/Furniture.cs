@@ -1,6 +1,8 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Data.Serialization.EntitySerialization;
+using MagiRogue.Entities.Core;
+using MagiRogue.Entities.Interfaces;
 using MagiRogue.GameSys.Physics;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
@@ -10,7 +12,7 @@ using System.Collections.Generic;
 namespace MagiRogue.Entities
 {
     [JsonConverter(typeof(FurnitureJsonConverter))]
-    public class Furniture : Entities.MagiEntity
+    public class Furniture : MagiEntity
     {
         public FurnitureType FurnitureType { get; set; }
         public int? MapIdConnection { get; set; }
@@ -26,7 +28,7 @@ namespace MagiRogue.Entities
         {
             get
             {
-                return MathMagi.GetWeightWithDensity(Material.Density, Volume);
+                return MathMagi.GetWeightWithDensity(Material.Density ?? 0, Volume);
             }
         }
 
@@ -50,8 +52,8 @@ namespace MagiRogue.Entities
         public override Furniture Copy()
         {
             var baseEntity = base.Copy();
-            Furniture fur = new Furniture(baseEntity.Appearance.Foreground,
-                baseEntity.Appearance.Background, baseEntity.Appearance.Glyph,
+            Furniture fur = new Furniture(baseEntity.AppearanceSingle.Appearance.Foreground,
+                baseEntity.AppearanceSingle.Appearance.Background, baseEntity.AppearanceSingle.Appearance.Glyph,
                 baseEntity.Position,
                 FurnitureType, Material.Id, Name, FurId, Durability)
             {

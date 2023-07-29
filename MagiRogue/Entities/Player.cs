@@ -1,9 +1,7 @@
 ﻿using MagiRogue.Data;
-using MagiRogue.Data.Enumerators;
-using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.GameSys.Magic;
+using MagiRogue.Utils;
 using SadRogue.Primitives;
-using System;
 using System.Collections.Generic;
 
 namespace MagiRogue.Entities
@@ -12,9 +10,12 @@ namespace MagiRogue.Entities
     // Default glyph is @
     public class Player : Actor
     {
-        public Player(string name, Color foreground, Color background, Point position,
-             int layer = (int)MapLayer.PLAYER) :
-            base(name, foreground, background, '@', position, layer)
+        // types: 0 - stamina
+        // 1 - mana
+        private readonly Dictionary<int, double> statusPercent = new Dictionary<int, double>();
+
+        public Player(string name, Color foreground, Color background, Point position) :
+            base(name, foreground, background, '@', position)
         {
         }
 
@@ -79,8 +80,8 @@ namespace MagiRogue.Entities
                 return null;
 
             Player player = new Player(actor.Name,
-                actor.Appearance.Foreground,
-                actor.Appearance.Background,
+                actor.AppearanceSingle.Appearance.Foreground,
+                actor.AppearanceSingle.Appearance.Background,
                 actor.Position)
             {
                 Inventory = actor.Inventory,
@@ -100,6 +101,50 @@ namespace MagiRogue.Entities
             };
 
             return player;
+        }
+
+        public string GetStaminaStatus()
+        {
+            double percent;
+            if (Body.Stamina == Body.MaxStamina)
+                percent = 100;
+            else
+                percent = MathMagi.GetPercentageBasedOnMax(Body.Stamina, Body.MaxStamina);
+
+            if (percent > 50)
+                return "[c:r f:Green]Fine";
+            if (percent <= 50 && percent > 25)
+                return "[c:r f:Yellow]Tired";
+            if (percent <= 25 && percent > 1)
+                return "[c:r f:Yellow][c:b]Winded";
+            if (percent <= 1)
+                return "[c:r f:Red][c:b]Spent";
+            return "Should not see this!";
+        }
+
+        public string GetManaStatus()
+        {
+            double percent;
+            if (Soul.CurrentMana == Soul.MaxMana)
+                percent = 100;
+            else
+                percent = MathMagi.GetPercentageBasedOnMax(Soul.CurrentMana, Soul.MaxMana);
+
+            if (percent >= 95)
+                return "[c:r f:DarkBlue]Full";
+            if (percent >= 60)
+                return "[c:r f:MediumBlue]Fine";
+            if (percent <= 60 && percent >= 50)
+                return "[c:r f:MediumBlue]Half";
+            if (percent <= 50 && percent > 25)
+                return "[c:r f:SkyBlue]Low";
+            if (percent <= 25 && percent > 9)
+                return "[c:r f:LightBlue]Spent";
+            if (percent <= 9 && percent > 1)
+                return "[c:r f:220,239,247]Fumes";
+            if (percent <= 1)
+                return "[c:r b:220,239,247]Empty";
+            return "Should not see this!";
         }
     }
 }

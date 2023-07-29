@@ -7,7 +7,7 @@
     "Adjective": "deer",
     "Description": "A medium-sized hoofed forest creature that grows its antlers back each year.",
     "RaceGlyph": "D",
-    "RaceForeground": "LightBrown",
+    "RaceForeground": "Brown",
     "RaceBackground": "Black",
     "ChildVolume": 14000,
     "MidVolume": 70000,
@@ -15,7 +15,7 @@
     "LifespanMax": 30,
     "LifespanMin": 20,
     "ChildAge": 0,
-    "ChildName": "Puppy",
+    "ChildName": "Deer Fawn",
     "AdulthoodAge": 1,
     "RaceViewRadius": 15,
     "BaseStrenght": 10,
@@ -29,10 +29,14 @@
     "BaseMagicResistance": 1,
     "RaceNormalLimbRegen": 0.6,
     "BleedRegenaration": 0.6,
-    "BodyPlan": [ "quadruped_hoof", "animal_tail", "humanoid_organs" ],
-    "Tissues": [ "fur", "skin", "fat", "muscle", "bone" ],
+    "BodyPlan": [ "quadruped_hoof", "animal_tail", "humanoid_organs", "generic_teeth" ],
+    "Tissues": [
+      "standard_tissues",
+      "standard_tissues_layering"
+    ],
     "HeightModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "BroadnessModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
+    "LenghtModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "Genders": [ "Male", "Female" ],
     "CreatureClass": [ "Mammal", "General" ],
     "Flags": [ "Animal", "Diurnal", "Wild", "Pet", "Grazer" ],
@@ -43,14 +47,55 @@
         "To": [ "quadruped_hoof", "animal_tail", "humanoid_organs", "2head_horns" ]
       },
       {
+        "Selector": [ { "Genders": "Male" } ],
+        "Change": "Attacks",
+        "To": [
+          {
+            "LimbFunction": "Horn",
+            "Main": true,
+            "AttacksUsesLimbName": false,
+            "Name": "Gore",
+            "AttackVerb": [ "gore", "gores" ],
+            "AttackAbility": "Bite",
+            "PrepareVelocity": 3,
+            "RecoverVelocity": 3,
+            "DamageTypes": "Pierce",
+            "ContactArea": 100,
+            "PenetrationPercentage": 1.5
+          }
+        ]
+      },
+      {
         "Selector": [ { "LimbType": "Horn" } ],
         "Change": "LastBodyPartName",
         "To": [ "{0} Antler" ]
+      }
+    ],
+    "Attacks": [
+      {
+        "LimbFunction": "Teeth",
+        "Main": true,
+        "AttacksUsesLimbName": false,
+        "Name": "Bite",
+        "AttackVerb": [ "bite", "bites" ],
+        "AttackAbility": "Bite",
+        "PrepareVelocity": 3,
+        "RecoverVelocity": 3,
+        "DamageTypes": "Pierce",
+        "ContactArea": 100,
+        "PenetrationPercentage": 1
       },
       {
-        "Selector": [ { "LimbType": "Foot" } ],
-        "Change": "Material",
-        "To": [ "hoof_mat" ]
+        "LimbFunction": "Stance",
+        "Main": false,
+        "AttacksUsesLimbName": true,
+        "Name": "Kick",
+        "AttackVerb": [ "kick", "kicks" ],
+        "AttackAbility": "Unarmed",
+        "PrepareVelocity": 4,
+        "RecoverVelocity": 4,
+        "DamageTypes": "Blunt",
+        "ContactArea": 100
       }
     ]
   },
@@ -61,8 +106,8 @@
     "Adjective": "cunning",
     "Description": "A large canine found in temperate regions. It is territorial and hunts in packs.",
     "RaceGlyph": "w",
-    "RaceForeground": "White",
-    "RaceBackground": "Grey",
+    "RaceForeground": "Gray",
+    "RaceBackground": "Black",
     "ChildVolume": 4000,
     "MidVolume": 20000,
     "MaxVolume": 40000,
@@ -83,12 +128,31 @@
     "BaseMagicResistance": 4,
     "RaceNormalLimbRegen": 0.7,
     "BleedRegenaration": 0.7,
-    "BodyPlan": [ "quadruped_limbs", "animal_tail", "humanoid_organs", "4toes" ],
-    "Tissues": [ "fur", "skin", "fat", "muscle", "bone" ],
+    "BodyPlan": [ "quadruped_limbs", "animal_tail", "humanoid_organs", "4toes", "generic_teeth" ],
+    "Tissues": [
+      "standard_tissues",
+      "standard_tissues_layering"
+    ],
     "HeightModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "BroadnessModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
+    "LenghtModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
     "Genders": [ "Male", "Female" ],
     "CreatureClass": [ "Mammal", "General" ],
-    "Flags": [ "Diurnal", "Wild", "Pet", "Hunter", "PackAnimal" ]
+    "Flags": [ "Diurnal", "Wild", "Pet", "Predator", "PackAnimal" ],
+    "Attacks": [
+      {
+        "LimbFunction": "Teeth",
+        "Main": true,
+        "AttacksUsesLimbName": false,
+        "Name": "Bite",
+        "AttackVerb": [ "bite", "bites" ],
+        "AttackAbility": "Bite",
+        "PrepareVelocity": 3,
+        "RecoverVelocity": 3,
+        "DamageTypes": "Pierce",
+        "ContactArea": 100,
+        "PenetrationPercentage": 1
+      }
+    ]
   }
 ]

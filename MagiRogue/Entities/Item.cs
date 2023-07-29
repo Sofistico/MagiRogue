@@ -1,6 +1,8 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Data.Serialization.EntitySerialization;
+using MagiRogue.Entities.Core;
+using MagiRogue.Entities.Interfaces;
 using MagiRogue.GameSys.Planet.History;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
@@ -46,7 +48,7 @@ namespace MagiRogue.Entities
         {
             get
             {
-                return MathMagi.GetWeightWithDensity(Material.Density, Volume);
+                return MathMagi.GetWeightWithDensity(Material.Density ?? 0, Volume);
             }
         }
 
@@ -81,6 +83,11 @@ namespace MagiRogue.Entities
 
         public MaterialTemplate Material { get; set; }
         public List<Legend> Legends { get; set; }
+        public ItemType ItemType { get; set; }
+        public List<Attack> Attacks { get; set; }
+        public Limb HeldLimb { get; set; }
+        public ArmorType ArmorType { get; set; }
+        public int Coverage { get; set; }
 
         // By default, a new Item is sized 1x1, with a weight of 1, and at 100% condition
         public Item(Color foreground, Color background, string name, int glyph, Point coord, int size,
@@ -96,6 +103,7 @@ namespace MagiRogue.Entities
             Traits = new();
             Qualities = new();
             Legends = new();
+            Attacks = new();
         }
 
         // removes this object from

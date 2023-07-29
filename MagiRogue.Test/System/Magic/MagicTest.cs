@@ -1,5 +1,6 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
+using MagiRogue.Entities.Core;
 using MagiRogue.GameSys.Magic;
 using SadConsole;
 using SadRogue.Primitives;
@@ -14,11 +15,6 @@ namespace MagiRogue.Test.System.Magic
         private MagiRogue.GameSys.Magic.MagicManager weakMagic;
         private MagiRogue.GameSys.Magic.MagicManager mediumMagic;
         private MagiRogue.GameSys.Magic.MagicManager strongMagic;
-
-        public MagicTest()
-        {
-            Game.Create(1, 1);
-        }
 
         [Fact]
         public void TestCasting()
@@ -99,7 +95,7 @@ namespace MagiRogue.Test.System.Magic
             { Proficiency = 1 };
 
             SpellBase cure = new SpellBase("cure_test", "Cure Test",
-                ArtMagic.MedicalMagic, 0, 1, 4)
+                ArtMagic.BloodMagic, 0, 1, 4)
             { Proficiency = 1 };
 
             SpellBase haste = new SpellBase("haste_self", "Haste",

@@ -6,6 +6,7 @@ namespace MagiRogue.Data.Enumerators
     [JsonConverter(typeof(StringEnumConverter))]
     public enum RoomTag
     {
+        Debug,
         Generic,
         Inn,
         Temple,
@@ -22,6 +23,7 @@ namespace MagiRogue.Data.Enumerators
         DungeonKeeper,
         Farm,
         ResearchRoom,
-        EnchantingRoom
+        EnchantingRoom,
+        Ritual
     }
 }

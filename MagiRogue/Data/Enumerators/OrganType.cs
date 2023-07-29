@@ -6,10 +6,15 @@ namespace MagiRogue.Data.Enumerators
     [JsonConverter(typeof(StringEnumConverter))]
     public enum OrganType
     {
-        Misc,
+        None,
         Heart,
         Brain,
         Digestive,
+        Intestine,
+        Mouth,
+        Tongue,
+        Nose,
+        Teeth,
         Filtering,
         Breather,
         Protective,

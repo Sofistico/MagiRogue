@@ -11,6 +11,7 @@ namespace MagiRogue.Data.Enumerators
     [JsonConverter(typeof(StringEnumConverter))]
     public enum BodyPartFunction
     {
+        None,
         Root, // where the body begins, normally the upper body
         Limb,
         Grasp,
@@ -18,11 +19,15 @@ namespace MagiRogue.Data.Enumerators
         Flier,
         Digit,
         Aperture,
+        Horn,
 
         Vital,
         Thought,
         Breath,
-        Embedded,
-        Protection // bone, skulls, ribcage and etc
+        Tongue,
+        Mouth,
+        Visual,
+        Protection, // bone, skulls, ribcage and etc
+        Teeth,
     }
 }

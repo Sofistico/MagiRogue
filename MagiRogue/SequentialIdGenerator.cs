@@ -14,6 +14,7 @@ namespace MagiRogue
         private const int civId = 3;
         private const int mythId = 4;
         private const int abilityId = 5;
+        private const int discoveryId = 6;
 
         #endregion Ids
 
@@ -27,6 +28,7 @@ namespace MagiRogue
         public static int CivId { get => idsDirectory[civId]++; }
         public static int MythId { get => idsDirectory[mythId]++; }
         public static int AbilityId { get => idsDirectory[abilityId]++; }
+        public static int DiscoveryId => idsDirectory[discoveryId]++;
 
         static SequentialIdGenerator()
         {

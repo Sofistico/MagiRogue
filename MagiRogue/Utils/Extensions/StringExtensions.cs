@@ -40,5 +40,17 @@ namespace MagiRogue.Utils.Extensions
                 "" => throw new ArgumentException($"{nameof(input)} cannot be empty", nameof(input)),
                 _ => string.Concat(input[0].ToString().ToUpper(), input.AsSpan(1))
             };
+
+        public static char? GetChar(this string input)
+        {
+            if (char.TryParse(input, out char result))
+            {
+                return result;
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }

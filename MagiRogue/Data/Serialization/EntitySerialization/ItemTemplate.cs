@@ -1,9 +1,11 @@
-﻿using MagiRogue.Data.Enumerators;
+﻿using GoRogue.Components;
+using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
+using MagiRogue.Entities.Core;
+using MagiRogue.Entities.Interfaces;
 using MagiRogue.GameSys.Magic;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
-using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -125,6 +127,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<List<string>> Qualities { get; set; }
         public EquipType EquipType { get; set; }
+        public ItemType ItemType { get; set; }
 
         [DataMember]
         public int SpeedOfAttack { get; set; }
@@ -141,13 +144,22 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         [DataMember]
         public int Broadness { get; set; }
 
+        [DataMember]
+        public List<Attack> Attacks { get; set; }
+
+        [DataMember]
+        public ArmorType ArmorType { get; set; }
+
+        [DataMember]
+        public int Coverage { get; set; }
+
         // Will need to see if it works, but so far the logic seems to check
         public static implicit operator ItemTemplate(Item item)
         {
             ItemTemplate itemSerialized = new(item.Name,
-                item.Appearance.Foreground.PackedValue,
-                item.Appearance.Background.PackedValue,
-                item.Appearance.Glyph,
+                item.AppearanceSingle.Appearance.Foreground.PackedValue,
+                item.AppearanceSingle.Appearance.Background.PackedValue,
+                item.AppearanceSingle.Appearance.Glyph,
                 item.Weight,
                 item.Volume,
                 item.Material.Id,
@@ -163,22 +175,24 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 Traits = item.Traits,
                 Qualities = Quality.ReturnQualityListAsString(item.Qualities),
                 EquipType = item.EquipType,
+                ItemType = item.ItemType,
                 SpeedOfAttack = item.SpeedOfAttack,
                 WeaponType = item.WeaponType,
+                Attacks = item.Attacks,
+                Broadness = item.Broadness,
+                Height = item.Height,
+                Length = item.Length,
+                Id = item.ItemId,
+                ArmorType = item.ArmorType,
+                Coverage = item.Coverage,
             };
-
-            itemSerialized.Broadness = item.Broadness;
-            itemSerialized.Height = item.Height;
-            itemSerialized.Length = item.Length;
-            itemSerialized.Id = item.ItemId;
-
             return itemSerialized;
         }
 
         public static implicit operator Item(ItemTemplate itemTemplate)
         {
-            int glyph = GlyphHelper.GlyphExistInDictionary(itemTemplate.Glyph) ?
-                GlyphHelper.GetGlyph(itemTemplate.Glyph) : itemTemplate.Glyph;
+            int glyph = GlyphHelper.GlyphExistInDictionary(itemTemplate.Glyph)
+                ? GlyphHelper.GetGlyph(itemTemplate.Glyph) : itemTemplate.Glyph;
             MagiColorSerialization foreground = new MagiColorSerialization(itemTemplate.Foreground);
             MagiColorSerialization background = new MagiColorSerialization(itemTemplate.Background);
 
@@ -199,8 +213,12 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 Qualities = Quality.ReturnQualityList(itemTemplate.Qualities),
                 ItemId = itemTemplate.Id,
                 EquipType = itemTemplate.EquipType,
+                ItemType = itemTemplate.ItemType,
                 SpeedOfAttack = itemTemplate.SpeedOfAttack,
                 WeaponType = itemTemplate.WeaponType,
+                Attacks = itemTemplate.Attacks,
+                ArmorType = itemTemplate.ArmorType,
+                Coverage = itemTemplate.Coverage,
             };
             if (itemTemplate.Traits is not null)
                 item.Traits = itemTemplate.Traits;
@@ -209,7 +227,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 item.Condition = itemTemplate.Condition;
             }
             item.Description = itemTemplate.Description;
-            if (item.Material is not null && item.Material.ConfersTraits is not null && item.Material.ConfersTraits.Count > 0)
+            if (item.Material?.ConfersTraits?.Count > 0)
             {
                 item.Traits.AddRange(item.Material.ConfersTraits);
             }

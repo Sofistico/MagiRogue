@@ -39,7 +39,7 @@ namespace MagiRogue.GameSys.Magic.Effects
             Actor poorGuy = GameLoop.GetCurrentMap().GetEntityAt<Actor>(target);
             int luck = GoRogue.DiceNotation.Dice.Roll($"{spellCasted.SpellLevel}d{spellCasted.Power}");
 
-            if (poorGuy is not null && poorGuy.GetAnatomy().Limbs.Count > 0
+            if (poorGuy?.GetAnatomy().Limbs.Count > 0
                 && MagicManager.PenetrateResistance(spellCasted, caster, poorGuy, luck))
             {
                 var rng = GoRogue.Random.GlobalRandom.DefaultRNG;
@@ -47,8 +47,7 @@ namespace MagiRogue.GameSys.Magic.Effects
 
                 Limb limbToLose = poorGuy.GetAnatomy().Limbs[i];
 
-                //poorGuy.GetAnatomy().Dismember(limbToLose, poorGuy);
-                Wound injury = new Wound(limbToLose.MaxBodyPartHp, DamageTypes.Sharp);
+                Wound injury = new Wound(DamageTypes.Sharp, limbToLose.Tissues);
                 poorGuy.GetAnatomy().Injury(injury, limbToLose, poorGuy);
 
                 if (poorGuy is not null)

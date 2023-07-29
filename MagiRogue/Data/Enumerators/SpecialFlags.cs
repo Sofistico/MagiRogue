@@ -42,8 +42,12 @@ namespace MagiRogue.Data.Enumerators
         Pet, // the animal can be adopted
         Wild, // this animal can be found in the wild
         Grazer, // eats grass from the ground
-        Hunter, // animal hunts for meat
-        PackAimal, // animal forms packs
+        Predator, // animal hunts for meat
+        PackAnimal, // animal forms packs
+        NoSleep,
+        NoEat,
+        NoDrink,
+        NeedsConfortToSleep,
 
         //Civ stuff:
         Married,

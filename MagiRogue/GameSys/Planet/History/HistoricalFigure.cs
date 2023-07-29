@@ -12,6 +12,7 @@ using MagiRogue.GameSys.Planet.TechRes;
 using MagiRogue.Data.Serialization;
 using MagiRogue.GameSys.Magic;
 using MagiRogue.Utils.Extensions;
+using MagiRogue.Entities.Core;
 
 namespace MagiRogue.GameSys.Planet.History
 {
@@ -22,7 +23,7 @@ namespace MagiRogue.GameSys.Planet.History
     public sealed class HistoricalFigure
     {
         // years that the current long activity started
-        private int seasonsOnActivity = 0;
+        private int seasonsOnActivity;
         private int whatScoreToSettleForTrainingAbility;
         private Personality cachedPersonality;
         private Race raceField;
@@ -830,5 +831,11 @@ namespace MagiRogue.GameSys.Planet.History
         }
 
         public string GetRaceId() => GetAnatomy().RaceId;
+
+        internal void SetRace(Race figureRace)
+        {
+            GetAnatomy().Race = figureRace;
+            GetAnatomy().RaceId = figureRace.Id;
+        }
     }
 }

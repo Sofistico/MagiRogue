@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Commands;
+using SadRogue.Primitives;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,7 +14,7 @@ namespace MagiRogue.Utils
         /// <param name="radius">The radius of the cone</param>
         /// <param name="target">The target that is creating the cone</param>
         /// <returns></returns>
-        public static Shape Cone(Point originCoordinate, double radius, Target target, double coneSpan = 90)
+        public static Shape Cone(this Point originCoordinate, double radius, Target target, double coneSpan = 90)
         {
             var map = GameLoop.GetCurrentMap();
             Point[] points;
@@ -27,13 +28,32 @@ namespace MagiRogue.Utils
                 new(map.TransparencyView);
 
             coneFov.Calculate(originCoordinate.X, originCoordinate.Y,
-                angle, map.DistanceMeasurement, angle, coneSpan);
+                radius, Distance.Chebyshev, angle, coneSpan);
 
             points = coneFov.CurrentFOV.ToArray();
 #if DEBUG
             GameLoop.AddMessageLog(angle.ToString());
 #endif
-            return new Shape(points, radius);
+            return new Shape(points);
+        }
+
+        public static Shape HollowCircleFromOriginPoint(this Point origin, int radius)
+        {
+            return new Shape(Shapes.GetCircle(origin, radius).ToArray());
+        }
+
+        public static Shape CircleFromOriginPoint(this Point origin, int radius)
+        {
+            return new Shape(Radius.Circle.PositionsInRadius(origin, radius).ToArray());
+        }
+
+        public static bool PointInsideACircle(this Point center, Point point, double radius)
+        {
+            double dx = center.X - point.X;
+            double dy = center.Y - point.Y;
+            double distance = (dx * dx) + (dy * dy); // little optmization, rather than get the square root, i just put
+            // distance^2<=radius^2
+            return distance <= (radius * radius);
         }
     }
 
@@ -41,12 +61,9 @@ namespace MagiRogue.Utils
     {
         public readonly Point[] Points { get; }
 
-        public readonly double Radius { get; }
-
-        public Shape(Point[] points, double radius)
+        public Shape(Point[] points)
         {
             Points = points;
-            Radius = radius;
         }
     }
 
@@ -79,6 +96,42 @@ namespace MagiRogue.Utils
             Height = height;
             Size = width * height;
             Points = points;
+        }
+    }
+
+    /// <summary>
+    /// Represents a simple 3d grid, does not hold any kind of objects and is there just to represent
+    /// the space
+    /// </summary>
+    public struct Simple3DGrid
+    {
+        /// <summary>
+        /// Also know as the rows
+        /// </summary>
+        public int Width { get; set; }
+
+        /// <summary>
+        /// Also know as the columns
+        /// </summary>
+        public int Height { get; set; }
+
+        public int Depth { get; set; }
+
+        /// <summary>
+        /// The total size of the grid
+        /// </summary>
+        public int Size { get; set; }
+
+        public Simple3DGrid(int width, int height, int depth)
+        {
+            Width = width;
+            Height = height;
+            Size = width * height * depth;
+        }
+
+        public int ToIndex(int y, int x, int z)
+        {
+            return z + (y * Depth) + (x * Height * Depth);
         }
     }
 }

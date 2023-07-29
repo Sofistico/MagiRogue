@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Entities;
+using MagiRogue.Entities.Core;
 using MagiRogue.GameSys.Magic;
 using MagiRogue.GameSys.Tiles;
 
@@ -23,6 +24,12 @@ namespace MagiRogue.GameSys.Time
             return GetWalkTime(actor, tile);
         }
 
+        public static int GetWalkTime(Actor actor)
+        {
+            var tile = ((Map)actor.CurrentMap).GetTileAt<TileBase>(actor.Position);
+            return GetWalkTime(actor, tile);
+        }
+
         public static int GetWorldWalkTime(Actor actor, WorldTile tile)
         {
             // TODO: Need to fix this time to represent how slow it is to move on the overmap based
@@ -30,16 +37,16 @@ namespace MagiRogue.GameSys.Time
             return (int)((tile.MoveTimeCost * 100) / actor.GetActorBaseSpeed());
         }
 
-        public static int GetAttackTime(Actor actor)
+        public static int GetAttackTime(Actor actor, Attack attack)
         {
-            return (int)actor.GetAttackVelocity();
+            return (int)actor.GetAttackVelocity(attack) / ((int)attack.RecoverVelocity + 1);
         }
 
         public static int GetCastingTime(Actor actor, SpellBase spellCasted)
         {
             return (int)
                 ((MagicalThings * (spellCasted.SpellLevel + spellCasted.ManaCost))
-                    / (actor.GetActorCastingSpeed()));
+                    / (actor.GetActorBaseCastingSpeed()));
         }
     }
 }

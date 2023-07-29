@@ -39,6 +39,14 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             {
                 createdSpell.Proficiency = (double)spell["Proficiency"];
             }
+            if (spell.ContainsKey("Keywords"))
+            {
+                createdSpell.Keywords = JsonConvert.DeserializeObject<List<string>>(spell["Keywords"].ToString())!;
+            }
+            if (spell.ContainsKey("Context"))
+            {
+                createdSpell.Context = JsonConvert.DeserializeObject<List<SpellContext>>(spell["Context"].ToString())!;
+            }
 
             return createdSpell;
         }
@@ -66,7 +74,9 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 "TELEPORT" => EffectType.TELEPORT,
                 "DEBUFF" => EffectType.DEBUFF,
                 "BUFF" => EffectType.BUFF,
-                _ => throw new ApplicationException($"It wasn't possible to convert the effect, " +
+                "LIGHT" => EffectType.LIGHT,
+                "KNOCKBACK" => EffectType.KNOCKBACK,
+                _ => throw new ApplicationException("It wasn't possible to convert the effect, " +
                     $"please use only the provided effects types.\nEffect used: {st}"),
             };
         }
@@ -93,11 +103,11 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 "None" => DamageTypes.None,
                 "Blunt" => DamageTypes.Blunt,
                 "Sharp" => DamageTypes.Sharp,
-                "Point" => DamageTypes.Point,
+                "Point" => DamageTypes.Pierce,
                 "Force" => DamageTypes.Force,
                 "Fire" => DamageTypes.Fire,
                 "Cold" => DamageTypes.Cold,
-                "Lighting" => DamageTypes.Ligthing,
+                "Lighting" => DamageTypes.Lightning,
                 "Poison" => DamageTypes.Poison,
                 "Acid" => DamageTypes.Acid,
                 "Shock" => DamageTypes.Shock,
@@ -158,10 +168,9 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 "Dimensionalism" => ArtMagic.Dimensionalism, // 7
                 "Conjuration" => ArtMagic.Conjuration, // 8
                 "Illuminism" => ArtMagic.Illuminism, // 9
-                "MedicalMagic" => ArtMagic.MedicalMagic, // 10
-                "MindMagic" => ArtMagic.MindMagic, // 11
-                "SoulMagic" => ArtMagic.SoulMagic, // 12
-                "BloodMagic" => ArtMagic.BloodMagic, // 13
+                "MindMagic" => ArtMagic.MindMagic, // 10
+                "SoulMagic" => ArtMagic.SoulMagic, // 11
+                "BloodMagic" => ArtMagic.BloodMagic, // 12
                 _ => throw new Exception($"Are you sure the school is correct? it must be a valid one./n School used: {st}")
             };
         }
@@ -189,9 +198,12 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
         public double ManaCost { get; set; }
         public string SpellId { get; set; }
+        public List<SpellContext> Context { get; set; } = new();
+        public List<string> Keywords { get; set; } = new();
 
         public SpellTemplate(int spellLevel, List<ISpellEffect> effects, string spellName, string description,
-            ArtMagic magicArt, int spellRange, double manaCost, string spellId)
+            ArtMagic magicArt, int spellRange, double manaCost, string spellId,
+            List<SpellContext> context)
         {
             SpellLevel = spellLevel;
             Effects = effects;
@@ -201,6 +213,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             SpellRange = spellRange;
             ManaCost = manaCost;
             SpellId = spellId;
+            Context = context;
         }
 
         public static implicit operator SpellBase(SpellTemplate spellTemplate)
@@ -210,12 +223,11 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                 spellTemplate.ManaCost)
             {
                 Proficiency =
-                spellTemplate.Proficiency is null ? 0 : (double)spellTemplate.Proficiency
+                spellTemplate.Proficiency is null ? 0 : (double)spellTemplate.Proficiency,
+                Context = spellTemplate.Context,
+                Keywords = spellTemplate.Keywords,
             };
-            foreach (var item in spellTemplate.Effects)
-            {
-                spell.Effects.Add(item);
-            }
+            spell.Effects.AddRange(spellTemplate.Effects);
             spell.SetDescription(spellTemplate.Description);
             return spell;
         }
@@ -224,9 +236,10 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         {
             SpellTemplate template =
                 new SpellTemplate(spell.SpellLevel, spell.Effects, spell.SpellName,
-                spell.Description, spell.MagicArt, spell.SpellRange, spell.ManaCost, spell.SpellId)
+                spell.Description, spell.MagicArt, spell.SpellRange, spell.ManaCost, spell.SpellId, spell.Context)
                 {
-                    Proficiency = spell.Proficiency
+                    Proficiency = spell.Proficiency,
+                    Keywords = spell.Keywords,
                 };
 
             return template;

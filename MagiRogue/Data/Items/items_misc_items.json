@@ -7,6 +7,7 @@
     "Foreground": "DarkGrey",
     "Glyph": "*",
     "Weight": 12,
-    "Size": 7
+    "Size": 7,
+    "ItemType": "Fuel"
   }
 ]

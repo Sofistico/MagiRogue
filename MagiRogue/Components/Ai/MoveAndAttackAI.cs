@@ -1,5 +1,4 @@
-﻿using GoRogue.Components.ParentAware;
-using GoRogue.Pathing;
+﻿using GoRogue.Pathing;
 using MagiRogue.Entities;
 using MagiRogue.GameSys;
 using MagiRogue.GameSys.Time;
@@ -19,7 +18,7 @@ namespace MagiRogue.Components.Ai
             perceptionAi = perception;
         }
 
-        public IObjectWithComponents? Parent { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public object? Parent { get; set; }
 
         public (bool sucess, long ticks) RunAi(Map map, MessageLogWindow messageLog)
         {

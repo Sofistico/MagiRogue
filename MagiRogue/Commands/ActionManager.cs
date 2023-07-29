@@ -1,17 +1,22 @@
-﻿using GoRogue.DiceNotation;
+﻿using GoRogue.GameFramework;
+using GoRogue.Pathing;
+using MagiRogue.Components;
 using MagiRogue.Data;
 using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
+using MagiRogue.Entities.Core;
 using MagiRogue.GameSys;
 using MagiRogue.GameSys.Planet;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.GameSys.Time;
+using MagiRogue.Entities.Veggies;
 using MagiRogue.Utils;
+using MagiRogue.Utils.Extensions;
 using SadConsole;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using System.Text;
+using Map = MagiRogue.GameSys.Map;
 
 namespace MagiRogue.Commands
 {
@@ -19,14 +24,9 @@ namespace MagiRogue.Commands
     /// Contains all generic actions performed on entities and tiles
     /// including combat, movement, and so on.
     /// </summary>
-    public sealed class ActionManager
+    public static class ActionManager
     {
-        private const int staminaAttackAction = 100;
-
-        private ActionManager()
-        {
-            // makes sure that it's never instantiated
-        }
+        private const int maxTries = 10;
 
         /// <summary>
         /// Move the actor BY +/- X&Y coordinates
@@ -61,47 +61,62 @@ namespace MagiRogue.Commands
         /// </summary>
         /// <param name="attacker"></param>
         /// <param name="defender"></param>
-        public static void MeleeAttack(Actor attacker, Actor defender)
+        public static int MeleeAttack(Actor attacker,
+            Actor defender,
+            Attack? attack = null,
+            Limb? limbChoosen = null)
         {
             if (!defender.CanBeAttacked)
-                return;
+                return 0;
 
-            if (!attacker.GetAnatomy().HasEnoughArms)
+            if (!attacker.GetAnatomy().HasAnyRaceAttack)
             {
-                GameLoop.AddMessageLog
-                    ($"The {attacker.Name} doesn't have enough arms to hit {defender.Name}");
-                return;
+                attack = Attack.PushAttack();
             }
+            attack ??= attacker.GetRaceAttacks().GetRandomItemFromList();
 
             if (attacker.Body.Stamina <= 0)
             {
                 GameLoop.AddMessageLog($"{attacker.Name} is far too tired to attack!");
-                return;
+                return TimeHelper.Wait;
             }
 
             // Create two messages that describe the outcome
             // of the attack and defense
             StringBuilder attackMessage = new();
             StringBuilder defenseMessage = new();
+            bool isPlayer = attacker is Player;
 
-            // Count up the amount of attacking damage done
-            // and the number of successful blocks
-            (bool hit, Limb limbAttacked, Limb limbAttacking, DamageTypes dmgType)
-                = CombatUtils.ResolveHit(attacker, defender, attackMessage);
-            double damage = CombatUtils.ResolveDefense(attacker,
-                defender, hit, attackMessage, defenseMessage, limbAttacked, dmgType, limbAttacking);
+            (bool hit, BodyPart limbAttacked, BodyPart limbAttacking, DamageTypes dmgType, Item? itemUsed,
+                MaterialTemplate attackMaterial)
+                = CombatUtils.ResolveHit(attacker, defender, attackMessage, attack, isPlayer, limbChoosen);
+            double finalMomentum = CombatUtils.ResolveDefenseAndGetAttackMomentum(attacker,
+                defender,
+                hit,
+                limbAttacking,
+                attack,
+                itemUsed);
 
             // Display the outcome of the attack & defense
-            GameLoop.AddMessageLog(attackMessage.ToString());
+            GameLoop.AddMessageLog(attackMessage.ToString(), false);
             if (!string.IsNullOrWhiteSpace(defenseMessage.ToString()))
-                GameLoop.AddMessageLog(defenseMessage.ToString());
+                GameLoop.AddMessageLog(defenseMessage.ToString(), false);
 
             // The defender now takes damage
-            CombatUtils.ResolveDamage(defender, damage, dmgType, limbAttacking, limbAttacked);
-
+            CombatUtils.ResolveDamage(defender,
+                finalMomentum,
+                dmgType,
+                limbAttacked,
+                attackMaterial,
+                attack,
+                itemUsed,
+                limbAttacking);
+            var staminaDiscount = (attacker.Body.Stamina
+                - (attack.PrepareVelocity * 10)) + (attacker.Body.Endurance * 0.5);
             // discount stamina from the attacker
-            attacker.Body.Stamina =
-                MathMagi.Round((attacker.Body.Stamina - staminaAttackAction) * (attacker.Body.Endurance / 100));
+            attacker.Body.Stamina = MathMagi.Round(staminaDiscount);
+
+            return TimeHelper.GetAttackTime(attacker, attack);
         }
 
         /// <summary>
@@ -126,7 +141,7 @@ namespace MagiRogue.Commands
             List<Actor> monsterClose = new List<Actor>();
 
             // Saves all Points directions of the attacker.
-            Point[] directions = SadConsole.PointExtensions.GetDirectionPoints(attacker.Position);
+            Point[] directions = attacker.Position.GetDirectionPoints();
 
             foreach (Point direction in directions)
             {
@@ -140,7 +155,7 @@ namespace MagiRogue.Commands
                         // add logic for attack here
                         // TODO: make it possible to choose which monster to strike and test what happens when there is more
                         // than one monster nearby.
-                        Actor closestMonster = monsterClose.First();
+                        Actor closestMonster = monsterClose[0];
                         MeleeAttack(attacker, closestMonster);
                         return true;
                     }
@@ -205,19 +220,15 @@ namespace MagiRogue.Commands
         /// <param name="door">Door that wil be closed></param>
         public static bool CloseDoor(Actor actor)
         {
-            Point[] allDirections = SadConsole.PointExtensions.GetDirectionPoints(actor.Position);
-            foreach (Point points in allDirections)
+            foreach (Point points in actor.Position.GetDirectionPoints())
             {
                 TileDoor possibleDoor = GameLoop.GetCurrentMap().GetTileAt<TileDoor>(points);
-                if (possibleDoor != null)
+                if (possibleDoor?.IsOpen == true)
                 {
-                    if (possibleDoor.IsOpen)
-                    {
-                        possibleDoor.Close();
-                        GameLoop.AddMessageLog($"{actor.Name} closed a {possibleDoor.Name}");
-                        GameLoop.GetCurrentMap().ForceFovCalculation();
-                        return true;
-                    }
+                    possibleDoor.Close();
+                    GameLoop.AddMessageLog($"{actor.Name} closed a {possibleDoor.Name}");
+                    GameLoop.GetCurrentMap().ForceFovCalculation();
+                    return true;
                 }
             }
             return false;
@@ -232,10 +243,10 @@ namespace MagiRogue.Commands
             }
             else
             {
-                Item item = inv.Inventory.First();
+                Item item = inv.Inventory[0];
                 inv.Inventory.Remove(item);
                 item.Position = inv.Position;
-                GameLoop.GetCurrentMap().Add(item);
+                GameLoop.GetCurrentMap().AddMagiEntity(item);
                 GameLoop.AddMessageLog($"{inv.Name} dropped {item.Name}");
                 return true;
             }
@@ -263,10 +274,12 @@ namespace MagiRogue.Commands
         {
             if (GameLoop.GetCurrentMap().GoRogueComponents.GetFirstOrDefault<FOVHandler>().IsEnabled)
             {
-                GameLoop.GetCurrentMap().GoRogueComponents.GetFirstOrDefault<FOVHandler>().Disable(false);
+                GameLoop.GetCurrentMap().GoRogueComponents.GetFirstOrDefault<FOVHandler>()?.Disable(false);
             }
             else
-                GameLoop.GetCurrentMap().GoRogueComponents.GetFirstOrDefault<FOVHandler>().Enable();
+            {
+                GameLoop.GetCurrentMap().GoRogueComponents.GetFirstOrDefault<FOVHandler>()?.Enable();
+            }
         }
 
         public static void CreateNewMapForTesting()
@@ -321,10 +334,10 @@ namespace MagiRogue.Commands
         public static bool RestTillFull(Actor actor)
         {
             Body bodyStats = actor.Body;
-            Mind mindStats = actor.Mind;
+            //Mind mindStats = actor.Mind;
             Soul soulStats = actor.Soul;
 
-            if ((bodyStats.Stamina < bodyStats.MaxStamina || soulStats.CurrentMana < soulStats.MaxMana))
+            if (bodyStats.Stamina < bodyStats.MaxStamina || soulStats.CurrentMana < soulStats.MaxMana)
             {
                 // calculate here the amount of time that it will take in turns to rest to full
                 double staminaDif, manaDif;
@@ -334,24 +347,11 @@ namespace MagiRogue.Commands
 
                 double totalTurnsWait = staminaDif + manaDif;
 
-                for (int i = 0; i < totalTurnsWait + 1; i++)
-                {
-                    foreach (Point p in GameLoop.GetCurrentMap().PlayerFOV.CurrentFOV)
-                    {
-                        Actor possibleActor = GameLoop.GetCurrentMap().GetEntityAt<Actor>(p);
-                        if (possibleActor is not null && !possibleActor.Equals(actor))
-                        {
-                            GameLoop.AddMessageLog("There is an enemy in view, stop resting!");
-                            return false;
-                        }
-                    }
-
-                    GameLoop.Universe.ProcessTurn(TimeHelper.Wait, true);
-                }
+                bool sus = WaitForNTurns((int)totalTurnsWait, actor);
 
                 GameLoop.AddMessageLog($"You have rested for {totalTurnsWait} turns");
 
-                return true;
+                return sus;
             }
 
             GameLoop.AddMessageLog("You have no need to rest");
@@ -368,10 +368,7 @@ namespace MagiRogue.Commands
         public static bool EquipItem(Actor actor, Item item)
         {
             item.Equip(actor);
-            if (actor.GetEquipment().ContainsValue(item))
-                return true;
-            else
-                return false;
+            return actor.GetEquipment().ContainsValue(item);
         }
 
         /// <summary>
@@ -383,10 +380,7 @@ namespace MagiRogue.Commands
         public static bool UnequipItem(Actor actor, Item item)
         {
             item.Unequip(actor);
-            if (!actor.GetEquipment().ContainsValue(item))
-                return true;
-            else
-                return false;
+            return !actor.GetEquipment().ContainsValue(item);
         }
 
         public static bool EnterDownMovement(Point playerPoint)
@@ -396,8 +390,7 @@ namespace MagiRogue.Commands
             WorldTile? possibleWorldTileHere =
                 GameLoop.GetCurrentMap().GetTileAt<WorldTile>(playerPoint);
             Map currentMap = GameLoop.GetCurrentMap();
-            if (possibleStairs is not null
-                && possibleStairs.MapIdConnection.HasValue)
+            if (possibleStairs?.MapIdConnection.HasValue == true)
             {
                 Map map = Universe.GetMapById(possibleStairs.MapIdConnection.Value);
                 // TODO: For now it's just a test, need to work out a better way to do it.
@@ -466,7 +459,7 @@ namespace MagiRogue.Commands
                     GameLoop.Universe.ChangePlayerMap(map, playerLastPos, currentMap);
                     GameLoop.Universe.SaveAndLoad.SaveChunkInPos(GameLoop.Universe.CurrentChunk,
                         GameLoop.Universe.CurrentChunk.ToIndex(map.Width));
-                    GameLoop.Universe.CurrentChunk = null;
+                    GameLoop.Universe.CurrentChunk = null!;
                     return true;
                 }
                 else if (GameLoop.Universe.MapIsWorld())
@@ -490,6 +483,198 @@ namespace MagiRogue.Commands
                 GameLoop.AddMessageLog("You can't change the map right now!");
                 return false;
             }
+        }
+
+        public static Need Sleep(Actor actor, Need need)
+        {
+            if (actor.State != ActorState.Sleeping)
+            {
+                if (actor.Flags.Contains(SpecialFlag.NeedsConfortToSleep))
+                {
+                    // define behavior for civilized races here in the future!
+                    //map.GetFurnitureTypeClosest()
+                }
+                actor.State = ActorState.Sleeping;
+            }
+            else
+            {
+                if (need.TurnCounter-- == 0)
+                {
+                    actor.State = ActorState.Normal;
+                }
+            }
+            return need;
+        }
+
+        public static bool WaitForNTurns(int turns, Actor actor, bool canBeInterrupted = true)
+        {
+            if (turns < 0)
+                return false;
+            for (int i = 0; i < turns; i++)
+            {
+                foreach (Point p in GameLoop.GetCurrentMap().PlayerFOV.NewlySeen)
+                {
+                    Actor possibleActor = GameLoop.GetCurrentMap().GetEntityAt<Actor>(p);
+                    if (possibleActor?.Equals(actor) == false && canBeInterrupted)
+                    {
+                        GameLoop.AddMessageLog("There is an enemy in view, stop resting!");
+                        return false;
+                    }
+                }
+
+                GameLoop.Universe.ProcessTurn(TimeHelper.Wait, true);
+            }
+            return true;
+        }
+
+        public static Need? FindFood(Actor actor, Map map)
+        {
+            var whatToEat = actor.GetAnatomy().WhatToEat();
+            var foodItem = map.FindTypeOfFood(whatToEat, actor);
+            Need? commitedToNeed = null;
+            if (foodItem is null)
+            {
+                Wander(actor);
+                return null;
+            }
+            if (foodItem is Actor victim)
+            {
+                commitedToNeed = new Need($"Kill {victim}", false, 0, Data.Enumerators.Actions.Fight, "Peace", $"eat {victim.ID}")
+                {
+                    Objective = actor,
+                };
+            }
+            if (foodItem is Item item)
+            {
+                commitedToNeed = new Need($"Pickup {item.Name}", false, 0, Actions.PickUp, "Greed", $"eat {item.ID}")
+                {
+                    Objective = foodItem
+                };
+            }
+            if (foodItem is Plant plant)
+            {
+                commitedToNeed = new Need($"Eat {plant.Name}", false, 0, Actions.Eat, "Greed", $"eat {plant.ID}")
+                {
+                    Objective = foodItem
+                };
+            }
+            return commitedToNeed;
+        }
+
+        public static int Wander(Actor actor)
+        {
+            int tries = 0;
+            bool tileIsInvalid;
+            do
+            {
+                var posToGo = PointUtils.GetPointNextToWithCardinals();
+                tileIsInvalid = !MoveActorBy(actor, posToGo);
+                tries++;
+            } while (tileIsInvalid && tries <= maxTries);
+            return TimeHelper.GetWalkTime(actor, actor.Position);
+        }
+
+        public static int Drink(Actor actor,
+            MaterialTemplate material,
+            int temperature,
+            Need? needSatisfied = null)
+        {
+            if (material.GetState(temperature) == MaterialState.Liquid)
+            {
+                if (needSatisfied != null)
+                    needSatisfied?.Fulfill();
+                GameLoop.AddMessageLog($"The {actor.Name} drank {material.Name}");
+                return TimeHelper.Interact;
+            }
+            return 0;
+        }
+
+        public static int Eat(Actor actor, IGameObject whatToEat, Need? need = null)
+        {
+            if (!actor.CanInteract)
+                return 0;
+            if (whatToEat is Item item)
+            {
+                if (need is not null)
+                    need?.Fulfill();
+                item.Condition -= 100;
+                GameLoop.AddMessageLog($"The {actor.Name} ate {item.Name}");
+            }
+            if (whatToEat is Plant plant)
+            {
+                if (need is not null)
+                    need?.Fulfill();
+                plant.RemoveThisFromMap();
+                GameLoop.AddMessageLog($"The {actor.Name} ate {plant.Name}");
+            }
+            return TimeHelper.Interact;
+        }
+
+        public static Path FindFleeAction(Map map, Actor actor, Actor? danger)
+        {
+#if DEBUG
+            GameLoop.AddMessageLog($"{actor.Name} considers {danger.Name} dangerous!");
+#endif
+
+            Point rngPoint = map.GetRandomWalkableTile();
+            return map.AStar.ShortestPath(actor.Position, rngPoint);
+        }
+
+        public static bool SearchForDangerAction(Actor actor, Map map, out Actor? danger)
+        {
+            danger = null;
+            if (actor.Mind.Personality.Anger > 20 || actor.Mind.Personality.Peace <= 15)
+                return false;
+            foreach (var item in actor.AllThatCanSee())
+            {
+                if (map.EntityIsThere(item, out danger))
+                {
+                    if (danger is null)
+                        continue;
+                    if (danger.ID == actor.ID) // ignore if it's the same actor
+                        continue;
+                    // ignore if it's the same species
+                    // TODO: Implement eater of same species
+                    if (danger.GetAnatomy().RaceId.Equals(actor.GetAnatomy().RaceId))
+                        continue;
+                    if (!actor.CanSee(danger.Position))
+                        continue;
+                    if (danger.Flags.Contains(SpecialFlag.Sapient)) // will need another method to identify sapient creatures
+                        continue;
+                    var dis = map.DistanceMeasurement.Calculate(actor.Position, danger.Position);
+
+                    bool considersDangerBasedOnSize = (danger.Flags.Contains(SpecialFlag.Predator)
+                        && actor.Volume < danger.Volume * 4)
+                        || actor.Volume < (danger.Volume * 2) - (actor.Soul.WillPower * actor.Body.Strength);
+                    bool getifDangerOnViewNecessaryToworry = dis <= 15 && dis <= actor.GetViewRadius(); // 15 or view radius, whatever is lower.
+
+                    return considersDangerBasedOnSize && getifDangerOnViewNecessaryToworry;
+                }
+            }
+            return false;
+        }
+
+        public static bool FindWater(Actor actor, Map map, out WaterTile water)
+        {
+            water = map.GetClosestWaterTile(actor.Body.ViewRadius, actor.Position);
+
+            if (water is null)
+            {
+                if (actor.GetMemory<WaterTile>(MemoryType.WaterLoc, out var memory))
+                {
+                    water = memory.ObjToRemember!;
+                    return true;
+                }
+                return false;
+            }
+
+            if (!actor.CanSee(water.Position))
+                return false;
+
+            if (!actor.HasMemory(MemoryType.WaterLoc, water))
+                actor.AddMemory(water.Position, MemoryType.WaterLoc, water);
+
+            return true;
         }
     }
 }

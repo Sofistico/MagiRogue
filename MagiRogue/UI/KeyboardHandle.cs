@@ -7,7 +7,9 @@ using MagiRogue.Entities;
 using MagiRogue.GameSys;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.GameSys.Time;
+using MagiRogue.UI.Enums;
 using MagiRogue.UI.Windows;
+using MagiRogue.Utils.Extensions;
 using Newtonsoft.Json;
 using SadConsole.Input;
 using SadRogue.Primitives;
@@ -160,10 +162,16 @@ namespace MagiRogue.UI
             if (HandleMove(info, world))
             {
                 if (!GetPlayer.Bumped && world.CurrentMap.ControlledEntitiy is Player)
+                {
                     world.ProcessTurn(TimeHelper.GetWalkTime(GetPlayer,
                         world.CurrentMap.GetTileAt<TileBase>(GetPlayer.Position)), true);
+                }
                 else if (world.CurrentMap.ControlledEntitiy is Player)
-                    world.ProcessTurn(TimeHelper.GetAttackTime(GetPlayer), true);
+                {
+                    world.ProcessTurn(TimeHelper.GetAttackTime(GetPlayer,
+                        GetPlayer.GetAttacks().GetRandomItemFromList()),
+                        true);
+                }
 
                 return true;
             }
@@ -179,12 +187,12 @@ namespace MagiRogue.UI
                 return true;
             }
 
-            if (info.IsKeyPressed(Keys.A))
-            {
-                bool sucess = ActionManager.DirectAttack(world.Player);
-                world.ProcessTurn(TimeHelper.GetAttackTime(world.Player), sucess);
-                return sucess;
-            }
+            //if (info.IsKeyPressed(Keys.A))
+            //{
+            //    bool sucess = ActionManager.DirectAttack(world.Player);
+            //    world.ProcessTurn(TimeHelper.GetAttackTime(world.Player), sucess);
+            //    return sucess;
+            //} // some other thing will be in here!
             if (info.IsKeyPressed(Keys.G))
             {
                 Item item = world.CurrentMap.GetEntityAt<Item>(world.Player.Position);
@@ -218,8 +226,7 @@ namespace MagiRogue.UI
             }
             if (info.IsKeyPressed(Keys.L))
             {
-                if (targetCursor is null)
-                    targetCursor = new Target(GetPlayer.Position);
+                targetCursor ??= new Target(GetPlayer.Position);
 
                 if (world.CurrentMap.ControlledEntitiy is not Player
                     && !targetCursor.EntityInTarget())
@@ -229,8 +236,6 @@ namespace MagiRogue.UI
                 }
 
                 targetCursor.StartTargetting();
-                targetCursor.LookMode = true;
-                targetCursor.Cursor.IgnoresWalls = true;
 
                 return true;
             }
@@ -250,8 +255,19 @@ namespace MagiRogue.UI
                 return true;
             }
 
-            if (info.IsKeyPressed(Keys.Enter) && targetCursor is not null
-                && targetCursor.State == TargetState.Targeting)
+            if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.R))
+            {
+                var wait = ui.GetWindow<WaitWindow>(WindowTag.Wait);
+                if (wait is null)
+                {
+                    wait = new();
+                    ui.AddWindowToList(wait);
+                }
+                wait.Show(true);
+                return true;
+            }
+
+            if (info.IsKeyPressed(Keys.Enter) && targetCursor?.State == TargetState.Targeting)
             {
                 if ((targetCursor.EntityInTarget() || targetCursor.TileInTarget()) && targetCursor.SpellSelected is null)
                 {
@@ -280,7 +296,7 @@ namespace MagiRogue.UI
             {
                 targetCursor.EndTargetting();
 
-                targetCursor = null;
+                targetCursor = null!;
 
                 return true;
             }
@@ -313,18 +329,17 @@ namespace MagiRogue.UI
 
             if (info.IsKeyPressed(Keys.F8))
             {
-                GetPlayer.AddComponent(new Components.TestComponent(GetPlayer));
+                world.CurrentMap.ControlledEntitiy.AddComponent(new TestComponent());
                 return false;
             }
 
             if (info.IsKeyPressed(Keys.F6))
             {
-                if (world.CurrentMap.Rooms is not null && world.CurrentMap.Rooms.Count > 0)
+                if (world.CurrentMap.Rooms?.Count > 0)
                 {
                     foreach (Room room in world.CurrentMap.Rooms)
                     {
-                        var pos = room.PositionsRoom();
-                        foreach (Point point in pos)
+                        foreach (Point point in room.RoomPoints)
                         {
                             world.CurrentMap.SetTerrain(new TileFloor("Test Room Tile", point,
                                 "stone", '$', Color.ForestGreen, Color.FloralWhite));
@@ -371,7 +386,6 @@ namespace MagiRogue.UI
             {
                 Actor actor = (Actor)targetCursor.TargetEntity();
                 actor.AddComponent(new NeedDrivenAi());
-                actor.AddComponent(NeedCollection.WithCommonNeeds());
                 GameLoop.AddMessageLog($"Added need component to {actor.Name}!");
                 return false;
             }
@@ -427,6 +441,21 @@ namespace MagiRogue.UI
             if (info.IsKeyPressed(Keys.OemMinus))
             {
                 GameLoop.Universe.SaveAndLoad.SaveGameToFolder(GameLoop.Universe, "TestFile");
+                return false;
+            }
+
+            if (info.IsKeyPressed(Keys.P) && (targetCursor?.EntityInTarget()) == true)
+            {
+                var target = targetCursor.TargetEntity();
+                var needs = target.GetComponent<NeedCollection>();
+                for (int i = 0; i < needs.Count; i++)
+                {
+                    var need = needs[i];
+                    need.TurnCounter = need.MaxTurnCounter.HasValue
+                        ? need.MaxTurnCounter.Value - 1
+                        : (int)((need.Priority + 1) * 1000);
+                }
+                GameLoop.AddMessageLog($"{target.Name} is stuck with strange needs!");
                 return false;
             }
 

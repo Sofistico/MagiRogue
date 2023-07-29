@@ -1,5 +1,5 @@
 ﻿using GoRogue.Components.ParentAware;
-using MagiRogue.Entities;
+using MagiRogue.Entities.Core;
 using MagiRogue.GameSys;
 using MagiRogue.GameSys.Time;
 using MagiRogue.UI.Windows;
@@ -15,7 +15,7 @@ namespace MagiRogue.Components.Ai
     public class BasicAi : IAiComponent
     {
         private readonly MagiEntity _entity;
-        public IObjectWithComponents? Parent { get; set; }
+        public object? Parent { get; set; }
 
         public BasicAi(MagiEntity entity)
         {

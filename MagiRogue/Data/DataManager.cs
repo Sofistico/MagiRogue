@@ -1,15 +1,16 @@
-﻿using GoRogue.MapGeneration.Steps;
-using MagiRogue.Data.Enumerators;
+﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.Entities;
+using MagiRogue.Entities.Core;
 using MagiRogue.Entities.StarterScenarios;
 using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Magic;
 using MagiRogue.GameSys.Planet.History;
 using MagiRogue.GameSys.Planet.TechRes;
 using MagiRogue.GameSys.Tiles;
+using MagiRogue.Entities.Veggies;
 using MagiRogue.Utils;
 using MagiRogue.Utils.Extensions;
 using System;
@@ -20,6 +21,10 @@ namespace MagiRogue.Data
 {
     public static class DataManager
     {
+        // TODO: change all IReadOnlyList to dictionaries!
+        // and make it all private
+        private static bool firstLoad = true;
+
         #region jsons
 
         public static readonly IReadOnlyList<ItemTemplate> ListOfItems =
@@ -74,6 +79,12 @@ namespace MagiRogue.Data
         public static readonly IReadOnlyList<Ruleset> ListOfRules =
             GetSourceTree<Ruleset>(@".\Data\Rules\rules_*");
 
+        public static readonly IReadOnlyList<Plant> ListOfPlants =
+            GetSourceTree<Plant>(@".\Data\Plant\plant_*");
+
+        public static readonly IReadOnlyList<TissuePlanTemplate> ListOfTissuePlans =
+            GetSourceTree<TissuePlanTemplate>(@".\Data\Bodies\tissue_*");
+
         #region Descriptors
 
         public static readonly IReadOnlyList<string> ListOfRealmsName =
@@ -89,7 +100,7 @@ namespace MagiRogue.Data
 
         #endregion jsons
 
-        public static IReadOnlyList<T> GetSourceTree<T>(string wildCard)
+        public static IReadOnlyList<T> GetSourceTree<T>(string wildCard, Action<T>? executeOnList = null)
         {
             string[] files = FileUtils.GetFiles(wildCard);
 
@@ -109,10 +120,15 @@ namespace MagiRogue.Data
                 allTList.AddRange(tList);
             }
 
+            if (executeOnList is not null)
+            {
+                allTList.ForEach(executeOnList);
+            }
+
             return allTList.AsReadOnly();
         }
 
-        #region Queryes
+        #region Query
 
         public static SpellBase QuerySpellInData(string spellId) => ListOfSpells.FirstOrDefault
                 (m => m.SpellId.Equals(spellId))?.Copy();
@@ -148,7 +164,26 @@ namespace MagiRogue.Data
             => ListOfRooms.FirstOrDefault(i => i.Id.Equals(roomId));
 
         public static MaterialTemplate QueryMaterial(string id)
-            => ListOfMaterials.FirstOrDefault(a => a.Id.Equals(id));
+        {
+            if (firstLoad)
+            {
+                firstLoad = false;
+                var list = ListOfMaterials.Where(i => !string.IsNullOrEmpty(i.InheirtFrom)).ToArray();
+                for (int i = 0; i < list.Length; i++)
+                {
+                    var mat = list[i];
+                    var inheirtFrom = ListOfMaterials.FirstOrDefault(i => i.Id.Equals(mat.InheirtFrom));
+                    if (inheirtFrom is null)
+                    {
+                        GameLoop.WriteToLog($"Material to inheirt from was null! Id: {mat.InheirtFrom}");
+                        continue;
+                    }
+
+                    inheirtFrom.CopyTo(mat);
+                }
+            }
+            return ListOfMaterials.FirstOrDefault(a => a.Id.Equals(id));
+        }
 
         public static List<BasicTile> QueryTilesInDataWithTrait(Trait trait)
             => ListOfTiles.Where(i => i.HasAnyTrait()
@@ -163,16 +198,16 @@ namespace MagiRogue.Data
         public static BodyPlan QueryBpPlanInData(string bpPlanId)
             => ListOfBpPlan.FirstOrDefault(c => c.Id.Equals(bpPlanId));
 
-        public static List<BodyPart> QueryBpsPlansInDataAndReturnBodyParts(string[] bpPlansId)
+        public static List<BodyPart> QueryBpsPlansInDataAndReturnBodyParts(string[] bpPlansId, Race race = null!)
         {
             List<BodyPart> bps = new();
-            BodyPlan bodyPlan = new();
-            foreach (var ids in bpPlansId)
+            BodyPlanCollection collection = new();
+            foreach (var id in bpPlansId)
             {
-                BodyPlan bp = QueryBpPlanInData(ids);
-                bodyPlan.BodyParts.AddRange(bp.BodyParts);
+                BodyPlan bp = QueryBpPlanInData(id);
+                collection.BodyPlans.Add(bp);
             }
-            bps.AddRange(bodyPlan.ReturnBodyParts());
+            bps.AddRange(collection.ExecuteAllBodyPlans(race));
 
             return bps;
         }
@@ -195,7 +230,15 @@ namespace MagiRogue.Data
         public static Research QueryResearchInData(string researchId)
             => ListOfResearches.FirstOrDefault(i => i.Id.Equals(researchId));
 
-        #endregion Queryes
+        public static Plant QueryPlantInData(string plantId)
+            => ListOfPlants.FirstOrDefault(i => i.Id.Equals(plantId))?.Clone();
+
+        public static TissuePlanTemplate QueryTissuePlanInData(string tissuePlanId)
+            => ListOfTissuePlans.FirstOrDefault(i => i.Id.Equals(tissuePlanId));
+
+        #endregion Query
+
+        #region rng
 
         public static Language RandomLangugage()
             => ListOfLanguages.GetRandomItemFromList();
@@ -212,9 +255,15 @@ namespace MagiRogue.Data
         public static Research RandomNonMagicalResearch()
             => ListOfResearches.Where(i => !i.IsMagical).ToList().GetRandomItemFromList();
 
+        #endregion rng
+
+        #region helper methods
+
         public static List<Reaction> GetProductsByTag(RoomTag tag)
         {
             return ListOfReactions.Where(i => i.RoomTag.Contains(tag)).ToList();
         }
+
+        #endregion helper methods
     }
 }

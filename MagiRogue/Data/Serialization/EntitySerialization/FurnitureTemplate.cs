@@ -1,6 +1,8 @@
 ﻿using GoRogue.DiceNotation.Terms;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
+using MagiRogue.Entities.Core;
+using MagiRogue.Entities.Interfaces;
 using MagiRogue.GameSys.Magic;
 using MagiRogue.GameSys.Physics;
 using MagiRogue.Utils;
@@ -237,9 +239,9 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         public static implicit operator FurnitureTemplate(Furniture fur)
         {
             var template = new FurnitureTemplate(fur.Name,
-                fur.Appearance.Foreground.PackedValue,
-                fur.Appearance.Background.PackedValue,
-                fur.Appearance.GlyphCharacter,
+                fur.AppearanceSingle.Appearance.Foreground.PackedValue,
+                fur.AppearanceSingle.Appearance.Background.PackedValue,
+                fur.AppearanceSingle.Appearance.GlyphCharacter,
                 fur.Weight,
                 fur.Volume,
                 fur.Description,

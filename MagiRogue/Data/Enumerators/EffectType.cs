@@ -8,6 +8,8 @@
         HASTE,
         MAGESIGHT,
         SEVER,
-        TELEPORT
+        TELEPORT,
+        KNOCKBACK,
+        LIGHT,
     }
 }

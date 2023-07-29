@@ -2,7 +2,6 @@
   {
     "Id": "room_city1",
     "Obj": {
-      "EmptyFill": "t_grass",
       "Tag": "Dinner",
       "Rows": [
         "##########",
@@ -29,19 +28,6 @@
           "standing_light",
           [ "keg", 2 ]
         ]
-      }
-    }
-  },
-  {
-    "Id": "room_dungeon_keeper",
-    "Obj": {
-      "EmptyFill": "t_grass",
-      "Tag": "Dinner",
-      "Rows": [
-      ],
-      "Terrain": {
-      },
-      "Furniture": {
       }
     }
   }

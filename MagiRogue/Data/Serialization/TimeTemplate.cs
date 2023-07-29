@@ -1,6 +1,8 @@
 ﻿using MagiRogue.GameSys.Time;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace MagiRogue.Data.Serialization
@@ -20,18 +22,13 @@ namespace MagiRogue.Data.Serialization
     [DataContract]
     public class TimeTemplate
     {
-        [DataMember] public long Ticks;
+        [DataMember] public long Ticks { get; set; }
+        [DataMember] public List<ITimeNode> Nodes { get; set; }
         /*[DataMember] public PlayerTimeNode PlayerNode;
         [DataMember] public List<EntityTimeNode> EntityNodes;*/
 
         public static implicit operator TimeTemplate(TimeSystem timeMaster)
         {
-            var serialized = new TimeTemplate()
-            {
-                Ticks = timeMaster.TimePassed.Ticks,
-                //EntityNodes = new List<EntityTimeNode>(),
-            };
-
             /*foreach (var node in timeMaster.Nodes)
             {
                 switch (node)
@@ -50,12 +47,17 @@ namespace MagiRogue.Data.Serialization
                 }
             }*/
 
-            return serialized;
+            return new TimeTemplate()
+            {
+                Ticks = timeMaster.TimePassed.Ticks,
+                Nodes = timeMaster.Nodes.ToList()
+                //EntityNodes = new List<EntityTimeNode>(),
+            };
         }
 
         public static implicit operator TimeSystem(TimeTemplate serialized)
         {
-            var timeMaster = new TimeSystem(serialized.Ticks);
+            // TODO: broken ass loading of entities in time!
             /*if (serialized.PlayerNode != null)
             {
                 timeMaster.RegisterEntity(serialized.PlayerNode);
@@ -68,8 +70,14 @@ namespace MagiRogue.Data.Serialization
                     timeMaster.RegisterEntity(node);
                 }
             }*/
+            var time = new TimeSystem(serialized.Ticks);
 
-            return timeMaster;
+            foreach (var item in serialized.Nodes)
+            {
+                time.RegisterEntity(item);
+            }
+
+            return time;
         }
     }
 }

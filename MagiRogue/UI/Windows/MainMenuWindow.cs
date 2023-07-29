@@ -5,6 +5,7 @@ using MagiRogue.UI.Controls;
 using SadConsole;
 using SadConsole.UI.Controls;
 using System;
+using System.Linq;
 
 namespace MagiRogue.UI.Windows
 {
@@ -14,8 +15,8 @@ namespace MagiRogue.UI.Windows
 
         private readonly MagiButton startGame;
         private readonly MagiButton testMap;
-        private readonly MagiButton continueGame;
-        private readonly MagiButton saveGame;
+        private readonly MagiButton continueGame; // this doesn't work
+        private readonly MagiButton saveGame; // neither does this
         private ListBox savesBox;
         private PopWindow loadPop;
 
@@ -56,7 +57,7 @@ namespace MagiRogue.UI.Windows
             IsFocused = true;
         }
 
-        private void ContinueGame_Click(object sender, EventArgs e)
+        private void ContinueGame_Click(object? sender, EventArgs e)
         {
             if (GameStarted && GameLoop.UIManager.NoPopWindow)
             {
@@ -142,7 +143,7 @@ namespace MagiRogue.UI.Windows
             }
         }
 
-        private void TestMap_Click(object sender, EventArgs e)
+        private void TestMap_Click(object? sender, EventArgs e)
         {
             if (!GameStarted && GameLoop.UIManager.NoPopWindow)
             {
@@ -155,7 +156,7 @@ namespace MagiRogue.UI.Windows
             }
         }
 
-        private void QuitGameClick(object sender, EventArgs e)
+        private void QuitGameClick(object? sender, EventArgs e)
         {
             Game.Instance.MonoGameInstance.Exit();
         }
@@ -170,7 +171,7 @@ namespace MagiRogue.UI.Windows
             }
         }
 
-        private void StartGameClick(object sender, EventArgs e)
+        private void StartGameClick(object? sender, EventArgs e)
         {
             if (!GameStarted && GameLoop.UIManager.NoPopWindow)
             {
@@ -178,7 +179,7 @@ namespace MagiRogue.UI.Windows
             }
         }
 
-        private void SaveGameClick(object sender, EventArgs e)
+        private void SaveGameClick(object? sender, EventArgs e)
         {
             if (GameStarted)
             {
@@ -204,26 +205,20 @@ namespace MagiRogue.UI.Windows
         public void RestartGame()
         {
             GameStarted = false;
-            GameLoop.Universe = null;
+            GameLoop.Universe = null!;
             RefreshButtons();
 
-            /*foreach (Console item in Children)
-            {
-                Children.Remove(item);
-                item.Dispose();
-            }*/
-
-            foreach (SadConsole.Console item in GameLoop.UIManager.Children)
+            foreach (SadConsole.Console item in GameLoop.UIManager.Children.Cast<SadConsole.Console>())
             {
                 if (!item.Equals(this))
                     item.Dispose();
             }
 
-            GameLoop.UIManager.MessageLog = null;
-            GameLoop.UIManager.MapWindow = null;
-            GameLoop.UIManager.StatusConsole = null;
-            GameLoop.UIManager.InventoryScreen = null;
-            GameLoop.UIManager.CharCreationWindow = null;
+            GameLoop.UIManager.MessageLog = null!;
+            GameLoop.UIManager.MapWindow = null!;
+            GameLoop.UIManager.StatusWindow = null!;
+            GameLoop.UIManager.InventoryScreen = null!;
+            GameLoop.UIManager.CharCreationWindow = null!;
             GameLoop.UIManager.Children.Clear();
             GameLoop.UIManager.Children.Add(this);
 

@@ -68,7 +68,6 @@ namespace MagiRogue.Test.Entities
             var eyes = playa.GetAnatomy().Organs.FindAll(i => i.OrganType is MagiRogue.Data.Enumerators.OrganType.Visual);
             foreach (var item in eyes)
             {
-                item.BodyPartHp = 0;
                 item.Working = false;
             }
             var json = JsonConvert.SerializeObject(playa);

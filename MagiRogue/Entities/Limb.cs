@@ -1,19 +1,15 @@
 ﻿using MagiRogue.Data.Enumerators;
-using MagiRogue.Data.Serialization;
-using MagiRogue.Utils;
+using MagiRogue.Entities.Core;
 using Newtonsoft.Json;
-using System;
-using System.Diagnostics;
-using System.Runtime.Serialization;
 
 namespace MagiRogue.Entities
 {
     public sealed class Limb : BodyPart
     {
-        [JsonProperty("ConnectedTo")]
+        [JsonProperty(nameof(ConnectedTo))]
         private string? _connectedLimb;
 
-        public TypeOfLimb LimbType { get; set; }
+        public LimbType LimbType { get; set; }
 
         [JsonIgnore]
         public string? ConnectedTo
@@ -34,7 +30,7 @@ namespace MagiRogue.Entities
         public bool Attached { get; set; } = true;
 
         [JsonConstructor()]
-        public Limb(string materialId) : base(materialId)
+        public Limb() : base()
         {
         }
 
@@ -46,9 +42,9 @@ namespace MagiRogue.Entities
         /// <param name="orientation">If it's in the center, left or right of the body</param>
         /// <param name="materialID">The id to define the material, if needeed look at the material definition json\n
         /// Defaults to "skin"</param>
-        public Limb(TypeOfLimb limbType, string limbName,
+        public Limb(LimbType limbType, string limbName,
             BodyPartOrientation orientation, string connectedTo,
-            string materialID = "skin", BodyPartFunction bodyPartFunction = BodyPartFunction.Limb) : base(materialID)
+            BodyPartFunction bodyPartFunction = BodyPartFunction.Limb) : base()
         {
             LimbType = limbType;
             Attached = true;
@@ -58,15 +54,11 @@ namespace MagiRogue.Entities
             BodyPartFunction = bodyPartFunction;
         }
 
-        public Limb(string id, TypeOfLimb limbType, int limbHp, int maxLimbHp,
-            string limbName, BodyPartOrientation orientation, string connectedTo,
-           string materialID = "skin") : base(materialID)
+        public Limb(string id, LimbType limbType,
+            string limbName, BodyPartOrientation orientation, string connectedTo)
         {
             Id = id;
             LimbType = limbType;
-            MaxBodyPartHp = maxLimbHp;
-            BodyPartHp = limbHp;
-            //BodyPartWeight = limbWeight;
             // Defaults to true
             Attached = true;
             BodyPartName = limbName;
@@ -80,43 +72,41 @@ namespace MagiRogue.Entities
             int size = Volume;
             //Attached = false;
 
-            return new Item(actor.Appearance.Foreground,
-                actor.Appearance.Background,
+            return new Item(actor.AppearanceSingle.Appearance.Foreground,
+                actor.AppearanceSingle.Appearance.Background,
                 limbName,
                 253,
                 actor.Position,
                 size,
-                materialId: MaterialId
+                materialId: Tissues.Find(i => i.Flags.Contains(TissueFlag.Structural)).MaterialId
                 );
         }
 
-        public Limb Copy()
+        public override Limb Copy()
         {
-            return new Limb(MaterialId)
+            return new Limb()
             {
                 Attached = this.Attached,
                 Broken = this.Broken,
                 ConnectedTo = this.ConnectedTo,
                 Id = this.Id,
-                BodyPartHp = this.BodyPartHp,
                 BodyPartName = this.BodyPartName,
                 Orientation = this.Orientation,
                 LimbType = this.LimbType,
-                MaxBodyPartHp = this.MaxBodyPartHp,
                 BodyPartFunction = this.BodyPartFunction,
-                RateOfHeal = this.RateOfHeal,
                 RelativeVolume = this.RelativeVolume,
-                CanHeal = this.CanHeal,
-                Tissues = this.Tissues,
+                Tissues = new(Tissues),
                 Volume = this.Volume,
                 Working = this.Working,
-                Wounds = this.Wounds,
+                Wounds = new(Wounds),
+                Insides = new(Insides),
+                Category = Category,
             };
         }
 
-        public override void CalculateWound(Wound wound)
+        public override void AddWound(Wound wound)
         {
-            base.CalculateWound(wound);
+            base.AddWound(wound);
             switch (wound.Severity)
             {
                 case InjurySeverity.Broken:

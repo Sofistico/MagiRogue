@@ -15,7 +15,8 @@
         "EffectType": "DAMAGE",
         "CanMiss": true
       }
-    ]
+    ],
+    "Context": [ "Offensive" ]
   },
   {
     "/": "In the future should have here an effect to represent the increasing of temperature!",
@@ -29,7 +30,7 @@
 
         "EffectType": "DAMAGE",
 
-        "CanMiss": true,
+        "CanMiss": true
       }
     ],
     "SpellName": "Fire Ray",
@@ -37,7 +38,8 @@
     "MagicArt": "Projection",
     "SpellRange": 5,
     "ManaCost": 2.5,
-    "SpellId": "fire_ray"
+    "SpellId": "fire_ray",
+    "Context": [ "Offensive" ]
   },
   {
     "/": "In the future should have here an effect to represent the increasing of temperature!",
@@ -66,7 +68,8 @@
     "MagicArt": "Projection",
     "SpellRange": 6,
     "ManaCost": 5.5,
-    "SpellId": "lighting_bolt"
+    "SpellId": "lighting_bolt",
+    "Context": [ "Offensive", "Debuff" ]
   },
   {
     "/": "In the future should have here an effect to represent the increasing of temperature!",
@@ -86,7 +89,8 @@
     "MagicArt": "Projection",
     "SpellRange": 7,
     "ManaCost": 5.0,
-    "SpellId": "fire_ball"
+    "SpellId": "fire_ball",
+    "Context": [ "Offensive" ]
   },
   {
     "SpellLevel": 4,
@@ -104,7 +108,8 @@
     "MagicArt": "Projection",
     "SpellRange": 5,
     "ManaCost": 3.0,
-    "SpellId": "sever_whip"
+    "SpellId": "sever_whip",
+    "Context": [ "Offensive" ]
   },
   {
     "/": "In the future should have here an effect to represent the lowering of temperature!",
@@ -114,8 +119,8 @@
         "AreaOfEffect": "Cone",
         "SpellDamageType": "Cold",
         "BaseDamage": 5,
-        "Radius": 8,
-        "ConeCircleSpan": 90,
+        "Radius": 10,
+        "ConeCircleSpan": 95,
         "TargetsTile": true,
         "EffectType": "DAMAGE"
       }
@@ -125,6 +130,7 @@
     "MagicArt": "Projection",
     "SpellRange": 1,
     "ManaCost": 8.0,
-    "SpellId": "cone_cold"
+    "SpellId": "cone_cold",
+    "Context": [ "Offensive" ]
   }
 ]

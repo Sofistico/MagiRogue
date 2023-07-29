@@ -7,7 +7,7 @@ namespace MagiRogue.GameSys.Planet.TechRes
 {
     public class Discovery
     {
-        public uint Id { get; set; }
+        public int Id { get; set; }
         public int? HFIdThatDiscovered { get; set; }
         public string? WhatHappenead { get; set; }
         public string? WhereHappnead { get; set; }
@@ -23,7 +23,7 @@ namespace MagiRogue.GameSys.Planet.TechRes
             string whereHappnead,
             Research whatWasResearched)
         {
-            Id = GameLoop.IdGen.UseID();
+            Id = SequentialIdGenerator.DiscoveryId;
             HFIdThatDiscovered = hFIdThatDiscovered;
             WhatHappenead = whatHappenead;
             WhereHappnead = whereHappnead;

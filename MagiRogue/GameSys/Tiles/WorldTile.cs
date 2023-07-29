@@ -80,7 +80,7 @@ namespace MagiRogue.GameSys.Tiles
             int count = 0;
 
             if (Collidable && Top != null && Top.BiomeType == BiomeType)
-                count += 1;
+                count++;
             if (Collidable && Bottom != null && Bottom.BiomeType == BiomeType)
                 count += 4;
             if (Collidable && Left != null && Left.BiomeType == BiomeType)
@@ -96,7 +96,7 @@ namespace MagiRogue.GameSys.Tiles
             int count = 0;
 
             if (Top.HeightType == HeightType)
-                count += 1;
+                count++;
             if (Right.HeightType == HeightType)
                 count += 2;
             if (Left.HeightType == HeightType)
@@ -138,21 +138,31 @@ namespace MagiRogue.GameSys.Tiles
             if (Left.HeightValue < Right.HeightValue
                 && Left.HeightValue < Top.HeightValue
                 && Left.HeightValue < Bottom.HeightValue)
+            {
                 return WorldDirection.Left;
+            }
             else if (Right.HeightValue < Left.HeightValue
                 && Right.HeightValue < Top.HeightValue
                 && Right.HeightValue < Bottom.HeightValue)
+            {
                 return WorldDirection.Right;
+            }
             else if (Top.HeightValue < Left.HeightValue
                 && Top.HeightValue < Right.HeightValue
                 && Top.HeightValue < Bottom.HeightValue)
+            {
                 return WorldDirection.Right;
+            }
             else if (Bottom.HeightValue < Left.HeightValue
                 && Bottom.HeightValue < Top.HeightValue
                 && Bottom.HeightValue < Right.HeightValue)
+            {
                 return WorldDirection.Right;
+            }
             else
+            {
                 return WorldDirection.Bottom;
+            }
         }
 
         public void SetRiverPath(River river)
@@ -169,7 +179,7 @@ namespace MagiRogue.GameSys.Tiles
             }
             catch (Exception)
             {
-                throw new Exception($"Recursive river generation failed!");
+                throw new Exception("Recursive river generation failed!");
             }
         }
 
@@ -249,6 +259,11 @@ namespace MagiRogue.GameSys.Tiles
         public double GetResources()
         {
             return MineralValue;
+        }
+
+        public override TileBase Copy()
+        {
+            throw new NotImplementedException();
         }
     }
 }

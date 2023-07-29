@@ -1,6 +1,5 @@
 ﻿using MagiRogue.Entities;
 using SadConsole;
-using SadConsole.UI.Controls;
 using SadRogue.Primitives;
 using System;
 using Console = SadConsole.Console;
@@ -11,7 +10,6 @@ namespace MagiRogue.UI.Windows
     {
         private readonly Player player;
         private readonly Console statsConsole;
-        private readonly ScrollBar statusScroll;
 
         private const int windowBorderThickness = 2;
 
@@ -22,39 +20,38 @@ namespace MagiRogue.UI.Windows
             statsConsole = new Console(width - windowBorderThickness, heigth - windowBorderThickness)
             {
                 Position = new Point(1, 1),
-                View = new Rectangle(0, 0, width - 1, heigth - windowBorderThickness),
-                DefaultBackground = Color.Black
             };
-
-            statusScroll = new ScrollBar
-                (Orientation.Vertical, heigth - windowBorderThickness)
-            {
-                Position = new Point(statsConsole.Width + 1, statsConsole.Position.X)
-
-                //IsEnabled = false
-            };
-            statusScroll.ValueChanged += StatusScroll_ValueChanged; ;
-            Controls.Add(statusScroll);
-
+            statsConsole.Surface.View = new Rectangle(0, 0, width - 1, heigth - windowBorderThickness);
+            statsConsole.Surface.DefaultBackground = Color.Black;
             // enable mouse input
-            UseMouse = true;
+            UseMouse = false;
 
             Children.Add(statsConsole);
-        }
-
-        private void StatusScroll_ValueChanged(object sender, EventArgs e)
-        {
-            statsConsole.View = new Rectangle(0, statusScroll.Value + windowBorderThickness,
-                statsConsole.Width, statsConsole.View.Height);
         }
 
         // Probably needs to create a way to make it update only when needed, by an event.
         public override void Update(TimeSpan time)
         {
-            statsConsole.Print(0, 0, $"{player.Name}");
-            statsConsole.Print(0, 2, $"Stamina: {(int)player.Body.Stamina} / {player.Body.MaxStamina}   ", Color.Red);
-            statsConsole.Print(0, 3, $"Mana: {(int)player.Soul.CurrentMana} / {player.Soul.MaxMana}     ", Color.LightBlue);
+            int xOffSet = 0;
+            statsConsole.Clear();
+            xOffSet += player.Name.Length;
+            statsConsole.Print(xOffSet, 0, player.Name);
+            xOffSet += player.GetStaminaStatus().Length;
+            statsConsole.Print(xOffSet, 0, ColoredString.Parser.Parse(player.GetStaminaStatus()));
+            xOffSet += player.GetManaStatus().Length;
+            statsConsole.Print(xOffSet, 0, ColoredString.Parser.Parse(player.GetManaStatus()));
+
             base.Update(time);
+        }
+
+        public void ChangePositionToBottomPage()
+        {
+            Position = new Point(1, GameLoop.GameHeight - 3);
+        }
+
+        public void ChangePositionToUpMessageLog()
+        {
+            Position = new Point(1, GameLoop.GameHeight - 12);
         }
     }
 }

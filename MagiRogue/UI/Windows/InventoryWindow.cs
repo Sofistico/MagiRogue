@@ -34,7 +34,7 @@ namespace MagiRogue.UI.Windows
             {
                 Position = new Point(1, WindowBorderThickness)
             };
-            inventoryConsole.View = new Rectangle(0, 0, width - 1, heigth - WindowBorderThickness);
+            inventoryConsole.Surface.View = new Rectangle(0, 0, width - 1, heigth - WindowBorderThickness);
 
             invScrollBar = new ScrollBar(Orientation.Vertical, heigth - WindowBorderThickness)
             {
@@ -65,8 +65,8 @@ namespace MagiRogue.UI.Windows
 
         private void InvScrollBar_ValueChanged(object sender, EventArgs e)
         {
-            inventoryConsole.View = new Rectangle(0, invScrollBar.Value + WindowBorderThickness,
-                    inventoryConsole.Width, inventoryConsole.View.Height);
+            inventoryConsole.Surface.Surface.View = new Rectangle(0, invScrollBar.Value + WindowBorderThickness,
+                    inventoryConsole.Width, inventoryConsole.ViewHeight);
         }
 
         public void ShowItems(Actor actorInventory)
@@ -84,36 +84,36 @@ namespace MagiRogue.UI.Windows
                 DescriptionArea.Cursor.Print(item.Description);
         }
 
-        private Dictionary<MagiButton, Action> BuildInventoryButtons(List<Item> listItems)
+        private List<MagiButton> BuildInventoryButtons(List<Item> listItems)
         {
             _hotKeys.Clear();
 
             int yCount = 1;
 
-            var controlDictionary = listItems
-                .OrderBy(i => i.Name)
-                .ToDictionary(i =>
-                {
-                    var hotkeyLetter = (char)(96 + yCount);
-                    _hotKeys.Add(hotkeyLetter, i);
-
-                    var itemButton = new MagiButton(ButtonWidth - 2)
-                    {
-                        Text = $"{hotkeyLetter}. {i.Name}",
-                        Position = new Point(1, yCount++),
-                    };
-
-                    return itemButton;
-                }, i => (Action)(() => OnItemSelected(i)));
-
-            var buttons = controlDictionary.Keys.ToArray();
-            for (int i = 1; i < buttons.Length; i++)
+            var orderedItems = listItems
+                .OrderBy(i => i.Name).ToArray();
+            var controlList = new List<MagiButton>(orderedItems.Length);
+            for (int i = 0; i < orderedItems.Length; i++)
             {
-                buttons[i - 1].NextSelection = buttons[i];
-                buttons[i].PreviousSelection = buttons[i - 1];
+                var hotkeyLetter = (char)(96 + yCount);
+                Item item = orderedItems[i];
+                _hotKeys.Add(hotkeyLetter, item);
+
+                controlList.Add(new MagiButton(ButtonWidth - 2)
+                {
+                    Text = $"{hotkeyLetter}. {item.Name}",
+                    Position = new Point(1, yCount++),
+                    Action = () => OnItemSelected(item)
+                });
             }
 
-            return controlDictionary;
+            for (int i = 1; i < controlList.Count; i++)
+            {
+                controlList[i - 1].NextSelection = controlList[i];
+                controlList[i].PreviousSelection = controlList[i - 1];
+            }
+
+            return controlList;
         }
     }
 }

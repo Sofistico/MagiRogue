@@ -1,69 +1,88 @@
 ﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Utils;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Runtime.Serialization;
 
 namespace MagiRogue.Data.Serialization
 {
-    [DataContract]
     [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
     public class MaterialTemplate
     {
         // Only putting in here for the sake of future me, only need to use JsonProperty if the name will be diferrent
         // than whats in the json.
-        //[JsonProperty("Id")]
 
-        [DataMember]
         public string Id { get; set; }
-
-        [DataMember]
-        public string? InheirtFrom { get; set; }
-
-        [DataMember]
         public string Name { get; set; }
 
-        [DataMember]
-        public bool Flamability { get; set; }
+        public string? InheirtFrom { get; set; }
 
-        [DataMember]
+        public bool? Flamability { get; set; }
+
         public int? IgnationPoint { get; set; }
 
-        [DataMember]
-        public int Hardness { get; set; }
+        public int? Hardness { get; set; }
 
-        [DataMember]
         public int? MPInfusionLimit { get; set; }
 
-        [DataMember]
-        public bool CanRegen { get; set; }
+        public bool? CanRegen { get; set; }
 
-        [DataMember]
-        public double Density { get; set; }
+        public double? Density { get; set; }
+        public double? DensityKgM3 => Density.HasValue ? MathMagi.GetDensityInKgM(Density.Value) : 0;
 
-        [DataMember]
         public int? MeltingPoint { get; set; }
 
-        [DataMember]
         public int? BoilingPoint { get; set; }
 
-        // Will be removed!
-        [DataMember]
-        public string LiquidTurnsInto { get; set; }
+        public string? LiquidTurnsInto { get; set; }
+        public string? SolidTurnsInto { get; set; }
+        public string? GasTurnsInto { get; set; }
 
-        [DataMember]
-        public List<Trait> ConfersTraits { get; set; }
+        public List<Trait>? ConfersTraits { get; set; }
 
-        [DataMember]
-        public string Color { get; set; }
+        public string? Color { get; set; }
 
-        [DataMember]
-        public MaterialType Type { get; set; }
+        public MaterialType? Type { get; set; }
 
-        [DataMember]
         public int? HeatDamageTemp { get; set; }
 
-        [DataMember]
         public int? ColdDamageTemp { get; set; }
+
+        /// <summary>
+        /// How sharp the material is. Used in cutting calculations. Does not allow an inferior metal to penetrate superior armor.
+        /// Applying a value of at least 100 to a stone will allow weapons to be made from that stone.
+        /// </summary>
+        public double? MaxEdge { get; set; }
+
+        public int? ShearYield { get; set; }
+        public int? ShearFracture { get; set; }
+        public double? ShearStrainAtYield { get; set; }
+
+        /// <summary>
+        /// Specifies how hard of an impact (in kilopascals)
+        /// the material can withstand before it will start deforming permanently.
+        /// Used for blunt-force combat.
+        /// </summary>
+        public int? ImpactYield { get; set; }
+
+        // the same as above, but in mpa
+        public double? ImpactYieldMpa => ImpactYield.HasValue ? ImpactYield / 1000 : 0;
+
+        /// <summary>
+        /// Specifies how hard of an impact the material can withstand before it will fail entirely.
+        /// Used for blunt-force combat. Defaults to 10000.
+        /// </summary>
+        public int? ImpactFracture { get; set; }
+
+        public double? ImpactFractureMpa => ImpactFracture.HasValue ? (double)ImpactFracture / 1000 : 0;
+
+        /// <summary>
+        /// How much force is needed for the material to be damaged?
+        /// The deformation limit!
+        /// More means it's more elastic, less means it's more rigid
+        /// affects in combat whether the corresponding tissue
+        /// is bruised (value >= 50000), torn (value between 25000 and 49999), or fractured (value <= 24999)
+        /// </summary>
+        public double? ImpactStrainsAtYield { get; set; }
 
         public MaterialTemplate Copy()
         {
@@ -79,6 +98,22 @@ namespace MagiRogue.Data.Serialization
                 MPInfusionLimit = this.MPInfusionLimit,
                 Name = this.Name,
                 Color = this.Color,
+                ImpactStrainsAtYield = this.ImpactStrainsAtYield,
+                ColdDamageTemp = this.ColdDamageTemp,
+                ConfersTraits = this.ConfersTraits,
+                HeatDamageTemp = this.HeatDamageTemp,
+                IgnationPoint = this.IgnationPoint,
+                InheirtFrom = this.InheirtFrom,
+                LiquidTurnsInto = this.LiquidTurnsInto,
+                MaxEdge = this.MaxEdge,
+                Type = this.Type,
+                ImpactFracture = this.ImpactFracture,
+                ImpactYield = this.ImpactYield,
+                ShearFracture = this.ShearFracture,
+                ShearYield = this.ShearYield,
+                ShearStrainAtYield = this.ShearStrainAtYield,
+                GasTurnsInto = GasTurnsInto,
+                SolidTurnsInto = SolidTurnsInto,
             };
         }
 
@@ -88,8 +123,7 @@ namespace MagiRogue.Data.Serialization
             {
                 return objectName;
             }
-            string v = $"{materialName} {objectName}";
-            return v;
+            return $"{materialName} {objectName}";
         }
 
         public string ReturnNameFromMaterial(string objectName)
@@ -97,7 +131,7 @@ namespace MagiRogue.Data.Serialization
             return ReturnNameFromMaterial(Name, objectName);
         }
 
-        internal MagiColorSerialization ReturnMagiColor()
+        public MagiColorSerialization ReturnMagiColor()
         {
             return new MagiColorSerialization(Color);
         }
@@ -113,5 +147,44 @@ namespace MagiRogue.Data.Serialization
         {
             return $"{Name} - {Id}";
         }
+
+        public MaterialState GetState(int temperature)
+        {
+            if (MeltingPoint is not null && temperature > MeltingPoint)
+                return MaterialState.Liquid;
+            else if (BoilingPoint is not null && temperature > BoilingPoint)
+                return MaterialState.Gas;
+            else
+                return MaterialState.Solid;
+        }
+
+        public void CopyTo(MaterialTemplate mat)
+        {
+            var props = this.GetType().GetProperties();
+            var sourceProps = GetType().GetProperties();
+
+            for (int i = 0; i < props.Length; i++)
+            {
+                var prop = props[i];
+                var sourceProp = sourceProps[i];
+                if (!prop.CanRead && !sourceProp.CanWrite)
+                    continue;
+                var propVal = prop.GetValue(this, null);
+                var sourceVal = prop.GetValue(mat, null);
+                if (propVal is null)
+                    continue;
+                if (sourceVal is not null)
+                    continue;
+
+                prop.SetValue(mat, propVal);
+            }
+        }
+
+        //private static object GetDefaultValue(Type type)
+        //{
+        //    if (type.IsValueType)
+        //        return Activator.CreateInstance(type);
+        //    return null;
+        //}
     }
 }

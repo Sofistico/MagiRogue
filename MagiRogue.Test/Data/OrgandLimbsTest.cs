@@ -13,6 +13,7 @@ using Newtonsoft.Json.Linq;
 using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Data.Enumerators;
 using SadRogue.Primitives;
+using MagiRogue.Entities.Core;
 
 namespace MagiRogue.Test.Data
 {
@@ -52,9 +53,7 @@ namespace MagiRogue.Test.Data
         {
             Organ organ = new Organ("organ_test", "Test", null,
                 BodyPartOrientation.Center,
-                OrganType.Misc,
-                15,
-                "null");
+                OrganType.Auditory);
 
             string json = JsonConvert.SerializeObject(organ);
             JObject jOrgan = JObject.Parse(json);
@@ -65,9 +64,7 @@ namespace MagiRogue.Test.Data
         [Fact]
         public void SerializeLimbs()
         {
-            Limb limb = new Limb("head_test", TypeOfLimb.Head,
-                12,
-                12,
+            Limb limb = new Limb("head_test", LimbType.Head,
                 "Test",
                 BodyPartOrientation.Center,
                 "humanoid_torso");
@@ -87,7 +84,7 @@ namespace MagiRogue.Test.Data
             List<Limb> basicHuman = bp.ReturnBodyParts().Where(i => i is Limb).Cast<Limb>().ToList();
             Anatomy ana = new Anatomy();
             ana.Limbs = basicHuman;
-            List<Limb> test = ana.GetAllConnectedLimb(basicHuman.Find(f => f.LimbType is TypeOfLimb.Arm));
+            List<Limb> test = ana.GetAllConnectedLimb(basicHuman.Find(f => f.LimbType is LimbType.Arm));
             Assert.True(test.Count >= 3);
         }
 
@@ -100,7 +97,7 @@ namespace MagiRogue.Test.Data
             List<Limb> basicHuman = bp.ReturnBodyParts().Where(i => i is Limb).Cast<Limb>().ToList();
             Anatomy ana = new Anatomy();
             ana.Limbs = basicHuman;
-            List<Limb> test = ana.GetAllParentConnectionLimb(basicHuman.Find(i => i.LimbType is TypeOfLimb.Finger));
+            List<Limb> test = ana.GetAllParentConnectionLimb(basicHuman.Find(i => i.LimbType is LimbType.Finger));
             Assert.True(test.Count >= 1);
         }
 
@@ -115,10 +112,10 @@ namespace MagiRogue.Test.Data
             //bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5fingers").BodyParts);
             //bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5toes").BodyParts);
             //actor.GetAnatomy().Limbs = bp.ReturnBodyParts().Where(i => i is Limb).Cast<Limb>().ToList();
-            var arms = actor.GetAnatomy().Limbs.FindAll(l => l.LimbType is TypeOfLimb.Arm);
+            var arms = actor.GetAnatomy().Limbs.FindAll(l => l.LimbType is LimbType.Arm);
             foreach (var arm in arms)
             {
-                actor.GetAnatomy().Injury(new Wound(arm.BodyPartHp, DamageTypes.Sharp), arm, actor);
+                actor.GetAnatomy().Injury(new Wound(DamageTypes.Sharp, arm.Tissues), arm, actor);
             }
             bool healing = true;
             while (healing)

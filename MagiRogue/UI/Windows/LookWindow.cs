@@ -1,5 +1,6 @@
-﻿using MagiRogue.Entities;
+﻿using MagiRogue.Entities.Core;
 using MagiRogue.GameSys.Tiles;
+using System.Text;
 using Console = SadConsole.Console;
 
 namespace MagiRogue.UI.Windows
@@ -20,8 +21,12 @@ namespace MagiRogue.UI.Windows
             };
 
             lookConsole.Cursor.Position = new Point(1, 1);
+            StringBuilder desc = new StringBuilder();
             if (entity.Description is not null)
             {
+                desc.Append(entity.GetDescriptor());
+                desc.AppendLine();
+                desc.Append(entity.GetCurrentStatus());
                 lookConsole.Cursor.Print(entity.Description);
             }
             Children.Add(lookConsole);

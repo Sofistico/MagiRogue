@@ -1,4 +1,5 @@
 ﻿using MagiRogue.Entities;
+using MagiRogue.Entities.Core;
 using MagiRogue.GameSys;
 using SadConsole;
 using SadRogue.Primitives;
@@ -10,7 +11,7 @@ namespace MagiRogue.UI.Windows
     public class MapWindow : MagiBaseWindow
     {
         private Map _mapDisplayed;
-        private SadConsole.Components.SurfaceComponentFollowTarget followComponent;
+        private readonly SadConsole.Components.SurfaceComponentFollowTarget followComponent;
         public ScreenSurface MapConsole { get; set; }
 
         public MapWindow(int width, int height, string title) : base(width, height, title)
@@ -75,13 +76,11 @@ namespace MagiRogue.UI.Windows
                 map.Height, map.Width,
                 map.Height, map.Tiles)
             {
-                View = rec,
-
                 //reposition the MapConsole so it doesnt overlap with the left/top window edges
                 Position = new Point(1, 1),
-
-                DefaultBackground = Color.Black
             };
+            MapConsole.Surface.View = rec;
+            MapConsole.Surface.DefaultBackground = Color.Black;
 
             // Adds the console to the children list of the window
             Children.Add(MapConsole);

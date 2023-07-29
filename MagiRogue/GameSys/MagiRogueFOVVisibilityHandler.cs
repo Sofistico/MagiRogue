@@ -1,6 +1,10 @@
-﻿using MagiRogue.Entities;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Entities.Core;
 using MagiRogue.GameSys.Tiles;
+using MagiRogue.Utils.Extensions;
 using SadRogue.Primitives;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MagiRogue.GameSys
 {
@@ -11,6 +15,7 @@ namespace MagiRogue.GameSys
     public sealed class MagiRogueFOVVisibilityHandler : FOVHandler
     {
         private readonly int _ghostLayer;
+        private readonly Dictionary<uint, MagiEntity> ghosts = new();
 
         /// <summary>
         /// Foreground color to set to all terrain that is outside of FOV but has been explored.
@@ -42,13 +47,10 @@ namespace MagiRogue.GameSys
             {
                 for (int y = 0; y < Map.Height; y++)
                 {
-                    if (Map.PlayerExplored[x, y])
+                    if (Map.PlayerExplored[x, y] && Map.Terrain[x, y] is TileBase tile)
                     {
-                        if (Map.Terrain[x, y] is TileBase tile)
-                        {
-                            UpdateTerrainSeen(tile);
-                            UpdateTerrainUnseen(tile);
-                        }
+                        UpdateTerrainSeen(tile);
+                        UpdateTerrainUnseen(tile);
                     }
                 }
             }
@@ -60,15 +62,25 @@ namespace MagiRogue.GameSys
         /// <param name="entity">Entity to modify.</param>
         protected override void UpdateEntitySeen(MagiEntity entity)
         {
-            //Map.EntityRender.DoEntityUpdate = true;
             if (entity.Layer == _ghostLayer)
             {
-                //Map.EntityRender.Remove(entity);
                 Map.Remove(entity);
+
                 return;
+            }
+            else if (ghosts.ContainsKey(entity.ID))
+            {
+                RemoveEntityGhost(entity);
             }
             //Map.EntityRender.Add(entity);
             entity.IsVisible = true;
+        }
+
+        private void RemoveEntityGhost(MagiEntity entity)
+        {
+            var value = ghosts[entity.ID];
+            ghosts.Remove(entity.ID);
+            Map.Remove(value);
         }
 
         /// <summary>
@@ -77,27 +89,26 @@ namespace MagiRogue.GameSys
         /// <param name="entity">Entity to modify.</param>
         protected override void UpdateEntityUnseen(MagiEntity entity)
         {
-            if (entity.Layer == _ghostLayer || entity.AlwaySeen == true)
+            if (entity.Layer == _ghostLayer || entity.AlwaySeen)
                 return;
 
-            if (entity.Layer != _ghostLayer && Map.PlayerExplored[entity.Position] && entity.LeavesGhost)
+            if (entity.Layer != _ghostLayer
+                && Map.PlayerExplored[entity.Position]
+                && entity.LeavesGhost
+                && !ghosts.ContainsKey(entity.ID))
             {
                 MagiEntity ghost = new MagiEntity(ExploredColorTint,
-                    entity.Appearance.Background,
-                    entity.Appearance.Glyph,
+                    entity.AppearanceSingle.Appearance.Background,
+                    entity.AppearanceSingle.Appearance.Glyph,
                     entity.Position,
                     _ghostLayer)
                 {
                     IsVisible = true,
                     Name = $"Ghost {entity.Name}"
                 };
-
-                //ghost.OnCalculateRenderPosition();
-                //Map.EntityRender.Add(entity);
-
-                Map.Add(ghost);
+                if (ghosts.TryAdd(entity.ID, ghost))
+                    Map.AddMagiEntity(ghost);
             }
-            //Map.EntityRender.Remove(entity);
             entity.IsVisible = false;
         }
 
@@ -119,6 +130,10 @@ namespace MagiRogue.GameSys
             if (!terrain.LastSeenAppereance.Matches(terrain))
             {
                 terrain.CopyAppearanceFrom(terrain.LastSeenAppereance);
+            }
+            if (terrain.Vegetations.All(i => i is not null))
+            {
+                terrain.CopyAppearanceFrom(terrain.Vegetations.GetRandomItemFromList().SadGlyph);
             }
         }
 

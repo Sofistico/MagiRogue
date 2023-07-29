@@ -1,18 +1,21 @@
 ﻿using GoRogue.GameFramework;
 using GoRogue.Pathing;
-using GoRogue.SpatialMaps;
+using MagiRogue.Components;
 using MagiRogue.Data;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.Entities;
+using MagiRogue.Entities.Core;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
+using MagiRogue.Utils.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SadConsole;
 using SadConsole.Entities;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
+using SadRogue.Primitives.SpatialMaps;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -27,19 +30,26 @@ namespace MagiRogue.GameSys
     [JsonConverter(typeof(MapJsonConverter))]
     public sealed class Map : GoRogue.GameFramework.Map, IDisposable
     {
-        #region Properties
+        #region Fields
 
-        private TileBase[] _tiles; // Contains all tiles objects
         private MagiEntity _gameObjectControlled;
         private SadConsole.Entities.Renderer _entityRender;
         private bool _disposed;
+        private Dictionary<Func<Actor, bool>, Actor[]> _lastCalledActors = new();
+        private bool _needsToUpdateActorsDict;
+
+        private readonly Dictionary<uint, IGameObject> _idMap;
+        private readonly EntityRegistry _registry = new EntityRegistry(500);
+
+        #endregion Fields
+
+        #region Properties
 
         /// <summary>
         /// All cell tiles of the map, it's a TileBase array, should never be directly declared to create new tiles, rather
         /// it must use <see cref="Map.SetTerrain(IGameObject)"/>.
         /// </summary>
-        public TileBase[] Tiles
-        { get { return _tiles; } private set { _tiles = value; } }
+        public TileBase[] Tiles { get; private set; }
 
         /// <summary>
         /// Fires whenever FOV is recalculated.
@@ -78,7 +88,6 @@ namespace MagiRogue.GameSys
         public List<Room> Rooms { get; set; }
 
         public Renderer EntityRender { get => _entityRender; }
-        //public Light[] Ilumination { get; set; }
 
         #endregion Properties
 
@@ -94,8 +103,11 @@ namespace MagiRogue.GameSys
         public Map(string mapName, int width = 60, int height = 60, bool usesWeighEvaluation = true) :
             base(CreateTerrain(width, height), Enum.GetNames(typeof(MapLayer)).Length - 1,
             Distance.Euclidean,
-            entityLayersSupportingMultipleItems: LayerMasker.Default.Mask
-            ((int)MapLayer.ITEMS, (int)MapLayer.GHOSTS, (int)MapLayer.PLAYER))
+            entityLayersSupportingMultipleItems: LayerMasker.Default.Mask((int)MapLayer.VEGETATION,
+                (int)MapLayer.ITEMS,
+                (int)MapLayer.GHOSTS,
+                (int)MapLayer.ACTORS,
+                (int)MapLayer.SPECIAL))
         {
             Tiles = (ArrayView<TileBase>)((LambdaSettableTranslationGridView<TileBase, IGameObject>)Terrain).BaseGrid;
 
@@ -117,12 +129,15 @@ namespace MagiRogue.GameSys
                 });
                 AStar = new AStar(WalkabilityView, Distance.Euclidean, weights, 0.01);
             }
-            //Ilumination = new Light[Width * Height];
+
+            _idMap = new();
+            ObjectAdded += OnObjectAdded;
+            ObjectRemoved += OnObjectRemoved;
         }
 
         #endregion Constructor
 
-        #region HelperMethods
+        #region Methods
 
         private static ISettableGridView<IGameObject?> CreateTerrain(int width, int heigth)
         {
@@ -132,10 +147,15 @@ namespace MagiRogue.GameSys
 
         public void RemoveAllEntities()
         {
-            foreach (MagiEntity item in Entities.Items.Cast<MagiEntity>())
+            foreach (IGameObject item in Entities.Items)
             {
-                Remove(item);
+                if (item is MagiEntity entity)
+                    Remove(entity);
+                else
+                    RemoveEntity(item);
             }
+
+            _registry.RemoveComponentAll();
         }
 
         public void SetSeed(ulong seed, uint x, uint y, uint i)
@@ -160,7 +180,7 @@ namespace MagiRogue.GameSys
                 return false;
 
             // then return whether the tile is walkable
-            return !_tiles[location.Y * Width + location.X].IsBlockingMove;
+            return !Tiles[(location.Y * Width) + location.X].IsBlockingMove;
         }
 
         /// <summary>
@@ -182,7 +202,7 @@ namespace MagiRogue.GameSys
                 return true;
 
             // then return whether the tile is walkable
-            return !_tiles[location.Y * Width + location.X].IsBlockingMove;
+            return !Tiles[(location.Y * Width) + location.X].IsBlockingMove;
         }
 
         /// <summary>
@@ -216,35 +236,45 @@ namespace MagiRogue.GameSys
             return Entities.GetItemsAt(location).OfType<T>().FirstOrDefault(e => e.CanInteract);
         }
 
-        public MagiEntity GetClosestEntity(Point originPos, int range)
+        public WaterTile GetClosestWaterTile(int range, Point position)
         {
-            MagiEntity closest = null;
-            double bestDistance = double.MaxValue;
+            var waters = GetAllTilesOfType<WaterTile>();
+            return position.GetClosest<WaterTile>(range, waters, null);
+        }
 
-            foreach (MagiEntity entity in Entities.Items)
+        public Actor[] GetAllActors(Func<Actor, bool>? actionToRunInActors = null)
+        {
+            if (_lastCalledActors.TryGetValue(actionToRunInActors, out Actor[] value)
+                && !_needsToUpdateActorsDict)
             {
-                if (entity is not Player)
-                {
-                    double distance = Point.EuclideanDistanceMagnitude(originPos, entity.Position);
-
-                    if (distance < bestDistance && (distance <= range || range == 0))
-                    {
-                        bestDistance = distance;
-                        closest = entity;
-                    }
-                }
+                return value;
             }
+            _lastCalledActors.Clear();
+            _needsToUpdateActorsDict = false;
+            Actor[] search;
+            if (actionToRunInActors is null)
+            {
+                search = Entities.GetLayer((int)MapLayer.ACTORS).Items.Cast<Actor>().ToArray();
+            }
+            else
+            {
+                search = Entities.GetLayer((int)MapLayer.ACTORS).Items.Cast<Actor>().Where(actionToRunInActors).ToArray();
+            }
+            _lastCalledActors.TryAdd(actionToRunInActors, search);
 
-            return closest;
+            return search;
         }
 
         public bool EntityIsThere(Point pos)
         {
             MagiEntity? entity = GetEntityAt<MagiEntity>(pos);
-            if (entity is not null)
-                return true;
-            else
-                return false;
+            return entity is not null;
+        }
+
+        public bool EntityIsThere<T>(Point pos, out T? entity) where T : MagiEntity
+        {
+            entity = GetEntityAt<T>(pos);
+            return entity is not null;
         }
 
         /// <summary>
@@ -260,9 +290,10 @@ namespace MagiRogue.GameSys
                 _entityRender.Remove(entity);
 
                 // Link up the entity's Moved event to a new handler
-                entity.Moved -= OnEntityMoved;
+                entity.PositionChanged -= OnPositionChanged;
 
                 _entityRender.IsDirty = true;
+                _needsToUpdateActorsDict = true;
             }
         }
 
@@ -270,15 +301,8 @@ namespace MagiRogue.GameSys
         /// Adds an Entity to the Entities field
         /// </summary>
         /// <param name="entity"></param>
-        public void Add(MagiEntity entity)
+        public void AddMagiEntity(MagiEntity entity)
         {
-            /*if (entity.CurrentMap is not null)
-            {
-                Map map = (Map)entity.CurrentMap;
-                map.ControlledEntitiy = null;
-                map.Remove(entity);
-            }*/
-
             try
             {
                 AddEntity(entity);
@@ -298,12 +322,17 @@ namespace MagiRogue.GameSys
                 ControlledEntitiy = player;
                 ForceFovCalculation();
                 LastPlayerPosition = player.Position;
+                entity.PositionChanged += OnPositionChanged;
             }
 
             _entityRender.Add(entity);
 
-            // Link up the entity's Moved event to a new handler
-            entity.Moved += OnEntityMoved;
+            _needsToUpdateActorsDict = true;
+        }
+
+        public void AddComponentToEntity<T>(uint id, T component)
+        {
+            _registry.AddComponent(id, component);
         }
 
         /// <summary>
@@ -312,14 +341,13 @@ namespace MagiRogue.GameSys
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        private void OnEntityMoved(object? sender, GameObjectPropertyChanged<Point>? args)
+        private void OnPositionChanged(object? sender, ValueChangedEventArgs<Point>? args)
         {
-            if (args.Item is Player player)
+            if (sender is Player player)
             {
                 FovCalculate(player);
                 LastPlayerPosition = player.Position;
             }
-
             _entityRender.IsDirty = true;
         }
 
@@ -338,11 +366,9 @@ namespace MagiRogue.GameSys
             int locationIndex = Point.ToIndex(x, y, Width);
 
             // make sure the index is within the boundaries of the map!
-            if (locationIndex <= Width * Height && locationIndex >= 0)
-            {
-                return Tiles[locationIndex] is T t ? t : null;
-            }
-            else return null;
+            return locationIndex <= Width * Height && locationIndex >= 0
+                ? Tiles[locationIndex] is T t ? t : null
+                : null;
         }
 
         public TileBase GetTileAt(int x, int y)
@@ -392,18 +418,24 @@ namespace MagiRogue.GameSys
         /// <typeparam name="T">Any type of entity</typeparam>
         /// <param name="id">The id of the entity to find</param>
         /// <returns>Returns the entity owner of the id</returns>
-        public MagiEntity GetEntityById(uint id)
+        public MagiEntity GetEntityById(uint id) => (MagiEntity)_idMap[id];
+
+        /// <summary>
+        /// Gets the entity by it's id
+        /// </summary>
+        /// <typeparam name="T">Any type of entity</typeparam>
+        /// <param name="id">The id of the entity to find</param>
+        /// <returns>Returns the entity owner of the id</returns>
+        public T SafeGetEntityById<T>(uint id) where T : IGameObject
         {
             // TODO: this shit is wonky, need to do something about it
-            var filter = from entity in Entities.Items
-                         where entity.ID == id
-                         select entity;
+            var filter = Entities.FirstOrDefault(i => i.Item.ID == id);
 
-            if (filter.Any())
+            if (filter != default)
             {
-                return (MagiEntity)filter.FirstOrDefault();
+                return (T)filter.Item;
             }
-            return null;
+            return default;
         }
 
         public void ConfigureRender(ScreenSurface renderer)
@@ -415,7 +447,18 @@ namespace MagiRogue.GameSys
             _entityRender = new();
             renderer.SadComponents.Add(_entityRender);
             _entityRender.DoEntityUpdate = true;
-            _entityRender.AddRange(Entities.Items.Cast<MagiEntity>());
+
+            var layerMask = Entities.GetLayersInMask(LayerMasker.Mask(
+                (int)MapLayer.ITEMS,
+                (int)MapLayer.GHOSTS,
+                (int)MapLayer.FURNITURE,
+                (int)MapLayer.ACTORS));
+
+            foreach (var spatialMap in layerMask)
+            {
+                _entityRender.AddRange(spatialMap.Items.Cast<MagiEntity>());
+            }
+            //_entityRender.AddRange(Entities.Items.Cast<MagiEntity>());
             renderer.IsDirty = true;
         }
 
@@ -481,19 +524,23 @@ namespace MagiRogue.GameSys
         }
 
         /// <summary>
+        /// This is used to get a random point that is random inside the map.
+        /// </summary>
+        /// <returns>Returns an Point that is random inside the map</returns>
+        public Point GetRandomPos()
+        {
+            return new Point(GameLoop.GlobalRand.NextInt(Width - 1), GameLoop.GlobalRand.NextInt(Height - 1));
+        }
+
+        /// <summary>
         /// Returns if the Point is inside the index of the map, makes sure that nothing tries to go outside the map.
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
         public bool CheckForIndexOutOfBounds(Point point)
         {
-            if (point.X < 0 || point.Y < 0
-                || point.X >= Width || point.Y >= Height)
-            {
-                return true;
-            }
-
-            return false;
+            return point.X < 0 || point.Y < 0
+                || point.X >= Width || point.Y >= Height;
         }
 
         private string GetDebuggerDisplay()
@@ -511,9 +558,7 @@ namespace MagiRogue.GameSys
             {
                 mapView[i] = true;
             }
-            FastAStar astar = new FastAStar(mapView, DistanceMeasurement);
-
-            return astar;
+            return new FastAStar(mapView, DistanceMeasurement);
         }
 
         /// <summary>
@@ -540,22 +585,29 @@ namespace MagiRogue.GameSys
         /// Adds the room to the map.
         /// </summary>
         /// <param name="r"></param>
-        public void AddRoom(Room r)
+        public void AddRoom(Room r, bool insideAnotherRoom = false)
         {
-            if (Rooms is null)
-                Rooms = new List<Room>();
-            if (!CheckIfRoomFitsInsideMap(r))
+            Rooms ??= new List<Room>();
+            if (!CheckIfRoomFitsInsideMap(r) || !insideAnotherRoom)
             {
                 try
                 {
                     FindOtherPlaceForRoom(r);
                 }
-                catch (ApplicationException ex)
+                catch (ApplicationException)
                 {
-                    throw ex;
+                    throw;
                 }
             }
             Rooms.Add(r);
+        }
+
+        public Room AddRoom(RoomTemplate template, Point pointBegin)
+        {
+            var r = template.ConfigureRoom(pointBegin);
+            AddRoom(r, template.Obj.InsideAnotherRoom);
+            SpawnRoomThingsOnMap(r);
+            return r;
         }
 
         public bool CheckIfRoomFitsInsideMap(Room r)
@@ -573,7 +625,7 @@ namespace MagiRogue.GameSys
             {
                 throw new ApplicationException("Tried to place a room inside a map that cound't fit it!");
             }
-            if (r.PositionsRoom().Any(p => CheckForIndexOutOfBounds(p)))
+            if (r.RoomPoints.Any(CheckForIndexOutOfBounds))
             {
                 throw new ApplicationException("Tried to place a room inside a map that cound't fit it!");
             }
@@ -585,14 +637,13 @@ namespace MagiRogue.GameSys
         /// <param name="r"></param>
         public void AddRooms(List<Room> r)
         {
-            if (Rooms is null)
-                Rooms = new List<Room>();
+            Rooms ??= new List<Room>();
             Rooms.AddRange(r);
         }
 
         public void SpawnRoomThingsOnMap(Room r)
         {
-            Point[] posRoom = r.PositionsRoom();
+            Point[] posRoom = r.RoomPoints;
 
             for (int x = 0; x < r.Template.Obj.Rows.Length; x++)
             {
@@ -607,9 +658,12 @@ namespace MagiRogue.GameSys
                         continue;
                     }
                     r.Terrain.TryGetValue(c.ToString(), out var ter);
-                    r.Furniture.TryGetValue(c.ToString(), out var fur);
                     TryToPutTerrain(pos, ter);
-                    TryToPutFurniture(pos, fur);
+                    if (r.Furniture is not null)
+                    {
+                        r.Furniture.TryGetValue(c.ToString(), out var fur);
+                        TryToPutFurniture(pos, fur);
+                    }
                 }
             }
         }
@@ -631,11 +685,11 @@ namespace MagiRogue.GameSys
                 {
                     Furniture furniture = DataManager.QueryFurnitureInData(str);
                     furniture.Position = pos;
-                    Add(furniture);
+                    AddMagiEntity(furniture);
                 }
                 catch (NullReferenceException ex)
                 {
-                    throw new NullReferenceException($"Tried to create a room with a non existent furniture! \n" +
+                    throw new NullReferenceException("Tried to create a room with a non existent furniture! \n" +
                         $"Furniture: {str}, Exception: {ex}");
                 }
             }
@@ -656,13 +710,25 @@ namespace MagiRogue.GameSys
                 }
                 try
                 {
-                    TileBase tile = DataManager.QueryTileInData(str);
-                    tile.Position = pos;
+                    TileBase tile;
+                    if (str.Equals("debug_tree"))
+                    {
+                        tile = TileEncyclopedia.GenericTree(pos);
+                    }
+                    else if (str.Equals("t_grass"))
+                    {
+                        tile = TileEncyclopedia.GenericGrass(pos, this);
+                    }
+                    else
+                    {
+                        tile = DataManager.QueryTileInData(str);
+                        tile.Position = pos;
+                    }
                     SetTerrain(tile);
                 }
                 catch (NullReferenceException ex)
                 {
-                    throw new NullReferenceException($"Tried to create a room with a non existent tile! \n" +
+                    throw new NullReferenceException("Tried to create a room with a non existent tile! \n" +
                         $"Tile: {str}, Exception: {ex}");
                 }
             }
@@ -700,7 +766,19 @@ namespace MagiRogue.GameSys
             return obj;
         }
 
-        #endregion HelperMethods
+        private void OnObjectRemoved(object? sender, ItemEventArgs<IGameObject> e)
+        {
+            if (e.Item is not TileBase)
+                _idMap.Remove(e.Item.ID);
+        }
+
+        private void OnObjectAdded(object? sender, ItemEventArgs<IGameObject> e)
+        {
+            if (e.Item is not TileBase)
+                _idMap[e.Item.ID] = e.Item;
+        }
+
+        #endregion Methods
 
         #region Dispose
 
@@ -709,11 +787,13 @@ namespace MagiRogue.GameSys
             RemoveAllEntities();
             RemoveAllTiles();
             if (GoRogueComponents.Count > 0)
-                GoRogueComponents.GetFirstOrDefault<FOVHandler>().DisposeMap();
-            Tiles = null;
-            ControlledGameObjectChanged = null;
-            this.ControlledEntitiy = null;
-            _entityRender = null;
+                GoRogueComponents.GetFirstOrDefault<FOVHandler>()?.DisposeMap();
+            _lastCalledActors.Clear();
+            _lastCalledActors = null!;
+            Tiles = null!;
+            ControlledGameObjectChanged = null!;
+            this.ControlledEntitiy = null!;
+            _entityRender = null!;
             GoRogueComponents.Clear();
             _disposed = true;
         }
@@ -726,6 +806,95 @@ namespace MagiRogue.GameSys
                 GC.SuppressFinalize(this);
             }
         }
+
+        public IGameObject FindTypeOfFood(Food whatToEat, IGameObject entity)
+        {
+            const int defaultSearchRange = 25;
+
+            foreach (var objId in _registry.CompView<FoodComponent>())
+            {
+                var searchEntity = _idMap[objId];
+                var foodComp = _registry.GetComponent<FoodComponent>(searchEntity);
+                if (foodComp.FoodType.HasFlag(whatToEat)
+                    && searchEntity.Position.GetDistance(entity.Position) <= defaultSearchRange)
+                {
+                    return searchEntity;
+                }
+            }
+
+            /*switch (whatToEat)
+            {
+                case Food.Carnivore:
+                    var meat = entity.Position.GetClosest(defaultSearchRange, GetAllMeatsEvenAlive(), entity);
+                    if (meat is not null)
+                    {
+                        return meat;
+                    }
+                    break;
+
+                case Food.Herbivore:
+                    var plant = entity.Position.GetClosest(defaultSearchRange, GetAllPlantsEvenItem(), entity);
+                    if (plant is not null)
+                    {
+                        return plant;
+                    }
+                    break;
+
+                case Food.Omnivere:
+                    // well if it works...
+                    var objList = new List<IGameObject>();
+                    var meatO = entity.Position.GetClosest(defaultSearchRange, GetAllMeatsEvenAlive(), entity);
+                    if (meatO is not null)
+                    {
+                        objList.Add(meatO);
+                    }
+                    var plantO = entity.Position.GetClosest(defaultSearchRange, GetAllPlantsEvenItem(), entity);
+                    if (plantO is not null)
+                    {
+                        objList.Add(plantO);
+                    }
+                    return objList.GetRandomItemFromList();
+
+                default:
+                    return null;
+            }*/
+            return null;
+        }
+
+        /*private List<MagiEntity> GetAllMeatsEvenAlive()
+        {
+            var meats = Entities.GetLayersInMask(LayerMasker.Mask((int)MapLayer.ACTORS, (int)MapLayer.ITEMS))
+                .Select(i => i.Items);
+            var list = new List<MagiEntity>();
+            foreach (var item in meats)
+            {
+                foreach (var meat in item)
+                {
+                    if (meat is Item deadMeat && deadMeat.Material.Type == MaterialType.Meat)
+                    {
+                        list.Add(deadMeat);
+                        continue;
+                    }
+                    list.Add((MagiEntity)meat);
+                }
+            }
+
+            return list;
+        }
+
+        private IGameObject[] GetAllPlantsEvenItem()
+        {
+            var layer = Entities.GetLayer((int)MapLayer.ITEMS).Where(i => i.Item is Item item && (item.ItemType == ItemType.PlantFood)).Select(i => i.Item).ToList();
+            layer.AddRange(Entities.GetLayer((int)MapLayer.VEGETATION).Select(i => i.Item));
+            return layer.ToArray();
+        }*/
+
+        public TFind[] GetAllTilesOfType<TFind>()
+        {
+            return Tiles.OfType<TFind>().ToArray();
+        }
+
+        public List<Room> FindRoomsByTag(RoomTag tag) => Rooms.FindAll(i => i.Tag == tag);
 
         ~Map()
         {

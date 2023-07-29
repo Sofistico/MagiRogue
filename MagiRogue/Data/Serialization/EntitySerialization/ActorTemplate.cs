@@ -1,4 +1,7 @@
-﻿using MagiRogue.Entities;
+﻿using GoRogue.Components;
+using MagiRogue.Data.Enumerators;
+using MagiRogue.Entities;
+using MagiRogue.Entities.Core;
 using MagiRogue.GameSys.Magic;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
@@ -26,7 +29,6 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             => serializer.Deserialize<ActorTemplate>(reader);
     }
 
-    [DataContract]
     [Serializable]
     public class ActorTemplate
     {
@@ -34,37 +36,27 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         /// Different from the id of GoRogue, this is for easy acess and navigation in the json, should be unique for
         /// each actor and human redable.
         /// </summary>
-        [DataMember]
         public string ID { get; set; }
 
-        [DataMember]
         public string Name { get; set; }
 
-        [DataMember]
         public string Description { get; set; }
 
-        [DataMember]
         public char Glyph { get; set; }
 
-        [DataMember]
         public int GlyphInt { get; set; }
 
         /// <summary>
         /// <inheritdoc cref="MagiEntity.Volume"/>
         /// </summary>
-        [DataMember]
         public int Volume { get; set; }
 
-        [DataMember]
         public int Height { get; set; }
 
-        [DataMember]
         public int Length { get; set; }
 
-        [DataMember]
         public int Broadness { get; set; }
 
-        [DataMember]
         public double Weight { get; set; }
 
         [DataMember(EmitDefaultValue = false, IsRequired = false)]
@@ -76,47 +68,37 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         [JsonIgnore]
         public MagiColorSerialization BackgroundBackingField { get; internal set; }
 
-        [DataMember]
         public string Foreground { get; internal set; }
 
-        [DataMember]
         public uint ForegroundPackedValue { get; internal set; }
 
-        [DataMember]
         public string Background { get; internal set; }
 
-        [DataMember]
         public uint BackgroundPackedValue { get; internal set; }
 
-        [DataMember]
         public List<AbilityTemplate> Abilities { get; set; } = new();
 
-        [DataMember]
         public List<ItemTemplate> Inventory { get; set; } = new();
 
-        [DataMember]
         public const string EntityType = "Actor";
 
-        [DataMember]
         public Point Position { get; set; }
 
-        [DataMember]
         public bool? IsPlayer { get; set; }
 
-        [DataMember]
         public MagicManager MagicStuff { get; set; }
 
-        [DataMember]
         public List<EquipTemplate> Equip { get; set; }
 
-        [DataMember]
         public Mind Mind { get; set; }
 
-        [DataMember]
         public Soul Soul { get; set; }
 
-        [DataMember]
         public Body Body { get; set; }
+
+        public ActorState State { get; set; }
+        public List<ActorSituationalFlags> SituationalFlags { get; set; }
+        public IComponentCollection Component { get; set; }
 
         /// <summary>
         /// Is used in the serialization of the actor.
@@ -126,12 +108,8 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         /// <param name="background"></param>
         /// <param name="glyph"></param>
         /// <param name="layer"></param>
-        /// <param name="stats"></param>
-        /// <param name="anatomy"></param>
-        /// <param name="description"></param>
         /// <param name="size"></param>
         /// <param name="weight"></param>
-        /// <param name="materialId"></param>
         public ActorTemplate(string name, uint foreground, uint background, int glyph,
             int layer, Body body, int size, double weight,
             List<AbilityTemplate> abilities, MagicManager magic, Soul soul, Mind mind)
@@ -158,9 +136,9 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         public ActorTemplate(Actor actor)
         {
             Name = actor.Name;
-            ForegroundBackingField = new MagiColorSerialization(actor.Appearance.Foreground);
-            BackgroundBackingField = new MagiColorSerialization(actor.Appearance.Background);
-            Glyph = (char)actor.Appearance.Glyph;
+            ForegroundBackingField = new MagiColorSerialization(actor.AppearanceSingle.Appearance.Foreground);
+            BackgroundBackingField = new MagiColorSerialization(actor.AppearanceSingle.Appearance.Background);
+            Glyph = (char)actor.AppearanceSingle.Appearance.Glyph;
             Body = actor.Body;
             Description = actor.Description;
             Layer = actor.Layer;
@@ -191,12 +169,10 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         {
         }
 
-        public Actor Copy()
-        {
-            Actor actor = this;
-
-            return actor;
-        }
+        //public Actor Copy()
+        //{
+        //    return new Actor();
+        //}
 
         public static implicit operator Actor(ActorTemplate actorTemplate)
         {
@@ -214,8 +190,9 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
                     Body = actorTemplate.Body,
                     Volume = actorTemplate.Volume,
                     Weight = actorTemplate.Weight,
+                    State = actorTemplate.State
                 };
-            if (actorTemplate.Abilities is not null && actorTemplate.Abilities.Count > 0)
+            if (actorTemplate.Abilities?.Count > 0)
             {
                 for (int i = 0; i < actorTemplate.Abilities.Count; i++)
                 {
@@ -248,14 +225,14 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
 
             if (actorTemplate.ForegroundPackedValue == 0 && !string.IsNullOrEmpty(actorTemplate.Foreground))
             {
-                actor.Appearance.Foreground = new MagiColorSerialization(actorTemplate.Foreground).Color;
-                actor.Appearance.Background = new MagiColorSerialization(actorTemplate.Background).Color;
+                actor.AppearanceSingle.Appearance.Foreground = new MagiColorSerialization(actorTemplate.Foreground).Color;
+                actor.AppearanceSingle.Appearance.Background = new MagiColorSerialization(actorTemplate.Background).Color;
             }
             else
             {
-                actor.Appearance.Foreground =
+                actor.AppearanceSingle.Appearance.Foreground =
                     new MagiColorSerialization(actorTemplate.ForegroundPackedValue).Color;
-                actor.Appearance.Background =
+                actor.AppearanceSingle.Appearance.Background =
                     new MagiColorSerialization(actorTemplate.BackgroundPackedValue).Color;
             }
             actor.Description = actorTemplate.Description;
@@ -265,6 +242,8 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             actor.Height = actorTemplate.Height;
             actor.Broadness = actorTemplate.Broadness;
             actor.Length = actorTemplate.Length;
+            actor.SituationalFlags = actorTemplate.SituationalFlags;
+            actor.AddComponent(actorTemplate.Component);
 
             return actor;
         }
@@ -273,7 +252,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
         {
             var abilitylist = new List<AbilityTemplate>();
 
-            if (actor.Mind.Abilities is not null && actor.Mind.Abilities.Count > 0)
+            if (actor.Mind.Abilities?.Count > 0)
             {
                 foreach (var item in actor.Mind.Abilities.Values)
                 {
@@ -282,9 +261,9 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             }
 
             ActorTemplate actorTemplate = new ActorTemplate(actor.Name,
-                actor.Appearance.Foreground.PackedValue,
-               actor.Appearance.Background.PackedValue,
-               actor.Appearance.Glyph,
+                actor.AppearanceSingle.Appearance.Foreground.PackedValue,
+               actor.AppearanceSingle.Appearance.Background.PackedValue,
+               actor.AppearanceSingle.Appearance.Glyph,
                actor.Layer,
                actor.Body,
                actor.Volume,
@@ -296,12 +275,7 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             if (!string.IsNullOrWhiteSpace(actor.Description))
                 actorTemplate.Description = actor.Description;
 
-            if (actor is Player)
-            {
-                actorTemplate.IsPlayer = true;
-            }
-            else
-                actorTemplate.IsPlayer = null;
+            actorTemplate.IsPlayer = actor is Player ? true : null;
 
             actorTemplate.Position = actor.Position;
             for (int a = 0; a < actor.Inventory.Count; a++)
@@ -313,12 +287,14 @@ namespace MagiRogue.Data.Serialization.EntitySerialization
             {
                 actorTemplate.Equip.Add(new EquipTemplate(actor.GetEquipment()[limb].ItemId, limb));
             }
-            actorTemplate.GlyphInt = actor.Appearance.Glyph;
+            actorTemplate.GlyphInt = actor.AppearanceSingle.Appearance.Glyph;
 
             actorTemplate.Length = actor.Length;
             actorTemplate.Height = actor.Height;
             actorTemplate.Broadness = actor.Broadness;
-
+            actorTemplate.State = actor.State;
+            actorTemplate.SituationalFlags = actor.SituationalFlags;
+            actorTemplate.Component = actor.GoRogueComponents;
             return actorTemplate;
         }
     }

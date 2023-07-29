@@ -27,14 +27,13 @@ namespace MagiRogue.Data.Enumerators
         Conjuration,
         ///<summary>The art of ilusion, of creating light, of affecting the senses</summary>
         Illuminism,
-        ///<summary>The art of healing, is limited by the caster own medical knowlodge</summary>
-        MedicalMagic,
         ///<summary>The art of mind reading, of implating thought and deleting memories</summary>
         MindMagic,
         ///<summary>The art of the soul, of splicing souls, creating undead and becoming more</summary>
         SoulMagic,
-        ///<summary>The art of the body,
-        ///of making permanent arcane alterations to the body and sacrificial power</summary>
+        ///<summary>The art of the body, of sacrifice, of giving oneself or the self of others,
+        ///of making permanent arcane alterations to the body and sacrificial power,
+        ///of healing as well.</summary>
         BloodMagic
     }
 }

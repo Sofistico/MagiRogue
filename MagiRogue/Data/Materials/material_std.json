@@ -1,5 +1,5 @@
 ﻿[
-  /*Example: {
+  /*Example: { // not up to date!
     "Id": "idOfMaterial" // Id of the material, it must be unique
     "InheirtFrom": "idOfOtherMaterial" // makes so that you can inheirt from another material and still make changes
     "Name": "nameOfMaterial" // Dont need any extra comment
@@ -19,7 +19,7 @@
   },*/
   {
     "Id": "memory_stuff",
-    "Name": "Memory",
+    "Name": "memory",
     "Flamability": false,
     "Hardness": 0,
     "MPInfusionLimit": 0,
@@ -29,7 +29,7 @@
   },
   {
     "Id": "skin",
-    "Name": "Skin",
+    "Name": "skin",
     "Flamability": false,
     "Hardness": 3,
     "MPInfusionLimit": 1,
@@ -39,11 +39,17 @@
     "HeatDamageTemp": 139,
     "ColdDamageTemp": -56,
     "Color": "Gray",
-    "Type": "Skin"
+    "Type": "Skin",
+    "ShearYield": 20000,
+    "ShearFracture": 20000,
+    "ShearStrainAtYield": 50000,
+    "ImpactYield": 10000,
+    "ImpactFracture": 10000,
+    "ImpactStrainsAtYield": 50000
   },
   {
     "Id": "fat",
-    "Name": "Fat",
+    "Name": "fat",
     "Flamability": false,
     "Hardness": 3,
     "MPInfusionLimit": 1,
@@ -54,11 +60,17 @@
     "HeatDamageTemp": 139,
     "ColdDamageTemp": -56,
     "Color": "Yellow",
-    "Type": "Fat"
+    "Type": "Fat",
+    "ShearYield": 10000,
+    "ShearFracture": 10000,
+    "ShearStrainAtYield": 50000,
+    "ImpactYield": 10000,
+    "ImpactFracture": 10000,
+    "ImpactStrainsAtYield": 50000
   },
   {
     "Id": "muscle",
-    "Name": "Muscle",
+    "Name": "muscle",
     "Flamability": true,
     "Hardness": 1,
     "MPInfusionLimit": 0,
@@ -68,11 +80,17 @@
     "HeatDamageTemp": 139,
     "ColdDamageTemp": -56,
     "Color": "Red",
-    "Type": "Meat"
+    "Type": "Meat",
+    "ShearYield": 10000,
+    "ShearFracture": 10000,
+    "ShearStrainAtYield": 50000,
+    "ImpactYield": 10000,
+    "ImpactFracture": 10000,
+    "ImpactStrainsAtYield": 50000
   },
   {
     "Id": "bone",
-    "Name": "Bone",
+    "Name": "bone",
     "IgnationPoint": 124,
     "Flamability": true,
     "Hardness": 2,
@@ -82,38 +100,252 @@
     "ColdDamageTemp": -56,
     "Density": 0.5,
     "Color": "White",
+    "Type": "Bone",
+    "ShearYield": 115000,
+    "ShearFracture": 130000,
+    "ShearStrainAtYield": 100,
+    "ImpactYield": 20000,
+    "ImpactFracture": 20000,
+    "ImpactStrainsAtYield": 100,
+    "MaxEdge": 100
+  },
+  {
+    "Id": "teeth",
+    "InheirtFrom": "bone",
+    "Name": "teeth",
+    "IgnationPoint": 124,
+    "Flamability": false,
+    "Hardness": 1,
+    "MPInfusionLimit": 3,
+    "CanRegen": false,
+    "HeatDamageTemp": 139,
+    "ColdDamageTemp": -56,
+    "Density": 0.6,
+    "Color": "White",
+    "Type": "Teeth",
+    // same from bone
+    "MaxEdge": 1000
+  },
+  {
+    "Id": "nerve",
+    "Name": "nerve material",
+    "InheirtFrom": "skin",
+    "IgnationPoint": 105,
+    "Flamability": false,
+    "Hardness": 1,
+    "MPInfusionLimit": 5,
+    "CanRegen": false,
+    "HeatDamageTemp": 105,
+    "ColdDamageTemp": -25,
+    "Density": 0.5,
+    "Color": "Gray",
+    "Type": "None"
+  },
+  {
+    "Id": "brain",
+    "Name": "brain material",
+    "InheirtFrom": "skin",
+    "MPInfusionLimit": 5,
+    "HeatDamageTemp": 105,
+    "ColdDamageTemp": -25,
+    "Density": 0.5,
+    "Color": "Gray",
+    "Type": "None"
+  },
+  {
+    "Id": "heart",
+    "Name": "heart material",
+    "InheirtFrom": "skin",
+    "MPInfusionLimit": 5,
+    "HeatDamageTemp": 105,
+    "ColdDamageTemp": -25,
+    "Density": 0.5,
+    "Color": "Gray",
+    "Type": "None"
+  },
+  {
+    "Id": "stomach",
+    "Name": "stomach material",
+    "InheirtFrom": "skin",
+    "MPInfusionLimit": 5,
+    "HeatDamageTemp": 105,
+    "ColdDamageTemp": -25,
+    "Density": 0.5,
+    "Color": "Gray",
+    "Type": "None"
+  },
+  {
+    "Id": "gut",
+    "Name": "intestine material",
+    "InheirtFrom": "skin",
+    "MPInfusionLimit": 5,
+    "HeatDamageTemp": 105,
+    "ColdDamageTemp": -25,
+    "Density": 0.5,
+    "Color": "Gray",
+    "Type": "None"
+  },
+  {
+    "Id": "kidney",
+    "Name": "kidney material",
+    "InheirtFrom": "skin",
+    "MPInfusionLimit": 5,
+    "HeatDamageTemp": 105,
+    "ColdDamageTemp": -25,
+    "Density": 0.5,
+    "Color": "Gray",
+    "Type": "None"
+  },
+  {
+    "Id": "lung",
+    "Name": "lung material",
+    "InheirtFrom": "skin",
+    "MPInfusionLimit": 5,
+    "HeatDamageTemp": 105,
+    "ColdDamageTemp": -25,
+    "Density": 0.5,
+    "Color": "Gray",
+    "Type": "None"
+  },
+  {
+    "Id": "eye",
+    "Name": "eye material",
+    "InheirtFrom": "skin",
+    "MPInfusionLimit": 5,
+    "HeatDamageTemp": 105,
+    "ColdDamageTemp": -25,
+    "Density": 0.5,
+    "Color": "Gray",
+    "Type": "None"
+  },
+  {
+    // todo: Fix these values
+    "Id": "hair",
+    "Name": "hair material",
+    "InheirtFrom": "skin",
+    "MPInfusionLimit": 5,
+    "HeatDamageTemp": 105,
+    "ColdDamageTemp": -25,
+    "Density": 0.5,
+    "Color": "Gray",
+    "Type": "None"
+  },
+  {
+    // TODO: to fix this layer
+    "Id": "cartilage",
+    "Name": "cartilage material",
+    "InheirtFrom": "skin",
+    "MPInfusionLimit": 5,
+    "HeatDamageTemp": 105,
+    "ColdDamageTemp": -25,
+    "Density": 0.5,
+    "Color": "Gray",
+    "Type": "None"
+  },
+  {
+    "Id": "hoof",
+    "InheirtFrom": "bone",
+    "Name": "hoof",
+    "IgnationPoint": 124,
+    "Flamability": true,
+    "Hardness": 2,
+    "MPInfusionLimit": 5,
+    "CanRegen": true,
+    "HeatDamageTemp": 139,
+    "ColdDamageTemp": -56,
+    "Density": 0.5,
+    "Color": "Gray",
     "Type": "Bone"
   },
   {
+    "Id": "horn",
+    "InheirtFrom": "bone",
+    "Name": "horn",
+    "IgnationPoint": 124,
+    "Flamability": true,
+    "Hardness": 2,
+    "MPInfusionLimit": 5,
+    "CanRegen": true,
+    "HeatDamageTemp": 139,
+    "ColdDamageTemp": -56,
+    "Density": 0.5,
+    "Color": "Gray",
+    "Type": "Bone"
+  },
+  {
+    "Id": "nail",
+    "InheirtFrom": "bone",
+    "Name": "nail",
+    "IgnationPoint": 124,
+    "Flamability": true,
+    "Hardness": 2,
+    "MPInfusionLimit": 5,
+    "CanRegen": true,
+    "HeatDamageTemp": 139,
+    "ColdDamageTemp": -56,
+    "Density": 0.5,
+    "Color": "Gray",
+    "Type": "Bone",
+    // more elastic than bone
+    "ImpactYield": 200000,
+    "ImpactFracture": 200000,
+    "ImpactStrainsAtYield": 5000,
+    "MaxEdge": 1000
+  },
+  {
     "Id": "stone",
-    "Name": "Stone",
+    "Name": "stone",
     "Flamability": false,
     "Hardness": 7,
     "MPInfusionLimit": 1,
     "CanRegen": false,
     "Density": 2.6,
     "MeltingPoint": 1200,
+    "LiquidTurnsInto": "magma",
+    "SolidTurnsInto": "self",
+    "GasTurnsInto": "boiling magma", // when there isn't an id to it, it will just copy all properties and change the material name and state
     "ConfersTraits": [ "Durable", "MagicallyWeak" ],
     "Color": "DarkGray",
-    "Type": "Stone"
+    "Type": "Stone",
+    // generic values
+    "ShearYield": 15000,
+    "ShearFracture": 15000,
+    "ShearStrainAtYield": 100,
+    "ImpactYield": 120000,
+    "ImpactFracture": 120000,
+    "ImpactStrainsAtYield": 100,
+    "MaxEdge": 1000
   },
   {
-    "Id": "iron",
-    "Name": "Iron",
-    "Flamability": false,
+    "Id": "generic_metal",
+    "Name": "metal",
     "Hardness": 10,
     "MPInfusionLimit": 2,
-    "CanRegen": false,
-    "Density": 7.8,
-    "MeltingPoint": 1538,
-    "BoilingPoint": 2862,
-    "ConfersTraits": [ "Durable", "MagicallyWeak" ],
+    "LiquidTurnsInto": "molten self",
+    "SolidTurnsInto": "boiling self",
     "Color": "Gray",
     "Type": "Metal"
   },
   {
+    "Id": "iron",
+    "Name": "iron",
+    "InheirtFrom": "generic_metal",
+    "MPInfusionLimit": 4,
+    "Density": 7.8,
+    "MeltingPoint": 1538,
+    "BoilingPoint": 2862,
+    "ConfersTraits": [ "Durable", "MagicallyWeak" ],
+    "ShearYield": 15000,
+    "ShearFracture": 15000,
+    "ShearStrainAtYield": 100,
+    "ImpactYield": 120000,
+    "ImpactFracture": 120000,
+    "ImpactStrainsAtYield": 100,
+    "MaxEdge": 1000
+  },
+  {
     "Id": "wood",
-    "Name": "Wood",
+    "Name": "wood",
     "Flamability": true,
     "IgnationPoint": 371,
     "Hardness": 5,
@@ -122,37 +354,64 @@
     "Density": 0.9,
     "ConfersTraits": [ "Inexpensive" ],
     "Color": "Wood",
-    "Type": "Wood"
+    "Type": "Wood",
+    "ShearYield": 40000,
+    "ShearFracture": 40000,
+    "ShearStrainAtYield": 1000,
+    "ImpactYield": 10000,
+    "ImpactFracture": 10000,
+    "ImpactStrainsAtYield": 1000,
+    "MaxEdge": 1000
+  },
+  {
+    // based on grass and stuff, for greeny stuff
+    "Id": "generic_plant_matter",
+    "Name": "plant stuff",
+    "Flamability": true,
+    "CanRegen": true,
+    "Hardness": 0,
+    "IgnationPoint": 105,
+    "MPInfusionLimit": 0,
+    "Density": 1.4,
+    "Type": "Plant",
+    "ShearYield": 40000,
+    "ShearFracture": 40000,
+    "ShearStrainAtYield": 1000,
+    "ImpactYield": 10000,
+    "ImpactFracture": 10000,
+    "ImpactStrainsAtYield": 1000,
+    "MaxEdge": 1000
   },
   {
     "Id": "grass",
-    "Name": "Grass",
-    "Flamability": false,
-    "Hardness": 1,
-    "MPInfusionLimit": 0,
-    "CanRegen": true,
-    "Density": 1.4,
+    "InheirtFrom": "generic_plant_matter",
+    "Name": "grass",
     "Color": "GrassColor",
-    "Type": "Plant"
+    "ConfersTraits": [ "HerbivoreEatable" ]
   },
   {
     "Id": "h2o",
-    "Name": "Water",
+    "Name": "water",
     "Flamability": false,
     "Hardness": 0,
     "MPInfusionLimit": 1,
     "CanRegen": true,
     "Density": 1.1,
     "MeltingPoint": 0,
+    "LiquidTurnsInto": "ice",
     "BoilingPoint": 100,
+    "SolidTurnsInto": "gas",
+    "GasTurnsInto": "h2o",
     "Color": "RiverWater"
   },
   {
+    // does pure magic is matter?
+    // does it need any special properties?
     "Id": "pure_magic",
-    "Name": "Magic Energy",
+    "Name": "magic energy",
     "Flamability": false,
     "Hardness": 1,
-    "MPInfusionLimit": 100,
+    "MPInfusionLimit": 999,
     "CanRegen": true,
     "Density": 0.85,
     "ConfersTraits": [ "Magical" ],
@@ -160,7 +419,8 @@
   },
   {
     "Id": "gold",
-    "Name": "Gold",
+    "InheirtFrom": "generic_metal",
+    "Name": "gold",
     "Hardness": 1,
     "MPInfusionLimit": 10,
     "Density": 19.3,
@@ -171,22 +431,26 @@
   },
   {
     "Id": "null",
-    "Name": "Null",
+    "Name": "null",
     "Density": 1
   },
-  //{ // Transfer over to the water material
-  //  "Id": "ice",
-  //  "Name": "Ice",
-  //  "Hardness": 1,
-  //  "MPInfusionLimit": 5,
-  //  "Density": 0.917,
-  //  "MeltingPoint": 0,
-  //  "ConfersTraits": [ "Fragile" ],
-  //  "Color": "Ice"
-  //},
+  {
+    "Id": "ice",
+    "InheirtFrom": "stone",
+    "Name": "Ice",
+    "Hardness": 1,
+    "MPInfusionLimit": 5,
+    "Density": 0.917,
+    "MeltingPoint": 0,
+    "ConfersTraits": [ "Fragile" ],
+    "Color": "Ice",
+    "ImpactYield": 1000,
+    "ImpactFracture": 1000
+  },
   {
     "Id": "dirt",
-    "Name": "Dirt",
+    "InheirtFrom": "stone",
+    "Name": "dirt",
     "Hardness": 1,
     "MPInfusionLimit": 1,
     "Density": 1.22,
@@ -196,7 +460,8 @@
   },
   {
     "Id": "sand",
-    "Name": "Sand",
+    "Name": "sand",
+    "InheirtFrom": "dirt",
     "Hardeness": 1,
     "MPInfusionLimit": 2,
     "Density": 1.6,
@@ -206,7 +471,8 @@
   },
   {
     "Id": "carbon_coal",
-    "Name": "Coal",
+    "InheirtFrom": "stone",
+    "Name": "coal",
     "Hardeness": 2,
     "MPInfusionLimit": 1,
     "Density": 1.3,
@@ -218,7 +484,7 @@
   },
   {
     "Id": "glass",
-    "Name": "Glass",
+    "Name": "glass",
     "Hardness": 0,
     "MPInfusionLimit": 6,
     "Density": 2.7,
@@ -230,7 +496,8 @@
   },
   {
     "Id": "mud",
-    "Name": "Mud",
+    "InheirtFrom": "dirt",
+    "Name": "mud",
     "Hardness": 0,
     "MPInfusionLimit": 1,
     "Density": 1.9,
@@ -238,5 +505,14 @@
     "BoilingPoint": 3000,
     "ConfersTraits": [ "Inexpensive" ],
     "Color": "Brown"
+  },
+  {
+    "Id": "chalk",
+    "Name": "chalk",
+    "InheirtFrom": "stone",
+    "MPInfusionLimit": 5,
+    "Density": 1.4,
+    "ConfersTraits": [ "Inexpensive", "Powders" ],
+    "Color": "White"
   }
 ]

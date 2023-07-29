@@ -8,6 +8,7 @@
         public const int DaysPerMonth = 31;
         public const int MonthsPerYear = 12;
         public const int MinutesPerHour = 60;
+        public const int SecondsPerHour = SecondsPerMinute * MinutesPerHour;
         public const int SecondsPerMinute = 60;
         public const int SecondsPerDay = 86400;
         public const int CentisecondsPerSecond = 100;

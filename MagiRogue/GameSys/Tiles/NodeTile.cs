@@ -13,7 +13,7 @@ namespace MagiRogue.GameSys.Tiles
 
         public float MpPoints { get; set; }
 
-        public int MaxMp { get; private set; }
+        public int MaxMp { get; }
 
         public float MpRecovering
         {
@@ -34,7 +34,7 @@ namespace MagiRogue.GameSys.Tiles
             }
         }
 
-        public ColoredGlyph TrueAppearence { get; private set; }
+        public ColoredGlyph TrueAppearence { get; }
 
         public NodeTile(Color foreground, Color background, Point position, int mpPower, int nodeStrength) :
             base(foreground, background, '*', (int)MapLayer.TERRAIN, position,
@@ -54,7 +54,7 @@ namespace MagiRogue.GameSys.Tiles
             LastSeenAppereance.CopyAppearanceFrom(TrueAppearence);
             if (GoRogueComponents.Contains<Components.IllusionComponent>())
             {
-                illusion = GoRogueComponents.GetFirstOrDefault<Components.IllusionComponent>();
+                illusion = GoRogueComponents.GetFirstOrDefault<Components.IllusionComponent>()!;
                 GoRogueComponents.Remove(Components.IllusionComponent.Tag);
             }
         }
@@ -76,7 +76,9 @@ namespace MagiRogue.GameSys.Tiles
                 MpPoints = MathMagi.Round(MpPoints + MpRecovering);
             }
             else
+            {
                 DestroyTile(BecomeNextTile());
+            }
         }
 
         public void DrainNode(Actor actor)
@@ -105,16 +107,16 @@ namespace MagiRogue.GameSys.Tiles
             }
         }
 
-        public override void DestroyTile(TileBase changeTile, Item itemDropped = null)
+        public override void DestroyTile(TileBase changeTile, Item? itemDropped = null)
         {
-            GameLoop.Universe.Time.TurnPassed -= GetTime_NodeTurnPassed;
+            GameLoop.Universe.Time.TurnPassed -= GetTime_NodeTurnPassed!;
 
             base.DestroyTile(changeTile, itemDropped);
         }
 
-        public void SetUpNodeTurn(Universe world) => world.Time.TurnPassed += GetTime_NodeTurnPassed;
+        public void SetUpNodeTurn(Universe? world) => world.Time.TurnPassed += GetTime_NodeTurnPassed!;
 
-        private void DestroyNodeTurn(Universe world) => world.Time.TurnPassed -= GetTime_NodeTurnPassed;
+        private void DestroyNodeTurn(Universe? world) => world.Time.TurnPassed -= GetTime_NodeTurnPassed!;
 
         private void GetTime_NodeTurnPassed(object sender, Time.TimeDefSpan e)
         {
@@ -147,6 +149,11 @@ namespace MagiRogue.GameSys.Tiles
             }
 
             return null;
+        }
+
+        public override TileBase Copy()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

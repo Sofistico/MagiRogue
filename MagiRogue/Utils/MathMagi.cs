@@ -6,32 +6,19 @@ namespace MagiRogue.Utils
     {
         public static float ReturnPositive(float nmb)
         {
-            float positive;
-            if (nmb < 0)
-                positive = nmb * -1;
-            else
-                positive = nmb;
+            float positive = nmb < 0 ? nmb * -1 : nmb;
             return positive;
         }
 
         public static double ReturnPositive(double nmb)
         {
-            double positive;
-            if (nmb < 0)
-                positive = nmb * -1;
-            else
-                positive = nmb;
+            double positive = nmb < 0 ? nmb * -1 : nmb;
             return positive;
         }
 
         public static int ReturnPositive(int nmb)
         {
-            int positive;
-            if (nmb < 0)
-                positive = nmb * -1;
-            else
-                positive = nmb;
-            return positive;
+            return nmb < 0 ? nmb * -1 : nmb;
         }
 
         /// <summary>
@@ -56,6 +43,15 @@ namespace MagiRogue.Utils
             return MathF.Round(x, 2, MidpointRounding.AwayFromZero);
         }
 
+        public static double FastRound(double val)
+        {
+            if (val >= 0)
+            {
+                return val + 0.5d > 100 ? 100 : val + 0.5d;
+            }
+            return val - 0.5d;
+        }
+
         public static int GetVolumeOfObject(double densityInGCm, double weightInKg)
         {
             int densityKgM = GetDensityInKgM(densityInGCm);
@@ -75,12 +71,28 @@ namespace MagiRogue.Utils
 
         public static int CalculateVolumeWithModifier(int modifier, int volume)
         {
-            return (int)((volume) * (modifier / (double)100));
+            return (int)(volume * (modifier / (double)100));
         }
 
         public static long GetTickByYear(int yearToGameBegin)
         {
             return yearToGameBegin * 3214080000;
+        }
+
+        public static double GetInversePercentageBasedOnMax(int current, int max)
+        {
+            if (current == 0)
+                return 100;
+            var val = (double)(100 - (current / (double)max * 100));
+            return FastRound(val);
+        }
+
+        public static double GetPercentageBasedOnMax(double current, double max)
+        {
+            if (current == 0)
+                return 100;
+            var val = (double)(current / (double)max * 100);
+            return FastRound(val);
         }
     }
 }

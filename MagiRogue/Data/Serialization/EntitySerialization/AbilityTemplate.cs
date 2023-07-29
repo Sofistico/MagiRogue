@@ -1,5 +1,5 @@
 ﻿using MagiRogue.Data.Enumerators;
-using MagiRogue.Entities;
+using MagiRogue.Entities.Core;
 
 namespace MagiRogue.Data.Serialization.EntitySerialization
 {

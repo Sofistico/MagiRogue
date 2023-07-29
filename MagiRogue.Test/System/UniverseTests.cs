@@ -1,26 +1,15 @@
-﻿using MagiRogue.Data.Serialization;
+﻿using MagiRogue.Data.Enumerators;
+using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys;
 using MagiRogue.GameSys.Planet;
 using MagiRogue.GameSys.Tiles;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
-using BenchmarkDotNet;
-using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Running;
-using Newtonsoft.Json.Linq;
-using MagiRogue.Data.Enumerators;
 
 namespace MagiRogue.Test.System
 {
-    [MemoryDiagnoser]
     public class UniverseTests
     {
         private Universe uni;
@@ -66,7 +55,7 @@ namespace MagiRogue.Test.System
                 (new TileFloor(new SadRogue.Primitives.Point(0, 0)));
             Player player = Player.TestPlayer();
             player.Position = new SadRogue.Primitives.Point(0, 0);
-            uni.WorldMap.AssocietatedMap.Add(player);
+            uni.WorldMap.AssocietatedMap.AddMagiEntity(player);
             uni.Player = player;
             var json = JsonConvert.SerializeObject(uni, Formatting.Indented,
                 new JsonSerializerSettings()

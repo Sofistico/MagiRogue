@@ -1,4 +1,7 @@
-﻿using MagiRogue.UI.Controls;
+﻿using CommunityToolkit.HighPerformance;
+using MagiRogue.UI.Controls;
+using MagiRogue.UI.Enums;
+using MagiRogue.UI.Interfaces;
 using SadConsole;
 using SadConsole.UI;
 using System;
@@ -10,15 +13,17 @@ namespace MagiRogue.UI.Windows
 {
     // Will contain relevant custom code here, maybe
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public class MagiBaseWindow : Window
+    public class MagiBaseWindow : Window, IWindowTagContract
     {
-        private Dictionary<MagiButton, Action> _selectionButtons;
+        private List<MagiButton> _selectionButtons;
         private MagiButton lastFocusedButton;
 
         /// <summary>
         /// account for the thickness of the window border to prevent UI element spillover
         /// </summary>
         protected const int WindowBorderThickness = 2;
+
+        public WindowTag Tag { get; set; }
 
         public MagiBaseWindow(int width, int height, string title) : base(width, height)
         {
@@ -41,35 +46,25 @@ namespace MagiRogue.UI.Windows
             Title = title;
         }
 
-        public void AddToDictionary(MagiButton[] buttons)
-        {
-            foreach (MagiButton button in buttons)
-            {
-                AddToDictionary(button);
-            }
-        }
-
         public void AddToDictionary(MagiButton button)
         {
-            _selectionButtons.Add(button, () => { });
-            SetupSelectionButtons(_selectionButtons);
+            SetupSelectionButtons(new List<MagiButton>() { button });
         }
 
         public void SetupSelectionButtons(params MagiButton[] buttons)
         {
-            SetupSelectionButtons(new Dictionary<MagiButton, Action>
-                (buttons.Select(b => new KeyValuePair<MagiButton, Action>(b, () => { }))));
+            SetupSelectionButtons(buttons.ToList());
         }
 
-        public void SetupSelectionButtons(Dictionary<MagiButton, Action> buttonsSelectionAction)
+        public void SetupSelectionButtons(List<MagiButton> buttonsSelectionAction)
         {
-            _selectionButtons = new Dictionary<MagiButton, Action>(buttonsSelectionAction);
+            _selectionButtons ??= new(buttonsSelectionAction);
             if (_selectionButtons.Count < 1)
             {
                 return;
             }
 
-            MagiButton[] buttons = buttonsSelectionAction.Keys.ToArray();
+            var buttons = buttonsSelectionAction.AsSpan();
 
             for (int i = 1; i < _selectionButtons.Count; i++)
             {
@@ -83,10 +78,7 @@ namespace MagiRogue.UI.Windows
             foreach (var button in buttons)
             {
                 Controls.Add(button);
-                button.MouseEnter += (_, __) =>
-                {
-                    Controls.FocusedControl = button;
-                };
+                button.MouseEnter += (_, __) => Controls.FocusedControl = button;
             }
 
             if (buttons[0].IsEnabled)
@@ -109,17 +101,14 @@ namespace MagiRogue.UI.Windows
 
         public override void Update(TimeSpan time)
         {
-            if (Controls.FocusedControl is not MagiButton focusedButton || focusedButton == lastFocusedButton)
+            if (Controls.FocusedControl is not MagiButton focusedButton
+                || focusedButton == lastFocusedButton)
             {
                 base.Update(time);
                 return;
             }
 
             lastFocusedButton = focusedButton;
-            if (_selectionButtons is not null)
-            {
-                _selectionButtons[focusedButton]();
-            }
 
             base.Update(time);
         }

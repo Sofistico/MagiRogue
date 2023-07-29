@@ -36,7 +36,7 @@
     "AbilityRequired": [ "Medicine", "Research" ],
     "TechResearched": [ "AlchemicalMedicine" ],
     "RequiredRes": [ "alchemy", "folk_medicine" ]
-  }
+  },
   {
     "Id": "prosthetics",
     "Name": "Anatomy of the body",
@@ -44,5 +44,5 @@
     "AbilityRequired": [ "Medicine", "Research" ],
     "TechResearched": [ "Prosthetics" ],
     "RequiredRes": [ "advanced_anatomy", "alchemical_medicine" ]
-  },
+  }
 ]

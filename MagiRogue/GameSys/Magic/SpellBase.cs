@@ -1,6 +1,7 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Entities;
+using MagiRogue.Entities.Core;
 using MagiRogue.Utils;
 using Newtonsoft.Json;
 using System;
@@ -109,6 +110,9 @@ namespace MagiRogue.GameSys.Magic
         {
             get => (int)(SpellLevel + ManaCost);
         }
+
+        public List<string> Keywords { get; set; } = new();
+        public List<SpellContext> Context { get; set; }
 
         /// <summary>
         /// Empty constructor, a waste of space

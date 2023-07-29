@@ -1,6 +1,8 @@
-﻿using GoRogue.Pathing;
+﻿using GoRogue.GameFramework;
+using GoRogue.Pathing;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
+using MagiRogue.Entities.Core;
 using MagiRogue.GameSys.Magic;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.UI.Windows;
@@ -37,6 +39,8 @@ namespace MagiRogue.Commands
 
         public bool LookMode { get; set; }
 
+        public Point Position => Cursor.Position;
+
         public Target(Point spawnCoord)
         {
             Color targetColor = new Color(255, 0, 0);
@@ -44,7 +48,7 @@ namespace MagiRogue.Commands
             OriginCoord = spawnCoord;
 
             Cursor = new Actor("Target Cursor",
-                targetColor, Color.AnsiYellow, 'X', spawnCoord, (int)MapLayer.PLAYER)
+                targetColor, Color.AnsiYellow, 'X', spawnCoord, (int)MapLayer.SPECIAL)
             {
                 IsWalkable = true,
                 CanBeKilled = false,
@@ -61,7 +65,7 @@ namespace MagiRogue.Commands
                 BlinkOutColor = Color.Aquamarine,
                 UseCellBackgroundColor = false,
             };
-            Cursor.Effect = blink;
+            Cursor.AppearanceSingle.Effect = blink;
             blink.Restart();
 
             State = TargetState.Resting;
@@ -109,10 +113,12 @@ namespace MagiRogue.Commands
                  GameLoop.GetCurrentMap().ControlledEntitiy.Position.X,
                  GameLoop.GetCurrentMap().ControlledEntitiy.Position.Y);
             GameLoop.Universe.ChangeControlledEntity(Cursor);
-            GameLoop.GetCurrentMap().Add(Cursor);
-            Cursor.Moved += Cursor_Moved;
+            GameLoop.GetCurrentMap().AddMagiEntity(Cursor);
+            Cursor.PositionChanged += Cursor_Moved;
 
             State = TargetState.Targeting;
+            LookMode = true;
+            Cursor.IgnoresWalls = true;
         }
 
         // TODO: Customize who should you target
@@ -171,7 +177,7 @@ namespace MagiRogue.Commands
                 if (TravelPath is not null)
                 {
                     ClearTileDictionary();
-                    Cursor.Moved -= Cursor_Moved;
+                    Cursor.PositionChanged -= Cursor_Moved;
                     TravelPath = null;
                 }
 
@@ -193,9 +199,9 @@ namespace MagiRogue.Commands
             tileDictionary.Clear();
         }
 
-        private (bool, SpellBase) AffectPath()
+        private (bool, SpellBase?) AffectPath()
         {
-            if (TravelPath is not null && TravelPath.Length >= 1)
+            if (TravelPath?.Length >= 1)
             {
                 bool sucess = SpellSelected.CastSpell(TravelPath.Steps.ToList(), _caster);
 
@@ -209,7 +215,7 @@ namespace MagiRogue.Commands
             return (false, null);
         }
 
-        private (bool, SpellBase) AffectArea()
+        private (bool, SpellBase?) AffectArea()
         {
             if (SpellSelected.Effects.Any(e => e.Radius > 0))
             {
@@ -236,14 +242,14 @@ namespace MagiRogue.Commands
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Cursor_Moved(object sender, GoRogue.GameFramework.GameObjectPropertyChanged<Point> e)
+        private void Cursor_Moved(object sender, ValueChangedEventArgs<Point> e)
         {
             TargetList.Clear();
-            TravelPath = GameLoop.GetCurrentMap().AStar.ShortestPath(OriginCoord, e.NewValue);
+            TravelPath = GameLoop.GetCurrentMap().AStar.ShortestPath(OriginCoord, e.NewValue)!;
             if (LookMode || TravelPath is null)
             {
                 TravelPath = GameLoop.GetCurrentMap()
-                    .AStarWithAllWalkable().ShortestPath(OriginCoord, e.NewValue);
+                    .AStarWithAllWalkable().ShortestPath(OriginCoord, e.NewValue)!;
                 ClearTileDictionary();
                 return;
             }
@@ -358,15 +364,18 @@ namespace MagiRogue.Commands
 
         public void LookTarget()
         {
-            LookWindow w = new(DetermineWhatToLook());
-            w.Show();
+            if (DetermineWhatToLook() is MagiEntity entity)
+            {
+                LookWindow w = new(entity);
+                w.Show();
+            }
         }
 
         public MagiEntity TargetEntity() => GameLoop.GetCurrentMap().GetEntityAt<MagiEntity>(Cursor.Position);
 
-        public TileBase TargetAtTile() => GameLoop.GetCurrentMap().GetTileAt<TileBase>(Cursor.Position);
+        private TileBase TargetAtTile() => GameLoop.GetCurrentMap().GetTileAt<TileBase>(Cursor.Position);
 
-        private dynamic DetermineWhatToLook()
+        public IGameObject DetermineWhatToLook()
         {
             if (EntityInTarget())
             {

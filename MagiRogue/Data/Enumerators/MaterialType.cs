@@ -15,6 +15,7 @@ namespace MagiRogue.Data.Enumerators
         Stone,
         Meat,
         Bone,
+        Teeth,
         Metal,
         Glass,
         Wood,

@@ -1,110 +1,116 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
-    <StartupObject>MagiRogue.GameLoop</StartupObject>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Authors>Sofistico</Authors>
-    <Company>Sofistico</Company>
-    <Description>A roguelike created with SadConsole 9.x and GoRogue 3.x</Description>
-    <ApplicationIcon>Wizard.ico</ApplicationIcon>
-    <Nullable>enable</Nullable>
-    <Win32Resource />
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <Copyright>Sofistico</Copyright>
-	<PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageLicenseFile>C:\Users\joaorodrigues\source\repos\MagiRogue\LICENSE</PackageLicenseFile>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net7.0</TargetFramework>
+		<StartupObject>MagiRogue.GameLoop</StartupObject>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<Authors>Sofistico</Authors>
+		<Company>Sofistico</Company>
+		<Description>A roguelike created with SadConsole 9.x and GoRogue 3.x</Description>
+		<ApplicationIcon>Wizard.ico</ApplicationIcon>
+		<Nullable>enable</Nullable>
+		<Win32Resource />
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+		<Copyright>Sofistico</Copyright>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseFile>C:\Users\joaorodrigues\source\repos\MagiRogue\LICENSE</PackageLicenseFile>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <NoWarn>1701;1702;8765;8618;8604;8602;8600;8603</NoWarn>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<NoWarn>1701;1702;8765;8618;8604;8602;8600;8603</NoWarn>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <NoWarn>1701;1702;8765;8618;8604;8602;8600;8603</NoWarn>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<NoWarn>1701;1702;8765;8618;8604;8602;8600;8603</NoWarn>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Content Include="Wizard.ico" />
-  </ItemGroup>
-    <ItemGroup>
+	<ItemGroup>
+		<Content Include="Wizard.ico" />
+	</ItemGroup>
+	<ItemGroup>
 		<EmbeddedResource Include="Icon.bmp" />
 	</ItemGroup>
 
 
 	<ItemGroup>
-    <None Include="..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="GoRogue" Version="3.0.0-beta02" />
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-    <PackageReference Include="SadConsole" Version="9.2.2" />
-    <PackageReference Include="SadConsole.Host.MonoGame" Version="9.2.2" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="GoRogue" Version="3.0.0-beta07" />
+		<PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="SadConsole" Version="10.0.0-alpha2-debug" />
+		<PackageReference Include="SadConsole.Host.MonoGame" Version="10.0.0-alpha2-debug" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Update="Data\Cultures\*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-	<None Update="Data\Reaction\*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-	<None Update="Data\Rules\*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\Descriptors\*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\Furniture\*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\Items\*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\Language\*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\Materials\*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\Bodies\*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\Races\*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\Rooms\*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\Scenarios\*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\Spells\*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\Tiles\*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\Research\*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\Professions\*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Fonts\*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Settings\*.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\Arquimedes\Arquimedes.csproj" />
+	  <ProjectReference Include="..\Diviner\Diviner.csproj" />
+	  <ProjectReference Include="..\MagusEngine\MagusEngine.csproj" />
+	</ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
-
+	<ItemGroup>
+		<None Update="Data\Cultures\*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Data\Reaction\*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Data\Rules\*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Data\Descriptors\*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Data\Furniture\*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Data\Items\*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Data\Language\*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Data\Materials\*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Data\Bodies\*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Data\Races\*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Data\Rooms\*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Data\Scenarios\*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Data\Spells\*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Data\Tiles\*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Data\Research\*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Data\Professions\*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Data\Plant\*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Fonts\*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Settings\*.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 </Project>

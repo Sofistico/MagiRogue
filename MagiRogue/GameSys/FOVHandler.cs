@@ -1,8 +1,9 @@
 ﻿using GoRogue.GameFramework;
-using GoRogue.SpatialMaps;
-using MagiRogue.Entities;
+using MagiRogue.Data.Enumerators;
+using MagiRogue.Entities.Core;
 using MagiRogue.GameSys.Tiles;
 using SadRogue.Primitives.GridViews;
+using SadRogue.Primitives.SpatialMaps;
 using System;
 using System.Linq;
 
@@ -48,11 +49,14 @@ namespace MagiRogue.GameSys
         /// on each possible value.
         /// </summary>
         /// <remarks>
+        /// <para>
         /// If the component has been added to a map, setting this value will set all values in
         /// the map according to the new state.
-        ///
+        /// </para>
+        /// <para>
         /// When the component is added to a map, the visibility of all values in that map will
         /// be set according to this value.
+        /// </para>
         /// </remarks>
         public FovState CurrentState
         {
@@ -110,13 +114,11 @@ namespace MagiRogue.GameSys
                         TileBase terrain = Map.GetTerrainAt<TileBase>(pos);
                         if (terrain == null) continue;
                         if (terrain != null && Map.PlayerFOV.BooleanResultView[pos])
-                        {
                             UpdateTerrainSeen(terrain);
-                        }
                         else if (terrain != null)
                             UpdateTerrainUnseen(terrain);
                     }
-                    foreach (MagiEntity entity in Map.Entities.Items.Cast<MagiEntity>())
+                    foreach (MagiEntity entity in Map.Entities.Items.OfType<MagiEntity>())
                     {
                         if (Map.PlayerFOV.BooleanResultView[entity.Position])
                             UpdateEntitySeen(entity);
@@ -138,9 +140,10 @@ namespace MagiRogue.GameSys
                             UpdateTerrainSeen(terrain);
                     }
 
-                    foreach (MagiEntity entity in Map.Entities.Items.Cast<MagiEntity>())
+                    foreach (IGameObject obj in Map.Entities.Items)
                     {
-                        UpdateEntitySeen(entity);
+                        if (obj is MagiEntity entity)
+                            UpdateEntitySeen(entity);
                     }
 
                     break;
@@ -200,8 +203,8 @@ namespace MagiRogue.GameSys
         private void Map_ObjectAdded(object sender, ItemEventArgs<IGameObject> e)
         {
             if (!IsEnabled) return;
-
-            if (e.Item.Layer == 0) // terrain
+            if (e.Item.Layer == (int)MapLayer.VEGETATION) return;
+            if (e.Item.Layer == (int)MapLayer.TERRAIN) // terrain
             {
                 if (Map.PlayerFOV.BooleanResultView[e.Position])
                     UpdateTerrainSeen((TileBase)(e.Item));

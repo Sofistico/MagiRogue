@@ -2,6 +2,7 @@
 using MagiRogue.GameSys;
 using SadRogue.Primitives;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MagiRogue.Data.Serialization.MapSerialization
 {
@@ -15,14 +16,10 @@ namespace MagiRogue.Data.Serialization.MapSerialization
         {
             Rectangle rec = Obj.CreateRectangle()
                 .WithPosition(positionToBegin);
-            Room r = new Room(rec, Obj.Tag, Obj.Furniture, Obj.Terrain)
+            return new Room(rec, Obj.Tag, Obj.Furniture, Obj.Terrain)
             {
                 Template = this
             };
-
-            CheckForEmptyTile();
-
-            return r;
         }
 
         public bool CompareRectanglesSameSize(Rectangle toCompare)
@@ -31,20 +28,12 @@ namespace MagiRogue.Data.Serialization.MapSerialization
 
             return toCompare.Size == rec.Size;
         }
-
-        private void CheckForEmptyTile()
-        {
-            if (!string.IsNullOrEmpty(Obj.EmptyFill))
-            {
-            }
-            return;
-        }
     }
 
     public class PrefabRoom
     {
-        public string? EmptyFill { get; set; }
         public RoomTag Tag { get; set; }
+        public bool InsideAnotherRoom { get; set; }
         public string[] Rows { get; set; }
         public Dictionary<string, object> Terrain { get; set; }
         public Dictionary<string, object> Furniture { get; set; }

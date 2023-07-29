@@ -1,4 +1,4 @@
-﻿using MagiRogue.Data.Enumerators;
+﻿using GoRogue.GameFramework;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
@@ -77,9 +77,25 @@ namespace MagiRogue.Utils.Extensions
             };
 
             Direction directionToGo = directions.GetRandomItemFromList();
-            Point newPOint = new SadRogue.Primitives.Point(point.X + directionToGo.DeltaX, point.Y + directionToGo.DeltaY);
+            return new SadRogue.Primitives.Point(point.X + directionToGo.DeltaX, point.Y + directionToGo.DeltaY);
+        }
 
-            return newPOint;
+        public static Point GetPointNextToWithCardinals()
+        {
+            Direction[] directions = new Direction[]
+            {
+                Direction.Down,
+                Direction.Up,
+                Direction.Left,
+                Direction.Right,
+                Direction.DownLeft,
+                Direction.UpLeft,
+                Direction.DownRight,
+                Direction.UpRight
+            };
+
+            Direction directionToGo = directions.GetRandomItemFromList();
+            return new SadRogue.Primitives.Point(directionToGo.DeltaX, directionToGo.DeltaY);
         }
 
         public static Point FindClosest(this Point point, Point[] pointsToSearch)
@@ -146,6 +162,79 @@ namespace MagiRogue.Utils.Extensions
                 }
             }
             return (closestPoint, previousDistance);
+        }
+
+        public static Point GetRandomCoordinateWithinSquareRadius(this Point center, int squareSize, bool matchXLength = true)
+        {
+            int halfSquareSize = squareSize / 2;
+            int x;
+            var rand = GameLoop.GlobalRand;
+            int y = rand.NextInt(center.Y - halfSquareSize, center.Y + halfSquareSize);
+
+            if (matchXLength)
+                x = rand.NextInt(center.X - squareSize, center.X + squareSize);
+            else
+                x = rand.NextInt(center.X - halfSquareSize, center.X + halfSquareSize);
+
+            return new Point(x, y);
+        }
+
+        public static T? GetClosest<T>(this Point originPos, int range, List<T> listT, IGameObject? caller) where T : IGameObject
+        {
+            T closest = default;
+            double bestDistance = double.MaxValue;
+
+            IGameObjIterator(originPos, range, listT, caller, ref closest, ref bestDistance);
+
+            return closest;
+        }
+
+        private static void IGameObjIterator<T>(Point originPos,
+            int range,
+            ICollection<T> listT,
+            IGameObject? caller,
+            ref T closest,
+            ref double bestDistance) where T : IGameObject
+        {
+            foreach (T t in listT)
+            {
+                if (t is null) continue;
+                if (caller != null && t.ID != caller.ID)
+                {
+                    double distance = Point.EuclideanDistanceMagnitude(originPos, t.Position);
+
+                    if (distance < bestDistance && (distance <= range || range == 0))
+                    {
+                        bestDistance = distance;
+                        closest = t;
+                    }
+                }
+            }
+        }
+
+        public static T? GetClosest<T>(this Point originPos, int range, T[] listT, IGameObject? caller) where T : IGameObject
+        {
+            T closest = default;
+            double bestDistance = double.MaxValue;
+
+            IGameObjIterator(originPos, range, listT, caller, ref closest, ref bestDistance);
+
+            return closest;
+        }
+
+        public static (T?, double) GetClosestAndDistance<T>(this Point originPos, int range, T[] listT, IGameObject? caller) where T : IGameObject
+        {
+            T closest = default;
+            double bestDistance = double.MaxValue;
+
+            IGameObjIterator(originPos, range, listT, caller, ref closest, ref bestDistance);
+
+            return (closest, bestDistance);
+        }
+
+        public static double GetDistance(this Point originPos, Point posToCompare)
+        {
+            return Distance.Chebyshev.Calculate(originPos, posToCompare);
         }
     }
 }

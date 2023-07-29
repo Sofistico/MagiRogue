@@ -16,6 +16,7 @@ namespace MagiRogue.Data.Enumerators
         Finger,
         Tail,
         Wing,
-        Neck
+        Neck,
+        Held
     }
 }

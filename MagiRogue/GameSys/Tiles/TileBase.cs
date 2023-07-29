@@ -1,12 +1,13 @@
 ﻿using GoRogue.Components;
 using GoRogue.GameFramework;
+using MagiRogue.Components;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
+using MagiRogue.Entities.Veggies;
 using SadConsole;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace MagiRogue.GameSys.Tiles
 {
@@ -64,8 +65,7 @@ namespace MagiRogue.GameSys.Tiles
 
             set
             {
-                if (MaterialOfTile is not null
-                    && MaterialOfTile.MPInfusionLimit is not null
+                if (MaterialOfTile?.MPInfusionLimit is not null
                     && MaterialOfTile.MPInfusionLimit > 0)
                 {
                     _infusedMp = value;
@@ -82,6 +82,10 @@ namespace MagiRogue.GameSys.Tiles
         public int BitMask { get; set; }
 
         public List<Trait> Traits { get; set; }
+
+        public Plant[] Vegetations { get; set; } = new Plant[4];
+
+        public bool HoldsVegetation { get; set; }
 
         #region backingField Data
 
@@ -103,11 +107,13 @@ namespace MagiRogue.GameSys.Tiles
         public int MoveTimeCost { get; set; } = 100;
         public string Description { get; internal set; }
 
+        public ConnectedTilesType ConnectedTilesType { get; set; }
+
         #endregion backingField Data
 
         /// <summary>
         /// TileBase is an abstract base class
-        /// representing the most basic form of of all Tiles used.
+        /// representing the most basic form of all Tiles used.
         /// Every TileBase has a Foreground Colour, Background Colour, and Glyph
         /// isBlockingMove and isBlockingSight are optional parameters, set to false by default
         /// </summary>
@@ -165,7 +171,10 @@ namespace MagiRogue.GameSys.Tiles
             };
         }
 
-        protected void CalculateTileHealth() => _tileHealth = (int)MaterialOfTile.Density * MaterialOfTile.Hardness <= 0 ? 10 : _tileHealth = (int)MaterialOfTile.Density * MaterialOfTile.Hardness;
+        protected void CalculateTileHealth() =>
+            _tileHealth = MaterialOfTile.Density * MaterialOfTile.Hardness <= 0 ?
+            10
+            : _tileHealth = (int)(MaterialOfTile.Density * MaterialOfTile.Hardness)!;
 
         public virtual void DestroyTile(TileBase changeTile, Entities.Item? itemDropped = null)
         {
@@ -173,26 +182,48 @@ namespace MagiRogue.GameSys.Tiles
             LastSeenAppereance = changeTile;
             if (itemDropped is not null)
             {
-                GameLoop.GetCurrentMap().Add(itemDropped);
+                GameLoop.GetCurrentMap().AddMagiEntity(itemDropped);
             }
         }
 
-        public virtual TileBase Copy()
-        {
-            // error
-            return null;
-        }
+        public abstract TileBase Copy();
 
         public List<Trait> GetMaterialTraits()
         {
-            if (MaterialOfTile.ConfersTraits is not null)
-                return MaterialOfTile.ConfersTraits;
-            return null;
+            return MaterialOfTile.ConfersTraits;
+        }
+
+        public void AddVegetation(Plant plant, int index, Map? map = null)
+        {
+            if (index < Vegetations.Length && HoldsVegetation)
+            {
+                Vegetations[index] = plant;
+
+                CopyAppearanceFrom(plant.SadGlyph);
+                LastSeenAppereance.CopyAppearanceFrom(plant.SadGlyph);
+                IsDirty = true;
+                plant.Position = Position;
+                plant.GoRogueComponents.Add(new FoodComponent(Food.Herbivore));
+                map?.AddEntity(plant);
+            }
+        }
+
+        public void AddVegetations(Plant plant, Map? map = null)
+        {
+            if (!HoldsVegetation)
+                return;
+            for (int i = 0; i < Vegetations.Length; i++)
+            {
+                AddVegetation(plant.Clone(), i, map);
+            }
         }
 
         #region IGameObject Interface
 
-        public event EventHandler<GameObjectPropertyChanged<bool>> TransparencyChanged
+        /// <summary>
+        /// Fired when <see cref="P:GoRogue.GameFramework.IGameObject.IsTransparent" /> is changed.
+        /// </summary>
+        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<bool>>? TransparencyChanged
         {
             add
             {
@@ -205,7 +236,10 @@ namespace MagiRogue.GameSys.Tiles
             }
         }
 
-        public event EventHandler<GameObjectPropertyChanged<bool>> WalkabilityChanged
+        /// <summary>
+        /// Fired when <see cref="P:GoRogue.GameFramework.IGameObject.IsWalkable" /> is changed.
+        /// </summary>
+        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<bool>>? WalkabilityChanged
         {
             add
             {
@@ -218,20 +252,10 @@ namespace MagiRogue.GameSys.Tiles
             }
         }
 
-        event EventHandler<GameObjectPropertyChanged<Point>> IGameObject.Moved
-        {
-            add
-            {
-                backingField.Moved += value;
-            }
-
-            remove
-            {
-                backingField.Moved -= value;
-            }
-        }
-
-        public event EventHandler<GameObjectCurrentMapChanged> AddedToMap
+        /// <summary>
+        /// Fired when the object is added to a map.
+        /// </summary>
+        public event EventHandler<GameObjectCurrentMapChanged>? AddedToMap
         {
             add
             {
@@ -244,7 +268,10 @@ namespace MagiRogue.GameSys.Tiles
             }
         }
 
-        public event EventHandler<GameObjectCurrentMapChanged> RemovedFromMap
+        /// <summary>
+        /// Fired when the object is removed from a map.
+        /// </summary>
+        public event EventHandler<GameObjectCurrentMapChanged>? RemovedFromMap
         {
             add
             {
@@ -257,7 +284,10 @@ namespace MagiRogue.GameSys.Tiles
             }
         }
 
-        public event EventHandler<GameObjectPropertyChanged<bool>> TransparencyChanging
+        /// <summary>
+        /// Fired when <see cref="P:GoRogue.GameFramework.IGameObject.IsTransparent" /> is about to be changed.
+        /// </summary>
+        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<bool>>? TransparencyChanging
         {
             add
             {
@@ -270,7 +300,10 @@ namespace MagiRogue.GameSys.Tiles
             }
         }
 
-        public event EventHandler<GameObjectPropertyChanged<bool>> WalkabilityChanging
+        /// <summary>
+        /// Fired when <see cref="P:GoRogue.GameFramework.IGameObject.IsWalkable" /> is about to changed.
+        /// </summary>
+        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<bool>>? WalkabilityChanging
         {
             add
             {
@@ -283,10 +316,39 @@ namespace MagiRogue.GameSys.Tiles
             }
         }
 
-        public void OnMapChanged(GoRogue.GameFramework.Map newMap)
+        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<Point>>? PositionChanging
         {
-            backingField.OnMapChanged(newMap);
+            add
+            {
+                backingField.PositionChanging += value;
+            }
+
+            remove
+            {
+                backingField.PositionChanging -= value;
+            }
         }
+
+        public event EventHandler<SadRogue.Primitives.ValueChangedEventArgs<Point>>? PositionChanged
+        {
+            add
+            {
+                backingField.PositionChanged += value;
+            }
+
+            remove
+            {
+                backingField.PositionChanged -= value;
+            }
+        }
+
+        /// <summary>
+        /// Internal use only, do not call manually!  Must, at minimum, call <see cref="M:GoRogue.GameFramework.GameObjectExtensions.SafelySetCurrentMap(GoRogue.GameFramework.IGameObject,GoRogue.GameFramework.Map@,GoRogue.GameFramework.Map,System.EventHandler{GoRogue.GameFramework.GameObjectCurrentMapChanged},System.EventHandler{GoRogue.GameFramework.GameObjectCurrentMapChanged})" />
+        /// which will update the <see cref="P:GoRogue.GameFramework.IGameObject.CurrentMap" /> field of the IGameObject to reflect the change and fire map
+        /// added/removed events as appropriate (or provide equivalent functionality).
+        /// </summary>
+        /// <param name="newMap">New map to which the IGameObject has been added.</param>
+        public void OnMapChanged(GoRogue.GameFramework.Map? newMap) => backingField.OnMapChanged(newMap);
 
         #endregion IGameObject Interface
     }

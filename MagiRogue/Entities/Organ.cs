@@ -1,8 +1,6 @@
 ﻿using MagiRogue.Data.Enumerators;
-using MagiRogue.Data.Serialization;
-using MagiRogue.GameSys.Physics;
+using MagiRogue.Entities.Core;
 using Newtonsoft.Json;
-using System.Runtime.Serialization;
 
 namespace MagiRogue.Entities
 {
@@ -11,25 +9,19 @@ namespace MagiRogue.Entities
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string? InsideOf { get; set; }
 
-        [DataMember]
         public OrganType OrganType { get; set; }
 
-        [DataMember]
-        public bool Destroyed { get => BodyPartHp <= 0; }
+        public bool Embedded { get; set; }
 
         public Organ(string name,
             string? connectedTo,
             BodyPartOrientation orientation,
-            OrganType organType,
-            int organHp,
-            string materialId) : base(materialId)
+            OrganType organType) : base()
         {
             BodyPartName = name;
             InsideOf = connectedTo;
             Orientation = orientation;
             OrganType = organType;
-            BodyPartHp = organHp;
-            MaxBodyPartHp = organHp;
         }
 
         [JsonConstructor()]
@@ -38,59 +30,51 @@ namespace MagiRogue.Entities
            string? connectedTo,
            BodyPartOrientation orientation,
            OrganType organType,
-           int organHp,
-           string materialId) : base(materialId)
+           bool embedded = false) : base()
         {
             Id = id;
             BodyPartName = name;
             InsideOf = connectedTo;
             Orientation = orientation;
             OrganType = organType;
-            BodyPartHp = organHp;
-            MaxBodyPartHp = organHp;
+            Embedded = embedded;
         }
 
-        public Organ(string materialId = "skin") : base(materialId)
+        public Organ() : base()
         {
             // Empty!
         }
 
-        public Organ Copy()
+        public override Organ Copy()
         {
-            Organ copy = new Organ()
+            return new Organ()
             {
                 Id = this.Id,
                 BodyPartName = this.BodyPartName,
                 InsideOf = this.InsideOf,
                 Orientation = this.Orientation,
-                BodyPartHp = this.BodyPartHp,
-                MaterialId = this.MaterialId,
-                BodyPartMaterial = this.BodyPartMaterial,
-                MaxBodyPartHp = this.MaxBodyPartHp,
-                OrganType = this.OrganType
+                OrganType = this.OrganType,
+                BodyPartFunction = this.BodyPartFunction,
+                RelativeVolume = this.RelativeVolume,
+                Tissues = new(Tissues),
+                Volume = this.Volume,
+                Working = this.Working,
+                Wounds = new(Wounds),
+                Insides = new(Insides),
+                Embedded = this.Embedded,
+                Category = Category,
             };
-
-            return copy;
         }
 
-        public override void CalculateWound(Wound wound)
+        public override void AddWound(Wound wound)
         {
-            base.CalculateWound(wound);
+            base.AddWound(wound);
             switch (wound.Severity)
             {
                 case InjurySeverity.Inhibited:
-                    Working = false;
-                    break;
-
                 case InjurySeverity.Broken:
-                    Working = false;
-                    break;
-
                 case InjurySeverity.Pulped:
-                    Working = true;
-                    break;
-
-                default:
+                    Working = false;
                     break;
             }
         }

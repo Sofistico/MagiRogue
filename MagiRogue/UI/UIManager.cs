@@ -1,9 +1,12 @@
 ﻿using MagiRogue.Entities;
 using MagiRogue.GameSys;
+using MagiRogue.UI.Enums;
+using MagiRogue.UI.Interfaces;
 using MagiRogue.UI.Windows;
 using SadConsole;
 using SadConsole.Input;
 using System;
+using System.Collections.Generic;
 using Color = SadConsole.UI.AdjustableColor;
 
 namespace MagiRogue.UI
@@ -12,14 +15,17 @@ namespace MagiRogue.UI
     // and makes consoles easily addressable from a central place.
     public sealed class UIManager : ScreenObject
     {
+        private readonly Dictionary<WindowTag, IWindowTagContract> windows
+            = new Dictionary<WindowTag, IWindowTagContract>();
+
         #region Managers
 
-        // Here are the managers
+        // Here are the managers, in the future will be a dictionary
         public MapWindow MapWindow { get; set; }
 
         public MessageLogWindow MessageLog { get; set; }
         public InventoryWindow InventoryScreen { get; set; }
-        public StatusWindow StatusConsole { get; set; }
+        public StatusWindow StatusWindow { get; set; }
         public MainMenuWindow MainMenu { get; set; }
         public CharacterCreationWindow CharCreationWindow { get; set; }
 
@@ -37,20 +43,11 @@ namespace MagiRogue.UI
 
         public UIManager()
         {
-            // must be set to true
-            // or will not call each child's Draw method
-            IsVisible = true;
-            IsFocused = true;
-
             UseMouse = false;
-
-            // The UIManager becomes the only
-            // screen that SadConsole processes
-            Parent = GameHost.Instance.Screen;
         }
 
         // Initiates the game by means of going to the menu first
-        public void InitMainMenu()
+        public void InitMainMenu(bool beginOnTestMap = false)
         {
             SetUpCustomColors();
 
@@ -61,6 +58,8 @@ namespace MagiRogue.UI
             Children.Add(MainMenu);
             MainMenu.Show();
             MainMenu.Position = new Point(0, 0);
+            if (beginOnTestMap)
+                StartGame(Player.TestPlayer(), null, true);
         }
 
         public void StartGame(Player player, Universe? uni = null, bool testGame = false)
@@ -87,10 +86,11 @@ namespace MagiRogue.UI
             }
 
             //Message Log initialization
-            MessageLog = new MessageLogWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Message Log");
-            Children.Add(MessageLog);
-            MessageLog.Show();
-            MessageLog.Position = new Point(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2);
+            MessageLog = new MessageLogWindow(GameLoop.GameWidth - 2, GameLoop.GameHeight - 20, "Message Log")
+            {
+                Position = new Point(1, GameLoop.GameHeight - 10),
+            };
+            MessageLog.Hide();
 #if DEBUG
             MessageLog.PrintMessage("Test message log works");
 #endif
@@ -99,19 +99,22 @@ namespace MagiRogue.UI
             Children.Add(InventoryScreen);
             InventoryScreen.Hide();
 
-            StatusConsole = new StatusWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2, "Status Window");
-            Children.Add(StatusConsole);
-            StatusConsole.Position = new Point(GameLoop.GameWidth / 2, 0);
-            StatusConsole.Show();
+            StatusWindow = new StatusWindow(GameLoop.GameWidth - 2, GameLoop.GameHeight - 27, "Status Window")
+            {
+                Position = new Point(1, GameLoop.GameHeight - 12),
+            };
+            StatusWindow.Show();
 
             // Build the Window
-            CreateMapWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight, "Game Map");
+            CreateMapWindow(GameLoop.GameWidth, GameLoop.GameHeight, "Game Map");
 
             // Then load the map into the MapConsole
             MapWindow.LoadMap(GameLoop.GetCurrentMap());
-
             // Start the game with the camera focused on the player
             MapWindow.CenterOnActor(GameLoop.Universe.Player);
+
+            Children.Add(StatusWindow);
+            Children.Add(MessageLog);
         }
 
         /// <summary>
@@ -159,6 +162,15 @@ namespace MagiRogue.UI
 
         #endregion Input
 
+        #region Update
+
+        //public override void OnFocusLost()
+        //{
+        //    base.OnFocusLost();
+        //}
+
+        #endregion Update
+
         #endregion Overrides
 
         #region HelperMethods
@@ -187,7 +199,7 @@ namespace MagiRogue.UI
         private void SetUpCustomColors()
         {
             // Create a set of default colours that we will modify
-            CustomColors = SadConsole.UI.Themes.Library.Default.Colors.Clone();
+            CustomColors = new SadConsole.UI.Colors();
 
             // Pick a couple of background colours that we will apply to all consoles.
             Color backgroundColor = new Color(CustomColors.Black, "Black");
@@ -209,7 +221,22 @@ namespace MagiRogue.UI
             CustomColors.RebuildAppearances();
 
             // Now set all of these colours as default for SC's default theme.
-            SadConsole.UI.Themes.Library.Default.Colors = CustomColors;
+            //SadConsole.UI.Themes.Library.Default.Colors = CustomColors;
+        }
+
+        public T GetWindow<T>(WindowTag tag) where T : IWindowTagContract
+        {
+            windows.TryGetValue(tag, out var window);
+            return (T)window;
+        }
+
+        public void AddWindowToList(IWindowTagContract window)
+        {
+            if (window.Tag == WindowTag.Undefined)
+            {
+                throw new UndefinedWindowTagException($"The tag for the window was undefined! Window: {window}");
+            }
+            windows.Add(window.Tag, window);
         }
 
         #endregion HelperMethods

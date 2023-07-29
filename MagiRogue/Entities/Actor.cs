@@ -1,23 +1,30 @@
-﻿using MagiRogue.Commands;
+﻿using GoRogue.FOV;
+using MagiRogue.Commands;
+using MagiRogue.Components;
 using MagiRogue.Data.Enumerators;
-using MagiRogue.Data.Serialization;
+using MagiRogue.Entities.Core;
 using MagiRogue.GameSys;
 using MagiRogue.GameSys.Physics;
 using MagiRogue.GameSys.Tiles;
-using MagiRogue.Utils;
 using MagiRogue.Utils.Extensions;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
 namespace MagiRogue.Entities
 {
     [JsonConverter(typeof(Data.Serialization.EntitySerialization.ActorJsonConverter))]
     public class Actor : MagiEntity
     {
+        #region Fields
+
+        private RecursiveShadowcastingBooleanBasedFOV actorFov;
+        private int? viewRadius;
+
+        #endregion Fields
+
         #region Properties
 
         /// <summary>
@@ -47,6 +54,14 @@ namespace MagiRogue.Entities
         public List<Item> Inventory { get; set; }
 
         public bool IsPlayer { get; set; }
+        public List<SpecialFlag> Flags { get => GetAnatomy().Race.Flags; }
+
+        /// <summary>
+        /// The current state of the actor, should be usd to track multi turns stuff
+        /// </summary>
+        public ActorState State { get; set; }
+
+        public List<ActorSituationalFlags> SituationalFlags { get; set; } = new();
 
         #endregion Properties
 
@@ -118,10 +133,10 @@ namespace MagiRogue.Entities
         private bool CheckForChangeMapChunk(Point pos, Point positionChange)
         {
             Direction dir = Direction.GetCardinalDirection(positionChange);
-            if (GameLoop.GetCurrentMap().MapZoneConnections.ContainsKey(dir) &&
+            if (GameLoop.GetCurrentMap().MapZoneConnections.TryGetValue(dir, out Map value) &&
                 GameLoop.GetCurrentMap().CheckForIndexOutOfBounds(pos + positionChange))
             {
-                Map mapToGo = GameLoop.GetCurrentMap().MapZoneConnections[dir];
+                Map mapToGo = value;
                 Point actorPosInChunk = GetNextMapPos(mapToGo, pos + positionChange);
                 // if tile in the other map isn't walkable, then it should't be possible to go there!
                 if (!mapToGo.IsTileWalkable(actorPosInChunk, this))
@@ -130,7 +145,9 @@ namespace MagiRogue.Entities
                 return true;
             }
             else
+            {
                 return false;
+            }
         }
 
         private static Point GetNextMapPos(Map map, Point pos)
@@ -148,6 +165,7 @@ namespace MagiRogue.Entities
 
             if (actor != null && CanBeAttacked)
             {
+                // TODO: Make sure that the time to attack is properly added here!
                 ActionManager.MeleeAttack(this, actor);
                 Bumped = true;
                 return Bumped;
@@ -189,25 +207,54 @@ namespace MagiRogue.Entities
             }
         }
 
-        public Item WieldedItem()
+        public Item? WieldedItem()
         {
-            return Body.Equipment.GetValueOrDefault(GetAnatomy().Limbs.Find(l =>
-                l.LimbType == TypeOfLimb.Hand).Id);
+            if (!Body.Anatomy.HasAnyHands)
+                return null;
+            return Body?.Equipment?.GetValueOrDefault(GetAnatomy().Limbs.Find(l =>
+                l.BodyPartFunction == BodyPartFunction.Grasp)?.Id, null);
         }
 
-        public Limb GetAttackingLimb(Item item)
+        public List<Item> GetAllWieldedItems()
         {
-            var key = Body.Equipment.FirstOrDefault(x => x.Value == item).Key;
-            var limb = GetAnatomy().Limbs.Find(i => i.Id.Equals(key));
-            if (item is null)
+            if (!Body.Anatomy.HasAnyHands)
+                return null;
+            List<Item> items = new();
+            foreach (var item in Body.Equipment)
             {
-                List<Limb> graspersAndStances = GetAnatomy().Limbs.FindAll(i =>
-                    (i.BodyPartFunction is BodyPartFunction.Grasp
-                    || i.BodyPartFunction is BodyPartFunction.Stance)
-                    && i.Working);
-                return graspersAndStances.GetRandomItemFromList();
+                var limb = GetAnatomy().Limbs.Find(i => i.Id.Equals(item.Key));
+                if (limb.BodyPartFunction == BodyPartFunction.Grasp
+                    && item.Value.EquipType == EquipType.Held)
+                {
+                    items.Add(item.Value);
+                }
             }
-            return limb;
+            return items;
+        }
+
+        public List<Item> ItemsInLimb(Limb limb)
+        {
+            var list = new List<Item>
+            {
+                Body.Equipment[limb.Id]
+            };
+            list.RemoveAll(i => i is null);
+            return list;
+        }
+
+        public BodyPart GetAttackingLimb(Attack attack)
+        {
+            if (attack.LimbFunction is not null)
+            {
+                return GetAnatomy().AllBPs.FindAll(i =>
+                    i.BodyPartFunction == attack.LimbFunction)
+                    .GetRandomItemFromList();
+            }
+            else
+            {
+                var items = GetAllWieldedItems();
+                return items.Find(i => i.Attacks.Contains(attack)).HeldLimb;
+            }
         }
 
         public void AddToEquipment(Item item)
@@ -239,53 +286,21 @@ namespace MagiRogue.Entities
 
         public void ApplyBodyRegen()
         {
-            #region Broken dreams lies here....
-
-            //Parallel.ForEach(GetAnatomy().Limbs, limb =>
-            //{
-            //    if (limb.BodyPartHp < limb.MaxBodyPartHp)
-            //    {
-            //        if (limb.Attached)
-            //        {
-            //            if (limb.CanHeal || GetAnatomy().GetActorRace().CanRegenLostLimbs)
-            //            {
-            //                limb.ApplyHeal(GetNormalLimbRegen() * limb.RateOfHeal);
-            //            }
-            //        }
-            //        if (!limb.Attached && GetAnatomy().GetActorRace().CanRegenLostLimbs)
-            //        {
-            //            List<Limb> connectedLimbs = GetAnatomy().GetAllParentConnectionLimb(limb);
-            //            if (!connectedLimbs.Any(i => !i.Attached))
-            //            {
-            //                limb.ApplyHeal(GetNormalLimbRegen() * limb.RateOfHeal + 0.5);
-            //                if (!limb.Wounds.Any(i => i.Severity is InjurySeverity.Missing))
-            //                    limb.Attached = true;
-            //            }
-            //        }
-            //    }
-            //});
-
-            #endregion Broken dreams lies here....
-
             bool regens = GetAnatomy().Race.CanRegenarate();
             var limbsHeal = GetAnatomy().Limbs.FindAll(i => i.NeedsHeal || (regens && !i.Attached));
             int limbCount = limbsHeal.Count;
             for (int i = 0; i < limbCount; i++)
             {
                 Limb limb = limbsHeal[i];
+
                 if (limb.Attached)
-                {
-                    if (limb.CanHeal || regens)
-                    {
-                        limb.ApplyHeal(GetNormalLimbRegen() * limb.RateOfHeal);
-                    }
-                }
-                if (!limb.Attached && regens)
+                    limb.ApplyHeal(GetNormalLimbRegen(), regens);
+                if (regens && !limb.Attached)
                 {
                     List<Limb> connectedLimbs = GetAnatomy().GetAllParentConnectionLimb(limb);
                     if (connectedLimbs.All(i => i.Attached))
                     {
-                        limb.ApplyHeal((GetNormalLimbRegen() * limb.RateOfHeal) + (0.5 * 2), regens);
+                        limb.ApplyHeal(GetNormalLimbRegen(), regens);
                         if (!limb.Wounds.Any(i => i.Severity is InjurySeverity.Missing))
                             limb.Attached = true;
                     }
@@ -309,7 +324,8 @@ namespace MagiRogue.Entities
 
         public int GetViewRadius()
         {
-            return Body.ViewRadius;
+            viewRadius ??= Body.ViewRadius;
+            return viewRadius.Value;
         }
 
         public double GetNormalLimbRegen()
@@ -345,24 +361,14 @@ namespace MagiRogue.Entities
             return Body.GeneralSpeed;
         }
 
-        public double GetActorCastingSpeed()
+        public double GetActorBaseCastingSpeed()
         {
-            return GetActorBaseSpeed() + ((Magic.ShapingSkill * 0.7) * (Soul.WillPower * 0.3));
+            return GetActorBaseSpeed() + (Magic.ShapingSkill * 0.7 * (Soul.WillPower * 0.3));
         }
 
-        public double GetAttackVelocity()
+        public double GetAttackVelocity(Attack attack)
         {
-            return PhysicsManager.GetAttackVelocity(this);
-        }
-
-        public double GetProtection(Limb limb)
-        {
-            var item = Body.GetArmorOnLimbIfAny(limb);
-            var armorModifier = item is not null ?
-                (item.Material.Hardness * Body.GetArmorOnLimbIfAny(limb).Material.Density) : 0;
-            return Body.Toughness +
-                armorModifier
-                + GetRelevantAbility(AbilityName.ArmorUse);
+            return PhysicsManager.GetAttackVelocity(this, attack);
         }
 
         public int GetPrecision()
@@ -376,7 +382,7 @@ namespace MagiRogue.Entities
             int shieldAbility = GetRelevantAbility(AbilityName.Shield);
             int armorAbility = GetRelevantAbility(AbilityName.ArmorUse);
             int dodgeAbility = GetRelevantAbility(AbilityName.Dodge);
-            int weaponAbility = GetRelevantAttackAbility();
+            int weaponAbility = GetRelevantAttackAbility(WieldedItem());
 
             if (shieldAbility > weaponAbility)
                 return shieldAbility;
@@ -393,46 +399,31 @@ namespace MagiRogue.Entities
             return Mind.GetAbility(ability);
         }
 
-        public int GetRelevantAttackAbility()
+        public int GetRelevantAttackAbility(Item? item = null)
         {
-            if (WieldedItem() is not null && WieldedItem() is Item item)
+            if (item is not null)
             {
                 return GetRelevantAttackAbility(item.WeaponType);
             }
             else
             {
-                return GetRelevantAbility(AbilityName.Unarmed);
+                return 0;
             }
         }
 
         public int GetRelevantAttackAbility(WeaponType weaponType)
         {
-            if (Mind.HasSpecifiedAttackAbility(weaponType, out int abilityScore))
-            {
-                return abilityScore;
-            }
-            else
-                return 0;
+            return Mind.HasSpecifiedAttackAbility(weaponType, out int abilityScore) ? abilityScore : 0;
         }
 
-        public double GetRelevantAttackAbilityMultiplier(WeaponType weaponType)
+        public double GetRelevantAttackAbilityMultiplier(AbilityName ability)
         {
-            if (Mind.HasSpecifiedAttackAbility(weaponType, out int abilityScore))
-            {
-                return abilityScore * 0.3;
-            }
-            else
-                return 0;
+            return Mind.HasSpecifiedAttackAbility(ability, out int abilityScore) ? abilityScore * 0.3 : 0;
         }
 
         public double GetRelevantAbilityMultiplier(AbilityName ability)
         {
-            if (Mind.Abilities.ContainsKey((int)ability))
-            {
-                return Mind.Abilities[(int)ability].Score * 0.3;
-            }
-            else
-                return 0;
+            return Mind.Abilities.TryGetValue((int)ability, out Ability value) ? value.Score * 0.3 : 0;
         }
 
         public int GetStrenght()
@@ -440,24 +431,128 @@ namespace MagiRogue.Entities
             return Body.Strength;
         }
 
-        public DamageTypes GetDamageType()
-        {
-            if (WieldedItem() is not null && WieldedItem() is Item item)
-            {
-                return item.ItemDamageType;
-            }
-            else
-            {
-                return DamageTypes.Blunt;
-            }
-        }
-
         public Sex GetGender()
         {
             return GetAnatomy().Gender;
         }
 
+        public Actor WithComponents(params object[] objs)
+        {
+            for (int i = 0; i < objs.Length; i++)
+            {
+                AddComponent(objs[i]);
+            }
+            return this;
+        }
+
+        public List<Attack> GetAttacks()
+        {
+            List<Attack> list = new List<Attack>();
+            foreach (var item in GetAllWieldedItems().Select(i => i.Attacks))
+            {
+                list.AddRange(item);
+            }
+            list.AddRange(GetRaceAttacks());
+            return list;
+        }
+
         #endregion GetProperties
+
+        #region Needs
+
+        public void ProcessNeeds()
+        {
+            if (GoRogueComponents.Contains(typeof(NeedCollection)))
+            {
+                NeedCollection needs = GetComponent<NeedCollection>();
+                int count = needs.Count;
+                for (int i = 0; i < count; i++)
+                {
+                    Need need = needs[i];
+                    if (need.TickNeed())
+                    {
+#if DEBUG
+                        GameLoop.AddMessageLog("Need is in dire need!");
+#endif
+                    }
+                }
+            }
+        }
+
+        #endregion Needs
+
+        public double AttackRange()
+        {
+            var item = WieldedItem();
+            if (item is null)
+            {
+                return 1; // punch and stuff distance!
+            }
+            return 1; // to be implemented item range that permits attacking and stuff!
+        }
+
+        public bool CanSee(Point pos)
+        {
+            UpdateFov();
+            return actorFov.BooleanResultView[pos];
+        }
+
+        public IEnumerable<Point> AllThatCanSee()
+        {
+            UpdateFov();
+            return actorFov.CurrentFOV;
+        }
+
+        private void UpdateFov()
+        {
+            actorFov ??= new RecursiveShadowcastingBooleanBasedFOV(CurrentMap.TransparencyView);
+            actorFov.Calculate(Position, GetViewRadius());
+        }
+
+        public void AddMemory<T>(Point lastSeen, MemoryType memoryType, T obj)
+        {
+            Mind.Memories.Add(new Memory<T>(lastSeen, memoryType, obj));
+        }
+
+        public bool HasMemory<T>(MemoryType memoryType, T obj)
+        {
+            foreach (var item in Mind.Memories)
+            {
+                if (item.MemoryType == memoryType)
+                {
+                    var mem = item as Memory<T>;
+                    if (mem.ObjToRemember.Equals(obj))
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        public bool GetMemory<T>(MemoryType type, out Memory<T>? memory)
+        {
+            foreach (var item in Mind.Memories)
+            {
+                if (item.MemoryType == type)
+                {
+                    memory = (Memory<T>?)item;
+                    return true;
+                }
+            }
+            memory = null;
+            return false;
+        }
+
+        public override string GetCurrentStatus()
+        {
+            StringBuilder bobBuilder = new();
+            bobBuilder.Append(State.ToString());
+            return bobBuilder.ToString();
+        }
+
+        public List<Attack> GetRaceAttacks()
+        {
+            return GetAnatomy().Race.Attacks;
+        }
 
         #endregion Methods
     }
