@@ -49,6 +49,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\Arquimedes\Arquimedes.csproj" />
+	  <ProjectReference Include="..\Diviner\Diviner.csproj" />
+	  <ProjectReference Include="..\MagusEngine\MagusEngine.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<None Update="Data\Cultures\*">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
