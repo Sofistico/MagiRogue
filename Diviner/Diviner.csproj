@@ -6,4 +6,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="SadConsole" Version="10.0.0-alpha2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MagusEngine\MagusEngine.csproj" />
+  </ItemGroup>
+
 </Project>

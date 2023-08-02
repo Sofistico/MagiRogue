@@ -11,6 +11,7 @@ using MagiRogue.GameSys.Tiles;
 using MagiRogue.GameSys.Time;
 using MagiRogue.Settings;
 using MagiRogue.Utils;
+using MagusEngine;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System;

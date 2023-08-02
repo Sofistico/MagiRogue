@@ -28,8 +28,6 @@ public static class GameLoop
 
     public static Universe Universe { get; set; }
 
-    public static IEnhancedRandom GlobalRand { get; } = GlobalRandom.DefaultRNG;
-
     #region configuration
 
     private static void Main(string[] args)
