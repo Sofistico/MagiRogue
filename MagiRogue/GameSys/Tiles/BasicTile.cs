@@ -1,12 +1,13 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
-using MagiRogue.GameSys.Civ;
-using MagiRogue.GameSys.Planet;
 using MagiRogue.Entities.Veggies;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
+using MagusEngine.Core.WorldStuff;
+using MagusEngine.Core.Civ;
+using MagusEngine.Systems.Physics;
 
 namespace MagiRogue.GameSys.Tiles
 {
@@ -162,7 +163,7 @@ namespace MagiRogue.GameSys.Tiles
         public bool HasAnyTrait()
         {
             Traits = Traits is null ? new List<Trait>() : Traits;
-            var material = Physics.PhysicsManager.SetMaterial(IdMaterial);
+            var material = PhysicsManager.SetMaterial(IdMaterial);
             if (material.ConfersTraits is not null)
             {
                 Traits.AddRange(material.ConfersTraits);
@@ -182,7 +183,7 @@ namespace MagiRogue.GameSys.Tiles
             if (tile is null)
                 return null;
 
-            tile.MaterialOfTile ??= Physics.PhysicsManager.SetMaterial("null");
+            tile.MaterialOfTile ??= PhysicsManager.SetMaterial("null");
 
             BasicTile basic = new BasicTile(tile.Position, tile.Foreground.PackedValue,
                 tile.Background.PackedValue, tile.Glyph, tile.IsWalkable,

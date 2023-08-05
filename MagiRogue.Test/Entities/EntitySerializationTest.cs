@@ -10,6 +10,7 @@ using System.Linq;
 using Xunit;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Data.Serialization.EntitySerialization;
+using MagusEngine.Systems.Physics;
 
 namespace MagiRogue.Test.Entities
 {
@@ -19,7 +20,7 @@ namespace MagiRogue.Test.Entities
         public void ItemSerializingTest()
         {
             const string name = "Serialization Test";
-            string expectedName = GameSys.Physics.PhysicsManager.SetMaterial("wood").ReturnNameFromMaterial(name);
+            string expectedName = PhysicsManager.SetMaterial("wood").ReturnNameFromMaterial(name);
 
             Item item = new Item(Color.Red, Color.Transparent, name, 'T', Point.None, 100, materialId: "wood");
 

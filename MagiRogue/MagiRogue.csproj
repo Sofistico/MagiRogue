@@ -46,4 +46,8 @@
 		<PackageReference Include="SadConsole" Version="10.0.0-alpha2" />
 		<PackageReference Include="SadConsole.Host.MonoGame" Version="10.0.0-alpha2" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Diviner\Diviner.csproj" />
+	</ItemGroup>
 </Project>

@@ -1,6 +1,6 @@
 ﻿using GoRogue.Components;
 using GoRogue.GameFramework;
-using MagiRogue.GameSys.Magic;
+using MagusEngine.Core.Magic;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;

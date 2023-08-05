@@ -1,6 +1,6 @@
 ﻿using MagiRogue.Data;
 using MagiRogue.Data.Serialization.MapSerialization;
-using MagiRogue.GameSys;
+using MagusEngine.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;

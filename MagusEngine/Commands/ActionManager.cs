@@ -1,22 +1,22 @@
 ﻿using GoRogue.GameFramework;
 using GoRogue.Pathing;
 using MagiRogue.Data.Enumerators;
-using MagiRogue.GameSys;
 using MagiRogue.GameSys.Planet;
 using MagiRogue.GameSys.Tiles;
-using MagiRogue.GameSys.Time;
 using SadConsole;
 using System.Collections.Generic;
 using System.Text;
 using Map = MagiRogue.GameSys.Map;
 using Arquimedes.Data;
 using MagusEngine.Utils.Extensions;
-using MagusEngine.ECS.Components;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Utils;
-using MagusEngine.Core.Entities.Veggies;
 using MagusEngine.Serialization;
+using MagusEngine.ECS.Components.ActorComponents;
+using MagusEngine.Core;
+using MagusEngine.Systems.Time;
+using MagusEngine.Systems;
 
 namespace MagusEngine.Commands
 {

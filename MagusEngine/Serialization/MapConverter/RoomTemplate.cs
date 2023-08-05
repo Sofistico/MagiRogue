@@ -1,5 +1,5 @@
 ﻿using Arquimedes.Enumerators;
-using MagiRogue.GameSys;
+using MagusEngine.Core;
 using SadRogue.Primitives;
 using System.Collections.Generic;
 using System.Linq;

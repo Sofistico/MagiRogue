@@ -1,6 +1,6 @@
 ﻿using Arquimedes.Enumerators;
-using MagiRogue.GameSys.Civ;
 using MagiRogue.GameSys.Tiles;
+using MagusEngine.Core.Civ;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

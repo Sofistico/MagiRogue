@@ -1,8 +1,8 @@
 ﻿using MagiRogue.Data.Enumerators;
-using MagiRogue.GameSys.Magic;
 using MagusEngine.Commands;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
+using MagusEngine.Core.Magic;
 using MagusEngine.Serialization;
 using MagusEngine.Utils.Extensions;
 using System;

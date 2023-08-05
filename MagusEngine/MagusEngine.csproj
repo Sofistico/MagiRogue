@@ -15,8 +15,4 @@
     <ProjectReference Include="..\Arquimedes\Arquimedes.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Systems\" />
-  </ItemGroup>
-
 </Project>

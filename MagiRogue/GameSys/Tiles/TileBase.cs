@@ -4,6 +4,7 @@ using MagiRogue.Components;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Entities.Veggies;
+using MagusEngine.Systems.Physics;
 using SadConsole;
 using SadRogue.Primitives;
 using System;
@@ -135,7 +136,7 @@ namespace MagiRogue.GameSys.Tiles
             Name = name;
             Layer = layer;
             backingField = new GameObject(position, layer, !blocksMove, isTransparent);
-            MaterialOfTile = GameSys.Physics.PhysicsManager.SetMaterial(idOfMaterial);
+            MaterialOfTile = PhysicsManager.SetMaterial(idOfMaterial);
             LastSeenAppereance = new ColoredGlyph(Foreground, Background, Glyph)
             {
                 IsVisible = false

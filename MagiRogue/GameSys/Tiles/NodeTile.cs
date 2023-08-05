@@ -1,6 +1,7 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.Utils;
+using MagusEngine.Systems.Time;
 using SadConsole;
 using SadRogue.Primitives;
 
@@ -118,7 +119,7 @@ namespace MagiRogue.GameSys.Tiles
 
         private void DestroyNodeTurn(Universe? world) => world.Time.TurnPassed -= GetTime_NodeTurnPassed!;
 
-        private void GetTime_NodeTurnPassed(object sender, Time.TimeDefSpan e)
+        private void GetTime_NodeTurnPassed(object sender, TimeDefSpan e)
         {
             if ((e.Minutes + 1) % 5 == 0 && e.Seconds % 60 == 0)
             {

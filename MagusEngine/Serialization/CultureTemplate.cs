@@ -2,9 +2,10 @@
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization.EntitySerialization;
 using MagiRogue.Entities.Core;
-using MagiRogue.GameSys.Civ;
 using MagiRogue.Utils;
 using MagiRogue.Utils.Extensions;
+using MagusEngine.Core.Civ;
+using MagusEngine.Systems;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

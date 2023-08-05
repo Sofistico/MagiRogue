@@ -1,7 +1,6 @@
 ﻿using GoRogue.FOV;
 using Arquimedes.Enumerators;
 using MagiRogue.GameSys;
-using MagiRogue.GameSys.Physics;
 using MagiRogue.GameSys.Tiles;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
@@ -11,8 +10,9 @@ using System.Text;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Commands;
 using MagusEngine.Utils.Extensions;
-using MagusEngine.ECS.Components;
 using MagusEngine.Serialization.EntitySerialization;
+using MagusEngine.ECS.Components.ActorComponents;
+using MagusEngine.Systems.Physics;
 
 namespace MagusEngine.Core.Entities
 {

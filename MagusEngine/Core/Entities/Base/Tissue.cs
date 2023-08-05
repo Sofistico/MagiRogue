@@ -1,9 +1,9 @@
 ﻿using GoRogue.DiceNotation;
 using Arquimedes.Enumerators;
-using MagiRogue.GameSys.Physics;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using MagusEngine.Serialization;
+using MagusEngine.Systems.Physics;
 
 namespace MagusEngine.Core.Entities.Base
 {

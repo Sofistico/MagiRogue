@@ -1,10 +1,10 @@
-﻿using MagiRogue.GameSys.Magic;
-using Diviner.Controls;
+﻿using Diviner.Controls;
 using SadConsole;
 using SadConsole.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MagusEngine.Core.Magic;
 
 namespace Diviner.Windows
 {

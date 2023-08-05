@@ -1,9 +1,9 @@
 ﻿using Arquimedes.Enumerators;
-using MagiRogue.GameSys.Physics;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Entities.Interfaces;
 using MagusEngine.Serialization;
 using MagusEngine.Serialization.EntitySerialization;
+using MagusEngine.Systems.Physics;
 using MagusEngine.Utils;
 using Newtonsoft.Json;
 using SadRogue.Primitives;

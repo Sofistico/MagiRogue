@@ -1,6 +1,6 @@
 ﻿using MagiRogue.Data.Enumerators;
-using MagiRogue.GameSys.Magic;
 using MagiRogue.GameSys.Magic.Effects;
+using MagusEngine.Core.Magic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;

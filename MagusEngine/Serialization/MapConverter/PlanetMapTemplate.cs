@@ -1,7 +1,7 @@
 ﻿using MagiRogue.GameSys;
-using MagiRogue.GameSys.Civ;
-using MagiRogue.GameSys.Planet;
-using MagiRogue.GameSys.Planet.History;
+using MagusEngine.Core;
+using MagusEngine.Core.Civ;
+using MagusEngine.Core.WorldStuff.History;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

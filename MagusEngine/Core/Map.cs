@@ -1,7 +1,16 @@
-﻿using GoRogue.GameFramework;
+﻿using Arquimedes.Enumerators;
+using GoRogue.GameFramework;
 using GoRogue.Pathing;
+using MagusEngine.Core.Entities;
+using MagusEngine.Core.Entities.Base;
 using MagusEngine.ECS;
+using MagusEngine.ECS.Components.TilesComponents;
+using MagusEngine.Factory;
 using MagusEngine.Serialization.MapConverter;
+using MagusEngine.Systems;
+using MagusEngine.Utils;
+using Newtonsoft.Json.Linq;
+using SadConsole.Entities;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 using SadRogue.Primitives.SpatialMaps;
@@ -20,36 +29,30 @@ namespace MagusEngine.Core
     {
         #region Fields
 
-        private MagiEntity _gameObjectControlled;
+        private MagiEntity? _gameObjectControlled;
         private SadConsole.Entities.Renderer _entityRender;
         private bool _disposed;
         private Dictionary<Func<Actor, bool>, Actor[]> _lastCalledActors = new();
         private bool _needsToUpdateActorsDict;
 
         private readonly Dictionary<uint, IGameObject> _idMap;
-        private readonly EntityRegistry _registry = new EntityRegistry(500);
+        private readonly EntityRegistry _registry = new(500);
 
         #endregion Fields
 
         #region Properties
 
         /// <summary>
-        /// All cell tiles of the map, it's a TileBase array, should never be directly declared to create new tiles, rather
-        /// it must use <see cref="Map.SetTerrain(IGameObject)"/>.
-        /// </summary>
-        public TileBase[] Tiles { get; private set; }
-
-        /// <summary>
         /// Fires whenever FOV is recalculated.
         /// </summary>
-        public event EventHandler FOVRecalculated;
+        public event EventHandler? FOVRecalculated;
 
         /// <summary>
         /// Fires whenever the value of <see cref="ControlledEntitiy"/> is changed.
         /// </summary>
-        public event EventHandler<ControlledGameObjectChangedArgs> ControlledGameObjectChanged;
+        public event EventHandler<ControlledGameObjectChangedArgs>? ControlledGameObjectChanged;
 
-        public MagiEntity ControlledEntitiy
+        public MagiEntity? ControlledEntitiy
         {
             get => _gameObjectControlled;
 
@@ -57,7 +60,7 @@ namespace MagusEngine.Core
             {
                 if (_gameObjectControlled != value)
                 {
-                    MagiEntity oldObject = _gameObjectControlled;
+                    MagiEntity? oldObject = _gameObjectControlled;
                     _gameObjectControlled = value;
                     ControlledGameObjectChanged?.Invoke(this, new ControlledGameObjectChangedArgs(oldObject));
                 }
@@ -73,7 +76,7 @@ namespace MagusEngine.Core
         public ulong Seed { get; set; }
         public int ZAmount { get; set; }
         public Dictionary<Direction, Map> MapZoneConnections { get; set; }
-        public List<Room> Rooms { get; set; }
+        public List<Room>? Rooms { get; set; }
 
         public Renderer EntityRender { get => _entityRender; }
 
@@ -82,14 +85,14 @@ namespace MagusEngine.Core
         #region Constructor
 
         /// <summary>
-        /// Build a new map with a specified width and height, has entity layers,
-        /// they being 0-Furniture, 1-ghosts, 2-Items, 3-Actors, 4-Player.
-        /// \nMaps can have any size, but the default is 60x60, for a nice 3600 tiles per map
+        /// Build a new map with a specified width and height, has entity layers, they being
+        /// 0-Furniture, 1-ghosts, 2-Items, 3-Actors, 4-Player. \nMaps can have any size, but the
+        /// default is 60x60, for a nice 3600 tiles per map
         /// </summary>
         /// <param name="width"></param>
         /// <param name="height"></param>
         public Map(string mapName, int width = 60, int height = 60, bool usesWeighEvaluation = true) :
-            base(CreateTerrain(width, height), Enum.GetNames(typeof(MapLayer)).Length - 1,
+            base(width, height, Enum.GetNames(typeof(MapLayer)).Length - 1,
             Distance.Euclidean,
             entityLayersSupportingMultipleItems: LayerMasker.Default.Mask((int)MapLayer.VEGETATION,
                 (int)MapLayer.ITEMS,
@@ -97,8 +100,6 @@ namespace MagusEngine.Core
                 (int)MapLayer.ACTORS,
                 (int)MapLayer.SPECIAL))
         {
-            Tiles = (ArrayView<TileBase>)((LambdaSettableTranslationGridView<TileBase, IGameObject>)Terrain).BaseGrid;
-
             // Treat the fov as a component.
             GoRogueComponents.Add
                 (new MagiRogueFOVVisibilityHandler(this, Color.DarkSlateGray, (int)MapLayer.GHOSTS));
@@ -112,7 +113,7 @@ namespace MagusEngine.Core
             {
                 var weights = new LambdaGridView<double>(Width, Height, pos =>
                 {
-                    var tile = Tiles[pos.ToIndex(Width)];
+                    var tile = (Tile?)Terrain[pos.ToIndex(Width)];
                     return tile is not null ? MathMagi.Round((double)((double)tile.MoveTimeCost / 100)) : 0;
                 });
                 AStar = new AStar(WalkabilityView, Distance.Euclidean, weights, 0.01);
@@ -127,11 +128,11 @@ namespace MagusEngine.Core
 
         #region Methods
 
-        private static ISettableGridView<IGameObject?> CreateTerrain(int width, int heigth)
-        {
-            var goRogueTerrain = new ArrayView<TileBase>(width, heigth);
-            return new LambdaSettableTranslationGridView<TileBase, IGameObject?>(goRogueTerrain, t => t, g => g as TileBase);
-        }
+        //private static ISettableGridView<IGameObject?> CreateTerrain(int width, int heigth)
+        //{
+        //    var goRogueTerrain = new ArrayView<TileBase>(width, heigth);
+        //    return new LambdaSettableTranslationGridView<TileBase, IGameObject?>(goRogueTerrain, t => t, g => g as TileBase);
+        //}
 
         public void RemoveAllEntities()
         {
@@ -152,45 +153,39 @@ namespace MagusEngine.Core
         }
 
         /// <summary>
-        /// IsTileWalkable checks
-        /// to see if the actor has tried
-        /// to walk off the map or into a non-walkable tile
-        /// Returns true if the tile location is walkable
-        /// false if tile location is not walkable or is off-map
+        /// IsTileWalkable checks to see if the actor has tried to walk off the map or into a
+        /// non-walkable tile Returns true if the tile location is walkable false if tile location
+        /// is not walkable or is off-map
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
         public bool IsTileWalkable(Point location)
         {
-            // first make sure that actor isn't trying to move
-            // off the limits of the map
+            // first make sure that actor isn't trying to move off the limits of the map
             if (CheckForIndexOutOfBounds(location))
                 return false;
 
             // then return whether the tile is walkable
-            return !Tiles[(location.Y * Width) + location.X].IsBlockingMove;
+            return Terrain[(location.Y * Width) + location.X]?.IsWalkable == true;
         }
 
         /// <summary>
-        /// IsTileWalkable checks
-        /// to see if the actor has tried
-        /// to walk off the map or into a non-walkable tile
-        /// Returns true if the tile location is walkable
-        /// false if tile location is not walkable or is off-map
+        /// IsTileWalkable checks to see if the actor has tried to walk off the map or into a
+        /// non-walkable tile Returns true if the tile location is walkable false if tile location
+        /// is not walkable or is off-map
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
         public bool IsTileWalkable(Point location, Actor actor)
         {
-            // first make sure that actor isn't trying to move
-            // off the limits of the map
+            // first make sure that actor isn't trying to move off the limits of the map
             if (CheckForIndexOutOfBounds(location))
                 return false;
             if (actor.IgnoresWalls)
                 return true;
 
             // then return whether the tile is walkable
-            return !Tiles[(location.Y * Width) + location.X].IsBlockingMove;
+            return Terrain[(location.Y * Width) + location.X]?.IsWalkable == true;
         }
 
         /// <summary>
@@ -205,16 +200,15 @@ namespace MagusEngine.Core
                 var room = Rooms[i];
                 for (int t = 0; t < room.DoorsPoint.Count; t++)
                 {
-                    TileDoor door = GetTileAt<TileDoor>(room.DoorsPoint[t]);
+                    Tile door = GetTileAt<DoorComponent>(room.DoorsPoint[t]);
                     room.Doors.Add(door);
                 }
             }
         }
 
         /// <summary>
-        /// Checking whether a certain type of
-        /// entity is at a specified location the manager's list of entities
-        /// and if it exists, return that Entity
+        /// Checking whether a certain type of entity is at a specified location the manager's list
+        /// of entities and if it exists, return that Entity
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="location"></param>
@@ -224,7 +218,7 @@ namespace MagusEngine.Core
             return Entities.GetItemsAt(location).OfType<T>().FirstOrDefault(e => e.CanInteract);
         }
 
-        public WaterTile GetClosestWaterTile(int range, Point position)
+        public Tile GetClosestWaterTile(int range, Point position)
         {
             var waters = GetAllTilesOfType<WaterTile>();
             return position.GetClosest<WaterTile>(range, waters, null);
@@ -324,8 +318,8 @@ namespace MagusEngine.Core
         }
 
         /// <summary>
-        /// When the Entity's .Moved value changes, it triggers this event handler
-        /// which updates the Entity's current position in the SpatialMap
+        /// When the Entity's .Moved value changes, it triggers this event handler which updates the
+        /// Entity's current position in the SpatialMap
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
@@ -340,64 +334,38 @@ namespace MagusEngine.Core
         }
 
         /// <summary>
-        /// really snazzy way of checking whether a certain type of
-        /// tile is at a specified location in the map's Tiles
-        /// and if it exists, return that Tile
-        /// accepts an x/y coordinate
+        /// really snazzy way of checking whether a certain type of tile is at a specified location
+        /// in the map's Tiles and if it exists, return that Tile accepts an x/y coordinate
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-        public T GetTileAt<T>(int x, int y) where T : TileBase
+        public Tile? GetTileAt<T>(int x, int y)
         {
             int locationIndex = Point.ToIndex(x, y, Width);
+            var tile = locationIndex <= Width * Height && locationIndex >= 0
+                ? (Tile?)Terrain[locationIndex]
+                : null;
+            if (tile?.GoRogueComponents.Contains(typeof(T)) == false)
+            {
+                return default;
+            }
 
             // make sure the index is within the boundaries of the map!
-            return locationIndex <= Width * Height && locationIndex >= 0
-                ? Tiles[locationIndex] is T t ? t : null
-                : null;
-        }
-
-        public TileBase GetTileAt(int x, int y)
-        {
-            return GetTileAt<TileBase>(x, y);
+            return tile;
         }
 
         /// <summary>
-        /// Checks if a specific type of tile at a specified location
-        /// is on the map. If it exists, returns that Tile
-        /// This form of the method accepts a Point coordinate.
+        /// Checks if a specific type of tile at a specified location is on the map. If it exists,
+        /// returns that Tile This form of the method accepts a Point coordinate.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="location"></param>
         /// <returns></returns>
-        public T GetTileAt<T>(Point location) where T : TileBase
+        public Tile? GetTileAt<T>(Point location)
         {
             return GetTileAt<T>(location.X, location.Y);
-        }
-
-        public TileBase GetTileAt(Point location)
-        {
-            return GetTileAt<TileBase>(location);
-        }
-
-        public void RemoveAllTiles()
-        {
-            if (Tiles is null)
-                return;
-            try
-            {
-                foreach (TileBase tile in Tiles)
-                {
-                    if (tile != null)
-                        RemoveTerrain(tile);
-                }
-            }
-            catch (Exception)
-            {
-                GameLoop.WriteToLog("Tried to destroy a tile that didn't exist!");
-            }
         }
 
         /// <summary>
@@ -477,8 +445,7 @@ namespace MagusEngine.Core
         }
 
         /// <summary>
-        /// Forcefully sets a seed to a map, if you want to generate a new seed for the map,
-        /// use <see cref="SetSeed(int, int, int)"/>
+        /// Forcefully sets a seed to a map, if you want to generate a new seed for the map, use <see cref="SetSeed(int, int, int)"/>
         /// </summary>
         /// <param name="seed">The seed to replace</param>
         internal void SetSeed(ulong seed)
@@ -496,8 +463,8 @@ namespace MagusEngine.Core
         }
 
         /// <summary>
-        /// This is used to get a random point that is walkable inside the map, mainly used when adding an entity
-        /// and there is already an entity there, so it picks another random location.
+        /// This is used to get a random point that is walkable inside the map, mainly used when
+        /// adding an entity and there is already an entity there, so it picks another random location.
         /// </summary>
         /// <returns>Returns an Point to a tile that is walkable and there is no actor there</returns>
         public Point GetRandomWalkableTile()
@@ -521,7 +488,8 @@ namespace MagusEngine.Core
         }
 
         /// <summary>
-        /// Returns if the Point is inside the index of the map, makes sure that nothing tries to go outside the map.
+        /// Returns if the Point is inside the index of the map, makes sure that nothing tries to go
+        /// outside the map.
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
@@ -555,10 +523,10 @@ namespace MagusEngine.Core
         /// <returns></returns>
         public Rectangle MapBounds() => Terrain.Bounds();
 
-        public List<TileBase> ReturnAllTrees()
+        public List<Tile> ReturnAllTrees()
         {
-            List<TileBase> result = new List<TileBase>();
-            foreach (TileBase tree in Tiles)
+            List<Tile> result = new List<Tile>();
+            foreach (Tile tree in Tiles)
             {
                 if (tree.Name.Equals("Tree"))
                 {
@@ -698,14 +666,14 @@ namespace MagusEngine.Core
                 }
                 try
                 {
-                    TileBase tile;
+                    Tile tile;
                     if (str.Equals("debug_tree"))
                     {
-                        tile = TileEncyclopedia.GenericTree(pos);
+                        tile = TileFactory.GenericTree(pos);
                     }
                     else if (str.Equals("t_grass"))
                     {
-                        tile = TileEncyclopedia.GenericGrass(pos, this);
+                        tile = TileFactory.GenericGrass(pos, this);
                     }
                     else
                     {
@@ -756,13 +724,13 @@ namespace MagusEngine.Core
 
         private void OnObjectRemoved(object? sender, ItemEventArgs<IGameObject> e)
         {
-            if (e.Item is not TileBase)
+            if (e.Item is not Tile)
                 _idMap.Remove(e.Item.ID);
         }
 
         private void OnObjectAdded(object? sender, ItemEventArgs<IGameObject> e)
         {
-            if (e.Item is not TileBase)
+            if (e.Item is not Tile)
                 _idMap[e.Item.ID] = e.Item;
         }
 
@@ -773,7 +741,7 @@ namespace MagusEngine.Core
         public void DestroyMap()
         {
             RemoveAllEntities();
-            RemoveAllTiles();
+            //RemoveAllTiles();
             if (GoRogueComponents.Count > 0)
                 GoRogueComponents.GetFirstOrDefault<FOVHandler>()?.DisposeMap();
             _lastCalledActors.Clear();
@@ -896,13 +864,13 @@ namespace MagusEngine.Core
 
     public class ControlledGameObjectChangedArgs : EventArgs
     {
-        public MagiEntity OldObject;
+        public MagiEntity? OldObject;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="oldObject"/>
-        public ControlledGameObjectChangedArgs(MagiEntity oldObject) => OldObject = oldObject;
+        public ControlledGameObjectChangedArgs(MagiEntity? oldObject) => OldObject = oldObject;
     }
 
     #endregion Event

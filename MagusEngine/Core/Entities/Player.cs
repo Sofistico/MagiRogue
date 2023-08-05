@@ -1,5 +1,6 @@
 ﻿using Arquimedes.Data;
-using MagiRogue.GameSys.Magic;
+using MagusEngine.Core.Magic;
+using MagusEngine.Systems;
 using MagusEngine.Utils;
 using SadRogue.Primitives;
 using System.Collections.Generic;

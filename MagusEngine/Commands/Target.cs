@@ -1,11 +1,11 @@
 ﻿using GoRogue.GameFramework;
 using GoRogue.Pathing;
 using MagiRogue.Data.Enumerators;
-using MagiRogue.GameSys.Magic;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.UI.Windows;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
+using MagusEngine.Core.Magic;
 using MagusEngine.Utils;
 using SadRogue.Primitives;
 using System;

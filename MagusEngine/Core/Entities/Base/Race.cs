@@ -9,6 +9,7 @@ using System.Linq;
 using Arquimedes.Data;
 using MagusEngine.Utils.Extensions;
 using MagusEngine.Serialization;
+using MagusEngine.Systems;
 
 namespace MagusEngine.Core.Entities.Base
 {

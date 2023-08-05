@@ -1,7 +1,7 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.Entities.Core;
-using MagiRogue.GameSys.Magic;
+using MagusEngine.Core.Magic;
 using SadConsole;
 using SadRogue.Primitives;
 using System.Collections.Generic;
@@ -12,9 +12,9 @@ namespace MagiRogue.Test.System.Magic
 {
     public class MagicTest
     {
-        private MagiRogue.GameSys.Magic.MagicManager weakMagic;
-        private MagiRogue.GameSys.Magic.MagicManager mediumMagic;
-        private MagiRogue.GameSys.Magic.MagicManager strongMagic;
+        private MagicManager weakMagic;
+        private MagicManager mediumMagic;
+        private MagicManager strongMagic;
 
         [Fact]
         public void TestCasting()

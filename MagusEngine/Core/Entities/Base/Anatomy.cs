@@ -7,8 +7,9 @@ using System.Runtime.Serialization;
 using System.Text;
 using Arquimedes.Data;
 using MagusEngine.Commands;
-using MagusEngine.ECS.Components;
 using MagusEngine.Utils;
+using MagusEngine.ECS.Components.ActorComponents;
+using MagusEngine.Systems;
 
 namespace MagusEngine.Core.Entities.Base
 {

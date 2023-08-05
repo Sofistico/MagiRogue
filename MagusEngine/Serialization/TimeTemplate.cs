@@ -1,4 +1,4 @@
-﻿using MagiRogue.GameSys.Time;
+﻿using MagusEngine.Systems.Time;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

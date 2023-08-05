@@ -1,6 +1,6 @@
 ﻿using MagiRogue.Data.Enumerators;
-using MagiRogue.GameSys.Civ;
-using MagiRogue.GameSys.Planet;
+using MagusEngine.Core.Civ;
+using MagusEngine.Core.WorldStuff;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;

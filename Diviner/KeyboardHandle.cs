@@ -2,9 +2,7 @@
 using MagiRogue.Components.Ai;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization.MapSerialization;
-using MagiRogue.GameSys;
 using MagiRogue.GameSys.Tiles;
-using MagiRogue.GameSys.Time;
 using Diviner.Enums;
 using Diviner.Windows;
 using Newtonsoft.Json;
@@ -16,6 +14,9 @@ using MagusEngine.Commands;
 using MagusEngine.Utils.Extensions;
 using MagusEngine.ECS.Components;
 using MagusEngine.Core.Entities;
+using MagusEngine.ECS.Components.ActorComponents;
+using MagusEngine.Core;
+using MagusEngine.Systems.Time;
 
 namespace Diviner
 {
@@ -165,7 +166,7 @@ namespace Diviner
                 if (!GetPlayer.Bumped && world.CurrentMap.ControlledEntitiy is Player)
                 {
                     world.ProcessTurn(TimeHelper.GetWalkTime(GetPlayer,
-                        world.CurrentMap.GetTileAt<TileBase>(GetPlayer.Position)), true);
+                        world.CurrentMap.GetTileAt<Tile>(GetPlayer.Position)), true);
                 }
                 else if (world.CurrentMap.ControlledEntitiy is Player)
                 {

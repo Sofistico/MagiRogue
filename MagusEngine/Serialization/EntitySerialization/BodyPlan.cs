@@ -2,6 +2,7 @@
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
 using MagiRogue.Entities.Core;
+using MagusEngine.Systems;
 using System;
 using System.Collections.Generic;
 using System.Linq;

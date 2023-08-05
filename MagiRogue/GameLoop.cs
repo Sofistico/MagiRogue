@@ -1,12 +1,10 @@
-﻿using GoRogue.Random;
+﻿using Arquimedes;
+using Arquimedes.Settings;
+using Arquimedes.Utils;
+using Diviner;
 using MagiRogue.GameSys;
-using MagiRogue.GameSys.Time;
-using MagiRogue.Settings;
-using MagiRogue.UI;
-using MagiRogue.Utils;
+using MagusEngine;
 using SadConsole;
-using SadRogue.Primitives;
-using ShaiRandom.Generators;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -53,7 +51,7 @@ public static class GameLoop
 
     private static void ConfigureServices()
     {
-        Locator.InitializeCommonServices();
+        Locator.InitializeSingletonServices();
     }
 
     // runs each frame
@@ -81,7 +79,7 @@ public static class GameLoop
 
     private static void Init()
     {
-        Palette.AddToColorDictionary();
+        MagiPalette.AddToColorDictionary();
         // Makes so that no excpetion happens for a custom control
         //SadConsole.UI.Themes.Library.Default.SetControlTheme(typeof(UI.Controls.MagiButton),
         //   typeof(SadConsole.UI.Themes.ButtonTheme));
@@ -89,65 +87,15 @@ public static class GameLoop
         //Instantiate the UIManager
         UIManager = (UIManager)GameHost.Instance.Screen!;
 
-        // Now let the UIManager create its consoles
-        // so they can use the World data
+        // Now let the UIManager create its consoles so they can use the World data
         UIManager.InitMainMenu(beginTest);
     }
 
     #endregion configuration
 
-    #region global methods
-
-    /// <summary>
-    /// Gets the current map, a shorthand for GameLoop.Universe.CurrentMap
-    /// </summary>
-    /// <returns></returns>
-    public static Map GetCurrentMap()
-    {
-        return Universe?.CurrentMap;
-    }
-
-    public static void SetIdGen(uint lastId) => Locator.AddService<IDGenerator>(new(lastId + 1));
-
-    public static void AddMessageLog(string message, bool newLine = true)
-    {
-        if (UIManager is null && UIManager.MessageLog is null)
-            return;
-        UIManager.MessageLog.PrintMessage(message, newLine);
-        UIManager.StatusWindow.ChangePositionToUpMessageLog();
-    }
-
-    public static int GetNHoursFromTurn(int hours)
-    {
-        int turn = Universe.Time.Turns;
-        int turnInNHours = turn * TimeDefSpan.SecondsPerHour * hours;
-        return turnInNHours;
-    }
-
-    #region IdCounters
-
-    public static int GetHfId()
-    {
-        return SequentialIdGenerator.HistoricalFigureId;
-    }
-
-    public static int GetCivId()
-        => SequentialIdGenerator.CivId;
-
-    public static int GetMythId()
-    {
-        return SequentialIdGenerator.MythId;
-    }
-
-    public static int GetAbilityId()
-    {
-        return SequentialIdGenerator.AbilityId;
-    }
-
-    #endregion IdCounters
-
     #region Logs
 
+    // TODO: move to it's own service
     public static void WriteToLog(List<string> errors)
     {
         // so that it doesn't block the main thread!
@@ -180,6 +128,4 @@ public static class GameLoop
     }
 
     #endregion Logs
-
-    #endregion global methods
 }

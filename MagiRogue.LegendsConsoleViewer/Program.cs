@@ -1,7 +1,7 @@
 ﻿using GoRogue.DiceNotation.Terms;
 using MagiRogue.Entities;
 using MagiRogue.GameSys.Civ;
-using MagiRogue.GameSys.Planet;
+using MagusEngine.Generators;
 using Newtonsoft.Json;
 
 namespace MagiRogue.LegendsConsoleViewer

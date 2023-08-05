@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MagiRogue.GameSys.Magic;
 using Newtonsoft.Json;
 using MagiRogue.Data.Enumerators;
+using MagusEngine.Core.Magic;
 
 namespace MagiRogue.Test.Data
 {

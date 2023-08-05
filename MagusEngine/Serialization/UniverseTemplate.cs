@@ -2,8 +2,7 @@
 using Arquimedes.Settings;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.Entities;
-using MagiRogue.GameSys;
-using MagiRogue.GameSys.Planet;
+using MagusEngine.Core;
 using MagusEngine.Serialization.MapConverter;
 using Newtonsoft.Json;
 using SadRogue.Primitives;

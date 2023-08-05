@@ -29,6 +29,7 @@ namespace MagusEngine
         {
             AddService<MessageBusService>(new());
             AddService<IDGenerator>(new());
+            AddService<SavingService>(new());
         }
     }
 }
