@@ -2,6 +2,7 @@
 using MagiRogue.Data.Enumerators;
 using MagiRogue.GameSys.Tiles;
 using MagusEngine.Core;
+using MagusEngine.Core.MapStuff;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;

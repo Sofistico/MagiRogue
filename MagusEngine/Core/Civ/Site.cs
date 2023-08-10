@@ -9,9 +9,9 @@ using System.Collections.Specialized;
 using MagiRogue.GameSys.Planet;
 using MagiRogue.Entities;
 using MagiRogue.Utils.Extensions;
-using MagusEngine.Core;
 using MagusEngine.Core.WorldStuff.History;
 using MagusEngine.Core.WorldStuff.TechRes;
+using MagusEngine.Core.MapStuff;
 
 namespace MagusEngine.Core.Civ
 {

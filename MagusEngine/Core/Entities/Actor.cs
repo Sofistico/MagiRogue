@@ -13,6 +13,7 @@ using MagusEngine.Utils.Extensions;
 using MagusEngine.Serialization.EntitySerialization;
 using MagusEngine.ECS.Components.ActorComponents;
 using MagusEngine.Systems.Physics;
+using MagusEngine.Core.MapStuff;
 
 namespace MagusEngine.Core.Entities
 {

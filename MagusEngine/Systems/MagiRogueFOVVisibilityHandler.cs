@@ -1,5 +1,6 @@
 ﻿using MagusEngine.Core;
 using MagusEngine.Core.Entities.Base;
+using MagusEngine.Core.MapStuff;
 using SadRogue.Primitives;
 
 namespace MagusEngine.Systems

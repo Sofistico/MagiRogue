@@ -4,7 +4,7 @@ using MagiRogue.Data;
 using MagiRogue.Data.Enumerators;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
-using MagusEngine.Core;
+using MagusEngine.Core.MapStuff;
 
 namespace MagusEngine.Generators.MapGen
 {
@@ -87,7 +87,7 @@ namespace MagusEngine.Generators.MapGen
             var pointBegin = new Point(_map.Width / 2, _map.Height / 2);
 
             var room = _map.AddRoom(r, pointBegin);
-            waterTile = _map.GetAllTilesOfType<WaterTile>()[0];
+            waterTile = _map.GetAllTilesWithComponents<WaterTile>()[0];
             PlaceUnitsInForest(room);
         }
 

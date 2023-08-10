@@ -1,4 +1,4 @@
-﻿using MagusEngine.Core;
+﻿using MagusEngine.Core.MapStuff;
 using Newtonsoft.Json;
 using System;
 

@@ -2,15 +2,12 @@
 using GoRogue.GameFramework;
 using MagusEngine.Core.Magic;
 using SadRogue.Primitives;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 
 namespace MagusEngine.Core.Entities.Base
 {
-    // Extends the SadConsole.Entities.Entity class
-    // by adding the IGameObject of SadConsole
+    // Extends the SadConsole.Entities.Entity class by adding the IGameObject of SadConsole
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public class MagiEntity : SadConsole.Entities.Entity, IGameObject
     {
@@ -67,7 +64,7 @@ namespace MagusEngine.Core.Entities.Base
 
         #region BackingField fields
 
-        public Map CurrentMap => backingField.CurrentMap;
+        public Map? CurrentMap => backingField.CurrentMap;
 
         public bool IsTransparent { get => backingField.IsTransparent; set => backingField.IsTransparent = value; }
         public bool IsWalkable { get => backingField.IsWalkable; set => backingField.IsWalkable = value; }
@@ -189,7 +186,7 @@ namespace MagusEngine.Core.Entities.Base
 
         private event EventHandler<ValueChangedEventArgs<Point>>? PositionablePositionChanged;
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         event EventHandler<ValueChangedEventArgs<Point>>? IPositionable.PositionChanged
         {
             add => PositionablePositionChanged += value;

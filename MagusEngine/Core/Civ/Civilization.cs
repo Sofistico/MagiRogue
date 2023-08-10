@@ -6,6 +6,7 @@ using MagiRogue.GameSys.Planet;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
 using MagiRogue.Utils.Extensions;
+using MagusEngine.Core.MapStuff;
 using MagusEngine.Core.WorldStuff.History;
 using MagusEngine.Core.WorldStuff.TechRes;
 using Newtonsoft.Json;

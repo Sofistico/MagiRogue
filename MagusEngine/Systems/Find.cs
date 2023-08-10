@@ -2,6 +2,7 @@
 using MagiRogue.Data.Enumerators;
 using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils.Extensions;
+using MagusEngine.Core;
 using MagusEngine.Core.Civ;
 using MagusEngine.Core.WorldStuff.History;
 using System.Collections.Generic;

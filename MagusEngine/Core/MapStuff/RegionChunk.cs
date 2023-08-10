@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MagusEngine.Core
+namespace MagusEngine.Core.MapStuff
 {
     /// <summary>
     /// Region chunks for the world map, each chunk contains 3 * 3 maps, in a grid like manner where the

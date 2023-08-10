@@ -7,6 +7,7 @@ using MagiRogue.GameSys.Tiles;
 using MagiRogue.Utils;
 using MagiRogue.Utils.Extensions;
 using MagusEngine.Core.Civ;
+using MagusEngine.Core.MapStuff;
 using SadConsole;
 using SadRogue.Primitives;
 using System;

@@ -14,9 +14,9 @@ using MagusEngine.Core.Entities.Base;
 using MagusEngine.Utils;
 using MagusEngine.Serialization;
 using MagusEngine.ECS.Components.ActorComponents;
-using MagusEngine.Core;
 using MagusEngine.Systems.Time;
 using MagusEngine.Systems;
+using MagusEngine.Core.MapStuff;
 
 namespace MagusEngine.Commands
 {

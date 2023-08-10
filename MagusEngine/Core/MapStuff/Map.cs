@@ -18,7 +18,7 @@ using System.Diagnostics;
 using System.Text.Json.Serialization;
 using System.Xml;
 
-namespace MagusEngine.Core
+namespace MagusEngine.Core.MapStuff
 {
     /// <summary>
     /// Stores, manipulates and queries Tile data, uses GoRogue Map class
@@ -30,7 +30,7 @@ namespace MagusEngine.Core
         #region Fields
 
         private MagiEntity? _gameObjectControlled;
-        private SadConsole.Entities.Renderer _entityRender;
+        private Renderer _entityRender;
         private bool _disposed;
         private Dictionary<Func<Actor, bool>, Actor[]> _lastCalledActors = new();
         private bool _needsToUpdateActorsDict;
@@ -104,7 +104,7 @@ namespace MagusEngine.Core
             GoRogueComponents.Add
                 (new MagiRogueFOVVisibilityHandler(this, Color.DarkSlateGray, (int)MapLayer.GHOSTS));
 
-            _entityRender = new SadConsole.Entities.Renderer();
+            _entityRender = new Renderer();
             MapName = mapName;
             MapZoneConnections = new();
 
@@ -149,7 +149,7 @@ namespace MagusEngine.Core
 
         public void SetSeed(ulong seed, uint x, uint y, uint i)
         {
-            Seed = seed + x + y + (x * x) + (y * y) + (x * y) - (x + y + i);
+            Seed = seed + x + y + x * x + y * y + x * y - (x + y + i);
         }
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace MagusEngine.Core
                 return false;
 
             // then return whether the tile is walkable
-            return Terrain[(location.Y * Width) + location.X]?.IsWalkable == true;
+            return Terrain[location.Y * Width + location.X]?.IsWalkable == true;
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace MagusEngine.Core
                 return true;
 
             // then return whether the tile is walkable
-            return Terrain[(location.Y * Width) + location.X]?.IsWalkable == true;
+            return Terrain[location.Y * Width + location.X]?.IsWalkable == true;
         }
 
         /// <summary>
@@ -200,7 +200,7 @@ namespace MagusEngine.Core
                 var room = Rooms[i];
                 for (int t = 0; t < room.DoorsPoint.Count; t++)
                 {
-                    Tile door = GetTileAt<DoorComponent>(room.DoorsPoint[t]);
+                    Tile? door = GetTileAt<DoorComponent>(room.DoorsPoint[t]);
                     room.Doors.Add(door);
                 }
             }
@@ -220,7 +220,7 @@ namespace MagusEngine.Core
 
         public Tile GetClosestWaterTile(int range, Point position)
         {
-            var waters = GetAllTilesOfType<WaterTile>();
+            var waters = GetAllTilesWithComponents<WaterTile>();
             return position.GetClosest<WaterTile>(range, waters, null);
         }
 
@@ -748,7 +748,7 @@ namespace MagusEngine.Core
             _lastCalledActors = null!;
             Tiles = null!;
             ControlledGameObjectChanged = null!;
-            this.ControlledEntitiy = null!;
+            ControlledEntitiy = null!;
             _entityRender = null!;
             GoRogueComponents.Clear();
             _disposed = true;
@@ -845,8 +845,16 @@ namespace MagusEngine.Core
             return layer.ToArray();
         }*/
 
-        public TFind[] GetAllTilesOfType<TFind>()
+        public Tile[] GetAllTilesWithComponents<TFind>()
         {
+            foreach (var item in Terrain.Positions())
+            {
+                var tile = (Tile?)Terrain[item];
+                if (tile?.HasComponent<TFind>() == true)
+                {
+
+                }
+            }
             return Tiles.OfType<TFind>().ToArray();
         }
 

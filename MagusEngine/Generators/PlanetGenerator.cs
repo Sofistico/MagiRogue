@@ -9,6 +9,7 @@ using MagiRogue.Utils;
 using MagiRogue.Utils.Extensions;
 using MagusEngine.Core;
 using MagusEngine.Core.Civ;
+using MagusEngine.Core.MapStuff;
 using MagusEngine.Core.WorldStuff;
 using MagusEngine.Core.WorldStuff.History;
 using SadRogue.Primitives;

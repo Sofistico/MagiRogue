@@ -10,7 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace MagusEngine.Core
+namespace MagusEngine.Core.MapStuff
 {
     // made with http://www.jgallant.com/procedurally-generating-wrapping-world-maps-in-unity-csharp-part-1/#intro
     [JsonConverter(typeof(PlanetMapJsonConverter))]

@@ -9,6 +9,7 @@ using MagiRogue.Utils;
 using MagiRogue.Data;
 using MagiRogue.Utils.Extensions;
 using MagiRogue.Entities.Core;
+using MagusEngine.Core.MapStuff;
 
 namespace MagusEngine.Core.WorldStuff.History
 {

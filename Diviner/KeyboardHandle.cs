@@ -17,6 +17,7 @@ using MagusEngine.Core.Entities;
 using MagusEngine.ECS.Components.ActorComponents;
 using MagusEngine.Core;
 using MagusEngine.Systems.Time;
+using MagusEngine.Core.MapStuff;
 
 namespace Diviner
 {

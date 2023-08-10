@@ -1,13 +1,11 @@
-﻿using Arquimedes.Enumerators;
-using GoRogue.Components;
+﻿using GoRogue.Components;
 using GoRogue.Components.ParentAware;
 using GoRogue.GameFramework;
-using SadConsole;
 using SadRogue.Primitives;
 
 namespace MagusEngine.Core
 {
-    public class Tile : IGameObject
+    public partial class Tile : IGameObject
     {
         private readonly GameObject _gameObject;
 
@@ -16,8 +14,7 @@ namespace MagusEngine.Core
         public bool IsTransparent { get => ((IGameObject)_gameObject).IsTransparent; set => ((IGameObject)_gameObject).IsTransparent = value; }
         public bool IsWalkable { get => ((IGameObject)_gameObject).IsWalkable; set => ((IGameObject)_gameObject).IsWalkable = value; }
 
-        public ColoredGlyph Appearence { get; set; }
-        public int MoveTimeCost { get; set; } = 100;
+        #region IGameObj
 
         public uint ID => ((IHasID)_gameObject).ID;
 
@@ -136,17 +133,6 @@ namespace MagusEngine.Core
             ((IGameObject)_gameObject).OnMapChanged(newMap);
         }
 
-        public Tile(Color foreground,
-            Color background,
-            char glyph,
-            bool isWalkable,
-            bool isTransparent)
-        {
-            Appearence = new(foreground, background, glyph);
-            _gameObject = new((int)MapLayer.TERRAIN,
-                isWalkable,
-                isTransparent,
-                Locator.GetService<IDGenerator>().UseID);
-        }
+        #endregion IGameObj
     }
 }

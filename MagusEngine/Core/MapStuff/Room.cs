@@ -1,13 +1,11 @@
-﻿using MagiRogue.Data.Enumerators;
-using MagiRogue.Data.Serialization.MapSerialization;
-using MagiRogue.GameSys.Tiles;
-using MagiRogue.Utils.Extensions;
+﻿using Arquimedes.Enumerators;
+using MagusEngine.ECS.Components.TilesComponents;
+using MagusEngine.Serialization.MapConverter;
+using MagusEngine.Utils.Extensions;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace MagusEngine.Core
+namespace MagusEngine.Core.MapStuff
 {
     public sealed class Room
     {
@@ -20,13 +18,13 @@ namespace MagusEngine.Core
         #region Props
 
         public Rectangle RoomRectangle { get; set; }
-        public Point[] RoomPoints { get; set; }
+        public Point[] RoomPoints { get; set; } = default!;
         public bool NonRectangleRoom => RoomRectangle == Rectangle.Empty;
 
         public RoomTag Tag { get; set; }
 
         [JsonIgnore]
-        public List<TileDoor> Doors { get; set; } = new List<TileDoor>();
+        public List<Tile> Doors { get; set; } = new List<Tile>();
 
         public List<Point> DoorsPoint { get; set; } = new List<Point>();
 
@@ -37,7 +35,7 @@ namespace MagusEngine.Core
         public Dictionary<string, object> Terrain { get; set; } = new();
 
         [JsonIgnore]
-        public RoomTemplate Template { get; set; }
+        public RoomTemplate? Template { get; set; }
 
         #endregion Props
 
@@ -84,14 +82,14 @@ namespace MagusEngine.Core
             Tag = tag;
         }
 
-        public List<TileDoor> GetAllDoorsInRoom()
+        public List<Tile> GetAllDoorsInRoom()
         {
-            List<TileDoor> doors = new List<TileDoor>();
+            List<Tile> doors = new List<Tile>();
 
             for (int i = 0; i < DoorsPoint.Count; i++)
             {
                 Point point = DoorsPoint[i];
-                TileDoor door = GameLoop.GetCurrentMap().GetTileAt<TileDoor>(point);
+                Tile? door = null;
                 doors.Add(door);
             }
 
@@ -103,7 +101,6 @@ namespace MagusEngine.Core
             for (int i = 0; i < Doors.Count; i++)
             {
                 Point point = Doors[i].Position;
-                //TileDoor door = GameLoop.GetCurrentMap().GetTileAt<TileDoor>(point);
                 DoorsPoint.Add(point);
             }
         }
@@ -116,7 +113,7 @@ namespace MagusEngine.Core
             {
                 int indexDoor = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(Doors.Count);
                 if (Doors.Count > 0)
-                    Doors[indexDoor].Locked = true;
+                    Doors[indexDoor].GoRogueComponents.GetFirst<DoorComponent>().Locked = true;
             }
         }
 
@@ -124,20 +121,21 @@ namespace MagusEngine.Core
         {
             foreach (var door in Doors)
             {
-                door.Locked = false;
+                var comp = door.GetComponent<DoorComponent>();
+                if (comp is not null)
+                    comp.Locked = false;
             }
         }
 
         public List<Point> ReturnRecPerimiter()
         {
             //establish room boundaries
-            int xMin = RoomRectangle.ToMonoRectangle().Left;
-            int xMax = RoomRectangle.ToMonoRectangle().Right;
-            int yMin = RoomRectangle.ToMonoRectangle().Bottom;
-            int yMax = RoomRectangle.ToMonoRectangle().Top;
+            int xMin = RoomRectangle.MinExtentX;
+            int xMax = RoomRectangle.MaxExtentX;
+            int yMin = RoomRectangle.MinExtentY;
+            int yMax = RoomRectangle.MaxExtentY;
 
-            // build a list of room border cells using a series of
-            // straight lines
+            // build a list of room border cells using a series of straight lines
             List<Point> borderCells = PointUtils.GetTileLocationsAlongLine(xMin, yMin, xMax, yMin).ToList();
             borderCells.AddRange(PointUtils.GetTileLocationsAlongLine(xMin, yMin, xMin, yMax));
             borderCells.AddRange(PointUtils.GetTileLocationsAlongLine(xMin, yMax, xMax, yMax));

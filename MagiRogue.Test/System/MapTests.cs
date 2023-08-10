@@ -5,7 +5,7 @@ using MagiRogue.Data.Serialization.MapSerialization;
 using MagiRogue.Entities;
 using MagiRogue.GameSys;
 using MagiRogue.GameSys.Tiles;
-using MagusEngine.Core;
+using MagusEngine.Core.MapStuff;
 using Newtonsoft.Json;
 using SadConsole;
 using SadRogue.Primitives;

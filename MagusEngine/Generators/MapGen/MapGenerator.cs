@@ -6,6 +6,7 @@ using MagiRogue.Utils;
 using MagiRogue.Utils.Extensions;
 using MagusEngine.Core;
 using MagusEngine.Core.Civ;
+using MagusEngine.Core.MapStuff;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 using ShaiRandom.Generators;

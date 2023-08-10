@@ -4,7 +4,7 @@ using MagiRogue.Entities;
 using MagiRogue.GameSys;
 using MagiRogue.GameSys.Planet;
 using MagiRogue.GameSys.Tiles;
-using MagusEngine.Core;
+using MagusEngine.Core.MapStuff;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using Xunit;
