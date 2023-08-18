@@ -1,26 +1,24 @@
-﻿using Arquimedes.Data.Serialization.EntitySerialization;
-using MagiRogue.Data.Enumerators;
-using MagiRogue.GameSys.Tiles;
-using MagiRogue.Utils.Extensions;
-using MagusEngine.Core;
+﻿using Arquimedes.Enumerators;
 using MagusEngine.Core.Civ;
 using MagusEngine.Core.WorldStuff.History;
-using System.Collections.Generic;
+using MagusEngine.ECS.Components.TilesComponents;
+using MagusEngine.Serialization.EntitySerialization;
+using MagusEngine.Utils.Extensions;
 
 namespace MagusEngine.Systems
 {
     public static class Find
     {
-        private static AccumulatedHistory history;
+        private static AccumulatedHistory? history;
 
         // big ass singleton for ease of finding information!
         public static int Year { get => history.Year; }
-        public static WorldTile[,] Tiles { get; private set; }
+        public static WorldTile[,]? Tiles { get; private set; }
         public static List<Civilization> Civs { get => history.Civs; }
         public static List<HistoricalFigure> Figures { get => history.Figures; }
         public static List<Site> Sites { get => history.AllSites; }
         public static List<ItemTemplate> Items { get => history.ImportantItems; }
-        public static List<Ruleset> Rules { get; private set; }
+        public static List<Ruleset>? Rules { get; private set; }
         public static string PlayerDeathReason { get; set; } = "undefined!";
 
         public static void PopulateValues(AccumulatedHistory h, WorldTile[,] tiles)

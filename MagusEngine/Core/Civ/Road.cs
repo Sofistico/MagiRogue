@@ -1,8 +1,7 @@
-﻿using MagiRogue.Data.Enumerators;
-using MagiRogue.Data.Serialization.MapSerialization;
-using MagiRogue.GameSys.Tiles;
+﻿using Arquimedes.Enumerators;
+using MagusEngine.ECS.Components.TilesComponents;
+using MagusEngine.Serialization.MapConverter;
 using Newtonsoft.Json;
-using System.Collections.Generic;
 
 namespace MagusEngine.Core.Civ
 {

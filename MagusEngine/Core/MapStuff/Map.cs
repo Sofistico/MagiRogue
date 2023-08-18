@@ -9,14 +9,15 @@ using MagusEngine.Factory;
 using MagusEngine.Serialization.MapConverter;
 using MagusEngine.Systems;
 using MagusEngine.Utils;
+using MagusEngine.Utils.Extensions;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SadConsole;
 using SadConsole.Entities;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 using SadRogue.Primitives.SpatialMaps;
 using System.Diagnostics;
-using System.Text.Json.Serialization;
-using System.Xml;
 
 namespace MagusEngine.Core.MapStuff
 {
@@ -213,7 +214,7 @@ namespace MagusEngine.Core.MapStuff
         /// <typeparam name="T"></typeparam>
         /// <param name="location"></param>
         /// <returns></returns>
-        public T GetEntityAt<T>(Point location) where T : MagiEntity
+        public T? GetEntityAt<T>(Point location) where T : MagiEntity
         {
             return Entities.GetItemsAt(location).OfType<T>().FirstOrDefault(e => e.CanInteract);
         }
@@ -404,13 +405,7 @@ namespace MagusEngine.Core.MapStuff
             renderer.SadComponents.Add(_entityRender);
             _entityRender.DoEntityUpdate = true;
 
-            var layerMask = Entities.GetLayersInMask(LayerMasker.Mask(
-                (int)MapLayer.ITEMS,
-                (int)MapLayer.GHOSTS,
-                (int)MapLayer.FURNITURE,
-                (int)MapLayer.ACTORS));
-
-            foreach (var spatialMap in layerMask)
+            foreach (var spatialMap in Entities.GetLayersInMask(LayerMasker.MaskAllAbove((int)MapLayer.TERRAIN)))
             {
                 _entityRender.AddRange(spatialMap.Items.Cast<MagiEntity>());
             }
@@ -424,7 +419,6 @@ namespace MagusEngine.Core.MapStuff
                 LastPlayerPosition = player.Position;
             var json = JsonConvert.SerializeObject(
                 this,
-                Formatting.Indented,
                 new JsonSerializerSettings()
                 {
                     NullValueHandling = NullValueHandling.Ignore
@@ -845,14 +839,13 @@ namespace MagusEngine.Core.MapStuff
             return layer.ToArray();
         }*/
 
-        public Tile[] GetAllTilesWithComponents<TFind>()
+        public Tile[] GetAllTilesWithComponents<TFind>() where TFind : class
         {
             foreach (var item in Terrain.Positions())
             {
                 var tile = (Tile?)Terrain[item];
                 if (tile?.HasComponent<TFind>() == true)
                 {
-
                 }
             }
             return Tiles.OfType<TFind>().ToArray();

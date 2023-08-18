@@ -1,6 +1,7 @@
 ﻿using MagusEngine.Core;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
+using MagusEngine.ECS.Components.ActorComponents;
 using SadRogue.Primitives;
 
 namespace MagusEngine.Systems
@@ -120,23 +121,23 @@ namespace MagusEngine.Systems
         /// <param name="terrain">Terrain to modify.</param>
         protected override void UpdateTerrainSeen(Tile terrain)
         {
-            terrain.IsVisible = true;
+            terrain.Appearence.IsVisible = true;
 
-            if (terrain.GoRogueComponents.Contains<Components.IllusionComponent>())
+            if (terrain.GoRogueComponents.Contains<IllusionComponent>())
             {
-                var illusion = terrain.GoRogueComponents.GetFirstOrDefault<Components.IllusionComponent>();
-                terrain.LastSeenAppereance.CopyAppearanceFrom(illusion.FakeAppearence);
+                var illusion = terrain.GoRogueComponents.GetFirstOrDefault<IllusionComponent>();
+                terrain.LastSeenAppereance?.CopyAppearanceFrom(illusion.FakeAppearence);
             }
 
             // If the appearances don't match currently, synchronize them
-            if (!terrain.LastSeenAppereance.Matches(terrain))
+            if (terrain.LastSeenAppereance?.Matches(terrain.Appearence) == false)
             {
-                terrain.CopyAppearanceFrom(terrain.LastSeenAppereance);
+                terrain.Appearence.CopyAppearanceFrom(terrain.LastSeenAppereance);
             }
-            if (terrain.Vegetations.All(i => i is not null))
-            {
-                terrain.CopyAppearanceFrom(terrain.Vegetations.GetRandomItemFromList().SadGlyph);
-            }
+            //if (terrain.Vegetations.All(i => i is not null))
+            //{
+            //    terrain.CopyAppearanceFrom(terrain.Vegetations.GetRandomItemFromList().SadGlyph);
+            //}
         }
 
         /// <summary>
@@ -153,13 +154,13 @@ namespace MagusEngine.Systems
             else
             {
                 // If the unseen tile isn't explored, it's invisible
-                terrain.IsVisible = false;
+                terrain.Appearence.IsVisible = false;
             }
         }
 
         private void ApplyMemoryAppearance(Tile tile)
         {
-            tile.Foreground = ExploredColorTint;
+            tile.Appearence.Foreground = ExploredColorTint;
         }
     }
 }

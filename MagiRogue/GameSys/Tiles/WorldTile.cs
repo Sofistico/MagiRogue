@@ -1,5 +1,4 @@
-﻿using MagiRogue.Data.Enumerators;
-using MagusEngine.Core.Civ;
+﻿using MagusEngine.Core.Civ;
 using MagusEngine.Core.WorldStuff;
 using SadRogue.Primitives;
 using System;
@@ -34,8 +33,8 @@ namespace MagiRogue.GameSys.Tiles
         public int Bitmask { get; private set; }
 
         /// <summary>
-        /// The FloodFilled variable will be used to keep
-        /// track of which tiles have already been processed by the flood filling algorithm
+        /// The FloodFilled variable will be used to keep track of which tiles have already been
+        /// processed by the flood filling algorithm
         /// </summary>
         public bool FloodFilled { get; set; }
 
@@ -54,8 +53,7 @@ namespace MagiRogue.GameSys.Tiles
         public bool Visited { get; internal set; }
 
         /// <summary>
-        /// The name of the 9x9 region of the local map
-        /// Randomly generated
+        /// The name of the 9x9 region of the local map Randomly generated
         /// </summary>
         public string RegionName { get; internal set; }
 
@@ -75,191 +73,6 @@ namespace MagiRogue.GameSys.Tiles
         {
         }
 
-        public void UpdateBiomeBitmask()
-        {
-            int count = 0;
-
-            if (Collidable && Top != null && Top.BiomeType == BiomeType)
-                count++;
-            if (Collidable && Bottom != null && Bottom.BiomeType == BiomeType)
-                count += 4;
-            if (Collidable && Left != null && Left.BiomeType == BiomeType)
-                count += 8;
-            if (Collidable && Right != null && Right.BiomeType == BiomeType)
-                count += 2;
-
-            BiomeBitmask = count;
-        }
-
-        public void UpdateBitmask()
-        {
-            int count = 0;
-
-            if (Top.HeightType == HeightType)
-                count++;
-            if (Right.HeightType == HeightType)
-                count += 2;
-            if (Left.HeightType == HeightType)
-                count += 4;
-            if (Bottom.HeightType == HeightType)
-                count += 8;
-
-            Bitmask = count;
-        }
-
-        private string GetDebuggerDisplay()
-        {
-            return BiomeType.ToString();
-        }
-
-        public int GetRiverNeighborCount(River river)
-        {
-            try
-            {
-                int count = 0;
-                if (Left.Rivers.Count > 0 && Left.Rivers.Contains(river))
-                    count++;
-                if (Right.Rivers.Count > 0 && Right.Rivers.Contains(river))
-                    count++;
-                if (Top.Rivers.Count > 0 && Top.Rivers.Contains(river))
-                    count++;
-                if (Bottom.Rivers.Count > 0 && Bottom.Rivers.Contains(river))
-                    count++;
-                return count;
-            }
-            catch (Exception)
-            {
-                throw new Exception("An error occured in the river count method!");
-            }
-        }
-
-        public WorldDirection GetLowestNeighbor()
-        {
-            if (Left.HeightValue < Right.HeightValue
-                && Left.HeightValue < Top.HeightValue
-                && Left.HeightValue < Bottom.HeightValue)
-            {
-                return WorldDirection.Left;
-            }
-            else if (Right.HeightValue < Left.HeightValue
-                && Right.HeightValue < Top.HeightValue
-                && Right.HeightValue < Bottom.HeightValue)
-            {
-                return WorldDirection.Right;
-            }
-            else if (Top.HeightValue < Left.HeightValue
-                && Top.HeightValue < Right.HeightValue
-                && Top.HeightValue < Bottom.HeightValue)
-            {
-                return WorldDirection.Right;
-            }
-            else if (Bottom.HeightValue < Left.HeightValue
-                && Bottom.HeightValue < Top.HeightValue
-                && Bottom.HeightValue < Right.HeightValue)
-            {
-                return WorldDirection.Right;
-            }
-            else
-            {
-                return WorldDirection.Bottom;
-            }
-        }
-
-        public void SetRiverPath(River river)
-        {
-            try
-            {
-                if (!Collidable)
-                    return;
-
-                if (!Rivers.Contains(river))
-                {
-                    Rivers.Add(river);
-                }
-            }
-            catch (Exception)
-            {
-                throw new Exception("Recursive river generation failed!");
-            }
-        }
-
-        private void SetRiverTile(River river)
-        {
-            SetRiverPath(river);
-            HeightType = HeightType.River;
-            HeightValue = 0;
-            Collidable = false;
-        }
-
-        public void DigRiver(River river, int size)
-        {
-            SetRiverTile(river);
-            RiverSize = size;
-
-            if (size == 1)
-            {
-                Bottom.SetRiverTile(river);
-                Right.SetRiverTile(river);
-                Bottom.Right.SetRiverTile(river);
-            }
-
-            if (size == 2)
-            {
-                Bottom.SetRiverTile(river);
-                Right.SetRiverTile(river);
-                Bottom.Right.SetRiverTile(river);
-                Top.SetRiverTile(river);
-                Top.Left.SetRiverTile(river);
-                Top.Right.SetRiverTile(river);
-                Left.SetRiverTile(river);
-                Left.Bottom.SetRiverTile(river);
-            }
-
-            if (size == 3)
-            {
-                Bottom.SetRiverTile(river);
-                Right.SetRiverTile(river);
-                Bottom.Right.SetRiverTile(river);
-                Top.SetRiverTile(river);
-                Top.Left.SetRiverTile(river);
-                Top.Right.SetRiverTile(river);
-                Left.SetRiverTile(river);
-                Left.Bottom.SetRiverTile(river);
-                Right.Right.SetRiverTile(river);
-                Right.Right.Bottom.SetRiverTile(river);
-                Bottom.Bottom.SetRiverTile(river);
-                Bottom.Bottom.Right.SetRiverTile(river);
-            }
-
-            if (size == 4)
-            {
-                Bottom.SetRiverTile(river);
-                Right.SetRiverTile(river);
-                Bottom.Right.SetRiverTile(river);
-                Top.SetRiverTile(river);
-                Top.Right.SetRiverTile(river);
-                Left.SetRiverTile(river);
-                Left.Bottom.SetRiverTile(river);
-                Right.Right.SetRiverTile(river);
-                Right.Right.Bottom.SetRiverTile(river);
-                Bottom.Bottom.SetRiverTile(river);
-                Bottom.Bottom.Right.SetRiverTile(river);
-                Left.Bottom.Bottom.SetRiverTile(river);
-                Left.Left.Bottom.SetRiverTile(river);
-                Left.Left.SetRiverTile(river);
-                Left.Left.Top.SetRiverTile(river);
-                Left.Top.SetRiverTile(river);
-                Left.Top.Top.SetRiverTile(river);
-                Top.Top.SetRiverTile(river);
-                Top.Top.Right.SetRiverTile(river);
-                Top.Right.Right.SetRiverTile(river);
-            }
-        }
-
-        public double GetResources()
-        {
-            return MineralValue;
-        }
 
         public override TileBase Copy()
         {

@@ -1,11 +1,10 @@
-﻿using GoRogue.GameFramework;
-using MagiRogue.Data.Enumerators;
-using MagiRogue.Entities.Core;
-using MagiRogue.GameSys.Tiles;
+﻿using Arquimedes.Enumerators;
+using GoRogue.GameFramework;
+using MagusEngine.Core;
+using MagusEngine.Core.Entities.Base;
 using SadRogue.Primitives.GridViews;
 using SadRogue.Primitives.SpatialMaps;
-using System;
-using System.Linq;
+using Map = MagusEngine.Core.MapStuff.Map;
 
 namespace MagusEngine.Systems
 {
@@ -25,14 +24,16 @@ namespace MagusEngine.Systems
             Enabled,
 
             /// <summary>
-            /// Disabled state.  All items in the map will be set as seen, and the FOVVisibilityHandler
-            /// will not set visibility of any items as FOV changes or as items are added/removed.
+            /// Disabled state. All items in the map will be set as seen, and the
+            /// FOVVisibilityHandler will not set visibility of any items as FOV changes or as items
+            /// are added/removed.
             /// </summary>
             DisabledResetVisibility,
 
             /// <summary>
-            /// Disabled state.  No changes to the current visibility of terrain/entities will be made, and the FOVVisibilityHandler
-            /// will not set visibility of any items as FOV changes or as items are added/removed.
+            /// Disabled state. No changes to the current visibility of terrain/entities will be
+            /// made, and the FOVVisibilityHandler will not set visibility of any items as FOV
+            /// changes or as items are added/removed.
             /// </summary>
             DisabledNoResetVisibility
         }
@@ -45,17 +46,17 @@ namespace MagusEngine.Systems
         private FovState _currentState;
 
         /// <summary>
-        /// The current state of the handler.  See <see cref="State"/> documentation for details
-        /// on each possible value.
+        /// The current state of the handler. See <see cref="State"/> documentation for details on
+        /// each possible value.
         /// </summary>
         /// <remarks>
         /// <para>
-        /// If the component has been added to a map, setting this value will set all values in
-        /// the map according to the new state.
+        /// If the component has been added to a map, setting this value will set all values in the
+        /// map according to the new state.
         /// </para>
         /// <para>
-        /// When the component is added to a map, the visibility of all values in that map will
-        /// be set according to this value.
+        /// When the component is added to a map, the visibility of all values in that map will be
+        /// set according to this value.
         /// </para>
         /// </remarks>
         public FovState CurrentState
@@ -67,8 +68,7 @@ namespace MagusEngine.Systems
                 // Nothing to do if the old value is the same as the new
                 if (value == _currentState) return;
 
-                // Otherwise, set the state value, and apply it to the map if
-                // there is one.
+                // Otherwise, set the state value, and apply it to the map if there is one.
                 _currentState = value;
 
                 //ApplyStateToMap()
@@ -101,7 +101,9 @@ namespace MagusEngine.Systems
         /// <summary>
         /// Sets the state of the FOVVisibilityHandler, affecting its behavior appropriately.
         /// </summary>
-        /// <param name="state">The new state for the FOVVisibilityHandler.  See <see cref="FovState"/> documentation for details.</param>
+        /// <param name="state">
+        /// The new state for the FOVVisibilityHandler. See <see cref="FovState"/> documentation for details.
+        /// </param>
         private void SetState(FovState state)
         {
             CurrentState = state;
@@ -111,7 +113,7 @@ namespace MagusEngine.Systems
                 case FovState.Enabled:
                     foreach (Point pos in Map.Positions())
                     {
-                        TileBase terrain = Map.GetTerrainAt<TileBase>(pos);
+                        Tile? terrain = Map.GetTerrainAt<Tile>(pos);
                         if (terrain == null) continue;
                         if (terrain != null && Map.PlayerFOV.BooleanResultView[pos])
                             UpdateTerrainSeen(terrain);
@@ -134,7 +136,7 @@ namespace MagusEngine.Systems
                 case FovState.DisabledNoResetVisibility:
                     foreach (Point pos in Map.Positions())
                     {
-                        TileBase terrain = Map.GetTerrainAt<TileBase>(pos);
+                        Tile? terrain = Map.GetTerrainAt<Tile>(pos);
                         if (terrain == null) return;
                         if (terrain != null)
                             UpdateTerrainSeen(terrain);
@@ -159,10 +161,12 @@ namespace MagusEngine.Systems
         public void Enable() => SetState(FovState.Enabled);
 
         /// <summary>
-        /// Sets the state to disabled.  If <paramref name="resetVisibilityToSeen"/> is true, all items will be set to seen before
-        /// the FOVVisibilityHandler is disabled.
+        /// Sets the state to disabled. If <paramref name="resetVisibilityToSeen"/> is true, all
+        /// items will be set to seen before the FOVVisibilityHandler is disabled.
         /// </summary>
-        /// <param name="resetVisibilityToSeen">Whether or not to set all items in the map to seen before disabling the FOVVisibilityHandler.</param>
+        /// <param name="resetVisibilityToSeen">
+        /// Whether or not to set all items in the map to seen before disabling the FOVVisibilityHandler.
+        /// </param>
         public void Disable(bool resetVisibilityToSeen = true)
             => SetState(resetVisibilityToSeen ? FovState.DisabledResetVisibility : FovState.DisabledNoResetVisibility);
 
@@ -170,13 +174,13 @@ namespace MagusEngine.Systems
         /// Implement to make appropriate changes to a terrain tile that is now inside FOV.
         /// </summary>
         /// <param name="terrain">Terrain tile to modify.</param>
-        protected abstract void UpdateTerrainSeen(TileBase terrain);
+        protected abstract void UpdateTerrainSeen(Tile terrain);
 
         /// <summary>
         /// Implement to make appropriate changes to a terrain tile that is now outside FOV.
         /// </summary>
         /// <param name="terrain">Terrain tile to modify.</param>
-        protected abstract void UpdateTerrainUnseen(TileBase terrain);
+        protected abstract void UpdateTerrainUnseen(Tile terrain);
 
         /// <summary>
         /// Implement to make appropriate changes to an entity that is now inside FOV.
@@ -207,9 +211,9 @@ namespace MagusEngine.Systems
             if (e.Item.Layer == (int)MapLayer.TERRAIN) // terrain
             {
                 if (Map.PlayerFOV.BooleanResultView[e.Position])
-                    UpdateTerrainSeen((TileBase)e.Item);
+                    UpdateTerrainSeen((Tile)e.Item);
                 else
-                    UpdateTerrainUnseen((TileBase)e.Item);
+                    UpdateTerrainUnseen((Tile)e.Item);
             }
             else // Entities
             {
@@ -226,7 +230,7 @@ namespace MagusEngine.Systems
 
             foreach (Point position in Map.PlayerFOV.NewlySeen)
             {
-                TileBase terrain = Map.GetTerrainAt<TileBase>(position);
+                Tile? terrain = Map.GetTerrainAt<Tile>(position);
                 if (terrain != null)
                     UpdateTerrainSeen(terrain);
 
@@ -236,7 +240,7 @@ namespace MagusEngine.Systems
 
             foreach (Point position in Map.PlayerFOV.NewlyUnseen)
             {
-                TileBase terrain = Map.GetTerrainAt<TileBase>(position);
+                Tile? terrain = Map.GetTerrainAt<Tile>(position);
                 if (terrain != null)
                     UpdateTerrainUnseen(terrain);
 
@@ -256,8 +260,7 @@ namespace MagusEngine.Systems
 
         ~FOVHandler()
         {
-            // dangling events of the map.
-            // Could be the origin of the memory leak of the map object
+            // dangling events of the map. Could be the origin of the memory leak of the map object
             if (Map is not null)
             {
                 Map.ObjectAdded -= Map_ObjectAdded;

@@ -1,15 +1,13 @@
 ﻿using GoRogue.GameFramework;
+using GoRogue.Random;
 using SadRogue.Primitives;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace MagusEngine.Utils.Extensions
 {
     public static class PointUtils
     {
         public static float PointMagnitude(this Point point) =>
-            MathF.Sqrt(point.X * point.X + point.Y * point.Y);
+            MathF.Sqrt((point.X * point.X) + (point.Y * point.Y));
 
         public static IEnumerable<Point> GetTileLocationsAlongLine(int xOrigin,
             int yOrigin,
@@ -51,13 +49,12 @@ namespace MagusEngine.Utils.Extensions
         public static List<Point> GetBorderCellLocations(Rectangle room)
         {
             //establish room boundaries
-            int xMin = room.ToMonoRectangle().Left;
-            int xMax = room.ToMonoRectangle().Right;
-            int yMin = room.ToMonoRectangle().Bottom;
-            int yMax = room.ToMonoRectangle().Top;
+            int xMin = room.MinExtentX;
+            int xMax = room.MaxExtentX;
+            int yMin = room.MinExtentY;
+            int yMax = room.MaxExtentY;
 
-            // build a list of room border cells using a series of
-            // straight lines
+            // build a list of room border cells using a series of straight lines
             List<Point> borderCells = GetTileLocationsAlongLine(xMin, yMin, xMax, yMin).ToList();
             borderCells.AddRange(GetTileLocationsAlongLine(xMin, yMin, xMin, yMax));
             borderCells.AddRange(GetTileLocationsAlongLine(xMin, yMax, xMax, yMax));
@@ -168,7 +165,7 @@ namespace MagusEngine.Utils.Extensions
         {
             int halfSquareSize = squareSize / 2;
             int x;
-            var rand = GameLoop.GlobalRand;
+            var rand = GlobalRandom.DefaultRNG;
             int y = rand.NextInt(center.Y - halfSquareSize, center.Y + halfSquareSize);
 
             if (matchXLength)
@@ -181,10 +178,10 @@ namespace MagusEngine.Utils.Extensions
 
         public static T? GetClosest<T>(this Point originPos, int range, List<T> listT, IGameObject? caller) where T : IGameObject
         {
-            T closest = default;
+            T? closest = default;
             double bestDistance = double.MaxValue;
 
-            IGameObjIterator(originPos, range, listT, caller, ref closest, ref bestDistance);
+            IGameObjIterator(originPos, range, listT, caller, ref closest!, ref bestDistance);
 
             return closest;
         }
@@ -214,20 +211,20 @@ namespace MagusEngine.Utils.Extensions
 
         public static T? GetClosest<T>(this Point originPos, int range, T[] listT, IGameObject? caller) where T : IGameObject
         {
-            T closest = default;
+            T? closest = default;
             double bestDistance = double.MaxValue;
 
-            IGameObjIterator(originPos, range, listT, caller, ref closest, ref bestDistance);
+            IGameObjIterator(originPos, range, listT, caller, ref closest!, ref bestDistance);
 
             return closest;
         }
 
         public static (T?, double) GetClosestAndDistance<T>(this Point originPos, int range, T[] listT, IGameObject? caller) where T : IGameObject
         {
-            T closest = default;
+            T? closest = default;
             double bestDistance = double.MaxValue;
 
-            IGameObjIterator(originPos, range, listT, caller, ref closest, ref bestDistance);
+            IGameObjIterator(originPos, range, listT, caller, ref closest!, ref bestDistance);
 
             return (closest, bestDistance);
         }

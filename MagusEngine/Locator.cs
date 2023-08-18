@@ -25,6 +25,13 @@ namespace MagusEngine
             _services[type] = instance;
         }
 
+        public static void AddService(Type type)
+        {
+            if (!type.IsAbstract && !type.IsSealed)
+                throw new ArgumentNullException(nameof(type));
+            _services[type] = type.GetConstructor(Array.Empty<Type>())!;
+        }
+
         public static void InitializeSingletonServices()
         {
             AddService<MessageBusService>(new());

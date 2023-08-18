@@ -8,6 +8,7 @@ namespace MagusEngine.Core
     public partial class Tile : IGameObject
     {
         public ColoredGlyph Appearence { get; set; }
+        public ColoredGlyph? LastSeenAppereance { get; internal set; }
         public int MoveTimeCost { get; set; } = 100;
 
         public Tile(Color foreground,
