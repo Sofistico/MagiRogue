@@ -1,10 +1,10 @@
 ﻿using MagiRogue.Data.Enumerators;
 using MagiRogue.Data.Serialization;
 using MagiRogue.Entities;
-using MagiRogue.GameSys;
 using MagiRogue.GameSys.Planet;
 using MagiRogue.GameSys.Tiles;
 using MagusEngine.Core.MapStuff;
+using MagusEngine.Systems;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using Xunit;

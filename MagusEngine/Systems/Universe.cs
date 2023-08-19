@@ -1,30 +1,18 @@
-﻿using MagiRogue.Components;
-using MagiRogue.Data;
-using MagiRogue.Data.Enumerators;
-using MagiRogue.Data.Serialization;
-using MagiRogue.Entities;
-using MagiRogue.Entities.Core;
-using MagiRogue.GameSys.Tiles;
-using MagiRogue.Settings;
-using MagiRogue.Utils;
-using MagusEngine;
+﻿using Arquimedes.Enumerators;
+using Arquimedes.Settings;
 using MagusEngine.Core.Civ;
+using MagusEngine.Core.Entities;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.Generators.MapGen;
+using MagusEngine.Serialization;
 using MagusEngine.Systems.Time;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
-namespace MagiRogue.GameSys
+namespace MagusEngine.Systems
 {
     /// <summary>
-    /// All game state data is stored in the Universe
-    /// also creates and processes generators
-    /// for map creation
+    /// All game state data is stored in the Universe also creates and processes generators for map creation
     /// </summary>
     [JsonConverter(typeof(UniverseJsonConverter))]
     public sealed class Universe
@@ -65,8 +53,7 @@ namespace MagiRogue.GameSys
         public PlanetGenSettings PlanetSettings { get; set; }
 
         /// <summary>
-        /// Creates a new game world and stores it in a
-        /// publicly accessible constructor.
+        /// Creates a new game world and stores it in a publicly accessible constructor.
         /// </summary>
         public Universe(Player player, bool testGame = false)
         {
@@ -223,10 +210,8 @@ namespace MagiRogue.GameSys
         }
 
         /*/// <summary>
-        /// Sets up anything that needs to be set up after map gen
-        /// and after placing entities, like the nodes turn
-        /// system
-        /// </summary>
+        /// Sets up anything that needs to be set up after map gen and after placing entities, like
+        /// the nodes turn system </summary>
         private void SetUpStuff(Map map)
         {
             foreach (NodeTile node in map.Tiles.OfType<NodeTile>())
@@ -244,8 +229,7 @@ namespace MagiRogue.GameSys
             CurrentChunk.LocalMaps[0] = map;
         }
 
-        // Create a player using the Player class
-        // and set its starting position
+        // Create a player using the Player class and set its starting position
         private void PlacePlayer(Player player)
         {
             // Place the player on the first non-movement-blocking tile on the map

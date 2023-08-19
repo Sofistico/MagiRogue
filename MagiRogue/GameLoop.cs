@@ -2,8 +2,8 @@
 using Arquimedes.Settings;
 using Arquimedes.Utils;
 using Diviner;
-using MagiRogue.GameSys;
 using MagusEngine;
+using MagusEngine.Systems;
 using SadConsole;
 using System;
 using System.Collections.Generic;

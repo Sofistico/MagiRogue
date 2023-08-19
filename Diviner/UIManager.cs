@@ -1,5 +1,4 @@
-﻿using MagiRogue.GameSys;
-using Diviner.Enums;
+﻿using Diviner.Enums;
 using Diviner.Interfaces;
 using Diviner.Windows;
 using SadConsole;
@@ -9,6 +8,7 @@ using System.Collections.Generic;
 using Color = SadConsole.UI.AdjustableColor;
 using SadRogue.Primitives;
 using MagusEngine.Core.Entities;
+using MagusEngine.Systems;
 
 namespace Diviner
 {

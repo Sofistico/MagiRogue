@@ -1,11 +1,11 @@
-﻿using MagiRogue.GameSys;
-using Diviner.Controls;
+﻿using Diviner.Controls;
 using SadConsole;
 using SadConsole.UI.Controls;
 using System;
 using System.Linq;
 using Arquimedes.Data;
 using MagusEngine.Core.Entities;
+using MagusEngine.Systems;
 
 namespace Diviner.Windows
 {
