@@ -1,10 +1,10 @@
-﻿using MagiRogue.GameSys;
-using MagiRogue.UI.Windows;
+﻿using MagusEngine.Core.MapStuff;
 
 namespace MagusEngine.ECS.Components.ActorComponents.Ai
 {
     public interface IAiComponent : GoRogue.Components.ParentAware.IParentAwareComponent
     {
-        (bool sucess, long ticks) RunAi(Map map, MessageLogWindow messageLog);
+        // message log will be by event
+        (bool sucess, long ticks) RunAi(Map map);
     }
 }

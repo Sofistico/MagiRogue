@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Arquimedes.Utils
 {
-    internal static class FileUtils
+    public static class FileUtils
     {
         private static readonly string _appDomain = AppDomain.CurrentDomain.BaseDirectory;
 

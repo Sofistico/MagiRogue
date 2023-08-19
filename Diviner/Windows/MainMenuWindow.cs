@@ -1,11 +1,10 @@
-﻿using Diviner.Controls;
+﻿using Arquimedes.Utils;
+using Diviner.Controls;
+using MagusEngine.Core.Entities;
+using MagusEngine.Services;
+using MagusEngine.Systems;
 using SadConsole;
 using SadConsole.UI.Controls;
-using System;
-using System.Linq;
-using Arquimedes.Data;
-using MagusEngine.Core.Entities;
-using MagusEngine.Systems;
 
 namespace Diviner.Windows
 {
@@ -66,7 +65,7 @@ namespace Diviner.Windows
             }
             else
             {
-                if (Utils.SaveUtils.CheckIfThereIsSaveFile())
+                if (SaveUtils.CheckIfThereIsSaveFile())
                 {
                     // creates a new pop window
                     loadPop = new PopWindow(30, 15, "Load Game");
@@ -111,7 +110,7 @@ namespace Diviner.Windows
         {
             if (savesBox.SelectedItem != null)
             {
-                SaveAndLoad.DeleteSave(savesBox.SelectedItem.ToString());
+                SavingService.DeleteSave(savesBox.SelectedItem?.ToString());
                 savesBox.Items.Remove(savesBox.SelectedItem);
                 savesBox.IsDirty = true;
             }
@@ -121,10 +120,10 @@ namespace Diviner.Windows
         {
             if (savesBox.SelectedItem != null)
             {
-                if (SaveAndLoad.CheckIfStringIsValidSave(savesBox.SelectedItem.ToString()))
+                if (SavingService.CheckIfStringIsValidSave(savesBox.SelectedItem.ToString()))
                 {
                     loadPop.Hide();
-                    Universe uni = SaveAndLoad.LoadGame(savesBox.SelectedItem.ToString());
+                    Universe uni = SavingService.LoadGame(savesBox.SelectedItem.ToString());
                     GameLoop.UIManager.StartGame(uni.Player, uni: uni);
                 }
             }
@@ -135,19 +134,19 @@ namespace Diviner.Windows
         /// </summary>
         private void PopulateListWithSaves()
         {
-            string[] saves = Utils.SaveUtils.ReturnAllSaveFiles();
+            string[] saves = SaveUtils.ReturnAllSaveFiles();
             for (int i = 0; i < saves.Length; i++)
             {
-                string save = Utils.SaveUtils.GetSaveName(saves[i]);
+                string save = SaveUtils.GetSaveName(saves[i]);
                 savesBox.Items.Add(save);
             }
         }
 
         private void TestMap_Click(object? sender, EventArgs e)
         {
-            if (!GameStarted && GameLoop.UIManager.NoPopWindow)
+            if (!GameStarted && UIManager.NoPopWindow)
             {
-                GameLoop.UIManager.StartGame(Player.TestPlayer(), testGame: true);
+                UIManager.StartGame(Player.TestPlayer(), testGame: true);
                 GameStarted = true;
             }
             else
@@ -173,9 +172,9 @@ namespace Diviner.Windows
 
         private void StartGameClick(object? sender, EventArgs e)
         {
-            if (!GameStarted && GameLoop.UIManager.NoPopWindow)
+            if (!GameStarted && UIManager.NoPopWindow)
             {
-                GameLoop.UIManager.CharCreationScreen();
+                UIManager.CharCreationScreen();
             }
         }
 
@@ -187,7 +186,7 @@ namespace Diviner.Windows
                 GameLoop.Universe.SaveGame(GameLoop.Universe.Player.Name);
                 PopWindow alert = new PopWindow(30, 10, "Save Done!");
                 // makes it a variable so that it can be properly accounted for in the print command
-                string text = "Save Sucessful!";
+                const string text = "Save Sucessful!";
                 alert.Print((alert.Width - text.Length) / 2, 3, text);
                 Children.Add(alert);
                 alert.Show();
@@ -205,7 +204,7 @@ namespace Diviner.Windows
         public void RestartGame()
         {
             GameStarted = false;
-            GameLoop.Universe = null!;
+            Universe = null!;
             RefreshButtons();
 
             foreach (SadConsole.Console item in GameLoop.UIManager.Children.Cast<SadConsole.Console>())

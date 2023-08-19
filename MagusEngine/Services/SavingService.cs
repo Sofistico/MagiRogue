@@ -1,4 +1,6 @@
 ﻿using Arquimedes.Utils;
+using MagusEngine.Core.MapStuff;
+using MagusEngine.Systems;
 using Newtonsoft.Json;
 using SadConsole;
 using SadRogue.Primitives;

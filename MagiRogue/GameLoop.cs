@@ -6,10 +6,7 @@ using MagusEngine;
 using MagusEngine.Systems;
 using SadConsole;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MagiRogue;
 
@@ -92,40 +89,4 @@ public static class GameLoop
     }
 
     #endregion configuration
-
-    #region Logs
-
-    // TODO: move to it's own service
-    public static void WriteToLog(List<string> errors)
-    {
-        // so that it doesn't block the main thread!
-        Task.Run(() =>
-        {
-            if (errors.Count == 0)
-                return;
-            var path = new StringBuilder(AppDomain.CurrentDomain.BaseDirectory).Append(@"\log.txt").ToString();
-            StringBuilder str = new StringBuilder($"{DateTime.Now:dd/MM/yyyy} ");
-            foreach (var item in errors)
-            {
-                str.AppendLine(item);
-                str.AppendLine();
-            }
-            if (!File.Exists(path))
-            {
-                File.Create(path).Close();
-            }
-
-            File.AppendAllText(path, str.ToString());
-#if DEBUG
-            AddMessageLog("Logged an error in the logs file!");
-#endif
-        });
-    }
-
-    public static void WriteToLog(string error)
-    {
-        WriteToLog(new List<string>() { error });
-    }
-
-    #endregion Logs
 }

@@ -1,10 +1,15 @@
 ﻿using Arquimedes.Enumerators;
 using Arquimedes.Settings;
+using Arquimedes.Utils;
 using MagusEngine.Core.Civ;
 using MagusEngine.Core.Entities;
+using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
+using MagusEngine.ECS.Components.ActorComponents.Ai;
+using MagusEngine.Generators;
 using MagusEngine.Generators.MapGen;
 using MagusEngine.Serialization;
+using MagusEngine.Services;
 using MagusEngine.Systems.Time;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
@@ -47,7 +52,6 @@ namespace MagusEngine.Systems
 
         public SeasonType CurrentSeason { get; set; }
 
-        public SaveAndLoad SaveAndLoad { get; set; }
         public int ZLevel { get; set; }
 
         public PlanetGenSettings PlanetSettings { get; set; }
@@ -71,7 +75,6 @@ namespace MagusEngine.Systems
                 WorldMap.AssocietatedMap.IsActive = true;
                 CurrentMap = WorldMap.AssocietatedMap;
                 PlacePlayerOnWorld(player);
-                SaveAndLoad = new();
                 if (player is not null)
                     SaveGame(player.Name);
             }
@@ -89,7 +92,6 @@ namespace MagusEngine.Systems
             TimeSystem time,
             bool possibleChangeMap,
             SeasonType currentSeason,
-            SaveAndLoad loadSave,
             RegionChunk currentChunk)
         {
             WorldMap = worldMap;
@@ -115,7 +117,6 @@ namespace MagusEngine.Systems
             Time = time;
             PossibleChangeMap = possibleChangeMap;
             CurrentSeason = currentSeason;
-            SaveAndLoad = loadSave;
         }
 
         private void PlacePlayerOnWorld(Player player)
@@ -136,13 +137,12 @@ namespace MagusEngine.Systems
                 }
                 catch (ApplicationException ex)
                 {
-                    GameLoop.WriteToLog(ex.Message);
+                    Locator.GetService<MagiLog>().Log(ex.Message);
                     throw;
                 }
                 catch (Exception e)
                 {
-                    GameLoop.WriteToLog(e.Message);
-
+                    Locator.GetService<MagiLog>().Log(e.Message);
                     throw;
                 }
             }
@@ -172,6 +172,7 @@ namespace MagusEngine.Systems
             UpdateIfNeedTheMap(mapToGo);
             CurrentMap = mapToGo;
             previousMap.ControlledEntitiy = null!;
+            // transform into event
             GameLoop.UIManager.MapWindow.LoadMap(CurrentMap);
             GameLoop.UIManager.MapWindow.CenterOnActor(Player);
         }
@@ -206,7 +207,7 @@ namespace MagusEngine.Systems
 
         public void SaveGame(string saveName)
         {
-            SaveAndLoad.SaveGameToFolder(this, saveName);
+            Locator.GetService<SavingService>().SaveGameToFolder(this, saveName);
         }
 
         /*/// <summary>
@@ -233,9 +234,9 @@ namespace MagusEngine.Systems
         private void PlacePlayer(Player player)
         {
             // Place the player on the first non-movement-blocking tile on the map
-            for (int i = 0; i < CurrentMap.Tiles.Length; i++)
+            for (int i = 0; i < CurrentMap.Terrain.Count; i++)
             {
-                if (!CurrentMap.Tiles[i].IsBlockingMove && CurrentMap.Tiles[i] is not NodeTile
+                if (!CurrentMap.Terrain[i]?.IsWalkable == true
                     && !CurrentMap.GetEntitiesAt<MagiEntity>(Point.FromIndex(i, CurrentMap.Width)).Any())
                 {
                     // Set the player's position to the index of the current map position
@@ -268,7 +269,7 @@ namespace MagusEngine.Systems
         {
             if (sucess)
             {
-                // hud action before any action!
+                // hud action before any action! will resolve with events...
                 if (GameLoop.UIManager.MessageLog.MessageSent)
                 {
                     GameLoop.UIManager.MessageLog.MessageSent = false;
@@ -300,23 +301,24 @@ namespace MagusEngine.Systems
                     if (tries++ > maxTries)
                         break;
                 }
-
+                // events
                 GameLoop.UIManager.MapWindow.MapConsole.IsDirty = true;
 #if DEBUG
+                // events
                 GameLoop.AddMessageLog($"Turns: {Time.Turns}, Tick: {Time.TimePassed.Ticks}");
 #endif
                 // makes sure that any entity that exists but has no AI, or the AI failed, get's a turn.
                 var ids = GetEntitiesIds();
                 RegisterInTime(ids);
 
-                // if there is the need to update any screen or console or window for last!
+                // if there is the need to update any screen or console or window for last! events
                 GameLoop.UIManager.MessageLog.HideIfNoMessageThisTurn();
             }
         }
 
         private IEnumerable<Actor> GetEntitiesIds()
         {
-            return CurrentChunk?.TotalPopulation();
+            return CurrentChunk?.TotalPopulation() ?? Enumerable.Empty<Actor>();
         }
 
         private void RegisterInTime(IEnumerable<Actor> population)
@@ -365,7 +367,7 @@ namespace MagusEngine.Systems
             int chunckLenght = (CurrentChunk?.LocalMaps.Length) ?? 0;
             for (int i = 0; i < chunckLenght; i++)
             {
-                Map maps = CurrentChunk.LocalMaps[i];
+                Map maps = CurrentChunk?.LocalMaps[i];
                 maps.DestroyMap();
             }
             CurrentMap = null!;
@@ -373,6 +375,7 @@ namespace MagusEngine.Systems
             CurrentChunk = null!;
             WorldMap = null!;
 
+            // event
             GameLoop.UIManager.MainMenu.RestartGame();
         }
 
@@ -388,7 +391,7 @@ namespace MagusEngine.Systems
                 long totalTicks = 0;
                 foreach (var ai in ais)
                 {
-                    (bool sucess, long tick) = ai?.RunAi(CurrentMap, GameLoop.UIManager.MessageLog)
+                    (bool sucess, long tick) = ai?.RunAi(CurrentMap)
                         ?? (false, -1);
                     if (sucess)
                     {
@@ -411,6 +414,7 @@ namespace MagusEngine.Systems
         public void ChangeControlledEntity(MagiEntity entity)
         {
             CurrentMap.ControlledEntitiy = entity;
+            // event
             GameLoop.UIManager.MapWindow.CenterOnActor(entity);
         }
 
@@ -431,12 +435,12 @@ namespace MagusEngine.Systems
 
         public RegionChunk GetChunckByPos(Point playerPoint)
         {
-            return SaveAndLoad.GetChunkAtIndex(playerPoint, PlanetSettings.PlanetWidth);
+            return Locator.GetService<SavingService>().GetChunkAtIndex(playerPoint, PlanetSettings.PlanetWidth);
         }
 
         public static Map GetMapById(int id)
         {
-            return SaveAndLoad.LoadMapById(id);
+            return SavingService.LoadMapById(id);
         }
 
         public bool MapIsWorld()

@@ -1,17 +1,13 @@
-﻿using MagiRogue.Data.Enumerators;
-using MagiRogue.Data.Serialization.MapSerialization;
-using MagiRogue.Entities;
+﻿using Arquimedes.Enumerators;
+using MagusEngine.Core.Entities;
+using MagusEngine.Serialization.MapConverter;
 using Newtonsoft.Json;
-using SadConsole.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace MagusEngine.Core.MapStuff
 {
     /// <summary>
-    /// Region chunks for the world map, each chunk contains 3 * 3 maps, in a grid like manner where the
-    /// edges connect the map to each other.
+    /// Region chunks for the world map, each chunk contains 3 * 3 maps, in a grid like manner where
+    /// the edges connect the map to each other.
     /// </summary>
     [JsonConverter(typeof(RegionChunkJsonConverter))]
     public sealed class RegionChunk
