@@ -1,9 +1,8 @@
-﻿using MagiRogue.Data.Enumerators;
-using MagiRogue.Data.Serialization;
-using MagiRogue.Data.Serialization.EntitySerialization;
-using MagiRogue.Entities.Core;
+﻿using Arquimedes.Enumerators;
+using MagusEngine.Core.Entities.Base;
+using MagusEngine.Serialization.EntitySerialization;
+using MagusEngine.Systems;
 using System.Collections.Generic;
-using System.Data;
 
 namespace MagusEngine.Core.Civ
 {
@@ -30,18 +29,17 @@ namespace MagusEngine.Core.Civ
         public int Amount { get; set; }
 
         /// <summary>
-        /// The type of material that will be needed or the type of material that the item will be made off!
+        /// The type of material that will be needed or the type of material that the item will be
+        /// made off!
         /// </summary>
         public List<MaterialType> Material { get; set; } = new();
 
-        /// <summary>
-        /// The total volume that the <see cref="Material"/ of the item will be needed!>
-        /// </summary>
+        /// <summary> The total volume that the <see cref="Material"/ of the item will be needed!> </summary>
         public int VolumeOfMaterialNeededToProduce
         {
             get
             {
-                cachedItem ??= Data.DataManager.QueryItemInData(ItemId);
+                cachedItem ??= DataManager.QueryItemInData(ItemId);
                 return cachedItem.Volume * Amount;
             }
         }
@@ -67,7 +65,7 @@ namespace MagusEngine.Core.Civ
 
         public ItemTemplate ReturnProductItem()
         {
-            cachedItem ??= Data.DataManager.QueryItemInData(ItemId);
+            cachedItem ??= DataManager.QueryItemInData(ItemId);
             return cachedItem;
         }
     }

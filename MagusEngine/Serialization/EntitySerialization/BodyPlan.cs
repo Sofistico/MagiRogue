@@ -1,7 +1,7 @@
-﻿using Arquimedes.Data;
-using MagiRogue.Data.Enumerators;
-using MagiRogue.Entities;
-using MagiRogue.Entities.Core;
+﻿using Arquimedes.Enumerators;
+using MagusEngine.Core.Entities;
+using MagusEngine.Core.Entities.Base;
+using MagusEngine.Services;
 using MagusEngine.Systems;
 using System;
 using System.Collections.Generic;
@@ -140,7 +140,7 @@ namespace MagusEngine.Serialization.EntitySerialization
                         break;
 
                     default:
-                        GameLoop.WriteToLog("No select context found!");
+                        Locator.GetService<MagiLog>().Log("No select context found!");
                         throw new ApplicationException("No select context found!");
                 }
                 if (finalList.Length > 0)
@@ -148,7 +148,7 @@ namespace MagusEngine.Serialization.EntitySerialization
             }
             if (finalList is null)
             {
-                GameLoop.WriteToLog("No final list for layering tissue found!");
+                Locator.GetService<MagiLog>().Log("No final list for layering tissue found!");
                 throw new ApplicationException("No final list for layering tissue found!");
             }
 

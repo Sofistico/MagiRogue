@@ -1,8 +1,10 @@
-﻿using MagiRogue.Data.Enumerators;
-using MagiRogue.Data.Serialization.EntitySerialization;
-using MagiRogue.Entities;
-using MagiRogue.Entities.Core;
-using MagiRogue.Utils;
+﻿using Arquimedes.Enumerators;
+using MagusEngine.Bus.UiBus;
+using MagusEngine.Core.Entities;
+using MagusEngine.Core.Entities.Base;
+using MagusEngine.Serialization.EntitySerialization;
+using MagusEngine.Services;
+using MagusEngine.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,8 +13,8 @@ using System.Text;
 namespace MagusEngine.Core.Magic
 {
     /// <summary>
-    /// The base class for creating a new Spell, deals with what happens with the spell + defines the
-    /// effects that it will have.
+    /// The base class for creating a new Spell, deals with what happens with the spell + defines
+    /// the effects that it will have.
     /// </summary>
     [JsonConverter(typeof(SpellJsonConverter))]
     public class SpellBase
@@ -77,10 +79,10 @@ namespace MagusEngine.Core.Magic
         public string SpellId { get; set; }
 
         /// <summary>
-        /// The total proficiency, goes up slowly as you use the spell or train with it in your downtime, makes
-        /// it more effective and cost less, goes from 0.0(not learned) to 2.0(double effectiviness),
-        /// for newly trained spell shoud be 0.5, see <see cref="MagicManager.ShapingSkill"/> for more details about
-        /// the shaping of mana
+        /// The total proficiency, goes up slowly as you use the spell or train with it in your
+        /// downtime, makes it more effective and cost less, goes from 0.0(not learned) to
+        /// 2.0(double effectiviness), for newly trained spell shoud be 0.5, see
+        /// <see cref="MagicManager.ShapingSkill"/> for more details about the shaping of mana
         /// </summary>
         public double Proficiency
         {
@@ -153,11 +155,11 @@ namespace MagusEngine.Core.Magic
                 int reqShapingWithDiscount;
                 try
                 {
-                    reqShapingWithDiscount = (int)(RequiredShapingSkill / (double)(stats.Soul.WillPower * 0.3 + 1));
+                    reqShapingWithDiscount = (int)(RequiredShapingSkill / (double)((stats.Soul.WillPower * 0.3) + 1));
                 }
                 catch (DivideByZeroException)
                 {
-                    GameLoop.AddMessageLog("Tried to divide your non existant will by zero! The universe almost exploded because of you");
+                    Locator.GetService<MagiLog>().Log("Tried to divide your non existant will by zero! The universe almost exploded because of you");
                     return false;
                 }
 
@@ -196,8 +198,8 @@ namespace MagusEngine.Core.Magic
 
                 foreach (ISpellEffect effect in Effects)
                 {
-                    if (entity is not null && (effect.AreaOfEffect is SpellAreaEffect.Self ||
-                        !entity.Equals(caster)) && entity.CanBeAttacked || effect.TargetsTile)
+                    if ((entity is not null && (effect.AreaOfEffect is SpellAreaEffect.Self ||
+                        !entity.Equals(caster)) && entity.CanBeAttacked) || effect.TargetsTile)
                     {
                         effect.ApplyEffect(target, caster, this);
                     }
@@ -243,7 +245,8 @@ namespace MagusEngine.Core.Magic
                 return true;
             }
             errorMessage = "Can't cast the spell, there must be an entity to target";
-            GameLoop.AddMessageLog(errorMessage);
+            Locator.GetService<MessageBusService>()
+                .SendMessage<MessageSent>(new(errorMessage));
             errorMessage = "Can't cast the spell";
 
             return false;

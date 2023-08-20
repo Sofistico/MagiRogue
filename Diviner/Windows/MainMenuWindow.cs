@@ -16,8 +16,8 @@ namespace Diviner.Windows
         private readonly MagiButton testMap;
         private readonly MagiButton continueGame; // this doesn't work
         private readonly MagiButton saveGame; // neither does this
-        private ListBox savesBox;
-        private PopWindow loadPop;
+        private ListBox? savesBox;
+        private PopWindow? loadPop;
 
         public MainMenuWindow(int width, int height, string title = "Main Menu") : base(width, height, title)
         {

@@ -1,7 +1,6 @@
-﻿using Arquimedes.Data;
-using MagiRogue.Data.Enumerators;
-using MagiRogue.Utils;
+﻿using Arquimedes.Enumerators;
 using MagusEngine.Systems;
+using MagusEngine.Utils;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -10,8 +9,8 @@ namespace MagusEngine.Serialization
     [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
     public class MaterialTemplate
     {
-        // Only putting in here for the sake of future me, only need to use JsonProperty if the name will be diferrent
-        // than whats in the json.
+        // Only putting in here for the sake of future me, only need to use JsonProperty if the name
+        // will be diferrent than whats in the json.
 
         public string Id { get; set; }
         public string Name { get; set; }
@@ -50,8 +49,9 @@ namespace MagusEngine.Serialization
         public int? ColdDamageTemp { get; set; }
 
         /// <summary>
-        /// How sharp the material is. Used in cutting calculations. Does not allow an inferior metal to penetrate superior armor.
-        /// Applying a value of at least 100 to a stone will allow weapons to be made from that stone.
+        /// How sharp the material is. Used in cutting calculations. Does not allow an inferior
+        /// metal to penetrate superior armor. Applying a value of at least 100 to a stone will
+        /// allow weapons to be made from that stone.
         /// </summary>
         public double? MaxEdge { get; set; }
 
@@ -60,9 +60,8 @@ namespace MagusEngine.Serialization
         public double? ShearStrainAtYield { get; set; }
 
         /// <summary>
-        /// Specifies how hard of an impact (in kilopascals)
-        /// the material can withstand before it will start deforming permanently.
-        /// Used for blunt-force combat.
+        /// Specifies how hard of an impact (in kilopascals) the material can withstand before it
+        /// will start deforming permanently. Used for blunt-force combat.
         /// </summary>
         public int? ImpactYield { get; set; }
 
@@ -77,13 +76,10 @@ namespace MagusEngine.Serialization
 
         public double? ImpactFractureMpa => ImpactFracture.HasValue ? (double)ImpactFracture / 1000 : 0;
 
-        /// <summary>
-        /// How much force is needed for the material to be damaged?
-        /// The deformation limit!
-        /// More means it's more elastic, less means it's more rigid
-        /// affects in combat whether the corresponding tissue
-        /// is bruised (value >= 50000), torn (value between 25000 and 49999), or fractured (value <= 24999)
-        /// </summary>
+        /// <summary> How much force is needed for the material to be damaged? The deformation
+        /// limit! More means it's more elastic, less means it's more rigid affects in combat
+        /// whether the corresponding tissue is bruised (value >= 50000), torn (value between 25000
+        /// and 49999), or fractured (value <= 24999) </summary>
         public double? ImpactStrainsAtYield { get; set; }
 
         public MaterialTemplate Copy()

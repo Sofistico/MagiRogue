@@ -1,4 +1,21 @@
-﻿using Arquimedes.Utils;
+﻿using Arquimedes.Enumerators;
+using Arquimedes.Utils;
+using MagusEngine.Core;
+using MagusEngine.Core.Civ;
+using MagusEngine.Core.Entities;
+using MagusEngine.Core.Entities.Base;
+using MagusEngine.Core.Entities.StarterScenarios;
+using MagusEngine.Core.Magic;
+using MagusEngine.Core.WorldStuff.History;
+using MagusEngine.Core.WorldStuff.TechRes;
+using MagusEngine.Serialization;
+using MagusEngine.Serialization.EntitySerialization;
+using MagusEngine.Serialization.MapConverter;
+using MagusEngine.Services;
+using MagusEngine.Utils.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MagusEngine.Systems
 {
@@ -127,14 +144,14 @@ namespace MagusEngine.Systems
             return organ?.Copy();
         }
 
-        public static TileBase QueryTileInData(string tileId)
+        public static Tile? QueryTileInData(string tileId)
             => ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId))?.Copy();
 
-        public static T QueryTileInData<T>(string tileId) where T : TileBase
-            => (T)ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId))?.Copy();
+        //public static T QueryTileInData<T>(string tileId) where T : TileBase
+        //    => (T)ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId))?.Copy();
 
-        public static T QueryTileInData<T>(string tileId, Point pos) where T : TileBase
-            => (T)ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId))?.Copy(pos);
+        //public static T QueryTileInData<T>(string tileId, Point pos) where T : TileBase
+        //    => (T)ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId))?.Copy(pos);
 
         public static Item QueryItemInData(string itemId)
             => ListOfItems.FirstOrDefault(i => i.Id.Equals(itemId));
@@ -157,7 +174,7 @@ namespace MagusEngine.Systems
                     var inheirtFrom = ListOfMaterials.FirstOrDefault(i => i.Id.Equals(mat.InheirtFrom));
                     if (inheirtFrom is null)
                     {
-                        GameLoop.WriteToLog($"Material to inheirt from was null! Id: {mat.InheirtFrom}");
+                        Locator.GetService<MagiLog>().Log($"Material to inheirt from was null! Id: {mat.InheirtFrom}");
                         continue;
                     }
 

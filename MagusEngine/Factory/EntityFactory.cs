@@ -1,5 +1,15 @@
-﻿using MagusEngine.Core.Entities;
+﻿using Arquimedes.Enumerators;
+using MagusEngine.Core.Entities;
+using MagusEngine.Core.Entities.Base;
+using MagusEngine.Core.Entities.StarterScenarios;
+using MagusEngine.Core.WorldStuff.History;
+using MagusEngine.Serialization.EntitySerialization;
 using MagusEngine.Systems;
+using MagusEngine.Utils;
+using MagusEngine.Utils.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MagusEngine.Factory
 {
@@ -8,7 +18,7 @@ namespace MagusEngine.Factory
     /// </summary>
     public static class EntityFactory
     {
-        private static Actor actorField;
+        private static Actor? actorField;
 
         public static Actor ActorCreator(HistoricalFigure figure, Point pos)
         {

@@ -1,16 +1,15 @@
-﻿using MagiRogue.Data.Enumerators;
+﻿using Arquimedes.Enumerators;
 using Diviner.Controls;
+using MagusEngine.Core.Entities;
+using MagusEngine.Core.Entities.Base;
+using MagusEngine.Core.Entities.StarterScenarios;
+using MagusEngine.Factory;
+using MagusEngine.Systems;
 using SadConsole;
 using SadConsole.Instructions;
 using SadConsole.UI.Controls;
 using SadRogue.Primitives;
-using System;
-using System.Collections.Generic;
 using Console = SadConsole.Console;
-using Arquimedes.Data;
-using MagusEngine.Core.Entities.Base;
-using MagusEngine.Core.Entities.StarterScenarios;
-using MagusEngine.Core.Entities;
 
 namespace Diviner.Windows
 {
@@ -66,7 +65,8 @@ namespace Diviner.Windows
             };
             helpButton.Click += (_, __) =>
             {
-                // We want this to print on a sub region of the main console, so we'll create a sub view and use that
+                // We want this to print on a sub region of the main console, so we'll create a sub
+                // view and use that
                 PopWindow window = new("Help Screen");
                 Console pop = new(window.Width - 3, window.Height - WindowBorderThickness,
                     window.Width, Height);

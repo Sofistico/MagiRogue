@@ -1,10 +1,10 @@
-﻿using GoRogue.Components;
-using MagiRogue.Data.Enumerators;
-using MagiRogue.Entities;
-using MagiRogue.Entities.Core;
-using MagiRogue.Entities.Interfaces;
-using MagiRogue.Utils;
+﻿using Arquimedes.Enumerators;
+using MagusEngine.Core.Entities;
+using MagusEngine.Core.Entities.Base;
+using MagusEngine.Core.Entities.Interfaces;
 using MagusEngine.Core.Magic;
+using MagusEngine.Systems.Physics;
+using MagusEngine.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -45,7 +45,7 @@ namespace MagusEngine.Serialization.EntitySerialization
             Condition = condition;
             Volume = size;
             MaterialId = materialId;
-            Material = GameSys.Physics.PhysicsManager.SetMaterial(materialId);
+            Material = PhysicsManager.SetMaterial(materialId);
             MagicStuff = magic;
         }
 

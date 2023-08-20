@@ -1,5 +1,5 @@
-﻿using MagiRogue.Data.Enumerators;
-using MagiRogue.Entities;
+﻿using Arquimedes.Enumerators;
+using MagusEngine.Core.Entities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
