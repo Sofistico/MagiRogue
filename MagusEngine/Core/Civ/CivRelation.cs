@@ -1,6 +1,5 @@
-﻿using MagiRogue.Data.Enumerators;
+﻿using Arquimedes.Enumerators;
 using Newtonsoft.Json;
-using System;
 
 namespace MagusEngine.Core.Civ
 {

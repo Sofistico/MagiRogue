@@ -1,7 +1,7 @@
-﻿using MagiRogue.Data;
-using MagiRogue.Data.Enumerators;
-using MagiRogue.Utils;
+﻿using Arquimedes.Enumerators;
 using MagusEngine.Core.WorldStuff.History;
+using MagusEngine.Services;
+using MagusEngine.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -22,24 +22,24 @@ namespace MagusEngine.Core.Civ
             Nodes = family;
         }
 
-        public void AddToFamilyLink(HistoricalFigure figure,
+        public void AddToFamilyLink(HistoricalFigure? figure,
             HfRelationType type,
-            HistoricalFigure otherFigure)
+            HistoricalFigure? otherFigure)
         {
             if (otherFigure is null)
                 return;
-            if (!Nodes.Any(i => i.OtherFigureId == otherFigure.Id))
-                Nodes.Add(new FamilyNode(type, figure, otherFigure));
+            if (!Nodes!.Any(i => i.OtherFigureId == otherFigure.Id))
+                Nodes?.Add(new FamilyNode(type, figure, otherFigure));
         }
 
-        public FamilyNode[] GetOtherFamilyNodesByRelations(HfRelationType toFind)
+        public FamilyNode[]? GetOtherFamilyNodesByRelations(HfRelationType toFind)
         {
-            return Nodes.FindAll(i => i.Relation == toFind).ToArray();
+            return Nodes?.FindAll(i => i.Relation == toFind).ToArray();
         }
 
-        public bool GetIfExistsAnyRelationOfType(HfRelationType toFind)
+        public bool? GetIfExistsAnyRelationOfType(HfRelationType toFind)
         {
-            return Nodes.Any(i => i.Relation == toFind);
+            return Nodes?.Any(i => i.Relation == toFind);
         }
 
         public void SetMotherChildFatherRelation(HistoricalFigure hfMother,
@@ -82,13 +82,13 @@ namespace MagusEngine.Core.Civ
             }
             catch (Exception)
             {
-                GameLoop.WriteToLog($"Something went wrong in the creation of children! Mother: {hfMother.Id} Child: {hfChild.Id}");
+                Locator.GetService<MagiLog>().Log($"Something went wrong in the creation of children! Mother: {hfMother.Id} Child: {hfChild.Id}");
             }
         }
 
         private void SetChildMotherFather(HistoricalFigure hfMother,
             HistoricalFigure hfChild,
-            HistoricalFigure hfFather)
+            HistoricalFigure? hfFather)
         {
             AddToFamilyLink(hfMother, HfRelationType.OwnChild, hfChild);
             AddToFamilyLink(hfChild, HfRelationType.Mother, hfMother);
@@ -96,7 +96,7 @@ namespace MagusEngine.Core.Civ
             if (hfFather is null)
             {
                 AddToFamilyLink(hfFather, HfRelationType.OwnChild, hfChild);
-                AddToFamilyLink(hfChild, HfRelationType.Father, hfFather);
+                AddToFamilyLink(hfChild, HfRelationType.Father, hfFather!);
             }
         }
 
@@ -107,7 +107,7 @@ namespace MagusEngine.Core.Civ
 
         public HistoricalFigure? GetSpouseIfAny()
         {
-            return Nodes.Find(i => i.Relation is HfRelationType.Married)?.OtherFigure;
+            return Nodes?.Find(i => i.Relation is HfRelationType.Married)?.OtherFigure;
         }
     }
 

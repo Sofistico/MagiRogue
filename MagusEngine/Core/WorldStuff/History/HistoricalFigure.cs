@@ -1,18 +1,17 @@
-﻿using MagiRogue.Data.Enumerators;
-using MagiRogue.Utils;
-using MagiRogue.Entities;
+﻿using Arquimedes.Enumerators;
+using GoRogue.Random;
+using MagusEngine.Core.Civ;
+using MagusEngine.Core.Entities;
+using MagusEngine.Core.Entities.Base;
+using MagusEngine.Core.WorldStuff.TechRes;
+using MagusEngine.Generators;
+using MagusEngine.Systems;
+using MagusEngine.Utils;
+using MagusEngine.Utils.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using MagiRogue.Data;
 using System.Text;
-using MagiRogue.GameSys.Tiles;
-using MagiRogue.Data.Serialization;
-using MagiRogue.GameSys.Magic;
-using MagiRogue.Utils.Extensions;
-using MagiRogue.Entities.Core;
-using MagusEngine.Core.Civ;
-using MagusEngine.Core.WorldStuff.TechRes;
 
 namespace MagusEngine.Core.WorldStuff.History
 {
@@ -104,7 +103,7 @@ namespace MagusEngine.Core.WorldStuff.History
             YearDeath = yearDeath;
             IsAlive = isAlive;
             Description = desc;
-            Id = GameLoop.GetHfId();
+            Id = SequentialIdGenerator.HistoricalFigureId;
             GetAnatomy().RaceId = raceId;
             GetAnatomy().Gender = hFGender;
         }
@@ -117,14 +116,14 @@ namespace MagusEngine.Core.WorldStuff.History
             GetAnatomy().RaceId = race;
             GetAnatomy().Gender = hFGender;
             IsAlive = isAlive;
-            Id = GameLoop.GetHfId();
+            Id = SequentialIdGenerator.HistoricalFigureId;
         }
 
         public HistoricalFigure(string name, string description)
         {
             Name = name;
             Description = description;
-            Id = GameLoop.GetHfId();
+            Id = SequentialIdGenerator.HistoricalFigureId;
         }
 
         #endregion Ctor
@@ -133,19 +132,17 @@ namespace MagusEngine.Core.WorldStuff.History
         {
             Personality personality = GetPersonality();
             // reflection because i'm lazy
-            var properties = typeof(Personality).GetProperties();
-            foreach (var property in properties)
+            foreach (var property in typeof(Personality).GetProperties())
             {
-                property.SetValue(personality, GameLoop.GlobalRand.NextInt(-50, 50 + 1));
+                property.SetValue(personality, GlobalRandom.DefaultRNG.NextInt(-50, 50 + 1));
             }
         }
 
         public void GenerateRandomSkills()
         {
-            var enums = Enum.GetValues(typeof(AbilityName));
             // TODO: Hfs will begins with X random amount of xp to spend, then they will use it rather than
             // having some random value!
-            foreach (AbilityName e in enums)
+            foreach (AbilityName e in Enum.GetValues(typeof(AbilityName)))
             {
                 if (e is AbilityName.None)
                     continue;
@@ -161,8 +158,8 @@ namespace MagusEngine.Core.WorldStuff.History
 
         public void DefineProfession()
         {
-            List<Ability> skills = new List<Ability>(Mind.Abilities.Values.ToList());
-            Ability bestSkill = new Ability(AbilityName.None, 0);
+            List<Ability> skills = new(Mind.Abilities.Values.ToList());
+            Ability bestSkill = new(AbilityName.None, 0);
             if (skills.Count > 0)
             {
                 bestSkill = skills.MaxBy(i => i.Score);
@@ -176,12 +173,14 @@ namespace MagusEngine.Core.WorldStuff.History
                 skills.Remove(secondBestSkill);
             }
             else
+            {
                 secondBestSkill = new Ability(AbilityName.None, 0);
+            }
 
             if (!DetermineProfessionFromBestSkills(bestSkill, secondBestSkill))
             {
-                // if no profession was found, then the figure isn't great with any profession sadly!
-                // it's tough being a legenday chemist in the middle ages....
+                // if no profession was found, then the figure isn't great with any profession
+                // sadly! it's tough being a legenday chemist in the middle ages....
                 Mind.Profession = DataManager.QueryProfessionInData("vagabond");
             }
         }
@@ -189,7 +188,7 @@ namespace MagusEngine.Core.WorldStuff.History
         private bool DetermineProfessionFromBestSkills(Ability bestAbility, Ability secondBest)
         {
             var professions = DataManager.ListOfProfessions
-                .Where(i => i.Ability.First() == bestAbility.ReturnAbilityEnumFromString()).ToList();
+                .Where(i => i.Ability[0] == bestAbility.ReturnAbilityEnumFromString()).ToList();
 
             if (professions.Count > 0)
             {
@@ -219,9 +218,8 @@ namespace MagusEngine.Core.WorldStuff.History
 
         public void AddLegend(string legend, int yearWhen)
         {
-            StringBuilder str = new StringBuilder($"In the year of {yearWhen}, ");
-            str.Append(legend);
-            Legend newLegend = new Legend(str.ToString(), yearWhen);
+            var str = new StringBuilder($"In the year of {yearWhen}, ").Append(legend);
+            Legend newLegend = new(str.ToString(), yearWhen);
             Legends.Add(newLegend);
         }
 
@@ -251,15 +249,13 @@ namespace MagusEngine.Core.WorldStuff.History
             MythAction[] actions = Enum.GetValues<MythAction>();
             MythAction action = actions.GetRandomItemFromList();
 
-            Myth myth = new()
+            return new()
             {
                 MythWho = MythWho,
                 MythWhat = what,
                 MythAction = action,
                 Name = Name,
             };
-
-            return myth;
         }
 
         public void AddNewNoblePos(Noble noble, int year, Civilization civ)
@@ -275,19 +271,24 @@ namespace MagusEngine.Core.WorldStuff.History
             }
 
             NobleTitles.Add(noble);
-            StringBuilder initialLegend = new StringBuilder();
-            initialLegend.Append($"{Name} ascended to the post of {noble.Name} ");
-            initialLegend.Append($"with {Body.Anatomy.CurrentAge} years as a member of {civ.Name}");
+            StringBuilder initialLegend = new StringBuilder().Append(Name)
+                .Append(" ascended to the post of ")
+                .Append(noble.Name)
+                .Append(' ')
+                .Append("with ")
+                .Append(Body.Anatomy.CurrentAge)
+                .Append(" years as a member of ")
+                .Append(civ.Name);
             AddLegend(initialLegend.ToString(), year);
         }
 
         public void AddNewRelationToCiv(int civId, RelationType relation)
         {
-            CivRelation re = new CivRelation(Id, civId, relation);
+            CivRelation re = new(Id, civId, relation);
             if (!RelatedCivs.Any(i => i.CivRelatedId == civId))
                 RelatedCivs.Add(re);
             else
-                RelatedCivs.Find(i => i.CivRelatedId == civId).Relation = relation;
+                RelatedCivs!.Find(i => i.CivRelatedId == civId)!.Relation = relation;
         }
 
         public Personality GetPersonality()
@@ -296,8 +297,7 @@ namespace MagusEngine.Core.WorldStuff.History
             return cachedPersonality;
         }
 
-        // see if there is anyway to refactor this to be better!
-        // maybe some good old OOP
+        // see if there is anyway to refactor this to be better! maybe some good old OOP
         /// <summary>
         /// Adds a relation type to another historifacl figure!
         /// </summary>
@@ -309,7 +309,7 @@ namespace MagusEngine.Core.WorldStuff.History
             if (otherId == Id) return false;
             if (RelatedHFs.Any(i => i.OtherHfId == otherId))
             {
-                RelatedHFs.Find(i => i.OtherHfId == otherId).RelationType = relation;
+                RelatedHFs!.Find(i => i.OtherHfId == otherId)!.RelationType = relation;
                 return true;
             }
             else
@@ -322,17 +322,19 @@ namespace MagusEngine.Core.WorldStuff.History
         public void AddRelatedSite(int otherId, SiteRelationTypes relation)
         {
             if (!RelatedSites.Any(i => i.OtherSiteId == otherId))
+            {
                 RelatedSites.Add(new SiteRelation(Id, otherId, relation));
+            }
             else
             {
                 var related = RelatedSites.Find(i => i.OtherSiteId == otherId);
                 if (related?.RelationType.HasFlag(relation) == true)
                     return;
-                related.RelationType &= relation;
+                related!.RelationType &= relation;
             }
         }
 
-        public SiteRelation FindSiteRelation(int siteId) =>
+        public SiteRelation? FindSiteRelation(int siteId) =>
             RelatedSites.Find(i => i.OtherSiteId == siteId);
 
         public string GetRaceName()
@@ -377,15 +379,14 @@ namespace MagusEngine.Core.WorldStuff.History
                 && GetPersonality().Peace <= 0;
         }
 
-        public Civilization GetRelatedCivFromFigure(RelationType relationType, List<Civilization> civs)
+        public Civilization? GetRelatedCivFromFigure(RelationType relationType, List<Civilization> civs)
         {
-            if (RelatedCivs.Count <= 0)
+            if (RelatedCivs.Count == 0)
                 return null;
             int? civId = RelatedCivs.Find(i => i.Relation == relationType)?.CivRelatedId;
             if (!civId.HasValue)
                 return null;
-            Civilization civ = civs.Find(i => i.Id == civId);
-            return civ;
+            return civs.Find(i => i.Id == civId);
         }
 
         public int? GetMemberCivId()
@@ -398,11 +399,11 @@ namespace MagusEngine.Core.WorldStuff.History
         {
             if (ResearchTree.CurrentResearchFocus is null)
                 return false;
-            List<AbilityName> abilitiesIntersection = ResearchTree
+            List<AbilityName>? abilitiesIntersection = ResearchTree
                 .CurrentResearchFocus
                 .GetRequisiteAbilitiesForResearch(this);
 
-            if (abilitiesIntersection is null || abilitiesIntersection.Count <= 0)
+            if (abilitiesIntersection is null || abilitiesIntersection.Count == 0)
                 return false;
             double totalRes = bonusResearchPower;
             foreach (AbilityName abiName in abilitiesIntersection)
@@ -446,9 +447,9 @@ namespace MagusEngine.Core.WorldStuff.History
         public Discovery ReturnDiscoveryFromCurrentFocus(Site site)
         {
             return new Discovery(Id,
-                $"{Name} finished research on {ResearchTree.CurrentResearchFocus.Research.Name}",
+                $"{Name} finished research on {ResearchTree!.CurrentResearchFocus?.Research.Name}",
                 site is null ? "Nowhere" : $"{site.Name}",
-                ResearchTree.CurrentResearchFocus.Research);
+                ResearchTree?.CurrentResearchFocus?.Research!);
         }
 
         public void CleanupResearch(Site site, int year)
@@ -491,17 +492,17 @@ namespace MagusEngine.Core.WorldStuff.History
             var combatAbilityDefender = Mind.CheckForCombatAbilities().GetRandomItemFromList();
             var defensiveAbilyDefender = Mind.CheckForDefensiveAbilities().GetRandomItemFromList();
 
-            StringBuilder killer = new StringBuilder();
-            StringBuilder victim = new StringBuilder();
+            StringBuilder killer = new();
+            StringBuilder victim = new();
 
             // TODO: Generalize this in the future
             if (Mind.GetAbility(combatAbilityAttacker) >= deadThing.Mind.GetAbility(defensiveAbilyDefender))
             {
                 deadThing.KillIt(year);
-                killer.Append($"the {Name} killed {deadThing.Name}");
+                killer.Append("the ").Append(Name).Append(" killed ").Append(deadThing.Name);
                 killer.Append(specialReason);
 
-                victim.Append($"the {deadThing.Name} was killed by {Name}");
+                victim.Append("the ").Append(deadThing.Name).Append(" was killed by ").Append(Name);
                 victim.Append(specialReason);
 
                 AddLegend(new Legend(killer.ToString(), year));
@@ -511,23 +512,23 @@ namespace MagusEngine.Core.WorldStuff.History
             if (Mind.GetAbility(combatAbilityDefender) <= deadThing.Mind.GetAbility(defensiveAbilityAttacker))
             {
                 KillIt(year);
-                killer.Append($"the {deadThing.Name} killed {Name}");
+                killer.Append("the ").Append(deadThing.Name).Append(" killed ").Append(Name);
                 killer.Append("in self defense");
 
-                victim.Append($"the {Name} was killed by {deadThing.Name}");
+                victim.Append("the ").Append(Name).Append(" was killed by ").Append(deadThing.Name);
                 victim.Append("in self defense");
                 AddLegend(new Legend(victim.ToString(), year));
                 deadThing.AddLegend(new Legend(killer.ToString(), year));
                 return;
             }
 
-            killer.Append($"the {Name} tried to kill {deadThing.Name}");
+            killer.Append("the ").Append(Name).Append(" tried to kill ").Append(deadThing.Name);
             killer.Append(specialReason);
             killer.Append(" but failed!");
 
-            victim.Append($"the {deadThing.Name} had a murder attempeted by {Name}");
+            victim.Append("the ").Append(deadThing.Name).Append(" had a murder attempeted by ").Append(Name);
             victim.Append(specialReason);
-            killer.Append($" but {Pronoum()} failed!");
+            killer.Append(" but ").Append(Pronoum()).Append(" failed!");
 
             AddLegend(new Legend(killer.ToString(), year));
             deadThing.AddLegend(new Legend(victim.ToString(), year));
@@ -575,8 +576,8 @@ namespace MagusEngine.Core.WorldStuff.History
             ResearchTree = new ResearchTree();
             foreach (Research item in researches)
             {
-                ResearchTreeNode node = new ResearchTreeNode(item);
-                ResearchTree.Nodes.Add(node);
+                ResearchTreeNode node = new(item);
+                ResearchTree?.Nodes?.Add(node);
                 if (DiscoveriesKnow.Exists(i => i.WhatWasResearched.Id.Equals(item.Id)))
                     node.ForceFinish();
             }
@@ -614,7 +615,7 @@ namespace MagusEngine.Core.WorldStuff.History
                     if (ability.ReturnAbilityEnumFromString() is not AbilityName.None)
                     {
                         ability.XpTotal +=
-                            Mind.Personality.HardWork + Mrn.Exploding2D6Dice * Mind.Inteligence;
+                            Mind.Personality.HardWork + (Mrn.Exploding2D6Dice * Mind.Inteligence);
                     }
                     if (ability.Score >= whatScoreToSettleForTrainingAbility)
                         TrainingFocus = AbilityName.None;
@@ -633,7 +634,7 @@ namespace MagusEngine.Core.WorldStuff.History
 
         public void SetStandardRaceFlags()
         {
-            foreach (var flag in Body.Anatomy.Race?.Flags)
+            foreach (var flag in Body.Anatomy.Race?.Flags!)
             {
                 AddNewFlag(flag);
             }
@@ -727,12 +728,12 @@ namespace MagusEngine.Core.WorldStuff.History
                 || GetPersonality().Familiy <= -10;
         }
 
-        public HistoricalFigure GetChildrenIfAny()
+        public HistoricalFigure? GetChildrenIfAny()
         {
             var family = FamilyLink.GetOtherFamilyNodesByRelations(HfRelationType.OwnChild);
-            if (family.Length <= 0)
+            if (family?.Length == 0)
                 return null;
-            var child = family.GetRandomItemFromList();
+            var child = family?.GetRandomItemFromList();
             return child.Figure;
         }
 
@@ -744,9 +745,7 @@ namespace MagusEngine.Core.WorldStuff.History
         internal bool CheckIfIsChildOrBabyForRace()
         {
             var group = GetRace().GetAgeGroup(GetAnatomy().CurrentAge, GetAnatomy().Ages);
-            if (group is AgeGroup.Baby || group is AgeGroup.Child)
-                return true;
-            return false;
+            return group is AgeGroup.Baby || group is AgeGroup.Child;
         }
 
         public Anatomy GetAnatomy()
@@ -762,8 +761,8 @@ namespace MagusEngine.Core.WorldStuff.History
 
         public bool CheckForWanderlust()
         {
-            return GetPersonality().Nature >= 15 || GetPersonality().Independence >= 20
-                && GetPersonality().Tradition <= 0;
+            return GetPersonality().Nature >= 15 || (GetPersonality().Independence >= 20
+                && GetPersonality().Tradition <= 0);
         }
 
         public static void RemovePreviousCivRelationAndSetNew(CivRelation? prevRelation, RelationType newRelation)
@@ -777,9 +776,9 @@ namespace MagusEngine.Core.WorldStuff.History
             CurrentPos = pos;
         }
 
-        public int? GetCurrentStayingSiteId(List<Site> sites)
+        public int? GetCurrentStayingSiteId(List<Site>? sites)
         {
-            return sites.Find(i => i.WorldPos == CurrentPos)?.Id;
+            return sites?.Find(i => i.WorldPos == CurrentPos)?.Id;
         }
 
         public bool IsAdult()
@@ -822,8 +821,7 @@ namespace MagusEngine.Core.WorldStuff.History
             {
                 if (ResearchTree is not null)
                 {
-                    if (ResearchTree.CurrentResearchFocus is not null
-                        && ResearchTree.CurrentResearchFocus.Research.Id.Equals(disc.WhatWasResearched.Id))
+                    if (ResearchTree.CurrentResearchFocus?.Research.Id.Equals(disc.WhatWasResearched.Id) == true)
                         ForceCleanupResearch(); // clean up reserach, since someone else discovery it before it!
                 }
                 DiscoveriesKnow.Add(disc);

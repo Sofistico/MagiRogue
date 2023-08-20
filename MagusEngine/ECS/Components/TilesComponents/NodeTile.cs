@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MagusEngine.Core.Entities;
+using System;
 
 namespace MagusEngine.ECS.Components.TilesComponents
 {
-    internal class NodeTile
+    public class NodeTile
     {
+        public void DrainNode(Actor actor)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

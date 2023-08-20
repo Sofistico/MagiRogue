@@ -1,14 +1,14 @@
-﻿using GoRogue;
-using MagiRogue.Data.Enumerators;
-using MagiRogue.Data.Serialization;
-using MagiRogue.Entities.Core;
-using MagiRogue.GameSys.Planet;
-using MagiRogue.GameSys.Tiles;
-using MagiRogue.Utils;
-using MagiRogue.Utils.Extensions;
+﻿using Arquimedes.Enumerators;
+using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.Core.WorldStuff.History;
 using MagusEngine.Core.WorldStuff.TechRes;
+using MagusEngine.ECS.Components.TilesComponents;
+using MagusEngine.Generators;
+using MagusEngine.Serialization;
+using MagusEngine.Systems;
+using MagusEngine.Utils;
+using MagusEngine.Utils.Extensions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -72,7 +72,7 @@ namespace MagusEngine.Core.Civ
             Sites = new List<Site>();
             ImportantPeople = new();
             Relations = new();
-            Id = GameLoop.GetCivId();
+            Id = SequentialIdGenerator.CivId;
             CivsTradingWith = new();
             Legends = new();
         }
@@ -95,7 +95,7 @@ namespace MagusEngine.Core.Civ
             for (int i = 0; i < nmbrOfImportant; i++)
             {
                 var hf = CreateNewHfMemberFromPop(0);
-                StringBuilder initialLegend = new StringBuilder("In a time before time, ");
+                StringBuilder initialLegend = new("In a time before time, ");
                 initialLegend.Append(hf.Name).Append(" was created looking like a ").Append(hf.HFGender).Append(" of the ").Append(hf.GetRaceNamePlural()).Append(" race ");
                 initialLegend.Append("with ").Append(hf.Body.Anatomy.CurrentAge).Append(" years as a member of ").Append(Name);
                 hf.Legends.Add(new Legend(initialLegend.ToString(), -1));
@@ -200,10 +200,10 @@ namespace MagusEngine.Core.Civ
 
         private void CheckIfGeneratedFigureIsWizard(Race figureRace, HistoricalFigure figure)
         {
-            // if the creature has more than the average mana for it's race, then the figure will be a wizard!
-            // plus a one in 10 chance of it becoming a wizard, to simulate that it will still need to learn
-            // and have the willingness to try to learn!
-            // with studious civs making it a 1 in 5 chance that the figure will be a wizard
+            // if the creature has more than the average mana for it's race, then the figure will be
+            // a wizard! plus a one in 10 chance of it becoming a wizard, to simulate that it will
+            // still need to learn and have the willingness to try to learn! with studious civs
+            // making it a 1 in 5 chance that the figure will be a wizard
             if (figure.HasPotentialToBeAWizard())
             {
                 bool chance;
@@ -219,7 +219,7 @@ namespace MagusEngine.Core.Civ
             }
         }
 
-        public void AppointNewNoble(Noble noble,
+        public void AppointNewNoble(Noble? noble,
             HistoricalFigure figureToAdd,
             int yearAdded,
             string? whyItHappenead = null)
@@ -403,9 +403,9 @@ namespace MagusEngine.Core.Civ
             return waterList;
         }
 
-        public Site GetSite(WorldTile worldTile)
+        public Site? GetSite(Tile worldTile)
         {
-            return Sites.FirstOrDefault(o => o.WorldPos == worldTile.Position);
+            return Sites.Find(o => o.WorldPos == worldTile.Position);
         }
 
         public void AddCivToRelations(Civilization civ, RelationType relationType)
@@ -444,7 +444,7 @@ namespace MagusEngine.Core.Civ
         }
 
         public Language GetLanguage()
-            => Data.DataManager.QueryLanguageInData(LanguageId);
+            => DataManager.QueryLanguageInData(LanguageId);
 
         private string GetDebuggerDisplay()
         {
@@ -464,7 +464,7 @@ namespace MagusEngine.Core.Civ
         public (Noble, HistoricalFigure?) GetRulerNoblePosition()
         {
             Noble n = NoblesPosition.First(i => i.Responsabilities.Contains(Responsability.Rule));
-            HistoricalFigure? figure = ImportantPeople.FirstOrDefault(i => i.NobleTitles.Contains(n));
+            HistoricalFigure? figure = ImportantPeople.Find(i => i.NobleTitles.Contains(n));
 
             return (n, figure);
         }
@@ -484,18 +484,18 @@ namespace MagusEngine.Core.Civ
         {
             foreach (var civId in CivsTradingWith)
             {
-                Civilization civ = otherCivs.FirstOrDefault(i => i.Id == civId);
+                Civilization? civ = Array.Find(otherCivs, i => i.Id == civId);
                 if (civ is not null && Sites.Any(i => i.Famine))
                 {
                     var siteWithMostFood = civ.Sites.MaxBy(i => i.FoodQuantity);
-                    int resourceSpent = 350;
+                    const int resourceSpent = 350;
                     BuyFoodFromOtherCivSite(siteWithMostFood, resourceSpent);
                 }
                 int wealthGeneratedByTrade = GetPotentialWealthGeneratedFromSimpleTrade(civ);
             }
         }
 
-        private int GetPotentialWealthGeneratedFromSimpleTrade(Civilization civ)
+        private int GetPotentialWealthGeneratedFromSimpleTrade(Civilization? civ)
         {
             if (civ is null)
                 return 0;
@@ -548,7 +548,7 @@ namespace MagusEngine.Core.Civ
             }
             if (!hf.IsAlive)
             {
-                if (noble.Succession is not null && noble.Succession.Type is SucessionType.Heir)
+                if (noble.Succession?.Type is SucessionType.Heir)
                 {
                     var inheirt = hf.GetChildrenIfAny();
                     inheirt ??= CreateNewHfMemberFromPop(year);

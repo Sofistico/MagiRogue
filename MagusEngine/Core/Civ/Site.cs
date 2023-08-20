@@ -1,17 +1,14 @@
-﻿using MagiRogue.Data.Enumerators;
-using System;
-using System.Collections.Generic;
-using MagiRogue.Utils;
-using MagiRogue.GameSys.Tiles;
-using System.Linq;
-using System.Text;
-using System.Collections.Specialized;
-using MagiRogue.GameSys.Planet;
-using MagiRogue.Entities;
-using MagiRogue.Utils.Extensions;
+﻿using Arquimedes.Enumerators;
+using MagusEngine.Core.MapStuff;
 using MagusEngine.Core.WorldStuff.History;
 using MagusEngine.Core.WorldStuff.TechRes;
-using MagusEngine.Core.MapStuff;
+using MagusEngine.ECS.Components.TilesComponents;
+using MagusEngine.Generators;
+using MagusEngine.Utils;
+using MagusEngine.Utils.Extensions;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace MagusEngine.Core.Civ
 {
@@ -35,7 +32,7 @@ namespace MagusEngine.Core.Civ
         public int? CivOwnerIfAny { get; set; }
         public bool Famine { get; set; }
         public List<Road> Roads { get; set; } = new();
-        public HistoricalFigure SiteLeader { get; set; }
+        public HistoricalFigure? SiteLeader { get; set; }
         public List<Legend> SiteLegends { get; set; } = new();
         public List<Discovery> DiscoveriesKnow { get; set; } = new();
         public bool FitRoomsCloseTogether { get; set; }
@@ -51,8 +48,10 @@ namespace MagusEngine.Core.Civ
         {
             WorldPos = pos;
             Name = name;
-            Population = new List<Population>();
-            Population.Add(totalPopulation);
+            Population = new List<Population>
+            {
+                totalPopulation
+            };
             CivOwnerIfAny = civOwnerIfAny;
             SetId();
         }
@@ -198,9 +197,9 @@ namespace MagusEngine.Core.Civ
             };
             for (int i = 0; i < numberOfNewTowerRooms; i++)
             {
-                var tag = tags.GetRandomItemFromList();
-                Room business = new Room();
-                Building build = new Building(business);
+                _ = tags.GetRandomItemFromList();
+                Room business = new();
+                Building build = new(business);
                 Buildings.Add(build);
             }
             FitRoomsCloseTogether = true;
@@ -211,7 +210,7 @@ namespace MagusEngine.Core.Civ
             int numberOfNewHouses = ReturnPopNumber() % 10;
             for (int i = 0; i < numberOfNewHouses; i++)
             {
-                Room house = new Room(RoomTag.House);
+                Room house = new(RoomTag.House);
                 Buildings.Add(new Building(house));
             }
         }
@@ -235,13 +234,13 @@ namespace MagusEngine.Core.Civ
             for (int i = 0; i < numberOfNewBusiness; i++)
             {
                 var tag = tags.GetRandomItemFromList();
-                Room business = new Room(tag);
+                Room business = new(tag);
                 MundaneResources -= 15;
                 Buildings.Add(new Building(business));
             }
             if (TotalFoodProductionPerYear() <= TotalFoodProductionNeededToNotStarve())
             {
-                Room business = new Room(RoomTag.Farm);
+                Room business = new(RoomTag.Farm);
                 MundaneResources -= 15;
                 Buildings.Add(new Building(business));
             }
@@ -316,7 +315,7 @@ namespace MagusEngine.Core.Civ
             StringBuilder builder = new($"the {hf.Name} assumed control of the {SiteType} {Name}");
             if (SiteLeader is not null)
             {
-                builder.Append($" removing the previous leader {SiteLeader.Name} from it's post!");
+                builder.Append(" removing the previous leader ").Append(SiteLeader.Name).Append(" from it's post!");
                 SiteLeader.RemovePreviousSiteRelation(Id);
                 SiteLeader.AddRelatedSite(Id, SiteRelationTypes.Ruled);
             }
@@ -333,23 +332,23 @@ namespace MagusEngine.Core.Civ
                 }
             }
             else
+            {
                 hf.AddRelatedSite(Id, SiteRelationTypes.LivesThere | SiteRelationTypes.Rules);
+            }
+
             AddLegend(builder.ToString(), currentYear);
         }
 
         public bool CheckIfSiteHasCurrentLeaderOrDiedAndRemoveIt(int currentYear)
         {
-            if (SiteLeader is not null)
+            if (SiteLeader?.IsAlive == false)
             {
-                if (!SiteLeader.IsAlive)
-                {
-                    SiteLeader.YearDeath ??= currentYear;
-                    var relation = SiteLeader.FindSiteRelation(Id);
-                    relation.RelationType &= ~SiteRelationTypes.Rules;
-                    relation.RelationType |= SiteRelationTypes.Ruled;
+                SiteLeader.YearDeath ??= currentYear;
+                var relation = SiteLeader.FindSiteRelation(Id);
+                relation.RelationType &= ~SiteRelationTypes.Rules;
+                relation.RelationType |= SiteRelationTypes.Ruled;
 
-                    SiteLeader = null;
-                }
+                SiteLeader = null;
             }
 
             return SiteLeader is null;
@@ -367,14 +366,12 @@ namespace MagusEngine.Core.Civ
 
         public void SimulateResearchPropagation(Civilization civ, WorldTile[,] tiles)
         {
-            if (DiscoveriesKnow.Count <= 0)
+            if (DiscoveriesKnow.Count == 0)
                 return;
-            var sitesThatAreNotThis = civ.Sites.Where(i => i.Id != Id);
-            foreach (Site siteNotThis in sitesThatAreNotThis)
+            foreach (Site siteNotThis in civ.Sites.Where(i => i.Id != Id))
             {
                 siteNotThis.AddDiscovery(DiscoveriesKnow.GetRandomItemFromList());
             }
-            return;
         }
 
         public void AddDiscovery(Discovery discovery)
@@ -395,7 +392,7 @@ namespace MagusEngine.Core.Civ
 
         public void AddLegend(string legend, int yearWhen)
         {
-            StringBuilder str = new StringBuilder($"In the year of {yearWhen}, ");
+            StringBuilder str = new($"In the year of {yearWhen}, ");
             str.Append(legend);
             Legend newLegend = new Legend(str.ToString(), yearWhen);
             SiteLegends.Add(newLegend);

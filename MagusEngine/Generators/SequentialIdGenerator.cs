@@ -1,4 +1,4 @@
-﻿using MagiRogue.Data.Enumerators;
+﻿using Arquimedes.Enumerators;
 using System;
 using System.Collections.Generic;
 

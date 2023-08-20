@@ -25,7 +25,7 @@ namespace Diviner.Windows
 
         public WindowTag Tag { get; set; }
 
-        public MagiBaseWindow(int width, int height, string title) : base(width, height)
+        public MagiBaseWindow(int width, int height, string? title) : base(width, height)
         {
             // Ensure that the window background is the correct colour
 
@@ -43,7 +43,7 @@ namespace Diviner.Windows
 
             CanDrag = false;
 
-            Title = title;
+            Title = title!;
         }
 
         public void AddToDictionary(MagiButton button)

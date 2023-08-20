@@ -8,6 +8,7 @@ using MagusEngine.Core.MapStuff;
 using MagusEngine.ECS.Components.ActorComponents;
 using MagusEngine.ECS.Components.TilesComponents;
 using MagusEngine.Factory;
+using MagusEngine.Generators;
 using MagusEngine.Serialization;
 using MagusEngine.Services;
 using MagusEngine.Systems;
@@ -107,7 +108,7 @@ namespace MagusEngine.Commands
                 itemUsed,
                 limbAttacking);
             var staminaDiscount = attacker.Body.Stamina
-                - attack.PrepareVelocity * 10 + attacker.Body.Endurance * 0.5;
+                - (attack.PrepareVelocity * 10) + (attacker.Body.Endurance * 0.5);
             // discount stamina from the attacker
             attacker.Body.Stamina = MathMagi.Round(staminaDiscount);
 
@@ -214,7 +215,7 @@ namespace MagusEngine.Commands
         {
             foreach (Point points in actor.Position.GetDirectionPoints())
             {
-                TileDoor possibleDoor = GameLoop.GetCurrentMap().GetTileAt<TileDoor>(points);
+                var possibleDoor = GameLoop.GetCurrentMap().GetTileAt<TileDoor>(points);
                 if (possibleDoor?.IsOpen == true)
                 {
                     possibleDoor.Close();
@@ -250,7 +251,7 @@ namespace MagusEngine.Commands
 
             foreach (Point item in direction)
             {
-                if (GameLoop.GetCurrentMap().Tiles[item.ToIndex(GameLoop.GetCurrentMap().Width)] is NodeTile node)
+                if (GameLoop.GetCurrentMap().Terrain[item] is NodeTile node)
                 {
                     node.DrainNode(actor);
                     return true;
@@ -435,7 +436,7 @@ namespace MagusEngine.Commands
             if (possibleChangeMap)
             {
                 if (possibleStairs is not null && !GameLoop.Universe.MapIsWorld()
-                    && possibleStairs.MapIdConnection.HasValue)
+                    && possibleStairs?.MapIdConnection)
                 {
                     Map map = Universe.GetMapById(possibleStairs.MapIdConnection.Value);
                     // TODO: For now it's just a test, need to work out a better way to do it.
@@ -605,7 +606,7 @@ namespace MagusEngine.Commands
         public static Path FindFleeAction(Map map, Actor actor, Actor? danger)
         {
 #if DEBUG
-            Locator.GetService<MagiLog>().Log($"{actor.Name} considers {danger.Name} dangerous!");
+            Locator.GetService<MagiLog>().Log($"{actor.Name} considers {danger?.Name} dangerous!");
 #endif
 
             Point rngPoint = map.GetRandomWalkableTile();

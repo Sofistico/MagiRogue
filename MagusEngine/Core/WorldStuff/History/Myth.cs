@@ -1,17 +1,15 @@
-﻿using MagiRogue.Data;
-using MagiRogue.Utils;
-using MagiRogue.Data.Enumerators;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using MagiRogue.Entities.Core;
+﻿using Arquimedes.Enumerators;
+using MagusEngine.Core.Entities.Base;
+using MagusEngine.Generators;
+using MagusEngine.Systems;
+using MagusEngine.Utils;
 
 namespace MagusEngine.Core.WorldStuff.History
 {
     public class Myth
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public MythWho MythWho { get; set; }
         public MythAction MythAction { get; set; }
         public MythWhat MythWhat { get; set; }
@@ -25,19 +23,19 @@ namespace MagusEngine.Core.WorldStuff.History
 
         public Myth()
         {
-            Id = GameLoop.GetMythId();
+            Id = SequentialIdGenerator.MythId;
         }
 
         public Myth(string name, MythWho mythWho, MythAction action, MythWhat whatAction)
         {
-            Id = GameLoop.GetMythId();
+            Id = SequentialIdGenerator.MythId;
             Name = name;
             MythWho = mythWho;
             MythAction = action;
             MythWhat = whatAction;
         }
 
-        public HistoricalFigure CreateFigureFromMyth(string creatorName)
+        public HistoricalFigure? CreateFigureFromMyth(string creatorName)
         {
             if (MythAction is not MythAction.Created)
                 return null;

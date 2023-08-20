@@ -1,25 +1,25 @@
-﻿using GoRogue.Pathing;
-using MagiRogue.Data;
-using MagiRogue.Data.Enumerators;
-using MagiRogue.Data.Serialization.EntitySerialization;
-using MagiRogue.Entities;
-using MagiRogue.GameSys.Tiles;
-using MagiRogue.Utils;
-using MagiRogue.Utils.Extensions;
+﻿using Arquimedes.Enumerators;
+using GoRogue.Pathing;
+using GoRogue.Random;
 using MagusEngine.Core.Civ;
 using MagusEngine.Core.MapStuff;
+using MagusEngine.ECS.Components.TilesComponents;
+using MagusEngine.Generators;
+using MagusEngine.Serialization.EntitySerialization;
+using MagusEngine.Systems;
+using MagusEngine.Utils;
+using MagusEngine.Utils.Extensions;
 using SadConsole;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace MagusEngine.Core.WorldStuff.History
 {
     public sealed class AccumulatedHistory
     {
-        private PlanetMap planetData;
+        private PlanetMap? planetData;
 
         #region Consts
 
@@ -59,21 +59,20 @@ namespace MagusEngine.Core.WorldStuff.History
             bool firstYearOnly = true;
             MythGenerator mythGenerator = new MythGenerator();
             Myths = mythGenerator.GenerateMyths(
-                Data.DataManager.ListOfRaces.ToList(),
+                DataManager.ListOfRaces.ToList(),
                 Figures,
                 planet);
             PopulateFindValues(tiles);
 
             if (firstYearOnly)
             {
-                // stuff that will only happen in the first year!
-                // after that won't really happen anymore!
+                // stuff that will only happen in the first year! after that won't really happen anymore!
                 FirstYearOnlyInteractions(civilizations.ToArray());
                 firstYearOnly = false;
 
                 DefineFiguresToHaveAInitialSite(Figures, Civs);
 
-                List<Site> civSite = Civs.Select(i => i.Sites).ToList().ReturnListListTAsListT();
+                List<Site> civSite = Civs.ConvertAll(i => i.Sites).ReturnListListTAsListT();
                 AllSites.AddRange(civSite);
             }
 
@@ -116,7 +115,7 @@ namespace MagusEngine.Core.WorldStuff.History
                 if (figure.RelatedCivs.Count > 0)
                 {
                     var civRelation = figure.RelatedCivs.Find(i => i.GetIfMember());
-                    Civilization civ = civs.Find(i => i.Id == civRelation.CivRelatedId);
+                    Civilization? civ = civs.Find(i => i.Id == civRelation?.CivRelatedId);
                     figure.AddRelatedSite(civ.Sites[0].Id, SiteRelationTypes.LivesThere);
                     figure.ChangeStayingSite(civ.Sites[0].WorldPos);
                 }
@@ -144,7 +143,9 @@ namespace MagusEngine.Core.WorldStuff.History
                     figure.KillIt(Year, $"the {figure.Name} died of old age.");
                 }
                 else
+                {
                     figure.Body.Anatomy.AgeBody();
+                }
             }
 
             AgePopsFromSite();
@@ -164,8 +165,8 @@ namespace MagusEngine.Core.WorldStuff.History
                     if (pop.PopulationRace().LifespanMin.HasValue
                         && Year >= pop.PopulationRace().LifespanMin.Value)
                     {
-                        // about 2.5% die to age every year,
-                        // if they age that is and the year is greater than the LifespanMin!
+                        // about 2.5% die to age every year, if they age that is and the year is
+                        // greater than the LifespanMin!
                         double totalLost = (double)(pop.TotalPopulation * (double)0.025);
                         pop.TotalPopulation = (int)MathMagi.Round(pop.TotalPopulation - totalLost);
                     }
@@ -192,7 +193,9 @@ namespace MagusEngine.Core.WorldStuff.History
                 if (figure is null)
                     continue;
                 if (figure.IsAlive)
+                {
                     HistoryAction.Act(figure);
+                }
                 else
                 {
                     figure.CleanupIfNotImportant(Year);
@@ -266,7 +269,7 @@ namespace MagusEngine.Core.WorldStuff.History
         {
             foreach (var otherCiv in Civs)
             {
-                if (civ.Territory.Any(p => otherCiv.Territory.Contains(p)))
+                if (civ.Territory.Any(otherCiv.Territory.Contains))
                 {
                     civ.AddCivToRelations(otherCiv, RelationType.Tension);
                 }
@@ -277,7 +280,7 @@ namespace MagusEngine.Core.WorldStuff.History
         {
             // this here is making the Civilization grab infinite tiles
             IEnumerable<Point> getAllPointsSites = civ.Sites.Select(o => o.WorldPos);
-            int propagationLimit = 10; // the civ can only extend by ten tiles from each site!
+            const int propagationLimit = 10; // the civ can only extend by ten tiles from each site!
             foreach (Point point in getAllPointsSites)
             {
                 var directions = point.GetDirectionPoints();
@@ -345,19 +348,18 @@ namespace MagusEngine.Core.WorldStuff.History
             Site site;
             if (civ is not null)
             {
-                int migrantsNmbr = GameLoop.GlobalRand.NextInt(10, 100);
+                int migrantsNmbr = GlobalRandom.DefaultRNG.NextInt(10, 100);
                 Site rngSettl = civ.Sites.GetRandomItemFromList();
                 var pop = rngSettl.Population.GetRandomItemFromList();
                 pop.TotalPopulation -= migrantsNmbr;
                 Point pos = rngSettl.WorldPos.GetPointNextTo();
-                if (planetData.AssocietatedMap.CheckForIndexOutOfBounds(pos))
+                if (planetData?.AssocietatedMap?.CheckForIndexOutOfBounds(pos) == true)
                 {
-                    int tries = 300;
-                    int currentRty = 0;
-                    while (planetData.AssocietatedMap.CheckForIndexOutOfBounds(pos) && currentRty <= tries)
+                    const int tries = 300;
+                    for (int currentRty = 0; planetData.AssocietatedMap.CheckForIndexOutOfBounds(pos)
+                        && currentRty <= tries; currentRty++)
                     {
                         pos = rngSettl.WorldPos.GetPointNextTo();
-                        currentRty++;
                     }
                 }
                 site = new Site(pos,
@@ -405,7 +407,7 @@ namespace MagusEngine.Core.WorldStuff.History
                 return false;
             }
 
-            Path path = planetData.AssocietatedMap.
+            Path? path = planetData.AssocietatedMap.
                         AStar.ShortestPath(territory,
                         friendTerr);
 
@@ -434,8 +436,7 @@ namespace MagusEngine.Core.WorldStuff.History
             if (tile == closestCityTile)
                 return;
 
-            // Shouldn't appear, but who knows
-            // Still need to know what i will do with it
+            // Shouldn't appear, but who knows Still need to know what i will do with it
             /*if (tile.HeightType == HeightType.River)
                 return;*/
 
@@ -506,7 +507,7 @@ namespace MagusEngine.Core.WorldStuff.History
             }
             if (direction == Direction.UpLeft)
             {
-                WorldTile worldTile = tile.TopLeft;
+                WorldTile worldTile = tile.Directions[direction];
                 if (worldTile.SiteInfluence is not null)
                 {
                     worldTile.SiteInfluence.Roads.Add(road);
@@ -522,7 +523,7 @@ namespace MagusEngine.Core.WorldStuff.History
             }
             if (direction == Direction.UpRight)
             {
-                WorldTile worldTile = tile.TopRight;
+                WorldTile worldTile = tile.Directions[direction];
                 if (worldTile.SiteInfluence is not null)
                 {
                     worldTile.SiteInfluence.Roads.Add(road);
@@ -538,7 +539,7 @@ namespace MagusEngine.Core.WorldStuff.History
             }
             if (direction == Direction.DownLeft)
             {
-                WorldTile worldTile = tile.BottomLeft;
+                WorldTile worldTile = tile.Directions[direction];
                 if (worldTile.SiteInfluence is not null)
                 {
                     worldTile.SiteInfluence.Roads.Add(road);
@@ -554,7 +555,7 @@ namespace MagusEngine.Core.WorldStuff.History
             }
             if (direction == Direction.DownRight)
             {
-                WorldTile worldTile = tile.BottomRight;
+                WorldTile worldTile = tile.Directions[direction];
                 if (worldTile.SiteInfluence is not null)
                 {
                     worldTile.SiteInfluence.Roads.Add(road);
@@ -571,7 +572,6 @@ namespace MagusEngine.Core.WorldStuff.History
             if (direction == Direction.None)
             {
                 // Should theoritically never happen, but who knows!
-                return;
             }
         }
     }

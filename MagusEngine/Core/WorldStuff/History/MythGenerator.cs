@@ -1,15 +1,10 @@
-﻿using MagiRogue.GameSys.Civ;
+﻿using Arquimedes.Enumerators;
+using MagusEngine.Core.Entities.Base;
+using MagusEngine.Core.MapStuff;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using MagiRogue.Data.Enumerators;
-using MagiRogue.Utils;
-using MagiRogue.Data;
-using MagiRogue.Utils.Extensions;
-using MagiRogue.Entities.Core;
-using MagusEngine.Core.MapStuff;
 
 namespace MagusEngine.Core.WorldStuff.History
 {
@@ -26,11 +21,11 @@ namespace MagusEngine.Core.WorldStuff.History
         public List<Myth> GenerateMyths(List<Race> races,
             List<HistoricalFigure> figures, PlanetMap planet)
         {
-            // there is lot that will need some tune up and some rewrite in the future
-            // but for now, let's see to where i can go with it!
+            // there is lot that will need some tune up and some rewrite in the future but for now,
+            // let's see to where i can go with it!
             List<Myth> myths = new List<Myth>();
-            // generate the primordials hfs (gods, demons, world, etc)
-            // and also define who or what created the world!
+            // generate the primordials hfs (gods, demons, world, etc) and also define who or what
+            // created the world!
             myths.AddRange(WhoCreatedTheWorld(figures, races, planet.Name));
             myths.AddRange(CreateSomeMinorMyths(figures, races, nmbrOfNewMyths));
             myths.AddRange(BunchOfMythsInteraction(races, figures, planet, nmbrInteractions));

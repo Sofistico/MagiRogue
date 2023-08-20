@@ -204,11 +204,11 @@ namespace MagusEngine.Core.Entities
         {
             if (!Body.Anatomy.HasAnyHands)
                 return null;
-            return Body?.Equipment?.GetValueOrDefault(GetAnatomy().Limbs.Find(l =>
+            return Body?.Equipment!.GetValueOrDefault(GetAnatomy().Limbs.Find(l =>
                 l.BodyPartFunction == BodyPartFunction.Grasp)?.Id, null);
         }
 
-        public List<Item> GetAllWieldedItems()
+        public List<Item>? GetAllWieldedItems()
         {
             if (!Body.Anatomy.HasAnyHands)
                 return null;
@@ -216,7 +216,7 @@ namespace MagusEngine.Core.Entities
             foreach (var item in Body.Equipment)
             {
                 var limb = GetAnatomy().Limbs.Find(i => i.Id.Equals(item.Key));
-                if (limb.BodyPartFunction == BodyPartFunction.Grasp
+                if (limb?.BodyPartFunction == BodyPartFunction.Grasp
                     && item.Value.EquipType == EquipType.Held)
                 {
                     items.Add(item.Value);
@@ -280,7 +280,7 @@ namespace MagusEngine.Core.Entities
         public void ApplyBodyRegen()
         {
             bool regens = GetAnatomy().Race.CanRegenarate();
-            var limbsHeal = GetAnatomy().Limbs.FindAll(i => i.NeedsHeal || regens && !i.Attached);
+            var limbsHeal = GetAnatomy().Limbs.FindAll(i => i.NeedsHeal || (regens && !i.Attached));
             int limbCount = limbsHeal.Count;
             for (int i = 0; i < limbCount; i++)
             {
@@ -330,7 +330,7 @@ namespace MagusEngine.Core.Entities
         {
             if (GetAnatomy().HasBlood)
             {
-                return GetAnatomy().Race.BleedRegenaration + Body.Toughness * 0.2;
+                return GetAnatomy().Race.BleedRegenaration + (Body.Toughness * 0.2);
             }
             return 0;
         }
@@ -356,7 +356,7 @@ namespace MagusEngine.Core.Entities
 
         public double GetActorBaseCastingSpeed()
         {
-            return GetActorBaseSpeed() + Magic.ShapingSkill * 0.7 * (Soul.WillPower * 0.3);
+            return GetActorBaseSpeed() + (Magic.ShapingSkill * 0.7 * (Soul.WillPower * 0.3));
         }
 
         public double GetAttackVelocity(Attack attack)
@@ -441,7 +441,7 @@ namespace MagusEngine.Core.Entities
         public List<Attack> GetAttacks()
         {
             List<Attack> list = new List<Attack>();
-            foreach (var item in GetAllWieldedItems().Select(i => i.Attacks))
+            foreach (var item in GetAllWieldedItems()!.Select(i => i.Attacks))
             {
                 list.AddRange(item);
             }
@@ -465,7 +465,7 @@ namespace MagusEngine.Core.Entities
                     if (need.TickNeed())
                     {
 #if DEBUG
-                        Locator.GetService<MagiLog>().Log("Need is in dire need!");
+                        Locator.GetService<MagiLog>().Log($"Need {need.Name} is in dire need!");
 #endif
                     }
                 }

@@ -1,4 +1,4 @@
-﻿using MagiRogue.GameSys.Tiles;
+﻿using MagusEngine.Core;
 using MagusEngine.Core.Entities.Base;
 using System.Text;
 using Console = SadConsole.Console;
@@ -7,8 +7,8 @@ namespace Diviner.Windows
 {
     public class LookWindow : PopWindow
     {
-        private readonly MagiEntity entityLooked;
-        private readonly TileBase tileLooked;
+        private readonly MagiEntity? entityLooked;
+        private readonly Tile? tileLooked;
         private readonly Console lookConsole;
 
         public LookWindow(MagiEntity entity) : base(entity.Name)
@@ -32,7 +32,7 @@ namespace Diviner.Windows
             Children.Add(lookConsole);
         }
 
-        public LookWindow(TileBase tile) : base(tile.Name)
+        public LookWindow(Tile tile) : base(tile.Name)
         {
             tileLooked = tile;
 

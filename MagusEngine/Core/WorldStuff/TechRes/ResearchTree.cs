@@ -1,9 +1,7 @@
-﻿using MagiRogue.Data.Enumerators;
-using MagiRogue.Entities;
-using MagiRogue.GameSys.Civ;
-using MagiRogue.Utils;
-using MagiRogue.Utils.Extensions;
+﻿using Arquimedes.Enumerators;
 using MagusEngine.Core.WorldStuff.History;
+using MagusEngine.Utils;
+using MagusEngine.Utils.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +11,7 @@ namespace MagusEngine.Core.WorldStuff.TechRes
     public class ResearchTree : BasicTreeStructure<ResearchTreeNode>
     {
         //public List<ResearchTreeNode> Nodes { get; set; }
-        public ResearchTreeNode CurrentResearchFocus { get; set; }
+        public ResearchTreeNode? CurrentResearchFocus { get; set; }
 
         public ResearchTree()
         {
@@ -43,7 +41,7 @@ namespace MagusEngine.Core.WorldStuff.TechRes
                 // priotize by roots first
                 if (nodes.Any(i => i?.IsRoot == true))
                 {
-                    int maxTries = 30;
+                    const int maxTries = 30;
                     int tries = 0;
                     while (tries <= maxTries)
                     {
@@ -64,8 +62,7 @@ namespace MagusEngine.Core.WorldStuff.TechRes
                 {
                     ResearchTreeNode[] nodesWithParentsDone =
                         nodes.Where(i => i.Parents.All(i => i.Finished)).ToArray();
-                    List<ResearchTreeNode> nodesWithEnoughAbilitiesForRes
-                        = new List<ResearchTreeNode>();
+                    List<ResearchTreeNode> nodesWithEnoughAbilitiesForRes = new();
                     for (int i = 0; i < nodesWithParentsDone.Length; i++)
                     {
                         ResearchTreeNode possibleNode = nodesWithParentsDone[i];
@@ -76,29 +73,27 @@ namespace MagusEngine.Core.WorldStuff.TechRes
                     if (nodesWithEnoughAbilitiesForRes.Count > 0)
                         CurrentResearchFocus = nodesWithEnoughAbilitiesForRes.GetRandomItemFromList();
                 }
-                return;
             }
         }
 
         private static bool CheckIfHasAbilityToResearchNode(HistoricalFigure figure, ResearchTreeNode node)
         {
             var abilities = node.GetRequisiteAbilitiesForResearch(figure);
-            return abilities is not null && abilities.Count > 0;
+            return abilities?.Count > 0;
         }
 
         private ResearchTreeNode[] GetUnfinishedNodes()
         {
-            ResearchTreeNode[] nodes = Nodes.Where(i => !i.Finished).ToArray();
-            return nodes;
+            return Nodes.Where(i => !i.Finished).ToArray();
         }
 
         private void DefineNodeRelation(ResearchTreeNode childNode, string str)
         {
-            var parentNode = Nodes.FirstOrDefault(i => i.Research.Id.Equals(str));
+            var parentNode = Nodes.Find(i => i.Research.Id.Equals(str));
             if (parentNode is not null)
             {
-                childNode.Parents.Add(parentNode);
-                parentNode.Children.Add(childNode);
+                childNode?.Parents?.Add(parentNode);
+                parentNode?.Children?.Add(childNode!);
             }
         }
     }
@@ -133,8 +128,7 @@ namespace MagusEngine.Core.WorldStuff.TechRes
             var getResAbilities = Research.AbilityRequired;
             List<AbilityName> abilitiesNeeded = new();
             int count = getResAbilities.Count;
-            // special handling for unusual cases for
-            // AnyCraft, AnyResearch, AnyMagic, AnyCombat and AnyJob
+            // special handling for unusual cases for AnyCraft, AnyResearch, AnyMagic, AnyCombat and AnyJob
             for (int i = 0; i < count; i++)
             {
                 string abilityString = getResAbilities[i];
@@ -210,13 +204,13 @@ namespace MagusEngine.Core.WorldStuff.TechRes
             return abilitiesNeeded;
         }
 
-        public List<AbilityName> GetRequisiteAbilitiesForResearch(HistoricalFigure figure)
+        public List<AbilityName>? GetRequisiteAbilitiesForResearch(HistoricalFigure figure)
         {
             if (figure.TrainingFocus is AbilityName.None)
                 return null;
             var abilities = GetRequisiteAbilitiesForResearch();
             List<AbilityName> abilitiesIntersection = figure.Mind.ReturnIntersectionAbilities(abilities);
-            if (abilitiesIntersection.Count <= 0)
+            if (abilitiesIntersection.Count == 0)
             {
                 figure.SetCurrentAbilityTrainingFocus(abilities.GetRandomItemFromList());
             }

@@ -1,7 +1,6 @@
 ﻿using Arquimedes.Enumerators;
+using MagusEngine.Generators;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 
@@ -13,7 +12,7 @@ namespace MagusEngine.Core.Entities.Base
         public int Score { get; set; }
         public int Id { get; }
         public int XpTotal { get; set; }
-        public int XpRequiredForNextLevel { get => (Score + 1) * 1000 * 2; }
+        public readonly int XpRequiredForNextLevel { get => (Score + 1) * 1000 * 2; }
 
         public Ability(AbilityName name, int abilityScore)
         {
@@ -27,7 +26,7 @@ namespace MagusEngine.Core.Entities.Base
         {
             Name = name;
             Score = abilityScore;
-            Id = GameLoop.GetAbilityId();
+            Id = SequentialIdGenerator.AbilityId;
             XpTotal = abilityScore * 1000;
         }
 
@@ -37,7 +36,7 @@ namespace MagusEngine.Core.Entities.Base
             return string.Join(" ", Regex.Split(tempName, "(?<!^)(?=[A-Z](?![A-Z]|$))", RegexOptions.None, TimeSpan.FromSeconds(10)));
         }
 
-        public AbilityName ReturnAbilityEnumFromString()
+        public readonly AbilityName ReturnAbilityEnumFromString()
         {
             try
             {

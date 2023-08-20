@@ -1,4 +1,8 @@
 ﻿using Arquimedes.Enumerators;
+using GoRogue.Random;
+using MagusEngine.Serialization;
+using MagusEngine.Systems;
+using MagusEngine.Utils.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SadRogue.Primitives;
@@ -6,10 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Arquimedes.Data;
-using MagusEngine.Utils.Extensions;
-using MagusEngine.Serialization;
-using MagusEngine.Systems;
 
 namespace MagusEngine.Core.Entities.Base
 {
@@ -134,8 +134,8 @@ namespace MagusEngine.Core.Entities.Base
 
         public int GetRngVolume(int age)
         {
-            // in the future will take in acount the variation across the height and broadness of the individual
-            // so that some are bigger or smaller than others.
+            // in the future will take in acount the variation across the height and broadness of
+            // the individual so that some are bigger or smaller than others.
             int volume = 0;
 
             if (ChildAge.HasValue && age <= ChildAge && age < TeenAge)
@@ -166,7 +166,7 @@ namespace MagusEngine.Core.Entities.Base
 
         public int GetAgeFromAgeGroup(AgeGroup group)
         {
-            var rng = GameLoop.GlobalRand;
+            var rng = GlobalRandom.DefaultRNG;
             return group switch
             {
                 AgeGroup.Baby => rng.NextInt(ChildAge.Value - 1),
@@ -197,7 +197,7 @@ namespace MagusEngine.Core.Entities.Base
         {
             if (modifiers is null)
                 return 0;
-            int rng = GameLoop.GlobalRand.NextInt(modifiers.Length);
+            int rng = GlobalRandom.DefaultRNG.NextInt(modifiers.Length);
             int value = modifiers.Length > 0 ? modifiers[rng] : 0;
             return value;
         }

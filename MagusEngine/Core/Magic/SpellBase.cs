@@ -194,7 +194,7 @@ namespace MagusEngine.Core.Magic
             {
                 MagiEntity entity = GameLoop.GetCurrentMap().GetEntityAt<MagiEntity>(target);
 
-                GameLoop.AddMessageLog($"{caster.Name} casted {SpellName}");
+                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"{caster.Name} casted {SpellName}"));
 
                 foreach (ISpellEffect effect in Effects)
                 {
@@ -211,7 +211,7 @@ namespace MagusEngine.Core.Magic
                 return true;
             }
 
-            GameLoop.AddMessageLog(errorMessage);
+            Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new(errorMessage));
             errorMessage = "Can't cast the spell";
 
             return false;
@@ -227,7 +227,7 @@ namespace MagusEngine.Core.Magic
         {
             if (CanCast(caster.Magic, caster) && target.Count > 0)
             {
-                GameLoop.AddMessageLog($"{caster.Name} casted {SpellName}");
+                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"{caster.Name} casted {SpellName}"));
 
                 foreach (var pos in target)
                 {

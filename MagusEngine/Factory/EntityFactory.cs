@@ -2,7 +2,9 @@
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Entities.StarterScenarios;
+using MagusEngine.Core.Magic;
 using MagusEngine.Core.WorldStuff.History;
+using MagusEngine.ECS.Components.ActorComponents;
 using MagusEngine.Serialization.EntitySerialization;
 using MagusEngine.Systems;
 using MagusEngine.Utils;

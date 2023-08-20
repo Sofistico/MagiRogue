@@ -1,5 +1,6 @@
 ﻿using SadConsole;
 using SadConsole.UI.Controls;
+using Console = SadConsole.Console;
 
 namespace Diviner.Windows
 {
@@ -20,7 +21,7 @@ namespace Diviner.Windows
         /// Width - ButtonWidth - 3, Height - 4, for the position = ButtonWidth + 2, 1
         /// </summary>
         /// <param name="title"></param>
-        public PopWindow(string title) : base(100, 20, title)
+        public PopWindow(string? title) : base(100, 20, title)
         {
             GameLoop.UIManager.NoPopWindow = false;
 
@@ -79,9 +80,9 @@ namespace Diviner.Windows
 
             DescriptionArea = new Console(Width - 3, Height - 4)
             {
-                Position = new Point(Width / 2, 1)
+                Position = new Point(Width / 2, 1),
+                IsVisible = true
             };
-            DescriptionArea.IsVisible = true;
             DescriptionArea.FillWithRandomGarbage(10);
             Children.Add(DescriptionArea);
         }
