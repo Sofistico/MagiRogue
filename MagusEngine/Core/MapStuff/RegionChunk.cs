@@ -2,6 +2,8 @@
 using MagusEngine.Core.Entities;
 using MagusEngine.Serialization.MapConverter;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MagusEngine.Core.MapStuff
 {

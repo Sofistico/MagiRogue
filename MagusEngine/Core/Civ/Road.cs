@@ -2,6 +2,7 @@
 using MagusEngine.ECS.Components.TilesComponents;
 using MagusEngine.Serialization.MapConverter;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace MagusEngine.Core.Civ
 {

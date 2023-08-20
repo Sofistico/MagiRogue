@@ -1,5 +1,7 @@
 ﻿using MagusEngine.ECS.Interfaces;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace MagusEngine.ECS
 {

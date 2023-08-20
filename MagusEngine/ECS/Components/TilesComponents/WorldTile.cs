@@ -1,6 +1,6 @@
 ﻿using Arquimedes.Enumerators;
-using MagusEngine.Core.Civ;
 using SadRogue.Primitives;
+using System.Collections.Generic;
 
 namespace MagusEngine.ECS.Components.TilesComponents
 {
@@ -18,6 +18,10 @@ namespace MagusEngine.ECS.Components.TilesComponents
         public SpecialLandType SpecialLandType { get; set; }
 
         public Dictionary<Direction, WorldTile> Directions { get; set; } = new();
+        public WorldTile Top => Directions[Direction.Up];
+        public WorldTile Bottom => Directions[Direction.Down];
+        public WorldTile Left => Directions[Direction.Left];
+        public WorldTile Right => Directions[Direction.Right];
         public int Bitmask { get; private set; }
 
         /// <summary>
@@ -74,8 +78,6 @@ namespace MagusEngine.ECS.Components.TilesComponents
             Bitmask = count;
         }
 
-
-
         public WorldDirection GetLowestNeighbor()
         {
             if (Left.HeightValue < Right.HeightValue
@@ -107,6 +109,5 @@ namespace MagusEngine.ECS.Components.TilesComponents
                 return WorldDirection.Bottom;
             }
         }
-
     }
 }

@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MagusEngine.Bus.UiBus
+﻿namespace MagusEngine.Bus.UiBus
 {
     public class MessageSent
     {
+        public string Message { get; set; }
+        public bool IsPlayer { get; set; }
+
+        public MessageSent(string message, bool playerSees = true)
+        {
+            Message = message;
+            IsPlayer = playerSees;
+        }
     }
 }

@@ -3,6 +3,7 @@ using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.ECS.Components.ActorComponents;
 using SadRogue.Primitives;
+using System.Collections.Generic;
 
 namespace MagusEngine.Systems
 {

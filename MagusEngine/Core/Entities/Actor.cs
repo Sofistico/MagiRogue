@@ -1,19 +1,18 @@
-﻿using GoRogue.FOV;
-using Arquimedes.Enumerators;
-using MagiRogue.GameSys;
-using MagiRogue.GameSys.Tiles;
+﻿using Arquimedes.Enumerators;
+using GoRogue.FOV;
+using MagusEngine.Commands;
+using MagusEngine.Core.Entities.Base;
+using MagusEngine.Core.MapStuff;
+using MagusEngine.ECS.Components.ActorComponents;
+using MagusEngine.Serialization.EntitySerialization;
+using MagusEngine.Services;
+using MagusEngine.Systems.Physics;
+using MagusEngine.Utils.Extensions;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using MagusEngine.Core.Entities.Base;
-using MagusEngine.Commands;
-using MagusEngine.Utils.Extensions;
-using MagusEngine.Serialization.EntitySerialization;
-using MagusEngine.ECS.Components.ActorComponents;
-using MagusEngine.Systems.Physics;
-using MagusEngine.Core.MapStuff;
 
 namespace MagusEngine.Core.Entities
 {
@@ -69,15 +68,10 @@ namespace MagusEngine.Core.Entities
 
         #region Constructor
 
-        /// <summary>
-        /// This here defines an actor, must be used with the <see cref= "Arquimedes.Data.EntityFactory">
-        /// Normally, use the ActorCreator method!
-        /// </summary>
-        /// <param name="foreground"></param>
-        /// <param name="background"></param>
-        /// <param name="glyph"></param>
-        /// <param name="layer"></param>
-        /// <param name="coord"></param>
+        /// <summary> This here defines an actor, must be used with the <see cref=
+        /// "Arquimedes.Data.EntityFactory"> Normally, use the ActorCreator method! </summary>
+        /// <param name="foreground"></param> <param name="background"></param> <param
+        /// name="glyph"></param> <param name="layer"></param> <param name="coord"></param>
         public Actor(string name, Color foreground, Color background,
             int glyph, Point coord, int layer = (int)MapLayer.ACTORS
             ) : base(foreground, background,
@@ -98,9 +92,8 @@ namespace MagusEngine.Core.Entities
 
         #region Utils
 
-        // Moves the Actor BY positionChange tiles in any X/Y direction
-        // returns true if actor was able to move, false if failed to move
-        // Checks for Monsters, and allows the Actor to commit
+        // Moves the Actor BY positionChange tiles in any X/Y direction returns true if actor was
+        // able to move, false if failed to move Checks for Monsters, and allows the Actor to commit
         // an action if one is present.
         // TODO: an autopickup feature for items
         public bool MoveBy(Point positionChange)
@@ -126,8 +119,8 @@ namespace MagusEngine.Core.Entities
                 if (doorThere)
                     return doorThere;
 
-                // true means that he entered inside a map,
-                // and thus the turn moved, a false means that there wasn't anything there
+                // true means that he entered inside a map, and thus the turn moved, a false means
+                // that there wasn't anything there
                 return CheckForChangeMapChunk(Position, positionChange);
             }
         }
@@ -161,8 +154,7 @@ namespace MagusEngine.Core.Entities
 
         private bool CheckIfCanAttack(Point positionChange)
         {
-            // if there's a monster here,
-            // do a bump attack
+            // if there's a monster here, do a bump attack
             Actor actor = GameLoop.GetCurrentMap().GetEntityAt<Actor>(Position + positionChange);
 
             if (actor != null && CanBeAttacked)
@@ -182,8 +174,7 @@ namespace MagusEngine.Core.Entities
             // Check for the presence of a door
             TileDoor door = GameLoop.GetCurrentMap().GetTileAt<TileDoor>(Position + positionChange);
 
-            // if there's a door here,
-            // try to use it
+            // if there's a door here, try to use it
             if (door != null && CanInteract)
             {
                 ActionManager.UseDoor(this, door);
@@ -194,8 +185,8 @@ namespace MagusEngine.Core.Entities
             return false;
         }
 
-        // Moves the Actor TO newPosition location
-        // returns true if actor was able to move, false if failed to move
+        // Moves the Actor TO newPosition location returns true if actor was able to move, false if
+        // failed to move
         public bool MoveTo(Point newPosition)
         {
             if (GameLoop.GetCurrentMap().IsTileWalkable(newPosition))
@@ -255,7 +246,7 @@ namespace MagusEngine.Core.Entities
             else
             {
                 var items = GetAllWieldedItems();
-                return items.Find(i => i.Attacks.Contains(attack)).HeldLimb;
+                return items?.Find(i => i.Attacks.Contains(attack))?.HeldLimb!;
             }
         }
 
@@ -474,7 +465,7 @@ namespace MagusEngine.Core.Entities
                     if (need.TickNeed())
                     {
 #if DEBUG
-                        GameLoop.AddMessageLog("Need is in dire need!");
+                        Locator.GetService<MagiLog>().Log("Need is in dire need!");
 #endif
                     }
                 }
@@ -507,7 +498,7 @@ namespace MagusEngine.Core.Entities
 
         private void UpdateFov()
         {
-            actorFov ??= new RecursiveShadowcastingBooleanBasedFOV(CurrentMap.TransparencyView);
+            actorFov ??= new RecursiveShadowcastingBooleanBasedFOV(CurrentMap!.TransparencyView!);
             actorFov.Calculate(Position, GetViewRadius());
         }
 
@@ -523,7 +514,7 @@ namespace MagusEngine.Core.Entities
                 if (item.MemoryType == memoryType)
                 {
                     var mem = item as Memory<T>;
-                    if (mem.ObjToRemember.Equals(obj))
+                    if (mem!.ObjToRemember!.Equals(obj))
                         return true;
                 }
             }

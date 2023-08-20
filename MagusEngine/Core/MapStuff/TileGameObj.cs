@@ -2,6 +2,7 @@
 using GoRogue.Components.ParentAware;
 using GoRogue.GameFramework;
 using SadRogue.Primitives;
+using System;
 
 namespace MagusEngine.Core
 {

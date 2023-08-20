@@ -16,6 +16,11 @@ namespace MagusEngine.Services
             _messageBus.Send(obj);
         }
 
+        public void SendMessage<T>(T obj) where T : notnull
+        {
+            _messageBus.Send(obj);
+        }
+
         public void RegisterSubscriber<T>(ISubscriber<T> subscriber)
         {
             _messageBus.RegisterSubscriber(subscriber);

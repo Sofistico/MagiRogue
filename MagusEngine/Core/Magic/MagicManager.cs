@@ -1,7 +1,8 @@
-﻿using GoRogue.DiceNotation;
-using MagiRogue.Data.Enumerators;
-using MagiRogue.Entities;
-using MagiRogue.Entities.Core;
+﻿using Arquimedes.Enumerators;
+using GoRogue.DiceNotation;
+using MagusEngine.Core.Entities;
+using MagusEngine.Core.Entities.Base;
+using MagusEngine.Services;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -20,9 +21,9 @@ namespace MagusEngine.Core.Magic
         public List<DamageTypes> KnowDamageTypes { get; set; }
 
         /// <summary>
-        /// The amount of mana finess required to pull of a spell, something can only be casted if you can
-        /// have enough control to properly control the mana, see <see cref="SpellBase.Proficiency"/>.
-        /// <para> Should be at minimum a 3 to cast the simplest battle spell reliable.</para>
+        /// The amount of mana finess required to pull of a spell, something can only be casted if
+        /// you can have enough control to properly control the mana, see <see cref="SpellBase.Proficiency"/>.
+        /// <para>Should be at minimum a 3 to cast the simplest battle spell reliable.</para>
         /// </summary>
         public int ShapingSkill { get; set; }
 
@@ -37,11 +38,9 @@ namespace MagusEngine.Core.Magic
         public int MagicResistance { get; set; } = 0;
 
         /// <summary>
-        /// How likely it is to penetrate the resistance of another being,
-        /// the formula should be to win against
-        /// the resistance
-        /// ((0.3 * Proficiency) + (ShapingSkill * 0.5) + MagicPenetration)
-        /// + bonusLuck >= (InnateResistance + MagicResistance) * 2
+        /// How likely it is to penetrate the resistance of another being, the formula should be to
+        /// win against the resistance ((0.3 * Proficiency) + (ShapingSkill * 0.5) + MagicPenetration)
+        /// + bonusLuck &gt;= (InnateResistance + MagicResistance) * 2
         /// </summary>
         public int MagicPenetration { get; set; } = 1;
 
@@ -61,7 +60,7 @@ namespace MagusEngine.Core.Magic
         public static int CalculateSpellDamage(Actor entityStats, SpellBase spellCasted)
         {
             int baseDamage = (int)(spellCasted.Power + spellCasted.SpellLevel
-                + entityStats.Mind.Inteligence + entityStats.Soul.WillPower * 0.5);
+                + entityStats.Mind.Inteligence + (entityStats.Soul.WillPower * 0.5));
 
             int rngDmg = Dice.Roll($"{spellCasted.SpellLevel}d{baseDamage}");
 
@@ -70,11 +69,11 @@ namespace MagusEngine.Core.Magic
 
         public static bool PenetrateResistance(SpellBase spellCasted, MagiEntity caster, MagiEntity defender,
             int bonusLuck) =>
-            (int)(0.3 * spellCasted.Proficiency + caster.Magic.ShapingSkill * 0.5
+            (int)((0.3 * spellCasted.Proficiency) + (caster.Magic.ShapingSkill * 0.5)
             + caster.Magic.MagicPenetration) + bonusLuck >= (defender.Magic.InnateMagicResistance
             + defender.Magic.MagicResistance) * 2;
 
-        public SpellBase QuerySpell(string spellId)
+        public SpellBase? QuerySpell(string spellId)
         {
             return KnowSpells.Find(i => i.SpellId.Equals(spellId));
         }
@@ -92,7 +91,8 @@ namespace MagusEngine.Core.Magic
                 var sp = spell.Effects[i];
                 if (sp is null)
                 {
-                    GameLoop.WriteToLog($"Spell effect is null! Something went wrong \nSpell Name: {spell.SpellName} \nSpell Id: {spell.SpellId} \nSpell effects: {spell.Effects}");
+                    Locator.GetService<MagiLog>()
+                        .Log($"Spell effect is null! Something went wrong \nSpell Name: {spell.SpellName} \nSpell Id: {spell.SpellId} \nSpell effects: {spell.Effects}");
                     continue;
                 }
                 if (!KnowEffects.Contains(sp.EffectType))
@@ -110,7 +110,7 @@ namespace MagusEngine.Core.Magic
     {
         public bool Equals(SpellBase? x, SpellBase? y)
         {
-            return x.SpellId.Equals(y.SpellId);
+            return x!.SpellId.Equals(y!.SpellId);
         }
 
         public int GetHashCode([DisallowNull] SpellBase obj)

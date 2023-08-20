@@ -4,6 +4,7 @@ using MagusEngine.Core.WorldStuff.History;
 using MagusEngine.ECS.Components.TilesComponents;
 using MagusEngine.Serialization.EntitySerialization;
 using MagusEngine.Utils.Extensions;
+using System.Collections.Generic;
 
 namespace MagusEngine.Systems
 {

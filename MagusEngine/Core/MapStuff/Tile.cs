@@ -10,6 +10,7 @@ namespace MagusEngine.Core
         public ColoredGlyph Appearence { get; set; }
         public ColoredGlyph? LastSeenAppereance { get; internal set; }
         public int MoveTimeCost { get; set; } = 100;
+        public string? Name { get; set; }
 
         public Tile(Color foreground,
             Color background,

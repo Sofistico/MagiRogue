@@ -4,6 +4,8 @@ using MagusEngine.Core;
 using MagusEngine.Core.Entities.Base;
 using SadRogue.Primitives.GridViews;
 using SadRogue.Primitives.SpatialMaps;
+using System;
+using System.Linq;
 using Map = MagusEngine.Core.MapStuff.Map;
 
 namespace MagusEngine.Systems
@@ -120,7 +122,7 @@ namespace MagusEngine.Systems
                         else if (terrain != null)
                             UpdateTerrainUnseen(terrain);
                     }
-                    foreach (MagiEntity entity in Map.Entities.Items.OfType<MagiEntity>())
+                    foreach (MagiEntity entity in Map.Entities.Items.Cast<MagiEntity>())
                     {
                         if (Map.PlayerFOV.BooleanResultView[entity.Position])
                             UpdateEntitySeen(entity);

@@ -1,9 +1,11 @@
-﻿using MagiRogue.Data.Enumerators;
+﻿using Arquimedes.Enumerators;
+using MagusEngine.Bus.UiBus;
 using MagusEngine.Commands;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic;
 using MagusEngine.Serialization;
+using MagusEngine.Services;
 using MagusEngine.Utils.Extensions;
 using System;
 using System.Collections.Generic;
@@ -82,14 +84,15 @@ namespace MagusEngine.Utils
                         woundString.AppendLine(DetermineDamageMessage(partWound.PartDamage, partWound));
                     }
 
-                    GameLoop.AddMessageLog(woundString.ToString());
+                    Locator.GetService<MessageBusService>()
+                        .SendMessage<MessageSent>(new(woundString.ToString()));
                     return;
                 }
                 else
                 {
-                    // no wound was received!
-                    // either the armor or the tissue absorbed all damage.
-                    GameLoop.AddMessageLog($"The attack glances {entity.Name}!");
+                    // no wound was received! either the armor or the tissue absorbed all damage.
+                    Locator.GetService<MessageBusService>()
+                        .SendMessage<MessageSent>(new($"The attack glances {entity.Name}!"));
                     return;
                 }
             }
@@ -101,9 +104,8 @@ namespace MagusEngine.Utils
         }
 
         /// <summary>
-        /// Calculates the damage a defender takes after a successful hit
-        /// and subtracts it from its Health
-        /// Then displays the outcome in the MessageLog.
+        /// Calculates the damage a defender takes after a successful hit and subtracts it from its
+        /// Health Then displays the outcome in the MessageLog.
         /// </summary>
         /// <param name="defender"></param>
         /// <param name="momentum"></param>
@@ -122,7 +124,8 @@ namespace MagusEngine.Utils
             }
             else
             {
-                GameLoop.AddMessageLog($"{defender.Name} received no damage!", true);
+                Locator.GetService<MessageBusService>()
+                    .SendMessage<MessageSent>(new($"{defender.Name} received no damage!", true));
             }
         }
 
@@ -156,7 +159,7 @@ namespace MagusEngine.Utils
             {
 #if DEBUG
                 if (++loopAmount == 1000)
-                    GameLoop.WriteToLog("Something went really wrong...");
+                    Locator.GetService<MagiLog>().Log("Something went really wrong...");
 #endif
                 if (remainingEnergy <= 0)
                     return list;
@@ -200,7 +203,8 @@ namespace MagusEngine.Utils
                 }
                 else
                 {
-                    // The attack has lost all of its energy and stopped in this tissue layer, doing blunt damage
+                    // The attack has lost all of its energy and stopped in this tissue layer, doing
+                    // blunt damage
                     partWound.PartDamage = DamageTypes.Blunt;
                     list.Add(partWound);
                     break;
@@ -254,7 +258,7 @@ namespace MagusEngine.Utils
                 {
                     stats.Body.Stamina = stats.Body.MaxStamina;
 
-                    GameLoop.AddMessageLog("You feel your inner fire full");
+                    Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("You feel your inner fire full"));
                 }
             }
 
@@ -265,50 +269,41 @@ namespace MagusEngine.Utils
             switch (healingType)
             {
                 case DamageTypes.None:
-                    GameLoop.AddMessageLog(bobTheBuilder
-                        .Append(", feeling your bones and skin growing over your wounds!").ToString());
+                    Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new(bobTheBuilder.Append(", feeling your bones and skin growing over your wounds!").ToString()));
                     break;
 
                 case DamageTypes.Force:
-                    GameLoop.AddMessageLog(bobTheBuilder
-                        .Append(", filling your movements with a spring!").ToString());
+                    Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new(bobTheBuilder.Append(", filling your movements with a spring!").ToString()));
                     break;
 
                 case DamageTypes.Fire:
-                    GameLoop.AddMessageLog(bobTheBuilder
-                        .Append(", firing your will!").ToString());
+                    Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new(bobTheBuilder.Append(", firing your will!").ToString()));
                     break;
 
                 case DamageTypes.Cold:
 
-                    GameLoop.AddMessageLog(bobTheBuilder
-                        .Append(", leaving you lethargic.").ToString());
+                    Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new(bobTheBuilder.Append(", leaving you lethargic.").ToString()));
                     break;
 
                 case DamageTypes.Poison:
-                    GameLoop.AddMessageLog(bobTheBuilder
-                        .Append(", ouch it hurt!").ToString());
+                    Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new(bobTheBuilder.Append(", ouch it hurt!").ToString()));
                     break;
 
                 case DamageTypes.Acid:
                     stats.Body.Stamina -= dmg;
-                    GameLoop.AddMessageLog(bobTheBuilder
-                        .Append(", dealing equal damage to yourself, shouldn't have done that.").ToString());
+                    Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new(bobTheBuilder.Append(", dealing equal damage to yourself, shouldn't have done that.").ToString()));
                     break;
 
                 case DamageTypes.Shock:
-                    GameLoop.AddMessageLog(bobTheBuilder
-                        .Append(", felling yourself speeding up!").ToString());
+                    Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new(bobTheBuilder.Append(", felling yourself speeding up!").ToString()));
                     break;
 
                 case DamageTypes.Soul:
-                    GameLoop.AddMessageLog(bobTheBuilder
-                        .Append(", feeling your soul at rest.").ToString());
+                    Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new(bobTheBuilder.Append(", feeling your soul at rest.").ToString()));
                     break;
 
                 case DamageTypes.Mind:
-                    GameLoop.AddMessageLog(bobTheBuilder
-                        .Append(", feeling your mind at ease.").ToString());
+                    Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new(bobTheBuilder.Append(", feeling your mind at ease.").ToString()));
                     break;
 
                 default:
@@ -332,7 +327,7 @@ namespace MagusEngine.Utils
             }
             else
             {
-                GameLoop.AddMessageLog($"{poorGuy.Name} resisted the effects of {spellCasted.SpellName}");
+                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"{poorGuy.Name} resisted the effects of {spellCasted.SpellName}"));
             }
         }
 
@@ -346,7 +341,8 @@ namespace MagusEngine.Utils
             else
             {
                 int diceRoll = Mrn.Exploding2D6Dice + caster.GetPrecision();
-                // the actor + exploding dice is the dice that the target will throw for either defense or blocking the projectile
+                // the actor + exploding dice is the dice that the target will throw for either
+                // defense or blocking the projectile
                 // TODO: When shield is done, needs to add the shield or any protection against the spell
                 if (poorGuy is Actor actor && diceRoll >= actor.GetDefenseAbility() + Mrn.Exploding2D6Dice)
                 {
@@ -354,7 +350,7 @@ namespace MagusEngine.Utils
                 }
                 else
                 {
-                    GameLoop.AddMessageLog($"{caster.Name} missed {poorGuy.Name}!");
+                    Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"{caster.Name} missed {poorGuy.Name}!"));
                 }
             }
         }
@@ -364,11 +360,9 @@ namespace MagusEngine.Utils
         #region Melee hit
 
         /// <summary>
-        /// Calculates the outcome of an attacker's attempt
-        /// at scoring a hit on a defender, using the attacker's
-        /// AttackChance and a random d100 roll as the basis.
-        /// Modifies a StringBuilder message that will be displayed
-        /// in the MessageLog
+        /// Calculates the outcome of an attacker's attempt at scoring a hit on a defender, using
+        /// the attacker's AttackChance and a random d100 roll as the basis. Modifies a
+        /// StringBuilder message that will be displayed in the MessageLog
         /// </summary>
         /// <param name="attacker"></param>
         /// <param name="defender"></param>
@@ -386,7 +380,8 @@ namespace MagusEngine.Utils
             Item wieldedItem = attacker.WieldedItem();
             BodyPart bpAttacking = attacker.GetAttackingLimb(attack) ?? throw new ArgumentNullException(nameof(attack));
 
-            // Create a string that expresses the attacker and defender's names as well as the attack verb
+            // Create a string that expresses the attacker and defender's names as well as the
+            // attack verb
             string person = firstPerson ? "You" : attacker.Name;
             string verb = firstPerson ? attack.AttackVerb[0] : attack.AttackVerb[1];
             string with = attack?.AttacksUsesLimbName == true ? firstPerson
@@ -401,7 +396,7 @@ namespace MagusEngine.Utils
                 : wieldedItem.Material;
             if (materialUsed is null)
             {
-                GameLoop.WriteToLog("Material was null!");
+                Locator.GetService<MagiLog>().Log("Material was null!");
                 materialUsed = bpAttacking.Tissues[0].Material;
             }
             // TODO: Granularize this more!
@@ -419,10 +414,9 @@ namespace MagusEngine.Utils
         }
 
         /// <summary>
-        /// Calculates the outcome of a defender's attempt
-        /// at blocking incoming hits.
-        /// Modifies a StringBuilder messages that will be displayed
-        /// in the MessageLog, expressing the number of hits blocked.
+        /// Calculates the outcome of a defender's attempt at blocking incoming hits. Modifies a
+        /// StringBuilder messages that will be displayed in the MessageLog, expressing the number
+        /// of hits blocked.
         /// </summary>
         /// <param name="defender"></param>
         /// <returns></returns>
@@ -446,7 +440,7 @@ namespace MagusEngine.Utils
                 // some moar randomness!
                 attackMomentum += Mrn.Exploding2D6Dice;
 
-                var damageWithoutPenetration = attackMomentum - Mrn.Exploding2D6Dice + defender.Body.Endurance * 0.5;
+                var damageWithoutPenetration = attackMomentum - Mrn.Exploding2D6Dice + (defender.Body.Endurance * 0.5);
                 var penetrationDamage = damageWithoutPenetration * attack.PenetrationPercentage;
                 var finalDamage = damageWithoutPenetration + penetrationDamage;
                 finalDamage = MathMagi.Round(finalDamage);
@@ -465,9 +459,8 @@ namespace MagusEngine.Utils
         #region Death Resolve
 
         /// <summary>
-        /// Removes an Actor that has died
-        /// and displays a message showing
-        /// the actor that has died, and the loot they dropped
+        /// Removes an Actor that has died and displays a message showing the actor that has died,
+        /// and the loot they dropped
         /// </summary>
         /// <param name="defender"></param>
         public static void ResolveDeath(Actor defender)
@@ -479,8 +472,7 @@ namespace MagusEngine.Utils
             // Set up a customized death message
             StringBuilder deathMessage = new StringBuilder();
             deathMessage.AppendFormat("{0} died", defender.Name);
-            // dump the dead actor's inventory (if any)
-            // at the map position where it died
+            // dump the dead actor's inventory (if any) at the map position where it died
             if (defender.Inventory.Count > 0)
             {
                 foreach (Item item in defender.Inventory)
@@ -492,8 +484,7 @@ namespace MagusEngine.Utils
                     GameLoop.GetCurrentMap().AddMagiEntity(item);
                 }
 
-                // Clear the actor's inventory. Not strictly
-                // necessary, but makes for good coding habits!
+                // Clear the actor's inventory. Not strictly necessary, but makes for good coding habits!
                 defender.Inventory.Clear();
             }
 
@@ -502,11 +493,11 @@ namespace MagusEngine.Utils
 
             if (defender is Player)
             {
-                GameLoop.AddMessageLog($" {defender.Name} was killed.");
+                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($" {defender.Name} was killed."));
             }
 
             // Now show the deathMessage in the messagelog
-            GameLoop.AddMessageLog(deathMessage.ToString());
+            Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new(deathMessage.ToString()));
         }
 
         #endregion Death Resolve
@@ -653,8 +644,11 @@ namespace MagusEngine.Utils
         }
 
         /// <summary>
-        /// Gets the momentum of the attack, based partially on the Dwarf Fortress math on attack momentum calculation
-        /// <para><seealso href="https://dwarffortresswiki.org/index.php/DF2014:Weapon">Link to DF wiki article</seealso></para>
+        /// Gets the momentum of the attack, based partially on the Dwarf Fortress math on attack
+        /// momentum calculation
+        /// <para>
+        /// <seealso href="https://dwarffortresswiki.org/index.php/DF2014:Weapon">Link to DF wiki article</seealso>
+        /// </para>
         /// </summary>
         /// <param name="attacker"></param>
         /// <param name="wieldedItem"></param>
@@ -668,8 +662,11 @@ namespace MagusEngine.Utils
         }
 
         /// <summary>
-        /// Gets the momentum of the attack, based partially on the Dwarf Fortress math on attack momentum calculation
-        /// <para><seealso href="https://dwarffortresswiki.org/index.php/DF2014:Weapon">Link to DF wiki article</seealso></para>
+        /// Gets the momentum of the attack, based partially on the Dwarf Fortress math on attack
+        /// momentum calculation
+        /// <para>
+        /// <seealso href="https://dwarffortresswiki.org/index.php/DF2014:Weapon">Link to DF wiki article</seealso>
+        /// </para>
         /// </summary>
         /// <param name="attacker"></param>
         public static double GetAttackMomentum(Actor attacker, BodyPart limbAttacking, Attack attack)

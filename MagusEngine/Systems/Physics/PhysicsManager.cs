@@ -1,8 +1,7 @@
-﻿using MagiRogue.Data;
-using MagiRogue.Data.Serialization;
-using MagiRogue.Entities;
-using MagiRogue.Entities.Core;
-using MagiRogue.Utils;
+﻿using MagusEngine.Core.Entities;
+using MagusEngine.Core.Entities.Base;
+using MagusEngine.Serialization;
+using MagusEngine.Utils;
 
 namespace MagusEngine.Systems.Physics
 {
@@ -29,7 +28,7 @@ namespace MagusEngine.Systems.Physics
             double finalSpeed;
             if (itemHeld is not null)
             {
-                var speed = (itemHeld.SpeedOfAttack + itemHeld.Weight * itemHeld.Volume)
+                var speed = (itemHeld.SpeedOfAttack + (itemHeld.Weight * itemHeld.Volume))
                     / actor.GetActorBaseSpeed();
                 ability = actor.GetRelevantAbility(attack.AttackAbility);
                 finalSpeed = ability != 0 ? speed / ability : speed;

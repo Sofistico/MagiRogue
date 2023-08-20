@@ -1,14 +1,14 @@
-﻿using GoRogue.GameFramework;
+﻿using Arquimedes.Enumerators;
+using GoRogue.GameFramework;
 using GoRogue.Pathing;
-using MagiRogue.Data.Enumerators;
-using MagiRogue.UI.Windows;
+using MagusEngine.Bus.UiBus;
 using MagusEngine.Commands;
 using MagusEngine.Core.Entities;
-using MagusEngine.ECS.Components.ActorComponents;
+using MagusEngine.Services;
 using MagusEngine.Systems.Time;
 using SadRogue.Primitives;
 using System;
-using Map = MagiRogue.GameSys.Map;
+using Map = MagusEngine.Core.MapStuff.Map;
 
 namespace MagusEngine.ECS.Components.ActorComponents.Ai
 {
@@ -23,7 +23,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.Ai
 
         public object? Parent { get; set; }
 
-        public (bool sucess, long ticks) RunAi(Map map, MessageLogWindow messageLog)
+        public (bool sucess, long ticks) RunAi(Map map)
         {
             if (Parent is not IGameObject)
             {
@@ -39,7 +39,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.Ai
                     return (false, -1);
 
                 int timeTakenAction = 0;
-                needs.GetPriority(out Need need);
+                needs.GetPriority(out Need? need);
                 FindIfDangerExists(map, actor);
                 if (commitedToNeed is not null)
                     need = commitedToNeed;
@@ -154,7 +154,8 @@ namespace MagusEngine.ECS.Components.ActorComponents.Ai
                     case Actions.Wander:
                         timeTakenAction = ActionManager.Wander(actor);
 #if DEBUG
-                        GameLoop.AddMessageLog($"{actor.Name} wanders");
+                        Locator.GetService<MessageBusService>()
+                            .SendMessage<MessageSent>(new($"{actor.Name} wanders", true));
 #endif
                         need?.Fulfill();
                         break;
@@ -189,7 +190,10 @@ namespace MagusEngine.ECS.Components.ActorComponents.Ai
 
         private void ClearCommit() => commitedToNeed = null;
 
-        /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting
+        /// unmanaged resources.
+        /// </summary>
 #pragma warning disable CA1816 // Dispose methods should call SuppressFinalize
 
         public void Dispose()

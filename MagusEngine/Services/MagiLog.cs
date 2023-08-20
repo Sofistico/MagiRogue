@@ -1,4 +1,8 @@
-﻿using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace MagusEngine.Services
 {
@@ -12,7 +16,7 @@ namespace MagusEngine.Services
                 if (errors.Count == 0)
                     return;
                 var path = new StringBuilder(AppDomain.CurrentDomain.BaseDirectory).Append(@"\log.txt").ToString();
-                StringBuilder str = new StringBuilder($"{DateTime.Now:dd/MM/yyyy} ");
+                StringBuilder str = new($"{DateTime.Now:dd/MM/yyyy} ");
                 foreach (var item in errors)
                 {
                     str.AppendLine(item);

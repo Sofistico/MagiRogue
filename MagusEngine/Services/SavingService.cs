@@ -4,6 +4,10 @@ using MagusEngine.Systems;
 using Newtonsoft.Json;
 using SadConsole;
 using SadRogue.Primitives;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace MagusEngine.Services
@@ -146,8 +150,7 @@ namespace MagusEngine.Services
             try
             {
                 string path = $@"{_folderName}\{saveName}\GameState.mr";
-                Universe uni = Serializer.Load<Universe>(path, true);
-                return uni;
+                return Serializer.Load<Universe>(path, true);
             }
             catch (Exception ex)
             {
@@ -185,7 +188,7 @@ namespace MagusEngine.Services
         /// <param name="index"></param>
         public void SaveChunkInPos(RegionChunk chunk, int index)
         {
-            string file = GetChunckFile(index);
+            string? file = GetChunckFile(index);
             if (string.IsNullOrWhiteSpace(file))
             {
                 SaveChunckToFile(chunk, index);
@@ -206,22 +209,19 @@ namespace MagusEngine.Services
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        private string GetChunckFile(int index)
+        private string? GetChunckFile(int index)
         {
             // need to remake, so that it will only load the relevant chunk
             string path = $@"{SaveDir}\Chunks_{index / chunkPartition}.mr";
             string pattern = Path.GetFileName(path);
             string realDir = path[..^pattern.Length];
             string fullPath = Path.Combine(dir, realDir);
-            string file =
-                Directory.GetFiles(fullPath, pattern, SearchOption.TopDirectoryOnly).FirstOrDefault();
-            return file;
+            return Directory.GetFiles(fullPath, pattern, SearchOption.TopDirectoryOnly).FirstOrDefault();
         }
 
         private string GetChunckRelativeFile(int index)
         {
-            string path = $@"{_folderName}\{SavePathName}\Chunks_{index / chunkPartition}.mr";
-            return path;
+            return $@"{_folderName}\{SavePathName}\Chunks_{index / chunkPartition}.mr";
         }
 
         /// <summary>
@@ -286,7 +286,7 @@ namespace MagusEngine.Services
             }
         }
 
-        public RegionChunk GetChunkAtIndex(int index, int mapWidth)
+        public RegionChunk? GetChunkAtIndex(int index, int mapWidth)
         {
             string file = GetChunckRelativeFile(index);
 
@@ -295,12 +295,12 @@ namespace MagusEngine.Services
             return Array.Find(regions, i => i.ToIndex(mapWidth) == index);
         }
 
-        public RegionChunk GetChunkAtIndex(Point point, int mapWidth)
+        public RegionChunk? GetChunkAtIndex(Point point, int mapWidth)
         {
             return GetChunkAtIndex(point.ToIndex(mapWidth), mapWidth);
         }
 
-        public static Map LoadMapById(int id)
+        public static Map? LoadMapById(int id)
         {
             const string pathWildcard = @"SaveDir\Chunks_*.mr";
             string[] list = FileUtils.GetFiles(pathWildcard);
@@ -320,7 +320,7 @@ namespace MagusEngine.Services
         }
 
         // keep thiis in here just to not lose it!
-        public void SetIdGen(uint lastId)
+        public static void SetIdGen(uint lastId)
         {
             Locator.AddService<IDGenerator>(new(lastId + 1));
         }

@@ -4,6 +4,8 @@ using MagusEngine.Serialization.MapConverter;
 using MagusEngine.Utils.Extensions;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MagusEngine.Core.MapStuff
 {
@@ -86,12 +88,12 @@ namespace MagusEngine.Core.MapStuff
         {
             List<Tile> doors = new List<Tile>();
 
-            for (int i = 0; i < DoorsPoint.Count; i++)
-            {
-                Point point = DoorsPoint[i];
-                Tile? door = null;
-                doors.Add(door);
-            }
+            //for (int i = 0; i < DoorsPoint.Count; i++)
+            //{
+            //    Point point = DoorsPoint[i];
+            //    Tile? door = null;
+            //    doors.Add(door!);
+            //}
 
             return doors;
         }

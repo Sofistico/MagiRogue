@@ -1,8 +1,7 @@
 ﻿using GoRogue.Pathing;
-using MagiRogue.GameSys;
-using MagiRogue.UI.Windows;
 using MagusEngine.Commands;
 using MagusEngine.Core.Entities;
+using MagusEngine.Core.MapStuff;
 using MagusEngine.Systems.Time;
 using SadRogue.Primitives;
 using System;
@@ -21,7 +20,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.Ai
 
         public object? Parent { get; set; }
 
-        public (bool sucess, long ticks) RunAi(Map map, MessageLogWindow messageLog)
+        public (bool sucess, long ticks) RunAi(Map map)
         {
             // TODO: Fix, because it hardly works, at least i saw the actor attacking
             if (Parent is not GoRogue.GameFramework.IGameObject parent)

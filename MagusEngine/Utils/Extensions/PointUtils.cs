@@ -1,6 +1,9 @@
 ﻿using GoRogue.GameFramework;
 using GoRogue.Random;
 using SadRogue.Primitives;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MagusEngine.Utils.Extensions
 {

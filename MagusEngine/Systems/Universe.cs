@@ -13,6 +13,8 @@ using MagusEngine.Services;
 using MagusEngine.Systems.Time;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MagusEngine.Systems
 {

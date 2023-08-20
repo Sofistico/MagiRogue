@@ -1,5 +1,7 @@
 ﻿using MagusEngine.Services;
 using SadRogue.Primitives;
+using System;
+using System.Collections.Generic;
 
 namespace MagusEngine
 {
@@ -25,19 +27,12 @@ namespace MagusEngine
             _services[type] = instance;
         }
 
-        public static void AddService(Type type)
-        {
-            if (!type.IsAbstract && !type.IsSealed)
-                throw new ArgumentNullException(nameof(type));
-            _services[type] = type.GetConstructor(Array.Empty<Type>())!;
-        }
-
         public static void InitializeSingletonServices()
         {
             AddService<MessageBusService>(new());
             AddService<IDGenerator>(new());
             AddService<SavingService>(new());
-            AddService(typeof(MagiLog));
+            AddService(new MagiLog());
         }
     }
 }

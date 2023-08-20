@@ -1,5 +1,5 @@
-﻿using GoRogue.GameFramework;
-using MagiRogue.Data.Enumerators;
+﻿using Arquimedes.Enumerators;
+using GoRogue.GameFramework;
 using MagusEngine.Utils;
 using System;
 using System.Collections;
@@ -13,13 +13,12 @@ namespace MagusEngine.ECS.Components.ActorComponents
         public string Name { get; set; }
         public bool Vital { get; set; }
 
-        // Should be roughly, less means that it has a higher priority
-        // 10 = should be at least once per week or stuff like that.
-        // 9 = at the very least 3 times per week.
-        // 8 = every day at least once.
-        // 7 to less, progessive less time till the next
-        // in special, 0 means special circustances, like a fight or demon pacts or whatever, things that need imediate action rather than a constant need.
-        // means that creatures with the fight need set to 0 will only fight in response to fighting
+        // Should be roughly, less means that it has a higher priority 10 = should be at least once
+        // per week or stuff like that. 9 = at the very least 3 times per week. 8 = every day at
+        // least once. 7 to less, progessive less time till the next in special, 0 means special
+        // circustances, like a fight or demon pacts or whatever, things that need imediate action
+        // rather than a constant need. means that creatures with the fight need set to 0 will only
+        // fight in response to fighting
         public double Priority { get; set; } // what is the priority of the need? how many times must it be fulfilled?
         public double PerceivedPriority => PercentFulfilled.HasValue ? Math.Pow(1 - PercentFulfilled.Value, Priority + 1) : (int)Priority;
         public Actions ActionToFulfillNeed { get; set; }
@@ -35,7 +34,7 @@ namespace MagusEngine.ECS.Components.ActorComponents
         /// </summary>
         public double? PercentFulfilled { get => MaxTurnCounter.HasValue ? MathMagi.GetInversePercentageBasedOnMax(TurnCounter, MaxTurnCounter.Value) : null; }
 
-        public IGameObject Objective { get; set; }
+        public IGameObject? Objective { get; set; }
 
         public Need(string name,
             bool vital,
@@ -103,11 +102,11 @@ namespace MagusEngine.ECS.Components.ActorComponents
             prioQueue = new();
         }
 
-        public static NeedCollection WithCommonNeeds() => new NeedCollection(Need.CommonNeeds());
+        public static NeedCollection WithCommonNeeds() => new(Need.CommonNeeds());
 
         public void Add(Need item)
         {
-            ((ICollection<Need>)needs).Add(item);
+            needs.Add(item);
         }
 
         public void AddPriority(Need item)
@@ -126,22 +125,22 @@ namespace MagusEngine.ECS.Components.ActorComponents
 
         public void Clear()
         {
-            ((ICollection<Need>)needs).Clear();
+            needs.Clear();
         }
 
         public bool Contains(Need item)
         {
-            return ((ICollection<Need>)needs).Contains(item);
+            return needs.Contains(item);
         }
 
         public void CopyTo(Need[] array, int arrayIndex)
         {
-            ((ICollection<Need>)needs).CopyTo(array, arrayIndex);
+            needs.CopyTo(array, arrayIndex);
         }
 
         public bool Remove(Need item)
         {
-            return ((ICollection<Need>)needs).Remove(item);
+            return needs.Remove(item);
         }
 
         public IEnumerator<Need> GetEnumerator()

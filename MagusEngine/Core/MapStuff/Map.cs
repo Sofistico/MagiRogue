@@ -1,9 +1,11 @@
 ﻿using Arquimedes.Enumerators;
 using GoRogue.GameFramework;
 using GoRogue.Pathing;
+using GoRogue.Random;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.ECS;
+using MagusEngine.ECS.Components.ActorComponents;
 using MagusEngine.ECS.Components.TilesComponents;
 using MagusEngine.Factory;
 using MagusEngine.Serialization.MapConverter;
@@ -17,7 +19,10 @@ using SadConsole.Entities;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 using SadRogue.Primitives.SpatialMaps;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace MagusEngine.Core.MapStuff
 {
@@ -186,7 +191,7 @@ namespace MagusEngine.Core.MapStuff
                 return true;
 
             // then return whether the tile is walkable
-            return Terrain[location.Y * Width + location.X]?.IsWalkable == true;
+            return Terrain[(location.Y * Width) + location.X]?.IsWalkable == true;
         }
 
         /// <summary>
@@ -227,7 +232,7 @@ namespace MagusEngine.Core.MapStuff
 
         public Actor[] GetAllActors(Func<Actor, bool>? actionToRunInActors = null)
         {
-            if (_lastCalledActors.TryGetValue(actionToRunInActors, out Actor[] value)
+            if (_lastCalledActors.TryGetValue(actionToRunInActors!, out Actor[]? value)
                 && !_needsToUpdateActorsDict)
             {
                 return value;
@@ -348,7 +353,7 @@ namespace MagusEngine.Core.MapStuff
             var tile = locationIndex <= Width * Height && locationIndex >= 0
                 ? (Tile?)Terrain[locationIndex]
                 : null;
-            if (tile?.GoRogueComponents.Contains(typeof(T)) == false)
+            if (tile?.GoRogueComponents.Contains(typeof(T)) == false && typeof(T) == typeof(Tile))
             {
                 return default;
             }
@@ -368,6 +373,8 @@ namespace MagusEngine.Core.MapStuff
         {
             return GetTileAt<T>(location.X, location.Y);
         }
+
+        public Tile? GetTileAt(Point location) => GetTileAt<Tile>(location);
 
         /// <summary>
         /// Gets the entity by it's id
@@ -478,7 +485,7 @@ namespace MagusEngine.Core.MapStuff
         /// <returns>Returns an Point that is random inside the map</returns>
         public Point GetRandomPos()
         {
-            return new Point(GameLoop.GlobalRand.NextInt(Width - 1), GameLoop.GlobalRand.NextInt(Height - 1));
+            return new Point(GlobalRandom.DefaultRNG.NextInt(Width - 1), GlobalRandom.DefaultRNG.NextInt(Height - 1));
         }
 
         /// <summary>
@@ -502,7 +509,7 @@ namespace MagusEngine.Core.MapStuff
 
         public FastAStar AStarWithAllWalkable()
         {
-            int count = Tiles.Length;
+            int count = Terrain.Count;
             ArrayView<bool> mapView = new ArrayView<bool>(Width, Height);
             for (int i = 0; i < count; i++)
             {
@@ -520,9 +527,10 @@ namespace MagusEngine.Core.MapStuff
         public List<Tile> ReturnAllTrees()
         {
             List<Tile> result = new List<Tile>();
-            foreach (Tile tree in Tiles)
+            foreach (Point p in Terrain.Positions())
             {
-                if (tree.Name.Equals("Tree"))
+                var tree = (Tile?)Terrain[p];
+                if (tree?.Name?.Equals("Tree") == true)
                 {
                     result.Add(tree);
                 }
@@ -697,7 +705,7 @@ namespace MagusEngine.Core.MapStuff
             string obj = "";
             while (string.IsNullOrEmpty(obj))
             {
-                string s = strs[GameLoop.GlobalRand.NextInt(0, nmbrOfObjects)];
+                string s = strs[GlobalRandom.DefaultRNG.NextInt(0, nmbrOfObjects)];
                 // one in ten
                 int mod = 10;
                 if (s.StartsWith('['))
@@ -735,12 +743,10 @@ namespace MagusEngine.Core.MapStuff
         public void DestroyMap()
         {
             RemoveAllEntities();
-            //RemoveAllTiles();
             if (GoRogueComponents.Count > 0)
                 GoRogueComponents.GetFirstOrDefault<FOVHandler>()?.DisposeMap();
             _lastCalledActors.Clear();
             _lastCalledActors = null!;
-            Tiles = null!;
             ControlledGameObjectChanged = null!;
             ControlledEntitiy = null!;
             _entityRender = null!;
@@ -841,17 +847,19 @@ namespace MagusEngine.Core.MapStuff
 
         public Tile[] GetAllTilesWithComponents<TFind>() where TFind : class
         {
+            List<Tile> tiles = new List<Tile>();
             foreach (var item in Terrain.Positions())
             {
                 var tile = (Tile?)Terrain[item];
                 if (tile?.HasComponent<TFind>() == true)
                 {
+                    tiles.Add(tile);
                 }
             }
-            return Tiles.OfType<TFind>().ToArray();
+            return tiles.ToArray();
         }
 
-        public List<Room> FindRoomsByTag(RoomTag tag) => Rooms.FindAll(i => i.Tag == tag);
+        public List<Room?> FindRoomsByTag(RoomTag tag) => Rooms?.FindAll(i => i.Tag == tag)!;
 
         ~Map()
         {

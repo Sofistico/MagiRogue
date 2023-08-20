@@ -1,7 +1,8 @@
-﻿using MagiRogue.Entities;
-using MagiRogue.Entities.Core;
-using MagiRogue.GameSys.Tiles;
+﻿using MagusEngine.Core;
+using MagusEngine.Core.Entities;
+using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic;
+using MagusEngine.Core.MapStuff;
 
 namespace MagusEngine.Systems.Time
 {
@@ -13,24 +14,24 @@ namespace MagusEngine.Systems.Time
         public const int MagicalThings = 250;
         public const int AiFailed = -1;
 
-        public static int GetWalkTime(Actor actor, TileBase tileToMove)
+        public static int GetWalkTime(Actor actor, Tile tileToMove)
         {
             return (int)(tileToMove.MoveTimeCost / actor.GetActorBaseSpeed());
         }
 
         public static int GetWalkTime(Actor actor, Point pos)
         {
-            var tile = GameLoop.GetCurrentMap().GetTileAt<TileBase>(pos);
+            var tile = GameLoop.GetCurrentMap().GetTileAt(pos);
             return GetWalkTime(actor, tile);
         }
 
         public static int GetWalkTime(Actor actor)
         {
-            var tile = ((Map)actor.CurrentMap).GetTileAt<TileBase>(actor.Position);
+            var tile = ((Map)actor.CurrentMap).GetTileAt(actor.Position);
             return GetWalkTime(actor, tile);
         }
 
-        public static int GetWorldWalkTime(Actor actor, WorldTile tile)
+        public static int GetWorldWalkTime(Actor actor, Tile tile)
         {
             // TODO: Need to fix this time to represent how slow it is to move on the overmap based
             // on the size of a overmap tile, which is to be defined.

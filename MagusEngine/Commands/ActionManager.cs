@@ -1,49 +1,45 @@
-﻿using GoRogue.GameFramework;
+﻿using Arquimedes.Enumerators;
+using GoRogue.GameFramework;
 using GoRogue.Pathing;
-using MagiRogue.Data.Enumerators;
-using MagiRogue.GameSys.Planet;
-using MagiRogue.GameSys.Tiles;
+using MagusEngine.Bus.UiBus;
+using MagusEngine.Core.Entities;
+using MagusEngine.Core.Entities.Base;
+using MagusEngine.Core.MapStuff;
+using MagusEngine.ECS.Components.ActorComponents;
+using MagusEngine.ECS.Components.TilesComponents;
+using MagusEngine.Factory;
+using MagusEngine.Serialization;
+using MagusEngine.Services;
+using MagusEngine.Systems;
+using MagusEngine.Systems.Time;
+using MagusEngine.Utils;
+using MagusEngine.Utils.Extensions;
 using SadConsole;
 using System.Collections.Generic;
 using System.Text;
-using Map = MagiRogue.GameSys.Map;
-using Arquimedes.Data;
-using MagusEngine.Utils.Extensions;
-using MagusEngine.Core.Entities;
-using MagusEngine.Core.Entities.Base;
-using MagusEngine.Utils;
-using MagusEngine.Serialization;
-using MagusEngine.ECS.Components.ActorComponents;
-using MagusEngine.Systems.Time;
-using MagusEngine.Systems;
-using MagusEngine.Core.MapStuff;
+using Map = MagusEngine.Core.MapStuff.Map;
 
 namespace MagusEngine.Commands
 {
     /// <summary>
-    /// Contains all generic actions performed on entities and tiles
-    /// including combat, movement, and so on.
+    /// Contains all generic actions performed on entities and tiles including combat, movement, and
+    /// so on.
     /// </summary>
     public static class ActionManager
     {
         private const int maxTries = 10;
 
-        /// <summary>
-        /// Move the actor BY +/- X&Y coordinates
-        /// returns true if the move was successful
-        /// and false if unable to move there
-        /// </summary>
-        /// <param name="actor"></param>
-        /// <param name="position"></param>
-        /// <returns></returns>
+        /// <summary> Move the actor BY +/- X&Y coordinates returns true if the move was successful
+        /// and false if unable to move there </summary> <param name="actor"></param> <param
+        /// name="position"></param> <returns></returns>
         public static bool MoveActorBy(Actor actor, Point position)
         {
             return actor.MoveBy(position);
         }
 
         /// <summary>
-        /// Moves the actor To a position, by means of teleport
-        /// returns true if the move was successful and false if unable to move
+        /// Moves the actor To a position, by means of teleport returns true if the move was
+        /// successful and false if unable to move
         /// </summary>
         /// <param name="actor"></param>
         /// <param name="position"></param>
@@ -55,9 +51,8 @@ namespace MagusEngine.Commands
 
         // TODO: An df inspired menu with body parts located.
         /// <summary>
-        /// Executes an attack from an attacking actor
-        /// on a defending actor, and then describes
-        /// the outcome of the attack in the Message Log
+        /// Executes an attack from an attacking actor on a defending actor, and then describes the
+        /// outcome of the attack in the Message Log
         /// </summary>
         /// <param name="attacker"></param>
         /// <param name="defender"></param>
@@ -77,12 +72,12 @@ namespace MagusEngine.Commands
 
             if (attacker.Body.Stamina <= 0)
             {
-                GameLoop.AddMessageLog($"{attacker.Name} is far too tired to attack!");
+                Locator.GetService<MessageBusService>()
+                    .SendMessage<MessageSent>(new($"{attacker.Name} is far too tired to attack!", true));
                 return TimeHelper.Wait;
             }
 
-            // Create two messages that describe the outcome
-            // of the attack and defense
+            // Create two messages that describe the outcome of the attack and defense
             StringBuilder attackMessage = new();
             StringBuilder defenseMessage = new();
             bool isPlayer = attacker is Player;
@@ -98,9 +93,9 @@ namespace MagusEngine.Commands
                 itemUsed);
 
             // Display the outcome of the attack & defense
-            GameLoop.AddMessageLog(attackMessage.ToString(), false);
+            Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new(attackMessage.ToString(), false));
             if (!string.IsNullOrWhiteSpace(defenseMessage.ToString()))
-                GameLoop.AddMessageLog(defenseMessage.ToString(), false);
+                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new(defenseMessage.ToString(), false));
 
             // The defender now takes damage
             CombatUtils.ResolveDamage(defender,
@@ -120,9 +115,8 @@ namespace MagusEngine.Commands
         }
 
         /// <summary>
-        /// Removes an Actor that has died
-        /// and displays a message showing
-        /// the actor that has died, and the loot they dropped
+        /// Removes an Actor that has died and displays a message showing the actor that has died,
+        /// and the loot they dropped
         /// </summary>
         /// <param name="actor"></param>
         public static void ResolveDeath(Actor actor)
@@ -166,47 +160,45 @@ namespace MagusEngine.Commands
             return false;
         }
 
-        // Tries to pick up an Item and add it to the Actor's
-        // inventory list
+        // Tries to pick up an Item and add it to the Actor's inventory list
         public static bool PickUp(Actor actor, Item item)
         {
-            // Add the item to the Actor's inventory list
-            // and then destroy it
+            // Add the item to the Actor's inventory list and then destroy it
             if (item != null)
             {
                 actor.Inventory.Add(item);
-                GameLoop.AddMessageLog($"{actor.Name} picked up {item.Name}");
+                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"{actor.Name} picked up {item.Name}"));
                 item.RemoveFromMap();
                 return true;
             }
             else
             {
-                GameLoop.AddMessageLog("There are no itens here");
+                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("There are no itens here"));
                 return false;
             }
         }
 
         /// <summary>
-        /// Triggered when an Actor attempts to move into a doorway.
-        /// A closed door opens when used by an Actor, it takes a full turn because there can be 2 combination, locked and
+        /// Triggered when an Actor attempts to move into a doorway. A closed door opens when used
+        /// by an Actor, it takes a full turn because there can be 2 combination, locked and
         /// unlocked, and im lazy to properly separate the time taken.
         /// </summary>
         /// <param name="actor"></param>
         /// <param name="door"></param>
         /// <returns></returns>
-        public static bool UseDoor(Actor actor, TileDoor door)
+        public static bool UseDoor(Actor actor, DoorComponent door, string doorName = "door")
         {
             // Handle a locked door
             if (door.Locked)
             {
-                GameLoop.AddMessageLog("The door is locked!");
+                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("The door is locked!"));
             }
 
             // Handled an unlocked door that is closed
             else if (!door.Locked && !door.IsOpen)
             {
                 door.Open();
-                GameLoop.AddMessageLog($"{actor.Name} opened a {door.Name}");
+                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"{actor.Name} opened a {doorName}"));
                 GameLoop.GetCurrentMap().ForceFovCalculation();
                 return true;
             }
@@ -217,7 +209,7 @@ namespace MagusEngine.Commands
         /// Closes an open door
         /// </summary>
         /// <param name="actor">Actor that closes the door</param>
-        /// <param name="door">Door that wil be closed></param>
+        /// <param name="door">Door that wil be closed&gt;</param>
         public static bool CloseDoor(Actor actor)
         {
             foreach (Point points in actor.Position.GetDirectionPoints())
@@ -226,7 +218,7 @@ namespace MagusEngine.Commands
                 if (possibleDoor?.IsOpen == true)
                 {
                     possibleDoor.Close();
-                    GameLoop.AddMessageLog($"{actor.Name} closed a {possibleDoor.Name}");
+                    Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"{actor.Name} closed a {possibleDoor.Name}"));
                     GameLoop.GetCurrentMap().ForceFovCalculation();
                     return true;
                 }
@@ -238,7 +230,7 @@ namespace MagusEngine.Commands
         {
             if (inv.Inventory.Count == 0)
             {
-                GameLoop.AddMessageLog("There is no item to drop in your inventory");
+                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("There is no item to drop in your inventory"));
                 return false;
             }
             else
@@ -247,7 +239,7 @@ namespace MagusEngine.Commands
                 inv.Inventory.Remove(item);
                 item.Position = inv.Position;
                 GameLoop.GetCurrentMap().AddMagiEntity(item);
-                GameLoop.AddMessageLog($"{inv.Name} dropped {item.Name}");
+                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"{inv.Name} dropped {item.Name}"));
                 return true;
             }
         }
@@ -264,7 +256,7 @@ namespace MagusEngine.Commands
                     return true;
                 }
             }
-            GameLoop.AddMessageLog("No node here to drain");
+            Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("No node here to drain"));
             return false;
         }
 
@@ -349,12 +341,12 @@ namespace MagusEngine.Commands
 
                 bool sus = WaitForNTurns((int)totalTurnsWait, actor);
 
-                GameLoop.AddMessageLog($"You have rested for {totalTurnsWait} turns");
+                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"You have rested for {totalTurnsWait} turns"));
 
                 return sus;
             }
 
-            GameLoop.AddMessageLog("You have no need to rest");
+            Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("You have no need to rest"));
 
             return false;
         }
@@ -401,7 +393,7 @@ namespace MagusEngine.Commands
             }
             else if (possibleStairs is null && possibleWorldTileHere is null)
             {
-                GameLoop.AddMessageLog("There is no way to go down from here!");
+                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("There is no way to go down from here!"));
                 return false;
             }
 
@@ -428,7 +420,7 @@ namespace MagusEngine.Commands
             }
             else
             {
-                GameLoop.AddMessageLog("There is nowhere to go!");
+                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("There is nowhere to go!"));
                 return false;
             }
         }
@@ -464,23 +456,23 @@ namespace MagusEngine.Commands
                 }
                 else if (GameLoop.Universe.MapIsWorld())
                 {
-                    GameLoop.AddMessageLog("Can't go to the overworld since you are there!");
+                    Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("Can't go to the overworld since you are there!"));
                     return false;
                 }
                 else if (possibleStairs is null && !GameLoop.Universe.MapIsWorld())
                 {
-                    GameLoop.AddMessageLog("Can't go up here!");
+                    Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("Can't go up here!"));
                     return false;
                 }
                 else
                 {
-                    GameLoop.AddMessageLog("Can't exit the map!");
+                    Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("Can't exit the map!"));
                     return false;
                 }
             }
             else
             {
-                GameLoop.AddMessageLog("You can't change the map right now!");
+                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("You can't change the map right now!"));
                 return false;
             }
         }
@@ -517,7 +509,7 @@ namespace MagusEngine.Commands
                     Actor possibleActor = GameLoop.GetCurrentMap().GetEntityAt<Actor>(p);
                     if (possibleActor?.Equals(actor) == false && canBeInterrupted)
                     {
-                        GameLoop.AddMessageLog("There is an enemy in view, stop resting!");
+                        Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("There is an enemy in view, stop resting!"));
                         return false;
                     }
                 }
@@ -539,7 +531,7 @@ namespace MagusEngine.Commands
             }
             if (foodItem is Actor victim)
             {
-                commitedToNeed = new Need($"Kill {victim}", false, 0, Data.Enumerators.Actions.Fight, "Peace", $"eat {victim.ID}")
+                commitedToNeed = new Need($"Kill {victim}", false, 0, Actions.Fight, "Peace", $"eat {victim.ID}")
                 {
                     Objective = actor,
                 };
@@ -583,7 +575,7 @@ namespace MagusEngine.Commands
             {
                 if (needSatisfied != null)
                     needSatisfied?.Fulfill();
-                GameLoop.AddMessageLog($"The {actor.Name} drank {material.Name}");
+                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"The {actor.Name} drank {material.Name}"));
                 return TimeHelper.Interact;
             }
             return 0;
@@ -598,14 +590,14 @@ namespace MagusEngine.Commands
                 if (need is not null)
                     need?.Fulfill();
                 item.Condition -= 100;
-                GameLoop.AddMessageLog($"The {actor.Name} ate {item.Name}");
+                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"The {actor.Name} ate {item.Name}"));
             }
             if (whatToEat is Plant plant)
             {
                 if (need is not null)
                     need?.Fulfill();
                 plant.RemoveThisFromMap();
-                GameLoop.AddMessageLog($"The {actor.Name} ate {plant.Name}");
+                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"The {actor.Name} ate {plant.Name}"));
             }
             return TimeHelper.Interact;
         }
@@ -613,11 +605,11 @@ namespace MagusEngine.Commands
         public static Path FindFleeAction(Map map, Actor actor, Actor? danger)
         {
 #if DEBUG
-            GameLoop.AddMessageLog($"{actor.Name} considers {danger.Name} dangerous!");
+            Locator.GetService<MagiLog>().Log($"{actor.Name} considers {danger.Name} dangerous!");
 #endif
 
             Point rngPoint = map.GetRandomWalkableTile();
-            return map.AStar.ShortestPath(actor.Position, rngPoint);
+            return map.AStar.ShortestPath(actor.Position, rngPoint)!;
         }
 
         public static bool SearchForDangerAction(Actor actor, Map map, out Actor? danger)
@@ -643,9 +635,9 @@ namespace MagusEngine.Commands
                         continue;
                     var dis = map.DistanceMeasurement.Calculate(actor.Position, danger.Position);
 
-                    bool considersDangerBasedOnSize = danger.Flags.Contains(SpecialFlag.Predator)
-                        && actor.Volume < danger.Volume * 4
-                        || actor.Volume < danger.Volume * 2 - actor.Soul.WillPower * actor.Body.Strength;
+                    bool considersDangerBasedOnSize = (danger.Flags.Contains(SpecialFlag.Predator)
+                        && actor.Volume < danger.Volume * 4)
+                        || actor.Volume < (danger.Volume * 2) - (actor.Soul.WillPower * actor.Body.Strength);
                     bool getifDangerOnViewNecessaryToworry = dis <= 15 && dis <= actor.GetViewRadius(); // 15 or view radius, whatever is lower.
 
                     return considersDangerBasedOnSize && getifDangerOnViewNecessaryToworry;
@@ -662,7 +654,7 @@ namespace MagusEngine.Commands
             {
                 if (actor.GetMemory<WaterTile>(MemoryType.WaterLoc, out var memory))
                 {
-                    water = memory.ObjToRemember!;
+                    water = memory?.ObjToRemember!;
                     return true;
                 }
                 return false;
