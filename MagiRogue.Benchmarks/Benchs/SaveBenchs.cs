@@ -1,12 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
-using MagiRogue.Data;
-using MagiRogue.Entities;
+using MagusEngine.Core.Entities;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MagiRogue.Benchmarks.Benchs
 {

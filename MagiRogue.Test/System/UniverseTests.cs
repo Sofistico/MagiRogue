@@ -1,10 +1,12 @@
-﻿using MagiRogue.Data.Enumerators;
-using MagiRogue.Data.Serialization;
-using MagiRogue.Entities;
-using MagiRogue.GameSys.Planet;
-using MagiRogue.GameSys.Tiles;
+﻿using Arquimedes;
+using Arquimedes.Enumerators;
+using MagusEngine.Core;
+using MagusEngine.Core.Entities;
 using MagusEngine.Core.MapStuff;
+using MagusEngine.Generators;
+using MagusEngine.Serialization;
 using MagusEngine.Systems;
+using MagusEngine.Systems.Time;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using Xunit;
@@ -17,11 +19,11 @@ namespace MagiRogue.Test.System
 
         public UniverseTests()
         {
-            Palette.AddToColorDictionary();
+            MagiPalette.AddToColorDictionary();
             var chunck = new RegionChunk(new Point(0, 0));
             uni = new(new PlanetMap(50, 50), null, null,
-                new MagiRogue.GameSys.Time.TimeSystem(10), true,
-                SeasonType.Spring, new(), chunck);
+                new TimeSystem(10), true,
+                SeasonType.Spring, chunck);
             PrepareForChunkTest();
         }
 
@@ -37,14 +39,14 @@ namespace MagiRogue.Test.System
 
         private static void FillTilesWithRandomShit(Map map)
         {
-            for (int i = 0; i < map.Tiles.Length; i++)
+            for (int i = 0; i < map.Terrain.Count; i++)
             {
-                var p = SadRogue.Primitives.Point.FromIndex(i, map.Width);
+                var p = Point.FromIndex(i, map.Width);
                 int z = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(1, 3);
                 if (z == 1)
-                    map.SetTerrain(new TileFloor(p));
+                    map.SetTerrain(new Tile(Color.Black, Color.Black, '#', false, false, p));
                 else
-                    map.SetTerrain(new TileWall(p));
+                    map.SetTerrain(new Tile(Color.Black, Color.Black, '.', true, true, p));
             }
         }
 
@@ -53,7 +55,7 @@ namespace MagiRogue.Test.System
         {
             uni.ForceChangeCurrentMap(new Map("Test"));
             uni.WorldMap.AssocietatedMap.SetTerrain
-                (new TileFloor(new SadRogue.Primitives.Point(0, 0)));
+                (new Tile(Color.Black, Color.Black, '.', true, true, Point.Zero));
             Player player = Player.TestPlayer();
             player.Position = new SadRogue.Primitives.Point(0, 0);
             uni.WorldMap.AssocietatedMap.AddMagiEntity(player);
@@ -95,9 +97,9 @@ namespace MagiRogue.Test.System
                     20,
                     3);
 
-            RegionChunk chunk = uni.GenerateChunck(new Point(0, 0));
+            
             //uni.AllChunks[i] = chunk;
-            uni.CurrentChunk = chunk;
+            uni.CurrentChunk = uni.GenerateChunck(new Point(0, 0));
 
             foreach (var map in uni.CurrentChunk.LocalMaps)
             {

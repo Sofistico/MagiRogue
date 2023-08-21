@@ -1,16 +1,11 @@
-﻿using MagiRogue.Entities;
-using MagiRogue.Data;
-using MagiRogue.Utils;
+﻿using Arquimedes.Enumerators;
+using MagusEngine.Core.Entities;
+using MagusEngine.Factory;
+using MagusEngine.Serialization.EntitySerialization;
+using MagusEngine.Systems.Physics;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Xunit;
-using MagiRogue.Data.Serialization;
-using MagiRogue.Data.Serialization.EntitySerialization;
-using MagusEngine.Systems.Physics;
 
 namespace MagiRogue.Test.Entities
 {
@@ -48,7 +43,7 @@ namespace MagiRogue.Test.Entities
             var playa = EntityFactory.PlayerCreatorFromZero(new Point(0, 0),
                 "human",
                 "Test",
-                MagiRogue.Data.Enumerators.Sex.None,
+                Sex.None,
                 "new_wiz");
 
             var json = JsonConvert.SerializeObject(playa);
@@ -64,9 +59,9 @@ namespace MagiRogue.Test.Entities
             var playa = EntityFactory.PlayerCreatorFromZero(new Point(0, 0),
                 "human",
                 "Test",
-                MagiRogue.Data.Enumerators.Sex.None,
+                Sex.None,
                 "new_wiz");
-            var eyes = playa.GetAnatomy().Organs.FindAll(i => i.OrganType is MagiRogue.Data.Enumerators.OrganType.Visual);
+            var eyes = playa.GetAnatomy().Organs.FindAll(i => i.OrganType is OrganType.Visual);
             foreach (var item in eyes)
             {
                 item.Working = false;
@@ -83,7 +78,7 @@ namespace MagiRogue.Test.Entities
             var playa = EntityFactory.PlayerCreatorFromZero(new Point(0, 0),
                 "human",
                 "Test",
-                MagiRogue.Data.Enumerators.Sex.None,
+                Sex.None,
                 "new_wiz");
             var json = JsonConvert.SerializeObject(playa);
             var deserialized = JsonConvert.DeserializeObject<Actor>(json);

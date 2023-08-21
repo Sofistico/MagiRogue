@@ -17,13 +17,15 @@ namespace MagusEngine.Core
             Color background,
             char glyph,
             bool isWalkable,
-            bool isTransparent)
+            bool isTransparent,
+            Point pos)
         {
             Appearence = new(foreground, background, glyph);
             _gameObject = new((int)MapLayer.TERRAIN,
                 isWalkable,
                 isTransparent,
                 Locator.GetService<IDGenerator>().UseID);
+            Position = pos;
         }
 
         public T? GetComponent<T>() where T : class => GoRogueComponents.GetFirst<T>();

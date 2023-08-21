@@ -1,19 +1,16 @@
-﻿using System;
+﻿using Arquimedes.Enumerators;
+using Arquimedes.Utils;
+using MagusEngine.Core.Entities;
+using MagusEngine.Core.Entities.Base;
+using MagusEngine.Factory;
+using MagusEngine.Systems;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using SadRogue.Primitives;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
-using MagiRogue.Data;
-using MagiRogue.Utils;
-using Newtonsoft.Json;
-using MagiRogue.Entities;
-using MagiRogue.Data.Serialization;
-using Newtonsoft.Json.Linq;
-using MagiRogue.Data.Serialization.EntitySerialization;
-using MagiRogue.Data.Enumerators;
-using SadRogue.Primitives;
-using MagiRogue.Entities.Core;
 
 namespace MagiRogue.Test.Data
 {
@@ -40,7 +37,7 @@ namespace MagiRogue.Test.Data
         {
             var path = AppDomain.CurrentDomain.BaseDirectory;
 
-            List<Limb> limb = MagiRogue.Utils.JsonUtils.JsonDeseralize<List<Limb>>
+            List<Limb> limb = JsonUtils.JsonDeseralize<List<Limb>>
                 (path + @"\Data\Bodies\limbs_std.json");
 
             var otherLimb = DataManager.QueryLimbInData("upper_body");
@@ -82,8 +79,10 @@ namespace MagiRogue.Test.Data
             bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5fingers").BodyParts);
             bp.BodyParts.AddRange(DataManager.QueryBpPlanInData("5toes").BodyParts);
             List<Limb> basicHuman = bp.ReturnBodyParts().Where(i => i is Limb).Cast<Limb>().ToList();
-            Anatomy ana = new Anatomy();
-            ana.Limbs = basicHuman;
+            Anatomy ana = new()
+            {
+                Limbs = basicHuman
+            };
             List<Limb> test = ana.GetAllConnectedLimb(basicHuman.Find(f => f.LimbType is LimbType.Arm));
             Assert.True(test.Count >= 3);
         }

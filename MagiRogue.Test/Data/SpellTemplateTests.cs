@@ -1,13 +1,7 @@
-﻿using Xunit;
-using MagiRogue.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using MagiRogue.Data.Enumerators;
+﻿using Arquimedes.Enumerators;
 using MagusEngine.Core.Magic;
+using Newtonsoft.Json;
+using Xunit;
 
 namespace MagiRogue.Test.Data
 {

@@ -1,9 +1,9 @@
-﻿using GoRogue.Components;
-using MagiRogue.Data.Enumerators;
-using MagiRogue.Entities;
-using MagiRogue.Entities.Core;
-using MagiRogue.Utils;
+﻿using Arquimedes.Enumerators;
+using GoRogue.Components;
+using MagusEngine.Core.Entities;
+using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic;
+using MagusEngine.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -33,8 +33,8 @@ namespace MagusEngine.Serialization.EntitySerialization
     public class ActorTemplate
     {
         /// <summary>
-        /// Different from the id of GoRogue, this is for easy acess and navigation in the json, should be unique for
-        /// each actor and human redable.
+        /// Different from the id of GoRogue, this is for easy acess and navigation in the json,
+        /// should be unique for each actor and human redable.
         /// </summary>
         public string ID { get; set; }
 

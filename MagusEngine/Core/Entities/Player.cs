@@ -1,5 +1,5 @@
-﻿using Arquimedes.Data;
-using MagusEngine.Core.Magic;
+﻿using MagusEngine.Core.Magic;
+using MagusEngine.Factory;
 using MagusEngine.Systems;
 using MagusEngine.Utils;
 using SadRogue.Primitives;
@@ -7,12 +7,10 @@ using System.Collections.Generic;
 
 namespace MagusEngine.Core.Entities
 {
-    // Creates a new player
-    // Default glyph is @
+    // Creates a new player Default glyph is @
     public class Player : Actor
     {
-        // types: 0 - stamina
-        // 1 - mana
+        // types: 0 - stamina 1 - mana
         private readonly Dictionary<int, double> statusPercent = new Dictionary<int, double>();
 
         public Player(string name, Color foreground, Color background, Point position) :

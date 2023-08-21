@@ -1,17 +1,14 @@
-﻿using MagiRogue.Data;
-using MagiRogue.Data.Serialization;
-using MagiRogue.Data.Serialization.EntitySerialization;
-using MagiRogue.Data.Serialization.MapSerialization;
-using MagiRogue.Entities;
-using MagiRogue.GameSys.Tiles;
+﻿using Arquimedes.Enumerators;
+using MagusEngine.Core;
+using MagusEngine.Core.Entities;
 using MagusEngine.Core.MapStuff;
+using MagusEngine.Factory;
+using MagusEngine.Generators;
+using MagusEngine.Serialization.EntitySerialization;
+using MagusEngine.Serialization.MapConverter;
 using MagusEngine.Systems;
 using Newtonsoft.Json;
-using SadConsole;
 using SadRogue.Primitives;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 
 namespace MagiRogue.Test.System
@@ -28,7 +25,7 @@ namespace MagiRogue.Test.System
         [Fact]
         public void MapTest()
         {
-            Assert.True(map.Tiles.Length == 20 * 20);
+            Assert.True(map.Terrain.Count == 20 * 20);
             Actor actor = new Actor("Test", Color.Black, Color.Black, '3', new Point(1, 1));
             map.AddMagiEntity(actor);
             Assert.True(map.Entities.Contains(actor));
@@ -40,7 +37,7 @@ namespace MagiRogue.Test.System
             var actor = new Actor("Test", Color.Black, Color.Black, '@', new Point(1, 1));
             map.AddMagiEntity(actor);
             var newMap = new Map("MapTest", 1, 1);
-            newMap.Tiles[0] = new TileFloor(new Point(0, 0));
+            newMap.SetTerrain(new Tile(Color.Beige, Color.Beige, '.', true, true, new Point(0, 0)));
             Universe.ChangeActorMap(actor, newMap, new Point(0, 0), map);
             Assert.True(actor.CurrentMap.Equals(newMap));
         }
@@ -56,7 +53,7 @@ namespace MagiRogue.Test.System
         [Fact]
         public void MapSerialization()
         {
-            map.SetTerrain(new TileFloor(new Point(0, 0)));
+            map.SetTerrain(new Tile(Color.Beige, Color.Beige, '.', true, true, new Point(0, 0)));
             Actor actor = new Actor("Test", Color.Black, Color.Black, '@', new Point(0, 0));
             map.AddMagiEntity(actor);
             var json = JsonConvert.SerializeObject((MapTemplate)map);
@@ -69,7 +66,7 @@ namespace MagiRogue.Test.System
         {
             PlanetMap planet = new PlanetGenerator().CreatePlanet(150, 150, 30);
             Player playa = EntityFactory.PlayerCreatorFromZeroForTest(new Point(), "human", "Playa", 25,
-                MagiRogue.Data.Enumerators.Sex.Female, "new_wiz");
+                Sex.Female, "new_wiz");
             planet.AssocietatedMap.AddMagiEntity(playa);
 
             PlanetMapTemplate planetMapTemplate = planet;
@@ -86,9 +83,9 @@ namespace MagiRogue.Test.System
         [Fact]
         public void MapDeserialization()
         {
-            for (int i = 0; i < map.Tiles.Length; i++)
+            for (int i = 0; i < map.Terrain.Count; i++)
             {
-                map.SetTerrain(new TileFloor(Point.FromIndex(i, map.Width)));
+                map.SetTerrain(new Tile(Color.Beige, Color.Beige, '.', true, true, Point.FromIndex(i, map.Width)));
             }
             ActorTemplate actor = new Actor("Test", Color.Black, Color.Black, '@', new Point(0, 0));
             actor.Description = "Test Desc";
@@ -96,7 +93,7 @@ namespace MagiRogue.Test.System
                 "Test Item", '@', Point.None, 100)
             {
                 ItemId = "test",
-                EquipType = MagiRogue.Data.Enumerators.EquipType.Head
+                EquipType = EquipType.Head
             };
             Player player = Player.TestPlayer();
             player.AddToEquipment(item);

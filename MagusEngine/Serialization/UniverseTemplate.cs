@@ -1,9 +1,9 @@
-﻿using Arquimedes.Data;
+﻿using Arquimedes.Enumerators;
 using Arquimedes.Settings;
-using MagiRogue.Data.Enumerators;
-using MagiRogue.Entities;
+using MagusEngine.Core.Entities;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.Serialization.MapConverter;
+using MagusEngine.Systems;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System;
@@ -61,8 +61,6 @@ namespace MagusEngine.Serialization
 
         public string CurrentSeason { get; set; }
 
-        public SaveAndLoad SaveAndLoad { get; set; }
-
         public uint LastIdAssigned { get; set; }
 
         public int ZLevel { get; set; }
@@ -113,7 +111,6 @@ namespace MagusEngine.Serialization
                 uni.CurrentSeason)
             {
                 CurrentChunk = uni.CurrentChunk,
-                SaveAndLoad = uni.SaveAndLoad,
                 LastIdAssigned = Locator.GetService<IDGenerator>().CurrentInteger,
                 ZLevel = uni.ZLevel,
                 PlanetSettings = uni.PlanetSettings,
@@ -123,14 +120,14 @@ namespace MagusEngine.Serialization
         public static implicit operator Universe(UniverseTemplate uni)
         {
             Universe universe = new Universe(uni.WorldMap, uni.CurrentMap,
-                Entities.Player.ReturnPlayerFromActor(uni.Player),
+                MagusEngine.Core.Entities.Player.ReturnPlayerFromActor(uni.Player),
                 uni.Time, uni.PossibleChangeMap,
-                SeasonEnumToString(uni.CurrentSeason), uni.SaveAndLoad, uni.CurrentChunk)
+                SeasonEnumToString(uni.CurrentSeason), uni.CurrentChunk)
             {
                 ZLevel = uni.ZLevel,
                 PlanetSettings = uni.PlanetSettings,
             };
-            GameLoop.SetIdGen(uni.LastIdAssigned);
+            Locator.AddService<IDGenerator>(new(uni.LastIdAssigned, true));
 
             return universe;
         }

@@ -1,4 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using MagusEngine.Core;
+using MagusEngine.Core.Entities;
+using MagusEngine.Core.Entities.Base;
+using MagusEngine.Core.MapStuff;
+using MagusEngine.Systems;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MagusEngine.Serialization.MapConverter
 {
@@ -269,8 +276,8 @@ namespace MagusEngine.Serialization.MapConverter
         public int Height { get; set; }
         public Point LastPlayerPosition { get; set; }
         public uint MapId { get; private set; }
-        public IList<Actor> Actors { get; set; }
-        public IList<Item> Items { get; set; }
+        public List<Actor> Actors { get; set; }
+        public List<Item> Items { get; set; }
         public bool[] Explored { get; set; }
         public ulong Seed { get; set; }
         public bool? HasFOV { get; set; }
@@ -308,10 +315,10 @@ namespace MagusEngine.Serialization.MapConverter
         {
             if (map == null)
                 return null;
-            BasicTile[] tiles = new BasicTile[map.Tiles.Length];
-            for (int i = 0; i < map.Tiles.Length; i++)
+            BasicTile[] tiles = new BasicTile[map.Terrain.Count];
+            for (int i = 0; i < map.Terrain.Count; i++)
             {
-                tiles[i] = map.Tiles[i];
+                tiles[i] = map.Terrain[i];
             }
 
             MapTemplate template = new MapTemplate(map.MapName, tiles, map.Width,
@@ -356,7 +363,7 @@ namespace MagusEngine.Serialization.MapConverter
             {
                 if (map.Tiles[i] == null)
                     continue;
-                var tile = (TileBase)map.Tiles[i];
+                var tile = (Tile)map.Tiles[i];
                 objMap.SetTerrain(tile);
             }
             for (int x = 0; x < map.Actors.Count; x++)
@@ -376,7 +383,7 @@ namespace MagusEngine.Serialization.MapConverter
             objMap.PlayerExplored = new SadRogue.Primitives.GridViews.ArrayView<bool>(
                 map.Explored, map.Width);
             objMap.SetSeed(map.Seed);
-            objMap.GoRogueComponents.GetFirstOrDefault<MagiRogueFOVVisibilityHandler>().RefreshExploredTerrain();
+            objMap?.GoRogueComponents.GetFirstOrDefault<MagiRogueFOVVisibilityHandler>()?.RefreshExploredTerrain();
             objMap.ZAmount = map.ZAmount;
             objMap.Rooms = map.Rooms;
             return objMap;

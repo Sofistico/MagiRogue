@@ -1,6 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
-using MagiRogue.GameSys;
-using MagiRogue.GameSys.MapGen;
+using MagusEngine.Core.MapStuff;
+using MagusEngine.Generators.MapGen;
 
 namespace MagiRogue.Benchmarks.Benchs
 {
