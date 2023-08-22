@@ -1,4 +1,5 @@
 ﻿using MagusEngine.Serialization;
+using MagusEngine.Systems.Physics;
 
 namespace MagusEngine.ECS.Components
 {
@@ -7,10 +8,10 @@ namespace MagusEngine.ECS.Components
         public string MaterialId { get; set; }
         public MaterialTemplate Material { get; set; }
 
-        public MaterialComponent(string materialId, MaterialTemplate material)
+        public MaterialComponent(string materialId)
         {
             MaterialId = materialId;
-            Material = material;
+            Material = PhysicsManager.SetMaterial(materialId);
         }
     }
 }

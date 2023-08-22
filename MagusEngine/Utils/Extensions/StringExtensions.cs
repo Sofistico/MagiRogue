@@ -8,7 +8,7 @@ namespace MagusEngine.Utils.Extensions
     {
         public static string ToAscii(this string text, int codepage = 437)
         {
-            byte[] stringBytes = CodePagesEncodingProvider.Instance.GetEncoding(codepage).GetBytes(text);
+            byte[] stringBytes = CodePagesEncodingProvider.Instance.GetEncoding(codepage)!.GetBytes(text);
             char[] stringChars = new char[stringBytes.Length];
 
             for (int i = 0; i < stringBytes.Length; i++)

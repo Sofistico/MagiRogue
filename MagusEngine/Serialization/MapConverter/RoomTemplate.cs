@@ -2,7 +2,6 @@
 using MagusEngine.Core.MapStuff;
 using SadRogue.Primitives;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace MagusEngine.Serialization.MapConverter
 {
@@ -41,8 +40,7 @@ namespace MagusEngine.Serialization.MapConverter
         public Rectangle CreateRectangle()
         {
             (int width, int height) = GetWidthAndHeight();
-            Rectangle rec = new Rectangle(0, 0, width, height);
-            return rec;
+            return new(0, 0, width, height);
         }
 
         public (int, int) GetWidthAndHeight()

@@ -1,13 +1,11 @@
-﻿using Arquimedes.Data;
-using GoRogue.DiceNotation.Terms;
-using MagiRogue.Data.Enumerators;
-using MagiRogue.Entities;
-using MagiRogue.Entities.Core;
-using MagiRogue.Entities.Interfaces;
-using MagiRogue.Utils;
+﻿using Arquimedes.Enumerators;
+using MagusEngine.Core.Entities;
+using MagusEngine.Core.Entities.Base;
+using MagusEngine.Core.Entities.Interfaces;
 using MagusEngine.Core.Magic;
 using MagusEngine.Systems;
 using MagusEngine.Systems.Physics;
+using MagusEngine.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SadRogue.Primitives;
@@ -226,7 +224,7 @@ namespace MagusEngine.Serialization.EntitySerialization
             {
                 objFur.Traits.AddRange(template.Traits);
             }
-            if (objFur.Material.ConfersTraits is not null && objFur.Material.ConfersTraits.Count > 0)
+            if (objFur.Material.ConfersTraits?.Count > 0)
             {
                 objFur.Traits.AddRange(objFur.Material.ConfersTraits);
             }

@@ -2,6 +2,8 @@
 using GoRogue.GameFramework;
 using MagusEngine.Core.Magic;
 using SadRogue.Primitives;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 
@@ -13,6 +15,9 @@ namespace MagusEngine.Core.Entities.Base
     {
         #region Fields
 
+        private IGameObject backingField;
+
+        public Core.MapStuff.Map? MagiMap => (MapStuff.Map?)CurrentMap;
         public uint ID => backingField.ID; // stores the entity's unique identification number
         public int Layer { get; set; } // stores and sets the layer that the entity is rendered
 
@@ -71,8 +76,6 @@ namespace MagusEngine.Core.Entities.Base
         public IComponentCollection GoRogueComponents => backingField.GoRogueComponents;
 
         #endregion BackingField fields
-
-        private IGameObject backingField;
 
         #endregion Fields
 

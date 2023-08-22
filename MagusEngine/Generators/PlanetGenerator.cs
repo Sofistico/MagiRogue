@@ -1,24 +1,21 @@
-﻿using GoRogue.DiceNotation;
-using GoRogue.Pathing;
-using MagiRogue.Data;
-using MagiRogue.Data.Enumerators;
-using MagiRogue.Entities;
-using MagiRogue.GameSys.Planet.History;
-using MagiRogue.GameSys.Tiles;
-using MagiRogue.Utils;
-using MagiRogue.Utils.Extensions;
+﻿using Arquimedes.Enumerators;
+using GoRogue.DiceNotation;
 using MagusEngine.Core;
 using MagusEngine.Core.Civ;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.Core.WorldStuff;
 using MagusEngine.Core.WorldStuff.History;
+using MagusEngine.ECS.Components.TilesComponents;
+using MagusEngine.Utils;
+using MagusEngine.Utils.Noise.AccidentalNoiseLibrary.Enums;
+using MagusEngine.Utils.Noise.AccidentalNoiseLibrary.Implicit;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TinkerWorX.AccidentalNoiseLibrary;
 
 // take a look at the historygen-sad, that's quite interesting
+// TODO: REDO!
 namespace MagusEngine.Generators
 {
     /// <summary>
@@ -88,7 +85,7 @@ namespace MagusEngine.Generators
         private PlanetMap planetData;
 
         // final object
-        private WorldTile[,] tiles;
+        private Tile[,] tiles;
 
         private float[,] HeightData;
 
@@ -232,7 +229,7 @@ namespace MagusEngine.Generators
 
         #region Tiles
 
-        private void CreateConsole(WorldTile[,] tiles)
+        private void CreateConsole(Tile[,] tiles)
         {
             PlanetGlyphGenerator.SetTile(_width, _height, ref tiles);
             // For Test only!
@@ -739,8 +736,7 @@ namespace MagusEngine.Generators
                     if (MathF.Abs(topValue - bottomValue) < 0.1f)
                         bottomValue = int.MaxValue;
 
-                // find mininum
-                // has god forsaken us?
+                // find mininum has god forsaken us?
                 float min = MathF.Min(MathF.Min(MathF.Min(leftValue, rigthValue), topValue), bottomValue);
 
                 // if no minimum found - exit

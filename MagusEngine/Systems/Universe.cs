@@ -1,6 +1,8 @@
 ﻿using Arquimedes.Enumerators;
 using Arquimedes.Settings;
 using Arquimedes.Utils;
+using MagusEngine.Bus;
+using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Civ;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
@@ -13,7 +15,9 @@ using MagusEngine.Services;
 using MagusEngine.Systems.Time;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace MagusEngine.Systems
@@ -56,7 +60,7 @@ namespace MagusEngine.Systems
 
         public int ZLevel { get; set; }
 
-        public PlanetGenSettings PlanetSettings { get; set; }
+        public PlanetGenSettings? PlanetSettings { get; set; }
 
         /// <summary>
         /// Creates a new game world and stores it in a publicly accessible constructor.
@@ -65,14 +69,16 @@ namespace MagusEngine.Systems
         {
             Time = new TimeSystem();
             CurrentSeason = SeasonType.Spring;
-            PlanetSettings = JsonUtils.JsonDeseralize<PlanetGenSettings>(
-                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Settings", "planet_gen_setting.json"));
+            PlanetSettings = JsonUtils.JsonDeseralize<PlanetGenSettings>(Path
+                .Combine(AppDomain.CurrentDomain.BaseDirectory,
+                "Settings",
+                "planet_gen_setting.json"));
 
             if (!testGame)
             {
-                WorldMap = new PlanetGenerator().CreatePlanet(PlanetSettings.PlanetWidth,
-                    PlanetSettings.PlanetHeight,
-                    PlanetSettings.PlanetMaxInitialCivs);
+                WorldMap = new PlanetGenerator().CreatePlanet(PlanetSettings!.PlanetWidth,
+                    PlanetSettings!.PlanetHeight,
+                    PlanetSettings!.PlanetMaxInitialCivs);
                 Time = WorldMap.GetTimePassed();
                 WorldMap.AssocietatedMap.IsActive = true;
                 CurrentMap = WorldMap.AssocietatedMap;
@@ -127,7 +133,7 @@ namespace MagusEngine.Systems
             {
                 try
                 {
-                    Civilization startTown = WorldMap.Civilizations
+                    Civilization? startTown = WorldMap.Civilizations
                         .Find(a => a.Tendency == CivilizationTendency.Neutral);
                     if (startTown is not null)
                         player.Position = startTown.ReturnAllLandTerritory(WorldMap.AssocietatedMap)[0].Position;
@@ -238,7 +244,7 @@ namespace MagusEngine.Systems
             // Place the player on the first non-movement-blocking tile on the map
             for (int i = 0; i < CurrentMap.Terrain.Count; i++)
             {
-                if (!CurrentMap.Terrain[i]?.IsWalkable == true
+                if (CurrentMap.Terrain[i]?.IsWalkable == false
                     && !CurrentMap.GetEntitiesAt<MagiEntity>(Point.FromIndex(i, CurrentMap.Width)).Any())
                 {
                     // Set the player's position to the index of the current map position
@@ -272,10 +278,10 @@ namespace MagusEngine.Systems
             if (sucess)
             {
                 // hud action before any action! will resolve with events...
-                if (GameLoop.UIManager.MessageLog.MessageSent)
-                {
-                    GameLoop.UIManager.MessageLog.MessageSent = false;
-                }
+                //if (GameLoop.UIManager.MessageLog.MessageSent)
+                //{
+                //    GameLoop.UIManager.MessageLog.MessageSent = false;
+                //}
 
                 bool playerActionWorked = ProcessPlayerTurn(playerTime);
 
@@ -304,17 +310,18 @@ namespace MagusEngine.Systems
                         break;
                 }
                 // events
-                GameLoop.UIManager.MapWindow.MapConsole.IsDirty = true;
+                //GameLoop.UIManager.MapWindow.MapConsole.IsDirty = true;
 #if DEBUG
                 // events
-                GameLoop.AddMessageLog($"Turns: {Time.Turns}, Tick: {Time.TimePassed.Ticks}");
+                Locator.GetService<MessageBusService>()
+                    .SendMessage<MessageSent>(new($"Turns: {Time.Turns}, Tick: {Time.TimePassed.Ticks}"));
 #endif
                 // makes sure that any entity that exists but has no AI, or the AI failed, get's a turn.
                 var ids = GetEntitiesIds();
                 RegisterInTime(ids);
 
                 // if there is the need to update any screen or console or window for last! events
-                GameLoop.UIManager.MessageLog.HideIfNoMessageThisTurn();
+                Locator.GetService<MessageBusService>().SendMessage<HideMessageEvent>(new());
             }
         }
 
@@ -370,7 +377,7 @@ namespace MagusEngine.Systems
             for (int i = 0; i < chunckLenght; i++)
             {
                 Map maps = CurrentChunk?.LocalMaps[i];
-                maps.DestroyMap();
+                maps?.DestroyMap();
             }
             CurrentMap = null!;
             Player = null!;
@@ -378,7 +385,8 @@ namespace MagusEngine.Systems
             WorldMap = null!;
 
             // event
-            GameLoop.UIManager.MainMenu.RestartGame();
+            //GameLoop.UIManager.MainMenu.RestartGame();
+            Locator.GetService<MessageBusService>().SendMessage<RestartGame>(new());
         }
 
         private void ProcessAiTurn(uint entityId)
@@ -417,7 +425,8 @@ namespace MagusEngine.Systems
         {
             CurrentMap.ControlledEntitiy = entity;
             // event
-            GameLoop.UIManager.MapWindow.CenterOnActor(entity);
+            //GameLoop.UIManager.MapWindow.CenterOnActor(entity);
+            Locator.GetService<MessageBusService>().SendMessage<ChangeCenteredActor>(new(entity));
         }
 
         public RegionChunk GenerateChunck(Point posGenerated)
@@ -435,12 +444,12 @@ namespace MagusEngine.Systems
             return newChunck;
         }
 
-        public RegionChunk GetChunckByPos(Point playerPoint)
+        public RegionChunk? GetChunckByPos(Point playerPoint)
         {
             return Locator.GetService<SavingService>().GetChunkAtIndex(playerPoint, PlanetSettings.PlanetWidth);
         }
 
-        public static Map GetMapById(int id)
+        public static Map? GetMapById(int id)
         {
             return SavingService.LoadMapById(id);
         }

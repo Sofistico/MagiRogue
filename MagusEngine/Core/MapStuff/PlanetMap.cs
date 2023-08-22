@@ -1,12 +1,10 @@
-﻿using MagiRogue.Data.Serialization.MapSerialization;
-using MagiRogue.GameSys.Tiles;
-using MagiRogue.Utils;
-using MagusEngine.Core.Civ;
+﻿using MagusEngine.Core.Civ;
 using MagusEngine.Core.WorldStuff.History;
+using MagusEngine.Serialization.MapConverter;
 using MagusEngine.Systems;
 using MagusEngine.Systems.Time;
+using MagusEngine.Utils;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -62,7 +60,7 @@ namespace MagusEngine.Core.MapStuff
                 GoRogueComponents.GetFirstOrDefault<FOVHandler>().Disable();
         }
 
-        public void SetWorldTiles(WorldTile[,] tiles)
+        public void SetWorldTiles(Tile[,] tiles)
         {
             AssocietatedMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().Disable();
 

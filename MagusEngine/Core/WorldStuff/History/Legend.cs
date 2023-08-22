@@ -1,17 +1,14 @@
-﻿using MagiRogue.Entities;
-using MagiRogue.Utils;
-using MagiRogue.GameSys.Time;
-using System;
-using System.Text;
-using MagiRogue.Data;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using MagiRogue.Data.Serialization;
-using MagiRogue.Data.Enumerators;
-using MagiRogue.Utils.Extensions;
-using MagiRogue.Entities.Core;
+﻿using Arquimedes.Enumerators;
 using MagusEngine.Core.Civ;
+using MagusEngine.Core.Entities;
+using MagusEngine.Core.Entities.Base;
+using MagusEngine.Serialization;
+using MagusEngine.Systems;
+using MagusEngine.Utils;
+using MagusEngine.Utils.Extensions;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace MagusEngine.Core.WorldStuff.History
 {
@@ -115,7 +112,7 @@ namespace MagusEngine.Core.WorldStuff.History
             // TODO: Make all that happenead translate to the world and it's people!
             switch (myth.MythAction)
             {
-                case Data.Enumerators.MythAction.Created:
+                case MythAction.Created:
                     happening.Append(" created ");
                     CreationActions(myth,
                         figure,
@@ -132,61 +129,61 @@ namespace MagusEngine.Core.WorldStuff.History
 
                     break;
 
-                case Data.Enumerators.MythAction.Destroyed:
+                case MythAction.Destroyed:
                     happening.Append(" destroyed ");
                     DestroyingActions(myth, figure, happening, race, worldName, possibleRealms);
 
                     break;
 
-                case Data.Enumerators.MythAction.Modified:
+                case MythAction.Modified:
                     happening.Append($" modified {myth.MythWhat.ToString().SeparateByUpperLetter().ToLower()} to better suit it's needs");
                     break;
 
-                case Data.Enumerators.MythAction.Antagonized:
+                case MythAction.Antagonized:
                     happening.Append($" antagonized ");
                     AntagonazingActions(myth, race, figure, possibleRealms, possibleRegions, happening);
                     break;
 
-                case Data.Enumerators.MythAction.Killed:
+                case MythAction.Killed:
                     happening.Append(" killed ");
                     KillingActions(myth, figure, happening, race, possibleRealms);
 
                     break;
 
-                case Data.Enumerators.MythAction.Gave:
+                case MythAction.Gave:
                     happening.Append(" gave ");
                     GaveActions(myth, happening, figure, race, possibleRealms);
                     break;
 
-                case Data.Enumerators.MythAction.Ascended:
+                case MythAction.Ascended:
                     happening.Append(" ascended as a god");
                     figure.SpecialFlags.Add(SpecialFlag.Myth);
 
                     break;
 
-                case Data.Enumerators.MythAction.Descended:
+                case MythAction.Descended:
                     happening.Append(" descended to the world");
                     figure.SpecialFlags.Add(SpecialFlag.MythDescended);
 
                     break;
 
-                case Data.Enumerators.MythAction.OpenPortal:
+                case MythAction.OpenPortal:
                     happening.Append($" opened portal to the outer realm {possibleRealms.GetRandomItemFromList()}");
                     figure.SpecialFlags.Add(SpecialFlag.OpenedPortal);
 
                     break;
 
-                case Data.Enumerators.MythAction.ClosedPortal:
+                case MythAction.ClosedPortal:
                     happening.Append($" closed portal to the outer realm {possibleRealms.GetRandomItemFromList()}");
 
                     break;
 
-                case Data.Enumerators.MythAction.Cursed:
+                case MythAction.Cursed:
                     happening.Append($" cursed the {myth.MythWhat.ToString().SeparateByUpperLetter().ToLower()} with something!");
 
                     break;
 
-                case Data.Enumerators.MythAction.Blessed:
+                case MythAction.Blessed:
                     happening.Append($" blessed the {myth.MythWhat.ToString().SeparateByUpperLetter().ToLower()} with something!");
 
                     break;
@@ -209,85 +206,85 @@ namespace MagusEngine.Core.WorldStuff.History
         {
             switch (myth.MythWhat)
             {
-                case Data.Enumerators.MythWhat.Race:
+                case MythWhat.Race:
                     happening.Append($"to the {race.RaceName} something!");
                     return;
 
-                case Data.Enumerators.MythWhat.OriginMagic:
+                case MythWhat.OriginMagic:
                     happening.Append("the origin of magic away");
                     break;
 
-                case Data.Enumerators.MythWhat.CostMagic:
+                case MythWhat.CostMagic:
                     happening.Append("a new cost to magic!");
                     break;
 
-                case Data.Enumerators.MythWhat.Magic:
+                case MythWhat.Magic:
                     happening.Append("magic to his creation");
                     figure.SpecialFlags.Add(SpecialFlag.GaveMagicToCreation);
                     break;
 
-                case Data.Enumerators.MythWhat.Land:
+                case MythWhat.Land:
                     happening.Append("it's land away to creation!");
                     break;
 
-                case Data.Enumerators.MythWhat.Region:
+                case MythWhat.Region:
                     happening.Append("it's region away to creation!");
                     break;
 
-                case Data.Enumerators.MythWhat.World:
+                case MythWhat.World:
                     happening.Append("away it's world to come to creation!");
                     break;
 
-                case Data.Enumerators.MythWhat.God:
+                case MythWhat.God:
                     happening.Append($"a gift to god {RandomNames.RandomNamesFromRandomLanguage()}!");
                     break;
 
-                case Data.Enumerators.MythWhat.Item:
+                case MythWhat.Item:
                     happening.Append("the secrets of item to creation!");
                     break;
 
-                case Data.Enumerators.MythWhat.Reagent:
+                case MythWhat.Reagent:
                     MaterialTemplate temp = DataManager.ListOfMaterials.GetRandomItemFromList();
                     happening.Append($"the secrets of material {temp.Name} to creation!");
 
                     break;
 
-                case Data.Enumerators.MythWhat.Afterlife:
+                case MythWhat.Afterlife:
                     happening.Append("a piece of it's power to the afterlife!");
 
                     break;
 
-                case Data.Enumerators.MythWhat.OuterRealm:
+                case MythWhat.OuterRealm:
                     happening.Append($"away it's {possibleRealms.GetRandomItemFromList()} realm!");
 
                     break;
 
-                case Data.Enumerators.MythWhat.Space:
+                case MythWhat.Space:
                     return;
 
-                case Data.Enumerators.MythWhat.Death:
+                case MythWhat.Death:
                     return;
 
-                case Data.Enumerators.MythWhat.Demon:
+                case MythWhat.Demon:
                     happening.Append("away something to the demons!");
                     break;
 
-                case Data.Enumerators.MythWhat.Angel:
+                case MythWhat.Angel:
                     happening.Append("away something to the angels!");
 
                     break;
 
-                case Data.Enumerators.MythWhat.Spirit:
+                case MythWhat.Spirit:
                     happening.Append("away something to the spirits!");
 
                     break;
 
-                case Data.Enumerators.MythWhat.Force:
+                case MythWhat.Force:
                     happening.Append("away something to the forces!");
 
                     break;
 
-                case Data.Enumerators.MythWhat.Individual:
+                case MythWhat.Individual:
                     happening.Append($"away something to the {RandomNames.GiberishFullName(5, 5)}!");
                     break;
 
@@ -305,97 +302,97 @@ namespace MagusEngine.Core.WorldStuff.History
         {
             switch (myth.MythWhat)
             {
-                case Data.Enumerators.MythWhat.Race:
-                    happening.Append($"the primordials of {race.RaceName}");
+                case MythWhat.Race:
+                    happening.Append("the primordials of ").Append(race.RaceName);
                     figure.SpecialFlags.Add(SpecialFlag.Antagonist);
 
                     break;
 
-                case Data.Enumerators.MythWhat.OriginMagic:
+                case MythWhat.OriginMagic:
                     happening.Append("to oppose the origin of magic!");
                     figure.SpecialFlags.Add(SpecialFlag.Antagonist);
 
                     break;
 
-                case Data.Enumerators.MythWhat.CostMagic:
+                case MythWhat.CostMagic:
                     happening.Append("to oppose the cost of magic!");
 
                     break;
 
-                case Data.Enumerators.MythWhat.Magic:
+                case MythWhat.Magic:
                     happening.Append("to oppose magic and those who wield it!");
                     figure.SpecialFlags.Add(SpecialFlag.Antagonist);
 
                     break;
 
-                case Data.Enumerators.MythWhat.Land:
+                case MythWhat.Land:
                     happening.Append("the creation of the land!");
                     figure.SpecialFlags.Add(SpecialFlag.Antagonist);
 
                     break;
 
-                case Data.Enumerators.MythWhat.Region:
+                case MythWhat.Region:
                     string region = possibleRegions.GetRandomItemFromList();
                     happening.Append($"to oppose the creation of {region}!");
 
                     break;
 
-                case Data.Enumerators.MythWhat.World:
+                case MythWhat.World:
                     happening.Append($"to oppose creation of the world!");
                     figure.SpecialFlags.Add(SpecialFlag.Antagonist);
 
                     break;
 
-                case Data.Enumerators.MythWhat.God:
+                case MythWhat.God:
                     happening.Append("to make enemy with the god");
                     break;
 
-                case Data.Enumerators.MythWhat.Item:
+                case MythWhat.Item:
                     Item ite = DataManager.ListOfItems.GetRandomItemFromList();
                     happening.Append($"the creation of the item {ite}");
                     break;
 
-                case Data.Enumerators.MythWhat.Reagent:
+                case MythWhat.Reagent:
                     MaterialTemplate temp = DataManager.ListOfMaterials.GetRandomItemFromList();
                     happening.Append($"the creation of the reagent {temp.Name}");
                     break;
 
-                case Data.Enumerators.MythWhat.Afterlife:
+                case MythWhat.Afterlife:
                     happening.Append("the afterlife");
                     break;
 
-                case Data.Enumerators.MythWhat.OuterRealm:
+                case MythWhat.OuterRealm:
                     happening.Append($"the outer realm of {possibleRealms.GetRandomItemFromList()}");
                     break;
 
-                case Data.Enumerators.MythWhat.Space:
+                case MythWhat.Space:
                     happening.Append("the space between worlds");
                     break;
 
-                case Data.Enumerators.MythWhat.Death:
+                case MythWhat.Death:
                     happening.Append("death");
                     break;
 
-                case Data.Enumerators.MythWhat.Demon:
+                case MythWhat.Demon:
                     happening.Append("the demons");
                     break;
 
-                case Data.Enumerators.MythWhat.Angel:
+                case MythWhat.Angel:
                     happening.Append("the angels");
 
                     break;
 
-                case Data.Enumerators.MythWhat.Spirit:
+                case MythWhat.Spirit:
                     happening.Append("the spirits");
 
                     break;
 
-                case Data.Enumerators.MythWhat.Force:
+                case MythWhat.Force:
                     happening.Append("the forces");
 
                     break;
 
-                case Data.Enumerators.MythWhat.Individual:
+                case MythWhat.Individual:
                     string name = RandomNames.GiberishFullName(6, 6);
                     happening.Append($"the {name}");
                     break;
@@ -412,74 +409,74 @@ namespace MagusEngine.Core.WorldStuff.History
         {
             switch (myth.MythWhat)
             {
-                case Data.Enumerators.MythWhat.Race:
+                case MythWhat.Race:
                     happening.Append($"the {race.RaceName}");
                     //figure.SpecialFlags.Add(SpecialFlag.RaceCreator);
                     break;
 
-                case Data.Enumerators.MythWhat.OriginMagic:
+                case MythWhat.OriginMagic:
                     string origin = possibleOrigins.GetRandomItemFromList();
                     happening.Append($"the {origin} of magic");
                     figure.SpecialFlags.Add(SpecialFlag.MagicCreator);
                     break;
 
-                case Data.Enumerators.MythWhat.CostMagic:
+                case MythWhat.CostMagic:
 
                     string why = possibleWhys.GetRandomItemFromList();
                     happening.Append("the cost of magic, ");
                     happening.Append($"because {why}");
                     break;
 
-                case Data.Enumerators.MythWhat.Magic:
+                case MythWhat.Magic:
                     happening.Append(possibleMagic.GetRandomItemFromList());
                     break;
 
-                case Data.Enumerators.MythWhat.Land:
+                case MythWhat.Land:
                     happening.Append("the land");
                     break;
 
-                case Data.Enumerators.MythWhat.Region:
+                case MythWhat.Region:
                     string region = possibleRegions.GetRandomItemFromList();
                     happening.Append($"the {region}");
                     break;
 
-                case Data.Enumerators.MythWhat.World:
+                case MythWhat.World:
                     happening.Append($"the world {worldName}");
                     figure.SpecialFlags.Add(SpecialFlag.WorldCreator);
                     break;
 
-                case Data.Enumerators.MythWhat.God:
+                case MythWhat.God:
                     string name = RandomNames.RandomNamesFromLanguage(
                         DataManager.ListOfLanguages.GetRandomItemFromList());
                     happening.Append($"the god {name}");
                     legend.WithWho = new(name, $"a god born of {myth.Name}");
                     break;
 
-                case Data.Enumerators.MythWhat.Item:
+                case MythWhat.Item:
                     string itemName = DataManager.ListOfItems.GetRandomItemFromList().Name;
                     happening.Append($"the {itemName}");
                     break;
 
-                case Data.Enumerators.MythWhat.Reagent:
+                case MythWhat.Reagent:
                     MaterialTemplate temp = DataManager.ListOfMaterials.GetRandomItemFromList();
                     happening.Append($"the material {temp.Name}");
                     break;
 
-                case Data.Enumerators.MythWhat.OuterRealm:
+                case MythWhat.OuterRealm:
                     string realm = possibleRealms.GetRandomItemFromList();
                     happening.Append($"the outer realm of {realm}");
                     break;
 
-                case Data.Enumerators.MythWhat.Space:
+                case MythWhat.Space:
                     happening.Append($"the beetwen worlds");
                     break;
 
-                case Data.Enumerators.MythWhat.Death:
+                case MythWhat.Death:
                     string because = possibleBecauses.GetRandomItemFromList();
                     happening.Append($"death, because {because}");
                     break;
 
-                case Data.Enumerators.MythWhat.Individual:
+                case MythWhat.Individual:
                     string indName = RandomNames.RandomNamesFromLanguage
                         (DataManager.ListOfLanguages.GetRandomItemFromList());
                     Race indRace = DataManager.ListOfRaces.GetRandomItemFromList();
@@ -499,101 +496,101 @@ namespace MagusEngine.Core.WorldStuff.History
         {
             switch (myth.MythWhat)
             {
-                case Data.Enumerators.MythWhat.Race:
+                case MythWhat.Race:
                     happening.Append($"the primordials of {race.RaceName}, so that they not exist!");
                     race.DeadRace = true;
                     figure.SpecialFlags.Add(SpecialFlag.Antagonist);
                     break;
 
-                case Data.Enumerators.MythWhat.OriginMagic:
+                case MythWhat.OriginMagic:
                     happening.Append("the origin of magic, thus making magic hard");
                     figure.SpecialFlags.Add(SpecialFlag.Antagonist);
                     break;
 
-                case Data.Enumerators.MythWhat.CostMagic:
+                case MythWhat.CostMagic:
                     happening.Append("the cost of magic, thus making magic free");
                     break;
 
-                case Data.Enumerators.MythWhat.Magic:
+                case MythWhat.Magic:
                     happening.Append("magic, thus making magic impossible");
                     figure.SpecialFlags.Add(SpecialFlag.MagicKiller);
                     break;
 
-                case Data.Enumerators.MythWhat.Land:
+                case MythWhat.Land:
                     string landName = RandomNames.RandomNamesFromLanguage(
                         DataManager.ListOfLanguages.GetRandomItemFromList());
                     happening.Append($"the lost land of {landName}");
                     break;
 
-                case Data.Enumerators.MythWhat.Region:
+                case MythWhat.Region:
                     string regionName = RandomNames.RandomNamesFromLanguage(
                         DataManager.ListOfLanguages.GetRandomItemFromList());
                     happening.Append($"the lost region of {regionName}");
 
                     break;
 
-                case Data.Enumerators.MythWhat.World:
+                case MythWhat.World:
                     happening.Append($"the lost world of {worldName}, thus forcing the creation cycle to begin anew");
                     figure.SpecialFlags.Add(SpecialFlag.Antagonist);
                     break;
 
-                case Data.Enumerators.MythWhat.God:
+                case MythWhat.God:
                     string godName = RandomNames.RandomNamesFromLanguage(
                         DataManager.ListOfLanguages.GetRandomItemFromList());
                     happening.Append($"the god {godName}");
                     break;
 
-                case Data.Enumerators.MythWhat.Item:
+                case MythWhat.Item:
                     string lostItem = RandomNames.RandomNamesFromLanguage(
                         DataManager.ListOfLanguages.GetRandomItemFromList());
                     happening.Append($"the item {lostItem}, thus making sure that it won't exist");
                     break;
 
-                case Data.Enumerators.MythWhat.Reagent:
+                case MythWhat.Reagent:
                     string lostReagent = RandomNames.RandomNamesFromLanguage(
                         DataManager.ListOfLanguages.GetRandomItemFromList());
                     happening.Append($"the reagent {lostReagent}, thus making sure that it won't exist");
                     break;
 
-                case Data.Enumerators.MythWhat.Afterlife:
+                case MythWhat.Afterlife:
                     happening.Append("the afterlife, forcing the souls to wander the beetween land");
                     break;
 
-                case Data.Enumerators.MythWhat.OuterRealm:
+                case MythWhat.OuterRealm:
                     string realm = possibleRealms.GetRandomItemFromList();
                     happening.Append($"the {realm}");
                     break;
 
-                case Data.Enumerators.MythWhat.Space:
+                case MythWhat.Space:
                     happening.Append("the space beetween worlds, making so that only the world remains");
                     break;
 
-                case Data.Enumerators.MythWhat.Death:
+                case MythWhat.Death:
                     // doesn't really makes sense to nothing to die!
                     happening.Append("death, so that none may die");
                     return;
 
-                case Data.Enumerators.MythWhat.Demon:
+                case MythWhat.Demon:
                     happening.Append($"the {myth.MythWhat.ToString().ToLower()}");
 
                     break;
 
-                case Data.Enumerators.MythWhat.Angel:
+                case MythWhat.Angel:
                     happening.Append($"the {myth.MythWhat.ToString().ToLower()}");
 
                     break;
 
-                case Data.Enumerators.MythWhat.Spirit:
+                case MythWhat.Spirit:
                     happening.Append($"the {myth.MythWhat.ToString().ToLower()}");
 
                     break;
 
-                case Data.Enumerators.MythWhat.Force:
+                case MythWhat.Force:
                     happening.Append($"the {myth.MythWhat.ToString().ToLower()}");
 
                     break;
 
-                case Data.Enumerators.MythWhat.Individual:
+                case MythWhat.Individual:
                     string indName = RandomNames.GiberishFullName(5, 5);
                     happening.Append($"the {indName}, so that none may rise like him!");
                     break;
@@ -609,80 +606,80 @@ namespace MagusEngine.Core.WorldStuff.History
         {
             switch (myth.MythWhat)
             {
-                case Data.Enumerators.MythWhat.Race:
+                case MythWhat.Race:
                     happening.Append($"the race {race.RaceName}");
                     race.DeadRace = true;
                     figure.SpecialFlags.Add(SpecialFlag.Antagonist);
 
                     break;
 
-                case Data.Enumerators.MythWhat.OriginMagic:
+                case MythWhat.OriginMagic:
                     happening.Append("the origin of magic");
                     figure.SpecialFlags.Add(SpecialFlag.Antagonist);
 
                     break;
 
-                case Data.Enumerators.MythWhat.CostMagic:
+                case MythWhat.CostMagic:
                     return;
 
-                case Data.Enumerators.MythWhat.Magic:
+                case MythWhat.Magic:
                     happening.Append("magic");
                     figure.SpecialFlags.Add(SpecialFlag.MagicKiller);
 
                     break;
 
-                case Data.Enumerators.MythWhat.Land:
+                case MythWhat.Land:
                     happening.Append("the land, creating a dead zone");
                     break;
 
-                case Data.Enumerators.MythWhat.Region:
+                case MythWhat.Region:
                     happening.Append("the region, creating a dead zone");
                     break;
 
-                case Data.Enumerators.MythWhat.World:
+                case MythWhat.World:
                     happening.Append("the world, creating a dead world");
                     break;
 
-                case Data.Enumerators.MythWhat.God:
+                case MythWhat.God:
                     happening.Append($"the god {RandomNames.GiberishFullName(4, 4)}");
                     break;
 
-                case Data.Enumerators.MythWhat.Item:
+                case MythWhat.Item:
                     return;
 
-                case Data.Enumerators.MythWhat.Reagent:
+                case MythWhat.Reagent:
                     return;
 
-                case Data.Enumerators.MythWhat.Afterlife:
+                case MythWhat.Afterlife:
                     return;
 
-                case Data.Enumerators.MythWhat.OuterRealm:
+                case MythWhat.OuterRealm:
                     happening.Append($"the outer realm of {possibleRealms.GetRandomItemFromList()}, creating a dead realm");
                     break;
 
-                case Data.Enumerators.MythWhat.Space:
+                case MythWhat.Space:
                     return; //space is already dead
 
-                case Data.Enumerators.MythWhat.Death:
+                case MythWhat.Death:
                     return; //you can't kill death
 
-                case Data.Enumerators.MythWhat.Demon:
+                case MythWhat.Demon:
                     happening.Append("the demons, so none remains");
                     break;
 
-                case Data.Enumerators.MythWhat.Angel:
+                case MythWhat.Angel:
                     happening.Append("the angels, so none remains");
                     break;
 
-                case Data.Enumerators.MythWhat.Spirit:
+                case MythWhat.Spirit:
                     happening.Append("the spirits, so none remains");
                     break;
 
-                case Data.Enumerators.MythWhat.Force:
+                case MythWhat.Force:
                     happening.Append("the forces, so none remains");
                     break;
 
-                case Data.Enumerators.MythWhat.Individual:
+                case MythWhat.Individual:
                     var name = RandomNames.GiberishFullName(4, 5);
                     happening.Append($"the {name}");
                     break;

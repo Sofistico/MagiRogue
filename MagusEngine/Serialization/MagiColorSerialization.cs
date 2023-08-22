@@ -7,7 +7,7 @@ namespace MagusEngine.Serialization
     {
         [JsonIgnore]
         public readonly Color Color { get; }
-        public readonly string ColorName { get; }
+        public readonly string? ColorName { get; }
 
         public MagiColorSerialization(string colorName)
         {

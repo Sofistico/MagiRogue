@@ -147,6 +147,9 @@ namespace MagusEngine.Systems
         public static Tile? QueryTileInData(string tileId)
             => ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId))?.Copy();
 
+        public static Tile? QueryTileInData(string tileId, Point pos)
+            => ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId))?.Copy();
+
         //public static T QueryTileInData<T>(string tileId) where T : TileBase
         //    => (T)ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId))?.Copy();
 

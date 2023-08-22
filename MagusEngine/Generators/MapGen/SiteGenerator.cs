@@ -1,10 +1,11 @@
-﻿using MagiRogue.Data;
-using MagiRogue.Data.Enumerators;
-using MagiRogue.Data.Serialization.MapSerialization;
-using MagiRogue.GameSys.Tiles;
-using MagiRogue.Utils;
+﻿using Arquimedes.Enumerators;
+using MagusEngine.Core;
 using MagusEngine.Core.Civ;
 using MagusEngine.Core.MapStuff;
+using MagusEngine.Factory;
+using MagusEngine.Serialization.MapConverter;
+using MagusEngine.Systems;
+using MagusEngine.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,14 +29,14 @@ namespace MagusEngine.Generators.MapGen
 
             map.MapName = townName;
 
-            PopulateMapWithRooms(rooms, QueryTilesForTrait<TileFloor>(Trait.Durable),
-                QueryTilesForTrait<TileWall>(Trait.Durable));
+            PopulateMapWithRooms(rooms, QueryTilesForTrait(Trait.Durable),
+                QueryTilesForTrait(Trait.Durable));
 
-            ApplyRoads(rooms, TileEncyclopedia.GenericDirtRoad(Point.None));
+            ApplyRoads(rooms, TileFactory.GenericDirtRoad(Point.None));
             buildings.AddRange(rooms);
         }
 
-        private void PopulateMapWithRooms(List<Building> rooms, TileFloor f, TileWall w)
+        private void PopulateMapWithRooms(List<Building> rooms, Tile f, Tile w)
         {
             for (int i = 0; i < rooms.Count; i++)
             {
@@ -63,7 +64,7 @@ namespace MagusEngine.Generators.MapGen
         }
 
         private void PopulateMapWithRoomsWithVariableMaterials(List<Building> rooms,
-            List<TileFloor> possibleFloors)
+            List<Tile> possibleFloors)
         {
             throw new NotImplementedException("GET TO WORK YOU LAZY HORSE 🐎!");
         }
@@ -76,10 +77,10 @@ namespace MagusEngine.Generators.MapGen
 
             var rooms = BspMapFunction(map, maxRoomSize, minRoomSize, maxRooms);
 
-            PopulateMapWithRooms(rooms, QueryTilesForTrait<TileFloor>(Trait.Inexpensive),
-                QueryTilesForTrait<TileWall>(Trait.Inexpensive));
+            PopulateMapWithRooms(rooms, QueryTilesForTrait(Trait.Inexpensive),
+                QueryTilesForTrait(Trait.Inexpensive));
 
-            ApplyRoads(_rooms, TileEncyclopedia.GenericDirtRoad(Point.None));
+            ApplyRoads(_rooms, TileFactory.GenericDirtRoad(Point.None));
             buildings.AddRange(rooms);
         }
 
@@ -91,10 +92,10 @@ namespace MagusEngine.Generators.MapGen
 
             var rooms = BspMapFunction(map, maxRoomSize, minRoomSize, maxRooms);
 
-            PopulateMapWithRooms(rooms, QueryTilesForTrait<TileFloor>(Trait.Durable),
-                QueryTilesForTrait<TileWall>(Trait.Durable));
+            PopulateMapWithRooms(rooms, QueryTilesForTrait(Trait.Durable),
+                QueryTilesForTrait(Trait.Durable));
 
-            ApplyRoads(_rooms, TileEncyclopedia.GenericDirtRoad(Point.None));
+            ApplyRoads(_rooms, TileFactory.GenericDirtRoad(Point.None));
             buildings.AddRange(rooms);
         }
     }

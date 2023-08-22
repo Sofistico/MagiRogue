@@ -1,10 +1,5 @@
-﻿using MagiRogue.Data.Enumerators;
+﻿using Arquimedes.Enumerators;
 using MagusEngine.Core.Entities.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MagusEngine.Utils
 {

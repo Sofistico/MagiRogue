@@ -2,6 +2,8 @@
 using GoRogue.GameFramework;
 using SadConsole;
 using SadRogue.Primitives;
+using System;
+using System.Collections.Generic;
 
 namespace MagusEngine.Core
 {
@@ -12,6 +14,7 @@ namespace MagusEngine.Core
         public int MoveTimeCost { get; set; } = 100;
         public string? Name { get; set; }
         public string? Description { get; set; }
+        public List<Trait> Traits { get; set; } = new();
 
         public Tile(Color foreground,
             Color background,
@@ -34,5 +37,18 @@ namespace MagusEngine.Core
         {
             return GoRogueComponents.Contains<TFind>(tag);
         }
+
+        public Tile Copy()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Tile Copy(Point pos)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddComponent<T>(T value, string? tag = null) where T : class
+            => GoRogueComponents.Add(value, tag);
     }
 }

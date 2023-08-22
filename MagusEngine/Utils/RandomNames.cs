@@ -1,8 +1,7 @@
-﻿using Arquimedes.Data;
+﻿using GoRogue.Random;
 using MagusEngine.Serialization;
 using MagusEngine.Systems;
 using MagusEngine.Utils.Extensions;
-using System;
 using System.Text;
 
 namespace MagusEngine.Utils
@@ -72,7 +71,7 @@ namespace MagusEngine.Utils
                                     "Damerel",
                                     "Stathmore" };
 
-            return townNames[GameLoop.GlobalRand.NextInt(townNames.Length)];
+            return townNames[GlobalRandom.DefaultRNG.NextInt(townNames.Length)];
         }
 
         public static string GiberishName(int len)
@@ -80,15 +79,13 @@ namespace MagusEngine.Utils
             string[] consonants = { "b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "l", "n", "p", "q", "r", "s", "sh", "zh", "t", "v", "w", "x" };
             string[] vowels = { "a", "e", "i", "o", "u", "ae", "y" };
             string Name = "";
-            Name += consonants[GameLoop.GlobalRand.NextInt(consonants.Length)].ToUpper();
-            Name += vowels[GameLoop.GlobalRand.NextInt(vowels.Length)];
-            int b = 2; //b tells how many times a new letter has been added. It's 2 right now because the first two letters are already in the name.
-            while (b < len)
+            Name += consonants[GlobalRandom.DefaultRNG.NextInt(consonants.Length)].ToUpper();
+            Name += vowels[GlobalRandom.DefaultRNG.NextInt(vowels.Length)];
+            for (int b = 2; b < len; b++)
             {
-                Name += consonants[GameLoop.GlobalRand.NextInt(consonants.Length)];
+                Name += consonants[GlobalRandom.DefaultRNG.NextInt(consonants.Length)];
                 b++;
-                Name += vowels[GameLoop.GlobalRand.NextInt(vowels.Length)];
-                b++;
+                Name += vowels[GlobalRandom.DefaultRNG.NextInt(vowels.Length)];
             }
 
             return Name;
@@ -102,26 +99,24 @@ namespace MagusEngine.Utils
             return str.ToString();
         }
 
-        public static string RandomNamesFromLanguage(Language language)
+        public static string? RandomNamesFromLanguage(Language language)
         {
             var words = language.ReturnWords();
             var firstName = words.GetRandomItemFromList();
             var lastName = words.GetRandomItemFromList();
 
             var str = new StringBuilder();
-            str.Append(firstName.TranslatedWord.FirstLetterUpper());
+            str.Append(firstName?.TranslatedWord.FirstLetterUpper());
             str.Append(' ');
-            str.Append(lastName.TranslatedWord.FirstLetterUpper());
+            str.Append(lastName?.TranslatedWord.FirstLetterUpper());
 
             return str.ToString();
         }
 
-        public static string RandomNamesFromLanguage(string languageId)
-        {
-            return RandomNamesFromLanguage(DataManager.QueryLanguageInData(languageId));
-        }
+        public static string? RandomNamesFromLanguage(string languageId)
+            => RandomNamesFromLanguage(DataManager.QueryLanguageInData(languageId));
 
-        public static string RandomNamesFromRandomLanguage()
+        public static string? RandomNamesFromRandomLanguage()
             => RandomNamesFromLanguage(DataManager.ListOfLanguages.GetRandomItemFromList());
     }
 }

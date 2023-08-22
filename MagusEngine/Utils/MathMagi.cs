@@ -83,7 +83,7 @@ namespace MagusEngine.Utils
         {
             if (current == 0)
                 return 100;
-            var val = (double)(100 - current / (double)max * 100);
+            var val = (double)(100 - (current / (double)max * 100));
             return FastRound(val);
         }
 

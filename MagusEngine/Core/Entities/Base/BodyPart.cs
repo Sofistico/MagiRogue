@@ -22,8 +22,8 @@ namespace MagusEngine.Core.Entities.Base
         public int Volume { get; set; }
 
         /// <summary>
-        /// The relative size of the being body part.
-        /// So that a giant doens't have the arm the size of a normal human
+        /// The relative size of the being body part. So that a giant doens't have the arm the size
+        /// of a normal human
         /// </summary>
         public double RelativeVolume { get; set; }
 
@@ -59,8 +59,8 @@ namespace MagusEngine.Core.Entities.Base
         {
             foreach (Wound wound in Wounds)
             {
-                // if the wound is festering and the injury is that bad, then no need to check if it will heal
-                // cuz it will not!
+                // if the wound is festering and the injury is that bad, then no need to check if it
+                // will heal cuz it will not!
                 if (!wound.Treated
                     && !regenLostLimb
                     && (wound.Severity is not InjurySeverity.Bruise

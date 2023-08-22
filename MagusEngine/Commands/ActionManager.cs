@@ -1,6 +1,7 @@
 ﻿using Arquimedes.Enumerators;
 using GoRogue.GameFramework;
 using GoRogue.Pathing;
+using MagusEngine.Bus.MapBus;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
@@ -140,7 +141,7 @@ namespace MagusEngine.Commands
 
             foreach (Point direction in directions)
             {
-                Actor monsterLocation = GameLoop.GetCurrentMap().GetEntityAt<Actor>(direction);
+                Actor monsterLocation = attacker.MagiMap.GetEntityAt<Actor>(direction);
 
                 if (monsterLocation != null && monsterLocation != attacker)
                 {
@@ -200,7 +201,7 @@ namespace MagusEngine.Commands
             {
                 door.Open();
                 Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"{actor.Name} opened a {doorName}"));
-                GameLoop.GetCurrentMap().ForceFovCalculation();
+                actor.MagiMap.ForceFovCalculation();
                 return true;
             }
             return false;
@@ -215,12 +216,12 @@ namespace MagusEngine.Commands
         {
             foreach (Point points in actor.Position.GetDirectionPoints())
             {
-                var possibleDoor = GameLoop.GetCurrentMap().GetTileAt<TileDoor>(points);
+                var possibleDoor = actor.MagiMap.GetTileAt<DoorComponent>(points).GetComponent<DoorComponent>();
                 if (possibleDoor?.IsOpen == true)
                 {
                     possibleDoor.Close();
                     Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"{actor.Name} closed a {possibleDoor.Name}"));
-                    GameLoop.GetCurrentMap().ForceFovCalculation();
+                    actor.MagiMap.ForceFovCalculation();
                     return true;
                 }
             }
@@ -239,7 +240,7 @@ namespace MagusEngine.Commands
                 Item item = inv.Inventory[0];
                 inv.Inventory.Remove(item);
                 item.Position = inv.Position;
-                GameLoop.GetCurrentMap().AddMagiEntity(item);
+                inv.MagiMap.AddMagiEntity(item);
                 Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"{inv.Name} dropped {item.Name}"));
                 return true;
             }
@@ -249,14 +250,14 @@ namespace MagusEngine.Commands
         {
             Point[] direction = actor.Position.GetDirectionPoints();
 
-            foreach (Point item in direction)
-            {
-                if (GameLoop.GetCurrentMap().Terrain[item] is NodeTile node)
-                {
-                    node.DrainNode(actor);
-                    return true;
-                }
-            }
+            //foreach (Point item in direction)
+            //{
+            //    if (GameLoop.GetCurrentMap().Terrain[item] is NodeTile node)
+            //    {
+            //        node.DrainNode(actor);
+            //        return true;
+            //    }
+            //}
             Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("No node here to drain"));
             return false;
         }
@@ -505,9 +506,9 @@ namespace MagusEngine.Commands
                 return false;
             for (int i = 0; i < turns; i++)
             {
-                foreach (Point p in GameLoop.GetCurrentMap().PlayerFOV.NewlySeen)
+                foreach (Point p in actor.MagiMap.PlayerFOV.NewlySeen)
                 {
-                    Actor possibleActor = GameLoop.GetCurrentMap().GetEntityAt<Actor>(p);
+                    Actor possibleActor = actor.MagiMap.GetEntityAt<Actor>(p);
                     if (possibleActor?.Equals(actor) == false && canBeInterrupted)
                     {
                         Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("There is an enemy in view, stop resting!"));
@@ -515,7 +516,7 @@ namespace MagusEngine.Commands
                     }
                 }
 
-                GameLoop.Universe.ProcessTurn(TimeHelper.Wait, true);
+                Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.Wait, true));
             }
             return true;
         }
@@ -649,24 +650,24 @@ namespace MagusEngine.Commands
 
         public static bool FindWater(Actor actor, Map map, out WaterTile water)
         {
-            water = map.GetClosestWaterTile(actor.Body.ViewRadius, actor.Position);
+            //water = map.GetClosestWaterTile(actor.Body.ViewRadius, actor.Position);
 
-            if (water is null)
-            {
-                if (actor.GetMemory<WaterTile>(MemoryType.WaterLoc, out var memory))
-                {
-                    water = memory?.ObjToRemember!;
-                    return true;
-                }
-                return false;
-            }
+            //if (water is null)
+            //{
+            //    if (actor.GetMemory<WaterTile>(MemoryType.WaterLoc, out var memory))
+            //    {
+            //        water = memory?.ObjToRemember!;
+            //        return true;
+            //    }
+            //    return false;
+            //}
 
-            if (!actor.CanSee(water.Position))
-                return false;
+            //if (!actor.CanSee(water.Position))
+            //    return false;
 
-            if (!actor.HasMemory(MemoryType.WaterLoc, water))
-                actor.AddMemory(water.Position, MemoryType.WaterLoc, water);
-
+            //if (!actor.HasMemory(MemoryType.WaterLoc, water))
+            //    actor.AddMemory(water.Position, MemoryType.WaterLoc, water);
+            water = new();
             return true;
         }
     }

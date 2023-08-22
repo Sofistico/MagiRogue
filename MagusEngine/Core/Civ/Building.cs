@@ -1,10 +1,6 @@
-﻿using MagiRogue.Data.Enumerators;
-using MagusEngine.Core.MapStuff;
-using System;
+﻿using MagusEngine.Core.MapStuff;
+using MagusEngine.Systems;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MagusEngine.Core.Civ
 {
@@ -23,7 +19,7 @@ namespace MagusEngine.Core.Civ
         public Building(Room physicalRoom)
         {
             PhysicalRoom = physicalRoom;
-            Produces = Data.DataManager.GetProductsByTag(PhysicalRoom.Tag);
+            Produces = DataManager.GetProductsByTag(PhysicalRoom.Tag);
         }
     }
 }

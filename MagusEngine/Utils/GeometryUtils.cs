@@ -1,4 +1,6 @@
-﻿using MagusEngine.Commands;
+﻿using MagusEngine.Bus.UiBus;
+using MagusEngine.Commands;
+using MagusEngine.Services;
 using SadRogue.Primitives;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +34,7 @@ namespace MagusEngine.Utils
 
             points = coneFov.CurrentFOV.ToArray();
 #if DEBUG
-            GameLoop.AddMessageLog(angle.ToString());
+            Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new(angle.ToString()));
 #endif
             return new Shape(points);
         }
@@ -51,7 +53,7 @@ namespace MagusEngine.Utils
         {
             double dx = center.X - point.X;
             double dy = center.Y - point.Y;
-            double distance = dx * dx + dy * dy; // little optmization, rather than get the square root, i just put
+            double distance = (dx * dx) + (dy * dy); // little optmization, rather than get the square root, i just put
             // distance^2<=radius^2
             return distance <= radius * radius;
         }
@@ -68,8 +70,8 @@ namespace MagusEngine.Utils
     }
 
     /// <summary>
-    /// Represents a simple 2d grid, does not hold any kind of objects and is there just to represent
-    /// the space
+    /// Represents a simple 2d grid, does not hold any kind of objects and is there just to
+    /// represent the space
     /// </summary>
     public struct Simple2DGrid
     {
@@ -100,8 +102,8 @@ namespace MagusEngine.Utils
     }
 
     /// <summary>
-    /// Represents a simple 3d grid, does not hold any kind of objects and is there just to represent
-    /// the space
+    /// Represents a simple 3d grid, does not hold any kind of objects and is there just to
+    /// represent the space
     /// </summary>
     public struct Simple3DGrid
     {
@@ -129,9 +131,9 @@ namespace MagusEngine.Utils
             Size = width * height * depth;
         }
 
-        public int ToIndex(int y, int x, int z)
+        public readonly int ToIndex(int y, int x, int z)
         {
-            return z + y * Depth + x * Height * Depth;
+            return z + (y * Depth) + (x * Height * Depth);
         }
     }
 }

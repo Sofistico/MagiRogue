@@ -1,9 +1,8 @@
-﻿using GoRogue.DiceNotation;
-using Arquimedes.Enumerators;
-using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using Arquimedes.Enumerators;
 using MagusEngine.Serialization;
 using MagusEngine.Systems.Physics;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace MagusEngine.Core.Entities.Base
 {
@@ -36,7 +35,8 @@ namespace MagusEngine.Core.Entities.Base
         public string MaterialId { get; set; }
 
         /// <summary>
-        /// The relative thickness of the tissue.A higher thickness is harder to penetrate, but raising a tissue's relative thickness decreases the thickness of all other tissues.
+        /// The relative thickness of the tissue.A higher thickness is harder to penetrate, but
+        /// raising a tissue's relative thickness decreases the thickness of all other tissues.
         /// </summary>
         public int RelativeThickness { get; set; }
 

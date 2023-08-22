@@ -1,9 +1,12 @@
 ﻿using Arquimedes.Enumerators;
+using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Entities.Interfaces;
 using MagusEngine.Core.WorldStuff.History;
 using MagusEngine.Serialization;
 using MagusEngine.Serialization.EntitySerialization;
+using MagusEngine.Services;
+using MagusEngine.Systems.Physics;
 using MagusEngine.Utils;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
@@ -13,8 +16,7 @@ using System.Collections.Generic;
 namespace MagusEngine.Core.Entities
 {
     /// <summary>
-    /// Item: Describes things that can be picked up or used
-    /// by actors, or destroyed on the map.
+    /// Item: Describes things that can be picked up or used by actors, or destroyed on the map.
     /// </summary>
     // TODO: Remove inherting from entity and add as a component.
     [JsonConverter(typeof(ItemJsonConverter))]
@@ -23,9 +25,7 @@ namespace MagusEngine.Core.Entities
         // backing field for Condition
         private int condition;
 
-        // physical condition of item, in percent
-        // 100 = item undamaged
-        // 0 = item is destroyed
+        // physical condition of item, in percent 100 = item undamaged 0 = item is destroyed
         public int Condition
         {
             get { return condition; }
@@ -97,7 +97,7 @@ namespace MagusEngine.Core.Entities
         {
             Volume = size;
             Condition = condition;
-            Material = GameSys.Physics.PhysicsManager.SetMaterial(materialId);
+            Material = PhysicsManager.SetMaterial(materialId);
             Name = Material is not null ? Material.ReturnNameFromMaterial(name) : "Bugged!";
             UseAction = new();
             Traits = new();
@@ -106,42 +106,43 @@ namespace MagusEngine.Core.Entities
             Attacks = new();
         }
 
-        // removes this object from
-        // the MultiSpatialMap's list of entities
-        // and lets the garbage collector take it
-        // out of memory automatically.
+        // removes this object from the MultiSpatialMap's list of entities and lets the garbage
+        // collector take it out of memory automatically.
         public void RemoveFromMap()
         {
-            GameLoop.GetCurrentMap().Remove(this);
+            MagiMap.Remove(this);
         }
 
         public bool Equip(Actor actor)
         {
-            // We need to store our modifiers in variables before adding them to the stat.
-            // just example code
+            // We need to store our modifiers in variables before adding them to the stat. just
+            // example code
 
             /*c.Strength.AddModifier(new StatModifier(10, StatModType.Flat, this));
             c.Strength.AddModifier(new StatModifier(0.1, StatModType.Percent, this));*/
 
             if (EquipType == EquipType.None)
             {
-                GameLoop.AddMessageLog("This item can't be equiped!");
+                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("This item can't be equiped!"));
                 return false;
             }
 
             if (!actor.GetEquipment().TryAdd(actor.GetAnatomy().Limbs.Find
                 (l => l.LimbType.ToString() == EquipType.ToString()).Id, this))
             {
-                GameLoop.AddMessageLog($"{actor.Name} has already an item equiped in addHere!");
+                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"{actor.Name} has already an item equiped in addHere!"));
                 return false;
             }
 
             if (EquipType == EquipType.Hand)
             {
-                GameLoop.AddMessageLog($"{actor.Name} wields {Name}");
+                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"{actor.Name} wields {Name}"));
             }
             else
-                GameLoop.AddMessageLog($"{actor.Name} equipped {Name} in {EquipType}");
+            {
+                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"{actor.Name} equipped {Name} in {EquipType}"));
+            }
+
             return true;
         }
 
@@ -157,7 +158,7 @@ namespace MagusEngine.Core.Entities
 
         public int DamageWhenItemStrikes(int itemAceleration)
         {
-            return GameSys.Physics.PhysicsManager.CalculateStrikeForce(Weight, itemAceleration) + BaseDmg;
+            return PhysicsManager.CalculateStrikeForce(Weight, itemAceleration) + BaseDmg;
         }
 
         public double QualityMultiplier()

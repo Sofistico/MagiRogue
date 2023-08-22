@@ -1,14 +1,12 @@
-﻿using MagiRogue.Data;
-using MagusEngine.Core.MapStuff;
+﻿using MagusEngine.Core.MapStuff;
+using MagusEngine.Factory;
 using SadRogue.Primitives;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace MagusEngine.Generators.MapGen
 {
-    // based on tunnelling room generation algorithm
-    // from RogueSharp tutorial
-    // https://roguesharp.wordpress.com/2016/03/26/roguesharp-v3-tutorial-simple-room-generation/
+    // based on tunnelling room generation algorithm from RogueSharp tutorial https://roguesharp.wordpress.com/2016/03/26/roguesharp-v3-tutorial-simple-room-generation/
     public class DungeonGenerator : MapGenerator
     {
         public DungeonGenerator()
@@ -24,8 +22,8 @@ namespace MagusEngine.Generators.MapGen
             // store a list of the rooms created so far
             List<Room> Rooms = new();
 
-            // create up to (maxRooms) rooms on the map
-            // and make sure the rooms do not overlap with each other
+            // create up to (maxRooms) rooms on the map and make sure the rooms do not overlap with
+            // each other
             for (int i = 0; i < maxRooms; i++)
             {
                 // set the room's (width, height) as a random size between (minRoomSize, maxRoomSize)
@@ -37,7 +35,7 @@ namespace MagusEngine.Generators.MapGen
                 int newRoomY = randNum.NextInt(0, _map.Height - newRoomHeigth - 1);
 
                 // create a Rectangle representing the room's perimeter
-                Rectangle roomRectangle = new Rectangle(newRoomX, newRoomY, newRoomWidth, newRoomHeigth);
+                Rectangle roomRectangle = new(newRoomX, newRoomY, newRoomWidth, newRoomHeigth);
                 Room newRoom = new(roomRectangle);
 
                 // Does the new room intersect with other rooms already generated?
@@ -54,11 +52,10 @@ namespace MagusEngine.Generators.MapGen
             foreach (var room in Rooms)
             {
                 CreateRoom(room,
-                    TileEncyclopedia.GenericStoneWall(), TileEncyclopedia.GenericStoneFloor());
+                    TileFactory.GenericStoneWall(), TileFactory.GenericStoneFloor());
             }
 
-            // carve out tunnels between all rooms
-            // based on the Positions of their centers
+            // carve out tunnels between all rooms based on the Positions of their centers
             for (int r = 1; r < Rooms.Count; r++)
             {
                 //for all remaining rooms get the center of the room and the previous room

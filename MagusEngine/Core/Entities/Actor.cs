@@ -1,9 +1,12 @@
 ﻿using Arquimedes.Enumerators;
 using GoRogue.FOV;
+using MagusEngine.Bus;
+using MagusEngine.Bus.UiBus;
 using MagusEngine.Commands;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.ECS.Components.ActorComponents;
+using MagusEngine.ECS.Components.TilesComponents;
 using MagusEngine.Serialization.EntitySerialization;
 using MagusEngine.Services;
 using MagusEngine.Systems.Physics;
@@ -99,7 +102,7 @@ namespace MagusEngine.Core.Entities
         public bool MoveBy(Point positionChange)
         {
             // Check the current map if we can move to this new position
-            if (GameLoop.GetCurrentMap().IsTileWalkable(Position + positionChange, this))
+            if (MagiMap.IsTileWalkable(Position + positionChange, this))
             {
                 bool attacked = CheckIfCanAttack(positionChange);
 
@@ -128,15 +131,17 @@ namespace MagusEngine.Core.Entities
         private bool CheckForChangeMapChunk(Point pos, Point positionChange)
         {
             Direction dir = Direction.GetCardinalDirection(positionChange);
-            if (GameLoop.GetCurrentMap().MapZoneConnections.TryGetValue(dir, out Map value) &&
-                GameLoop.GetCurrentMap().CheckForIndexOutOfBounds(pos + positionChange))
+            if (MagiMap.MapZoneConnections.TryGetValue(dir, out Map value) &&
+                MagiMap.CheckForIndexOutOfBounds(pos + positionChange))
             {
                 Map mapToGo = value;
                 Point actorPosInChunk = GetNextMapPos(mapToGo, pos + positionChange);
                 // if tile in the other map isn't walkable, then it should't be possible to go there!
                 if (!mapToGo.IsTileWalkable(actorPosInChunk, this))
                     return false;
-                GameLoop.Universe.ChangePlayerMap(mapToGo, actorPosInChunk, GameLoop.GetCurrentMap());
+                //GameLoop.Universe.ChangePlayerMap(mapToGo, actorPosInChunk, GameLoop.GetCurrentMap());
+                Locator.GetService<MessageBusService>().SendMessage<ChangeControlledActorMap>(new(this,
+                    mapToGo, actorPosInChunk));
                 return true;
             }
             else
@@ -147,15 +152,15 @@ namespace MagusEngine.Core.Entities
 
         private static Point GetNextMapPos(Map map, Point pos)
         {
-            int x = pos.X % map.Width < 0 ? map.Width + pos.X % map.Width : pos.X % map.Width;
-            int y = pos.Y % map.Height < 0 ? map.Height + pos.Y % map.Height : pos.Y % map.Height;
+            int x = pos.X % map.Width < 0 ? map.Width + (pos.X % map.Width) : pos.X % map.Width;
+            int y = pos.Y % map.Height < 0 ? map.Height + (pos.Y % map.Height) : pos.Y % map.Height;
             return new Point(x, y);
         }
 
         private bool CheckIfCanAttack(Point positionChange)
         {
             // if there's a monster here, do a bump attack
-            Actor actor = GameLoop.GetCurrentMap().GetEntityAt<Actor>(Position + positionChange);
+            Actor actor = MagiMap.GetEntityAt<Actor>(Position + positionChange);
 
             if (actor != null && CanBeAttacked)
             {
@@ -172,13 +177,14 @@ namespace MagusEngine.Core.Entities
         private bool CheckIfThereIsDoor(Point positionChange)
         {
             // Check for the presence of a door
-            TileDoor door = GameLoop.GetCurrentMap().GetTileAt<TileDoor>(Position + positionChange);
+            Tile door = MagiMap.GetTileAt<DoorComponent>(Position + positionChange);
 
             // if there's a door here, try to use it
             if (door != null && CanInteract)
             {
-                ActionManager.UseDoor(this, door);
-                GameLoop.UIManager.MapWindow.MapConsole.IsDirty = true;
+                ActionManager.UseDoor(this, door.GetComponent<DoorComponent>()!);
+                //GameLoop.UIManager.MapWindow.MapConsole.IsDirty = true;
+                Locator.GetService<MessageBusService>().SendMessage<MapConsoleIsDirty>(new());
                 return true;
             }
 
@@ -189,7 +195,7 @@ namespace MagusEngine.Core.Entities
         // failed to move
         public bool MoveTo(Point newPosition)
         {
-            if (GameLoop.GetCurrentMap().IsTileWalkable(newPosition))
+            if (MagiMap.IsTileWalkable(newPosition))
             {
                 Position = newPosition;
                 return true;

@@ -1,6 +1,6 @@
-﻿using MagiRogue.Data.Enumerators;
-using MagiRogue.GameSys.Magic.Effects;
+﻿using Arquimedes.Enumerators;
 using MagusEngine.Core.Magic;
+using MagusEngine.Core.Magic.Effects;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -177,8 +177,8 @@ namespace MagusEngine.Serialization.EntitySerialization
     }
 
     /// <summary>
-    /// This class will deal with the serialization of the spells and it's effects, will use a tag like CDDA
-    /// does to determine the effects
+    /// This class will deal with the serialization of the spells and it's effects, will use a tag
+    /// like CDDA does to determine the effects
     /// </summary>
     public class SpellTemplate
     {
@@ -218,7 +218,7 @@ namespace MagusEngine.Serialization.EntitySerialization
 
         public static implicit operator SpellBase(SpellTemplate spellTemplate)
         {
-            SpellBase spell = new SpellBase(spellTemplate.SpellId, spellTemplate.SpellName,
+            SpellBase spell = new(spellTemplate.SpellId, spellTemplate.SpellName,
                 spellTemplate.MagicArt, spellTemplate.SpellRange, spellTemplate.SpellLevel,
                 spellTemplate.ManaCost)
             {
@@ -234,15 +234,12 @@ namespace MagusEngine.Serialization.EntitySerialization
 
         public static implicit operator SpellTemplate(SpellBase spell)
         {
-            SpellTemplate template =
-                new SpellTemplate(spell.SpellLevel, spell.Effects, spell.SpellName,
+            return new SpellTemplate(spell.SpellLevel, spell.Effects, spell.SpellName,
                 spell.Description, spell.MagicArt, spell.SpellRange, spell.ManaCost, spell.SpellId, spell.Context)
-                {
-                    Proficiency = spell.Proficiency,
-                    Keywords = spell.Keywords,
-                };
-
-            return template;
+            {
+                Proficiency = spell.Proficiency,
+                Keywords = spell.Keywords,
+            };
         }
     }
 }

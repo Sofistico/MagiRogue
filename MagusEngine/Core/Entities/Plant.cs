@@ -1,14 +1,13 @@
-﻿using GoRogue.Components;
+﻿using Arquimedes.Enumerators;
+using GoRogue.Components;
 using GoRogue.Components.ParentAware;
 using GoRogue.GameFramework;
-using MagiRogue.Components;
-using Arquimedes.Enumerators;
+using MagusEngine.Serialization;
+using MagusEngine.Utils.Extensions;
 using Newtonsoft.Json;
 using SadConsole;
 using SadRogue.Primitives;
 using System;
-using MagusEngine.Utils.Extensions;
-using MagusEngine.Serialization;
 
 namespace MagusEngine.Core.Entities
 {

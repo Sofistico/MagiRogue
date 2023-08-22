@@ -1,24 +1,28 @@
-﻿using GoRogue;
-using SadRogue.Primitives.SpatialMaps;
+﻿using SadRogue.Primitives.SpatialMaps;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace MagusEngine.Utils.Extensions
 {
     public static class MapExtensions
     {
         public static IEnumerable<T> UnrollSpatialMap<T>(this IEnumerable<IReadOnlySpatialMap<T>> self)
+            where T : notnull
         {
             if (self is null)
             {
                 throw new ArgumentNullException(nameof(self));
             }
 
-            foreach (var layer in self)
+            return UnrollSpatialMapInlineMethod();
+
+            IEnumerable<T> UnrollSpatialMapInlineMethod()
             {
-                foreach (var item in layer)
-                    yield return item.Item;
+                foreach (var layer in self)
+                {
+                    foreach (var item in layer)
+                        yield return item.Item;
+                }
             }
         }
     }

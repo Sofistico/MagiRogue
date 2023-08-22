@@ -1,6 +1,4 @@
-﻿using MagiRogue.Data.Enumerators;
-using MagiRogue.Entities;
-using Newtonsoft.Json;
+﻿using Arquimedes.Enumerators;
 using System.Collections.Generic;
 
 namespace MagusEngine.Core.WorldStuff.TechRes
@@ -21,7 +19,8 @@ namespace MagusEngine.Core.WorldStuff.TechRes
         // can a deity just flat out give it out to it's followers?
         public bool ValidDeityGift { get; set; }
 
-        // values: Any from AbilityName.cs and any from AnyCraft, AnyResearch, AnyMagic, AnyCombat and AnyJob
+        // values: Any from AbilityName.cs and any from AnyCraft, AnyResearch, AnyMagic, AnyCombat
+        //         and AnyJob
         public List<string> AbilityRequired { get; set; }
         public List<Tech> TechResearched { get; set; }
 

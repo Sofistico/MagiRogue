@@ -11,18 +11,15 @@ namespace MagusEngine.Core.Entities
         public double Bleeding { get; set; }
 
         /// <summary>
-        /// The total area of the wound in cm3
-        /// Is initially the lesser of the weapon or body
-        /// part contact areas.It grows with cumulative hits.
-        /// Body parts and non-weapon
-        /// items have contact = (size / 10) ^ (2 / 3).
+        /// The total area of the wound in cm3 Is initially the lesser of the weapon or body part
+        /// contact areas.It grows with cumulative hits. Body parts and non-weapon items have
+        /// contact = (size / 10) ^ (2 / 3).
         /// </summary>
         public double VolumeInjury => Parts.Sum(i => i.VolumeFraction);
 
         /// <summary>
-        /// This is strain. For skin/muscle/fat it is usually around 50, and for
-        /// bone 10-11.3. This number heals over time towards 0. A wound that only
-        /// has strain is called "dented".
+        /// This is strain. For skin/muscle/fat it is usually around 50, and for bone 10-11.3. This
+        /// number heals over time towards 0. A wound that only has strain is called "dented".
         /// </summary>
         public double Strain => Parts.Sum(i => i.Strain);
 
@@ -88,11 +85,9 @@ namespace MagusEngine.Core.Entities
     public class PartWound
     {
         /// <summary>
-        /// The total area of the wound in cm3
-        /// Is initially the lesser of the weapon or body
-        /// part contact areas. It grows with cumulative hits.
-        /// Body parts and non-weapon
-        /// items have contact = (size / 10) ^ (2 / 3).
+        /// The total area of the wound in cm3 Is initially the lesser of the weapon or body part
+        /// contact areas. It grows with cumulative hits. Body parts and non-weapon items have
+        /// contact = (size / 10) ^ (2 / 3).
         /// </summary>
         public double VolumeFraction { get; set; }
 

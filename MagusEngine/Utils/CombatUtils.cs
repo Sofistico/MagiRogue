@@ -1,4 +1,5 @@
 ﻿using Arquimedes.Enumerators;
+using MagusEngine.Bus.MapBus;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Commands;
 using MagusEngine.Core.Entities;
@@ -481,7 +482,8 @@ namespace MagusEngine.Utils
                     item.Position = defender.Position;
 
                     // Now let the MultiSpatialMap know that the Item is visible
-                    GameLoop.GetCurrentMap().AddMagiEntity(item);
+                    //GameLoop.GetCurrentMap().AddMagiEntity(item);
+                    Locator.GetService<MessageBusService>().SendMessage<AddEntitiyCurrentMap>(new(item));
                 }
 
                 // Clear the actor's inventory. Not strictly necessary, but makes for good coding habits!
@@ -489,7 +491,7 @@ namespace MagusEngine.Utils
             }
 
             // actor goes bye-bye
-            GameLoop.GetCurrentMap().Remove(defender);
+            Locator.GetService<MessageBusService>().SendMessage<RemoveEntitiyCurrentMap>(new(defender));
 
             if (defender is Player)
             {

@@ -1,12 +1,13 @@
 ﻿using Arquimedes.Enumerators;
-using MagiRogue.GameSys.Tiles;
 using MagusEngine.Core.WorldStuff;
+using MagusEngine.ECS.Components.TilesComponents;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
 namespace MagusEngine.Serialization.MapConverter
 {
+    // TODO: REDO
     public class RiverJsonConverter : JsonConverter<River>
     {
         public override River? ReadJson(JsonReader reader,
@@ -35,18 +36,17 @@ namespace MagusEngine.Serialization.MapConverter
         public WorldDirection CurrentDirection { get; set; }
 
         public RiverTemplate(int riverCount, int length, int id,
-            List<WorldTile> tiles,
             int intersections,
             float turnCount, WorldDirection currentDirection)
         {
             RiverCount = riverCount;
             Length = length;
             Id = id;
-            Tiles = new();
-            for (int i = 0; i < tiles.Count; i++)
-            {
-                Tiles.Add(tiles[i].Position);
-            }
+            //Tiles = new();
+            //for (int i = 0; i < tiles.Count; i++)
+            //{
+            //    Tiles.Add(tiles[i].Position);
+            //}
             Intersections = intersections;
             TurnCount = turnCount;
             CurrentDirection = currentDirection;
@@ -90,11 +90,9 @@ namespace MagusEngine.Serialization.MapConverter
 
         public static implicit operator RiverTemplate(River river)
         {
-            var template = new RiverTemplate(river.RiverCount,
-                river.Length, river.Id, river.Tiles, river.Intersections,
+            return new RiverTemplate(river.RiverCount,
+                river.Length, river.Id, river.Intersections,
                 river.TurnCount, river.CurrentDirection);
-
-            return template;
         }
     }
 }

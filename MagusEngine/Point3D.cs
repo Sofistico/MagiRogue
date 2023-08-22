@@ -4,8 +4,8 @@
     {
         private Point internalPoint;
 
-        public int X { get => internalPoint.X; set => internalPoint = internalPoint.WithX(value); }
-        public int Y { get => internalPoint.Y; set => internalPoint = internalPoint.WithY(value); }
+        public int X { readonly get => internalPoint.X; set => internalPoint = internalPoint.WithX(value); }
+        public int Y { readonly get => internalPoint.Y; set => internalPoint = internalPoint.WithY(value); }
         public int Z { get; set; }
 
         public Point3D(Point point)
@@ -20,8 +20,8 @@
             Z = z;
         }
 
-        public Point InternalPoint() => internalPoint;
+        public readonly Point InternalPoint() => internalPoint;
 
-        public int ToIndex(int width, int height) => X + Y * width + Z * width * height;
+        public readonly int ToIndex(int width, int height) => X + (Y * width) + (Z * width * height);
     }
 }

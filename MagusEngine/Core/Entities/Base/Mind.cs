@@ -1,11 +1,8 @@
-﻿using GoRogue;
-using Arquimedes.Enumerators;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Arquimedes.Enumerators;
 using MagusEngine.Core.Entities.Interfaces;
 using MagusEngine.Utils;
-using MagusEngine.Core.Entities;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MagusEngine.Core.Entities.Base
 {
@@ -15,8 +12,8 @@ namespace MagusEngine.Core.Entities.Base
         public int Precision { get => Stats["Precision"]; set => Stats["Precision"] = value; }
 
         /// <summary>
-        /// Dictionary of the Abilities of an actor.
-        /// Never add directly to the dictionary, use the method AddAbilityToDictionary to add new abilities
+        /// Dictionary of the Abilities of an actor. Never add directly to the dictionary, use the
+        /// method AddAbilityToDictionary to add new abilities
         /// </summary>
         public Dictionary<int, Ability> Abilities { get; set; }
         public Personality Personality { get; set; }

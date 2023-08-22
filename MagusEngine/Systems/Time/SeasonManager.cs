@@ -1,4 +1,4 @@
-﻿using MagiRogue.Data.Enumerators;
+﻿using Arquimedes.Enumerators;
 using System;
 
 namespace MagusEngine.Systems.Time
@@ -19,11 +19,13 @@ namespace MagusEngine.Systems.Time
             SeasonLenght = seasonLenght;
         }
 
-        public SeasonType DetermineCurrentSeason(int monthOfYear)
+        public static SeasonType DetermineCurrentSeason(int monthOfYear)
         {
             if (monthOfYear <= 0 || monthOfYear > 12)
+            {
                 throw new Exception("An error occurred when " +
                     $"trying to determine the current season! Month of year {monthOfYear}");
+            }
 
             if (monthOfYear <= 3)
                 return SeasonType.Spring;
@@ -34,8 +36,7 @@ namespace MagusEngine.Systems.Time
             else if (monthOfYear > 9 && monthOfYear <= 12)
                 return SeasonType.Winter;
             else
-                throw new Exception
-                    ("An error occured in the if else statement to determine current season");
+                throw new Exception("An error occured in the if else statement to determine current season");
         }
     }
 }

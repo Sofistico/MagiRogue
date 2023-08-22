@@ -1,20 +1,23 @@
 ﻿using Arquimedes.Enumerators;
+using GoRogue.Random;
+using MagusEngine.Bus.UiBus;
+using MagusEngine.Commands;
+using MagusEngine.ECS.Components.ActorComponents;
+using MagusEngine.Services;
+using MagusEngine.Systems;
+using MagusEngine.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
-using Arquimedes.Data;
-using MagusEngine.Commands;
-using MagusEngine.Utils;
-using MagusEngine.ECS.Components.ActorComponents;
-using MagusEngine.Systems;
 
 namespace MagusEngine.Core.Entities.Base
 {
     /// <summary>
-    /// Your body characteristics, what race you are, if you are an undead or alive, if you are okay and etc
+    /// Your body characteristics, what race you are, if you are an undead or alive, if you are okay
+    /// and etc
     /// </summary>
     public class Anatomy
     {
@@ -124,8 +127,8 @@ namespace MagusEngine.Core.Entities.Base
         public double NormalLimbRegen { get; set; } = 0.001;
 
         /// <summary>
-        /// Value between 0 and 2, fitness level determines how well you "health" you are and how well you recover
-        /// your stamina, also helps with how long you will live.
+        /// Value between 0 and 2, fitness level determines how well you "health" you are and how
+        /// well you recover your stamina, also helps with how long you will live.
         /// </summary>
         [DataMember]
         public double FitLevel { get; set; } = 0.3;
@@ -305,7 +308,7 @@ namespace MagusEngine.Core.Entities.Base
             }
             catch (Exception ex)
             {
-                GameLoop.WriteToLog(ex.Message);
+                Locator.GetService<MagiLog>().Log(ex.Message);
             }
         }
 
@@ -340,7 +343,7 @@ namespace MagusEngine.Core.Entities.Base
             foreach (BodyPart bp in AllBPs)
             {
                 bp.Volume = MathMagi.ReturnPositive((int)(volume * (bp.RelativeVolume
-                    + GameLoop.GlobalRand.NextInclusiveDouble(-0.01, 0.01))));
+                    + GlobalRandom.DefaultRNG.NextInclusiveDouble(-0.01, 0.01))));
 
                 CalculateTissueVolume(bp);
             }
@@ -469,7 +472,8 @@ namespace MagusEngine.Core.Entities.Base
             dismemberMessage.Append(actor.Name).Append(" lost ").Append(limb.BodyPartName);
             try
             {
-                GameLoop.AddMessageLog(dismemberMessage.ToString());
+                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new(dismemberMessage.ToString()));
+
                 //if (totalDmg > 0)
                 //    GameLoop.AddMessageLog($"and took {totalDmg} damage!");
 
@@ -483,7 +487,7 @@ namespace MagusEngine.Core.Entities.Base
 
         public Limb GetRandomLimb()
         {
-            int rng = GameLoop.GlobalRand.NextInt(Limbs.Count);
+            int rng = GlobalRandom.DefaultRNG.NextInt(Limbs.Count);
 
             return Limbs[rng];
         }
@@ -512,8 +516,7 @@ namespace MagusEngine.Core.Entities.Base
         }
 
         /// <summary>
-        /// Checks once a year for aging related stuff and etc...
-        /// To be used
+        /// Checks once a year for aging related stuff and etc... To be used
         /// </summary>
         public bool CheckIfDiedByAge()
         {

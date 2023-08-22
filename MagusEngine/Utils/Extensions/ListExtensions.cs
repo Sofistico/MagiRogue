@@ -1,4 +1,5 @@
-﻿using MagusEngine.Core.WorldStuff.History;
+﻿using GoRogue.Random;
+using MagusEngine.Core.WorldStuff.History;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -34,17 +35,17 @@ namespace MagusEngine.Utils.Extensions
             return objList;
         }
 
-        public static T GetRandomItemFromList<T>(this List<T> list)
+        public static T? GetRandomItemFromList<T>(this List<T> list)
         {
             if (list.Count < 1)
                 return default;
-            int rng = GameLoop.GlobalRand.NextInt(list.Count);
+            int rng = GlobalRandom.DefaultRNG.NextInt(list.Count);
             return list[rng];
         }
 
         public static T GetRandomItemFromList<T>(this IReadOnlyList<T> list)
         {
-            int rng = GameLoop.GlobalRand.NextInt(list.Count);
+            int rng = GlobalRandom.DefaultRNG.NextInt(list.Count);
             return list[rng];
         }
 
@@ -53,7 +54,7 @@ namespace MagusEngine.Utils.Extensions
             int n = enumerable.Count;
             for (int i = n - 1; i > 0; i--)
             {
-                int j = GameLoop.GlobalRand.NextInt(i + 1);
+                int j = GlobalRandom.DefaultRNG.NextInt(i + 1);
                 (enumerable[j], enumerable[i]) = (enumerable[i], enumerable[j]);
             }
         }

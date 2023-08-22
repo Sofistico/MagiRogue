@@ -1,17 +1,7 @@
-﻿using MagiRogue.Data;
-using MagiRogue.Data.Enumerators;
-using MagiRogue.GameSys.Planet.TechRes;
-using MagiRogue.GameSys.Civ;
-using MagiRogue.GameSys.Tiles;
-using MagiRogue.Utils;
+﻿using MagusEngine.Services;
+using MagusEngine.Systems;
+using MagusEngine.Utils.Extensions;
 using System.Collections.Generic;
-using System.Linq;
-using System;
-using System.Text;
-using MagiRogue.Entities;
-using SadConsole.Renderers;
-using System.Data;
-using MagiRogue.Utils.Extensions;
 using System.Threading.Tasks;
 
 namespace MagusEngine.Core.WorldStuff.History
@@ -32,7 +22,7 @@ namespace MagusEngine.Core.WorldStuff.History
             {
                 var act = rule.DoAction(figure);
                 if (act is null)
-                    GameLoop.WriteToLog($"For some reason the action was null, here is the action: {rule.RuleFor}");
+                    Locator.GetService<MagiLog>().Log($"For some reason the action was null, here is the action: {rule.RuleFor}");
             });
 
             bool acted = false;
@@ -42,7 +32,7 @@ namespace MagusEngine.Core.WorldStuff.History
                 {
                     var act = rule.DoAction(figure);
                     if (act is null)
-                        GameLoop.WriteToLog($"For some reason the action was null, here is the action: {rule.RuleFor}");
+                        Locator.GetService<MagiLog>().Log($"For some reason the action was null, here is the action: {rule.RuleFor}");
                     if (act.GetValueOrDefault())
                         acted = true;
                 }

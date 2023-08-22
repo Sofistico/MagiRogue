@@ -1,12 +1,13 @@
-﻿using MagiRogue.Data;
-using MagiRogue.Data.Enumerators;
-using MagiRogue.Entities;
-using MagiRogue.GameSys.Tiles;
-using MagiRogue.Utils;
-using MagiRogue.Utils.Extensions;
+﻿using Arquimedes.Enumerators;
 using MagusEngine.Core;
 using MagusEngine.Core.Civ;
+using MagusEngine.Core.Entities;
 using MagusEngine.Core.MapStuff;
+using MagusEngine.ECS.Components.TilesComponents;
+using MagusEngine.Factory;
+using MagusEngine.Systems;
+using MagusEngine.Utils;
+using MagusEngine.Utils.Extensions;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 using ShaiRandom.Generators;
@@ -64,7 +65,7 @@ namespace MagusEngine.Generators.MapGen
         {
             foreach (var pos in _map.Positions())
             {
-                _map.SetTerrain(new TileFloor(pos, "stone"));
+                _map.SetTerrain(TileFactory.GenericStoneFloor(pos));
             }
         }
 
@@ -75,7 +76,7 @@ namespace MagusEngine.Generators.MapGen
         {
             foreach (var pos in _map.Positions())
             {
-                _map.SetTerrain(TileEncyclopedia.GenericGrass(pos));
+                _map.SetTerrain(TileFactory.GenericGrass(pos));
             }
         }
 
@@ -83,7 +84,7 @@ namespace MagusEngine.Generators.MapGen
         /// Makes all tiles become the specifed TileFloor
         /// </summary>
         /// <param name="floor"></param>
-        protected void PrepareForAnyFloor(TileFloor floor)
+        protected void PrepareForAnyFloor(Tile floor)
         {
             foreach (var pos in _map.Positions())
             {
@@ -97,7 +98,7 @@ namespace MagusEngine.Generators.MapGen
         /// </summary>
         /// <param name="floor"></param>
         /// <param name="map"></param>
-        protected static void PrepareForAnyFloor(TileFloor floor, Map map)
+        protected static void PrepareForAnyFloor(Tile floor, Map map)
         {
             map.SetTerrain(floor);
         }
@@ -107,7 +108,7 @@ namespace MagusEngine.Generators.MapGen
         /// </summary>
         /// <param name="start"></param>
         /// <param name="end"></param>
-        protected void CarveRoad(Point endCoord, Point originCoord, TileFloor roadTile)
+        protected void CarveRoad(Point endCoord, Point originCoord, Tile roadTile)
         {
             var path = _map.AStar.ShortestPath(originCoord, endCoord, Distance.Manhattan, true);
             if (path is null)
@@ -126,14 +127,14 @@ namespace MagusEngine.Generators.MapGen
             }
         }
 
-        protected void ApplyRoads(List<Building> roomsInMap, TileFloor tileToUse)
+        protected void ApplyRoads(List<Building> roomsInMap, Tile tileToUse)
         {
             for (int i = 1; i < roomsInMap.Count; i++)
             {
-                if (roomsInMap[i - 1].PhysicalRoom.Doors.Count <= 0 || roomsInMap[i].PhysicalRoom.Doors.Count <= 0)
+                if (roomsInMap[i - 1].PhysicalRoom.Doors.Count == 0 || roomsInMap[i].PhysicalRoom.Doors.Count == 0)
                     continue;
-                Point previousRoomDoor = roomsInMap[i - 1].PhysicalRoom.Doors.First().Position;
-                Point currentRoomDoor = roomsInMap[i].PhysicalRoom.Doors.First().Position;
+                Point previousRoomDoor = roomsInMap[i - 1].PhysicalRoom.Doors[0].Position;
+                Point currentRoomDoor = roomsInMap[i].PhysicalRoom.Doors[0].Position;
 
                 CarveRoad(previousRoomDoor, currentRoomDoor, tileToUse);
             }
@@ -148,47 +149,44 @@ namespace MagusEngine.Generators.MapGen
             {
                 if (pos.X == 0 || pos.Y == 0 || pos.X == _map.Width - 1 || pos.Y == _map.Height - 1)
                 {
-                    _map.SetTerrain(new TileWall(pos, "stone"));
+                    _map.SetTerrain(TileFactory.GenericStoneWall(pos));
                 }
             }
         }
 
         /// <summary>
-        /// Builds a room composed of walls and floors using the supplied Rectangle
-        /// which determines its size and position on the map
-        /// Walls are placed at the perimeter of the room
-        /// Floors are placed in the interior area of the room
+        /// Builds a room composed of walls and floors using the supplied Rectangle which determines
+        /// its size and position on the map Walls are placed at the perimeter of the room Floors
+        /// are placed in the interior area of the room
         /// </summary>
         /// <param name="room"></param>
-        protected void CreateRoom(Room room, TileWall wall, TileFloor floor)
+        protected void CreateRoom(Room room, Tile wall, Tile floor)
         {
             Rectangle rectangle = room.RoomRectangle;
             // Place floors in interior area
-            for (int x = rectangle.ToMonoRectangle().Left + 1; x < rectangle.ToMonoRectangle().Right; x++)
+            for (int x = 1; x < rectangle.Width; x++)
             {
-                for (int y = rectangle.ToMonoRectangle().Top + 1; y < rectangle.ToMonoRectangle().Bottom; y++)
+                for (int y = 1; y < rectangle.Height; y++)
                 {
                     CreateAnyFloor(new Point(x, y), floor);
                 }
             }
 
             // Place walls at perimeter
-            List<Point> perimeter = PointUtils.GetBorderCellLocations(rectangle);
-
-            foreach (Point location in perimeter)
+            foreach (Point location in PointUtils.GetBorderCellLocations(rectangle))
             {
                 CreateAnyWall(location, wall);
             }
         }
 
-        protected void CreateAnyWall(Point location, TileWall wall)
+        protected void CreateAnyWall(Point location, Tile wall)
         {
             var copyWall = wall.Copy();
             copyWall.Position = location;
             _map.SetTerrain(copyWall);
         }
 
-        protected void CreateAnyFloor(Point point, TileFloor floor)
+        protected void CreateAnyFloor(Point point, Tile floor)
         {
             var copyFloor = floor.Copy();
             copyFloor.Position = point;
@@ -201,7 +199,7 @@ namespace MagusEngine.Generators.MapGen
         /// <param name="location"></param>
         protected void CreateStoneFloor(Point location)
         {
-            TileFloor floor = new TileFloor(location);
+            Tile floor = TileFactory.GenericStoneFloor(location);
 
             // a simple setterrain already does it for me
             _map.SetTerrain(floor);
@@ -213,7 +211,7 @@ namespace MagusEngine.Generators.MapGen
         /// <param name="location"></param>
         protected void CreateStoneWall(Point location)
         {
-            TileWall wall = new TileWall(location);
+            Tile wall = TileFactory.GenericStoneWall(location);
             _map.SetTerrain(wall);
         }
 
@@ -221,14 +219,14 @@ namespace MagusEngine.Generators.MapGen
         /// Create any type of wall
         /// </summary>
         /// <param name="wall"></param>
-        protected void CreateAnyWall(TileWall wall) => _map.SetTerrain(wall);
+        protected void CreateAnyWall(Tile wall) => _map.SetTerrain(wall);
 
         /// <summary>
         /// Create any type of wall at the specifed map
         /// </summary>
         /// <param name="wall"></param>
         /// <param name="map"></param>
-        protected static void CreateAnyWall(TileWall wall, Map map)
+        protected static void CreateAnyWall(Tile wall, Map map)
         {
             map.SetTerrain(wall);
         }
@@ -238,9 +236,9 @@ namespace MagusEngine.Generators.MapGen
         /// </summary>
         protected void FloodWalls()
         {
-            for (int i = 0; i < _map.Tiles.Length; i++)
+            for (int i = 0; i < _map.Terrain.Count; i++)
             {
-                TileWall wall = new TileWall(Point.FromIndex(i, _map.Width), "stone");
+                Tile wall = TileFactory.GenericStoneWall(Point.FromIndex(i, _map.Width));
                 _map.SetTerrain(wall);
             }
         }
@@ -253,26 +251,25 @@ namespace MagusEngine.Generators.MapGen
         {
             for (int i = 0; i < nodes; i++)
             {
-                int rnd = randNum.NextInt(_map.Tiles.Length);
+                int rnd = randNum.NextInt(_map.Terrain.Count);
 
-                Tile rndTile = _map.GetTerrainAt<Tile>(Point.FromIndex(rnd, _map.Width));
+                Tile? rndTile = _map.GetTerrainAt<Tile>(Point.FromIndex(rnd, _map.Width));
 
                 int rndMp = randNum.NextInt(1, 15);
 
-                Tile nodeTile = new NodeTile
-                    (Color.Purple, Color.Transparent, Point.FromIndex(rnd, _map.Width), rndMp,
-                    (int)NodeStrength.Normal);
+                //var node = new NodeTile
+                //    (Color.Purple, Color.Transparent, Point.FromIndex(rnd, _map.Width), rndMp,
+                //    (int)NodeStrength.Normal);
 
-                nodeTile.GoRogueComponents.Add(new Components.IllusionComponent(rndTile),
-                    Components.IllusionComponent.Tag);
+                //nodeTile.GoRogueComponents.Add(new Components.IllusionComponent(rndTile),
+                //    Components.IllusionComponent.Tag);
 
-                _map.SetTerrain(nodeTile);
+                //_map.SetTerrain(nodeTile);
             }
         }
 
         /// <summary>
-        /// returns a collection of Points which represent
-        /// locations along a line
+        /// returns a collection of Points which represent locations along a line
         /// </summary>
         /// <param name="xOrigin"></param>
         /// <param name="yOrigin"></param>
@@ -282,8 +279,7 @@ namespace MagusEngine.Generators.MapGen
         protected IEnumerable<Point> GetTileLocationsAlongLine
             (int xOrigin, int yOrigin, int xDestination, int yDestination)
         {
-            // prevent line from overflowing
-            // boundaries of the map
+            // prevent line from overflowing boundaries of the map
             xOrigin = ClampX(xOrigin);
             yOrigin = ClampY(yOrigin);
             xDestination = ClampX(xDestination);
@@ -317,37 +313,37 @@ namespace MagusEngine.Generators.MapGen
         }
 
         /// <summary>
-        /// sets X coordinate between right and left edges of map
-        /// to prevent any out-of-bounds errors
+        /// sets X coordinate between right and left edges of map to prevent any out-of-bounds errors
         /// </summary>
         /// <param name="x"></param>
         /// <returns></returns>
         protected int ClampX(int x)
         {
             if (x < 0)
-                x = 0;
+                return 0;
             else if (x > _map.Width - 1)
-                x = _map.Width - 1;
+                return _map.Width - 1;
             return x;
 
-            // OR using ternary conditional operators: return (x < 0) ? 0 : (x > _map.Width - 1) ? _map.Width - 1 : x;
+            // OR using ternary conditional operators: return (x < 0) ? 0 : (x > _map.Width - 1) ?
+            // _map.Width - 1 : x;
         }
 
         /// <summary>
-        /// sets Y coordinate between top and bottom edges of map
-        /// to prevent any out-of-bounds errors
+        /// sets Y coordinate between top and bottom edges of map to prevent any out-of-bounds errors
         /// </summary>
         /// <param name="y"></param>
         /// <returns></returns>
         protected int ClampY(int y)
         {
             if (y < 0)
-                y = 0;
+                return 0;
             else if (y > _map.Height - 1)
-                y = _map.Height - 1;
+                return _map.Height - 1;
             return y;
 
-            // OR using ternary conditional operators: return (y < 0) ? 0 : (y > _map.Height - 1) ? _map.Height - 1 : y;
+            // OR using ternary conditional operators: return (y < 0) ? 0 : (y > _map.Height - 1) ?
+            // _map.Height - 1 : y;
         }
 
         /// <summary>
@@ -379,11 +375,8 @@ namespace MagusEngine.Generators.MapGen
         }
 
         /// <summary>
-        /// Determines if a Point on the map is a good
-        /// candidate for a door.
-        /// Returns true if it's a good spot for a door
-        /// Returns false if there is a Tile that IsBlockingMove=true
-        /// at that location
+        /// Determines if a Point on the map is a good candidate for a door. Returns true if it's a
+        /// good spot for a door Returns false if there is a Tile that IsBlockingMove=true at that location
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
@@ -398,8 +391,7 @@ namespace MagusEngine.Generators.MapGen
                 return false;
             }*/
 
-            // first make sure that isn't trying to take a door
-            // off the limits of the map
+            // first make sure that isn't trying to take a door off the limits of the map
             if (_map.CheckForIndexOutOfBounds(location))
                 return false;
 
@@ -409,34 +401,35 @@ namespace MagusEngine.Generators.MapGen
 
             if (_map.CheckForIndexOutOfBounds(top) || _map.CheckForIndexOutOfBounds(bottom)
                 || _map.CheckForIndexOutOfBounds(left) || _map.CheckForIndexOutOfBounds(right))
+            {
                 return false;
+            }
 
-            // check to see if there is a door already in the target
-            // location, or above/below/right/left of the target location
-            // If it detects a door there, return false.
-            if (_map.GetTileAt<TileDoor>(location.X, location.Y) != null ||
-                _map.GetTileAt<TileDoor>(right.X, right.Y) != null ||
-                _map.GetTileAt<TileDoor>(left.X, left.Y) != null ||
-                _map.GetTileAt<TileDoor>(top.X, top.Y) != null ||
-                _map.GetTileAt<TileDoor>(bottom.X, bottom.Y) != null)
+            // check to see if there is a door already in the target location, or
+            // above/below/right/left of the target location If it detects a door there, return false.
+            if (_map.GetTileAt<DoorComponent>(location.X, location.Y) != null ||
+                _map.GetTileAt<DoorComponent>(right.X, right.Y) != null ||
+                _map.GetTileAt<DoorComponent>(left.X, left.Y) != null ||
+                _map.GetTileAt<DoorComponent>(top.X, top.Y) != null ||
+                _map.GetTileAt<DoorComponent>(bottom.X, bottom.Y) != null)
             {
                 return false;
             }
 
             //if all the prior checks are okay, make sure that the door is placed along a horizontal wall
-            if (!_map.Tiles[right.ToIndex(_map.Width)].IsBlockingMove &&
-                !_map.Tiles[left.ToIndex(_map.Width)].IsBlockingMove &&
-                _map.Tiles[top.ToIndex(_map.Width)].IsBlockingMove &&
-                _map.Tiles[bottom.ToIndex(_map.Width)].IsBlockingMove)
+            if (!_map.Terrain[right.ToIndex(_map.Width)].IsWalkable &&
+                !_map.Terrain[left.ToIndex(_map.Width)].IsWalkable &&
+                _map.Terrain[top.ToIndex(_map.Width)].IsWalkable &&
+                _map.Terrain[bottom.ToIndex(_map.Width)].IsWalkable)
             {
                 return true;
             }
 
             //or make sure that the door is placed along a vertical wall
-            if (_map.Tiles[right.ToIndex(_map.Width)].IsBlockingMove &&
-                _map.Tiles[left.ToIndex(_map.Width)].IsBlockingMove &&
-                !_map.Tiles[top.ToIndex(_map.Width)].IsBlockingMove &&
-                !_map.Tiles[bottom.ToIndex(_map.Width)].IsBlockingMove)
+            if (_map.Terrain[right.ToIndex(_map.Width)].IsWalkable &&
+                _map.Terrain[left.ToIndex(_map.Width)].IsWalkable &&
+                !_map.Terrain[top.ToIndex(_map.Width)].IsWalkable &&
+                !_map.Terrain[bottom.ToIndex(_map.Width)].IsWalkable)
             {
                 return true;
             }
@@ -461,11 +454,9 @@ namespace MagusEngine.Generators.MapGen
         }
 
         /// <summary>
-        /// Tries to create a TileDoor object in a specified Rectangle
-        /// perimeter. Reads through the entire list of tiles comprising
-        /// the perimeter, and determines if each position is a viable
-        /// candidate for a door.
-        /// When it finds a potential position, creates a closed and
+        /// Tries to create a TileDoor object in a specified Rectangle perimeter. Reads through the
+        /// entire list of tiles comprising the perimeter, and determines if each position is a
+        /// viable candidate for a door. When it finds a potential position, creates a closed and
         /// unlocked door.
         /// </summary>
         /// <param name="room"></param>
@@ -484,8 +475,8 @@ namespace MagusEngine.Generators.MapGen
                 if (IsPotentialDoor(location) && !alreadyHasDoor)
                 {
                     // Create a new door that is closed and unlocked.
-                    TileDoor newDoor = DataManager.QueryTileInData<TileDoor>("wood_door", location);
-                    _map.SetTerrain(newDoor);
+                    Tile? newDoor = DataManager.QueryTileInData("wood_door", location);
+                    _map.SetTerrain(newDoor!);
                     if (!acceptsMoreThanOneDoor)
                         alreadyHasDoor = true;
                     room.Doors.Add(newDoor);
@@ -495,17 +486,16 @@ namespace MagusEngine.Generators.MapGen
         }
 
         /// <summary>
-        /// Places trees inside the map, in a random like manner
-        /// Sadly only places one type of tree
+        /// Places trees inside the map, in a random like manner Sadly only places one type of tree
         /// </summary>
         /// <param name="map"></param>
         /// <param name="treeToPlace"></param>
         /// <exception cref="NotImplementedException"></exception>
-        protected void PlaceTrees(Map map, TileWall treeToPlace)
+        protected void PlaceTrees(Map map, Tile treeToPlace)
         {
-            for (int i = 0; i < map.Tiles.Length; i++)
+            for (int i = 0; i < map.Terrain.Count; i++)
             {
-                TileWall tree = treeToPlace.Copy();
+                Tile tree = treeToPlace.Copy();
                 Point pos = Point.FromIndex(i, map.Width);
                 int rng = randNum.NextInt(0, 15);
                 if (rng == 13)
@@ -520,9 +510,9 @@ namespace MagusEngine.Generators.MapGen
         /// Place generic trees over the specified map
         /// </summary>
         /// <param name="map"></param>
-        protected void PlaceGenericTrees(Map map)
+        protected static void PlaceGenericTrees(Map map)
         {
-            PlaceTrees(map, TileEncyclopedia.GenericTree());
+            PlaceTrees(map, TileFactory.GenericTree());
         }
 
         /// <summary>
@@ -531,7 +521,7 @@ namespace MagusEngine.Generators.MapGen
         /// <param name="map"></param>
         protected void PlaceGenericTrees()
         {
-            PlaceTrees(_map, TileEncyclopedia.GenericTree());
+            PlaceTrees(_map, TileFactory.GenericTree());
         }
 
         /// <summary>
@@ -540,7 +530,7 @@ namespace MagusEngine.Generators.MapGen
         /// <param name="map"></param>
         /// <param name="treesToPlace"></param>
         /// <exception cref="NotImplementedException"></exception>
-        protected void PlaceTrees(Map map, List<TileWall> treesToPlace)
+        protected void PlaceTrees(Map map, List<Tile> treesToPlace)
         {
             // need to remake
             throw new NotImplementedException();
@@ -552,16 +542,16 @@ namespace MagusEngine.Generators.MapGen
         /// <param name="map"></param>
         /// <param name="vegetationToPlace"></param>
         /// <exception cref="NotImplementedException"></exception>
-        protected void PlaceVegetations(Map map, TileFloor vegetationToPlace)
+        protected void PlaceVegetations(Map map, Tile vegetationToPlace)
         {
             //first make sure that the vegetation won't be attackable and it's a vegetation
-            for (int i = 0; i < map.Tiles.Length; i++)
+            for (int i = 0; i < map.Terrain.Count; i++)
             {
                 /*TileFloor vegetal = new
                     TileFloor(vegetationToPlace.Name, vegetationToPlace.Position,
                     vegetationToPlace.MaterialOfTile.Id, vegetationToPlace.Glyph,
                     vegetationToPlace.Foreground, vegetationToPlace.Background);*/
-                TileFloor vegetal = vegetationToPlace.Copy();
+                Tile vegetal = vegetationToPlace.Copy();
                 Point pos = Point.FromIndex(i, map.Width);
                 int rng = randNum.NextInt(0, 15);
                 if (rng == 13)
@@ -578,12 +568,12 @@ namespace MagusEngine.Generators.MapGen
         /// <param name="map"></param>
         /// <param name="vegetationsToPlace"></param>
         /// <exception cref="NotImplementedException"></exception>
-        protected void PlaceVegetations(Map map, List<TileFloor> vegetationsToPlace)
+        protected void PlaceVegetations(Map map, List<Tile> vegetationsToPlace)
         {
             //first make sure that the vegetation won't be attackable and it's a vegetation
             for (int i = 0; i < vegetationsToPlace.Count; i++)
             {
-                TileFloor vegetal = vegetationsToPlace[randNum.NextInt(vegetationsToPlace.Count + 1)];
+                Tile vegetal = vegetationsToPlace[randNum.NextInt(vegetationsToPlace.Count + 1)];
 
                 PlaceVegetations(map, vegetal);
             }
@@ -594,12 +584,12 @@ namespace MagusEngine.Generators.MapGen
         /// </summary>
         /// <param name="tile"></param>
         /// <param name="map"></param>
-        protected static void FloodWithWaterMap(WaterTile tile, Map map)
+        protected static void FloodWithWaterMap(Tile tile, Map map)
         {
             map.SetTerrain(tile);
         }
 
-        protected void FloodWithWaterMap(WaterTile tile)
+        protected void FloodWithWaterMap(Tile tile)
         {
             _map.SetTerrain(tile);
         }
@@ -609,17 +599,16 @@ namespace MagusEngine.Generators.MapGen
         /// </summary>
         /// <param name="map"></param>
         /// <param name="template"></param>
-        protected void PutRngFloorTileThere(Map map, TileFloor template)
+        protected void PutRngFloorTileThere(Map map, Tile template)
         {
-            for (int i = 0; i < map.Tiles.Length; i++)
+            for (int i = 0; i < map.Terrain.Count; i++)
             {
                 int rng = randNum.NextInt(0, 15);
-                Point pos = map.Tiles[i].Position;
+                Point pos = map.Terrain[i].Position;
                 if (rng == 13)
                 {
-                    TileFloor newTile = new TileFloor(template.Name, pos,
-                        template.MaterialOfTile.Id, template.Glyph,
-                        template.Foreground, template.Background);
+                    Tile newTile = template.Copy(pos);
+
                     map.SetTerrain(newTile);
                 }
             }
@@ -629,17 +618,15 @@ namespace MagusEngine.Generators.MapGen
         /// Puts a tile in a random mode in the map
         /// </summary>
         /// <param name="template"></param>
-        protected void PutRngFloorTileThere(TileFloor template)
+        protected void PutRngFloorTileThere(Tile template)
         {
-            for (int i = 0; i < _map.Tiles.Length; i++)
+            for (int i = 0; i < _map.Terrain.Count; i++)
             {
                 int rng = randNum.NextInt(0, 15);
-                Point pos = _map.Tiles[i].Position;
+                Point pos = _map.Terrain[i].Position;
                 if (rng == 13)
                 {
-                    TileFloor newTile = new TileFloor(template.Name, pos,
-                        template.MaterialOfTile.Id, template.Glyph,
-                        template.Foreground, template.Background);
+                    var newTile = template.Copy(pos);
                     _map.SetTerrain(newTile);
                 }
             }
@@ -654,9 +641,9 @@ namespace MagusEngine.Generators.MapGen
         {
             int len = maps.Length;
             // perfect for flood fill!
-            Stack<Point> pointedList = new Stack<Point>();
-            int desiredSize = 3;
-            Simple2DGrid grid = new Simple2DGrid(len / desiredSize, len / desiredSize, new());
+            Stack<Point> pointedList = new();
+            const int desiredSize = 3;
+            Simple2DGrid grid = new(len / desiredSize, len / desiredSize, new());
             pointedList.Push(new Point(0, 0));
             while (pointedList.Count > 0)
             {
@@ -707,15 +694,18 @@ namespace MagusEngine.Generators.MapGen
 
         protected static void FillMapWithGrass(Map map)
         {
-            foreach (var item in map.Tiles.OfType<TileFloor>())
+            foreach (var p in map.Terrain.Positions())
             {
-                item.AddVegetations(DataManager.QueryPlantInData("grass"), map);
+                var item = (Tile)map.Terrain[p];
+                // TODO: REDO
+                //if (item.IsWalkable)
+                //    item.AddVegetations(DataManager.QueryPlantInData("grass"), map);
             }
         }
 
         protected void MakeRoomsUseful(Map completeMap)
         {
-            List<Room> mapRooms = completeMap.Rooms;
+            List<Room>? mapRooms = completeMap.Rooms;
             if (mapRooms is null)
                 return;
             // make so that the list of rooms come from the worldTile.CivInfluence.Sites
@@ -986,7 +976,7 @@ namespace MagusEngine.Generators.MapGen
         #region Utils
 
         // quite clever 🐴
-        protected static T QueryTilesForTrait<T>(Trait trait) where T : Tile
+        protected static Tile? QueryTilesForTrait(Trait trait)
         {
             List<BasicTile> tiles = DataManager.QueryTilesInDataWithTrait(trait);
             if (tiles.Count < 1)
@@ -998,15 +988,13 @@ namespace MagusEngine.Generators.MapGen
             for (int i = 0; i < tiles.Count; i++)
             {
                 Tile tile = (Tile)tiles[i];
-                if (tile is T && tile.Traits.Contains(trait))
+                if (tile.Traits.Contains(trait))
                 {
                     possibleResults.Add(tile);
                 }
             }
 
-            result = possibleResults.GetRandomItemFromList();
-
-            return (T)result;
+            return possibleResults.GetRandomItemFromList();
         }
 
         #endregion Utils

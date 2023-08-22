@@ -1,11 +1,14 @@
-﻿using GoRogue.GameFramework;
+﻿using Arquimedes.Enumerators;
+using GoRogue.GameFramework;
 using GoRogue.Pathing;
-using MagiRogue.Data.Enumerators;
-using MagiRogue.GameSys.Tiles;
-using MagiRogue.UI.Windows;
+using MagusEngine.Bus.MapBus;
+using MagusEngine.Bus.UiBus;
+using MagusEngine.Core;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic;
+using MagusEngine.Services;
+using MagusEngine.Systems.Time;
 using MagusEngine.Utils;
 using SadRogue.Primitives;
 using System;
@@ -20,7 +23,7 @@ namespace MagusEngine.Commands
     public class Target
     {
         private Actor _caster;
-        private readonly Dictionary<Point, TileBase> tileDictionary;
+        private readonly Dictionary<Point, Tile> tileDictionary;
         private static readonly Radius radius = Radius.Circle;
 
         public MagiEntity Cursor { get; set; }
@@ -71,12 +74,12 @@ namespace MagusEngine.Commands
             State = TargetState.Resting;
 
             TargetList = new List<MagiEntity>();
-            tileDictionary = new Dictionary<Point, TileBase>();
+            tileDictionary = new Dictionary<Point, Tile>();
         }
 
         public bool EntityInTarget()
         {
-            if (GameLoop.GetCurrentMap().GetEntitiesAt
+            if (Cursor.MagiMap.GetEntitiesAt
                 <MagiEntity>(Cursor.Position).Any(e => e.ID != Cursor.ID))
             //&& GameLoop.World.CurrentMap.GetEntityAt<Entity>(Cursor.Position) is not Player)
             {
@@ -94,8 +97,8 @@ namespace MagusEngine.Commands
             {
                 TargetList.Add(_caster);
                 var (sucess, s) = EndSpellTargetting();
-                GameLoop.Universe.ProcessTurn
-                    (GameSys.Time.TimeHelper.GetCastingTime(GameLoop.Universe.Player, s), sucess);
+                Locator.GetService<MessageBusService>()
+                    .SendMessage<ProcessTurnEvent>(new(TimeHelper.GetCastingTime(GameLoop.Universe.Player, s)), sucess);
                 return;
             }
 
@@ -107,13 +110,13 @@ namespace MagusEngine.Commands
             if (State is TargetState.Targeting)
                 return;
             OriginCoord = new Point(
-                GameLoop.GetCurrentMap().ControlledEntitiy.Position.X,
-                GameLoop.GetCurrentMap().ControlledEntitiy.Position.Y);
+                Cursor.MagiMap.ControlledEntitiy.Position.X,
+                Cursor.MagiMap.ControlledEntitiy.Position.Y);
             Cursor.Position = new Point(
-                 GameLoop.GetCurrentMap().ControlledEntitiy.Position.X,
-                 GameLoop.GetCurrentMap().ControlledEntitiy.Position.Y);
-            GameLoop.Universe.ChangeControlledEntity(Cursor);
-            GameLoop.GetCurrentMap().AddMagiEntity(Cursor);
+                 Cursor.MagiMap.ControlledEntitiy.Position.X,
+                 Cursor.MagiMap.ControlledEntitiy.Position.Y);
+            Locator.GetService<MessageBusService>().SendMessage<ChangeControlledEntitiy>(new(Cursor));
+            Cursor.MagiMap.AddMagiEntity(Cursor);
             Cursor.PositionChanged += Cursor_Moved;
 
             State = TargetState.Targeting;
@@ -141,7 +144,7 @@ namespace MagusEngine.Commands
             {
                 return AffectTarget();
             }
-            GameLoop.AddMessageLog("The target is too far!");
+            Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("The target is too far!"));
             return (false, null);
         }
 
@@ -149,7 +152,9 @@ namespace MagusEngine.Commands
         {
             bool casted;
             if (TargetList.Count > 0)
+            {
                 casted = SpellSelected.CastSpell(TargetList[0].Position, _caster);
+            }
             else if (TravelPath is not null)
             {
                 casted = SpellSelected.CastSpell(TravelPath.End, _caster);
@@ -157,7 +162,8 @@ namespace MagusEngine.Commands
             else
             {
                 casted = false;
-                GameLoop.AddMessageLog("An error ocurred, cound't find a target!");
+                Locator.GetService<MessageBusService>()
+                    .SendMessage<MessageSent>(new("An error ocurred, cound't find a target!"));
             }
             var spellCasted = SpellSelected;
             EndTargetting();
@@ -181,20 +187,20 @@ namespace MagusEngine.Commands
                     TravelPath = null;
                 }
 
-                GameLoop.Universe.ChangeControlledEntity(GameLoop.Universe.Player);
-                GameLoop.GetCurrentMap().Remove(Cursor);
+                Locator.GetService<MessageBusService>().SendMessage<ChangeControlledEntitiy>(new(GameLoop.Universe.Player));
+                Locator.GetService<MessageBusService>().SendMessage<RemoveEntitiyCurrentMap>(new(Cursor));
             }
         }
 
         private void ClearTileDictionary()
         {
-            if (tileDictionary.Count <= 0) return;
+            if (tileDictionary.Count == 0) return;
             // if there is anything in the path, clear it
             foreach (Point point in tileDictionary.Keys)
             {
-                TileBase tile = GameLoop.GetCurrentMap().GetTileAt<TileBase>(point);
+                Tile tile = Cursor.MagiMap.GetTileAt(point);
                 if (tile is not null)
-                    tile.Background = tile.LastSeenAppereance.Background;
+                    tile.Appearence.Background = tile.LastSeenAppereance.Background;
             }
             tileDictionary.Clear();
         }
@@ -245,10 +251,10 @@ namespace MagusEngine.Commands
         private void Cursor_Moved(object sender, ValueChangedEventArgs<Point> e)
         {
             TargetList.Clear();
-            TravelPath = GameLoop.GetCurrentMap().AStar.ShortestPath(OriginCoord, e.NewValue)!;
+            TravelPath = Cursor.MagiMap.AStar.ShortestPath(OriginCoord, e.NewValue)!;
             if (LookMode || TravelPath is null)
             {
-                TravelPath = GameLoop.GetCurrentMap()
+                TravelPath = Cursor.MagiMap
                     .AStarWithAllWalkable().ShortestPath(OriginCoord, e.NewValue)!;
                 ClearTileDictionary();
                 return;
@@ -258,20 +264,21 @@ namespace MagusEngine.Commands
                 foreach (Point pos in TravelPath.Steps)
                 {
                     // gets each point in the travel path steps and change the background of the wall
-                    var halp = GameLoop.GetCurrentMap().GetTileAt<TileBase>(pos);
-                    halp.Background = Color.Yellow;
+                    var halp = Cursor.MagiMap.GetTileAt(pos);
+                    halp.Appearence.Background = Color.Yellow;
                     tileDictionary.TryAdd(pos, halp);
                 }
 
-                // This loops makes sure that all the pos that aren't in the TravelPath gets it's proper appearence
+                // This loops makes sure that all the pos that aren't in the TravelPath gets it's
+                // proper appearence
                 foreach (Point item in tileDictionary.Keys)
                 {
                     if (!TravelPath.Steps.Contains(item))
                     {
-                        TileBase llop = GameLoop.GetCurrentMap().GetTileAt<TileBase>(item);
+                        Tile llop = Cursor.MagiMap.GetTileAt(item);
                         if (llop is not null)
                         {
-                            llop.Background = llop.LastSeenAppereance.Background;
+                            llop.Appearence.Background = llop.LastSeenAppereance.Background;
                         }
                     }
                 }
@@ -306,7 +313,7 @@ namespace MagusEngine.Commands
                 {
                     ISpellEffect effect = GetSpellAreaEffect(SpellAreaEffect.Cone);
                     foreach (Point point in
-                        GeometryUtils.Cone(OriginCoord, effect.Radius, this, effect.ConeCircleSpan).Points)
+                        OriginCoord.Cone(effect.Radius, this, effect.ConeCircleSpan).Points)
                     {
                         AddTileToDictionary(point);
                         AddEntityToList(point);
@@ -318,7 +325,7 @@ namespace MagusEngine.Commands
         public bool TileInTarget()
         {
             if (!EntityInTarget()
-                && GameLoop.GetCurrentMap().GetTileAt<TileBase>(Cursor.Position) != null)
+                && Cursor.MagiMap.GetTileAt(Cursor.Position) != null)
             {
                 State = TargetState.Targeting;
                 return true;
@@ -332,10 +339,10 @@ namespace MagusEngine.Commands
         /// <param name="point"></param>
         private void AddTileToDictionary(Point point)
         {
-            var halp = GameLoop.GetCurrentMap().GetTileAt<TileBase>(point);
+            var halp = Cursor.MagiMap.GetTileAt(point);
             if (halp is not null)
             {
-                halp.Background = Color.Yellow;
+                halp.Appearence.Background = Color.Yellow;
                 tileDictionary.TryAdd(point, halp);
             }
 
@@ -354,9 +361,9 @@ namespace MagusEngine.Commands
         /// <param name="point"></param>
         private void AddEntityToList(Point point)
         {
-            var entity = GameLoop.GetCurrentMap().GetEntityAt<MagiEntity>(point);
+            var entity = Cursor.MagiMap.GetEntityAt<MagiEntity>(point);
             if (entity is not null && !TargetList.Contains(entity))
-                TargetList.Add(GameLoop.GetCurrentMap().GetEntityAt<MagiEntity>(point));
+                TargetList.Add(Cursor.MagiMap.GetEntityAt<MagiEntity>(point));
         }
 
         private ISpellEffect GetSpellAreaEffect(SpellAreaEffect areaEffect) =>
@@ -366,14 +373,13 @@ namespace MagusEngine.Commands
         {
             if (DetermineWhatToLook() is MagiEntity entity)
             {
-                LookWindow w = new(entity);
-                w.Show();
+                Locator.GetService<MessageBusService>().SendMessage<LookStuff>(new(entity));
             }
         }
 
-        public MagiEntity TargetEntity() => GameLoop.GetCurrentMap().GetEntityAt<MagiEntity>(Cursor.Position);
+        public MagiEntity? TargetEntity() => Cursor.MagiMap.GetEntityAt<MagiEntity>(Cursor.Position);
 
-        private TileBase TargetAtTile() => GameLoop.GetCurrentMap().GetTileAt<TileBase>(Cursor.Position);
+        private Tile? TargetAtTile() => Cursor.MagiMap.GetTileAt(Cursor.Position);
 
         public IGameObject DetermineWhatToLook()
         {

@@ -1,6 +1,10 @@
 ﻿using Arquimedes.Enumerators;
+using GoRogue.Random;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
+using MagusEngine.Systems;
+using MagusEngine.Utils;
+using MagusEngine.Utils.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -141,7 +145,7 @@ namespace MagusEngine.Core.WorldStuff.History
             MythWho precursor = primordias.GetRandomItemFromList();
             HistoricalFigure precursorFigure;
 
-            bool alive = GameLoop.GlobalRand.NextBool();
+            bool alive = GlobalRandom.DefaultRNG.NextBool();
             Race race = races.GetRandomItemFromList();
             bool createdRace = false;
 

@@ -1,6 +1,6 @@
-﻿using MagiRogue.Data.Enumerators;
-using MagusEngine.Core.Civ;
+﻿using MagusEngine.Core.Civ;
 using MagusEngine.Core.WorldStuff.History;
+using MagusEngine.Generators;
 using System.Text;
 
 namespace MagusEngine.Core.WorldStuff.TechRes

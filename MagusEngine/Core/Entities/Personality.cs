@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MagusEngine.Core.Entities
 {
     /// <summary>
     /// Defines the personality of the mind... Has values ranging from -50 to 50, being 0 the middle
-    /// Based on this parameters, controls the response of an inteligent entity, animals and non-inteligent
-    /// have other responses and thus no personality...
+    /// Based on this parameters, controls the response of an inteligent entity, animals and
+    /// non-inteligent have other responses and thus no personality...
     /// </summary>
     public class Personality
     {

@@ -1,12 +1,13 @@
 ﻿using Arquimedes.Enumerators;
-using MagiRogue.GameSys.Tiles;
 using MagusEngine.Core.Civ;
+using MagusEngine.ECS.Components.TilesComponents;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
 namespace MagusEngine.Serialization.MapConverter
 {
+    // TODO: REDO
     public class RoadJsonConverter : JsonConverter<Road>
     {
         public override Road? ReadJson(JsonReader reader,
@@ -83,7 +84,7 @@ namespace MagusEngine.Serialization.MapConverter
                 List<Point> tiles = new();
                 for (int i = 0; i < road.RoadTiles.Count; i++)
                 {
-                    tiles.Add(road.RoadTiles[i].Position);
+                    //tiles.Add(road.RoadTiles[i].Position);
                 }
 
                 return new RoadTemplate(road.RoadDirectionInPos,

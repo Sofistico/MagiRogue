@@ -1,9 +1,8 @@
-﻿using MagiRogue.Data.Enumerators;
-using MagiRogue.Entities.Interfaces;
+﻿using Arquimedes.Enumerators;
+using MagusEngine.Core.Entities.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Reflection.PortableExecutable;
 
 namespace MagusEngine.Serialization.EntitySerialization
 {
@@ -16,7 +15,7 @@ namespace MagusEngine.Serialization.EntitySerialization
             IActivable activable;
             UseAction action = (UseAction)Enum.Parse(typeof(UseAction), jObj.ToString());
 
-            activable = action switch
+            return action switch
             {
                 UseAction.None => throw new NotSupportedException($"UseAction None in not supported!"),
                 UseAction.Sit => new Sit(),
@@ -34,14 +33,13 @@ namespace MagusEngine.Serialization.EntitySerialization
                 UseAction.Store => new Store(),
                 _ => throw new NotSupportedException($"Tried to add an use action that doensn't exists! Action used: {action} "),
             };
-            return activable;
         }
 
         public override void WriteJson(JsonWriter writer, IActivable? value, JsonSerializer serializer)
         {
             //throw new InvalidOperationException("Use default serialization.");
             // as we call on my language: GAMBIARRA
-            UseAction action = (UseAction)Enum.Parse(typeof(UseAction), value.ToString().Split('.')[2]);
+            UseAction action = (UseAction)Enum.Parse(typeof(UseAction), value?.ToString()?.Split('.')[2]!);
             serializer.Serialize(writer, action);
         }
     }

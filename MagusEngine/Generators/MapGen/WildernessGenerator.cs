@@ -1,14 +1,14 @@
-﻿using MagiRogue.Data;
-using MagiRogue.Data.Enumerators;
-using MagiRogue.GameSys.Tiles;
+﻿using Arquimedes.Enumerators;
 using MagusEngine.Core;
 using MagusEngine.Core.MapStuff;
+using MagusEngine.ECS.Components.TilesComponents;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 
 namespace MagusEngine.Generators.MapGen
 {
+    // TODO: Take a closer look
     public class WildernessGenerator : MapGenerator
     {
         #region PlanetMapGenStuff
@@ -21,7 +21,7 @@ namespace MagusEngine.Generators.MapGen
         public Map[] GenerateMapWithWorldParam(PlanetMap worldMap, Point posGenerated)
         {
             Map[] maps = new Map[RegionChunk.MAX_LOCAL_MAPS];
-            WorldTile worldTile = worldMap.AssocietatedMap.GetTileAt<WorldTile>(posGenerated);
+            var worldTile = worldMap.AssocietatedMap.GetTileAt<WorldTile>(posGenerated);
             int settlmentCounter = 0;
             for (int i = 0; i < maps.Length; i++)
             {
@@ -81,8 +81,7 @@ namespace MagusEngine.Generators.MapGen
 
         /// <summary>
         /// If the map has any modifer, like strong magic aura, cities, roads and particulaly civs
-        /// Anything that changes the composition of the World Tile map.
-        /// Trees also spawn here
+        /// Anything that changes the composition of the World Tile map. Trees also spawn here
         /// </summary>
         /// <param name="completeMap"></param>
         /// <param name="worldTile"></param>
@@ -177,7 +176,6 @@ namespace MagusEngine.Generators.MapGen
         }
 
         /// <summary>
-        ///
         /// </summary>
         /// <param name="completeMap"></param>
         /// <param name="worldTile"></param>

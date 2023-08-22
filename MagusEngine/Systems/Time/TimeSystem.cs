@@ -1,4 +1,5 @@
-﻿using Priority_Queue;
+﻿using MagusEngine.Serialization;
+using Priority_Queue;
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
@@ -18,7 +19,7 @@ namespace MagusEngine.Systems.Time
         private readonly SimplePriorityQueue<ITimeNode, long> turnQueue = new SimplePriorityQueue<ITimeNode, long>();
         private readonly TimeDefSpan timeSpan;
 
-        public event EventHandler<TimeDefSpan> TurnPassed;
+        public event EventHandler<TimeDefSpan>? TurnPassed;
 
         [JsonIgnore]
         public TimeDefSpan TimePassed => new TimeDefSpan(timeSpan.Ticks);
@@ -54,7 +55,7 @@ namespace MagusEngine.Systems.Time
             }
         }
 
-        public ITimeNode NextNode()
+        public ITimeNode? NextNode()
         {
             if (turnQueue.Count == 0)
                 return null;

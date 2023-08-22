@@ -1,9 +1,5 @@
-﻿using MagiRogue.Entities.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MagusEngine.Core.Entities.Base;
+using MagusEngine.Systems;
 
 namespace MagusEngine.Core.WorldStuff.History
 {
@@ -19,6 +15,6 @@ namespace MagusEngine.Core.WorldStuff.History
         }
 
         public Race PopulationRace()
-            => Data.DataManager.QueryRaceInData(PopulationRaceId);
+            => DataManager.QueryRaceInData(PopulationRaceId);
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Arquimedes.Enumerators;
-using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Interfaces;
 using MagusEngine.Utils;
 using Newtonsoft.Json;

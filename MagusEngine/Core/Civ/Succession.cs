@@ -1,4 +1,4 @@
-﻿using MagiRogue.Data.Enumerators;
+﻿using Arquimedes.Enumerators;
 
 namespace MagusEngine.Core.Civ
 {

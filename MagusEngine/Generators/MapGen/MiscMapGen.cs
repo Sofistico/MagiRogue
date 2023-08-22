@@ -1,17 +1,14 @@
-﻿using MagiRogue.Components;
-using MagiRogue.Components.Ai;
-using MagiRogue.Data;
-using MagiRogue.Data.Enumerators;
-using MagiRogue.GameSys.Tiles;
-using MagiRogue.Utils;
+﻿using Arquimedes.Enumerators;
 using MagusEngine.Core.MapStuff;
+using MagusEngine.ECS.Components.ActorComponents.Ai;
+using MagusEngine.Factory;
+using MagusEngine.Systems;
+using MagusEngine.Utils;
 
 namespace MagusEngine.Generators.MapGen
 {
     public class MiscMapGen : MapGenerator
     {
-        private WaterTile waterTile;
-
         public MiscMapGen()
         {
             // empty
@@ -37,11 +34,9 @@ namespace MagusEngine.Generators.MapGen
         {
             var r = _map.FindRoomsByTag(RoomTag.Blacksmith)[0];
             var point = r.GetCenter();
-            var actor = EntityFactory.ActorCreator(point,
-                "dwarf",
-                "Blacksmith",
-                25,
-                EntityFactory.GetRandomSex()).WithComponents(new NeedDrivenAi());
+            var actor = EntityFactory
+                .ActorCreator(point, "dwarf", "Blacksmith", 25, EntityFactory.GetRandomSex())
+                .WithComponents(new NeedDrivenAi());
 
             _map.AddMagiEntity(actor);
         }
@@ -61,11 +56,11 @@ namespace MagusEngine.Generators.MapGen
             //var poitns = _map.GetRandomWalkableTile();
             var poitns = new Point(10, 10);
             Shape circle = poitns.HollowCircleFromOriginPoint(5);
-            var r = new Room(poitns.CircleFromOriginPoint(5).Points, Data.Enumerators.RoomTag.Blacksmith);
+            var r = new Room(poitns.CircleFromOriginPoint(5).Points, RoomTag.Blacksmith);
 
             foreach (var point in circle.Points)
             {
-                var tile = TileEncyclopedia.GenericStoneWall(point);
+                var tile = TileFactory.GenericStoneWall(point);
                 _map.SetTerrain(tile);
             }
 
@@ -87,7 +82,7 @@ namespace MagusEngine.Generators.MapGen
             var pointBegin = new Point(_map.Width / 2, _map.Height / 2);
 
             var room = _map.AddRoom(r, pointBegin);
-            waterTile = _map.GetAllTilesWithComponents<WaterTile>()[0];
+            //waterTile = _map.GetAllTilesWithComponents<WaterTile>()[0];
             PlaceUnitsInForest(room);
         }
 
@@ -101,24 +96,18 @@ namespace MagusEngine.Generators.MapGen
                 {
                     var actor = EntityFactory.ActorCreator(pos,
                         "deer",
-                        Data.Enumerators.Sex.Male,
-                        Data.Enumerators.AgeGroup.Adult)
+                        Sex.Male,
+                        AgeGroup.Adult)
                         .WithComponents(new NeedDrivenAi());
-                    actor.AddMemory(waterTile.Position,
-                        Data.Enumerators.MemoryType.WaterLoc,
-                        waterTile);
                     _map.AddMagiEntity(actor);
                 }
                 else
                 {
                     var actor = EntityFactory.ActorCreator(pos,
                         "wolf",
-                        Data.Enumerators.Sex.Male,
-                        Data.Enumerators.AgeGroup.Adult)
+                        Sex.Male,
+                        AgeGroup.Adult)
                         .WithComponents(new NeedDrivenAi());
-                    actor.AddMemory(waterTile.Position,
-                        Data.Enumerators.MemoryType.WaterLoc,
-                        waterTile);
                     _map.AddMagiEntity(actor);
                 }
             }

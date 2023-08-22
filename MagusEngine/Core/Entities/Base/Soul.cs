@@ -1,10 +1,7 @@
-﻿using MagusEngine.Core.Entities.Interfaces;
+﻿using GoRogue.Random;
+using MagusEngine.Core.Entities.Interfaces;
 using MagusEngine.Utils;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MagusEngine.Core.Entities.Base
 {
@@ -18,8 +15,8 @@ namespace MagusEngine.Core.Entities.Base
         public double BaseManaRegen { get; set; }
 
         /// <summary>
-        /// The sense of self of the entity, is a percentage.
-        /// For a future working in the rituals and pact update....
+        /// The sense of self of the entity, is a percentage. For a future working in the rituals
+        /// and pact update....
         /// </summary>
         public int SenseOfSelf { get => Stats["SenseOfSelf"]; set => Stats["SenseOfSelf"] = value; }
 
@@ -43,8 +40,8 @@ namespace MagusEngine.Core.Entities.Base
         {
             int raceMaxMana = race.MaxManaRange;
             int raceMinMana = race.MinManaRange;
-            int statsModifier = (int)((WillPower + 1) * 0.3 + (inteligence + 1) * 0.2);
-            MaxMana = statsModifier + GameLoop.GlobalRand.NextInt(raceMinMana,
+            int statsModifier = (int)((WillPower + 1) * 0.3 + ((inteligence + 1) * 0.2));
+            MaxMana = statsModifier + GlobalRandom.DefaultRNG.NextInt(raceMinMana,
                 raceMaxMana + 1);
             CurrentMana = MaxMana;
         }

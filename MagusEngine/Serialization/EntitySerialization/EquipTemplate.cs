@@ -1,9 +1,4 @@
-﻿using MagiRogue.Entities;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-
-namespace MagusEngine.Serialization.EntitySerialization
+﻿namespace MagusEngine.Serialization.EntitySerialization
 {
     public class EquipTemplate
     {

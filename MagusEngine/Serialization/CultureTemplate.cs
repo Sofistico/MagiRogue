@@ -1,12 +1,9 @@
-﻿using Arquimedes.Data;
-using MagiRogue.Data.Enumerators;
-using MagiRogue.Data.Serialization.EntitySerialization;
-using MagiRogue.Entities.Core;
-using MagiRogue.Utils;
-using MagiRogue.Utils.Extensions;
+﻿using Arquimedes.Enumerators;
 using MagusEngine.Core.Civ;
+using MagusEngine.Core.Entities.Base;
 using MagusEngine.Systems;
-using Newtonsoft.Json;
+using MagusEngine.Utils;
+using MagusEngine.Utils.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +28,7 @@ namespace MagusEngine.Serialization
 
         public Civilization ConvertToCivilization()
         {
-            string rngName = RandomNames.RandomNamesFromLanguage(LanguageSpoken).Replace(" ", "");
+            var rngName = RandomNames.RandomNamesFromLanguage(LanguageSpoken)?.Replace(" ", "");
             Race primaryRace = DataManager.QueryRaceInData(Races[0]);
             CivilizationTendency tendency = DetermineCivTendency();
             Civilization civ = new Civilization(rngName, primaryRace, tendency)
@@ -44,7 +41,7 @@ namespace MagusEngine.Serialization
             };
             if (Races.Length > 0)
             {
-                List<string> otherRaces = new List<string>(Races);
+                List<string> otherRaces = new(Races);
                 otherRaces.RemoveAt(0);
                 civ.OtherRaces = otherRaces;
             }

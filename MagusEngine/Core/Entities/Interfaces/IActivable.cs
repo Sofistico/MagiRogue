@@ -1,6 +1,7 @@
 ﻿using MagusEngine.Core.Entities.Base;
 using MagusEngine.Serialization.EntitySerialization;
 using Newtonsoft.Json;
+using System;
 
 namespace MagusEngine.Core.Entities.Interfaces
 {

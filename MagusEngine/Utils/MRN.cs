@@ -1,5 +1,5 @@
 ﻿using GoRogue.DiceNotation;
-using System.Threading.Channels;
+using GoRogue.Random;
 
 namespace MagusEngine.Utils
 {
@@ -49,12 +49,12 @@ namespace MagusEngine.Utils
 
         public static bool OneIn(int chance)
         {
-            return chance <= 1 || GameLoop.GlobalRand.NextInt(0, chance) == 0;
+            return chance <= 1 || GlobalRandom.DefaultRNG.NextInt(0, chance) == 0;
         }
 
         public static bool XinY(int x, int y)
         {
-            return x <= y || GameLoop.GlobalRand.NextInt(x, y) == x;
+            return x <= y || GlobalRandom.DefaultRNG.NextInt(x, y) == x;
         }
 
         public static int CustomDice(string diceExpression)
