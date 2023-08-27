@@ -216,11 +216,12 @@ namespace MagusEngine.Commands
         {
             foreach (Point points in actor.Position.GetDirectionPoints())
             {
-                var possibleDoor = actor.MagiMap.GetTileAt<DoorComponent>(points).GetComponent<DoorComponent>();
+                var tile = actor.MagiMap.GetTileAt<DoorComponent>(points);
+                var possibleDoor = tile.GetComponent<DoorComponent>();
                 if (possibleDoor?.IsOpen == true)
                 {
                     possibleDoor.Close();
-                    Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"{actor.Name} closed a {possibleDoor.Name}"));
+                    Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"{actor.Name} closed a {tile.Name}"));
                     actor.MagiMap.ForceFovCalculation();
                     return true;
                 }
