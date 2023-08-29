@@ -21,6 +21,7 @@ namespace MagusEngine.Systems
         public static List<ItemTemplate>? Items { get => history?.ImportantItems; }
         public static List<Ruleset>? Rules { get; private set; }
         public static string PlayerDeathReason { get; set; } = "undefined!";
+        public static Universe Universe { get; private set; }
 
         public static void PopulateValues(AccumulatedHistory h, WorldTile[,] tiles)
         {

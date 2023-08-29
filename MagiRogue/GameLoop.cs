@@ -3,7 +3,6 @@ using Arquimedes.Settings;
 using Arquimedes.Utils;
 using Diviner;
 using MagusEngine;
-using MagusEngine.Systems;
 using SadConsole;
 using System;
 using System.IO;
@@ -15,13 +14,11 @@ public static class GameLoop
     private static GlobalSettings settings;
     private static bool beginTest;
 
-    public static int GameWidth { get; private set; }
-    public static int GameHeight { get; private set; }
+    public static int GameWidth => settings.ScreenWidth;
+    public static int GameHeight => settings.ScreenHeight;
 
     // Managers
     public static UIManager UIManager { get; set; }
-
-    public static Universe Universe { get; set; }
 
     #region configuration
 
@@ -70,8 +67,7 @@ public static class GameLoop
 
         settings = JsonUtils.JsonDeseralize<GlobalSettings>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
             "Settings", "global_setting.json"));
-        GameHeight = settings.ScreenHeight;
-        GameWidth = settings.ScreenWidth;
+        Locator.AddService(settings);
     }
 
     private static void Init()
@@ -85,7 +81,7 @@ public static class GameLoop
         UIManager = (UIManager)GameHost.Instance.Screen!;
 
         // Now let the UIManager create its consoles so they can use the World data
-        UIManager.InitMainMenu(beginTest);
+        UIManager.InitMainMenu(GameHeight, GameWidth, beginTest);
     }
 
     #endregion configuration

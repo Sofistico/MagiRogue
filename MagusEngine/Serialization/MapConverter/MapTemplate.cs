@@ -314,7 +314,7 @@ namespace MagusEngine.Serialization.MapConverter
 
         public static implicit operator MapTemplate(Map map)
         {
-            if (map == null)
+            if (map is not null)
                 return null;
             BasicTile[] tiles = new BasicTile[map.Terrain.Count];
             for (int i = 0; i < map.Terrain.Count; i++)

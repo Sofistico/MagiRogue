@@ -174,8 +174,8 @@ namespace Diviner.Windows
         {
             if (!GameStarted && UIManager.NoPopWindow)
             {
-                UIManager.CharCreationScreen();
-            }
+                UIManager.CharCreationScreen(Width, Height);
+            }   
         }
 
         private void SaveGameClick(object? sender, EventArgs e)

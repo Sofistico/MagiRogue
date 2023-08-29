@@ -1,23 +1,21 @@
 ﻿using Diviner.Enums;
 using Diviner.Interfaces;
 using Diviner.Windows;
-using SadConsole;
-using SadConsole.Input;
-using System;
-using System.Collections.Generic;
-using Color = SadConsole.UI.AdjustableColor;
-using SadRogue.Primitives;
+using MagusEngine;
 using MagusEngine.Core.Entities;
 using MagusEngine.Systems;
+using SadConsole;
+using SadConsole.Input;
+using Color = SadConsole.UI.AdjustableColor;
 
 namespace Diviner
 {
-    // Creates/Holds/Destroys all consoles used in the game
-    // and makes consoles easily addressable from a central place.
+    // Creates/Holds/Destroys all consoles used in the game and makes consoles easily addressable
+    // from a central place.
     public sealed class UIManager : ScreenObject
     {
-        private readonly Dictionary<WindowTag, IWindowTagContract> windows
-            = new Dictionary<WindowTag, IWindowTagContract>();
+        private readonly Dictionary<WindowTag, IWindowTagContract> windows = new();
+        private Universe _universe;
 
         #region Managers
 
@@ -48,11 +46,11 @@ namespace Diviner
         }
 
         // Initiates the game by means of going to the menu first
-        public void InitMainMenu(bool beginOnTestMap = false)
+        public void InitMainMenu(int gameHeight, int gameWidth, bool beginOnTestMap = false)
         {
             SetUpCustomColors();
 
-            MainMenu = new MainMenuWindow(GameLoop.GameWidth, GameLoop.GameHeight)
+            MainMenu = new MainMenuWindow(gameHeight, gameWidth)
             {
                 IsFocused = true
             };
@@ -60,10 +58,10 @@ namespace Diviner
             MainMenu.Show();
             MainMenu.Position = new Point(0, 0);
             if (beginOnTestMap)
-                StartGame(Player.TestPlayer(), null, true);
+                StartGame(Player.TestPlayer(), gameHeight, gameWidth, null, true);
         }
 
-        public void StartGame(Player player, Universe? uni = null, bool testGame = false)
+        public void StartGame(Player player, int height, int width, Universe? uni = null, bool testGame = false)
         {
             IsFocused = true;
             MainMenu.GameStarted = true;
@@ -76,43 +74,43 @@ namespace Diviner
 
             if (uni is not null)
             {
-                GameLoop.Universe = uni;
-                if (GameLoop.GetCurrentMap().LastPlayerPosition == Point.None)
+                if (uni.CurrentMap.LastPlayerPosition == Point.None)
                     throw new Exception("The player position was invalid, an error occured!");
-                GameLoop.Universe.PlacePlayerOnLoad();
+                uni.PlacePlayerOnLoad();
             }
             else
             {
-                GameLoop.Universe = new Universe(player, testGame);
+                uni = new Universe(player, testGame);
             }
+            Locator.AddService(uni);
 
             //Message Log initialization
-            MessageLog = new MessageLogWindow(GameLoop.GameWidth - 2, GameLoop.GameHeight - 20, "Message Log")
+            MessageLog = new MessageLogWindow(width - 2, height - 20, "Message Log")
             {
-                Position = new Point(1, GameLoop.GameHeight - 10),
+                Position = new Point(1, height - 10),
             };
             MessageLog.Hide();
 #if DEBUG
             MessageLog.PrintMessage("Test message log works");
 #endif
             // Inventory initialization
-            InventoryScreen = new InventoryWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight / 2);
+            InventoryScreen = new InventoryWindow(width / 2, height / 2);
             Children.Add(InventoryScreen);
             InventoryScreen.Hide();
 
-            StatusWindow = new StatusWindow(GameLoop.GameWidth - 2, GameLoop.GameHeight - 27, "Status Window")
+            StatusWindow = new StatusWindow(width - 2, height - 27, "Status Window")
             {
-                Position = new Point(1, GameLoop.GameHeight - 12),
+                Position = new Point(1, height - 12),
             };
             StatusWindow.Show();
 
             // Build the Window
-            CreateMapWindow(GameLoop.GameWidth, GameLoop.GameHeight, "Game Map");
+            CreateMapWindow(width, height, "Game Map");
 
             // Then load the map into the MapConsole
-            MapWindow.LoadMap(GameLoop.GetCurrentMap());
+            MapWindow.LoadMap(uni.CurrentMap);
             // Start the game with the camera focused on the player
-            MapWindow.CenterOnActor(GameLoop.Universe.Player);
+            MapWindow.CenterOnActor(uni.Player);
 
             Children.Add(StatusWindow);
             Children.Add(MessageLog);
@@ -121,9 +119,9 @@ namespace Diviner
         /// <summary>
         /// The char creation screen, before the initialization of the game.
         /// </summary>
-        public void CharCreationScreen()
+        public void CharCreationScreen(int width, int height)
         {
-            CharCreationWindow ??= new CharacterCreationWindow(GameLoop.GameWidth, GameLoop.GameHeight);
+            CharCreationWindow ??= new CharacterCreationWindow(width, height);
             CharCreationWindow.Position = new Point(0, 0);
             CharCreationWindow.Show();
             Children.Add(CharCreationWindow);
@@ -138,18 +136,18 @@ namespace Diviner
         #region Input
 
         /// <summary>
-        /// Scans the SadConsole's Global KeyboardState and triggers behaviour
-        /// based on the button pressed.
+        /// Scans the SadConsole's Global KeyboardState and triggers behaviour based on the button pressed.
         /// </summary>
         /// <param name="info"></param>
         /// <returns></returns>
         public override bool ProcessKeyboard(Keyboard info)
         {
-            if (GameLoop.Universe != null && GameLoop.GetCurrentMap() != null
-                && (GameLoop.GetCurrentMap().ControlledEntitiy != null
-                || GameLoop.Universe.WorldMap.AssocietatedMap == GameLoop.GetCurrentMap()))
+            _universe ??= Locator.GetService<Universe>();
+            if (_universe.CurrentMap is not null
+                && (_universe.CurrentMap.ControlledEntitiy is not null
+                || _universe.WorldMap.AssocietatedMap.Equals(_universe.CurrentMap)))
             {
-                if (KeyboardHandle.HandleMapKeys(info, this, GameLoop.Universe))
+                if (KeyboardHandle.HandleMapKeys(info, this, _universe))
                 {
                     return true;
                 }
@@ -163,24 +161,13 @@ namespace Diviner
 
         #endregion Input
 
-        #region Update
-
-        //public override void OnFocusLost()
-        //{
-        //    base.OnFocusLost();
-        //}
-
-        #endregion Update
-
         #endregion Overrides
 
         #region HelperMethods
 
-        // Creates a window that encloses a map console
-        // of a specified height and width
-        // and displays a centered window title
-        // make sure it is added as a child of the UIManager
-        // so it is updated and drawn
+        // Creates a window that encloses a map console of a specified height and width and displays
+        // a centered window title make sure it is added as a child of the UIManager so it is
+        // updated and drawn
         public void CreateMapWindow(int width, int height, string title)
         {
             MapWindow = new MapWindow(width, height, title);
@@ -195,8 +182,8 @@ namespace Diviner
             MapWindow.Show();
         }
 
-        // Build a new coloured theme based on SC's default theme
-        // and then set it as the program's default theme.
+        // Build a new coloured theme based on SC's default theme and then set it as the program's
+        // default theme.
         private void SetUpCustomColors()
         {
             // Create a set of default colours that we will modify
@@ -214,8 +201,8 @@ namespace Diviner
             //CustomColors.ControlH = (backgroundColor * 1.3f).FillAlpha();
             //CustomColors.ControlBackDark = (backgroundColor * 0.7f).FillAlpha();
 
-            // Set a color for currently selected controls. This should always
-            // be different from the background colour.
+            // Set a color for currently selected controls. This should always be different from the
+            // background colour.
             CustomColors.ControlBackgroundSelected = new Color(CustomColors.GrayDark, "Grey");
 
             // Rebuild all objects' themes with the custom colours we picked above.

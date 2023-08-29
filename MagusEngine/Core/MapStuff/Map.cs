@@ -36,7 +36,7 @@ namespace MagusEngine.Core.MapStuff
         #region Fields
 
         private MagiEntity? _gameObjectControlled;
-        private Renderer _entityRender;
+        private EntityManager _entityManager;
         private bool _disposed;
         private Dictionary<Func<Actor, bool>, Actor[]> _lastCalledActors = new();
         private bool _needsToUpdateActorsDict;
@@ -84,7 +84,7 @@ namespace MagusEngine.Core.MapStuff
         public Dictionary<Direction, Map> MapZoneConnections { get; set; }
         public List<Room>? Rooms { get; set; }
 
-        public Renderer EntityRender { get => _entityRender; }
+        public EntityManager EntityRender { get => _entityManager; }
 
         #endregion Properties
 
@@ -110,7 +110,7 @@ namespace MagusEngine.Core.MapStuff
             GoRogueComponents.Add
                 (new MagiRogueFOVVisibilityHandler(this, Color.DarkSlateGray, (int)MapLayer.GHOSTS));
 
-            _entityRender = new Renderer();
+            _entityManager = new();
             MapName = mapName;
             MapZoneConnections = new();
 
@@ -275,12 +275,12 @@ namespace MagusEngine.Core.MapStuff
             {
                 RemoveEntity(entity);
 
-                _entityRender.Remove(entity);
+                _entityManager.Remove(entity);
 
                 // Link up the entity's Moved event to a new handler
                 entity.PositionChanged -= OnPositionChanged;
 
-                _entityRender.IsDirty = true;
+                _entityManager.IsDirty = true;
                 _needsToUpdateActorsDict = true;
             }
         }
@@ -313,7 +313,7 @@ namespace MagusEngine.Core.MapStuff
                 entity.PositionChanged += OnPositionChanged;
             }
 
-            _entityRender.Add(entity);
+            _entityManager.Add(entity);
 
             _needsToUpdateActorsDict = true;
         }
@@ -336,7 +336,7 @@ namespace MagusEngine.Core.MapStuff
                 FovCalculate(player);
                 LastPlayerPosition = player.Position;
             }
-            _entityRender.IsDirty = true;
+            _entityManager.IsDirty = true;
         }
 
         /// <summary>
@@ -404,17 +404,17 @@ namespace MagusEngine.Core.MapStuff
 
         public void ConfigureRender(ScreenSurface renderer)
         {
-            if (renderer.SadComponents.Contains(_entityRender))
+            if (renderer.SadComponents.Contains(_entityManager))
             {
                 return;
             }
-            _entityRender = new();
-            renderer.SadComponents.Add(_entityRender);
-            _entityRender.DoEntityUpdate = true;
+            _entityManager = new();
+            renderer.SadComponents.Add(_entityManager);
+            _entityManager.DoEntityUpdate = true;
 
             foreach (var spatialMap in Entities.GetLayersInMask(LayerMasker.MaskAllAbove((int)MapLayer.TERRAIN)))
             {
-                _entityRender.AddRange(spatialMap.Items.Cast<MagiEntity>());
+                _entityManager.AddRange(spatialMap.Items.Cast<MagiEntity>());
             }
             //_entityRender.AddRange(Entities.Items.Cast<MagiEntity>());
             renderer.IsDirty = true;
@@ -738,6 +738,32 @@ namespace MagusEngine.Core.MapStuff
 
         #endregion Methods
 
+        #region overrides
+
+        public override bool Equals(object? obj)
+        {
+            // Check if obj is null
+            if (obj == null)
+            {
+                return false;
+            }
+
+            // Check if obj is of the same type
+            if (obj.GetType() != GetType())
+            {
+                return false;
+            }
+
+            // Compare hash codes
+            return GetHashCode() == obj.GetHashCode();
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Seed, MapId);
+        }
+        #endregion overrides
+
         #region Dispose
 
         public void DestroyMap()
@@ -749,7 +775,7 @@ namespace MagusEngine.Core.MapStuff
             _lastCalledActors = null!;
             ControlledGameObjectChanged = null!;
             ControlledEntitiy = null!;
-            _entityRender = null!;
+            _entityManager = null!;
             GoRogueComponents.Clear();
             _disposed = true;
         }

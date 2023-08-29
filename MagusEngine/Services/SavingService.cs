@@ -311,7 +311,7 @@ namespace MagusEngine.Services
                 for (int y = 0; y < chunks.Length; y++)
                 {
                     var m = Array.Find(chunks[i].LocalMaps, i => i.MapId == id);
-                    if (m != null)
+                    if (m is not null)
                         return m;
                 }
             }
