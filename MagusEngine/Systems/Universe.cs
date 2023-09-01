@@ -307,10 +307,12 @@ namespace MagusEngine.Systems
 
                     turnNode = Time.NextNode();
                     if (tries++ > maxTries)
+                    {
+                        Locator.GetService<MessageBusService>()
+                            .SendMessage<MessageSent>(new("Something went really wrong with the processing of the AI"));
                         break;
+                    }
                 }
-                // events
-                //GameLoop.UIManager.MapWindow.MapConsole.IsDirty = true;
 #if DEBUG
                 // events
                 Locator.GetService<MessageBusService>()
