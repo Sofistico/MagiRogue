@@ -1,5 +1,6 @@
 ﻿using Arquimedes.Enumerators;
 using MagusEngine.Core.Civ;
+using MagusEngine.Core.MapStuff;
 using MagusEngine.Core.WorldStuff.History;
 using MagusEngine.ECS.Components.TilesComponents;
 using MagusEngine.Serialization.EntitySerialization;
@@ -21,7 +22,8 @@ namespace MagusEngine.Systems
         public static List<ItemTemplate>? Items { get => history?.ImportantItems; }
         public static List<Ruleset>? Rules { get; private set; }
         public static string PlayerDeathReason { get; set; } = "undefined!";
-        public static Universe Universe { get; private set; }
+        public static Universe? Universe { get; set; }
+        public static Map? CurrentMap { get; set; }
 
         public static void PopulateValues(AccumulatedHistory h, WorldTile[,] tiles)
         {

@@ -82,7 +82,7 @@ namespace Diviner
             {
                 uni = new Universe(player, testGame);
             }
-            Locator.AddService(uni);
+            Find.Universe = uni;
 
             //Message Log initialization
             MessageLog = new MessageLogWindow(width - 2, height - 20, "Message Log")

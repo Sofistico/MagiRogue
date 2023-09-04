@@ -181,8 +181,8 @@ namespace MagusEngine.Systems
             CurrentMap = mapToGo;
             previousMap.ControlledEntitiy = null!;
             // transform into event
-            GameLoop.UIManager.MapWindow.LoadMap(CurrentMap);
-            GameLoop.UIManager.MapWindow.CenterOnActor(Player);
+            Locator.GetService<MessageBusService>().SendMessage<LoadMapMessage>(new(CurrentMap));
+            Locator.GetService<MessageBusService>().SendMessage<ChangeCenteredActor>(new(Player));
         }
 
         private void UpdateIfNeedTheMap(Map mapToGo)

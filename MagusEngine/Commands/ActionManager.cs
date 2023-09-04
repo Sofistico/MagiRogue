@@ -253,7 +253,7 @@ namespace MagusEngine.Commands
 
             //foreach (Point item in direction)
             //{
-            //    if (GameLoop.GetCurrentMap().Terrain[item] is NodeTile node)
+            //    if (Find.CurrentMap.Terrain[item] is NodeTile node)
             //    {
             //        node.DrainNode(actor);
             //        return true;
@@ -267,13 +267,13 @@ namespace MagusEngine.Commands
 
         public static void ToggleFOV()
         {
-            if (GameLoop.GetCurrentMap().GoRogueComponents.GetFirstOrDefault<FOVHandler>().IsEnabled)
+            if (Find.CurrentMap!.GoRogueComponents.GetFirstOrDefault<FOVHandler>()!.IsEnabled!)
             {
-                GameLoop.GetCurrentMap().GoRogueComponents.GetFirstOrDefault<FOVHandler>()?.Disable(false);
+                Find.CurrentMap?.GoRogueComponents.GetFirstOrDefault<FOVHandler>()?.Disable(false);
             }
             else
             {
-                GameLoop.GetCurrentMap().GoRogueComponents.GetFirstOrDefault<FOVHandler>()?.Enable();
+                Find.CurrentMap?.GoRogueComponents.GetFirstOrDefault<FOVHandler>()?.Enable();
             }
         }
 
@@ -292,8 +292,7 @@ namespace MagusEngine.Commands
             GameLoop.World.Player = null;
             GameLoop.World.AllMaps.Clear();
             GameLoop.World.AllMaps = null;*/
-
-            GameLoop.Universe.WorldMap = new PlanetGenerator().CreatePlanet(500, 500);
+            Find.Universe.WorldMap = new PlanetGenerator().CreatePlanet(500, 500);
         }
 
         public static (bool, Actor) CreateTestEntity(Point pos, Universe universe)
@@ -381,16 +380,16 @@ namespace MagusEngine.Commands
         public static bool EnterDownMovement(Point playerPoint)
         {
             Furniture possibleStairs =
-                GameLoop.GetCurrentMap().GetEntityAt<Furniture>(playerPoint);
-            WorldTile? possibleWorldTileHere =
-                GameLoop.GetCurrentMap().GetTileAt<WorldTile>(playerPoint);
-            Map currentMap = GameLoop.GetCurrentMap();
+                Find.CurrentMap.GetEntityAt<Furniture>(playerPoint);
+            var possibleWorldTileHere =
+                Find.CurrentMap.GetTileAt<WorldTile>(playerPoint).GetComponent<WorldTile>();
+            Map currentMap = Find.CurrentMap;
             if (possibleStairs?.MapIdConnection.HasValue == true)
             {
                 Map map = Universe.GetMapById(possibleStairs.MapIdConnection.Value);
                 // TODO: For now it's just a test, need to work out a better way to do it.
-                GameLoop.Universe.ChangePlayerMap(map, map.GetRandomWalkableTile(), currentMap);
-                GameLoop.Universe.ZLevel -= map.ZAmount;
+                Find.Universe.ChangePlayerMap(map, map.GetRandomWalkableTile(), currentMap);
+                Find.Universe.ZLevel -= map.ZAmount;
 
                 return true;
             }
@@ -404,19 +403,19 @@ namespace MagusEngine.Commands
             {
                 possibleWorldTileHere.Visited = true;
 
-                RegionChunk chunk = GameLoop.Universe.GenerateChunck(playerPoint);
-                GameLoop.Universe.CurrentChunk = chunk;
-                GameLoop.Universe.ChangePlayerMap(chunk.LocalMaps[0],
+                RegionChunk chunk = Find.Universe.GenerateChunck(playerPoint);
+                Find.Universe.CurrentChunk = chunk;
+                Find.Universe.ChangePlayerMap(chunk.LocalMaps[0],
                     chunk.LocalMaps[0].GetRandomWalkableTile(), currentMap);
                 return true;
             }
             else if (possibleWorldTileHere?.Visited == true)
             {
-                RegionChunk chunk = GameLoop.Universe.GetChunckByPos(playerPoint);
-                GameLoop.Universe.CurrentChunk = chunk;
+                RegionChunk chunk = Find.Universe.GetChunckByPos(playerPoint);
+                Find.Universe.CurrentChunk = chunk;
                 // if entering the map again, set to update
                 chunk.SetMapsToUpdate();
-                GameLoop.Universe.ChangePlayerMap(chunk.LocalMaps[0],
+                Find.Universe.ChangePlayerMap(chunk.LocalMaps[0],
                     chunk.LocalMaps[0].LastPlayerPosition, currentMap);
 
                 return true;
@@ -430,39 +429,39 @@ namespace MagusEngine.Commands
 
         public static bool EnterUpMovement(Point playerPoint)
         {
-            bool possibleChangeMap = GameLoop.Universe.PossibleChangeMap;
+            bool possibleChangeMap = Find.Universe.PossibleChangeMap;
             Furniture possibleStairs =
-                GameLoop.GetCurrentMap().GetEntityAt<Furniture>(playerPoint);
-            Map currentMap = GameLoop.GetCurrentMap();
+                Find.CurrentMap.GetEntityAt<Furniture>(playerPoint);
+            Map currentMap = Find.CurrentMap;
 
             if (possibleChangeMap)
             {
-                if (possibleStairs is not null && !GameLoop.Universe.MapIsWorld()
-                    && possibleStairs?.MapIdConnection)
+                if (possibleStairs is not null && !Find.Universe.MapIsWorld()
+                    && possibleStairs.MapIdConnection is not null)
                 {
                     Map map = Universe.GetMapById(possibleStairs.MapIdConnection.Value);
                     // TODO: For now it's just a test, need to work out a better way to do it.
-                    GameLoop.Universe.ChangePlayerMap(map, map.GetRandomWalkableTile(), currentMap);
-                    GameLoop.Universe.ZLevel += map.ZAmount;
+                    Find.Universe.ChangePlayerMap(map, map.GetRandomWalkableTile(), currentMap);
+                    Find.Universe.ZLevel += map.ZAmount;
 
                     return true;
                 }
-                else if (!GameLoop.Universe.MapIsWorld())
+                else if (!Find.Universe.MapIsWorld())
                 {
-                    Map map = GameLoop.Universe.WorldMap.AssocietatedMap;
-                    Point playerLastPos = GameLoop.Universe.WorldMap.AssocietatedMap.LastPlayerPosition;
-                    GameLoop.Universe.ChangePlayerMap(map, playerLastPos, currentMap);
-                    GameLoop.Universe.SaveAndLoad.SaveChunkInPos(GameLoop.Universe.CurrentChunk,
-                        GameLoop.Universe.CurrentChunk.ToIndex(map.Width));
-                    GameLoop.Universe.CurrentChunk = null!;
+                    Map map = Find.Universe.WorldMap.AssocietatedMap;
+                    Point playerLastPos = Find.Universe.WorldMap.AssocietatedMap.LastPlayerPosition;
+                    Find.Universe.ChangePlayerMap(map, playerLastPos, currentMap);
+                    Locator.GetService<SavingService>().SaveChunkInPos(Find.Universe.CurrentChunk,
+                        Find.Universe.CurrentChunk.ToIndex(map.Width));
+                    Find.Universe.CurrentChunk = null!;
                     return true;
                 }
-                else if (GameLoop.Universe.MapIsWorld())
+                else if (Find.Universe.MapIsWorld())
                 {
                     Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("Can't go to the overworld since you are there!"));
                     return false;
                 }
-                else if (possibleStairs is null && !GameLoop.Universe.MapIsWorld())
+                else if (possibleStairs is null && !Find.Universe.MapIsWorld())
                 {
                     Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("Can't go up here!"));
                     return false;
