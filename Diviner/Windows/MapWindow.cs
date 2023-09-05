@@ -1,6 +1,6 @@
-﻿using MagiRogue.GameSys;
-using MagusEngine.Core.Entities;
+﻿using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
+using MagusEngine.Core.MapStuff;
 using SadConsole;
 using SadRogue.Primitives;
 using Console = SadConsole.Console;
@@ -20,7 +20,7 @@ namespace Diviner.Windows
             UseMouse = false;
         }
 
-        //
+
         /// <summary>
         /// centers the viewport camera on an Actor
         /// </summary>
@@ -44,9 +44,8 @@ namespace Diviner.Windows
             MapConsole = new Console(Width, Height);
         }
 
-        // Adds the entire list of entities found in the
-        // World.CurrentMap's Entities SpatialMap to the
-        // MapConsole, so they can be seen onscreen
+        // Adds the entire list of entities found in the World.CurrentMap's Entities SpatialMap to
+        // the MapConsole, so they can be seen onscreen
         private void SyncMapEntities(Map map)
         {
             // remove all Entities from the console first
@@ -74,7 +73,7 @@ namespace Diviner.Windows
             // First load the map's tiles into the console
             MapConsole = new Console(map.Width,
                 map.Height, map.Width,
-                map.Height, map.Tiles)
+                map.Height, map.GetTilesAppearence())
             {
                 //reposition the MapConsole so it doesnt overlap with the left/top window edges
                 Position = new Point(1, 1),

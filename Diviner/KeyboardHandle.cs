@@ -475,13 +475,7 @@ namespace Diviner
 
 #endif
 
-        private static bool CurrentMapIsPlanetView(Universe world)
-        {
-            if (world.WorldMap != null
-                && world.WorldMap.AssocietatedMap == world.CurrentMap && world.Player == null)
-                return true;
-            else
-                return false;
-        }
+        private static bool CurrentMapIsPlanetView(Universe world) =>
+            world.WorldMap != null && world.WorldMap.AssocietatedMap == world.CurrentMap && world.Player == null;
     }
 }

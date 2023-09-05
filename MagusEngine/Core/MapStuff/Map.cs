@@ -40,6 +40,7 @@ namespace MagusEngine.Core.MapStuff
         private bool _disposed;
         private Dictionary<Func<Actor, bool>, Actor[]> _lastCalledActors = new();
         private bool _needsToUpdateActorsDict;
+        private Lazy<Tile[]> lazyTiles;
 
         private readonly Dictionary<uint, IGameObject> _idMap;
         private readonly EntityRegistry _registry = new(500);
@@ -736,6 +737,27 @@ namespace MagusEngine.Core.MapStuff
                 _idMap[e.Item.ID] = e.Item;
         }
 
+        public ColoredGlyph[]? GetTilesAppearence()
+        {
+            if (!lazyTiles.IsValueCreated)
+            {
+                var glyphs = new ColoredGlyph[Terrain.Count];
+                lazyTiles = new Lazy<Tile[]>(new Tile[Terrain.Count]);
+                for (int i = 0; i < Terrain.Count; i++)
+                {
+                    if (Terrain[i] is not Tile tile)
+                        continue;
+                    lazyTiles.Value[i] = tile;
+                    glyphs[i] = tile.Appearence;
+                }
+                return glyphs;
+            }
+            else
+            {
+                return Array.ConvertAll(lazyTiles.Value, i => i.Appearence);
+            }
+        }
+
         #endregion Methods
 
         #region overrides
@@ -762,6 +784,7 @@ namespace MagusEngine.Core.MapStuff
         {
             return HashCode.Combine(Seed, MapId);
         }
+
         #endregion overrides
 
         #region Dispose
