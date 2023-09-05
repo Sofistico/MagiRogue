@@ -144,7 +144,7 @@ namespace MagusEngine.Commands
             {
                 return AffectTarget();
             }
-            Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("The target is too far!"));
+            Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("The target is too far!"));
             return (false, null);
         }
 
@@ -163,7 +163,7 @@ namespace MagusEngine.Commands
             {
                 casted = false;
                 Locator.GetService<MessageBusService>()
-                    .SendMessage<MessageSent>(new("An error ocurred, cound't find a target!"));
+                    .SendMessage<AddMessageLog>(new("An error ocurred, cound't find a target!"));
             }
             var spellCasted = SpellSelected;
             EndTargetting();

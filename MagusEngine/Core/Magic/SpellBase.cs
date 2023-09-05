@@ -194,7 +194,7 @@ namespace MagusEngine.Core.Magic
             {
                 MagiEntity entity = GameLoop.GetCurrentMap().GetEntityAt<MagiEntity>(target);
 
-                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"{caster.Name} casted {SpellName}"));
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{caster.Name} casted {SpellName}"));
 
                 foreach (ISpellEffect effect in Effects)
                 {
@@ -211,7 +211,7 @@ namespace MagusEngine.Core.Magic
                 return true;
             }
 
-            Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new(errorMessage));
+            Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(errorMessage));
             errorMessage = "Can't cast the spell";
 
             return false;
@@ -227,7 +227,7 @@ namespace MagusEngine.Core.Magic
         {
             if (CanCast(caster.Magic, caster) && target.Count > 0)
             {
-                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"{caster.Name} casted {SpellName}"));
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{caster.Name} casted {SpellName}"));
 
                 foreach (var pos in target)
                 {
@@ -246,7 +246,7 @@ namespace MagusEngine.Core.Magic
             }
             errorMessage = "Can't cast the spell, there must be an entity to target";
             Locator.GetService<MessageBusService>()
-                .SendMessage<MessageSent>(new(errorMessage));
+                .SendMessage<AddMessageLog>(new(errorMessage));
             errorMessage = "Can't cast the spell";
 
             return false;

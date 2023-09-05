@@ -86,14 +86,14 @@ namespace MagusEngine.Utils
                     }
 
                     Locator.GetService<MessageBusService>()
-                        .SendMessage<MessageSent>(new(woundString.ToString()));
+                        .SendMessage<AddMessageLog>(new(woundString.ToString()));
                     return;
                 }
                 else
                 {
                     // no wound was received! either the armor or the tissue absorbed all damage.
                     Locator.GetService<MessageBusService>()
-                        .SendMessage<MessageSent>(new($"The attack glances {entity.Name}!"));
+                        .SendMessage<AddMessageLog>(new($"The attack glances {entity.Name}!"));
                     return;
                 }
             }
@@ -126,7 +126,7 @@ namespace MagusEngine.Utils
             else
             {
                 Locator.GetService<MessageBusService>()
-                    .SendMessage<MessageSent>(new($"{defender.Name} received no damage!", true));
+                    .SendMessage<AddMessageLog>(new($"{defender.Name} received no damage!", true));
             }
         }
 
@@ -259,7 +259,7 @@ namespace MagusEngine.Utils
                 {
                     stats.Body.Stamina = stats.Body.MaxStamina;
 
-                    Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("You feel your inner fire full"));
+                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("You feel your inner fire full"));
                 }
             }
 
@@ -270,41 +270,41 @@ namespace MagusEngine.Utils
             switch (healingType)
             {
                 case DamageTypes.None:
-                    Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new(bobTheBuilder.Append(", feeling your bones and skin growing over your wounds!").ToString()));
+                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(bobTheBuilder.Append(", feeling your bones and skin growing over your wounds!").ToString()));
                     break;
 
                 case DamageTypes.Force:
-                    Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new(bobTheBuilder.Append(", filling your movements with a spring!").ToString()));
+                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(bobTheBuilder.Append(", filling your movements with a spring!").ToString()));
                     break;
 
                 case DamageTypes.Fire:
-                    Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new(bobTheBuilder.Append(", firing your will!").ToString()));
+                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(bobTheBuilder.Append(", firing your will!").ToString()));
                     break;
 
                 case DamageTypes.Cold:
 
-                    Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new(bobTheBuilder.Append(", leaving you lethargic.").ToString()));
+                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(bobTheBuilder.Append(", leaving you lethargic.").ToString()));
                     break;
 
                 case DamageTypes.Poison:
-                    Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new(bobTheBuilder.Append(", ouch it hurt!").ToString()));
+                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(bobTheBuilder.Append(", ouch it hurt!").ToString()));
                     break;
 
                 case DamageTypes.Acid:
                     stats.Body.Stamina -= dmg;
-                    Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new(bobTheBuilder.Append(", dealing equal damage to yourself, shouldn't have done that.").ToString()));
+                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(bobTheBuilder.Append(", dealing equal damage to yourself, shouldn't have done that.").ToString()));
                     break;
 
                 case DamageTypes.Shock:
-                    Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new(bobTheBuilder.Append(", felling yourself speeding up!").ToString()));
+                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(bobTheBuilder.Append(", felling yourself speeding up!").ToString()));
                     break;
 
                 case DamageTypes.Soul:
-                    Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new(bobTheBuilder.Append(", feeling your soul at rest.").ToString()));
+                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(bobTheBuilder.Append(", feeling your soul at rest.").ToString()));
                     break;
 
                 case DamageTypes.Mind:
-                    Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new(bobTheBuilder.Append(", feeling your mind at ease.").ToString()));
+                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(bobTheBuilder.Append(", feeling your mind at ease.").ToString()));
                     break;
 
                 default:
@@ -328,7 +328,7 @@ namespace MagusEngine.Utils
             }
             else
             {
-                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"{poorGuy.Name} resisted the effects of {spellCasted.SpellName}"));
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{poorGuy.Name} resisted the effects of {spellCasted.SpellName}"));
             }
         }
 
@@ -351,7 +351,7 @@ namespace MagusEngine.Utils
                 }
                 else
                 {
-                    Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"{caster.Name} missed {poorGuy.Name}!"));
+                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{caster.Name} missed {poorGuy.Name}!"));
                 }
             }
         }
@@ -495,11 +495,11 @@ namespace MagusEngine.Utils
 
             if (defender is Player)
             {
-                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($" {defender.Name} was killed."));
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($" {defender.Name} was killed."));
             }
 
             // Now show the deathMessage in the messagelog
-            Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new(deathMessage.ToString()));
+            Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(deathMessage.ToString()));
         }
 
         #endregion Death Resolve

@@ -309,14 +309,14 @@ namespace MagusEngine.Systems
                     if (tries++ > maxTries)
                     {
                         Locator.GetService<MessageBusService>()
-                            .SendMessage<MessageSent>(new("Something went really wrong with the processing of the AI"));
+                            .SendMessage<AddMessageLog>(new("Something went really wrong with the processing of the AI"));
                         break;
                     }
                 }
 #if DEBUG
                 // events
                 Locator.GetService<MessageBusService>()
-                    .SendMessage<MessageSent>(new($"Turns: {Time.Turns}, Tick: {Time.TimePassed.Ticks}"));
+                    .SendMessage<AddMessageLog>(new($"Turns: {Time.Turns}, Tick: {Time.TimePassed.Ticks}"));
 #endif
                 // makes sure that any entity that exists but has no AI, or the AI failed, get's a turn.
                 var ids = GetEntitiesIds();

@@ -472,7 +472,7 @@ namespace MagusEngine.Core.Entities.Base
             dismemberMessage.Append(actor.Name).Append(" lost ").Append(limb.BodyPartName);
             try
             {
-                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new(dismemberMessage.ToString()));
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(dismemberMessage.ToString()));
 
                 //if (totalDmg > 0)
                 //    GameLoop.AddMessageLog($"and took {totalDmg} damage!");

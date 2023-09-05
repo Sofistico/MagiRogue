@@ -123,24 +123,24 @@ namespace MagusEngine.Core.Entities
 
             if (EquipType == EquipType.None)
             {
-                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("This item can't be equiped!"));
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("This item can't be equiped!"));
                 return false;
             }
 
             if (!actor.GetEquipment().TryAdd(actor.GetAnatomy().Limbs.Find
                 (l => l.LimbType.ToString() == EquipType.ToString()).Id, this))
             {
-                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"{actor.Name} has already an item equiped in addHere!"));
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{actor.Name} has already an item equiped in addHere!"));
                 return false;
             }
 
             if (EquipType == EquipType.Hand)
             {
-                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"{actor.Name} wields {Name}"));
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{actor.Name} wields {Name}"));
             }
             else
             {
-                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"{actor.Name} equipped {Name} in {EquipType}"));
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{actor.Name} equipped {Name} in {EquipType}"));
             }
 
             return true;

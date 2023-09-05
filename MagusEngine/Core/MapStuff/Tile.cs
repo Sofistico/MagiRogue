@@ -1,5 +1,6 @@
 ﻿using Arquimedes.Enumerators;
 using GoRogue.GameFramework;
+using MagusEngine.ECS.Components;
 using SadConsole;
 using SadRogue.Primitives;
 using System;
@@ -29,6 +30,21 @@ namespace MagusEngine.Core
                 isTransparent,
                 Locator.GetService<IDGenerator>().UseID);
             Position = pos;
+        }
+
+        public Tile(Color foreground,
+            Color background,
+            char glyph,
+            bool isWalkable,
+            bool isTransparent,
+            Point pos,
+            string? name,
+            string idMaterial,
+            int moveTimeCost = 100) : this(foreground, background, glyph, isWalkable, isTransparent, pos)
+        {
+            MoveTimeCost = moveTimeCost;
+            Name = name;
+            AddComponent<MaterialComponent>(new(idMaterial));
         }
 
         public T? GetComponent<T>() where T : class => GoRogueComponents.GetFirst<T>();

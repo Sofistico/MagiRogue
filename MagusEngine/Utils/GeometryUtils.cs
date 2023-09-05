@@ -34,7 +34,7 @@ namespace MagusEngine.Utils
 
             points = coneFov.CurrentFOV.ToArray();
 #if DEBUG
-            Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new(angle.ToString()));
+            Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(angle.ToString()));
 #endif
             return new Shape(points);
         }

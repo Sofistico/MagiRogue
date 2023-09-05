@@ -155,7 +155,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.Ai
                         timeTakenAction = ActionManager.Wander(actor);
 #if DEBUG
                         Locator.GetService<MessageBusService>()
-                            .SendMessage<MessageSent>(new($"{actor.Name} wanders", true));
+                            .SendMessage<AddMessageLog>(new($"{actor.Name} wanders", true));
 #endif
                         need?.Fulfill();
                         break;

@@ -1,29 +1,28 @@
-﻿using MagiRogue.Components;
-using MagiRogue.Components.Ai;
-using MagiRogue.Data.Enumerators;
-using MagiRogue.Data.Serialization.MapSerialization;
-using MagiRogue.GameSys.Tiles;
+﻿using Arquimedes.Enumerators;
 using Diviner.Enums;
 using Diviner.Windows;
+using MagusEngine;
+using MagusEngine.Bus.UiBus;
+using MagusEngine.Commands;
+using MagusEngine.Core;
+using MagusEngine.Core.Entities;
+using MagusEngine.Core.MapStuff;
+using MagusEngine.ECS.Components.ActorComponents;
+using MagusEngine.ECS.Components.ActorComponents.Ai;
+using MagusEngine.Serialization.MapConverter;
+using MagusEngine.Services;
+using MagusEngine.Systems;
+using MagusEngine.Systems.Time;
+using MagusEngine.Utils.Extensions;
 using Newtonsoft.Json;
 using SadConsole.Input;
 using SadRogue.Primitives;
-using System.Collections.Generic;
-using System.Linq;
-using MagusEngine.Commands;
-using MagusEngine.Utils.Extensions;
-using MagusEngine.ECS.Components;
-using MagusEngine.Core.Entities;
-using MagusEngine.ECS.Components.ActorComponents;
-using MagusEngine.Core;
-using MagusEngine.Systems.Time;
-using MagusEngine.Core.MapStuff;
 
 namespace Diviner
 {
     public static class KeyboardHandle
     {
-        private static Player GetPlayer => GameLoop.Universe.Player;
+        private static Player GetPlayer => Find.Universe.Player;
 
         private static Target targetCursor;
 
@@ -67,7 +66,7 @@ namespace Diviner
 
             if (CurrentMapIsPlanetView(world))
             {
-                var console = GameLoop.UIManager.MapWindow.MapConsole;
+                var console = UIManager.MapWindow.MapConsole;
 
                 if (info.IsKeyDown(Keys.Left))
                 {
@@ -109,8 +108,8 @@ namespace Diviner
 
                         int distance = HandleTargetActionAndReturnDistance(world, coorToMove);
 
-                        // If there is a need to roll back,
-                        // the code here was taking the CurrentFov and Contains(pos + posMove)
+                        // If there is a need to roll back, the code here was taking the CurrentFov
+                        // and Contains(pos + posMove)
                         if (world.CurrentMap.PlayerExplored
                             [world.CurrentMap.ControlledEntitiy.Position + coorToMove]
                             && distance <= targetCursor.MaxDistance)
@@ -344,8 +343,14 @@ namespace Diviner
                     {
                         foreach (Point point in room.RoomPoints)
                         {
-                            world.CurrentMap.SetTerrain(new TileFloor("Test Room Tile", point,
-                                "stone", '$', Color.ForestGreen, Color.FloralWhite));
+                            world.CurrentMap.SetTerrain(new Tile(Color.ForestGreen,
+                                Color.FloralWhite,
+                                '$',
+                                true,
+                                true,
+                                point,
+                                "Test Room Tile",
+                                "stone"));
                         }
                     }
                 }
@@ -378,7 +383,8 @@ namespace Diviner
             {
                 Actor actor = (Actor)targetCursor.TargetEntity();
                 actor.AddComponent(new MoveAndAttackAI(actor.GetViewRadius()));
-                GameLoop.AddMessageLog($"Added attack component to {actor.Name}!");
+                Locator.GetService<MessageBusService>()
+                    .SendMessage<AddMessageLog>(new($"Added attack component to {actor.Name}!"));
                 return false;
             }
 
@@ -387,24 +393,25 @@ namespace Diviner
                 && info.IsKeyPressed(Keys.P)
                 && targetCursor.EntityInTarget())
             {
-                Actor actor = (Actor)targetCursor.TargetEntity();
-                actor.AddComponent(new NeedDrivenAi());
-                GameLoop.AddMessageLog($"Added need component to {actor.Name}!");
+                Actor? actor = (Actor?)targetCursor.TargetEntity();
+                actor?.AddComponent(new NeedDrivenAi());
+                Locator.GetService<MessageBusService>()
+                    .SendMessage<AddMessageLog>(new($"Added need component to {actor.Name}!"));
                 return false;
             }
 
-            if (info.IsKeyPressed(Keys.T))
-            {
-                foreach (NodeTile node in world.CurrentMap.Tiles.OfType<NodeTile>())
-                {
-                    if (node.TrueAppearence.Matches(node))
-                    {
-                        break;
-                    }
-                    node.RestoreOriginalAppearence();
-                }
-                return false;
-            }
+            //if (info.IsKeyPressed(Keys.T))
+            //{
+            //    foreach (NodeTile node in world.CurrentMap.Tiles.OfType<NodeTile>())
+            //    {
+            //        if (node.TrueAppearence.Matches(node))
+            //        {
+            //            break;
+            //        }
+            //        node.RestoreOriginalAppearence();
+            //    }
+            //    return false;
+            //}
 
             if (info.IsKeyPressed(Keys.Tab))
             {
@@ -418,11 +425,11 @@ namespace Diviner
                     // the map is being saved, but it isn't being properly deserialized
                     Map map = (Map)GetPlayer.CurrentMap;
                     map.LastPlayerPosition = GetPlayer.Position;
-                    if (GameLoop.Universe.MapIsWorld(map))
+                    if (Find.Universe.MapIsWorld(map))
                     {
-                        string json = JsonConvert.SerializeObject(GameLoop.Universe.WorldMap);
+                        string json = JsonConvert.SerializeObject(Find.Universe.WorldMap);
 
-                        GameLoop.Universe.SaveAndLoad.SaveJsonToSaveFolder(json);
+                        Locator.GetService<SavingService>().SaveJsonToSaveFolder(json);
                     }
                     else
                     {
@@ -443,7 +450,7 @@ namespace Diviner
 
             if (info.IsKeyPressed(Keys.OemMinus))
             {
-                GameLoop.Universe.SaveAndLoad.SaveGameToFolder(GameLoop.Universe, "TestFile");
+                Locator.GetService<SavingService>().SaveGameToFolder(Find.Universe, "TestFile");
                 return false;
             }
 
@@ -458,7 +465,8 @@ namespace Diviner
                         ? need.MaxTurnCounter.Value - 1
                         : (int)((need.Priority + 1) * 1000);
                 }
-                GameLoop.AddMessageLog($"{target.Name} is stuck with strange needs!");
+                Locator.GetService<MessageBusService>()
+                    .SendMessage<AddMessageLog>(new($"{target.Name} is stuck with strange needs!"));
                 return false;
             }
 

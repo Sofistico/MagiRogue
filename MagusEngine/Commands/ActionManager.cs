@@ -75,7 +75,7 @@ namespace MagusEngine.Commands
             if (attacker.Body.Stamina <= 0)
             {
                 Locator.GetService<MessageBusService>()
-                    .SendMessage<MessageSent>(new($"{attacker.Name} is far too tired to attack!", true));
+                    .SendMessage<AddMessageLog>(new($"{attacker.Name} is far too tired to attack!", true));
                 return TimeHelper.Wait;
             }
 
@@ -95,9 +95,9 @@ namespace MagusEngine.Commands
                 itemUsed);
 
             // Display the outcome of the attack & defense
-            Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new(attackMessage.ToString(), false));
+            Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(attackMessage.ToString(), false));
             if (!string.IsNullOrWhiteSpace(defenseMessage.ToString()))
-                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new(defenseMessage.ToString(), false));
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(defenseMessage.ToString(), false));
 
             // The defender now takes damage
             CombatUtils.ResolveDamage(defender,
@@ -169,13 +169,13 @@ namespace MagusEngine.Commands
             if (item != null)
             {
                 actor.Inventory.Add(item);
-                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"{actor.Name} picked up {item.Name}"));
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{actor.Name} picked up {item.Name}"));
                 item.RemoveFromMap();
                 return true;
             }
             else
             {
-                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("There are no itens here"));
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("There are no itens here"));
                 return false;
             }
         }
@@ -193,14 +193,14 @@ namespace MagusEngine.Commands
             // Handle a locked door
             if (door.Locked)
             {
-                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("The door is locked!"));
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("The door is locked!"));
             }
 
             // Handled an unlocked door that is closed
             else if (!door.Locked && !door.IsOpen)
             {
                 door.Open();
-                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"{actor.Name} opened a {doorName}"));
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{actor.Name} opened a {doorName}"));
                 actor.MagiMap.ForceFovCalculation();
                 return true;
             }
@@ -221,7 +221,7 @@ namespace MagusEngine.Commands
                 if (possibleDoor?.IsOpen == true)
                 {
                     possibleDoor.Close();
-                    Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"{actor.Name} closed a {tile.Name}"));
+                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{actor.Name} closed a {tile.Name}"));
                     actor.MagiMap.ForceFovCalculation();
                     return true;
                 }
@@ -233,7 +233,7 @@ namespace MagusEngine.Commands
         {
             if (inv.Inventory.Count == 0)
             {
-                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("There is no item to drop in your inventory"));
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("There is no item to drop in your inventory"));
                 return false;
             }
             else
@@ -242,7 +242,7 @@ namespace MagusEngine.Commands
                 inv.Inventory.Remove(item);
                 item.Position = inv.Position;
                 inv.MagiMap.AddMagiEntity(item);
-                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"{inv.Name} dropped {item.Name}"));
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{inv.Name} dropped {item.Name}"));
                 return true;
             }
         }
@@ -259,7 +259,7 @@ namespace MagusEngine.Commands
             //        return true;
             //    }
             //}
-            Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("No node here to drain"));
+            Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("No node here to drain"));
             return false;
         }
 
@@ -343,12 +343,12 @@ namespace MagusEngine.Commands
 
                 bool sus = WaitForNTurns((int)totalTurnsWait, actor);
 
-                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"You have rested for {totalTurnsWait} turns"));
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"You have rested for {totalTurnsWait} turns"));
 
                 return sus;
             }
 
-            Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("You have no need to rest"));
+            Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("You have no need to rest"));
 
             return false;
         }
@@ -395,7 +395,7 @@ namespace MagusEngine.Commands
             }
             else if (possibleStairs is null && possibleWorldTileHere is null)
             {
-                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("There is no way to go down from here!"));
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("There is no way to go down from here!"));
                 return false;
             }
 
@@ -422,7 +422,7 @@ namespace MagusEngine.Commands
             }
             else
             {
-                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("There is nowhere to go!"));
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("There is nowhere to go!"));
                 return false;
             }
         }
@@ -458,23 +458,23 @@ namespace MagusEngine.Commands
                 }
                 else if (Find.Universe.MapIsWorld())
                 {
-                    Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("Can't go to the overworld since you are there!"));
+                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("Can't go to the overworld since you are there!"));
                     return false;
                 }
                 else if (possibleStairs is null && !Find.Universe.MapIsWorld())
                 {
-                    Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("Can't go up here!"));
+                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("Can't go up here!"));
                     return false;
                 }
                 else
                 {
-                    Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("Can't exit the map!"));
+                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("Can't exit the map!"));
                     return false;
                 }
             }
             else
             {
-                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("You can't change the map right now!"));
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("You can't change the map right now!"));
                 return false;
             }
         }
@@ -511,7 +511,7 @@ namespace MagusEngine.Commands
                     Actor possibleActor = actor.MagiMap.GetEntityAt<Actor>(p);
                     if (possibleActor?.Equals(actor) == false && canBeInterrupted)
                     {
-                        Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new("There is an enemy in view, stop resting!"));
+                        Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("There is an enemy in view, stop resting!"));
                         return false;
                     }
                 }
@@ -577,7 +577,7 @@ namespace MagusEngine.Commands
             {
                 if (needSatisfied != null)
                     needSatisfied?.Fulfill();
-                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"The {actor.Name} drank {material.Name}"));
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"The {actor.Name} drank {material.Name}"));
                 return TimeHelper.Interact;
             }
             return 0;
@@ -592,14 +592,14 @@ namespace MagusEngine.Commands
                 if (need is not null)
                     need?.Fulfill();
                 item.Condition -= 100;
-                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"The {actor.Name} ate {item.Name}"));
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"The {actor.Name} ate {item.Name}"));
             }
             if (whatToEat is Plant plant)
             {
                 if (need is not null)
                     need?.Fulfill();
                 plant.RemoveThisFromMap();
-                Locator.GetService<MessageBusService>().SendMessage<MessageSent>(new($"The {actor.Name} ate {plant.Name}"));
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"The {actor.Name} ate {plant.Name}"));
             }
             return TimeHelper.Interact;
         }
