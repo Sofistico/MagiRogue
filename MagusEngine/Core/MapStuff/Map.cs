@@ -228,7 +228,8 @@ namespace MagusEngine.Core.MapStuff
         public Tile GetClosestWaterTile(int range, Point position)
         {
             var waters = GetAllTilesWithComponents<WaterTile>();
-            return position.GetClosest<WaterTile>(range, waters, null);
+
+            return position.GetClosest<Tile>(range, waters, null);
         }
 
         public Actor[] GetAllActors(Func<Actor, bool>? actionToRunInActors = null)

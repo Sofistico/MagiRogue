@@ -13,14 +13,13 @@ namespace Diviner.Windows
 {
     public class MainMenuWindow : MagiBaseWindow
     {
-        public bool GameStarted { get; set; }
-
         private readonly MagiButton startGame;
         private readonly MagiButton testMap;
         private readonly MagiButton continueGame; // this doesn't work
         private readonly MagiButton saveGame; // neither does this
         private ListBox? savesBox;
         private PopWindow? loadPop;
+        public bool GameStarted { get; set; }
 
         public MainMenuWindow(int width, int height, string title = "Main Menu") : base(width, height, title)
         {
