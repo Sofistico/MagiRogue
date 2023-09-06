@@ -1,5 +1,8 @@
 ﻿using Arquimedes.Utils;
 using Diviner.Controls;
+using MagusEngine;
+using MagusEngine.Bus;
+using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
 using MagusEngine.Services;
 using MagusEngine.Systems;
@@ -58,10 +61,11 @@ namespace Diviner.Windows
 
         private void ContinueGame_Click(object? sender, EventArgs e)
         {
-            if (GameStarted && GameLoop.UIManager.NoPopWindow)
+            if (GameStarted && Find.UIManager.NoPopWindow)
             {
                 Hide();
-                GameLoop.UIManager.IsFocused = true;
+                Locator.GetService<MessageBusService>().SendMessage<FocusUiManagerMessage>();
+                //GameLoop.UIManager.IsFocused = true;
             }
             else
             {
@@ -118,14 +122,12 @@ namespace Diviner.Windows
 
         private void LoadGame_Click(object? sender, EventArgs e)
         {
-            if (savesBox.SelectedItem != null)
+            if (savesBox?.SelectedItem != null
+                && SavingService.CheckIfStringIsValidSave(savesBox.SelectedItem.ToString()))
             {
-                if (SavingService.CheckIfStringIsValidSave(savesBox.SelectedItem.ToString()))
-                {
-                    loadPop.Hide();
-                    Universe uni = SavingService.LoadGame(savesBox.SelectedItem.ToString());
-                    GameLoop.UIManager.StartGame(uni.Player, uni: uni);
-                }
+                loadPop.Hide();
+                Universe uni = SavingService.LoadGame(savesBox.SelectedItem.ToString());
+                Locator.GetService<MessageBusService>().SendMessage<StartGameMessage>(new(uni.Player, uni));
             }
         }
 
@@ -146,7 +148,8 @@ namespace Diviner.Windows
         {
             if (!GameStarted && UIManager.NoPopWindow)
             {
-                UIManager.StartGame(Player.TestPlayer(), testGame: true);
+                Locator.GetService<MessageBusService>()
+                    .SendMessage<StartGameMessage>(new(Player.TestPlayer()) { TestGame = true });
                 GameStarted = true;
             }
             else
@@ -175,7 +178,7 @@ namespace Diviner.Windows
             if (!GameStarted && UIManager.NoPopWindow)
             {
                 UIManager.CharCreationScreen(Width, Height);
-            }   
+            }
         }
 
         private void SaveGameClick(object? sender, EventArgs e)
@@ -183,7 +186,7 @@ namespace Diviner.Windows
             if (GameStarted)
             {
                 // makes so that there can only be one save per player name!
-                GameLoop.Universe.SaveGame(GameLoop.Universe.Player.Name);
+                Find.Universe.SaveGame(Find.Universe.Player.Name);
                 PopWindow alert = new PopWindow(30, 10, "Save Done!");
                 // makes it a variable so that it can be properly accounted for in the print command
                 const string text = "Save Sucessful!";
@@ -204,22 +207,23 @@ namespace Diviner.Windows
         public void RestartGame()
         {
             GameStarted = false;
-            Universe = null!;
+            Find.Universe = null!;
+            Find.CurrentMap = null;
             RefreshButtons();
 
-            foreach (SadConsole.Console item in GameLoop.UIManager.Children.Cast<SadConsole.Console>())
-            {
-                if (!item.Equals(this))
-                    item.Dispose();
-            }
+            //foreach (SadConsole.Console item in GameLoop.UIManager.Children.Cast<SadConsole.Console>())
+            //{
+            //    if (!item.Equals(this))
+            //        item.Dispose();
+            //}
 
-            GameLoop.UIManager.MessageLog = null!;
-            GameLoop.UIManager.MapWindow = null!;
-            GameLoop.UIManager.StatusWindow = null!;
-            GameLoop.UIManager.InventoryScreen = null!;
-            GameLoop.UIManager.CharCreationWindow = null!;
-            GameLoop.UIManager.Children.Clear();
-            GameLoop.UIManager.Children.Add(this);
+            //GameLoop.UIManager.MessageLog = null!;
+            //GameLoop.UIManager.MapWindow = null!;
+            //GameLoop.UIManager.StatusWindow = null!;
+            //GameLoop.UIManager.InventoryScreen = null!;
+            //GameLoop.UIManager.CharCreationWindow = null!;
+            //GameLoop.UIManager.Children.Clear();
+            //GameLoop.UIManager.Children.Add(this);
 
             Show();
         }

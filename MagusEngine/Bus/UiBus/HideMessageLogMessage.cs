@@ -1,6 +1,6 @@
 ﻿namespace MagusEngine.Bus.UiBus
 {
-    public class HideMessageEvent
+    public class HideMessageLogMessage
     {
     }
 }

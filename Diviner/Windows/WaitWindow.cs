@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using MagusEngine.Commands;
 using MagusEngine.Core.Entities;
 using MagusEngine.Utils.Extensions;
+using MagusEngine.Systems.Time;
+using MagusEngine.Systems;
 
 namespace Diviner.Windows
 {
@@ -23,22 +25,22 @@ namespace Diviner.Windows
             var wait1Hour = new MagiButton(string.Format(wait, CharExtension.GetCharHotkey(yCount), 1, "hour"),
                 () =>
                 {
-                    ActionManager.WaitForNTurns(GameLoop.GetNHoursFromTurn(1),
-                        (Actor)GameLoop.GetCurrentMap()?.ControlledEntitiy);
+                    ActionManager.WaitForNTurns(Find.Universe.Time.GetNHoursFromTurn(1),
+                        (Actor)Find.CurrentMap?.ControlledEntitiy);
                     Hide();
                 }, new SadRogue.Primitives.Point(ButtonWidth, yCount));
             var wait3Hour = new MagiButton(string.Format(wait, CharExtension.GetCharHotkey(yCount++), 3, "hours"),
                 () =>
                 {
-                    ActionManager.WaitForNTurns(GameLoop.GetNHoursFromTurn(3),
-                        (Actor)GameLoop.GetCurrentMap()?.ControlledEntitiy);
+                    ActionManager.WaitForNTurns(Find.Universe.Time.GetNHoursFromTurn(3),
+                        (Actor)Find.CurrentMap?.ControlledEntitiy);
                     Hide();
                 }, new SadRogue.Primitives.Point(ButtonWidth, yCount));
             var wait6Hour = new MagiButton(string.Format(wait, CharExtension.GetCharHotkey(yCount++), 6, "hours"),
                 () =>
                 {
-                    ActionManager.WaitForNTurns(GameLoop.GetNHoursFromTurn(6),
-                        (Actor)GameLoop.GetCurrentMap()?.ControlledEntitiy);
+                    ActionManager.WaitForNTurns(Find.Universe.Time.GetNHoursFromTurn(6),
+                        (Actor)Find.CurrentMap?.ControlledEntitiy);
                     Hide();
                 }, new SadRogue.Primitives.Point(ButtonWidth, yCount));
             hotKeys.Add('a', wait1Hour);

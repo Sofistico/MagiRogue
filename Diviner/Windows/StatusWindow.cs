@@ -1,21 +1,23 @@
-﻿using MagusEngine.Core.Entities;
+﻿using Arquimedes.Settings;
+using MagusEngine;
+using MagusEngine.Core.Entities;
+using MagusEngine.Systems;
 using SadConsole;
 using SadRogue.Primitives;
-using System;
 using Console = SadConsole.Console;
 
 namespace Diviner.Windows
 {
     public class StatusWindow : MagiBaseWindow
     {
-        private readonly Player player;
+        private readonly Player? player;
         private readonly Console statsConsole;
 
         private const int windowBorderThickness = 2;
 
         public StatusWindow(int width, int heigth, string title) : base(width, heigth, title)
         {
-            player = GameLoop.Universe.Player;
+            player = Find.Universe.Player;
 
             statsConsole = new Console(width - windowBorderThickness, heigth - windowBorderThickness)
             {
@@ -46,12 +48,12 @@ namespace Diviner.Windows
 
         public void ChangePositionToBottomPage()
         {
-            Position = new Point(1, GameLoop.GameHeight - 3);
+            Position = new Point(1, Locator.GetService<GlobalSettings>().ScreenHeight - 3);
         }
 
         public void ChangePositionToUpMessageLog()
         {
-            Position = new Point(1, GameLoop.GameHeight - 12);
+            Position = new Point(1, Locator.GetService<GlobalSettings>().ScreenHeight - 12);
         }
     }
 }

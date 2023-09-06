@@ -49,8 +49,7 @@ namespace Diviner.Windows
             messageScrollBar = new SadConsole.UI.Controls.ScrollBar(Orientation.Vertical, height - windowBorderThickness)
             {
                 Position = new Point(messageConsole.Width + 1, messageConsole.Position.X),
-                IsEnabled = false,
-                FocusOnClick = false
+                IsEnabled = false
             };
             FocusedMode = FocusBehavior.None;
             messageScrollBar.ValueChanged += MessageScrollBarValueChanged;
@@ -142,7 +141,7 @@ namespace Diviner.Windows
             if (MessageSent)
                 return;
             Hide();
-            GameLoop.UIManager.StatusWindow.ChangePositionToBottomPage();
+            //GameLoop.UIManager.StatusWindow.ChangePositionToBottomPage();
         }
     }
 }

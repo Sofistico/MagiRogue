@@ -1,10 +1,7 @@
 ﻿using Diviner.Controls;
+using MagusEngine.Core.Magic;
 using SadConsole;
 using SadConsole.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using MagusEngine.Core.Magic;
 
 namespace Diviner.Windows
 {

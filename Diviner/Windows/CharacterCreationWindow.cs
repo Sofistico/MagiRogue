@@ -1,9 +1,13 @@
 ﻿using Arquimedes.Enumerators;
 using Diviner.Controls;
+using MagusEngine;
+using MagusEngine.Bus;
+using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Entities.StarterScenarios;
 using MagusEngine.Factory;
+using MagusEngine.Services;
 using MagusEngine.Systems;
 using SadConsole;
 using SadConsole.Instructions;
@@ -61,7 +65,7 @@ namespace Diviner.Windows
             {
                 player = CreatePlayer();
                 if (player is not null)
-                    GameLoop.UIManager.StartGame(player);
+                    Locator.GetService<MessageBusService>().SendMessage<StartGameMessage>(new(player));
             };
             helpButton.Click += (_, __) =>
             {
@@ -115,7 +119,7 @@ namespace Diviner.Windows
             goBack.Click += (_, __) =>
             {
                 Hide();
-                GameLoop.UIManager.MainMenu.Show();
+                Locator.GetService<MessageBusService>().SendMessage<ShowMainMenuMessage>();
             };
 
             Controls.Add(charName);

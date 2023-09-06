@@ -24,7 +24,7 @@ namespace Diviner
     {
         private static Player GetPlayer => Find.Universe.Player;
 
-        private static Target targetCursor;
+        private static Target targetCursor = null!;
 
         private static readonly Dictionary<Keys, Direction> MovementDirectionMapping = new Dictionary<Keys, Direction>
         {
@@ -60,13 +60,13 @@ namespace Diviner
             return false;
         }
 
-        private static bool HandleMove(Keyboard info, Universe world)
+        private static bool HandleMove(Keyboard info, Universe world, UIManager ui)
         {
             #region WorldMovement
 
             if (CurrentMapIsPlanetView(world))
             {
-                var console = UIManager.MapWindow.MapConsole;
+                var console = ui.MapWindow.MapConsole;
 
                 if (info.IsKeyDown(Keys.Left))
                 {
@@ -161,7 +161,7 @@ namespace Diviner
             {
                 return ActionManager.EnterUpMovement(GetPlayer.Position);
             }
-            if (HandleMove(info, world))
+            if (HandleMove(info, world, ui))
             {
                 if (!GetPlayer.Bumped && world.CurrentMap.ControlledEntitiy is Player)
                 {

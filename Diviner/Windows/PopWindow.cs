@@ -1,12 +1,15 @@
-﻿using SadConsole;
+﻿using MagusEngine;
+using MagusEngine.Bus.UiBus;
+using MagusEngine.Services;
+using SadConsole;
 using SadConsole.UI.Controls;
 using Console = SadConsole.Console;
 
 namespace Diviner.Windows
 {
     /// <summary>
-    /// This creates a base pop window, keep in mind to create a console in the right place the math is
-    /// Width - ButtonWidth - 3, Height - 4, for the position = ButtonWidth + 2, 1
+    /// This creates a base pop window, keep in mind to create a console in the right place the math
+    /// is Width - ButtonWidth - 3, Height - 4, for the position = ButtonWidth + 2, 1
     /// </summary>
     public class PopWindow : MagiBaseWindow
     {
@@ -17,13 +20,14 @@ namespace Diviner.Windows
         protected readonly Console DescriptionArea;
 
         /// <summary>
-        /// This creates a base pop window, keep in mind to create a console in the right place the math is
-        /// Width - ButtonWidth - 3, Height - 4, for the position = ButtonWidth + 2, 1
+        /// This creates a base pop window, keep in mind to create a console in the right place the
+        /// math is Width - ButtonWidth - 3, Height - 4, for the position = ButtonWidth + 2, 1
         /// </summary>
         /// <param name="title"></param>
         public PopWindow(string? title) : base(100, 20, title)
         {
-            GameLoop.UIManager.NoPopWindow = false;
+            //GameLoop.UIManager.NoPopWindow = false;
+            Locator.GetService<MessageBusService>().SendMessage<TogglePopWindowMessage>(new(false));
 
             IsFocused = true;
 
@@ -56,7 +60,8 @@ namespace Diviner.Windows
 
         public PopWindow(int width, int height, string title) : base(width, height, title)
         {
-            GameLoop.UIManager.NoPopWindow = false;
+            //GameLoop.UIManager.NoPopWindow = false;
+            Locator.GetService<MessageBusService>().SendMessage<TogglePopWindowMessage>(new(false));
 
             IsFocused = true;
 
@@ -89,15 +94,17 @@ namespace Diviner.Windows
 
         public override void Hide()
         {
-            GameLoop.UIManager.NoPopWindow = true;
-            GameLoop.UIManager.IsFocused = true;
+            //GameLoop.UIManager.NoPopWindow = true;
+            Locator.GetService<MessageBusService>().SendMessage<TogglePopWindowMessage>(new(true));
+            //GameLoop.UIManager.IsFocused = true;
+            Locator.GetService<MessageBusService>().SendMessage<FocusUiManagerMessage>();
 
             base.Hide();
         }
 
         public override void Show(bool modal)
         {
-            GameLoop.UIManager.NoPopWindow = false;
+            Locator.GetService<MessageBusService>().SendMessage<TogglePopWindowMessage>(new(false));
             IsFocused = true;
 
             DescriptionArea.Clear();

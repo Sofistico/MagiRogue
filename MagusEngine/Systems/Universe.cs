@@ -323,7 +323,7 @@ namespace MagusEngine.Systems
                 RegisterInTime(ids);
 
                 // if there is the need to update any screen or console or window for last! events
-                Locator.GetService<MessageBusService>().SendMessage<HideMessageEvent>(new());
+                Locator.GetService<MessageBusService>().SendMessage<HideMessageLogMessage>(new());
             }
         }
 

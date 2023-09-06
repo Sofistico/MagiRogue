@@ -21,7 +21,7 @@ namespace Diviner.Windows
             };
 
             lookConsole.Cursor.Position = new Point(1, 1);
-            StringBuilder desc = new StringBuilder();
+            StringBuilder desc = new();
             if (entity.Description is not null)
             {
                 desc.Append(entity.GetDescriptor());

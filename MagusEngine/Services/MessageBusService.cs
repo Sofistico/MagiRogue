@@ -1,4 +1,5 @@
 ﻿using GoRogue.Messaging;
+using System;
 
 namespace MagusEngine.Services
 {
@@ -19,6 +20,12 @@ namespace MagusEngine.Services
         public void SendMessage<T>(T obj) where T : notnull
         {
             _messageBus.Send(obj);
+        }
+
+        public void SendMessage<T>() where T : new()
+        {
+            var instance = Activator.CreateInstance(typeof(T));
+            _messageBus?.Send((T)instance);
         }
 
         public void RegisterSubscriber<T>(ISubscriber<T> subscriber)
