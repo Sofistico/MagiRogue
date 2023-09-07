@@ -1,7 +1,7 @@
 ﻿using Arquimedes.Enumerators;
 using MagusEngine.Core.Civ;
-using MagusEngine.ECS.Components.TilesComponents;
 using Newtonsoft.Json;
+using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 
@@ -29,18 +29,15 @@ namespace MagusEngine.Serialization.MapConverter
     public class RoadTemplate
     {
         public List<WorldPosDictionary> RoadDirectionInPos { get; set; } = new();
-        public List<Point> RoadTiles { get; set; }
         public RoadStatus Status { get; set; }
         public int RoadId { get; set; }
 
-        public RoadTemplate(Dictionary<Point, WorldDirection> roadDirectionInPos,
-            List<Point> roadTiles, RoadStatus status)
+        public RoadTemplate(Dictionary<Point, Direction> roadDirectionInPos, RoadStatus status)
         {
             foreach (Point pos in roadDirectionInPos.Keys)
             {
                 RoadDirectionInPos.Add(new WorldPosDictionary(pos, roadDirectionInPos[pos]));
             }
-            RoadTiles = roadTiles;
             Status = status;
         }
 
@@ -51,28 +48,20 @@ namespace MagusEngine.Serialization.MapConverter
 
         public static implicit operator Road(RoadTemplate template)
         {
-            var tiles = new List<WorldTile>();
             if (template is null)
-                return null;
-            for (int i = 0; i < template.RoadTiles.Count; i++)
-            {
-                // TODO: Need to find a better way
-                //tiles.Add((WorldTile)template.RoadTiles[i]);
-            }
-            Dictionary<Point, WorldDirection> roadDirectoin = new();
+                return null!;
+            Dictionary<Point, Direction> roadDirectoin = new();
             for (int i = 0; i < template.RoadDirectionInPos.Count; i++)
             {
                 var (point, direction) = template.RoadDirectionInPos[i].ReturnValue();
                 roadDirectoin.TryAdd(point, direction);
             }
-            var road = new Road()
+            return new Road()
             {
-                RoadTiles = tiles,
                 RoadDirectionInPos = roadDirectoin,
                 Status = template.Status,
                 RoadId = template.RoadId
             };
-            return road;
         }
 
         public static implicit operator RoadTemplate(Road road)
@@ -80,16 +69,9 @@ namespace MagusEngine.Serialization.MapConverter
             try
             {
                 if (road is null)
-                    return null;
-                List<Point> tiles = new();
-                for (int i = 0; i < road.RoadTiles.Count; i++)
-                {
-                    //tiles.Add(road.RoadTiles[i].Position);
-                }
+                    return null!;
 
-                return new RoadTemplate(road.RoadDirectionInPos,
-                tiles,
-                road.Status)
+                return new RoadTemplate(road.RoadDirectionInPos, road.Status)
                 {
                     RoadId = road.RoadId
                 };
@@ -104,14 +86,14 @@ namespace MagusEngine.Serialization.MapConverter
     public class WorldPosDictionary
     {
         public Point Point { get; set; }
-        public WorldDirection Direction { get; set; }
+        public Direction Direction { get; set; }
 
-        public WorldPosDictionary(Point point, WorldDirection direction)
+        public WorldPosDictionary(Point point, Direction direction)
         {
             Point = point;
             Direction = direction;
         }
 
-        public (Point, WorldDirection) ReturnValue() => (Point, Direction);
+        public (Point, Direction) ReturnValue() => (Point, Direction);
     }
 }

@@ -1,7 +1,7 @@
-﻿using Arquimedes.Enumerators;
-using MagusEngine.ECS.Components.TilesComponents;
+﻿using MagusEngine.ECS.Components.TilesComponents;
 using MagusEngine.Serialization.MapConverter;
 using Newtonsoft.Json;
+using SadRogue.Primitives;
 using System.Collections.Generic;
 
 namespace MagusEngine.Core.WorldStuff
@@ -15,7 +15,7 @@ namespace MagusEngine.Core.WorldStuff
         public List<WorldTile> Tiles { get; set; }
         public int Intersections { get; set; }
         public float TurnCount { get; set; }
-        public WorldDirection CurrentDirection { get; set; }
+        public Direction CurrentDirection { get; set; }
 
         public River(int id)
         {

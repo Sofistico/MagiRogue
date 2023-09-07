@@ -1,10 +1,12 @@
 ﻿using Arquimedes.Enumerators;
+using GoRogue.Components.ParentAware;
+using MagusEngine.Core;
 using SadRogue.Primitives;
 using System.Collections.Generic;
 
 namespace MagusEngine.ECS.Components.TilesComponents
 {
-    public class WorldTile
+    public class WorldTile : IParentAwareComponent
     {
         public float HeightValue { get; set; }
         public float HeatValue { get; set; }
@@ -45,6 +47,8 @@ namespace MagusEngine.ECS.Components.TilesComponents
         /// The name of the 9x9 region of the local map Randomly generated
         /// </summary>
         public string? RegionName { get; internal set; }
+        public object? Parent { get; set; }
+        public Tile? ParentTile => (Tile?)Parent;
 
         public void UpdateBiomeBitmask()
         {
@@ -78,36 +82,42 @@ namespace MagusEngine.ECS.Components.TilesComponents
             Bitmask = count;
         }
 
-        public WorldDirection GetLowestNeighbor()
+        public Direction GetLowestNeighbor()
         {
             if (Left.HeightValue < Right.HeightValue
                 && Left.HeightValue < Top.HeightValue
                 && Left.HeightValue < Bottom.HeightValue)
             {
-                return WorldDirection.Left;
+                return Direction.Left;
             }
             else if (Right.HeightValue < Left.HeightValue
                 && Right.HeightValue < Top.HeightValue
                 && Right.HeightValue < Bottom.HeightValue)
             {
-                return WorldDirection.Right;
+                return Direction.Right;
             }
             else if (Top.HeightValue < Left.HeightValue
                 && Top.HeightValue < Right.HeightValue
                 && Top.HeightValue < Bottom.HeightValue)
             {
-                return WorldDirection.Right;
+                return Direction.Right;
             }
             else if (Bottom.HeightValue < Left.HeightValue
                 && Bottom.HeightValue < Top.HeightValue
                 && Bottom.HeightValue < Right.HeightValue)
             {
-                return WorldDirection.Right;
+                return Direction.Right;
             }
             else
             {
-                return WorldDirection.Bottom;
+                return Direction.Down;
             }
+        }
+
+        public float GetResources()
+        {
+            // i dunno!
+            return MineralValue;
         }
     }
 }

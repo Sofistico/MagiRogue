@@ -2,6 +2,7 @@
 using MagusEngine.Core.WorldStuff;
 using MagusEngine.ECS.Components.TilesComponents;
 using Newtonsoft.Json;
+using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 
@@ -33,11 +34,11 @@ namespace MagusEngine.Serialization.MapConverter
         public List<Point> Tiles { get; set; }
         public int Intersections { get; set; }
         public float TurnCount { get; set; }
-        public WorldDirection CurrentDirection { get; set; }
+        public Direction CurrentDirection { get; set; }
 
         public RiverTemplate(int riverCount, int length, int id,
             int intersections,
-            float turnCount, WorldDirection currentDirection)
+            float turnCount, Direction currentDirection)
         {
             RiverCount = riverCount;
             Length = length;
@@ -53,7 +54,7 @@ namespace MagusEngine.Serialization.MapConverter
         }
 
         public RiverTemplate(int riverCount, int length, int id, List<Point> tiles,
-            int intersections, float turnCount, WorldDirection currentDirection)
+            int intersections, float turnCount, Direction currentDirection)
         {
             RiverCount = riverCount;
             Length = length;

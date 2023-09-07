@@ -19,22 +19,20 @@ namespace MagusEngine.Core.WorldStuff.History
 {
     public sealed class AccumulatedHistory
     {
+        #region Private Fields
+
         private PlanetMap? planetData;
+
+        #endregion Private Fields
 
         #region Consts
 
-        private const int wealthToCreateRoad = 100;
         private const int wealthToCreateNewSite = 250;
+        private const int wealthToCreateRoad = 100;
 
         #endregion Consts
 
-        public List<HistoricalFigure> Figures { get; set; }
-        public List<Civilization> Civs { get; set; }
-        public List<Site> AllSites { get; set; } = new();
-        public List<Myth> Myths { get; set; } = new();
-        public List<ItemTemplate> ImportantItems { get; set; } = new();
-        public int Year { get; set; }
-        public int CreationYear { get; set; }
+        #region Public Constructors
 
         public AccumulatedHistory()
         {
@@ -50,6 +48,22 @@ namespace MagusEngine.Core.WorldStuff.History
             Civs = civs;
             Year = year;
         }
+
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public List<Site> AllSites { get; set; } = new();
+        public List<Civilization> Civs { get; set; }
+        public int CreationYear { get; set; }
+        public List<HistoricalFigure> Figures { get; set; }
+        public List<ItemTemplate> ImportantItems { get; set; } = new();
+        public List<Myth> Myths { get; set; } = new();
+        public int Year { get; set; }
+
+        #endregion Public Properties
+
+        #region Public Methods
 
         public void RunHistory(List<Civilization> civilizations, int yearToGameBegin,
             PlanetMap planet, WorldTile[,] tiles)
@@ -95,17 +109,9 @@ namespace MagusEngine.Core.WorldStuff.History
             }
         }
 
-        private void PopulateFindValues(WorldTile[,] tiles)
-        {
-            //Find.PopulateValues(Figures,
-            //    Civs,
-            //    AllSites,
-            //    ImportantItems,
-            //    this,
-            //    tiles);
-            Find.PopulateValues(this,
-                tiles);
-        }
+        #endregion Public Methods
+
+        #region Private Methods
 
         private static void DefineFiguresToHaveAInitialSite(List<HistoricalFigure> figures,
             List<Civilization> civs)
@@ -119,16 +125,6 @@ namespace MagusEngine.Core.WorldStuff.History
                     figure.AddRelatedSite(civ.Sites[0].Id, SiteRelationTypes.LivesThere);
                     figure.ChangeStayingSite(civ.Sites[0].WorldPos);
                 }
-            }
-        }
-
-        private void ConceiveAnyChild()
-        {
-            var pregnantFigures = Figures.Where(i => i.Pregnant);
-            foreach (var item in pregnantFigures)
-            {
-                var civ = item.GetRelatedCivFromFigure(RelationType.Member, Civs);
-                item.ConceiveChild(civ, Year);
             }
         }
 
@@ -174,31 +170,51 @@ namespace MagusEngine.Core.WorldStuff.History
             }
         }
 
-        private void NoCivSitesSimulation(WorldTile[,] tiles)
+        private bool BuildRoadsToFriends(Civilization civ, Civilization friend, WorldTile[,] tiles)
         {
-            if (AllSites.Count < 1)
-                return;
-            foreach (Site site in AllSites.Where(i => i.CivOwnerIfAny is null))
+            if (!civ.PossibleWorldConstruction.Contains(WorldConstruction.Road))
+                return false;
+
+            if (civ.Relations.Any(i => i.CivRelatedId.Equals(friend.Id)
+                && i.Relation is RelationType.Friendly && i.RoadBuilt.HasValue))
             {
+                return false;
             }
+
+            if (civ[friend.Id].RoadBuilt.HasValue)
+                return false;
+
+            var territory = civ.Territory[0];
+            var friendTerr = friend.Territory[0];
+            if (tiles.Length == 0)
+                return false;
+            int totalLineLength = (int)Math.Sqrt(Math.Pow(friendTerr.Y - territory.Y, 2)
+                + Math.Pow(friendTerr.X - territory.X, 2));
+            //TODO: Make sure that the roads don't colide with water and/or go away from water
+            if (totalLineLength > 50)
+            {
+                return false;
+            }
+
+            Path? path = planetData.AssocietatedMap.
+                        AStar.ShortestPath(territory,
+                        friendTerr);
+
+            var tile = tiles[territory.X, territory.Y];
+            var closestCityTile = tiles[friendTerr.X, friendTerr.Y];
+            FindPathToCityAndCreateRoad(tile, closestCityTile);
+            civ[friend.Id].RoadBuilt = true;
+            civ[friend.Id].Relation = RelationType.Neutral;
+            return true;
         }
 
-        private void HistoricalFigureSimulation()
+        private void CheckForTerritoryConflict(Civilization civ)
         {
-            if (Figures.Count < 1)
-                return;
-
-            foreach (HistoricalFigure figure in Figures)
+            foreach (var otherCiv in Civs)
             {
-                if (figure is null)
-                    continue;
-                if (figure.IsAlive)
+                if (civ.Territory.Any(otherCiv.Territory.Contains))
                 {
-                    HistoryAction.Act(figure);
-                }
-                else
-                {
-                    figure.CleanupIfNotImportant(Year);
+                    civ.AddCivToRelations(otherCiv, RelationType.Tension);
                 }
             }
         }
@@ -265,17 +281,6 @@ namespace MagusEngine.Core.WorldStuff.History
             }
         }
 
-        private void CheckForTerritoryConflict(Civilization civ)
-        {
-            foreach (var otherCiv in Civs)
-            {
-                if (civ.Territory.Any(otherCiv.Territory.Contains))
-                {
-                    civ.AddCivToRelations(otherCiv, RelationType.Tension);
-                }
-            }
-        }
-
         private void ClaimNewTerritory(Civilization civ)
         {
             // this here is making the Civilization grab infinite tiles
@@ -295,6 +300,92 @@ namespace MagusEngine.Core.WorldStuff.History
                         civ.AddToTerritory(direction);
                     }
                 }
+            }
+        }
+
+        private void ConceiveAnyChild()
+        {
+            var pregnantFigures = Figures.Where(i => i.Pregnant);
+            foreach (var item in pregnantFigures)
+            {
+                var civ = item.GetRelatedCivFromFigure(RelationType.Member, Civs);
+                item.ConceiveChild(civ, Year);
+            }
+        }
+
+        private void CreateNewSiteIfPossible(WorldTile[,] tiles, Civilization civ = null)
+        {
+            Site site;
+            if (civ is not null)
+            {
+                int migrantsNmbr = GlobalRandom.DefaultRNG.NextInt(10, 100);
+                Site rngSettl = civ.Sites.GetRandomItemFromList();
+                var pop = rngSettl.Population.GetRandomItemFromList();
+                pop.TotalPopulation -= migrantsNmbr;
+                Point pos = rngSettl.WorldPos.GetPointNextTo();
+                if (planetData?.AssocietatedMap?.CheckForIndexOutOfBounds(pos) == true)
+                {
+                    const int tries = 300;
+                    for (int currentRty = 0; planetData.AssocietatedMap.CheckForIndexOutOfBounds(pos)
+                        && currentRty <= tries; currentRty++)
+                    {
+                        pos = rngSettl.WorldPos.GetPointNextTo();
+                    }
+                }
+                site = new Site(pos,
+                    civ.RandomSiteFromLanguageName(),
+                    new Population(migrantsNmbr, pop.PopulationRaceId),
+                    civ.Id);
+                WorldTile tile = tiles[pos.X, pos.Y];
+                tile.ParentTile.AddComponent<SiteTile>(new(site));
+                civ.AddSiteToCiv(site);
+            }
+            else
+            {
+                site = new Site();
+                WorldTile tile = tiles.Transform2DTo1D().GetRandomItemFromList();
+                tile.ParentTile.AddComponent<SiteTile>(new(site));
+                site.WorldPos = tile.ParentTile.Position;
+                site.MundaneResources = (int)tile.GetResources();
+            }
+            AllSites.Add(site);
+        }
+
+        private void FindPathToCityAndCreateRoad(WorldTile tile, WorldTile closestCityTile)
+        {
+            Road road = new()
+            {
+                RoadId = SequentialIdGenerator.RoadId
+            };
+
+            if (tile.HeightType == HeightType.DeepWater || tile.HeightType == HeightType.ShallowWater)
+                return;
+
+            tile.ParentTile.GetComponent(out road);
+
+            // Found the city
+            if (tile == closestCityTile)
+                return;
+
+            // Shouldn't appear, but who knows Still need to know what i will do with it
+            /*if (tile.HeightType == HeightType.River)
+                return;*/
+
+            Point cityPoint = closestCityTile.ParentTile.Position;
+            Point roadPoint = tile.ParentTile.Position;
+            var direction = Direction.GetDirection(roadPoint, cityPoint);
+            if (direction != Direction.None)
+            {
+                WorldTile worldTile = tile.Directions[direction];
+                if (worldTile.ParentTile.GetComponent<SiteTile>(out var site))
+                {
+                    site.SiteInfluence.Roads.Add(road);
+                    return;
+                }
+                // redo to take the road from the tile components
+                road.RoadDirectionInPos.TryAdd(worldTile.ParentTile.Position, direction);
+
+                FindPathToCityAndCreateRoad(worldTile, closestCityTile);
             }
         }
 
@@ -327,6 +418,47 @@ namespace MagusEngine.Core.WorldStuff.History
             }
         }
 
+        private void HistoricalFigureSimulation()
+        {
+            if (Figures.Count < 1)
+                return;
+
+            foreach (HistoricalFigure figure in Figures)
+            {
+                if (figure is null)
+                    continue;
+                if (figure.IsAlive)
+                {
+                    HistoryAction.Act(figure);
+                }
+                else
+                {
+                    figure.CleanupIfNotImportant(Year);
+                }
+            }
+        }
+
+        private void NoCivSitesSimulation(WorldTile[,] tiles)
+        {
+            if (AllSites.Count < 1)
+                return;
+            foreach (Site site in AllSites.Where(i => i.CivOwnerIfAny is null))
+            {
+            }
+        }
+
+        private void PopulateFindValues(WorldTile[,] tiles)
+        {
+            //Find.PopulateValues(Figures,
+            //    Civs,
+            //    AllSites,
+            //    ImportantItems,
+            //    this,
+            //    tiles);
+            Find.PopulateValues(this,
+                tiles);
+        }
+
         private int SimulateSiteAndReturnRevenue(WorldTile[,] tiles,
             int totalRevenueYear, Site site, Civilization civ)
         {
@@ -343,236 +475,6 @@ namespace MagusEngine.Core.WorldStuff.History
             return totalRevenueYear;
         }
 
-        private void CreateNewSiteIfPossible(WorldTile[,] tiles, Civilization civ = null)
-        {
-            Site site;
-            if (civ is not null)
-            {
-                int migrantsNmbr = GlobalRandom.DefaultRNG.NextInt(10, 100);
-                Site rngSettl = civ.Sites.GetRandomItemFromList();
-                var pop = rngSettl.Population.GetRandomItemFromList();
-                pop.TotalPopulation -= migrantsNmbr;
-                Point pos = rngSettl.WorldPos.GetPointNextTo();
-                if (planetData?.AssocietatedMap?.CheckForIndexOutOfBounds(pos) == true)
-                {
-                    const int tries = 300;
-                    for (int currentRty = 0; planetData.AssocietatedMap.CheckForIndexOutOfBounds(pos)
-                        && currentRty <= tries; currentRty++)
-                    {
-                        pos = rngSettl.WorldPos.GetPointNextTo();
-                    }
-                }
-                site = new Site(pos,
-                    civ.RandomSiteFromLanguageName(),
-                    new Population(migrantsNmbr, pop.PopulationRaceId),
-                    civ.Id);
-                WorldTile tile = tiles[pos.X, pos.Y];
-                tile.SiteInfluence = site;
-                civ.AddSiteToCiv(site);
-            }
-            else
-            {
-                site = new Site();
-                WorldTile tile = tiles.Transform2DTo1D().GetRandomItemFromList();
-                tile.SiteInfluence = site;
-                site.WorldPos = tile.Position;
-                site.MundaneResources = (int)tile.GetResources();
-            }
-            AllSites.Add(site);
-        }
-
-        private bool BuildRoadsToFriends(Civilization civ, Civilization friend, WorldTile[,] tiles)
-        {
-            if (!civ.PossibleWorldConstruction.Contains(WorldConstruction.Road))
-                return false;
-
-            if (civ.Relations.Any(i => i.CivRelatedId.Equals(friend.Id)
-                && i.Relation is RelationType.Friendly && i.RoadBuilt.HasValue))
-            {
-                return false;
-            }
-
-            if (civ[friend.Id].RoadBuilt.HasValue)
-                return false;
-
-            var territory = civ.Territory[0];
-            var friendTerr = friend.Territory[0];
-            if (tiles.Length == 0)
-                return false;
-            int totalLineLength = (int)Math.Sqrt(Math.Pow(friendTerr.Y - territory.Y, 2)
-                + Math.Pow(friendTerr.X - territory.X, 2));
-            //TODO: Make sure that the roads don't colide with water and/or go away from water
-            if (totalLineLength > 50)
-            {
-                return false;
-            }
-
-            Path? path = planetData.AssocietatedMap.
-                        AStar.ShortestPath(territory,
-                        friendTerr);
-
-            var tile = tiles[territory.X, territory.Y];
-            var closestCityTile = tiles[friendTerr.X, friendTerr.Y];
-            FindPathToCityAndCreateRoad(tile, closestCityTile);
-            civ[friend.Id].RoadBuilt = true;
-            civ[friend.Id].Relation = RelationType.Neutral;
-            return true;
-        }
-
-        private void FindPathToCityAndCreateRoad(WorldTile tile, WorldTile closestCityTile)
-        {
-            Road road = new()
-            {
-                RoadId = SequentialIdGenerator.RoadId
-            };
-
-            if (tile.HeightType == HeightType.DeepWater || tile.HeightType == HeightType.ShallowWater)
-                return;
-
-            if (tile.Road != null)
-                road = tile.Road;
-
-            // Found the city
-            if (tile == closestCityTile)
-                return;
-
-            // Shouldn't appear, but who knows Still need to know what i will do with it
-            /*if (tile.HeightType == HeightType.River)
-                return;*/
-
-            Point cityPoint = closestCityTile.Position;
-            Point roadPoint = tile.Position;
-            var direction = Direction.GetDirection(roadPoint, cityPoint);
-
-            if (direction == Direction.Up)
-            {
-                WorldTile worldTile = tile.Top;
-                if (worldTile.SiteInfluence is not null)
-                {
-                    worldTile.SiteInfluence.Roads.Add(road);
-                    return;
-                }
-                worldTile.Road = road;
-                worldTile.Road.AddTileToList(worldTile);
-                worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.Top);
-
-                FindPathToCityAndCreateRoad(worldTile, closestCityTile);
-            }
-            if (direction == Direction.Down)
-            {
-                WorldTile worldTile = tile.Bottom;
-                if (worldTile.SiteInfluence is not null)
-                {
-                    worldTile.SiteInfluence.Roads.Add(road);
-
-                    return;
-                }
-                worldTile.Road = road;
-                worldTile.Road.AddTileToList(worldTile);
-                worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.Bottom);
-
-                FindPathToCityAndCreateRoad(worldTile, closestCityTile);
-            }
-            if (direction == Direction.Left)
-            {
-                WorldTile worldTile = tile.Left;
-                if (worldTile.SiteInfluence is not null)
-                {
-                    worldTile.SiteInfluence.Roads.Add(road);
-
-                    return;
-                }
-
-                worldTile.Road = road;
-                worldTile.Road.AddTileToList(worldTile);
-                worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.Left);
-
-                FindPathToCityAndCreateRoad(worldTile, closestCityTile);
-            }
-            if (direction == Direction.Right)
-            {
-                WorldTile worldTile = tile.Right;
-                if (worldTile.SiteInfluence is not null)
-                {
-                    worldTile.SiteInfluence.Roads.Add(road);
-
-                    return;
-                }
-
-                worldTile.Road = road;
-                worldTile.Road.AddTileToList(worldTile);
-                worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.Right);
-
-                FindPathToCityAndCreateRoad(worldTile, closestCityTile);
-            }
-            if (direction == Direction.UpLeft)
-            {
-                WorldTile worldTile = tile.Directions[direction];
-                if (worldTile.SiteInfluence is not null)
-                {
-                    worldTile.SiteInfluence.Roads.Add(road);
-
-                    return;
-                }
-
-                worldTile.Road = road;
-                worldTile.Road.AddTileToList(worldTile);
-                worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.BottomLeft);
-
-                FindPathToCityAndCreateRoad(worldTile, closestCityTile);
-            }
-            if (direction == Direction.UpRight)
-            {
-                WorldTile worldTile = tile.Directions[direction];
-                if (worldTile.SiteInfluence is not null)
-                {
-                    worldTile.SiteInfluence.Roads.Add(road);
-
-                    return;
-                }
-
-                worldTile.Road = road;
-                worldTile.Road.AddTileToList(worldTile);
-                worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.TopRight);
-
-                FindPathToCityAndCreateRoad(worldTile, closestCityTile);
-            }
-            if (direction == Direction.DownLeft)
-            {
-                WorldTile worldTile = tile.Directions[direction];
-                if (worldTile.SiteInfluence is not null)
-                {
-                    worldTile.SiteInfluence.Roads.Add(road);
-
-                    return;
-                }
-
-                worldTile.Road = road;
-                worldTile.Road.AddTileToList(worldTile);
-                worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.BottomLeft);
-
-                FindPathToCityAndCreateRoad(worldTile, closestCityTile);
-            }
-            if (direction == Direction.DownRight)
-            {
-                WorldTile worldTile = tile.Directions[direction];
-                if (worldTile.SiteInfluence is not null)
-                {
-                    worldTile.SiteInfluence.Roads.Add(road);
-
-                    return;
-                }
-
-                worldTile.Road = road;
-                worldTile.Road.AddTileToList(worldTile);
-                worldTile.Road.RoadDirectionInPos.TryAdd(worldTile.Position, WorldDirection.BottomRight);
-
-                FindPathToCityAndCreateRoad(worldTile, closestCityTile);
-            }
-            if (direction == Direction.None)
-            {
-                // Should theoritically never happen, but who knows!
-            }
-        }
+        #endregion Private Methods
     }
 }

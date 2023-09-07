@@ -677,7 +677,7 @@ namespace MagusEngine.Generators
         }
 
         // Worried with this method, the recursion is throwing too many errors
-        private void FindPathToWater(WorldTile tile, WorldDirection currentDirection, ref River river)
+        private void FindPathToWater(WorldTile tile, Direction currentDirection, ref River river)
         {
             currentRecursiveRiverAttempt++;
             if (currentRecursiveRiverAttempt >= maxRecursiveRiverAttemepts)
@@ -723,16 +723,16 @@ namespace MagusEngine.Generators
                     leftValue = 0;
 
                 // override flow direction if a tile is significantly lower
-                if (currentDirection == WorldDirection.Left)
+                if (currentDirection == Direction.Left)
                     if (MathF.Abs(rigthValue - leftValue) < 0.1f)
                         rigthValue = int.MaxValue;
-                if (currentDirection == WorldDirection.Right)
+                if (currentDirection == Direction.Right)
                     if (MathF.Abs(rigthValue - leftValue) < 0.1f)
                         leftValue = int.MaxValue;
-                if (currentDirection == WorldDirection.Top)
+                if (currentDirection == Direction.Top)
                     if (MathF.Abs(topValue - bottomValue) < 0.1f)
                         topValue = int.MaxValue;
-                if (currentDirection == WorldDirection.Bottom)
+                if (currentDirection == Direction.Down)
                     if (MathF.Abs(topValue - bottomValue) < 0.1f)
                         bottomValue = int.MaxValue;
 
@@ -748,10 +748,10 @@ namespace MagusEngine.Generators
                 {
                     if (left.Collidable)
                     {
-                        if (river.CurrentDirection != WorldDirection.Left)
+                        if (river.CurrentDirection != Direction.Left)
                         {
                             river.TurnCount++;
-                            river.CurrentDirection = WorldDirection.Left;
+                            river.CurrentDirection = Direction.Left;
                         }
                         FindPathToWater(left, currentDirection, ref river);
                     }
@@ -760,10 +760,10 @@ namespace MagusEngine.Generators
                 {
                     if (right.Collidable)
                     {
-                        if (river.CurrentDirection != WorldDirection.Right)
+                        if (river.CurrentDirection != Direction.Right)
                         {
                             river.TurnCount++;
-                            river.CurrentDirection = WorldDirection.Right;
+                            river.CurrentDirection = Direction.Right;
                         }
                         FindPathToWater(right, currentDirection, ref river);
                     }
@@ -772,10 +772,10 @@ namespace MagusEngine.Generators
                 {
                     if (bottom.Collidable)
                     {
-                        if (river.CurrentDirection != WorldDirection.Bottom)
+                        if (river.CurrentDirection != Direction.Down)
                         {
                             river.TurnCount++;
-                            river.CurrentDirection = WorldDirection.Bottom;
+                            river.CurrentDirection = Direction.Down;
                         }
                         FindPathToWater(bottom, currentDirection, ref river);
                     }
@@ -784,10 +784,10 @@ namespace MagusEngine.Generators
                 {
                     if (top.Collidable)
                     {
-                        if (river.CurrentDirection != WorldDirection.Top)
+                        if (river.CurrentDirection != Direction.Top)
                         {
                             river.TurnCount++;
-                            river.CurrentDirection = WorldDirection.Top;
+                            river.CurrentDirection = Direction.Top;
                         }
                         FindPathToWater(top, currentDirection, ref river);
                     }
@@ -1157,9 +1157,9 @@ namespace MagusEngine.Generators
             {
                 for (var y = 0; y < _height; y++)
                 {
-                    if (!tiles[x, y].GetComponent<WorldTile>().Collidable) continue;
+                    if (!tiles[x, y].GetComponent<WorldTile>()!.Collidable) continue;
 
-                    WorldTile t = tiles[x, y].GetComponent<WorldTile>();
+                    WorldTile t = tiles[x, y].GetComponent<WorldTile>()!;
                     t.BiomeType = GetBiomeType(t);
                 }
             }
@@ -1171,7 +1171,7 @@ namespace MagusEngine.Generators
             {
                 for (var y = 0; y < _height; y++)
                 {
-                    tiles?[x, y].GetComponent<WorldTile>().UpdateBiomeBitmask();
+                    tiles?[x, y].GetComponent<WorldTile>()!.UpdateBiomeBitmask();
                 }
             }
         }

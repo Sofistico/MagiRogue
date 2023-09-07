@@ -1,4 +1,8 @@
-﻿using SadConsole;
+﻿using Arquimedes;
+using Arquimedes.Enumerators;
+using MagusEngine.ECS.Components.TilesComponents;
+using MagusEngine.Utils;
+using SadConsole;
 using SadRogue.Primitives;
 using System;
 
@@ -17,73 +21,73 @@ namespace MagusEngine.Generators
                     switch (tiles[x, y].HeightType)
                     {
                         case HeightType.DeepWater:
-                            tempTile = new(Palette.DeepWaterColor, Color.Black, '~');
-                            tiles[x, y].CopyAppearanceFrom(tempTile);
-                            tiles[x, y].IsBlockingMove = true;
+                            tempTile = new(MagiPalette.DeepWaterColor, Color.Black, '~');
+                            tiles[x, y].ParentTile.Appearence.CopyAppearanceFrom(tempTile);
+                            tiles[x, y].ParentTile.IsWalkable = false;
                             break;
 
                         case HeightType.ShallowWater:
-                            tempTile = new(Palette.ShallowWaterColor, Color.Black, '~');
-                            tiles[x, y].CopyAppearanceFrom(tempTile);
-                            tiles[x, y].IsBlockingMove = true;
+                            tempTile = new(MagiPalette.ShallowWaterColor, Color.Black, '~');
+                            tiles[x, y].ParentTile.Appearence.CopyAppearanceFrom(tempTile);
+                            tiles[x, y].ParentTile.IsWalkable = false;
 
                             break;
 
                         case HeightType.Sand:
-                            tempTile = new(Palette.SandColor, Color.Black, '~');
-                            tiles[x, y].CopyAppearanceFrom(tempTile);
-                            tiles[x, y].IsBlockingMove = false;
+                            tempTile = new(MagiPalette.SandColor, Color.Black, '~');
+                            tiles[x, y].ParentTile.Appearence.CopyAppearanceFrom(tempTile);
+                            tiles[x, y].ParentTile.IsWalkable = true;
 
                             break;
 
                         case HeightType.Grass:
-                            tempTile = new(Palette.GrassColor, Color.Black, 39);
-                            tiles[x, y].CopyAppearanceFrom(tempTile);
-                            tiles[x, y].IsBlockingMove = false;
+                            tempTile = new(MagiPalette.GrassColor, Color.Black, 39);
+                            tiles[x, y].ParentTile.Appearence.CopyAppearanceFrom(tempTile);
+                            tiles[x, y].ParentTile.IsWalkable = true;
 
                             break;
 
                         case HeightType.Forest:
-                            tempTile = new(Palette.ForestColor, Color.Black, 'T');
-                            tiles[x, y].CopyAppearanceFrom(tempTile);
-                            tiles[x, y].IsBlockingMove = false;
+                            tempTile = new(MagiPalette.ForestColor, Color.Black, 'T');
+                            tiles[x, y].ParentTile.Appearence.CopyAppearanceFrom(tempTile);
+                            tiles[x, y].ParentTile.IsWalkable = true;
 
                             break;
 
                         case HeightType.Mountain:
-                            tempTile = new(Palette.RockColor, Color.Black, 127);
-                            tiles[x, y].CopyAppearanceFrom(tempTile);
-                            tiles[x, y].MoveTimeCost = 500;
-                            tiles[x, y].IsBlockingMove = false;
+                            tempTile = new(MagiPalette.RockColor, Color.Black, 127);
+                            tiles[x, y].ParentTile.Appearence.CopyAppearanceFrom(tempTile);
+                            tiles[x, y].ParentTile.MoveTimeCost = 500;
+                            tiles[x, y].ParentTile.IsWalkable = true;
 
                             break;
 
                         case HeightType.Snow:
-                            tempTile = new(Palette.SnowColor, Color.Black, '~');
-                            tiles[x, y].CopyAppearanceFrom(tempTile);
-                            tiles[x, y].IsBlockingMove = false;
+                            tempTile = new(MagiPalette.SnowColor, Color.Black, '~');
+                            tiles[x, y].ParentTile.Appearence.CopyAppearanceFrom(tempTile);
+                            tiles[x, y].ParentTile.IsWalkable = true;
 
                             break;
 
                         case HeightType.River:
-                            tempTile = new(Palette.RiverColor, Color.Black, '~');
-                            tiles[x, y].CopyAppearanceFrom(tempTile);
-                            tiles[x, y].IsBlockingMove = false;
+                            tempTile = new(MagiPalette.RiverColor, Color.Black, '~');
+                            tiles[x, y].ParentTile.Appearence.CopyAppearanceFrom(tempTile);
+                            tiles[x, y].ParentTile.IsWalkable = true;
 
                             break;
 
                         case HeightType.HighMountain:
-                            tempTile = new(Palette.HighMountainColor, Color.Black, 30);
-                            tiles[x, y].CopyAppearanceFrom(tempTile);
-                            tiles[x, y].IsBlockingMove = false;
+                            tempTile = new(MagiPalette.HighMountainColor, Color.Black, 30);
+                            tiles[x, y].ParentTile.Appearence.CopyAppearanceFrom(tempTile);
+                            tiles[x, y].ParentTile.IsWalkable = true;
                             break;
                     }
 
                     if (tiles[x, y].Bitmask != 15)
                     {
-                        tiles[x, y].Foreground = Color.Lerp(tiles[x, y].Foreground, Color.Black, 0.2f);
+                        tiles[x, y].ParentTile.Appearence.Foreground = Color.Lerp(tiles[x, y].ParentTile.Appearence.Foreground, Color.Black, 0.2f);
                     }
-                    tiles[x, y].Position = new Point(x, y);
+                    tiles[x, y].ParentTile.Position = new Point(x, y);
                 }
             }
         }
@@ -99,36 +103,36 @@ namespace MagusEngine.Generators
                     switch (tiles[x, y].HeatType)
                     {
                         case HeatType.Coldest:
-                            tiles[x, y].Foreground = Palette.Coldest;
+                            tiles[x, y].ParentTile.Appearence.Foreground = MagiPalette.Coldest;
 
                             break;
 
                         case HeatType.Colder:
-                            tiles[x, y].Foreground = Palette.Colder;
+                            tiles[x, y].ParentTile.Appearence.Foreground = MagiPalette.Colder;
 
                             break;
 
                         case HeatType.Cold:
-                            tiles[x, y].Foreground = Palette.Cold;
+                            tiles[x, y].ParentTile.Appearence.Foreground = MagiPalette.Cold;
                             break;
 
                         case HeatType.Warm:
-                            tiles[x, y].Foreground = Palette.Warm;
+                            tiles[x, y].ParentTile.Appearence.Foreground = MagiPalette.Warm;
                             break;
 
                         case HeatType.Warmer:
-                            tiles[x, y].Foreground = Palette.Warmer;
+                            tiles[x, y].ParentTile.Appearence.Foreground = MagiPalette.Warmer;
                             break;
 
                         case HeatType.Warmest:
-                            tiles[x, y].Foreground = Palette.Warmest;
+                            tiles[x, y].ParentTile.Appearence.Foreground = MagiPalette.Warmest;
                             break;
                     }
 
                     // Darkens color if is a edge tile
                     if (tiles[x, y].Bitmask != 15)
                     {
-                        tiles[x, y].Foreground = Color.Lerp(tiles[x, y].Foreground, Color.Black, 0.4f);
+                        tiles[x, y].ParentTile.Appearence.Foreground = Color.Lerp(tiles[x, y].ParentTile.Appearence.Foreground, Color.Black, 0.4f);
                     }
                 }
             }
@@ -145,27 +149,27 @@ namespace MagusEngine.Generators
                     switch (tile.MoistureType)
                     {
                         case MoistureType.Wettest:
-                            tile.Foreground = Palette.Wettest;
+                            tile.ParentTile.Appearence.Foreground = MagiPalette.Wettest;
                             break;
 
                         case MoistureType.Wetter:
-                            tile.Foreground = Palette.Wetter;
+                            tile.ParentTile.Appearence.Foreground = MagiPalette.Wetter;
                             break;
 
                         case MoistureType.Wet:
-                            tile.Foreground = Palette.Wet;
+                            tile.ParentTile.Appearence.Foreground = MagiPalette.Wet;
                             break;
 
                         case MoistureType.Dry:
-                            tile.Foreground = Palette.Dry;
+                            tile.ParentTile.Appearence.Foreground = MagiPalette.Dry;
                             break;
 
                         case MoistureType.Dryer:
-                            tile.Foreground = Palette.Dryer;
+                            tile.ParentTile.Appearence.Foreground = MagiPalette.Dryer;
                             break;
 
                         case MoistureType.Dryest:
-                            tile.Foreground = Palette.Dryest;
+                            tile.ParentTile.Appearence.Foreground = MagiPalette.Dryest;
                             break;
 
                         default:
@@ -191,88 +195,88 @@ namespace MagusEngine.Generators
                         switch (value)
                         {
                             case BiomeType.Ice:
-                                tile.Foreground = Palette.Ice;
+                                tile.ParentTile.Appearence.Foreground = MagiPalette.Ice;
                                 tile.Collidable = true;
-                                tile.IsBlockingMove = false;
-                                tile.Glyph = 176;
+                                tile.ParentTile.IsWalkable = false;
+                                tile.ParentTile.Appearence.Glyph = 176;
                                 break;
 
                             case BiomeType.BorealForest:
-                                tile.Foreground = Palette.BorealForest;
-                                tile.MoveTimeCost = 275;
+                                tile.ParentTile.Appearence.Foreground = MagiPalette.BorealForest;
+                                tile.ParentTile.MoveTimeCost = 275;
                                 tile.Collidable = true;
-                                tile.IsBlockingMove = false;
-                                tile.Glyph = 20;
+                                tile.ParentTile.IsWalkable = false;
+                                tile.ParentTile.Appearence.Glyph = 20;
 
                                 break;
 
                             case BiomeType.Desert:
-                                tile.Foreground = Palette.Desert;
-                                tile.MoveTimeCost = 350;
+                                tile.ParentTile.Appearence.Foreground = MagiPalette.Desert;
+                                tile.ParentTile.MoveTimeCost = 350;
                                 tile.Collidable = true;
-                                tile.IsBlockingMove = false;
-                                tile.Glyph = 247;
+                                tile.ParentTile.IsWalkable = false;
+                                tile.ParentTile.Appearence.Glyph = 247;
 
                                 break;
 
                             case BiomeType.Grassland:
-                                tile.Foreground = Palette.Grassland;
+                                tile.ParentTile.Appearence.Foreground = MagiPalette.Grassland;
                                 tile.Collidable = true;
-                                tile.IsBlockingMove = false;
-                                tile.Glyph = 'n';
+                                tile.ParentTile.IsWalkable = false;
+                                tile.ParentTile.Appearence.Glyph = 'n';
 
                                 break;
 
                             case BiomeType.SeasonalForest:
-                                tile.Foreground = Palette.SeasonalForest;
-                                tile.MoveTimeCost = 275;
+                                tile.ParentTile.Appearence.Foreground = MagiPalette.SeasonalForest;
+                                tile.ParentTile.MoveTimeCost = 275;
                                 tile.Collidable = true;
-                                tile.IsBlockingMove = false;
-                                tile.Glyph = 6;
+                                tile.ParentTile.IsWalkable = false;
+                                tile.ParentTile.Appearence.Glyph = 6;
                                 break;
 
                             case BiomeType.Tundra:
-                                tile.Foreground = Palette.Tundra;
-                                tile.MoveTimeCost = 300;
+                                tile.ParentTile.Appearence.Foreground = MagiPalette.Tundra;
+                                tile.ParentTile.MoveTimeCost = 300;
                                 tile.Collidable = true;
-                                tile.IsBlockingMove = false;
-                                tile.Glyph = 226;
+                                tile.ParentTile.IsWalkable = false;
+                                tile.ParentTile.Appearence.Glyph = 226;
 
                                 break;
 
                             case BiomeType.Savanna:
-                                tile.Foreground = Palette.Savanna;
-                                tile.MoveTimeCost = 300;
+                                tile.ParentTile.Appearence.Foreground = MagiPalette.Savanna;
+                                tile.ParentTile.MoveTimeCost = 300;
                                 tile.Collidable = true;
-                                tile.IsBlockingMove = false;
-                                tile.Glyph = 5;
+                                tile.ParentTile.IsWalkable = false;
+                                tile.ParentTile.Appearence.Glyph = 5;
 
                                 break;
 
                             case BiomeType.TemperateRainforest:
-                                tile.Foreground = Palette.TemperateRainforest;
-                                tile.MoveTimeCost = 310;
-                                tile.IsBlockingMove = false;
+                                tile.ParentTile.Appearence.Foreground = MagiPalette.TemperateRainforest;
+                                tile.ParentTile.MoveTimeCost = 310;
+                                tile.ParentTile.IsWalkable = false;
                                 tile.Collidable = true;
-                                tile.Glyph = 6;
+                                tile.ParentTile.Appearence.Glyph = 6;
 
                                 break;
 
                             case BiomeType.TropicalRainforest:
-                                tile.Foreground = Palette.TropicalRainforest;
-                                tile.MoveTimeCost = 315;
-                                tile.IsBlockingMove = false;
+                                tile.ParentTile.Appearence.Foreground = MagiPalette.TropicalRainforest;
+                                tile.ParentTile.MoveTimeCost = 315;
+                                tile.ParentTile.IsWalkable = false;
                                 tile.Collidable = true;
-                                tile.Glyph = 6;
+                                tile.ParentTile.Appearence.Glyph = 6;
 
                                 break;
 
                             case BiomeType.Woodland:
-                                tile.Foreground = Palette.Woodland;
-                                tile.MoveTimeCost = 250;
-                                tile.IsBlockingMove = false;
+                                tile.ParentTile.Appearence.Foreground = MagiPalette.Woodland;
+                                tile.ParentTile.MoveTimeCost = 250;
+                                tile.ParentTile.IsWalkable = false;
                                 tile.Collidable = true;
-                                tile.Glyph = 5;
+                                tile.ParentTile.Appearence.Glyph = 5;
 
                                 break;
                         }
@@ -280,14 +284,14 @@ namespace MagusEngine.Generators
                     // Water tiles
                     if (tiles[x, y].HeightType == HeightType.DeepWater)
                     {
-                        tile.Foreground = Palette.DeepWaterColor;
-                        tile.IsBlockingMove = true;
+                        tile.ParentTile.Appearence.Foreground = MagiPalette.DeepWaterColor;
+                        tile.ParentTile.IsWalkable = true;
                         tile.BiomeType = BiomeType.Sea;
                     }
                     else if (tiles[x, y].HeightType == HeightType.ShallowWater)
                     {
-                        tile.Foreground = Palette.ShallowWaterColor;
-                        tile.IsBlockingMove = true;
+                        tile.ParentTile.Appearence.Foreground = MagiPalette.ShallowWaterColor;
+                        tile.ParentTile.IsWalkable = true;
                         tile.BiomeType = BiomeType.Sea;
                     }
 
@@ -297,13 +301,13 @@ namespace MagusEngine.Generators
                         float heatValue = tiles[x, y].HeatValue;
 
                         if (tiles[x, y].HeatType == HeatType.Coldest)
-                            tile.Foreground = Color.Lerp(Palette.IceWater, Palette.ColdWater, heatValue / Palette.Coldest.B);
+                            tile.ParentTile.Appearence.Foreground = Color.Lerp(MagiPalette.IceWater, MagiPalette.ColdWater, heatValue / MagiPalette.Coldest.B);
                         else if (tiles[x, y].HeatType == HeatType.Colder)
-                            tile.Foreground = Color.Lerp(Palette.ColdWater, Palette.RiverWater, (heatValue - Palette.Coldest.B) / (Palette.Colder.B - Palette.Coldest.G));
+                            tile.ParentTile.Appearence.Foreground = Color.Lerp(MagiPalette.ColdWater, MagiPalette.RiverWater, (heatValue - MagiPalette.Coldest.B) / (MagiPalette.Colder.B - MagiPalette.Coldest.G));
                         else if (tiles[x, y].HeatType == HeatType.Cold)
-                            tile.Foreground = Color.Lerp(Palette.RiverWater, Palette.ShallowWaterColor, (heatValue - Palette.Colder.G) / (Palette.Cold.R - Palette.Colder.B));
+                            tile.ParentTile.Appearence.Foreground = Color.Lerp(MagiPalette.RiverWater, MagiPalette.ShallowWaterColor, (heatValue - MagiPalette.Colder.G) / (MagiPalette.Cold.R - MagiPalette.Colder.B));
                         else
-                            tile.Foreground = Palette.ShallowWaterColor;
+                            tile.ParentTile.Appearence.Foreground = MagiPalette.ShallowWaterColor;
                     }
 
                     if (tile.HeightType == HeightType.HighMountain || tile.HeightType == HeightType.Mountain)
@@ -316,9 +320,9 @@ namespace MagusEngine.Generators
                         && tiles[x, y].HeightType != HeightType.River)
                     {
                         if (tiles[x, y].BiomeBitmask != 15)
-                            tile.Foreground = Color.Lerp(tile.Foreground, Color.Black, 0.35f);
+                            tile.ParentTile.Appearence.Foreground = Color.Lerp(tile.ParentTile.Appearence.Foreground, Color.Black, 0.35f);
                     }
-                    tile.Name = tile.BiomeType.ToString();
+                    tile.ParentTile.Name = tile.BiomeType.ToString();
 
                     if (tile.HeightType == HeightType.ShallowWater && tile.BiomeType != BiomeType.Sea)
                         throw new Exception("Tried to add a biome to the ShallowWater other than Sea!");
@@ -334,71 +338,72 @@ namespace MagusEngine.Generators
                 {
                     WorldTile tile = tiles[x, y];
 
-                    if (tile.SiteInfluence is null)
+                    if (!tile.ParentTile.GetComponent<SiteTile>(out var site))
                         continue;
 
-                    if (tile.SiteInfluence.SiteType is SiteType.City)
+                    if (site.SiteInfluence.SiteType is SiteType.City)
                     {
-                        tile.Glyph = '#';
-                        tile.Foreground = Color.White;
+                        tile.ParentTile.Appearence.Glyph = '#';
+                        tile.ParentTile.Appearence.Foreground = Color.White;
                     }
 
-                    if (tile.SiteInfluence.SiteType is SiteType.Camp)
+                    if (site.SiteInfluence.SiteType is SiteType.Camp)
                     {
-                        tile.Glyph = GlyphHelper.GetGlyph('☼');
-                        tile.Foreground = Color.AnsiYellow;
+                        tile.ParentTile.Appearence.Glyph = GlyphHelper.GetGlyph('☼');
+                        tile.ParentTile.Appearence.Foreground = Color.AnsiYellow;
                     }
-                    if (tile.SiteInfluence.SiteType is SiteType.Tower)
+                    if (site.SiteInfluence.SiteType is SiteType.Tower)
                     {
-                        tile.Glyph = GlyphHelper.GetGlyph('T');
-                        tile.Foreground = Color.MediumPurple;
+                        tile.ParentTile.Appearence.Glyph = GlyphHelper.GetGlyph('T');
+                        tile.ParentTile.Appearence.Foreground = Color.MediumPurple;
                     }
-                    if (tile.SiteInfluence.SiteType is SiteType.Dungeon)
+                    if (site.SiteInfluence.SiteType is SiteType.Dungeon)
                     {
-                        tile.Glyph = GlyphHelper.GetGlyph('D');
-                        tile.Foreground = Color.MediumPurple;
+                        tile.ParentTile.Appearence.Glyph = GlyphHelper.GetGlyph('D');
+                        tile.ParentTile.Appearence.Foreground = Color.MediumPurple;
                     }
 
-                    if (tile.Road != null &&
+                    // think of a better way later
+                    /*if (tile.Road != null &&
                         tile.HeightType != HeightType.DeepWater &&
                         tile.HeightType != HeightType.ShallowWater)
                     {
-                        if (tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.Bottom
-                            || tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.Top)
+                        if (tile.Road.RoadDirectionInPos[tile.Position] == Direction.Down
+                            || tile.Road.RoadDirectionInPos[tile.Position] == Direction.Top)
                         {
-                            tile.Glyph = 179;
-                            tile.Foreground = Palette.DirtRoad;
+                            tile.ParentTile.Appearence.Glyph = 179;
+                            tile.ParentTile.Appearence.Foreground = MagiPalette.DirtRoad;
                         }
-                        if (tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.Right
-                            || tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.Left)
+                        if (tile.Road.RoadDirectionInPos[tile.Position] == Direction.Right
+                            || tile.Road.RoadDirectionInPos[tile.Position] == Direction.Left)
                         {
-                            tile.Glyph = 196;
-                            tile.Foreground = Palette.DirtRoad;
+                            tile.ParentTile.Appearence.Glyph = 196;
+                            tile.ParentTile.Appearence.Foreground = MagiPalette.DirtRoad;
                         }
                         // Need to make it better!
-                        if (tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.TopLeft)
+                        if (tile.Road.RoadDirectionInPos[tile.Position] == Direction.TopLeft)
                         {
-                            tile.Foreground = Palette.DirtRoad;
-                            tile.Glyph = '\\';
+                            tile.ParentTile.Appearence.Foreground = MagiPalette.DirtRoad;
+                            tile.ParentTile.Appearence.Glyph = '\\';
                         }
-                        if (tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.BottomRight)
+                        if (tile.Road.RoadDirectionInPos[tile.Position] == Direction.DownRight)
                         {
-                            tile.Foreground = Palette.DirtRoad;
-                            tile.Glyph = '\\';
+                            tile.ParentTile.Appearence.Foreground = MagiPalette.DirtRoad;
+                            tile.ParentTile.Appearence.Glyph = '\\';
                         }
-                        if (tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.TopRight)
+                        if (tile.Road.RoadDirectionInPos[tile.Position] == Direction.TopRight)
                         {
-                            tile.Foreground = Palette.DirtRoad;
-                            tile.Glyph = '/';
+                            tile.ParentTile.Appearence.Foreground = MagiPalette.DirtRoad;
+                            tile.ParentTile.Appearence.Glyph = '/';
                         }
-                        if (tile.Road.RoadDirectionInPos[tile.Position] == WorldDirection.BottomLeft)
+                        if (tile.Road.RoadDirectionInPos[tile.Position] == Direction.DownLeft)
                         {
-                            tile.Foreground = Palette.DirtRoad;
-                            tile.Glyph = '/';
+                            tile.ParentTile.Appearence.Foreground = MagiPalette.DirtRoad;
+                            tile.ParentTile.Appearence.Glyph = '/';
                         }
 
-                        tile.MoveTimeCost = 100;
-                    }
+                        tile.ParentTile.MoveTimeCost = 100;
+                    }*/
                 }
             }
         }
@@ -419,9 +424,9 @@ namespace MagusEngine.Generators
                                 throw new Exception("An error occured! the game tried to add an special land type to a land that has nothing special.");
 
                             case SpecialLandType.MagicLand:
-                                tile.Foreground = Palette.MagicColor;
+                                tile.ParentTile.Appearence.Foreground = MagiPalette.MagicColor;
 #if DEBUG
-                                tile.Background = Palette.MagicColor;
+                                tile.ParentTile.Appearence.Background = MagiPalette.MagicColor;
 #endif
 
                                 break;

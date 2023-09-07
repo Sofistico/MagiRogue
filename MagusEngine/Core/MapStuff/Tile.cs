@@ -50,6 +50,12 @@ namespace MagusEngine.Core
 
         public T? GetComponent<T>() where T : class => GoRogueComponents.GetFirst<T>();
 
+        public bool GetComponent<T>(out T comp) where T : class
+        {
+            comp = GoRogueComponents.GetFirst<T>();
+            return comp != null;
+        }
+
         public bool HasComponent<TFind>(string? tag = null) where TFind : class
         {
             return GoRogueComponents.Contains<TFind>(tag);

@@ -2,6 +2,7 @@
 using MagusEngine.Commands;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.MapStuff;
+using MagusEngine.Systems;
 using MagusEngine.Systems.Time;
 using SadRogue.Primitives;
 using System;
@@ -28,7 +29,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.Ai
                 return (false, -1);
             }
 
-            Actor actor = (Actor)GameLoop.GetCurrentMap().GetEntityById(parent.ID);
+            Actor? actor = (Actor?)Find.CurrentMap?.GetEntityById(parent.ID);
 
             if (TryGetDirectionMove(map, actor))
             {
@@ -43,10 +44,10 @@ namespace MagusEngine.ECS.Components.ActorComponents.Ai
 
         public bool TryGetDirectionMove(Map map, Actor actor)
         {
-            Path shortPath = map.AStar.ShortestPath(actor.Position, GameLoop.Universe.Player.Position);
+            Path shortPath = map.AStar.ShortestPath(actor.Position, Find.Universe.Player.Position);
 
             GoRogue.GameFramework.IGameObject iGame = (GoRogue.GameFramework.IGameObject)Parent;
-            var parent = GameLoop.GetCurrentMap().GetEntityById(iGame.ID);
+            var parent = Find.CurrentMap.GetEntityById(iGame.ID);
 
             Direction direction;
 
