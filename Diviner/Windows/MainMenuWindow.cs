@@ -60,7 +60,7 @@ namespace Diviner.Windows
 
         private void ContinueGame_Click(object? sender, EventArgs e)
         {
-            if (GameStarted && Find.UIManager.NoPopWindow)
+            if (GameStarted && UIManager.NoPopWindow)
             {
                 Hide();
                 Locator.GetService<MessageBusService>().SendMessage<FocusUiManagerMessage>();

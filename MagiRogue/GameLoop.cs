@@ -13,12 +13,10 @@ public static class GameLoop
 {
     private static GlobalSettings settings;
     private static bool beginTest;
+    private static UIManager ui;
 
     public static int GameWidth => settings.ScreenWidth;
     public static int GameHeight => settings.ScreenHeight;
-
-    // Managers
-    public static UIManager UIManager { get; set; }
 
     #region configuration
 
@@ -78,10 +76,11 @@ public static class GameLoop
         //   typeof(SadConsole.UI.Themes.ButtonTheme));
 
         //Instantiate the UIManager
-        UIManager = (UIManager)GameHost.Instance.Screen!;
+        ui = (UIManager)GameHost.Instance.Screen!;
 
         // Now let the UIManager create its consoles so they can use the World data
-        UIManager.InitMainMenu(GameHeight, GameWidth, beginTest);
+        ui.InitMainMenu(GameHeight, GameWidth, beginTest);
+        Locator.AddService(ui);
     }
 
     #endregion configuration
