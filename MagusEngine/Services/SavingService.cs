@@ -196,7 +196,7 @@ namespace MagusEngine.Services
             else
             {
                 List<RegionChunk> chunks = LoadChunks(SavePathName,
-                    chunk.ToIndex(GameLoop.Universe.WorldMap.AssocietatedMap.Width)).ToList();
+                    chunk.ToIndex(Find.Universe.WorldMap.AssocietatedMap.Width)).ToList();
                 chunks.RemoveAll(c => c.ChunckPos() == chunk.ChunckPos());
                 chunks.Add(chunk);
 

@@ -63,7 +63,6 @@ namespace MagusEngine.Core.Magic
                 + entityStats.Mind.Inteligence + (entityStats.Soul.WillPower * 0.5));
 
             int rngDmg = Dice.Roll($"{spellCasted.SpellLevel}d{baseDamage}");
-
             return (int)(rngDmg * spellCasted.Proficiency);
         }
 

@@ -3,6 +3,7 @@ using GoRogue.GameFramework;
 using GoRogue.Pathing;
 using MagusEngine.Bus.MapBus;
 using MagusEngine.Bus.UiBus;
+using MagusEngine.Core;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
@@ -648,26 +649,25 @@ namespace MagusEngine.Commands
             return false;
         }
 
-        public static bool FindWater(Actor actor, Map map, out WaterTile water)
+        public static bool FindWater(Actor actor, Map map, out Tile water)
         {
-            //water = map.GetClosestWaterTile(actor.Body.ViewRadius, actor.Position);
+            water = map.GetClosestWaterTile(actor.Body.ViewRadius, actor.Position);
 
-            //if (water is null)
-            //{
-            //    if (actor.GetMemory<WaterTile>(MemoryType.WaterLoc, out var memory))
-            //    {
-            //        water = memory?.ObjToRemember!;
-            //        return true;
-            //    }
-            //    return false;
-            //}
+            if (water is null)
+            {
+                if (actor.GetMemory<Tile>(MemoryType.WaterLoc, out var memory))
+                {
+                    water = memory?.ObjToRemember!;
+                    return true;
+                }
+                return false;
+            }
 
-            //if (!actor.CanSee(water.Position))
-            //    return false;
+            if (!actor.CanSee(water.Position))
+                return false;
 
-            //if (!actor.HasMemory(MemoryType.WaterLoc, water))
-            //    actor.AddMemory(water.Position, MemoryType.WaterLoc, water);
-            water = new();
+            if (!actor.HasMemory(MemoryType.WaterLoc, water))
+                actor.AddMemory(water.Position, MemoryType.WaterLoc, water);
             return true;
         }
     }

@@ -60,7 +60,7 @@ namespace Diviner.Windows
 
         private void ContinueGame_Click(object? sender, EventArgs e)
         {
-            if (GameStarted && UIManager.NoPopWindow)
+            if (GameStarted && Locator.GetService<UIManager>().NoPopWindow)
             {
                 Hide();
                 Locator.GetService<MessageBusService>().SendMessage<FocusUiManagerMessage>();
@@ -145,7 +145,7 @@ namespace Diviner.Windows
 
         private void TestMap_Click(object? sender, EventArgs e)
         {
-            if (!GameStarted && UIManager.NoPopWindow)
+            if (!GameStarted && Locator.GetService<UIManager>().NoPopWindow)
             {
                 Locator.GetService<MessageBusService>()
                     .SendMessage<StartGameMessage>(new(Player.TestPlayer()) { TestGame = true });
@@ -174,9 +174,9 @@ namespace Diviner.Windows
 
         private void StartGameClick(object? sender, EventArgs e)
         {
-            if (!GameStarted && UIManager.NoPopWindow)
+            if (!GameStarted && Locator.GetService<UIManager>().NoPopWindow)
             {
-                UIManager.CharCreationScreen(Width, Height);
+                Locator.GetService<UIManager>().CharCreationScreen(Width, Height);
             }
         }
 

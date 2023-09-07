@@ -179,7 +179,7 @@ namespace MagusEngine.Generators
 
                 int x = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, _width);
                 int y = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, _height);
-                WorldTile tile = tiles[x, y];
+                WorldTile tile = tiles[x, y].GetComponent<WorldTile>();
 
                 if (tile.HeightType == HeightType.DeepWater
                 || tile.HeightType == HeightType.ShallowWater
@@ -385,7 +385,7 @@ namespace MagusEngine.Generators
                     if (t.MagicalAuraStrength >= 10)
                         t.SpecialLandType = SpecialLandType.MagicLand;
 
-                    tiles[x, y] = t;
+                    tiles[x, y].GetComponent<WorldTile>() = t;
                 }
             }
         }
@@ -516,7 +516,7 @@ namespace MagusEngine.Generators
             {
                 for (int y = 0; y < _height; y++)
                 {
-                    WorldTile tile = tiles[x, y];
+                    WorldTile tile = tiles[x, y].GetComponent<WorldTile>();
 
                     tile.Top = GetTop(tile);
                     tile.Bottom = GetBottom(tile);
@@ -536,7 +536,7 @@ namespace MagusEngine.Generators
             {
                 for (int y = 0; y < _height; y++)
                 {
-                    tiles[x, y].UpdateBitmask();
+                    tiles[x, y].GetComponent<WorldTile>().UpdateBitmask();
                 }
             }
         }
@@ -549,7 +549,7 @@ namespace MagusEngine.Generators
             {
                 for (int y = 0; y < _height; y++)
                 {
-                    WorldTile t = tiles[x, y];
+                    WorldTile t = tiles[x, y].GetComponent<WorldTile>();
 
                     //Tile already flood filled, skip
                     if (t.FloodFilled)
@@ -636,7 +636,7 @@ namespace MagusEngine.Generators
                 // get random tiles
                 int x = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, _width);
                 int y = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, _height);
-                WorldTile tile = tiles[x, y];
+                WorldTile tile = tiles[x, y].GetComponent<WorldTile>();
 
                 // validate the tile
                 if (!tile.Collidable) continue;
@@ -806,7 +806,7 @@ namespace MagusEngine.Generators
             {
                 for (var y = 0; y < _height; y++)
                 {
-                    WorldTile t = tiles[x, y];
+                    WorldTile t = tiles[x, y].GetComponent<WorldTile>();
 
                     if (t.Rivers.Count > 1)
                     {
@@ -975,7 +975,7 @@ namespace MagusEngine.Generators
             {
                 for (var y = 0; y < _height; y++)
                 {
-                    WorldTile t = tiles[x, y];
+                    WorldTile t = tiles[x, y].GetComponent<WorldTile>();
                     if (t.HeightType == HeightType.River)
                     {
                         AddMoisture(t, 60);
@@ -1157,9 +1157,9 @@ namespace MagusEngine.Generators
             {
                 for (var y = 0; y < _height; y++)
                 {
-                    if (!tiles[x, y].Collidable) continue;
+                    if (!tiles[x, y].GetComponent<WorldTile>().Collidable) continue;
 
-                    WorldTile t = tiles[x, y];
+                    WorldTile t = tiles[x, y].GetComponent<WorldTile>();
                     t.BiomeType = GetBiomeType(t);
                 }
             }
@@ -1171,7 +1171,7 @@ namespace MagusEngine.Generators
             {
                 for (var y = 0; y < _height; y++)
                 {
-                    tiles[x, y].UpdateBiomeBitmask();
+                    tiles?[x, y].GetComponent<WorldTile>().UpdateBiomeBitmask();
                 }
             }
         }

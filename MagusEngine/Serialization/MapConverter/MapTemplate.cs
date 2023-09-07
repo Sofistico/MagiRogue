@@ -272,7 +272,7 @@ namespace MagusEngine.Serialization.MapConverter
     public sealed class MapTemplate
     {
         public string MapName { get; set; }
-        public BasicTile[] Tiles { get; set; }
+        public Tile[] Tiles { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
         public Point LastPlayerPosition { get; set; }
@@ -288,7 +288,7 @@ namespace MagusEngine.Serialization.MapConverter
 
         [JsonConstructor]
         public MapTemplate(string mapName,
-            BasicTile[] tiles,
+            Tile[] tiles,
             int width,
             int height,
             Point lastPlayerPosition,
@@ -316,10 +316,10 @@ namespace MagusEngine.Serialization.MapConverter
         {
             if (map is not null)
                 return null;
-            BasicTile[] tiles = new BasicTile[map.Terrain.Count];
+            var tiles = new Tile[map.Terrain.Count];
             for (int i = 0; i < map.Terrain.Count; i++)
             {
-                tiles[i] = map.Terrain[i];
+                tiles[i] = (Tile)map.Terrain[i];
             }
 
             MapTemplate template = new MapTemplate(map.MapName, tiles, map.Width,

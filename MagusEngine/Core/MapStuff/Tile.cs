@@ -1,6 +1,7 @@
 ﻿using Arquimedes.Enumerators;
 using GoRogue.GameFramework;
 using MagusEngine.ECS.Components;
+using MagusEngine.Serialization;
 using SadConsole;
 using SadRogue.Primitives;
 using System;
@@ -66,5 +67,10 @@ namespace MagusEngine.Core
 
         public void AddComponent<T>(T value, string? tag = null) where T : class
             => GoRogueComponents.Add(value, tag);
+
+        public MaterialTemplate? GetMaterial()
+        {
+            return GetComponent<MaterialComponent>()?.Material;
+        }
     }
 }

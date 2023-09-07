@@ -6,5 +6,4 @@
 using System.Diagnostics.CodeAnalysis;
 
 //[assembly: SuppressMessage("Style", "IDE0090:Usar 'new(...)'", Justification = "<Pendente>", Scope = "module")]
-[assembly: SuppressMessage("Style", "CS8600", Justification = "<Pendente>", Scope = "module")]
 [assembly: SuppressMessage("Style", "CS8602", Justification = "<Pendente>", Scope = "module")]
