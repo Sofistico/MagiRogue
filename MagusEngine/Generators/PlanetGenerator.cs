@@ -6,7 +6,9 @@ using MagusEngine.Core.MapStuff;
 using MagusEngine.Core.WorldStuff;
 using MagusEngine.Core.WorldStuff.History;
 using MagusEngine.ECS.Components.TilesComponents;
+using MagusEngine.Systems;
 using MagusEngine.Utils;
+using MagusEngine.Utils.Extensions;
 using MagusEngine.Utils.Noise.AccidentalNoiseLibrary.Enums;
 using MagusEngine.Utils.Noise.AccidentalNoiseLibrary.Implicit;
 using SadRogue.Primitives;
@@ -85,7 +87,7 @@ namespace MagusEngine.Generators
         private PlanetMap planetData;
 
         // final object
-        private Tile[,] tiles;
+        private WorldTile[,] tiles;
 
         private float[,] HeightData;
 
@@ -179,29 +181,28 @@ namespace MagusEngine.Generators
 
                 int x = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, _width);
                 int y = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, _height);
-                WorldTile tile = tiles[x, y].GetComponent<WorldTile>();
+                WorldTile tile = tiles[x, y];
+                Tile parentTile = tile.ParentTile!;
 
                 if (tile.HeightType == HeightType.DeepWater
-                || tile.HeightType == HeightType.ShallowWater
-                || tile.HeightType == HeightType.River)
+                    || tile.HeightType == HeightType.ShallowWater
+                    || tile.HeightType == HeightType.River)
                     continue;
 
-                if (tile.SiteInfluence != null)
+                if (parentTile.GetComponent<SiteTile>(out var site))
                     continue;
 
                 var possibleCivs = DataManager.QueryCultureTemplateFromBiome(tile.BiomeType.ToString());
                 Civilization civ;
                 if (possibleCivs.Count > 0)
-                {
                     civ = possibleCivs.GetRandomItemFromList().ConvertToCivilization();
-                }
                 else
                     continue;
 
                 int rng = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(25, 50);
 
                 int popNmr = (int)(rng * ((int)tile.HeightType * tile.MoistureValue + 1));
-                Site set = new Site(tile.Position, civ.RandomSiteFromLanguageName(), new Population(popNmr, civ.PrimaryRace.Id))
+                Site set = new Site(parentTile.Position, civ.RandomSiteFromLanguageName(), new Population(popNmr, civ.PrimaryRace.Id))
                 {
                     MundaneResources = (int)tile.GetResources()
                 };
@@ -209,14 +210,14 @@ namespace MagusEngine.Generators
                 set.Buildings.Add(new Building(room));
                 set.DefineSiteSize();
 
-                tile.SiteInfluence = set;
+                parentTile.AddComponent<SiteTile>(new(set));
                 civ.AddSiteToCiv(set);
                 if (civ.Territory.Count == 0)
                     throw new Exception();
 
                 if (currentCivCount < maxCivsWorld)
                 {
-                    _civilizations.Add(civ);
+                    _civilizations?.Add(civ);
                 }
 
                 planetData.Civilizations.Add(civ);
@@ -229,7 +230,7 @@ namespace MagusEngine.Generators
 
         #region Tiles
 
-        private void CreateConsole(Tile[,] tiles)
+        private void CreateConsole(WorldTile[,] tiles)
         {
             PlanetGlyphGenerator.SetTile(_width, _height, ref tiles);
             // For Test only!
@@ -252,140 +253,142 @@ namespace MagusEngine.Generators
             {
                 for (int y = 0; y < _height; y++)
                 {
-                    WorldTile t = new();
-                    t.Position = new Point(x, y);
+                    WorldTile worldTile = new();
+                    Tile parentTile = new();
+                    parentTile.Position = new Point(x, y);
 
                     float heightValue = HeightData[x, y];
-                    t.MineralValue = MathMagi.ReturnPositive(MathMagi.Round
+                    worldTile.MineralValue = MathMagi.ReturnPositive(MathMagi.Round
                         ((HeightData[x, y] + HeatData[x, y]) * 200));
 
                     // normalize value between 0 and 1
                     heightValue = MathMagi.ReturnPositive(heightValue);
 
-                    t.HeightValue = heightValue;
+                    worldTile.HeightValue = heightValue;
 
                     //HeightMap Analyze
                     if (heightValue < deepWater)
                     {
-                        t.HeightType = HeightType.DeepWater;
-                        t.Collidable = false;
-                        t.MineralValue *= 1.5f;
+                        worldTile.HeightType = HeightType.DeepWater;
+                        worldTile.Collidable = false;
+                        worldTile.MineralValue *= 1.5f;
                     }
                     else if (heightValue < shallowWater)
                     {
-                        t.HeightType = HeightType.ShallowWater;
-                        t.Collidable = false;
-                        t.MineralValue *= 0.5f;
+                        worldTile.HeightType = HeightType.ShallowWater;
+                        worldTile.Collidable = false;
+                        worldTile.MineralValue *= 0.5f;
                     }
                     else if (heightValue < sand)
                     {
-                        t.HeightType = HeightType.Sand;
-                        t.Collidable = true;
-                        t.MineralValue *= 0.7f;
+                        worldTile.HeightType = HeightType.Sand;
+                        worldTile.Collidable = true;
+                        worldTile.MineralValue *= 0.7f;
                     }
                     else if (heightValue < grass)
                     {
-                        t.HeightType = HeightType.Grass;
-                        t.Collidable = true;
-                        t.MineralValue *= 0.7f;
+                        worldTile.HeightType = HeightType.Grass;
+                        worldTile.Collidable = true;
+                        worldTile.MineralValue *= 0.7f;
                     }
                     else if (heightValue < forest)
                     {
-                        t.HeightType = HeightType.Forest;
-                        t.Collidable = true;
-                        t.MineralValue *= 1.2f;
+                        worldTile.HeightType = HeightType.Forest;
+                        worldTile.Collidable = true;
+                        worldTile.MineralValue *= 1.2f;
                     }
                     else if (heightValue < rock)
                     {
-                        t.HeightType = HeightType.Mountain;
-                        t.Collidable = true;
-                        t.MineralValue *= 2.0f;
+                        worldTile.HeightType = HeightType.Mountain;
+                        worldTile.Collidable = true;
+                        worldTile.MineralValue *= 2.0f;
                     }
                     else if (heightValue < snow)
                     {
-                        t.HeightType = HeightType.Snow;
-                        t.Collidable = true;
+                        worldTile.HeightType = HeightType.Snow;
+                        worldTile.Collidable = true;
                     }
                     else
                     {
-                        t.HeightType = HeightType.HighMountain;
-                        t.Collidable = true;
-                        t.MineralValue *= 3.0f;
+                        worldTile.HeightType = HeightType.HighMountain;
+                        worldTile.Collidable = true;
+                        worldTile.MineralValue *= 3.0f;
                     }
 
                     //Moisture Map Analyze
                     float moistureValue = MathMagi.ReturnPositive(MoistureData[x, y]);
-                    t.MoistureValue = MathMagi.Round(moistureValue);
+                    worldTile.MoistureValue = MathMagi.Round(moistureValue);
 
                     //adjust moisture based on height
-                    if (t.HeightType == HeightType.DeepWater)
+                    if (worldTile.HeightType == HeightType.DeepWater)
                     {
-                        MoistureData[t.Position.X, t.Position.Y] += 8f * t.HeightValue;
+                        MoistureData[parentTile.Position.X, parentTile.Position.Y] += 8f * worldTile.HeightValue;
                     }
-                    else if (t.HeightType == HeightType.ShallowWater)
+                    else if (worldTile.HeightType == HeightType.ShallowWater)
                     {
-                        MoistureData[t.Position.X, t.Position.Y] += 3f * t.HeightValue;
+                        MoistureData[parentTile.Position.X, parentTile.Position.Y] += 3f * worldTile.HeightValue;
                     }
-                    else if (t.HeightType == HeightType.Shore)
+                    else if (worldTile.HeightType == HeightType.Shore)
                     {
-                        MoistureData[t.Position.X, t.Position.Y] += 1f * t.HeightValue;
+                        MoistureData[parentTile.Position.X, parentTile.Position.Y] += 1f * worldTile.HeightValue;
                     }
-                    else if (t.HeightType == HeightType.Sand)
+                    else if (worldTile.HeightType == HeightType.Sand)
                     {
-                        MoistureData[t.Position.X, t.Position.Y] += 0.25f * t.HeightValue;
+                        MoistureData[parentTile.Position.X, parentTile.Position.Y] += 0.25f * worldTile.HeightValue;
                     }
-                    else if (t.HeightType == HeightType.Snow)
+                    else if (worldTile.HeightType == HeightType.Snow)
                     {
-                        MoistureData[t.Position.X, t.Position.Y] += 2f * t.HeightValue;
+                        MoistureData[parentTile.Position.X, parentTile.Position.Y] += 2f * worldTile.HeightValue;
                     }
 
                     //set moisture type
-                    if (moistureValue < dryerValue) t.MoistureType = MoistureType.Dryest;
-                    else if (moistureValue < dryValue) t.MoistureType = MoistureType.Dryer;
-                    else if (moistureValue < wetValue) t.MoistureType = MoistureType.Dry;
-                    else if (moistureValue < wetterValue) t.MoistureType = MoistureType.Wet;
-                    else if (moistureValue < wettestValue) t.MoistureType = MoistureType.Wetter;
-                    else t.MoistureType = MoistureType.Wettest;
+                    if (moistureValue < dryerValue) worldTile.MoistureType = MoistureType.Dryest;
+                    else if (moistureValue < dryValue) worldTile.MoistureType = MoistureType.Dryer;
+                    else if (moistureValue < wetValue) worldTile.MoistureType = MoistureType.Dry;
+                    else if (moistureValue < wetterValue) worldTile.MoistureType = MoistureType.Wet;
+                    else if (moistureValue < wettestValue) worldTile.MoistureType = MoistureType.Wetter;
+                    else worldTile.MoistureType = MoistureType.Wettest;
 
-                    if (t.HeightType == HeightType.Forest)
+                    if (worldTile.HeightType == HeightType.Forest)
                     {
-                        HeatData[t.Position.X, t.Position.Y] -= 0.1f * t.HeightValue;
+                        HeatData[parentTile.Position.X, parentTile.Position.Y] -= 0.1f * worldTile.HeightValue;
                     }
-                    else if (t.HeightType == HeightType.Mountain)
+                    else if (worldTile.HeightType == HeightType.Mountain)
                     {
-                        HeatData[t.Position.X, t.Position.Y] -= 0.25f * t.HeightValue;
+                        HeatData[parentTile.Position.X, parentTile.Position.Y] -= 0.25f * worldTile.HeightValue;
                     }
-                    else if (t.HeightType == HeightType.HighMountain)
+                    else if (worldTile.HeightType == HeightType.HighMountain)
                     {
-                        HeatData[t.Position.X, t.Position.Y] -= 0.5f * t.HeightValue;
+                        HeatData[parentTile.Position.X, parentTile.Position.Y] -= 0.5f * worldTile.HeightValue;
                     }
-                    else if (t.HeightType == HeightType.Snow)
+                    else if (worldTile.HeightType == HeightType.Snow)
                     {
-                        HeatData[t.Position.X, t.Position.Y] -= 0.7f * t.HeightValue;
+                        HeatData[parentTile.Position.X, parentTile.Position.Y] -= 0.7f * worldTile.HeightValue;
                     }
                     else
                     {
-                        HeatData[t.Position.X, t.Position.Y] += 0.01f * t.HeightValue;
+                        HeatData[parentTile.Position.X, parentTile.Position.Y] += 0.01f * worldTile.HeightValue;
                     }
 
                     // Set heat value
-                    float heatModValue = MathMagi.ReturnPositive(HeatData[t.Position.X, t.Position.Y]);
-                    t.HeatValue = heatModValue;
+                    float heatModValue = MathMagi.ReturnPositive(HeatData[parentTile.Position.X, parentTile.Position.Y]);
+                    worldTile.HeatValue = heatModValue;
 
                     // set heat type
-                    if (heatModValue < coldestValue) t.HeatType = HeatType.Coldest;
-                    else if (heatModValue < colderValue) t.HeatType = HeatType.Colder;
-                    else if (heatModValue < coldValue) t.HeatType = HeatType.Cold;
-                    else if (heatModValue < warmValue) t.HeatType = HeatType.Warm;
-                    else if (heatModValue < warmerValue) t.HeatType = HeatType.Warmer;
-                    else t.HeatType = HeatType.Warmest;
+                    if (heatModValue < coldestValue) worldTile.HeatType = HeatType.Coldest;
+                    else if (heatModValue < colderValue) worldTile.HeatType = HeatType.Colder;
+                    else if (heatModValue < coldValue) worldTile.HeatType = HeatType.Cold;
+                    else if (heatModValue < warmValue) worldTile.HeatType = HeatType.Warm;
+                    else if (heatModValue < warmerValue) worldTile.HeatType = HeatType.Warmer;
+                    else worldTile.HeatType = HeatType.Warmest;
 
-                    t.MagicalAuraStrength = Dice.Roll("2d50 / 10");
+                    worldTile.MagicalAuraStrength = Dice.Roll("2d50 / 10");
 
-                    if (t.MagicalAuraStrength >= 10)
-                        t.SpecialLandType = SpecialLandType.MagicLand;
+                    if (worldTile.MagicalAuraStrength >= 10)
+                        worldTile.SpecialLandType = SpecialLandType.MagicLand;
 
-                    tiles[x, y].GetComponent<WorldTile>() = t;
+                    parentTile.AddComponent(worldTile);
+                    tiles[x, y] = worldTile;
                 }
             }
         }
@@ -408,18 +411,18 @@ namespace MagusEngine.Generators
                     // -1 to 1 makes extreme straigh lines
                     // -1 to 2 makes circular world
                     // -1 to 3 makes lots of archipelagos
-                    float x1 = 1, x2 = 2;
-                    float y1 = 1, y2 = 2;
-                    float dx = x2 - x1;
-                    float dy = y2 - y1;
+                    const float x1 = 1, x2 = 2;
+                    const float y1 = 1, y2 = 2;
+                    const float dx = x2 - x1;
+                    const float dy = y2 - y1;
 
                     //Sample noise at smaller intervals
                     float s = x / (float)_width;
                     float t = y / (float)_height;
 
                     // Calculate our 2D coordinates
-                    float nx = x1 + MathF.Cos(s * 2) * dx;
-                    float ny = y1 + MathF.Sin(t * 2) * dy;
+                    float nx = x1 + (MathF.Cos(s * 2) * dx);
+                    float ny = y1 + (MathF.Sin(t * 2) * dy);
 
                     float heightValue = (float)heightMap.Get(nx, ny);
                     float heatValue = (float)heatMap.Get(nx, ny);
@@ -472,42 +475,42 @@ namespace MagusEngine.Generators
         // need to get the mod so that it doesn't pick up a tile outside of the map.
         private WorldTile GetTop(WorldTile center)
         {
-            return tiles[center.Position.X, MathMagi.Mod(center.Position.Y - 1, _height)];
+            return tiles[center.ParentTile.Position.X, MathMagi.Mod(center.ParentTile.Position.Y - 1, _height)];
         }
 
         private WorldTile GetBottom(WorldTile t)
         {
-            return tiles[t.Position.X, MathMagi.Mod(t.Position.Y + 1, _height)];
+            return tiles[t.ParentTile.Position.X, MathMagi.Mod(t.ParentTile.Position.Y + 1, _height)];
         }
 
         private WorldTile GetLeft(WorldTile t)
         {
-            return tiles[MathMagi.Mod(t.Position.X - 1, _width), t.Position.Y];
+            return tiles[MathMagi.Mod(t.ParentTile.Position.X - 1, _width), t.ParentTile.Position.Y];
         }
 
         private WorldTile GetRight(WorldTile t)
         {
-            return tiles[MathMagi.Mod(t.Position.X + 1, _width), t.Position.Y];
+            return tiles[MathMagi.Mod(t.ParentTile.Position.X + 1, _width), t.ParentTile.Position.Y];
         }
 
         private WorldTile GetTopRight(WorldTile t)
         {
-            return tiles[MathMagi.Mod(t.Position.X + 1, _width), MathMagi.Mod(t.Position.Y - 1, _width)];
+            return tiles[MathMagi.Mod(t.ParentTile.Position.X + 1, _width), MathMagi.Mod(t.ParentTile.Position.Y - 1, _width)];
         }
 
         private WorldTile GetBottomRight(WorldTile t)
         {
-            return tiles[MathMagi.Mod(t.Position.X + 1, _width), MathMagi.Mod(t.Position.Y + 1, _width)];
+            return tiles[MathMagi.Mod(t.ParentTile.Position.X + 1, _width), MathMagi.Mod(t.ParentTile.Position.Y + 1, _width)];
         }
 
         private WorldTile GetTopLeft(WorldTile t)
         {
-            return tiles[MathMagi.Mod(t.Position.X + -1, _width), MathMagi.Mod(t.Position.Y + 1, _width)];
+            return tiles[MathMagi.Mod(t.ParentTile.Position.X + -1, _width), MathMagi.Mod(t.ParentTile.Position.Y + 1, _width)];
         }
 
         private WorldTile GetBottomLeft(WorldTile t)
         {
-            return tiles[MathMagi.Mod(t.Position.X - 1, _width), MathMagi.Mod(t.Position.Y - 1, _width)];
+            return tiles[MathMagi.Mod(t.ParentTile.Position.X - 1, _width), MathMagi.Mod(t.ParentTile.Position.Y - 1, _width)];
         }
 
         private void UpdateNeighbors()
@@ -516,7 +519,7 @@ namespace MagusEngine.Generators
             {
                 for (int y = 0; y < _height; y++)
                 {
-                    WorldTile tile = tiles[x, y].GetComponent<WorldTile>();
+                    WorldTile tile = tiles[x, y];
 
                     tile.Top = GetTop(tile);
                     tile.Bottom = GetBottom(tile);
@@ -536,7 +539,7 @@ namespace MagusEngine.Generators
             {
                 for (int y = 0; y < _height; y++)
                 {
-                    tiles[x, y].GetComponent<WorldTile>().UpdateBitmask();
+                    tiles[x, y].UpdateBitmask();
                 }
             }
         }
@@ -549,7 +552,7 @@ namespace MagusEngine.Generators
             {
                 for (int y = 0; y < _height; y++)
                 {
-                    WorldTile t = tiles[x, y].GetComponent<WorldTile>();
+                    WorldTile t = tiles[x, y];
 
                     //Tile already flood filled, skip
                     if (t.FloodFilled)
@@ -636,7 +639,7 @@ namespace MagusEngine.Generators
                 // get random tiles
                 int x = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, _width);
                 int y = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, _height);
-                WorldTile tile = tiles[x, y].GetComponent<WorldTile>();
+                WorldTile tile = tiles[x, y];
 
                 // validate the tile
                 if (!tile.Collidable) continue;
@@ -723,18 +726,14 @@ namespace MagusEngine.Generators
                     leftValue = 0;
 
                 // override flow direction if a tile is significantly lower
-                if (currentDirection == Direction.Left)
-                    if (MathF.Abs(rigthValue - leftValue) < 0.1f)
-                        rigthValue = int.MaxValue;
-                if (currentDirection == Direction.Right)
-                    if (MathF.Abs(rigthValue - leftValue) < 0.1f)
-                        leftValue = int.MaxValue;
-                if (currentDirection == Direction.Top)
-                    if (MathF.Abs(topValue - bottomValue) < 0.1f)
-                        topValue = int.MaxValue;
-                if (currentDirection == Direction.Down)
-                    if (MathF.Abs(topValue - bottomValue) < 0.1f)
-                        bottomValue = int.MaxValue;
+                if (currentDirection == Direction.Left && MathF.Abs(rigthValue - leftValue) < 0.1f)
+                    rigthValue = int.MaxValue;
+                if (currentDirection == Direction.Right && MathF.Abs(rigthValue - leftValue) < 0.1f)
+                    leftValue = int.MaxValue;
+                if (currentDirection == Direction.Up && MathF.Abs(topValue - bottomValue) < 0.1f)
+                    topValue = int.MaxValue;
+                if (currentDirection == Direction.Down && MathF.Abs(topValue - bottomValue) < 0.1f)
+                    bottomValue = int.MaxValue;
 
                 // find mininum has god forsaken us?
                 float min = MathF.Min(MathF.Min(MathF.Min(leftValue, rigthValue), topValue), bottomValue);
@@ -784,10 +783,10 @@ namespace MagusEngine.Generators
                 {
                     if (top.Collidable)
                     {
-                        if (river.CurrentDirection != Direction.Top)
+                        if (river.CurrentDirection != Direction.Up)
                         {
                             river.TurnCount++;
-                            river.CurrentDirection = Direction.Top;
+                            river.CurrentDirection = Direction.Up;
                         }
                         FindPathToWater(top, currentDirection, ref river);
                     }
@@ -975,7 +974,7 @@ namespace MagusEngine.Generators
             {
                 for (var y = 0; y < _height; y++)
                 {
-                    WorldTile t = tiles[x, y].GetComponent<WorldTile>();
+                    WorldTile t = tiles[x, y];
                     if (t.HeightType == HeightType.River)
                     {
                         AddMoisture(t, 60);
@@ -986,14 +985,14 @@ namespace MagusEngine.Generators
 
         private void AddMoisture(WorldTile t, int radius)
         {
-            Point center = new(t.Position.X, t.Position.Y);
+            Point center = new(t.ParentTile.Position.X, t.ParentTile.Position.Y);
             int curr = radius;
 
             while (curr > 0)
             {
-                int x1 = MathMagi.Mod(t.Position.X - curr, _width);
-                int x2 = MathMagi.Mod(t.Position.X + curr, _width);
-                int y = t.Position.Y;
+                int x1 = MathMagi.Mod(t.ParentTile.Position.X - curr, _width);
+                int x2 = MathMagi.Mod(t.ParentTile.Position.X + curr, _width);
+                int y = t.ParentTile.Position.Y;
 
                 AddMoisture(tiles[x1, y],
                     (int)(0.025f / (center - new Point(x1, y)).PointMagnitude()));
@@ -1157,9 +1156,9 @@ namespace MagusEngine.Generators
             {
                 for (var y = 0; y < _height; y++)
                 {
-                    if (!tiles[x, y].GetComponent<WorldTile>()!.Collidable) continue;
+                    if (!tiles[x, y].Collidable) continue;
 
-                    WorldTile t = tiles[x, y].GetComponent<WorldTile>()!;
+                    WorldTile t = tiles[x, y];
                     t.BiomeType = GetBiomeType(t);
                 }
             }
@@ -1171,7 +1170,7 @@ namespace MagusEngine.Generators
             {
                 for (var y = 0; y < _height; y++)
                 {
-                    tiles?[x, y].GetComponent<WorldTile>()!.UpdateBiomeBitmask();
+                    tiles?[x, y].UpdateBiomeBitmask();
                 }
             }
         }

@@ -20,10 +20,15 @@ namespace MagusEngine.ECS.Components.TilesComponents
         public SpecialLandType SpecialLandType { get; set; }
 
         public Dictionary<Direction, WorldTile> Directions { get; set; } = new();
-        public WorldTile Top => Directions[Direction.Up];
-        public WorldTile Bottom => Directions[Direction.Down];
-        public WorldTile Left => Directions[Direction.Left];
-        public WorldTile Right => Directions[Direction.Right];
+        public WorldTile Top { get => Directions[Direction.Up]; set => Directions[Direction.Up] = value; }
+        public WorldTile Bottom { get => Directions[Direction.Down]; set => Directions[Direction.Down] = value; }
+        public WorldTile Left { get => Directions[Direction.Left]; set => Directions[Direction.Left] = value; }
+        public WorldTile Right { get => Directions[Direction.Right]; set => Directions[Direction.Right] = value; }
+        public WorldTile TopRight { get => Directions[Direction.UpRight]; set => Directions[Direction.UpRight] = value; }
+        public WorldTile TopLeft { get => Directions[Direction.UpLeft]; set => Directions[Direction.UpLeft] = value; }
+        public WorldTile BottomRight { get => Directions[Direction.DownRight]; set => Directions[Direction.DownRight] = value; }
+        public WorldTile BottomLeft { get => Directions[Direction.DownLeft]; set => Directions[Direction.DownLeft] = value; }
+
         public int Bitmask { get; private set; }
 
         /// <summary>
@@ -49,6 +54,12 @@ namespace MagusEngine.ECS.Components.TilesComponents
         public string? RegionName { get; internal set; }
         public object? Parent { get; set; }
         public Tile? ParentTile => (Tile?)Parent;
+
+        public Point Position
+        {
+            get => ParentTile.Position;
+            set => ParentTile.Position = value;
+        }
 
         public void UpdateBiomeBitmask()
         {

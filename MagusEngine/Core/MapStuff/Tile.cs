@@ -18,6 +18,10 @@ namespace MagusEngine.Core
         public string? Description { get; set; }
         public List<Trait> Traits { get; set; } = new();
 
+        public Tile() : this(Color.BlueViolet, Color.Wheat, '@', true, true, Point.None)
+        {
+        }
+
         public Tile(Color foreground,
             Color background,
             char glyph,

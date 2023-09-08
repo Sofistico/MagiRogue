@@ -1,5 +1,6 @@
 ﻿using MagusEngine.Core.Civ;
 using MagusEngine.Core.WorldStuff.History;
+using MagusEngine.ECS.Components.TilesComponents;
 using MagusEngine.Serialization.MapConverter;
 using MagusEngine.Systems;
 using MagusEngine.Systems.Time;
@@ -60,7 +61,7 @@ namespace MagusEngine.Core.MapStuff
                 GoRogueComponents.GetFirstOrDefault<FOVHandler>().Disable();
         }
 
-        public void SetWorldTiles(Tile[,] tiles)
+        public void SetWorldTiles(WorldTile[,] tiles)
         {
             AssocietatedMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().Disable();
 
@@ -68,7 +69,7 @@ namespace MagusEngine.Core.MapStuff
             {
                 for (int y = 0; y < _height; y++)
                 {
-                    AssocietatedMap.SetTerrain(tiles[x, y]);
+                    AssocietatedMap.SetTerrain(tiles[x, y].ParentTile);
                 }
             }
         }

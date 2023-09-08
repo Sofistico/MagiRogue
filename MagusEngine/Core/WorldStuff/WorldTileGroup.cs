@@ -1,5 +1,5 @@
-﻿using MagiRogue.Data.Enumerators;
-using MagiRogue.GameSys.Tiles;
+﻿using Arquimedes.Enumerators;
+using MagusEngine.ECS.Components.TilesComponents;
 using System.Collections.Generic;
 
 // Used in flood fill algorithm
