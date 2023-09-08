@@ -2,6 +2,7 @@
 using MagusEngine.Core;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.ECS.Components.TilesComponents;
+using MagusEngine.Factory;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace MagusEngine.Generators.MapGen
         public Map[] GenerateMapWithWorldParam(PlanetMap worldMap, Point posGenerated)
         {
             Map[] maps = new Map[RegionChunk.MAX_LOCAL_MAPS];
-            var worldTile = worldMap.AssocietatedMap.GetTileAt<WorldTile>(posGenerated);
+            var worldTile = worldMap.AssocietatedMap.GetTileAt<WorldTile>(posGenerated).GetComponent<WorldTile>();
             int settlmentCounter = 0;
             for (int i = 0; i < maps.Length; i++)
             {
@@ -54,7 +55,7 @@ namespace MagusEngine.Generators.MapGen
         private void FinishingTouches(Map completeMap, WorldTile worldTile)
         {
             // here prune trees
-            if (worldTile.SiteInfluence is not null)
+            if (worldTile.ParentTile.GetComponent<SiteTile>(out var _))
             {
                 PruneTrees(completeMap, worldTile);
                 MakeRoomsUseful(completeMap);
@@ -66,14 +67,14 @@ namespace MagusEngine.Generators.MapGen
             List<Tile> trees = completeMap.ReturnAllTrees();
 
             int chanceToRemoveTree = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt
-                (worldTile.SiteInfluence.ReturnPopNumber()) / 100;
+                (worldTile.ParentTile.GetComponent<SiteTile>().SiteInfluence.ReturnPopNumber()) / 100;
             for (int i = 0; i < trees.Count; i++)
             {
                 int rng = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, 101);
                 if (rng <= chanceToRemoveTree)
                 {
                     Point pos = trees[i].Position;
-                    var floor = TileEncyclopedia.GenericTreeTrunk(pos);
+                    var floor = TileFactory.GenericTreeTrunk(pos);
                     completeMap.SetTerrain(floor);
                 }
             }
@@ -100,8 +101,7 @@ namespace MagusEngine.Generators.MapGen
 
                 case BiomeType.Desert:
                     PlaceVegetations(completeMap,
-                        new TileFloor("Cactus", Point.None,
-                        "grass", 198, Color.Green, Color.Black));
+                        new Tile(Color.Green, Color.Black, (char)198, false, false, Point.None, "Cactus", "grass"));
                     break;
 
                 case BiomeType.Savanna:
@@ -114,8 +114,7 @@ namespace MagusEngine.Generators.MapGen
 
                 case BiomeType.Grassland:
                     PlaceVegetations(completeMap,
-                        new TileFloor("Shrub", Point.None,
-                            "grass", '"', Color.Green, Color.Black));
+                        new Tile(Color.Green, Color.Black, '"', true, true, Point.None, "Shrub", "grass"));
                     break;
 
                 case BiomeType.Woodland:
@@ -144,22 +143,22 @@ namespace MagusEngine.Generators.MapGen
                     break; // null as well
 
                 case BiomeType.Mountain:
-                    PutRngFloorTileThere(completeMap, TileEncyclopedia.GenericGrass(Point.None));
+                    PutRngFloorTileThere(completeMap, TileFactory.GenericGrass(Point.None));
                     break;
 
                 default:
                     break;
             }
 
-            if (worldTile.Rivers.Count > 0)
-            {
-            }
-            if (worldTile.Road is not null)
-            {
-            }
-            if (worldTile.MagicalAuraStrength > 7)
-            {
-            }
+            //if (worldTile.Rivers.Count > 0)
+            //{
+            //}
+            //if (worldTile.Road is not null)
+            //{
+            //}
+            //if (worldTile.MagicalAuraStrength > 7)
+            //{
+            //}
             /*switch (worldTile.SpecialLandType)
             {
                 case SpecialLandType.None:
@@ -184,10 +183,10 @@ namespace MagusEngine.Generators.MapGen
         /// <exception cref="ApplicationException"></exception>
         private int CreateSitesIfAny(Map completeMap, WorldTile worldTile, int createdSites)
         {
-            if (worldTile.SiteInfluence is not null)
+            if (worldTile.ParentTile.GetComponent<SiteTile>(out var siteTile))
             {
                 SiteGenerator city = new();
-                var site = worldTile.SiteInfluence;
+                var site = siteTile.SiteInfluence;
                 if ((int)site.Size == createdSites)
                     return (int)site.Size;
                 switch (site.Size)
@@ -260,10 +259,10 @@ namespace MagusEngine.Generators.MapGen
         {
             Map map = new Map($"{worldTile.BiomeType}");
 
-            for (int i = 0; i < map.Tiles.Length; i++)
+            for (int i = 0; i < map.Terrain.Count; i++)
             {
                 Point pos = Point.FromIndex(i, map.Width);
-                TileFloor tile = new TileFloor(pos);
+                Tile tile = TileFactory.GenericStoneFloor(pos);
                 PrepareForAnyFloor(tile, map);
             }
             return map;
@@ -272,10 +271,10 @@ namespace MagusEngine.Generators.MapGen
         private static Map GenericIceMap(WorldTile worldTile)
         {
             Map map = new Map($"{worldTile.BiomeType}");
-            for (int i = 0; i < map.Tiles.Length; i++)
+            for (int i = 0; i < map.Terrain.Length; i++)
             {
                 Point pos = Point.FromIndex(i, map.Width);
-                TileFloor tile = (TileFloor)DataManager.QueryTileInData("snow_floor");
+                Tile tile = DataManager.QueryTileInData("snow_floor");
                 tile.Position = pos;
                 PrepareForAnyFloor(tile, map);
             }

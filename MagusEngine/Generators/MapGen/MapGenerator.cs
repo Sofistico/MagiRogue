@@ -1,4 +1,5 @@
 ﻿using Arquimedes.Enumerators;
+using GoRogue.Random;
 using MagusEngine.Core;
 using MagusEngine.Core.Civ;
 using MagusEngine.Core.Entities;
@@ -491,13 +492,13 @@ namespace MagusEngine.Generators.MapGen
         /// <param name="map"></param>
         /// <param name="treeToPlace"></param>
         /// <exception cref="NotImplementedException"></exception>
-        protected void PlaceTrees(Map map, Tile treeToPlace)
+        protected static void PlaceTrees(Map map, Tile treeToPlace)
         {
             for (int i = 0; i < map.Terrain.Count; i++)
             {
                 Tile tree = treeToPlace.Copy();
                 Point pos = Point.FromIndex(i, map.Width);
-                int rng = randNum.NextInt(0, 15);
+                int rng = GlobalRandom.DefaultRNG.NextInt(0, 15);
                 if (rng == 13)
                 {
                     tree.Position = pos;
@@ -978,7 +979,7 @@ namespace MagusEngine.Generators.MapGen
         // quite clever 🐴
         protected static Tile? QueryTilesForTrait(Trait trait)
         {
-            List<BasicTile> tiles = DataManager.QueryTilesInDataWithTrait(trait);
+            List<Tile> tiles = DataManager.QueryTilesInDataWithTrait(trait);
             if (tiles.Count < 1)
             {
                 throw new ApplicationException($"There wasn't any tile with that material! \nMaterial: {trait}");

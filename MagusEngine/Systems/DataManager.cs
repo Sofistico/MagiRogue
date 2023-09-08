@@ -41,8 +41,8 @@ namespace MagusEngine.Systems
         public static readonly IReadOnlyList<Limb> ListOfLimbs =
             GetSourceTree<Limb>(@".\Data\Bodies\limbs_*");
 
-        public static readonly IReadOnlyList<BasicTile> ListOfTiles =
-            GetSourceTree<BasicTile>(@".\Data\Tiles\tiles_*");
+        //public static readonly IReadOnlyList<Tile> ListOfTiles =
+        //    GetSourceTree<Tile>(@".\Data\Tiles\tiles_*");
 
         public static readonly IReadOnlyList<Furniture> ListOfFurnitures =
             GetSourceTree<Furniture>(@".\Data\Furniture\fur_*");
@@ -144,11 +144,11 @@ namespace MagusEngine.Systems
             return organ?.Copy();
         }
 
-        public static Tile? QueryTileInData(string tileId)
-            => ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId))?.Copy();
+        //public static Tile? QueryTileInData(string tileId)
+        //    => ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId))?.Copy();
 
-        public static Tile? QueryTileInData(string tileId, Point pos)
-            => ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId))?.Copy();
+        //public static Tile? QueryTileInData(string tileId, Point pos)
+        //    => ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId))?.Copy();
 
         //public static T QueryTileInData<T>(string tileId) where T : TileBase
         //    => (T)ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId))?.Copy();
@@ -187,9 +187,9 @@ namespace MagusEngine.Systems
             return ListOfMaterials.FirstOrDefault(a => a.Id.Equals(id));
         }
 
-        public static List<BasicTile> QueryTilesInDataWithTrait(Trait trait)
-            => ListOfTiles.Where(i => i.HasAnyTrait()
-                && i.Traits.Contains(trait)).ToList();
+        //public static List<Tile> QueryTilesInDataWithTrait(Trait trait)
+        //    => ListOfTiles.Where(i => i.HasAnyTrait()
+        //        && i.Traits.Contains(trait)).ToList();
 
         public static Race QueryRaceInData(string raceId)
             => (Race)(ListOfRaces.FirstOrDefault(c => c.Id.Equals(raceId))?.Clone());
