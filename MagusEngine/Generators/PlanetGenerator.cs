@@ -29,7 +29,7 @@ namespace MagusEngine.Generators
 
         private int _width;
         private int _height;
-        private List<Civilization> _civilizations;
+        private List<Civilization>? _civilizations;
         private int maxCivsWorld;
 
         private readonly float deepWater = 0.3f;
