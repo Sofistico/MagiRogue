@@ -476,7 +476,7 @@ namespace MagusEngine.Generators.MapGen
                 if (IsPotentialDoor(location) && !alreadyHasDoor)
                 {
                     // Create a new door that is closed and unlocked.
-                    Tile? newDoor = DataManager.QueryTileInData("wood_door", location);
+                    Tile? newDoor = TileFactory.CreateTile(location, TileType.Door, "wood");
                     _map.SetTerrain(newDoor!);
                     if (!acceptsMoreThanOneDoor)
                         alreadyHasDoor = true;
@@ -977,25 +977,9 @@ namespace MagusEngine.Generators.MapGen
         #region Utils
 
         // quite clever 🐴
-        protected static Tile? QueryTilesForTrait(Trait trait)
+        protected static Tile? QueryTilesForTrait(Trait trait, TileType type = TileType.Floor)
         {
-            List<Tile> tiles = DataManager.QueryTilesInDataWithTrait(trait);
-            if (tiles.Count < 1)
-            {
-                throw new ApplicationException($"There wasn't any tile with that material! \nMaterial: {trait}");
-            }
-            List<Tile> possibleResults = new List<Tile>();
-            Tile result;
-            for (int i = 0; i < tiles.Count; i++)
-            {
-                Tile tile = (Tile)tiles[i];
-                if (tile.Traits.Contains(trait))
-                {
-                    possibleResults.Add(tile);
-                }
-            }
-
-            return possibleResults.GetRandomItemFromList();
+            return TileFactory.CreateTile(Point.None, type, trait);
         }
 
         #endregion Utils

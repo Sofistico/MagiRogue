@@ -271,6 +271,11 @@ namespace MagusEngine.Systems
             return ListOfMaterials.Where(i => i.Type == typeToMake).GetRandomItemFromList();
         }
 
+        public static MaterialTemplate QueryMaterialWithTrait(Trait trait)
+        {
+            return ListOfMaterials.Where(i => i.ConfersTraits.Contains(trait)).GetRandomItemFromList();
+        }
+
         #endregion helper methods
     }
 }

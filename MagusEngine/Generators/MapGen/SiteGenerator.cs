@@ -30,7 +30,7 @@ namespace MagusEngine.Generators.MapGen
             map.MapName = townName;
 
             PopulateMapWithRooms(rooms, QueryTilesForTrait(Trait.Durable),
-                QueryTilesForTrait(Trait.Durable));
+                QueryTilesForTrait(Trait.Durable, TileType.Wall));
 
             ApplyRoads(rooms, TileFactory.GenericDirtRoad(Point.None));
             buildings.AddRange(rooms);
@@ -78,7 +78,7 @@ namespace MagusEngine.Generators.MapGen
             var rooms = BspMapFunction(map, maxRoomSize, minRoomSize, maxRooms);
 
             PopulateMapWithRooms(rooms, QueryTilesForTrait(Trait.Inexpensive),
-                QueryTilesForTrait(Trait.Inexpensive));
+                QueryTilesForTrait(Trait.Inexpensive, TileType.Wall));
 
             ApplyRoads(_rooms, TileFactory.GenericDirtRoad(Point.None));
             buildings.AddRange(rooms);
@@ -93,7 +93,7 @@ namespace MagusEngine.Generators.MapGen
             var rooms = BspMapFunction(map, maxRoomSize, minRoomSize, maxRooms);
 
             PopulateMapWithRooms(rooms, QueryTilesForTrait(Trait.Durable),
-                QueryTilesForTrait(Trait.Durable));
+                QueryTilesForTrait(Trait.Durable, TileType.Wall));
 
             ApplyRoads(_rooms, TileFactory.GenericDirtRoad(Point.None));
             buildings.AddRange(rooms);

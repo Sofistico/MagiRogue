@@ -100,6 +100,13 @@ namespace MagusEngine.Factory
             {
                 cachedMaterial = material;
             }
+            return CreateTile(pos, tileType, material);
+        }
+
+        public static Tile CreateTile(Point pos,
+            TileType tileType,
+            MaterialTemplate material)
+        {
             var (foreground, background, glyph, isWalkable, isTransparent, name)
                 = DetermineTileLookAndName(material!, tileType);
             return new Tile(foreground, background, glyph, isWalkable, isTransparent, pos, name, material!.Id);
@@ -153,6 +160,12 @@ namespace MagusEngine.Factory
             }
             string name = material.Name + " " + tileType.ToString();
             return (material.ReturnMagiColor().Color, Color.Black, glyph, isWalkable, isTransparent, name);
+        }
+
+        public static Tile CreateTile(Point pos, TileType type, Trait trait)
+        {
+            MaterialTemplate mat = DataManager.QueryMaterialWithTrait(trait);
+            return CreateTile(pos, type, mat);
         }
     }
 }
