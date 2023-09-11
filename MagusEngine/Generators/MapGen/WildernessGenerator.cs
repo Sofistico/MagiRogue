@@ -255,7 +255,7 @@ namespace MagusEngine.Generators.MapGen
 
         #region BiomeMaps
 
-        private static Map GenericMountainMap(WorldTile worldTile)
+        /*private static Map GenericMountainMap(WorldTile worldTile)
         {
             Map map = new Map($"{worldTile.BiomeType}");
 
@@ -420,6 +420,18 @@ namespace MagusEngine.Generators.MapGen
             }
 
             return map;
+        }
+        */
+
+        private static Map GenericBiomeMap(WorldTile worldTile, MaterialType typeToMake, List<Trait> traitsToHave)
+        {
+            Map map = new Map($"{worldTile.BiomeType}");
+            for (int i = 0; i < map.Terrain.Count; i++)
+            {
+                Point pos = Point.FromIndex(i, map.Width);
+                Tile tile = TileFactory.CreateTile(pos, typeToMake, traitsToHave);
+                PrepareForAnyFloor(tile, map);
+            }
         }
 
         #endregion BiomeMaps

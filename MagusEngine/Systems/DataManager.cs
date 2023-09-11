@@ -266,6 +266,11 @@ namespace MagusEngine.Systems
             return ListOfReactions.Where(i => i.RoomTag.Contains(tag)).ToList();
         }
 
+        public static MaterialTemplate? QueryMaterialWithType(MaterialType typeToMake)
+        {
+            return ListOfMaterials.Where(i => i.Type == typeToMake).GetRandomItemFromList();
+        }
+
         #endregion helper methods
     }
 }

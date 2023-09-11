@@ -9,9 +9,10 @@ namespace Arquimedes.Enumerators
         Null,
         Floor,
         Wall,
-        Water,
+        Liquid,
         Node,
         WorldTile,
-        Door
+        Door,
+        TreeTrunk
     }
 }

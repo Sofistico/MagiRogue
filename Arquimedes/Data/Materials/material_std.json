@@ -450,6 +450,7 @@
   {
     "Id": "dirt",
     "InheirtFrom": "stone",
+    "Type": "GroundPowder",
     "Name": "dirt",
     "Hardness": 1,
     "MPInfusionLimit": 1,

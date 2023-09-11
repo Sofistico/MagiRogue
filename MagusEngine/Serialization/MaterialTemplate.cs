@@ -9,6 +9,7 @@ namespace MagusEngine.Serialization
     [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
     public class MaterialTemplate
     {
+        private MagiColorSerialization? magiColorSerialization;
         // Only putting in here for the sake of future me, only need to use JsonProperty if the name
         // will be diferrent than whats in the json.
 
@@ -131,7 +132,8 @@ namespace MagusEngine.Serialization
 
         public MagiColorSerialization ReturnMagiColor()
         {
-            return new MagiColorSerialization(Color);
+            magiColorSerialization ??= new MagiColorSerialization(Color);
+            return magiColorSerialization ?? default;
         }
 
         public MaterialTemplate GetMaterialThatLiquidTurns()

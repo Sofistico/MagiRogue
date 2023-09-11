@@ -16,6 +16,7 @@ namespace Arquimedes.Enumerators
         Meat,
         Bone,
         Teeth,
+        GroundPowder,
         Metal,
         Glass,
         Wood,

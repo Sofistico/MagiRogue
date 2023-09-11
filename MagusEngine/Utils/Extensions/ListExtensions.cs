@@ -12,10 +12,7 @@ namespace MagusEngine.Utils.Extensions
             var objList = new List<T>();
             foreach (var subList in list)
             {
-                foreach (var item in subList)
-                {
-                    objList.Add(item);
-                }
+                objList.AddRange(subList);
             }
             return objList;
         }
@@ -43,6 +40,15 @@ namespace MagusEngine.Utils.Extensions
             return list[rng];
         }
 
+        public static T? GetRandomItemFromList<T>(this IEnumerable<T> enumerable)
+        {
+            if (!enumerable.Any())
+                return default;
+            _ = enumerable.TryGetNonEnumeratedCount(out int count);
+            int rng = GlobalRandom.DefaultRNG.NextInt(count);
+            return enumerable.ElementAt(rng);
+        }
+
         public static T GetRandomItemFromList<T>(this IReadOnlyList<T> list)
         {
             int rng = GlobalRandom.DefaultRNG.NextInt(list.Count);
@@ -61,7 +67,7 @@ namespace MagusEngine.Utils.Extensions
 
         public static List<T> ShuffleAlgorithmAndTakeN<T>(this List<T> values, int howManyToTake)
         {
-            List<T> list = new List<T>(values);
+            List<T> list = new(values);
 
             list.ShuffleAlgorithm();
 
