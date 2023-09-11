@@ -11,6 +11,8 @@ namespace MagusEngine.Factory
 {
     public static class TileFactory
     {
+        private static MaterialTemplate? cachedMaterial;
+
         public static Tile GenericGrass(Point pos, Map? map = null)
         {
             var tile = CreateTile(pos, TileType.Floor, "t_soil");
@@ -75,11 +77,18 @@ namespace MagusEngine.Factory
             return CreateTile(pos, TileType.TreeTrunk, "wood");
         }
 
-        public static Tile CreateTile(Point pos, TileType tileType, string? materialId = null,
-            MaterialType typeToMake = MaterialType.None)
+        public static Tile CreateTile(Point pos,
+            TileType tileType,
+            string? materialId = null,
+            MaterialType typeToMake = MaterialType.None,
+            bool cacheMaterial = false)
         {
             MaterialTemplate? material;
-            if (!string.IsNullOrEmpty(materialId))
+            if (cachedMaterial is not null)
+            {
+                material = cachedMaterial;
+            }
+            else if (!string.IsNullOrEmpty(materialId))
             {
                 material = DataManager.QueryMaterial(materialId);
             }
@@ -87,10 +96,16 @@ namespace MagusEngine.Factory
             {
                 material = DataManager.QueryMaterialWithType(typeToMake);
             }
+            if (cacheMaterial)
+            {
+                cachedMaterial = material;
+            }
             var (foreground, background, glyph, isWalkable, isTransparent, name)
                 = DetermineTileLookAndName(material!, tileType);
             return new Tile(foreground, background, glyph, isWalkable, isTransparent, pos, name, material!.Id);
         }
+
+        public static void ResetCachedMaterial() => cachedMaterial = null;
 
         private static (Color, Color, char, bool, bool, string) DetermineTileLookAndName(MaterialTemplate material,
             TileType tileType)

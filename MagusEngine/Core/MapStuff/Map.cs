@@ -681,8 +681,8 @@ namespace MagusEngine.Core.MapStuff
                     }
                     else
                     {
-                        tile = DataManager.QueryTileInData(str);
-                        tile.Position = pos;
+                        var arr = str.Split(';');
+                        tile = TileFactory.CreateTile(pos, Enum.Parse<TileType>(arr[0]), arr[1]);
                     }
                     SetTerrain(tile);
                 }

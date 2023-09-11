@@ -16,9 +16,9 @@
         "##########"
       ],
       "Terrain": {
-        "#": "wood_wall",
-        ".": "wood_floor",
-        "1": "wood_door"
+        "#": "Wall;wood",
+        ".": "Floor;wood",
+        "1": "Door;wood"
       },
       "Furniture": {
         "2": "wood_table",

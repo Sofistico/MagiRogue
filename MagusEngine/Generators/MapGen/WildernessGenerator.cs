@@ -237,19 +237,11 @@ namespace MagusEngine.Generators.MapGen
                 return null;
             return worldTile.BiomeType switch
             {
-                BiomeType.Sea => GenericSeaMap(worldTile),
-                BiomeType.Desert => GenericDesertMap(worldTile),
-                BiomeType.Savanna => GenericSavannaMap(worldTile),
-                BiomeType.TropicalRainforest => GenericTropicalRainforest(worldTile),
-                BiomeType.Grassland => GenericGrassland(worldTile),
-                BiomeType.Woodland => GenericWoodLands(worldTile),
-                BiomeType.SeasonalForest => GenericSeasonalForests(worldTile),
-                BiomeType.TemperateRainforest => GenericTemperateRainForest(worldTile),
-                BiomeType.BorealForest => GenericBorealForest(worldTile),
-                BiomeType.Tundra => GenericTundra(worldTile),
-                BiomeType.Ice => GenericIceMap(worldTile),
-                BiomeType.Mountain => GenericMountainMap(worldTile),
-                _ => throw new Exception("Cound't find the biome to generate a map!"),
+                BiomeType.Sea => GenericBiomeMap(worldTile, "h2o"),
+                BiomeType.Desert => GenericBiomeMap(worldTile, "sand"),
+                BiomeType.Ice => GenericBiomeMap(worldTile, "ice"),
+                BiomeType.Mountain => GenericBiomeMap(worldTile, null, MaterialType.Stone, true),
+                _ => GenericBiomeMap(worldTile, "dirt"),
             };
         }
 
@@ -423,15 +415,22 @@ namespace MagusEngine.Generators.MapGen
         }
         */
 
-        private static Map GenericBiomeMap(WorldTile worldTile, MaterialType typeToMake, List<Trait> traitsToHave)
+        private static Map GenericBiomeMap(WorldTile worldTile,
+            string materialId = null,
+            MaterialType typeToMake = MaterialType.None,
+            bool cacheMaterial = false)
         {
             Map map = new Map($"{worldTile.BiomeType}");
+            // create a height map in the future
             for (int i = 0; i < map.Terrain.Count; i++)
             {
                 Point pos = Point.FromIndex(i, map.Width);
-                Tile tile = TileFactory.CreateTile(pos, typeToMake, traitsToHave);
+                Tile tile = TileFactory.CreateTile(pos, TileType.Floor, materialId, typeToMake, cacheMaterial);
                 PrepareForAnyFloor(tile, map);
             }
+            if (cacheMaterial)
+                TileFactory.ResetCachedMaterial();
+            return map;
         }
 
         #endregion BiomeMaps

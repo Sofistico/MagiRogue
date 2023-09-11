@@ -13,8 +13,8 @@
         ".    ."
       ],
       "Terrain": {
-        ".": "t_chalk",
-        " ": "t_stone"
+        ".": "Floor;chalk",
+        " ": "Floor;stone"
       }
     }
   }

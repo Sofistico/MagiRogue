@@ -25,5 +25,6 @@ namespace Arquimedes.Enumerators
         Skin,
         Fat,
         Fuel,
+        Liquid,
     }
 }

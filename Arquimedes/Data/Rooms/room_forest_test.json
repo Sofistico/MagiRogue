@@ -22,10 +22,10 @@
       ],
       "Terrain": {
         "T": "debug_tree",
-        " ": "t_soil",
-        ".": "t_soil",
+        " ": "Floor;dirt",
+        ".": "Floor;dirt",
         ",": "t_grass",
-        "w": "t_water"
+        "w": "Liquid;h2o"
       }
     }
   }

@@ -392,6 +392,7 @@
   {
     "Id": "h2o",
     "Name": "water",
+    "Type": "Liquid",
     "Flamability": false,
     "Hardness": 0,
     "MPInfusionLimit": 1,
