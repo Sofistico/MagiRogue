@@ -55,12 +55,6 @@ namespace MagusEngine.Serialization.MapConverter
 
     public sealed class PlanetMapTemplate
     {
-        [JsonIgnore]
-        public float Min { get; set; }
-
-        [JsonIgnore]
-        public float Max { get; set; }
-
         [DataMember]
         public List<Civilization> Civilizations { get; set; }
 
@@ -74,12 +68,8 @@ namespace MagusEngine.Serialization.MapConverter
         [DataMember]
         public AccumulatedHistory WorldHistory { get; set; }
 
-        public PlanetMapTemplate(float min,
-            float max,
-            List<Civilization> civilizations)
+        public PlanetMapTemplate(List<Civilization> civilizations)
         {
-            Min = min;
-            Max = max;
             Civilizations = new();
             for (int i = 0; i < civilizations.Count; i++)
             {
@@ -92,24 +82,20 @@ namespace MagusEngine.Serialization.MapConverter
         {
         }
 
-        public PlanetMapTemplate(float min,
-            float max,
-            List<Civilization> civilizations,
-            MapTemplate associetatedMap) : this(min, max, civilizations)
+        public PlanetMapTemplate(List<Civilization> civilizations,
+            MapTemplate associetatedMap) : this(civilizations)
         {
             AssocietatedMap = associetatedMap;
         }
 
         public static implicit operator PlanetMapTemplate(PlanetMap map)
         {
-            var template = new PlanetMapTemplate(map.Min, map.Max,
-                map.Civilizations)
+            return new PlanetMapTemplate(map.Civilizations)
             {
                 AssocietatedMap = map.AssocietatedMap,
                 YearSinceCreation = map.YearSinceCreation,
                 WorldHistory = map.WorldHistory
             };
-            return template;
         }
 
         public static implicit operator PlanetMap(PlanetMapTemplate map)
@@ -119,18 +105,11 @@ namespace MagusEngine.Serialization.MapConverter
             {
                 civs.Add(map.Civilizations[i]);
             }
-            map.Max = int.MaxValue;
-            map.Min = int.MinValue;
 
-            PlanetMap mio = new PlanetMap(map.Min, map.Max,
-                civs, (MapTemplate)map.AssocietatedMap)
+            return new PlanetMap(civs, (MapTemplate)map.AssocietatedMap)
             {
                 WorldHistory = map.WorldHistory
             };
-            /*PlanetMap mio = new PlanetMap(map.Min, map.Max,
-                civs, (MapTemplate)map.AssocietatedMap);*/
-
-            return mio;
         }
     }
 }

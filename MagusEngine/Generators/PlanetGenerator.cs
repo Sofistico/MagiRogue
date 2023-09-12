@@ -49,12 +49,12 @@ namespace MagusEngine.Generators
         private readonly float warmerValue = 0.8f;
 
         private readonly int terrainOctaves = 6;
-        private readonly float terrainFrequency = 1.0f;
-        private readonly float heatFrequency = 3.0f;
+        private readonly float terrainFrequency = 4.59f;
+        private readonly float heatFrequency = 5.90f;
         private readonly int heatOctaves = 4;
 
         private readonly int moistureOctaves = 7;
-        private readonly float moistureFrequency = 4.0f;
+        private readonly float moistureFrequency = 4.22f;
 
         private readonly float dryerValue = 0.27f;
         private readonly float dryValue = 0.4f;
@@ -425,15 +425,10 @@ namespace MagusEngine.Generators
                     float ny = y1 + (MathF.Sin(t * 2) * dy);
 
                     float heightValue = (float)heightMap.Get(nx, ny);
-                    float heatValue = (float)heatMap.Get(nx, ny);
+                    var polarNx = nx;
+                    var polarNy = ny;
+                    float heatValue = (float)heatMap.Get(polarNx, polarNy);
                     float moistureValue = (float)moistureMap.Get(nx, ny);
-
-                    if (heightValue > planetData.Max) planetData.Max = heightValue;
-                    if (heightValue < planetData.Min) planetData.Min = heightValue;
-                    if (heatValue > planetData.Max) planetData.Max = heatValue;
-                    if (heatValue < planetData.Min) planetData.Min = heatValue;
-                    if (moistureValue > planetData.Max) planetData.Max = moistureValue;
-                    if (moistureValue < planetData.Min) planetData.Min = moistureValue;
 
                     HeightData[x, y] = heightValue;
                     HeatData[x, y] = heatValue;

@@ -19,12 +19,6 @@ namespace MagusEngine.Core.MapStuff
         private readonly int _width;
 
         [DataMember]
-        public float Min { get; set; }
-
-        [DataMember]
-        public float Max { get; set; }
-
-        [DataMember]
         public List<Civilization> Civilizations { get; set; }
 
         [DataMember]
@@ -41,18 +35,13 @@ namespace MagusEngine.Core.MapStuff
         {
             _height = height;
             _width = width;
-            Min = float.MinValue;
-            Max = float.MaxValue;
             AssocietatedMap = new(RandomNames.RandomNamesFromRandomLanguage(), width, height, false);
             Civilizations = new List<Civilization>();
             WorldHistory = new();
         }
 
-        public PlanetMap(float min, float max,
-            List<Civilization> civilizations, Map associetatedMap)
+        public PlanetMap(List<Civilization> civilizations, Map associetatedMap)
         {
-            Min = min;
-            Max = max;
             Civilizations = civilizations;
             AssocietatedMap = associetatedMap;
             _height = associetatedMap.Height;

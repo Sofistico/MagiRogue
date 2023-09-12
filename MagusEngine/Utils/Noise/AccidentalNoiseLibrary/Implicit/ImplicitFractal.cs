@@ -6,13 +6,13 @@ namespace MagusEngine.Utils.Noise.AccidentalNoiseLibrary.Implicit
 {
     public sealed class ImplicitFractal : ImplicitModuleBase
     {
-        private readonly ImplicitBasisFunction[] basisFunctions = new ImplicitBasisFunction[Noise.MAX_SOURCES];
+        private readonly ImplicitBasisFunction[] basisFunctions = new ImplicitBasisFunction[NoiseAcc.MAX_SOURCES];
 
-        private readonly ImplicitModuleBase[] sources = new ImplicitModuleBase[Noise.MAX_SOURCES];
+        private readonly ImplicitModuleBase[] sources = new ImplicitModuleBase[NoiseAcc.MAX_SOURCES];
 
-        private readonly double[] expArray = new double[Noise.MAX_SOURCES];
+        private readonly double[] expArray = new double[NoiseAcc.MAX_SOURCES];
 
-        private readonly double[,] correct = new double[Noise.MAX_SOURCES, 2];
+        private readonly double[,] correct = new double[NoiseAcc.MAX_SOURCES, 2];
 
         private int seed;
 
@@ -50,7 +50,7 @@ namespace MagusEngine.Utils.Noise.AccidentalNoiseLibrary.Implicit
             set
             {
                 seed = value;
-                for (var source = 0; source < Noise.MAX_SOURCES; source += 1)
+                for (var source = 0; source < NoiseAcc.MAX_SOURCES; source += 1)
                     sources[source].Seed = seed + source * 300;
             }
         }
@@ -115,8 +115,8 @@ namespace MagusEngine.Utils.Noise.AccidentalNoiseLibrary.Implicit
 
             set
             {
-                if (value >= Noise.MAX_SOURCES)
-                    value = Noise.MAX_SOURCES - 1;
+                if (value >= NoiseAcc.MAX_SOURCES)
+                    value = NoiseAcc.MAX_SOURCES - 1;
                 octaves = value;
             }
         }
@@ -133,7 +133,7 @@ namespace MagusEngine.Utils.Noise.AccidentalNoiseLibrary.Implicit
 
         public void SetAllSourceTypes(BasisType newBasisType, InterpolationType newInterpolationType)
         {
-            for (var i = 0; i < Noise.MAX_SOURCES; ++i)
+            for (var i = 0; i < NoiseAcc.MAX_SOURCES; ++i)
             {
                 basisFunctions[i] = new ImplicitBasisFunction(newBasisType, newInterpolationType);
             }
@@ -141,7 +141,7 @@ namespace MagusEngine.Utils.Noise.AccidentalNoiseLibrary.Implicit
 
         public void SetSourceType(int which, BasisType newBasisType, InterpolationType newInterpolationType)
         {
-            if (which >= Noise.MAX_SOURCES || which < 0) return;
+            if (which >= NoiseAcc.MAX_SOURCES || which < 0) return;
 
             basisFunctions[which].BasisType = newBasisType;
             basisFunctions[which].InterpolationType = newInterpolationType;
@@ -149,27 +149,27 @@ namespace MagusEngine.Utils.Noise.AccidentalNoiseLibrary.Implicit
 
         public void SetSourceOverride(int which, ImplicitModuleBase newSource)
         {
-            if (which < 0 || which >= Noise.MAX_SOURCES) return;
+            if (which < 0 || which >= NoiseAcc.MAX_SOURCES) return;
 
             sources[which] = newSource;
         }
 
         public void ResetSource(int which)
         {
-            if (which < 0 || which >= Noise.MAX_SOURCES) return;
+            if (which < 0 || which >= NoiseAcc.MAX_SOURCES) return;
 
             sources[which] = basisFunctions[which];
         }
 
         public void ResetAllSources()
         {
-            for (var c = 0; c < Noise.MAX_SOURCES; ++c)
+            for (var c = 0; c < NoiseAcc.MAX_SOURCES; ++c)
                 sources[c] = basisFunctions[c];
         }
 
         public ImplicitBasisFunction GetBasis(int which)
         {
-            if (which < 0 || which >= Noise.MAX_SOURCES) return null;
+            if (which < 0 || which >= NoiseAcc.MAX_SOURCES) return null;
 
             return basisFunctions[which];
         }
@@ -305,7 +305,7 @@ namespace MagusEngine.Utils.Noise.AccidentalNoiseLibrary.Implicit
 
         private void FractionalBrownianMotion_CalculateWeights()
         {
-            for (var i = 0; i < Noise.MAX_SOURCES; ++i)
+            for (var i = 0; i < NoiseAcc.MAX_SOURCES; ++i)
             {
                 expArray[i] = Math.Pow(Lacunarity, -i * H);
             }
@@ -313,7 +313,7 @@ namespace MagusEngine.Utils.Noise.AccidentalNoiseLibrary.Implicit
             // Calculate scale/bias pairs by guessing at minimum and maximum values and remapping to [-1,1]
             var minvalue = 0.00;
             var maxvalue = 0.00;
-            for (var i = 0; i < Noise.MAX_SOURCES; ++i)
+            for (var i = 0; i < NoiseAcc.MAX_SOURCES; ++i)
             {
                 minvalue += -1.0 * expArray[i];
                 maxvalue += 1.0 * expArray[i];
@@ -329,7 +329,7 @@ namespace MagusEngine.Utils.Noise.AccidentalNoiseLibrary.Implicit
 
         private void RidgedMulti_CalculateWeights()
         {
-            for (var i = 0; i < Noise.MAX_SOURCES; ++i)
+            for (var i = 0; i < NoiseAcc.MAX_SOURCES; ++i)
             {
                 expArray[i] = Math.Pow(Lacunarity, -i * H);
             }
@@ -337,7 +337,7 @@ namespace MagusEngine.Utils.Noise.AccidentalNoiseLibrary.Implicit
             // Calculate scale/bias pairs by guessing at minimum and maximum values and remapping to [-1,1]
             var minvalue = 0.00;
             var maxvalue = 0.00;
-            for (var i = 0; i < Noise.MAX_SOURCES; ++i)
+            for (var i = 0; i < NoiseAcc.MAX_SOURCES; ++i)
             {
                 minvalue += (Offset - 1.0) * (Offset - 1.0) * expArray[i];
                 maxvalue += Offset * Offset * expArray[i];
@@ -353,7 +353,7 @@ namespace MagusEngine.Utils.Noise.AccidentalNoiseLibrary.Implicit
 
         private void Billow_CalculateWeights()
         {
-            for (var i = 0; i < Noise.MAX_SOURCES; ++i)
+            for (var i = 0; i < NoiseAcc.MAX_SOURCES; ++i)
             {
                 expArray[i] = Math.Pow(Lacunarity, -i * H);
             }
@@ -361,7 +361,7 @@ namespace MagusEngine.Utils.Noise.AccidentalNoiseLibrary.Implicit
             // Calculate scale/bias pairs by guessing at minimum and maximum values and remapping to [-1,1]
             var minvalue = 0.0;
             var maxvalue = 0.0;
-            for (var i = 0; i < Noise.MAX_SOURCES; ++i)
+            for (var i = 0; i < NoiseAcc.MAX_SOURCES; ++i)
             {
                 minvalue += -1.0 * expArray[i];
                 maxvalue += 1.0 * expArray[i];
@@ -377,7 +377,7 @@ namespace MagusEngine.Utils.Noise.AccidentalNoiseLibrary.Implicit
 
         private void Multi_CalculateWeights()
         {
-            for (var i = 0; i < Noise.MAX_SOURCES; ++i)
+            for (var i = 0; i < NoiseAcc.MAX_SOURCES; ++i)
             {
                 expArray[i] = Math.Pow(Lacunarity, -i * H);
             }
@@ -385,7 +385,7 @@ namespace MagusEngine.Utils.Noise.AccidentalNoiseLibrary.Implicit
             // Calculate scale/bias pairs by guessing at minimum and maximum values and remapping to [-1,1]
             var minvalue = 1.0;
             var maxvalue = 1.0;
-            for (var i = 0; i < Noise.MAX_SOURCES; ++i)
+            for (var i = 0; i < NoiseAcc.MAX_SOURCES; ++i)
             {
                 minvalue *= -1.0 * expArray[i] + 1.0;
                 maxvalue *= 1.0 * expArray[i] + 1.0;
@@ -401,7 +401,7 @@ namespace MagusEngine.Utils.Noise.AccidentalNoiseLibrary.Implicit
 
         private void HybridMulti_CalculateWeights()
         {
-            for (var i = 0; i < Noise.MAX_SOURCES; ++i)
+            for (var i = 0; i < NoiseAcc.MAX_SOURCES; ++i)
             {
                 expArray[i] = Math.Pow(Lacunarity, -i * H);
             }
@@ -420,7 +420,7 @@ namespace MagusEngine.Utils.Noise.AccidentalNoiseLibrary.Implicit
             correct[0, 0] = scale;
             correct[0, 1] = bias;
 
-            for (var i = 1; i < Noise.MAX_SOURCES; ++i)
+            for (var i = 1; i < NoiseAcc.MAX_SOURCES; ++i)
             {
                 if (weightmin > 1.00) weightmin = 1.00;
                 if (weightmax > 1.00) weightmax = 1.00;

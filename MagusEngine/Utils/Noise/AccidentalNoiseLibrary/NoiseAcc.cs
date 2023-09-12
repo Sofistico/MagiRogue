@@ -13,7 +13,7 @@ namespace MagusEngine.Utils.Noise.AccidentalNoiseLibrary
 
     public delegate double Noise6DDelegate(double x, double y, double z, double w, double u, double v, int seed, InterpolationDelegate interp);
 
-    public static class Noise
+    public static class NoiseAcc
     {
         public const int MAX_SOURCES = 20;
 

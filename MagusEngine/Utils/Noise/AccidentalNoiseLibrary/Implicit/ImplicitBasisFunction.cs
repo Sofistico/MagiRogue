@@ -69,41 +69,41 @@ namespace MagusEngine.Utils.Noise.AccidentalNoiseLibrary.Implicit
                 switch (basisType)
                 {
                     case BasisType.Value:
-                        noise2D = Noise.ValueNoise;
-                        noise3D = Noise.ValueNoise;
-                        noise4D = Noise.ValueNoise;
-                        noise6D = Noise.ValueNoise;
+                        noise2D = NoiseAcc.ValueNoise;
+                        noise3D = NoiseAcc.ValueNoise;
+                        noise4D = NoiseAcc.ValueNoise;
+                        noise6D = NoiseAcc.ValueNoise;
                         break;
                     case BasisType.Gradient:
-                        noise2D = Noise.GradientNoise;
-                        noise3D = Noise.GradientNoise;
-                        noise4D = Noise.GradientNoise;
-                        noise6D = Noise.GradientNoise;
+                        noise2D = NoiseAcc.GradientNoise;
+                        noise3D = NoiseAcc.GradientNoise;
+                        noise4D = NoiseAcc.GradientNoise;
+                        noise6D = NoiseAcc.GradientNoise;
                         break;
                     case BasisType.GradientValue:
-                        noise2D = Noise.GradientValueNoise;
-                        noise3D = Noise.GradientValueNoise;
-                        noise4D = Noise.GradientValueNoise;
-                        noise6D = Noise.GradientValueNoise;
+                        noise2D = NoiseAcc.GradientValueNoise;
+                        noise3D = NoiseAcc.GradientValueNoise;
+                        noise4D = NoiseAcc.GradientValueNoise;
+                        noise6D = NoiseAcc.GradientValueNoise;
                         break;
                     case BasisType.White:
-                        noise2D = Noise.WhiteNoise;
-                        noise3D = Noise.WhiteNoise;
-                        noise4D = Noise.WhiteNoise;
-                        noise6D = Noise.WhiteNoise;
+                        noise2D = NoiseAcc.WhiteNoise;
+                        noise3D = NoiseAcc.WhiteNoise;
+                        noise4D = NoiseAcc.WhiteNoise;
+                        noise6D = NoiseAcc.WhiteNoise;
                         break;
                     case BasisType.Simplex:
-                        noise2D = Noise.SimplexNoise;
-                        noise3D = Noise.SimplexNoise;
-                        noise4D = Noise.SimplexNoise;
-                        noise6D = Noise.SimplexNoise;
+                        noise2D = NoiseAcc.SimplexNoise;
+                        noise3D = NoiseAcc.SimplexNoise;
+                        noise4D = NoiseAcc.SimplexNoise;
+                        noise6D = NoiseAcc.SimplexNoise;
                         break;
 
                     default:
-                        noise2D = Noise.GradientNoise;
-                        noise3D = Noise.GradientNoise;
-                        noise4D = Noise.GradientNoise;
-                        noise6D = Noise.GradientNoise;
+                        noise2D = NoiseAcc.GradientNoise;
+                        noise3D = NoiseAcc.GradientNoise;
+                        noise4D = NoiseAcc.GradientNoise;
+                        noise6D = NoiseAcc.GradientNoise;
                         break;
                 }
                 SetMagicNumbers(basisType);
@@ -118,10 +118,10 @@ namespace MagusEngine.Utils.Noise.AccidentalNoiseLibrary.Implicit
                 interpolationType = value;
                 switch (interpolationType)
                 {
-                    case InterpolationType.None: interpolator = Noise.NoInterpolation; break;
-                    case InterpolationType.Linear: interpolator = Noise.LinearInterpolation; break;
-                    case InterpolationType.Cubic: interpolator = Noise.HermiteInterpolation; break;
-                    default: interpolator = Noise.QuinticInterpolation; break;
+                    case InterpolationType.None: interpolator = NoiseAcc.NoInterpolation; break;
+                    case InterpolationType.Linear: interpolator = NoiseAcc.LinearInterpolation; break;
+                    case InterpolationType.Cubic: interpolator = NoiseAcc.HermiteInterpolation; break;
+                    default: interpolator = NoiseAcc.QuinticInterpolation; break;
                 }
             }
         }
