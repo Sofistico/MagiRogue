@@ -40,7 +40,7 @@ namespace MagusEngine.Core.MapStuff
         private bool _disposed;
         private Dictionary<Func<Actor, bool>, Actor[]> _lastCalledActors = new();
         private bool _needsToUpdateActorsDict;
-        private Lazy<Tile[]> lazyTiles;
+        private Lazy<Tile[]> lazyTiles = new();
 
         private readonly Dictionary<uint, IGameObject> _idMap;
         private readonly EntityRegistry _registry = new(500);

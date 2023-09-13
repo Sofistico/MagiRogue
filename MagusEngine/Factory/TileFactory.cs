@@ -16,7 +16,7 @@ namespace MagusEngine.Factory
 
         public static Tile GenericGrass(Point pos, Map? map = null)
         {
-            var tile = CreateTile(pos, TileType.Floor, "t_soil");
+            var tile = CreateTile(pos, TileType.Floor, "dirt");
             // TODO: REDO
             //for (int i = 0; i < tile.Vegetations.Length; i++)
             //{
@@ -106,7 +106,7 @@ namespace MagusEngine.Factory
 
         public static Tile CreateTile(Point pos,
             TileType tileType,
-            MaterialTemplate material)
+            MaterialTemplate? material)
         {
             var (foreground, background, glyph, isWalkable, isTransparent, name)
                 = DetermineTileLookAndName(material!, tileType);
