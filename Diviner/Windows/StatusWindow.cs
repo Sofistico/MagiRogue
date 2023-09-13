@@ -1,5 +1,7 @@
 ﻿using Arquimedes.Settings;
+using GoRogue.Messaging;
 using MagusEngine;
+using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
 using MagusEngine.Systems;
 using SadConsole;
@@ -8,7 +10,9 @@ using Console = SadConsole.Console;
 
 namespace Diviner.Windows
 {
-    public class StatusWindow : MagiBaseWindow
+    public class StatusWindow : MagiBaseWindow,
+        ISubscriber<HideMessageLogMessage>,
+        ISubscriber<AddMessageLog>
     {
         private readonly Player? player;
         private readonly Console statsConsole;
@@ -54,6 +58,16 @@ namespace Diviner.Windows
         public void ChangePositionToUpMessageLog()
         {
             Position = new Point(1, Locator.GetService<GlobalSettings>().ScreenHeight - 12);
+        }
+
+        public void Handle(HideMessageLogMessage message)
+        {
+            ChangePositionToBottomPage();
+        }
+
+        public void Handle(AddMessageLog message)
+        {
+            ChangePositionToUpMessageLog();
         }
     }
 }

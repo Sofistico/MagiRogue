@@ -1,14 +1,16 @@
-﻿using SadConsole;
+﻿using GoRogue.Messaging;
+using MagusEngine.Bus.UiBus;
+using SadConsole;
 using SadRogue.Primitives;
-using System;
-using System.Collections.Generic;
 using Console = SadConsole.Console;
 
 namespace Diviner.Windows
 {
     //A scrollable window that displays messages
     //using a FIFO (first-in-first-out) Queue data structure
-    public class MessageLogWindow : MagiBaseWindow
+    public class MessageLogWindow : MagiBaseWindow,
+        ISubscriber<AddMessageLog>,
+        ISubscriber<HideMessageLogMessage>
     {
         //max number of lines to store in message log
         private const int maxLines = 100;
@@ -141,7 +143,17 @@ namespace Diviner.Windows
             if (MessageSent)
                 return;
             Hide();
-            //GameLoop.UIManager.StatusWindow.ChangePositionToBottomPage();
+        }
+
+        public void Handle(AddMessageLog message)
+        {
+            if (message.PlayerCanSee)
+                PrintMessage(message.Message);
+        }
+
+        public void Handle(HideMessageLogMessage message)
+        {
+            HideIfNoMessageThisTurn();
         }
     }
 }

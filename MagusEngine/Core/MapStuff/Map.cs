@@ -135,12 +135,6 @@ namespace MagusEngine.Core.MapStuff
 
         #region Methods
 
-        //private static ISettableGridView<IGameObject?> CreateTerrain(int width, int heigth)
-        //{
-        //    var goRogueTerrain = new ArrayView<Tile>(width, heigth);
-        //    return new LambdaSettableTranslationGridView<Tile, IGameObject?>(goRogueTerrain, t => t, g => g as Tile);
-        //}
-
         public void RemoveAllEntities()
         {
             foreach (IGameObject item in Entities.Items)

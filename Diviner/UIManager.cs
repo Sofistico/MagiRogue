@@ -1,7 +1,9 @@
 ﻿using Diviner.Enums;
 using Diviner.Interfaces;
 using Diviner.Windows;
+using GoRogue.Messaging;
 using MagusEngine;
+using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
 using MagusEngine.Systems;
 using SadConsole;
@@ -12,7 +14,7 @@ namespace Diviner
 {
     // Creates/Holds/Destroys all consoles used in the game and makes consoles easily addressable
     // from a central place.
-    public sealed class UIManager : ScreenObject
+    public sealed class UIManager : ScreenObject, ISubscriber<FocusUiManagerMessage>
     {
         private readonly Dictionary<WindowTag, IWindowTagContract> windows = new();
         private Universe _universe;
@@ -228,5 +230,10 @@ namespace Diviner
         }
 
         #endregion HelperMethods
+
+        public void Handle(FocusUiManagerMessage message)
+        {
+            IsFocused = true;
+        }
     }
 }

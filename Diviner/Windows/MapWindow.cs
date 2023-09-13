@@ -1,4 +1,6 @@
-﻿using MagusEngine.Core.Entities;
+﻿using GoRogue.Messaging;
+using MagusEngine.Bus.UiBus;
+using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
 using SadConsole;
@@ -8,7 +10,10 @@ using Rectangle = SadRogue.Primitives.Rectangle;
 
 namespace Diviner.Windows
 {
-    public class MapWindow : MagiBaseWindow
+    public class MapWindow : MagiBaseWindow,
+        ISubscriber<ChangeCenteredActor>,
+        ISubscriber<LoadMapMessage>,
+        ISubscriber<MapConsoleIsDirty>
     {
         private Map _mapDisplayed;
         private readonly SadConsole.Components.SurfaceComponentFollowTarget followComponent;
@@ -19,7 +24,6 @@ namespace Diviner.Windows
             followComponent = new SadConsole.Components.SurfaceComponentFollowTarget();
             UseMouse = false;
         }
-
 
         /// <summary>
         /// centers the viewport camera on an Actor
@@ -94,6 +98,21 @@ namespace Diviner.Windows
             Title = map.MapName;
 
             MapConsole.SadComponents.Add(followComponent);
+        }
+
+        public void Handle(ChangeCenteredActor message)
+        {
+            CenterOnActor(message.Entity);
+        }
+
+        public void Handle(LoadMapMessage message)
+        {
+            LoadMap(message.Map);
+        }
+
+        public void Handle(MapConsoleIsDirty message)
+        {
+            MapConsole.IsDirty = true;
         }
     }
 }
