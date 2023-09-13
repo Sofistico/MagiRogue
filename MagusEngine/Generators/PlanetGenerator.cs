@@ -66,15 +66,14 @@ namespace MagusEngine.Generators
         private readonly float wettestValue = 0.9f;
 
         // Rivers
-        private readonly int riverCount = 40;
+        private readonly int riverMaxCount = 40;
         private readonly int maxRiverAttempts = 1000;
         private readonly int maxRecursiveRiverAttemepts = 750;
         private int currentRecursiveRiverAttempt = 0;
-        private readonly float minRiverHeight = 0.6f;
+        private readonly float minRiverHeight = 0.8f;
         private readonly int minRiverTurns = 18;
         private readonly int _minRiverLength = 20;
         private readonly int maxRiverIntersections = 2;
-        private List<RiverGroup> riverGroups;
 
         private readonly List<WorldTileGroup> waters = new();
         private readonly List<WorldTileGroup> lands = new();
@@ -140,7 +139,6 @@ namespace MagusEngine.Generators
             UpdateNeighbors();
 
             GenerateRivers();
-            BuildRiverGroups();
             DigRiverGroups();
             AdjustMoistureMap();
 
@@ -430,7 +428,7 @@ namespace MagusEngine.Generators
                     float heightValue = (float)heightMap.Get(nx, ny);
 
                     var sigmoid = 1.0 / (1.0 + Math.Exp(-steepness * (y - gradientCenter)));
-                    var heatNoise = heatMap.Get(nx, ny);
+                    var heatNoise = heatMap.Get(x, y);
                     // Add the noise value to the gradient
                     var val = sigmoid + heatNoise - 0.5;
 
@@ -470,8 +468,6 @@ namespace MagusEngine.Generators
 
             moistureMap = new(FractalType.Multi, BasisType.Simplex, InterpolationType.Quintic,
                 moistureOctaves, moistureFrequency, seed);
-
-            riverGroups = new();
         }
 
         // need to get the mod so that it doesn't pick up a tile outside of the map.
@@ -633,7 +629,7 @@ namespace MagusEngine.Generators
         private void GenerateRivers()
         {
             int attempts = 0;
-            int count = riverCount;
+            int count = riverMaxCount;
 
             // generate some rivers
             while (count > 0 && attempts < maxRiverAttempts)
@@ -645,36 +641,25 @@ namespace MagusEngine.Generators
 
                 // validate the tile
                 if (!tile.Collidable) continue;
-                if (tile.Rivers.Count > 0) continue;
-
+                if (planetData.Rivers.Any(i => i.Points.Contains(tile.Position))) continue;
+                Direction currentDirection;
                 if (tile.HeightValue > minRiverHeight)
                 {
                     // tile is good to start river from
-                    River river = new(riverCount);
+                    River river = new(SequentialIdGenerator.RiverId);
 
                     // Figure out the direction this river will try to flow
-                    river.CurrentDirection = tile.GetLowestNeighbor();
+                    currentDirection = tile.GetLowestNeighbor();
 
                     // Recursively find a path to water
-                    FindPathToWater(tile, river.CurrentDirection, ref river);
+                    FindPathToWater(tile, currentDirection, ref river);
 
-                    // Validate the generated river
-                    if (river.TurnCount < minRiverTurns
-                        || river.Tiles.Count < _minRiverLength
-                        || river.Intersections > maxRiverIntersections)
-                    {
-                        //Validation failed - remove this river
-                        for (int i = 0; i < river.Tiles.Count; i++)
-                        {
-                            WorldTile t = river.Tiles[i];
-                            t.Rivers.Remove(river);
-                        }
-                    }
-                    else if (river.Tiles.Count >= _minRiverLength)
+                    if (river.Points.Count >= _minRiverLength)
                     {
                         //Validation passed - Add river to list
-                        tile.Rivers.Add(river);
+                        planetData.Rivers.Add(river);
                         count--;
+                        tile.HeightValue -= 0.1f; // channel into the mountain
                     }
                 }
                 attempts++;
@@ -688,111 +673,86 @@ namespace MagusEngine.Generators
             if (currentRecursiveRiverAttempt >= maxRecursiveRiverAttemepts)
                 return;
 
-            if (tile.Rivers.Contains(river))
+            if (planetData.Rivers.Contains(river))
                 return;
 
-            if (tile.Rivers.Count > 0)
-                river.Intersections++;
+            if (planetData.Rivers.Any(i => i.Points.Contains(tile.Position))) { }
+            river.AddIntersection(tile.Position);
 
             river.AddTile(tile);
 
-            WorldTile left = GetLeft(tile);
-            WorldTile right = GetRight(tile);
-            WorldTile top = GetTop(tile);
-            WorldTile bottom = GetBottom(tile);
-
-            float leftValue = int.MaxValue;
-            float rigthValue = int.MaxValue;
-            float topValue = int.MaxValue;
-            float bottomValue = int.MaxValue;
             try
             {
-                // query height values of neighbors
-                if (left.GetRiverNeighborCount(river) < 2 && !river.Tiles.Contains(left))
-                    leftValue = left.HeightValue;
-                if (right.GetRiverNeighborCount(river) <= 2 && !river.Tiles.Contains(right))
-                    rigthValue = right.HeightValue;
-                if (top.GetRiverNeighborCount(river) <= 2 && !river.Tiles.Contains(top))
-                    topValue = top.HeightValue;
-                if (bottom.GetRiverNeighborCount(river) <= 2 && !river.Tiles.Contains(bottom))
-                    bottomValue = bottom.HeightValue;
-
-                // if neighbor is existing river that is not this one, flow into it
-                if (bottom.Rivers.Count == 0 && !bottom.Collidable)
-                    bottomValue = 0;
-                if (top.Rivers.Count == 0 && !top.Collidable)
-                    topValue = 0;
-                if (right.Rivers.Count == 0 && !right.Collidable)
-                    rigthValue = 0;
-                if (left.Rivers.Count == 0 && !left.Collidable)
-                    leftValue = 0;
-
+                currentDirection = tile.GetLowestNeighbor();
+                if (currentDirection == Direction.None)
+                    return;
                 // override flow direction if a tile is significantly lower
-                if (currentDirection == Direction.Left && MathF.Abs(rigthValue - leftValue) < 0.1f)
-                    rigthValue = int.MaxValue;
-                if (currentDirection == Direction.Right && MathF.Abs(rigthValue - leftValue) < 0.1f)
-                    leftValue = int.MaxValue;
-                if (currentDirection == Direction.Up && MathF.Abs(topValue - bottomValue) < 0.1f)
-                    topValue = int.MaxValue;
-                if (currentDirection == Direction.Down && MathF.Abs(topValue - bottomValue) < 0.1f)
-                    bottomValue = int.MaxValue;
+                //if (currentDirection == Direction.Left && MathF.Abs(rigthValue - leftValue) < 0.1f)
+                //    rigthValue = int.MaxValue;
+                //if (currentDirection == Direction.Right && MathF.Abs(rigthValue - leftValue) < 0.1f)
+                //    leftValue = int.MaxValue;
+                //if (currentDirection == Direction.Up && MathF.Abs(topValue - bottomValue) < 0.1f)
+                //    topValue = int.MaxValue;
+                //if (currentDirection == Direction.Down && MathF.Abs(topValue - bottomValue) < 0.1f)
+                //    bottomValue = int.MaxValue;
 
                 // find mininum has god forsaken us?
-                float min = MathF.Min(MathF.Min(MathF.Min(leftValue, rigthValue), topValue), bottomValue);
+                //float min = MathF.Min(MathF.Min(MathF.Min(leftValue, rigthValue), topValue), bottomValue);
 
-                // if no minimum found - exit
-                if (min == int.MaxValue)
-                    return;
+                //// if no minimum found - exit
+                //if (min == int.MaxValue)
+                //    return;
 
                 //Move to next neighbor
-                if (min == leftValue)
-                {
-                    if (left.Collidable)
-                    {
-                        if (river.CurrentDirection != Direction.Left)
-                        {
-                            river.TurnCount++;
-                            river.CurrentDirection = Direction.Left;
-                        }
-                        FindPathToWater(left, currentDirection, ref river);
-                    }
-                }
-                if (min == rigthValue)
-                {
-                    if (right.Collidable)
-                    {
-                        if (river.CurrentDirection != Direction.Right)
-                        {
-                            river.TurnCount++;
-                            river.CurrentDirection = Direction.Right;
-                        }
-                        FindPathToWater(right, currentDirection, ref river);
-                    }
-                }
-                if (min == bottomValue)
-                {
-                    if (bottom.Collidable)
-                    {
-                        if (river.CurrentDirection != Direction.Down)
-                        {
-                            river.TurnCount++;
-                            river.CurrentDirection = Direction.Down;
-                        }
-                        FindPathToWater(bottom, currentDirection, ref river);
-                    }
-                }
-                if (min == topValue)
-                {
-                    if (top.Collidable)
-                    {
-                        if (river.CurrentDirection != Direction.Up)
-                        {
-                            river.TurnCount++;
-                            river.CurrentDirection = Direction.Up;
-                        }
-                        FindPathToWater(top, currentDirection, ref river);
-                    }
-                }
+                //if (min == leftValue)
+                //{
+                //    if (left.Collidable)
+                //    {
+                //        if (river.CurrentDirection != Direction.Left)
+                //        {
+                //            river.TurnCount++;
+                //            river.CurrentDirection = Direction.Left;
+                //        }
+                //        FindPathToWater(left, currentDirection, ref river);
+                //    }
+                //}
+                //if (min == rigthValue)
+                //{
+                //    if (right.Collidable)
+                //    {
+                //        if (river.CurrentDirection != Direction.Right)
+                //        {
+                //            river.TurnCount++;
+                //            river.CurrentDirection = Direction.Right;
+                //        }
+                //        FindPathToWater(right, currentDirection, ref river);
+                //    }
+                //}
+                //if (min == bottomValue)
+                //{
+                //    if (bottom.Collidable)
+                //    {
+                //        if (river.CurrentDirection != Direction.Down)
+                //        {
+                //            river.TurnCount++;
+                //            river.CurrentDirection = Direction.Down;
+                //        }
+                //        FindPathToWater(bottom, currentDirection, ref river);
+                //    }
+                //}
+                //if (min == topValue)
+                //{
+                //    if (top.Collidable)
+                //    {
+                //        if (river.CurrentDirection != Direction.Up)
+                //        {
+                //            river.TurnCount++;
+                //            river.CurrentDirection = Direction.Up;
+                //        }
+                //        FindPathToWater(top, currentDirection, ref river);
+                //    }
+                //}
+                FindPathToWater(tile.Directions[currentDirection], currentDirection, ref river);
             }
             catch
             {
@@ -800,7 +760,7 @@ namespace MagusEngine.Generators
             }
         }
 
-        private void BuildRiverGroups()
+        /*private void BuildRiverGroups()
         {
             //loop each tile, checking if it belongs to multiple rivers
             for (var x = 0; x < _width; x++)
@@ -855,49 +815,29 @@ namespace MagusEngine.Generators
                     }
                 }
             }
-        }
+        }*/
 
         private void DigRiverGroups()
         {
-            for (int i = 0; i < riverGroups.Count; i++)
+            for (int i = 0; i < planetData.Rivers.Count; i++)
             {
-                RiverGroup group = riverGroups[i];
-                River? longest = null;
+                River river = planetData.Rivers[i];
 
-                //Find longest river in this group
-                for (int j = 0; j < group.Rivers.Count; j++)
-                {
-                    River river = group.Rivers[j];
-                    if (longest == null)
-                        longest = river;
-                    else if (longest.Tiles.Count < river.Tiles.Count)
-                        longest = river;
-                }
-
-                if (longest != null)
+                if (river != null)
                 {
                     //Dig out longest path first
-                    DigRiver(longest);
-
-                    for (int j = 0; j < group.Rivers.Count; j++)
-                    {
-                        River river = group.Rivers[j];
-                        if (river != longest)
-                        {
-                            DigRiver(river, longest);
-                        }
-                    }
+                    DigRiver(river);
                 }
             }
         }
 
-        private static void DigRiver(River river)
+        private void DigRiver(River river)
         {
             int counter = 0;
 
             // How wide are we digging this river?
             int size = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(1, 5);
-            river.Length = river.Tiles.Count;
+            river.Length = river.Points.Count;
 
             // randomize size change
             int two = river.Length / 2;
@@ -942,31 +882,13 @@ namespace MagusEngine.Generators
             }
 
             // Dig it out
-            for (int i = river.Tiles.Count - 1; i >= 0; i--)
+            for (int i = river.Points.Count; i >= 0; i--)
             {
-                WorldTile t = river.Tiles[i];
+                var pos = river.Points[i];
+                WorldTile t = tiles[pos.X, pos.Y];
 
-                if (counter < count1)
-                {
-                    t.DigRiver(river, 4);
-                }
-                else if (counter < count2)
-                {
-                    t.DigRiver(river, 3);
-                }
-                else if (counter < count3)
-                {
-                    t.DigRiver(river, 2);
-                }
-                else if (counter < count4)
-                {
-                    t.DigRiver(river, 1);
-                }
-                else
-                {
-                    t.DigRiver(river, 0);
-                }
-                counter++;
+                t.Collidable = false;
+                t.HeightType = HeightType.River;
             }
         }
 
@@ -1020,7 +942,7 @@ namespace MagusEngine.Generators
         }
 
         // Dig river based on a parent river vein
-        private static void DigRiver(River river, River parent)
+        /*private static void DigRiver(River river, River parent)
         {
             int intersectionID = 0;
             int intersectionSize = 0;
@@ -1145,7 +1067,7 @@ namespace MagusEngine.Generators
                 }
                 counter++;
             }
-        }
+        }*/
 
         public BiomeType GetBiomeType(WorldTile tile)
         {

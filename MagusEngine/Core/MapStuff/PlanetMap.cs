@@ -1,35 +1,31 @@
 ﻿using MagusEngine.Core.Civ;
+using MagusEngine.Core.WorldStuff;
 using MagusEngine.Core.WorldStuff.History;
 using MagusEngine.ECS.Components.TilesComponents;
-using MagusEngine.Serialization.MapConverter;
 using MagusEngine.Systems;
 using MagusEngine.Systems.Time;
 using MagusEngine.Utils;
-using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 namespace MagusEngine.Core.MapStuff
 {
     // made with http://www.jgallant.com/procedurally-generating-wrapping-world-maps-in-unity-csharp-part-1/#intro
-    [JsonConverter(typeof(PlanetMapJsonConverter))]
     public sealed class PlanetMap
     {
         private readonly int _height;
         private readonly int _width;
 
-        [DataMember]
         public List<Civilization> Civilizations { get; set; }
 
-        [DataMember]
         public Map AssocietatedMap { get; }
 
         public int YearSinceCreation { get => WorldHistory.CreationYear; }
 
-        [DataMember]
         public AccumulatedHistory WorldHistory { get; set; }
 
         public string Name => AssocietatedMap.MapName;
+
+        public List<River> Rivers { get; set; } = new();
 
         public PlanetMap(int width, int height)
         {

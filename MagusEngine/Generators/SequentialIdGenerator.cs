@@ -15,6 +15,7 @@ namespace MagusEngine.Generators
         private const int mythId = 4;
         private const int abilityId = 5;
         private const int discoveryId = 6;
+        private const int riverId = 7;
 
         #endregion Ids
 
@@ -30,6 +31,8 @@ namespace MagusEngine.Generators
         public static int AbilityId { get => idsDirectory[abilityId]++; }
         public static int DiscoveryId => idsDirectory[discoveryId]++;
 
+        public static int RiverId => idsDirectory[riverId]++;
+
         static SequentialIdGenerator()
         {
             int totalAbilityEnum = Enum.GetNames<AbilityName>().Length;
@@ -42,6 +45,7 @@ namespace MagusEngine.Generators
                 { civId, 0 },
                 { mythId, 0 },
                 { abilityId, totalAbilityEnum },
+                { riverId, 0},
             };
         }
     }

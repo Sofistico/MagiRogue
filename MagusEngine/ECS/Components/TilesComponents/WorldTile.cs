@@ -95,34 +95,25 @@ namespace MagusEngine.ECS.Components.TilesComponents
 
         public Direction GetLowestNeighbor()
         {
-            if (Left.HeightValue < Right.HeightValue
-                && Left.HeightValue < Top.HeightValue
-                && Left.HeightValue < Bottom.HeightValue)
+            Direction lowerDirection = default;
+            float lowerValue = float.MaxValue;
+            foreach (var (dir, neighboor) in Directions)
             {
-                return Direction.Left;
+                if (!dir.IsCardinal())
+                    continue;
+                if (neighboor.HeightValue < lowerValue)
+                {
+                    lowerDirection = dir;
+                    lowerValue = neighboor.HeightValue;
+                }
+                if (neighboor.HeightType is HeightType.ShallowWater or HeightType.DeepWater)
+                {
+                    lowerDirection = Direction.None;
+                    break;
+                }
             }
-            else if (Right.HeightValue < Left.HeightValue
-                && Right.HeightValue < Top.HeightValue
-                && Right.HeightValue < Bottom.HeightValue)
-            {
-                return Direction.Right;
-            }
-            else if (Top.HeightValue < Left.HeightValue
-                && Top.HeightValue < Right.HeightValue
-                && Top.HeightValue < Bottom.HeightValue)
-            {
-                return Direction.Right;
-            }
-            else if (Bottom.HeightValue < Left.HeightValue
-                && Bottom.HeightValue < Top.HeightValue
-                && Bottom.HeightValue < Right.HeightValue)
-            {
-                return Direction.Right;
-            }
-            else
-            {
-                return Direction.Down;
-            }
+
+            return lowerDirection;
         }
 
         public float GetResources()
