@@ -50,7 +50,7 @@ namespace Diviner
         {
             SetUpCustomColors();
 
-            MainMenu = new MainMenuWindow(gameHeight, gameWidth)
+            MainMenu = new MainMenuWindow(gameWidth, gameHeight)
             {
                 IsFocused = true
             };

@@ -6,6 +6,7 @@ using MagusEngine.ECS.Components;
 using MagusEngine.Serialization;
 using MagusEngine.Systems;
 using SadRogue.Primitives;
+using System;
 
 namespace MagusEngine.Factory
 {
@@ -114,9 +115,14 @@ namespace MagusEngine.Factory
 
         public static void ResetCachedMaterial() => cachedMaterial = null;
 
-        private static (Color, Color, char, bool, bool, string) DetermineTileLookAndName(MaterialTemplate material,
+        private static (Color, Color, char, bool, bool, string) DetermineTileLookAndName(MaterialTemplate? material,
             TileType tileType)
         {
+            if (material == null)
+            {
+                throw new ArgumentNullException(nameof(material));
+            }
+
             char glyph;
             bool isTransparent;
             bool isWalkable;
