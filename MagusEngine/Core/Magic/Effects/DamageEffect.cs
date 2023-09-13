@@ -1,7 +1,8 @@
-﻿using MagiRogue.Data.Enumerators;
-using MagiRogue.Entities;
-using MagiRogue.Entities.Core;
-using MagiRogue.Utils;
+﻿using Arquimedes.Enumerators;
+using MagusEngine.Core.Entities;
+using MagusEngine.Core.Entities.Base;
+using MagusEngine.Systems;
+using MagusEngine.Utils;
 using Newtonsoft.Json;
 
 namespace MagusEngine.Core.Magic.Effects
@@ -61,9 +62,9 @@ namespace MagusEngine.Core.Magic.Effects
         {
             BaseDamage = MagicManager.CalculateSpellDamage(caster, spellCasted);
 
-            MagiEntity poorGuy = GameLoop.GetCurrentMap().GetEntityAt<MagiEntity>(target);
+            MagiEntity poorGuy = Find.CurrentMap.GetEntityAt<MagiEntity>(target);
 
-            if ((poorGuy == GameLoop.GetCurrentMap().ControlledEntitiy || poorGuy is Player)
+            if ((poorGuy == Find.CurrentMap.ControlledEntitiy || poorGuy is Player)
                 && AreaOfEffect is not SpellAreaEffect.Ball)
             {
                 poorGuy = null;
@@ -82,10 +83,12 @@ namespace MagusEngine.Core.Magic.Effects
             BaseDamage = MagicManager.CalculateSpellDamage(caster, spellCasted);
 
             if (AreaOfEffect is SpellAreaEffect.Self)
+            {
                 CombatUtils.ApplyHealing(BaseDamage, caster, SpellDamageType);
+            }
             else
             {
-                Actor happyGuy = GameLoop.GetCurrentMap().GetEntityAt<Actor>(target);
+                Actor happyGuy = Find.CurrentMap.GetEntityAt<Actor>(target);
 
                 if (happyGuy == null)
                 {

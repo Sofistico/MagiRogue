@@ -1,7 +1,7 @@
-﻿using MagiRogue.Data;
-using MagiRogue.Data.Enumerators;
-using MagiRogue.Utils;
-using MagiRogue.Utils.Extensions;
+﻿using MagusEngine.Systems;
+using Arquimedes.Enumerators;
+using MagusEngine.Utils;
+using MagusEngine.Utils.Extensions;
 using MagusEngine.Core.Civ;
 using System;
 using System.Collections.Generic;

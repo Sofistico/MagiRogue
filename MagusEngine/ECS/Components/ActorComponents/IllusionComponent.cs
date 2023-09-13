@@ -1,5 +1,4 @@
-﻿using GoRogue.Components.ParentAware;
-using MagiRogue.GameSys.Tiles;
+﻿using MagusEngine.Core;
 using SadConsole;
 
 namespace MagusEngine.ECS.Components.ActorComponents
@@ -11,10 +10,10 @@ namespace MagusEngine.ECS.Components.ActorComponents
         public readonly ColoredGlyph FakeAppearence;
         //public IObjectWithComponents? Parent { get; set; }
 
-        public IllusionComponent(TileBase fakeAppearence)
+        public IllusionComponent(Tile fakeAppearence)
         {
-            FakeAppearence = new ColoredGlyph(fakeAppearence.Foreground,
-                fakeAppearence.Background, fakeAppearence.Glyph);
+            FakeAppearence = new ColoredGlyph(fakeAppearence.Appearence.Foreground,
+                fakeAppearence.Appearence.Background, fakeAppearence.Appearence.Glyph);
             FakeAppearence.IsVisible = true;
         }
     }

@@ -1,6 +1,6 @@
-﻿using MagiRogue.Data.Enumerators;
-using MagiRogue.Entities;
-using MagusEngine.Core.Magic;
+﻿using Arquimedes.Enumerators;
+using MagusEngine.Core.Entities;
+using MagusEngine.Systems;
 using MagusEngine.Systems.Time;
 using Newtonsoft.Json;
 
@@ -52,11 +52,11 @@ namespace MagusEngine.Core.Magic.Effects
 
         private void Haste(Point target, SpellBase spellCasted)
         {
-            double targetStats = GameLoop.GetCurrentMap().GetEntityAt<Actor>(target).GetActorBaseSpeed();
+            double targetStats = Find.CurrentMap.GetEntityAt<Actor>(target).GetActorBaseSpeed();
 
             // TODO: Refactor this shit
             if (turnToRemove == 0)
-                GameLoop.Universe.Time.TurnPassed -= GetTime_TurnPassed;
+                Find.Universe.Time.TurnPassed -= GetTime_TurnPassed;
             if (isHasted)
             {
                 GameLoop.AddMessageLog("Can only have one haste effect per time");
@@ -65,11 +65,11 @@ namespace MagusEngine.Core.Magic.Effects
             currentSpeed = targetStats;
             previousSpeed = targetStats;
             targetStats += HastePower;
-            TurnApplied = GameLoop.Universe.Time.Turns;
+            TurnApplied = Find.Universe.Time.Turns;
             turnToRemove = TurnApplied + Duration;
             isHasted = true;
 
-            GameLoop.Universe.Time.TurnPassed += GetTime_TurnPassed;
+            Find.Universe.Time.TurnPassed += GetTime_TurnPassed;
         }
 
         private void GetTime_TurnPassed(object sender, TimeDefSpan e)
@@ -81,7 +81,7 @@ namespace MagusEngine.Core.Magic.Effects
                 isHasted = false;
 
                 GameLoop.AddMessageLog("You feel yourself slowing down");
-                GameLoop.Universe.Time.TurnPassed -= GetTime_TurnPassed;
+                Find.Universe.Time.TurnPassed -= GetTime_TurnPassed;
             }
         }
     }

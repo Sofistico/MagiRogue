@@ -1,4 +1,4 @@
-﻿using MagiRogue.Entities;
+﻿using MagusEngine.Core.Entities;
 using System.Collections.Generic;
 
 namespace MagusEngine.Core.Magic.Practices

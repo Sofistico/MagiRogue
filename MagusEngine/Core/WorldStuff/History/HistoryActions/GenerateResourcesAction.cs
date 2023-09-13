@@ -1,11 +1,6 @@
-﻿using MagiRogue.Data;
-using MagiRogue.Data.Enumerators;
+﻿using Arquimedes.Enumerators;
 using MagusEngine.Core.Civ;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MagusEngine.Systems;
 
 namespace MagusEngine.Core.WorldStuff.History.HistoryActions
 {

@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MagiRogue.DataCreatorWpf
+namespace MagusEngine.SystemsCreatorWpf
 {
     /// <summary>
     /// Interação lógica para ResearchCU.xam

@@ -139,7 +139,7 @@ namespace MagusEngine.Core.Entities
                 // if tile in the other map isn't walkable, then it should't be possible to go there!
                 if (!mapToGo.IsTileWalkable(actorPosInChunk, this))
                     return false;
-                //GameLoop.Universe.ChangePlayerMap(mapToGo, actorPosInChunk, GameLoop.GetCurrentMap());
+                //Find.Universe.ChangePlayerMap(mapToGo, actorPosInChunk, Find.CurrentMap);
                 Locator.GetService<MessageBusService>().SendMessage<ChangeControlledActorMap>(new(this,
                     mapToGo, actorPosInChunk));
                 return true;

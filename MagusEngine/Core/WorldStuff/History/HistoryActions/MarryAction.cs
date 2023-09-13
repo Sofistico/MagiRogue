@@ -1,6 +1,6 @@
-﻿using MagiRogue.Data;
-using MagiRogue.GameSys.Tiles;
-using MagiRogue.Utils.Extensions;
+﻿using MagusEngine.Systems;
+using MagusEngine.Core;
+using MagusEngine.Utils.Extensions;
 using MagusEngine.Core.Civ;
 using MagusEngine.Core.WorldStuff.History;
 using System;

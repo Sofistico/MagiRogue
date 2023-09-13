@@ -98,7 +98,7 @@ namespace MagusEngine.Commands
                 TargetList.Add(_caster);
                 var (sucess, s) = EndSpellTargetting();
                 Locator.GetService<MessageBusService>()
-                    .SendMessage<ProcessTurnEvent>(new(TimeHelper.GetCastingTime(GameLoop.Universe.Player, s)), sucess);
+                    .SendMessage<ProcessTurnEvent>(new(TimeHelper.GetCastingTime(Find.Universe.Player, s)), sucess);
                 return;
             }
 
@@ -187,7 +187,7 @@ namespace MagusEngine.Commands
                     TravelPath = null;
                 }
 
-                Locator.GetService<MessageBusService>().SendMessage<ChangeControlledEntitiy>(new(GameLoop.Universe.Player));
+                Locator.GetService<MessageBusService>().SendMessage<ChangeControlledEntitiy>(new(Find.Universe.Player));
                 Locator.GetService<MessageBusService>().SendMessage<RemoveEntitiyCurrentMap>(new(Cursor));
             }
         }

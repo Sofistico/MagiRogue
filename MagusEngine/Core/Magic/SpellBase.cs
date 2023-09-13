@@ -192,7 +192,7 @@ namespace MagusEngine.Core.Magic
         {
             if (CanCast(caster.Magic, caster) && target != Point.None)
             {
-                MagiEntity entity = GameLoop.GetCurrentMap().GetEntityAt<MagiEntity>(target);
+                MagiEntity entity = Find.CurrentMap.GetEntityAt<MagiEntity>(target);
 
                 Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{caster.Name} casted {SpellName}"));
 
@@ -231,7 +231,7 @@ namespace MagusEngine.Core.Magic
 
                 foreach (var pos in target)
                 {
-                    MagiEntity entity = GameLoop.GetCurrentMap().GetEntityAt<MagiEntity>(pos);
+                    MagiEntity entity = Find.CurrentMap.GetEntityAt<MagiEntity>(pos);
                     foreach (ISpellEffect effect in Effects)
                     {
                         if (entity is not null && entity.CanBeAttacked)

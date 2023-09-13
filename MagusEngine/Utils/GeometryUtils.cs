@@ -1,6 +1,7 @@
 ﻿using MagusEngine.Bus.UiBus;
 using MagusEngine.Commands;
 using MagusEngine.Services;
+using MagusEngine.Systems;
 using SadRogue.Primitives;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace MagusEngine.Utils
         /// <returns></returns>
         public static Shape Cone(this Point originCoordinate, double radius, Target target, double coneSpan = 90)
         {
-            var map = GameLoop.GetCurrentMap();
+            var map = Find.CurrentMap;
             Point[] points;
             double angle = 0;
             if (target.TravelPath.Length > 0)

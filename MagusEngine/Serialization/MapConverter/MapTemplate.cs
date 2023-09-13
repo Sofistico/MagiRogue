@@ -56,7 +56,7 @@ namespace MagusEngine.Serialization.MapConverter
 
                 ParametizeTile(tile, tiles[i]);
 
-                map.SetTerrain((TileBase)tile);
+                map.SetTerrain((Tile)tile);
 
                 // handle explored flags
                 map.PlayerExplored[i] = (bool)explored[i];

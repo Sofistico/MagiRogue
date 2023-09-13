@@ -1,16 +1,16 @@
 ﻿//using GoRogue.Components;
 //using GoRogue.GameFramework;
 //using MagiRogue.Components;
-//using MagiRogue.Data.Enumerators;
-//using MagiRogue.Data.Serialization;
-//using MagiRogue.Entities.Veggies;
+//using Arquimedes.Enumerators;
+//using MagusEngine.Systems.Serialization;
+//using MagusEngine.Core.Entities.Veggies;
 //using MagusEngine.Systems.Physics;
 //using SadConsole;
 //using SadRogue.Primitives;
 //using System;
 //using System.Collections.Generic;
 
-//namespace MagiRogue.GameSys.Tiles
+//namespace MagusEngine.Core
 //{
 //    // need to separate the TileBase from the ColoredGlyph object
 //    public abstract class TileBase : ColoredGlyph, IGameObject
@@ -179,11 +179,11 @@
 
 //        public virtual void DestroyTile(TileBase changeTile, Entities.Item? itemDropped = null)
 //        {
-//            GameLoop.GetCurrentMap().SetTerrain(changeTile);
+//            Find.CurrentMap.SetTerrain(changeTile);
 //            LastSeenAppereance = changeTile;
 //            if (itemDropped is not null)
 //            {
-//                GameLoop.GetCurrentMap().AddMagiEntity(itemDropped);
+//                Find.CurrentMap.AddMagiEntity(itemDropped);
 //            }
 //        }
 

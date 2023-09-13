@@ -1,4 +1,5 @@
 ﻿using GoRogue.Messaging;
+using MagusEngine.Core.MapStuff;
 
 namespace MagusEngine.Bus.ComponentBus
 {

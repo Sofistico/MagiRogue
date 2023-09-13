@@ -1,6 +1,6 @@
-﻿using MagiRogue.Data.Enumerators;
-using MagiRogue.Entities;
-using MagiRogue.GameSys.Tiles;
+﻿using Arquimedes.Enumerators;
+using MagusEngine.Core.Entities;
+using MagusEngine.Core;
 using System.Collections.Generic;
 
 namespace MagusEngine.Core.Magic

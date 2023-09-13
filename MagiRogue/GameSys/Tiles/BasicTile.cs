@@ -1,6 +1,6 @@
-﻿//using MagiRogue.Data.Enumerators;
-//using MagiRogue.Data.Serialization;
-//using MagiRogue.Entities.Veggies;
+﻿//using Arquimedes.Enumerators;
+//using MagusEngine.Systems.Serialization;
+//using MagusEngine.Core.Entities.Veggies;
 //using Newtonsoft.Json;
 //using SadRogue.Primitives;
 //using System;
@@ -9,7 +9,7 @@
 //using MagusEngine.Core.Civ;
 //using MagusEngine.Systems.Physics;
 
-//namespace MagiRogue.GameSys.Tiles
+//namespace MagusEngine.Core
 //{
 //    #region Tile Serializer
 

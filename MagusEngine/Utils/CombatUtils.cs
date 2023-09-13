@@ -482,7 +482,7 @@ namespace MagusEngine.Utils
                     item.Position = defender.Position;
 
                     // Now let the MultiSpatialMap know that the Item is visible
-                    //GameLoop.GetCurrentMap().AddMagiEntity(item);
+                    //Find.CurrentMap.AddMagiEntity(item);
                     Locator.GetService<MessageBusService>().SendMessage<AddEntitiyCurrentMap>(new(item));
                 }
 

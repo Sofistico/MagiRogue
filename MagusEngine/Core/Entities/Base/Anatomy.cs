@@ -477,7 +477,7 @@ namespace MagusEngine.Core.Entities.Base
                 //if (totalDmg > 0)
                 //    GameLoop.AddMessageLog($"and took {totalDmg} damage!");
 
-                GameLoop.GetCurrentMap()?.AddMagiEntity(limb.ReturnLimbAsItem(actor));
+                Find.CurrentMap?.AddMagiEntity(limb.ReturnLimbAsItem(actor));
             }
             catch (Exception)
             {

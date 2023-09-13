@@ -1,5 +1,6 @@
-﻿using MagiRogue.Data.Enumerators;
-using MagiRogue.Entities;
+﻿using Arquimedes.Enumerators;
+using MagusEngine.Core.Entities;
+using MagusEngine.Systems.Time;
 using Newtonsoft.Json;
 using System.Linq;
 
@@ -39,9 +40,9 @@ namespace MagusEngine.Core.Magic.Effects
                 return;
             }
 
-            TurnApplied = GameLoop.Universe.Time.Turns;
+            TurnApplied = Find.Universe.Time.Turns;
 
-            foreach (Tiles.NodeTile node in GameLoop.GetCurrentMap().Tiles.Where(t => t is Tiles.NodeTile))
+            foreach (Tiles.NodeTile node in Find.CurrentMap.Tiles.Where(t => t is Tiles.NodeTile))
             {
                 node.RestoreOriginalAppearence();
             }
@@ -49,16 +50,16 @@ namespace MagusEngine.Core.Magic.Effects
             turnToRemove = TurnApplied + Duration;
 
             hasMageSight = true;
-            GameLoop.Universe.Time.TurnPassed += GetTime_TurnPassed;
+            Find.Universe.Time.TurnPassed += GetTime_TurnPassed;
 
             GameLoop.AddMessageLog("You can see the unseen now");
         }
 
-        private void GetTime_TurnPassed(object sender, Time.TimeDefSpan e)
+        private void GetTime_TurnPassed(object sender, TimeDefSpan e)
         {
             if (e.Seconds >= turnToRemove)
             {
-                foreach (Tiles.NodeTile node in GameLoop.GetCurrentMap().Tiles.Where(t => t is Tiles.NodeTile))
+                foreach (Tiles.NodeTile node in Find.CurrentMap.Tiles.Where(t => t is Tiles.NodeTile))
                 {
                     node.RestoreIllusionComponent();
                 }
@@ -66,7 +67,7 @@ namespace MagusEngine.Core.Magic.Effects
                 hasMageSight = false;
 
                 GameLoop.AddMessageLog("Your eyes sees normally now");
-                GameLoop.Universe.Time.TurnPassed -= GetTime_TurnPassed;
+                Find.Universe.Time.TurnPassed -= GetTime_TurnPassed;
             }
         }
     }

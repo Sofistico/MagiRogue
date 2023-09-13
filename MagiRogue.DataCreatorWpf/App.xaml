@@ -1,7 +1,7 @@
-﻿<Application x:Class="MagiRogue.DataCreatorWpf.App"
+﻿<Application x:Class="MagusEngine.SystemsCreatorWpf.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:MagiRogue.DataCreatorWpf"
+             xmlns:local="clr-namespace:MagusEngine.SystemsCreatorWpf"
              DispatcherUnhandledException="Application_DispatcherUnhandledException">
     <Application.Resources>
         <LinearGradientBrush x:Key="WindowBackgroundBrush">

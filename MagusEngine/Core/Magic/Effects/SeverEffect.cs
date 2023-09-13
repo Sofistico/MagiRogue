@@ -1,5 +1,5 @@
-﻿using MagiRogue.Data.Enumerators;
-using MagiRogue.Entities;
+﻿using Arquimedes.Enumerators;
+using MagusEngine.Core.Entities;
 using Newtonsoft.Json;
 
 namespace MagusEngine.Core.Magic.Effects
@@ -36,7 +36,7 @@ namespace MagusEngine.Core.Magic.Effects
         private void CutLimb(Point target, Actor caster, SpellBase spellCasted)
         {
             // Actor because only actor have an anatomy
-            Actor poorGuy = GameLoop.GetCurrentMap().GetEntityAt<Actor>(target);
+            Actor poorGuy = Find.CurrentMap.GetEntityAt<Actor>(target);
             int luck = GoRogue.DiceNotation.Dice.Roll($"{spellCasted.SpellLevel}d{spellCasted.Power}");
 
             if (poorGuy?.GetAnatomy().Limbs.Count > 0

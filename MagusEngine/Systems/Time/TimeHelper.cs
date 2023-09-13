@@ -21,7 +21,7 @@ namespace MagusEngine.Systems.Time
 
         public static int GetWalkTime(Actor actor, Point pos)
         {
-            var tile = GameLoop.GetCurrentMap().GetTileAt(pos);
+            var tile = Find.CurrentMap.GetTileAt(pos);
             return GetWalkTime(actor, tile);
         }
 

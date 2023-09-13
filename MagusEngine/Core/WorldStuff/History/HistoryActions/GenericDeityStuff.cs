@@ -1,14 +1,11 @@
-﻿using MagiRogue.Data;
-using MagiRogue.Data.Enumerators;
-using MagiRogue.Utils.Extensions;
+﻿using Arquimedes.Enumerators;
+using GoRogue.Random;
 using MagusEngine.Core.Civ;
-using MagusEngine.Core.WorldStuff.History;
 using MagusEngine.Core.WorldStuff.TechRes;
+using MagusEngine.Systems;
+using MagusEngine.Utils.Extensions;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MagusEngine.Core.WorldStuff.History.HistoryActions
 {
@@ -25,7 +22,7 @@ namespace MagusEngine.Core.WorldStuff.History.HistoryActions
         private bool? MythStuff(HistoricalFigure figure)
         {
             // fuck deities!
-            if (figure.SpecialFlags.Contains(Data.Enumerators.SpecialFlag.Myth))
+            if (figure.SpecialFlags.Contains(SpecialFlag.Myth))
             {
                 if (figure.CheckForInsurrection())
                 {
@@ -78,7 +75,7 @@ namespace MagusEngine.Core.WorldStuff.History.HistoryActions
             if (figure.CheckForGreed())
             {
                 Civilization civ = figure.GetRelatedCivFromFigure(RelationType.PatronDeity, Find.Civs);
-                int weatlh = GameLoop.GlobalRand.NextInt(100, 500);
+                int weatlh = GlobalRandom.DefaultRNG.NextInt(100, 500);
                 civ.Wealth += weatlh;
                 figure.AddLegend($"The {figure.Name} gifted {figure.PronoumPossesive()} followers generated wealth in the value of {weatlh}",
                     Find.Year);

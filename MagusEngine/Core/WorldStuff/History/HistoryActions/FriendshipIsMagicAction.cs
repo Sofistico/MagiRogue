@@ -1,11 +1,7 @@
-﻿using MagiRogue.Data;
-using MagiRogue.Utils.Extensions;
-using MagusEngine.Core.Civ;
-using System;
-using System.Collections.Generic;
+﻿using MagusEngine.Core.Civ;
+using MagusEngine.Systems;
+using MagusEngine.Utils.Extensions;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MagusEngine.Core.WorldStuff.History.HistoryActions
 {

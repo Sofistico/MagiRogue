@@ -150,10 +150,10 @@ namespace MagusEngine.Systems
         //public static Tile? QueryTileInData(string tileId, Point pos)
         //    => ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId))?.Copy();
 
-        //public static T QueryTileInData<T>(string tileId) where T : TileBase
+        //public static T QueryTileInData<T>(string tileId) where T : Tile
         //    => (T)ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId))?.Copy();
 
-        //public static T QueryTileInData<T>(string tileId, Point pos) where T : TileBase
+        //public static T QueryTileInData<T>(string tileId, Point pos) where T : Tile
         //    => (T)ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId))?.Copy(pos);
 
         public static Item QueryItemInData(string itemId)
