@@ -53,6 +53,9 @@ namespace MagusEngine.Generators
         private readonly float heatFrequency = 5.90f;
         private readonly int heatOctaves = 4;
 
+        private readonly double gradientCenter = 0.5; // Center of the gradient
+        private readonly double steepness = 10.0; // Adjust the steepness as needed
+
         private readonly int moistureOctaves = 7;
         private readonly float moistureFrequency = 4.22f;
 
@@ -425,9 +428,13 @@ namespace MagusEngine.Generators
                     float ny = y1 + (MathF.Sin(t * 2) * dy);
 
                     float heightValue = (float)heightMap.Get(nx, ny);
-                    var polarNx = nx;
-                    var polarNy = ny;
-                    float heatValue = (float)heatMap.Get(polarNx, polarNy);
+
+                    var sigmoid = 1.0 / (1.0 + Math.Exp(-steepness * (y - gradientCenter)));
+                    var heatNoise = heatMap.Get(nx, ny);
+                    // Add the noise value to the gradient
+                    var val = sigmoid + heatNoise - 0.5;
+
+                    float heatValue = (float)val;
                     float moistureValue = (float)moistureMap.Get(nx, ny);
 
                     HeightData[x, y] = heightValue;
