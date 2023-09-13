@@ -1,5 +1,6 @@
 ﻿using Arquimedes.Enumerators;
 using MagusEngine.Core.Entities;
+using MagusEngine.Systems;
 using Newtonsoft.Json;
 
 namespace MagusEngine.Core.Magic.Effects

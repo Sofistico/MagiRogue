@@ -207,7 +207,6 @@ namespace Diviner.Windows
         {
             GameStarted = false;
             Find.Universe = null!;
-            Find.CurrentMap = null;
             RefreshButtons();
 
             //foreach (SadConsole.Console item in GameLoop.UIManager.Children.Cast<SadConsole.Console>())

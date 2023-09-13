@@ -1,14 +1,9 @@
-﻿using GoRogue.Components.ParentAware;
-using MagiRogue.GameSys;
-using MagiRogue.UI.Windows;
+﻿using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities.Base;
+using MagusEngine.Core.MapStuff;
+using MagusEngine.Services;
 using MagusEngine.Systems.Time;
 using MagusEngine.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MagusEngine.ECS.Components.ActorComponents.Ai
 {
@@ -22,12 +17,12 @@ namespace MagusEngine.ECS.Components.ActorComponents.Ai
             _entity = entity;
         }
 
-        public virtual (bool sucess, long ticks) RunAi(Map map, MessageLogWindow messageLog)
+        public virtual (bool sucess, long ticks) RunAi(Map map)
         {
             bool rng = Mrn.OneIn(10);
             if (rng)
             {
-                messageLog.PrintMessage($"The {_entity.Name} waits doing nothing...");
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"The {_entity.Name} waits doing nothing..."));
                 return (true, TimeHelper.Wait);
             }
             else

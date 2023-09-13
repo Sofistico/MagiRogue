@@ -1,8 +1,10 @@
 ﻿using Arquimedes.Enumerators;
+using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
+using MagusEngine.Services;
+using MagusEngine.Systems;
 using MagusEngine.Systems.Time;
 using Newtonsoft.Json;
-using System.Linq;
 
 namespace MagusEngine.Core.Magic.Effects
 {
@@ -36,37 +38,37 @@ namespace MagusEngine.Core.Magic.Effects
         {
             if (hasMageSight)
             {
-                GameLoop.AddMessageLog("You already have your mage sight active");
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("You already have your Sight active"));
                 return;
             }
 
             TurnApplied = Find.Universe.Time.Turns;
 
-            foreach (Tiles.NodeTile node in Find.CurrentMap.Tiles.Where(t => t is Tiles.NodeTile))
-            {
-                node.RestoreOriginalAppearence();
-            }
+            //foreach (Tiles.NodeTile node in Find.CurrentMap.Tiles.Where(t => t is Tiles.NodeTile))
+            //{
+            //    node.RestoreOriginalAppearence();
+            //}
 
             turnToRemove = TurnApplied + Duration;
 
             hasMageSight = true;
             Find.Universe.Time.TurnPassed += GetTime_TurnPassed;
 
-            GameLoop.AddMessageLog("You can see the unseen now");
+            Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("You can See"));
         }
 
         private void GetTime_TurnPassed(object sender, TimeDefSpan e)
         {
             if (e.Seconds >= turnToRemove)
             {
-                foreach (Tiles.NodeTile node in Find.CurrentMap.Tiles.Where(t => t is Tiles.NodeTile))
-                {
-                    node.RestoreIllusionComponent();
-                }
+                //foreach (Tiles.NodeTile node in Find.CurrentMap.Tiles.Where(t => t is Tiles.NodeTile))
+                //{
+                //    node.RestoreIllusionComponent();
+                //}
                 turnToRemove = 0;
                 hasMageSight = false;
 
-                GameLoop.AddMessageLog("Your eyes sees normally now");
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("Your close your Sigth"));
                 Find.Universe.Time.TurnPassed -= GetTime_TurnPassed;
             }
         }

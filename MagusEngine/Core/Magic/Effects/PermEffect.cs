@@ -30,13 +30,13 @@ namespace MagusEngine.Core.Magic.Effects
 
         public void Enchant(int nodesSacrificed)
         {
-            if (nodesSacrificed >= NodeCost)
-            {
-                Enchantment.ApplyEffect(Caster.Position, Caster, new SpellBase());
-            }
-            else
-                GameLoop.UIManager.MessageLog
-                    .PrintMessage($"{Caster.Name} does not have enough nodes for the enchantment");
+            //if (nodesSacrificed >= NodeCost)
+            //{
+            //    Enchantment.ApplyEffect(Caster.Position, Caster, new SpellBase());
+            //}
+            //else
+            //    GameLoop.UIManager.MessageLog
+            //        .PrintMessage($"{Caster.Name} does not have enough nodes for the enchantment");
         }
     }
 }

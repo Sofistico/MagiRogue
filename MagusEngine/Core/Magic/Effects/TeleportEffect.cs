@@ -1,5 +1,7 @@
 ﻿using Arquimedes.Enumerators;
+using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
+using MagusEngine.Services;
 using Newtonsoft.Json;
 
 namespace MagusEngine.Core.Magic.Effects
@@ -29,7 +31,7 @@ namespace MagusEngine.Core.Magic.Effects
         {
             if (Commands.ActionManager.MoveActorTo(caster, target))
             {
-                GameLoop.AddMessageLog($"{caster.Name} disappeared!");
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{caster.Name} disappeared!"));
             }
         }
     }

@@ -1,5 +1,7 @@
 ﻿using Arquimedes.Enumerators;
+using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
+using MagusEngine.Services;
 using MagusEngine.Systems;
 using MagusEngine.Systems.Time;
 using Newtonsoft.Json;
@@ -59,7 +61,7 @@ namespace MagusEngine.Core.Magic.Effects
                 Find.Universe.Time.TurnPassed -= GetTime_TurnPassed;
             if (isHasted)
             {
-                GameLoop.AddMessageLog("Can only have one haste effect per time");
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("Can only have one haste effect per time"));
                 return;
             }
             currentSpeed = targetStats;
@@ -80,7 +82,7 @@ namespace MagusEngine.Core.Magic.Effects
                 turnToRemove = 0;
                 isHasted = false;
 
-                GameLoop.AddMessageLog("You feel yourself slowing down");
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("You feel yourself slowing down"));
                 Find.Universe.Time.TurnPassed -= GetTime_TurnPassed;
             }
         }

@@ -35,7 +35,6 @@ namespace MagusEngine.Serialization
         /// The World map, contains the map data and the Planet data
         /// </summary>
         // TODO: Separate it so that it searchs for the world map in another file
-        [JsonProperty(ItemConverterType = typeof(PlanetMapJsonConverter))]
         public PlanetMap WorldMap { get; set; }
 
         /// <summary>

@@ -69,9 +69,7 @@ namespace MagiRogue.Test.System
                 Sex.Female, "new_wiz");
             planet.AssocietatedMap.AddMagiEntity(playa);
 
-            PlanetMapTemplate planetMapTemplate = planet;
-
-            string json = JsonConvert.SerializeObject(planetMapTemplate, Formatting.Indented,
+            string json = JsonConvert.SerializeObject(planet, Formatting.Indented,
                 new JsonSerializerSettings()
                 {
                     NullValueHandling = NullValueHandling.Ignore

@@ -8,6 +8,7 @@ using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic;
 using MagusEngine.Services;
+using MagusEngine.Systems;
 using MagusEngine.Systems.Time;
 using MagusEngine.Utils;
 using SadRogue.Primitives;
@@ -98,7 +99,7 @@ namespace MagusEngine.Commands
                 TargetList.Add(_caster);
                 var (sucess, s) = EndSpellTargetting();
                 Locator.GetService<MessageBusService>()
-                    .SendMessage<ProcessTurnEvent>(new(TimeHelper.GetCastingTime(Find.Universe.Player, s)), sucess);
+                    .SendMessage<ProcessTurnEvent>(new(TimeHelper.GetCastingTime(Find.Universe.Player, s), sucess));
                 return;
             }
 

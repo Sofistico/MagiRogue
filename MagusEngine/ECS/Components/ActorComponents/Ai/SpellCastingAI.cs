@@ -1,7 +1,5 @@
-﻿using GoRogue.Components.ParentAware;
-using MagiRogue.GameSys;
-using MagiRogue.UI.Windows;
-using MagusEngine.Core.Magic;
+﻿using MagusEngine.Core.Magic;
+using MagusEngine.Core.MapStuff;
 using System;
 
 namespace MagusEngine.ECS.Components.ActorComponents.Ai
@@ -17,7 +15,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.Ai
             _spellsKnow = spellsKnow;
         }
 
-        public (bool sucess, long ticks) RunAi(Map map, MessageLogWindow messageLog)
+        public (bool sucess, long ticks) RunAi(Map map)
         {
             throw new NotImplementedException();
         }

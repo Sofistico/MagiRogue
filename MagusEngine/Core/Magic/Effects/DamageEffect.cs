@@ -1,6 +1,8 @@
 ﻿using Arquimedes.Enumerators;
+using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
+using MagusEngine.Services;
 using MagusEngine.Systems;
 using MagusEngine.Utils;
 using Newtonsoft.Json;
@@ -97,7 +99,7 @@ namespace MagusEngine.Core.Magic.Effects
 
                 if (happyGuy.CanBeAttacked)
                 {
-                    GameLoop.AddMessageLog("You can't heal what can't take damage");
+                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("You can't heal this!"));
                     return;
                 }
 

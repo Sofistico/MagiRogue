@@ -41,7 +41,7 @@ namespace MagusEngine.Core.Magic
             RitualRange = ritualRange;
         }
 
-        public void PerformRitual(NodeTile node, Actor caster, Point target)
+        /*public void PerformRitual(NodeTile node, Actor caster, Point target)
         {
             if (node.MpPoints >= MpNodeCost)
             {
@@ -57,7 +57,7 @@ namespace MagusEngine.Core.Magic
             }
 
             GameLoop.AddMessageLog($"{caster.Name} didn't have enough mana in the node for the ritual!");
-        }
+        }*/
 
         public override string ToString()
         {
