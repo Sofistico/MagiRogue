@@ -1,5 +1,6 @@
 ﻿using Arquimedes.Utils;
 using Diviner.Controls;
+using GoRogue.Messaging;
 using MagusEngine;
 using MagusEngine.Bus;
 using MagusEngine.Bus.UiBus;
@@ -11,7 +12,8 @@ using SadConsole.UI.Controls;
 
 namespace Diviner.Windows
 {
-    public class MainMenuWindow : MagiBaseWindow
+    public class MainMenuWindow : MagiBaseWindow,
+        ISubscriber<ShowMainMenuMessage>
     {
         private readonly MagiButton startGame;
         private readonly MagiButton testMap;
@@ -223,6 +225,11 @@ namespace Diviner.Windows
             //GameLoop.UIManager.Children.Clear();
             //GameLoop.UIManager.Children.Add(this);
 
+            Show();
+        }
+
+        public void Handle(ShowMainMenuMessage message)
+        {
             Show();
         }
     }

@@ -4,9 +4,9 @@
     {
         public bool NoPopWindow { get; set; }
 
-        public TogglePopWindowMessage(bool isFocused)
+        public TogglePopWindowMessage(bool noPopWindow)
         {
-            NoPopWindow = isFocused;
+            NoPopWindow = noPopWindow;
         }
     }
 }

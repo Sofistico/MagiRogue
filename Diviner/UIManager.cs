@@ -14,7 +14,9 @@ namespace Diviner
 {
     // Creates/Holds/Destroys all consoles used in the game and makes consoles easily addressable
     // from a central place.
-    public sealed class UIManager : ScreenObject, ISubscriber<FocusUiManagerMessage>
+    public sealed class UIManager : ScreenObject,
+        ISubscriber<FocusUiManagerMessage>,
+        ISubscriber<TogglePopWindowMessage>
     {
         private readonly Dictionary<WindowTag, IWindowTagContract> windows = new();
         private Universe _universe;
@@ -234,6 +236,11 @@ namespace Diviner
         public void Handle(FocusUiManagerMessage message)
         {
             IsFocused = true;
+        }
+
+        public void Handle(TogglePopWindowMessage message)
+        {
+            NoPopWindow = message.NoPopWindow;
         }
     }
 }
