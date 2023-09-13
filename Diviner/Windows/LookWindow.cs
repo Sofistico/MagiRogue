@@ -1,11 +1,13 @@
-﻿using MagusEngine.Core;
+﻿using GoRogue.Messaging;
+using MagusEngine.Bus.UiBus;
+using MagusEngine.Core;
 using MagusEngine.Core.Entities.Base;
 using System.Text;
 using Console = SadConsole.Console;
 
 namespace Diviner.Windows
 {
-    public class LookWindow : PopWindow
+    public class LookWindow : PopWindow, ISubscriber<LookStuff>
     {
         private readonly MagiEntity? entityLooked;
         private readonly Tile? tileLooked;
@@ -47,6 +49,17 @@ namespace Diviner.Windows
                 lookConsole.Cursor.Print(tile.Description);
             }
             Children.Add(lookConsole);
+        }
+
+        public void Handle(LookStuff message)
+        {
+            LookWindow look;
+            if (message.Tile is not null)
+                look = new LookWindow(message.Tile);
+            else
+                look = new(message.Entitiy);
+
+            look.Show(true);
         }
     }
 }
