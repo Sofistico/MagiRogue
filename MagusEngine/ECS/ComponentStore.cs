@@ -1,10 +1,14 @@
-﻿using MagusEngine.ECS.Interfaces;
+﻿using GoRogue.Messaging;
+using MagusEngine.Bus.ComponentBus;
+using MagusEngine.ECS.Interfaces;
 
 namespace MagusEngine.ECS
 {
-    public class ComponentStore<T> : IComponentStore
+    public class ComponentStore<T> : IComponentStore,
+        ISubscriber<ComponentAddedCommand<T>>
     {
         private readonly T[] instances;
+        private readonly bool initialized;
 
         public SparseSet Set { get; }
         public int Count => Set.Count;
@@ -13,6 +17,7 @@ namespace MagusEngine.ECS
         {
             Set = new SparseSet(maxComponents);
             instances = new T[maxComponents];
+            initialized = true;
         }
 
         public void Add(uint entityId, T value)
@@ -31,5 +36,11 @@ namespace MagusEngine.ECS
         }
 
         private void Remove(uint entityId) => Set.Remove(entityId);
+
+        public void Handle(ComponentAddedCommand<T> message)
+        {
+            if (initialized)
+                Add(message.Id, message.Component);
+        }
     }
 }
