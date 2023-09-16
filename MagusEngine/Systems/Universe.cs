@@ -1,7 +1,10 @@
 ﻿using Arquimedes.Enumerators;
 using Arquimedes.Settings;
 using Arquimedes.Utils;
+using GoRogue.Messaging;
 using MagusEngine.Bus;
+using MagusEngine.Bus.ComponentBus;
+using MagusEngine.Bus.MapBus;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Civ;
 using MagusEngine.Core.Entities;
@@ -26,7 +29,11 @@ namespace MagusEngine.Systems
     /// All game state data is stored in the Universe also creates and processes generators for map creation
     /// </summary>
     [JsonConverter(typeof(UniverseJsonConverter))]
-    public sealed class Universe
+    public sealed class Universe :
+        ISubscriber<ChangeControlledActorMap>,
+        ISubscriber<AddEntitiyCurrentMap>,
+        ISubscriber<ProcessTurnEvent>,
+        ISubscriber<RemoveEntitiyCurrentMap>
     {
         /// <summary>
         /// The World map, contains the map data and the Planet data
@@ -467,5 +474,25 @@ namespace MagusEngine.Systems
         }
 
         public void ForceChangeCurrentMap(Map map) => CurrentMap = map;
+
+        public void Handle(ChangeControlledActorMap message)
+        {
+            ChangePlayerMap(message.Map, message.PosInMap, CurrentMap);
+        }
+
+        public void Handle(AddEntitiyCurrentMap message)
+        {
+            CurrentMap.AddEntity(message.Entitiy);
+        }
+
+        public void Handle(ProcessTurnEvent message)
+        {
+            ProcessTurn(message.Time, message.Sucess);
+        }
+
+        public void Handle(RemoveEntitiyCurrentMap message)
+        {
+            CurrentMap.RemoveEntity(message.Entity);
+        }
     }
 }

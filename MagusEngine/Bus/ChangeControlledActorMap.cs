@@ -5,13 +5,13 @@ namespace MagusEngine.Bus
 {
     public class ChangeControlledActorMap
     {
-        public MagiEntity Entity { get; set; }
+        //public MagiEntity Entity { get; set; }
         public Map Map { get; set; }
         public Point PosInMap { get; set; }
 
-        public ChangeControlledActorMap(MagiEntity actor, Map map, Point posInMap)
+        public ChangeControlledActorMap(Map map, Point posInMap)
         {
-            Entity = actor;
+            //Entity = actor;
             Map = map;
             PosInMap = posInMap;
         }

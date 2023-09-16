@@ -2,10 +2,10 @@
 {
     public class ProcessTurnEvent
     {
-        public uint Time { get; set; }
+        public long Time { get; set; }
         public bool Sucess { get; set; }
 
-        public ProcessTurnEvent(uint time, bool sucess)
+        public ProcessTurnEvent(long time, bool sucess)
         {
             Time = time;
             Sucess = sucess;

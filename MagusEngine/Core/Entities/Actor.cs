@@ -140,8 +140,8 @@ namespace MagusEngine.Core.Entities
                 if (!mapToGo.IsTileWalkable(actorPosInChunk, this))
                     return false;
                 //Find.Universe.ChangePlayerMap(mapToGo, actorPosInChunk, Find.CurrentMap);
-                Locator.GetService<MessageBusService>().SendMessage<ChangeControlledActorMap>(new(this,
-                    mapToGo, actorPosInChunk));
+                Locator.GetService<MessageBusService>()
+                    .SendMessage<ChangeControlledActorMap>(new(mapToGo, actorPosInChunk));
                 return true;
             }
             else

@@ -13,7 +13,9 @@ using SadConsole.UI.Controls;
 namespace Diviner.Windows
 {
     public class MainMenuWindow : MagiBaseWindow,
-        ISubscriber<ShowMainMenuMessage>
+        ISubscriber<ShowMainMenuMessage>,
+        ISubscriber<StartGameMessage>,
+        ISubscriber<RestartGame>
     {
         private readonly MagiButton startGame;
         private readonly MagiButton testMap;
@@ -231,6 +233,16 @@ namespace Diviner.Windows
         public void Handle(ShowMainMenuMessage message)
         {
             Show();
+        }
+
+        public void Handle(StartGameMessage message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Handle(RestartGame message)
+        {
+            throw new NotImplementedException();
         }
     }
 }

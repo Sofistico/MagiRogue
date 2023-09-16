@@ -1,11 +1,11 @@
 ﻿namespace MagusEngine.Bus.ComponentBus
 {
-    public class ComponentAddedCommand
+    public class ComponentAddedCommand<T>
     {
         public uint Id { get; set; }
-        public object Component { get; set; }
+        public T Component { get; set; }
 
-        public ComponentAddedCommand(uint id, object component)
+        public ComponentAddedCommand(uint id, T component)
         {
             Id = id;
             Component = component;
