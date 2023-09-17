@@ -36,10 +36,7 @@ namespace Diviner
 
         public static bool HandleMapKeys(Keyboard input, UIManager ui, Universe world)
         {
-            if (HandleActions(input, world, ui))
-                return true;
-
-            return false;
+            return HandleActions(input, world, ui);
         }
 
         public static bool HandleUiKeys(Keyboard info, UIManager ui)

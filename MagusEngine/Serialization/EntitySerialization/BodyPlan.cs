@@ -34,7 +34,7 @@ namespace MagusEngine.Serialization.EntitySerialization
         private readonly Dictionary<string, Tissue> raceTissue = new();
         private readonly List<TissueLayeringTemplate> raceTissueLayering = new();
 
-        public string Id { get; set; }
+        public string? Id { get; set; }
         public List<string> BodyParts { get; set; }
 
         //public List<Tissue> Tissues { get; set; }
@@ -47,8 +47,8 @@ namespace MagusEngine.Serialization.EntitySerialization
 
         public List<BodyPart> ReturnBodyParts(Race race = null!)
         {
-            List<BodyPart> returnParts = new List<BodyPart>();
-            string[] tissues = race?.Tissues;
+            List<BodyPart> returnParts = new();
+            string[] tissues = race?.Tissues!;
             if (tissues?.Length > 0)
             {
                 for (int i = 0; i < tissues.Length; i++)
@@ -77,9 +77,7 @@ namespace MagusEngine.Serialization.EntitySerialization
 
                 if (raceTissueLayering.Count > 0 && raceTissue.Count > 0)
                 {
-#pragma warning disable RCS1084 // Use coalesce expression instead of conditional expression.
-                    SetBodyPartTissueLayering(limb is null ? organ : limb);
-#pragma warning restore RCS1084 // Use coalesce expression instead of conditional expression.
+                    SetBodyPartTissueLayering((BodyPart?)limb ?? organ!);
                 }
             }
 
@@ -126,7 +124,7 @@ namespace MagusEngine.Serialization.EntitySerialization
 
                     case SelectContext.BodyPartFunction:
                         finalList = Array.FindAll(tisLayer.BodyParts,
-                            i => i.Contains(bp.ToString()));
+                            i => i.Contains(bp.ToString()!));
                         break;
 
                     case SelectContext.Id:
@@ -136,7 +134,7 @@ namespace MagusEngine.Serialization.EntitySerialization
 
                     case SelectContext.Category:
                         finalList = Array.FindAll(tisLayer.BodyParts,
-                            i => !string.IsNullOrEmpty(bp.Category) && i.Contains(bp?.Category));
+                            i => !string.IsNullOrEmpty(bp.Category) && i.Contains(bp?.Category!));
                         break;
 
                     default:
@@ -157,7 +155,7 @@ namespace MagusEngine.Serialization.EntitySerialization
                 var layer = finalList[i].Split(':');
                 if (layer.Length == 0)
                     continue;
-                foreach (var tissueId in tisLayer.Tissues)
+                foreach (var tissueId in tisLayer!.Tissues)
                 {
                     var tissue = raceTissue[tissueId];
                     if (layer.Length > 1)

@@ -11,7 +11,8 @@ namespace MagusEngine
 
         public static object GetService(Type serviceType)
         {
-            return _services[serviceType];
+            _services.TryGetValue(serviceType, out var obj);
+            return obj;
         }
 
         public static T GetService<T>()

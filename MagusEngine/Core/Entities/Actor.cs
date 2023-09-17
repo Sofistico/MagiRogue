@@ -241,7 +241,7 @@ namespace MagusEngine.Core.Entities
             return list;
         }
 
-        public BodyPart GetAttackingLimb(Attack attack)
+        public BodyPart? GetAttackingLimb(Attack attack)
         {
             if (attack.LimbFunction is not null)
             {
@@ -446,7 +446,7 @@ namespace MagusEngine.Core.Entities
 
         public List<Attack> GetAttacks()
         {
-            List<Attack> list = new List<Attack>();
+            List<Attack> list = new();
             foreach (var item in GetAllWieldedItems()!.Select(i => i.Attacks))
             {
                 list.AddRange(item);

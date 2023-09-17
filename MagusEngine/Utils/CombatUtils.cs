@@ -378,7 +378,7 @@ namespace MagusEngine.Utils
             bool firstPerson = false,
             Limb? limbAttacked = null)
         {
-            Item wieldedItem = attacker.WieldedItem();
+            Item? wieldedItem = attacker.WieldedItem();
             BodyPart bpAttacking = attacker.GetAttackingLimb(attack) ?? throw new ArgumentNullException(nameof(attack));
 
             // Create a string that expresses the attacker and defender's names as well as the

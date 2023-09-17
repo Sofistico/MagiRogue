@@ -19,7 +19,7 @@ namespace Diviner
         ISubscriber<TogglePopWindowMessage>
     {
         private readonly Dictionary<WindowTag, IWindowTagContract> windows = new();
-        private Universe _universe;
+        private Universe? _universe;
 
         #region Managers
 
@@ -118,6 +118,9 @@ namespace Diviner
 
             Children.Add(StatusWindow);
             Children.Add(MessageLog);
+
+            FocusedMode = FocusBehavior.Set;
+            IsFocused = true;
         }
 
         /// <summary>
@@ -146,8 +149,8 @@ namespace Diviner
         /// <returns></returns>
         public override bool ProcessKeyboard(Keyboard info)
         {
-            _universe ??= Locator.GetService<Universe>();
-            if (_universe.CurrentMap is not null
+            _universe ??= Find.Universe;
+            if (_universe?.CurrentMap is not null
                 && (_universe.CurrentMap.ControlledEntitiy is not null
                 || _universe.WorldMap.AssocietatedMap.Equals(_universe.CurrentMap)))
             {

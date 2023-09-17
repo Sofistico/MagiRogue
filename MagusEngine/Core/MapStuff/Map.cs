@@ -349,7 +349,7 @@ namespace MagusEngine.Core.MapStuff
             var tile = locationIndex <= Width * Height && locationIndex >= 0
                 ? (Tile?)Terrain[locationIndex]
                 : null;
-            if (tile?.GoRogueComponents.Contains(typeof(T)) == false && typeof(T) == typeof(Tile))
+            if (tile?.GoRogueComponents.Contains(typeof(T)) == false && typeof(T) != typeof(Tile))
             {
                 return default;
             }
