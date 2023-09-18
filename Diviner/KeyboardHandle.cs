@@ -22,7 +22,7 @@ namespace Diviner
 {
     public static class KeyboardHandle
     {
-        private static Player GetPlayer => Find.Universe.Player;
+        private static Player getPlayer => Find.Universe.Player;
 
         private static Target targetCursor = null!;
 
@@ -151,24 +151,24 @@ namespace Diviner
             // Work around for a > symbol, must be top to not make the char wait
             if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.OemPeriod))
             {
-                return ActionManager.EnterDownMovement(GetPlayer.Position);
+                return ActionManager.EnterDownMovement(getPlayer.Position);
             }
             // Work around for a < symbol, must be top to not make the char wait
             if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.OemComma))
             {
-                return ActionManager.EnterUpMovement(GetPlayer.Position);
+                return ActionManager.EnterUpMovement(getPlayer.Position);
             }
             if (HandleMove(info, world, ui))
             {
-                if (!GetPlayer.Bumped && world.CurrentMap.ControlledEntitiy is Player)
+                if (!getPlayer.Bumped && world.CurrentMap.ControlledEntitiy is Player)
                 {
-                    world.ProcessTurn(TimeHelper.GetWalkTime(GetPlayer,
-                        world.CurrentMap.GetTileAt<Tile>(GetPlayer.Position)), true);
+                    world.ProcessTurn(TimeHelper.GetWalkTime(getPlayer,
+                        world.CurrentMap.GetTileAt<Tile>(getPlayer.Position)), true);
                 }
                 else if (world.CurrentMap.ControlledEntitiy is Player)
                 {
-                    world.ProcessTurn(TimeHelper.GetAttackTime(GetPlayer,
-                        GetPlayer.GetAttacks().GetRandomItemFromList()),
+                    world.ProcessTurn(TimeHelper.GetAttackTime(getPlayer,
+                        getPlayer.GetAttacks().GetRandomItemFromList()),
                         true);
                 }
 
@@ -177,7 +177,7 @@ namespace Diviner
 
             if (info.IsKeyPressed(Keys.NumPad5) && info.IsKeyDown(Keys.LeftControl))
             {
-                return ActionManager.RestTillFull(GetPlayer);
+                return ActionManager.RestTillFull(getPlayer);
             }
 
             if (info.IsKeyPressed(Keys.NumPad5) || info.IsKeyPressed(Keys.OemPeriod))
@@ -220,12 +220,12 @@ namespace Diviner
             //}
             if (info.IsKeyPressed(Keys.H) && info.IsKeyDown(Keys.LeftShift))
             {
-                bool sucess = ActionManager.NodeDrain(GetPlayer);
+                bool sucess = ActionManager.NodeDrain(getPlayer);
                 world.ProcessTurn(TimeHelper.MagicalThings, sucess);
             }
             if (info.IsKeyPressed(Keys.L))
             {
-                targetCursor ??= new Target(GetPlayer.Position);
+                targetCursor ??= new Target(getPlayer.Position);
 
                 if (world.CurrentMap.ControlledEntitiy is not Player
                     && !targetCursor.EntityInTarget())
@@ -242,14 +242,14 @@ namespace Diviner
             if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.Z))
             {
                 SpellSelectWindow spell =
-                    new SpellSelectWindow(GetPlayer.Soul.CurrentMana);
+                    new SpellSelectWindow(getPlayer.Soul.CurrentMana);
 
-                targetCursor = new Target(GetPlayer.Position);
+                targetCursor = new Target(getPlayer.Position);
 
-                spell.Show(GetPlayer.Magic.KnowSpells,
+                spell.Show(getPlayer.Magic.KnowSpells,
                     selectedSpell => targetCursor.OnSelectSpell(selectedSpell,
                     (Actor)world.CurrentMap.ControlledEntitiy),
-                    GetPlayer.Soul.CurrentMana);
+                    getPlayer.Soul.CurrentMana);
 
                 return true;
             }
@@ -280,7 +280,7 @@ namespace Diviner
                     if (sucess)
                     {
                         targetCursor = null;
-                        world.ProcessTurn(TimeHelper.GetCastingTime(GetPlayer, spellCasted), sucess);
+                        world.ProcessTurn(TimeHelper.GetCastingTime(getPlayer, spellCasted), sucess);
                     }
                     return sucess;
                 }
@@ -356,7 +356,7 @@ namespace Diviner
 
             if (info.IsKeyPressed(Keys.NumPad0))
             {
-                LookWindow w = new LookWindow(GetPlayer);
+                LookWindow w = new LookWindow(getPlayer);
                 w.Show();
                 return false;
             }
@@ -420,8 +420,8 @@ namespace Diviner
                 try
                 {
                     // the map is being saved, but it isn't being properly deserialized
-                    Map map = (Map)GetPlayer.CurrentMap;
-                    map.LastPlayerPosition = GetPlayer.Position;
+                    Map map = (Map)getPlayer.CurrentMap;
+                    map.LastPlayerPosition = getPlayer.Position;
                     if (Find.Universe.MapIsWorld(map))
                     {
                         string json = JsonConvert.SerializeObject(Find.Universe.WorldMap);
@@ -430,7 +430,7 @@ namespace Diviner
                     }
                     else
                     {
-                        string json = map.SaveMapToJson(GetPlayer);
+                        string json = map.SaveMapToJson(getPlayer);
 
                         // The universe class also isn't being serialized properly, crashing newtonsoft
                         // TODO: Revise this line of code when the time comes to work on the save system.

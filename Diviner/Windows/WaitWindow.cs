@@ -1,15 +1,9 @@
 ﻿using Diviner.Controls;
-using SadConsole.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MagusEngine.Commands;
 using MagusEngine.Core.Entities;
-using MagusEngine.Utils.Extensions;
-using MagusEngine.Systems.Time;
 using MagusEngine.Systems;
+using MagusEngine.Utils.Extensions;
+using SadConsole.Input;
 
 namespace Diviner.Windows
 {

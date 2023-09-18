@@ -3,7 +3,6 @@ using Arquimedes.Settings;
 using Arquimedes.Utils;
 using GoRogue.Messaging;
 using MagusEngine.Bus;
-using MagusEngine.Bus.ComponentBus;
 using MagusEngine.Bus.MapBus;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Civ;
@@ -99,6 +98,7 @@ namespace MagusEngine.Systems
 
                 PlacePlayer(player);
             }
+            Locator.GetService<MessageBusService>().RegisterAllSubscriber(this);
         }
 
         public Universe(PlanetMap worldMap,
@@ -132,6 +132,7 @@ namespace MagusEngine.Systems
             Time = time;
             PossibleChangeMap = possibleChangeMap;
             CurrentSeason = currentSeason;
+            Locator.GetService<MessageBusService>().RegisterAllSubscriber(this);
         }
 
         private void PlacePlayerOnWorld(Player player)
@@ -493,6 +494,11 @@ namespace MagusEngine.Systems
         public void Handle(RemoveEntitiyCurrentMap message)
         {
             CurrentMap.RemoveEntity(message.Entity);
+        }
+
+        ~Universe()
+        {
+            Locator.GetService<MessageBusService>().UnRegisterAllSubscriber(this);
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using GoRogue.Messaging;
+using MagusEngine;
 using MagusEngine.Bus.UiBus;
+using MagusEngine.Services;
 using SadConsole;
 using SadRogue.Primitives;
 using Console = SadConsole.Console;
@@ -62,6 +64,8 @@ namespace Diviner.Windows
 
             // Add the child consoles to the window
             Children.Add(messageConsole);
+
+            Locator.GetService<MessageBusService>().RegisterAllSubscriber(this);
         }
 
         public void PrintMessage(string message, bool newLine = true)
@@ -154,6 +158,11 @@ namespace Diviner.Windows
         public void Handle(HideMessageLogMessage message)
         {
             HideIfNoMessageThisTurn();
+        }
+
+        ~MessageLogWindow()
+        {
+            Locator.GetService<MessageBusService>().UnRegisterAllSubscriber(this);
         }
     }
 }

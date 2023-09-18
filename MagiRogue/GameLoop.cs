@@ -3,6 +3,7 @@ using Arquimedes.Settings;
 using Arquimedes.Utils;
 using Diviner;
 using MagusEngine;
+using MagusEngine.Services;
 using SadConsole;
 using System;
 using System.IO;

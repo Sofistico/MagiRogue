@@ -3,6 +3,7 @@ using GoRogue.Messaging;
 using MagusEngine;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
+using MagusEngine.Services;
 using MagusEngine.Systems;
 using SadConsole;
 using SadRogue.Primitives;
@@ -33,6 +34,8 @@ namespace Diviner.Windows
             UseMouse = false;
 
             Children.Add(statsConsole);
+
+            Locator.GetService<MessageBusService>().RegisterAllSubscriber(this);
         }
 
         // Probably needs to create a way to make it update only when needed, by an event.
@@ -68,6 +71,11 @@ namespace Diviner.Windows
         public void Handle(AddMessageLog message)
         {
             ChangePositionToUpMessageLog();
+        }
+
+        ~StatusWindow()
+        {
+            Locator.GetService<MessageBusService>().UnRegisterAllSubscriber(this);
         }
     }
 }

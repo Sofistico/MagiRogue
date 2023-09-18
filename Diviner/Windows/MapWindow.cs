@@ -1,8 +1,10 @@
 ﻿using GoRogue.Messaging;
+using MagusEngine;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
+using MagusEngine.Services;
 using SadConsole;
 using SadRogue.Primitives;
 using Console = SadConsole.Console;
@@ -23,6 +25,7 @@ namespace Diviner.Windows
         {
             followComponent = new SadConsole.Components.SurfaceComponentFollowTarget();
             UseMouse = false;
+            Locator.GetService<MessageBusService>().RegisterAllSubscriber(this);
         }
 
         /// <summary>
@@ -113,6 +116,11 @@ namespace Diviner.Windows
         public void Handle(MapConsoleIsDirty message)
         {
             MapConsole.IsDirty = true;
+        }
+
+        ~MapWindow()
+        {
+            Locator.GetService<MessageBusService>().UnRegisterAllSubscriber(this);
         }
     }
 }

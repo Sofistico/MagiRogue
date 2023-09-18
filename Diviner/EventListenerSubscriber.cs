@@ -14,7 +14,6 @@ namespace Diviner
 
         public void RegisterListeners()
         {
-
         }
     }
 }

@@ -1,10 +1,13 @@
-﻿using Diviner.Enums;
+﻿using Arquimedes.Settings;
+using Diviner.Enums;
 using Diviner.Interfaces;
 using Diviner.Windows;
 using GoRogue.Messaging;
 using MagusEngine;
+using MagusEngine.Bus;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
+using MagusEngine.Services;
 using MagusEngine.Systems;
 using SadConsole;
 using SadConsole.Input;
@@ -16,7 +19,9 @@ namespace Diviner
     // from a central place.
     public sealed class UIManager : ScreenObject,
         ISubscriber<FocusUiManagerMessage>,
-        ISubscriber<TogglePopWindowMessage>
+        ISubscriber<TogglePopWindowMessage>,
+        ISubscriber<StartGameMessage>,
+        ISubscriber<RestartGame>
     {
         private readonly Dictionary<WindowTag, IWindowTagContract> windows = new();
         private Universe? _universe;
@@ -47,6 +52,7 @@ namespace Diviner
         public UIManager()
         {
             UseMouse = false;
+            Locator.GetService<MessageBusService>().RegisterAllSubscriber(this);
         }
 
         // Initiates the game by means of going to the menu first
@@ -244,6 +250,22 @@ namespace Diviner
         public void Handle(TogglePopWindowMessage message)
         {
             NoPopWindow = message.NoPopWindow;
+        }
+
+        public void Handle(StartGameMessage message)
+        {
+            var settings = Locator.GetService<GlobalSettings>();
+            StartGame(message.Player, settings.ScreenHeight, settings.ScreenWidth, message.Universe, message.TestGame);
+        }
+
+        public void Handle(RestartGame message)
+        {
+            MainMenu.Show();
+        }
+
+        ~UIManager()
+        {
+            Locator.GetService<MessageBusService>().UnRegisterAllSubscriber(this);
         }
     }
 }
