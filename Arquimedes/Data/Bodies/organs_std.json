@@ -138,6 +138,7 @@
     "Orientation": "Center",
     "HealingRate": 0,
     "BodyPartFunction": "Teeth",
+    "Category": "Teeth",
     "InsideOf": "mouth"
   },
   {

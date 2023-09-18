@@ -226,7 +226,7 @@
         "BodyParts": [ "Nerve:2:2" ]
       },
       {
-        "Select": "OrganType",
+        "Select": "Category",
         "Tissues": [ "teeth" ],
         "BodyParts": [ "Teeth" ]
       },

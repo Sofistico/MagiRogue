@@ -251,7 +251,7 @@ namespace MagusEngine.Systems
             // Place the player on the first non-movement-blocking tile on the map
             for (int i = 0; i < CurrentMap.Terrain.Count; i++)
             {
-                if (CurrentMap.Terrain[i]?.IsWalkable == false
+                if (CurrentMap.Terrain[i]?.IsWalkable == true
                     && !CurrentMap.GetEntitiesAt<MagiEntity>(Point.FromIndex(i, CurrentMap.Width)).Any())
                 {
                     // Set the player's position to the index of the current map position
