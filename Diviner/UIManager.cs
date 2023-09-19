@@ -95,7 +95,7 @@ namespace Diviner
             Find.Universe = uni;
 
             //Message Log initialization
-            MessageLog = new MessageLogWindow(width - 2, height - 20, "Message Log")
+            MessageLog = new MessageLogWindow(width - 2, height - 23, "Message Log")
             {
                 Position = new Point(1, height - 11),
             };

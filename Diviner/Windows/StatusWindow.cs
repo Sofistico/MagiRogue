@@ -60,17 +60,19 @@ namespace Diviner.Windows
 
         public void ChangePositionToUpMessageLog()
         {
-            Position = new Point(1, Locator.GetService<GlobalSettings>().ScreenHeight - 12);
+            Position = new Point(1, Locator.GetService<GlobalSettings>().ScreenHeight - 14);
         }
 
         public void Handle(MessageLogHidden message)
         {
             ChangePositionToBottomPage();
+            Show();
         }
 
         public void Handle(AddMessageLog message)
         {
             ChangePositionToUpMessageLog();
+            Show();
         }
 
         ~StatusWindow()
