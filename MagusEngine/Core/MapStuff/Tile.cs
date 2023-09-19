@@ -20,6 +20,7 @@ namespace MagusEngine.Core
 
         public Tile() : this(Color.BlueViolet, Color.Wheat, '@', true, true, Point.None)
         {
+            LastSeenAppereance = Appearence.Clone();
         }
 
         public Tile(Color foreground,
@@ -35,6 +36,7 @@ namespace MagusEngine.Core
                 isTransparent,
                 Locator.GetService<IDGenerator>().UseID);
             Position = pos;
+            LastSeenAppereance = Appearence.Clone();
         }
 
         public Tile(Color foreground,

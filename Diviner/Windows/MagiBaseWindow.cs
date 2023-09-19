@@ -4,10 +4,7 @@ using Diviner.Enums;
 using Diviner.Interfaces;
 using SadConsole;
 using SadConsole.UI;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
 namespace Diviner.Windows
 {
@@ -15,8 +12,8 @@ namespace Diviner.Windows
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public class MagiBaseWindow : Window, IWindowTagContract
     {
-        private List<MagiButton> _selectionButtons;
-        private MagiButton lastFocusedButton;
+        private List<MagiButton>? _selectionButtons;
+        private MagiButton? lastFocusedButton;
 
         /// <summary>
         /// account for the thickness of the window border to prevent UI element spillover
@@ -95,7 +92,7 @@ namespace Diviner.Windows
         {
             get
             {
-                return ($"Nameof Screen: {Title}");
+                return $"Nameof Screen: {Title}";
             }
         }
 

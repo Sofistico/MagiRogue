@@ -12,7 +12,7 @@ using Console = SadConsole.Console;
 namespace Diviner.Windows
 {
     public class StatusWindow : MagiBaseWindow,
-        ISubscriber<HideMessageLogMessage>,
+        ISubscriber<MessageLogHidden>,
         ISubscriber<AddMessageLog>
     {
         private readonly Player? player;
@@ -63,7 +63,7 @@ namespace Diviner.Windows
             Position = new Point(1, Locator.GetService<GlobalSettings>().ScreenHeight - 12);
         }
 
-        public void Handle(HideMessageLogMessage message)
+        public void Handle(MessageLogHidden message)
         {
             ChangePositionToBottomPage();
         }

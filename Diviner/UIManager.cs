@@ -97,7 +97,7 @@ namespace Diviner
             //Message Log initialization
             MessageLog = new MessageLogWindow(width - 2, height - 20, "Message Log")
             {
-                Position = new Point(1, height - 10),
+                Position = new Point(1, height - 11),
             };
             MessageLog.Hide();
 #if DEBUG
@@ -110,7 +110,7 @@ namespace Diviner
 
             StatusWindow = new StatusWindow(width - 2, height - 27, "Status Window")
             {
-                Position = new Point(1, height - 12),
+                Position = new Point(1, height - 13),
             };
             StatusWindow.Show();
 
@@ -122,8 +122,8 @@ namespace Diviner
             // Start the game with the camera focused on the player
             MapWindow.CenterOnActor(uni.Player);
 
-            Children.Add(StatusWindow);
             Children.Add(MessageLog);
+            Children.Add(StatusWindow);
 
             FocusedMode = FocusBehavior.Set;
             IsFocused = true;

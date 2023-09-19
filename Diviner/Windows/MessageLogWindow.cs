@@ -147,6 +147,7 @@ namespace Diviner.Windows
             if (MessageSent)
                 return;
             Hide();
+            Locator.GetService<MessageBusService>().SendMessage<MessageLogHidden>();
         }
 
         public void Handle(AddMessageLog message)
