@@ -97,7 +97,7 @@ namespace Diviner
             //Message Log initialization
             MessageLog = new MessageLogWindow(width - 2, height - 23, "Message Log")
             {
-                Position = new Point(1, height - 11),
+                Position = new Point(1, height - 8),
             };
             MessageLog.Hide();
 #if DEBUG
@@ -108,12 +108,8 @@ namespace Diviner
             Children.Add(InventoryScreen);
             InventoryScreen.Hide();
 
-            StatusWindow = new StatusWindow(width - 2, height - 27, "Status Window")
-            {
-                Position = new Point(1, height - 13),
-            };
-            StatusWindow.Show();
-
+            StatusWindow = new StatusWindow(width - 2, height - 27, "Status Window");
+            StatusWindow.ChangePositionToBottomPage();
             // Build the Window
             CreateMapWindow(width, height, "Game Map");
 
@@ -124,6 +120,7 @@ namespace Diviner
 
             Children.Add(MessageLog);
             Children.Add(StatusWindow);
+            StatusWindow.Show();
 
             FocusedMode = FocusBehavior.Set;
             IsFocused = true;

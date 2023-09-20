@@ -55,12 +55,12 @@ namespace Diviner.Windows
 
         public void ChangePositionToBottomPage()
         {
-            Position = new Point(1, Locator.GetService<GlobalSettings>().ScreenHeight - 3);
+            Position = new Point(1, Locator.GetService<GlobalSettings>().ScreenHeight - 4);
         }
 
         public void ChangePositionToUpMessageLog()
         {
-            Position = new Point(1, Locator.GetService<GlobalSettings>().ScreenHeight - 14);
+            Position = new Point(1, Locator.GetService<GlobalSettings>().ScreenHeight - 11);
         }
 
         public void Handle(MessageLogHidden message)
