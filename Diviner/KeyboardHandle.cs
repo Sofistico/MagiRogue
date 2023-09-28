@@ -14,7 +14,9 @@ using MagusEngine.Services;
 using MagusEngine.Systems;
 using MagusEngine.Systems.Time;
 using MagusEngine.Utils.Extensions;
+using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
+using SadConsole;
 using SadConsole.Input;
 using SadRogue.Primitives;
 
@@ -95,39 +97,69 @@ namespace Diviner
                 if (info.IsKeyPressed(key) && world.CurrentMap is not null)
                 {
                     Direction moveDirection = MovementDirectionMapping[key];
-                    Point coorToMove = new(moveDirection.DeltaX, moveDirection.DeltaY);
+                    Point deltaMove = new(moveDirection.DeltaX, moveDirection.DeltaY);
+
+                    CheckAndRemoveHindrances(ui);
 
                     if (world.CurrentMap.ControlledEntitiy is not Player)
                     {
-                        if (world.CurrentMap.CheckForIndexOutOfBounds
-                            (world.CurrentMap.ControlledEntitiy.Position + coorToMove))
+                        if (world.CurrentMap.CheckForIndexOutOfBounds(world.CurrentMap.ControlledEntitiy.Position + deltaMove))
                             return false;
 
-                        int distance = HandleTargetActionAndReturnDistance(world, coorToMove);
+                        int distance = HandleNonPlayerMoveAndReturnDistance(world, deltaMove);
 
                         // If there is a need to roll back, the code here was taking the CurrentFov
                         // and Contains(pos + posMove)
-                        if (world.CurrentMap.PlayerExplored
-                            [world.CurrentMap.ControlledEntitiy.Position + coorToMove]
-                            && distance <= targetCursor.MaxDistance)
-                        {
-                            return ActionManager.MoveActorBy
-                                ((Actor)world.CurrentMap.ControlledEntitiy, coorToMove);
-                        }
-                        else
-                            return false;
+                        return world.CurrentMap.PlayerExplored[world.CurrentMap.ControlledEntitiy.Position + deltaMove]
+                            && distance <= targetCursor.MaxDistance
+                            && ActionManager.MoveActorBy((Actor)world.CurrentMap.ControlledEntitiy, deltaMove);
                     }
 
-                    bool sucess =
-                        ActionManager.MoveActorBy((Actor)world.CurrentMap.ControlledEntitiy, coorToMove);
-                    return sucess;
+                    return ActionManager.MoveActorBy((Actor)world.CurrentMap.ControlledEntitiy, deltaMove);
                 }
             }
 
             return false;
         }
 
-        private static int HandleTargetActionAndReturnDistance(Universe world, Point coorToMove)
+        private static void CheckAndRemoveHindrances(UIManager ui, Universe uni)
+        {
+            /*IScreenSurface surfaceObject;
+            Entity entityObjectInSurface;
+            Window someWindow;
+
+            // Use this next variable or the one after it based on if you're using an entity or not
+
+            // Using entities that live on the surface via the entity manager/renderer
+            // This is surfaceObject's screen pixel pos + entity position inside - viewport of surfaceOject
+            Point screenPositionOfGlyph = surfaceObject.AbsolutePosition +
+                                          entityObjectInSurface.Position.SurfaceLocationToPixel(surfaceObject.FontSize) -
+                                          surfaceObject.Surface.ViewPosition.SurfaceLocationToPixel(surfaceObject.FontSize);
+
+            // Just using parented objects that are offset by viewport?
+            // This is surfaceObject's screen pixel pos - viewport
+            Point screenPositionOfGlyph = surfaceObject.AbsolutePosition -
+                                          surfaceObject.Surface.ViewPosition.SurfaceLocationToPixel(surfaceObject.FontSize);
+
+            // Check if the window's pixel area contains the pixel position of the glyph
+            if (someWindow.AbsoluteArea.Contains(screenPositionOfGlyph))
+            {
+            }*/
+            var entity = uni.CurrentMap.ControlledEntitiy;
+            Point screenPositionOfGlyph = ui.AbsolutePosition
+                + entity!.Position.SurfaceLocationToPixel(ui.MapWindow.FontSize)
+                - ui.MapWindow.Surface.ViewPosition.SurfaceLocationToPixel(ui.MapWindow.FontSize);
+
+            // Check if the window's pixel area contains the pixel position of the glyph
+            if (ui.StatusWindow.AbsoluteArea.Contains(screenPositionOfGlyph))
+            {
+            }
+            else if (ui.MessageLog.AbsoluteArea.Contains(screenPositionOfGlyph))
+            {
+            }
+        }
+
+        private static int HandleNonPlayerMoveAndReturnDistance(Universe world, Point coorToMove)
         {
             int distance = 0;
 
@@ -138,9 +170,7 @@ namespace Diviner
                 if (targetCursor.TravelPath is not null
                     && targetCursor.TravelPath.LengthWithStart >= targetCursor.MaxDistance)
                 {
-                    distance = world.CurrentMap.AStar.ShortestPath(targetCursor.OriginCoord,
-                        world.CurrentMap.ControlledEntitiy.Position + coorToMove)
-                        .Length;
+                    distance = world.CurrentMap.AStar.ShortestPath(targetCursor.OriginCoord, world.CurrentMap.ControlledEntitiy.Position + coorToMove).Length;
                 }
             }
             return distance;
