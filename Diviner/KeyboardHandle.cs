@@ -19,6 +19,7 @@ using Newtonsoft.Json;
 using SadConsole;
 using SadConsole.Input;
 using SadRogue.Primitives;
+using Color = SadRogue.Primitives.Color;
 
 namespace Diviner
 {
@@ -99,7 +100,7 @@ namespace Diviner
                     Direction moveDirection = MovementDirectionMapping[key];
                     Point deltaMove = new(moveDirection.DeltaX, moveDirection.DeltaY);
 
-                    CheckAndRemoveHindrances(ui);
+                    CheckAndRemoveHindrances(ui, world);
 
                     if (world.CurrentMap.ControlledEntitiy is not Player)
                     {
@@ -124,38 +125,15 @@ namespace Diviner
 
         private static void CheckAndRemoveHindrances(UIManager ui, Universe uni)
         {
-            /*IScreenSurface surfaceObject;
-            Entity entityObjectInSurface;
-            Window someWindow;
-
-            // Use this next variable or the one after it based on if you're using an entity or not
-
-            // Using entities that live on the surface via the entity manager/renderer
-            // This is surfaceObject's screen pixel pos + entity position inside - viewport of surfaceOject
-            Point screenPositionOfGlyph = surfaceObject.AbsolutePosition +
-                                          entityObjectInSurface.Position.SurfaceLocationToPixel(surfaceObject.FontSize) -
-                                          surfaceObject.Surface.ViewPosition.SurfaceLocationToPixel(surfaceObject.FontSize);
-
-            // Just using parented objects that are offset by viewport?
-            // This is surfaceObject's screen pixel pos - viewport
-            Point screenPositionOfGlyph = surfaceObject.AbsolutePosition -
-                                          surfaceObject.Surface.ViewPosition.SurfaceLocationToPixel(surfaceObject.FontSize);
-
-            // Check if the window's pixel area contains the pixel position of the glyph
-            if (someWindow.AbsoluteArea.Contains(screenPositionOfGlyph))
-            {
-            }*/
             var entity = uni.CurrentMap.ControlledEntitiy;
-            Point screenPositionOfGlyph = ui.AbsolutePosition
-                + entity!.Position.SurfaceLocationToPixel(ui.MapWindow.FontSize)
-                - ui.MapWindow.Surface.ViewPosition.SurfaceLocationToPixel(ui.MapWindow.FontSize);
+            var surfaceEntityPoint = entity!.Position.SurfaceLocationToPixel(ui.MapWindow.FontSize);
+            Point screenPositionOfGlyph = surfaceEntityPoint
+                - ui.MapWindow.MapConsole.Surface.ViewPosition.SurfaceLocationToPixel(ui.MapWindow.FontSize);
 
             // Check if the window's pixel area contains the pixel position of the glyph
             if (ui.StatusWindow.AbsoluteArea.Contains(screenPositionOfGlyph))
             {
-            }
-            else if (ui.MessageLog.AbsoluteArea.Contains(screenPositionOfGlyph))
-            {
+                ui.MessageLog.PrintMessage("Player is in loc");
             }
         }
 
