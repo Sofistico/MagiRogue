@@ -14,7 +14,6 @@ using MagusEngine.Services;
 using MagusEngine.Systems;
 using MagusEngine.Systems.Time;
 using MagusEngine.Utils.Extensions;
-using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using SadConsole;
 using SadConsole.Input;
