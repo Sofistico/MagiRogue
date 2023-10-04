@@ -130,7 +130,7 @@ namespace Diviner
                 - ui.MapWindow.MapConsole.Surface.ViewPosition.SurfaceLocationToPixel(ui.MapWindow.FontSize);
 
             // Check if the window's pixel area contains the pixel position of the glyph
-            if (ui.StatusWindow.AbsoluteArea.Contains(screenPositionOfGlyph))
+            if (ui.StatusWindow.AbsoluteArea.Contains(screenPositionOfGlyph + new Point(0, 2)))
             {
                 ui.MessageLog.PrintMessage("Player is in loc");
             }
