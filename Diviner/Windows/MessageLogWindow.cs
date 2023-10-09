@@ -11,8 +11,7 @@ namespace Diviner.Windows
     //A scrollable window that displays messages
     //using a FIFO (first-in-first-out) Queue data structure
     public class MessageLogWindow : MagiBaseWindow,
-        ISubscriber<AddMessageLog>,
-        ISubscriber<HideMessageLogMessage>
+        ISubscriber<AddMessageLog>
     {
         //max number of lines to store in message log
         private const int maxLines = 100;
@@ -142,23 +141,10 @@ namespace Diviner.Windows
             }
         }
 
-        public void HideIfNoMessageThisTurn()
-        {
-            if (MessageSent)
-                return;
-            Hide();
-            Locator.GetService<MessageBusService>().SendMessage<MessageLogHidden>();
-        }
-
         public void Handle(AddMessageLog message)
         {
             if (message.PlayerCanSee)
                 PrintMessage(message.Message);
-        }
-
-        public void Handle(HideMessageLogMessage message)
-        {
-            HideIfNoMessageThisTurn();
         }
 
         ~MessageLogWindow()

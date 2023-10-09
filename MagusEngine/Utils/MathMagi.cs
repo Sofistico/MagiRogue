@@ -94,5 +94,18 @@ namespace MagusEngine.Utils
             var val = (double)(current / (double)max * 100);
             return FastRound(val);
         }
+
+        /// <summary>
+        /// Gets a value representing the percentage of a given number
+        /// </summary>
+        /// <param name="number">The number</param>
+        /// <param name="percentageToGet">The percentage, should be given in fractions</param>
+        /// <returns>Returns the double representing the percentage</returns>
+        public static double GetSimplePercentage(int number, double percentageToGet)
+        {
+            if (percentageToGet <= 0)
+                return 0;
+            return number * percentageToGet;
+        }
     }
 }

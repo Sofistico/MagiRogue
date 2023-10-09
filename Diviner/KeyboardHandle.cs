@@ -15,7 +15,6 @@ using MagusEngine.Systems;
 using MagusEngine.Systems.Time;
 using MagusEngine.Utils.Extensions;
 using Newtonsoft.Json;
-using SadConsole;
 using SadConsole.Input;
 using SadRogue.Primitives;
 using Color = SadRogue.Primitives.Color;
@@ -99,8 +98,6 @@ namespace Diviner
                     Direction moveDirection = MovementDirectionMapping[key];
                     Point deltaMove = new(moveDirection.DeltaX, moveDirection.DeltaY);
 
-                    CheckAndRemoveHindrances(ui, world);
-
                     if (world.CurrentMap.ControlledEntitiy is not Player)
                     {
                         if (world.CurrentMap.CheckForIndexOutOfBounds(world.CurrentMap.ControlledEntitiy.Position + deltaMove))
@@ -120,20 +117,6 @@ namespace Diviner
             }
 
             return false;
-        }
-
-        private static void CheckAndRemoveHindrances(UIManager ui, Universe uni)
-        {
-            var entity = uni.CurrentMap.ControlledEntitiy;
-            var surfaceEntityPoint = entity!.Position.SurfaceLocationToPixel(ui.MapWindow.FontSize);
-            Point screenPositionOfGlyph = surfaceEntityPoint
-                - ui.MapWindow.MapConsole.Surface.ViewPosition.SurfaceLocationToPixel(ui.MapWindow.FontSize);
-
-            // Check if the window's pixel area contains the pixel position of the glyph
-            if (ui.StatusWindow.AbsoluteArea.Contains(screenPositionOfGlyph + new Point(0, 2)))
-            {
-                ui.MessageLog.PrintMessage("Player is in loc");
-            }
         }
 
         private static int HandleNonPlayerMoveAndReturnDistance(Universe world, Point coorToMove)

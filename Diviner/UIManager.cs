@@ -9,6 +9,7 @@ using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
 using MagusEngine.Services;
 using MagusEngine.Systems;
+using MagusEngine.Utils;
 using SadConsole;
 using SadConsole.Input;
 using Color = SadConsole.UI.AdjustableColor;
@@ -95,11 +96,11 @@ namespace Diviner
             Find.Universe = uni;
 
             //Message Log initialization
-            MessageLog = new MessageLogWindow(width - 2, height - 23, "Message Log")
+            var messageLogWidth = (int)MathMagi.GetSimplePercentage(width, 0.2);
+            MessageLog = new MessageLogWindow(messageLogWidth, height - 2, "Message Log")
             {
-                Position = new Point(1, height - 8),
+                Position = new Point(width - messageLogWidth, 1),
             };
-            MessageLog.Hide();
 #if DEBUG
             MessageLog.PrintMessage("Test message log works");
 #endif
@@ -108,10 +109,10 @@ namespace Diviner
             Children.Add(InventoryScreen);
             InventoryScreen.Hide();
 
-            StatusWindow = new StatusWindow(width - 2, height - 27, "Status Window");
+            StatusWindow = new StatusWindow(width - MessageLog.Width, height - 27, "Status Window");
             StatusWindow.ChangePositionToBottomPage();
             // Build the Window
-            CreateMapWindow(width, height, "Game Map");
+            CreateMapWindow(width - MessageLog.Width, height - 3, "Game Map");
 
             // Then load the map into the MapConsole
             MapWindow.LoadMap(uni.CurrentMap);

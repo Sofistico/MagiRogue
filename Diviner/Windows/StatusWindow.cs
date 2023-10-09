@@ -1,7 +1,5 @@
 ﻿using Arquimedes.Settings;
-using GoRogue.Messaging;
 using MagusEngine;
-using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
 using MagusEngine.Services;
 using MagusEngine.Systems;
@@ -11,9 +9,7 @@ using Console = SadConsole.Console;
 
 namespace Diviner.Windows
 {
-    public class StatusWindow : MagiBaseWindow,
-        ISubscriber<MessageLogHidden>,
-        ISubscriber<AddMessageLog>
+    public class StatusWindow : MagiBaseWindow
     {
         private readonly Player? player;
         private readonly Console statsConsole;
@@ -34,8 +30,6 @@ namespace Diviner.Windows
             UseMouse = false;
 
             Children.Add(statsConsole);
-
-            Locator.GetService<MessageBusService>().RegisterAllSubscriber(this);
         }
 
         // Probably needs to create a way to make it update only when needed, by an event.
@@ -55,24 +49,7 @@ namespace Diviner.Windows
 
         public void ChangePositionToBottomPage()
         {
-            Position = new Point(1, Locator.GetService<GlobalSettings>().ScreenHeight - 4);
-        }
-
-        public void ChangePositionToUpMessageLog()
-        {
-            Position = new Point(1, Locator.GetService<GlobalSettings>().ScreenHeight - 11);
-        }
-
-        public void Handle(MessageLogHidden message)
-        {
-            ChangePositionToBottomPage();
-            Show();
-        }
-
-        public void Handle(AddMessageLog message)
-        {
-            ChangePositionToUpMessageLog();
-            Show();
+            Position = new Point(0, Locator.GetService<GlobalSettings>().ScreenHeight - 3);
         }
 
         ~StatusWindow()

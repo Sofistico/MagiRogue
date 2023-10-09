@@ -285,12 +285,6 @@ namespace MagusEngine.Systems
         {
             if (sucess)
             {
-                // hud action before any action! will resolve with events...
-                //if (GameLoop.UIManager.MessageLog.MessageSent)
-                //{
-                //    GameLoop.UIManager.MessageLog.MessageSent = false;
-                //}
-
                 bool playerActionWorked = ProcessPlayerTurn(playerTime);
 
                 if (!playerActionWorked)
@@ -329,9 +323,6 @@ namespace MagusEngine.Systems
                 // makes sure that any entity that exists but has no AI, or the AI failed, get's a turn.
                 var ids = GetEntitiesIds();
                 RegisterInTime(ids);
-
-                // if there is the need to update any screen or console or window for last! events
-                Locator.GetService<MessageBusService>().SendMessage<HideMessageLogMessage>(new());
             }
         }
 
