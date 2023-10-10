@@ -96,10 +96,10 @@ namespace Diviner
             Find.Universe = uni;
 
             //Message Log initialization
-            var messageLogWidth = (int)MathMagi.GetSimplePercentage(width, 0.2);
-            MessageLog = new MessageLogWindow(messageLogWidth, height - 2, "Message Log")
+            var messageLogWidth = (int)MathMagi.GetSimplePercentage(width, 0.25) - 2;
+            MessageLog = new MessageLogWindow(messageLogWidth, height, "Message Log")
             {
-                Position = new Point(width - messageLogWidth, 1),
+                Position = new Point(width - messageLogWidth, 0),
             };
 #if DEBUG
             MessageLog.PrintMessage("Test message log works");
@@ -119,9 +119,10 @@ namespace Diviner
             // Start the game with the camera focused on the player
             MapWindow.CenterOnActor(uni.Player);
 
-            Children.Add(MessageLog);
             Children.Add(StatusWindow);
+            Children.Add(MessageLog);
             StatusWindow.Show();
+            MessageLog.Show();
 
             FocusedMode = FocusBehavior.Set;
             IsFocused = true;
