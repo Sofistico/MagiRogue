@@ -20,7 +20,7 @@ namespace MagusEngine.Core
 
         public Tile() : this(Color.BlueViolet, Color.Wheat, '@', true, true, Point.None)
         {
-            LastSeenAppereance = Appearence.Clone();
+            LastSeenAppereance = (ColoredGlyph)Appearence.Clone();
         }
 
         public Tile(Color foreground,
@@ -30,13 +30,13 @@ namespace MagusEngine.Core
             bool isTransparent,
             Point pos)
         {
-            Appearence = new(foreground, background, glyph);
+            Appearence = new ColoredGlyph(foreground, background, glyph);
             _gameObject = new((int)MapLayer.TERRAIN,
                 isWalkable,
                 isTransparent,
                 Locator.GetService<IDGenerator>().UseID);
             Position = pos;
-            LastSeenAppereance = Appearence.Clone();
+            LastSeenAppereance = (ColoredGlyph)Appearence.Clone();
         }
 
         public Tile(Color foreground,

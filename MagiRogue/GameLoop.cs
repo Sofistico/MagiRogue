@@ -3,8 +3,8 @@ using Arquimedes.Settings;
 using Arquimedes.Utils;
 using Diviner;
 using MagusEngine;
-using MagusEngine.Services;
 using SadConsole;
+using SadConsole.Configuration;
 using System;
 using System.IO;
 
@@ -26,17 +26,17 @@ public static class GameLoop
         ConfigureBeforeCreateGame(args);
 
         ConfigureServices();
-
         // Setup the engine and create the main window.
-        Game.Configuration gameStartup = new Game.Configuration()
+        new Builder()
             .SetScreenSize(GameWidth, GameHeight)
             .OnStart(Init) // Hook the start event so we can add consoles to the system.
             .SetStartingScreen<UIManager>()
             .IsStartingScreenFocused(true)
-            .ConfigureFonts((f) => f.UseBuiltinFontExtended());
+            .ConfigureFonts((f, _) => f.UseBuiltinFontExtended())
+            .Run();
 
-        Game.Create(gameStartup);
-        //Start the game.
+        //Game.Create(gameStartup);
+        ////Start the game.
         Game.Instance.Run();
         // Code here will not run until the game window closes.
         Game.Instance.Dispose();
@@ -69,7 +69,7 @@ public static class GameLoop
         Locator.AddService(settings);
     }
 
-    private static void Init()
+    private static void Init(object? sender, GameHost e)
     {
         MagiPalette.AddToColorDictionary();
         // Makes so that no excpetion happens for a custom control
