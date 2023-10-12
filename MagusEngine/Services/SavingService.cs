@@ -300,7 +300,7 @@ namespace MagusEngine.Services
             return GetChunkAtIndex(point.ToIndex(mapWidth), mapWidth);
         }
 
-        public static Map? LoadMapById(int id)
+        public static MagiMap? LoadMapById(int id)
         {
             const string pathWildcard = @"SaveDir\Chunks_*.mr";
             string[] list = FileUtils.GetFiles(pathWildcard);

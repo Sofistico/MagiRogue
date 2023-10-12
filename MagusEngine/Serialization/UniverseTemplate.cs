@@ -41,7 +41,7 @@ namespace MagusEngine.Serialization
         /// Stores the current map
         /// </summary>
         [JsonProperty(ItemConverterType = typeof(MapJsonConverter))]
-        public Map CurrentMap { get; private set; }
+        public MagiMap CurrentMap { get; private set; }
 
         /// <summary>
         /// The current chunk of the player
@@ -67,7 +67,7 @@ namespace MagusEngine.Serialization
         public PlanetGenSettings PlanetSettings { get; set; }
 
         public UniverseTemplate(PlanetMap worldMap,
-            Map currentMap,
+            MagiMap currentMap,
             Player player,
             TimeTemplate time,
             bool possibleChangeMap,

@@ -25,10 +25,10 @@ namespace MagusEngine.Serialization.MapConverter
     {
         public int X { get; }
         public int Y { get; }
-        public Map[] LocalMaps { get; set; }
+        public MagiMap[] LocalMaps { get; set; }
         public uint[] LocalMapsIds { get; set; }
 
-        public RegionChunkTemplate(int x, int y, Map[] localMaps)
+        public RegionChunkTemplate(int x, int y, MagiMap[] localMaps)
         {
             X = x;
             Y = y;
@@ -40,9 +40,9 @@ namespace MagusEngine.Serialization.MapConverter
             }
         }
 
-        public Map[] ReturnAsMap()
+        public MagiMap[] ReturnAsMap()
         {
-            var map = new Map[LocalMaps.Length];
+            var map = new MagiMap[LocalMaps.Length];
             for (int i = 0; i < LocalMaps.Length; i++)
             {
                 map[i] = LocalMaps[i];
@@ -53,7 +53,7 @@ namespace MagusEngine.Serialization.MapConverter
 
         public static implicit operator RegionChunkTemplate(RegionChunk region)
         {
-            Map[] maps = new Map[region.LocalMaps.Length];
+            MagiMap[] maps = new MagiMap[region.LocalMaps.Length];
             for (int i = 0; i < region.LocalMaps.Length; i++)
             {
                 maps[i] = region.LocalMaps[i];

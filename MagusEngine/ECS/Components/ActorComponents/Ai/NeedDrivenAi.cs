@@ -8,7 +8,7 @@ using MagusEngine.Services;
 using MagusEngine.Systems.Time;
 using SadRogue.Primitives;
 using System;
-using Map = MagusEngine.Core.MapStuff.Map;
+using MagiMap = MagusEngine.Core.MapStuff.MagiMap;
 
 namespace MagusEngine.ECS.Components.ActorComponents.Ai
 {
@@ -23,7 +23,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.Ai
 
         public object? Parent { get; set; }
 
-        public (bool sucess, long ticks) RunAi(Map map)
+        public (bool sucess, long ticks) RunAi(MagiMap map)
         {
             if (Parent is not IGameObject)
             {
@@ -50,7 +50,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.Ai
             return (false, -1);
         }
 
-        private int ActOnNeed(Map map, Actor actor, int timeTakenAction, Need need)
+        private int ActOnNeed(MagiMap map, Actor actor, int timeTakenAction, Need need)
         {
             if (previousKnowPath is not null && step < previousKnowPath.Length)
             {
@@ -168,7 +168,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.Ai
             return timeTakenAction;
         }
 
-        private void FindIfDangerExists(Map map, Actor actor)
+        private void FindIfDangerExists(MagiMap map, Actor actor)
         {
             if (ActionManager.SearchForDangerAction(actor, map, out var danger))
             {
@@ -176,13 +176,13 @@ namespace MagusEngine.ECS.Components.ActorComponents.Ai
             }
         }
 
-        private int FindPathAndMoveOneStep(Map map, Actor actor, IGameObject item)
+        private int FindPathAndMoveOneStep(MagiMap map, Actor actor, IGameObject item)
         {
             previousKnowPath = map.AStar.ShortestPath(actor.Position, item.Position)!;
             return MoveActorAStep(actor, map);
         }
 
-        private int MoveActorAStep(Actor actor, Map map)
+        private int MoveActorAStep(Actor actor, MagiMap map)
         {
             ActionManager.MoveActorBy(actor, previousKnowPath.GetStep(step++).Subtract(actor.Position));
             return TimeHelper.GetWalkTime(actor, map.GetTileAt(actor.Position));

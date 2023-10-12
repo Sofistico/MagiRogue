@@ -20,7 +20,7 @@ using MagusEngine.Utils.Extensions;
 using SadConsole;
 using System.Collections.Generic;
 using System.Text;
-using Map = MagusEngine.Core.MapStuff.Map;
+using MagiMap = MagusEngine.Core.MapStuff.MagiMap;
 
 namespace MagusEngine.Commands
 {
@@ -384,10 +384,10 @@ namespace MagusEngine.Commands
                 Find.CurrentMap.GetEntityAt<Furniture>(playerPoint);
             var possibleWorldTileHere =
                 Find.CurrentMap.GetTileAt<WorldTile>(playerPoint).GetComponent<WorldTile>();
-            Map currentMap = Find.CurrentMap;
+            MagiMap currentMap = Find.CurrentMap;
             if (possibleStairs?.MapIdConnection.HasValue == true)
             {
-                Map map = Universe.GetMapById(possibleStairs.MapIdConnection.Value);
+                MagiMap map = Universe.GetMapById(possibleStairs.MapIdConnection.Value);
                 // TODO: For now it's just a test, need to work out a better way to do it.
                 Find.Universe.ChangePlayerMap(map, map.GetRandomWalkableTile(), currentMap);
                 Find.Universe.ZLevel -= map.ZAmount;
@@ -433,14 +433,14 @@ namespace MagusEngine.Commands
             bool possibleChangeMap = Find.Universe.PossibleChangeMap;
             Furniture possibleStairs =
                 Find.CurrentMap.GetEntityAt<Furniture>(playerPoint);
-            Map currentMap = Find.CurrentMap;
+            MagiMap currentMap = Find.CurrentMap;
 
             if (possibleChangeMap)
             {
                 if (possibleStairs is not null && !Find.Universe.MapIsWorld()
                     && possibleStairs.MapIdConnection is not null)
                 {
-                    Map map = Universe.GetMapById(possibleStairs.MapIdConnection.Value);
+                    MagiMap map = Universe.GetMapById(possibleStairs.MapIdConnection.Value);
                     // TODO: For now it's just a test, need to work out a better way to do it.
                     Find.Universe.ChangePlayerMap(map, map.GetRandomWalkableTile(), currentMap);
                     Find.Universe.ZLevel += map.ZAmount;
@@ -449,7 +449,7 @@ namespace MagusEngine.Commands
                 }
                 else if (!Find.Universe.MapIsWorld())
                 {
-                    Map map = Find.Universe.WorldMap.AssocietatedMap;
+                    MagiMap map = Find.Universe.WorldMap.AssocietatedMap;
                     Point playerLastPos = Find.Universe.WorldMap.AssocietatedMap.LastPlayerPosition;
                     Find.Universe.ChangePlayerMap(map, playerLastPos, currentMap);
                     Locator.GetService<SavingService>().SaveChunkInPos(Find.Universe.CurrentChunk,
@@ -522,7 +522,7 @@ namespace MagusEngine.Commands
             return true;
         }
 
-        public static Need? FindFood(Actor actor, Map map)
+        public static Need? FindFood(Actor actor, MagiMap map)
         {
             var whatToEat = actor.GetAnatomy().WhatToEat();
             var foodItem = map.FindTypeOfFood(whatToEat, actor);
@@ -605,7 +605,7 @@ namespace MagusEngine.Commands
             return TimeHelper.Interact;
         }
 
-        public static Path FindFleeAction(Map map, Actor actor, Actor? danger)
+        public static Path FindFleeAction(MagiMap map, Actor actor, Actor? danger)
         {
 #if DEBUG
             Locator.GetService<MagiLog>().Log($"{actor.Name} considers {danger?.Name} dangerous!");
@@ -615,7 +615,7 @@ namespace MagusEngine.Commands
             return map.AStar.ShortestPath(actor.Position, rngPoint)!;
         }
 
-        public static bool SearchForDangerAction(Actor actor, Map map, out Actor? danger)
+        public static bool SearchForDangerAction(Actor actor, MagiMap map, out Actor? danger)
         {
             danger = null;
             if (actor.Mind.Personality.Anger > 20 || actor.Mind.Personality.Peace <= 15)
@@ -649,7 +649,7 @@ namespace MagusEngine.Commands
             return false;
         }
 
-        public static bool FindWater(Actor actor, Map map, out Tile water)
+        public static bool FindWater(Actor actor, MagiMap map, out Tile water)
         {
             water = map.GetClosestWaterTile(actor.Body.ViewRadius, actor.Position);
 

@@ -15,7 +15,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.Ai
             _spellsKnow = spellsKnow;
         }
 
-        public (bool sucess, long ticks) RunAi(Map map)
+        public (bool sucess, long ticks) RunAi(MagiMap map)
         {
             throw new NotImplementedException();
         }

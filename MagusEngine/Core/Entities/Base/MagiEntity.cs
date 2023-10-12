@@ -17,7 +17,7 @@ namespace MagusEngine.Core.Entities.Base
 
         private IGameObject backingField;
 
-        public Core.MapStuff.Map? MagiMap => (MapStuff.Map?)CurrentMap;
+        public Core.MapStuff.MagiMap? MagiMap => (MapStuff.MagiMap?)CurrentMap;
         public uint ID => backingField.ID; // stores the entity's unique identification number
         public int Layer { get; set; } // stores and sets the layer that the entity is rendered
 

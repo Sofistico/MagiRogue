@@ -18,7 +18,7 @@ namespace MagiRogue.Test.Data
         [Fact]
         public void RoomDeserializeAndGetToMap()
         {
-            Map map = new MiscMapGen().GenerateStoneFloorMap();
+            MagiMap map = new MiscMapGen().GenerateStoneFloorMap();
             Room r = room.ConfigureRoom(map.GetRandomWalkableTile());
             map.AddRoom(r);
             map.SpawnRoomThingsOnMap(r);

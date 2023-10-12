@@ -21,7 +21,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.Ai
 
         public object? Parent { get; set; }
 
-        public (bool sucess, long ticks) RunAi(Map map)
+        public (bool sucess, long ticks) RunAi(MagiMap map)
         {
             // TODO: Fix, because it hardly works, at least i saw the actor attacking
             if (Parent is not GoRogue.GameFramework.IGameObject parent)
@@ -42,7 +42,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.Ai
             }
         }
 
-        public bool TryGetDirectionMove(Map map, Actor actor)
+        public bool TryGetDirectionMove(MagiMap map, Actor actor)
         {
             Path shortPath = map.AStar.ShortestPath(actor.Position, Find.Universe.Player.Position);
 

@@ -14,10 +14,10 @@ namespace MagusEngine.Generators.MapGen
             // empty
         }
 
-        public Map GenerateMazeMap(int maxRooms, int minRoomSize, int maxRoomSize)
+        public MagiMap GenerateMazeMap(int maxRooms, int minRoomSize, int maxRoomSize)
         {
             // Create an empty map of size (mapWidht * mapHeight)
-            _map = new Map("Maze");
+            _map = new MagiMap("Maze");
 
             // store a list of the rooms created so far
             List<Room> Rooms = new();

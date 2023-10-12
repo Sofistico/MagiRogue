@@ -17,7 +17,7 @@ namespace MagusEngine.Core.MapStuff
 
         public List<Civilization> Civilizations { get; set; }
 
-        public Map AssocietatedMap { get; }
+        public MagiMap AssocietatedMap { get; }
 
         public int YearSinceCreation { get => WorldHistory.CreationYear; }
 
@@ -36,7 +36,7 @@ namespace MagusEngine.Core.MapStuff
             WorldHistory = new();
         }
 
-        public PlanetMap(List<Civilization> civilizations, Map associetatedMap)
+        public PlanetMap(List<Civilization> civilizations, MagiMap associetatedMap)
         {
             Civilizations = civilizations;
             AssocietatedMap = associetatedMap;

@@ -17,6 +17,7 @@ namespace MagusEngine.Core.Entities
         private ColoredGlyph sadGlyph;
         private MagiColorSerialization fore;
         private MagiColorSerialization back;
+        private MaterialTemplate material;
 
         #region Properties
 
@@ -194,6 +195,10 @@ namespace MagusEngine.Core.Entities
         public ColoredGlyph SadGlyph => sadGlyph ??= new ColoredGlyph(Foreground, Background, Glyphs.GetRandomItemFromList());
         public Color Foreground => fore.Color;
         public Color Background => back.Color;
+
+        public string MaterialId { get; set; }
+
+        public MaterialTemplate Material => material;
 
         [JsonConstructor]
         public Plant()

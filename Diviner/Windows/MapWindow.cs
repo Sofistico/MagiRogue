@@ -17,7 +17,7 @@ namespace Diviner.Windows
         ISubscriber<LoadMapMessage>,
         ISubscriber<MapConsoleIsDirty>
     {
-        private Map _mapDisplayed;
+        private MagiMap _mapDisplayed;
         private readonly SadConsole.Components.SurfaceComponentFollowTarget followComponent;
         public ScreenSurface MapConsole { get; set; }
 
@@ -53,7 +53,7 @@ namespace Diviner.Windows
 
         // Adds the entire list of entities found in the World.CurrentMap's Entities SpatialMap to
         // the MapConsole, so they can be seen onscreen
-        private void SyncMapEntities(Map map)
+        private void SyncMapEntities(MagiMap map)
         {
             // remove all Entities from the console first
             MapConsole.Children.Clear();
@@ -65,7 +65,7 @@ namespace Diviner.Windows
         /// Loads a Map into the MapConsole
         /// </summary>
         /// <param name="map"></param>
-        public void LoadMap(Map map)
+        public void LoadMap(MagiMap map)
         {
             //make console short enough to show the window title
             //and borders, and position it away from borders

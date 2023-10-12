@@ -1,4 +1,4 @@
-﻿using MagusEngine.Core;
+﻿using MagusEngine.Core.MapStuff;
 using SadConsole;
 
 namespace MagusEngine.ECS.Components.ActorComponents

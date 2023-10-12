@@ -37,7 +37,7 @@ namespace MagiRogue.Test.System
             Assert.Contains(uni.Time.TimePassed.Ticks.ToString(), json);
         }
 
-        private static void FillTilesWithRandomShit(Map map)
+        private static void FillTilesWithRandomShit(MagiMap map)
         {
             for (int i = 0; i < map.Terrain.Count; i++)
             {
@@ -53,7 +53,7 @@ namespace MagiRogue.Test.System
         [Fact]
         public void DeserializeUniverse()
         {
-            uni.ForceChangeCurrentMap(new Map("Test"));
+            uni.ForceChangeCurrentMap(new MagiMap("Test"));
             uni.WorldMap.AssocietatedMap.SetTerrain
                 (new Tile(Color.Black, Color.Black, '.', true, true, Point.Zero));
             Player player = Player.TestPlayer();

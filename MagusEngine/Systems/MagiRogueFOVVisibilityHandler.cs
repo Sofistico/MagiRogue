@@ -31,7 +31,7 @@ namespace MagusEngine.Systems
         /// Foreground color to set to all terrain tiles that are outside of FOV but have been explored.
         /// </param>
         /// <param name="startingState">The starting state to put the handler in.</param>
-        public MagiRogueFOVVisibilityHandler(Map map, Color unexploredColor, int ghostLayer,
+        public MagiRogueFOVVisibilityHandler(MagiMap map, Color unexploredColor, int ghostLayer,
             FovState startingState = FovState.Enabled) :
             base(map, startingState)
         {

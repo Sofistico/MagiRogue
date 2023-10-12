@@ -15,7 +15,7 @@ namespace MagiRogue.Test.System
 {
     public class MapTests
     {
-        private readonly Map map = new("Test", 20, 20);
+        private readonly MagiMap map = new("Test", 20, 20);
 
         public MapTests()
         {
@@ -36,7 +36,7 @@ namespace MagiRogue.Test.System
         {
             var actor = new Actor("Test", Color.Black, Color.Black, '@', new Point(1, 1));
             map.AddMagiEntity(actor);
-            var newMap = new Map("MapTest", 1, 1);
+            var newMap = new MagiMap("MapTest", 1, 1);
             newMap.SetTerrain(new Tile(Color.Beige, Color.Beige, '.', true, true, new Point(0, 0)));
             Universe.ChangeActorMap(actor, newMap, new Point(0, 0), map);
             Assert.True(actor.CurrentMap.Equals(newMap));
@@ -104,7 +104,7 @@ namespace MagiRogue.Test.System
                 {
                     NullValueHandling = NullValueHandling.Ignore
                 });
-            MapTemplate mapDeJsonified = JsonConvert.DeserializeObject<Map>(json);
+            MapTemplate mapDeJsonified = JsonConvert.DeserializeObject<MagiMap>(json);
 
             Assert.True(mapDeJsonified.MapName == map.MapName);
         }
@@ -114,7 +114,7 @@ namespace MagiRogue.Test.System
         {
             map.SetId(2);
             string json = JsonConvert.SerializeObject(map);
-            Map newMap = JsonConvert.DeserializeObject<Map>(json);
+            MagiMap newMap = JsonConvert.DeserializeObject<MagiMap>(json);
 
             Assert.Equal(map.MapId, newMap.MapId);
         }

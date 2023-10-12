@@ -131,10 +131,10 @@ namespace MagusEngine.Core.Entities
         private bool CheckForChangeMapChunk(Point pos, Point positionChange)
         {
             Direction dir = Direction.GetCardinalDirection(positionChange);
-            if (MagiMap.MapZoneConnections.TryGetValue(dir, out Map value) &&
+            if (MagiMap.MapZoneConnections.TryGetValue(dir, out MagiMap value) &&
                 MagiMap.CheckForIndexOutOfBounds(pos + positionChange))
             {
-                Map mapToGo = value;
+                MagiMap mapToGo = value;
                 Point actorPosInChunk = GetNextMapPos(mapToGo, pos + positionChange);
                 // if tile in the other map isn't walkable, then it should't be possible to go there!
                 if (!mapToGo.IsTileWalkable(actorPosInChunk, this))
@@ -150,7 +150,7 @@ namespace MagusEngine.Core.Entities
             }
         }
 
-        private static Point GetNextMapPos(Map map, Point pos)
+        private static Point GetNextMapPos(MagiMap map, Point pos)
         {
             int x = pos.X % map.Width < 0 ? map.Width + (pos.X % map.Width) : pos.X % map.Width;
             int y = pos.Y % map.Height < 0 ? map.Height + (pos.Y % map.Height) : pos.Y % map.Height;

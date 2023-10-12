@@ -4,7 +4,7 @@ using GoRogue.GameFramework;
 using SadRogue.Primitives;
 using System;
 
-namespace MagusEngine.Core
+namespace MagusEngine.Core.MapStuff
 {
     public partial class Tile : IGameObject
     {

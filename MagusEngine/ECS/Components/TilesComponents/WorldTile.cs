@@ -1,6 +1,6 @@
 ﻿using Arquimedes.Enumerators;
 using GoRogue.Components.ParentAware;
-using MagusEngine.Core;
+using MagusEngine.Core.MapStuff;
 using SadRogue.Primitives;
 using System.Collections.Generic;
 

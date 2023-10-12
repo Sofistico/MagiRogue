@@ -3,6 +3,7 @@ using MagusEngine;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Core;
 using MagusEngine.Core.Entities.Base;
+using MagusEngine.Core.MapStuff;
 using MagusEngine.Services;
 using System.Text;
 using Console = SadConsole.Console;

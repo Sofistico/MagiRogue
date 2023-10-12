@@ -1,13 +1,15 @@
 ﻿using Arquimedes.Enumerators;
 using GoRogue.GameFramework;
+using MagusEngine.Bus.ComponentBus;
 using MagusEngine.ECS.Components;
 using MagusEngine.Serialization;
+using MagusEngine.Services;
 using SadConsole;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 
-namespace MagusEngine.Core
+namespace MagusEngine.Core.MapStuff
 {
     public partial class Tile : IGameObject
     {
@@ -78,7 +80,11 @@ namespace MagusEngine.Core
         }
 
         public void AddComponent<T>(T value, string? tag = null) where T : class
-            => GoRogueComponents.Add(value, tag);
+        {
+            GoRogueComponents.Add(value, tag);
+            Locator.GetService<MessageBusService>()
+                .SendMessage<ComponentAddedCommand<T>>(new(ID, value));
+        }
 
         public MaterialTemplate? GetMaterial()
         {

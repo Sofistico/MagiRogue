@@ -21,20 +21,20 @@ namespace MagusEngine.Core.MapStuff
 
         public int X { get; }
         public int Y { get; }
-        public Map[] LocalMaps { get; set; }
+        public MagiMap[] LocalMaps { get; set; }
 
         public RegionChunk(int x, int y)
         {
             X = x;
             Y = y;
-            LocalMaps = new Map[MAX_LOCAL_MAPS];
+            LocalMaps = new MagiMap[MAX_LOCAL_MAPS];
         }
 
         public RegionChunk(Point point)
         {
             X = point.X;
             Y = point.Y;
-            LocalMaps = new Map[MAX_LOCAL_MAPS];
+            LocalMaps = new MagiMap[MAX_LOCAL_MAPS];
         }
 
         public Point ChunckPos() => new Point(X, Y);
@@ -45,7 +45,7 @@ namespace MagusEngine.Core.MapStuff
         {
             for (int i = 0; i < MAX_LOCAL_MAPS; i++)
             {
-                Map map = LocalMaps[i];
+                MagiMap map = LocalMaps[i];
                 if (map.MapZoneConnections.Count <= 0)
                     return false;
             }
@@ -78,7 +78,7 @@ namespace MagusEngine.Core.MapStuff
             List<Actor> actors = new List<Actor>();
             for (int m = 0; m < LocalMaps.Length; m++)
             {
-                Map? map = LocalMaps[m];
+                MagiMap? map = LocalMaps[m];
                 if (map is null) continue;
                 var ac = map.Entities.GetLayer((int)MapLayer.ACTORS).Items.ToArray();
                 for (int i = 0; i < ac.Length; i++)

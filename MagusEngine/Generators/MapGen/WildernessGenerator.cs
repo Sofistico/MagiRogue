@@ -19,14 +19,14 @@ namespace MagusEngine.Generators.MapGen
             //Empty const
         }
 
-        public Map[] GenerateMapWithWorldParam(PlanetMap worldMap, Point posGenerated)
+        public MagiMap[] GenerateMapWithWorldParam(PlanetMap worldMap, Point posGenerated)
         {
-            Map[] maps = new Map[RegionChunk.MAX_LOCAL_MAPS];
+            MagiMap[] maps = new MagiMap[RegionChunk.MAX_LOCAL_MAPS];
             var worldTile = worldMap.AssocietatedMap.GetTileAt<WorldTile>(posGenerated).GetComponent<WorldTile>();
             int settlmentCounter = 0;
             for (int i = 0; i < maps.Length; i++)
             {
-                Map completeMap = DetermineBiomeLookForTile(worldTile);
+                MagiMap completeMap = DetermineBiomeLookForTile(worldTile);
                 if (completeMap is not null)
                 {
                     ApplyModifierToTheMap(completeMap, worldTile, (uint)i);
@@ -52,7 +52,7 @@ namespace MagusEngine.Generators.MapGen
         /// </summary>
         /// <param name="completeMap"></param>
         /// <param name="worldTile"></param>
-        private void FinishingTouches(Map completeMap, WorldTile worldTile)
+        private void FinishingTouches(MagiMap completeMap, WorldTile worldTile)
         {
             // here prune trees
             if (worldTile.ParentTile.GetComponent<SiteTile>(out var _))
@@ -62,7 +62,7 @@ namespace MagusEngine.Generators.MapGen
             }
         }
 
-        private static void PruneTrees(Map completeMap, WorldTile worldTile)
+        private static void PruneTrees(MagiMap completeMap, WorldTile worldTile)
         {
             List<Tile> trees = completeMap.ReturnAllTrees();
 
@@ -87,7 +87,7 @@ namespace MagusEngine.Generators.MapGen
         /// <param name="completeMap"></param>
         /// <param name="worldTile"></param>
         /// <param name="magicI">Serves to add unique seeds to the map</param>
-        private void ApplyModifierToTheMap(Map completeMap, WorldTile worldTile, ulong magicI)
+        private void ApplyModifierToTheMap(MagiMap completeMap, WorldTile worldTile, ulong magicI)
         {
             completeMap.SetSeed((uint)seed, (uint)worldTile.Position.X,
                 (uint)worldTile.Position.Y, (uint)magicI);
@@ -181,7 +181,7 @@ namespace MagusEngine.Generators.MapGen
         /// <param name="createdSites"></param>
         /// <returns>Returns the number of Site already created on the map</returns>
         /// <exception cref="ApplicationException"></exception>
-        private int CreateSitesIfAny(Map completeMap, WorldTile worldTile, int createdSites)
+        private int CreateSitesIfAny(MagiMap completeMap, WorldTile worldTile, int createdSites)
         {
             if (worldTile.ParentTile.GetComponent<SiteTile>(out var siteTile))
             {
@@ -231,7 +231,7 @@ namespace MagusEngine.Generators.MapGen
             return 0;
         }
 
-        private static Map DetermineBiomeLookForTile(WorldTile worldTile)
+        private static MagiMap DetermineBiomeLookForTile(WorldTile worldTile)
         {
             if (worldTile is null)
                 return null;
@@ -415,12 +415,12 @@ namespace MagusEngine.Generators.MapGen
         }
         */
 
-        private static Map GenericBiomeMap(WorldTile worldTile,
+        private static MagiMap GenericBiomeMap(WorldTile worldTile,
             string materialId = null,
             MaterialType typeToMake = MaterialType.None,
             bool cacheMaterial = false)
         {
-            Map map = new Map($"{worldTile.BiomeType}");
+            MagiMap map = new MagiMap($"{worldTile.BiomeType}");
             // create a height map in the future
             for (int i = 0; i < map.Terrain.Count; i++)
             {

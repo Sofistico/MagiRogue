@@ -410,7 +410,7 @@ namespace Diviner
                 try
                 {
                     // the map is being saved, but it isn't being properly deserialized
-                    Map map = (Map)getPlayer.CurrentMap;
+                    MagiMap map = (MagiMap)getPlayer.CurrentMap;
                     map.LastPlayerPosition = getPlayer.Position;
                     if (Find.Universe.MapIsWorld(map))
                     {
@@ -425,7 +425,7 @@ namespace Diviner
                         // The universe class also isn't being serialized properly, crashing newtonsoft
                         // TODO: Revise this line of code when the time comes to work on the save system.
                         //var gameState = JsonConvert.SerializeObject(new GameState().Universe);
-                        MapTemplate mapDeJsonified = JsonConvert.DeserializeObject<Map>(json);
+                        MapTemplate mapDeJsonified = JsonConvert.DeserializeObject<MagiMap>(json);
                     }
                 }
                 catch (Newtonsoft.Json.JsonSerializationException e)

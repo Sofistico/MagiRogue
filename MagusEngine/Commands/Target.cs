@@ -7,6 +7,7 @@ using MagusEngine.Core;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic;
+using MagusEngine.Core.MapStuff;
 using MagusEngine.Services;
 using MagusEngine.Systems;
 using MagusEngine.Systems.Time;

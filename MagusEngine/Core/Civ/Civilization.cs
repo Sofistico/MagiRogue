@@ -362,7 +362,7 @@ namespace MagusEngine.Core.Civ
         public List<HistoricalFigure> GetAllHfsNotNobles()
             => ImportantPeople.Where(i => i.NobleTitles.Count <= 0).ToList();
 
-        public List<Tile> ReturnAllTerritories(Map map)
+        public List<Tile> ReturnAllTerritories(MagiMap map)
         {
             List<Tile> tiles = new();
             int count = Territory.Count;
@@ -375,7 +375,7 @@ namespace MagusEngine.Core.Civ
             return tiles;
         }
 
-        public List<Tile> ReturnAllLandTerritory(Map map)
+        public List<Tile> ReturnAllLandTerritory(MagiMap map)
         {
             var list = ReturnAllTerritories(map);
             var landList = new List<Tile>();
@@ -389,7 +389,7 @@ namespace MagusEngine.Core.Civ
             return landList;
         }
 
-        public List<Tile> ReturnAllWaterTerritoey(Map map)
+        public List<Tile> ReturnAllWaterTerritoey(MagiMap map)
         {
             var list = ReturnAllTerritories(map);
             var waterList = new List<Tile>();

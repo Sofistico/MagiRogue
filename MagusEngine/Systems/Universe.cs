@@ -42,7 +42,7 @@ namespace MagusEngine.Systems
         /// <summary>
         /// Stores the current map
         /// </summary>
-        public Map CurrentMap { get; private set; }
+        public MagiMap CurrentMap { get; private set; }
 
         /// <summary>
         /// Stores the current chunk that is loaded
@@ -102,7 +102,7 @@ namespace MagusEngine.Systems
         }
 
         public Universe(PlanetMap worldMap,
-            Map currentMap,
+            MagiMap currentMap,
             Player player,
             TimeSystem time,
             bool possibleChangeMap,
@@ -180,7 +180,7 @@ namespace MagusEngine.Systems
             }
         }
 
-        public void ChangePlayerMap(Map mapToGo, Point pos, Map previousMap)
+        public void ChangePlayerMap(MagiMap mapToGo, Point pos, MagiMap previousMap)
         {
             CurrentMap.LastPlayerPosition = new Point(Player.Position.X, Player.Position.Y);
             previousMap.NeedsUpdate = true;
@@ -193,7 +193,7 @@ namespace MagusEngine.Systems
             Locator.GetService<MessageBusService>().SendMessage<ChangeCenteredActor>(new(Player));
         }
 
-        private void UpdateIfNeedTheMap(Map mapToGo)
+        private void UpdateIfNeedTheMap(MagiMap mapToGo)
         {
             if (mapToGo != WorldMap.AssocietatedMap && !CurrentChunk.MapsAreConnected())
                 MapGenerator.ConnectMapsInsideChunk(CurrentChunk.LocalMaps);
@@ -214,7 +214,7 @@ namespace MagusEngine.Systems
             AddEntityToTime(entity);
         }
 
-        public static void ChangeActorMap(MagiEntity entity, Map mapToGo, Point pos, Map previousMap)
+        public static void ChangeActorMap(MagiEntity entity, MagiMap mapToGo, Point pos, MagiMap previousMap)
         {
             previousMap.Remove(entity);
             entity.Position = pos;
@@ -240,7 +240,7 @@ namespace MagusEngine.Systems
         private void CreateTestMap()
         {
             MiscMapGen generalMapGenerator = new();
-            Map map = generalMapGenerator.GenerateTestMap();
+            MagiMap map = generalMapGenerator.GenerateTestMap();
             CurrentMap = map;
             CurrentChunk = new RegionChunk(0, 0);
             CurrentChunk.LocalMaps[0] = map;
@@ -269,7 +269,7 @@ namespace MagusEngine.Systems
             CurrentMap.AddMagiEntity(Player);
         }
 
-        public Map GetWorldMap()
+        public MagiMap GetWorldMap()
         {
             return WorldMap.AssocietatedMap;
         }
@@ -377,7 +377,7 @@ namespace MagusEngine.Systems
             int chunckLenght = (CurrentChunk?.LocalMaps.Length) ?? 0;
             for (int i = 0; i < chunckLenght; i++)
             {
-                Map maps = CurrentChunk?.LocalMaps[i];
+                MagiMap maps = CurrentChunk?.LocalMaps[i];
                 maps?.DestroyMap();
             }
             CurrentMap = null!;
@@ -450,7 +450,7 @@ namespace MagusEngine.Systems
             return Locator.GetService<SavingService>().GetChunkAtIndex(playerPoint, PlanetSettings.PlanetWidth);
         }
 
-        public static Map? GetMapById(int id)
+        public static MagiMap? GetMapById(int id)
         {
             return SavingService.LoadMapById(id);
         }
@@ -460,12 +460,12 @@ namespace MagusEngine.Systems
             return CurrentMap == WorldMap.AssocietatedMap;
         }
 
-        public bool MapIsWorld(Map map)
+        public bool MapIsWorld(MagiMap map)
         {
             return map == WorldMap.AssocietatedMap;
         }
 
-        public void ForceChangeCurrentMap(Map map) => CurrentMap = map;
+        public void ForceChangeCurrentMap(MagiMap map) => CurrentMap = map;
 
         public void Handle(ChangeControlledActorMap message)
         {

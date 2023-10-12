@@ -25,7 +25,7 @@ namespace MagusEngine.Generators.MapGen
 
         protected DistinctRandom randNum;
         protected ulong seed;
-        protected Map _map; // Temporarily store the map currently worked on
+        protected MagiMap _map; // Temporarily store the map currently worked on
         protected List<Building> _rooms;
 
         // Empty constructor
@@ -37,7 +37,7 @@ namespace MagusEngine.Generators.MapGen
             _rooms = new();
         }
 
-        public MapGenerator(Map map) : this()
+        public MapGenerator(MagiMap map) : this()
         {
             _map = map;
         }
@@ -99,7 +99,7 @@ namespace MagusEngine.Generators.MapGen
         /// </summary>
         /// <param name="floor"></param>
         /// <param name="map"></param>
-        protected static void PrepareForAnyFloor(Tile floor, Map map)
+        protected static void PrepareForAnyFloor(Tile floor, MagiMap map)
         {
             map.SetTerrain(floor);
         }
@@ -227,7 +227,7 @@ namespace MagusEngine.Generators.MapGen
         /// </summary>
         /// <param name="wall"></param>
         /// <param name="map"></param>
-        protected static void CreateAnyWall(Tile wall, Map map)
+        protected static void CreateAnyWall(Tile wall, MagiMap map)
         {
             map.SetTerrain(wall);
         }
@@ -492,7 +492,7 @@ namespace MagusEngine.Generators.MapGen
         /// <param name="map"></param>
         /// <param name="treeToPlace"></param>
         /// <exception cref="NotImplementedException"></exception>
-        protected static void PlaceTrees(Map map, Tile treeToPlace)
+        protected static void PlaceTrees(MagiMap map, Tile treeToPlace)
         {
             for (int i = 0; i < map.Terrain.Count; i++)
             {
@@ -511,7 +511,7 @@ namespace MagusEngine.Generators.MapGen
         /// Place generic trees over the specified map
         /// </summary>
         /// <param name="map"></param>
-        protected static void PlaceGenericTrees(Map map)
+        protected static void PlaceGenericTrees(MagiMap map)
         {
             PlaceTrees(map, TileFactory.GenericTree());
         }
@@ -531,7 +531,7 @@ namespace MagusEngine.Generators.MapGen
         /// <param name="map"></param>
         /// <param name="treesToPlace"></param>
         /// <exception cref="NotImplementedException"></exception>
-        protected void PlaceTrees(Map map, List<Tile> treesToPlace)
+        protected void PlaceTrees(MagiMap map, List<Tile> treesToPlace)
         {
             // need to remake
             throw new NotImplementedException();
@@ -543,7 +543,7 @@ namespace MagusEngine.Generators.MapGen
         /// <param name="map"></param>
         /// <param name="vegetationToPlace"></param>
         /// <exception cref="NotImplementedException"></exception>
-        protected void PlaceVegetations(Map map, Tile vegetationToPlace)
+        protected void PlaceVegetations(MagiMap map, Tile vegetationToPlace)
         {
             //first make sure that the vegetation won't be attackable and it's a vegetation
             for (int i = 0; i < map.Terrain.Count; i++)
@@ -569,7 +569,7 @@ namespace MagusEngine.Generators.MapGen
         /// <param name="map"></param>
         /// <param name="vegetationsToPlace"></param>
         /// <exception cref="NotImplementedException"></exception>
-        protected void PlaceVegetations(Map map, List<Tile> vegetationsToPlace)
+        protected void PlaceVegetations(MagiMap map, List<Tile> vegetationsToPlace)
         {
             //first make sure that the vegetation won't be attackable and it's a vegetation
             for (int i = 0; i < vegetationsToPlace.Count; i++)
@@ -585,7 +585,7 @@ namespace MagusEngine.Generators.MapGen
         /// </summary>
         /// <param name="tile"></param>
         /// <param name="map"></param>
-        protected static void FloodWithWaterMap(Tile tile, Map map)
+        protected static void FloodWithWaterMap(Tile tile, MagiMap map)
         {
             map.SetTerrain(tile);
         }
@@ -600,7 +600,7 @@ namespace MagusEngine.Generators.MapGen
         /// </summary>
         /// <param name="map"></param>
         /// <param name="template"></param>
-        protected void PutRngFloorTileThere(Map map, Tile template)
+        protected void PutRngFloorTileThere(MagiMap map, Tile template)
         {
             for (int i = 0; i < map.Terrain.Count; i++)
             {
@@ -638,7 +638,7 @@ namespace MagusEngine.Generators.MapGen
             return point.X < grid.Width && point.X >= 0 && point.Y < grid.Height && point.Y >= 0;
         }
 
-        public static void ConnectMapsInsideChunk(Map[] maps)
+        public static void ConnectMapsInsideChunk(MagiMap[] maps)
         {
             int len = maps.Length;
             // perfect for flood fill!
@@ -652,7 +652,7 @@ namespace MagusEngine.Generators.MapGen
                 if (CheckIfPointIsCorrect(grid, currentPoint))
                 {
                     int idx = Point.ToIndex(currentPoint.X, currentPoint.Y, grid.Width);
-                    Map map = maps[idx];
+                    MagiMap map = maps[idx];
 
                     if (!grid.Points.Contains(currentPoint))
                     {
@@ -684,8 +684,8 @@ namespace MagusEngine.Generators.MapGen
             }
         }
 
-        private static void ConnectPointsWithMaps(Map[] maps, Stack<Point> pointedList, Simple2DGrid grid,
-            Point currentPoint, Map map, Point nextPoint)
+        private static void ConnectPointsWithMaps(MagiMap[] maps, Stack<Point> pointedList, Simple2DGrid grid,
+            Point currentPoint, MagiMap map, Point nextPoint)
         {
             int endIdx = Point.ToIndex(nextPoint.X, nextPoint.Y, grid.Width);
             Direction di = Direction.GetDirection(currentPoint, nextPoint);
@@ -693,7 +693,7 @@ namespace MagusEngine.Generators.MapGen
             map.MapZoneConnections.Add(di, maps[endIdx]);
         }
 
-        protected static void FillMapWithGrass(Map map)
+        protected static void FillMapWithGrass(MagiMap map)
         {
             foreach (var p in map.Terrain.Positions())
             {
@@ -704,7 +704,7 @@ namespace MagusEngine.Generators.MapGen
             }
         }
 
-        protected void MakeRoomsUseful(Map completeMap)
+        protected void MakeRoomsUseful(MagiMap completeMap)
         {
             List<Room>? mapRooms = completeMap.Rooms;
             if (mapRooms is null)
@@ -716,7 +716,7 @@ namespace MagusEngine.Generators.MapGen
             }
         }
 
-        protected static void MakeRoomWithTagUseful(Room room, Map map)
+        protected static void MakeRoomWithTagUseful(Room room, MagiMap map)
         {
             // make so that the list of rooms come from the worldTile.CivInfluence.Sites
             if (room.RoomPoints.Length >= 6)
@@ -725,7 +725,7 @@ namespace MagusEngine.Generators.MapGen
             }
         }
 
-        protected void MakeRoomUseful(Room room, Map map)
+        protected void MakeRoomUseful(Room room, MagiMap map)
         {
             // make so that the list of rooms come from the worldTile.CivInfluence.Sites
             if (room.RoomPoints.Length >= 6)
@@ -747,7 +747,7 @@ namespace MagusEngine.Generators.MapGen
             }
         }
 
-        protected static void GiveRoomFurniture(Room room, Map map)
+        protected static void GiveRoomFurniture(Room room, MagiMap map)
         {
             switch (room.Tag)
             {
@@ -838,7 +838,7 @@ namespace MagusEngine.Generators.MapGen
             }
         }
 
-        private static void AddFurnituresAtRandomPos(Furniture furniture, Room room, Map map, int quantity)
+        private static void AddFurnituresAtRandomPos(Furniture furniture, Room room, MagiMap map, int quantity)
         {
             for (int i = 0; i < quantity; i++)
             {
@@ -846,7 +846,7 @@ namespace MagusEngine.Generators.MapGen
             }
         }
 
-        private static void AddFurnitureAtRandomPos(Furniture furniture, Room room, Map map)
+        private static void AddFurnitureAtRandomPos(Furniture furniture, Room room, MagiMap map)
         {
             Point pos = Point.None;
             int tries = 0;
@@ -874,7 +874,7 @@ namespace MagusEngine.Generators.MapGen
         /// <param name="roomMinSize"></param>
         /// <param name="maxRooms"></param>
         /// <returns></returns>
-        protected List<Building> BspMapFunction(Map map, int roomMaxSize, int roomMinSize, int maxRooms)
+        protected List<Building> BspMapFunction(MagiMap map, int roomMaxSize, int roomMinSize, int maxRooms)
         {
             _map = map;
             List<Building> rooms = new List<Building>();

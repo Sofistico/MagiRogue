@@ -2,11 +2,12 @@
 using GoRogue.GameFramework;
 using MagusEngine.Core;
 using MagusEngine.Core.Entities.Base;
+using MagusEngine.Core.MapStuff;
 using SadRogue.Primitives.GridViews;
 using SadRogue.Primitives.SpatialMaps;
 using System;
 using System.Linq;
-using Map = MagusEngine.Core.MapStuff.Map;
+using MagiMap = MagusEngine.Core.MapStuff.MagiMap;
 
 namespace MagusEngine.Systems
 {
@@ -80,14 +81,14 @@ namespace MagusEngine.Systems
         /// <summary>
         /// The map that this handler manages visibility of objects for.
         /// </summary>
-        public Map Map { get; protected private set; }
+        public MagiMap Map { get; protected private set; }
 
         /// <summary>
         /// Creates a FOVVisibilityHandler that will manage visibility of objects for the given map.
         /// </summary>
         /// <param name="map">The map this handler will manage visibility for.</param>
         /// <param name="startingState">The starting state to put the handler in.</param>
-        protected FOVHandler(Map map, FovState startingState)
+        protected FOVHandler(MagiMap map, FovState startingState)
         {
             Map = map;
 

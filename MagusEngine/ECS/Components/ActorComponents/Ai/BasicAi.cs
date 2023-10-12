@@ -17,7 +17,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.Ai
             _entity = entity;
         }
 
-        public virtual (bool sucess, long ticks) RunAi(Map map)
+        public virtual (bool sucess, long ticks) RunAi(MagiMap map)
         {
             bool rng = Mrn.OneIn(10);
             if (rng)

@@ -14,9 +14,9 @@ namespace MagusEngine.Generators.MapGen
             // empty
         }
 
-        public Map GenerateTestMap()
+        public MagiMap GenerateTestMap()
         {
-            _map = new Map("Test Map", 180, 180);
+            _map = new MagiMap("Test Map", 180, 180);
 
             PrepareForFloors();
             PrepareForOuterWalls();
@@ -113,9 +113,9 @@ namespace MagusEngine.Generators.MapGen
             }
         }
 
-        public Map GenerateStoneFloorMap()
+        public MagiMap GenerateStoneFloorMap()
         {
-            _map = new Map("Test Stone Map");
+            _map = new MagiMap("Test Stone Map");
 
             PrepareForFloors();
 

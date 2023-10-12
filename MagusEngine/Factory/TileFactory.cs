@@ -1,7 +1,6 @@
 ﻿using Arquimedes;
 using Arquimedes.Enumerators;
-using GoRogue.GameFramework;
-using MagusEngine.Core;
+using MagusEngine.Core.MapStuff;
 using MagusEngine.ECS.Components;
 using MagusEngine.Serialization;
 using MagusEngine.Systems;
@@ -14,7 +13,7 @@ namespace MagusEngine.Factory
     {
         private static MaterialTemplate? cachedMaterial;
 
-        public static Tile GenericGrass(Point pos, Map? map = null)
+        public static Tile GenericGrass(Point pos, MagiMap? map = null)
         {
             var tile = CreateTile(pos, TileType.Floor, "dirt");
             // TODO: REDO
@@ -22,6 +21,9 @@ namespace MagusEngine.Factory
             //{
             //    tile.AddVegetation(DataManager.QueryPlantInData("grass"), i, (GameSys.Map?)map);
             //}
+            var plant = DataManager.QueryPlantInData("grass");
+            tile.AddComponent(plant);
+            map?.AddEntity(plant);
 
             return tile;
         }

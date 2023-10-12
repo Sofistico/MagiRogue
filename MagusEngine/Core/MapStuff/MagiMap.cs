@@ -31,7 +31,7 @@ namespace MagusEngine.Core.MapStuff
     /// </summary>
     [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
     [JsonConverter(typeof(MapJsonConverter))]
-    public sealed class Map : GoRogue.GameFramework.Map, IDisposable
+    public sealed class MagiMap : GoRogue.GameFramework.Map, IDisposable
     {
         #region Fields
 
@@ -82,7 +82,7 @@ namespace MagusEngine.Core.MapStuff
         public uint MapId { get; private set; }
         public ulong Seed { get; set; }
         public int ZAmount { get; set; }
-        public Dictionary<Direction, Map> MapZoneConnections { get; set; }
+        public Dictionary<Direction, MagiMap> MapZoneConnections { get; set; }
         public List<Room>? Rooms { get; set; }
 
         public EntityManager EntityRender { get => _entityManager; }
@@ -98,7 +98,7 @@ namespace MagusEngine.Core.MapStuff
         /// </summary>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public Map(string mapName, int width = 60, int height = 60, bool usesWeighEvaluation = true) :
+        public MagiMap(string mapName, int width = 60, int height = 60, bool usesWeighEvaluation = true) :
             base(width, height, Enum.GetNames(typeof(MapLayer)).Length - 1,
             Distance.Euclidean,
             entityLayersSupportingMultipleItems: LayerMasker.Default.Mask((int)MapLayer.VEGETATION,
@@ -905,7 +905,7 @@ namespace MagusEngine.Core.MapStuff
 
         public List<Room?> FindRoomsByTag(RoomTag tag) => Rooms?.FindAll(i => i.Tag == tag)!;
 
-        ~Map()
+        ~MagiMap()
         {
             Dispose();
         }

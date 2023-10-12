@@ -12,10 +12,10 @@ namespace MagusEngine.Serialization.MapConverter
 {
     #region Serialization
 
-    public sealed class MapJsonConverter : JsonConverter<Map>
+    public sealed class MapJsonConverter : JsonConverter<MagiMap>
     {
-        public override Map ReadJson(JsonReader reader,
-            Type objectType, Map? existingValue, bool hasExistingValue,
+        public override MagiMap ReadJson(JsonReader reader,
+            Type objectType, MagiMap? existingValue, bool hasExistingValue,
             JsonSerializer serializer)
         {
             #region Old Code
@@ -256,7 +256,7 @@ namespace MagusEngine.Serialization.MapConverter
             };
         }*/
 
-        public override void WriteJson(JsonWriter writer, Map? value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, MagiMap? value, JsonSerializer serializer)
         {
             MapTemplate template = (MapTemplate)value;
             /*if (template.Entities.Count == 0)
@@ -312,7 +312,7 @@ namespace MagusEngine.Serialization.MapConverter
             Height = height;
         }
 
-        public static implicit operator MapTemplate(Map map)
+        public static implicit operator MapTemplate(MagiMap map)
         {
             if (map is not null)
                 return null;
@@ -351,11 +351,11 @@ namespace MagusEngine.Serialization.MapConverter
             return template;
         }
 
-        public static implicit operator Map(MapTemplate map)
+        public static implicit operator MagiMap(MapTemplate map)
         {
             if (map is null)
                 return null;
-            var objMap = new Map(map.MapName, map.Width, map.Height);
+            var objMap = new MagiMap(map.MapName, map.Width, map.Height);
 
             if (map.HasFOV is not null && (bool)!map.HasFOV)
                 objMap.GoRogueComponents.GetFirstOrDefault<MagiRogueFOVVisibilityHandler>().Disable();
