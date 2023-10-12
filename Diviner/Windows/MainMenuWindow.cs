@@ -31,7 +31,7 @@ namespace Diviner.Windows
             };
             startGame = new MagiButton(12, 1)
             {
-                Text = "Start Game"
+                Text = "Start Game (NOT WORKING RIGHT NOW!)"
             };
 
             testMap = new MagiButton(12, 1)
@@ -89,11 +89,11 @@ namespace Diviner.Windows
                     {
                         Position = new Point((loadPop.Width / 2) - 10, (loadPop.Height / 2) - 5)
                     };
-                    string delete = "Delete";
+                    const string delete = "Delete";
                     MagiButton deleteSaveBtn = new MagiButton(delete.Length + 2)
                     {
                         Text = delete,
-                        Position = new Point(loadPop.Width / 2 - 5, loadPop.Height - 3)
+                        Position = new Point((loadPop.Width / 2) - 5, loadPop.Height - 3)
                     };
 
                     deleteSaveBtn.Click += DeleteSaveBtn_Click;
