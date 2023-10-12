@@ -35,8 +35,6 @@ public static class GameLoop
             .ConfigureFonts((f, _) => f.UseBuiltinFontExtended())
             .Run();
 
-        //Game.Create(gameStartup);
-        ////Start the game.
         Game.Instance.Run();
         // Code here will not run until the game window closes.
         Game.Instance.Dispose();
