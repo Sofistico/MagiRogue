@@ -598,7 +598,7 @@ namespace MagusEngine.Commands
             {
                 if (need is not null)
                     need?.Fulfill();
-                if (--plant.Bundle == 0)
+                if (--plant!.Bundle == 0)
                 {
                     tile.RemoveComponent(plant);
                 }

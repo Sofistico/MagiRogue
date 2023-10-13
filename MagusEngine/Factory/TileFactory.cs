@@ -14,14 +14,9 @@ namespace MagusEngine.Factory
     {
         private static MaterialTemplate? cachedMaterial;
 
-        public static Tile GenericGrass(Point pos, MagiMap? map = null)
+        public static Tile GenericGrass(Point pos)
         {
             var tile = CreateTile(pos, TileType.Floor, "dirt");
-            // TODO: REDO
-            //for (int i = 0; i < tile.Vegetations.Length; i++)
-            //{
-            //    tile.AddVegetation(DataManager.QueryPlantInData("grass"), i, (GameSys.Map?)map);
-            //}
             var plant = DataManager.QueryPlantInData("grass");
             tile.AddComponent(plant);
             tile.AddComponent(new FoodComponent(Food.Herbivore));
