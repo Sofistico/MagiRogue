@@ -387,7 +387,7 @@
     "InheirtFrom": "generic_plant_matter",
     "Name": "grass",
     "Color": "GrassColor",
-    "ConfersTraits": [ "HerbivoreEatable" ]
+    "ConfersTraits": [ "GrazerEatable" ]
   },
   {
     "Id": "h2o",

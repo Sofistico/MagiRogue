@@ -8,6 +8,7 @@ using MagusEngine.Core.Entities.StarterScenarios;
 using MagusEngine.Core.Magic;
 using MagusEngine.Core.WorldStuff.History;
 using MagusEngine.Core.WorldStuff.TechRes;
+using MagusEngine.ECS.Components.TilesComponents;
 using MagusEngine.Serialization;
 using MagusEngine.Serialization.EntitySerialization;
 using MagusEngine.Serialization.MapConverter;

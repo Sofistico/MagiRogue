@@ -2,6 +2,7 @@
 using Arquimedes.Enumerators;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.ECS.Components;
+using MagusEngine.ECS.Components.ActorComponents;
 using MagusEngine.Serialization;
 using MagusEngine.Systems;
 using SadRogue.Primitives;
@@ -23,7 +24,8 @@ namespace MagusEngine.Factory
             //}
             var plant = DataManager.QueryPlantInData("grass");
             tile.AddComponent(plant);
-            map?.AddEntity(plant);
+            tile.AddComponent(new FoodComponent(Food.Herbivore));
+            tile.Traits.Add(Trait.GrazerEatable);
 
             return tile;
         }

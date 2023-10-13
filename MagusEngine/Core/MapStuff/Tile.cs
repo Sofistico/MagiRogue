@@ -56,17 +56,27 @@ namespace MagusEngine.Core.MapStuff
             AddComponent<MaterialComponent>(new(idMaterial));
         }
 
-        public T? GetComponent<T>() where T : class => GoRogueComponents.GetFirst<T>();
+        public T? GetComponent<T>(string? tag = null) where T : class => GoRogueComponents.GetFirst<T>(tag);
 
-        public bool GetComponent<T>(out T comp) where T : class
+        public bool GetComponent<T>(out T? comp, string? tag = null) where T : class
         {
-            comp = GoRogueComponents.GetFirst<T>();
+            comp = GoRogueComponents.GetFirstOrDefault<T>(tag)!;
             return comp != null;
         }
 
         public bool HasComponent<TFind>(string? tag = null) where TFind : class
         {
             return GoRogueComponents.Contains<TFind>(tag);
+        }
+
+        public void RemoveComponent(object comp)
+        {
+            GoRogueComponents.Remove(comp);
+        }
+
+        public void RemoveComponent(string tag)
+        {
+            GoRogueComponents.Remove(tag);
         }
 
         public Tile Copy()

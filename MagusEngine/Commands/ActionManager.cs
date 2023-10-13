@@ -3,7 +3,6 @@ using GoRogue.GameFramework;
 using GoRogue.Pathing;
 using MagusEngine.Bus.MapBus;
 using MagusEngine.Bus.UiBus;
-using MagusEngine.Core;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
@@ -546,9 +545,9 @@ namespace MagusEngine.Commands
                     Objective = foodItem
                 };
             }
-            if (foodItem is Plant plant)
+            if (foodItem is Tile tilePlant && tilePlant.GetComponent<Plant>(out var plant))
             {
-                commitedToNeed = new Need($"Eat {plant.Name}", false, 0, Actions.Eat, "Greed", $"eat {plant.ID}")
+                commitedToNeed = new Need($"Eat {plant.Name}", false, 0, Actions.Eat, "Greed", $"eat {tilePlant.ID}")
                 {
                     Objective = foodItem
                 };
@@ -595,11 +594,14 @@ namespace MagusEngine.Commands
                 item.Condition -= 100;
                 Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"The {actor.Name} ate {item.Name}"));
             }
-            if (whatToEat is Plant plant)
+            if (whatToEat is Tile tile && tile.GetComponent<Plant>(out var plant))
             {
                 if (need is not null)
                     need?.Fulfill();
-                plant.RemoveThisFromMap();
+                if (--plant.Bundle == 0)
+                {
+                    tile.RemoveComponent(plant);
+                }
                 Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"The {actor.Name} ate {plant.Name}"));
             }
             return TimeHelper.Interact;

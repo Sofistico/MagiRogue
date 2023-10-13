@@ -1,7 +1,7 @@
-﻿using MagusEngine.Core;
-using MagusEngine.Core.Entities.Base;
+﻿using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.ECS.Components.ActorComponents;
+using MagusEngine.ECS.Components.TilesComponents;
 using SadRogue.Primitives;
 using System.Collections.Generic;
 
@@ -135,10 +135,10 @@ namespace MagusEngine.Systems
             {
                 terrain.Appearence.CopyAppearanceFrom(terrain.LastSeenAppereance);
             }
-            //if (terrain.Vegetations.All(i => i is not null))
-            //{
-            //    terrain.CopyAppearanceFrom(terrain.Vegetations.GetRandomItemFromList().SadGlyph);
-            //}
+            if (terrain.GetComponent<Plant>(out var plant))
+            {
+                terrain.Appearence.CopyAppearanceFrom(plant.SadGlyph);
+            }
         }
 
         /// <summary>

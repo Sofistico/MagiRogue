@@ -1,6 +1,5 @@
 ﻿using Arquimedes.Enumerators;
 using GoRogue.GameFramework;
-using MagusEngine.Core;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
 using SadRogue.Primitives.GridViews;
@@ -210,7 +209,6 @@ namespace MagusEngine.Systems
         private void Map_ObjectAdded(object sender, ItemEventArgs<IGameObject> e)
         {
             if (!IsEnabled) return;
-            if (e.Item.Layer == (int)MapLayer.VEGETATION) return;
             if (e.Item.Layer == (int)MapLayer.TERRAIN) // terrain
             {
                 if (Map.PlayerFOV.BooleanResultView[e.Position])

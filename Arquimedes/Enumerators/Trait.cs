@@ -81,8 +81,8 @@ namespace Arquimedes.Enumerators
         Powders,
 
         /// <summary>
-        /// Materials is some kind of plant material that herbivore eats
+        /// Materials is some kind of plant material that grazer eats
         /// </summary>
-        HerbivoreEatable,
+        GrazerEatable,
     }
 }

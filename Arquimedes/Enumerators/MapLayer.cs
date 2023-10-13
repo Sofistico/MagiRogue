@@ -8,7 +8,7 @@
     public enum MapLayer
     {
         TERRAIN, // does not support more than one
-        VEGETATION, // supports more than one
+        //VEGETATION, // supports more than one
         GHOSTS, // supports more than one
         ITEMS, // supports more than one
         FURNITURE, // supports more than one

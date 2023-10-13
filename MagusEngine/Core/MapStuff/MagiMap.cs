@@ -101,8 +101,7 @@ namespace MagusEngine.Core.MapStuff
         public MagiMap(string mapName, int width = 60, int height = 60, bool usesWeighEvaluation = true) :
             base(width, height, Enum.GetNames(typeof(MapLayer)).Length - 1,
             Distance.Euclidean,
-            entityLayersSupportingMultipleItems: LayerMasker.Default.Mask((int)MapLayer.VEGETATION,
-                (int)MapLayer.ITEMS,
+            entityLayersSupportingMultipleItems: LayerMasker.Default.Mask((int)MapLayer.ITEMS,
                 (int)MapLayer.GHOSTS,
                 (int)MapLayer.ACTORS,
                 (int)MapLayer.SPECIAL))
