@@ -670,7 +670,7 @@ namespace MagusEngine.Core.MapStuff
                     }
                     else if (str.Equals("t_grass"))
                     {
-                        tile = TileFactory.GenericGrass(pos, this);
+                        tile = TileFactory.GenericGrass(pos);
                     }
                     else
                     {

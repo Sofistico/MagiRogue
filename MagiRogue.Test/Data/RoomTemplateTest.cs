@@ -1,4 +1,5 @@
-﻿using MagusEngine.Core.MapStuff;
+﻿using MagusEngine;
+using MagusEngine.Core.MapStuff;
 using MagusEngine.Generators.MapGen;
 using MagusEngine.Serialization.MapConverter;
 using MagusEngine.Systems;
@@ -13,6 +14,7 @@ namespace MagiRogue.Test.Data
         public RoomTemplateTest()
         {
             room = DataManager.QueryRoomInData("room_city1");
+            Locator.InitializeSingletonServices();
         }
 
         [Fact]

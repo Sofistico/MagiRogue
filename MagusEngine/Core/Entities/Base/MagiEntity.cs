@@ -98,8 +98,8 @@ namespace MagusEngine.Core.Entities.Base
             AppearanceSingle.Appearance.Background = background;
             AppearanceSingle.Appearance.Glyph = glyph;
             Layer = layer;
-
-            backingField = new GameObject(coord, layer, idGenerator: Locator.GetService<IDGenerator>().UseID);
+            var gen = Locator.GetService<IDGenerator>();
+            backingField = new GameObject(coord, layer, idGenerator: gen is null ? null : gen.UseID);
             Position = backingField.Position;
 
             //PositionChanged += Position_Changed;

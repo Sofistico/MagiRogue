@@ -18,7 +18,7 @@ namespace MagiRogue.Test.System.Magic
         [Fact]
         public void TestCasting()
         {
-            List<SpellBase> spellBase = new List<SpellBase>(TestSpellsNoEffect());
+            List<SpellBase> spellBase = new List<SpellBase>(GetListSpells());
 
             weakMagic = new MagicManager()
             {
@@ -86,7 +86,7 @@ namespace MagiRogue.Test.System.Magic
                 && (canStrongCast.Count(a => a).Equals(4)));
         }
 
-        private static List<SpellBase> TestSpellsNoEffect()
+        private static List<SpellBase> GetListSpells()
         {
             SpellBase missile = new SpellBase("magic_missile",
                  "Magic Missile",

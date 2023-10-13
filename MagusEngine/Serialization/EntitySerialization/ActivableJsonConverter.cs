@@ -3,6 +3,7 @@ using MagusEngine.Core.Entities.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Linq;
 
 namespace MagusEngine.Serialization.EntitySerialization
 {
@@ -12,12 +13,11 @@ namespace MagusEngine.Serialization.EntitySerialization
             Type objectType, IActivable? existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
             var jObj = JToken.ReadFrom(reader);
-            IActivable activable;
             UseAction action = (UseAction)Enum.Parse(typeof(UseAction), jObj.ToString());
 
             return action switch
             {
-                UseAction.None => throw new NotSupportedException($"UseAction None in not supported!"),
+                UseAction.None => throw new NotSupportedException("UseAction None in not supported!"),
                 UseAction.Sit => new Sit(),
                 UseAction.Study => new Study(),
                 UseAction.Craft => new Craft(),
@@ -39,7 +39,7 @@ namespace MagusEngine.Serialization.EntitySerialization
         {
             //throw new InvalidOperationException("Use default serialization.");
             // as we call on my language: GAMBIARRA
-            UseAction action = (UseAction)Enum.Parse(typeof(UseAction), value?.ToString()?.Split('.')[2]!);
+            UseAction action = (UseAction)Enum.Parse(typeof(UseAction), value?.ToString()?.Split('.').Last()!);
             serializer.Serialize(writer, action);
         }
     }

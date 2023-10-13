@@ -33,10 +33,11 @@ namespace MagusEngine.Core.MapStuff
             Point pos)
         {
             Appearence = new ColoredGlyph(foreground, background, glyph);
+            var gen = Locator.GetService<IDGenerator>();
             _gameObject = new((int)MapLayer.TERRAIN,
                 isWalkable,
                 isTransparent,
-                Locator.GetService<IDGenerator>().UseID);
+                gen is not null ? gen.UseID : null);
             Position = pos;
             LastSeenAppereance = (ColoredGlyph)Appearence.Clone();
         }
