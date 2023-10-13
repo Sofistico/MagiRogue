@@ -1,5 +1,6 @@
 ﻿using Arquimedes.Enumerators;
 using MagusEngine.Systems;
+using MagusEngine.Systems.Physics;
 using MagusEngine.Utils;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -82,6 +83,7 @@ namespace MagusEngine.Serialization
         /// whether the corresponding tissue is bruised (value >= 50000), torn (value between 25000
         /// and 49999), or fractured (value <= 24999) </summary>
         public double? ImpactStrainsAtYield { get; set; }
+        public static MaterialTemplate? None => PhysicsManager.SetMaterial("null");
 
         public MaterialTemplate Copy()
         {

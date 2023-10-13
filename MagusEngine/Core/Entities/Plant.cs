@@ -3,6 +3,7 @@ using GoRogue.Components;
 using GoRogue.Components.ParentAware;
 using GoRogue.GameFramework;
 using MagusEngine.Serialization;
+using MagusEngine.Systems.Physics;
 using MagusEngine.Utils.Extensions;
 using Newtonsoft.Json;
 using SadConsole;
@@ -17,7 +18,6 @@ namespace MagusEngine.Core.Entities
         private ColoredGlyph sadGlyph;
         private MagiColorSerialization fore;
         private MagiColorSerialization back;
-        private MaterialTemplate material;
 
         #region Properties
 
@@ -196,23 +196,27 @@ namespace MagusEngine.Core.Entities
         public Color Foreground => fore.Color;
         public Color Background => back.Color;
 
+        [JsonRequired]
         public string MaterialId { get; set; }
 
-        public MaterialTemplate Material => material;
+        public MaterialTemplate Material { get; }
+
+        public int Bundle { get; set; }
 
         [JsonConstructor]
-        public Plant()
+        public Plant(string? materialId = null)
         {
+            Material = materialId!.IsNullOrEmpty() ? MaterialTemplate.None! : PhysicsManager.SetMaterial(materialId)!;
         }
 
-        public Plant(ColoredGlyph glyph)
+        public Plant(ColoredGlyph glyph, string? materialId) : this(materialId)
         {
             fore = new(glyph.Foreground);
             back = new(glyph.Background);
             Glyphs = new char[] { (char)glyph.Glyph };
         }
 
-        public Plant(Color foreground, Color background, char[] glyphs)
+        public Plant(Color foreground, Color background, char[] glyphs, string materialId) : this(materialId)
         {
             fore = new(foreground);
             back = new(background);
@@ -226,13 +230,14 @@ namespace MagusEngine.Core.Entities
 
         public Plant Clone()
         {
-            var plant = new Plant(Foreground, Background, Glyphs)
+            var plant = new Plant(Foreground, Background, Glyphs, MaterialId)
             {
                 Id = Id,
                 Name = Name,
                 Position = new Point(Position.X, Position.Y),
                 IsWalkable = IsWalkable,
                 IsTransparent = IsTransparent,
+                Bundle = Bundle,
             };
             foreach (var item in GoRogueComponents)
             {
