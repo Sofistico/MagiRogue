@@ -220,7 +220,7 @@ namespace MagusEngine.Factory
 
             if (anatomy.AllBPs.Any(i => i.Tissues.Any(i => i.Material.Type == MaterialType.Meat)))
             {
-                actor.AddComponent(new FoodComponent(Food.Carnivore));
+                actor.AddComponents(new FoodComponent(Food.Carnivore));
             }
         }
 

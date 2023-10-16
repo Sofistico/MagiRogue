@@ -101,7 +101,7 @@ namespace MagusEngine.Serialization.EntitySerialization
 
         public ActorState State { get; set; }
         public List<ActorSituationalFlags> SituationalFlags { get; set; }
-        public IComponentCollection Component { get; set; }
+        public IComponentCollection Components { get; set; }
 
         /// <summary>
         /// Is used in the serialization of the actor.
@@ -246,7 +246,7 @@ namespace MagusEngine.Serialization.EntitySerialization
             actor.Broadness = actorTemplate.Broadness;
             actor.Length = actorTemplate.Length;
             actor.SituationalFlags = actorTemplate.SituationalFlags;
-            actor.AddComponent(actorTemplate.Component);
+            actor.AddComponents(actorTemplate.Components);
 
             return actor;
         }
@@ -297,7 +297,7 @@ namespace MagusEngine.Serialization.EntitySerialization
             actorTemplate.Broadness = actor.Broadness;
             actorTemplate.State = actor.State;
             actorTemplate.SituationalFlags = actor.SituationalFlags;
-            actorTemplate.Component = actor.GoRogueComponents;
+            actorTemplate.Components = actor.GoRogueComponents;
             return actorTemplate;
         }
     }

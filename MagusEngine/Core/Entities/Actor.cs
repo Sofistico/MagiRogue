@@ -439,7 +439,7 @@ namespace MagusEngine.Core.Entities
         {
             for (int i = 0; i < objs.Length; i++)
             {
-                AddComponent(objs[i]);
+                AddComponents(objs[i]);
             }
             return this;
         }

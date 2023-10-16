@@ -281,7 +281,7 @@ namespace MagusEngine.Core.Entities.Base
             backingField.OnMapChanged(newMap);
         }
 
-        public void AddComponent(params object[] components)
+        public void AddComponents(params object[] components)
         {
             foreach (object component in components)
             {
@@ -290,6 +290,11 @@ namespace MagusEngine.Core.Entities.Base
                 backingField.GoRogueComponents.Add(component);
                 //Locator.GetService<MessageBusService>().SendMessage(component);
             }
+        }
+
+        public void AddComponent<T>(T component, string? tag) where T : class
+        {
+            GoRogueComponents.Add(component, tag);
         }
 
         public T GetComponent<T>() where T : class

@@ -242,7 +242,7 @@ namespace MagusEngine.Core.Entities.Base
         {
             var flags = actor.Flags;
             var needs = NeedCollection.WithCommonNeeds();
-            actor.AddComponent(needs);
+            actor.AddComponents(needs);
             if (flags.Contains(SpecialFlag.NoSleep))
             {
                 var sleep = needs.FirstOrDefault(i => i.ActionToFulfillNeed is Actions.Sleep);

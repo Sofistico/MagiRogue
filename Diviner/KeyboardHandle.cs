@@ -318,7 +318,7 @@ namespace Diviner
 
             if (info.IsKeyPressed(Keys.F8))
             {
-                world.CurrentMap.ControlledEntitiy.AddComponent(new TestComponent());
+                world.CurrentMap.ControlledEntitiy.AddComponents(new TestComponent());
                 return false;
             }
 
@@ -356,20 +356,20 @@ namespace Diviner
                 && info.IsKeyPressed(Keys.O) && targetCursor is not null)
             {
                 var (_, actor) = ActionManager.CreateTestEntity(targetCursor.Cursor.Position, world);
-                actor.AddComponent(new MoveAndAttackAI(actor.GetViewRadius()));
+                actor.AddComponents(new MoveAndAttackAI(actor.GetViewRadius()));
                 return false;
             }
 
             if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.O) && targetCursor is not null)
             {
                 var (_, entity) = ActionManager.CreateTestEntity(targetCursor.Cursor.Position, world);
-                entity.AddComponent(new BasicAi(entity));
+                entity.AddComponents(new BasicAi(entity));
                 return false;
             }
             if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.P) && targetCursor.EntityInTarget())
             {
                 Actor actor = (Actor)targetCursor.TargetEntity();
-                actor.AddComponent(new MoveAndAttackAI(actor.GetViewRadius()));
+                actor.AddComponents(new MoveAndAttackAI(actor.GetViewRadius()));
                 Locator.GetService<MessageBusService>()
                     .SendMessage<AddMessageLog>(new($"Added attack component to {actor.Name}!"));
                 return false;
@@ -381,7 +381,7 @@ namespace Diviner
                 && targetCursor.EntityInTarget())
             {
                 Actor? actor = (Actor?)targetCursor.TargetEntity();
-                actor?.AddComponent(new NeedDrivenAi());
+                actor?.AddComponents(new NeedDrivenAi());
                 Locator.GetService<MessageBusService>()
                     .SendMessage<AddMessageLog>(new($"Added need component to {actor.Name}!"));
                 return false;
