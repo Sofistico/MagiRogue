@@ -18,7 +18,7 @@ namespace MagiRogue.Test.Entities
             string expectedName = PhysicsManager.SetMaterial("wood").ReturnNameFromMaterial(name);
 
             Item item = new(Color.Red, Color.Transparent, name, 'T', Point.None, 100, materialId: "wood");
-              
+
             string serialized = JsonConvert.SerializeObject(item);
             Item deserialized = JsonConvert.DeserializeObject<Item>(serialized);
 
@@ -30,7 +30,10 @@ namespace MagiRogue.Test.Entities
         {
             const string name = "Actor Serialization Test";
 
-            ActorTemplate actor = new ActorTemplate(new Actor(name, Color.White, Color.Black, '@', Point.None));
+            ActorTemplate actor = new ActorTemplate(EntityFactory.ActorCreator(Point.None,
+                "test_race",
+                Sex.None,
+                AgeGroup.Adult));
             string serialized = JsonConvert.SerializeObject(actor);
             Actor deserialized = JsonConvert.DeserializeObject<Actor>(serialized);
 

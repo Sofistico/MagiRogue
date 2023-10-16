@@ -13,7 +13,7 @@ namespace MagusEngine.Serialization.EntitySerialization
 {
     public class ActorJsonConverter : JsonConverter<Actor>
     {
-        public override void WriteJson(JsonWriter writer, Actor value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, Actor? value, JsonSerializer serializer)
         {
             ActorTemplate actor = (ActorTemplate)value;
             serializer.NullValueHandling = NullValueHandling.Ignore;
@@ -21,12 +21,15 @@ namespace MagusEngine.Serialization.EntitySerialization
             serializer.Serialize(writer, actor);
         }
 
-        public override Actor ReadJson(JsonReader reader,
+        public override Actor? ReadJson(JsonReader reader,
             Type objectType,
-            Actor existingValue,
+            Actor? existingValue,
             bool hasExistingValue,
             JsonSerializer serializer)
-            => serializer.Deserialize<ActorTemplate>(reader);
+        {
+            serializer.TypeNameHandling = TypeNameHandling.Auto;
+            return serializer.Deserialize<ActorTemplate>(reader)!;
+        }
     }
 
     [Serializable]

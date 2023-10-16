@@ -44,6 +44,7 @@ namespace MagusEngine.Core.Entities.Base
 
         public bool NeedsHeal => Wounds.Count > 0;
 
+        [JsonIgnore]
         public List<BodyPart> Insides { get; set; }
 
         public string? Category { get; set; }

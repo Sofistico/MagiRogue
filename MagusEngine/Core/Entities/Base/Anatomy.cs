@@ -36,6 +36,7 @@ namespace MagusEngine.Core.Entities.Base
         [DataMember]
         public List<Organ> Organs { get; set; }
 
+        [JsonIgnore]
         public List<BodyPart> AllBPs
         {
             get
