@@ -33,7 +33,8 @@ namespace MagiRogue.Test.Entities
             ActorTemplate actor = new ActorTemplate(EntityFactory.ActorCreator(Point.None,
                 "test_race",
                 Sex.None,
-                AgeGroup.Adult));
+                AgeGroup.Adult,
+                name));
             string serialized = JsonConvert.SerializeObject(actor);
             Actor deserialized = JsonConvert.DeserializeObject<Actor>(serialized);
 

@@ -26,6 +26,7 @@ namespace MagusEngine.Factory
         {
             var actor = ActorCreator(pos,
                 figure.GetRaceId(),
+                figure.Name,
                 figure.Body.GetCurrentAge(),
                 figure.Body.Anatomy.Gender);
             actor.HistoryId = figure.Id;
@@ -54,13 +55,13 @@ namespace MagusEngine.Factory
             return actor;
         }
 
-        public static Actor ActorCreator(Point position, string raceId, Sex sex, AgeGroup age)
+        public static Actor ActorCreator(Point position, string raceId, Sex sex, AgeGroup age, string? name = null)
         {
             Race race = DataManager.QueryRaceInData(raceId);
             int glyph = GlyphHelper.GlyphExistInDictionary(race.RaceGlyph) ?
                 GlyphHelper.GetGlyph(race.RaceGlyph) : race.RaceGlyph;
 
-            Actor actor = new Actor(race.RaceName,
+            Actor actor = new Actor(name.IsNullOrEmpty() ? race.RaceName : name,
                 race.ReturnForegroundColor(),
                 race.ReturnBackgroundColor(),
                 glyph,
@@ -74,13 +75,13 @@ namespace MagusEngine.Factory
             return actor;
         }
 
-        public static Actor ActorCreator(Point position, string raceId, int actorAge, Sex sex)
+        public static Actor ActorCreator(Point position, string raceId, int actorAge, Sex sex, string? name = null)
         {
             Race race = DataManager.QueryRaceInData(raceId);
             int glyph = GlyphHelper.GlyphExistInDictionary(race.RaceGlyph) ?
                 GlyphHelper.GetGlyph(race.RaceGlyph) : race.RaceGlyph;
 
-            Actor actor = new Actor(race.RaceName,
+            Actor actor = new(name.IsNullOrEmpty() ? race.RaceName : name,
                 race.ReturnForegroundColor(),
                 race.ReturnBackgroundColor(),
                 glyph,
