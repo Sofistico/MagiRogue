@@ -285,6 +285,8 @@ namespace MagusEngine.Core.Entities.Base
         {
             foreach (object component in components)
             {
+                if (component is null)
+                    continue;
                 backingField.GoRogueComponents.Add(component);
                 //Locator.GetService<MessageBusService>().SendMessage(component);
             }
