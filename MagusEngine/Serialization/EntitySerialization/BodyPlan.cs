@@ -55,7 +55,7 @@ namespace MagusEngine.Serialization.EntitySerialization
                 {
                     var tissueGroup = DataManager.QueryTissuePlanInData(tissues[i]);
                     tissueGroup.Tissues?.ForEach(i => raceTissue.TryAdd(i.Id, i));
-                    if (tissueGroup.TissueLayering is not null)
+                    if (tissueGroup.TissueLayering is not null && tissueGroup.TissueLayering.Count > 0)
                         raceTissueLayering.AddRange(tissueGroup.TissueLayering);
                 }
             }

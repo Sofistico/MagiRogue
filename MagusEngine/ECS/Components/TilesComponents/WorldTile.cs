@@ -53,7 +53,7 @@ namespace MagusEngine.ECS.Components.TilesComponents
         /// </summary>
         public string? RegionName { get; internal set; }
         public object? Parent { get; set; }
-        public Tile? ParentTile => (Tile?)Parent;
+        public Tile? ParentTile =>(Tile?)Parent;
 
         public Point Position
         {

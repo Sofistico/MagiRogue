@@ -94,7 +94,7 @@ namespace MagusEngine.Core.MapStuff
         {
             GoRogueComponents.Add(value, tag);
             Locator.GetService<MessageBusService>()
-                .SendMessage<ComponentAddedCommand<T>>(new(ID, value));
+                ?.SendMessage<ComponentAddedCommand<T>>(new(ID, value));
         }
 
         public MaterialTemplate? GetMaterial()

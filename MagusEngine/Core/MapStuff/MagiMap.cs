@@ -570,8 +570,8 @@ namespace MagusEngine.Core.MapStuff
 
         private void FindOtherPlaceForRoom(Room r)
         {
-            int newRoomX = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(1, Width - r.RoomRectangle.Width);
-            int newRoomY = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(1, Height - r.RoomRectangle.Height);
+            int newRoomX = GlobalRandom.DefaultRNG.NextInt(1, Width - r.RoomRectangle.Width);
+            int newRoomY = GlobalRandom.DefaultRNG.NextInt(1, Height - r.RoomRectangle.Height);
 
             r.ChangeRoomPos(newRoomX, newRoomY);
             if (!CheckIfRoomFitsInsideMap(r))
