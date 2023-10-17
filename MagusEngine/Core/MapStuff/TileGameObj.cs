@@ -1,6 +1,7 @@
 ﻿using GoRogue.Components;
 using GoRogue.Components.ParentAware;
 using GoRogue.GameFramework;
+using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System;
 
@@ -10,6 +11,7 @@ namespace MagusEngine.Core.MapStuff
     {
         private readonly GameObject _gameObject;
 
+        [JsonIgnore]
         public GoRogue.GameFramework.Map? CurrentMap => ((IGameObject)_gameObject).CurrentMap;
 
         public bool IsTransparent { get => ((IGameObject)_gameObject).IsTransparent; set => ((IGameObject)_gameObject).IsTransparent = value; }

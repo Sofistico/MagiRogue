@@ -314,8 +314,6 @@ namespace MagusEngine.Serialization.MapConverter
 
         public static implicit operator MapTemplate(MagiMap map)
         {
-            if (map is not null)
-                return null;
             var tiles = new Tile[map.Terrain.Count];
             for (int i = 0; i < map.Terrain.Count; i++)
             {

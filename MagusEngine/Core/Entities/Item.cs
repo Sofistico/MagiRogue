@@ -123,7 +123,7 @@ namespace MagusEngine.Core.Entities
 
             if (EquipType == EquipType.None)
             {
-                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("This item can't be equiped!"));
+                Locator.GetService<MessageBusService>()?.SendMessage<AddMessageLog>(new("This item can't be equiped!"));
                 return false;
             }
 
@@ -136,11 +136,11 @@ namespace MagusEngine.Core.Entities
 
             if (EquipType == EquipType.Hand)
             {
-                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{actor.Name} wields {Name}"));
+                Locator.GetService<MessageBusService>()?.SendMessage<AddMessageLog>(new($"{actor.Name} wields {Name}"));
             }
             else
             {
-                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{actor.Name} equipped {Name} in {EquipType}"));
+                Locator.GetService<MessageBusService>()?.SendMessage<AddMessageLog>(new($"{actor.Name} equipped {Name} in {EquipType}"));
             }
 
             return true;

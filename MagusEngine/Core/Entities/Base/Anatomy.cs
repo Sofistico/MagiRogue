@@ -157,7 +157,8 @@ namespace MagusEngine.Core.Entities.Base
         {
             get
             {
-                if (Race.Attacks.Count < 1) return false;
+                if (Race is null) return false;
+                if (Race?.Attacks?.Count < 1) return false;
                 return Race.Attacks.Any(i => Limbs.Any(z => z.BodyPartFunction == i?.LimbFunction));
             }
         }
