@@ -1,5 +1,4 @@
 ﻿using Arquimedes.Enumerators;
-using MagusEngine.Core;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.Factory;
@@ -85,8 +84,10 @@ namespace MagiRogue.Test.System
             {
                 map.SetTerrain(new Tile(Color.Beige, Color.Beige, '.', true, true, Point.FromIndex(i, map.Width)));
             }
-            ActorTemplate actor = new Actor("Test", Color.Black, Color.Black, '@', new Point(0, 0));
-            actor.Description = "Test Desc";
+            ActorTemplate actor = new Actor("Test", Color.Black, Color.Black, '@', new Point(0, 0))
+            {
+                Description = "Test Desc"
+            };
             ItemTemplate item = new Item(Color.Black, Color.Black,
                 "Test Item", '@', Point.None, 100)
             {
