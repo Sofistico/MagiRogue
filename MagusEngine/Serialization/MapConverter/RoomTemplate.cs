@@ -32,7 +32,6 @@ namespace MagusEngine.Serialization.MapConverter
     public class PrefabRoom
     {
         public RoomTag Tag { get; set; }
-        public bool InsideAnotherRoom { get; set; }
         public string[] Rows { get; set; }
         public Dictionary<string, object> Terrain { get; set; }
         public Dictionary<string, object> Furniture { get; set; }

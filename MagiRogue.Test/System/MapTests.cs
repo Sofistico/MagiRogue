@@ -25,7 +25,7 @@ namespace MagiRogue.Test.System
         public void MapTest()
         {
             Assert.True(map.Terrain.Count == 20 * 20);
-            Actor actor = new Actor("Test", Color.Black, Color.Black, '3', new Point(1, 1));
+            Actor actor = new("Test", Color.Black, Color.Black, '3', new Point(1, 1));
             map.AddMagiEntity(actor);
             Assert.True(map.Entities.Contains(actor));
         }
@@ -41,19 +41,11 @@ namespace MagiRogue.Test.System
             Assert.True(actor.CurrentMap.Equals(newMap));
         }
 
-        /*[Fact]
-        public void CheckIfCanGoBeyondBoundsEntity()
-        {
-            var actor = new Actor("Name", Color.Black, Color.Black, '@', new Point(21, 21));
-            Action testCode = delegate () { map.Add(actor); };
-            Assert.Throws<NullReferenceException>(testCode);
-        }*/
-
         [Fact]
         public void MapSerialization()
         {
             map.SetTerrain(new Tile(Color.Beige, Color.Beige, '.', true, true, new Point(0, 0)));
-            Actor actor = new Actor("Test", Color.Black, Color.Black, '@', new Point(0, 0));
+            Actor actor = new("Test", Color.Black, Color.Black, '@', new Point(0, 0));
             map.AddMagiEntity(actor);
             var json = JsonConvert.SerializeObject((MapTemplate)map);
 

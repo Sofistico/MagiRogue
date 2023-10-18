@@ -4,6 +4,7 @@ using MagusEngine.Core.Entities.Base;
 using MagusEngine.Services;
 using MagusEngine.Systems;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -31,7 +32,7 @@ namespace MagusEngine.Serialization.EntitySerialization
 
     public class BodyPlan
     {
-        private readonly Dictionary<string, Tissue> raceTissue = new();
+        private readonly ConcurrentDictionary<string, Tissue> raceTissue = new();
         private readonly List<TissueLayeringTemplate> raceTissueLayering = new();
 
         public string? Id { get; set; }
@@ -54,9 +55,9 @@ namespace MagusEngine.Serialization.EntitySerialization
                 for (int i = 0; i < tissues.Length; i++)
                 {
                     var tissueGroup = DataManager.QueryTissuePlanInData(tissues[i]);
-                    tissueGroup.Tissues?.ForEach(i => raceTissue.TryAdd(i.Id, i));
-                    if (tissueGroup.TissueLayering is not null && tissueGroup.TissueLayering.Count > 0)
-                        raceTissueLayering.AddRange(tissueGroup.TissueLayering);
+                    tissueGroup?.Tissues?.ForEach(i => raceTissue?.TryAdd(i.Id, i));
+                    if (tissueGroup?.TissueLayering?.Count > 0)
+                        raceTissueLayering?.AddRange(tissueGroup?.TissueLayering);
                 }
             }
 
@@ -75,7 +76,7 @@ namespace MagusEngine.Serialization.EntitySerialization
                 if (limb is null && organ is null)
                     throw new ApplicationException($"Coudn't find a valid body part! bodypart id: {bp}");
 
-                if (raceTissueLayering.Count > 0 && raceTissue.Count > 0)
+                if (raceTissueLayering.Count > 0 && !raceTissue.IsEmpty)
                 {
                     SetBodyPartTissueLayering((BodyPart?)limb ?? organ!);
                 }

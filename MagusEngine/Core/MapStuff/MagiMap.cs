@@ -149,7 +149,7 @@ namespace MagusEngine.Core.MapStuff
 
         public void SetSeed(ulong seed, uint x, uint y, uint i)
         {
-            Seed = seed + x + y + x * x + y * y + x * y - (x + y + i);
+            Seed = seed + x + y + (x * x) + (y * y) + (x * y) - (x + y + i);
         }
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace MagusEngine.Core.MapStuff
                 return false;
 
             // then return whether the tile is walkable
-            return Terrain[location.Y * Width + location.X]?.IsWalkable == true;
+            return Terrain[(location.Y * Width) + location.X]?.IsWalkable == true;
         }
 
         /// <summary>
@@ -466,7 +466,7 @@ namespace MagusEngine.Core.MapStuff
         public Point GetRandomWalkableTile()
         {
             var rng = GoRogue.Random.GlobalRandom.DefaultRNG;
-            Point rngPoint = new Point(rng.NextInt(Width - 1), rng.NextInt(Height - 1));
+            Point rngPoint = new(rng.NextInt(Width - 1), rng.NextInt(Height - 1));
 
             while (!IsTileWalkable(rngPoint))
                 rngPoint = new Point(rng.NextInt(Width - 1), rng.NextInt(Height - 1));
@@ -505,7 +505,7 @@ namespace MagusEngine.Core.MapStuff
         public FastAStar AStarWithAllWalkable()
         {
             int count = Terrain.Count;
-            ArrayView<bool> mapView = new ArrayView<bool>(Width, Height);
+            ArrayView<bool> mapView = new(Width, Height);
             for (int i = 0; i < count; i++)
             {
                 mapView[i] = true;
@@ -521,7 +521,7 @@ namespace MagusEngine.Core.MapStuff
 
         public List<Tile> ReturnAllTrees()
         {
-            List<Tile> result = new List<Tile>();
+            List<Tile> result = new();
             foreach (Point p in Terrain.Positions())
             {
                 var tree = (Tile?)Terrain[p];
@@ -538,10 +538,11 @@ namespace MagusEngine.Core.MapStuff
         /// Adds the room to the map.
         /// </summary>
         /// <param name="r"></param>
-        public void AddRoom(Room r, bool insideAnotherRoom = false)
+        public void AddRoom(Room r)
         {
             Rooms ??= new List<Room>();
-            if (!CheckIfRoomFitsInsideMap(r) || !insideAnotherRoom)
+            int tries = 1000;
+            while (!CheckIfRoomFitsInsideMap(r) && --tries != 0)
             {
                 try
                 {
@@ -558,30 +559,24 @@ namespace MagusEngine.Core.MapStuff
         public Room AddRoom(RoomTemplate template, Point pointBegin)
         {
             var r = template.ConfigureRoom(pointBegin);
-            AddRoom(r, template.Obj.InsideAnotherRoom);
+            AddRoom(r);
             SpawnRoomThingsOnMap(r);
             return r;
         }
 
         public bool CheckIfRoomFitsInsideMap(Room r)
         {
+            if (r.RoomPoints.Any(CheckForIndexOutOfBounds))
+                return false;
             return r.RoomRectangle.Position.X <= Width || r.RoomRectangle.Position.Y <= Height;
         }
 
         private void FindOtherPlaceForRoom(Room r)
         {
-            int newRoomX = GlobalRandom.DefaultRNG.NextInt(1, Width - r.RoomRectangle.Width);
-            int newRoomY = GlobalRandom.DefaultRNG.NextInt(1, Height - r.RoomRectangle.Height);
+            int newRoomX = GlobalRandom.DefaultRNG.NextInt(0, Width - r.RoomRectangle.Width);
+            int newRoomY = GlobalRandom.DefaultRNG.NextInt(0, Height - r.RoomRectangle.Height);
 
             r.ChangeRoomPos(newRoomX, newRoomY);
-            if (!CheckIfRoomFitsInsideMap(r))
-            {
-                throw new ApplicationException("Tried to place a room inside a map that cound't fit it!");
-            }
-            if (r.RoomPoints.Any(CheckForIndexOutOfBounds))
-            {
-                throw new ApplicationException("Tried to place a room inside a map that cound't fit it!");
-            }
         }
 
         /// <summary>
@@ -821,76 +816,12 @@ namespace MagusEngine.Core.MapStuff
                 }
             }
 
-            /*switch (whatToEat)
-            {
-                case Food.Carnivore:
-                    var meat = entity.Position.GetClosest(defaultSearchRange, GetAllMeatsEvenAlive(), entity);
-                    if (meat is not null)
-                    {
-                        return meat;
-                    }
-                    break;
-
-                case Food.Herbivore:
-                    var plant = entity.Position.GetClosest(defaultSearchRange, GetAllPlantsEvenItem(), entity);
-                    if (plant is not null)
-                    {
-                        return plant;
-                    }
-                    break;
-
-                case Food.Omnivere:
-                    // well if it works...
-                    var objList = new List<IGameObject>();
-                    var meatO = entity.Position.GetClosest(defaultSearchRange, GetAllMeatsEvenAlive(), entity);
-                    if (meatO is not null)
-                    {
-                        objList.Add(meatO);
-                    }
-                    var plantO = entity.Position.GetClosest(defaultSearchRange, GetAllPlantsEvenItem(), entity);
-                    if (plantO is not null)
-                    {
-                        objList.Add(plantO);
-                    }
-                    return objList.GetRandomItemFromList();
-
-                default:
-                    return null;
-            }*/
             return null;
         }
 
-        /*private List<MagiEntity> GetAllMeatsEvenAlive()
-        {
-            var meats = Entities.GetLayersInMask(LayerMasker.Mask((int)MapLayer.ACTORS, (int)MapLayer.ITEMS))
-                .Select(i => i.Items);
-            var list = new List<MagiEntity>();
-            foreach (var item in meats)
-            {
-                foreach (var meat in item)
-                {
-                    if (meat is Item deadMeat && deadMeat.Material.Type == MaterialType.Meat)
-                    {
-                        list.Add(deadMeat);
-                        continue;
-                    }
-                    list.Add((MagiEntity)meat);
-                }
-            }
-
-            return list;
-        }
-
-        private IGameObject[] GetAllPlantsEvenItem()
-        {
-            var layer = Entities.GetLayer((int)MapLayer.ITEMS).Where(i => i.Item is Item item && (item.ItemType == ItemType.PlantFood)).Select(i => i.Item).ToList();
-            layer.AddRange(Entities.GetLayer((int)MapLayer.VEGETATION).Select(i => i.Item));
-            return layer.ToArray();
-        }*/
-
         public Tile[] GetAllTilesWithComponents<TFind>() where TFind : class
         {
-            List<Tile> tiles = new List<Tile>();
+            List<Tile> tiles = new();
             foreach (var item in Terrain.Positions())
             {
                 var tile = (Tile?)Terrain[item];
