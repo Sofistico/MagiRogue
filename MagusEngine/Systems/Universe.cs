@@ -132,7 +132,7 @@ namespace MagusEngine.Systems
             Time = time;
             PossibleChangeMap = possibleChangeMap;
             CurrentSeason = currentSeason;
-            Locator.GetService<MessageBusService>().RegisterAllSubscriber(this);
+           Locator.GetService<MessageBusService>()?.RegisterAllSubscriber(this);
         }
 
         private void PlacePlayerOnWorld(Player player)

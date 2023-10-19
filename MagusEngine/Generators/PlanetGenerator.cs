@@ -1,6 +1,5 @@
 ﻿using Arquimedes.Enumerators;
 using GoRogue.DiceNotation;
-using MagusEngine.Core;
 using MagusEngine.Core.Civ;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.Core.WorldStuff;
@@ -255,8 +254,10 @@ namespace MagusEngine.Generators
                 for (int y = 0; y < _height; y++)
                 {
                     WorldTile worldTile = new();
-                    Tile parentTile = new();
-                    parentTile.Position = new Point(x, y);
+                    Tile parentTile = new()
+                    {
+                        Position = new Point(x, y)
+                    };
 
                     float heightValue = HeightData[x, y];
                     worldTile.MineralValue = MathMagi.ReturnPositive(MathMagi.Round

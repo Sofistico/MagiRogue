@@ -1,6 +1,5 @@
 ﻿using Arquimedes;
 using Arquimedes.Enumerators;
-using MagusEngine.Core;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.Generators;
@@ -15,7 +14,7 @@ namespace MagiRogue.Test.System
 {
     public class UniverseTests
     {
-        private Universe uni;
+        private readonly Universe uni;
 
         public UniverseTests()
         {
@@ -97,7 +96,6 @@ namespace MagiRogue.Test.System
                     20,
                     3);
 
-            
             //uni.AllChunks[i] = chunk;
             uni.CurrentChunk = uni.GenerateChunck(new Point(0, 0));
 
