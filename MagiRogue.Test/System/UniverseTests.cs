@@ -9,6 +9,7 @@ using MagusEngine.Systems;
 using MagusEngine.Systems.Time;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
+using System;
 using Xunit;
 
 namespace MagiRogue.Test.System

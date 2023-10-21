@@ -1,6 +1,5 @@
 ﻿using Arquimedes.Enumerators;
 using GoRogue.Components;
-using GoRogue.GameFramework;
 using MagusEngine.Bus.ComponentBus;
 using MagusEngine.ECS.Components;
 using MagusEngine.Serialization;
@@ -11,7 +10,7 @@ using System.Collections.Generic;
 
 namespace MagusEngine.Core.MapStuff
 {
-    public class Tile : GameObject
+    public class Tile : MagiGameObject
     {
         public ColoredGlyph Appearence { get; set; }
         public ColoredGlyph? LastSeenAppereance { get; set; }

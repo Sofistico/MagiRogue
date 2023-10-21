@@ -4,7 +4,6 @@ using MagusEngine.Core.Civ;
 using MagusEngine.Core.WorldStuff.TechRes;
 using MagusEngine.Systems;
 using MagusEngine.Utils.Extensions;
-using System;
 using System.Linq;
 
 namespace MagusEngine.Core.WorldStuff.History.HistoryActions
@@ -91,6 +90,8 @@ namespace MagusEngine.Core.WorldStuff.History.HistoryActions
         private void PerformDivineInsurrection()
         {
             Civilization civ = Find.Civs.GetRandomItemFromList();
+            if (civ is null)
+                return;
             (Noble ruler, HistoricalFigure noKingAnymore) = civ.GetRulerNoblePosition();
             if (noKingAnymore is not null)
             {
