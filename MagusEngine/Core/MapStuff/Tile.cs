@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 namespace MagusEngine.Core.MapStuff
 {
-    public partial class Tile : IGameObject
+    public class Tile : GameObject
     {
         public ColoredGlyph Appearence { get; set; }
         public ColoredGlyph? LastSeenAppereance { get; set; }
@@ -22,7 +22,6 @@ namespace MagusEngine.Core.MapStuff
 
         public Tile() : this(Color.BlueViolet, Color.Wheat, '@', true, true, Point.None)
         {
-            LastSeenAppereance = (ColoredGlyph)Appearence.Clone();
         }
 
         public Tile(Color foreground,
@@ -30,15 +29,12 @@ namespace MagusEngine.Core.MapStuff
             char glyph,
             bool isWalkable,
             bool isTransparent,
-            Point pos)
+            Point pos) : base(pos,
+                (int)MapLayer.TERRAIN,
+                isWalkable, isTransparent,
+                Locator.GetService<IDGenerator>() is not null ? Locator.GetService<IDGenerator>().UseID : null)
         {
             Appearence = new ColoredGlyph(foreground, background, glyph);
-            var gen = Locator.GetService<IDGenerator>();
-            _gameObject = new((int)MapLayer.TERRAIN,
-                isWalkable,
-                isTransparent,
-                gen is not null ? gen.UseID : null);
-            Position = pos;
             LastSeenAppereance = (ColoredGlyph)Appearence.Clone();
         }
 
