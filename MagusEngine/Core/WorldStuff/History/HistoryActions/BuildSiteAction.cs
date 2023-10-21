@@ -63,7 +63,7 @@ namespace MagusEngine.Core.WorldStuff.History.HistoryActions
             while (goodLocation)
             {
                 rngTile = Find.Tiles.Transform2DTo1D().GetRandomItemFromList();
-                goodLocation = rngTile.ParentTile.GetComponent<SiteTile>().SiteInfluence is null && !rngTile.Collidable;
+                goodLocation = rngTile.Parent.GetComponent<SiteTile>().SiteInfluence is null && !rngTile.Collidable;
             }
 
             Site site = new Site(rngTile.Position, $"Tower of {figure.Name}",
@@ -85,7 +85,7 @@ namespace MagusEngine.Core.WorldStuff.History.HistoryActions
         private static void OnNewSiteCreated(WorldTile rngTile, Site site, HistoricalFigure figure,
             string whyFigure = "", string whySite = "")
         {
-            rngTile.ParentTile.AddComponent<SiteTile>(new(site));
+            rngTile.Parent.AddComponent<SiteTile>(new(site));
             Find.Sites.Add(site);
             if (!string.IsNullOrEmpty(whyFigure))
                 figure.AddLegend(whyFigure, Find.Year);

@@ -54,7 +54,7 @@ namespace MagusEngine.Core.MapStuff
             {
                 for (int y = 0; y < _height; y++)
                 {
-                    AssocietatedMap.SetTerrain(tiles[x, y].ParentTile);
+                    AssocietatedMap.SetTerrain(tiles[x, y].Parent);
                 }
             }
         }

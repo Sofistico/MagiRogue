@@ -1,5 +1,6 @@
 ﻿using Arquimedes;
 using Arquimedes.Enumerators;
+using MagusEngine;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.Generators;
@@ -23,6 +24,7 @@ namespace MagiRogue.Test.System
             uni = new(new PlanetMap(50, 50), null, null,
                 new TimeSystem(10), true,
                 SeasonType.Spring, chunck);
+            Locator.InitializeSingletonServices();
             PrepareForChunkTest();
         }
 

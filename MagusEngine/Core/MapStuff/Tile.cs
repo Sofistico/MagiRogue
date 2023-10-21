@@ -1,4 +1,5 @@
 ﻿using Arquimedes.Enumerators;
+using GoRogue.Components;
 using GoRogue.GameFramework;
 using MagusEngine.Bus.ComponentBus;
 using MagusEngine.ECS.Components;
@@ -6,7 +7,6 @@ using MagusEngine.Serialization;
 using MagusEngine.Services;
 using SadConsole;
 using SadRogue.Primitives;
-using System;
 using System.Collections.Generic;
 
 namespace MagusEngine.Core.MapStuff
@@ -29,10 +29,12 @@ namespace MagusEngine.Core.MapStuff
             char glyph,
             bool isWalkable,
             bool isTransparent,
-            Point pos) : base(pos,
+            Point pos,
+            IComponentCollection collection = null) : base(pos,
                 (int)MapLayer.TERRAIN,
                 isWalkable, isTransparent,
-                Locator.GetService<IDGenerator>() is not null ? Locator.GetService<IDGenerator>().UseID : null)
+                Locator.GetService<IDGenerator>() is not null ? Locator.GetService<IDGenerator>().UseID : null,
+                collection)
         {
             Appearence = new ColoredGlyph(foreground, background, glyph);
             LastSeenAppereance = (ColoredGlyph)Appearence.Clone();
@@ -53,7 +55,22 @@ namespace MagusEngine.Core.MapStuff
             AddComponent<MaterialComponent>(new(idMaterial));
         }
 
-        public T? GetComponent<T>(string? tag = null) where T : class => GoRogueComponents.GetFirst<T>(tag);
+        private Tile(Tile tile)
+            : this(tile.Appearence.Foreground,
+                tile.Appearence.Background,
+                tile.Appearence.GlyphCharacter,
+                tile.IsWalkable,
+                tile.IsTransparent,
+                tile.Position,
+                tile.GoRogueComponents)
+        {
+            Traits = tile.Traits;
+            Name = tile.Name;
+            MoveTimeCost = tile.MoveTimeCost;
+        }
+
+        public T? GetComponent<T>(string? tag = null) where T : class
+            => GoRogueComponents.GetFirst<T>(tag);
 
         public bool GetComponent<T>(out T? comp, string? tag = null) where T : class
         {
@@ -78,12 +95,15 @@ namespace MagusEngine.Core.MapStuff
 
         public Tile Copy()
         {
-            throw new NotImplementedException();
+            return new Tile(this);
         }
 
         public Tile Copy(Point pos)
         {
-            throw new NotImplementedException();
+            var tile = Copy();
+            tile.Position = pos;
+
+            return tile;
         }
 
         public void AddComponent<T>(T value, string? tag = null) where T : class

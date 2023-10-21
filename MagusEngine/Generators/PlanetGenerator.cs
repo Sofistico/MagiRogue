@@ -182,14 +182,14 @@ namespace MagusEngine.Generators
                 int x = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, _width);
                 int y = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, _height);
                 WorldTile tile = tiles[x, y];
-                Tile parentTile = tile.ParentTile!;
+                Tile Parent = tile.Parent!;
 
                 if (tile.HeightType == HeightType.DeepWater
                     || tile.HeightType == HeightType.ShallowWater
                     || tile.HeightType == HeightType.River)
                     continue;
 
-                if (parentTile.GetComponent<SiteTile>(out var site))
+                if (Parent.GetComponent<SiteTile>(out var site))
                     continue;
 
                 var possibleCivs = DataManager.QueryCultureTemplateFromBiome(tile.BiomeType.ToString());
@@ -202,7 +202,7 @@ namespace MagusEngine.Generators
                 int rng = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(25, 50);
 
                 int popNmr = (int)(rng * ((int)tile.HeightType * tile.MoistureValue + 1));
-                Site set = new Site(parentTile.Position, civ.RandomSiteFromLanguageName(), new Population(popNmr, civ.PrimaryRace.Id))
+                Site set = new Site(Parent.Position, civ.RandomSiteFromLanguageName(), new Population(popNmr, civ.PrimaryRace.Id))
                 {
                     MundaneResources = (int)tile.GetResources()
                 };
@@ -210,7 +210,7 @@ namespace MagusEngine.Generators
                 set.Buildings.Add(new Building(room));
                 set.DefineSiteSize();
 
-                parentTile.AddComponent<SiteTile>(new(set));
+                Parent.AddComponent<SiteTile>(new(set));
                 civ.AddSiteToCiv(set);
                 if (civ.Territory.Count == 0)
                     throw new Exception();
@@ -254,7 +254,7 @@ namespace MagusEngine.Generators
                 for (int y = 0; y < _height; y++)
                 {
                     WorldTile worldTile = new();
-                    Tile parentTile = new()
+                    Tile Parent = new()
                     {
                         Position = new Point(x, y)
                     };
@@ -324,23 +324,23 @@ namespace MagusEngine.Generators
                     //adjust moisture based on height
                     if (worldTile.HeightType == HeightType.DeepWater)
                     {
-                        MoistureData[parentTile.Position.X, parentTile.Position.Y] += 8f * worldTile.HeightValue;
+                        MoistureData[Parent.Position.X, Parent.Position.Y] += 8f * worldTile.HeightValue;
                     }
                     else if (worldTile.HeightType == HeightType.ShallowWater)
                     {
-                        MoistureData[parentTile.Position.X, parentTile.Position.Y] += 3f * worldTile.HeightValue;
+                        MoistureData[Parent.Position.X, Parent.Position.Y] += 3f * worldTile.HeightValue;
                     }
                     else if (worldTile.HeightType == HeightType.Shore)
                     {
-                        MoistureData[parentTile.Position.X, parentTile.Position.Y] += 1f * worldTile.HeightValue;
+                        MoistureData[Parent.Position.X, Parent.Position.Y] += 1f * worldTile.HeightValue;
                     }
                     else if (worldTile.HeightType == HeightType.Sand)
                     {
-                        MoistureData[parentTile.Position.X, parentTile.Position.Y] += 0.25f * worldTile.HeightValue;
+                        MoistureData[Parent.Position.X, Parent.Position.Y] += 0.25f * worldTile.HeightValue;
                     }
                     else if (worldTile.HeightType == HeightType.Snow)
                     {
-                        MoistureData[parentTile.Position.X, parentTile.Position.Y] += 2f * worldTile.HeightValue;
+                        MoistureData[Parent.Position.X, Parent.Position.Y] += 2f * worldTile.HeightValue;
                     }
 
                     //set moisture type
@@ -353,27 +353,27 @@ namespace MagusEngine.Generators
 
                     if (worldTile.HeightType == HeightType.Forest)
                     {
-                        HeatData[parentTile.Position.X, parentTile.Position.Y] -= 0.1f * worldTile.HeightValue;
+                        HeatData[Parent.Position.X, Parent.Position.Y] -= 0.1f * worldTile.HeightValue;
                     }
                     else if (worldTile.HeightType == HeightType.Mountain)
                     {
-                        HeatData[parentTile.Position.X, parentTile.Position.Y] -= 0.25f * worldTile.HeightValue;
+                        HeatData[Parent.Position.X, Parent.Position.Y] -= 0.25f * worldTile.HeightValue;
                     }
                     else if (worldTile.HeightType == HeightType.HighMountain)
                     {
-                        HeatData[parentTile.Position.X, parentTile.Position.Y] -= 0.5f * worldTile.HeightValue;
+                        HeatData[Parent.Position.X, Parent.Position.Y] -= 0.5f * worldTile.HeightValue;
                     }
                     else if (worldTile.HeightType == HeightType.Snow)
                     {
-                        HeatData[parentTile.Position.X, parentTile.Position.Y] -= 0.7f * worldTile.HeightValue;
+                        HeatData[Parent.Position.X, Parent.Position.Y] -= 0.7f * worldTile.HeightValue;
                     }
                     else
                     {
-                        HeatData[parentTile.Position.X, parentTile.Position.Y] += 0.01f * worldTile.HeightValue;
+                        HeatData[Parent.Position.X, Parent.Position.Y] += 0.01f * worldTile.HeightValue;
                     }
 
                     // Set heat value
-                    float heatModValue = MathMagi.ReturnPositive(HeatData[parentTile.Position.X, parentTile.Position.Y]);
+                    float heatModValue = MathMagi.ReturnPositive(HeatData[Parent.Position.X, Parent.Position.Y]);
                     worldTile.HeatValue = heatModValue;
 
                     // set heat type
@@ -389,7 +389,7 @@ namespace MagusEngine.Generators
                     if (worldTile.MagicalAuraStrength >= 10)
                         worldTile.SpecialLandType = SpecialLandType.MagicLand;
 
-                    parentTile.AddComponent(worldTile);
+                    Parent.AddComponent(worldTile);
                     tiles[x, y] = worldTile;
                 }
             }
@@ -474,42 +474,42 @@ namespace MagusEngine.Generators
         // need to get the mod so that it doesn't pick up a tile outside of the map.
         private WorldTile GetTop(WorldTile center)
         {
-            return tiles[center.ParentTile.Position.X, MathMagi.Mod(center.ParentTile.Position.Y - 1, _height)];
+            return tiles[center.Parent.Position.X, MathMagi.Mod(center.Parent.Position.Y - 1, _height)];
         }
 
         private WorldTile GetBottom(WorldTile t)
         {
-            return tiles[t.ParentTile.Position.X, MathMagi.Mod(t.ParentTile.Position.Y + 1, _height)];
+            return tiles[t.Parent.Position.X, MathMagi.Mod(t.Parent.Position.Y + 1, _height)];
         }
 
         private WorldTile GetLeft(WorldTile t)
         {
-            return tiles[MathMagi.Mod(t.ParentTile.Position.X - 1, _width), t.ParentTile.Position.Y];
+            return tiles[MathMagi.Mod(t.Parent.Position.X - 1, _width), t.Parent.Position.Y];
         }
 
         private WorldTile GetRight(WorldTile t)
         {
-            return tiles[MathMagi.Mod(t.ParentTile.Position.X + 1, _width), t.ParentTile.Position.Y];
+            return tiles[MathMagi.Mod(t.Parent.Position.X + 1, _width), t.Parent.Position.Y];
         }
 
         private WorldTile GetTopRight(WorldTile t)
         {
-            return tiles[MathMagi.Mod(t.ParentTile.Position.X + 1, _width), MathMagi.Mod(t.ParentTile.Position.Y - 1, _width)];
+            return tiles[MathMagi.Mod(t.Parent.Position.X + 1, _width), MathMagi.Mod(t.Parent.Position.Y - 1, _width)];
         }
 
         private WorldTile GetBottomRight(WorldTile t)
         {
-            return tiles[MathMagi.Mod(t.ParentTile.Position.X + 1, _width), MathMagi.Mod(t.ParentTile.Position.Y + 1, _width)];
+            return tiles[MathMagi.Mod(t.Parent.Position.X + 1, _width), MathMagi.Mod(t.Parent.Position.Y + 1, _width)];
         }
 
         private WorldTile GetTopLeft(WorldTile t)
         {
-            return tiles[MathMagi.Mod(t.ParentTile.Position.X + -1, _width), MathMagi.Mod(t.ParentTile.Position.Y + 1, _width)];
+            return tiles[MathMagi.Mod(t.Parent.Position.X + -1, _width), MathMagi.Mod(t.Parent.Position.Y + 1, _width)];
         }
 
         private WorldTile GetBottomLeft(WorldTile t)
         {
-            return tiles[MathMagi.Mod(t.ParentTile.Position.X - 1, _width), MathMagi.Mod(t.ParentTile.Position.Y - 1, _width)];
+            return tiles[MathMagi.Mod(t.Parent.Position.X - 1, _width), MathMagi.Mod(t.Parent.Position.Y - 1, _width)];
         }
 
         private void UpdateNeighbors()
@@ -883,7 +883,7 @@ namespace MagusEngine.Generators
             }
 
             // Dig it out
-            for (int i = river.Points.Count; i >= 0; i--)
+            for (int i = river.Points.Count - 1; i >= 0; i--)
             {
                 var pos = river.Points[i];
                 WorldTile t = tiles[pos.X, pos.Y];
@@ -910,14 +910,14 @@ namespace MagusEngine.Generators
 
         private void AddMoisture(WorldTile t, int radius)
         {
-            Point center = new(t.ParentTile.Position.X, t.ParentTile.Position.Y);
+            Point center = new(t.Parent.Position.X, t.Parent.Position.Y);
             int curr = radius;
 
             while (curr > 0)
             {
-                int x1 = MathMagi.Mod(t.ParentTile.Position.X - curr, _width);
-                int x2 = MathMagi.Mod(t.ParentTile.Position.X + curr, _width);
-                int y = t.ParentTile.Position.Y;
+                int x1 = MathMagi.Mod(t.Parent.Position.X - curr, _width);
+                int x2 = MathMagi.Mod(t.Parent.Position.X + curr, _width);
+                int y = t.Parent.Position.Y;
 
                 AddMoisture(tiles[x1, y],
                     (int)(0.025f / (center - new Point(x1, y)).PointMagnitude()));

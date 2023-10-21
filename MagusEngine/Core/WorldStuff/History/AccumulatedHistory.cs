@@ -337,15 +337,15 @@ namespace MagusEngine.Core.WorldStuff.History
                     new Population(migrantsNmbr, pop.PopulationRaceId),
                     civ.Id);
                 WorldTile tile = tiles[pos.X, pos.Y];
-                tile.ParentTile.AddComponent<SiteTile>(new(site));
+                tile.Parent.AddComponent<SiteTile>(new(site));
                 civ.AddSiteToCiv(site);
             }
             else
             {
                 site = new Site();
                 WorldTile tile = tiles.Transform2DTo1D().GetRandomItemFromList();
-                tile.ParentTile.AddComponent<SiteTile>(new(site));
-                site.WorldPos = tile.ParentTile.Position;
+                tile.Parent.AddComponent<SiteTile>(new(site));
+                site.WorldPos = tile.Parent.Position;
                 site.MundaneResources = (int)tile.GetResources();
             }
             AllSites.Add(site);
@@ -353,15 +353,16 @@ namespace MagusEngine.Core.WorldStuff.History
 
         private void FindPathToCityAndCreateRoad(WorldTile tile, WorldTile closestCityTile)
         {
-            Road road = new()
-            {
-                RoadId = SequentialIdGenerator.RoadId
-            };
-
             if (tile.HeightType == HeightType.DeepWater || tile.HeightType == HeightType.ShallowWater)
                 return;
 
-            tile.ParentTile.GetComponent(out road);
+            if (!tile.Parent.GetComponent<Road>(out var road))
+            {
+                road = new()
+                {
+                    RoadId = SequentialIdGenerator.RoadId
+                };
+            }
 
             // Found the city
             if (tile == closestCityTile)
@@ -371,19 +372,19 @@ namespace MagusEngine.Core.WorldStuff.History
             /*if (tile.HeightType == HeightType.River)
                 return;*/
 
-            Point cityPoint = closestCityTile.ParentTile.Position;
-            Point roadPoint = tile.ParentTile.Position;
+            Point cityPoint = closestCityTile.Parent.Position;
+            Point roadPoint = tile.Parent.Position;
             var direction = Direction.GetDirection(roadPoint, cityPoint);
             if (direction != Direction.None)
             {
                 WorldTile worldTile = tile.Directions[direction];
-                if (worldTile.ParentTile.GetComponent<SiteTile>(out var site))
+                if (worldTile.Parent.GetComponent<SiteTile>(out var site))
                 {
                     site.SiteInfluence.Roads.Add(road);
                     return;
                 }
                 // redo to take the road from the tile components
-                road.RoadDirectionInPos.TryAdd(worldTile.ParentTile.Position, direction);
+                road.RoadDirectionInPos.TryAdd(worldTile.Parent.Position, direction);
 
                 FindPathToCityAndCreateRoad(worldTile, closestCityTile);
             }

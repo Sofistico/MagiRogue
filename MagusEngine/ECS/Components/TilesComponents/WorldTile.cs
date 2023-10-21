@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace MagusEngine.ECS.Components.TilesComponents
 {
-    public class WorldTile : IParentAwareComponent
+    public class WorldTile : ParentAwareComponentBase<Tile>
     {
         public float HeightValue { get; set; }
         public float HeatValue { get; set; }
@@ -52,13 +52,11 @@ namespace MagusEngine.ECS.Components.TilesComponents
         /// The name of the 9x9 region of the local map Randomly generated
         /// </summary>
         public string? RegionName { get; internal set; }
-        public object? Parent { get; set; }
-        public Tile? ParentTile => (Tile?)Parent;
 
         public Point Position
         {
-            get => ParentTile.Position;
-            set => ParentTile.Position = value;
+            get => Parent.Position;
+            set => Parent.Position = value;
         }
 
         public void UpdateBiomeBitmask()

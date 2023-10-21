@@ -55,7 +55,7 @@ namespace MagusEngine.Generators.MapGen
         private void FinishingTouches(MagiMap completeMap, WorldTile worldTile)
         {
             // here prune trees
-            if (worldTile.ParentTile.GetComponent<SiteTile>(out var _))
+            if (worldTile.Parent.GetComponent<SiteTile>(out var _))
             {
                 PruneTrees(completeMap, worldTile);
                 MakeRoomsUseful(completeMap);
@@ -67,7 +67,7 @@ namespace MagusEngine.Generators.MapGen
             List<Tile> trees = completeMap.ReturnAllTrees();
 
             int chanceToRemoveTree = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt
-                (worldTile.ParentTile.GetComponent<SiteTile>().SiteInfluence.ReturnPopNumber()) / 100;
+                (worldTile.Parent.GetComponent<SiteTile>().SiteInfluence.ReturnPopNumber()) / 100;
             for (int i = 0; i < trees.Count; i++)
             {
                 int rng = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, 101);
@@ -183,7 +183,7 @@ namespace MagusEngine.Generators.MapGen
         /// <exception cref="ApplicationException"></exception>
         private int CreateSitesIfAny(MagiMap completeMap, WorldTile worldTile, int createdSites)
         {
-            if (worldTile.ParentTile.GetComponent<SiteTile>(out var siteTile))
+            if (worldTile.Parent.GetComponent<SiteTile>(out var siteTile))
             {
                 SiteGenerator city = new();
                 var site = siteTile.SiteInfluence;
