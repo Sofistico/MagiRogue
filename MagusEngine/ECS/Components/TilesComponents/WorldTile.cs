@@ -1,6 +1,7 @@
 ﻿using Arquimedes.Enumerators;
 using GoRogue.Components.ParentAware;
 using MagusEngine.Core.MapStuff;
+using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System.Collections.Generic;
 
@@ -19,14 +20,31 @@ namespace MagusEngine.ECS.Components.TilesComponents
         public BiomeType BiomeType { get; set; }
         public SpecialLandType SpecialLandType { get; set; }
 
+        [JsonIgnore]
         public Dictionary<Direction, WorldTile> Directions { get; set; } = new();
+
+        [JsonIgnore]
         public WorldTile Top { get => Directions[Direction.Up]; set => Directions[Direction.Up] = value; }
+
+        [JsonIgnore]
         public WorldTile Bottom { get => Directions[Direction.Down]; set => Directions[Direction.Down] = value; }
+
+        [JsonIgnore]
         public WorldTile Left { get => Directions[Direction.Left]; set => Directions[Direction.Left] = value; }
+
+        [JsonIgnore]
         public WorldTile Right { get => Directions[Direction.Right]; set => Directions[Direction.Right] = value; }
+
+        [JsonIgnore]
         public WorldTile TopRight { get => Directions[Direction.UpRight]; set => Directions[Direction.UpRight] = value; }
+
+        [JsonIgnore]
         public WorldTile TopLeft { get => Directions[Direction.UpLeft]; set => Directions[Direction.UpLeft] = value; }
+
+        [JsonIgnore]
         public WorldTile BottomRight { get => Directions[Direction.DownRight]; set => Directions[Direction.DownRight] = value; }
+
+        [JsonIgnore]
         public WorldTile BottomLeft { get => Directions[Direction.DownLeft]; set => Directions[Direction.DownLeft] = value; }
 
         public int Bitmask { get; private set; }

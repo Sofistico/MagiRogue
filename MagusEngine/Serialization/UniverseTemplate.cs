@@ -4,6 +4,7 @@ using MagusEngine.Core.Entities;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.Serialization.MapConverter;
 using MagusEngine.Systems;
+using MagusEngine.Systems.Time;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System;
@@ -25,6 +26,7 @@ namespace MagusEngine.Serialization
         {
             // Make it only referrence other maps, like all chunks containing only the id to a map
             serializer.NullValueHandling = NullValueHandling.Ignore;
+            serializer.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             serializer.Serialize(writer, (UniverseTemplate)value);
         }
     }
@@ -54,7 +56,8 @@ namespace MagusEngine.Serialization
         /// </summary>
         public Actor Player { get; set; }
 
-        public TimeTemplate Time { get; }
+        [JsonProperty(ItemConverterType = typeof(TimeJsonConverter))]
+        public TimeSystem Time { get; }
 
         public bool PossibleChangeMap { get; internal set; } = true;
 
@@ -118,7 +121,7 @@ namespace MagusEngine.Serialization
 
         public static implicit operator Universe(UniverseTemplate uni)
         {
-            Universe universe = new Universe(uni.WorldMap, uni.CurrentMap,
+            Universe universe = new(uni.WorldMap, uni.CurrentMap,
                 MagusEngine.Core.Entities.Player.ReturnPlayerFromActor(uni.Player),
                 uni.Time, uni.PossibleChangeMap,
                 SeasonEnumToString(uni.CurrentSeason), uni.CurrentChunk)

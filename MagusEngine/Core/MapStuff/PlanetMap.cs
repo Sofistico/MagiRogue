@@ -27,6 +27,10 @@ namespace MagusEngine.Core.MapStuff
 
         public List<River> Rivers { get; set; } = new();
 
+        public PlanetMap()
+        {
+        }
+
         public PlanetMap(int width, int height)
         {
             _height = height;
@@ -43,7 +47,7 @@ namespace MagusEngine.Core.MapStuff
             _height = associetatedMap.Height;
             _width = associetatedMap.Width;
             AssocietatedMap.
-                GoRogueComponents.GetFirstOrDefault<FOVHandler>().Disable();
+                GoRogueComponents.GetFirstOrDefault<FOVHandler>()?.Disable();
         }
 
         public void SetWorldTiles(WorldTile[,] tiles)

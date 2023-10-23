@@ -678,7 +678,7 @@ namespace MagusEngine.Generators
                 return;
 
             if (planetData.Rivers.Any(i => i.Points.Contains(tile.Position))) { }
-            river.AddIntersection(tile.Position);
+            river.AddIntersection(tile.Position, _width);
 
             river.AddTile(tile);
 

@@ -1,5 +1,4 @@
 ﻿using MagusEngine.ECS.Components.TilesComponents;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace MagusEngine.Core.WorldStuff
@@ -10,7 +9,11 @@ namespace MagusEngine.Core.WorldStuff
         public int Length { get; set; }
         public int Id { get; }
         public List<Point> Points { get; set; } = new();
-        public Dictionary<Point, int> Intersections { get; set; } = new();
+
+        /// <summary>
+        /// Uses the point index for serialization
+        /// </summary>
+        public Dictionary<int, int> Intersections { get; set; } = new();
         public float TurnCount { get; set; }
         //public Direction CurrentDirection { get; set; }
 
@@ -24,11 +27,12 @@ namespace MagusEngine.Core.WorldStuff
             Points.Add(tile.Position);
         }
 
-        public void AddIntersection(Point position)
+        public void AddIntersection(Point position, int width)
         {
-            if (!Intersections.TryAdd(position, 1))
+            var index = position.ToIndex(width);
+            if (!Intersections.TryAdd(index, 1))
             {
-                Intersections[position]++;
+                Intersections[index]++;
             }
         }
     }
