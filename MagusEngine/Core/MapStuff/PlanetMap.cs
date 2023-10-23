@@ -5,6 +5,7 @@ using MagusEngine.ECS.Components.TilesComponents;
 using MagusEngine.Systems;
 using MagusEngine.Systems.Time;
 using MagusEngine.Utils;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace MagusEngine.Core.MapStuff
@@ -27,10 +28,6 @@ namespace MagusEngine.Core.MapStuff
 
         public List<River> Rivers { get; set; } = new();
 
-        public PlanetMap()
-        {
-        }
-
         public PlanetMap(int width, int height)
         {
             _height = height;
@@ -40,6 +37,7 @@ namespace MagusEngine.Core.MapStuff
             WorldHistory = new();
         }
 
+        [JsonConstructor]
         public PlanetMap(List<Civilization> civilizations, MagiMap associetatedMap)
         {
             Civilizations = civilizations;

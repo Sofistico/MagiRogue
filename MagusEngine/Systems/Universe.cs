@@ -112,7 +112,7 @@ namespace MagusEngine.Systems
             WorldMap = worldMap;
             CurrentChunk = currentChunk;
 
-            if (currentMap is not null && worldMap.AssocietatedMap.MapName.Equals(currentMap.MapName))
+            if (currentMap is not null && worldMap?.AssocietatedMap?.MapName?.Equals(currentMap.MapName) == true)
             {
                 CurrentMap = worldMap.AssocietatedMap;
             }
@@ -132,7 +132,7 @@ namespace MagusEngine.Systems
             Time = time;
             PossibleChangeMap = possibleChangeMap;
             CurrentSeason = currentSeason;
-           Locator.GetService<MessageBusService>()?.RegisterAllSubscriber(this);
+            Locator.GetService<MessageBusService>()?.RegisterAllSubscriber(this);
         }
 
         private void PlacePlayerOnWorld(Player player)

@@ -274,7 +274,7 @@ namespace MagusEngine.Systems
 
         public static MaterialTemplate QueryMaterialWithTrait(Trait trait)
         {
-            return ListOfMaterials.Where(i => i.ConfersTraits.Contains(trait)).GetRandomItemFromList();
+            return ListOfMaterials.Where(i => i?.ConfersTraits?.Contains(trait) == true).GetRandomItemFromList();
         }
 
         #endregion helper methods

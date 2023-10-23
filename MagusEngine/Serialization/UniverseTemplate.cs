@@ -4,7 +4,6 @@ using MagusEngine.Core.Entities;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.Serialization.MapConverter;
 using MagusEngine.Systems;
-using MagusEngine.Systems.Time;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System;
@@ -25,7 +24,6 @@ namespace MagusEngine.Serialization
         public override void WriteJson(JsonWriter writer, Universe value, JsonSerializer serializer)
         {
             // Make it only referrence other maps, like all chunks containing only the id to a map
-            serializer.NullValueHandling = NullValueHandling.Ignore;
             serializer.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             serializer.Serialize(writer, (UniverseTemplate)value);
         }
@@ -33,38 +31,38 @@ namespace MagusEngine.Serialization
 
     public class UniverseTemplate
     {
-        /// <summary>
-        /// The World map, contains the map data and the Planet data
-        /// </summary>
-        // TODO: Separate it so that it searchs for the world map in another file
+        [JsonRequired]
         public PlanetMap WorldMap { get; set; }
 
+        [JsonRequired]
         /// <summary>
         /// Stores the current map
         /// </summary>
         [JsonProperty(ItemConverterType = typeof(MapJsonConverter))]
-        public MagiMap CurrentMap { get; private set; }
+        public MagiMap CurrentMap { get; set; }
 
+        [JsonRequired]
         /// <summary>
         /// The current chunk of the player
         /// </summary>
         [JsonProperty(ItemConverterType = typeof(RegionChunkJsonConverter))]
         public RegionChunk CurrentChunk { get; set; }
 
-        /// <summary>
-        /// Player data
-        /// </summary>
+        [JsonRequired]
         public Actor Player { get; set; }
 
-        [JsonProperty(ItemConverterType = typeof(TimeJsonConverter))]
-        public TimeSystem Time { get; }
+        [JsonRequired]
+        public TimeTemplate Time { get; set; }
 
-        public bool PossibleChangeMap { get; internal set; } = true;
+        public bool PossibleChangeMap { get; set; } = true;
 
+        [JsonRequired]
         public string CurrentSeason { get; set; }
 
+        [JsonRequired]
         public uint LastIdAssigned { get; set; }
 
+        [JsonRequired]
         public int ZLevel { get; set; }
 
         public PlanetGenSettings PlanetSettings { get; set; }
@@ -129,7 +127,7 @@ namespace MagusEngine.Serialization
                 ZLevel = uni.ZLevel,
                 PlanetSettings = uni.PlanetSettings,
             };
-            Locator.AddService<IDGenerator>(new(uni.LastIdAssigned, true));
+            Locator.AddService<IDGenerator>(new(uni.LastIdAssigned));
 
             return universe;
         }

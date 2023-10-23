@@ -8,8 +8,11 @@ using MagusEngine.Serialization;
 using MagusEngine.Systems;
 using MagusEngine.Systems.Time;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 using SadRogue.Primitives;
-using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using Xunit;
 
 namespace MagiRogue.Test.System
@@ -17,6 +20,18 @@ namespace MagiRogue.Test.System
     public class UniverseTests
     {
         private readonly Universe uni;
+        private static readonly ITraceWriter traceWriter = new MemoryTraceWriter();
+        private static readonly JsonSerializerSettings settings = new()
+        {
+            Error = (sender, args) =>
+            {
+                errors?.Add(args.ErrorContext.Error.Message);
+                args.ErrorContext.Handled = true;
+            },
+            Converters = { new IsoDateTimeConverter() },
+            TraceWriter = traceWriter,
+        };
+        private static readonly List<string> errors = new();
 
         public UniverseTests()
         {
@@ -55,22 +70,27 @@ namespace MagiRogue.Test.System
         [Fact]
         public void DeserializeUniverse()
         {
-            uni.ForceChangeCurrentMap(new MagiMap("Test"));
-            uni.WorldMap.AssocietatedMap.SetTerrain
-                (new Tile(Color.Black, Color.Black, '.', true, true, Point.Zero));
-            Player player = Player.TestPlayer();
-            player.Position = new SadRogue.Primitives.Point(0, 0);
-            uni.WorldMap.AssocietatedMap.AddMagiEntity(player);
-            uni.Player = player;
-            var json = JsonConvert.SerializeObject(uni, Formatting.Indented,
-                new JsonSerializerSettings()
-                {
-                    NullValueHandling = NullValueHandling.Ignore
-                });
-            // make it so that the object only reference other files
-            UniverseTemplate obj = JsonConvert.DeserializeObject<Universe>(json);
-
-            Assert.True(obj.PossibleChangeMap);
+            try
+            {
+                uni.ForceChangeCurrentMap(new MagiMap("Test"));
+                uni.WorldMap.AssocietatedMap.SetTerrain
+                    (new Tile(Color.Black, Color.Black, '.', true, true, Point.Zero));
+                Player player = Player.TestPlayer();
+                player.Position = new SadRogue.Primitives.Point(0, 0);
+                uni.WorldMap.AssocietatedMap.AddMagiEntity(player);
+                uni.Player = player;
+                string name = uni.WorldMap.Name;
+                var json = JsonConvert.SerializeObject(uni);
+                // make it so that the object only reference other files
+                UniverseTemplate obj = JsonConvert.DeserializeObject<Universe>(json, settings);
+                Debug.WriteLine(traceWriter);
+                Assert.Equal(name, obj.WorldMap.Name);
+            }
+            catch (global::System.Exception)
+            {
+                Debug.WriteLine(traceWriter);
+                throw;
+            }
         }
 
         //// CODE DEAD END, MAYBE KEEP FOR A FUTURE PROJECT
