@@ -112,8 +112,8 @@ namespace Diviner
             InventoryScreen = new InventoryWindow(width / 2, height / 2);
             Children.Add(InventoryScreen);
             InventoryScreen.Hide();
-
-            StatusWindow = new StatusWindow(width - MessageLog.Width, 4, "Status Window");
+            const int statusWindowHeight = 4;
+            StatusWindow = new StatusWindow(width - MessageLog.Width, statusWindowHeight, "Status Window");
             StatusWindow.ChangePositionToBottomPage();
             // Build the Window
             CreateMapWindow(width - MessageLog.Width, height - StatusWindow.Height, "Game Map");
