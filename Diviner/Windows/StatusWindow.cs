@@ -49,7 +49,7 @@ namespace Diviner.Windows
 
         public void ChangePositionToBottomPage()
         {
-            Position = new Point(0, Locator.GetService<GlobalSettings>().ScreenHeight - 3);
+            Position = new Point(0, Locator.GetService<GlobalSettings>().ScreenHeight - Height);
         }
 
         ~StatusWindow()

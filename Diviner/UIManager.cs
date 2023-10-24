@@ -94,7 +94,11 @@ namespace Diviner
                 uni = new Universe(player, testGame);
             }
             Find.Universe = uni;
+            ConfigureWindowsAndConsoles(height, width, uni);
+        }
 
+        private void ConfigureWindowsAndConsoles(int height, int width, Universe uni)
+        {
             //Message Log initialization
             var messageLogWidth = (int)MathMagi.GetSimplePercentage(width, 0.25) - 2;
             MessageLog = new MessageLogWindow(messageLogWidth, height, "Message Log")
@@ -109,10 +113,10 @@ namespace Diviner
             Children.Add(InventoryScreen);
             InventoryScreen.Hide();
 
-            StatusWindow = new StatusWindow(width - MessageLog.Width, height - 27, "Status Window");
+            StatusWindow = new StatusWindow(width - MessageLog.Width, 4, "Status Window");
             StatusWindow.ChangePositionToBottomPage();
             // Build the Window
-            CreateMapWindow(width - MessageLog.Width, height - 3, "Game Map");
+            CreateMapWindow(width - MessageLog.Width, height - StatusWindow.Height, "Game Map");
 
             // Then load the map into the MapConsole
             MapWindow.LoadMap(uni.CurrentMap);
