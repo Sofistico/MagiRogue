@@ -34,35 +34,28 @@ namespace MagusEngine.Serialization
         [JsonRequired]
         public PlanetMap WorldMap { get; set; }
 
-        [JsonRequired]
         /// <summary>
         /// Stores the current map
         /// </summary>
         [JsonProperty(ItemConverterType = typeof(MapJsonConverter))]
         public MagiMap CurrentMap { get; set; }
 
-        [JsonRequired]
         /// <summary>
         /// The current chunk of the player
         /// </summary>
         [JsonProperty(ItemConverterType = typeof(RegionChunkJsonConverter))]
         public RegionChunk CurrentChunk { get; set; }
 
-        [JsonRequired]
         public Actor Player { get; set; }
 
-        [JsonRequired]
         public TimeTemplate Time { get; set; }
 
         public bool PossibleChangeMap { get; set; } = true;
 
-        [JsonRequired]
         public string CurrentSeason { get; set; }
 
-        [JsonRequired]
         public uint LastIdAssigned { get; set; }
 
-        [JsonRequired]
         public int ZLevel { get; set; }
 
         public PlanetGenSettings PlanetSettings { get; set; }

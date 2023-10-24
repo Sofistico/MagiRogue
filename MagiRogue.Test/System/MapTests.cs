@@ -63,7 +63,8 @@ namespace MagiRogue.Test.System
             string json = JsonConvert.SerializeObject(planet, Formatting.Indented,
                 new JsonSerializerSettings()
                 {
-                    NullValueHandling = NullValueHandling.Ignore
+                    NullValueHandling = NullValueHandling.Ignore,
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                 });
 
             Assert.True(json.StartsWith('{'));

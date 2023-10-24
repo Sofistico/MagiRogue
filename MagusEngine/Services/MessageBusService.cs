@@ -45,7 +45,14 @@ namespace MagusEngine.Services
 
         public void UnRegisterAllSubscriber<T>(T subscriber) where T : notnull
         {
-            _messageBus.UnregisterAllSubscribers(subscriber);
+            try
+            {
+                _messageBus?.UnregisterAllSubscribers(subscriber);
+            }
+            catch (ArgumentException)
+            {
+                // ignore this error
+            }
         }
 
         public void UnRegisterSubscriber<T>(ISubscriber<T> subscriber)
