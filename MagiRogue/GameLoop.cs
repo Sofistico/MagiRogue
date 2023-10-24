@@ -1,17 +1,12 @@
-﻿using GoRogue.Random;
-using MagiRogue.GameSys;
-using MagiRogue.GameSys.Time;
-using MagiRogue.Settings;
-using MagiRogue.UI;
-using MagiRogue.Utils;
+﻿using Arquimedes;
+using Arquimedes.Settings;
+using Arquimedes.Utils;
+using Diviner;
+using MagusEngine;
 using SadConsole;
-using SadRogue.Primitives;
-using ShaiRandom.Generators;
+using SadConsole.Configuration;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MagiRogue;
 
@@ -19,16 +14,10 @@ public static class GameLoop
 {
     private static GlobalSettings settings;
     private static bool beginTest;
+    private static UIManager ui;
 
-    public static int GameWidth { get; private set; }
-    public static int GameHeight { get; private set; }
-
-    // Managers
-    public static UIManager UIManager { get; set; }
-
-    public static Universe Universe { get; set; }
-
-    public static IEnhancedRandom GlobalRand { get; } = GlobalRandom.DefaultRNG;
+    public static int GameWidth => settings.ScreenWidth;
+    public static int GameHeight => settings.ScreenHeight;
 
     #region configuration
 
@@ -37,17 +26,15 @@ public static class GameLoop
         ConfigureBeforeCreateGame(args);
 
         ConfigureServices();
-
         // Setup the engine and create the main window.
-        Game.Configuration gameStartup = new Game.Configuration()
+        new Builder()
             .SetScreenSize(GameWidth, GameHeight)
             .OnStart(Init) // Hook the start event so we can add consoles to the system.
             .SetStartingScreen<UIManager>()
             .IsStartingScreenFocused(true)
-            .ConfigureFonts((f) => f.UseBuiltinFontExtended());
+            .ConfigureFonts((f, _) => f.UseBuiltinFontExtended())
+            .Run();
 
-        Game.Create(gameStartup);
-        //Start the game.
         Game.Instance.Run();
         // Code here will not run until the game window closes.
         Game.Instance.Dispose();
@@ -55,7 +42,7 @@ public static class GameLoop
 
     private static void ConfigureServices()
     {
-        Locator.InitializeCommonServices();
+        Locator.InitializeSingletonServices();
     }
 
     // runs each frame
@@ -77,111 +64,23 @@ public static class GameLoop
 
         settings = JsonUtils.JsonDeseralize<GlobalSettings>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
             "Settings", "global_setting.json"));
-        GameHeight = settings.ScreenHeight;
-        GameWidth = settings.ScreenWidth;
+        Locator.AddService(settings);
     }
 
-    private static void Init()
+    private static void Init(object? sender, GameHost e)
     {
-        Palette.AddToColorDictionary();
+        MagiPalette.AddToColorDictionary();
         // Makes so that no excpetion happens for a custom control
         //SadConsole.UI.Themes.Library.Default.SetControlTheme(typeof(UI.Controls.MagiButton),
         //   typeof(SadConsole.UI.Themes.ButtonTheme));
 
         //Instantiate the UIManager
-        UIManager = (UIManager)GameHost.Instance.Screen!;
+        ui = (UIManager)GameHost.Instance.Screen!;
 
-        // Now let the UIManager create its consoles
-        // so they can use the World data
-        UIManager.InitMainMenu(beginTest);
+        // Now let the UIManager create its consoles so they can use the World data
+        ui.InitMainMenu(GameHeight, GameWidth, beginTest);
+        Locator.AddService(ui);
     }
 
     #endregion configuration
-
-    #region global methods
-
-    /// <summary>
-    /// Gets the current map, a shorthand for GameLoop.Universe.CurrentMap
-    /// </summary>
-    /// <returns></returns>
-    public static Map GetCurrentMap()
-    {
-        return Universe?.CurrentMap;
-    }
-
-    public static void SetIdGen(uint lastId) => Locator.AddService<IDGenerator>(new(lastId + 1));
-
-    public static void AddMessageLog(string message, bool newLine = true)
-    {
-        if (UIManager is null && UIManager.MessageLog is null)
-            return;
-        UIManager.MessageLog.PrintMessage(message, newLine);
-        UIManager.StatusWindow.ChangePositionToUpMessageLog();
-    }
-
-    public static int GetNHoursFromTurn(int hours)
-    {
-        int turn = Universe.Time.Turns;
-        int turnInNHours = turn * TimeDefSpan.SecondsPerHour * hours;
-        return turnInNHours;
-    }
-
-    #region IdCounters
-
-    public static int GetHfId()
-    {
-        return SequentialIdGenerator.HistoricalFigureId;
-    }
-
-    public static int GetCivId()
-        => SequentialIdGenerator.CivId;
-
-    public static int GetMythId()
-    {
-        return SequentialIdGenerator.MythId;
-    }
-
-    public static int GetAbilityId()
-    {
-        return SequentialIdGenerator.AbilityId;
-    }
-
-    #endregion IdCounters
-
-    #region Logs
-
-    public static void WriteToLog(List<string> errors)
-    {
-        // so that it doesn't block the main thread!
-        Task.Run(() =>
-        {
-            if (errors.Count == 0)
-                return;
-            var path = new StringBuilder(AppDomain.CurrentDomain.BaseDirectory).Append(@"\log.txt").ToString();
-            StringBuilder str = new StringBuilder($"{DateTime.Now:dd/MM/yyyy} ");
-            foreach (var item in errors)
-            {
-                str.AppendLine(item);
-                str.AppendLine();
-            }
-            if (!File.Exists(path))
-            {
-                File.Create(path).Close();
-            }
-
-            File.AppendAllText(path, str.ToString());
-#if DEBUG
-            AddMessageLog("Logged an error in the logs file!");
-#endif
-        });
-    }
-
-    public static void WriteToLog(string error)
-    {
-        WriteToLog(new List<string>() { error });
-    }
-
-    #endregion Logs
-
-    #endregion global methods
 }

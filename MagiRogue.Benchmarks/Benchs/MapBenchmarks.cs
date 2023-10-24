@@ -1,6 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
-using MagiRogue.GameSys;
-using MagiRogue.GameSys.MapGen;
+using MagusEngine.Core.MapStuff;
+using MagusEngine.Generators.MapGen;
 
 namespace MagiRogue.Benchmarks.Benchs
 {
@@ -19,7 +19,7 @@ namespace MagiRogue.Benchmarks.Benchs
         [Benchmark]
         public void Get1TestMapWithoutStuff()
         {
-            var map = new Map("Map map", 180, 180);
+            var map = new MagiMap("Map map", 180, 180);
         }
 
         //[Benchmark]

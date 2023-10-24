@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GoRogue.DiceNotation;
-using MagiRogue.Utils;
-using Xunit;
+﻿using Xunit;
 
 namespace MagiRogue.Test.Utils
 {

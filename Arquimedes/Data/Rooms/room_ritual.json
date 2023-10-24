@@ -1,0 +1,20 @@
+[
+  {
+    "Id": "ritual_simple",
+    "Obj": {
+      "Tag": "Ritual",
+      "Rows": [
+        ".    .",
+        "....",
+        ".  .",
+        ".  .",
+        "....",
+        ".    ."
+      ],
+      "Terrain": {
+        ".": "Floor;chalk",
+        " ": "Floor;stone"
+      }
+    }
+  }
+]

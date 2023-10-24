@@ -1,7 +1,4 @@
-﻿using GoRogue.DiceNotation.Terms;
-using MagiRogue.Entities;
-using MagiRogue.GameSys.Civ;
-using MagiRogue.GameSys.Planet;
+﻿using MagusEngine.Generators;
 using Newtonsoft.Json;
 
 namespace MagiRogue.LegendsConsoleViewer
@@ -105,7 +102,7 @@ namespace MagiRogue.LegendsConsoleViewer
 
         private static int InputHandle()
         {
-            string result;
+            string? result;
             int value;
             do
             {

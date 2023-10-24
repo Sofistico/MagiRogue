@@ -1,26 +1,46 @@
-﻿using MagiRogue.Data.Enumerators;
-using MagiRogue.Data.Serialization;
-using MagiRogue.Entities;
-using MagiRogue.GameSys;
-using MagiRogue.GameSys.Planet;
-using MagiRogue.GameSys.Tiles;
+﻿using Arquimedes;
+using Arquimedes.Enumerators;
+using MagusEngine;
+using MagusEngine.Core.Entities;
+using MagusEngine.Core.MapStuff;
+using MagusEngine.Generators;
+using MagusEngine.Serialization;
+using MagusEngine.Systems;
+using MagusEngine.Systems.Time;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 using SadRogue.Primitives;
+using System.Collections.Generic;
+using System.Diagnostics;
 using Xunit;
 
 namespace MagiRogue.Test.System
 {
     public class UniverseTests
     {
-        private Universe uni;
+        private readonly Universe uni;
+        private static readonly ITraceWriter traceWriter = new MemoryTraceWriter();
+        private static readonly JsonSerializerSettings settings = new()
+        {
+            Error = (sender, args) =>
+            {
+                errors?.Add(args.ErrorContext.Error.Message);
+                args.ErrorContext.Handled = true;
+            },
+            Converters = { new IsoDateTimeConverter() },
+            TraceWriter = traceWriter,
+        };
+        private static readonly List<string> errors = new();
 
         public UniverseTests()
         {
-            Palette.AddToColorDictionary();
+            MagiPalette.AddToColorDictionary();
             var chunck = new RegionChunk(new Point(0, 0));
             uni = new(new PlanetMap(50, 50), null, null,
-                new MagiRogue.GameSys.Time.TimeSystem(10), true,
-                SeasonType.Spring, new(), chunck);
+                new TimeSystem(10), true,
+                SeasonType.Spring, chunck);
+            Locator.InitializeSingletonServices();
             PrepareForChunkTest();
         }
 
@@ -34,38 +54,43 @@ namespace MagiRogue.Test.System
             Assert.Contains(uni.Time.TimePassed.Ticks.ToString(), json);
         }
 
-        private static void FillTilesWithRandomShit(Map map)
+        private static void FillTilesWithRandomShit(MagiMap map)
         {
-            for (int i = 0; i < map.Tiles.Length; i++)
+            for (int i = 0; i < map.Terrain.Count; i++)
             {
-                var p = SadRogue.Primitives.Point.FromIndex(i, map.Width);
+                var p = Point.FromIndex(i, map.Width);
                 int z = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(1, 3);
                 if (z == 1)
-                    map.SetTerrain(new TileFloor(p));
+                    map.SetTerrain(new Tile(Color.Black, Color.Black, '#', false, false, p));
                 else
-                    map.SetTerrain(new TileWall(p));
+                    map.SetTerrain(new Tile(Color.Black, Color.Black, '.', true, true, p));
             }
         }
 
         [Fact]
         public void DeserializeUniverse()
         {
-            uni.ForceChangeCurrentMap(new Map("Test"));
-            uni.WorldMap.AssocietatedMap.SetTerrain
-                (new TileFloor(new SadRogue.Primitives.Point(0, 0)));
-            Player player = Player.TestPlayer();
-            player.Position = new SadRogue.Primitives.Point(0, 0);
-            uni.WorldMap.AssocietatedMap.AddMagiEntity(player);
-            uni.Player = player;
-            var json = JsonConvert.SerializeObject(uni, Formatting.Indented,
-                new JsonSerializerSettings()
-                {
-                    NullValueHandling = NullValueHandling.Ignore
-                });
-            // make it so that the object only reference other files
-            UniverseTemplate obj = JsonConvert.DeserializeObject<Universe>(json);
-
-            Assert.True(obj.PossibleChangeMap);
+            try
+            {
+                uni.ForceChangeCurrentMap(new MagiMap("Test"));
+                uni.WorldMap.AssocietatedMap.SetTerrain
+                    (new Tile(Color.Black, Color.Black, '.', true, true, Point.Zero));
+                Player player = Player.TestPlayer();
+                player.Position = new SadRogue.Primitives.Point(0, 0);
+                uni.WorldMap.AssocietatedMap.AddMagiEntity(player);
+                uni.Player = player;
+                string name = uni.WorldMap.Name;
+                var json = JsonConvert.SerializeObject(uni);
+                // make it so that the object only reference other files
+                UniverseTemplate obj = JsonConvert.DeserializeObject<Universe>(json, settings);
+                Debug.WriteLine(traceWriter);
+                Assert.Equal(name, obj.WorldMap.Name);
+            }
+            catch (global::System.Exception)
+            {
+                Debug.WriteLine(traceWriter);
+                throw;
+            }
         }
 
         //// CODE DEAD END, MAYBE KEEP FOR A FUTURE PROJECT
@@ -94,9 +119,8 @@ namespace MagiRogue.Test.System
                     20,
                     3);
 
-            RegionChunk chunk = uni.GenerateChunck(new Point(0, 0));
             //uni.AllChunks[i] = chunk;
-            uni.CurrentChunk = chunk;
+            uni.CurrentChunk = uni.GenerateChunck(new Point(0, 0));
 
             foreach (var map in uni.CurrentChunk.LocalMaps)
             {

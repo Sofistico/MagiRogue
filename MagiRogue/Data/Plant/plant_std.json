@@ -1,8 +1,0 @@
-﻿[
-  {
-    "Id": "grass",
-    "Name": "Grass",
-    "Fore": "GrassColor",
-    "Glyphs": [ ".", ";", ",", "'" ]
-  }
-]

@@ -1,11 +1,8 @@
-﻿using MagiRogue.Data;
-using MagiRogue.Data.Serialization.MapSerialization;
-using MagiRogue.GameSys;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MagusEngine;
+using MagusEngine.Core.MapStuff;
+using MagusEngine.Generators.MapGen;
+using MagusEngine.Serialization.MapConverter;
+using MagusEngine.Systems;
 using Xunit;
 
 namespace MagiRogue.Test.Data
@@ -17,12 +14,13 @@ namespace MagiRogue.Test.Data
         public RoomTemplateTest()
         {
             room = DataManager.QueryRoomInData("room_city1");
+            Locator.InitializeSingletonServices();
         }
 
         [Fact]
         public void RoomDeserializeAndGetToMap()
         {
-            Map map = new GameSys.MapGen.MiscMapGen().GenerateStoneFloorMap();
+            MagiMap map = new MiscMapGen().GenerateStoneFloorMap();
             Room r = room.ConfigureRoom(map.GetRandomWalkableTile());
             map.AddRoom(r);
             map.SpawnRoomThingsOnMap(r);

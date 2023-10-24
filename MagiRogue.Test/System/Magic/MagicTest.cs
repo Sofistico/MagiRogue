@@ -1,8 +1,7 @@
-﻿using MagiRogue.Data.Enumerators;
-using MagiRogue.Entities;
-using MagiRogue.Entities.Core;
-using MagiRogue.GameSys.Magic;
-using SadConsole;
+﻿using Arquimedes.Enumerators;
+using MagusEngine.Core.Entities;
+using MagusEngine.Core.Entities.Base;
+using MagusEngine.Core.Magic;
 using SadRogue.Primitives;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,28 +11,28 @@ namespace MagiRogue.Test.System.Magic
 {
     public class MagicTest
     {
-        private MagiRogue.GameSys.Magic.MagicManager weakMagic;
-        private MagiRogue.GameSys.Magic.MagicManager mediumMagic;
-        private MagiRogue.GameSys.Magic.MagicManager strongMagic;
+        private MagicManager weakMagic;
+        private MagicManager mediumMagic;
+        private MagicManager strongMagic;
 
         [Fact]
         public void TestCasting()
         {
-            List<SpellBase> spellBase = new List<SpellBase>(TestSpellsNoEffect());
+            List<SpellBase> spellBase = new List<SpellBase>(GetListSpells());
 
-            weakMagic = new MagiRogue.GameSys.Magic.MagicManager()
+            weakMagic = new MagicManager()
             {
                 ShapingSkill = 5,
                 KnowSpells = spellBase
             };
 
-            mediumMagic = new MagiRogue.GameSys.Magic.MagicManager()
+            mediumMagic = new MagicManager()
             {
                 ShapingSkill = 10,
                 KnowSpells = spellBase
             };
 
-            strongMagic = new MagiRogue.GameSys.Magic.MagicManager()
+            strongMagic = new MagicManager()
             {
                 ShapingSkill = 15,
                 KnowSpells = spellBase
@@ -82,12 +81,12 @@ namespace MagiRogue.Test.System.Magic
                 canStrongCast.Add(item.CanCast(strongMagic, strongSpellCaster));
             }
 
-            Assert.True((canWeakCast.Where(a => a == true).Count().Equals(1))
-                && (canMediumCast.Where(a => a == true).Count().Equals(2))
-                && (canStrongCast.Where(a => a == true).Count().Equals(4)));
+            Assert.True((canWeakCast.Count(a => a).Equals(1))
+                && (canMediumCast.Count(a => a).Equals(2))
+                && (canStrongCast.Count(a => a).Equals(4)));
         }
 
-        private static List<SpellBase> TestSpellsNoEffect()
+        private static List<SpellBase> GetListSpells()
         {
             SpellBase missile = new SpellBase("magic_missile",
                  "Magic Missile",

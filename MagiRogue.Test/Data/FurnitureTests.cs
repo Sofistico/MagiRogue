@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
+﻿using Arquimedes.Enumerators;
+using MagusEngine.Core.Entities;
 using Newtonsoft.Json;
-using MagiRogue.Entities;
 using SadRogue.Primitives;
-using MagiRogue.Data.Enumerators;
+using System.Linq;
+using Xunit;
 
 namespace MagiRogue.Test.Data
 {
@@ -80,7 +76,7 @@ namespace MagiRogue.Test.Data
         [Fact]
         public void FurnitureWithUseAndQualitySerializeTest()
         {
-            string json = @"{'Id': 'stone_forge',
+            const string json = @"{'Id': 'stone_forge',
                             'MaterialId': 'stone',
                             'Name': 'Forge',
                             'Description': 'This is a forge, you can forge metal items in it and also harden clay. /r/nMakes quite a nice cake, if you like yours a little burnt.',
@@ -94,7 +90,7 @@ namespace MagiRogue.Test.Data
             var fur = JsonConvert.DeserializeObject<Furniture>(json);
             var newJson = JsonConvert.SerializeObject(fur);
 
-            Assert.Contains(fur.Qualities.First().QualityType.ToString(), newJson);
+            Assert.Contains(fur.Qualities[0].QualityType.ToString(), newJson);
         }
     }
 }

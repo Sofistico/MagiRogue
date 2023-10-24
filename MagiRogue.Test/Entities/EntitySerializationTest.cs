@@ -1,15 +1,11 @@
-﻿using MagiRogue.Entities;
-using MagiRogue.Data;
-using MagiRogue.Utils;
+﻿using Arquimedes.Enumerators;
+using MagusEngine.Core.Entities;
+using MagusEngine.Factory;
+using MagusEngine.Serialization.EntitySerialization;
+using MagusEngine.Systems.Physics;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Xunit;
-using MagiRogue.Data.Serialization;
-using MagiRogue.Data.Serialization.EntitySerialization;
 
 namespace MagiRogue.Test.Entities
 {
@@ -19,9 +15,9 @@ namespace MagiRogue.Test.Entities
         public void ItemSerializingTest()
         {
             const string name = "Serialization Test";
-            string expectedName = GameSys.Physics.PhysicsManager.SetMaterial("wood").ReturnNameFromMaterial(name);
+            string expectedName = PhysicsManager.SetMaterial("wood").ReturnNameFromMaterial(name);
 
-            Item item = new Item(Color.Red, Color.Transparent, name, 'T', Point.None, 100, materialId: "wood");
+            Item item = new(Color.Red, Color.Transparent, name, 'T', Point.None, 100, materialId: "wood");
 
             string serialized = JsonConvert.SerializeObject(item);
             Item deserialized = JsonConvert.DeserializeObject<Item>(serialized);
@@ -34,7 +30,11 @@ namespace MagiRogue.Test.Entities
         {
             const string name = "Actor Serialization Test";
 
-            ActorTemplate actor = new ActorTemplate(new Actor(name, Color.White, Color.Black, '@', Point.None));
+            ActorTemplate actor = new ActorTemplate(EntityFactory.ActorCreator(Point.None,
+                "test_race",
+                Sex.None,
+                AgeGroup.Adult,
+                name));
             string serialized = JsonConvert.SerializeObject(actor);
             Actor deserialized = JsonConvert.DeserializeObject<Actor>(serialized);
 
@@ -47,7 +47,7 @@ namespace MagiRogue.Test.Entities
             var playa = EntityFactory.PlayerCreatorFromZero(new Point(0, 0),
                 "human",
                 "Test",
-                MagiRogue.Data.Enumerators.Sex.None,
+                Sex.None,
                 "new_wiz");
 
             var json = JsonConvert.SerializeObject(playa);
@@ -63,9 +63,9 @@ namespace MagiRogue.Test.Entities
             var playa = EntityFactory.PlayerCreatorFromZero(new Point(0, 0),
                 "human",
                 "Test",
-                MagiRogue.Data.Enumerators.Sex.None,
+                Sex.None,
                 "new_wiz");
-            var eyes = playa.GetAnatomy().Organs.FindAll(i => i.OrganType is MagiRogue.Data.Enumerators.OrganType.Visual);
+            var eyes = playa.GetAnatomy().Organs.FindAll(i => i.OrganType is OrganType.Visual);
             foreach (var item in eyes)
             {
                 item.Working = false;
@@ -82,7 +82,7 @@ namespace MagiRogue.Test.Entities
             var playa = EntityFactory.PlayerCreatorFromZero(new Point(0, 0),
                 "human",
                 "Test",
-                MagiRogue.Data.Enumerators.Sex.None,
+                Sex.None,
                 "new_wiz");
             var json = JsonConvert.SerializeObject(playa);
             var deserialized = JsonConvert.DeserializeObject<Actor>(json);

@@ -1,11 +1,6 @@
-﻿using MagiRogue.Data.Enumerators;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Arquimedes.Enumerators;
 
-namespace MagiRogue.DataCreatorWpf
+namespace MagusEngine.SystemsCreatorWpf
 {
     public class ResearchViewModel : ObservableObject, IPageView
     {
@@ -25,7 +20,8 @@ namespace MagiRogue.DataCreatorWpf
         // can a deity just flat out give it out to it's followers?
         public bool ValidDeityGift { get; set; }
 
-        // values: Any from AbilityName.cs and any from AnyCraft, AnyResearch, AnyMagic, AnyCombat and AnyJob
+        // values: Any from AbilityName.cs and any from AnyCraft, AnyResearch, AnyMagic, AnyCombat
+        //         and AnyJob
         public string AbilityRequired { get; set; } = null!;
         public Tech TechResearched { get; set; }
 

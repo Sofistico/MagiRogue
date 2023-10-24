@@ -6,4 +6,14 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
+    <PackageReference Include="SadConsole" Version="10.0.0-beta1" />
+    <PackageReference Include="SadConsole.Host.MonoGame" Version="10.0.0-beta1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MagusEngine\MagusEngine.csproj" />
+  </ItemGroup>
+
 </Project>
