@@ -59,7 +59,7 @@ namespace Diviner
         // Initiates the game by means of going to the menu first
         public void InitMainMenu(int gameHeight, int gameWidth, bool beginOnTestMap = false)
         {
-            SetUpCustomColors();
+            //SetUpCustomColors();
 
             MainMenu = new MainMenuWindow(gameWidth, gameHeight)
             {
@@ -206,7 +206,7 @@ namespace Diviner
             CustomColors = new SadConsole.UI.Colors();
 
             // Pick a couple of background colours that we will apply to all consoles.
-            Color backgroundColor = new Color(CustomColors.Black, "Black");
+            Color backgroundColor = new(CustomColors.Black, "Black");
 
             // Set background colour for controls consoles and their controls
             CustomColors.ControlHostBackground = backgroundColor;

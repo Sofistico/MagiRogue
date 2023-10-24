@@ -84,8 +84,7 @@ namespace MagusEngine.Commands
             StringBuilder defenseMessage = new();
             bool isPlayer = attacker is Player;
 
-            (bool hit, BodyPart limbAttacked, BodyPart limbAttacking, DamageTypes dmgType, Item? itemUsed,
-                MaterialTemplate attackMaterial)
+            (bool hit, BodyPart limbAttacked, BodyPart limbAttacking, DamageTypes dmgType, Item? itemUsed, MaterialTemplate attackMaterial)
                 = CombatUtils.ResolveHit(attacker, defender, attackMessage, attack, isPlayer, limbChoosen);
             double finalMomentum = CombatUtils.ResolveDefenseAndGetAttackMomentum(attacker,
                 defender,
@@ -95,9 +94,13 @@ namespace MagusEngine.Commands
                 itemUsed);
 
             // Display the outcome of the attack & defense
-            Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(attackMessage.ToString(), false));
+            var showMessage = isPlayer || Find.Universe.Player.CanSee(attacker.Position);
+            Locator.GetService<MessageBusService>()?.SendMessage<AddMessageLog>(new(attackMessage.ToString(), showMessage));
             if (!string.IsNullOrWhiteSpace(defenseMessage.ToString()))
-                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(defenseMessage.ToString(), false));
+            {
+                showMessage = isPlayer || Find.Universe.Player.CanSee(defender.Position);
+                Locator.GetService<MessageBusService>()?.SendMessage<AddMessageLog>(new(defenseMessage.ToString(), showMessage));
+            }
 
             // The defender now takes damage
             CombatUtils.ResolveDamage(defender,
@@ -134,7 +137,7 @@ namespace MagusEngine.Commands
         public static bool DirectAttack(Actor attacker)
         {
             // Lists all monsters that are close and their locations
-            List<Actor> monsterClose = new List<Actor>();
+            List<Actor> monsterClose = new();
 
             // Saves all Points directions of the attacker.
             Point[] directions = attacker.Position.GetDirectionPoints();
