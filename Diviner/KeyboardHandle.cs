@@ -108,7 +108,7 @@ namespace Diviner
                         // If there is a need to roll back, the code here was taking the CurrentFov
                         // and Contains(pos + posMove)
                         return world.CurrentMap.PlayerExplored[world.CurrentMap.ControlledEntitiy.Position + deltaMove]
-                            && distance <= targetCursor.MaxDistance
+                            && distance <= targetCursor?.MaxDistance
                             && ActionManager.MoveActorBy((Actor)world.CurrentMap.ControlledEntitiy, deltaMove);
                     }
 
@@ -123,7 +123,7 @@ namespace Diviner
         {
             int distance = 0;
 
-            if (world.CurrentMap.ControlledEntitiy == targetCursor.Cursor)
+            if (world.CurrentMap.ControlledEntitiy == targetCursor?.Cursor)
             {
                 if (targetCursor.TravelPath is not null)
                     distance = targetCursor.TravelPath.LengthWithStart;
@@ -430,7 +430,7 @@ namespace Diviner
                 }
                 catch (Newtonsoft.Json.JsonSerializationException e)
                 {
-                    throw e;
+                    throw;
                 }
                 return false;
             }

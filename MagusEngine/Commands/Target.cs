@@ -3,7 +3,6 @@ using GoRogue.GameFramework;
 using GoRogue.Pathing;
 using MagusEngine.Bus.MapBus;
 using MagusEngine.Bus.UiBus;
-using MagusEngine.Core;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic;
@@ -25,6 +24,7 @@ namespace MagusEngine.Commands
     public class Target
     {
         private Actor _caster;
+        private MagiEntity _lastControlledEntity;
         private readonly Dictionary<Point, Tile> tileDictionary;
         private static readonly Radius radius = Radius.Circle;
 
@@ -112,15 +112,16 @@ namespace MagusEngine.Commands
             if (State is TargetState.Targeting)
                 return;
             OriginCoord = new Point(
-                Cursor.MagiMap.ControlledEntitiy.Position.X,
-                Cursor.MagiMap.ControlledEntitiy.Position.Y);
+                Find.CurrentMap.ControlledEntitiy.Position.X,
+                Find.CurrentMap.ControlledEntitiy.Position.Y);
             Cursor.Position = new Point(
-                 Cursor.MagiMap.ControlledEntitiy.Position.X,
-                 Cursor.MagiMap.ControlledEntitiy.Position.Y);
-            Locator.GetService<MessageBusService>().SendMessage<ChangeControlledEntitiy>(new(Cursor));
-            Cursor.MagiMap.AddMagiEntity(Cursor);
-            Cursor.PositionChanged += Cursor_Moved;
+                 Find.CurrentMap.ControlledEntitiy.Position.X,
+                 Find.CurrentMap.ControlledEntitiy.Position.Y);
+            _lastControlledEntity = Find.CurrentMap.ControlledEntitiy;
+            Locator.GetService<MessageBusService>()?.SendMessage<ChangeControlledEntitiy>(new(Cursor));
+            Locator.GetService<MessageBusService>()?.SendMessage<AddEntitiyCurrentMap>(new(Cursor));
 
+            Cursor.PositionChanged += Cursor_Moved;
             State = TargetState.Targeting;
             LookMode = true;
             Cursor.IgnoresWalls = true;
@@ -189,7 +190,7 @@ namespace MagusEngine.Commands
                     TravelPath = null;
                 }
 
-                Locator.GetService<MessageBusService>().SendMessage<ChangeControlledEntitiy>(new(Find.Universe.Player));
+                Locator.GetService<MessageBusService>().SendMessage<ChangeControlledEntitiy>(new(_lastControlledEntity));
                 Locator.GetService<MessageBusService>().SendMessage<RemoveEntitiyCurrentMap>(new(Cursor));
             }
         }

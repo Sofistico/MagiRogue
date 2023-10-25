@@ -30,6 +30,7 @@ namespace MagusEngine.Systems
     [JsonConverter(typeof(UniverseJsonConverter))]
     public sealed class Universe :
         ISubscriber<ChangeControlledActorMap>,
+        ISubscriber<ChangeControlledEntitiy>,
         ISubscriber<AddEntitiyCurrentMap>,
         ISubscriber<ProcessTurnEvent>,
         ISubscriber<RemoveEntitiyCurrentMap>
@@ -216,7 +217,7 @@ namespace MagusEngine.Systems
 
         public static void ChangeActorMap(MagiEntity entity, MagiMap mapToGo, Point pos, MagiMap previousMap)
         {
-            previousMap.Remove(entity);
+            previousMap.RemoveMagiEntity(entity);
             entity.Position = pos;
             mapToGo.AddMagiEntity(entity);
         }
@@ -357,7 +358,7 @@ namespace MagusEngine.Systems
             }
 
             Player.ProcessNeeds();
-            PlayerTimeNode playerTurn = new PlayerTimeNode(Time.GetTimePassed(playerTime));
+            PlayerTimeNode playerTurn = new(Time.GetTimePassed(playerTime));
             Time.RegisterEntity(playerTurn);
             Player.GetAnatomy().UpdateBody(Player);
             CurrentMap.PlayerFOV.Calculate(Player.Position, Player.GetViewRadius());
@@ -417,7 +418,7 @@ namespace MagusEngine.Systems
                 if (sucesses > 0 && totalTicks < -1)
                     return;
 
-                EntityTimeNode nextTurnNode = new EntityTimeNode(entityId, Time.GetTimePassed(totalTicks));
+                EntityTimeNode nextTurnNode = new(entityId, Time.GetTimePassed(totalTicks));
                 Time.RegisterEntity(nextTurnNode);
             }
         }
@@ -426,15 +427,14 @@ namespace MagusEngine.Systems
         {
             CurrentMap.ControlledEntitiy = entity;
             // event
-            //GameLoop.UIManager.MapWindow.CenterOnActor(entity);
             Locator.GetService<MessageBusService>().SendMessage<ChangeCenteredActor>(new(entity));
         }
 
         public RegionChunk GenerateChunck(Point posGenerated)
         {
-            RegionChunk newChunck = new RegionChunk(posGenerated);
+            RegionChunk newChunck = new(posGenerated);
 
-            WildernessGenerator genMap = new WildernessGenerator();
+            WildernessGenerator genMap = new();
             newChunck.LocalMaps = genMap.GenerateMapWithWorldParam(WorldMap, posGenerated);
 
             for (int i = 0; i < newChunck.LocalMaps.Length; i++)
@@ -474,7 +474,7 @@ namespace MagusEngine.Systems
 
         public void Handle(AddEntitiyCurrentMap message)
         {
-            CurrentMap.AddEntity(message.Entitiy);
+            CurrentMap.AddMagiEntity(message.Entitiy);
         }
 
         public void Handle(ProcessTurnEvent message)
@@ -484,7 +484,12 @@ namespace MagusEngine.Systems
 
         public void Handle(RemoveEntitiyCurrentMap message)
         {
-            CurrentMap.RemoveEntity(message.Entity);
+            CurrentMap.RemoveMagiEntity(message.Entity);
+        }
+
+        public void Handle(ChangeControlledEntitiy message)
+        {
+            ChangeControlledEntity(message.ControlledEntitiy);
         }
 
         ~Universe()

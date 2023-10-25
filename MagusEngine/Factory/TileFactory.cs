@@ -3,6 +3,7 @@ using Arquimedes.Enumerators;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.ECS.Components;
 using MagusEngine.ECS.Components.ActorComponents;
+using MagusEngine.ECS.Components.TilesComponents;
 using MagusEngine.Serialization;
 using MagusEngine.Systems;
 using SadRogue.Primitives;
@@ -18,11 +19,18 @@ namespace MagusEngine.Factory
         {
             var tile = CreateTile(pos, TileType.Floor, "dirt");
             var plant = DataManager.QueryPlantInData("grass");
-            tile.AddComponent(plant);
-            tile.AddComponent(new FoodComponent(Food.Herbivore));
-            tile.Traits.Add(Trait.GrazerEatable);
-
+            AddVegetation(tile, plant);
             return tile;
+        }
+
+        public static void AddVegetation(Tile tile, Plant plant)
+        {
+            tile.AddComponent(plant);
+            if (plant.Material.ConfersTraits.Contains(Trait.GrazerEatable))
+            {
+                tile.AddComponent(new FoodComponent(Food.Herbivore));
+                tile.Traits.Add(Trait.GrazerEatable);
+            }
         }
 
         public static Tile GenericDirtRoad(Point pos)

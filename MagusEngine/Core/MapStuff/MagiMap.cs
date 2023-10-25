@@ -139,7 +139,7 @@ namespace MagusEngine.Core.MapStuff
             foreach (IGameObject item in Entities.Items)
             {
                 if (item is MagiEntity entity)
-                    Remove(entity);
+                    RemoveMagiEntity(entity);
                 else
                     RemoveEntity(item);
             }
@@ -264,7 +264,7 @@ namespace MagusEngine.Core.MapStuff
         /// Removes an Entity from the Entities Field
         /// </summary>
         /// <param name="entity"></param>
-        public void Remove(MagiEntity entity)
+        public void RemoveMagiEntity(MagiEntity entity)
         {
             if (Entities.Contains(entity))
             {

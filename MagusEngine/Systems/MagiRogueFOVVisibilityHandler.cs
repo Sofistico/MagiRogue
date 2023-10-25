@@ -67,7 +67,7 @@ namespace MagusEngine.Systems
         {
             if (entity.Layer == _ghostLayer)
             {
-                Map.Remove(entity);
+                Map.RemoveMagiEntity(entity);
 
                 return;
             }
@@ -83,7 +83,7 @@ namespace MagusEngine.Systems
         {
             var value = ghosts[entity.ID];
             ghosts.Remove(entity.ID);
-            Map.Remove(value);
+            Map.RemoveMagiEntity(value);
         }
 
         /// <summary>

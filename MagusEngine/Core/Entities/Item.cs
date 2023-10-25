@@ -110,7 +110,7 @@ namespace MagusEngine.Core.Entities
         // collector take it out of memory automatically.
         public void RemoveFromMap()
         {
-            MagiMap.Remove(this);
+            MagiMap.RemoveMagiEntity(this);
         }
 
         public bool Equip(Actor actor)
