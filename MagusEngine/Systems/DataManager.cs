@@ -1,6 +1,5 @@
 ﻿using Arquimedes.Enumerators;
 using Arquimedes.Utils;
-using MagusEngine.Core;
 using MagusEngine.Core.Civ;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
@@ -30,7 +29,7 @@ namespace MagusEngine.Systems
         public static readonly IReadOnlyList<ItemTemplate> ListOfItems =
             GetSourceTree<ItemTemplate>(@".\Data\Items\items_*");
 
-        public static readonly IReadOnlyList<MaterialTemplate> ListOfMaterials =
+        public static readonly List<MaterialTemplate> ListOfMaterials =
             GetSourceTree<MaterialTemplate>(@".\Data\Materials\material_*");
 
         public static readonly IReadOnlyList<SpellBase> ListOfSpells =
@@ -128,6 +127,29 @@ namespace MagusEngine.Systems
             return allTList.AsReadOnly();
         }
 
+        public static List<T> GetSourceTree<T>(string wildCard)
+        {
+            string[] files = FileUtils.GetFiles(wildCard);
+
+            List<List<T>> listTList = new();
+
+            for (int i = 0; i < files.Length; i++)
+            {
+                var t = JsonUtils.JsonDeseralize<List<T>>(files[i]);
+                listTList.Add(t);
+            }
+            List<T> allTList = new();
+
+            foreach (List<T> tList in listTList)
+            {
+                if (tList is null)
+                    continue;
+                allTList.AddRange(tList);
+            }
+
+            return allTList;
+        }
+
         #region Query
 
         public static SpellBase QuerySpellInData(string spellId) => ListOfSpells.FirstOrDefault
@@ -185,7 +207,7 @@ namespace MagusEngine.Systems
                     inheirtFrom.CopyTo(mat);
                 }
             }
-            return ListOfMaterials.FirstOrDefault(a => a.Id.Equals(id));
+            return ListOfMaterials.Find(a => a.Id.Equals(id));
         }
 
         //public static List<Tile> QueryTilesInDataWithTrait(Trait trait)
@@ -274,7 +296,7 @@ namespace MagusEngine.Systems
 
         public static MaterialTemplate QueryMaterialWithTrait(Trait trait)
         {
-            return ListOfMaterials.Where(i => i?.ConfersTraits?.Contains(trait) == true).GetRandomItemFromList();
+            return ListOfMaterials.Where(i => i.ConfersTraits?.Contains(trait) == true).GetRandomItemFromList();
         }
 
         #endregion helper methods

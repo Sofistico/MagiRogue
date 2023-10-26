@@ -370,7 +370,7 @@ namespace MagusEngine.Utils
         /// <param name="attackMessage"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">throws if the attack is null</exception>
-        public static (bool, BodyPart?, BodyPart, DamageTypes, Item?, MaterialTemplate?) ResolveHit(
+        public static (bool, BodyPart?, BodyPart, DamageTypes, Item?, MaterialTemplate) ResolveHit(
             Actor attacker,
             Actor defender,
             StringBuilder attackMessage,
@@ -393,8 +393,8 @@ namespace MagusEngine.Utils
             attackMessage.AppendFormat("{0} {1} the {2}{3}", person, verb, defender.Name, with);
             var materialUsed = wieldedItem is null
                 ? bpAttacking.Tissues.Find(i => i.Flags.Contains(TissueFlag.Structural)
-                    || i.Flags.Contains(TissueFlag.Muscular))?.Material
-                : wieldedItem.Material;
+                    || i.Flags.Contains(TissueFlag.Muscular)).Material
+                : wieldedItem?.Material;
             if (materialUsed is null)
             {
                 Locator.GetService<MagiLog>().Log("Material was null!");
@@ -677,7 +677,7 @@ namespace MagusEngine.Utils
                 (attacker.GetStrenght() + Mrn.Exploding2D6Dice)
                 * (attacker.GetRelevantAbilityMultiplier(attack.AttackAbility) + 1)
                 * attacker.GetAttackVelocity(attack)
-                + (1 + attacker.Volume / ((limbAttacking.GetStructuralMaterial()?.DensityKgM3 ?? 1) * limbAttacking.Volume)));
+                + (1 + (attacker.Volume / ((limbAttacking.GetStructuralMaterial()?.DensityKgM3 ?? 1) * limbAttacking.Volume))));
         }
 
         #endregion Physics

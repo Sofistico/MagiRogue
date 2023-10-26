@@ -1,9 +1,9 @@
 ﻿using Arquimedes.Enumerators;
 using GoRogue.Components;
 using MagusEngine.Bus.ComponentBus;
-using MagusEngine.ECS.Components;
 using MagusEngine.Serialization;
 using MagusEngine.Services;
+using MagusEngine.Systems.Physics;
 using SadConsole;
 using SadRogue.Primitives;
 using System.Collections.Generic;
@@ -12,12 +12,28 @@ namespace MagusEngine.Core.MapStuff
 {
     public class Tile : MagiGameObject
     {
+        private MaterialTemplate _material;
+
         public ColoredGlyph Appearence { get; set; }
         public ColoredGlyph? LastSeenAppereance { get; set; }
         public int MoveTimeCost { get; set; } = 100;
         public string? Name { get; set; }
         public string? Description { get; set; }
         public List<Trait> Traits { get; set; } = new();
+
+        public string MaterialId
+        {
+            get
+            {
+                return _material.Id;
+            }
+
+            set
+            {
+                _material = PhysicsManager.SetMaterial(value);
+            }
+        }
+        public MaterialTemplate Material => _material;
 
         public Tile() : this(Color.BlueViolet, Color.Wheat, '@', true, true, Point.None)
         {
@@ -51,7 +67,7 @@ namespace MagusEngine.Core.MapStuff
         {
             MoveTimeCost = moveTimeCost;
             Name = name;
-            AddComponent<MaterialComponent>(new(idMaterial));
+            MaterialId = idMaterial;
         }
 
         private Tile(Tile tile)
@@ -66,6 +82,7 @@ namespace MagusEngine.Core.MapStuff
             Traits = tile.Traits;
             Name = tile.Name;
             MoveTimeCost = tile.MoveTimeCost;
+            MaterialId = tile.MaterialId;
         }
 
         public T? GetComponent<T>(string? tag = null) where T : class
@@ -110,11 +127,6 @@ namespace MagusEngine.Core.MapStuff
             GoRogueComponents.Add(value, tag);
             Locator.GetService<MessageBusService>()
                 ?.SendMessage<ComponentAddedCommand<T>>(new(ID, value));
-        }
-
-        public MaterialTemplate? GetMaterial()
-        {
-            return GetComponent<MaterialComponent>()?.Material;
         }
     }
 }

@@ -2,6 +2,7 @@
 using MagusEngine.Systems;
 using MagusEngine.Systems.Physics;
 using MagusEngine.Utils;
+using MagusEngine.Utils.Extensions;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -124,7 +125,7 @@ namespace MagusEngine.Serialization
             {
                 return objectName;
             }
-            return $"{materialName} {objectName}";
+            return $"{materialName.FirstLetterUpper()} {objectName}";
         }
 
         public string ReturnNameFromMaterial(string objectName)

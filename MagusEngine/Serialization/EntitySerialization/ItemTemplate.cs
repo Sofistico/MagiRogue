@@ -193,8 +193,8 @@ namespace MagusEngine.Serialization.EntitySerialization
         {
             int glyph = GlyphHelper.GlyphExistInDictionary(itemTemplate.Glyph)
                 ? GlyphHelper.GetGlyph(itemTemplate.Glyph) : itemTemplate.Glyph;
-            MagiColorSerialization foreground = new MagiColorSerialization(itemTemplate.Foreground);
-            MagiColorSerialization background = new MagiColorSerialization(itemTemplate.Background);
+            MagiColorSerialization foreground = new(itemTemplate.Foreground);
+            MagiColorSerialization background = new(itemTemplate.Background);
 
             Item item = new(foreground.Color,
                 background.Color,
@@ -227,7 +227,7 @@ namespace MagusEngine.Serialization.EntitySerialization
                 item.Condition = itemTemplate.Condition;
             }
             item.Description = itemTemplate.Description;
-            if (item.Material?.ConfersTraits?.Count > 0)
+            if (item.Material.ConfersTraits?.Count > 0)
             {
                 item.Traits.AddRange(item.Material.ConfersTraits);
             }
