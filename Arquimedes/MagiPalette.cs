@@ -53,61 +53,65 @@ namespace Arquimedes
         public static readonly Color Wood = new Color(186, 140, 99);
         public static readonly Color DarkWood = new Color(87, 65, 46);
         public static readonly Color UnclearGlass = new Color(183, 183, 189);
+        public static readonly Color DarkGrassColor = GrassColor.GetDark();
 
         public static void AddToColorDictionary()
         {
-            if (ColorExtensions2.ColorMappings.ContainsKey("DeepWaterColor".ToLower()))
+            // bizarre, why is this here?
+            if (ColorExtensions2.ColorMappings.ContainsKey(nameof(DeepWaterColor).ToLower()))
                 return;
             // height map color
-            ColorExtensions2.ColorMappings.Add("DeepWaterColor".ToLower(), DeepWaterColor);
-            ColorExtensions2.ColorMappings.Add("ShallowWaterColor".ToLower(), ShallowWaterColor);
-            ColorExtensions2.ColorMappings.Add("RiverColor".ToLower(), RiverColor);
-            ColorExtensions2.ColorMappings.Add("SandColor".ToLower(), SandColor);
-            ColorExtensions2.ColorMappings.Add("GrassColor".ToLower(), GrassColor);
-            ColorExtensions2.ColorMappings.Add("ForestColor".ToLower(), ForestColor);
-            ColorExtensions2.ColorMappings.Add("RockColor".ToLower(), RockColor);
-            ColorExtensions2.ColorMappings.Add("HighMountainColor".ToLower(), HighMountainColor);
-            ColorExtensions2.ColorMappings.Add("SnowColor".ToLower(), SnowColor);
-            ColorExtensions2.ColorMappings.Add("MagicColor".ToLower(), MagicColor);
+            ColorExtensions2.ColorMappings.Add(nameof(DeepWaterColor).ToLower(), DeepWaterColor);
+            ColorExtensions2.ColorMappings.Add(nameof(ShallowWaterColor).ToLower(), ShallowWaterColor);
+            ColorExtensions2.ColorMappings.Add(nameof(RiverColor).ToLower(), RiverColor);
+            ColorExtensions2.ColorMappings.Add(nameof(SandColor).ToLower(), SandColor);
+            ColorExtensions2.ColorMappings.Add(nameof(GrassColor).ToLower(), GrassColor);
+            ColorExtensions2.ColorMappings.Add(nameof(ForestColor).ToLower(), ForestColor);
+            ColorExtensions2.ColorMappings.Add(nameof(RockColor).ToLower(), RockColor);
+            ColorExtensions2.ColorMappings.Add(nameof(HighMountainColor).ToLower(), HighMountainColor);
+            ColorExtensions2.ColorMappings.Add(nameof(SnowColor).ToLower(), SnowColor);
+            ColorExtensions2.ColorMappings.Add(nameof(MagicColor).ToLower(), MagicColor);
 
             // temperature map color
-            ColorExtensions2.ColorMappings.Add("Coldest".ToLower(), Coldest);
-            ColorExtensions2.ColorMappings.Add("Colder".ToLower(), Colder);
-            ColorExtensions2.ColorMappings.Add("Cold".ToLower(), Cold);
-            ColorExtensions2.ColorMappings.Add("Warm".ToLower(), Warm);
-            ColorExtensions2.ColorMappings.Add("Warmer".ToLower(), Warmer);
-            ColorExtensions2.ColorMappings.Add("Warmest".ToLower(), Warmest);
+            ColorExtensions2.ColorMappings.Add(nameof(Coldest).ToLower(), Coldest);
+            ColorExtensions2.ColorMappings.Add(nameof(Colder).ToLower(), Colder);
+            ColorExtensions2.ColorMappings.Add(nameof(Cold).ToLower(), Cold);
+            ColorExtensions2.ColorMappings.Add(nameof(Warm).ToLower(), Warm);
+            ColorExtensions2.ColorMappings.Add(nameof(Warmer).ToLower(), Warmer);
+            ColorExtensions2.ColorMappings.Add(nameof(Warmest).ToLower(), Warmest);
             // hydro map color
-            ColorExtensions2.ColorMappings.Add("Dryest".ToLower(), Dryest);
-            ColorExtensions2.ColorMappings.Add("Dryer".ToLower(), Dryer);
-            ColorExtensions2.ColorMappings.Add("Dry".ToLower(), Dry);
-            ColorExtensions2.ColorMappings.Add("Wet".ToLower(), Wet);
-            ColorExtensions2.ColorMappings.Add("Wetter".ToLower(), Wetter);
-            ColorExtensions2.ColorMappings.Add("Wettest".ToLower(), Wettest);
+            ColorExtensions2.ColorMappings.Add(nameof(Dryest).ToLower(), Dryest);
+            ColorExtensions2.ColorMappings.Add(nameof(Dryer).ToLower(), Dryer);
+            ColorExtensions2.ColorMappings.Add(nameof(Dry).ToLower(), Dry);
+            ColorExtensions2.ColorMappings.Add(nameof(Wet).ToLower(), Wet);
+            ColorExtensions2.ColorMappings.Add(nameof(Wetter).ToLower(), Wetter);
+            ColorExtensions2.ColorMappings.Add(nameof(Wettest).ToLower(), Wettest);
 
             // river map colors
-            ColorExtensions2.ColorMappings.Add("IceWater".ToLower(), IceWater);
-            ColorExtensions2.ColorMappings.Add("ColdWater".ToLower(), ColdWater);
-            ColorExtensions2.ColorMappings.Add("RiverWater".ToLower(), RiverWater);
+            ColorExtensions2.ColorMappings.Add(nameof(IceWater).ToLower(), IceWater);
+            ColorExtensions2.ColorMappings.Add(nameof(ColdWater).ToLower(), ColdWater);
+            ColorExtensions2.ColorMappings.Add(nameof(RiverWater).ToLower(), RiverWater);
 
             // biomes map colors
-            ColorExtensions2.ColorMappings.Add("Ice".ToLower(), Ice);
-            ColorExtensions2.ColorMappings.Add("Desert".ToLower(), Desert);
-            ColorExtensions2.ColorMappings.Add("Savanna".ToLower(), Savanna);
-            ColorExtensions2.ColorMappings.Add("TropicalRainforest".ToLower(), TropicalRainforest);
-            ColorExtensions2.ColorMappings.Add("Tundra".ToLower(), Tundra);
-            ColorExtensions2.ColorMappings.Add("TemperateRainforest".ToLower(), TemperateRainforest);
-            ColorExtensions2.ColorMappings.Add("Grassland".ToLower(), Grassland);
-            ColorExtensions2.ColorMappings.Add("SeasonalForest".ToLower(), SeasonalForest);
-            ColorExtensions2.ColorMappings.Add("BorealForest".ToLower(), BorealForest);
-            ColorExtensions2.ColorMappings.Add("Woodland".ToLower(), Woodland);
+            ColorExtensions2.ColorMappings.Add(nameof(Ice).ToLower(), Ice);
+            ColorExtensions2.ColorMappings.Add(nameof(Desert).ToLower(), Desert);
+            ColorExtensions2.ColorMappings.Add(nameof(Savanna).ToLower(), Savanna);
+            ColorExtensions2.ColorMappings.Add(nameof(TropicalRainforest).ToLower(), TropicalRainforest);
+            ColorExtensions2.ColorMappings.Add(nameof(Tundra).ToLower(), Tundra);
+            ColorExtensions2.ColorMappings.Add(nameof(TemperateRainforest).ToLower(), TemperateRainforest);
+            ColorExtensions2.ColorMappings.Add(nameof(Grassland).ToLower(), Grassland);
+            ColorExtensions2.ColorMappings.Add(nameof(SeasonalForest).ToLower(), SeasonalForest);
+            ColorExtensions2.ColorMappings.Add(nameof(BorealForest).ToLower(), BorealForest);
+            ColorExtensions2.ColorMappings.Add(nameof(Woodland).ToLower(), Woodland);
 
             // normal tile map colors
-            ColorExtensions2.ColorMappings.Add("Dirt".ToLower(), Dirt);
-            ColorExtensions2.ColorMappings.Add("DirtRoad".ToLower(), DirtRoad);
-            ColorExtensions2.ColorMappings.Add("Wood".ToLower(), Wood);
-            ColorExtensions2.ColorMappings.Add("DarkWood".ToLower(), DarkWood);
-            ColorExtensions2.ColorMappings.Add("UnclearGlass".ToLower(), UnclearGlass);
+            ColorExtensions2.ColorMappings.Add(nameof(Dirt).ToLower(), Dirt);
+            ColorExtensions2.ColorMappings.Add(nameof(DirtRoad).ToLower(), DirtRoad);
+            ColorExtensions2.ColorMappings.Add(nameof(Wood).ToLower(), Wood);
+            ColorExtensions2.ColorMappings.Add(nameof(DarkWood).ToLower(), DarkWood);
+            ColorExtensions2.ColorMappings.Add(nameof(UnclearGlass).ToLower(), UnclearGlass);
+
+            ColorExtensions2.ColorMappings.Add(nameof(DarkGrassColor).ToLower(), DarkGrassColor);
         }
     }
 }

@@ -23,8 +23,8 @@ namespace MagusEngine.Generators.MapGen
             PrepareForFloors();
             PrepareForOuterWalls();
             AppendForestTestMap();
-            AppendRitualFloor();
             FillMapWithGrass(_map);
+            AppendRitualFloor();
             PutCircularRoom();
             PutFurnitureInCircularRoom();
             PutDwarfInCenterOfCircularRoom();

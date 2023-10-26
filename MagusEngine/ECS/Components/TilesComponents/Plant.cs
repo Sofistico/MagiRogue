@@ -20,6 +20,8 @@ namespace MagusEngine.ECS.Components.TilesComponents
         public string Name { get; set; }
 
         [JsonRequired]
+        public string[] Fores { get; set; }
+
         public string Fore
         {
             get
@@ -56,14 +58,16 @@ namespace MagusEngine.ECS.Components.TilesComponents
         [JsonRequired]
         public string MaterialId { get; set; }
 
-        public MaterialTemplate Material { get; }
+        public MaterialTemplate Material { get; set; }
 
         public int Bundle { get; set; }
 
         [JsonConstructor]
-        public Plant(string? materialId = null)
+        public Plant(string? materialId = null, string[] fores = null)
         {
             Material = materialId!.IsNullOrEmpty() ? MaterialTemplate.None! : PhysicsManager.SetMaterial(materialId)!;
+            Fores = fores;
+            Fore = Fores.GetRandomItemFromList();
         }
 
         public Plant(ColoredGlyph glyph, string? materialId) : this(materialId)
@@ -73,7 +77,7 @@ namespace MagusEngine.ECS.Components.TilesComponents
             Glyphs = new char[] { (char)glyph.Glyph };
         }
 
-        public Plant(Color foreground, Color background, char[] glyphs, string materialId) : this(materialId)
+        public Plant(string foreground, Color background, char[] glyphs)
         {
             fore = new(foreground);
             back = new(background);
@@ -82,11 +86,15 @@ namespace MagusEngine.ECS.Components.TilesComponents
 
         public Plant Clone()
         {
-            return new Plant(Foreground, Background, Glyphs, MaterialId)
+            return new Plant(Fores.GetRandomItemFromList(), Background, Glyphs)
             {
                 Id = Id,
                 Name = Name,
                 Bundle = Bundle,
+                Material = Material,
+                MaterialId = MaterialId,
+                Fores = Fores,
+                Glyphs = Glyphs,
             };
         }
     }

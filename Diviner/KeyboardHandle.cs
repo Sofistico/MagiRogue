@@ -4,7 +4,6 @@ using Diviner.Windows;
 using MagusEngine;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Commands;
-using MagusEngine.Core;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.ECS.Components.ActorComponents;
@@ -428,7 +427,7 @@ namespace Diviner
                         MapTemplate mapDeJsonified = JsonConvert.DeserializeObject<MagiMap>(json);
                     }
                 }
-                catch (Newtonsoft.Json.JsonSerializationException e)
+                catch
                 {
                     throw;
                 }
