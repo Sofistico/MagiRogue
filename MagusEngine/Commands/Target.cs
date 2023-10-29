@@ -11,6 +11,7 @@ using MagusEngine.Services;
 using MagusEngine.Systems;
 using MagusEngine.Systems.Time;
 using MagusEngine.Utils;
+using SadConsole.Effects;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace MagusEngine.Commands
 
         public MagiEntity Cursor { get; set; }
 
-        public IList<MagiEntity> TargetList { get; set; }
+        public List<MagiEntity> TargetList { get; set; }
 
         public Point OriginCoord { get; set; }
 
@@ -42,18 +43,19 @@ namespace MagusEngine.Commands
 
         public SpellBase SpellSelected { get; set; }
 
-        public bool LookMode { get; set; }
-
         public Point Position => Cursor.Position;
 
         public Target(Point spawnCoord)
         {
-            Color targetColor = new Color(255, 0, 0);
+            Color targetColor = new(255, 0, 0);
 
             OriginCoord = spawnCoord;
 
             Cursor = new Actor("Target Cursor",
-                targetColor, Color.AnsiYellow, 'X', spawnCoord, (int)MapLayer.SPECIAL)
+                targetColor,
+                Color.AnsiYellow,
+                'X', spawnCoord,
+                (int)MapLayer.SPECIAL)
             {
                 IsWalkable = true,
                 CanBeKilled = false,
@@ -63,7 +65,7 @@ namespace MagusEngine.Commands
                 AlwaySeen = true
             };
 
-            SadConsole.Effects.Blink blink = new SadConsole.Effects.Blink()
+            Blink blink = new()
             {
                 BlinkCount = -1,
                 BlinkSpeed = TimeSpan.FromSeconds(0.5),
@@ -105,6 +107,7 @@ namespace MagusEngine.Commands
             }
 
             StartTargetting();
+            State = TargetState.Targeting;
         }
 
         public void StartTargetting()
@@ -122,8 +125,7 @@ namespace MagusEngine.Commands
             Locator.GetService<MessageBusService>()?.SendMessage<AddEntitiyCurrentMap>(new(Cursor));
 
             Cursor.PositionChanged += Cursor_Moved;
-            State = TargetState.Targeting;
-            LookMode = true;
+            State = TargetState.LookMode;
             Cursor.IgnoresWalls = true;
         }
 
@@ -228,20 +230,28 @@ namespace MagusEngine.Commands
         {
             if (SpellSelected.Effects.Any(e => e.Radius > 0))
             {
-                var _spellCasted = SpellSelected;
-                var allPosEntities = new List<Point>();
+                var allPos = new List<Point>();
 
                 foreach (var entity in TargetList)
                 {
                     if (entity.CanBeAttacked)
-                        allPosEntities.Add(entity.Position);
+                        allPos.Add(entity.Position);
                 }
 
-                var sucess = SpellSelected.CastSpell(allPosEntities, _caster);
+                if (SpellSelected.AffectsTile)
+                {
+                    foreach (var pos in tileDictionary.Keys)
+                    {
+                        if (!allPos.Contains(pos))
+                            allPos.Add(pos);
+                    }
+                }
+
+                var sucess = SpellSelected.CastSpell(allPos, _caster);
 
                 EndTargetting();
 
-                return (sucess, _spellCasted);
+                return (sucess, SpellSelected);
             }
             return (false, null);
         }
@@ -255,7 +265,7 @@ namespace MagusEngine.Commands
         {
             TargetList.Clear();
             TravelPath = Cursor.MagiMap.AStar.ShortestPath(OriginCoord, e.NewValue)!;
-            if (LookMode || TravelPath is null)
+            if (State is TargetState.LookMode || TravelPath is null)
             {
                 TravelPath = Cursor.MagiMap
                     .AStarWithAllWalkable().ShortestPath(OriginCoord, e.NewValue)!;
@@ -302,12 +312,11 @@ namespace MagusEngine.Commands
                 {
                     var eff = GetSpellAreaEffect(SpellAreaEffect.Ball);
                     if (eff is null) { return; }
-                    RadiusLocationContext radiusLocation =
-                       new RadiusLocationContext(Cursor.Position, eff.Radius);
+                    RadiusLocationContext radiusLocation = new(Cursor.Position, eff.Radius);
 
                     foreach (Point point in radius.PositionsInRadius(radiusLocation))
                     {
-                        AddTileToDictionary(point);
+                        AddTileToDictionary(point, SpellSelected.IgnoresWall);
                         AddEntityToList(point);
                     }
                 }
@@ -318,7 +327,7 @@ namespace MagusEngine.Commands
                     foreach (Point point in
                         OriginCoord.Cone(effect.Radius, this, effect.ConeCircleSpan).Points)
                     {
-                        AddTileToDictionary(point);
+                        AddTileToDictionary(point, SpellSelected.IgnoresWall);
                         AddEntityToList(point);
                     }
                 }
@@ -340,10 +349,10 @@ namespace MagusEngine.Commands
         /// Adds the tile to the <see cref="tileDictionary"/>.
         /// </summary>
         /// <param name="point"></param>
-        private void AddTileToDictionary(Point point)
+        private void AddTileToDictionary(Point point, bool ignoresWall = false)
         {
             var halp = Cursor.MagiMap.GetTileAt(point);
-            if (halp is not null)
+            if (halp is not null && (halp.IsTransparent || ignoresWall))
             {
                 halp.Appearence.Background = Color.Yellow;
                 tileDictionary.TryAdd(point, halp);
@@ -366,7 +375,7 @@ namespace MagusEngine.Commands
         {
             var entity = Cursor.MagiMap.GetEntityAt<MagiEntity>(point);
             if (entity is not null && !TargetList.Contains(entity))
-                TargetList.Add(Cursor.MagiMap.GetEntityAt<MagiEntity>(point));
+                TargetList.Add(entity);
         }
 
         private ISpellEffect GetSpellAreaEffect(SpellAreaEffect areaEffect) =>

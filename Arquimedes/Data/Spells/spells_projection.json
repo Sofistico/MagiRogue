@@ -131,6 +131,7 @@
     "SpellRange": 1,
     "ManaCost": 8.0,
     "SpellId": "cone_cold",
-    "Context": [ "Offensive" ]
+    "Context": [ "Offensive" ],
+    "AffectsTile": true
   }
 ]

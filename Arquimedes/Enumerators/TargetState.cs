@@ -3,6 +3,7 @@
     public enum TargetState
     {
         Resting,
+        LookMode,
         Targeting
     }
 }

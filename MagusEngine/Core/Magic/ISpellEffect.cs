@@ -24,7 +24,7 @@ namespace MagusEngine.Core.Magic
         public EffectType EffectType { get; set; }
         bool CanMiss { get; set; }
 
-        public void ApplyEffect(Point target, Actor caster, SpellBase spellCasted);
+        void ApplyEffect(Point target, Actor caster, SpellBase spellCasted);
     }
 
     public interface IPermEffect
