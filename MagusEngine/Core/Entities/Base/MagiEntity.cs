@@ -1,6 +1,8 @@
 ﻿using GoRogue.Components;
 using GoRogue.GameFramework;
+using MagusEngine.Bus.ComponentBus;
 using MagusEngine.Core.Magic;
+using MagusEngine.Services;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
@@ -281,27 +283,43 @@ namespace MagusEngine.Core.Entities.Base
             backingField.OnMapChanged(newMap);
         }
 
-        public void AddComponents(params object[] components)
+        public void AddComponents<T>(params T[] components) where T : class
         {
-            foreach (object component in components)
+            foreach (var component in components)
             {
                 if (component is null)
                     continue;
-                backingField.GoRogueComponents.Add(component);
-                //Locator.GetService<MessageBusService>().SendMessage(component);
+                backingField.GoRogueComponents.Add<T>(component);
+                Locator.GetService<MessageBusService>().SendMessage<ComponentAddedCommand<T>>(new(ID, component));
             }
         }
 
-        public void AddComponent<T>(T component, string? tag) where T : class
+        public void AddComponent<T>(T component, string? tag = null) where T : class
         {
             GoRogueComponents.Add(component, tag);
+            Locator.GetService<MessageBusService>().SendMessage<ComponentAddedCommand<T>>(new(ID, component));
         }
 
         public T GetComponent<T>() where T : class
             => backingField.GoRogueComponents.GetFirstOrDefault<T>();
 
+        public bool GetComponent<T>(out T component, string? tag = null) where T : class
+        {
+            component = backingField.GoRogueComponents.GetFirstOrDefault<T>(tag);
+            return component != null;
+        }
+
         public IEnumerable<T> GetComponents<T>() where T : class
             => backingField.GoRogueComponents.GetAll<T>();
+
+        public void RemoveComponent<T>() where T : class
+        {
+            if (GetComponent(out T comp))
+            {
+                GoRogueComponents.Remove(comp);
+                Locator.GetService<MessageBusService>().SendMessage<ComponentRemovedCommand>(new(ID));
+            }
+        }
 
         #endregion IGameObject Interface
     }

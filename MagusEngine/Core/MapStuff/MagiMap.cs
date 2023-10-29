@@ -277,6 +277,7 @@ namespace MagusEngine.Core.MapStuff
 
                 _entityManager.IsDirty = true;
                 _needsToUpdateActorsDict = true;
+                _registry.Destroy(entity.ID);
             }
         }
 

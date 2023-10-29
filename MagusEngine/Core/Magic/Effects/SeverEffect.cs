@@ -19,6 +19,7 @@ namespace MagusEngine.Core.Magic.Effects
         public EffectType EffectType { get; set; } = EffectType.SEVER;
         public int BaseDamage { get; set; }
         public bool CanMiss { get; set; }
+        public string EffectMessage { get; set; }
 
         [JsonConstructor]
         public SeverEffect(SpellAreaEffect areaOfEffect, DamageTypes spellDamageType, int radius, int dmg)
@@ -48,13 +49,16 @@ namespace MagusEngine.Core.Magic.Effects
 
                 Limb limbToLose = poorGuy.GetAnatomy().Limbs[i];
 
-                Wound injury = new Wound(DamageTypes.Sharp, limbToLose.Tissues);
+                Wound injury = new(DamageTypes.Sharp, limbToLose.Tissues);
                 poorGuy.GetAnatomy().Injury(injury, limbToLose, poorGuy);
 
                 if (poorGuy is not null)
                 {
-                    DamageEffect damage = new
-                        DamageEffect(BaseDamage, AreaOfEffect, SpellDamageType, canMiss: true, radius: Radius,
+                    DamageEffect damage = new(BaseDamage,
+                        AreaOfEffect,
+                        SpellDamageType,
+                        canMiss: true,
+                        radius: Radius,
                         isResistable: true);
                     damage.ApplyEffect(target, caster, spellCasted);
                 }

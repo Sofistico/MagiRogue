@@ -6,7 +6,8 @@ using MagusEngine.Services;
 namespace MagusEngine.ECS
 {
     public class ComponentStore<T> : IComponentStore,
-        ISubscriber<ComponentAddedCommand<T>>
+        ISubscriber<ComponentAddedCommand<T>>,
+        ISubscriber<ComponentRemovedCommand>
     {
         private readonly T[] instances;
         private readonly bool initialized;
@@ -43,6 +44,12 @@ namespace MagusEngine.ECS
         {
             if (initialized)
                 Add(message.Id, message.Component);
+        }
+
+        public void Handle(ComponentRemovedCommand message)
+        {
+            if (initialized)
+                Remove(message.Id);
         }
 
         ~ComponentStore()

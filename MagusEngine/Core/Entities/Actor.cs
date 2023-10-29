@@ -6,6 +6,7 @@ using MagusEngine.Commands;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.ECS.Components.ActorComponents;
+using MagusEngine.ECS.Components.ActorComponents.EffectComponents;
 using MagusEngine.ECS.Components.TilesComponents;
 using MagusEngine.Serialization.EntitySerialization;
 using MagusEngine.Services;
@@ -355,14 +356,17 @@ namespace MagusEngine.Core.Entities
             return Body.StaminaRegen * GetAnatomy().FitLevel;
         }
 
-        public double GetActorBaseSpeed()
+        public double GetActorSpeed()
         {
-            return Body.GeneralSpeed;
+            var speed = Body.GeneralSpeed;
+            if (GetComponent<HasteComponent>(out var haste))
+                speed += haste.HastePower;
+            return speed;
         }
 
         public double GetActorBaseCastingSpeed()
         {
-            return GetActorBaseSpeed() + (Magic.ShapingSkill * 0.7 * (Soul.WillPower * 0.3));
+            return GetActorSpeed() + (Magic.ShapingSkill * 0.7 * (Soul.WillPower * 0.3));
         }
 
         public double GetAttackVelocity(Attack attack)

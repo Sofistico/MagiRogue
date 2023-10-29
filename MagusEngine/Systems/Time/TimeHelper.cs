@@ -16,7 +16,7 @@ namespace MagusEngine.Systems.Time
 
         public static int GetWalkTime(Actor actor, Tile tileToMove)
         {
-            return (int)(tileToMove.MoveTimeCost / actor.GetActorBaseSpeed());
+            return (int)(tileToMove.MoveTimeCost / actor.GetActorSpeed());
         }
 
         public static int GetWalkTime(Actor actor, Point pos)
@@ -35,7 +35,7 @@ namespace MagusEngine.Systems.Time
         {
             // TODO: Need to fix this time to represent how slow it is to move on the overmap based
             // on the size of a overmap tile, which is to be defined.
-            return (int)(tile.MoveTimeCost * 100 / actor.GetActorBaseSpeed());
+            return (int)(tile.MoveTimeCost * 100 / actor.GetActorSpeed());
         }
 
         public static int GetAttackTime(Actor actor, Attack attack)

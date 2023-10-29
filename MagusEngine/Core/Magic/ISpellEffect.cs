@@ -11,18 +11,19 @@ namespace MagusEngine.Core.Magic
     public interface ISpellEffect
     {
         [JsonConverter(typeof(StringEnumConverter))]
-        public SpellAreaEffect AreaOfEffect { get; set; }
+        SpellAreaEffect AreaOfEffect { get; set; }
 
         [JsonConverter(typeof(StringEnumConverter))]
-        public DamageTypes SpellDamageType { get; set; }
-        public int Radius { get; set; }
-        public double ConeCircleSpan { get; set; }
-        public bool TargetsTile { get; set; }
-        public int BaseDamage { get; set; }
+        DamageTypes SpellDamageType { get; set; }
+        int Radius { get; set; }
+        double ConeCircleSpan { get; set; }
+        bool TargetsTile { get; set; }
+        int BaseDamage { get; set; }
 
         [JsonConverter(typeof(StringEnumConverter))]
-        public EffectType EffectType { get; set; }
+        EffectType EffectType { get; set; }
         bool CanMiss { get; set; }
+        string EffectMessage { get; set; }
 
         void ApplyEffect(Point target, Actor caster, SpellBase spellCasted);
     }

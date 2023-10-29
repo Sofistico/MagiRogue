@@ -27,14 +27,13 @@ public static class GameLoop
 
         ConfigureServices();
         // Setup the engine and create the main window.
-        new Builder()
+        var config = new Builder()
             .SetScreenSize(GameWidth, GameHeight)
             .OnStart(Init) // Hook the start event so we can add consoles to the system.
             .SetStartingScreen<UIManager>()
             .IsStartingScreenFocused(true)
-            .ConfigureFonts((f, _) => f.UseBuiltinFontExtended())
-            .Run();
-
+            .ConfigureFonts((f, _) => f.UseBuiltinFontExtended());
+        Game.Create(config);
         Game.Instance.Run();
         // Code here will not run until the game window closes.
         Game.Instance.Dispose();

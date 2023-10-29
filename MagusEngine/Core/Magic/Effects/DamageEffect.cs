@@ -24,6 +24,7 @@ namespace MagusEngine.Core.Magic.Effects
         public bool IsHealing { get; set; }
         public bool CanMiss { get; set; }
         public bool IsResistable { get; set; }
+        public string EffectMessage { get; set; }
 
         [JsonConstructor]
         public DamageEffect(int dmg,
@@ -73,7 +74,11 @@ namespace MagusEngine.Core.Magic.Effects
             }
 
             if (poorGuy is null)
+                return;
+
+            if (!poorGuy.CanBeAttacked)
             {
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("You can't target this!"));
                 return;
             }
 

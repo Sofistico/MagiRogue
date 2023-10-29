@@ -29,15 +29,15 @@ namespace MagusEngine.Systems.Physics
             if (itemHeld is not null)
             {
                 var speed = (itemHeld.SpeedOfAttack + (itemHeld.Weight * itemHeld.Volume))
-                    / actor.GetActorBaseSpeed();
+                    / actor.GetActorSpeed();
                 ability = actor.GetRelevantAbility(attack.AttackAbility);
                 finalSpeed = ability != 0 ? speed / ability : speed;
                 return finalSpeed * attack.VelocityMultiplier * 100;
             }
             ability = actor.GetRelevantAbility(attack.AttackAbility);
             finalSpeed = ability != 0 ?
-                actor.GetActorBaseSpeed() / ability
-                : actor.GetActorBaseSpeed();
+                actor.GetActorSpeed() / ability
+                : actor.GetActorSpeed();
             return finalSpeed * attack.VelocityMultiplier * 100;
         }
     }

@@ -17,6 +17,7 @@ namespace MagusEngine.Core.Magic.Effects
         public EffectType EffectType { get; set; } = EffectType.TELEPORT;
         public int BaseDamage { get; set; } = 0;
         public bool CanMiss { get; set; }
+        public string EffectMessage { get; set; }
 
         [JsonConstructor]
         public TeleportEffect(SpellAreaEffect areaOfEffect = SpellAreaEffect.Target,

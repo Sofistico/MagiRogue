@@ -241,8 +241,7 @@ namespace MagusEngine.Core.Magic
                     MagiEntity entity = Find.CurrentMap.GetEntityAt<MagiEntity>(pos);
                     foreach (ISpellEffect effect in Effects)
                     {
-                        if (entity?.CanBeAttacked == true)
-                            effect.ApplyEffect(pos, caster, this);
+                        effect.ApplyEffect(pos, caster, this);
                     }
                 }
 
