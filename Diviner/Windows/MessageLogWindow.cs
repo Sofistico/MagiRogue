@@ -144,7 +144,7 @@ namespace Diviner.Windows
         public void Handle(AddMessageLog message)
         {
             if (message.PlayerCanSee)
-                PrintMessage(message.Message.Split(":")[(int)message.Person]);
+                PrintMessage(message.Message.Split("/")[(int)message.Person]);
         }
 
         ~MessageLogWindow()

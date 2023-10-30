@@ -44,7 +44,7 @@ namespace MagusEngine.Serialization.EntitySerialization
             if (spell.ContainsKey("Context"))
                 createdSpell.Context = JsonConvert.DeserializeObject<List<SpellContext>>(spell["Context"].ToString())!;
             if (spell.ContainsKey("AffectsTile"))
-                createdSpell.AffectsTile = JsonConvert.DeserializeObject<bool>(spell["AffectsTile"].ToString());
+                createdSpell.AffectsTile = (bool)spell["AffectsTile"]!;
 
             return createdSpell;
         }

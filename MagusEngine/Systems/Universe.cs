@@ -286,7 +286,6 @@ namespace MagusEngine.Systems
         {
             if (sucess)
             {
-                var turnNow = Time.Turns;
                 bool playerActionWorked = ProcessPlayerTurn(playerTime);
 
                 if (!playerActionWorked)
