@@ -31,7 +31,7 @@
         "TurnApplied": 0,
         "Radius": 0,
         "EffectType": "HASTE",
-        "EffectMessage": "You feel yourself speeding up!/{0} speeds up!"
+        "EffectMessage": "You feel yourself speeding up!|{0} speeds up!"
       }
     ],
     "SpellName": "Haste",
