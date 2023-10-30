@@ -21,7 +21,7 @@ namespace MagusEngine.Core.Magic.Effects
         public EffectType EffectType { get; set; } = EffectType.MAGESIGHT;
         public int BaseDamage { get; set; } = 0;
         public bool CanMiss { get; set; }
-        public string EffectMessage { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+        public string EffectMessage { get; set; }
 
         [JsonConstructor]
         public MageSightEffect(int duration)

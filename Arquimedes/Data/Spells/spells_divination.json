@@ -8,7 +8,7 @@
         "Duration": 5,
         "TurnApplied": 0,
         "Radius": 0,
-
+        "EffectMessage": "You See",
         "EffectType": "MAGESIGHT",
         "BaseDamage": 0
       }

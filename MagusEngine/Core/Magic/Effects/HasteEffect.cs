@@ -57,7 +57,7 @@ namespace MagusEngine.Core.Magic.Effects
         {
             if (actor.GetComponent<HasteComponent>(out _))
             {
-                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("Can only have one haste effect per time"));
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("Can only have one haste effect active!"));
                 return;
             }
             HasteComponent haste = new();

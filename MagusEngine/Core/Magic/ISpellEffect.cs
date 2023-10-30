@@ -23,7 +23,7 @@ namespace MagusEngine.Core.Magic
         [JsonConverter(typeof(StringEnumConverter))]
         EffectType EffectType { get; set; }
         bool CanMiss { get; set; }
-        string EffectMessage { get; set; }
+        string? EffectMessage { get; set; }
 
         void ApplyEffect(Point target, Actor caster, SpellBase spellCasted);
     }
