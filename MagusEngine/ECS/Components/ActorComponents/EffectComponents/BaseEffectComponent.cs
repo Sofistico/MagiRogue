@@ -13,6 +13,13 @@ namespace MagusEngine.ECS.Components.ActorComponents.EffectComponents
         public int TurnApplied { get; set; }
         public string EffectMessage { get; set; }
 
+        public BaseEffectComponent(int turnToRemove, int turnApplied, string effectMessage)
+        {
+            TurnToRemove = turnToRemove;
+            TurnApplied = turnApplied;
+            EffectMessage = effectMessage;
+        }
+
         public virtual void ConfigureTurnTimer()
         {
             Find.Universe.Time.TurnPassed += GetTime_TurnPassed;
@@ -27,6 +34,11 @@ namespace MagusEngine.ECS.Components.ActorComponents.EffectComponents
                     .SendMessage<AddMessageLog>(new(EffectMessage, Parent == Find.Universe.Player));
                 Find.Universe.Time.TurnPassed -= GetTime_TurnPassed;
             }
+        }
+
+        ~BaseEffectComponent()
+        {
+            Find.Universe.Time.TurnPassed -= GetTime_TurnPassed;
         }
     }
 }

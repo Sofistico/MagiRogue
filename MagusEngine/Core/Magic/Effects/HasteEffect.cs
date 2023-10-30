@@ -49,8 +49,9 @@ namespace MagusEngine.Core.Magic.Effects
 
         private void Haste(Point target)
         {
-            var actor = Find.CurrentMap.GetEntityAt<Actor>(target);
-            Haste(actor);
+            var actor = Find.CurrentMap?.GetEntityAt<Actor>(target);
+            if (actor is not null)
+                Haste(actor);
         }
 
         private void Haste(Actor actor)
@@ -60,15 +61,11 @@ namespace MagusEngine.Core.Magic.Effects
                 Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("Can only have one haste effect active!"));
                 return;
             }
-            HasteComponent haste = new();
+            HasteComponent haste = new(HastePower,
+                Find.Universe.Time.Turns,
+                Find.Universe.Time.Turns + Duration,
+                EffectMessage);
             actor.AddComponent(haste);
-
-            haste.HastePower = HastePower;
-            haste.TurnApplied = Find.Universe.Time.Turns;
-            haste.TurnToRemove = haste.TurnApplied + Duration;
-            haste.EffectMessage = EffectMessage;
-
-            haste.ConfigureTurnTimer();
         }
     }
 }

@@ -38,32 +38,10 @@ namespace MagusEngine.Core.Magic.Effects
                 Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("You already have your Sight active"));
                 return;
             }
-            effect = new()
-            {
-                TurnApplied = Find.Universe.Time.Turns,
-                TurnToRemove = effect.TurnApplied + Duration
-            };
+            effect = new(Find.Universe.Time.Turns, Find.Universe.Time.Turns + Duration, EffectMessage);
 
             var actor = Find.CurrentMap.GetEntityAt<Actor>(target);
             actor.AddComponent(effect);
-            Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("You can See", actor == caster));
-            //Find.Universe.Time.TurnPassed += GetTime_TurnPassed;
         }
-
-        //private void GetTime_TurnPassed(object sender, TimeDefSpan e)
-        //{
-        //    if (e.Seconds >= turnToRemove)
-        //    {
-        //        //foreach (Tiles.NodeTile node in Find.CurrentMap.Tiles.Where(t => t is Tiles.NodeTile))
-        //        //{
-        //        //    node.RestoreIllusionComponent();
-        //        //}
-        //        turnToRemove = 0;
-        //        hasMageSight = false;
-
-        //        Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("Your close your Sigth"));
-        //        Find.Universe.Time.TurnPassed -= GetTime_TurnPassed;
-        //    }
-        //}
     }
 }
