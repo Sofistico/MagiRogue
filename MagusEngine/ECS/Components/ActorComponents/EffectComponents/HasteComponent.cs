@@ -10,7 +10,6 @@
             string effectMessage) : base(turnApplied, turnToRemove, effectMessage)
         {
             HastePower = hastePower;
-            ConfigureTurnTimer();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using GoRogue.Components.ParentAware;
 using MagusEngine.Bus.UiBus;
+using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Services;
 using MagusEngine.Systems;
@@ -18,6 +19,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.EffectComponents
             TurnToRemove = turnToRemove;
             TurnApplied = turnApplied;
             EffectMessage = effectMessage;
+            ConfigureTurnTimer();
         }
 
         public virtual void ConfigureTurnTimer()
@@ -25,11 +27,11 @@ namespace MagusEngine.ECS.Components.ActorComponents.EffectComponents
             Find.Universe.Time.TurnPassed += GetTime_TurnPassed;
         }
 
-        protected virtual void GetTime_TurnPassed(object sender, TimeDefSpan e)
+        protected virtual void GetTime_TurnPassed(object? sender, TimeDefSpan e)
         {
             if (e.Seconds >= TurnToRemove)
             {
-                Parent.RemoveComponent<HasteComponent>();
+                Parent?.RemoveComponent<HasteComponent>();
                 Locator.GetService<MessageBusService>()?
                     .SendMessage<AddMessageLog>(new(EffectMessage, Parent == Find.Universe.Player));
                 Find.Universe.Time.TurnPassed -= GetTime_TurnPassed;
