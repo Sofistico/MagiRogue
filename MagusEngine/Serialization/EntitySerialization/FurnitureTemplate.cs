@@ -239,9 +239,9 @@ namespace MagusEngine.Serialization.EntitySerialization
         public static implicit operator FurnitureTemplate(Furniture fur)
         {
             var template = new FurnitureTemplate(fur.Name,
-                fur.AppearanceSingle.Appearance.Foreground.PackedValue,
-                fur.AppearanceSingle.Appearance.Background.PackedValue,
-                fur.AppearanceSingle.Appearance.GlyphCharacter,
+                fur.SadCell.AppearanceSingle.Appearance.Foreground.PackedValue,
+                fur.SadCell.AppearanceSingle.Appearance.Background.PackedValue,
+                fur.SadCell.AppearanceSingle.Appearance.GlyphCharacter,
                 fur.Weight,
                 fur.Volume,
                 fur.Description,

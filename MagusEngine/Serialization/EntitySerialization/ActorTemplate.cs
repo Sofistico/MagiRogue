@@ -139,9 +139,9 @@ namespace MagusEngine.Serialization.EntitySerialization
         public ActorTemplate(Actor actor)
         {
             Name = actor.Name;
-            ForegroundBackingField = new MagiColorSerialization(actor.AppearanceSingle.Appearance.Foreground);
-            BackgroundBackingField = new MagiColorSerialization(actor.AppearanceSingle.Appearance.Background);
-            Glyph = (char)actor.AppearanceSingle.Appearance.Glyph;
+            ForegroundBackingField = new MagiColorSerialization(actor.SadCell.AppearanceSingle.Appearance.Foreground);
+            BackgroundBackingField = new MagiColorSerialization(actor.SadCell.AppearanceSingle.Appearance.Background);
+            Glyph = (char)actor.SadCell.AppearanceSingle.Appearance.Glyph;
             Body = actor.Body;
             Description = actor.Description;
             Layer = actor.Layer;
@@ -228,14 +228,14 @@ namespace MagusEngine.Serialization.EntitySerialization
 
             if (actorTemplate.ForegroundPackedValue == 0 && !string.IsNullOrEmpty(actorTemplate.Foreground))
             {
-                actor.AppearanceSingle.Appearance.Foreground = new MagiColorSerialization(actorTemplate.Foreground).Color;
-                actor.AppearanceSingle.Appearance.Background = new MagiColorSerialization(actorTemplate.Background).Color;
+                actor.SadCell.AppearanceSingle.Appearance.Foreground = new MagiColorSerialization(actorTemplate.Foreground).Color;
+                actor.SadCell.AppearanceSingle.Appearance.Background = new MagiColorSerialization(actorTemplate.Background).Color;
             }
             else
             {
-                actor.AppearanceSingle.Appearance.Foreground =
+                actor.SadCell.AppearanceSingle.Appearance.Foreground =
                     new MagiColorSerialization(actorTemplate.ForegroundPackedValue).Color;
-                actor.AppearanceSingle.Appearance.Background =
+                actor.SadCell.AppearanceSingle.Appearance.Background =
                     new MagiColorSerialization(actorTemplate.BackgroundPackedValue).Color;
             }
             actor.Description = actorTemplate.Description;
@@ -264,9 +264,9 @@ namespace MagusEngine.Serialization.EntitySerialization
             }
 
             ActorTemplate actorTemplate = new ActorTemplate(actor.Name,
-                actor.AppearanceSingle.Appearance.Foreground.PackedValue,
-               actor.AppearanceSingle.Appearance.Background.PackedValue,
-               actor.AppearanceSingle.Appearance.Glyph,
+               actor.SadCell.AppearanceSingle.Appearance.Foreground.PackedValue,
+               actor.SadCell.AppearanceSingle.Appearance.Background.PackedValue,
+               actor.SadCell.AppearanceSingle.Appearance.Glyph,
                actor.Layer,
                actor.Body,
                actor.Volume,
@@ -290,7 +290,7 @@ namespace MagusEngine.Serialization.EntitySerialization
             {
                 actorTemplate.Equip.Add(new EquipTemplate(actor.GetEquipment()[limb].ItemId, limb));
             }
-            actorTemplate.GlyphInt = actor.AppearanceSingle.Appearance.Glyph;
+            actorTemplate.GlyphInt = actor.SadCell.AppearanceSingle.Appearance.Glyph;
 
             actorTemplate.Length = actor.Length;
             actorTemplate.Height = actor.Height;

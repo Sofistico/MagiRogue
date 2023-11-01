@@ -71,18 +71,21 @@ namespace MagusEngine.Commands
                 attack = Attack.PushAttack();
             }
             attack ??= attacker.GetRaceAttacks().GetRandomItemFromList();
+            bool isPlayer = attacker is Player;
+            var showMessage = isPlayer || Find.Universe.Player.CanSee(attacker.Position);
 
             if (attacker.Body.Stamina <= 0)
             {
                 Locator.GetService<MessageBusService>()
-                    .SendMessage<AddMessageLog>(new($"{attacker.Name} is far too tired to attack!", true));
+                    .SendMessage<AddMessageLog>(new($"You are too tired to attack|{attacker.Name} is too tired to attack!",
+                    showMessage,
+                    isPlayer ? PointOfView.First : PointOfView.Third));
                 return TimeHelper.Wait;
             }
 
             // Create two messages that describe the outcome of the attack and defense
             StringBuilder attackMessage = new();
             StringBuilder defenseMessage = new();
-            bool isPlayer = attacker is Player;
 
             (bool hit, BodyPart limbAttacked, BodyPart limbAttacking, DamageTypes dmgType, Item? itemUsed, MaterialTemplate attackMaterial)
                 = CombatUtils.ResolveHit(attacker, defender, attackMessage, attack, isPlayer, limbChoosen);
@@ -94,7 +97,6 @@ namespace MagusEngine.Commands
                 itemUsed);
 
             // Display the outcome of the attack & defense
-            var showMessage = isPlayer || Find.Universe.Player.CanSee(attacker.Position);
             Locator.GetService<MessageBusService>()?.SendMessage<AddMessageLog>(new(attackMessage.ToString(), showMessage));
             if (!string.IsNullOrWhiteSpace(defenseMessage.ToString()))
             {

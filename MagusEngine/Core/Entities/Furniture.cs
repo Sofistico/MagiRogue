@@ -52,8 +52,9 @@ namespace MagusEngine.Core.Entities
         public override Furniture Copy()
         {
             var baseEntity = base.Copy();
-            Furniture fur = new Furniture(baseEntity.AppearanceSingle.Appearance.Foreground,
-                baseEntity.AppearanceSingle.Appearance.Background, baseEntity.AppearanceSingle.Appearance.Glyph,
+            Furniture fur = new Furniture(baseEntity.SadCell.AppearanceSingle.Appearance.Foreground,
+                baseEntity.SadCell.AppearanceSingle.Appearance.Background,
+                baseEntity.SadCell.AppearanceSingle.Appearance.Glyph,
                 baseEntity.Position,
                 FurnitureType, Material.Id, Name, FurId, Durability)
             {

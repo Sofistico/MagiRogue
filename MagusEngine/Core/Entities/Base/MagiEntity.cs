@@ -1,37 +1,38 @@
-﻿using GoRogue.Components;
-using GoRogue.GameFramework;
-using MagusEngine.Bus.ComponentBus;
+﻿using MagusEngine.Bus.ComponentBus;
 using MagusEngine.Core.Magic;
 using MagusEngine.Services;
+using SadConsole.Entities;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Runtime.Serialization;
 
 namespace MagusEngine.Core.Entities.Base
 {
     // Extends the SadConsole.Entities.Entity class by adding the IGameObject of SadConsole
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public class MagiEntity : SadConsole.Entities.Entity, IGameObject
+    public class MagiEntity : MagiGameObject
     {
+        private string DebuggerDisplay
+        {
+            get
+            {
+                return string.Format($"{nameof(MagiEntity)} : {Name}");
+            }
+        }
+
         #region Fields
 
-        private IGameObject backingField;
-
-        public Core.MapStuff.MagiMap? MagiMap => (MapStuff.MagiMap?)CurrentMap;
-        public uint ID => backingField.ID; // stores the entity's unique identification number
-        public int Layer { get; set; } // stores and sets the layer that the entity is rendered
+        public MapStuff.MagiMap? MagiMap => (MapStuff.MagiMap?)CurrentMap;
 
         public int HistoryId { get; set; } // stores the history id of the entitiy
+        public string? Name { get; set; }
 
-        [DataMember]
         public virtual double Weight { get; set; }
 
         /// <summary>
         /// The size is defined as cm³
         /// </summary>
-        [DataMember]
         public int Volume { get; set; }
 
         public int Height { get; set; }
@@ -43,8 +44,7 @@ namespace MagusEngine.Core.Entities.Base
         /// </summary>
         public bool LeavesGhost { get; set; } = true;
 
-        [DataMember]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         public MagicManager Magic { get; set; }
 
@@ -69,72 +69,39 @@ namespace MagusEngine.Core.Entities.Base
         public bool IgnoresWalls { get; set; }
         public bool AlwaySeen { get; set; }
 
-        #region BackingField fields
-
-        public Map? CurrentMap => backingField.CurrentMap;
-
-        public bool IsTransparent { get => backingField.IsTransparent; set => backingField.IsTransparent = value; }
-        public bool IsWalkable { get => backingField.IsWalkable; set => backingField.IsWalkable = value; }
-        public IComponentCollection GoRogueComponents => backingField.GoRogueComponents;
-
-        #endregion BackingField fields
+        public Entity SadCell { get; set; }
 
         #endregion Fields
 
         #region Constructor
 
         public MagiEntity(Color foreground, Color background,
-            int glyph, Point coord, int layer) : base(foreground, background, glyph, layer)
+            int glyph, Point coord, int layer) : base(coord, layer, true, true,
+                Locator.GetService<IDGenerator>() is not null ? Locator.GetService<IDGenerator>().UseID : null)
         {
-            InitializeObject(foreground, background, glyph, coord, layer);
+            SadCell = new(foreground, background, glyph, layer)
+            {
+                Position = coord
+            };
+            Magic = new MagicManager();
+
+            PositionChanged += MagiEntity_PositionChanged;
         }
 
         #endregion Constructor
 
-        #region Helper Methods
+        #region events
 
-        private void InitializeObject(
-            Color foreground, Color background, int glyph, Point coord, int layer)
+        private void MagiEntity_PositionChanged(object? sender, ValueChangedEventArgs<Point> e)
         {
-            AppearanceSingle.Appearance.Foreground = foreground;
-            AppearanceSingle.Appearance.Background = background;
-            AppearanceSingle.Appearance.Glyph = glyph;
-            Layer = layer;
-            var gen = Locator.GetService<IDGenerator>();
-            backingField = new GameObject(coord, layer, idGenerator: gen is null ? null : gen.UseID);
-            Position = backingField.Position;
-
-            //PositionChanged += Position_Changed;
-
-            Magic = new MagicManager();
+            SadCell.Position = e.NewValue;
         }
 
-        private string DebuggerDisplay
-        {
-            get
-            {
-                return string.Format($"{nameof(MagiEntity)} : {Name}");
-            }
-        }
-
-        #region temporary
-
-        protected override void OnPositionChanged(Point oldPosition, Point newPosition)
-        {
-            var args = new ValueChangedEventArgs<Point>(oldPosition, newPosition);
-
-            PositionablePositionChanging?.Invoke(this, args);
-            base.OnPositionChanged(oldPosition, newPosition);
-            PositionablePositionChanged?.Invoke(this, args);
-        }
-
-        #endregion temporary
-
-        #endregion Helper Methods
+        #endregion events
 
         #region Virtual Methods
 
-        public virtual string GetDescriptor()
+        public virtual string? GetDescriptor()
         {
             return Description;
         }
@@ -150,8 +117,11 @@ namespace MagusEngine.Core.Entities.Base
 
         public virtual MagiEntity Copy()
         {
-            var entity = new MagiEntity(AppearanceSingle.Appearance.Foreground,
-                AppearanceSingle.Appearance.Background, AppearanceSingle.Appearance.Glyph, Position, Layer)
+            var entity = new MagiEntity(SadCell.AppearanceSingle!.Appearance.Foreground,
+                SadCell.AppearanceSingle.Appearance.Background,
+                SadCell.AppearanceSingle.Appearance.Glyph,
+                Position,
+                Layer)
             {
                 Magic = Magic,
                 AlwaySeen = AlwaySeen,
@@ -163,7 +133,6 @@ namespace MagusEngine.Core.Entities.Base
                 LeavesGhost = LeavesGhost,
                 Volume = Volume,
                 Weight = Weight,
-                ZIndex = ZIndex,
                 Name = Name,
             };
 
@@ -177,111 +146,7 @@ namespace MagusEngine.Core.Entities.Base
 
         #endregion Overload Methods
 
-        #region IGameObject Interface
-
-        #region temporary
-
-        private event EventHandler<ValueChangedEventArgs<Point>>? PositionablePositionChanging;
-
-        event EventHandler<ValueChangedEventArgs<Point>>? IPositionable.PositionChanging
-        {
-            add => PositionablePositionChanging += value;
-            remove => PositionablePositionChanging -= value;
-        }
-
-        private event EventHandler<ValueChangedEventArgs<Point>>? PositionablePositionChanged;
-
-        /// <inheritdoc/>
-        event EventHandler<ValueChangedEventArgs<Point>>? IPositionable.PositionChanged
-        {
-            add => PositionablePositionChanged += value;
-            remove => PositionablePositionChanged -= value;
-        }
-
-        #endregion temporary
-
-        public event EventHandler<GameObjectCurrentMapChanged> AddedToMap
-        {
-            add
-            {
-                backingField.AddedToMap += value;
-            }
-
-            remove
-            {
-                backingField.AddedToMap -= value;
-            }
-        }
-
-        public event EventHandler<GameObjectCurrentMapChanged> RemovedFromMap
-        {
-            add
-            {
-                backingField.RemovedFromMap += value;
-            }
-
-            remove
-            {
-                backingField.RemovedFromMap -= value;
-            }
-        }
-
-        public event EventHandler<ValueChangedEventArgs<bool>> TransparencyChanging
-        {
-            add
-            {
-                backingField.TransparencyChanging += value;
-            }
-
-            remove
-            {
-                backingField.TransparencyChanging -= value;
-            }
-        }
-
-        public event EventHandler<ValueChangedEventArgs<bool>> TransparencyChanged
-        {
-            add
-            {
-                backingField.TransparencyChanged += value;
-            }
-
-            remove
-            {
-                backingField.TransparencyChanged -= value;
-            }
-        }
-
-        public event EventHandler<ValueChangedEventArgs<bool>> WalkabilityChanging
-        {
-            add
-            {
-                backingField.WalkabilityChanging += value;
-            }
-
-            remove
-            {
-                backingField.WalkabilityChanging -= value;
-            }
-        }
-
-        public event EventHandler<ValueChangedEventArgs<bool>> WalkabilityChanged
-        {
-            add
-            {
-                backingField.WalkabilityChanged += value;
-            }
-
-            remove
-            {
-                backingField.WalkabilityChanged -= value;
-            }
-        }
-
-        public void OnMapChanged(Map newMap)
-        {
-            backingField.OnMapChanged(newMap);
-        }
+        #region Components
 
         public void AddComponents<T>(params T[] components) where T : class
         {
@@ -289,7 +154,7 @@ namespace MagusEngine.Core.Entities.Base
             {
                 if (component is null)
                     continue;
-                backingField.GoRogueComponents.Add<T>(component);
+                GoRogueComponents.Add<T>(component);
                 Locator.GetService<MessageBusService>().SendMessage<ComponentAddedCommand<T>>(new(ID, component));
             }
         }
@@ -301,16 +166,16 @@ namespace MagusEngine.Core.Entities.Base
         }
 
         public T GetComponent<T>() where T : class
-            => backingField.GoRogueComponents.GetFirstOrDefault<T>();
+            => GoRogueComponents?.GetFirstOrDefault<T>()!;
 
         public bool GetComponent<T>(out T component, string? tag = null) where T : class
         {
-            component = backingField.GoRogueComponents.GetFirstOrDefault<T>(tag);
+            component = GoRogueComponents?.GetFirstOrDefault<T>(tag)!;
             return component != null;
         }
 
         public IEnumerable<T> GetComponents<T>() where T : class
-            => backingField.GoRogueComponents.GetAll<T>();
+            => GoRogueComponents.GetAll<T>();
 
         public void RemoveComponent<T>() where T : class
         {
@@ -321,6 +186,15 @@ namespace MagusEngine.Core.Entities.Base
             }
         }
 
-        #endregion IGameObject Interface
+        #endregion Components
+
+        #region Deconstructor
+
+        ~MagiEntity()
+        {
+            PositionChanged -= MagiEntity_PositionChanged;
+        }
+
+        #endregion Deconstructor
     }
 }

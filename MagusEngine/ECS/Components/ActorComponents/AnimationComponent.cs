@@ -24,7 +24,7 @@ namespace MagusEngine.ECS.Components.ActorComponents
         {
             Animating = false;
             var parent = Parent;
-            parent.AppearanceSingle.Appearance.Glyph = _animationFrames[0].Glyph;
+            parent.SadCell.AppearanceSingle.Appearance.Glyph = _animationFrames[0].Glyph;
             animationIndex = 0;
         }
 
@@ -40,7 +40,7 @@ namespace MagusEngine.ECS.Components.ActorComponents
             else
             {
                 var parent = Parent;
-                parent.AppearanceSingle.Appearance.CopyAppearanceFrom(_animationFrames[animationIndex]);
+                parent.SadCell.AppearanceSingle.Appearance.CopyAppearanceFrom(_animationFrames[animationIndex]);
                 animationIndex++;
             }
         }

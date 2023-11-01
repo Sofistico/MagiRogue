@@ -76,7 +76,7 @@ namespace MagusEngine.Systems
                 RemoveEntityGhost(entity);
             }
             //Map.EntityRender.Add(entity);
-            entity.IsVisible = true;
+            entity.SadCell.IsVisible = true;
         }
 
         private void RemoveEntityGhost(MagiEntity entity)
@@ -102,18 +102,18 @@ namespace MagusEngine.Systems
                 && !ghosts.ContainsKey(entity.ID))
             {
                 MagiEntity ghost = new MagiEntity(ExploredColorTint,
-                    entity.AppearanceSingle.Appearance.Background,
-                    entity.AppearanceSingle.Appearance.Glyph,
+                    entity.SadCell.AppearanceSingle.Appearance.Background,
+                    entity.SadCell.AppearanceSingle.Appearance.Glyph,
                     entity.Position,
                     _ghostLayer)
                 {
-                    IsVisible = true,
                     Name = $"Ghost {entity.Name}"
                 };
+                ghost.SadCell.IsVisible = true;
                 if (ghosts.TryAdd(entity.ID, ghost))
                     Map.AddMagiEntity(ghost);
             }
-            entity.IsVisible = false;
+            entity.SadCell.IsVisible = false;
         }
 
         /// <summary>

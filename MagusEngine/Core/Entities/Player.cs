@@ -76,8 +76,8 @@ namespace MagusEngine.Core.Entities
                 return null;
 
             return new Player(actor.Name,
-                actor.AppearanceSingle!.Appearance.Foreground,
-                actor.AppearanceSingle.Appearance.Background,
+                actor.SadCell.AppearanceSingle!.Appearance.Foreground,
+                actor.SadCell.AppearanceSingle.Appearance.Background,
                 actor.Position)
             {
                 Inventory = actor.Inventory,

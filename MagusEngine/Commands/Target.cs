@@ -72,7 +72,7 @@ namespace MagusEngine.Commands
                 BlinkOutColor = Color.Aquamarine,
                 UseCellBackgroundColor = false,
             };
-            Cursor.AppearanceSingle.Effect = blink;
+            Cursor.SadCell.AppearanceSingle.Effect = blink;
             blink.Restart();
 
             State = TargetState.Resting;

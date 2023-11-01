@@ -270,7 +270,7 @@ namespace MagusEngine.Core.MapStuff
             {
                 RemoveEntity(entity);
 
-                _entityManager.Remove(entity);
+                _entityManager.Remove(entity.SadCell);
 
                 // Link up the entity's Moved event to a new handler
                 entity.PositionChanged -= OnPositionChanged;
@@ -309,7 +309,7 @@ namespace MagusEngine.Core.MapStuff
                 entity.PositionChanged += OnPositionChanged;
             }
 
-            _entityManager.Add(entity);
+            _entityManager.Add(entity.SadCell);
 
             _needsToUpdateActorsDict = true;
         }
@@ -410,7 +410,7 @@ namespace MagusEngine.Core.MapStuff
 
             foreach (var spatialMap in Entities.GetLayersInMask(LayerMasker.MaskAllAbove((int)MapLayer.TERRAIN)))
             {
-                _entityManager.AddRange(spatialMap.Items.Cast<MagiEntity>());
+                _entityManager.AddRange(spatialMap.Items.Cast<MagiEntity>().Select(i => i.SadCell));
             }
             //_entityRender.AddRange(Entities.Items.Cast<MagiEntity>());
             renderer.IsDirty = true;

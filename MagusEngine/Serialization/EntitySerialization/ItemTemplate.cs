@@ -157,9 +157,9 @@ namespace MagusEngine.Serialization.EntitySerialization
         public static implicit operator ItemTemplate(Item item)
         {
             ItemTemplate itemSerialized = new(item.Name,
-                item.AppearanceSingle.Appearance.Foreground.PackedValue,
-                item.AppearanceSingle.Appearance.Background.PackedValue,
-                item.AppearanceSingle.Appearance.Glyph,
+                item.SadCell.AppearanceSingle.Appearance.Foreground.PackedValue,
+                item.SadCell.AppearanceSingle.Appearance.Background.PackedValue,
+                item.SadCell.AppearanceSingle.Appearance.Glyph,
                 item.Weight,
                 item.Volume,
                 item.Material.Id,
