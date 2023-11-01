@@ -1,6 +1,5 @@
 ﻿using GoRogue.Components.ParentAware;
 using MagusEngine.Bus.UiBus;
-using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Services;
 using MagusEngine.Systems;
@@ -14,7 +13,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.EffectComponents
         public int TurnApplied { get; set; }
         public string EffectMessage { get; set; }
 
-        public BaseEffectComponent(int turnToRemove, int turnApplied, string effectMessage)
+        public BaseEffectComponent(int turnApplied, int turnToRemove, string effectMessage)
         {
             TurnToRemove = turnToRemove;
             TurnApplied = turnApplied;
