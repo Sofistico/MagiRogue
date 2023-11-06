@@ -47,7 +47,7 @@
     "Effects": [
       {
         "AreaOfEffect": "Beam",
-        "SpellDamageType": "Lighting",
+        "SpellDamageType": "Lightning",
         "BaseDamage": 6,
         "Radius": 0,
         "TargetsTile": true,
@@ -63,12 +63,12 @@
         "EffectStr": "{0} locks up!"
       }
     ],
-    "SpellName": "Bolt of Lighting",
-    "Description": "A bolt of lighting leaves your finger to strike your opponent on a line",
+    "SpellName": "Bolt of Lightning",
+    "Description": "A bolt of lightning leaves your finger to strike your opponent on a line",
     "MagicArt": "Projection",
     "SpellRange": 6,
     "ManaCost": 5.5,
-    "SpellId": "lighting_bolt",
+    "SpellId": "lightning_bolt",
     "Context": [ "Offensive", "Debuff" ]
   },
   {

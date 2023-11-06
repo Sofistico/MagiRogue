@@ -47,7 +47,7 @@ namespace MagusEngine.Core.Magic
         /// Description of the spell
         /// </summary>
         [JsonProperty(Order = 0)]
-        public string Description { get; private set; }
+        public string? Description { get; set; }
 
         /// <summary>
         /// What art of magic the spell is
@@ -114,8 +114,8 @@ namespace MagusEngine.Core.Magic
             get => (int)(SpellLevel + ManaCost);
         }
 
-        public List<string> Keywords { get; set; } = new();
-        public List<SpellContext> Context { get; set; }
+        public List<string>? Keywords { get; set; } = new();
+        public List<SpellContext>? Context { get; set; }
         public bool IgnoresWall { get; set; }
         public bool AffectsTile { get; set; }
 
@@ -253,11 +253,6 @@ namespace MagusEngine.Core.Magic
             Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(errorMessage));
 
             return false;
-        }
-
-        public void SetDescription(string description)
-        {
-            Description = description;
         }
 
         public SpellBase Copy()

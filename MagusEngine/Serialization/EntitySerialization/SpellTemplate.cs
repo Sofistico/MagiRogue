@@ -11,7 +11,7 @@ namespace MagusEngine.Serialization.EntitySerialization
     public class SpellJsonConverter : JsonConverter<SpellBase>
     {
         public override SpellBase ReadJson(JsonReader reader, Type objectType,
-            SpellBase existingValue, bool hasExistingValue, JsonSerializer serializer)
+            SpellBase? existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
             JObject spell = JObject.Load(reader);
             IEnumerable<JToken> listEffectsJson = spell.SelectTokens("$.Effects[*]");
@@ -19,41 +19,43 @@ namespace MagusEngine.Serialization.EntitySerialization
 
             foreach (JToken token in listEffectsJson)
             {
-                EffectType effect = StringToEnumEffectType((string)token["EffectType"]);
+                EffectType effect = StringToEnumEffectType((string)token["EffectType"]!);
                 var eff = EnumToEffect(effect, token);
                 if (token["ConeCircleSpan"] != null)
-                    eff.ConeCircleSpan = (double)token["ConeCircleSpan"];
+                    eff.ConeCircleSpan = (double)token["ConeCircleSpan"]!;
                 if (token["EffectMessage"] != null)
-                    eff.EffectMessage = token["EffectMessage"].ToString();
+                    eff.EffectMessage = token["EffectMessage"]?.ToString();
                 effectsList.Add(eff);
             }
 
             SpellBase createdSpell = new(
-                (string)spell["SpellId"],
-                (string)spell["SpellName"],
-                StringToSchool((string)spell["MagicArt"]),
-                (int)spell["SpellRange"],
-                (int)spell["SpellLevel"],
-                (double)spell["ManaCost"]);
-            createdSpell.SetDescription((string)spell["Description"]);
-            createdSpell.Effects = effectsList;
+                (string)spell["SpellId"]!,
+                (string)spell["SpellName"]!,
+                StringToSchool((string)spell["MagicArt"]!),
+                (int)spell["SpellRange"]!,
+                (int)spell["SpellLevel"]!,
+                (double)spell["ManaCost"]!)
+            {
+                Description = spell["Description"]?.ToString(),
+                Effects = effectsList
+            };
             if (spell.ContainsKey("Proficiency"))
-                createdSpell.Proficiency = (double)spell["Proficiency"];
+                createdSpell.Proficiency = (double)spell["Proficiency"]!;
             if (spell.ContainsKey("Keywords"))
-                createdSpell.Keywords = JsonConvert.DeserializeObject<List<string>>(spell["Keywords"].ToString())!;
+                createdSpell.Keywords = JsonConvert.DeserializeObject<List<string>>(spell["Keywords"]!.ToString())!;
             if (spell.ContainsKey("Context"))
-                createdSpell.Context = JsonConvert.DeserializeObject<List<SpellContext>>(spell["Context"].ToString())!;
+                createdSpell.Context = JsonConvert.DeserializeObject<List<SpellContext>>(spell["Context"]!.ToString())!;
             if (spell.ContainsKey("AffectsTile"))
                 createdSpell.AffectsTile = (bool)spell["AffectsTile"]!;
 
             return createdSpell;
         }
 
-        public override void WriteJson(JsonWriter writer, SpellBase value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, SpellBase? value, JsonSerializer serializer)
         {
-            serializer.Formatting = Formatting.Indented;
+            //serializer.Formatting = Formatting.Indented;
             serializer.NullValueHandling = NullValueHandling.Ignore;
-            serializer.Serialize(writer, (SpellTemplate)value);
+            serializer.Serialize(writer, (SpellTemplate)value!);
         }
 
         /// <summary>
@@ -81,38 +83,40 @@ namespace MagusEngine.Serialization.EntitySerialization
 
         private static SpellAreaEffect StringToAreaEffect(string st)
         {
-            return st switch
-            {
-                "Target" => SpellAreaEffect.Target,
-                "Self" => SpellAreaEffect.Self,
-                "Ball" => SpellAreaEffect.Ball,
-                "Beam" => SpellAreaEffect.Beam,
-                "Cone" => SpellAreaEffect.Cone,
-                "Level" => SpellAreaEffect.Level,
-                "World" => SpellAreaEffect.World,
-                _ => throw new Exception($"It wasn't possible to understand this spell area, is it a valid area?/n area = {st}")
-            };
+            return Enum.Parse<SpellAreaEffect>(st);
+            //return st switch
+            //{
+            //    "Target" => SpellAreaEffect.Target,
+            //    "Self" => SpellAreaEffect.Self,
+            //    "Ball" => SpellAreaEffect.Ball,
+            //    "Beam" => SpellAreaEffect.Beam,
+            //    "Cone" => SpellAreaEffect.Cone,
+            //    "Level" => SpellAreaEffect.Level,
+            //    "World" => SpellAreaEffect.World,
+            //    _ => throw new Exception($"It wasn't possible to understand this spell area, is it a valid area?/n area = {st}")
+            //};
         }
 
         private static DamageTypes StringToDamageType(string st)
         {
-            return st switch
-            {
-                "None" => DamageTypes.None,
-                "Blunt" => DamageTypes.Blunt,
-                "Sharp" => DamageTypes.Sharp,
-                "Point" => DamageTypes.Pierce,
-                "Force" => DamageTypes.Force,
-                "Fire" => DamageTypes.Fire,
-                "Cold" => DamageTypes.Cold,
-                "Lighting" => DamageTypes.Lightning,
-                "Poison" => DamageTypes.Poison,
-                "Acid" => DamageTypes.Acid,
-                "Shock" => DamageTypes.Shock,
-                "Soul" => DamageTypes.Soul,
-                "Mind" => DamageTypes.Mind,
-                _ => throw new Exception($"This isn't a valid damage type, please use a valid one. Value used: {st}")
-            };
+            return Enum.Parse<DamageTypes>(st);
+            //return st switch
+            //{
+            //    "None" => DamageTypes.None,
+            //    "Blunt" => DamageTypes.Blunt,
+            //    "Sharp" => DamageTypes.Sharp,
+            //    "Point" => DamageTypes.Pierce,
+            //    "Force" => DamageTypes.Force,
+            //    "Fire" => DamageTypes.Fire,
+            //    "Cold" => DamageTypes.Cold,
+            //    "Lighting" => DamageTypes.Lightning,
+            //    "Poison" => DamageTypes.Poison,
+            //    "Acid" => DamageTypes.Acid,
+            //    "Shock" => DamageTypes.Shock,
+            //    "Soul" => DamageTypes.Soul,
+            //    "Mind" => DamageTypes.Mind,
+            //    _ => throw new Exception($"This isn't a valid damage type, please use a valid one. Value used: {st}")
+            //};
         }
 
         /// <summary>
@@ -125,7 +129,7 @@ namespace MagusEngine.Serialization.EntitySerialization
         {
             bool? canMiss = (bool?)jToken["CanMiss"];
             bool? isHealing = (bool?)jToken["IsHealing"];
-            int? raidus = (int?)jToken["Radius"];
+            int? radius = (int?)jToken["Radius"];
             bool? resistable = (bool?)jToken["IsResistable"];
             return effect switch
             {
@@ -135,7 +139,7 @@ namespace MagusEngine.Serialization.EntitySerialization
                 {
                     CanMiss = canMiss ?? false,
                     IsHealing = isHealing ?? false,
-                    Radius = raidus ?? 0,
+                    Radius = radius ?? 0,
                     IsResistable = resistable ?? false,
                 },
                 EffectType.HASTE => new HasteEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]),
@@ -155,22 +159,23 @@ namespace MagusEngine.Serialization.EntitySerialization
 
         private static ArtMagic StringToSchool(string st)
         {
-            return st switch
-            {
-                "Projection" => ArtMagic.Projection, // 1
-                "Negation" => ArtMagic.Negation, // 2
-                "Animation" => ArtMagic.Animation, // 3
-                "Divination" => ArtMagic.Divination, // 4
-                "Alteration" => ArtMagic.Alteration, // 5
-                "Wards" => ArtMagic.Wards, // 6
-                "Dimensionalism" => ArtMagic.Dimensionalism, // 7
-                "Conjuration" => ArtMagic.Conjuration, // 8
-                "Illuminism" => ArtMagic.Illuminism, // 9
-                "MindMagic" => ArtMagic.MindMagic, // 10
-                "SoulMagic" => ArtMagic.SoulMagic, // 11
-                "BloodMagic" => ArtMagic.BloodMagic, // 12
-                _ => throw new Exception($"Are you sure the school is correct? it must be a valid one./n School used: {st}")
-            };
+            return Enum.Parse<ArtMagic>(st);
+            //return st switch
+            //{
+            //    "Projection" => ArtMagic.Projection, // 1
+            //    "Negation" => ArtMagic.Negation, // 2
+            //    "Animation" => ArtMagic.Animation, // 3
+            //    "Divination" => ArtMagic.Divination, // 4
+            //    "Alteration" => ArtMagic.Alteration, // 5
+            //    "Wards" => ArtMagic.Wards, // 6
+            //    "Dimensionalism" => ArtMagic.Dimensionalism, // 7
+            //    "Conjuration" => ArtMagic.Conjuration, // 8
+            //    "Illuminism" => ArtMagic.Illuminism, // 9
+            //    "MindMagic" => ArtMagic.MindMagic, // 10
+            //    "SoulMagic" => ArtMagic.SoulMagic, // 11
+            //    "BloodMagic" => ArtMagic.BloodMagic, // 12
+            //    _ => throw new Exception($"Are you sure the school is correct? it must be a valid one./n School used: {st}")
+            //};
         }
     }
 
@@ -188,7 +193,7 @@ namespace MagusEngine.Serialization.EntitySerialization
 
         public string SpellName { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         public ArtMagic MagicArt { get; set; }
 
@@ -196,12 +201,12 @@ namespace MagusEngine.Serialization.EntitySerialization
 
         public double ManaCost { get; set; }
         public string SpellId { get; set; }
-        public List<SpellContext> Context { get; set; } = new();
-        public List<string> Keywords { get; set; } = new();
+        public List<SpellContext>? Context { get; set; } = new();
+        public List<string>? Keywords { get; set; } = new();
 
-        public SpellTemplate(int spellLevel, List<ISpellEffect> effects, string spellName, string description,
+        public SpellTemplate(int spellLevel, List<ISpellEffect> effects, string spellName, string? description,
             ArtMagic magicArt, int spellRange, double manaCost, string spellId,
-            List<SpellContext> context)
+            List<SpellContext>? context)
         {
             SpellLevel = spellLevel;
             Effects = effects;
@@ -216,7 +221,7 @@ namespace MagusEngine.Serialization.EntitySerialization
 
         public static implicit operator SpellBase(SpellTemplate spellTemplate)
         {
-            SpellBase spell = new(spellTemplate.SpellId, spellTemplate.SpellName,
+            return new(spellTemplate.SpellId, spellTemplate.SpellName,
                 spellTemplate.MagicArt, spellTemplate.SpellRange, spellTemplate.SpellLevel,
                 spellTemplate.ManaCost)
             {
@@ -224,10 +229,9 @@ namespace MagusEngine.Serialization.EntitySerialization
                 spellTemplate.Proficiency is null ? 0 : (double)spellTemplate.Proficiency,
                 Context = spellTemplate.Context,
                 Keywords = spellTemplate.Keywords,
+                Description = spellTemplate.Description,
+                Effects = spellTemplate.Effects,
             };
-            spell.Effects.AddRange(spellTemplate.Effects);
-            spell.SetDescription(spellTemplate.Description);
-            return spell;
         }
 
         public static implicit operator SpellTemplate(SpellBase spell)
