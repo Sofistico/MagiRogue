@@ -65,20 +65,21 @@ namespace MagusEngine.Serialization.EntitySerialization
         /// <returns></returns>
         private static EffectType StringToEnumEffectType(string st)
         {
-            return st switch
-            {
-                "DAMAGE" => EffectType.DAMAGE,
-                "HASTE" => EffectType.HASTE,
-                "MAGESIGHT" => EffectType.MAGESIGHT,
-                "SEVER" => EffectType.SEVER,
-                "TELEPORT" => EffectType.TELEPORT,
-                "DEBUFF" => EffectType.DEBUFF,
-                "BUFF" => EffectType.BUFF,
-                "LIGHT" => EffectType.LIGHT,
-                "KNOCKBACK" => EffectType.KNOCKBACK,
-                _ => throw new ApplicationException("It wasn't possible to convert the effect, " +
-                    $"please use only the provided effects types.\nEffect used: {st}"),
-            };
+            return Enum.Parse<EffectType>(st);
+            //return st switch
+            //{
+            //    "DAMAGE" => EffectType.DAMAGE,
+            //    "HASTE" => EffectType.HASTE,
+            //    "MAGESIGHT" => EffectType.MAGESIGHT,
+            //    "SEVER" => EffectType.SEVER,
+            //    "TELEPORT" => EffectType.TELEPORT,
+            //    "DEBUFF" => EffectType.DEBUFF,
+            //    "BUFF" => EffectType.BUFF,
+            //    "LIGHT" => EffectType.LIGHT,
+            //    "KNOCKBACK" => EffectType.KNOCKBACK,
+            //    _ => throw new ApplicationException("It wasn't possible to convert the effect, " +
+            //        $"please use only the provided effects types.\nEffect used: {st}"),
+            //};
         }
 
         private static SpellAreaEffect StringToAreaEffect(string st)
