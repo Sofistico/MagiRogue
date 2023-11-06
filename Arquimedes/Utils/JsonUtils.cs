@@ -6,7 +6,7 @@ namespace Arquimedes.Utils
 {
     public static class JsonUtils
     {
-        private static readonly JsonSerializerSettings settings = new JsonSerializerSettings()
+        private static readonly JsonSerializerSettings settings = new()
         {
             Error = (sender, args) =>
             {
@@ -15,7 +15,7 @@ namespace Arquimedes.Utils
             },
             Converters = { new IsoDateTimeConverter() }
         };
-        private static readonly List<string> errors = new List<string>();
+        private static readonly List<string> errors = new();
 
         public static T? JsonDeseralize<T>(string path)
         {

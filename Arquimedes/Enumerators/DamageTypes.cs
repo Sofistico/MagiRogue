@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using System;
 
 namespace Arquimedes.Enumerators
 {
@@ -15,15 +14,14 @@ namespace Arquimedes.Enumerators
         Force = 1 << 3,
         Fire = 1 << 4,
         Cold = 1 << 5,
+        Steam = Fire | Cold,
         Poison = 1 << 6,
+        Frostbite = Sharp | Cold | Poison,
         Acid = 1 << 7,
         Shock = 1 << 8,
         Soul = 1 << 9,
         Mind = 1 << 10,
         Lightning = 1 << 11,
-
-        Steam = Fire | Cold,
-        Frostbite = Sharp | Cold | Poison,
         Thunderstorm = Shock | Lightning | Force,
     }
 }
