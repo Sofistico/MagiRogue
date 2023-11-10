@@ -217,7 +217,7 @@ namespace MagusEngine.Core.Entities.Base
             if (wound.InitialDamageSource is DamageTypes.Sharp
                 || wound.InitialDamageSource is DamageTypes.Pierce)
             {
-                wound.Bleeding = actorWounded.Weight / bpInjured.BodyPartWeight * (int)wound.Severity
+                wound.Bleeding = (actorWounded.Weight / bpInjured.BodyPartWeight * (int)wound.Severity)
                     + wound.GetBaseBleedingRate();
             }
 

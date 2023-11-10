@@ -16,31 +16,6 @@ namespace MagusEngine.Utils
 {
     public static class CombatUtils
     {
-        #region Flags
-
-        public static DamageTypes SetFlag(DamageTypes a, DamageTypes b)
-        {
-            return a | b;
-        }
-
-        public static DamageTypes UnsetFlag(DamageTypes a, DamageTypes b)
-        {
-            return a & ~b;
-        }
-
-        // Works with "None" as well
-        public static bool HasFlag(DamageTypes a, DamageTypes b)
-        {
-            return (a & b) == b;
-        }
-
-        public static DamageTypes ToogleFlag(DamageTypes a, DamageTypes b)
-        {
-            return a ^ b;
-        }
-
-        #endregion Flags
-
         #region Damage
 
         public static void DealDamage(double attackMomentum,

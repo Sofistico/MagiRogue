@@ -1,0 +1,14 @@
+[
+  {
+    "Id": "blunt",
+    "Name": "Blunt",
+    "SeverityDmgString": [ "bruising", "torn", "fracturating" ],
+    "Magical": false
+  },
+  {
+    "Id": "sharp",
+    "Name": "Sharp",
+    "SeverityDmgString": [ "slicing", "tearing", "mutilating" ],
+    "Magical": false
+  } 
+]
