@@ -1,5 +1,6 @@
 ﻿using Arquimedes.Enumerators;
 using Arquimedes.Utils;
+using MagusEngine.Core;
 using MagusEngine.Core.Civ;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
@@ -81,8 +82,8 @@ namespace MagusEngine.Systems
         public static readonly IReadOnlyList<TissuePlanTemplate> ListOfTissuePlans =
             GetSourceTree<TissuePlanTemplate>(@".\Data\Bodies\tissue_*");
 
-        public static readonly IReadOnlyList<TissuePlanTemplate> ListOfDamageTypes =
-            GetSourceTree<TissuePlanTemplate>(@".\Data\Damage\dmg_*");
+        public static readonly IReadOnlyList<DamageType> ListOfDamageTypes =
+            GetSourceTree<DamageType>(@".\Data\Damage\dmg_*");
 
         #region Descriptors
 
@@ -244,6 +245,9 @@ namespace MagusEngine.Systems
 
         public static TissuePlanTemplate QueryTissuePlanInData(string tissuePlanId)
             => ListOfTissuePlans.FirstOrDefault(i => i.Id.Equals(tissuePlanId));
+
+        public static DamageType QueryDamageInData(string dmgId)
+            => ListOfDamageTypes.FirstOrDefault(i => i.Id.Equals(dmgId));
 
         #endregion Query
 

@@ -11,7 +11,7 @@ namespace MagusEngine.Core.Magic.Effects
     public class HasteEffect : ISpellEffect
     {
         public SpellAreaEffect AreaOfEffect { get; set; }
-        public DamageTypes SpellDamageType { get; set; }
+        public string SpellDamageTypeId { get; set; }
         public int BaseDamage { get; set; }
 
         public float HastePower { get; set; }
@@ -24,11 +24,10 @@ namespace MagusEngine.Core.Magic.Effects
         public string EffectMessage { get; set; }
 
         [JsonConstructor]
-        public HasteEffect(SpellAreaEffect areaOfEffect, float hastePower, int duration,
-            DamageTypes spellDamageType = DamageTypes.Force)
+        public HasteEffect(SpellAreaEffect areaOfEffect, float hastePower, int duration, string spellDamageTypeId = "force")
         {
             AreaOfEffect = areaOfEffect;
-            SpellDamageType = spellDamageType;
+            SpellDamageTypeId = spellDamageTypeId;
             HastePower = hastePower;
             Duration = duration;
         }

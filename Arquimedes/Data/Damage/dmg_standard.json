@@ -10,5 +10,11 @@
     "Name": "Sharp",
     "SeverityDmgString": [ "slicing", "tearing", "mutilating" ],
     "Magical": false
+  },
+  {
+    "Id": "pierce",
+    "Name": "Pierce",
+    "SeverityDmgString": [ "stabing", "skewering", "impaling" ],
+    "Magical": false
   } 
 ]

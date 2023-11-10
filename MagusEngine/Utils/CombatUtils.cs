@@ -2,6 +2,7 @@
 using MagusEngine.Bus.MapBus;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Commands;
+using MagusEngine.Core;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic;
@@ -20,7 +21,7 @@ namespace MagusEngine.Utils
 
         public static void DealDamage(double attackMomentum,
             MagiEntity entity,
-            DamageTypes dmgType,
+            DamageType dmgType,
             MaterialTemplate? attackMaterial = null,
             Attack? attack = null,
             BodyPart? limbAttacked = null,
@@ -191,7 +192,7 @@ namespace MagusEngine.Utils
             return list;
         }
 
-        private static string DetermineDamageMessage(DamageTypes partDamage, PartWound wound)
+        private static string DetermineDamageMessage(DamageType partDamage, PartWound wound)
         {
             StringBuilder baseMessage = new();
             if (partDamage is DamageTypes.Blunt)
@@ -223,7 +224,7 @@ namespace MagusEngine.Utils
             return baseMessage.ToString();
         }
 
-        public static void ApplyHealing(int dmg, Actor stats, DamageTypes healingType, bool healsStamina = false)
+        public static void ApplyHealing(int dmg, Actor stats, DamageType healingType, bool healsStamina = false)
         {
             if (healsStamina)
             {
@@ -234,57 +235,13 @@ namespace MagusEngine.Utils
                 {
                     stats.Body.Stamina = stats.Body.MaxStamina;
 
-                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("You feel your inner fire full"));
+                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("You feel your tiredeness fade away"));
                 }
             }
 
             // then here heal the limbs
             // TODO: Add the function to do it
-
-            StringBuilder bobTheBuilder = new StringBuilder($"You healed for {dmg} damage");
-            switch (healingType)
-            {
-                case DamageTypes.None:
-                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(bobTheBuilder.Append(", feeling your bones and skin growing over your wounds!").ToString()));
-                    break;
-
-                case DamageTypes.Force:
-                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(bobTheBuilder.Append(", filling your movements with a spring!").ToString()));
-                    break;
-
-                case DamageTypes.Fire:
-                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(bobTheBuilder.Append(", firing your will!").ToString()));
-                    break;
-
-                case DamageTypes.Cold:
-
-                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(bobTheBuilder.Append(", leaving you lethargic.").ToString()));
-                    break;
-
-                case DamageTypes.Poison:
-                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(bobTheBuilder.Append(", ouch it hurt!").ToString()));
-                    break;
-
-                case DamageTypes.Acid:
-                    stats.Body.Stamina -= dmg;
-                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(bobTheBuilder.Append(", dealing equal damage to yourself, shouldn't have done that.").ToString()));
-                    break;
-
-                case DamageTypes.Shock:
-                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(bobTheBuilder.Append(", felling yourself speeding up!").ToString()));
-                    break;
-
-                case DamageTypes.Soul:
-                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(bobTheBuilder.Append(", feeling your soul at rest.").ToString()));
-                    break;
-
-                case DamageTypes.Mind:
-                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(bobTheBuilder.Append(", feeling your mind at ease.").ToString()));
-                    break;
-
-                default:
-                    break;
-            }
+            Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"You healed for {dmg} damage"));
         }
 
         #endregion Damage
@@ -299,7 +256,7 @@ namespace MagusEngine.Utils
             int luck = Mrn.Exploding2D6Dice;
             if (MagicManager.PenetrateResistance(spellCasted, caster, poorGuy, luck))
             {
-                DealDamage(effect.BaseDamage, poorGuy, effect.SpellDamageType);
+                DealDamage(effect.BaseDamage, poorGuy, effect.GetDamageType());
             }
             else
             {

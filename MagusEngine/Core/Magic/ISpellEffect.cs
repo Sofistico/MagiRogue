@@ -13,8 +13,7 @@ namespace MagusEngine.Core.Magic
         [JsonConverter(typeof(StringEnumConverter))]
         SpellAreaEffect AreaOfEffect { get; set; }
 
-        [JsonConverter(typeof(StringEnumConverter))]
-        DamageTypes SpellDamageType { get; set; }
+        string SpellDamageTypeId { get; set; }
         int Radius { get; set; }
         double ConeCircleSpan { get; set; }
         bool TargetsTile { get; set; }
@@ -26,6 +25,8 @@ namespace MagusEngine.Core.Magic
         string? EffectMessage { get; set; }
 
         void ApplyEffect(Point target, Actor caster, SpellBase spellCasted);
+
+        DamageType GetDamageType();
     }
 
     public interface IPermEffect

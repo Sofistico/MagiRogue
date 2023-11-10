@@ -33,7 +33,7 @@ namespace MagusEngine.Utils.Extensions
             return Regex.Replace(text, @"(\p{Lu})(?<=\p{Ll}\1|(\p{Lu}|\p{Ll})\1(?=\p{Ll}))", " $1", RegexOptions.None, TimeSpan.FromSeconds(10)).Trim();
         }
 
-        public static string FirstLetterUpper(this string input) =>
+        public static string FirstLetterUpper(this string? input) =>
             input switch
             {
                 null => throw new ArgumentNullException(nameof(input)),
@@ -41,7 +41,7 @@ namespace MagusEngine.Utils.Extensions
                 _ => string.Concat(input[0].ToString().ToUpper(), input.AsSpan(1))
             };
 
-        public static char? GetChar(this string input)
+        public static char? GetChar(this string? input)
         {
             if (char.TryParse(input, out char result))
             {
@@ -53,12 +53,12 @@ namespace MagusEngine.Utils.Extensions
             }
         }
 
-        public static bool IsNullOrEmpty(this string str)
+        public static bool IsNullOrEmpty(this string? str)
         {
             return string.IsNullOrEmpty(str);
         }
 
-        public static bool IsNullOrWhiteSpace(this string str)
+        public static bool IsNullOrWhiteSpace(this string? str)
         {
             return string.IsNullOrWhiteSpace(str);
         }
