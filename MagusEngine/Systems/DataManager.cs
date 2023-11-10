@@ -185,7 +185,7 @@ namespace MagusEngine.Systems
                 for (int i = 0; i < list.Length; i++)
                 {
                     var mat = list[i];
-                    var inheirtFrom = ListOfMaterials.FirstOrDefault(i => i.Id.Equals(mat.InheirtFrom));
+                    var inheirtFrom = ListOfMaterials.Find(i => i.Id.Equals(mat.InheirtFrom));
                     if (inheirtFrom is null)
                     {
                         Locator.GetService<MagiLog>().Log($"Material to inheirt from was null! Id: {mat.InheirtFrom}");
