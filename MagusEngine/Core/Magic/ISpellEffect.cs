@@ -26,7 +26,7 @@ namespace MagusEngine.Core.Magic
 
         void ApplyEffect(Point target, Actor caster, SpellBase spellCasted);
 
-        DamageType GetDamageType();
+        DamageType? GetDamageType();
     }
 
     public interface IPermEffect

@@ -98,8 +98,8 @@ namespace MagusEngine.Core.Magic
                     KnowEffects.Add(sp.EffectType);
                 if (!KnowArea.Contains(sp.AreaOfEffect))
                     KnowArea.Add(sp.AreaOfEffect);
-                if (!KnowDamageTypes.Contains(sp.SpellDamageType))
-                    KnowDamageTypes.Add(sp.SpellDamageType);
+                if (!KnowDamageTypes.Contains(sp.GetDamageType().Type))
+                    KnowDamageTypes.Add(sp.GetDamageType().Type);
             }
             return true;
         }

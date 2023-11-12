@@ -11,7 +11,7 @@ namespace MagusEngine.Core.Magic.Effects
     public class MageSightEffect : ISpellEffect
     {
         public SpellAreaEffect AreaOfEffect { get; set; }
-        public DamageTypes SpellDamageType { get; set; }
+        public string? SpellDamageTypeId { get; set; }
 
         public int Duration { get; set; }
         public int Radius { get; set; } = 0;
@@ -21,13 +21,12 @@ namespace MagusEngine.Core.Magic.Effects
         public EffectType EffectType { get; set; } = EffectType.MAGESIGHT;
         public int BaseDamage { get; set; } = 0;
         public bool CanMiss { get; set; }
-        public string EffectMessage { get; set; }
+        public string? EffectMessage { get; set; }
 
         [JsonConstructor]
         public MageSightEffect(int duration)
         {
             Duration = duration;
-            SpellDamageType = DamageTypes.None;
             AreaOfEffect = SpellAreaEffect.Self;
         }
 
@@ -42,6 +41,11 @@ namespace MagusEngine.Core.Magic.Effects
 
             var actor = Find.CurrentMap.GetEntityAt<Actor>(target);
             actor.AddComponent(effect);
+        }
+
+        public DamageType? GetDamageType()
+        {
+            return null;
         }
     }
 }

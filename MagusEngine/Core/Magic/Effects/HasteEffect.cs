@@ -21,7 +21,7 @@ namespace MagusEngine.Core.Magic.Effects
         public bool TargetsTile { get; set; } = false;
         public EffectType EffectType { get; set; } = EffectType.HASTE;
         public bool CanMiss { get; set; }
-        public string EffectMessage { get; set; }
+        public string? EffectMessage { get; set; }
 
         [JsonConstructor]
         public HasteEffect(SpellAreaEffect areaOfEffect, float hastePower, int duration, string spellDamageTypeId = "force")
@@ -65,6 +65,11 @@ namespace MagusEngine.Core.Magic.Effects
                 Find.Universe.Time.Turns + Duration,
                 EffectMessage);
             actor.AddComponent(haste);
+        }
+
+        public DamageType GetDamageType()
+        {
+            return DataManager.QueryDamageInData(SpellDamageTypeId);
         }
     }
 }

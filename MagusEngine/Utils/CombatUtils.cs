@@ -88,7 +88,7 @@ namespace MagusEngine.Utils
         /// <param name="momentum"></param>
         public static void ResolveDamage(Actor defender,
             double momentum,
-            DamageTypes dmgType,
+            DamageType dmgType,
             BodyPart limbAttacked,
             MaterialTemplate attackMaterial,
             Attack attack,
@@ -172,7 +172,7 @@ namespace MagusEngine.Utils
                     : tissue.Volume;
 
                 double strain = attackTotalContactArea / attackMomentum;
-                PartWound partWound = new PartWound(woundVolume, strain, tissue, attack.DamageTypes);
+                PartWound partWound = new(woundVolume, strain, tissue, attack.DamageType);
                 if (remainingEnergy >= energyToPenetrate)
                 {
                     remainingEnergy -= energyToPenetrate;
@@ -182,7 +182,7 @@ namespace MagusEngine.Utils
                 {
                     // The attack has lost all of its energy and stopped in this tissue layer, doing
                     // blunt damage
-                    partWound.PartDamage = DamageTypes.Blunt;
+                    partWound.PartDamage.Type = DamageTypes.Blunt;
                     list.Add(partWound);
                     break;
                 }
@@ -233,7 +233,7 @@ namespace MagusEngine.Utils
             return baseMessage.ToString();
         }
 
-        public static void ApplyHealing(int dmg, Actor stats, DamageType healingType, bool healsStamina = false)
+        public static void ApplyHealing(int dmg, Actor stats, bool healsStamina = false)
         {
             if (healsStamina)
             {
@@ -311,7 +311,7 @@ namespace MagusEngine.Utils
         /// <param name="attackMessage"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">throws if the attack is null</exception>
-        public static (bool, BodyPart?, BodyPart, DamageTypes, Item?, MaterialTemplate) ResolveHit(
+        public static (bool, BodyPart?, BodyPart, DamageType?, Item?, MaterialTemplate) ResolveHit(
             Actor attacker,
             Actor defender,
             StringBuilder attackMessage,
@@ -347,11 +347,11 @@ namespace MagusEngine.Utils
                 + Mrn.Exploding2D6Dice)
             {
                 limbAttacked ??= defender.GetAnatomy().GetRandomLimb();
-                return (true, limbAttacked, bpAttacking, attack.DamageTypes, wieldedItem, materialUsed);
+                return (true, limbAttacked, bpAttacking, attack.DamageType, wieldedItem, materialUsed);
             }
             else
             {
-                return (false, null, bpAttacking, attack.DamageTypes, wieldedItem, materialUsed);
+                return (false, null, bpAttacking, attack.DamageType, wieldedItem, materialUsed);
             }
         }
 
@@ -503,7 +503,7 @@ namespace MagusEngine.Utils
             double armorQualityMultiplier = 0,
             double weaponQualityModifier = 0)
         {
-            return attack.DamageTypes switch
+            return attack.DamageType.Type switch
             {
                 DamageTypes.Blunt => CalculateBluntDefenseCost(defenseMaterial,
                                         //attackMaterial,
@@ -538,7 +538,7 @@ namespace MagusEngine.Utils
             double shearFRatio = (double)((double)attackMaterial.ShearFracture / (double)defenseMaterial.ShearFracture);
             double shearYRatio = (double)((double)attackMaterial.ShearYield / (double)defenseMaterial.ShearYield);
             var momentumReq = (shearYRatio + (attackContactArea + 1) * shearFRatio)
-                * (10 + 2 * armorQualityModifier) / (attackMaterial.MaxEdge * (weaponQualityModifier + 1));
+                * (10 + (2 * armorQualityModifier)) / (attackMaterial.MaxEdge * (weaponQualityModifier + 1));
             if (originalMomentum >= momentumReq)
             {
                 return (double)((double)originalMomentum * (double)(defenseMaterial.ShearStrainAtYield / 50000));

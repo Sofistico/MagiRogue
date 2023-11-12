@@ -246,8 +246,8 @@ namespace MagusEngine.Systems
         public static TissuePlanTemplate QueryTissuePlanInData(string tissuePlanId)
             => ListOfTissuePlans.FirstOrDefault(i => i.Id.Equals(tissuePlanId));
 
-        public static DamageType QueryDamageInData(string dmgId)
-            => ListOfDamageTypes.FirstOrDefault(i => i.Id.Equals(dmgId));
+        public static DamageType? QueryDamageInData(string dmgId)
+            => ListOfDamageTypes.FirstOrDefault(i => i.Id.Equals(dmgId), null);
 
         #endregion Query
 

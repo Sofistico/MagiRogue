@@ -48,7 +48,7 @@
         "AttackAbility": "Bite",
         "PrepareVelocity": 3,
         "RecoverVelocity": 3,
-        "DamageTypes": "Pierce",
+        "DamageTypeId": "pierce",
         "ContactArea": 100,
         "PenetrationPercentage": 1
       }

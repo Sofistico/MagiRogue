@@ -9,7 +9,7 @@ namespace MagusEngine.Core.Magic.Effects
     public class TeleportEffect : ISpellEffect
     {
         public SpellAreaEffect AreaOfEffect { get; set; }
-        public DamageTypes SpellDamageType { get; set; }
+        public string SpellDamageTypeId { get; set; }
         public int Radius { get; set; }
         public double ConeCircleSpan { get; set; }
         public bool TargetsTile { get; set; } = true;
@@ -21,10 +21,10 @@ namespace MagusEngine.Core.Magic.Effects
 
         [JsonConstructor]
         public TeleportEffect(SpellAreaEffect areaOfEffect = SpellAreaEffect.Target,
-            DamageTypes spellDamageType = DamageTypes.None, int radius = 0)
+            string spellDamageTypeId = null, int radius = 0)
         {
             AreaOfEffect = areaOfEffect;
-            SpellDamageType = spellDamageType;
+            SpellDamageTypeId = spellDamageTypeId;
             Radius = radius;
         }
 
@@ -34,6 +34,11 @@ namespace MagusEngine.Core.Magic.Effects
             {
                 Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{caster.Name} disappeared!"));
             }
+        }
+
+        public DamageType? GetDamageType()
+        {
+            return null;
         }
     }
 }
