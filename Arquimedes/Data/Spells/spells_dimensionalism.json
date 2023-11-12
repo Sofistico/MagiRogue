@@ -4,7 +4,6 @@
     "Effects": [
       {
         "AreaOfEffect": "Target",
-        "SpellDamageType": "None",
         "Radius": 0,
         "TargetsTile": true,
         "EffectType": "TELEPORT",
@@ -24,7 +23,7 @@
     "Effects": [
       {
         "AreaOfEffect": "Self",
-        "SpellDamageType": "Force",
+        "SpellDamageTypeId": "force",
         "BaseDamage": 0,
         "HastePower": 2.0,
         "Duration": 5,

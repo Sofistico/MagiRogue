@@ -4,7 +4,6 @@
     "Effects": [
       {
         "AreaOfEffect": "Target",
-        "SpellDamageType": "Force",
         "BaseDamage": 2,
         "Radius": 0,
         "EffectType": "DAMAGE",

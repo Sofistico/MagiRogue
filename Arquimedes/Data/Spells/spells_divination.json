@@ -4,7 +4,6 @@
     "Effects": [
       {
         "AreaOfEffect": "Self",
-        "SpellDamageType": "None",
         "Duration": 5,
         "TurnApplied": 0,
         "Radius": 0,

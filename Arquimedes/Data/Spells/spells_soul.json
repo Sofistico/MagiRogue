@@ -10,7 +10,7 @@
     "Effects": [
       {
         "AreaOfEffect": "Target",
-        "SpellDamageType": "Soul",
+        "SpellDamageTypeId": "soul",
         "BaseDamage": 999,
         "EffectType": "DAMAGE",
         "CanMiss": true,

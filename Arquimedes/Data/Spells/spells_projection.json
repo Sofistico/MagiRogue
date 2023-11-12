@@ -10,7 +10,7 @@
     "Effects": [
       {
         "AreaOfEffect": "Target",
-        "SpellDamageType": "Force",
+        "SpellDamageTypeId": "force",
         "BaseDamage": 2,
         "EffectType": "DAMAGE",
         "CanMiss": true
@@ -24,7 +24,7 @@
     "Effects": [
       {
         "AreaOfEffect": "Beam",
-        "SpellDamageType": "Fire",
+        "SpellDamageTypeId": "fire",
         "BaseDamage": 3,
         "Radius": 0,
 
@@ -47,7 +47,7 @@
     "Effects": [
       {
         "AreaOfEffect": "Beam",
-        "SpellDamageType": "Lightning",
+        "SpellDamageTypeId": "lightning",
         "BaseDamage": 6,
         "Radius": 0,
         "TargetsTile": true,
@@ -77,7 +77,7 @@
     "Effects": [
       {
         "AreaOfEffect": "Ball",
-        "SpellDamageType": "Fire",
+        "SpellDamageTypeId": "fire",
         "BaseDamage": 6,
         "Radius": 3,
 
@@ -97,7 +97,7 @@
     "Effects": [
       {
         "AreaOfEffect": "Target",
-        "SpellDamageType": "Sharp",
+        "SpellDamageTypeId": "sharp",
         "Radius": 1,
         "EffectType": "SEVER",
         "BaseDamage": 5
@@ -117,7 +117,7 @@
     "Effects": [
       {
         "AreaOfEffect": "Cone",
-        "SpellDamageType": "Cold",
+        "SpellDamageTypeId": "cold",
         "BaseDamage": 5,
         "Radius": 10,
         "ConeCircleSpan": 95,
