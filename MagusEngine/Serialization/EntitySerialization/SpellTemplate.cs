@@ -98,27 +98,27 @@ namespace MagusEngine.Serialization.EntitySerialization
             //};
         }
 
-        private static DamageTypes StringToDamageType(string st)
-        {
-            return Enum.Parse<DamageTypes>(st);
-            //return st switch
-            //{
-            //    "None" => DamageTypes.None,
-            //    "Blunt" => DamageTypes.Blunt,
-            //    "Sharp" => DamageTypes.Sharp,
-            //    "Point" => DamageTypes.Pierce,
-            //    "Force" => DamageTypes.Force,
-            //    "Fire" => DamageTypes.Fire,
-            //    "Cold" => DamageTypes.Cold,
-            //    "Lighting" => DamageTypes.Lightning,
-            //    "Poison" => DamageTypes.Poison,
-            //    "Acid" => DamageTypes.Acid,
-            //    "Shock" => DamageTypes.Shock,
-            //    "Soul" => DamageTypes.Soul,
-            //    "Mind" => DamageTypes.Mind,
-            //    _ => throw new Exception($"This isn't a valid damage type, please use a valid one. Value used: {st}")
-            //};
-        }
+        //private static DamageTypes StringToDamageType(string st)
+        //{
+        //    return Enum.Parse<DamageTypes>(st);
+        //    //return st switch
+        //    //{
+        //    //    "None" => DamageTypes.None,
+        //    //    "Blunt" => DamageTypes.Blunt,
+        //    //    "Sharp" => DamageTypes.Sharp,
+        //    //    "Point" => DamageTypes.Pierce,
+        //    //    "Force" => DamageTypes.Force,
+        //    //    "Fire" => DamageTypes.Fire,
+        //    //    "Cold" => DamageTypes.Cold,
+        //    //    "Lighting" => DamageTypes.Lightning,
+        //    //    "Poison" => DamageTypes.Poison,
+        //    //    "Acid" => DamageTypes.Acid,
+        //    //    "Shock" => DamageTypes.Shock,
+        //    //    "Soul" => DamageTypes.Soul,
+        //    //    "Mind" => DamageTypes.Mind,
+        //    //    _ => throw new Exception($"This isn't a valid damage type, please use a valid one. Value used: {st}")
+        //    //};
+        //}
 
         /// <summary>
         /// Is used to instantiate and return any number of possible effects
@@ -136,7 +136,7 @@ namespace MagusEngine.Serialization.EntitySerialization
             {
                 EffectType.DAMAGE => new DamageEffect
                     ((int)jToken["BaseDamage"], StringToAreaEffect((string)jToken["AreaOfEffect"]),
-                    StringToDamageType((string)jToken["SpellDamageType"]))
+                    (string)jToken["SpellDamageTypeId"])
                 {
                     CanMiss = canMiss ?? false,
                     IsHealing = isHealing ?? false,
@@ -146,13 +146,13 @@ namespace MagusEngine.Serialization.EntitySerialization
                 EffectType.HASTE => new HasteEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]),
                     (int)jToken["HastePower"],
                     (int)jToken["Duration"],
-                    StringToDamageType((string)jToken["SpellDamageType"])),
+                    (string)jToken["SpellDamageTypeId"]),
                 EffectType.MAGESIGHT => new MageSightEffect((int)jToken["Duration"]),
                 EffectType.SEVER => new SeverEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]),
-                    StringToDamageType((string)jToken["SpellDamageType"]),
+                    (string)jToken["SpellDamageTypeId"],
                     (int)jToken["Radius"], (int)jToken["BaseDamage"]),
                 EffectType.TELEPORT => new TeleportEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]),
-                    StringToDamageType((string)jToken["SpellDamageType"]),
+                    (string)jToken["SpellDamageTypeId"],
                     (int)jToken["Radius"]),
                 _ => null,
             };

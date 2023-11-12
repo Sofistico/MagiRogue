@@ -3,6 +3,7 @@ using GoRogue.GameFramework;
 using GoRogue.Pathing;
 using MagusEngine.Bus.MapBus;
 using MagusEngine.Bus.UiBus;
+using MagusEngine.Core;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
@@ -87,7 +88,7 @@ namespace MagusEngine.Commands
             StringBuilder attackMessage = new();
             StringBuilder defenseMessage = new();
 
-            (bool hit, BodyPart limbAttacked, BodyPart limbAttacking, DamageTypes dmgType, Item? itemUsed, MaterialTemplate attackMaterial)
+            (bool hit, BodyPart limbAttacked, BodyPart limbAttacking, DamageType dmgType, Item? itemUsed, MaterialTemplate attackMaterial)
                 = CombatUtils.ResolveHit(attacker, defender, attackMessage, attack, isPlayer, limbChoosen);
             double finalMomentum = CombatUtils.ResolveDefenseAndGetAttackMomentum(attacker,
                 defender,

@@ -59,7 +59,7 @@
             "AttackAbility": "Bite",
             "PrepareVelocity": 3,
             "RecoverVelocity": 3,
-            "DamageTypes": "Pierce",
+            "DamageTypeId": "pierce",
             "ContactArea": 100,
             "PenetrationPercentage": 1.5
           }
@@ -81,7 +81,7 @@
         "AttackAbility": "Bite",
         "PrepareVelocity": 3,
         "RecoverVelocity": 3,
-        "DamageTypes": "Pierce",
+        "DamageTypeId": "pierce",
         "ContactArea": 100,
         "PenetrationPercentage": 1
       },
@@ -94,7 +94,7 @@
         "AttackAbility": "Unarmed",
         "PrepareVelocity": 4,
         "RecoverVelocity": 4,
-        "DamageTypes": "Blunt",
+        "DamageTypeId": "blunt",
         "ContactArea": 100
       }
     ]
@@ -149,7 +149,7 @@
         "AttackAbility": "Bite",
         "PrepareVelocity": 3,
         "RecoverVelocity": 3,
-        "DamageTypes": "Pierce",
+        "DamageTypeId": "pierce",
         "ContactArea": 100,
         "PenetrationPercentage": 1
       }
