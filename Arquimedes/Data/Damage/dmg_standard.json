@@ -1,20 +1,22 @@
 [
+  // these 3 are special and shouldn't be removed
   {
     "Id": "blunt",
     "Name": "Blunt",
     "SeverityDmgString": [ "bruising", "torn", "fracturating" ],
-    "Magical": false
+    "Magical": false,
+    "Type": "Blunt"
   },
   {
     "Id": "sharp",
     "Name": "Sharp",
-    "SeverityDmgString": [ "slicing", "tearing", "mutilating" ],
-    "Magical": false
+    "Magical": false,
+    "Type": "Sharp"
   },
   {
     "Id": "pierce",
     "Name": "Pierce",
-    "SeverityDmgString": [ "stabing", "skewering", "impaling" ],
-    "Magical": false
-  } 
+    "Magical": false,
+    "Type": "Pierce"
+  }
 ]

@@ -1,4 +1,6 @@
-﻿namespace MagusEngine.Core
+﻿using Arquimedes.Enumerators;
+
+namespace MagusEngine.Core
 {
     public class DamageType
     {
@@ -11,6 +13,7 @@
         public string[] SeverityDmgString { get; set; } = null!;
         public string[]? CombinatedFrom { get; set; }
         public bool Magical { get; set; }
+        public DamageTypes Type { get; set; }
 
         public DamageType()
         {

@@ -195,31 +195,40 @@ namespace MagusEngine.Utils
         private static string DetermineDamageMessage(DamageType partDamage, PartWound wound)
         {
             StringBuilder baseMessage = new();
-            if (partDamage is DamageTypes.Blunt)
+            // i liked this, a lot.
+            if (partDamage.Type is DamageTypes.Blunt)
             {
                 if (wound.Tissue.Material.ImpactStrainsAtYield <= 24.999
                     && wound.Strain >= wound.Tissue.Material.ImpactStrainsAtYield)
                 {
-                    baseMessage.Append("fracturating");
+                    baseMessage.Append(partDamage.SeverityDmgString[2]);
                 }
                 else if (wound.Tissue.Material.ImpactStrainsAtYield <= 49.999
                     && wound.Strain >= wound.Tissue.Material.ImpactStrainsAtYield)
                 {
-                    baseMessage.Append("torn");
+                    baseMessage.Append(partDamage.SeverityDmgString[1]);
                 }
                 else
                 {
-                    baseMessage.Append("bruising");
+                    baseMessage.Append(partDamage.SeverityDmgString[0]);
                 }
             }
-            else if (partDamage is DamageTypes.Sharp || partDamage is DamageTypes.Pierce)
+            else if (partDamage.Type is DamageTypes.Sharp || partDamage.Type is DamageTypes.Pierce)
             {
                 baseMessage.Append("tearing");
                 if (wound.WholeTissue)
                     baseMessage.Append(" apart");
             }
+            else
+            {
+                var percent = MathMagi.GetPercentageBasedOnMax(wound.VolumeFraction, wound?.TotalVolume ?? 0);
+                var fractionNecessaryToChange = 100 / partDamage.SeverityDmgString.Length;
+                int index = (int)(percent / fractionNecessaryToChange);
+                if (index != 0 && index <= partDamage.SeverityDmgString.Length)
+                    baseMessage.Append(partDamage.SeverityDmgString[index]);
+            }
 
-            baseMessage.Append(" the ").Append(wound.Tissue.Name);
+            baseMessage.Append(" the ").Append(wound?.Tissue.Name);
 
             return baseMessage.ToString();
         }
@@ -403,7 +412,7 @@ namespace MagusEngine.Utils
                 return;
 
             // Set up a customized death message
-            StringBuilder deathMessage = new StringBuilder();
+            StringBuilder deathMessage = new();
             deathMessage.AppendFormat("{0} died", defender.Name);
             // dump the dead actor's inventory (if any) at the map position where it died
             if (defender.Inventory.Count > 0)
@@ -566,8 +575,8 @@ namespace MagusEngine.Utils
             }
             else
             {
-                var minimumMomentum = (2 * defenseMaterial.ImpactFracture - defenseMaterial.ImpactYield)
-                    * (2 + 0.4 * armorQualityMultiplier) * (attackContactArea * (weaponQualityModifier + 1));
+                var minimumMomentum = ((2 * defenseMaterial.ImpactFracture) - defenseMaterial.ImpactYield)
+                    * (2 + (0.4 * armorQualityMultiplier)) * (attackContactArea * (weaponQualityModifier + 1));
                 if (originalMomentum >= minimumMomentum)
                 {
                     return originalMomentum * ((defenseMaterial.ImpactStrainsAtYield ?? 1) / 50000);
@@ -586,13 +595,13 @@ namespace MagusEngine.Utils
         /// </summary>
         /// <param name="attacker"></param>
         /// <param name="wieldedItem"></param>
-        public static double GetAttackMomentumWithItem(Actor attacker, Item wieldedItem, Attack attack)
+        public static double GetAttackMomentumWithItem(Actor attacker, Item? wieldedItem, Attack attack)
         {
-            return MathMagi.Round(
-                (attacker.GetStrenght() + wieldedItem.BaseDmg + Mrn.Exploding2D6Dice)
-                * attacker.GetRelevantAttackAbilityMultiplier(attack.AttackAbility)
-                + (10 + 2 * wieldedItem.QualityMultiplier())) * attacker.GetAttackVelocity(attack)
-                + (1 + attacker.Volume / ((wieldedItem.Material.DensityKgM3 ?? 1) * wieldedItem.Volume));
+            return (MathMagi.Round(
+                ((attacker.GetStrenght() + wieldedItem?.BaseDmg ?? 0 + Mrn.Exploding2D6Dice)
+                * attacker.GetRelevantAttackAbilityMultiplier(attack.AttackAbility))
+                + (10 + (2 * wieldedItem?.QualityMultiplier() ?? 1))) * attacker.GetAttackVelocity(attack))
+                + (1 + (attacker.Volume / ((wieldedItem?.Material?.DensityKgM3 ?? 1) * wieldedItem?.Volume ?? 1)));
         }
 
         /// <summary>
@@ -606,9 +615,9 @@ namespace MagusEngine.Utils
         public static double GetAttackMomentum(Actor attacker, BodyPart limbAttacking, Attack attack)
         {
             return MathMagi.Round(
-                (attacker.GetStrenght() + Mrn.Exploding2D6Dice)
+                ((attacker.GetStrenght() + Mrn.Exploding2D6Dice)
                 * (attacker.GetRelevantAbilityMultiplier(attack.AttackAbility) + 1)
-                * attacker.GetAttackVelocity(attack)
+                * attacker.GetAttackVelocity(attack))
                 + (1 + (attacker.Volume / ((limbAttacking.GetStructuralMaterial()?.DensityKgM3 ?? 1) * limbAttacking.Volume))));
         }
 

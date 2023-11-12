@@ -82,7 +82,7 @@ namespace MagusEngine.Core.Entities
         }
     }
 
-    public class PartWound
+    public sealed class PartWound
     {
         /// <summary>
         /// The total area of the wound in cm3 Is initially the lesser of the weapon or body part

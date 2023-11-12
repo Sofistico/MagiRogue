@@ -12,8 +12,8 @@ namespace MagusEngine.Serialization
     public class MaterialTemplate
     {
         private MagiColorSerialization? magiColorSerialization;
-        // Only putting in here for the sake of future me, only need to use JsonProperty if the name
-        // will be diferrent than whats in the json.
+
+        public static MaterialTemplate? None => PhysicsManager.SetMaterial("null");
 
         public string Id { get; set; }
         public string Name { get; set; }
@@ -79,12 +79,13 @@ namespace MagusEngine.Serialization
 
         public double? ImpactFractureMpa => ImpactFracture.HasValue ? (double)ImpactFracture / 1000 : 0;
 
-        /// <summary> How much force is needed for the material to be damaged? The deformation
+        /// <summary>
+        /// How much force is needed for the material to be damaged? The deformation
         /// limit! More means it's more elastic, less means it's more rigid affects in combat
         /// whether the corresponding tissue is bruised (value >= 50000), torn (value between 25000
-        /// and 49999), or fractured (value <= 24999) </summary>
+        /// and 49999), or fractured (value <= 24999)
+        /// </summary>
         public double? ImpactStrainsAtYield { get; set; }
-        public static MaterialTemplate? None => PhysicsManager.SetMaterial("null");
 
         public MaterialTemplate Copy()
         {
