@@ -11,7 +11,6 @@ namespace Arquimedes.Enumerators
         Blunt = 1 << 0,
         Sharp = 1 << 1,
         Pierce = 1 << 2,
-        Force = 1 << 3,
         Fire = 1 << 4,
         Cold = 1 << 5,
         Steam = Fire | Cold,
@@ -22,6 +21,6 @@ namespace Arquimedes.Enumerators
         Soul = 1 << 9,
         Mind = 1 << 10,
         Lightning = 1 << 11,
-        Thunderstorm = Shock | Lightning | Force,
+        Thunderstorm = Shock | Lightning,
     }
 }

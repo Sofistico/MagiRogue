@@ -12,20 +12,18 @@ namespace MagusEngine.Core
         /// </summary>
         public string[] SeverityDmgString { get; set; } = null!;
         public string[]? CombinatedFrom { get; set; }
-        public bool Magical { get; set; }
         public DamageTypes Type { get; set; }
 
         public DamageType()
         {
         }
 
-        public DamageType(string id, string name, string[] severityDmgString, string[]? combinatedFrom, bool magical)
+        public DamageType(string id, string name, string[] severityDmgString, string[]? combinatedFrom)
         {
             Id = id;
             Name = name;
             SeverityDmgString = severityDmgString;
             CombinatedFrom = combinatedFrom;
-            Magical = magical;
         }
     }
 }

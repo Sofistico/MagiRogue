@@ -23,7 +23,6 @@
     "Effects": [
       {
         "AreaOfEffect": "Self",
-        "SpellDamageTypeId": "force",
         "BaseDamage": 0,
         "HastePower": 2.0,
         "Duration": 5,

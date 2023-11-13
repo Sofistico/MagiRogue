@@ -4,19 +4,34 @@
     "Id": "blunt",
     "Name": "Blunt",
     "SeverityDmgString": [ "bruising", "torn", "fracturating" ],
-    "Magical": false,
     "Type": "Blunt"
   },
   {
     "Id": "sharp",
     "Name": "Sharp",
-    "Magical": false,
     "Type": "Sharp"
   },
   {
     "Id": "pierce",
     "Name": "Pierce",
-    "Magical": false,
     "Type": "Pierce"
+  },
+  {
+    "Id": "fire",
+    "Name": "Fire",
+    "SeverityDmgString": [ "bruising", "torn", "fracturating" ],
+    "Type": "Fire"
+  },
+  {
+    "Id": "cold",
+    "Name": "Cold",
+    "SeverityDmgString": [ "bruising", "torn", "fracturating" ],
+    "Type": "Cold"
+  },
+  {
+    "Id": "lightning",
+    "Name": "Lightning",
+    "SeverityDmgString": [ "bruising", "torn", "fracturating" ],
+    "Type": "Lightning"
   }
 ]
