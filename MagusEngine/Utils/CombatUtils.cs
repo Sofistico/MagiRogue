@@ -26,7 +26,8 @@ namespace MagusEngine.Utils
             Attack? attack = null,
             BodyPart? limbAttacked = null,
             Item? weapon = null,
-            BodyPart? limbAttacking = null)
+            BodyPart? limbAttacking = null,
+            SpellBase? spellUsed = null)
         {
             if (entity is Actor actor)
             {
@@ -215,9 +216,10 @@ namespace MagusEngine.Utils
             }
             else if (partDamage.Type is DamageTypes.Sharp || partDamage.Type is DamageTypes.Pierce)
             {
-                baseMessage.Append("tearing");
-                if (wound.WholeTissue)
-                    baseMessage.Append(" apart");
+                if (!wound.WholeTissue)
+                    baseMessage.Append(partDamage.SeverityDmgString[0]);
+                else
+                    baseMessage.Append(partDamage.SeverityDmgString[1]);
             }
             else
             {
@@ -264,17 +266,12 @@ namespace MagusEngine.Utils
         {
             int luck = Mrn.Exploding2D6Dice;
             if (MagicManager.PenetrateResistance(spellCasted, caster, poorGuy, luck))
-            {
-                DealDamage(effect.BaseDamage, poorGuy, effect.GetDamageType());
-            }
+                DealDamage(effect.BaseDamage, poorGuy, effect.GetDamageType(), spellUsed: spellCasted);
             else
-            {
                 Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{poorGuy.Name} resisted the effects of {spellCasted.SpellName}"));
-            }
         }
 
-        public static void ResolveSpellHit(MagiEntity poorGuy, Actor caster, SpellBase spellCasted,
-            ISpellEffect effect)
+        public static void ResolveSpellHit(MagiEntity poorGuy, Actor caster, SpellBase spellCasted, ISpellEffect effect)
         {
             if (!effect.CanMiss)
             {
@@ -287,13 +284,9 @@ namespace MagusEngine.Utils
                 // defense or blocking the projectile
                 // TODO: When shield is done, needs to add the shield or any protection against the spell
                 if (poorGuy is Actor actor && diceRoll >= actor.GetDefenseAbility() + Mrn.Exploding2D6Dice)
-                {
                     ResolveResist(poorGuy, caster, spellCasted, effect);
-                }
                 else
-                {
                     Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{caster.Name} missed {poorGuy.Name}!"));
-                }
             }
         }
 

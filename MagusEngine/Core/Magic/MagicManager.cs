@@ -3,6 +3,7 @@ using GoRogue.DiceNotation;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Services;
+using MagusEngine.Utils.Extensions;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -98,8 +99,8 @@ namespace MagusEngine.Core.Magic
                     KnowEffects.Add(sp.EffectType);
                 if (!KnowArea.Contains(sp.AreaOfEffect))
                     KnowArea.Add(sp.AreaOfEffect);
-                if (!KnowDamageTypes.Contains(sp.GetDamageType().Type))
-                    KnowDamageTypes.Add(sp.GetDamageType().Type);
+                if (!sp.SpellDamageTypeId.IsNullOrEmpty() && !KnowDamageTypes.Contains(sp.GetDamageType()!.Type))
+                    KnowDamageTypes.Add(sp.GetDamageType()!.Type);
             }
             return true;
         }

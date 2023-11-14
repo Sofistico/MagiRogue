@@ -126,34 +126,33 @@ namespace MagusEngine.Serialization.EntitySerialization
         /// <param name="effect"></param>
         /// <param name="jToken"></param>
         /// <returns></returns>
-        private static ISpellEffect EnumToEffect(EffectType effect, JToken jToken)
+        private static ISpellEffect? EnumToEffect(EffectType effect, JToken jToken)
         {
             bool? canMiss = (bool?)jToken["CanMiss"];
             bool? isHealing = (bool?)jToken["IsHealing"];
             int? radius = (int?)jToken["Radius"];
             bool? resistable = (bool?)jToken["IsResistable"];
+            string? damageId = (string?)jToken["SpellDamageTypeId"];
             return effect switch
             {
-                EffectType.DAMAGE => new DamageEffect
-                    ((int)jToken["BaseDamage"], StringToAreaEffect((string)jToken["AreaOfEffect"]),
-                    (string)jToken["SpellDamageTypeId"])
+                EffectType.DAMAGE => new DamageEffect((int)jToken["BaseDamage"]!, StringToAreaEffect((string)jToken["AreaOfEffect"]!), damageId!)
                 {
                     CanMiss = canMiss ?? false,
                     IsHealing = isHealing ?? false,
                     Radius = radius ?? 0,
                     IsResistable = resistable ?? false,
                 },
-                EffectType.HASTE => new HasteEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]),
-                    (int)jToken["HastePower"],
-                    (int)jToken["Duration"],
-                    (string)jToken["SpellDamageTypeId"]),
-                EffectType.MAGESIGHT => new MageSightEffect((int)jToken["Duration"]),
-                EffectType.SEVER => new SeverEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]),
-                    (string)jToken["SpellDamageTypeId"],
-                    (int)jToken["Radius"], (int)jToken["BaseDamage"]),
-                EffectType.TELEPORT => new TeleportEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]),
-                    (string)jToken["SpellDamageTypeId"],
-                    (int)jToken["Radius"]),
+                EffectType.HASTE => new HasteEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]!),
+                    (int)jToken["HastePower"]!,
+                    (int)jToken["Duration"]!,
+                    damageId!),
+                EffectType.MAGESIGHT => new MageSightEffect((int)jToken["Duration"]!),
+                EffectType.SEVER => new SeverEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]!),
+                    damageId!,
+                    (int)jToken["Radius"]!, (int)jToken["BaseDamage"]!),
+                EffectType.TELEPORT => new TeleportEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]!),
+                    damageId!,
+                    (int)jToken["Radius"]!),
                 _ => null,
             };
         }
