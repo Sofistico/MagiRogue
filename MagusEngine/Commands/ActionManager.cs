@@ -3,6 +3,7 @@ using GoRogue.GameFramework;
 using GoRogue.Pathing;
 using MagusEngine.Bus.MapBus;
 using MagusEngine.Bus.UiBus;
+using MagusEngine.Core;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
@@ -71,21 +72,23 @@ namespace MagusEngine.Commands
                 attack = Attack.PushAttack();
             }
             attack ??= attacker.GetRaceAttacks().GetRandomItemFromList();
+            bool isPlayer = attacker is Player;
+            var showMessage = isPlayer || Find.Universe.Player.CanSee(attacker.Position);
 
             if (attacker.Body.Stamina <= 0)
             {
                 Locator.GetService<MessageBusService>()
-                    .SendMessage<AddMessageLog>(new($"{attacker.Name} is far too tired to attack!", true));
+                    .SendMessage<AddMessageLog>(new($"You are too tired to attack|{attacker.Name} is too tired to attack!",
+                    showMessage,
+                    isPlayer ? PointOfView.First : PointOfView.Third));
                 return TimeHelper.Wait;
             }
 
             // Create two messages that describe the outcome of the attack and defense
             StringBuilder attackMessage = new();
             StringBuilder defenseMessage = new();
-            bool isPlayer = attacker is Player;
 
-            (bool hit, BodyPart limbAttacked, BodyPart limbAttacking, DamageTypes dmgType, Item? itemUsed,
-                MaterialTemplate attackMaterial)
+            (bool hit, BodyPart limbAttacked, BodyPart limbAttacking, DamageType dmgType, Item? itemUsed, MaterialTemplate attackMaterial)
                 = CombatUtils.ResolveHit(attacker, defender, attackMessage, attack, isPlayer, limbChoosen);
             double finalMomentum = CombatUtils.ResolveDefenseAndGetAttackMomentum(attacker,
                 defender,
@@ -95,9 +98,12 @@ namespace MagusEngine.Commands
                 itemUsed);
 
             // Display the outcome of the attack & defense
-            Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(attackMessage.ToString(), false));
+            Locator.GetService<MessageBusService>()?.SendMessage<AddMessageLog>(new(attackMessage.ToString(), showMessage));
             if (!string.IsNullOrWhiteSpace(defenseMessage.ToString()))
-                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(defenseMessage.ToString(), false));
+            {
+                showMessage = isPlayer || Find.Universe.Player.CanSee(defender.Position);
+                Locator.GetService<MessageBusService>()?.SendMessage<AddMessageLog>(new(defenseMessage.ToString(), showMessage));
+            }
 
             // The defender now takes damage
             CombatUtils.ResolveDamage(defender,
@@ -134,7 +140,7 @@ namespace MagusEngine.Commands
         public static bool DirectAttack(Actor attacker)
         {
             // Lists all monsters that are close and their locations
-            List<Actor> monsterClose = new List<Actor>();
+            List<Actor> monsterClose = new();
 
             // Saves all Points directions of the attacker.
             Point[] directions = attacker.Position.GetDirectionPoints();

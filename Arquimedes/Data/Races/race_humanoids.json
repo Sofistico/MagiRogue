@@ -49,7 +49,7 @@
         "AttackAbility": "Unarmed",
         "PrepareVelocity": 3,
         "RecoverVelocity": 3,
-        "DamageTypes": "Blunt",
+        "DamageTypeId": "blunt",
         "ContactArea": 100
       },
       {
@@ -61,7 +61,7 @@
         "AttackAbility": "Unarmed",
         "PrepareVelocity": 5,
         "RecoverVelocity": 5,
-        "DamageTypes": "Blunt",
+        "DamageTypeId": "blunt",
         "ContactArea": 100
       }
     ]
@@ -123,7 +123,7 @@
         "AttackAbility": "Unarmed",
         "PrepareVelocity": 3,
         "RecoverVelocity": 3,
-        "DamageTypes": "Blunt",
+        "DamageTypeId": "blunt",
         "ContactArea": 100
       },
       {
@@ -135,7 +135,7 @@
         "AttackAbility": "Unarmed",
         "PrepareVelocity": 5,
         "RecoverVelocity": 5,
-        "DamageTypes": "Blunt",
+        "DamageTypeId": "blunt",
         "ContactArea": 100
       },
       {
@@ -147,7 +147,7 @@
         "AttackAbility": "Bite",
         "PrepareVelocity": 3,
         "RecoverVelocity": 3,
-        "DamageTypes": "Pierce",
+        "DamageTypeId": "pierce",
         "ContactArea": 100,
         "PenetrationPercentage": 1
       }
@@ -208,7 +208,7 @@
         "AttackAbility": "Unarmed",
         "PrepareVelocity": 3,
         "RecoverVelocity": 3,
-        "DamageTypes": "Blunt",
+        "DamageTypeId": "blunt",
         "ContactArea": 100
       },
       {
@@ -220,7 +220,7 @@
         "AttackAbility": "Unarmed",
         "PrepareVelocity": 5,
         "RecoverVelocity": 5,
-        "DamageTypes": "Blunt",
+        "DamageTypeId": "blunt",
         "ContactArea": 100
       },
       {
@@ -232,7 +232,7 @@
         "AttackAbility": "Bite",
         "PrepareVelocity": 3,
         "RecoverVelocity": 3,
-        "DamageTypes": "Pierce",
+        "DamageTypeId": "pierce",
         "ContactArea": 100,
         "PenetrationPercentage": 1
       }
@@ -289,7 +289,7 @@
         "AttackAbility": "Unarmed",
         "PrepareVelocity": 3,
         "RecoverVelocity": 3,
-        "DamageTypes": "Blunt",
+        "DamageTypeId": "blunt",
         "ContactArea": 100
       },
       {
@@ -301,7 +301,7 @@
         "AttackAbility": "Unarmed",
         "PrepareVelocity": 5,
         "RecoverVelocity": 5,
-        "DamageTypes": "Blunt",
+        "DamageTypeId": "blunt",
         "ContactArea": 100
       },
       {
@@ -313,7 +313,7 @@
         "AttackAbility": "Bite",
         "PrepareVelocity": 3,
         "RecoverVelocity": 3,
-        "DamageTypes": "Pierce",
+        "DamageTypeId": "pierce",
         "ContactArea": 100,
         "PenetrationPercentage": 1
       }

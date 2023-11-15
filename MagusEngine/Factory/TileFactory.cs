@@ -1,12 +1,11 @@
 ﻿using Arquimedes;
 using Arquimedes.Enumerators;
 using MagusEngine.Core.MapStuff;
-using MagusEngine.ECS.Components;
 using MagusEngine.ECS.Components.ActorComponents;
+using MagusEngine.ECS.Components.TilesComponents;
 using MagusEngine.Serialization;
 using MagusEngine.Systems;
 using SadRogue.Primitives;
-using System;
 
 namespace MagusEngine.Factory
 {
@@ -18,11 +17,18 @@ namespace MagusEngine.Factory
         {
             var tile = CreateTile(pos, TileType.Floor, "dirt");
             var plant = DataManager.QueryPlantInData("grass");
-            tile.AddComponent(plant);
-            tile.AddComponent(new FoodComponent(Food.Herbivore));
-            tile.Traits.Add(Trait.GrazerEatable);
-
+            AddVegetation(tile, plant);
             return tile;
+        }
+
+        public static void AddVegetation(Tile tile, Plant plant)
+        {
+            tile.AddComponent(plant);
+            if (plant.Material.ConfersTraits.Contains(Trait.GrazerEatable))
+            {
+                tile.AddComponent(new FoodComponent(Food.Herbivore));
+                tile.Traits.Add(Trait.GrazerEatable);
+            }
         }
 
         public static Tile GenericDirtRoad(Point pos)
@@ -37,8 +43,8 @@ namespace MagusEngine.Factory
             var tile = new Tile(MagiPalette.Wood, Color.Black, 'O', false, false, Point.None)
             {
                 Name = "Tree",
+                MaterialId = "wood",
             };
-            tile.AddComponent<MaterialComponent>(new("wood"));
             return tile;
         }
 
@@ -47,8 +53,8 @@ namespace MagusEngine.Factory
             var tile = new Tile(MagiPalette.Wood, Color.Black, 'O', false, false, pos)
             {
                 Name = "Tree",
+                MaterialId = "wood",
             };
-            tile.AddComponent<MaterialComponent>(new("wood"));
             return tile;
         }
 
@@ -83,7 +89,7 @@ namespace MagusEngine.Factory
             MaterialType typeToMake = MaterialType.None,
             bool cacheMaterial = false)
         {
-            MaterialTemplate? material;
+            MaterialTemplate material;
             if (cachedMaterial is not null)
             {
                 material = cachedMaterial;
@@ -105,11 +111,11 @@ namespace MagusEngine.Factory
 
         public static Tile CreateTile(Point pos,
             TileType tileType,
-            MaterialTemplate? material)
+            MaterialTemplate material)
         {
             var (foreground, background, glyph, isWalkable, isTransparent, name)
-                = DetermineTileLookAndName(material!, tileType);
-            return new Tile(foreground, background, glyph, isWalkable, isTransparent, pos, name, material!.Id);
+                = DetermineTileLookAndName(material, tileType);
+            return new Tile(foreground, background, glyph, isWalkable, isTransparent, pos, name, material.Id);
         }
 
         public static void ResetCachedMaterial() => cachedMaterial = null;
@@ -117,11 +123,6 @@ namespace MagusEngine.Factory
         private static (Color, Color, char, bool, bool, string) DetermineTileLookAndName(MaterialTemplate? material,
             TileType tileType)
         {
-            if (material == null)
-            {
-                throw new ArgumentNullException(nameof(material));
-            }
-
             char glyph;
             bool isTransparent;
             bool isWalkable;

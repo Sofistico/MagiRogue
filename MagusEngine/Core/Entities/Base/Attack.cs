@@ -1,9 +1,11 @@
 ﻿using Arquimedes.Enumerators;
+using MagusEngine.Systems;
 
 namespace MagusEngine.Core.Entities.Base
 {
     public class Attack
     {
+        private DamageType? damageType;
         public string Name { get; set; }
 
         /// <summary>
@@ -13,7 +15,16 @@ namespace MagusEngine.Core.Entities.Base
         public AbilityName AttackAbility { get; set; }
         public int PrepareVelocity { get; set; }
         public int RecoverVelocity { get; set; }
-        public DamageTypes DamageTypes { get; set; }
+        public string DamageTypeId { get; set; } = null!;
+
+        public DamageType? DamageType
+        {
+            get
+            {
+                damageType ??= DataManager.QueryDamageInData(DamageTypeId);
+                return damageType;
+            }
+        }
 
         /// <summary>
         /// Determines the surface area hit by the weapon.
@@ -37,7 +48,7 @@ namespace MagusEngine.Core.Entities.Base
                 AttackAbility = AbilityName.None,
                 AttackVerb = new[] { "push", "pushes" },
                 ContactArea = 100,
-                DamageTypes = DamageTypes.Blunt,
+                DamageTypeId = "blunt",
                 LimbFunction = BodyPartFunction.Root,
                 Main = true,
                 Name = "Push",

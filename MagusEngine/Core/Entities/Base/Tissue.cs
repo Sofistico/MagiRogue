@@ -8,7 +8,7 @@ namespace MagusEngine.Core.Entities.Base
 {
     public sealed class Tissue
     {
-        private MaterialTemplate material;
+        private MaterialTemplate? material;
 
         public string Id { get; set; }
 

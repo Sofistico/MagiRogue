@@ -6,6 +6,6 @@
 
         void DeRegisterEntity(ITimeNode node);
 
-        ITimeNode NextNode();
+        ITimeNode? NextNode();
     }
 }

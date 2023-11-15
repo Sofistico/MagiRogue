@@ -16,26 +16,25 @@ namespace MagusEngine.Systems.Time
         // https://github.com/AnotherEpigone/moving-castles/tree/master/MovingCastles/GameSystems/Time
         // Add a priority queue to represent the queue that an actor will act, or a linked
         // dictionary, or whatever
-        private readonly SimplePriorityQueue<ITimeNode, long> turnQueue = new SimplePriorityQueue<ITimeNode, long>();
-        private readonly TimeDefSpan timeSpan;
+        private readonly SimplePriorityQueue<ITimeNode, long> turnQueue = new();
 
         public event EventHandler<TimeDefSpan>? TurnPassed;
 
         [JsonIgnore]
-        public TimeDefSpan TimePassed => new TimeDefSpan(timeSpan.Ticks);
+        public TimeDefSpan TimePassed { get; }
 
         [JsonIgnore]
-        public int Turns => (int)timeSpan.Seconds;
+        public int Turns => (int)TimePassed.Seconds;
 
         public TimeSystem(long initialTick = 0)
         {
-            timeSpan = new TimeDefSpan(initialTick);
+            TimePassed = new TimeDefSpan(initialTick);
             turnQueue = new SimplePriorityQueue<ITimeNode, long>();
         }
 
         public TimeSystem(int initialYear)
         {
-            timeSpan = new TimeDefSpan(initialYear);
+            TimePassed = new TimeDefSpan(initialYear);
             turnQueue = new SimplePriorityQueue<ITimeNode, long>();
         }
 
@@ -61,7 +60,7 @@ namespace MagusEngine.Systems.Time
                 return null;
 
             var node = turnQueue.Dequeue();
-            timeSpan.SetTick(node.Tick);
+            TimePassed.SetTick(node.Tick);
 
             TurnPassed?.Invoke(this, TimePassed);
 

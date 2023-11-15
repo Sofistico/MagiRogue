@@ -206,7 +206,7 @@ namespace MagusEngine.Core.Entities.Base
 
                 case >= 1:
                     wound.Severity = bpInjured is Limb ? InjurySeverity.Missing : InjurySeverity.Pulped;
-                    if (wound.InitialDamageSource is DamageTypes.Blunt || injureSeverity < 2)
+                    if (wound.InitialDamageSource.Type is DamageTypes.Blunt || injureSeverity < 2)
                         wound.Severity = InjurySeverity.Pulped;
                     break;
 
@@ -214,10 +214,10 @@ namespace MagusEngine.Core.Entities.Base
                     throw new Exception($"Error with getting percentage of the damage done to the body part: {injureSeverity}");
             }
 
-            if (wound.InitialDamageSource is DamageTypes.Sharp
-                || wound.InitialDamageSource is DamageTypes.Pierce)
+            if (wound.InitialDamageSource.Type is DamageTypes.Sharp
+                || wound.InitialDamageSource.Type is DamageTypes.Pierce)
             {
-                wound.Bleeding = actorWounded.Weight / bpInjured.BodyPartWeight * (int)wound.Severity
+                wound.Bleeding = (actorWounded.Weight / bpInjured.BodyPartWeight * (int)wound.Severity)
                     + wound.GetBaseBleedingRate();
             }
 
@@ -414,7 +414,7 @@ namespace MagusEngine.Core.Entities.Base
                 foreach (Limb connectedLimb in connectedParts)
                 {
                     // Here so that the bleeding from a lost part isn't being considered
-                    Wound lostLimb = new Wound(DamageTypes.Sharp, connectedLimb.Tissues)
+                    Wound lostLimb = new Wound(DataManager.QueryDamageInData("sharp"), connectedLimb.Tissues)
                     {
                         Severity = InjurySeverity.Missing
                     };

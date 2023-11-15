@@ -30,7 +30,7 @@ namespace MagusEngine.Systems
         public static readonly IReadOnlyList<ItemTemplate> ListOfItems =
             GetSourceTree<ItemTemplate>(@".\Data\Items\items_*");
 
-        public static readonly IReadOnlyList<MaterialTemplate> ListOfMaterials =
+        public static readonly List<MaterialTemplate> ListOfMaterials =
             GetSourceTree<MaterialTemplate>(@".\Data\Materials\material_*");
 
         public static readonly IReadOnlyList<SpellBase> ListOfSpells =
@@ -41,9 +41,6 @@ namespace MagusEngine.Systems
 
         public static readonly IReadOnlyList<Limb> ListOfLimbs =
             GetSourceTree<Limb>(@".\Data\Bodies\limbs_*");
-
-        //public static readonly IReadOnlyList<Tile> ListOfTiles =
-        //    GetSourceTree<Tile>(@".\Data\Tiles\tiles_*");
 
         public static readonly IReadOnlyList<Furniture> ListOfFurnitures =
             GetSourceTree<Furniture>(@".\Data\Furniture\fur_*");
@@ -84,6 +81,9 @@ namespace MagusEngine.Systems
 
         public static readonly IReadOnlyList<TissuePlanTemplate> ListOfTissuePlans =
             GetSourceTree<TissuePlanTemplate>(@".\Data\Bodies\tissue_*");
+
+        public static readonly IReadOnlyList<DamageType> ListOfDamageTypes =
+            GetSourceTree<DamageType>(@".\Data\Damage\dmg_*");
 
         #region Descriptors
 
@@ -128,6 +128,29 @@ namespace MagusEngine.Systems
             return allTList.AsReadOnly();
         }
 
+        public static List<T> GetSourceTree<T>(string wildCard)
+        {
+            string[] files = FileUtils.GetFiles(wildCard);
+
+            List<List<T>> listTList = new();
+
+            for (int i = 0; i < files.Length; i++)
+            {
+                var t = JsonUtils.JsonDeseralize<List<T>>(files[i]);
+                listTList.Add(t);
+            }
+            List<T> allTList = new();
+
+            foreach (List<T> tList in listTList)
+            {
+                if (tList is null)
+                    continue;
+                allTList.AddRange(tList);
+            }
+
+            return allTList;
+        }
+
         #region Query
 
         public static SpellBase QuerySpellInData(string spellId) => ListOfSpells.FirstOrDefault
@@ -144,18 +167,6 @@ namespace MagusEngine.Systems
             var organ = ListOfOrgans.FirstOrDefault(o => o.Id.Equals(organId), null);
             return organ?.Copy();
         }
-
-        //public static Tile? QueryTileInData(string tileId)
-        //    => ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId))?.Copy();
-
-        //public static Tile? QueryTileInData(string tileId, Point pos)
-        //    => ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId))?.Copy();
-
-        //public static T QueryTileInData<T>(string tileId) where T : Tile
-        //    => (T)ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId))?.Copy();
-
-        //public static T QueryTileInData<T>(string tileId, Point pos) where T : Tile
-        //    => (T)ListOfTiles.FirstOrDefault(t => t.TileId.Equals(tileId))?.Copy(pos);
 
         public static Item QueryItemInData(string itemId)
             => ListOfItems.FirstOrDefault(i => i.Id.Equals(itemId));
@@ -175,7 +186,7 @@ namespace MagusEngine.Systems
                 for (int i = 0; i < list.Length; i++)
                 {
                     var mat = list[i];
-                    var inheirtFrom = ListOfMaterials.FirstOrDefault(i => i.Id.Equals(mat.InheirtFrom));
+                    var inheirtFrom = ListOfMaterials.Find(i => i.Id.Equals(mat.InheirtFrom));
                     if (inheirtFrom is null)
                     {
                         Locator.GetService<MagiLog>().Log($"Material to inheirt from was null! Id: {mat.InheirtFrom}");
@@ -185,12 +196,8 @@ namespace MagusEngine.Systems
                     inheirtFrom.CopyTo(mat);
                 }
             }
-            return ListOfMaterials.FirstOrDefault(a => a.Id.Equals(id));
+            return ListOfMaterials.Find(a => a.Id.Equals(id));
         }
-
-        //public static List<Tile> QueryTilesInDataWithTrait(Trait trait)
-        //    => ListOfTiles.Where(i => i.HasAnyTrait()
-        //        && i.Traits.Contains(trait)).ToList();
 
         public static Race QueryRaceInData(string raceId)
             => (Race)(ListOfRaces.FirstOrDefault(c => c.Id.Equals(raceId))?.Clone());
@@ -239,6 +246,9 @@ namespace MagusEngine.Systems
         public static TissuePlanTemplate QueryTissuePlanInData(string tissuePlanId)
             => ListOfTissuePlans.FirstOrDefault(i => i.Id.Equals(tissuePlanId));
 
+        public static DamageType? QueryDamageInData(string dmgId)
+            => ListOfDamageTypes.FirstOrDefault(i => i.Id.Equals(dmgId), null);
+
         #endregion Query
 
         #region rng
@@ -274,7 +284,7 @@ namespace MagusEngine.Systems
 
         public static MaterialTemplate QueryMaterialWithTrait(Trait trait)
         {
-            return ListOfMaterials.Where(i => i?.ConfersTraits?.Contains(trait) == true).GetRandomItemFromList();
+            return ListOfMaterials.Where(i => i.ConfersTraits?.Contains(trait) == true).GetRandomItemFromList();
         }
 
         #endregion helper methods

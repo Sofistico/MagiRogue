@@ -72,8 +72,8 @@ namespace MagusEngine.Core.Entities
             int size = Volume;
             //Attached = false;
 
-            return new Item(actor.AppearanceSingle.Appearance.Foreground,
-                actor.AppearanceSingle.Appearance.Background,
+            return new Item(actor.SadCell.AppearanceSingle.Appearance.Foreground,
+                actor.SadCell.AppearanceSingle.Appearance.Background,
                 limbName,
                 253,
                 actor.Position,

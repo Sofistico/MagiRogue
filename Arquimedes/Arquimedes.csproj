@@ -8,7 +8,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="SadConsole" Version="10.0.0-beta1" />
+		<PackageReference Include="SadConsole" Version="10.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -61,6 +61,9 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 		<None Update="Data\Plant\*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Data\Damage\*">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 		<None Update="Fonts\*">

@@ -5,6 +5,8 @@
     /// </summary>
     public sealed class TimeDefSpan
     {
+        private long _centiseconds;
+
         public const int DaysPerMonth = 31;
         public const int MonthsPerYear = 12;
         public const int MinutesPerHour = 60;
@@ -15,7 +17,14 @@
         public const int SecondsPerMonth = DaysPerMonth * SecondsPerDay;
         public const int SecondsPerYear = SecondsPerMonth * MonthsPerYear;
 
-        private long _centiseconds;
+        public int Year { get; set; }
+        public int Session => (int)((Month / 3) + 0.5f);
+        public int Month => ((int)(Seconds % SecondsPerYear) / SecondsPerMonth) + 1;
+        public int Day => ((int)(Seconds % SecondsPerMonth) / SecondsPerDay) + 1;
+        public int Hours => Minutes / MinutesPerHour;
+        public int Minutes => (int)(Seconds / SecondsPerMinute);
+        public long Seconds => _centiseconds / CentisecondsPerSecond;
+        public long Ticks => _centiseconds;
 
         public TimeDefSpan(long centiseconds)
         {
@@ -26,15 +35,6 @@
         {
             Year = startYear;
         }
-
-        public int Year { get; set; }
-        public int Session => (int)(Month / 3 + 0.5f);
-        public int Month => (int)(Seconds % SecondsPerYear) / SecondsPerMonth + 1;
-        public int Day => (int)(Seconds % SecondsPerMonth) / SecondsPerDay + 1;
-        public int Hours => Minutes / MinutesPerHour;
-        public int Minutes => (int)(Seconds / SecondsPerMinute);
-        public long Seconds => _centiseconds / CentisecondsPerSecond;
-        public long Ticks => _centiseconds;
 
         public void SetTick(long centiseconds)
         {

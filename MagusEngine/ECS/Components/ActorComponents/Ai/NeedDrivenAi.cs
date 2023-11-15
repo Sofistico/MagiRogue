@@ -94,7 +94,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.Ai
                         {
                             if (map.DistanceMeasurement.Calculate(actor.Position - water.Position) <= 1) // right next to the water tile or in it
                             {
-                                timeTakenAction = ActionManager.Drink(actor, water.GetMaterial(), 25, need);
+                                timeTakenAction = ActionManager.Drink(actor, water.Material, 25, need);
                             }
                             else
                             {

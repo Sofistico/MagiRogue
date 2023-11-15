@@ -10,7 +10,7 @@
     "Effects": [
       {
         "AreaOfEffect": "Target",
-        "SpellDamageType": "Force",
+        "SpellDamageTypeId": "blunt",
         "BaseDamage": 2,
         "EffectType": "DAMAGE",
         "CanMiss": true
@@ -24,12 +24,10 @@
     "Effects": [
       {
         "AreaOfEffect": "Beam",
-        "SpellDamageType": "Fire",
+        "SpellDamageTypeId": "fire",
         "BaseDamage": 3,
         "Radius": 0,
-
         "EffectType": "DAMAGE",
-
         "CanMiss": true
       }
     ],
@@ -47,12 +45,11 @@
     "Effects": [
       {
         "AreaOfEffect": "Beam",
-        "SpellDamageType": "Lighting",
+        "SpellDamageTypeId": "lightning",
         "BaseDamage": 6,
         "Radius": 0,
         "TargetsTile": true,
         "EffectType": "DAMAGE",
-
         "IsResistable": true
       },
       {
@@ -63,12 +60,12 @@
         "EffectStr": "{0} locks up!"
       }
     ],
-    "SpellName": "Bolt of Lighting",
-    "Description": "A bolt of lighting leaves your finger to strike your opponent on a line",
+    "SpellName": "Bolt of Lightning",
+    "Description": "A bolt of lightning leaves your finger to strike your opponent on a line",
     "MagicArt": "Projection",
     "SpellRange": 6,
     "ManaCost": 5.5,
-    "SpellId": "lighting_bolt",
+    "SpellId": "lightning_bolt",
     "Context": [ "Offensive", "Debuff" ]
   },
   {
@@ -77,7 +74,7 @@
     "Effects": [
       {
         "AreaOfEffect": "Ball",
-        "SpellDamageType": "Fire",
+        "SpellDamageTypeId": "fire",
         "BaseDamage": 6,
         "Radius": 3,
 
@@ -97,7 +94,7 @@
     "Effects": [
       {
         "AreaOfEffect": "Target",
-        "SpellDamageType": "Sharp",
+        "SpellDamageTypeId": "sharp",
         "Radius": 1,
         "EffectType": "SEVER",
         "BaseDamage": 5
@@ -117,7 +114,7 @@
     "Effects": [
       {
         "AreaOfEffect": "Cone",
-        "SpellDamageType": "Cold",
+        "SpellDamageTypeId": "cold",
         "BaseDamage": 5,
         "Radius": 10,
         "ConeCircleSpan": 95,
@@ -131,6 +128,7 @@
     "SpellRange": 1,
     "ManaCost": 8.0,
     "SpellId": "cone_cold",
-    "Context": [ "Offensive" ]
+    "Context": [ "Offensive" ],
+    "AffectsTile": true
   }
 ]

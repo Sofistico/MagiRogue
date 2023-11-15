@@ -1,0 +1,31 @@
+[
+  {
+    "Id": "iron",
+    "Name": "iron",
+    "InheirtFrom": "generic_metal",
+    "MPInfusionLimit": 4,
+    "Density": 7.8,
+    "MeltingPoint": 1538,
+    "BoilingPoint": 2862,
+    "ConfersTraits": [ "Durable", "MagicallyWeak" ],
+    "ShearYield": 15000,
+    "ShearFracture": 15000,
+    "ShearStrainAtYield": 100,
+    "ImpactYield": 120000,
+    "ImpactFracture": 120000,
+    "ImpactStrainsAtYield": 100,
+    "MaxEdge": 1000
+  },
+  {
+    "Id": "gold",
+    "InheirtFrom": "generic_metal",
+    "Name": "gold",
+    "Hardness": 1,
+    "MPInfusionLimit": 10,
+    "Density": 19.3,
+    "MeltingPoint": 1064,
+    "ConfersTraits": [ "Magical", "MagicallyPotent", "Opulent" ],
+    "Color": "Gold",
+    "Type": "Metal"
+  }
+]

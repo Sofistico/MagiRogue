@@ -2,6 +2,7 @@
 using MagusEngine.Bus.MapBus;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Commands;
+using MagusEngine.Core;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic;
@@ -16,41 +17,17 @@ namespace MagusEngine.Utils
 {
     public static class CombatUtils
     {
-        #region Flags
-
-        public static DamageTypes SetFlag(DamageTypes a, DamageTypes b)
-        {
-            return a | b;
-        }
-
-        public static DamageTypes UnsetFlag(DamageTypes a, DamageTypes b)
-        {
-            return a & ~b;
-        }
-
-        // Works with "None" as well
-        public static bool HasFlag(DamageTypes a, DamageTypes b)
-        {
-            return (a & b) == b;
-        }
-
-        public static DamageTypes ToogleFlag(DamageTypes a, DamageTypes b)
-        {
-            return a ^ b;
-        }
-
-        #endregion Flags
-
         #region Damage
 
         public static void DealDamage(double attackMomentum,
             MagiEntity entity,
-            DamageTypes dmgType,
+            DamageType dmgType,
             MaterialTemplate? attackMaterial = null,
             Attack? attack = null,
             BodyPart? limbAttacked = null,
             Item? weapon = null,
-            BodyPart? limbAttacking = null)
+            BodyPart? limbAttacking = null,
+            SpellBase? spellUsed = null)
         {
             if (entity is Actor actor)
             {
@@ -112,7 +89,7 @@ namespace MagusEngine.Utils
         /// <param name="momentum"></param>
         public static void ResolveDamage(Actor defender,
             double momentum,
-            DamageTypes dmgType,
+            DamageType dmgType,
             BodyPart limbAttacked,
             MaterialTemplate attackMaterial,
             Attack attack,
@@ -196,7 +173,7 @@ namespace MagusEngine.Utils
                     : tissue.Volume;
 
                 double strain = attackTotalContactArea / attackMomentum;
-                PartWound partWound = new PartWound(woundVolume, strain, tissue, attack.DamageTypes);
+                PartWound partWound = new(woundVolume, strain, tissue, attack.DamageType);
                 if (remainingEnergy >= energyToPenetrate)
                 {
                     remainingEnergy -= energyToPenetrate;
@@ -206,7 +183,7 @@ namespace MagusEngine.Utils
                 {
                     // The attack has lost all of its energy and stopped in this tissue layer, doing
                     // blunt damage
-                    partWound.PartDamage = DamageTypes.Blunt;
+                    partWound.PartDamage.Type = DamageTypes.Blunt;
                     list.Add(partWound);
                     break;
                 }
@@ -216,39 +193,49 @@ namespace MagusEngine.Utils
             return list;
         }
 
-        private static string DetermineDamageMessage(DamageTypes partDamage, PartWound wound)
+        private static string DetermineDamageMessage(DamageType partDamage, PartWound wound)
         {
             StringBuilder baseMessage = new();
-            if (partDamage is DamageTypes.Blunt)
+            // i liked this, a lot.
+            if (partDamage.Type is DamageTypes.Blunt)
             {
                 if (wound.Tissue.Material.ImpactStrainsAtYield <= 24.999
                     && wound.Strain >= wound.Tissue.Material.ImpactStrainsAtYield)
                 {
-                    baseMessage.Append("fracturating");
+                    baseMessage.Append(partDamage.SeverityDmgString[2]);
                 }
                 else if (wound.Tissue.Material.ImpactStrainsAtYield <= 49.999
                     && wound.Strain >= wound.Tissue.Material.ImpactStrainsAtYield)
                 {
-                    baseMessage.Append("torn");
+                    baseMessage.Append(partDamage.SeverityDmgString[1]);
                 }
                 else
                 {
-                    baseMessage.Append("bruising");
+                    baseMessage.Append(partDamage.SeverityDmgString[0]);
                 }
             }
-            else if (partDamage is DamageTypes.Sharp || partDamage is DamageTypes.Pierce)
+            else if (partDamage.Type is DamageTypes.Sharp || partDamage.Type is DamageTypes.Pierce)
             {
-                baseMessage.Append("tearing");
-                if (wound.WholeTissue)
-                    baseMessage.Append(" apart");
+                if (!wound.WholeTissue)
+                    baseMessage.Append(partDamage.SeverityDmgString[0]);
+                else
+                    baseMessage.Append(partDamage.SeverityDmgString[1]);
+            }
+            else
+            {
+                var percent = MathMagi.GetPercentageBasedOnMax(wound.VolumeFraction, wound?.TotalVolume ?? 0);
+                var fractionNecessaryToChange = 100 / partDamage.SeverityDmgString.Length;
+                int index = (int)(percent / fractionNecessaryToChange);
+                if (index != 0 && index <= partDamage.SeverityDmgString.Length)
+                    baseMessage.Append(partDamage.SeverityDmgString[index]);
             }
 
-            baseMessage.Append(" the ").Append(wound.Tissue.Name);
+            baseMessage.Append(" the ").Append(wound?.Tissue.Name);
 
             return baseMessage.ToString();
         }
 
-        public static void ApplyHealing(int dmg, Actor stats, DamageTypes healingType, bool healsStamina = false)
+        public static void ApplyHealing(int dmg, Actor stats, bool healsStamina = false)
         {
             if (healsStamina)
             {
@@ -259,57 +246,13 @@ namespace MagusEngine.Utils
                 {
                     stats.Body.Stamina = stats.Body.MaxStamina;
 
-                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("You feel your inner fire full"));
+                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("You feel your tiredeness fade away"));
                 }
             }
 
             // then here heal the limbs
             // TODO: Add the function to do it
-
-            StringBuilder bobTheBuilder = new StringBuilder($"You healed for {dmg} damage");
-            switch (healingType)
-            {
-                case DamageTypes.None:
-                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(bobTheBuilder.Append(", feeling your bones and skin growing over your wounds!").ToString()));
-                    break;
-
-                case DamageTypes.Force:
-                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(bobTheBuilder.Append(", filling your movements with a spring!").ToString()));
-                    break;
-
-                case DamageTypes.Fire:
-                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(bobTheBuilder.Append(", firing your will!").ToString()));
-                    break;
-
-                case DamageTypes.Cold:
-
-                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(bobTheBuilder.Append(", leaving you lethargic.").ToString()));
-                    break;
-
-                case DamageTypes.Poison:
-                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(bobTheBuilder.Append(", ouch it hurt!").ToString()));
-                    break;
-
-                case DamageTypes.Acid:
-                    stats.Body.Stamina -= dmg;
-                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(bobTheBuilder.Append(", dealing equal damage to yourself, shouldn't have done that.").ToString()));
-                    break;
-
-                case DamageTypes.Shock:
-                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(bobTheBuilder.Append(", felling yourself speeding up!").ToString()));
-                    break;
-
-                case DamageTypes.Soul:
-                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(bobTheBuilder.Append(", feeling your soul at rest.").ToString()));
-                    break;
-
-                case DamageTypes.Mind:
-                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(bobTheBuilder.Append(", feeling your mind at ease.").ToString()));
-                    break;
-
-                default:
-                    break;
-            }
+            Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"You healed for {dmg} damage"));
         }
 
         #endregion Damage
@@ -323,17 +266,12 @@ namespace MagusEngine.Utils
         {
             int luck = Mrn.Exploding2D6Dice;
             if (MagicManager.PenetrateResistance(spellCasted, caster, poorGuy, luck))
-            {
-                DealDamage(effect.BaseDamage, poorGuy, effect.SpellDamageType);
-            }
+                DealDamage(effect.BaseDamage, poorGuy, effect.GetDamageType(), spellUsed: spellCasted);
             else
-            {
                 Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{poorGuy.Name} resisted the effects of {spellCasted.SpellName}"));
-            }
         }
 
-        public static void ResolveSpellHit(MagiEntity poorGuy, Actor caster, SpellBase spellCasted,
-            ISpellEffect effect)
+        public static void ResolveSpellHit(MagiEntity poorGuy, Actor caster, SpellBase spellCasted, ISpellEffect effect)
         {
             if (!effect.CanMiss)
             {
@@ -346,13 +284,9 @@ namespace MagusEngine.Utils
                 // defense or blocking the projectile
                 // TODO: When shield is done, needs to add the shield or any protection against the spell
                 if (poorGuy is Actor actor && diceRoll >= actor.GetDefenseAbility() + Mrn.Exploding2D6Dice)
-                {
                     ResolveResist(poorGuy, caster, spellCasted, effect);
-                }
                 else
-                {
                     Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{caster.Name} missed {poorGuy.Name}!"));
-                }
             }
         }
 
@@ -370,7 +304,7 @@ namespace MagusEngine.Utils
         /// <param name="attackMessage"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">throws if the attack is null</exception>
-        public static (bool, BodyPart?, BodyPart, DamageTypes, Item?, MaterialTemplate?) ResolveHit(
+        public static (bool, BodyPart?, BodyPart, DamageType?, Item?, MaterialTemplate) ResolveHit(
             Actor attacker,
             Actor defender,
             StringBuilder attackMessage,
@@ -393,8 +327,8 @@ namespace MagusEngine.Utils
             attackMessage.AppendFormat("{0} {1} the {2}{3}", person, verb, defender.Name, with);
             var materialUsed = wieldedItem is null
                 ? bpAttacking.Tissues.Find(i => i.Flags.Contains(TissueFlag.Structural)
-                    || i.Flags.Contains(TissueFlag.Muscular))?.Material
-                : wieldedItem.Material;
+                    || i.Flags.Contains(TissueFlag.Muscular)).Material
+                : wieldedItem?.Material;
             if (materialUsed is null)
             {
                 Locator.GetService<MagiLog>().Log("Material was null!");
@@ -406,11 +340,11 @@ namespace MagusEngine.Utils
                 + Mrn.Exploding2D6Dice)
             {
                 limbAttacked ??= defender.GetAnatomy().GetRandomLimb();
-                return (true, limbAttacked, bpAttacking, attack.DamageTypes, wieldedItem, materialUsed);
+                return (true, limbAttacked, bpAttacking, attack.DamageType, wieldedItem, materialUsed);
             }
             else
             {
-                return (false, null, bpAttacking, attack.DamageTypes, wieldedItem, materialUsed);
+                return (false, null, bpAttacking, attack.DamageType, wieldedItem, materialUsed);
             }
         }
 
@@ -471,7 +405,7 @@ namespace MagusEngine.Utils
                 return;
 
             // Set up a customized death message
-            StringBuilder deathMessage = new StringBuilder();
+            StringBuilder deathMessage = new();
             deathMessage.AppendFormat("{0} died", defender.Name);
             // dump the dead actor's inventory (if any) at the map position where it died
             if (defender.Inventory.Count > 0)
@@ -562,7 +496,7 @@ namespace MagusEngine.Utils
             double armorQualityMultiplier = 0,
             double weaponQualityModifier = 0)
         {
-            return attack.DamageTypes switch
+            return attack.DamageType.Type switch
             {
                 DamageTypes.Blunt => CalculateBluntDefenseCost(defenseMaterial,
                                         //attackMaterial,
@@ -597,7 +531,7 @@ namespace MagusEngine.Utils
             double shearFRatio = (double)((double)attackMaterial.ShearFracture / (double)defenseMaterial.ShearFracture);
             double shearYRatio = (double)((double)attackMaterial.ShearYield / (double)defenseMaterial.ShearYield);
             var momentumReq = (shearYRatio + (attackContactArea + 1) * shearFRatio)
-                * (10 + 2 * armorQualityModifier) / (attackMaterial.MaxEdge * (weaponQualityModifier + 1));
+                * (10 + (2 * armorQualityModifier)) / (attackMaterial.MaxEdge * (weaponQualityModifier + 1));
             if (originalMomentum >= momentumReq)
             {
                 return (double)((double)originalMomentum * (double)(defenseMaterial.ShearStrainAtYield / 50000));
@@ -634,8 +568,8 @@ namespace MagusEngine.Utils
             }
             else
             {
-                var minimumMomentum = (2 * defenseMaterial.ImpactFracture - defenseMaterial.ImpactYield)
-                    * (2 + 0.4 * armorQualityMultiplier) * (attackContactArea * (weaponQualityModifier + 1));
+                var minimumMomentum = ((2 * defenseMaterial.ImpactFracture) - defenseMaterial.ImpactYield)
+                    * (2 + (0.4 * armorQualityMultiplier)) * (attackContactArea * (weaponQualityModifier + 1));
                 if (originalMomentum >= minimumMomentum)
                 {
                     return originalMomentum * ((defenseMaterial.ImpactStrainsAtYield ?? 1) / 50000);
@@ -654,13 +588,13 @@ namespace MagusEngine.Utils
         /// </summary>
         /// <param name="attacker"></param>
         /// <param name="wieldedItem"></param>
-        public static double GetAttackMomentumWithItem(Actor attacker, Item wieldedItem, Attack attack)
+        public static double GetAttackMomentumWithItem(Actor attacker, Item? wieldedItem, Attack attack)
         {
-            return MathMagi.Round(
-                (attacker.GetStrenght() + wieldedItem.BaseDmg + Mrn.Exploding2D6Dice)
-                * attacker.GetRelevantAttackAbilityMultiplier(attack.AttackAbility)
-                + (10 + 2 * wieldedItem.QualityMultiplier())) * attacker.GetAttackVelocity(attack)
-                + (1 + attacker.Volume / ((wieldedItem.Material.DensityKgM3 ?? 1) * wieldedItem.Volume));
+            return (MathMagi.Round(
+                ((attacker.GetStrenght() + wieldedItem?.BaseDmg ?? 0 + Mrn.Exploding2D6Dice)
+                * attacker.GetRelevantAttackAbilityMultiplier(attack.AttackAbility))
+                + (10 + (2 * wieldedItem?.QualityMultiplier() ?? 1))) * attacker.GetAttackVelocity(attack))
+                + (1 + (attacker.Volume / ((wieldedItem?.Material?.DensityKgM3 ?? 1) * wieldedItem?.Volume ?? 1)));
         }
 
         /// <summary>
@@ -674,10 +608,10 @@ namespace MagusEngine.Utils
         public static double GetAttackMomentum(Actor attacker, BodyPart limbAttacking, Attack attack)
         {
             return MathMagi.Round(
-                (attacker.GetStrenght() + Mrn.Exploding2D6Dice)
+                ((attacker.GetStrenght() + Mrn.Exploding2D6Dice)
                 * (attacker.GetRelevantAbilityMultiplier(attack.AttackAbility) + 1)
-                * attacker.GetAttackVelocity(attack)
-                + (1 + attacker.Volume / ((limbAttacking.GetStructuralMaterial()?.DensityKgM3 ?? 1) * limbAttacking.Volume)));
+                * attacker.GetAttackVelocity(attack))
+                + (1 + (attacker.Volume / ((limbAttacking.GetStructuralMaterial()?.DensityKgM3 ?? 1) * limbAttacking.Volume))));
         }
 
         #endregion Physics

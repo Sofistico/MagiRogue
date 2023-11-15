@@ -15,7 +15,6 @@ namespace MagusEngine.Core.Magic.Effects
     public class DamageEffect : ISpellEffect
     {
         public SpellAreaEffect AreaOfEffect { get; set; }
-        public DamageTypes SpellDamageType { get; set; }
         public int BaseDamage { get; set; }
         public int Radius { get; set; }
         public double ConeCircleSpan { get; set; }
@@ -24,11 +23,13 @@ namespace MagusEngine.Core.Magic.Effects
         public bool IsHealing { get; set; }
         public bool CanMiss { get; set; }
         public bool IsResistable { get; set; }
+        public string? EffectMessage { get; set; }
+        public string SpellDamageTypeId { get; set; }
 
         [JsonConstructor]
         public DamageEffect(int dmg,
             SpellAreaEffect areaOfEffect,
-            DamageTypes spellDamageType,
+            string spellDamageTypeId,
             bool canMiss = false,
             bool isHeal = false,
             int radius = 0,
@@ -36,7 +37,7 @@ namespace MagusEngine.Core.Magic.Effects
         {
             BaseDamage = dmg;
             AreaOfEffect = areaOfEffect;
-            SpellDamageType = spellDamageType;
+            SpellDamageTypeId = spellDamageTypeId;
             IsHealing = isHeal;
             Radius = radius;
             CanMiss = canMiss;
@@ -64,16 +65,20 @@ namespace MagusEngine.Core.Magic.Effects
         {
             BaseDamage = MagicManager.CalculateSpellDamage(caster, spellCasted);
 
-            MagiEntity poorGuy = Find.CurrentMap.GetEntityAt<MagiEntity>(target);
+            MagiEntity? poorGuy = Find.CurrentMap?.GetEntityAt<MagiEntity>(target);
 
-            if ((poorGuy == Find.CurrentMap.ControlledEntitiy || poorGuy is Player)
+            if ((poorGuy == Find.CurrentMap?.ControlledEntitiy || poorGuy is Player)
                 && AreaOfEffect is not SpellAreaEffect.Ball)
             {
                 poorGuy = null;
             }
 
             if (poorGuy is null)
+                return;
+
+            if (!poorGuy.CanBeAttacked)
             {
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("You can't target this!"));
                 return;
             }
 
@@ -86,7 +91,7 @@ namespace MagusEngine.Core.Magic.Effects
 
             if (AreaOfEffect is SpellAreaEffect.Self)
             {
-                CombatUtils.ApplyHealing(BaseDamage, caster, SpellDamageType);
+                CombatUtils.ApplyHealing(BaseDamage, caster);
             }
             else
             {
@@ -103,8 +108,13 @@ namespace MagusEngine.Core.Magic.Effects
                     return;
                 }
 
-                CombatUtils.ApplyHealing(BaseDamage, happyGuy, SpellDamageType);
+                CombatUtils.ApplyHealing(BaseDamage, happyGuy);
             }
+        }
+
+        public DamageType GetDamageType()
+        {
+            return DataManager.QueryDamageInData(SpellDamageTypeId);
         }
     }
 }

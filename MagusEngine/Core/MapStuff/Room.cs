@@ -41,10 +41,8 @@ namespace MagusEngine.Core.MapStuff
 
         #endregion Props
 
-        public Room(Rectangle roomRectangle, RoomTag tag)
+        public Room(Rectangle roomRectangle, RoomTag tag) : this(roomRectangle)
         {
-            RoomRectangle = roomRectangle;
-            RoomPoints = roomRectangle.Positions().ToArray();
             Tag = tag;
         }
 
@@ -53,9 +51,16 @@ namespace MagusEngine.Core.MapStuff
             RoomPoints = points;
         }
 
-        public Room(Point[] points, RoomTag tag)
+        public Room(IEnumerable<Point> points) : this(points.ToArray())
         {
-            RoomPoints = points;
+        }
+
+        public Room(IEnumerable<Point> points, RoomTag tag) : this(points.ToArray(), tag)
+        {
+        }
+
+        public Room(Point[] points, RoomTag tag) : this(points)
+        {
             Tag = tag;
         }
 
@@ -119,7 +124,7 @@ namespace MagusEngine.Core.MapStuff
             }
         }
 
-        internal void ForceUnlock()
+        public void ForceUnlock()
         {
             foreach (var door in Doors)
             {

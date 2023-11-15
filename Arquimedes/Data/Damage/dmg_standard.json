@@ -1,0 +1,45 @@
+[
+  // these first 3 are special and shouldn't be removed
+  {
+    "Id": "blunt",
+    "Name": "Blunt",
+    "SeverityDmgString": [ "bruising", "torn", "fracturating" ],
+    "Type": "Blunt"
+  },
+  {
+    "Id": "sharp",
+    "Name": "Sharp",
+    "SeverityDmgString": [ "tearing", "cleaving apart" ],
+    "Type": "Sharp"
+  },
+  {
+    "Id": "pierce",
+    "Name": "Pierce",
+    "SeverityDmgString": [ "piercing", "impaling" ],
+    "Type": "Pierce"
+  },
+  {
+    "Id": "fire",
+    "Name": "Fire",
+    "SeverityDmgString": [ "scorching", "burning", "incinerating" ],
+    "Type": "Fire"
+  },
+  {
+    "Id": "cold",
+    "Name": "Cold",
+    "SeverityDmgString": [ "cooling", "chilling", "freezing" ],
+    "Type": "Cold"
+  },
+  {
+    "Id": "lightning",
+    "Name": "Lightning",
+    "SeverityDmgString": [ "zapping", "shocking", "electrifying", "vaporizing" ],
+    "Type": "Lightning"
+  },
+  {
+    "Id": "soul",
+    "Name": "Soul",
+    "SeverityDmgString": [ "destabilizing", "dissociating", "disintigrating" ],
+    "Type": "Soul"
+  }
+]

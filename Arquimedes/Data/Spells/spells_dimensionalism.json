@@ -4,7 +4,6 @@
     "Effects": [
       {
         "AreaOfEffect": "Target",
-        "SpellDamageType": "None",
         "Radius": 0,
         "TargetsTile": true,
         "EffectType": "TELEPORT",
@@ -24,13 +23,13 @@
     "Effects": [
       {
         "AreaOfEffect": "Self",
-        "SpellDamageType": "Force",
         "BaseDamage": 0,
         "HastePower": 2.0,
         "Duration": 5,
         "TurnApplied": 0,
         "Radius": 0,
-        "EffectType": "HASTE"
+        "EffectType": "HASTE",
+        "EffectMessage": "You feel yourself speeding up!|{0} speeds up!"
       }
     ],
     "SpellName": "Haste",

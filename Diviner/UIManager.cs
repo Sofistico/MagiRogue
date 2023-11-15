@@ -59,7 +59,7 @@ namespace Diviner
         // Initiates the game by means of going to the menu first
         public void InitMainMenu(int gameHeight, int gameWidth, bool beginOnTestMap = false)
         {
-            SetUpCustomColors();
+            //SetUpCustomColors();
 
             MainMenu = new MainMenuWindow(gameWidth, gameHeight)
             {
@@ -94,7 +94,11 @@ namespace Diviner
                 uni = new Universe(player, testGame);
             }
             Find.Universe = uni;
+            ConfigureWindowsAndConsoles(height, width, uni);
+        }
 
+        private void ConfigureWindowsAndConsoles(int height, int width, Universe uni)
+        {
             //Message Log initialization
             var messageLogWidth = (int)MathMagi.GetSimplePercentage(width, 0.25) - 2;
             MessageLog = new MessageLogWindow(messageLogWidth, height, "Message Log")
@@ -108,11 +112,11 @@ namespace Diviner
             InventoryScreen = new InventoryWindow(width / 2, height / 2);
             Children.Add(InventoryScreen);
             InventoryScreen.Hide();
-
-            StatusWindow = new StatusWindow(width - MessageLog.Width, height - 27, "Status Window");
+            const int statusWindowHeight = 4;
+            StatusWindow = new StatusWindow(width - MessageLog.Width, statusWindowHeight, "Status Window");
             StatusWindow.ChangePositionToBottomPage();
             // Build the Window
-            CreateMapWindow(width - MessageLog.Width, height - 3, "Game Map");
+            CreateMapWindow(width - MessageLog.Width, height - StatusWindow.Height, "Game Map");
 
             // Then load the map into the MapConsole
             MapWindow.LoadMap(uni.CurrentMap);
@@ -202,7 +206,7 @@ namespace Diviner
             CustomColors = new SadConsole.UI.Colors();
 
             // Pick a couple of background colours that we will apply to all consoles.
-            Color backgroundColor = new Color(CustomColors.Black, "Black");
+            Color backgroundColor = new(CustomColors.Black, "Black");
 
             // Set background colour for controls consoles and their controls
             CustomColors.ControlHostBackground = backgroundColor;

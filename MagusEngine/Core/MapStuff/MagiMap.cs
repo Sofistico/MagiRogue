@@ -139,7 +139,7 @@ namespace MagusEngine.Core.MapStuff
             foreach (IGameObject item in Entities.Items)
             {
                 if (item is MagiEntity entity)
-                    Remove(entity);
+                    RemoveMagiEntity(entity);
                 else
                     RemoveEntity(item);
             }
@@ -264,19 +264,20 @@ namespace MagusEngine.Core.MapStuff
         /// Removes an Entity from the Entities Field
         /// </summary>
         /// <param name="entity"></param>
-        public void Remove(MagiEntity entity)
+        public void RemoveMagiEntity(MagiEntity entity)
         {
             if (Entities.Contains(entity))
             {
                 RemoveEntity(entity);
 
-                _entityManager.Remove(entity);
+                _entityManager.Remove(entity.SadCell);
 
                 // Link up the entity's Moved event to a new handler
                 entity.PositionChanged -= OnPositionChanged;
 
                 _entityManager.IsDirty = true;
                 _needsToUpdateActorsDict = true;
+                _registry.Destroy(entity.ID);
             }
         }
 
@@ -308,7 +309,7 @@ namespace MagusEngine.Core.MapStuff
                 entity.PositionChanged += OnPositionChanged;
             }
 
-            _entityManager.Add(entity);
+            _entityManager.Add(entity.SadCell);
 
             _needsToUpdateActorsDict = true;
         }
@@ -409,7 +410,7 @@ namespace MagusEngine.Core.MapStuff
 
             foreach (var spatialMap in Entities.GetLayersInMask(LayerMasker.MaskAllAbove((int)MapLayer.TERRAIN)))
             {
-                _entityManager.AddRange(spatialMap.Items.Cast<MagiEntity>());
+                _entityManager.AddRange(spatialMap.Items.Cast<MagiEntity>().Select(i => i.SadCell));
             }
             //_entityRender.AddRange(Entities.Items.Cast<MagiEntity>());
             renderer.IsDirty = true;

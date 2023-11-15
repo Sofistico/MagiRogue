@@ -834,8 +834,6 @@ namespace MagusEngine.Generators
 
         private void DigRiver(River river)
         {
-            int counter = 0;
-
             // How wide are we digging this river?
             int size = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(1, 5);
             river.Length = river.Points.Count;

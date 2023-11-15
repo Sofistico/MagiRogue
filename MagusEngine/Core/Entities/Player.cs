@@ -10,9 +10,6 @@ namespace MagusEngine.Core.Entities
     // Creates a new player Default glyph is @
     public class Player : Actor
     {
-        // types: 0 - stamina 1 - mana
-        private readonly Dictionary<int, double> statusPercent = new Dictionary<int, double>();
-
         public Player(string name, Color foreground, Color background, Point position) :
             base(name, foreground, background, '@', position)
         {
@@ -23,7 +20,7 @@ namespace MagusEngine.Core.Entities
             Player player = EntityFactory.PlayerCreatorFromZeroForTest(new Point(), "human", "Playa", 25,
                 Arquimedes.Enumerators.Sex.Female, "new_wiz");
 
-            player.Magic.ShapingSkill = 9;
+            player.Magic.ShapingSkill = 25;
 
             player.Magic.KnowSpells[0].Proficiency = 1;
 
@@ -52,7 +49,7 @@ namespace MagusEngine.Core.Entities
             coneOfCold.Proficiency = 1;
             SpellBase fingerOfDeath = DataManager.QuerySpellInData("finger_death");
 
-            List<SpellBase> testSpells = new List<SpellBase>()
+            List<SpellBase> testSpells = new()
             {
                 cure,
                 haste,
@@ -73,14 +70,14 @@ namespace MagusEngine.Core.Entities
             return player;
         }
 
-        public static Player ReturnPlayerFromActor(Actor actor)
+        public static Player? ReturnPlayerFromActor(Actor actor)
         {
             if (actor is null)
                 return null;
 
-            Player player = new Player(actor.Name,
-                actor.AppearanceSingle.Appearance.Foreground,
-                actor.AppearanceSingle.Appearance.Background,
+            return new Player(actor.Name,
+                actor.SadCell.AppearanceSingle!.Appearance.Foreground,
+                actor.SadCell.AppearanceSingle.Appearance.Background,
                 actor.Position)
             {
                 Inventory = actor.Inventory,
@@ -98,8 +95,6 @@ namespace MagusEngine.Core.Entities
                 Broadness = actor.Broadness,
                 Length = actor.Length
             };
-
-            return player;
         }
 
         public string GetStaminaStatus()

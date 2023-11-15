@@ -81,7 +81,7 @@ namespace MagusEngine.Core.Entities
         public string ItemId { get; set; }
         public WeaponType WeaponType { get; set; }
 
-        public MaterialTemplate Material { get; set; }
+        public MaterialTemplate? Material { get; set; }
         public List<Legend> Legends { get; set; }
         public ItemType ItemType { get; set; }
         public List<Attack> Attacks { get; set; }
@@ -98,7 +98,7 @@ namespace MagusEngine.Core.Entities
             Volume = size;
             Condition = condition;
             Material = PhysicsManager.SetMaterial(materialId);
-            Name = Material is not null ? Material.ReturnNameFromMaterial(name) : "Bugged!";
+            Name = Material.ReturnNameFromMaterial(name) ?? "BUGGED!";
             UseAction = new();
             Traits = new();
             Qualities = new();
@@ -110,7 +110,7 @@ namespace MagusEngine.Core.Entities
         // collector take it out of memory automatically.
         public void RemoveFromMap()
         {
-            MagiMap.Remove(this);
+            MagiMap.RemoveMagiEntity(this);
         }
 
         public bool Equip(Actor actor)

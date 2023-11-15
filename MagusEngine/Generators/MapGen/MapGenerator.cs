@@ -1,6 +1,5 @@
 ﻿using Arquimedes.Enumerators;
 using GoRogue.Random;
-using MagusEngine.Core;
 using MagusEngine.Core.Civ;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.MapStuff;
@@ -50,7 +49,7 @@ namespace MagusEngine.Generators.MapGen
         /// <param name="room"></param>
         protected void InsertStairs(Room room)
         {
-            Furniture stairsDown = new Furniture(Color.White, Color.Black, '>', room.RoomRectangle.Center,
+            Furniture stairsDown = new(Color.White, Color.Black, '>', room.RoomRectangle.Center,
                 FurnitureType.StairsDown, "wood", "Stair");
 
             // debug to unlock the room
@@ -698,9 +697,8 @@ namespace MagusEngine.Generators.MapGen
             foreach (var p in map.Terrain.Positions())
             {
                 var item = (Tile)map.Terrain[p];
-                // TODO: REDO
-                //if (item.IsWalkable)
-                //    item.AddVegetations(DataManager.QueryPlantInData("grass"), map);
+                if (item.IsWalkable)
+                    TileFactory.AddVegetation(item, DataManager.QueryPlantInData("grass"));
             }
         }
 
@@ -771,7 +769,7 @@ namespace MagusEngine.Generators.MapGen
                 case RoomTag.Blacksmith:
                     AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("stone_forge"), room, map);
                     AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("anvil"), room, map);
-                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("coal_sack"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("sack"), room, map);
                     break;
 
                 case RoomTag.Clothier:
@@ -877,17 +875,17 @@ namespace MagusEngine.Generators.MapGen
         protected List<Building> BspMapFunction(MagiMap map, int roomMaxSize, int roomMinSize, int maxRooms)
         {
             _map = map;
-            List<Building> rooms = new List<Building>();
+            List<Building> rooms = new();
 
-            Rectangle rec = new Rectangle(map.Positions().ToEnumerable().First(),
-                map.Positions().ToEnumerable().Last());
+            Rectangle rec = new(map.Positions().First(),
+                map.Positions().Last());
 
             List<Rectangle> mapPartitions =
                 BisectRecursiveRandom(rec, roomMaxSize).ToList();
 
             for (int i = 0; i <= maxRooms; i++)
             {
-                if (mapPartitions.Count <= 0) break;
+                if (mapPartitions.Count == 0) break;
                 Rectangle area = mapPartitions[randNum.NextInt(mapPartitions.Count)];
                 mapPartitions.Remove(area);
 

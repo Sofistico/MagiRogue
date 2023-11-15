@@ -4,7 +4,6 @@ using Diviner.Windows;
 using MagusEngine;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Commands;
-using MagusEngine.Core;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.ECS.Components.ActorComponents;
@@ -108,7 +107,7 @@ namespace Diviner
                         // If there is a need to roll back, the code here was taking the CurrentFov
                         // and Contains(pos + posMove)
                         return world.CurrentMap.PlayerExplored[world.CurrentMap.ControlledEntitiy.Position + deltaMove]
-                            && distance <= targetCursor.MaxDistance
+                            && distance <= targetCursor?.MaxDistance
                             && ActionManager.MoveActorBy((Actor)world.CurrentMap.ControlledEntitiy, deltaMove);
                     }
 
@@ -123,7 +122,7 @@ namespace Diviner
         {
             int distance = 0;
 
-            if (world.CurrentMap.ControlledEntitiy == targetCursor.Cursor)
+            if (world.CurrentMap.ControlledEntitiy == targetCursor?.Cursor)
             {
                 if (targetCursor.TravelPath is not null)
                     distance = targetCursor.TravelPath.LengthWithStart;
@@ -428,9 +427,9 @@ namespace Diviner
                         MapTemplate mapDeJsonified = JsonConvert.DeserializeObject<MagiMap>(json);
                     }
                 }
-                catch (Newtonsoft.Json.JsonSerializationException e)
+                catch
                 {
-                    throw e;
+                    throw;
                 }
                 return false;
             }

@@ -2,12 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <Nullable>annotations</Nullable>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="GoRogue" Version="3.0.0-beta08" />
-    <PackageReference Include="SadConsole" Version="10.0.0-beta1" />
+    <PackageReference Include="SadConsole" Version="10.0.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -47,7 +47,7 @@ namespace MagusEngine.Core.Magic
         /// Description of the spell
         /// </summary>
         [JsonProperty(Order = 0)]
-        public string Description { get; private set; }
+        public string? Description { get; set; }
 
         /// <summary>
         /// What art of magic the spell is
@@ -114,8 +114,10 @@ namespace MagusEngine.Core.Magic
             get => (int)(SpellLevel + ManaCost);
         }
 
-        public List<string> Keywords { get; set; } = new();
-        public List<SpellContext> Context { get; set; }
+        public List<string>? Keywords { get; set; } = new();
+        public List<SpellContext>? Context { get; set; }
+        public bool IgnoresWall { get; set; }
+        public bool AffectsTile { get; set; }
 
         /// <summary>
         /// Empty constructor, a waste of space
@@ -226,7 +228,11 @@ namespace MagusEngine.Core.Magic
         /// <returns></returns>
         public bool CastSpell(List<Point> target, Actor caster)
         {
-            if (CanCast(caster.Magic, caster) && target.Count > 0)
+            if (target.Count == 0)
+            {
+                errorMessage = "Can't cast the spell, there must be an entity to target";
+            }
+            else if (CanCast(caster.Magic, caster) && target.Count > 0)
             {
                 Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{caster.Name} casted {SpellName}"));
 
@@ -235,8 +241,7 @@ namespace MagusEngine.Core.Magic
                     MagiEntity entity = Find.CurrentMap.GetEntityAt<MagiEntity>(pos);
                     foreach (ISpellEffect effect in Effects)
                     {
-                        if (entity is not null && entity.CanBeAttacked)
-                            effect.ApplyEffect(pos, caster, this);
+                        effect.ApplyEffect(pos, caster, this);
                     }
                 }
 
@@ -245,22 +250,14 @@ namespace MagusEngine.Core.Magic
 
                 return true;
             }
-            errorMessage = "Can't cast the spell, there must be an entity to target";
-            Locator.GetService<MessageBusService>()
-                .SendMessage<AddMessageLog>(new(errorMessage));
-            errorMessage = "Can't cast the spell";
+            Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(errorMessage));
 
             return false;
         }
 
-        public void SetDescription(string description)
-        {
-            Description = description;
-        }
-
         public SpellBase Copy()
         {
-            SpellBase copy = new SpellBase()
+            return new()
             {
                 Description = Description,
                 Effects = Effects,
@@ -270,10 +267,12 @@ namespace MagusEngine.Core.Magic
                 SpellLevel = SpellLevel,
                 SpellName = SpellName,
                 SpellRange = SpellRange,
-                MagicArt = MagicArt
+                MagicArt = MagicArt,
+                AffectsTile = AffectsTile,
+                Context = Context,
+                IgnoresWall = IgnoresWall,
+                Keywords = Keywords,
             };
-
-            return copy;
         }
 
         private void TickProfiency() => Proficiency = MathMagi.Round(Proficiency + 0.01);

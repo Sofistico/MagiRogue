@@ -31,7 +31,7 @@ namespace MagusEngine.Core.Entities
         public InjurySeverity Severity { get; set; }
         public bool Infected { get; set; }
         public bool Treated { get; set; }
-        public DamageTypes InitialDamageSource { get; set; }
+        public DamageType InitialDamageSource { get; set; }
         public double Recovery { get; set; }
         public bool Recovered { get; set; }
 
@@ -45,13 +45,13 @@ namespace MagusEngine.Core.Entities
         //public int CurrentPenetrationPercentage { get; set; }
         //public int MaxPenetrationPercentage { get; set; }
 
-        public Wound(DamageTypes damageSource, List<PartWound> parts)
+        public Wound(DamageType damageSource, List<PartWound> parts)
         {
             InitialDamageSource = damageSource;
             Parts = parts;
         }
 
-        public Wound(DamageTypes damageSource, List<Tissue> tissues)
+        public Wound(DamageType damageSource, List<Tissue> tissues)
         {
             InitialDamageSource = damageSource;
             foreach (var tissue in tissues)
@@ -82,7 +82,7 @@ namespace MagusEngine.Core.Entities
         }
     }
 
-    public class PartWound
+    public sealed class PartWound
     {
         /// <summary>
         /// The total area of the wound in cm3 Is initially the lesser of the weapon or body part
@@ -94,19 +94,19 @@ namespace MagusEngine.Core.Entities
         // determines how dented the material is, slowly heals to 0
         public double Strain { get; set; } = 0;
 
-        public DamageTypes PartDamage { get; set; }
+        public DamageType PartDamage { get; set; }
         public Tissue Tissue { get; set; }
 
         public double? TotalVolume => Tissue?.Volume;
         public bool WholeTissue => VolumeFraction >= TotalVolume;
         public bool IsOnlyDented => VolumeFraction <= 0 && Strain > 0;
 
-        public PartWound(double volume, double strain, Tissue tissue, DamageTypes damageTypes)
+        public PartWound(double volume, double strain, Tissue tissue, DamageType damageType)
         {
             VolumeFraction = volume;
             Strain = strain;
             Tissue = tissue;
-            PartDamage = damageTypes;
+            PartDamage = damageType;
         }
     }
 }

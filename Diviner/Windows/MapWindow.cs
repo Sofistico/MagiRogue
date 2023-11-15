@@ -34,7 +34,7 @@ namespace Diviner.Windows
         /// <param name="actor"></param>
         public void CenterOnActor(Actor actor)
         {
-            followComponent.Target = actor;
+            followComponent.Target = actor.SadCell;
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Diviner.Windows
         /// <param name="entity"></param>
         public void CenterOnActor(MagiEntity entity)
         {
-            followComponent.Target = entity;
+            followComponent.Target = entity.SadCell;
         }
 
         public void CreateMapConsole()

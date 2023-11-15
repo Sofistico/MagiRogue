@@ -1,0 +1,29 @@
+[
+  {
+    "Id": "grass",
+    "InheirtFrom": "generic_plant_matter",
+    "Name": "grass",
+    "Color": "GrassColor",
+    "ConfersTraits": [ "GrazerEatable" ]
+  },
+  {
+    "Id": "wood",
+    "Name": "wood",
+    "Flamability": true,
+    "IgnationPoint": 371,
+    "Hardness": 5,
+    "MPInfusionLimit": 3,
+    "CanRegen": false,
+    "Density": 0.9,
+    "ConfersTraits": [ "Inexpensive" ],
+    "Color": "Wood",
+    "Type": "Wood",
+    "ShearYield": 40000,
+    "ShearFracture": 40000,
+    "ShearStrainAtYield": 1000,
+    "ImpactYield": 10000,
+    "ImpactFracture": 10000,
+    "ImpactStrainsAtYield": 1000,
+    "MaxEdge": 1000
+  }
+]

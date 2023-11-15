@@ -25,7 +25,7 @@
   },
   {
     // TODO: Redefine the way a furniture holds equip
-    "Id": "coal_sack",
+    "Id": "sack",
     "MaterialId": "carbon_coal",
     "Name": "Sack of Coal",
     "Description": "An altar for a deity, there is inscription with holy words.",

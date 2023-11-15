@@ -11,7 +11,7 @@ namespace MagusEngine.Core.Magic.Effects
     public class SeverEffect : ISpellEffect
     {
         public SpellAreaEffect AreaOfEffect { get; set; }
-        public DamageTypes SpellDamageType { get; set; }
+        public string SpellDamageTypeId { get; set; }
         public int Radius { get; set; }
         public double ConeCircleSpan { get; set; }
 
@@ -19,12 +19,13 @@ namespace MagusEngine.Core.Magic.Effects
         public EffectType EffectType { get; set; } = EffectType.SEVER;
         public int BaseDamage { get; set; }
         public bool CanMiss { get; set; }
+        public string? EffectMessage { get; set; }
 
         [JsonConstructor]
-        public SeverEffect(SpellAreaEffect areaOfEffect, DamageTypes spellDamageType, int radius, int dmg)
+        public SeverEffect(SpellAreaEffect areaOfEffect, string spellDamageTypeId, int radius, int dmg)
         {
             AreaOfEffect = areaOfEffect;
-            SpellDamageType = spellDamageType;
+            SpellDamageTypeId = spellDamageTypeId;
             Radius = radius;
             BaseDamage = dmg;
         }
@@ -37,7 +38,7 @@ namespace MagusEngine.Core.Magic.Effects
         private void CutLimb(Point target, Actor caster, SpellBase spellCasted)
         {
             // Actor because only actor have an anatomy
-            Actor poorGuy = Find.CurrentMap.GetEntityAt<Actor>(target);
+            Actor? poorGuy = Find.CurrentMap?.GetEntityAt<Actor>(target);
             int luck = GoRogue.DiceNotation.Dice.Roll($"{spellCasted.SpellLevel}d{spellCasted.Power}");
 
             if (poorGuy?.GetAnatomy().Limbs.Count > 0
@@ -48,17 +49,25 @@ namespace MagusEngine.Core.Magic.Effects
 
                 Limb limbToLose = poorGuy.GetAnatomy().Limbs[i];
 
-                Wound injury = new Wound(DamageTypes.Sharp, limbToLose.Tissues);
+                Wound injury = new(GetDamageType(), limbToLose.Tissues);
                 poorGuy.GetAnatomy().Injury(injury, limbToLose, poorGuy);
 
                 if (poorGuy is not null)
                 {
-                    DamageEffect damage = new
-                        DamageEffect(BaseDamage, AreaOfEffect, SpellDamageType, canMiss: true, radius: Radius,
+                    DamageEffect damage = new(BaseDamage,
+                        AreaOfEffect,
+                        SpellDamageTypeId,
+                        canMiss: true,
+                        radius: Radius,
                         isResistable: true);
                     damage.ApplyEffect(target, caster, spellCasted);
                 }
             }
+        }
+
+        public DamageType? GetDamageType()
+        {
+            return DataManager.QueryDamageInData(SpellDamageTypeId);
         }
     }
 }
