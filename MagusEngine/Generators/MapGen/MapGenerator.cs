@@ -769,7 +769,7 @@ namespace MagusEngine.Generators.MapGen
                 case RoomTag.Blacksmith:
                     AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("stone_forge"), room, map);
                     AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("anvil"), room, map);
-                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("coal_sack"), room, map);
+                    AddFurnitureAtRandomPos(DataManager.QueryFurnitureInData("sack"), room, map);
                     break;
 
                 case RoomTag.Clothier:

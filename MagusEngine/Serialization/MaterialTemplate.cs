@@ -122,7 +122,7 @@ namespace MagusEngine.Serialization
 
         public static string ReturnNameFromMaterial(string materialName, string objectName)
         {
-            if (objectName.Contains(materialName))
+            if (objectName.Contains(materialName, System.StringComparison.OrdinalIgnoreCase))
             {
                 return objectName;
             }

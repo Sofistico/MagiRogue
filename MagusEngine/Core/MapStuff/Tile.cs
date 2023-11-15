@@ -25,7 +25,7 @@ namespace MagusEngine.Core.MapStuff
         {
             get
             {
-                return _material.Id;
+                return _material?.Id;
             }
 
             set

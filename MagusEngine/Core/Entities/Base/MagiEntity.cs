@@ -154,8 +154,8 @@ namespace MagusEngine.Core.Entities.Base
             {
                 if (component is null)
                     continue;
-                GoRogueComponents.Add<T>(component);
-                Locator.GetService<MessageBusService>().SendMessage<ComponentAddedCommand<T>>(new(ID, component));
+                GoRogueComponents.Add(component);
+                Locator.GetService<MessageBusService>()?.SendMessage<ComponentAddedCommand<T>>(new(ID, component));
             }
         }
 
