@@ -12,6 +12,8 @@ namespace MagusEngine.Utils.Extensions
             var objList = new List<T>();
             foreach (var subList in list)
             {
+                if(subList is null)
+                    continue;
                 objList.AddRange(subList);
             }
             return objList;

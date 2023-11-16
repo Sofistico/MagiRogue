@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-
-namespace Arquimedes.Utils
+﻿namespace Arquimedes.Utils
 {
     public static class FileUtils
     {
@@ -18,6 +15,20 @@ namespace Arquimedes.Utils
             string absPath = Path.GetFullPath(Path.Combine(_appDomain, realDir));
 
             return Directory.GetFiles(absPath, pattern, SearchOption.AllDirectories);
+        }
+
+        public static string? GetAllTextFromFile(FileInfo file)
+        {
+            try
+            {
+                using var fileStream = file.Open(FileMode.Open, FileAccess.Read, FileShare.Read);
+                using var streamReader = new StreamReader(fileStream);
+                return streamReader.ReadToEnd();
+            }
+            catch (IOException)
+            {
+                throw;
+            }
         }
     }
 }

@@ -32,8 +32,9 @@ namespace MagusEngine.Serialization.EntitySerialization
 
     public class BodyPlan
     {
-        private readonly ConcurrentDictionary<string, Tissue> raceTissue = new();
-        private readonly List<TissueLayeringTemplate> raceTissueLayering = new();
+        private readonly ConcurrentDictionary<string, Tissue> _raceTissue = new();
+        private readonly List<TissueLayeringTemplate> _raceTissueLayering = new();
+        private readonly object _lockObj = new();
 
         public string? Id { get; set; }
         public List<string> BodyParts { get; set; }
@@ -55,9 +56,14 @@ namespace MagusEngine.Serialization.EntitySerialization
                 for (int i = 0; i < tissues.Length; i++)
                 {
                     var tissueGroup = DataManager.QueryTissuePlanInData(tissues[i]);
-                    tissueGroup?.Tissues?.ForEach(i => raceTissue?.TryAdd(i.Id, i));
+                    tissueGroup?.Tissues?.ForEach(i => _raceTissue?.TryAdd(i.Id, i));
                     if (tissueGroup?.TissueLayering?.Count > 0)
-                        raceTissueLayering?.AddRange(tissueGroup?.TissueLayering);
+                    {
+                        lock (_lockObj)
+                        {
+                            _raceTissueLayering?.AddRange(tissueGroup.TissueLayering);
+                        }
+                    }
                 }
             }
 
@@ -76,7 +82,7 @@ namespace MagusEngine.Serialization.EntitySerialization
                 if (limb is null && organ is null)
                     throw new ApplicationException($"Coudn't find a valid body part! bodypart id: {bp}");
 
-                if (raceTissueLayering.Count > 0 && !raceTissue.IsEmpty)
+                if (_raceTissueLayering.Count > 0 && !_raceTissue.IsEmpty)
                 {
                     SetBodyPartTissueLayering((BodyPart?)limb ?? organ!);
                 }
@@ -103,9 +109,9 @@ namespace MagusEngine.Serialization.EntitySerialization
             TissueLayeringTemplate? tisLayer = default;
             string[]? finalList = null;
             // this is bad!
-            for (int i = 0; i < raceTissueLayering.Count; i++)
+            for (int i = 0; i < _raceTissueLayering.Count; i++)
             {
-                tisLayer = raceTissueLayering[i];
+                tisLayer = _raceTissueLayering[i];
                 switch (tisLayer.Select)
                 {
                     case SelectContext.LimbType:
@@ -158,7 +164,7 @@ namespace MagusEngine.Serialization.EntitySerialization
                     continue;
                 foreach (var tissueId in tisLayer!.Tissues)
                 {
-                    var tissue = raceTissue[tissueId];
+                    var tissue = _raceTissue[tissueId];
                     if (layer.Length > 1)
                     {
                         for (int z = 1; z < layer.Length; z++)

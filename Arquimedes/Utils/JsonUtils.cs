@@ -24,8 +24,8 @@ namespace Arquimedes.Utils
             //{
             //    GameLoop.WriteToLog(errors);
             //}
-
-            return JsonConvert.DeserializeObject<T>(File.ReadAllText(path), settings);
+            var str = FileUtils.GetAllTextFromFile(new FileInfo(path));
+            return str is not null ? JsonConvert.DeserializeObject<T>(str, settings) : throw new ApplicationException("Tried to read a empty file!");
         }
 
         public static List<T>? JsonDeseralize<T>(string[] arrayOfStreams)

@@ -100,34 +100,6 @@ namespace MagusEngine.Systems
 
         #endregion jsons
 
-        public static IReadOnlyList<T> GetSourceTree<T>(string wildCard, Action<T>? executeOnList = null)
-        {
-            string[] files = FileUtils.GetFiles(wildCard);
-
-            List<List<T>> listTList = new();
-
-            for (int i = 0; i < files.Length; i++)
-            {
-                var t = JsonUtils.JsonDeseralize<List<T>>(files[i]);
-                listTList.Add(t);
-            }
-            List<T> allTList = new();
-
-            foreach (List<T> tList in listTList)
-            {
-                if (tList is null)
-                    continue;
-                allTList.AddRange(tList);
-            }
-
-            if (executeOnList is not null)
-            {
-                allTList.ForEach(executeOnList);
-            }
-
-            return allTList.AsReadOnly();
-        }
-
         public static List<T> GetSourceTree<T>(string wildCard)
         {
             string[] files = FileUtils.GetFiles(wildCard);
@@ -139,27 +111,18 @@ namespace MagusEngine.Systems
                 var t = JsonUtils.JsonDeseralize<List<T>>(files[i]);
                 listTList.Add(t);
             }
-            List<T> allTList = new();
-
-            foreach (List<T> tList in listTList)
-            {
-                if (tList is null)
-                    continue;
-                allTList.AddRange(tList);
-            }
-
-            return allTList;
+            return listTList.ReturnListListTAsListT();
         }
 
         #region Query
 
-        public static SpellBase QuerySpellInData(string spellId) => ListOfSpells.FirstOrDefault
+        public static SpellBase? QuerySpellInData(string spellId) => ListOfSpells.FirstOrDefault
                 (m => m.SpellId.Equals(spellId))?.Copy();
 
         public static Limb QueryLimbInData(string limbId)
         {
             var limb = ListOfLimbs.FirstOrDefault(l => l.Id.Equals(limbId), null);
-            return limb?.Copy();
+            return limb?.Copy()!;
         }
 
         public static Organ? QueryOrganInData(string organId)
