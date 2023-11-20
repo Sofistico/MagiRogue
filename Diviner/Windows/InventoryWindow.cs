@@ -76,12 +76,12 @@ namespace Diviner.Windows
 
         private void OnItemSelected(Item item)
         {
-            DescriptionArea.Clear();
-            DescriptionArea.Cursor.Position = new Point(0, 1);
-            DescriptionArea.Cursor.Print(item.ToString());
-            DescriptionArea.Cursor.Position = new Point(0, 5);
+            _descriptionArea.Clear();
+            _descriptionArea.Cursor.Position = new Point(0, 1);
+            _descriptionArea.Cursor.Print(item.ToString());
+            _descriptionArea.Cursor.Position = new Point(0, 5);
             if (item.Description is object)
-                DescriptionArea.Cursor.Print(item.Description);
+                _descriptionArea.Cursor.Print(item.Description);
         }
 
         private List<MagiButton> BuildInventoryButtons(List<Item> listItems)

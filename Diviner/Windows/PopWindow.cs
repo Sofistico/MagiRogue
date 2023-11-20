@@ -17,7 +17,7 @@ namespace Diviner.Windows
 
         private readonly Button _cancelButton;
 
-        protected readonly Console DescriptionArea;
+        protected readonly Console _descriptionArea;
 
         /// <summary>
         /// This creates a base pop window, keep in mind to create a console in the right place the
@@ -49,13 +49,12 @@ namespace Diviner.Windows
 
             Controls.Add(_cancelButton);
 
-            DescriptionArea = new Console(Width - ButtonWidth - 3, Height - 4)
+            _descriptionArea = new Console(Width - ButtonWidth - 3, Height - 4)
             {
                 Position = new Point(ButtonWidth + 2, 1)
             };
-            DescriptionArea.FillWithRandomGarbage(10);
 
-            Children.Add(DescriptionArea);
+            Children.Add(_descriptionArea);
         }
 
         public PopWindow(int width, int height, string title) : base(width, height, title)
@@ -83,13 +82,12 @@ namespace Diviner.Windows
 
             Controls.Add(_cancelButton);
 
-            DescriptionArea = new Console(Width - 3, Height - 4)
+            _descriptionArea = new Console(Width - 3, Height - 4)
             {
                 Position = new Point(Width / 2, 1),
                 IsVisible = true
             };
-            DescriptionArea.FillWithRandomGarbage(10);
-            Children.Add(DescriptionArea);
+            Children.Add(_descriptionArea);
         }
 
         public override void Hide()
@@ -107,13 +105,14 @@ namespace Diviner.Windows
             Locator.GetService<MessageBusService>().SendMessage<TogglePopWindowMessage>(new(false));
             IsFocused = true;
 
-            DescriptionArea.Clear();
+            _descriptionArea.Clear();
+            _descriptionArea.IsVisible = true;
 
             base.Show(modal);
         }
 
-        public void PrintConsole(Point pos, string text) => DescriptionArea.Print(pos.X, pos.Y, text);
+        public void PrintConsole(Point pos, string text) => _descriptionArea.Print(pos.X, pos.Y, text);
 
-        public void PrintConsole(int x, int y, string text) => DescriptionArea.Print(x, y, text);
+        public void PrintConsole(int x, int y, string text) => _descriptionArea.Print(x, y, text);
     }
 }

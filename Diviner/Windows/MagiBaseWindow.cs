@@ -24,28 +24,9 @@ namespace Diviner.Windows
 
         public MagiBaseWindow(int width, int height, string? title) : base(width, height)
         {
-            // Ensure that the window background is the correct colour
-
-            /*ThemeColors = GameLoop.UIManager.CustomColors;
-            ThemeColors.ControlBack = Color.Black;
-            ThemeColors.TitleText = Color.Red;
-            ThemeColors.ModalBackground = Color.Black;
-            ThemeColors.ControlHostBack = Color.Black;
-            ThemeColors.ControlBackSelected = Color.DarkRed;
-            ThemeColors.ControlBackLight = Color.LightSlateGray;
-            ThemeColors.RebuildAppearances();*/
-
-            // instantiete the inventory of the actor, passing the actor value if and when i implement helpers, to make it
-            // possible to see and use their inventory.
-
             CanDrag = false;
 
             Title = title!;
-        }
-
-        public void AddToDictionary(MagiButton button)
-        {
-            SetupSelectionButtons(new List<MagiButton>() { button });
         }
 
         public void SetupSelectionButtons(params MagiButton[] buttons)

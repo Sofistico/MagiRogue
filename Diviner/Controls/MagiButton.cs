@@ -9,8 +9,12 @@ namespace Diviner.Controls
     /// button when the arrow keys are pushed.
     /// </summary>
     /// S
+    /// <remarks>
+    /// Creates a new Selection Button with a specific width and height.
+    /// </remarks>
+    /// <param name="width">The width of the selection button.</param>
     [DebuggerDisplay("Name = {Name} || Text = {Text}")]
-    public class MagiButton : Button
+    public class MagiButton(int width, int height = 1) : Button(width, height)
     {
         /// <summary>
         /// The selection button to focus when the UP key is pressed or the SelectPrevious() method
@@ -24,14 +28,6 @@ namespace Diviner.Controls
         public MagiButton? NextSelection { get; set; }
 
         public Action? Action { get; set; }
-
-        /// <summary>
-        /// Creates a new Selection Button with a specific width and height.
-        /// </summary>
-        /// <param name="width">The width of the selection button.</param>
-        public MagiButton(int width, int height = 1) : base(width, height)
-        {
-        }
 
         /// <summary>
         /// Creates a new Selection Button with a specific text.
@@ -136,7 +132,7 @@ namespace Diviner.Controls
                 // scanning for the next button like this will stack overflow if it loops, so we
                 // maintain the stack here. Note, we don't include this button yet. Looping back to
                 // self is acceptable.
-                return NextSelection.SelectNextProtected(new HashSet<MagiButton>());
+                return NextSelection.SelectNextProtected([]);
             }
 
             NextSelection.IsFocused = true;

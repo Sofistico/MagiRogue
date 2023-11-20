@@ -32,7 +32,7 @@ namespace Diviner.Windows
             };
             _castButton.Click += (_, __) =>
             {
-                _onCast?.Invoke(_selectedSpell);
+                _onCast?.Invoke(_selectedSpell!);
                 Hide();
             };
         }
@@ -57,8 +57,7 @@ namespace Diviner.Windows
             _currentMana = currentMana;
             _onCast = onCast;
 
-            _selectedSpell = null;
-            DescriptionArea.Clear();
+            _selectedSpell = null!;
 
             _castButton.IsEnabled = false;
 
@@ -87,13 +86,14 @@ namespace Diviner.Windows
                     Text = $"{hotkeyLetter}. {s.SpellName}",
                     Position = new Point(1, yCount++),
                     IsEnabled = _currentMana >= s.ManaCost,
-                    Action = () => OnSpellSelected(s)
+                    Action = () => OnSpellSelected(s),
                 };
                 spellButton.Click += (_, __) =>
                 {
                     _onCast(s);
                     Hide();
                 };
+                spellButton.Focused += (_, __) => spellButton.Action.Invoke();
                 list.Add(spellButton);
             }
             for (int i = 1; i < list.Count; i++)
@@ -108,12 +108,12 @@ namespace Diviner.Windows
         public void OnSpellSelected(SpellBase spell)
         {
             _selectedSpell = spell;
-            DescriptionArea.Clear();
-            DescriptionArea.Cursor.Position = new Point(0, 1);
-            DescriptionArea.Cursor.Print(_selectedSpell.ToString());
-            DescriptionArea.Cursor.Position = new Point(0, 5);
+            _descriptionArea.Clear();
+            _descriptionArea.Cursor.Position = new Point(0, 1);
+            _descriptionArea.Cursor.Print(_selectedSpell.ToString());
+            _descriptionArea.Cursor.Position = new Point(0, 5);
             if (_selectedSpell.Description is not null)
-                DescriptionArea.Cursor.Print(_selectedSpell.Description);
+                _descriptionArea.Cursor.Print(_selectedSpell.Description);
             _castButton.IsEnabled = true;
         }
 
