@@ -114,7 +114,7 @@ namespace Diviner.Windows
             _descriptionArea.Cursor.Position = new Point(0, 5);
             if (_selectedSpell.Description is not null)
                 _descriptionArea.Cursor.Print(_selectedSpell.Description);
-            _castButton.IsEnabled = true;
+            _castButton.IsEnabled = true;a
         }
 
         private void RefreshControls(List<SpellBase> listSpells)

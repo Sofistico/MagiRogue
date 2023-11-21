@@ -24,7 +24,7 @@ namespace Diviner
         ISubscriber<StartGameMessage>,
         ISubscriber<RestartGame>
     {
-        private readonly Dictionary<WindowTag, IWindowTagContract> windows = new();
+        private readonly Dictionary<WindowTag, IWindowTagContract> windows = [];
         private Universe? _universe;
 
         #region Managers
@@ -228,10 +228,10 @@ namespace Diviner
             //SadConsole.UI.Themes.Library.Default.Colors = CustomColors;
         }
 
-        public T GetWindow<T>(WindowTag tag) where T : IWindowTagContract
+        public T? GetWindow<T>(WindowTag tag) where T : IWindowTagContract
         {
             windows.TryGetValue(tag, out var window);
-            return (T)window;
+            return (T?)window;
         }
 
         public void AddWindowToList(IWindowTagContract window)
