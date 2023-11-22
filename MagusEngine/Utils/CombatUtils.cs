@@ -22,7 +22,7 @@ namespace MagusEngine.Utils
         public static void DealDamage(double attackMomentum,
             MagiEntity entity,
             DamageType dmgType,
-            MaterialTemplate? attackMaterial = null,
+            Material? attackMaterial = null,
             Attack? attack = null,
             BodyPart? limbAttacked = null,
             Item? weapon = null,
@@ -91,7 +91,7 @@ namespace MagusEngine.Utils
             double momentum,
             DamageType dmgType,
             BodyPart limbAttacked,
-            MaterialTemplate attackMaterial,
+            Material attackMaterial,
             Attack attack,
             Item? weapon = null,
             BodyPart? limbAttacking = null)
@@ -110,7 +110,7 @@ namespace MagusEngine.Utils
         private static List<PartWound> CalculatePartWoundsReceived(double attackMomentum,
             BodyPart partInjured,
             Item targetArmor,
-            MaterialTemplate attackMaterial,
+            Material attackMaterial,
             Attack attack,
             double attackVolume,
             Item? weapon = null,
@@ -304,7 +304,7 @@ namespace MagusEngine.Utils
         /// <param name="attackMessage"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">throws if the attack is null</exception>
-        public static (bool, BodyPart?, BodyPart, DamageType?, Item?, MaterialTemplate) ResolveHit(
+        public static (bool, BodyPart?, BodyPart, DamageType?, Item?, Material) ResolveHit(
             Actor attacker,
             Actor defender,
             StringBuilder attackMessage,
@@ -442,7 +442,7 @@ namespace MagusEngine.Utils
 
         private static double CalculateArmorEffectiveness(Item armor,
             double attackSize,
-            MaterialTemplate attackMaterial,
+            Material attackMaterial,
             double attackMomentum,
             Attack attack,
             Item? weapon)
@@ -487,9 +487,9 @@ namespace MagusEngine.Utils
             return momentumAfterArmor;
         }
 
-        private static double CalculateEnergyCostToPenetrateMaterial(MaterialTemplate defenseMaterial,
+        private static double CalculateEnergyCostToPenetrateMaterial(Material defenseMaterial,
             //double defenseMaterialVolume,
-            MaterialTemplate attackMaterial,
+            Material attackMaterial,
             Attack attack,
             double originalMomentum,
             double attackVolume,
@@ -519,8 +519,8 @@ namespace MagusEngine.Utils
         }
 
         // Edged defense calculations
-        public static double CalculateEdgedDefenseCost(MaterialTemplate defenseMaterial,
-            MaterialTemplate attackMaterial,
+        public static double CalculateEdgedDefenseCost(Material defenseMaterial,
+            Material attackMaterial,
             //double layerVolume,
             int attackContactArea,
             double originalMomentum,
@@ -551,7 +551,7 @@ namespace MagusEngine.Utils
         }
 
         // Blunt defense calculations
-        public static double CalculateBluntDefenseCost(MaterialTemplate defenseMaterial,
+        public static double CalculateBluntDefenseCost(Material defenseMaterial,
             //MaterialTemplate attackMaterial,
             double originalMomentum,
             int attackContactArea,

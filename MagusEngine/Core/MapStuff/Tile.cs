@@ -12,7 +12,7 @@ namespace MagusEngine.Core.MapStuff
 {
     public class Tile : MagiGameObject
     {
-        private MaterialTemplate _material;
+        private Material _material;
 
         public ColoredGlyph Appearence { get; set; }
         public ColoredGlyph? LastSeenAppereance { get; set; }
@@ -33,7 +33,7 @@ namespace MagusEngine.Core.MapStuff
                 _material = PhysicsManager.SetMaterial(value);
             }
         }
-        public MaterialTemplate Material => _material;
+        public Material Material => _material;
 
         public Tile() : this(Color.BlueViolet, Color.Wheat, '@', true, true, Point.None)
         {

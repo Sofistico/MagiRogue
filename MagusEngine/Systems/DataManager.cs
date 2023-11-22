@@ -30,8 +30,8 @@ namespace MagusEngine.Systems
         public static readonly IReadOnlyList<ItemTemplate> ListOfItems =
             GetSourceTree<ItemTemplate>(@".\Data\Items\items_*");
 
-        public static readonly List<MaterialTemplate> ListOfMaterials =
-            GetSourceTree<MaterialTemplate>(@".\Data\Materials\material_*");
+        public static readonly List<Material> ListOfMaterials =
+            GetSourceTree<Material>(@".\Data\Materials\material_*");
 
         public static readonly IReadOnlyList<SpellBase> ListOfSpells =
             GetSourceTree<SpellBase>(@".\Data\Spells\spells_*");
@@ -140,7 +140,7 @@ namespace MagusEngine.Systems
         public static RoomTemplate QueryRoomInData(string roomId)
             => ListOfRooms.FirstOrDefault(i => i.Id.Equals(roomId));
 
-        public static MaterialTemplate QueryMaterial(string id)
+        public static Material QueryMaterial(string id)
         {
             if (firstLoad)
             {
@@ -240,12 +240,12 @@ namespace MagusEngine.Systems
             return ListOfReactions.Where(i => i.RoomTag.Contains(tag)).ToList();
         }
 
-        public static MaterialTemplate? QueryMaterialWithType(MaterialType typeToMake)
+        public static Material? QueryMaterialWithType(MaterialType typeToMake)
         {
             return ListOfMaterials.Where(i => i.Type == typeToMake).GetRandomItemFromList();
         }
 
-        public static MaterialTemplate QueryMaterialWithTrait(Trait trait)
+        public static Material QueryMaterialWithTrait(Trait trait)
         {
             return ListOfMaterials.Where(i => i.ConfersTraits?.Contains(trait) == true).GetRandomItemFromList();
         }

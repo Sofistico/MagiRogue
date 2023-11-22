@@ -1,4 +1,5 @@
 ﻿using Arquimedes.Enumerators;
+using MagusEngine.Serialization;
 using MagusEngine.Systems;
 using MagusEngine.Systems.Physics;
 using MagusEngine.Utils;
@@ -6,14 +7,14 @@ using MagusEngine.Utils.Extensions;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace MagusEngine.Serialization
+namespace MagusEngine.Core
 {
     [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
-    public class MaterialTemplate
+    public class Material
     {
         private MagiColorSerialization? magiColorSerialization;
 
-        public static MaterialTemplate? None => PhysicsManager.SetMaterial("null");
+        public static Material? None => PhysicsManager.SetMaterial("null");
 
         public string Id { get; set; }
         public string Name { get; set; }
@@ -87,9 +88,9 @@ namespace MagusEngine.Serialization
         /// </summary>
         public double? ImpactStrainsAtYield { get; set; }
 
-        public MaterialTemplate Copy()
+        public Material Copy()
         {
-            return new MaterialTemplate()
+            return new Material()
             {
                 BoilingPoint = BoilingPoint,
                 Density = Density,
@@ -140,7 +141,7 @@ namespace MagusEngine.Serialization
             return magiColorSerialization ?? default;
         }
 
-        public MaterialTemplate GetMaterialThatLiquidTurns()
+        public Material GetMaterialThatLiquidTurns()
         {
             if (string.IsNullOrEmpty(LiquidTurnsInto))
                 return null;
@@ -162,7 +163,7 @@ namespace MagusEngine.Serialization
                 return MaterialState.Solid;
         }
 
-        public void CopyTo(MaterialTemplate mat)
+        public void CopyTo(Material mat)
         {
             var props = GetType().GetProperties();
             var sourceProps = GetType().GetProperties();
@@ -183,12 +184,5 @@ namespace MagusEngine.Serialization
                 prop.SetValue(mat, propVal);
             }
         }
-
-        //private static object GetDefaultValue(Type type)
-        //{
-        //    if (type.IsValueType)
-        //        return Activator.CreateInstance(type);
-        //    return null;
-        //}
     }
 }

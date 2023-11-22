@@ -1,4 +1,5 @@
-﻿using MagusEngine.Core.Entities;
+﻿using MagusEngine.Core;
+using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Serialization;
 using MagusEngine.Utils;
@@ -13,7 +14,7 @@ namespace MagusEngine.Systems.Physics
         /// </summary>
         /// <param name="id">Id of the material you want, must consult the json file</param>
         /// <returns></returns>
-        public static MaterialTemplate SetMaterial(string id) =>
+        public static Material SetMaterial(string id) =>
             DataManager.QueryMaterial(id);
 
         public static int CalculateStrikeForce(double weight, int actorStrikeForce)

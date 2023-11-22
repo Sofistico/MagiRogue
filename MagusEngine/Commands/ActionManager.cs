@@ -88,7 +88,7 @@ namespace MagusEngine.Commands
             StringBuilder attackMessage = new();
             StringBuilder defenseMessage = new();
 
-            (bool hit, BodyPart limbAttacked, BodyPart limbAttacking, DamageType dmgType, Item? itemUsed, MaterialTemplate attackMaterial)
+            (bool hit, BodyPart limbAttacked, BodyPart limbAttacking, DamageType dmgType, Item? itemUsed, Material attackMaterial)
                 = CombatUtils.ResolveHit(attacker, defender, attackMessage, attack, isPlayer, limbChoosen);
             double finalMomentum = CombatUtils.ResolveDefenseAndGetAttackMomentum(attacker,
                 defender,
@@ -575,7 +575,7 @@ namespace MagusEngine.Commands
         }
 
         public static int Drink(Actor actor,
-            MaterialTemplate material,
+            Material material,
             int temperature,
             Need? needSatisfied = null)
         {

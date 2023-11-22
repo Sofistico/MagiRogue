@@ -1,4 +1,5 @@
 ﻿using Arquimedes.Enumerators;
+using MagusEngine.Core;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Entities.Interfaces;
@@ -8,7 +9,6 @@ using MagusEngine.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 namespace MagusEngine.Serialization.EntitySerialization
 {
@@ -28,8 +28,6 @@ namespace MagusEngine.Serialization.EntitySerialization
         }
     }
 
-    [DataContract]
-    [Serializable]
     public class ItemTemplate
     {
         public ItemTemplate(string name, uint foreground, uint background, int glyph,
@@ -53,10 +51,8 @@ namespace MagusEngine.Serialization.EntitySerialization
         {
         }
 
-        [DataMember]
         public string Id { get; set; }
 
-        [DataMember]
         public string Name { get; internal set; }
 
         [JsonIgnore]
@@ -65,56 +61,40 @@ namespace MagusEngine.Serialization.EntitySerialization
         [JsonIgnore]
         public MagiColorSerialization BackgroundBackingField { get; set; }
 
-        [DataMember]
         public string Foreground { get; set; }
 
-        [DataMember]
         public string Background { get; set; }
 
-        [DataMember]
         public char Glyph { get; set; }
 
-        [DataMember]
         public double Weight { get; set; }
 
-        [DataMember]
         public int Volume { get; set; }
 
-        [DataMember]
         public int Condition { get; internal set; }
 
-        [DataMember]
         public string Description { get; set; }
 
-        [DataMember]
         public string MaterialId { get; set; }
 
-        public MaterialTemplate Material { get; set; }
+        public Material Material { get; set; }
 
-        [DataMember]
         public MagicManager MagicStuff { get; set; }
 
-        [DataMember]
         public const string EntityType = "Item";
 
-        [DataMember]
         public uint ForegroundPackedValue { get; internal set; }
 
-        [DataMember]
         public uint BackgroundPackedValue { get; internal set; }
 
-        [DataMember]
         public Point Position { get; set; }
 
-        [DataMember]
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int BaseDamage { get; private set; }
 
-        [DataMember]
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public bool CanInteract { get; private set; }
 
-        [DataMember]
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public DamageTypes DamageType { get; private set; }
 
@@ -129,28 +109,20 @@ namespace MagusEngine.Serialization.EntitySerialization
         public EquipType EquipType { get; set; }
         public ItemType ItemType { get; set; }
 
-        [DataMember]
         public int SpeedOfAttack { get; set; }
 
-        [DataMember]
         public WeaponType WeaponType { get; set; }
 
-        [DataMember]
         public int Height { get; set; }
 
-        [DataMember]
         public int Length { get; set; }
 
-        [DataMember]
         public int Broadness { get; set; }
 
-        [DataMember]
         public List<Attack> Attacks { get; set; }
 
-        [DataMember]
         public ArmorType ArmorType { get; set; }
 
-        [DataMember]
         public int Coverage { get; set; }
 
         // Will need to see if it works, but so far the logic seems to check

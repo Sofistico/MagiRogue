@@ -22,7 +22,7 @@ namespace MagusEngine.Core.Entities
         public List<IActivable> UseActions { get; set; }
         public List<Quality> Qualities { get; set; }
         public List<Item> Inventory { get; set; }
-        public MaterialTemplate Material { get; set; }
+        public Material Material { get; set; }
 
         public override double Weight
         {

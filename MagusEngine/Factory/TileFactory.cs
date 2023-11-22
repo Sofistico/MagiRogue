@@ -1,9 +1,9 @@
 ﻿using Arquimedes;
 using Arquimedes.Enumerators;
+using MagusEngine.Core;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.ECS.Components.ActorComponents;
 using MagusEngine.ECS.Components.TilesComponents;
-using MagusEngine.Serialization;
 using MagusEngine.Systems;
 using SadRogue.Primitives;
 
@@ -11,7 +11,7 @@ namespace MagusEngine.Factory
 {
     public static class TileFactory
     {
-        private static MaterialTemplate? cachedMaterial;
+        private static Material? cachedMaterial;
 
         public static Tile GenericGrass(Point pos)
         {
@@ -89,7 +89,7 @@ namespace MagusEngine.Factory
             MaterialType typeToMake = MaterialType.None,
             bool cacheMaterial = false)
         {
-            MaterialTemplate material;
+            Material material;
             if (cachedMaterial is not null)
             {
                 material = cachedMaterial;
@@ -111,7 +111,7 @@ namespace MagusEngine.Factory
 
         public static Tile CreateTile(Point pos,
             TileType tileType,
-            MaterialTemplate material)
+            Material material)
         {
             var (foreground, background, glyph, isWalkable, isTransparent, name)
                 = DetermineTileLookAndName(material, tileType);
@@ -120,7 +120,7 @@ namespace MagusEngine.Factory
 
         public static void ResetCachedMaterial() => cachedMaterial = null;
 
-        private static (Color, Color, char, bool, bool, string) DetermineTileLookAndName(MaterialTemplate? material,
+        private static (Color, Color, char, bool, bool, string) DetermineTileLookAndName(Material? material,
             TileType tileType)
         {
             char glyph;
@@ -170,7 +170,7 @@ namespace MagusEngine.Factory
 
         public static Tile CreateTile(Point pos, TileType type, Trait trait)
         {
-            MaterialTemplate mat = DataManager.QueryMaterialWithTrait(trait);
+            Material mat = DataManager.QueryMaterialWithTrait(trait);
             return CreateTile(pos, type, mat);
         }
     }

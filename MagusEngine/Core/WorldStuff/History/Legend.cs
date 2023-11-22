@@ -244,7 +244,7 @@ namespace MagusEngine.Core.WorldStuff.History
                     break;
 
                 case MythWhat.Reagent:
-                    MaterialTemplate temp = DataManager.ListOfMaterials.GetRandomItemFromList();
+                    Material temp = DataManager.ListOfMaterials.GetRandomItemFromList();
                     happening.Append($"the secrets of material {temp.Name} to creation!");
 
                     break;
@@ -353,7 +353,7 @@ namespace MagusEngine.Core.WorldStuff.History
                     break;
 
                 case MythWhat.Reagent:
-                    MaterialTemplate temp = DataManager.ListOfMaterials.GetRandomItemFromList();
+                    Material temp = DataManager.ListOfMaterials.GetRandomItemFromList();
                     happening.Append($"the creation of the reagent {temp.Name}");
                     break;
 
@@ -458,7 +458,7 @@ namespace MagusEngine.Core.WorldStuff.History
                     break;
 
                 case MythWhat.Reagent:
-                    MaterialTemplate temp = DataManager.ListOfMaterials.GetRandomItemFromList();
+                    Material temp = DataManager.ListOfMaterials.GetRandomItemFromList();
                     happening.Append($"the material {temp.Name}");
                     break;
 

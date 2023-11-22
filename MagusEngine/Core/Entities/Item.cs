@@ -81,7 +81,7 @@ namespace MagusEngine.Core.Entities
         public string ItemId { get; set; }
         public WeaponType WeaponType { get; set; }
 
-        public MaterialTemplate? Material { get; set; }
+        public Material? Material { get; set; }
         public List<Legend> Legends { get; set; }
         public ItemType ItemType { get; set; }
         public List<Attack> Attacks { get; set; }

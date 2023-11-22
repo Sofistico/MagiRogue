@@ -117,7 +117,7 @@ namespace MagusEngine.Core.Entities.Base
             return Tissues.ConvertAll(i => i.Material).Sum(i => i.Density ?? 0);
         }
 
-        public MaterialTemplate? GetStructuralMaterial()
+        public Material? GetStructuralMaterial()
         {
             return Tissues.Find(i => i.Flags.Contains(TissueFlag.Structural))?.Material;
         }
