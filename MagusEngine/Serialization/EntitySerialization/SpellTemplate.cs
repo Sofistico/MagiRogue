@@ -66,59 +66,12 @@ namespace MagusEngine.Serialization.EntitySerialization
         private static EffectType StringToEnumEffectType(string st)
         {
             return Enum.Parse<EffectType>(st);
-            //return st switch
-            //{
-            //    "DAMAGE" => EffectType.DAMAGE,
-            //    "HASTE" => EffectType.HASTE,
-            //    "MAGESIGHT" => EffectType.MAGESIGHT,
-            //    "SEVER" => EffectType.SEVER,
-            //    "TELEPORT" => EffectType.TELEPORT,
-            //    "DEBUFF" => EffectType.DEBUFF,
-            //    "BUFF" => EffectType.BUFF,
-            //    "LIGHT" => EffectType.LIGHT,
-            //    "KNOCKBACK" => EffectType.KNOCKBACK,
-            //    _ => throw new ApplicationException("It wasn't possible to convert the effect, " +
-            //        $"please use only the provided effects types.\nEffect used: {st}"),
-            //};
         }
 
         private static SpellAreaEffect StringToAreaEffect(string st)
         {
             return Enum.Parse<SpellAreaEffect>(st);
-            //return st switch
-            //{
-            //    "Target" => SpellAreaEffect.Target,
-            //    "Self" => SpellAreaEffect.Self,
-            //    "Ball" => SpellAreaEffect.Ball,
-            //    "Beam" => SpellAreaEffect.Beam,
-            //    "Cone" => SpellAreaEffect.Cone,
-            //    "Level" => SpellAreaEffect.Level,
-            //    "World" => SpellAreaEffect.World,
-            //    _ => throw new Exception($"It wasn't possible to understand this spell area, is it a valid area?/n area = {st}")
-            //};
         }
-
-        //private static DamageTypes StringToDamageType(string st)
-        //{
-        //    return Enum.Parse<DamageTypes>(st);
-        //    //return st switch
-        //    //{
-        //    //    "None" => DamageTypes.None,
-        //    //    "Blunt" => DamageTypes.Blunt,
-        //    //    "Sharp" => DamageTypes.Sharp,
-        //    //    "Point" => DamageTypes.Pierce,
-        //    //    "Force" => DamageTypes.Force,
-        //    //    "Fire" => DamageTypes.Fire,
-        //    //    "Cold" => DamageTypes.Cold,
-        //    //    "Lighting" => DamageTypes.Lightning,
-        //    //    "Poison" => DamageTypes.Poison,
-        //    //    "Acid" => DamageTypes.Acid,
-        //    //    "Shock" => DamageTypes.Shock,
-        //    //    "Soul" => DamageTypes.Soul,
-        //    //    "Mind" => DamageTypes.Mind,
-        //    //    _ => throw new Exception($"This isn't a valid damage type, please use a valid one. Value used: {st}")
-        //    //};
-        //}
 
         /// <summary>
         /// Is used to instantiate and return any number of possible effects
@@ -160,22 +113,6 @@ namespace MagusEngine.Serialization.EntitySerialization
         private static ArtMagic StringToSchool(string st)
         {
             return Enum.Parse<ArtMagic>(st);
-            //return st switch
-            //{
-            //    "Projection" => ArtMagic.Projection, // 1
-            //    "Negation" => ArtMagic.Negation, // 2
-            //    "Animation" => ArtMagic.Animation, // 3
-            //    "Divination" => ArtMagic.Divination, // 4
-            //    "Alteration" => ArtMagic.Alteration, // 5
-            //    "Wards" => ArtMagic.Wards, // 6
-            //    "Dimensionalism" => ArtMagic.Dimensionalism, // 7
-            //    "Conjuration" => ArtMagic.Conjuration, // 8
-            //    "Illuminism" => ArtMagic.Illuminism, // 9
-            //    "MindMagic" => ArtMagic.MindMagic, // 10
-            //    "SoulMagic" => ArtMagic.SoulMagic, // 11
-            //    "BloodMagic" => ArtMagic.BloodMagic, // 12
-            //    _ => throw new Exception($"Are you sure the school is correct? it must be a valid one./n School used: {st}")
-            //};
         }
     }
 
