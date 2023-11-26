@@ -111,9 +111,20 @@ namespace MagusEngine.Core.Entities.Base
             throw new ApplicationException("Must define the get status for the class!");
         }
 
-        #endregion Virtual Methods
+        public virtual int GetShapingAbility(string shapingAbility)
+        {
+            return 0;
+        }
 
-        #region Overload Methods
+        public virtual int GetPenetration()
+        {
+            return 0;
+        }
+
+        public virtual int GetMagicResistance()
+        {
+            return 0;
+        }
 
         public virtual MagiEntity Copy()
         {
@@ -144,7 +155,7 @@ namespace MagusEngine.Core.Entities.Base
             return entity;
         }
 
-        #endregion Overload Methods
+        #endregion Virtual Methods
 
         #region Components
 

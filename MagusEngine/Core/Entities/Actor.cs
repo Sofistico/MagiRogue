@@ -364,9 +364,9 @@ namespace MagusEngine.Core.Entities
             return speed;
         }
 
-        public double GetActorBaseCastingSpeed()
+        public double GetActorBaseCastingSpeed(string shapingAbility)
         {
-            return GetActorSpeed() + (Magic.ShapingSkill * 0.7 * (Soul.WillPower * 0.3));
+            return GetActorSpeed() + (GetShapingAbility(shapingAbility) * 0.7 * (Soul.WillPower * 0.3));
         }
 
         public double GetAttackVelocity(Attack attack)
@@ -382,9 +382,9 @@ namespace MagusEngine.Core.Entities
         public int GetDefenseAbility()
         {
             // four different ways to defend
-            int shieldAbility = GetRelevantAbility(AbilityName.Shield);
-            int armorAbility = GetRelevantAbility(AbilityName.ArmorUse);
-            int dodgeAbility = GetRelevantAbility(AbilityName.Dodge);
+            int shieldAbility = GetRelevantAbility(AbilityCategory.Shield);
+            int armorAbility = GetRelevantAbility(AbilityCategory.ArmorUse);
+            int dodgeAbility = GetRelevantAbility(AbilityCategory.Dodge);
             int weaponAbility = GetRelevantAttackAbility(WieldedItem());
 
             if (shieldAbility > weaponAbility)
@@ -397,7 +397,7 @@ namespace MagusEngine.Core.Entities
             return dodgeAbility;
         }
 
-        public int GetRelevantAbility(AbilityName ability)
+        public int GetRelevantAbility(AbilityCategory ability)
         {
             return Mind.GetAbility(ability);
         }
@@ -419,12 +419,12 @@ namespace MagusEngine.Core.Entities
             return Mind.HasSpecifiedAttackAbility(weaponType, out int abilityScore) ? abilityScore : 0;
         }
 
-        public double GetRelevantAttackAbilityMultiplier(AbilityName ability)
+        public double GetRelevantAttackAbilityMultiplier(AbilityCategory ability)
         {
             return Mind.HasSpecifiedAttackAbility(ability, out int abilityScore) ? abilityScore * 0.3 : 0;
         }
 
-        public double GetRelevantAbilityMultiplier(AbilityName ability)
+        public double GetRelevantAbilityMultiplier(AbilityCategory ability)
         {
             return Mind.Abilities.TryGetValue((int)ability, out Ability value) ? value.Score * 0.3 : 0;
         }
@@ -450,7 +450,7 @@ namespace MagusEngine.Core.Entities
 
         public List<Attack> GetAttacks()
         {
-            List<Attack> list = new();
+            List<Attack> list = [];
             foreach (var item in GetAllWieldedItems()!.Select(i => i.Attacks))
             {
                 list.AddRange(item);

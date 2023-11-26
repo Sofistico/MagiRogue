@@ -21,8 +21,8 @@ namespace MagiRogue.Test.Entities
                 Sex.None);
             Player player = EntityFactory.PlayerCreatorFromActor(test, scenario,
                 Sex.Male);
-
-            Assert.Equal(scenario.ShapingSkill, player.Magic.ShapingSkill);
+            var ability = scenario.Abilities.Find(i => i.Category is AbilityCategory.MagicShaping);
+            Assert.Equal(ability.Score, player.GetShapingAbility(ability.Name));
         }
     }
 }

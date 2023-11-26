@@ -31,7 +31,7 @@ namespace MagusEngine.Core.Entities.Base
 
         public void AddAbilityToDictionary(Ability ability)
         {
-            if (ability.ReturnAbilityEnumFromString() is AbilityName.None)
+            if (ability.Category is AbilityCategory.None)
                 return;
             Abilities.TryAdd(ability.Id, ability);
         }
@@ -49,7 +49,7 @@ namespace MagusEngine.Core.Entities.Base
             }
         }
 
-        public bool HasSpecifiedAttackAbility(AbilityName ability, out int abilityScore)
+        public bool HasSpecifiedAttackAbility(AbilityCategory ability, out int abilityScore)
         {
             int possibleId = (int)ability;
             abilityScore = 0;
@@ -64,7 +64,7 @@ namespace MagusEngine.Core.Entities.Base
             }
         }
 
-        public int GetAbility(AbilityName ability)
+        public int GetAbility(AbilityCategory ability)
         {
             int possibleId = (int)Ability.ReturnAbilityEnumFromString(ability.ToString());
             int abilityScore = 0;
@@ -76,38 +76,38 @@ namespace MagusEngine.Core.Entities.Base
             return abilityScore;
         }
 
-        public Ability ReturnAbilityFromName(AbilityName ability)
+        public Ability ReturnAbilityFromName(AbilityCategory ability)
         {
             int possibleId = (int)Ability.ReturnAbilityEnumFromString(ability.ToString());
             return Abilities.TryGetValue(possibleId, out Ability value) ? value : new Ability();
         }
 
-        public List<AbilityName> CheckForCombatAbilities()
+        public List<AbilityCategory> CheckForCombatAbilities()
         {
-            var abilitiesNeeded = new AbilityName[]
+            var abilitiesNeeded = new AbilityCategory[]
             {
-                AbilityName.Unarmed,
-                AbilityName.Misc,
-                AbilityName.Sword,
-                AbilityName.Staff,
-                AbilityName.Hammer,
-                AbilityName.Spear,
-                AbilityName.Axe,
+                AbilityCategory.Unarmed,
+                AbilityCategory.Misc,
+                AbilityCategory.Sword,
+                AbilityCategory.Staff,
+                AbilityCategory.Hammer,
+                AbilityCategory.Spear,
+                AbilityCategory.Axe,
             };
             return ReturnIntersectionAbilities(abilitiesNeeded);
         }
 
-        public List<AbilityName> CheckForDefensiveAbilities()
+        public List<AbilityCategory> CheckForDefensiveAbilities()
         {
-            var abilitiesNeeded = new AbilityName[]
+            var abilitiesNeeded = new AbilityCategory[]
             {
-                AbilityName.ArmorUse,
-                AbilityName.Dodge,
+                AbilityCategory.ArmorUse,
+                AbilityCategory.Dodge,
             };
             return ReturnIntersectionAbilities(abilitiesNeeded);
         }
 
-        public List<AbilityName> ReturnIntersectionAbilities(IEnumerable<AbilityName> abilitiesNeeded)
+        public List<AbilityCategory> ReturnIntersectionAbilities(IEnumerable<AbilityCategory> abilitiesNeeded)
         {
             return abilitiesNeeded.Where(i => Abilities.ContainsKey((int)i)).ToList();
         }

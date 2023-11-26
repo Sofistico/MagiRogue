@@ -121,7 +121,6 @@ namespace MagusEngine.Factory
 
         private static void SetupScenarioMagic(Actor actor, Scenario scenario)
         {
-            actor.Magic.ShapingSkill += scenario.ShapingSkill;
             foreach (var str in scenario.SpellsKnow)
             {
                 var queriedSpell = DataManager.QuerySpellInData(str);
@@ -139,6 +138,9 @@ namespace MagusEngine.Factory
                     }
                 }
                 actor.Magic.AddToSpellList(queriedSpell);
+                var ability = scenario.Abilities.Find(i => i.Name.Equals(queriedSpell.ShapingAbility));
+                if (ability is not null)
+                    actor.Mind.AddAbilityToDictionary(new Ability(ability.Name, ability.Category, ability.Score));
             }
         }
 
@@ -216,8 +218,6 @@ namespace MagusEngine.Factory
             soul.WillPower = race.BaseWillPower;
             soul.BaseManaRegen = race.BaseManaRegen;
             soul.InitialMana(mind.Inteligence, race);
-
-            magic.InnateMagicResistance = race.BaseMagicResistance;
 
             if (anatomy.AllBPs.Any(i => i.Tissues.Any(i => i.Material.Type == MaterialType.Meat)))
             {

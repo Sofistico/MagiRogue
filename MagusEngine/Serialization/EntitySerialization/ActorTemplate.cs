@@ -79,9 +79,9 @@ namespace MagusEngine.Serialization.EntitySerialization
 
         public uint BackgroundPackedValue { get; internal set; }
 
-        public List<AbilityTemplate> Abilities { get; set; } = new();
+        public List<AbilityTemplate> Abilities { get; set; } = [];
 
-        public List<ItemTemplate> Inventory { get; set; } = new();
+        public List<ItemTemplate> Inventory { get; set; } = [];
 
         public const string EntityType = "Actor";
 
@@ -91,7 +91,7 @@ namespace MagusEngine.Serialization.EntitySerialization
 
         public MagicManager MagicStuff { get; set; }
 
-        public List<EquipTemplate> Equip { get; set; }
+        public List<EquipTemplate> Equip { get; set; } = [];
 
         public Mind Mind { get; set; }
 
@@ -133,7 +133,6 @@ namespace MagusEngine.Serialization.EntitySerialization
             BackgroundPackedValue = background;
 
             Abilities = abilities;
-            Equip = new();
         }
 
         public ActorTemplate(Actor actor)
@@ -147,9 +146,7 @@ namespace MagusEngine.Serialization.EntitySerialization
             Layer = actor.Layer;
             Volume = actor.Volume;
             Weight = actor.Weight;
-            Abilities = new();
             AddToAbilities(actor);
-            Equip = new();
             Soul = actor.Soul;
             Mind = actor.Mind;
         }
@@ -161,8 +158,9 @@ namespace MagusEngine.Serialization.EntitySerialization
                 var actorAbility = actor.Mind.Abilities[i];
                 var abilityTemplaye = new AbilityTemplate()
                 {
-                    Ability = actorAbility.ReturnAbilityEnumFromString(),
+                    Category = actorAbility.Category,
                     Score = actorAbility.Score,
+                    Name = actorAbility.Name,
                 };
                 Abilities.Add(abilityTemplaye);
             }
@@ -185,7 +183,7 @@ namespace MagusEngine.Serialization.EntitySerialization
                 GlyphHelper.GetGlyph(actorTemplate.Glyph) : actorTemplate.Glyph;
 
             Actor actor =
-                new Actor(actorTemplate.Name, actorTemplate.ForegroundBackingField.Color,
+                new(actorTemplate.Name, actorTemplate.ForegroundBackingField.Color,
                 actorTemplate.BackgroundBackingField.Color, glyph,
                 Point.None)
                 {

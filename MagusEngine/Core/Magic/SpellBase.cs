@@ -71,7 +71,7 @@ namespace MagusEngine.Core.Magic
         /// The total mana cost of the spell, ranging from 0.1 for simple feats of magic to anything beyond
         /// </summary>
         [JsonProperty(Order = 5)]
-        public double ManaCost { get; set; }
+        public double MagicCost { get; set; }
 
         /// <summary>
         /// The id of the spell, required for quick look up and human redable serialization.
@@ -111,13 +111,14 @@ namespace MagusEngine.Core.Magic
         /// </summary>
         public int Power
         {
-            get => (int)(SpellLevel + ManaCost);
+            get => (int)(SpellLevel + MagicCost);
         }
 
         public List<string>? Keywords { get; set; } = new();
         public List<SpellContext>? Context { get; set; }
         public bool IgnoresWall { get; set; }
         public bool AffectsTile { get; set; }
+        public string ShapingAbility { get; set; }
 
         /// <summary>
         /// Empty constructor, a waste of space
@@ -134,21 +135,21 @@ namespace MagusEngine.Core.Magic
         /// <param name="magicArt">What school is this spell part of?</param>
         /// <param name="spellRange">The range of the spell</param>
         /// <param name="spellLevel">The level of the spell, going from 1 to 9</param>
-        /// <param name="manaCost">The mana cost of the spell, should be more than 0.1</param>
+        /// <param name="MagicCost">The mana cost of the spell, should be more than 0.1</param>
         public SpellBase(string spellId,
             string spellName,
             ArtMagic magicArt,
             int spellRange,
             int spellLevel = 1,
-            double manaCost = 0.1)
+            double MagicCost = 0.1)
         {
             SpellId = spellId;
             SpellName = spellName;
             MagicArt = magicArt;
             SpellRange = spellRange;
             SpellLevel = spellLevel;
-            ManaCost = manaCost;
-            Effects = new List<ISpellEffect>();
+            MagicCost = MagicCost;
+            Effects = [];
         }
 
         public bool CanCast(MagicManager magicSkills, Actor stats)
@@ -166,14 +167,14 @@ namespace MagusEngine.Core.Magic
                     return false;
                 }
 
-                bool canCast = reqShapingWithDiscount <= magicSkills.ShapingSkill;
+                bool canCast = reqShapingWithDiscount <= stats.GetShapingAbility(ShapingAbility);
 
                 if (!canCast)
                 {
                     TickProfiency();
                     errorMessage = "Can't cast the spell because you don't have the required shaping skills and/or the proficiency";
                 }
-                if (stats.Soul.CurrentMana <= ManaCost)
+                if (stats.Soul.CurrentMana <= MagicCost)
                 {
                     errorMessage = "You don't have enough mana to cast the spell!";
                     canCast = false;
@@ -208,7 +209,7 @@ namespace MagusEngine.Core.Magic
                     }
                 }
 
-                caster.Soul.CurrentMana -= (float)ManaCost;
+                caster.Soul.CurrentMana -= (float)MagicCost;
                 TickProfiency();
 
                 return true;
@@ -245,7 +246,7 @@ namespace MagusEngine.Core.Magic
                     }
                 }
 
-                caster.Soul.CurrentMana -= ManaCost;
+                caster.Soul.CurrentMana -= MagicCost;
                 TickProfiency();
 
                 return true;
@@ -261,7 +262,7 @@ namespace MagusEngine.Core.Magic
             {
                 Description = Description,
                 Effects = Effects,
-                ManaCost = ManaCost,
+                MagicCost = MagicCost,
                 Proficiency = Proficiency,
                 SpellId = SpellId,
                 SpellLevel = SpellLevel,

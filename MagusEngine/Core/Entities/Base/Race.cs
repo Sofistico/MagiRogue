@@ -61,6 +61,9 @@ namespace MagusEngine.Core.Entities.Base
         /// </summary>
         public int MinManaRange { get; set; } = 1;
 
+        /// <summary>
+        /// The innate resistance to magic from a being, how hard it is to harm another with pure magic
+        /// </summary>
         public int BaseMagicResistance { get; set; }
 
         // Body

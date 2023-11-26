@@ -69,7 +69,7 @@ namespace MagusEngine.Core.WorldStuff.History
         /// <br>The figure can only do one long term activity</br>
         /// </summary>
         public bool DoingLongTermActivity { get; set; }
-        public AbilityName TrainingFocus { get; private set; }
+        public AbilityCategory TrainingFocus { get; private set; }
         public bool Pregnant { get; private set; }
 
         /// <summary>
@@ -142,9 +142,9 @@ namespace MagusEngine.Core.WorldStuff.History
         {
             // TODO: Hfs will begins with X random amount of xp to spend, then they will use it rather than
             // having some random value!
-            foreach (AbilityName e in Enum.GetValues(typeof(AbilityName)))
+            foreach (AbilityCategory e in Enum.GetValues(typeof(AbilityCategory)))
             {
-                if (e is AbilityName.None)
+                if (e is AbilityCategory.None)
                     continue;
                 bool hasSkill = Mrn.OneIn(10);
                 if (hasSkill)
@@ -159,7 +159,7 @@ namespace MagusEngine.Core.WorldStuff.History
         public void DefineProfession()
         {
             List<Ability> skills = new(Mind.Abilities.Values.ToList());
-            Ability bestSkill = new(AbilityName.None, 0);
+            Ability bestSkill = new(AbilityCategory.None, 0);
             if (skills.Count > 0)
             {
                 bestSkill = skills.MaxBy(i => i.Score);
@@ -174,7 +174,7 @@ namespace MagusEngine.Core.WorldStuff.History
             }
             else
             {
-                secondBestSkill = new Ability(AbilityName.None, 0);
+                secondBestSkill = new Ability(AbilityCategory.None, 0);
             }
 
             if (!DetermineProfessionFromBestSkills(bestSkill, secondBestSkill))
@@ -188,7 +188,7 @@ namespace MagusEngine.Core.WorldStuff.History
         private bool DetermineProfessionFromBestSkills(Ability bestAbility, Ability secondBest)
         {
             var professions = DataManager.ListOfProfessions
-                .Where(i => i.Ability[0] == bestAbility.ReturnAbilityEnumFromString()).ToList();
+                .Where(i => i.Ability[0] == bestAbility.Category).ToList();
 
             if (professions.Count > 0)
             {
@@ -196,7 +196,7 @@ namespace MagusEngine.Core.WorldStuff.History
                 {
                     if (prof.Ability.Length > 0)
                     {
-                        if (prof.Ability.Contains(secondBest.ReturnAbilityEnumFromString()))
+                        if (prof.Ability.Contains(secondBest.Category))
                         {
                             Mind.Profession = prof;
 
@@ -399,14 +399,14 @@ namespace MagusEngine.Core.WorldStuff.History
         {
             if (ResearchTree.CurrentResearchFocus is null)
                 return false;
-            List<AbilityName>? abilitiesIntersection = ResearchTree
+            List<AbilityCategory>? abilitiesIntersection = ResearchTree
                 .CurrentResearchFocus
                 .GetRequisiteAbilitiesForResearch(this);
 
             if (abilitiesIntersection is null || abilitiesIntersection.Count == 0)
                 return false;
             double totalRes = bonusResearchPower;
-            foreach (AbilityName abiName in abilitiesIntersection)
+            foreach (AbilityCategory abiName in abilitiesIntersection)
             {
                 // research should take years, but let's observe if will take too long as well...
                 int abilityScore = Mind.GetAbility(abiName);
@@ -595,14 +595,14 @@ namespace MagusEngine.Core.WorldStuff.History
                 && GetPersonality().Perseverance > 0;
         }
 
-        public void SetCurrentAbilityTrainingFocus(AbilityName abilityName)
+        public void SetCurrentAbilityTrainingFocus(AbilityCategory abilityName)
         {
             TrainingFocus = abilityName;
         }
 
         public void TrainAbilityFocus()
         {
-            if (TrainingFocus is not AbilityName.None)
+            if (TrainingFocus is not AbilityCategory.None)
             {
                 whatScoreToSettleForTrainingAbility = Mrn.Normal2D6Dice;
                 if (!Mind.Abilities.ContainsKey((int)TrainingFocus))
@@ -612,18 +612,18 @@ namespace MagusEngine.Core.WorldStuff.History
                 else
                 {
                     Ability ability = Mind.ReturnAbilityFromName(TrainingFocus);
-                    if (ability.ReturnAbilityEnumFromString() is not AbilityName.None)
+                    if (ability.Category is not AbilityCategory.None)
                     {
                         ability.XpTotal +=
                             Mind.Personality.HardWork + (Mrn.Exploding2D6Dice * Mind.Inteligence);
                     }
                     if (ability.Score >= whatScoreToSettleForTrainingAbility)
-                        TrainingFocus = AbilityName.None;
+                        TrainingFocus = AbilityCategory.None;
                 }
             }
             else
             {
-                TrainingFocus = Enum.GetValues<AbilityName>().GetRandomItemFromList();
+                TrainingFocus = Enum.GetValues<AbilityCategory>().GetRandomItemFromList();
             }
         }
 

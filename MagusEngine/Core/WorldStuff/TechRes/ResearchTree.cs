@@ -53,7 +53,7 @@ namespace MagusEngine.Core.WorldStuff.TechRes
                             return;
                         }
                         tries++;
-                        if (figure.TrainingFocus is not AbilityName.None)
+                        if (figure.TrainingFocus is not AbilityCategory.None)
                             return;
                     }
                 }
@@ -123,10 +123,10 @@ namespace MagusEngine.Core.WorldStuff.TechRes
             CurrentRP = RequiredRP;
         }
 
-        public List<AbilityName> GetRequisiteAbilitiesForResearch()
+        public List<AbilityCategory> GetRequisiteAbilitiesForResearch()
         {
             var getResAbilities = Research.AbilityRequired;
-            List<AbilityName> abilitiesNeeded = new();
+            List<AbilityCategory> abilitiesNeeded = new();
             int count = getResAbilities.Count;
             // special handling for unusual cases for AnyCraft, AnyResearch, AnyMagic, AnyCombat and AnyJob
             for (int i = 0; i < count; i++)
@@ -135,68 +135,68 @@ namespace MagusEngine.Core.WorldStuff.TechRes
                 switch (abilityString)
                 {
                     case "AnyCraft":
-                        abilitiesNeeded.AddRange(new AbilityName[]
+                        abilitiesNeeded.AddRange(new AbilityCategory[]
                         {
-                            AbilityName.Mason,
-                            AbilityName.WoodCraft,
-                            AbilityName.Forge,
-                            AbilityName.Smelt,
-                            AbilityName.Weaver,
-                            AbilityName.Alchemy,
-                            AbilityName.Enchantment,
-                            AbilityName.GlassMaking
+                            AbilityCategory.Mason,
+                            AbilityCategory.WoodCraft,
+                            AbilityCategory.Forge,
+                            AbilityCategory.Smelt,
+                            AbilityCategory.Weaver,
+                            AbilityCategory.Alchemy,
+                            AbilityCategory.Enchantment,
+                            AbilityCategory.GlassMaking
                         });
                         break;
 
                     case "AnyResearch":
-                        abilitiesNeeded.AddRange(new AbilityName[]
+                        abilitiesNeeded.AddRange(new AbilityCategory[]
                         {
-                            AbilityName.MagicTheory,
-                            AbilityName.MagicLore,
-                            AbilityName.Research,
-                            AbilityName.Mathematics,
-                            AbilityName.Astronomer,
-                            AbilityName.Chemist,
-                            AbilityName.Physics,
-                            AbilityName.Enginner,
+                            AbilityCategory.MagicTheory,
+                            AbilityCategory.MagicLore,
+                            AbilityCategory.Research,
+                            AbilityCategory.Mathematics,
+                            AbilityCategory.Astronomer,
+                            AbilityCategory.Chemist,
+                            AbilityCategory.Physics,
+                            AbilityCategory.Enginner,
                         });
                         break;
 
                     case "AnyMagic":
-                        abilitiesNeeded.AddRange(new AbilityName[]
+                        abilitiesNeeded.AddRange(new AbilityCategory[]
                         {
-                            AbilityName.MagicTheory,
-                            AbilityName.MagicLore
+                            AbilityCategory.MagicTheory,
+                            AbilityCategory.MagicLore
                         });
                         break;
 
                     case "AnyCombat":
-                        abilitiesNeeded.AddRange(new AbilityName[]
+                        abilitiesNeeded.AddRange(new AbilityCategory[]
                         {
-                            AbilityName.Unarmed,
-                            AbilityName.Misc,
-                            AbilityName.Sword,
-                            AbilityName.Staff,
-                            AbilityName.Hammer,
-                            AbilityName.Spear,
-                            AbilityName.Axe,
+                            AbilityCategory.Unarmed,
+                            AbilityCategory.Misc,
+                            AbilityCategory.Sword,
+                            AbilityCategory.Staff,
+                            AbilityCategory.Hammer,
+                            AbilityCategory.Spear,
+                            AbilityCategory.Axe,
                         });
                         break;
 
                     case "AnyJob":
-                        abilitiesNeeded.AddRange(new AbilityName[]
+                        abilitiesNeeded.AddRange(new AbilityCategory[]
                         {
-                            AbilityName.Farm,
-                            AbilityName.Medicine,
-                            AbilityName.Surgeon,
-                            AbilityName.Miner,
-                            AbilityName.Brewer,
-                            AbilityName.Cook,
+                            AbilityCategory.Farm,
+                            AbilityCategory.Medicine,
+                            AbilityCategory.Surgeon,
+                            AbilityCategory.Miner,
+                            AbilityCategory.Brewer,
+                            AbilityCategory.Cook,
                         });
                         break;
 
                     default:
-                        abilitiesNeeded.Add(Enum.Parse<AbilityName>(abilityString));
+                        abilitiesNeeded.Add(Enum.Parse<AbilityCategory>(abilityString));
                         break;
                 }
             }
@@ -204,12 +204,12 @@ namespace MagusEngine.Core.WorldStuff.TechRes
             return abilitiesNeeded;
         }
 
-        public List<AbilityName>? GetRequisiteAbilitiesForResearch(HistoricalFigure figure)
+        public List<AbilityCategory>? GetRequisiteAbilitiesForResearch(HistoricalFigure figure)
         {
-            if (figure.TrainingFocus is AbilityName.None)
+            if (figure.TrainingFocus is AbilityCategory.None)
                 return null;
             var abilities = GetRequisiteAbilitiesForResearch();
-            List<AbilityName> abilitiesIntersection = figure.Mind.ReturnIntersectionAbilities(abilities);
+            List<AbilityCategory> abilitiesIntersection = figure.Mind.ReturnIntersectionAbilities(abilities);
             if (abilitiesIntersection.Count == 0)
             {
                 figure.SetCurrentAbilityTrainingFocus(abilities.GetRandomItemFromList());

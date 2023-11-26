@@ -505,7 +505,7 @@ namespace MagusEngine.Core.Civ
             var hf = GetRulerNoblePosition().Item2;
             double nobleInfluence = 1;
             if (hf is not null)
-                nobleInfluence = hf.Mind.GetAbility(AbilityName.Negotiator) + 1 / 100;
+                nobleInfluence = hf.Mind.GetAbility(AbilityCategory.Negotiator) + 1 / 100;
             return (int)(civSum * nobleInfluence);
         }
 

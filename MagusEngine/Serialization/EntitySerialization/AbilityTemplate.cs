@@ -5,24 +5,23 @@ namespace MagusEngine.Serialization.EntitySerialization
 {
     public class AbilityTemplate
     {
-        public AbilityName Ability { get; set; }
+        public string Name { get; set; }
+        public AbilityCategory Category { get; set; }
         public int Score { get; set; }
 
         public static implicit operator AbilityTemplate(Ability ability)
         {
-            var abilityTemplaye = new AbilityTemplate()
+            return new AbilityTemplate()
             {
-                Ability = ability.ReturnAbilityEnumFromString(),
+                Category = ability.Category,
                 Score = ability.Score,
+                Name = ability.Name
             };
-
-            return abilityTemplaye;
         }
 
         public static implicit operator Ability(AbilityTemplate abilityTemplate)
         {
-            var ability = new Ability(abilityTemplate.Ability, abilityTemplate.Score);
-            return ability;
+            return new Ability(abilityTemplate.Name, abilityTemplate.Category, abilityTemplate.Score);
         }
     }
 }

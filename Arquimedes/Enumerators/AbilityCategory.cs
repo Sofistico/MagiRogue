@@ -4,7 +4,7 @@ using Newtonsoft.Json.Converters;
 namespace Arquimedes.Enumerators
 {
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum AbilityName
+    public enum AbilityCategory
     {
         None,
 
@@ -60,7 +60,22 @@ namespace Arquimedes.Enumerators
         MagicTheory,
         Gestures,
         Incantation,
-        ManaShaping,
+        /// <summary>
+        /// The amount of mana finess required to pull of a spell, something can only be casted if
+        /// you can have enough control to properly control the mana, see <see cref="SpellBase.Proficiency"/>.
+        /// <para>Should be at minimum a 3 to cast the simplest battle spell reliable.</para>
+        /// </summary>
+        MagicShaping,
+        /// <summary>
+        /// How likely it is to penetrate the resistance of another being, the formula should be to
+        /// win against the resistance ((0.3 * Proficiency) + (ShapingSkill * 0.5) + MagicPenetration)
+        /// + bonusLuck &gt;= (InnateResistance + MagicResistance) * 2
+        /// </summary>
+        MagicPenetration,
+        /// <summary>
+        /// The resistance to magic from other stuff add to a being
+        /// </summary>
+        MagicResistance,
 
         // scholary
         MagicLore,

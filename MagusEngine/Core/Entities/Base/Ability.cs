@@ -9,25 +9,23 @@ namespace MagusEngine.Core.Entities.Base
     public struct Ability
     {
         public string Name { get; }
+        public AbilityCategory Category { get; set; }
         public int Score { get; set; }
         public int Id { get; }
         public int XpTotal { get; set; }
         public readonly int XpRequiredForNextLevel { get => (Score + 1) * 1000 * 2; }
 
-        public Ability(AbilityName name, int abilityScore)
-        {
-            Name = ReturnEnumString(name);
-            Score = abilityScore;
-            Id = (int)name;
-            XpTotal = abilityScore * 1000;
-        }
-
-        public Ability(string name, int abilityScore)
+        public Ability(string name, AbilityCategory category, int abilityScore)
         {
             Name = name;
+            Category = category;
             Score = abilityScore;
             Id = SequentialIdGenerator.AbilityId;
             XpTotal = abilityScore * 1000;
+        }
+
+        public Ability(AbilityCategory name, int abilityScore) : this(ReturnEnumString(name), name, abilityScore)
+        {
         }
 
         private static string ReturnEnumString(Enum name)
@@ -36,21 +34,7 @@ namespace MagusEngine.Core.Entities.Base
             return string.Join(" ", Regex.Split(tempName, "(?<!^)(?=[A-Z](?![A-Z]|$))", RegexOptions.None, TimeSpan.FromSeconds(10)));
         }
 
-        public readonly AbilityName ReturnAbilityEnumFromString()
-        {
-            try
-            {
-                string test = Name.Replace(" ", "");
-                AbilityName ability = Enum.Parse<AbilityName>(test);
-                return ability;
-            }
-            catch (AbilityNotFoundExepction)
-            {
-                return AbilityName.None;
-            }
-        }
-
-        public static AbilityName ReturnAbilityEnumFromString(string name)
+        public static AbilityCategory ReturnAbilityEnumFromString(string name)
         {
             //try
             //{
@@ -68,12 +52,12 @@ namespace MagusEngine.Core.Entities.Base
             try
             {
                 string test = name.Replace(" ", "");
-                AbilityName ability = Enum.Parse<AbilityName>(test);
+                AbilityCategory ability = Enum.Parse<AbilityCategory>(test);
                 return ability;
             }
             catch (AbilityNotFoundExepction)
             {
-                return AbilityName.None;
+                return AbilityCategory.None;
             }
         }
     }

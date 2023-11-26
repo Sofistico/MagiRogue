@@ -1,10 +1,11 @@
 [
   {
     "SpellId": "magic_missile",
+    "ShapingAbility": "Mana Shaping",
     "SpellName": "Magic Missile",
     "Description": "Magic missile, the first real combat magic any prospecting wizard will learn, it's many use will carry you for a long time.\r\nIt's said that the greatest of training in this magic permits one to shape it as a piercer or as a cutter, make it invisible or add a homing function to it.",
     "SpellLevel": 1,
-    "ManaCost": 1.0,
+    "MagicCost": 1.0,
     "MagicArt": "Projection",
     "SpellRange": 5,
     "Effects": [
@@ -21,6 +22,7 @@
   {
     "/": "In the future should have here an effect to represent the increasing of temperature!",
     "SpellLevel": 2,
+    "ShapingAbility": "Mana Shaping",
     "Effects": [
       {
         "AreaOfEffect": "Beam",
@@ -35,13 +37,14 @@
     "Description": "A ray of fire leaves your finger and strikes the opponent!",
     "MagicArt": "Projection",
     "SpellRange": 5,
-    "ManaCost": 2.5,
+    "MagicCost": 2.5,
     "SpellId": "fire_ray",
     "Context": [ "Offensive" ]
   },
   {
     "/": "In the future should have here an effect to represent the increasing of temperature!",
     "SpellLevel": 3,
+    "ShapingAbility": "Mana Shaping",
     "Effects": [
       {
         "AreaOfEffect": "Beam",
@@ -64,13 +67,14 @@
     "Description": "A bolt of lightning leaves your finger to strike your opponent on a line",
     "MagicArt": "Projection",
     "SpellRange": 6,
-    "ManaCost": 5.5,
+    "MagicCost": 5.5,
     "SpellId": "lightning_bolt",
     "Context": [ "Offensive", "Debuff" ]
   },
   {
     "/": "In the future should have here an effect to represent the increasing of temperature!",
     "SpellLevel": 3,
+    "ShapingAbility": "Mana Shaping",
     "Effects": [
       {
         "AreaOfEffect": "Ball",
@@ -85,12 +89,13 @@
     "Description": "A fireball is projected from your hand towards your opponent!",
     "MagicArt": "Projection",
     "SpellRange": 7,
-    "ManaCost": 5.0,
+    "MagicCost": 5.0,
     "SpellId": "fire_ball",
     "Context": [ "Offensive" ]
   },
   {
     "SpellLevel": 4,
+    "ShapingAbility": "Mana Shaping",
     "Effects": [
       {
         "AreaOfEffect": "Target",
@@ -104,13 +109,14 @@
     "Description": "You project a severing force towards your opponent, to sever it's limb!'",
     "MagicArt": "Projection",
     "SpellRange": 5,
-    "ManaCost": 3.0,
+    "MagicCost": 3.0,
     "SpellId": "sever_whip",
     "Context": [ "Offensive" ]
   },
   {
     "/": "In the future should have here an effect to represent the lowering of temperature!",
     "SpellLevel": 5,
+    "ShapingAbility": "Mana Shaping",
     "Effects": [
       {
         "AreaOfEffect": "Cone",
@@ -126,7 +132,7 @@
     "Description": "A cone of cold busts forth from your hands!",
     "MagicArt": "Projection",
     "SpellRange": 1,
-    "ManaCost": 8.0,
+    "MagicCost": 8.0,
     "SpellId": "cone_cold",
     "Context": [ "Offensive" ],
     "AffectsTile": true

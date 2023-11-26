@@ -7,12 +7,12 @@ namespace MagusEngine.Utils
     {
         public static Ability[] GetMagicalAbilities()
         {
-            var abilitiesNames = new AbilityName[]
+            var abilitiesNames = new AbilityCategory[]
             {
-                AbilityName.MagicTheory,
-                AbilityName.Gestures,
-                AbilityName.Incantation,
-                AbilityName.ManaShaping,
+                AbilityCategory.MagicTheory,
+                AbilityCategory.Gestures,
+                AbilityCategory.Incantation,
+                AbilityCategory.MagicShaping,
             };
             Ability[] abilities = new Ability[abilitiesNames.Length];
             for (int i = 0; i < abilitiesNames.Length; i++)

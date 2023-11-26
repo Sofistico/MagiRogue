@@ -46,8 +46,8 @@ namespace MagusEngine.Systems.Time
         public static uint GetCastingTime(Actor actor, SpellBase spellCasted)
         {
             return (uint)
-                (MagicalThings * (spellCasted.SpellLevel + spellCasted.ManaCost)
-                    / actor.GetActorBaseCastingSpeed());
+                (MagicalThings * (spellCasted.SpellLevel + spellCasted.MagicCost)
+                    / actor.GetActorBaseCastingSpeed(spellCasted.ShapingAbility));
         }
     }
 }

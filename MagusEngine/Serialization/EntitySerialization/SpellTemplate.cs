@@ -34,10 +34,11 @@ namespace MagusEngine.Serialization.EntitySerialization
                 StringToSchool((string)spell["MagicArt"]!),
                 (int)spell["SpellRange"]!,
                 (int)spell["SpellLevel"]!,
-                (double)spell["ManaCost"]!)
+                (double)spell["MagicCost"]!)
             {
                 Description = spell["Description"]?.ToString(),
-                Effects = effectsList
+                Effects = effectsList,
+                ShapingAbility = spell["ShapingAbility"]!.ToString()
             };
             if (spell.ContainsKey("Proficiency"))
                 createdSpell.Proficiency = (double)spell["Proficiency"]!;
@@ -136,14 +137,15 @@ namespace MagusEngine.Serialization.EntitySerialization
 
         public int SpellRange { get; set; }
 
-        public double ManaCost { get; set; }
+        public double MagicCost { get; set; }
         public string SpellId { get; set; }
-        public List<SpellContext>? Context { get; set; } = new();
-        public List<string>? Keywords { get; set; } = new();
+        public List<SpellContext>? Context { get; set; } = [];
+        public List<string>? Keywords { get; set; } = [];
+        public string ShapingAbility { get; set; }
 
         public SpellTemplate(int spellLevel, List<ISpellEffect> effects, string spellName, string? description,
-            ArtMagic magicArt, int spellRange, double manaCost, string spellId,
-            List<SpellContext>? context)
+            ArtMagic magicArt, int spellRange, double MagicCost, string spellId,
+            List<SpellContext>? context, string shapingAbility)
         {
             SpellLevel = spellLevel;
             Effects = effects;
@@ -151,16 +153,17 @@ namespace MagusEngine.Serialization.EntitySerialization
             Description = description;
             MagicArt = magicArt;
             SpellRange = spellRange;
-            ManaCost = manaCost;
+            MagicCost = MagicCost;
             SpellId = spellId;
             Context = context;
+            ShapingAbility = shapingAbility;
         }
 
         public static implicit operator SpellBase(SpellTemplate spellTemplate)
         {
             return new(spellTemplate.SpellId, spellTemplate.SpellName,
                 spellTemplate.MagicArt, spellTemplate.SpellRange, spellTemplate.SpellLevel,
-                spellTemplate.ManaCost)
+                spellTemplate.MagicCost)
             {
                 Proficiency =
                 spellTemplate.Proficiency is null ? 0 : (double)spellTemplate.Proficiency,
@@ -174,7 +177,7 @@ namespace MagusEngine.Serialization.EntitySerialization
         public static implicit operator SpellTemplate(SpellBase spell)
         {
             return new SpellTemplate(spell.SpellLevel, spell.Effects, spell.SpellName,
-                spell.Description, spell.MagicArt, spell.SpellRange, spell.ManaCost, spell.SpellId, spell.Context)
+                spell.Description, spell.MagicArt, spell.SpellRange, spell.MagicCost, spell.SpellId, spell.Context, spell.ShapingAbility)
             {
                 Proficiency = spell.Proficiency,
                 Keywords = spell.Keywords,

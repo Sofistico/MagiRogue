@@ -6,6 +6,6 @@ namespace MagusEngine.Core.Entities.Base
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public AbilityName[] Ability { get; set; }
+        public AbilityCategory[] Ability { get; set; }
     }
 }

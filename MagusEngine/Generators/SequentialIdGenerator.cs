@@ -35,7 +35,7 @@ namespace MagusEngine.Generators
 
         static SequentialIdGenerator()
         {
-            int totalAbilityEnum = Enum.GetNames<AbilityName>().Length;
+            int totalAbilityEnum = Enum.GetNames<AbilityCategory>().Length;
             // Here it must be defined any new ids, to properly initialize itself!
             idsDirectory = new Dictionary<int, int>
             {

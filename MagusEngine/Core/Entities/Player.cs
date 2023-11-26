@@ -20,7 +20,7 @@ namespace MagusEngine.Core.Entities
             Player player = EntityFactory.PlayerCreatorFromZeroForTest(new Point(), "human", "Playa", 25,
                 Arquimedes.Enumerators.Sex.Female, "new_wiz");
 
-            player.Magic.ShapingSkill = 25;
+            player.Mind.AddAbilityToDictionary(new(Arquimedes.Enumerators.AbilityCategory.MagicShaping, 25));
 
             player.Magic.KnowSpells[0].Proficiency = 1;
 

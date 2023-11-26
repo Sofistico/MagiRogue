@@ -1,6 +1,7 @@
 ﻿[
   {
     "SpellLevel": 4,
+    "ShapingAbility": "Mana Shaping",
     "Effects": [
       {
         "AreaOfEffect": "Target",
@@ -14,12 +15,13 @@
     "Description": "The major first spell taught to any Dimensionalism student, also the one that causes most students death on it's first try.\r\nIt's said that the Berjoar method of teaching created a variant of this that weaponizes it's teleportation.",
     "MagicArt": "Dimensionalism",
     "SpellRange": 5,
-    "ManaCost": 8.0,
+    "MagicCost": 8.0,
     "SpellId": "teleport",
     "Context": [ "Teleport" ]
   },
   {
     "SpellLevel": 5,
+    "ShapingAbility": "Mana Shaping",
     "Effects": [
       {
         "AreaOfEffect": "Self",
@@ -36,7 +38,7 @@
     "Description": "A powerful spell, speeds up the caster local time.\r\nAs many other spells of the Dimensionalism school of magic, has extreme high mana cost and needs great shaping skills to be able to pull of on the battle.",
     "MagicArt": "Dimensionalism",
     "SpellRange": 0,
-    "ManaCost": 10.0,
+    "MagicCost": 10.0,
     "SpellId": "haste_self",
     "Context": [ "Buff" ]
   }

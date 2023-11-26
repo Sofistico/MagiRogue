@@ -41,7 +41,7 @@ namespace Diviner.Windows
         {
             foreach (var key in info.KeysPressed)
             {
-                if (_hotKeys.TryGetValue(key.Character, out var spell) && _currentMana >= spell.ManaCost)
+                if (_hotKeys.TryGetValue(key.Character, out var spell) && _currentMana >= spell.MagicCost)
                 {
                     _onCast(spell);
                     Hide();
@@ -85,7 +85,7 @@ namespace Diviner.Windows
                 {
                     Text = $"{hotkeyLetter}. {s.SpellName}",
                     Position = new Point(1, yCount++),
-                    IsEnabled = _currentMana >= s.ManaCost,
+                    IsEnabled = _currentMana >= s.MagicCost,
                     Action = () => OnSpellSelected(s),
                 };
                 spellButton.Click += (_, __) =>

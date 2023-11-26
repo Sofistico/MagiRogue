@@ -16,27 +16,31 @@
     "ManaRegen": 0.0,
     "LimbRegen": 0.0,
     "FitLevel": -0.1,
-    "ShapingSkill": 8,
     "Abilities": [
       {
-        "Ability": "MagicLore",
+        "Category": "MagicLore",
         "Score": 3
       },
       {
-        "Ability": "Staff",
+        "Category": "Staff",
         "Score": 1
       },
       {
-        "Ability": "Alchemy",
+        "Category": "Alchemy",
         "Score": 1
       },
       {
-        "Ability": "Enchantment",
+        "Category": "Enchantment",
         "Score": 1
       },
       {
-        "Ability": "Read",
+        "Category": "Read",
         "Score": 5
+      },
+      {
+        "Name": "Mana Shaping",
+        "Category": "MagicShaping",
+        "Score": 8
       }
     ],
     "Inventory": [ [ "read_item", "magical", "subject:random_level_spell:1:5" ] ],

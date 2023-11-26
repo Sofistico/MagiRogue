@@ -18,7 +18,7 @@ namespace MagiRogue.Test.System.Magic
         [Fact]
         public void TestCasting()
         {
-            List<SpellBase> spellBase = new List<SpellBase>(GetListSpells());
+            List<SpellBase> spellBase = new(GetListSpells());
 
             weakMagic = new MagicManager()
             {
@@ -90,7 +90,7 @@ namespace MagiRogue.Test.System.Magic
         {
             SpellBase missile = new SpellBase("magic_missile",
                  "Magic Missile",
-                ArtMagic.Projection, 5, manaCost: 1.0f)
+                ArtMagic.Projection, 5, MagicCost: 1.0f)
             { Proficiency = 1 };
 
             SpellBase cure = new SpellBase("cure_test", "Cure Test",

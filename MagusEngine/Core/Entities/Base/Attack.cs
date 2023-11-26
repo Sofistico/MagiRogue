@@ -12,7 +12,7 @@ namespace MagusEngine.Core.Entities.Base
         /// 0 = fist person, 1 = third person
         /// </summary>
         public string[] AttackVerb { get; set; }
-        public AbilityName AttackAbility { get; set; }
+        public AbilityCategory AttackAbility { get; set; }
         public int PrepareVelocity { get; set; }
         public int RecoverVelocity { get; set; }
         public string DamageTypeId { get; set; } = null!;
@@ -45,7 +45,7 @@ namespace MagusEngine.Core.Entities.Base
         {
             return new Attack()
             {
-                AttackAbility = AbilityName.None,
+                AttackAbility = AbilityCategory.None,
                 AttackVerb = new[] { "push", "pushes" },
                 ContactArea = 100,
                 DamageTypeId = "blunt",

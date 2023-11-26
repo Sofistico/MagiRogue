@@ -22,40 +22,17 @@ namespace MagusEngine.Core.Magic
         public List<DamageTypes> KnowDamageTypes { get; set; }
 
         /// <summary>
-        /// The amount of mana finess required to pull of a spell, something can only be casted if
-        /// you can have enough control to properly control the mana, see <see cref="SpellBase.Proficiency"/>.
-        /// <para>Should be at minimum a 3 to cast the simplest battle spell reliable.</para>
-        /// </summary>
-        public int ShapingSkill { get; set; }
-
-        /// <summary>
-        /// The innate resistance to magic from a being, how hard it is to harm another with pure magic
-        /// </summary>
-        public int InnateMagicResistance { get; set; } = 1;
-
-        /// <summary>
-        /// The resistance to magic from other stuff add to a being
-        /// </summary>
-        public int MagicResistance { get; set; } = 0;
-
-        /// <summary>
-        /// How likely it is to penetrate the resistance of another being, the formula should be to
-        /// win against the resistance ((0.3 * Proficiency) + (ShapingSkill * 0.5) + MagicPenetration)
-        /// + bonusLuck &gt;= (InnateResistance + MagicResistance) * 2
-        /// </summary>
-        public int MagicPenetration { get; set; } = 1;
-
-        /// <summary>
         /// Any enchantment that affects something
         /// </summary>
-        public List<ISpellEffect> Enchantments { get; set; } = new List<ISpellEffect>();
+        public List<ISpellEffect> Enchantments { get; set; }
 
         public MagicManager()
         {
-            KnowSpells = new List<SpellBase>();
-            KnowEffects = new();
-            KnowArea = new();
-            KnowDamageTypes = new();
+            KnowSpells = [];
+            KnowEffects = [];
+            KnowArea = [];
+            KnowDamageTypes = [];
+            Enchantments = [];
         }
 
         public static int CalculateSpellDamage(Actor entityStats, SpellBase spellCasted)
@@ -69,9 +46,8 @@ namespace MagusEngine.Core.Magic
 
         public static bool PenetrateResistance(SpellBase spellCasted, MagiEntity caster, MagiEntity defender,
             int bonusLuck) =>
-            (int)((0.3 * spellCasted.Proficiency) + (caster.Magic.ShapingSkill * 0.5)
-            + caster.Magic.MagicPenetration) + bonusLuck >= (defender.Magic.InnateMagicResistance
-            + defender.Magic.MagicResistance) * 2;
+            (int)((0.3 * spellCasted.Proficiency) + (caster.GetShapingAbility(spellCasted.ShapingAbility) * 0.5)
+            + caster.GetPenetration()) + bonusLuck >= defender.GetMagicResistance() * 2;
 
         public SpellBase? QuerySpell(string spellId)
         {

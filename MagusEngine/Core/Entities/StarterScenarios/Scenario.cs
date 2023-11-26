@@ -48,8 +48,6 @@ namespace MagusEngine.Core.Entities.StarterScenarios
 
         #region Skills
 
-        public int ShapingSkill { get; set; }
-
         public List<AbilityTemplate> Abilities { get; set; }
 
         #endregion Skills
