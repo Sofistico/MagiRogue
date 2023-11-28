@@ -19,54 +19,61 @@ namespace MagiRogue.Test.System.Magic
         public void TestCasting()
         {
             List<SpellBase> spellBase = new(GetListSpells());
-
-            weakMagic = new MagicManager()
+            const int weakShaping = 5;
+            const int mediumShaping = 10;
+            const int strongShaping = 20;
+            weakMagic = new()
             {
-                ShapingSkill = 5,
                 KnowSpells = spellBase
             };
 
-            mediumMagic = new MagicManager()
+            mediumMagic = new()
             {
-                ShapingSkill = 10,
                 KnowSpells = spellBase
             };
 
-            strongMagic = new MagicManager()
+            strongMagic = new()
             {
-                ShapingSkill = 15,
                 KnowSpells = spellBase
             };
-            Soul soul = new Soul()
+            Soul soul = new()
             {
                 WillPower = 10,
                 CurrentMana = 100
             };
-
-            Actor weakSpellCaster = new Actor("Test1", Color.Black, Color.Black, 't', Point.None)
+            Ability weakShape = new(AbilityCategory.MagicShaping, weakShaping);
+            Ability mediumShape = new(AbilityCategory.MagicShaping, mediumShaping);
+            Ability strongShape = new(AbilityCategory.MagicShaping, strongShaping);
+            Mind weakMind = new();
+            weakMind.AddAbilityToDictionary(weakShape);
+            Mind mediumMind = new();
+            mediumMind.AddAbilityToDictionary(mediumShape);
+            Mind strongMind = new();
+            strongMind.AddAbilityToDictionary(strongShape);
+            Actor weakSpellCaster = new("Test1", Color.Black, Color.Black, 't', Point.None)
             {
                 Magic = weakMagic,
                 Soul = soul,
-                //Stats = testStats
+                Mind = weakMind
             };
 
-            Actor mediumSpellCaster = new Actor("Test2", Color.Black, Color.Black, 't', Point.None)
+            Actor mediumSpellCaster = new("Test2", Color.Black, Color.Black, 't', Point.None)
             {
                 Magic = mediumMagic,
-                Soul = soul
-                //Stats = testStats
+                Soul = soul,
+                Mind = mediumMind
             };
 
-            Actor strongSpellCaster = new Actor("Test3", Color.Black, Color.Black, 't', Point.None)
+            Actor strongSpellCaster = new("Test3", Color.Black, Color.Black, 't', Point.None)
             {
                 Magic = strongMagic,
-                Soul = soul
-                //Stats = testStats
+                Soul = soul,
+                Mind = strongMind
             };
 
-            List<bool> canWeakCast = new();
-            List<bool> canMediumCast = new();
-            List<bool> canStrongCast = new();
+            List<bool> canWeakCast = [];
+            List<bool> canMediumCast = [];
+            List<bool> canStrongCast = [];
 
             foreach (var item in weakMagic.KnowSpells)
             {
@@ -88,30 +95,30 @@ namespace MagiRogue.Test.System.Magic
 
         private static List<SpellBase> GetListSpells()
         {
-            SpellBase missile = new SpellBase("magic_missile",
+            SpellBase missile = new("magic_missile",
                  "Magic Missile",
                 ArtMagic.Projection, 5, MagicCost: 1.0f)
             { Proficiency = 1 };
 
-            SpellBase cure = new SpellBase("cure_test", "Cure Test",
+            SpellBase cure = new("cure_test", "Cure Test",
                 ArtMagic.BloodMagic, 0, 1, 4)
             { Proficiency = 1 };
 
-            SpellBase haste = new SpellBase("haste_self", "Haste",
+            SpellBase haste = new("haste_self", "Haste",
                 ArtMagic.Dimensionalism, 0, 1, 7)
             { Proficiency = 1 };
 
-            SpellBase mageSight = new SpellBase("mage_sight", "Mage Sight",
+            SpellBase mageSight = new("mage_sight", "Mage Sight",
                 ArtMagic.Divination, 0, 1, 8)
             { Proficiency = 1 };
 
-            return new List<SpellBase>()
-            {
+            return
+            [
                 missile,
                 cure,
                 haste,
                 mageSight
-            };
+            ];
         }
     }
 }

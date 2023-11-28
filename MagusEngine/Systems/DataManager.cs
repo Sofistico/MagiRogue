@@ -14,7 +14,7 @@ using MagusEngine.Serialization.EntitySerialization;
 using MagusEngine.Serialization.MapConverter;
 using MagusEngine.Services;
 using MagusEngine.Utils.Extensions;
-using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -104,11 +104,11 @@ namespace MagusEngine.Systems
         {
             string[] files = FileUtils.GetFiles(wildCard);
 
-            List<List<T>> listTList = new();
+            List<List<T>> listTList = [];
 
             for (int i = 0; i < files.Length; i++)
             {
-                var t = JsonUtils.JsonDeseralize<List<T>>(files[i]);
+                var t = JsonUtils.JsonDeseralize<List<T>>(files[i])!;
                 listTList.Add(t);
             }
             return listTList.ReturnListListTAsListT();
