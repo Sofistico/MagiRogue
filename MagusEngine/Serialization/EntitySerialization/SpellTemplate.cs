@@ -107,6 +107,8 @@ namespace MagusEngine.Serialization.EntitySerialization
                 EffectType.TELEPORT => new TeleportEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]!),
                     damageId!,
                     (int)jToken["Radius"]!),
+                EffectType.KNOCKBACK => JsonConvert.DeserializeObject<KnockbackEffect>(jToken.ToString()),
+                EffectType.LIGHT => JsonConvert.DeserializeObject<LightEffect>(jToken.ToString()),
                 _ => null,
             };
         }

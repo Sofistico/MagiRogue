@@ -1,22 +1,18 @@
 ﻿using Arquimedes.Enumerators;
 using MagusEngine.Core.Entities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MagusEngine.Core.Magic.Effects
 {
     public class KnockbackEffect : ISpellEffect
     {
         public SpellAreaEffect AreaOfEffect { get; set; }
-        public string SpellDamageTypeId { get; set; }
+        public string SpellDamageTypeId { get; set; } = "blunt";
         public int Radius { get; set; }
         public double ConeCircleSpan { get; set; }
         public bool TargetsTile { get; set; }
         public int BaseDamage { get; set; }
-        public EffectType EffectType { get; set; }
+        public EffectType EffectType { get; set; } = EffectType.KNOCKBACK;
         public bool CanMiss { get; set; }
         public string? EffectMessage { get; set; }
 

@@ -14,10 +14,10 @@ namespace MagusEngine.Core.Magic.Effects
         public string? SpellDamageTypeId { get; set; }
 
         public int Duration { get; set; }
-        public int Radius { get; set; } = 0;
+        public int Radius { get; set; };
         public double ConeCircleSpan { get; set; }
 
-        public bool TargetsTile { get; set; } = false;
+        public bool TargetsTile { get; set; }
         public EffectType EffectType { get; set; } = EffectType.MAGESIGHT;
         public int BaseDamage { get; set; } = 0;
         public bool CanMiss { get; set; }
