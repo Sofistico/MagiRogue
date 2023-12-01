@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MagusEngine.Core.Magic.Effects
 {
-    public class LightEffect
+    public class LightEffect : ISpellEffect
     {
     }
 }
