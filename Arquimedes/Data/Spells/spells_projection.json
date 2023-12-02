@@ -20,6 +20,28 @@
     "Context": [ "Offensive" ]
   },
   {
+    "SpellId": "push",
+    "ShapingAbility": "Mana Shaping",
+    "SpellName": "Push",
+    "Description": "A simple spell, shapes mana to a concussive force that damages and throws away enemies and objects",
+    "SpellLevel": 1,
+    "MagicCost": 1.5,
+    "MagicArt": "Projection",
+    "SpellRange": 3,
+    "Effects": [
+      {
+        "AreaOfEffect": "Target",
+        "SpellDamageTypeId": "blunt",
+        "BaseDamage": 2,
+        "EffectType": "KNOCKBACK",
+        "CanMiss": false,
+        "PushForceInMPS": 3,
+        "EffectMessage": "You push away {0}!|{0} pushes {1} away!"
+      }
+    ],
+    "Context": [ "Offensive", "Distance" ]
+  },
+  {
     "/": "In the future should have here an effect to represent the increasing of temperature!",
     "SpellLevel": 2,
     "ShapingAbility": "Mana Shaping",
@@ -60,7 +82,7 @@
         "AreaOfEffect": "Struck",
         "EffectType": "DEBUFF",
         "CauseEffect": [ "Nausea", "Paralyzed" ],
-        "EffectStr": "{0} locks up!"
+        "EffectMessage": "{0} locks up!"
       }
     ],
     "SpellName": "Bolt of Lightning",

@@ -3,6 +3,7 @@ using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Serialization;
 using MagusEngine.Utils;
+using System;
 
 namespace MagusEngine.Systems.Physics
 {
@@ -40,6 +41,16 @@ namespace MagusEngine.Systems.Physics
                 actor.GetActorSpeed() / ability
                 : actor.GetActorSpeed();
             return finalSpeed * attack.VelocityMultiplier * 100;
+        }
+
+        public static double CalculateNewton2Law(double weight, double pushForceInMPS)
+        {
+            return weight * pushForceInMPS;
+        }
+
+        public static double CalculateFrictionToMovement(double frictionCoeficient, double force)
+        {
+            return force * frictionCoeficient;
         }
     }
 }

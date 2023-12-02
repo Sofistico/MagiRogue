@@ -13,6 +13,7 @@ namespace Arquimedes.Enumerators
         Healing,
         Buff,
         Debuff,
-        Teleport
+        Teleport,
+        Distance
     }
 }

@@ -414,7 +414,7 @@ namespace MagusEngine.Core.Entities.Base
                 foreach (Limb connectedLimb in connectedParts)
                 {
                     // Here so that the bleeding from a lost part isn't being considered
-                    Wound lostLimb = new Wound(DataManager.QueryDamageInData("sharp"), connectedLimb.Tissues)
+                    Wound lostLimb = new(DataManager.QueryDamageInData("sharp"), connectedLimb.Tissues)
                     {
                         Severity = InjurySeverity.Missing
                     };

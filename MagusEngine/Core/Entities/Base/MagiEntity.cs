@@ -28,6 +28,7 @@ namespace MagusEngine.Core.Entities.Base
         public int HistoryId { get; set; } // stores the history id of the entitiy
         public string? Name { get; set; }
 
+        // I think it's in kilograms
         public virtual double Weight { get; set; }
 
         /// <summary>
