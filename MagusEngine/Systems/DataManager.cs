@@ -116,8 +116,12 @@ namespace MagusEngine.Systems
 
         #region Query
 
-        public static SpellBase? QuerySpellInData(string spellId) => ListOfSpells.FirstOrDefault
-                (m => m.SpellId.Equals(spellId))?.Copy();
+        public static SpellBase? QuerySpellInData(string spellId, double proficiency = 0)
+        {
+            var spell = ListOfSpells.FirstOrDefault(m => m.SpellId.Equals(spellId))?.Copy();
+            spell.Proficiency = proficiency;
+            return spell;
+        }
 
         public static Limb QueryLimbInData(string limbId)
         {

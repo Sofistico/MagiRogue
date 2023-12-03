@@ -23,6 +23,11 @@ namespace MagusEngine.Systems.Physics
             return (int)MathMagi.Round(weight * actorStrikeForce);
         }
 
+        public static double CalculateStrikeForce(double weight, double actorStrikeForce)
+        {
+            return (int)MathMagi.Round(weight * actorStrikeForce);
+        }
+
         public static double GetAttackVelocity(Actor actor, Attack attack)
         {
             var itemHeld = actor.WieldedItem();

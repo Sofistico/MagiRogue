@@ -87,7 +87,7 @@ namespace MagusEngine.Utils
         /// </summary>
         /// <param name="defender"></param>
         /// <param name="momentum"></param>
-        public static void ResolveDamage(Actor defender,
+        public static void ResolveDamage(MagiEntity defender,
             double momentum,
             DamageType dmgType,
             BodyPart limbAttacked,

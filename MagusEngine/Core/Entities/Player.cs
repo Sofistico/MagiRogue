@@ -24,30 +24,24 @@ namespace MagusEngine.Core.Entities
 
             player.Magic.KnowSpells[0].Proficiency = 1;
 
-            SpellBase cure = DataManager.QuerySpellInData("minor_cure");
-            cure.Proficiency = 1;
+            SpellBase cure = DataManager.QuerySpellInData("minor_cure", 1);
 
-            SpellBase haste = DataManager.QuerySpellInData("haste_self");
-            haste.Proficiency = 1;
+            SpellBase haste = DataManager.QuerySpellInData("haste_self", 1);
 
-            SpellBase mageSight = DataManager.QuerySpellInData("mage_sight");
-            mageSight.Proficiency = 1;
+            SpellBase mageSight = DataManager.QuerySpellInData("mage_sight", 1);
 
-            SpellBase fireRay = DataManager.QuerySpellInData("fire_ray");
-            fireRay.Proficiency = 1;
+            SpellBase fireRay = DataManager.QuerySpellInData("fire_ray", 1);
 
-            SpellBase fireBall = DataManager.QuerySpellInData("fire_ball");
-            fireBall.Proficiency = 1;
+            SpellBase fireBall = DataManager.QuerySpellInData("fire_ball", 1);
 
-            SpellBase severWhip = DataManager.QuerySpellInData("sever_whip");
-            severWhip.Proficiency = 1;
+            SpellBase severWhip = DataManager.QuerySpellInData("sever_whip", 1);
 
-            SpellBase teleport = DataManager.QuerySpellInData("teleport");
-            teleport.Proficiency = 1;
+            SpellBase teleport = DataManager.QuerySpellInData("teleport", 1);
 
-            SpellBase coneOfCold = DataManager.QuerySpellInData("cone_cold");
-            coneOfCold.Proficiency = 1;
-            SpellBase fingerOfDeath = DataManager.QuerySpellInData("finger_death");
+            SpellBase coneOfCold = DataManager.QuerySpellInData("cone_cold", 1);
+            SpellBase fingerOfDeath = DataManager.QuerySpellInData("finger_death", 1);
+
+            SpellBase knockBack = DataManager.QuerySpellInData("push", 1);
 
             List<SpellBase> testSpells = new()
             {
@@ -59,8 +53,10 @@ namespace MagusEngine.Core.Entities
                 severWhip,
                 teleport,
                 coneOfCold,
-                fingerOfDeath
+                fingerOfDeath,
+                knockBack
             };
+
             int co = testSpells.Count;
             for (int i = 0; i < co; i++)
             {
