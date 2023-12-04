@@ -5,6 +5,7 @@ using MagusEngine.Systems;
 using MagusEngine.Systems.Physics;
 using MagusEngine.Utils;
 using MagusEngine.Utils.Extensions;
+using SadRogue.Primitives;
 
 namespace MagusEngine.Core.Magic.Effects
 {
@@ -28,11 +29,15 @@ namespace MagusEngine.Core.Magic.Effects
             var entity = caster.CurrentMap.GetEntityAt<MagiEntity>(target);
             if (entity is null && PushForceInMPS == 0)
                 return;
+            // calculate on force necessary to push entity if it's enough
             var force = PhysicsManager.CalculateNewton2Law(entity.Weight, PushForceInMPS);
-            // calculate on many meters it will slide
 
             // then add friction
             var forceAfterFriction = PhysicsManager.CalculateFrictionToMovement(0.15, force);
+            var accelerationNecessaryToMoveEntity = PhysicsManager.CalculateNewton2LawReturnAcceleration(entity.Weight, forceAfterFriction);
+
+            if (accelerationNecessaryToMoveEntity >= PushForceInMPS)
+                return; // not enough punch in the spell to move the entity
 
             // then calculate damage as base damage + forceAfterFriction(energy not lost to friction)
             var damage = PhysicsManager.CalculateStrikeForce(entity.Weight, forceAfterFriction) + BaseDamage;
@@ -40,8 +45,10 @@ namespace MagusEngine.Core.Magic.Effects
             // V =  a * t which t is time, and spell resolution happens in a second or less after casting, then this simplification should logicaly work!
             int meters = (int)PushForceInMPS;
             BodyPart? bp = null;
+            var directionToBeFlung = Direction.GetDirection(entity.Position - caster.Position);
             for (int i = 0; i < meters; i++)
             {
+                var tile = entity.MagiMap.GetTileAt(entity.Position);
                 if (entity is Actor actor)
                     bp = actor.GetAnatomy().Limbs.GetRandomItemFromList();
                 CombatUtils.DealDamage(damage, entity, GetDamageType(), limbAttacked: bp);

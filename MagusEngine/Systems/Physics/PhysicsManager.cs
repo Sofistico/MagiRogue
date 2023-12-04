@@ -1,9 +1,7 @@
 ﻿using MagusEngine.Core;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
-using MagusEngine.Serialization;
 using MagusEngine.Utils;
-using System;
 
 namespace MagusEngine.Systems.Physics
 {
@@ -51,6 +49,11 @@ namespace MagusEngine.Systems.Physics
         public static double CalculateNewton2Law(double weight, double pushForceInMPS)
         {
             return weight * pushForceInMPS;
+        }
+
+        public static double CalculateNewton2LawReturnAcceleration(double weight, double force)
+        {
+            return force > 0 && weight > 0 ? force / weight : 0;
         }
 
         public static double CalculateFrictionToMovement(double frictionCoeficient, double force)
