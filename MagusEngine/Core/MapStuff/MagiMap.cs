@@ -176,12 +176,12 @@ namespace MagusEngine.Core.MapStuff
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public bool IsTileWalkable(Point location, Actor actor)
+        public bool IsTileWalkable(Point location, MagiEntity entity)
         {
             // first make sure that actor isn't trying to move off the limits of the map
             if (CheckForIndexOutOfBounds(location))
                 return false;
-            if (actor.IgnoresWalls)
+            if (entity.IgnoresWalls)
                 return true;
 
             // then return whether the tile is walkable

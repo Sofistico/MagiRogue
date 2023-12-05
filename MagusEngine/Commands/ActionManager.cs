@@ -11,7 +11,6 @@ using MagusEngine.ECS.Components.ActorComponents;
 using MagusEngine.ECS.Components.TilesComponents;
 using MagusEngine.Factory;
 using MagusEngine.Generators;
-using MagusEngine.Serialization;
 using MagusEngine.Services;
 using MagusEngine.Systems;
 using MagusEngine.Systems.Time;
@@ -32,24 +31,27 @@ namespace MagusEngine.Commands
     {
         private const int maxTries = 10;
 
-        /// <summary> Move the actor BY +/- X&Y coordinates returns true if the move was successful
-        /// and false if unable to move there </summary> <param name="actor"></param> <param
-        /// name="position"></param> <returns></returns>
-        public static bool MoveActorBy(Actor actor, Point position)
+        /// <summary>
+        /// Move the actor BY +/- X&Y coordinates returns true if the move was successful
+        /// and false if unable to move there
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="positionChange"></param>
+        public static bool MoveActorBy(MagiEntity entity, Point positionChange)
         {
-            return actor.MoveBy(position);
+            return entity.MoveBy(positionChange);
         }
 
         /// <summary>
         /// Moves the actor To a position, by means of teleport returns true if the move was
         /// successful and false if unable to move
         /// </summary>
-        /// <param name="actor"></param>
+        /// <param name="entity"></param>
         /// <param name="position"></param>
         /// <returns></returns>
-        public static bool MoveActorTo(Actor actor, Point position)
+        public static bool MoveActorTo(MagiEntity entity, Point position)
         {
-            return actor.MoveTo(position);
+            return entity.MoveTo(position);
         }
 
         // TODO: An df inspired menu with body parts located.

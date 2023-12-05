@@ -100,10 +100,10 @@ namespace MagusEngine.Core.Entities
         // able to move, false if failed to move Checks for Monsters, and allows the Actor to commit
         // an action if one is present.
         // TODO: an autopickup feature for items
-        public bool MoveBy(Point positionChange)
+        public override bool MoveBy(Point positionChange)
         {
             // Check the current map if we can move to this new position
-            if (MagiMap.IsTileWalkable(Position + positionChange, this))
+            if (MagiMap?.IsTileWalkable(Position + positionChange, this) == true)
             {
                 bool attacked = CheckIfCanAttack(positionChange);
 
@@ -114,9 +114,7 @@ namespace MagusEngine.Core.Entities
 
                 return true;
             }
-
-            // Handle situations where there are non-walkable tiles that CAN be used
-            else
+            else // Handle situations where there are non-walkable tiles that CAN be used
             {
                 bool doorThere = CheckIfThereIsDoor(positionChange);
 
@@ -190,21 +188,6 @@ namespace MagusEngine.Core.Entities
             }
 
             return false;
-        }
-
-        // Moves the Actor TO newPosition location returns true if actor was able to move, false if
-        // failed to move
-        public bool MoveTo(Point newPosition)
-        {
-            if (MagiMap.IsTileWalkable(newPosition))
-            {
-                Position = newPosition;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
         }
 
         public Item? WieldedItem()

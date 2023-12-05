@@ -156,6 +156,26 @@ namespace MagusEngine.Core.Entities.Base
             return entity;
         }
 
+        public virtual bool MoveBy(Point positionChange)
+        {
+            return MagiMap.IsTileWalkable(Position + positionChange, this);
+        }
+
+        // Moves the Actor TO newPosition location returns true if actor was able to move, false if
+        // failed to move
+        public bool MoveTo(Point newPosition)
+        {
+            if (MagiMap.IsTileWalkable(newPosition))
+            {
+                Position = newPosition;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         #endregion Virtual Methods
 
         #region Components

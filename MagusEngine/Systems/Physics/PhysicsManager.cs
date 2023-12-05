@@ -1,7 +1,11 @@
-﻿using MagusEngine.Core;
+﻿using MagusEngine.Commands;
+using MagusEngine.Core;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Utils;
+using MagusEngine.Utils.Extensions;
+using SadRogue.Primitives;
+using System;
 
 namespace MagusEngine.Systems.Physics
 {
@@ -59,6 +63,50 @@ namespace MagusEngine.Systems.Physics
         public static double CalculateFrictionToMovement(double frictionCoeficient, double force)
         {
             return force * frictionCoeficient;
+        }
+
+        public static void DealWithPushes(MagiEntity entity,
+            double pushForce,
+            int baseDamage,
+            Direction directionToBeFlung,
+            DamageType damageType)
+        {
+            if (entity is null && pushForce == 0)
+                return;
+            // calculate on force necessary to push entity if it's enough
+            var force = CalculateNewton2Law(entity.Weight, pushForce);
+
+            // then add friction
+            var forceAfterFriction = CalculateFrictionToMovement(0.15, force);
+            var accelerationNecessaryToMoveEntity = CalculateNewton2LawReturnAcceleration(entity.Weight, forceAfterFriction);
+
+            if (accelerationNecessaryToMoveEntity >= pushForce)
+                return; // not enough punch in the spell to move the entity
+
+            // then calculate damage as base damage + forceAfterFriction(energy not lost to friction)
+            var damage = CalculateStrikeForce(entity.Weight, forceAfterFriction) + baseDamage;
+
+            // the acceleration isn't the same, and the meters is more the velocity of the object, since the formula would be:
+            // V =  a * t which t is time, and spell resolution happens in a second or less after casting, then this simplification should logicaly work!
+            int meters = (int)pushForce;
+            BodyPart? bp = null;
+            bool run = true;
+            for (int i = 0; i < meters || run; i++)
+            {
+                // is this enough?
+                var tile = (entity?.MagiMap?.GetTileAt(entity.Position + directionToBeFlung + i)) 
+                    ?? throw new ApplicationException("The tile was null can't push!");
+                if (entity is Actor actor)
+                    bp = actor.GetAnatomy().Limbs.GetRandomItemFromList();
+                var dmgThisTile = damage;
+                if (tile?.IsWalkable == false)
+                {
+                    dmgThisTile *= tile.Material.Density ?? 1; // massive damage by hitting a wall, multiplied by something i dunno
+                    run = false;
+                }
+                ActionManager.MoveActorTo(entity!, tile!.Position);
+                CombatUtils.DealDamage(dmgThisTile, entity!, damageType, limbAttacked: bp);
+            }
         }
     }
 }
