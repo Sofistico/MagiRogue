@@ -53,7 +53,7 @@ namespace MagusEngine.Serialization.EntitySerialization
 
         public string Id { get; set; }
 
-        public string Name { get; internal set; }
+        public string Name { get; set; }
 
         [JsonIgnore]
         public MagiColorSerialization ForegroundBackingField { get; set; }
@@ -83,20 +83,20 @@ namespace MagusEngine.Serialization.EntitySerialization
 
         public const string EntityType = "Item";
 
-        public uint ForegroundPackedValue { get; internal set; }
+        public uint ForegroundPackedValue { get; set; }
 
-        public uint BackgroundPackedValue { get; internal set; }
+        public uint BackgroundPackedValue { get; set; }
 
         public Point Position { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int BaseDamage { get; private set; }
+        public int BaseDamage { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public bool CanInteract { get; private set; }
+        public bool CanInteract { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public DamageTypes DamageType { get; private set; }
+        public DamageTypes DamageType { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<IActivable> UseAction { get; set; }
@@ -163,8 +163,7 @@ namespace MagusEngine.Serialization.EntitySerialization
 
         public static implicit operator Item(ItemTemplate itemTemplate)
         {
-            int glyph = GlyphHelper.GlyphExistInDictionary(itemTemplate.Glyph)
-                ? GlyphHelper.GetGlyph(itemTemplate.Glyph) : itemTemplate.Glyph;
+            int glyph = GlyphHelper.GlyphExistInDictionary(itemTemplate.Glyph) ? GlyphHelper.GetGlyph(itemTemplate.Glyph) : itemTemplate.Glyph;
             MagiColorSerialization foreground = new(itemTemplate.Foreground);
             MagiColorSerialization background = new(itemTemplate.Background);
 
@@ -199,7 +198,7 @@ namespace MagusEngine.Serialization.EntitySerialization
                 item.Condition = itemTemplate.Condition;
             }
             item.Description = itemTemplate.Description;
-            if (item.Material.ConfersTraits?.Count > 0)
+            if (item?.Material?.ConfersTraits?.Count > 0)
             {
                 item.Traits.AddRange(item.Material.ConfersTraits);
             }

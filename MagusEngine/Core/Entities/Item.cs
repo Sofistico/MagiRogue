@@ -3,7 +3,6 @@ using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Entities.Interfaces;
 using MagusEngine.Core.WorldStuff.History;
-using MagusEngine.Serialization;
 using MagusEngine.Serialization.EntitySerialization;
 using MagusEngine.Services;
 using MagusEngine.Systems.Physics;
@@ -99,11 +98,11 @@ namespace MagusEngine.Core.Entities
             Condition = condition;
             Material = PhysicsManager.SetMaterial(materialId);
             Name = Material.ReturnNameFromMaterial(name) ?? "BUGGED!";
-            UseAction = new();
-            Traits = new();
-            Qualities = new();
-            Legends = new();
-            Attacks = new();
+            UseAction = [];
+            Traits = [];
+            Qualities = [];
+            Legends = [];
+            Attacks = [];
         }
 
         // removes this object from the MultiSpatialMap's list of entities and lets the garbage

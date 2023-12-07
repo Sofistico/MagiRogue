@@ -123,7 +123,7 @@ namespace MagusEngine.Core
 
         public static string ReturnNameFromMaterial(string materialName, string objectName)
         {
-            if (objectName.Contains(materialName, System.StringComparison.OrdinalIgnoreCase))
+            if (objectName?.Contains(materialName, System.StringComparison.OrdinalIgnoreCase) == true)
             {
                 return objectName;
             }
