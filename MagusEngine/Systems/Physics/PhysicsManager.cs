@@ -94,7 +94,7 @@ namespace MagusEngine.Systems.Physics
             for (int i = 0; i < meters || run; i++)
             {
                 // is this enough?
-                var tile = (entity?.MagiMap?.GetTileAt(entity.Position + directionToBeFlung + i)) 
+                var tile = (entity?.MagiMap?.GetTileAt(entity.Position + directionToBeFlung + i))
                     ?? throw new ApplicationException("The tile was null can't push!");
                 if (entity is Actor actor)
                     bp = actor.GetAnatomy().Limbs.GetRandomItemFromList();

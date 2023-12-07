@@ -11,10 +11,10 @@ namespace MagusEngine.Core.Magic.Effects
     public class MageSightEffect : ISpellEffect
     {
         public SpellAreaEffect AreaOfEffect { get; set; }
-        public string? SpellDamageTypeId { get; set; }
+        public string SpellDamageTypeId { get; set; }
 
         public int Duration { get; set; }
-        public int Radius { get; set; };
+        public int Radius { get; set; }
         public double ConeCircleSpan { get; set; }
 
         public bool TargetsTile { get; set; }

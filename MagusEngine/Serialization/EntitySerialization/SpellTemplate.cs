@@ -21,6 +21,8 @@ namespace MagusEngine.Serialization.EntitySerialization
             {
                 EffectType effect = StringToEnumEffectType((string)token["EffectType"]!);
                 var eff = EnumToEffect(effect, token);
+                if (eff is null)
+                    continue;
                 if (token["ConeCircleSpan"] != null)
                     eff.ConeCircleSpan = (double)token["ConeCircleSpan"]!;
                 if (token["EffectMessage"] != null)
