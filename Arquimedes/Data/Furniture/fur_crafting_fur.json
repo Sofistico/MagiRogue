@@ -115,7 +115,7 @@
   {
     "Id": "wood_loom",
     "MaterialId": "wood",
-    "Name": "Crafting Table",
+    "Name": "Loom",
     "Description": "This is a loom, you use it to weave stuff on it, there are a variety of needles and colorful strings on it.",
     "Glyph": "§",
     "Weight": 100,

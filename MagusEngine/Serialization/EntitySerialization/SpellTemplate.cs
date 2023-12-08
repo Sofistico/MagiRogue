@@ -35,12 +35,12 @@ namespace MagusEngine.Serialization.EntitySerialization
                 (string)spell["SpellName"]!,
                 StringToSchool((string)spell["MagicArt"]!),
                 (int)spell["SpellRange"]!,
+                spell["ShapingAbility"]!.ToString(),
                 (int)spell["SpellLevel"]!,
                 (double)spell["MagicCost"]!)
             {
                 Description = spell["Description"]?.ToString(),
                 Effects = effectsList,
-                ShapingAbility = spell["ShapingAbility"]!.ToString()
             };
             if (spell.ContainsKey("Proficiency"))
                 createdSpell.Proficiency = (double)spell["Proficiency"]!;
@@ -148,7 +148,7 @@ namespace MagusEngine.Serialization.EntitySerialization
         public string ShapingAbility { get; set; }
 
         public SpellTemplate(int spellLevel, List<ISpellEffect> effects, string spellName, string? description,
-            ArtMagic magicArt, int spellRange, double MagicCost, string spellId,
+            ArtMagic magicArt, int spellRange, double magicCost, string spellId,
             List<SpellContext>? context, string shapingAbility)
         {
             SpellLevel = spellLevel;
@@ -157,7 +157,7 @@ namespace MagusEngine.Serialization.EntitySerialization
             Description = description;
             MagicArt = magicArt;
             SpellRange = spellRange;
-            MagicCost = MagicCost;
+            MagicCost = magicCost;
             SpellId = spellId;
             Context = context;
             ShapingAbility = shapingAbility;
@@ -166,11 +166,10 @@ namespace MagusEngine.Serialization.EntitySerialization
         public static implicit operator SpellBase(SpellTemplate spellTemplate)
         {
             return new(spellTemplate.SpellId, spellTemplate.SpellName,
-                spellTemplate.MagicArt, spellTemplate.SpellRange, spellTemplate.SpellLevel,
+                spellTemplate.MagicArt, spellTemplate.SpellRange, spellTemplate.ShapingAbility, spellTemplate.SpellLevel,
                 spellTemplate.MagicCost)
             {
-                Proficiency =
-                spellTemplate.Proficiency is null ? 0 : (double)spellTemplate.Proficiency,
+                Proficiency = spellTemplate.Proficiency is null ? 0 : (double)spellTemplate.Proficiency,
                 Context = spellTemplate.Context,
                 Keywords = spellTemplate.Keywords,
                 Description = spellTemplate.Description,

@@ -36,9 +36,9 @@ namespace MagusEngine.Core.Entities
             FurnitureType type, string materialId, string name, string furId = null, int durability = 0)
             : base(foreground, background, glyph, coord, (int)MapLayer.FURNITURE)
         {
-            Traits = new();
-            UseActions = new();
-            Qualities = new();
+            Traits = [];
+            UseActions = [];
+            Qualities = [];
             FurnitureType = type;
             Material = PhysicsManager.SetMaterial(materialId);
             // makes sure that the furniture is named by it's material
@@ -46,7 +46,7 @@ namespace MagusEngine.Core.Entities
             Name = Material.ReturnNameFromMaterial(name);
             Durability = (int)(Material.Hardness * Material.Density) + durability;
             FurId = furId;
-            Inventory = new();
+            Inventory = [];
         }
 
         public override Furniture Copy()

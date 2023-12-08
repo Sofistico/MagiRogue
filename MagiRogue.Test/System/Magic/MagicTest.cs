@@ -97,20 +97,30 @@ namespace MagiRogue.Test.System.Magic
         {
             SpellBase missile = new("magic_missile",
                  "Magic Missile",
-                ArtMagic.Projection, 5, MagicCost: 1.0f)
-            { Proficiency = 1 };
+                ArtMagic.Projection, 5,
+                "Mana Shaping",
+                magicCost: 1.0f)
+            {
+                Proficiency = 1
+            };
 
             SpellBase cure = new("cure_test", "Cure Test",
-                ArtMagic.BloodMagic, 0, 1, 4)
-            { Proficiency = 1 };
+                ArtMagic.BloodMagic, 0, "Mana Shaping", 1, 4)
+            {
+                Proficiency = 1
+            };
 
             SpellBase haste = new("haste_self", "Haste",
-                ArtMagic.Dimensionalism, 0, 1, 7)
-            { Proficiency = 1 };
+                ArtMagic.Dimensionalism, 0, "Mana Shaping", 1, 7)
+            {
+                Proficiency = 1
+            };
 
             SpellBase mageSight = new("mage_sight", "Mage Sight",
-                ArtMagic.Divination, 0, 1, 8)
-            { Proficiency = 1 };
+                ArtMagic.Divination, 0, "Mana Shaping", 1, 8)
+            {
+                Proficiency = 1
+            };
 
             return
             [

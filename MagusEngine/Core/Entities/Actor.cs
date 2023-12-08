@@ -66,7 +66,7 @@ namespace MagusEngine.Core.Entities
         /// </summary>
         public ActorState State { get; set; }
 
-        public List<ActorSituationalFlags> SituationalFlags { get; set; } = new();
+        public List<ActorSituationalFlags> SituationalFlags { get; set; } = [];
 
         #endregion Properties
 
@@ -77,17 +77,14 @@ namespace MagusEngine.Core.Entities
         /// <param name="foreground"></param> <param name="background"></param> <param
         /// name="glyph"></param> <param name="layer"></param> <param name="coord"></param>
         public Actor(string name, Color foreground, Color background,
-            int glyph, Point coord, int layer = (int)MapLayer.ACTORS
-            ) : base(foreground, background,
+            int glyph, Point coord, int layer = (int)MapLayer.ACTORS) : base(foreground, background,
             glyph, coord, layer)
         {
             Body = new Body();
             Mind = new Mind();
             Soul = new Soul();
-            Inventory = new List<Item>();
+            Inventory = [];
             Name = name;
-            // by default the material of the actor will be mostly skin
-            //Material = GameSys.Physics.PhysicsManager.SetMaterial("skin");
         }
 
         #endregion Constructor
@@ -385,6 +382,11 @@ namespace MagusEngine.Core.Entities
             return Mind.GetAbility(ability);
         }
 
+        public int GetRelevantAbility(string ability)
+        {
+            return Mind.GetAbility(ability);
+        }
+
         public int GetRelevantAttackAbility(Item? item = null)
         {
             if (item is not null)
@@ -440,6 +442,21 @@ namespace MagusEngine.Core.Entities
             }
             list.AddRange(GetRaceAttacks());
             return list;
+        }
+
+        public override int GetShapingAbility(string shapingAbility)
+        {
+            return GetRelevantAbility(shapingAbility);
+        }
+
+        public override int GetMagicResistance()
+        {
+            return GetRelevantAbility(AbilityCategory.MagicResistance) + GetAnatomy().Race.BaseMagicResistance;
+        }
+
+        public override int GetPenetration()
+        {
+            return GetRelevantAbility(AbilityCategory.MagicPenetration);
         }
 
         #endregion GetProperties

@@ -138,9 +138,6 @@ namespace MagusEngine.Factory
                     }
                 }
                 actor.Magic.AddToSpellList(queriedSpell);
-                var ability = scenario.Abilities.Find(i => i.Name.Equals(queriedSpell.ShapingAbility));
-                if (ability is not null)
-                    actor.Mind.AddAbilityToDictionary(new Ability(ability.Name, ability.Category, ability.Score));
             }
         }
 

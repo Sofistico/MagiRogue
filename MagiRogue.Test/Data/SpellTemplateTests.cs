@@ -11,7 +11,8 @@ namespace MagiRogue.Test.Data
             "Magic Missile",
             ArtMagic.Projection,
             5,
-            MagicCost: 1.0f)
+            "Mana Shaping",
+            magicCost: 1.0)
         {
             Proficiency = 1
         };

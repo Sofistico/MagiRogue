@@ -135,21 +135,23 @@ namespace MagusEngine.Core.Magic
         /// <param name="magicArt">What school is this spell part of?</param>
         /// <param name="spellRange">The range of the spell</param>
         /// <param name="spellLevel">The level of the spell, going from 1 to 9</param>
-        /// <param name="MagicCost">The mana cost of the spell, should be more than 0.1</param>
+        /// <param name="magicCost">The mana cost of the spell, should be more than 0.1</param>
         public SpellBase(string spellId,
             string spellName,
             ArtMagic magicArt,
             int spellRange,
+            string shapingAbility,
             int spellLevel = 1,
-            double MagicCost = 0.1)
+            double magicCost = 0.1)
         {
             SpellId = spellId;
             SpellName = spellName;
             MagicArt = magicArt;
             SpellRange = spellRange;
             SpellLevel = spellLevel;
-            MagicCost = MagicCost;
+            MagicCost = magicCost;
             Effects = [];
+            ShapingAbility = shapingAbility;
         }
 
         public bool CanCast(MagicManager magicSkills, Actor stats)
@@ -166,18 +168,20 @@ namespace MagusEngine.Core.Magic
                     Locator.GetService<MagiLog>().Log("Tried to divide your non existant will by zero! The universe almost exploded because of you");
                     return false;
                 }
+                bool canCast = false;
 
-                bool canCast = reqShapingWithDiscount <= stats.GetShapingAbility(ShapingAbility);
+                if (stats.Soul.CurrentMana <= MagicCost)
+                {
+                    errorMessage = "You don't have enough mana to cast the spell!";
+                    return canCast;
+                }
+
+                canCast = reqShapingWithDiscount <= stats.GetShapingAbility(ShapingAbility);
 
                 if (!canCast)
                 {
                     TickProfiency();
                     errorMessage = "Can't cast the spell because you don't have the required shaping skills and/or the proficiency";
-                }
-                if (stats.Soul.CurrentMana <= MagicCost)
-                {
-                    errorMessage = "You don't have enough mana to cast the spell!";
-                    canCast = false;
                 }
 
                 return canCast;
@@ -194,31 +198,34 @@ namespace MagusEngine.Core.Magic
         /// <returns></returns>
         public bool CastSpell(Point target, Actor caster)
         {
-            if (CanCast(caster.Magic, caster) && target != Point.None)
+            if (!CanCast(caster.Magic, caster))
             {
-                MagiEntity entity = Find.CurrentMap.GetEntityAt<MagiEntity>(target);
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(errorMessage));
+                errorMessage = "Can't cast the spell";
 
-                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{caster.Name} casted {SpellName}"));
-
-                foreach (ISpellEffect effect in Effects)
-                {
-                    if ((entity is not null && (effect.AreaOfEffect is SpellAreaEffect.Self ||
-                        !entity.Equals(caster)) && entity.CanBeAttacked) || effect.TargetsTile)
-                    {
-                        effect.ApplyEffect(target, caster, this);
-                    }
-                }
-
-                caster.Soul.CurrentMana -= (float)MagicCost;
-                TickProfiency();
-
-                return true;
+                return false;
             }
 
-            Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(errorMessage));
-            errorMessage = "Can't cast the spell";
+            MagiEntity? entity = Find.CurrentMap?.GetEntityAt<MagiEntity>(target);
+            caster.Soul.CurrentMana -= (float)MagicCost;
 
-            return false;
+            if (entity is null)
+                return false;
+
+            Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{caster.Name} casted {SpellName}"));
+
+            foreach (ISpellEffect effect in Effects)
+            {
+                if ((entity.CanBeAttacked && (effect.AreaOfEffect is SpellAreaEffect.Self || !entity.Equals(caster)))
+                    || effect.TargetsTile)
+                {
+                    effect.ApplyEffect(target, caster, this);
+                }
+            }
+
+            TickProfiency();
+
+            return true;
         }
 
         /// <summary>
@@ -273,6 +280,7 @@ namespace MagusEngine.Core.Magic
                 Context = Context,
                 IgnoresWall = IgnoresWall,
                 Keywords = Keywords,
+                ShapingAbility = ShapingAbility,
             };
         }
 

@@ -4,6 +4,7 @@ using MagusEngine.Core.Entities.Base;
 using MagusEngine.Systems;
 using MagusEngine.Systems.Physics;
 using SadRogue.Primitives;
+using SadRogue.Primitives.SpatialMaps;
 
 namespace MagusEngine.Core.Magic.Effects
 {
@@ -24,7 +25,7 @@ namespace MagusEngine.Core.Magic.Effects
 
         public void ApplyEffect(Point target, Actor caster, SpellBase spellCasted)
         {
-            var entity = caster.CurrentMap.GetEntityAt<MagiEntity>(target);
+            var entity = caster.MagiMap.GetEntityAt<MagiEntity>(target);
             PhysicsManager.DealWithPushes(entity, PushForceInMPS, BaseDamage, Direction.GetDirection(entity.Position - caster.Position), GetDamageType());
         }
 

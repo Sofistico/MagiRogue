@@ -144,7 +144,7 @@ namespace MagusEngine.Serialization.EntitySerialization
 
         private static void DetermineInvFromJson(FurnitureTemplate template, Furniture objFur)
         {
-            List<Item> inv = new();
+            List<Item> inv = [];
             if (template.Inventory is null)
                 return;
             for (int i = 0; i < template.Inventory.Count; i++)
@@ -167,14 +167,14 @@ namespace MagusEngine.Serialization.EntitySerialization
 
         private static void DetermineInventoryFromItem(Furniture fur, FurnitureTemplate template)
         {
-            List<object> invIds = new();
+            List<object> invIds = [];
             for (int i = 0; i < fur.Inventory.Count; i++)
             {
                 var item = fur.Inventory[i];
 
                 if (invIds.Any(v => v.ToString().Contains(item.ItemId)))
                     continue;
-                int invCount = fur.Inventory.Where(i => i.ItemId.Equals(item.ItemId)).Count();
+                int invCount = fur.Inventory.Count(i => i.ItemId.Equals(item.ItemId));
                 if (invCount > 1)
                 {
                     invIds.Add(new JArray(item.ItemId, invCount));

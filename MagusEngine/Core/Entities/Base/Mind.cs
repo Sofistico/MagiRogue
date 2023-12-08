@@ -23,10 +23,10 @@ namespace MagusEngine.Core.Entities.Base
 
         public Mind()
         {
-            Abilities = new();
+            Abilities = [];
             Personality = new Personality();
             Stats = new Dictionary<string, int>() { { "Inteligence", 0 }, { "Precision", 0 } };
-            Memories = new List<IMemory>();
+            Memories = [];
         }
 
         public void AddAbilityToDictionary(Ability ability)
@@ -71,6 +71,21 @@ namespace MagusEngine.Core.Entities.Base
             if (Abilities.TryGetValue(possibleId, out Ability value))
             {
                 abilityScore = value.Score;
+            }
+
+            return abilityScore;
+        }
+
+        public int GetAbility(string ability)
+        {
+            int abilityScore = 0;
+            foreach (var item in Abilities)
+            {
+                if (item.Value.Name?.Equals(ability) == true)
+                {
+                    abilityScore = item.Value.Score;
+                    break;
+                }
             }
 
             return abilityScore;

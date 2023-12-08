@@ -119,7 +119,8 @@ namespace MagusEngine.Systems
         public static SpellBase? QuerySpellInData(string spellId, double proficiency = 0)
         {
             var spell = ListOfSpells.FirstOrDefault(m => m.SpellId.Equals(spellId))?.Copy();
-            spell.Proficiency = proficiency;
+            if(spell is not null)
+                spell.Proficiency = proficiency;
             return spell;
         }
 
