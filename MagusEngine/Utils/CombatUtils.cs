@@ -31,7 +31,16 @@ namespace MagusEngine.Utils
         {
             if (entity is Actor actor)
             {
-                double attackVolume = weapon is null ? limbAttacking.Volume : weapon.Volume;
+                double attackVolume;
+                if (spellUsed is not null)
+                    attackVolume = 1; // need to do something to calculate
+                else if (weapon is not null)
+                    attackVolume = weapon.Volume;
+                else if (limbAttacking is not null)
+                    attackVolume = limbAttacking.Volume;
+                else
+                    attackVolume = 1;
+
                 // calculate how many part wounds the actor will receive!
                 var woundParts = CalculatePartWoundsReceived(attackMomentum,
                     limbAttacked,
@@ -45,7 +54,7 @@ namespace MagusEngine.Utils
                 if (woundParts.Count > 0)
                 {
                     // need to redo this to take into account the new tissue based wound!
-                    Wound woundTaken = new Wound(dmgType,
+                    Wound woundTaken = new(dmgType,
                         woundParts);
 
                     actor.GetAnatomy().Injury(woundTaken, limbAttacked, actor);
@@ -62,8 +71,7 @@ namespace MagusEngine.Utils
                         woundString.AppendLine(DetermineDamageMessage(partWound.PartDamage, partWound));
                     }
 
-                    Locator.GetService<MessageBusService>()
-                        .SendMessage<AddMessageLog>(new(woundString.ToString()));
+                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(woundString.ToString()));
                     return;
                 }
                 else
