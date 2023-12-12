@@ -23,6 +23,7 @@ namespace MagusEngine.Core.Magic
         EffectType EffectType { get; set; }
         bool CanMiss { get; set; }
         string? EffectMessage { get; set; }
+        int Volume { get; set; }
 
         void ApplyEffect(Point target, Actor caster, SpellBase spellCasted);
 

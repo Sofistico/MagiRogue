@@ -20,6 +20,7 @@ namespace MagusEngine.Core.Magic.Effects
         public int BaseDamage { get; set; }
         public bool CanMiss { get; set; }
         public string? EffectMessage { get; set; }
+        public int Volume { get; set; }
 
         [JsonConstructor]
         public SeverEffect(SpellAreaEffect areaOfEffect, string spellDamageTypeId, int radius, int dmg)

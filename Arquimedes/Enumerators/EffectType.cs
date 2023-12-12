@@ -3,6 +3,7 @@
     public enum EffectType
     {
         DAMAGE,
+        MEMISSION,
         DEBUFF,
         BUFF,
         HASTE,

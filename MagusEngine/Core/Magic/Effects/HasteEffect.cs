@@ -22,6 +22,7 @@ namespace MagusEngine.Core.Magic.Effects
         public EffectType EffectType { get; set; } = EffectType.HASTE;
         public bool CanMiss { get; set; }
         public string? EffectMessage { get; set; }
+        public int Volume { get; set; }
 
         [JsonConstructor]
         public HasteEffect(SpellAreaEffect areaOfEffect, float hastePower, int duration, string spellDamageTypeId = "force")

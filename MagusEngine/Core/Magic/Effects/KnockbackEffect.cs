@@ -22,6 +22,7 @@ namespace MagusEngine.Core.Magic.Effects
 
         // meters per second
         public double PushForceInMPS { get; set; }
+        public int Volume { get; set; }
 
         public void ApplyEffect(Point target, Actor caster, SpellBase spellCasted)
         {

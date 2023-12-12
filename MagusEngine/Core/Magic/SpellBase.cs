@@ -34,49 +34,41 @@ namespace MagusEngine.Core.Magic
         /// <summary>
         /// All the effects that the spell can have
         /// </summary>
-        [JsonProperty(Order = 8)]
         public List<ISpellEffect> Effects { get; set; }
 
         /// <summary>
         /// Spell name
         /// </summary>
-        [JsonProperty(Order = -1)]
         public string SpellName { get; set; }
 
         /// <summary>
         /// Description of the spell
         /// </summary>
-        [JsonProperty(Order = 0)]
         public string? Description { get; set; }
 
         /// <summary>
         /// What art of magic the spell is
         /// </summary>
-        [JsonProperty(Order = 6)]
         public ArtMagic MagicArt { get; set; }
 
         /// <summary>
         /// The range that the spell can act, can be anything from 0 - self to 999 - map
         /// </summary>
-        [JsonProperty(Order = 7)]
         public int SpellRange { get; set; }
 
         /// <summary>
         /// From 1 to 9
         /// </summary>
-        [JsonProperty(Order = 4)]
         public int SpellLevel { get; set; }
 
         /// <summary>
         /// The total mana cost of the spell, ranging from 0.1 for simple feats of magic to anything beyond
         /// </summary>
-        [JsonProperty(Order = 5)]
         public double MagicCost { get; set; }
 
         /// <summary>
         /// The id of the spell, required for quick look up and human redable serialization.
         /// </summary>
-        [JsonProperty(Order = -2)]
         public string SpellId { get; set; }
 
         /// <summary>
@@ -114,7 +106,7 @@ namespace MagusEngine.Core.Magic
             get => (int)(SpellLevel + MagicCost);
         }
 
-        public List<string>? Keywords { get; set; } = new();
+        public List<string>? Keywords { get; set; } = [];
         public List<SpellContext>? Context { get; set; }
         public bool IgnoresWall { get; set; }
         public bool AffectsTile { get; set; }
@@ -193,9 +185,9 @@ namespace MagusEngine.Core.Magic
         /// <summary>
         /// Single spell targeting
         /// </summary>
-        /// <param name="target"></param>
-        /// <param name="caster"></param>
-        /// <returns></returns>
+        /// <param name="target">The target pos</param>
+        /// <param name="caster">the caster</param>
+        /// <returns>whetever the cast was successful</returns>
         public bool CastSpell(Point target, Actor caster)
         {
             if (!CanCast(caster.Magic, caster))
@@ -231,9 +223,9 @@ namespace MagusEngine.Core.Magic
         /// <summary>
         /// Multi spell targetting
         /// </summary>
-        /// <param name="target"></param>
-        /// <param name="caster"></param>
-        /// <returns></returns>
+        /// <param name="target">The list of pos</param>
+        /// <param name="caster">the caster</param>
+        /// <returns>whetever the cast was successful</returns>
         public bool CastSpell(List<Point> target, Actor caster)
         {
             if (target.Count == 0)
@@ -302,7 +294,7 @@ namespace MagusEngine.Core.Magic
 
         public override bool Equals(object? obj)
         {
-            return GetHashCode() == obj.GetHashCode();
+            return GetHashCode() == obj?.GetHashCode();
         }
     }
 }

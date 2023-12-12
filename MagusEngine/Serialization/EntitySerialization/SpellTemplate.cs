@@ -111,6 +111,7 @@ namespace MagusEngine.Serialization.EntitySerialization
                     (int)jToken["Radius"]!),
                 EffectType.KNOCKBACK => JsonConvert.DeserializeObject<KnockbackEffect>(jToken.ToString()),
                 EffectType.LIGHT => JsonConvert.DeserializeObject<LightEffect>(jToken.ToString()),
+                EffectType.MEMISSION => JsonConvert.DeserializeObject<MEssionEffect>(jToken.ToString()),
                 _ => null,
             };
         }

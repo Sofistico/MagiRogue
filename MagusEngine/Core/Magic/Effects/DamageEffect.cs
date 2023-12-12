@@ -25,6 +25,7 @@ namespace MagusEngine.Core.Magic.Effects
         public bool IsResistable { get; set; }
         public string? EffectMessage { get; set; }
         public string SpellDamageTypeId { get; set; }
+        public int Volume { get; set; }
 
         [JsonConstructor]
         public DamageEffect(int dmg,
