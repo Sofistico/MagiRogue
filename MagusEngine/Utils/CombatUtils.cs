@@ -11,6 +11,7 @@ using MagusEngine.Services;
 using MagusEngine.Utils.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace MagusEngine.Utils
@@ -33,7 +34,7 @@ namespace MagusEngine.Utils
             {
                 double attackVolume;
                 if (spellUsed is not null)
-                    attackVolume = 1; // need to do something to calculate
+                    attackVolume = spellUsed.Effects.Sum(i => i.Volume); // need to do something to calculate
                 else if (weapon is not null)
                     attackVolume = weapon.Volume;
                 else if (limbAttacking is not null)
