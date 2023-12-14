@@ -18,7 +18,7 @@ namespace MagusEngine.Core.Magic.Effects
         public int BaseDamage { get; set; }
         public int Radius { get; set; }
         public double ConeCircleSpan { get; set; }
-        public bool TargetsTile { get; set; } = false;
+        public bool TargetsTile { get; set; }
         public EffectType EffectType { get; set; } = EffectType.DAMAGE;
         public bool IsHealing { get; set; }
         public bool CanMiss { get; set; }
@@ -26,6 +26,12 @@ namespace MagusEngine.Core.Magic.Effects
         public string? EffectMessage { get; set; }
         public string SpellDamageTypeId { get; set; }
         public int Volume { get; set; }
+        public int VelocityMultiplier { get; set; }
+        public double PenetrationPercentage { get; set; }
+
+        public DamageEffect()
+        {
+        }
 
         [JsonConstructor]
         public DamageEffect(int dmg,
@@ -83,7 +89,7 @@ namespace MagusEngine.Core.Magic.Effects
                 return;
             }
 
-            CombatUtils.ResolveSpellHit(poorGuy, caster, spellCasted, this);
+            CombatUtils.ResolveSpellHit(poorGuy, caster, spellCasted, this, ReturnAttack());
         }
 
         private void HealEffect(Point target, Actor caster, SpellBase spellCasted)
@@ -116,6 +122,20 @@ namespace MagusEngine.Core.Magic.Effects
         public DamageType GetDamageType()
         {
             return DataManager.QueryDamageInData(SpellDamageTypeId);
+        }
+
+        public Attack ReturnAttack()
+        {
+            return new()
+            {
+                AttackAbility = AbilityCategory.MagicShaping,
+                DamageTypeId = SpellDamageTypeId,
+                VelocityMultiplier = VelocityMultiplier,
+                ContactArea = Volume,
+                PenetrationPercentage = PenetrationPercentage,
+                PrepareVelocity = 1,
+                RecoverVelocity = 1
+            };
         }
     }
 }

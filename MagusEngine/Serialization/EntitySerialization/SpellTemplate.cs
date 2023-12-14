@@ -89,6 +89,9 @@ namespace MagusEngine.Serialization.EntitySerialization
             int? radius = (int?)jToken["Radius"];
             bool? resistable = (bool?)jToken["IsResistable"];
             string? damageId = (string?)jToken["SpellDamageTypeId"];
+            int? velocityMulti = (int?)jToken["VelocityMultiplier"];
+            double? penetrationPercent = (double?)jToken["PenetrationPercentage"];
+            int? volume = (int?)jToken["Volume"];
             return effect switch
             {
                 EffectType.DAMAGE => new DamageEffect((int)jToken["BaseDamage"]!, StringToAreaEffect((string)jToken["AreaOfEffect"]!), damageId!)
@@ -97,6 +100,9 @@ namespace MagusEngine.Serialization.EntitySerialization
                     IsHealing = isHealing ?? false,
                     Radius = radius ?? 0,
                     IsResistable = resistable ?? false,
+                    PenetrationPercentage = penetrationPercent ?? 0,
+                    VelocityMultiplier = velocityMulti ?? 0,
+                    Volume = volume ?? 0,
                 },
                 EffectType.HASTE => new HasteEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]!),
                     (int)jToken["HastePower"]!,

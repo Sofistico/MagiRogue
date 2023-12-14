@@ -6,6 +6,7 @@ namespace MagusEngine.Core.Entities.Base
     public class Attack
     {
         private DamageType? damageType;
+
         public string Name { get; set; }
 
         /// <summary>
