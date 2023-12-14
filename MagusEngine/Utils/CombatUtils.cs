@@ -271,20 +271,30 @@ namespace MagusEngine.Utils
         private static void ResolveResist(MagiEntity poorGuy,
             Actor caster,
             SpellBase spellCasted,
-            ISpellEffect effect)
+            ISpellEffect effect,
+            Attack attack)
         {
             int luck = Mrn.Exploding2D6Dice;
             if (MagicManager.PenetrateResistance(spellCasted, caster, poorGuy, luck))
-                DealDamage(effect.BaseDamage, poorGuy, effect.GetDamageType(), spellUsed: spellCasted);
+                DealDamage(effect.BaseDamage, poorGuy, effect.GetDamageType(), attack: attack, spellUsed: spellCasted);
             else
                 Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{poorGuy.Name} resisted the effects of {spellCasted.SpellName}"));
         }
 
-        public static void ResolveSpellHit(MagiEntity poorGuy, Actor caster, SpellBase spellCasted, ISpellEffect effect)
+        public static void ResolveSpellHit(MagiEntity poorGuy, Actor caster, SpellBase spellCasted, ISpellEffect effect, Attack attack)
+        {
+            var hit = ResolveSpellHit(poorGuy, caster, spellCasted, effect);
+            if (hit)
+            {
+                ResolveResist(poorGuy, caster, spellCasted, effect, attack);
+            }
+        }
+
+        public static bool ResolveSpellHit(MagiEntity poorGuy, Actor caster, SpellBase spellCasted, ISpellEffect effect)
         {
             if (!effect.CanMiss)
             {
-                ResolveResist(poorGuy, caster, spellCasted, effect);
+                return true;
             }
             else
             {
@@ -293,9 +303,14 @@ namespace MagusEngine.Utils
                 // defense or blocking the projectile
                 // TODO: When shield is done, needs to add the shield or any protection against the spell
                 if (poorGuy is Actor actor && diceRoll >= actor.GetDefenseAbility() + Mrn.Exploding2D6Dice)
-                    ResolveResist(poorGuy, caster, spellCasted, effect);
+                {
+                    return true;
+                }
                 else
+                {
                     Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{caster.Name} missed {poorGuy.Name}!"));
+                    return false;
+                }
             }
         }
 
