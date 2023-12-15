@@ -21,6 +21,7 @@ namespace MagusEngine.Core.Magic.Effects
         public bool TargetsTile { get; set; } = false;
         public EffectType EffectType { get; set; } = EffectType.HASTE;
         public bool CanMiss { get; set; }
+        public bool IsResistable { get; set; }
         public string? EffectMessage { get; set; }
         public int Volume { get; set; }
 

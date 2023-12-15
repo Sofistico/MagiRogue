@@ -14,8 +14,8 @@ namespace MagusEngine.Core.Magic.Effects
         public string SpellDamageTypeId { get; set; }
         public int Radius { get; set; }
         public double ConeCircleSpan { get; set; }
-
-        public bool TargetsTile { get; set; } = false;
+        public bool IsResistable { get; set; }
+        public bool TargetsTile { get; set; }
         public EffectType EffectType { get; set; } = EffectType.SEVER;
         public int BaseDamage { get; set; }
         public bool CanMiss { get; set; }

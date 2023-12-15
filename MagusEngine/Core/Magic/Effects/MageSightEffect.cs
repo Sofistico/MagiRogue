@@ -16,7 +16,7 @@ namespace MagusEngine.Core.Magic.Effects
         public int Duration { get; set; }
         public int Radius { get; set; }
         public double ConeCircleSpan { get; set; }
-
+        public bool IsResistable { get; set; }
         public bool TargetsTile { get; set; }
         public EffectType EffectType { get; set; } = EffectType.MAGESIGHT;
         public int BaseDamage { get; set; } = 0;

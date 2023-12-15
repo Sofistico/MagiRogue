@@ -1,11 +1,13 @@
 ﻿using Arquimedes.Enumerators;
 using GoRogue.Components;
 using MagusEngine.Bus.ComponentBus;
+using MagusEngine.Core.Entities.Base;
 using MagusEngine.Serialization;
 using MagusEngine.Services;
 using MagusEngine.Systems.Physics;
 using SadConsole;
 using SadRogue.Primitives;
+using System;
 using System.Collections.Generic;
 
 namespace MagusEngine.Core.MapStuff
@@ -127,6 +129,14 @@ namespace MagusEngine.Core.MapStuff
             GoRogueComponents.Add(value, tag);
             Locator.GetService<MessageBusService>()
                 ?.SendMessage<ComponentAddedCommand<T>>(new(ID, value));
+        }
+
+        public Attack? ReturnAttack()
+        {
+            return new()
+            {
+
+            };
         }
     }
 }

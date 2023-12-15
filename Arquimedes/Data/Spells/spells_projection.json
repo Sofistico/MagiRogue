@@ -14,6 +14,8 @@
         "SpellDamageTypeId": "blunt",
         "BaseDamage": 2,
         "EffectType": "DAMAGE",
+        "VelocityMultiplier": 1,
+        "Volume": 150,
         "CanMiss": true
       }
     ],
@@ -23,7 +25,7 @@
     "SpellId": "push",
     "ShapingAbility": "Mana Shaping",
     "SpellName": "Push",
-    "Description": "A simple spell, shapes mana to a concussive force that damages and throws away enemies and objects",
+    "Description": "A simple spell, shapes mana to fling a concussive force that damages and throws away enemies and objects",
     "SpellLevel": 1,
     "MagicCost": 1.5,
     "MagicArt": "Projection",
@@ -34,7 +36,7 @@
         "SpellDamageTypeId": "blunt",
         "BaseDamage": 2,
         "EffectType": "KNOCKBACK",
-        "CanMiss": false,
+        "CanMiss": true,
         "PushForceInMPS": 3,
         "EffectMessage": "You push away {0}!|{0} pushes {1} away!"
       }
@@ -51,6 +53,7 @@
         "SpellDamageTypeId": "fire",
         "BaseDamage": 3,
         "Radius": 0,
+        "Volume": 150,
         "EffectType": "DAMAGE",
         "CanMiss": true
       }
@@ -75,6 +78,9 @@
         "Radius": 0,
         "TargetsTile": true,
         "EffectType": "DAMAGE",
+        "Volume": 150,
+        "PenetrationPercentage": 0.5,
+        "VelocityMultiplier": 3,
         "IsResistable": true
       },
       {
@@ -103,7 +109,7 @@
         "SpellDamageTypeId": "fire",
         "BaseDamage": 6,
         "Radius": 3,
-
+        "Volume": 500,
         "EffectType": "DAMAGE"
       }
     ],
@@ -145,6 +151,7 @@
         "SpellDamageTypeId": "cold",
         "BaseDamage": 5,
         "Radius": 10,
+        "Volume": 1000,
         "ConeCircleSpan": 95,
         "TargetsTile": true,
         "EffectType": "DAMAGE"

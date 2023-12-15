@@ -79,9 +79,6 @@ namespace MagusEngine.Serialization.EntitySerialization
         /// <summary>
         /// Is used to instantiate and return any number of possible effects
         /// </summary>
-        /// <param name="effect"></param>
-        /// <param name="jToken"></param>
-        /// <returns></returns>
         private static ISpellEffect? EnumToEffect(EffectType effect, JToken jToken)
         {
             bool? canMiss = (bool?)jToken["CanMiss"];

@@ -84,7 +84,7 @@ namespace MagusEngine.Systems.Physics
                 return; // not enough punch in the spell to move the entity
 
             // then calculate damage as base damage + forceAfterFriction(energy not lost to friction)
-            var damage = CalculateStrikeForce(entity.Weight, forceAfterFriction) + baseDamage;
+            var damage = CalculateStrikeForce(entity.Weight, forceAfterFriction) * baseDamage;
 
             // the acceleration isn't the same, and the meters is more the velocity of the object, since the formula would be:
             // V =  a * t which t is time, and spell resolution happens in a second or less after casting, then this simplification should logicaly work!
@@ -105,7 +105,7 @@ namespace MagusEngine.Systems.Physics
                     run = false;
                 }
                 ActionManager.MoveActorTo(entity!, tile!.Position);
-                CombatUtils.DealDamage(dmgThisTile, entity!, damageType, limbAttacked: bp);
+                CombatUtils.DealDamage(dmgThisTile, entity!, damageType, attack: tile.ReturnAttack(), limbAttacked: bp);
             }
         }
     }

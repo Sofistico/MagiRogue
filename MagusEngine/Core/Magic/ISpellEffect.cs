@@ -24,6 +24,7 @@ namespace MagusEngine.Core.Magic
         bool CanMiss { get; set; }
         string? EffectMessage { get; set; }
         int Volume { get; set; }
+        bool IsResistable { get; set; }
 
         void ApplyEffect(Point target, Actor caster, SpellBase spellCasted);
 

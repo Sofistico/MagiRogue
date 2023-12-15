@@ -15,8 +15,7 @@
         "BaseDamage": 999,
         "EffectType": "DAMAGE",
         "CanMiss": true,
-        "IsResistable": true,
-        "Radius": 0
+        "IsResistable": true
       }
     ],
     "Context": [ "Offensive" ]

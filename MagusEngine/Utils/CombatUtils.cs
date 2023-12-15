@@ -275,7 +275,7 @@ namespace MagusEngine.Utils
             Attack attack)
         {
             int luck = Mrn.Exploding2D6Dice;
-            if (MagicManager.PenetrateResistance(spellCasted, caster, poorGuy, luck))
+            if (effect.IsResistable || MagicManager.PenetrateResistance(spellCasted, caster, poorGuy, luck))
                 DealDamage(effect.BaseDamage, poorGuy, effect.GetDamageType(), attack: attack, spellUsed: spellCasted);
             else
                 Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{poorGuy.Name} resisted the effects of {spellCasted.SpellName}"));
@@ -298,7 +298,7 @@ namespace MagusEngine.Utils
             }
             else
             {
-                int diceRoll = Mrn.Exploding2D6Dice + caster.GetPrecision();
+                int diceRoll = (int)Math.Round((Mrn.Exploding2D6Dice + caster.GetPrecision()) * spellCasted.Proficiency);
                 // the actor + exploding dice is the dice that the target will throw for either
                 // defense or blocking the projectile
                 // TODO: When shield is done, needs to add the shield or any protection against the spell

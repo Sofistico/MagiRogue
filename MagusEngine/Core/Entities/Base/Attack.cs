@@ -38,6 +38,8 @@ namespace MagusEngine.Core.Entities.Base
         public bool Main { get; set; }
         public bool? AttacksUsesLimbName { get; set; }
 
+        public bool Projectile { get; set; }
+
         /// <summary>
         /// The pitful kind of attack that all entities have if they don't have ANY other form of attack
         /// </summary>

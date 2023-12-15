@@ -25,6 +25,9 @@ namespace MagusEngine.Core.Magic.Effects
         public bool IsResistable { get; set; }
         public string? EffectMessage { get; set; }
         public string SpellDamageTypeId { get; set; }
+        /// <summary>
+        /// The volume occupied by the spell, should take into account only the volume that "hits" something, should be in cm3
+        /// </summary>
         public int Volume { get; set; }
         public int VelocityMultiplier { get; set; }
         public double PenetrationPercentage { get; set; }
@@ -134,7 +137,8 @@ namespace MagusEngine.Core.Magic.Effects
                 ContactArea = Volume,
                 PenetrationPercentage = PenetrationPercentage,
                 PrepareVelocity = 1,
-                RecoverVelocity = 1
+                RecoverVelocity = 1,
+                Projectile = AreaOfEffect is not SpellAreaEffect.Struck,
             };
         }
     }

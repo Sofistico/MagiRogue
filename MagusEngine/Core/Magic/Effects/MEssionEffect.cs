@@ -18,6 +18,7 @@ namespace MagusEngine.Core.Magic.Effects
         public int BaseDamage { get; set; }
         public EffectType EffectType { get; set; }
         public bool CanMiss { get; set; }
+        public bool IsResistable { get; set; }
         public string? EffectMessage { get; set; }
         public int Volume { get; set; }
 
