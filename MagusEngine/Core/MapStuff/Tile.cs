@@ -2,12 +2,10 @@
 using GoRogue.Components;
 using MagusEngine.Bus.ComponentBus;
 using MagusEngine.Core.Entities.Base;
-using MagusEngine.Serialization;
 using MagusEngine.Services;
 using MagusEngine.Systems.Physics;
 using SadConsole;
 using SadRogue.Primitives;
-using System;
 using System.Collections.Generic;
 
 namespace MagusEngine.Core.MapStuff
@@ -135,7 +133,10 @@ namespace MagusEngine.Core.MapStuff
         {
             return new()
             {
-
+                AttackVerb = ["skid", "skids"],
+                ContactArea = 1_000_000, // 1 cubic meters
+                AttackAbility = AbilityCategory.None,
+                DamageTypeId = "blunt",
             };
         }
     }
