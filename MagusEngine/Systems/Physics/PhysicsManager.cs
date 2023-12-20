@@ -105,7 +105,7 @@ namespace MagusEngine.Systems.Physics
                     run = false;
                 }
                 ActionManager.MoveActorTo(entity!, tile!.Position);
-                CombatUtils.DealDamage(dmgThisTile, entity!, damageType, attack: tile.ReturnAttack(), limbAttacked: bp);
+                CombatUtils.DealDamage(dmgThisTile, entity!, damageType, tile.Material, tile.ReturnAttack(), limbAttacked: bp);
             }
         }
     }
