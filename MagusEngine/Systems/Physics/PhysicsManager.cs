@@ -88,7 +88,8 @@ namespace MagusEngine.Systems.Physics
             var damage = CalculateStrikeForce(entity.Weight, forceAfterFriction);
 
             // the acceleration isn't the same, and the meters is more the velocity of the object, since the formula would be:
-            // V =  a * t which t is time, and spell resolution happens in a second or less after casting, then this simplification should logicaly work!
+            // V =  a * t which t is time, and spell resolution happens in a second or less after casting,
+            // then this simplification should logicaly work!
             int meters = (int)pushForce;
             List<BodyPart?> bps = [];
             Tile? tile = null;
