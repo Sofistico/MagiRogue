@@ -2,10 +2,12 @@
 using MagusEngine.Core;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
+using MagusEngine.Core.MapStuff;
 using MagusEngine.Utils;
 using MagusEngine.Utils.Extensions;
 using SadRogue.Primitives;
 using System;
+using System.Collections.Generic;
 
 namespace MagusEngine.Systems.Physics
 {
@@ -67,7 +69,6 @@ namespace MagusEngine.Systems.Physics
 
         public static void DealWithPushes(MagiEntity entity,
             double pushForce,
-            int baseDamage,
             Direction directionToBeFlung,
             DamageType damageType)
         {
@@ -84,28 +85,31 @@ namespace MagusEngine.Systems.Physics
                 return; // not enough punch in the spell to move the entity
 
             // then calculate damage as base damage + forceAfterFriction(energy not lost to friction)
-            var damage = CalculateStrikeForce(entity.Weight, forceAfterFriction) * baseDamage;
+            var damage = CalculateStrikeForce(entity.Weight, forceAfterFriction);
 
             // the acceleration isn't the same, and the meters is more the velocity of the object, since the formula would be:
             // V =  a * t which t is time, and spell resolution happens in a second or less after casting, then this simplification should logicaly work!
             int meters = (int)pushForce;
-            BodyPart? bp = null;
-            bool run = true;
-            for (int i = 0; i < meters || run; i++)
+            List<BodyPart?> bps = [];
+            Tile? tile = null;
+            for (int i = 0; i < meters; i++)
             {
                 // is this enough?
-                var tile = (entity?.MagiMap?.GetTileAt(entity.Position + directionToBeFlung + i))
+                tile = (entity?.MagiMap?.GetTileAt(entity.Position + directionToBeFlung))
                     ?? throw new ApplicationException("The tile was null can't push!");
                 if (entity is Actor actor)
-                    bp = actor.GetAnatomy().Limbs.GetRandomItemFromList();
-                var dmgThisTile = damage;
+                    bps.Add(actor.GetAnatomy().Limbs.GetRandomItemFromList());
+                damage += damage;
                 if (tile?.IsWalkable == false)
                 {
-                    dmgThisTile *= tile.Material.Density ?? 1; // massive damage by hitting a wall, multiplied by something i dunno
-                    run = false;
+                    damage *= tile.Material.Density ?? 1; // massive damage by hitting a wall, multiplied by something i dunno
+                    break;
                 }
                 ActionManager.MoveActorTo(entity!, tile!.Position);
-                CombatUtils.DealDamage(dmgThisTile, entity!, damageType, tile.Material, tile.ReturnAttack(), limbAttacked: bp);
+            }
+            foreach (var bp in bps)
+            {
+                CombatUtils.DealDamage(damage, entity!, damageType, tile?.Material, tile?.ReturnAttack(), limbAttacked: bp);
             }
         }
     }
