@@ -95,9 +95,10 @@ namespace MagusEngine.Systems.Physics
             Tile? tile = null;
             for (int i = 0; i < meters; i++)
             {
-                // is this enough?
-                tile = (entity?.MagiMap?.GetTileAt(entity.Position + directionToBeFlung))
+                var currentTile = (entity?.MagiMap?.GetTileAt(tile is null ? entity.Position + directionToBeFlung : tile.Position + directionToBeFlung))
                     ?? throw new ApplicationException("The tile was null can't push!");
+                // is this enough?
+
                 if (entity is Actor actor)
                     bps.Add(actor.GetAnatomy().Limbs.GetRandomItemFromList());
                 damage += damage;
@@ -106,8 +107,12 @@ namespace MagusEngine.Systems.Physics
                     damage *= tile.Material.Density ?? 1; // massive damage by hitting a wall, multiplied by something i dunno
                     break;
                 }
-                ActionManager.MoveActorTo(entity!, tile!.Position);
+                tile = currentTile;
             }
+            // only move the actor effective position to the last tile, maybe there will be a need to redo this, but for now with instanteneous movement,
+            // this is good enough
+            ActionManager.MoveActorTo(entity!, tile!.Position);
+
             foreach (var bp in bps)
             {
                 CombatUtils.DealDamage(damage, entity!, damageType, tile?.Material, tile?.ReturnAttack(), limbAttacked: bp);

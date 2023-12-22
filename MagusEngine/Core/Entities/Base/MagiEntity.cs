@@ -165,7 +165,7 @@ namespace MagusEngine.Core.Entities.Base
         // failed to move
         public bool MoveTo(Point newPosition)
         {
-            if (MagiMap.IsTileWalkable(newPosition))
+            if (MagiMap?.IsTileWalkable(newPosition) == true)
             {
                 Position = newPosition;
                 return true;

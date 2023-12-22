@@ -15,7 +15,7 @@ namespace MagusEngine.Systems
     public sealed class MagiRogueFOVVisibilityHandler : FOVHandler
     {
         private readonly int _ghostLayer;
-        private readonly Dictionary<uint, MagiEntity> ghosts = new();
+        private readonly Dictionary<uint, MagiEntity> ghosts = [];
 
         /// <summary>
         /// Foreground color to set to all terrain that is outside of FOV but has been explored.

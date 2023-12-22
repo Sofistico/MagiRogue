@@ -38,7 +38,7 @@ namespace MagusEngine.Core.MapStuff
         private MagiEntity? _gameObjectControlled;
         private EntityManager _entityManager;
         private bool _disposed;
-        private Dictionary<Func<Actor, bool>, Actor[]> _lastCalledActors = new();
+        private Dictionary<Func<Actor, bool>, Actor[]> _lastCalledActors = [];
         private bool _needsToUpdateActorsDict;
         private Lazy<Tile[]> lazyTiles = new();
 
@@ -270,14 +270,16 @@ namespace MagusEngine.Core.MapStuff
             {
                 RemoveEntity(entity);
 
-                _entityManager.Remove(entity.SadCell);
-
                 // Link up the entity's Moved event to a new handler
                 entity.PositionChanged -= OnPositionChanged;
 
-                _entityManager.IsDirty = true;
                 _needsToUpdateActorsDict = true;
                 _registry.Destroy(entity.ID);
+            }
+            if (_entityManager.Contains(entity.SadCell))
+            {
+                _entityManager.Remove(entity.SadCell);
+                _entityManager.IsDirty = true;
             }
         }
 
