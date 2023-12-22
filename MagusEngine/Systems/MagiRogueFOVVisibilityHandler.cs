@@ -75,7 +75,6 @@ namespace MagusEngine.Systems
             {
                 RemoveEntityGhost(entity);
             }
-            //Map.EntityRender.Add(entity);
             entity.SadCell.IsVisible = true;
         }
 
@@ -101,8 +100,8 @@ namespace MagusEngine.Systems
                 && entity.LeavesGhost
                 && !ghosts.ContainsKey(entity.ID))
             {
-                MagiEntity ghost = new MagiEntity(ExploredColorTint,
-                    entity.SadCell.AppearanceSingle.Appearance.Background,
+                MagiEntity ghost = new(ExploredColorTint,
+                    entity.SadCell.AppearanceSingle!.Appearance.Background!,
                     entity.SadCell.AppearanceSingle.Appearance.Glyph,
                     entity.Position,
                     _ghostLayer)
@@ -127,7 +126,7 @@ namespace MagusEngine.Systems
             if (terrain.GoRogueComponents.Contains<IllusionComponent>())
             {
                 var illusion = terrain.GoRogueComponents.GetFirstOrDefault<IllusionComponent>();
-                terrain.LastSeenAppereance?.CopyAppearanceFrom(illusion.FakeAppearence);
+                terrain.LastSeenAppereance?.CopyAppearanceFrom(illusion!.FakeAppearence);
             }
 
             // If the appearances don't match currently, synchronize them
@@ -137,7 +136,7 @@ namespace MagusEngine.Systems
             }
             if (terrain.GetComponent<Plant>(out var plant))
             {
-                terrain.Appearence.CopyAppearanceFrom(plant.SadGlyph);
+                terrain.Appearence.CopyAppearanceFrom(plant!.SadGlyph);
             }
         }
 
