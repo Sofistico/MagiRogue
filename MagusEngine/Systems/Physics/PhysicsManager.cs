@@ -2,12 +2,10 @@
 using MagusEngine.Core;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
-using MagusEngine.Core.MapStuff;
 using MagusEngine.Utils;
 using MagusEngine.Utils.Extensions;
 using SadRogue.Primitives;
 using System;
-using System.Collections.Generic;
 
 namespace MagusEngine.Systems.Physics
 {
@@ -91,32 +89,29 @@ namespace MagusEngine.Systems.Physics
             // V =  a * t which t is time, and spell resolution happens in a second or less after casting,
             // then this simplification should logicaly work!
             int meters = (int)pushForce;
-            List<BodyPart?> bps = [];
-            Tile? tile = null;
+            BodyPart? bp = null;
+            Point tilePos = Point.None;
             for (int i = 0; i < meters; i++)
             {
-                var currentTile = (entity?.MagiMap?.GetTileAt(tile is null ? entity.Position + directionToBeFlung : tile.Position + directionToBeFlung))
+                var currentTile = (entity?.MagiMap?.GetTileAt(tilePos == Point.None ? entity.Position + directionToBeFlung : tilePos + directionToBeFlung))
                     ?? throw new ApplicationException("The tile was null can't push!");
                 // is this enough?
-
                 if (entity is Actor actor)
-                    bps.Add(actor.GetAnatomy().Limbs.GetRandomItemFromList());
+                    bp = actor.GetAnatomy().Limbs.GetRandomItemFromList();
                 damage += damage;
-                if (tile?.IsWalkable == false)
+                if (currentTile?.IsWalkable == false)
                 {
-                    damage *= tile.Material.Density ?? 1; // massive damage by hitting a wall, multiplied by something i dunno
+                    damage *= currentTile.Material.Density ?? 1; // massive damage by hitting a wall, multiplied by something i dunno
+                    CombatUtils.DealDamage(damage, entity!, damageType, currentTile?.Material, currentTile?.ReturnAttack(), limbAttacked: bp);
                     break;
                 }
-                tile = currentTile;
+                CombatUtils.DealDamage(damage, entity!, damageType, currentTile?.Material, currentTile?.ReturnAttack(), limbAttacked: bp);
+
+                tilePos = currentTile!.Position;
             }
             // only move the actor effective position to the last tile, maybe there will be a need to redo this, but for now with instanteneous movement,
             // this is good enough
-            ActionManager.MoveActorTo(entity!, tile!.Position);
-
-            foreach (var bp in bps)
-            {
-                CombatUtils.DealDamage(damage, entity!, damageType, tile?.Material, tile?.ReturnAttack(), limbAttacked: bp);
-            }
+            ActionManager.MoveActorTo(entity!, tilePos);
         }
     }
 }
