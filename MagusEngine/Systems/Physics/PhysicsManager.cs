@@ -66,20 +66,20 @@ namespace MagusEngine.Systems.Physics
         }
 
         public static void DealWithPushes(MagiEntity entity,
-            double pushForce,
+            double impulse,
             Direction directionToBeFlung,
             DamageType damageType)
         {
-            if (entity is null && pushForce == 0)
+            if (entity is null && impulse == 0)
                 return;
             // calculate on force necessary to push entity if it's enough
-            var force = CalculateNewton2Law(entity.Weight, pushForce);
+            var force = CalculateNewton2Law(entity.Weight, impulse);
 
             // then add friction
             var forceAfterFriction = CalculateFrictionToMovement(0.15, force);
             var accelerationNecessaryToMoveEntity = CalculateNewton2LawReturnAcceleration(entity.Weight, forceAfterFriction);
 
-            if (accelerationNecessaryToMoveEntity >= pushForce)
+            if (accelerationNecessaryToMoveEntity >= impulse)
                 return; // not enough punch in the spell to move the entity
 
             // then calculate damage as base damage + forceAfterFriction(energy not lost to friction)
@@ -88,7 +88,7 @@ namespace MagusEngine.Systems.Physics
             // the acceleration isn't the same, and the meters is more the velocity of the object, since the formula would be:
             // V =  a * t which t is time, and spell resolution happens in a second or less after casting,
             // then this simplification should logicaly work!
-            int meters = (int)pushForce;
+            int meters = (int)impulse;
             BodyPart? bp = null;
             Point tilePos = Point.None;
             for (int i = 0; i < meters; i++)

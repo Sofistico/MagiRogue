@@ -34,10 +34,9 @@
       {
         "AreaOfEffect": "Target",
         "SpellDamageTypeId": "blunt",
-        "BaseDamage": 2,
+        "BaseDamage": 3,
         "EffectType": "KNOCKBACK",
         "CanMiss": true,
-        "PushForceInMPS": 3,
         "EffectMessage": "You push away {0}!|{0} pushes {1} away!"
       }
     ],

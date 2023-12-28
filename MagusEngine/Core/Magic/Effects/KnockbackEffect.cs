@@ -15,14 +15,11 @@ namespace MagusEngine.Core.Magic.Effects
         public int Radius { get; set; }
         public double ConeCircleSpan { get; set; }
         public bool TargetsTile { get; set; }
-        public int BaseDamage { get; set; } // does nothing
+        public int BaseDamage { get; set; } // works as the impulse
         public EffectType EffectType { get; set; } = EffectType.KNOCKBACK;
         public bool CanMiss { get; set; }
         public bool IsResistable { get; set; }
         public string? EffectMessage { get; set; }
-
-        // meters per second
-        public double PushForceInMPS { get; set; }
         public int Volume { get; set; }
 
         public void ApplyEffect(Point target, Actor caster, SpellBase spellCasted)
@@ -30,7 +27,7 @@ namespace MagusEngine.Core.Magic.Effects
             var entity = caster.MagiMap.GetEntityAt<MagiEntity>(target);
             var hit = CombatUtils.ResolveSpellHit(entity, caster, spellCasted, this);
             if (hit)
-                PhysicsManager.DealWithPushes(entity, PushForceInMPS, Direction.GetDirection(entity.Position - caster.Position), GetDamageType());
+                PhysicsManager.DealWithPushes(entity, BaseDamage, Direction.GetDirection(entity.Position - caster.Position), GetDamageType());
         }
 
         public DamageType? GetDamageType()
