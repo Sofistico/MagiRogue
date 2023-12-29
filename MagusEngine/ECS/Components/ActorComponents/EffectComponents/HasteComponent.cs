@@ -7,7 +7,7 @@
         public HasteComponent(double hastePower,
             int turnApplied,
             int turnToRemove,
-            string effectMessage) : base(turnApplied, turnToRemove, effectMessage)
+            string effectMessage) : base(turnApplied, turnToRemove, effectMessage, "haste")
         {
             HastePower = hastePower;
         }

@@ -14,5 +14,6 @@ namespace Arquimedes.Enumerators
         Normal,
         Sleeping,
         Prone,
+        UncontrolledMovement,
     }
 }

@@ -218,6 +218,19 @@ namespace MagusEngine.Core.Entities.Base
             }
         }
 
+        public void RemoveComponent(string tag)
+        {
+            try
+            {
+                GoRogueComponents.Remove(tag);
+                Locator.GetService<MessageBusService>().SendMessage<ComponentRemovedCommand>(new(ID));
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         #endregion Components
 
         #region Deconstructor
