@@ -282,10 +282,11 @@ namespace MagusEngine.Systems
                 Time.RegisterEntity(new EntityTimeNode(entity.ID, Time.GetTimePassed(time)));
         }
 
-        public void ProcessTurn(long playerTime, bool sucess)
+        private void ProcessTurn(long playerTime, bool sucess)
         {
             if (sucess)
             {
+                ProcessEffects(Player.ID);
                 bool playerActionWorked = ProcessPlayerTurn(playerTime);
 
                 if (!playerActionWorked)
@@ -301,7 +302,9 @@ namespace MagusEngine.Systems
                     switch (turnNode)
                     {
                         case EntityTimeNode entityTurn:
-                            ProcessAiTurn(entityTurn.EntityId);
+                            bool canDoAnotherAction = ProcessEffects(entityTurn.EntityId);
+                            if (canDoAnotherAction)
+                                ProcessAiTurn(entityTurn.EntityId);
                             break;
 
                         default:
@@ -325,6 +328,11 @@ namespace MagusEngine.Systems
                 var ids = GetEntitiesIds();
                 RegisterInTime(ids);
             }
+        }
+
+        private bool ProcessEffects(uint entityId)
+        {
+            throw new NotImplementedException();
         }
 
         private IEnumerable<Actor> GetEntitiesIds()

@@ -2,6 +2,7 @@
 using Diviner.Enums;
 using Diviner.Windows;
 using MagusEngine;
+using MagusEngine.Bus.MapBus;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Commands;
 using MagusEngine.Core.Entities;
@@ -151,14 +152,14 @@ namespace Diviner
             {
                 if (!getPlayer.Bumped && world.CurrentMap.ControlledEntitiy is Player)
                 {
-                    world.ProcessTurn(TimeHelper.GetWalkTime(getPlayer,
-                        world.CurrentMap.GetTileAt<Tile>(getPlayer.Position)), true);
+                    Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.GetWalkTime(getPlayer,
+                        world.CurrentMap.GetTileAt<Tile>(getPlayer.Position)), true));
                 }
                 else if (world.CurrentMap.ControlledEntitiy is Player)
                 {
-                    world.ProcessTurn(TimeHelper.GetAttackTime(getPlayer,
+                    Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.GetAttackTime(getPlayer,
                         getPlayer.GetAttacks().GetRandomItemFromList()),
-                        true);
+                        true));
                 }
 
                 return true;
@@ -171,7 +172,7 @@ namespace Diviner
 
             if (info.IsKeyPressed(Keys.NumPad5) || info.IsKeyPressed(Keys.OemPeriod))
             {
-                world.ProcessTurn(TimeHelper.Wait, true);
+                Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.Wait, true));
                 return true;
             }
 
@@ -186,20 +187,20 @@ namespace Diviner
                 Item item = world.CurrentMap.GetEntityAt<Item>(world.Player.Position);
                 bool sucess = ActionManager.PickUp(world.Player, item);
                 ui.InventoryScreen.ShowItems(world.Player);
-                world.ProcessTurn(TimeHelper.Interact, sucess);
+                Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.Interact, sucess));
                 return sucess;
             }
             if (info.IsKeyPressed(Keys.D))
             {
                 bool sucess = ActionManager.DropItems(world.Player);
                 ui.InventoryScreen.ShowItems(world.Player);
-                world.ProcessTurn(TimeHelper.Interact, sucess);
+                Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.Interact, sucess));
                 return sucess;
             }
             if (info.IsKeyPressed(Keys.C))
             {
                 bool sucess = ActionManager.CloseDoor(world.Player);
-                world.ProcessTurn(TimeHelper.Interact, sucess);
+                Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.Interact, sucess));
                 ui.MapWindow.MapConsole.IsDirty = true;
             }
             //if (info.IsKeyPressed(Keys.H) && !info.IsKeyDown(Keys.LeftShift))
@@ -210,7 +211,7 @@ namespace Diviner
             if (info.IsKeyPressed(Keys.H) && info.IsKeyDown(Keys.LeftShift))
             {
                 bool sucess = ActionManager.NodeDrain(getPlayer);
-                world.ProcessTurn(TimeHelper.MagicalThings, sucess);
+                Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.MagicalThings, sucess));
             }
             if (info.IsKeyPressed(Keys.L))
             {
@@ -269,7 +270,7 @@ namespace Diviner
                     if (sucess)
                     {
                         targetCursor = null;
-                        world.ProcessTurn(TimeHelper.GetCastingTime(getPlayer, spellCasted), sucess);
+                        Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.GetCastingTime(getPlayer, spellCasted), sucess));
                     }
                     return sucess;
                 }

@@ -516,7 +516,7 @@ namespace MagusEngine.Commands
             {
                 foreach (Point p in actor.MagiMap.PlayerFOV.NewlySeen)
                 {
-                    Actor possibleActor = actor.MagiMap.GetEntityAt<Actor>(p);
+                    Actor? possibleActor = actor.MagiMap.GetEntityAt<Actor>(p);
                     if (possibleActor?.Equals(actor) == false && canBeInterrupted)
                     {
                         Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("There is an enemy in view, stop resting!"));
