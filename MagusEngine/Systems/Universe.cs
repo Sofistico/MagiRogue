@@ -43,7 +43,7 @@ namespace MagusEngine.Systems
         /// <summary>
         /// Stores the current map
         /// </summary>
-        public MagiMap CurrentMap { get; private set; }
+        public MagiMap? CurrentMap { get; private set; }
 
         /// <summary>
         /// Stores the current chunk that is loaded
@@ -61,7 +61,7 @@ namespace MagusEngine.Systems
         public Point AbsolutePlayerPos { get; set; }
 
         public TimeSystem Time { get; }
-        public bool PossibleChangeMap { get; internal set; } = true;
+        public bool PossibleChangeMap { get; set; } = true;
 
         public SeasonType CurrentSeason { get; set; }
 
@@ -102,6 +102,7 @@ namespace MagusEngine.Systems
             Locator.GetService<MessageBusService>().RegisterAllSubscriber(this);
         }
 
+        [JsonConstructor]
         public Universe(PlanetMap worldMap,
             MagiMap currentMap,
             Player player,
@@ -275,7 +276,7 @@ namespace MagusEngine.Systems
             return WorldMap.AssocietatedMap;
         }
 
-        public void AddEntityToTime(MagiEntity entity, int time = 0)
+        private void AddEntityToTime(MagiEntity entity, int time = 0)
         {
             // register to next turn
             if (!Time.Nodes.Cast<EntityTimeNode>().Any(i => i.EntityId.Equals(entity.ID)))
@@ -431,7 +432,7 @@ namespace MagusEngine.Systems
             }
         }
 
-        public void ChangeControlledEntity(MagiEntity entity)
+        private void ChangeControlledEntity(MagiEntity entity)
         {
             CurrentMap.ControlledEntitiy = entity;
             // event

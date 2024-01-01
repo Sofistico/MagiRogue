@@ -23,7 +23,7 @@ namespace Diviner
 {
     public static class KeyboardHandle
     {
-        private static Player getPlayer => Find.Universe.Player;
+        private static readonly Player? getPlayer = Find.Universe?.Player;
 
         private static Target targetCursor = null!;
 
@@ -231,8 +231,7 @@ namespace Diviner
 
             if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.Z))
             {
-                SpellSelectWindow spell =
-                    new SpellSelectWindow(getPlayer.Soul.CurrentMana);
+                SpellSelectWindow spell = new(getPlayer.Soul.CurrentMana);
 
                 targetCursor = new Target(getPlayer.Position);
 
