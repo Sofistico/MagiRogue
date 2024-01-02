@@ -182,14 +182,23 @@ namespace MagusEngine.Systems
             }
         }
 
-        public void ChangePlayerMap(MagiMap mapToGo, Point pos, MagiMap previousMap)
+        private void ChangePlayerMap(MagiMap mapToGo, Point pos, MagiMap? previousMap)
         {
-            CurrentMap.LastPlayerPosition = new Point(Player.Position.X, Player.Position.Y);
-            previousMap.NeedsUpdate = true;
+            if (CurrentMap is not null)
+            {
+                CurrentMap.LastPlayerPosition = new Point(Player.Position.X, Player.Position.Y);
+            }
+
             ChangeActorMap(Player, mapToGo, pos, previousMap);
             UpdateIfNeedTheMap(mapToGo);
             CurrentMap = mapToGo;
-            previousMap.ControlledEntitiy = null!;
+
+            if (previousMap is not null)
+            {
+                previousMap.NeedsUpdate = true;
+                previousMap.ControlledEntitiy = null!;
+            }
+
             // transform into event
             Locator.GetService<MessageBusService>().SendMessage<LoadMapMessage>(new(CurrentMap));
             Locator.GetService<MessageBusService>().SendMessage<ChangeCenteredActor>(new(Player));
@@ -216,9 +225,9 @@ namespace MagusEngine.Systems
             AddEntityToTime(entity);
         }
 
-        public static void ChangeActorMap(MagiEntity entity, MagiMap mapToGo, Point pos, MagiMap previousMap)
+        public static void ChangeActorMap(MagiEntity entity, MagiMap mapToGo, Point pos, MagiMap? previousMap)
         {
-            previousMap.RemoveMagiEntity(entity);
+            previousMap?.RemoveMagiEntity(entity);
             entity.Position = pos;
             mapToGo.AddMagiEntity(entity);
         }
@@ -483,7 +492,7 @@ namespace MagusEngine.Systems
 
         public void Handle(AddEntitiyCurrentMap message)
         {
-            CurrentMap.AddMagiEntity(message.Entitiy);
+            CurrentMap?.AddMagiEntity(message.Entitiy);
         }
 
         public void Handle(ProcessTurnEvent message)
@@ -493,7 +502,7 @@ namespace MagusEngine.Systems
 
         public void Handle(RemoveEntitiyCurrentMap message)
         {
-            CurrentMap.RemoveMagiEntity(message.Entity);
+            CurrentMap?.RemoveMagiEntity(message.Entity);
         }
 
         public void Handle(ChangeControlledEntitiy message)

@@ -1,6 +1,7 @@
 ﻿using Arquimedes.Enumerators;
 using GoRogue.GameFramework;
 using GoRogue.Pathing;
+using MagusEngine.Bus;
 using MagusEngine.Bus.MapBus;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Core;
@@ -387,16 +388,13 @@ namespace MagusEngine.Commands
 
         public static bool EnterDownMovement(Point playerPoint)
         {
-            Furniture possibleStairs =
-                Find.CurrentMap.GetEntityAt<Furniture>(playerPoint);
-            var possibleWorldTileHere =
-                Find.CurrentMap.GetTileAt<WorldTile>(playerPoint).GetComponent<WorldTile>();
+            Furniture? possibleStairs = Find.CurrentMap?.GetEntityAt<Furniture>(playerPoint);
+            var possibleWorldTileHere = Find.CurrentMap?.GetComponentInTileAt<WorldTile>(playerPoint);
             MagiMap currentMap = Find.CurrentMap;
             if (possibleStairs?.MapIdConnection.HasValue == true)
             {
                 MagiMap map = Universe.GetMapById(possibleStairs.MapIdConnection.Value);
-                // TODO: For now it's just a test, need to work out a better way to do it.
-                Find.Universe.ChangePlayerMap(map, map.GetRandomWalkableTile(), currentMap);
+                Locator.GetService<MessageBusService>().SendMessage<ChangeControlledActorMap>(new(map, map.GetRandomWalkableTile(), currentMap));
                 Find.Universe.ZLevel -= map.ZAmount;
 
                 return true;
@@ -413,8 +411,8 @@ namespace MagusEngine.Commands
 
                 RegionChunk chunk = Find.Universe.GenerateChunck(playerPoint);
                 Find.Universe.CurrentChunk = chunk;
-                Find.Universe.ChangePlayerMap(chunk.LocalMaps[0],
-                    chunk.LocalMaps[0].GetRandomWalkableTile(), currentMap);
+                Locator.GetService<MessageBusService>().SendMessage<ChangeControlledActorMap>(new(chunk.LocalMaps[0],
+                    chunk.LocalMaps[0].GetRandomWalkableTile(), currentMap));
                 return true;
             }
             else if (possibleWorldTileHere?.Visited == true)
@@ -423,8 +421,8 @@ namespace MagusEngine.Commands
                 Find.Universe.CurrentChunk = chunk;
                 // if entering the map again, set to update
                 chunk.SetMapsToUpdate();
-                Find.Universe.ChangePlayerMap(chunk.LocalMaps[0],
-                    chunk.LocalMaps[0].LastPlayerPosition, currentMap);
+                Locator.GetService<MessageBusService>().SendMessage<ChangeControlledActorMap>(new(chunk.LocalMaps[0],
+                    chunk.LocalMaps[0].LastPlayerPosition, currentMap));
 
                 return true;
             }
@@ -448,8 +446,7 @@ namespace MagusEngine.Commands
                     && possibleStairs.MapIdConnection is not null)
                 {
                     MagiMap map = Universe.GetMapById(possibleStairs.MapIdConnection.Value);
-                    // TODO: For now it's just a test, need to work out a better way to do it.
-                    Find.Universe.ChangePlayerMap(map, map.GetRandomWalkableTile(), currentMap);
+                    Locator.GetService<MessageBusService>().SendMessage<ChangeControlledActorMap>(new(map, map.GetRandomWalkableTile(), currentMap));
                     Find.Universe.ZLevel += map.ZAmount;
 
                     return true;
@@ -458,7 +455,7 @@ namespace MagusEngine.Commands
                 {
                     MagiMap map = Find.Universe.WorldMap.AssocietatedMap;
                     Point playerLastPos = Find.Universe.WorldMap.AssocietatedMap.LastPlayerPosition;
-                    Find.Universe.ChangePlayerMap(map, playerLastPos, currentMap);
+                    Locator.GetService<MessageBusService>().SendMessage<ChangeControlledActorMap>(new(map, playerLastPos, currentMap));
                     Locator.GetService<SavingService>().SaveChunkInPos(Find.Universe.CurrentChunk,
                         Find.Universe.CurrentChunk.ToIndex(map.Width));
                     Find.Universe.CurrentChunk = null!;

@@ -372,6 +372,11 @@ namespace MagusEngine.Core.MapStuff
             return GetTileAt<T>(location.X, location.Y);
         }
 
+        public T? GetComponentInTileAt<T>(Point location, string? tag = null) where T : class
+        {
+            return GetTileAt<T>(location.X, location.Y)?.GetComponent<T>(tag);
+        }
+
         public Tile? GetTileAt(Point location) => GetTileAt<Tile>(location);
 
         /// <summary>

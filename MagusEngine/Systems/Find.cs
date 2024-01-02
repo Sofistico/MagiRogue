@@ -22,7 +22,7 @@ namespace MagusEngine.Systems
         public static List<ItemTemplate>? Items { get => history?.ImportantItems; }
         public static List<Ruleset>? Rules { get; private set; }
         public static string PlayerDeathReason { get; set; } = "undefined!";
-        public static Universe? Universe { get; set; }
+        public static Universe Universe { get; set; } = null!;
         public static MagiMap? CurrentMap => Universe?.CurrentMap;
 
         public static void PopulateValues(AccumulatedHistory h, WorldTile[,] tiles)
