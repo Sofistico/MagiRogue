@@ -490,7 +490,7 @@ namespace MagusEngine.Commands
             {
                 if (actor.Flags.Contains(SpecialFlag.NeedsConfortToSleep))
                 {
-                    // define behavior for civilized races here in the future!
+                    // TODO: define behavior for civilized races here in the future!
                     //map.GetFurnitureTypeClosest()
                 }
                 actor.State = ActorState.Sleeping;

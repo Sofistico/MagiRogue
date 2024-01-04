@@ -8,7 +8,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.EffectComponents
         public Direction Direction { get; set; }
 
         public UncontrolledMovementComponent(int tilesToMove, Direction dir, int turnApplied, int turnToRemove, string effectMessage)
-            : base(turnApplied, turnToRemove, effectMessage, "uncont_mov")
+            : base(turnApplied, turnToRemove, effectMessage, "uncont_mov", freezesTurn: true)
         {
             TilesToMovePerTurn = tilesToMove;
             Direction = dir;

@@ -7,14 +7,15 @@ using MagusEngine.Systems.Time;
 
 namespace MagusEngine.ECS.Components.ActorComponents.EffectComponents
 {
-    public class BaseEffectComponent : ParentAwareComponentBase<MagiEntity>
+    public abstract class BaseEffectComponent : ParentAwareComponentBase<MagiEntity>
     {
         public int TurnToRemove { get; set; }
         public int TurnApplied { get; set; }
         public string EffectMessage { get; set; }
         public string Tag { get; set; }
+        public bool FreezesTurn { get; set; }
 
-        public BaseEffectComponent(int turnApplied, int turnToRemove, string effectMessage, string tag, bool customTurnTimer = false)
+        protected BaseEffectComponent(int turnApplied, int turnToRemove, string effectMessage, string tag, bool customTurnTimer = false, bool freezesTurn = false)
         {
             TurnToRemove = turnToRemove;
             TurnApplied = turnApplied;
@@ -22,6 +23,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.EffectComponents
             Tag = tag;
             if (!customTurnTimer)
                 ConfigureTurnTimer();
+            FreezesTurn = freezesTurn;
         }
 
         public virtual void ConfigureTurnTimer()
@@ -38,8 +40,13 @@ namespace MagusEngine.ECS.Components.ActorComponents.EffectComponents
                 Locator.GetService<MessageBusService>()?
                     .SendMessage<AddMessageLog>(new(EffectMessage, Parent == Find.Universe.Player));
                 Find.Universe.Time.TurnPassed -= GetTime_TurnPassed;
+                return;
             }
+            // let me think better...
+            ExecutePerTurn();
         }
+
+        public abstract void ExecutePerTurn();
 
         ~BaseEffectComponent()
         {
