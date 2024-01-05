@@ -311,9 +311,7 @@ namespace MagusEngine.Systems
                     switch (turnNode)
                     {
                         case EntityTimeNode entityTurn:
-                            bool canDoAnotherAction = ProcessEffects(entityTurn.EntityId);
-                            if (canDoAnotherAction)
-                                ProcessAiTurn(entityTurn.EntityId);
+                            ProcessAiTurn(entityTurn.EntityId);
                             break;
 
                         default:
@@ -405,9 +403,9 @@ namespace MagusEngine.Systems
 
         private void ProcessAiTurn(uint entityId)
         {
-            Actor entity = (Actor)CurrentMap.GetEntityById(entityId);
+            Actor? entity = (Actor?)CurrentMap?.GetEntityById(entityId);
 
-            if (entity != null)
+            if (entity is not null)
             {
                 var ais = entity.GetComponents<IAiComponent>();
                 // sucess and failure will have to have some sort of aggregate function made later!

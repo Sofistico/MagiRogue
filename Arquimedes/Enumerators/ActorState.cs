@@ -9,11 +9,12 @@ using System.Threading.Tasks;
 namespace Arquimedes.Enumerators
 {
     [JsonConverter(typeof(StringEnumConverter))]
+    [Flags]
     public enum ActorState
     {
         Normal,
-        Sleeping,
+        Uncontrolled,
         Prone,
-        UncontrolledMovement,
+        Sleeping,
     }
 }
