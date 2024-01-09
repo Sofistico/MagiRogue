@@ -379,16 +379,16 @@ namespace MagusEngine.Systems
         private void KillPlayer()
         {
             var figure = Find.GetFigureById(Player.HistoryId);
-            figure.KillIt(WorldMap.WorldHistory.Year, Find.PlayerDeathReason);
+            figure?.KillIt(WorldMap.WorldHistory.Year, Find.PlayerDeathReason);
         }
 
         private void RestartGame()
         {
-            CurrentMap.DestroyMap();
+            CurrentMap?.DestroyMap();
             int chunckLenght = (CurrentChunk?.LocalMaps.Length) ?? 0;
             for (int i = 0; i < chunckLenght; i++)
             {
-                MagiMap maps = CurrentChunk?.LocalMaps[i];
+                MagiMap? maps = CurrentChunk?.LocalMaps[i];
                 maps?.DestroyMap();
             }
             CurrentMap = null!;
