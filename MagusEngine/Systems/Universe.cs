@@ -397,7 +397,6 @@ namespace MagusEngine.Systems
             WorldMap = null!;
 
             // event
-            //GameLoop.UIManager.MainMenu.RestartGame();
             Locator.GetService<MessageBusService>().SendMessage<RestartGame>(new());
         }
 
@@ -433,9 +432,9 @@ namespace MagusEngine.Systems
             }
         }
 
-        private void ChangeControlledEntity(MagiEntity entity)
+        private void ChangeControlledEntity(MagiEntity? entity)
         {
-            CurrentMap.ControlledEntitiy = entity;
+            CurrentMap!.ControlledEntitiy = entity;
             // event
             Locator.GetService<MessageBusService>().SendMessage<ChangeCenteredActor>(new(entity));
         }
