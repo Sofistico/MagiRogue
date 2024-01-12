@@ -1,4 +1,6 @@
-﻿namespace MagusEngine.ECS.Components.ActorComponents.EffectComponents
+﻿using MagusEngine.ECS.Components.ActorComponents.Effects;
+
+namespace MagusEngine.ECS.Components.ActorComponents.Status
 {
     public class HasteComponent : BaseEffectComponent
     {
@@ -10,6 +12,10 @@
             string effectMessage) : base(turnApplied, turnToRemove, effectMessage, "haste")
         {
             HastePower = hastePower;
+        }
+
+        public override void ExecutePerTurn()
+        {
         }
     }
 }

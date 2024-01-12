@@ -1,6 +1,6 @@
 ﻿using SadRogue.Primitives;
 
-namespace MagusEngine.ECS.Components.ActorComponents.EffectComponents
+namespace MagusEngine.ECS.Components.ActorComponents.Effects
 {
     public class UncontrolledMovementComponent : BaseEffectComponent
     {
@@ -12,6 +12,11 @@ namespace MagusEngine.ECS.Components.ActorComponents.EffectComponents
         {
             TilesToMovePerTurn = tilesToMove;
             Direction = dir;
+        }
+
+        public override void ExecutePerTurn()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

@@ -488,7 +488,7 @@ namespace MagusEngine.Systems
 
         public void Handle(ProcessTurnEvent message)
         {
-            ProcessTurn(message.Time, message.Sucess);
+            ProcessTurn(message.Time, message.Sucess, message.CanAct);
         }
 
         public void Handle(RemoveEntitiyCurrentMap message)

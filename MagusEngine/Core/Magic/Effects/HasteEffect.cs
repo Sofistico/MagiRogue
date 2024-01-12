@@ -1,7 +1,7 @@
 ﻿using Arquimedes.Enumerators;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
-using MagusEngine.ECS.Components.ActorComponents.EffectComponents;
+using MagusEngine.ECS.Components.ActorComponents.Status;
 using MagusEngine.Services;
 using MagusEngine.Systems;
 using Newtonsoft.Json;

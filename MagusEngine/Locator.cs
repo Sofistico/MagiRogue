@@ -7,9 +7,9 @@ namespace MagusEngine
 {
     public static class Locator
     {
-        private static readonly Dictionary<Type, object> _services = new();
+        private static readonly Dictionary<Type, object> _services = [];
 
-        public static object GetService(Type serviceType)
+        public static object? GetService(Type serviceType)
         {
             _services.TryGetValue(serviceType, out var obj);
             return obj;
@@ -17,7 +17,8 @@ namespace MagusEngine
 
         public static T GetService<T>()
         {
-            return (T)GetService(typeof(T));
+            var result = (T?)GetService(typeof(T));
+            return result is null ? throw new ArgumentNullException("Trying to pass a service as null") : result;
         }
 
         public static void AddService<T>(T instance)

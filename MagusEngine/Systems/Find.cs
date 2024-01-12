@@ -4,6 +4,7 @@ using MagusEngine.Core.MapStuff;
 using MagusEngine.Core.WorldStuff.History;
 using MagusEngine.ECS.Components.TilesComponents;
 using MagusEngine.Serialization.EntitySerialization;
+using MagusEngine.Systems.Time;
 using MagusEngine.Utils.Extensions;
 using System.Collections.Generic;
 
@@ -14,24 +15,21 @@ namespace MagusEngine.Systems
         private static AccumulatedHistory? history;
 
         // big ass singleton for ease of finding information!
-        public static int Year { get => history!.Year; }
         public static WorldTile[,]? Tiles { get; private set; }
-        public static List<Civilization>? Civs { get => history?.Civs; }
-        public static List<HistoricalFigure>? Figures { get => history?.Figures; }
-        public static List<Site>? Sites { get => history?.AllSites; }
-        public static List<ItemTemplate>? Items { get => history?.ImportantItems; }
         public static List<Ruleset>? Rules { get; private set; }
+        public static int Year => history!.Year;
+        public static List<Civilization>? Civs => history?.Civs;
+        public static List<HistoricalFigure>? Figures => history?.Figures;
+        public static List<Site>? Sites => history?.AllSites;
+        public static List<ItemTemplate>? Items => history?.ImportantItems;
         public static string PlayerDeathReason { get; set; } = "undefined!";
         public static Universe Universe { get; set; } = null!;
         public static MagiMap? CurrentMap => Universe?.CurrentMap;
+        public static TimeSystem Time => Universe.Time;
 
         public static void PopulateValues(AccumulatedHistory h, WorldTile[,] tiles)
         {
             history = h;
-            //Figures = figures;
-            //Civs = civs;
-            //Sites = allSites;
-            //Items = importantItems;
             Tiles = tiles;
             Rules ??= new(DataManager.ListOfRules);
         }

@@ -99,14 +99,14 @@ namespace Diviner
 
         private void ConfigureWindowsAndConsoles(int height, int width, Universe uni)
         {
-            //Message Log initialization
+            //Message Log initializationz
             var messageLogWidth = (int)MathMagi.GetSimplePercentage(width, 0.25) - 2;
             MessageLog = new MessageLogWindow(messageLogWidth, height, "Message Log")
             {
                 Position = new Point(width - messageLogWidth, 0),
             };
 #if DEBUG
-            MessageLog.PrintMessage("Test message log works");
+            Locator.GetService<MessageBusService>()?.SendMessage<AddMessageLog>(new("Test message log works"));
 #endif
             // Inventory initialization
             InventoryScreen = new InventoryWindow(width / 2, height / 2);

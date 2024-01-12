@@ -1,11 +1,13 @@
-﻿using MagusEngine.Commands;
+﻿using MagusEngine.Bus.UiBus;
 using MagusEngine.Core;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
+using MagusEngine.ECS.Components.ActorComponents.Effects;
+using MagusEngine.Services;
 using MagusEngine.Utils;
-using MagusEngine.Utils.Extensions;
 using SadRogue.Primitives;
 using System;
+using System.Linq;
 
 namespace MagusEngine.Systems.Physics
 {
@@ -78,50 +80,58 @@ namespace MagusEngine.Systems.Physics
                 if (entity is Actor actorTemp)
                 {
                     actor = actorTemp;
-                    actor.State = Arquimedes.Enumerators.ActorState.UncontrolledMovement;
+                    actor.State = Arquimedes.Enumerators.ActorState.Uncontrolled;
                 }
             }
-
+            int turns = 0;
+            string effectMessage = $"The {entity?.Name} is sent flying!";
             // calculate on force necessary to push entity if it's enough
             var force = CalculateNewton2Law(entity.Weight, pushForce);
 
             // then add friction
             var forceAfterFriction = CalculateFrictionToMovement(0.15, force);
             var accelerationNecessaryToMoveEntity = CalculateNewton2LawReturnAcceleration(entity.Weight, forceAfterFriction);
+            int meters = (int)pushForce;
 
             if (accelerationNecessaryToMoveEntity >= pushForce)
-                return; // not enough punch in the spell to move the entity
-
-            // then calculate damage as base damage + forceAfterFriction(energy not lost to friction)
-            var damage = CalculateStrikeForce(entity.Weight, forceAfterFriction);
-
-            // the acceleration isn't the same, and the meters is more the velocity of the object, since the formula would be:
-            // V =  a * t which t is time, and spell resolution happens in a second or less after casting,
-            // then this simplification should logicaly work!
-            int meters = (int)pushForce;
-            BodyPart? bp = null;
-            Point tilePos = Point.None;
-            for (int i = 0; i < meters; i++)
             {
-                var currentTile = (entity?.MagiMap?.GetTileAt(tilePos == Point.None ? entity.Position + directionToBeFlung : tilePos + directionToBeFlung))
-                    ?? throw new ApplicationException("The tile was null can't push!");
-                // is this enough?
-                if (actor is not null)
-                    bp = actor.GetAnatomy().Limbs.GetRandomItemFromList();
-                damage += damage;
-                if (currentTile?.IsWalkable == false)
-                {
-                    damage *= currentTile.Material.Density ?? 1; // massive damage by hitting a wall, multiplied by something i dunno
-                    CombatUtils.DealDamage(damage, entity!, damageType, currentTile?.Material, currentTile?.ReturnAttack(), limbAttacked: bp);
-                    break;
-                }
-                CombatUtils.DealDamage(damage, entity!, damageType, currentTile?.Material, currentTile?.ReturnAttack(), limbAttacked: bp);
-
-                tilePos = currentTile!.Position;
+                // not enough punch in the spell to move the entity
+                Locator.GetService<MessageBusService>()
+                    .SendMessage<AddMessageLog>(new($"The {entity?.Name} resists being flung!", Find.CurrentMap.PlayerFOV.CurrentFOV.Contains(entity.Position)));
+                return;
             }
-            // only move the actor effective position to the last tile, maybe there will be a need to redo this, but for now with instanteneous movement,
-            // this is good enough
-            ActionManager.MoveActorTo(entity!, tilePos);
+            actor?.AddComponent<UncontrolledMovementComponent>(new(meters, directionToBeFlung, Find.Time.Turns, Find.Time.Turns + turns, effectMessage));
+
+            //// then calculate damage as base damage + forceAfterFriction(energy not lost to friction)
+            //var damage = CalculateStrikeForce(entity.Weight, forceAfterFriction);
+
+            //// the acceleration isn't the same, and the meters is more the velocity of the object, since the formula would be:
+            //// V =  a * t which t is time, and spell resolution happens in a second or less after casting,
+            //// then this simplification should logicaly work!
+            //int meters = (int)pushForce;
+            //BodyPart? bp = null;
+            //Point tilePos = Point.None;
+            //for (int i = 0; i < meters; i++)
+            //{
+            //    var currentTile = (entity?.MagiMap?.GetTileAt(tilePos == Point.None ? entity.Position + directionToBeFlung : tilePos + directionToBeFlung))
+            //        ?? throw new ApplicationException("The tile was null can't push!");
+            //    // is this enough?
+            //    if (actor is not null)
+            //        bp = actor.GetAnatomy().Limbs.GetRandomItemFromList();
+            //    damage += damage;
+            //    if (currentTile?.IsWalkable == false)
+            //    {
+            //        damage *= currentTile.Material.Density ?? 1; // massive damage by hitting a wall, multiplied by something i dunno
+            //        CombatUtils.DealDamage(damage, entity!, damageType, currentTile?.Material, currentTile?.ReturnAttack(), limbAttacked: bp);
+            //        break;
+            //    }
+            //    CombatUtils.DealDamage(damage, entity!, damageType, currentTile?.Material, currentTile?.ReturnAttack(), limbAttacked: bp);
+
+            //    tilePos = currentTile!.Position;
+            //}
+            //// only move the actor effective position to the last tile, maybe there will be a need to redo this, but for now with instanteneous movement,
+            //// this is good enough
+            //ActionManager.MoveActorTo(entity!, tilePos);
         }
     }
 }

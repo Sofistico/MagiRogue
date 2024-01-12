@@ -269,13 +269,13 @@ namespace Diviner
                     if (sucess)
                     {
                         targetCursor = null;
-                        Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.GetCastingTime(getPlayer, spellCasted), sucess));
+                        Locator.GetService<MessageBusService>()?.SendMessage<ProcessTurnEvent>(new(TimeHelper.GetCastingTime(getPlayer, spellCasted), sucess));
                     }
                     return sucess;
                 }
                 else
                 {
-                    ui.MessageLog.PrintMessage("Invalid target!");
+                    Locator.GetService<MessageBusService>()?.SendMessage<AddMessageLog>(new("Invalid target!"));
                     return false;
                 }
             }

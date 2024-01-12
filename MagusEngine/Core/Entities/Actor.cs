@@ -6,7 +6,7 @@ using MagusEngine.Commands;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.ECS.Components.ActorComponents;
-using MagusEngine.ECS.Components.ActorComponents.EffectComponents;
+using MagusEngine.ECS.Components.ActorComponents.Status;
 using MagusEngine.ECS.Components.TilesComponents;
 using MagusEngine.Serialization.EntitySerialization;
 using MagusEngine.Services;

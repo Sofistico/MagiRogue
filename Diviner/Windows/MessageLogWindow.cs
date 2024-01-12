@@ -67,7 +67,7 @@ namespace Diviner.Windows
             Locator.GetService<MessageBusService>().RegisterAllSubscriber(this);
         }
 
-        public void PrintMessage(string message, bool newLine = true)
+        private void PrintMessage(string message, bool newLine = true)
         {
             lines.Enqueue(message);
 
