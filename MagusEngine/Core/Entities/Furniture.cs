@@ -40,7 +40,7 @@ namespace MagusEngine.Core.Entities
             UseActions = [];
             Qualities = [];
             FurnitureType = type;
-            Material = PhysicsManager.SetMaterial(materialId);
+            Material = PhysicsSystem.SetMaterial(materialId);
             // makes sure that the furniture is named by it's material
             // which is quite stupid, if i say so myself...
             Name = Material.ReturnNameFromMaterial(name);

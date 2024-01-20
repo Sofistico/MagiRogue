@@ -3,7 +3,6 @@ using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Systems;
 using MagusEngine.Systems.Physics;
-using MagusEngine.Utils;
 using SadRogue.Primitives;
 
 namespace MagusEngine.Core.Magic.Effects
@@ -15,24 +14,22 @@ namespace MagusEngine.Core.Magic.Effects
         public int Radius { get; set; }
         public double ConeCircleSpan { get; set; }
         public bool TargetsTile { get; set; }
-        public int BaseDamage { get; set; } // works as the impulse
+        public int BaseDamage { get; set; } // works as the mass that will collide with the target/s
         public EffectType EffectType { get; set; } = EffectType.KNOCKBACK;
         public bool CanMiss { get; set; }
-        public bool IsResistable { get; set; }
+        public bool IsResistable { get; set; }  
         public string? EffectMessage { get; set; }
         public int Volume { get; set; }
 
         public void ApplyEffect(Point target, Actor caster, SpellBase spellCasted)
         {
             var entity = caster.MagiMap.GetEntityAt<MagiEntity>(target);
-            var hit = CombatUtils.ResolveSpellHit(entity, caster, spellCasted, this);
+            var hit = CombatSystem.ResolveSpellHit(entity, caster, spellCasted, this);
             if (hit)
-                PhysicsManager.DealWithPushes(entity, BaseDamage, Direction.GetDirection(entity.Position - caster.Position), GetDamageType());
+                PhysicsSystem.DealWithPushes(entity, BaseDamage, Direction.GetDirection(entity.Position - caster.Position));
         }
 
-        public DamageType? GetDamageType()
-        {
-            return DataManager.QueryDamageInData(SpellDamageTypeId);
-        }
+        // not used in this case
+        public DamageType? GetDamageType() => DataManager.QueryDamageInData(SpellDamageTypeId);
     }
 }

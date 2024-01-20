@@ -6,17 +6,17 @@ using MagusEngine.Core;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic;
-using MagusEngine.Serialization;
 using MagusEngine.Services;
+using MagusEngine.Utils;
 using MagusEngine.Utils.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MagusEngine.Utils
+namespace MagusEngine.Systems
 {
-    public static class CombatUtils
+    public static class CombatSystem
     {
         #region Damage
 
@@ -399,7 +399,7 @@ namespace MagusEngine.Utils
                 // some moar randomness!
                 attackMomentum += Mrn.Exploding2D6Dice;
 
-                var damageWithoutPenetration = attackMomentum - Mrn.Exploding2D6Dice + (defender.Body.Endurance * 0.5);
+                var damageWithoutPenetration = attackMomentum - Mrn.Exploding2D6Dice + defender.Body.Endurance * 0.5;
                 var penetrationDamage = damageWithoutPenetration * attack.PenetrationPercentage;
                 var finalDamage = damageWithoutPenetration + penetrationDamage;
                 finalDamage = MathMagi.Round(finalDamage);
@@ -555,7 +555,7 @@ namespace MagusEngine.Utils
             double shearFRatio = (double)((double)attackMaterial.ShearFracture / (double)defenseMaterial.ShearFracture);
             double shearYRatio = (double)((double)attackMaterial.ShearYield / (double)defenseMaterial.ShearYield);
             var momentumReq = (shearYRatio + (attackContactArea + 1) * shearFRatio)
-                * (10 + (2 * armorQualityModifier)) / (attackMaterial.MaxEdge * (weaponQualityModifier + 1));
+                * (10 + 2 * armorQualityModifier) / (attackMaterial.MaxEdge * (weaponQualityModifier + 1));
             if (originalMomentum >= momentumReq)
             {
                 return (double)((double)originalMomentum * (double)(defenseMaterial.ShearStrainAtYield / 50000));

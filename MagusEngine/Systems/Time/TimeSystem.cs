@@ -20,11 +20,9 @@ namespace MagusEngine.Systems.Time
 
         public event EventHandler<TimeDefSpan>? TurnPassed;
 
-        [JsonIgnore]
         public TimeDefSpan TimePassed { get; }
-
-        [JsonIgnore]
         public int Turns => (int)TimePassed.Seconds;
+        public long Tick => TimePassed.Ticks;
 
         public TimeSystem(long initialTick = 0)
         {

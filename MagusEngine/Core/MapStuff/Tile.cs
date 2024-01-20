@@ -30,7 +30,7 @@ namespace MagusEngine.Core.MapStuff
 
             set
             {
-                _material = PhysicsManager.SetMaterial(value);
+                _material = PhysicsSystem.SetMaterial(value);
             }
         }
         public Material Material => _material;

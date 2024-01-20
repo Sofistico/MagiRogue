@@ -96,7 +96,7 @@ namespace MagusEngine.Core.Entities
         {
             Volume = size;
             Condition = condition;
-            Material = PhysicsManager.SetMaterial(materialId);
+            Material = PhysicsSystem.SetMaterial(materialId);
             Name = Material.ReturnNameFromMaterial(name) ?? "BUGGED!";
             UseAction = [];
             Traits = [];
@@ -157,7 +157,7 @@ namespace MagusEngine.Core.Entities
 
         public int DamageWhenItemStrikes(int itemAceleration)
         {
-            return PhysicsManager.CalculateStrikeForce(Weight, itemAceleration) + BaseDmg;
+            return PhysicsSystem.CalculateMomentum(Weight, itemAceleration) + BaseDmg;
         }
 
         public double QualityMultiplier()

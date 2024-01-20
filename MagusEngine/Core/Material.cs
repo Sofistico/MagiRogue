@@ -14,7 +14,7 @@ namespace MagusEngine.Core
     {
         private MagiColorSerialization? magiColorSerialization;
 
-        public static Material? None => PhysicsManager.SetMaterial("null");
+        public static Material? None => PhysicsSystem.SetMaterial("null");
 
         public string Id { get; set; }
         public string Name { get; set; }

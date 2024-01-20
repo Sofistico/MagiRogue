@@ -494,29 +494,6 @@ namespace MagusEngine.Core.Entities.Base
             return Limbs[rng];
         }
 
-        public void UpdateBody(Actor actor)
-        {
-            if (BloodCount <= 0)
-                ActionManager.ResolveDeath(actor);
-            actor.ApplyAllRegen();
-            List<Wound> wounds = GetAllWounds();
-            if (wounds.Count > 0)
-            {
-                foreach (Wound wound in wounds)
-                {
-                    if (wound.Bleeding > 0)
-                    {
-                        BloodCount -= wound.Bleeding;
-
-                        if (wound.Treated)
-                            wound.Bleeding -= actor.GetBloodCoagulation();
-                        else
-                            wound.Bleeding -= actor.GetBloodCoagulation() / (int)wound.Severity + 1;
-                    }
-                }
-            }
-        }
-
         /// <summary>
         /// Checks once a year for aging related stuff and etc... To be used
         /// </summary>

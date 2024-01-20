@@ -4,7 +4,6 @@ using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Services;
 using MagusEngine.Systems;
-using MagusEngine.Utils;
 using Newtonsoft.Json;
 
 namespace MagusEngine.Core.Magic.Effects
@@ -92,7 +91,7 @@ namespace MagusEngine.Core.Magic.Effects
                 return;
             }
 
-            CombatUtils.ResolveSpellHit(poorGuy, caster, spellCasted, this, ReturnAttack());
+            CombatSystem.ResolveSpellHit(poorGuy, caster, spellCasted, this, ReturnAttack());
         }
 
         private void HealEffect(Point target, Actor caster, SpellBase spellCasted)
@@ -101,7 +100,7 @@ namespace MagusEngine.Core.Magic.Effects
 
             if (AreaOfEffect is SpellAreaEffect.Self)
             {
-                CombatUtils.ApplyHealing(BaseDamage, caster);
+                CombatSystem.ApplyHealing(BaseDamage, caster);
             }
             else
             {
@@ -118,7 +117,7 @@ namespace MagusEngine.Core.Magic.Effects
                     return;
                 }
 
-                CombatUtils.ApplyHealing(BaseDamage, happyGuy);
+                CombatSystem.ApplyHealing(BaseDamage, happyGuy);
             }
         }
 

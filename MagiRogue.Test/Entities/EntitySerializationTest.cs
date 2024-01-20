@@ -15,7 +15,7 @@ namespace MagiRogue.Test.Entities
         public void ItemSerializingTest()
         {
             const string name = "Serialization Test";
-            string expectedName = PhysicsManager.SetMaterial("wood").ReturnNameFromMaterial(name);
+            string expectedName = PhysicsSystem.SetMaterial("wood").ReturnNameFromMaterial(name);
 
             Item item = new(Color.Red, Color.Transparent, name, 'T', Point.None, 100, materialId: "wood");
 

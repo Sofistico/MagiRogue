@@ -24,7 +24,7 @@ namespace MagusEngine.Core.Entities.Base
         {
             get
             {
-                material ??= PhysicsManager.SetMaterial(MaterialId);
+                material ??= PhysicsSystem.SetMaterial(MaterialId);
                 return material;
             }
         }

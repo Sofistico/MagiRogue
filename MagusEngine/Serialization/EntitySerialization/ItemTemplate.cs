@@ -43,7 +43,7 @@ namespace MagusEngine.Serialization.EntitySerialization
             Condition = condition;
             Volume = size;
             MaterialId = materialId;
-            Material = PhysicsManager.SetMaterial(materialId);
+            Material = PhysicsSystem.SetMaterial(materialId);
             MagicStuff = magic;
         }
 

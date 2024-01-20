@@ -66,7 +66,7 @@ namespace MagusEngine.ECS.Components.TilesComponents
         [JsonConstructor]
         public Plant(string? materialId = null, string[] fores = null)
         {
-            Material = materialId.IsNullOrEmpty() ? Material.None : PhysicsManager.SetMaterial(materialId)!;
+            Material = materialId.IsNullOrEmpty() ? Material.None : PhysicsSystem.SetMaterial(materialId)!;
             Fores = fores;
             Fore = Fores.GetRandomItemFromList();
         }

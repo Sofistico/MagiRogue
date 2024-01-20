@@ -351,7 +351,7 @@ namespace MagusEngine.Core.Entities
 
         public double GetAttackVelocity(Attack attack)
         {
-            return PhysicsManager.GetAttackVelocity(this, attack);
+            return PhysicsSystem.GetAttackVelocity(this, attack);
         }
 
         public int GetPrecision()
@@ -555,6 +555,30 @@ namespace MagusEngine.Core.Entities
         public List<Attack> GetRaceAttacks()
         {
             return GetAnatomy().Race.Attacks;
+        }
+
+        public void UpdateBody()
+        {
+            var anatomy = GetAnatomy();
+            if (anatomy.BloodCount <= 0)
+                ActionManager.ResolveDeath(this);
+            ApplyAllRegen();
+            List<Wound> wounds = anatomy.GetAllWounds();
+            if (wounds.Count > 0)
+            {
+                foreach (Wound wound in wounds)
+                {
+                    if (wound.Bleeding > 0)
+                    {
+                        anatomy.BloodCount -= wound.Bleeding;
+
+                        if (wound.Treated)
+                            wound.Bleeding -= GetBloodCoagulation();
+                        else
+                            wound.Bleeding -= (GetBloodCoagulation() / (int)wound.Severity) + 1;
+                    }
+                }
+            }
         }
 
         #endregion Methods

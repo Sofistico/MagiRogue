@@ -4,6 +4,7 @@ using MagusEngine.Core.Entities;
 using MagusEngine.ECS.Components.ActorComponents.Status;
 using MagusEngine.Services;
 using MagusEngine.Systems;
+using MagusEngine.Systems.Time;
 using Newtonsoft.Json;
 
 namespace MagusEngine.Core.Magic.Effects
@@ -33,15 +34,15 @@ namespace MagusEngine.Core.Magic.Effects
 
         public void ApplyEffect(Point target, Actor caster, SpellBase spellCasted)
         {
-            if (caster.GetComponent(out SightComponent effect))
+            if (caster.GetComponent(out SightComponent _))
             {
                 Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("You already have your Sight active"));
                 return;
             }
-            effect = new(Find.Universe.Time.Turns, Find.Universe.Time.Turns + Duration, EffectMessage);
+            SightComponent effect = new(Find.Universe.Time.Tick, Find.Universe.Time.Tick + (Duration * TimeDefSpan.CentisecondsPerSecond), EffectMessage);
 
-            var actor = Find.CurrentMap.GetEntityAt<Actor>(target);
-            actor.AddComponent(effect);
+            var actor = Find.CurrentMap?.GetEntityAt<Actor>(target);
+            actor?.AddComponent(effect);
         }
 
         public DamageType? GetDamageType()

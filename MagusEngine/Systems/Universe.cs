@@ -296,9 +296,9 @@ namespace MagusEngine.Systems
         {
             if (sucess)
             {
-                bool playerActionWorked = ProcessPlayerTurn(playerTime);
+                bool playerIsDed = ProcessPlayerTurn(playerTime);
 
-                if (!playerActionWorked)
+                if (!playerIsDed)
                     return;
 
                 // here the player has done it's turn, so let's go to the next one
@@ -370,8 +370,8 @@ namespace MagusEngine.Systems
             Player.ProcessNeeds();
             PlayerTimeNode playerTurn = new(Time.GetTimePassed(playerTime));
             Time.RegisterEntity(playerTurn);
-            Player.GetAnatomy().UpdateBody(Player);
-            CurrentMap.PlayerFOV.Calculate(Player.Position, Player.GetViewRadius());
+            Player.UpdateBody();
+            CurrentMap?.PlayerFOV.Calculate(Player.Position, Player.GetViewRadius());
 
             return true;
         }
@@ -404,7 +404,7 @@ namespace MagusEngine.Systems
         {
             Actor? entity = (Actor?)CurrentMap?.GetEntityById(entityId);
 
-            if (entity is not null)
+            if (entity?.State.HasFlag(ActorState.Uncontrolled) == false)
             {
                 var ais = entity.GetComponents<IAiComponent>();
                 // sucess and failure will have to have some sort of aggregate function made later!
@@ -422,7 +422,7 @@ namespace MagusEngine.Systems
                 }
 
                 entity.ProcessNeeds();
-                entity.GetAnatomy().UpdateBody(entity);
+                entity.UpdateBody();
 
                 if (sucesses > 0 && totalTicks < -1)
                     return;

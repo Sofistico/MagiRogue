@@ -5,7 +5,7 @@
         /// <summary>
         /// In meters per second, m/s²
         /// </summary>
-        public const double EarthGravity = 9.807;
+        public const double PlanetGravity = 9.807;
 
         /// <summary>
         /// Represents the speed that something will reach when eventually going to the ground.
@@ -16,7 +16,7 @@
         /// <returns>Returns the speed in m/s</returns>
         public static double CalculateFallSpeed(int ticksFalling)
         {
-            return EarthGravity * ticksFalling;
+            return PlanetGravity * ticksFalling;
         }
     }
 }

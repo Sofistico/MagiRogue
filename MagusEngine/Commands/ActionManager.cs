@@ -92,8 +92,8 @@ namespace MagusEngine.Commands
             StringBuilder defenseMessage = new();
 
             (bool hit, BodyPart limbAttacked, BodyPart limbAttacking, DamageType dmgType, Item? itemUsed, Material attackMaterial)
-                = CombatUtils.ResolveHit(attacker, defender, attackMessage, attack, isPlayer, limbChoosen);
-            double finalMomentum = CombatUtils.ResolveDefenseAndGetAttackMomentum(attacker,
+                = CombatSystem.ResolveHit(attacker, defender, attackMessage, attack, isPlayer, limbChoosen);
+            double finalMomentum = CombatSystem.ResolveDefenseAndGetAttackMomentum(attacker,
                 defender,
                 hit,
                 limbAttacking,
@@ -109,7 +109,7 @@ namespace MagusEngine.Commands
             }
 
             // The defender now takes damage
-            CombatUtils.ResolveDamage(defender,
+            CombatSystem.ResolveDamage(defender,
                 finalMomentum,
                 dmgType,
                 limbAttacked,
@@ -132,7 +132,7 @@ namespace MagusEngine.Commands
         /// <param name="actor"></param>
         public static void ResolveDeath(Actor actor)
         {
-            CombatUtils.ResolveDeath(actor);
+            CombatSystem.ResolveDeath(actor);
         }
 
         /// <summary>

@@ -4,6 +4,7 @@ using MagusEngine.Core.Entities;
 using MagusEngine.ECS.Components.ActorComponents.Status;
 using MagusEngine.Services;
 using MagusEngine.Systems;
+using MagusEngine.Systems.Time;
 using Newtonsoft.Json;
 
 namespace MagusEngine.Core.Magic.Effects
@@ -63,8 +64,8 @@ namespace MagusEngine.Core.Magic.Effects
                 return;
             }
             HasteComponent haste = new(HastePower,
-                Find.Universe.Time.Turns,
-                Find.Universe.Time.Turns + Duration,
+                Find.Universe.Time.Tick,
+                Find.Universe.Time.Tick + (Duration * TimeDefSpan.CentisecondsPerSecond),
                 EffectMessage);
             actor.AddComponent(haste);
         }
