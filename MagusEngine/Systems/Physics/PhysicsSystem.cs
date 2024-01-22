@@ -124,13 +124,6 @@ namespace MagusEngine.Systems.Physics
                 Find.Time.Tick + 1, // should run exactly once
                 effectMessage);
             entity?.AddComponent(comp, comp.Tag);
-            //var momentum = CalculateMomentum(entity!.Weight, pushForce);
-            //BodyPart? bp = null;
-            //if (entity is Actor actor)
-            //{
-            //    bp = actor.GetAnatomy().GetRandomLimb();
-            //}
-            //CombatSystem.DealDamage(momentum, entity, DataManager.QueryDamageInData("blunt")!, null, null, bp);
         }
     }
 }
