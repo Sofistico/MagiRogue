@@ -46,9 +46,7 @@ namespace MagusEngine.Systems.Physics
                 return finalSpeed * attack.VelocityMultiplier * 100;
             }
             ability = actor.GetRelevantAbility(attack.AttackAbility);
-            finalSpeed = ability != 0 ?
-                actor.GetActorSpeed() / ability
-                : actor.GetActorSpeed();
+            finalSpeed = ability != 0 ? actor.GetActorSpeed() / ability : actor.GetActorSpeed();
             return finalSpeed * attack.VelocityMultiplier * 100;
         }
 
