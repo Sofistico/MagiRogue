@@ -292,7 +292,7 @@ namespace MagusEngine.Systems
                 Time.RegisterEntity(new EntityTimeNode(entity.ID, Time.GetTimePassed(time)));
         }
 
-        private void ProcessTurn(long playerTime, bool sucess, bool playerCanAct)
+        private void ProcessTurn(long playerTime, bool sucess)
         {
             if (sucess)
             {
@@ -488,7 +488,7 @@ namespace MagusEngine.Systems
 
         public void Handle(ProcessTurnEvent message)
         {
-            ProcessTurn(message.Time, message.Sucess, message.CanAct);
+            ProcessTurn(message.Time, message.Sucess);
         }
 
         public void Handle(RemoveEntitiyCurrentMap message)
