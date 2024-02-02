@@ -15,6 +15,8 @@ namespace MagusEngine.Systems
     /// </summary>
     public abstract class FOVHandler
     {
+        private FovState _currentState;
+
         /// <summary>
         /// Possible states for the <see cref="FOVHandler"/> FOVVisibilityHandler to be in.
         /// </summary>
@@ -45,8 +47,6 @@ namespace MagusEngine.Systems
         /// </summary>
         public bool IsEnabled => CurrentState == FovState.Enabled;
 
-        private FovState _currentState;
-
         /// <summary>
         /// The current state of the handler. See <see cref="State"/> documentation for details on
         /// each possible value.
@@ -73,7 +73,7 @@ namespace MagusEngine.Systems
                 // Otherwise, set the state value, and apply it to the map if there is one.
                 _currentState = value;
 
-                //ApplyStateToMap()
+                SetState(_currentState);
             }
         }
 
@@ -94,8 +94,6 @@ namespace MagusEngine.Systems
             map.ObjectAdded += Map_ObjectAdded;
             map.ObjectMoved += Map_ObjectMoved;
             map.FOVRecalculated += Map_FOVRecalculated;
-
-            //CurrentState = startingState;
 
             SetState(startingState);
         }
@@ -150,9 +148,6 @@ namespace MagusEngine.Systems
                             UpdateEntitySeen(entity);
                     }
 
-                    break;
-
-                default:
                     break;
             }
         }

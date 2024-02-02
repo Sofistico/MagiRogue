@@ -4,6 +4,7 @@ using GoRogue.Pathing;
 using GoRogue.Random;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
+using MagusEngine.Core.MapStuff;
 using MagusEngine.ECS;
 using MagusEngine.ECS.Components.ActorComponents;
 using MagusEngine.ECS.Components.TilesComponents;
@@ -24,14 +25,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace MagusEngine.Core.MapStuff
+namespace MagusEngine.RemoveGoRogueMapDependency
 {
     /// <summary>
     /// Stores, manipulates and queries Tile data, uses GoRogue Map class
     /// </summary>
     [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
     [JsonConverter(typeof(MapJsonConverter))]
-    public sealed class MagiMap : GoRogue.GameFramework.Map, IDisposable
+    public sealed class NewMagiMap : GoRogue.GameFramework.Map, IDisposable
     {
         #region Fields
 
@@ -98,7 +99,7 @@ namespace MagusEngine.Core.MapStuff
         /// </summary>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public MagiMap(string mapName, int width = 60, int height = 60, bool usesWeighEvaluation = true) :
+        public NewMagiMap(string mapName, int width = 60, int height = 60, bool usesWeighEvaluation = true) :
             base(width, height, Enum.GetNames(typeof(MapLayer)).Length - 1,
             Distance.Euclidean,
             entityLayersSupportingMultipleItems: LayerMasker.Default.Mask((int)MapLayer.ITEMS,
@@ -107,7 +108,7 @@ namespace MagusEngine.Core.MapStuff
                 (int)MapLayer.SPECIAL))
         {
             // Treat the fov as a component.
-            GoRogueComponents.Add(new MagiRogueFOVVisibilityHandler(this, Color.DarkSlateGray, (int)MapLayer.GHOSTS));
+            //GoRogueComponents.Add(new MagiRogueFOVVisibilityHandler(this, Color.DarkSlateGray, (int)MapLayer.GHOSTS));
 
             _entityManager = new();
             MapName = mapName;
@@ -842,7 +843,7 @@ namespace MagusEngine.Core.MapStuff
 
         public List<Room?> FindRoomsByTag(RoomTag tag) => Rooms?.FindAll(i => i.Tag == tag)!;
 
-        ~MagiMap()
+        ~NewMagiMap()
         {
             Dispose();
         }
