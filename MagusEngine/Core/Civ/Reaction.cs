@@ -1,6 +1,6 @@
 ﻿using Arquimedes.Enumerators;
+using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
-using MagusEngine.Serialization.EntitySerialization;
 using MagusEngine.Systems;
 using System.Collections.Generic;
 
@@ -9,14 +9,19 @@ namespace MagusEngine.Core.Civ
     // will need to rethink this object better!
     public class Reaction
     {
-        private ItemTemplate cachedItem;
+        private Dictionary<string, Item> cachedItems;
 
         public string Id { get; set; }
 
         /// <summary>
-        /// The item that is produced
+        /// The items that is produced
         /// </summary>
-        public string ItemId { get; set; }
+        public List<string> ItemsId { get; set; }
+
+        /// <summary>
+        /// The selected item to produce
+        /// </summary>
+        public string SelectedItemId { get; set; }
 
         /// <summary>
         /// Reaction name
@@ -32,14 +37,20 @@ namespace MagusEngine.Core.Civ
         /// The type of material that will be needed or the type of material that the item will be
         /// made off!
         /// </summary>
-        public List<MaterialType> Material { get; set; } = new();
+        public List<MaterialType> Material { get; set; } = [];
+
+        public List<string> Query { get; set; }
 
         /// <summary> The total volume that the <see cref="Material"/ of the item will be needed!> </summary>
         public int VolumeOfMaterialNeededToProduce
         {
             get
             {
-                cachedItem ??= DataManager.QueryItemInData(ItemId);
+                if (!cachedItems.TryGetValue(SelectedItemId, out var cachedItem))
+                {
+                    cachedItem = DataManager.QueryItemInData(SelectedItemId);
+                    cachedItems.Add(SelectedItemId, cachedItem);
+                }
                 return cachedItem.Volume * Amount;
             }
         }
@@ -47,8 +58,8 @@ namespace MagusEngine.Core.Civ
         /// <summary>
         /// What quality the product needs to be made
         /// </summary>
-        public List<Quality> Quality { get; set; } = new();
-        public List<RoomTag> RoomTag { get; set; } = new();
+        public List<Quality> Quality { get; set; } = [];
+        public List<RoomTag> RoomTag { get; set; } = [];
 
         public Reaction()
         {
@@ -58,14 +69,19 @@ namespace MagusEngine.Core.Civ
             int amount,
             List<MaterialType> material)
         {
-            ItemId = itemId;
+            ItemsId = [itemId];
+            SelectedItemId = itemId;
             Amount = amount;
             Material = material;
         }
 
-        public ItemTemplate ReturnProductItem()
+        public Item ReturnProductItem(string itemId, Material materialToUse)
         {
-            cachedItem ??= DataManager.QueryItemInData(ItemId);
+            SelectedItemId = itemId;
+            if (!cachedItems.TryGetValue(itemId, out var cachedItem))
+            {
+                cachedItem = DataManager.QueryItemInData(SelectedItemId, materialToUse);
+            }
             return cachedItem;
         }
     }

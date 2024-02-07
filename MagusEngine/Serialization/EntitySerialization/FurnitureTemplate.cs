@@ -200,7 +200,7 @@ namespace MagusEngine.Serialization.EntitySerialization
             if (template.Foreground == null && template.Background == null)
             {
                 // TODO: will transplate to entity as a static method
-                var material = PhysicsSystem.SetMaterial(template.MaterialId);
+                var material = DataManager.QueryMaterial(template.MaterialId);
                 template.BackgroundBackingField = new MagiColorSerialization(Color.Black);
                 template.ForegroundBackingField = material.ReturnMagiColor();
             }

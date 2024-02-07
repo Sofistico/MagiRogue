@@ -3,6 +3,7 @@ using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Entities.Interfaces;
 using MagusEngine.Serialization;
 using MagusEngine.Serialization.EntitySerialization;
+using MagusEngine.Systems;
 using MagusEngine.Systems.Physics;
 using MagusEngine.Utils;
 using Newtonsoft.Json;
@@ -40,11 +41,11 @@ namespace MagusEngine.Core.Entities
             UseActions = [];
             Qualities = [];
             FurnitureType = type;
-            Material = PhysicsSystem.SetMaterial(materialId);
+            Material = DataManager.QueryMaterial(materialId);
             // makes sure that the furniture is named by it's material
             // which is quite stupid, if i say so myself...
             Name = Material.ReturnNameFromMaterial(name);
-            Durability = (int)(Material.Hardness * Material.Density) + durability;
+            Durability = (int)(Material?.Hardness ?? 1 * Material.Density) + durability;
             FurId = furId;
             Inventory = [];
         }

@@ -2,6 +2,7 @@
 using MagusEngine.Core.Entities;
 using MagusEngine.Factory;
 using MagusEngine.Serialization.EntitySerialization;
+using MagusEngine.Systems;
 using MagusEngine.Systems.Physics;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
@@ -15,7 +16,7 @@ namespace MagiRogue.Test.Entities
         public void ItemSerializingTest()
         {
             const string name = "Serialization Test";
-            string expectedName = PhysicsSystem.SetMaterial("wood").ReturnNameFromMaterial(name);
+            string expectedName = DataManager.QueryMaterial("wood").ReturnNameFromMaterial(name);
 
             Item item = new(Color.Red, Color.Transparent, name, 'T', Point.None, 100, materialId: "wood");
 

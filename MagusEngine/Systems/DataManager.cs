@@ -22,79 +22,59 @@ namespace MagusEngine.Systems
 {
     public static class DataManager
     {
-        // TODO: change all IReadOnlyList to dictionaries! and make it all private
+        // TODO: change all List to dictionaries! and make it all private
         private static bool firstLoad = true;
 
         #region jsons
 
-        public static readonly IReadOnlyList<ItemTemplate> ListOfItems =
-            GetSourceTree<ItemTemplate>(@".\Data\Items\items_*");
+        public static List<ItemTemplate> ListOfItems => GetSourceTree<ItemTemplate>(@".\Data\Items\items_*");
 
-        public static readonly List<Material> ListOfMaterials =
-            GetSourceTree<Material>(@".\Data\Materials\material_*");
+        public static List<Material> ListOfMaterials => GetSourceTree<Material>(@".\Data\Materials\material_*");
 
-        public static readonly IReadOnlyList<SpellBase> ListOfSpells =
-            GetSourceTree<SpellBase>(@".\Data\Spells\spells_*");
+        public static List<SpellBase> ListOfSpells => GetSourceTree<SpellBase>(@".\Data\Spells\spells_*");
 
-        public static readonly IReadOnlyList<Organ> ListOfOrgans =
-            GetSourceTree<Organ>(@".\Data\Bodies\organs_*");
+        public static List<Organ> ListOfOrgans => GetSourceTree<Organ>(@".\Data\Bodies\organs_*");
 
-        public static readonly IReadOnlyList<Limb> ListOfLimbs =
-            GetSourceTree<Limb>(@".\Data\Bodies\limbs_*");
+        public static List<Limb> ListOfLimbs => GetSourceTree<Limb>(@".\Data\Bodies\limbs_*");
 
-        public static readonly IReadOnlyList<Furniture> ListOfFurnitures =
-            GetSourceTree<Furniture>(@".\Data\Furniture\fur_*");
+        public static List<Furniture> ListOfFurnitures => GetSourceTree<Furniture>(@".\Data\Furniture\fur_*");
 
-        public static readonly IReadOnlyList<RoomTemplate> ListOfRooms =
-            GetSourceTree<RoomTemplate>(@".\Data\Rooms\room_*");
+        public static List<RoomTemplate> ListOfRooms => GetSourceTree<RoomTemplate>(@".\Data\Rooms\room_*");
 
         // races can be dynamically generated ingame
-        public static readonly IReadOnlyList<Race> ListOfRaces =
-            GetSourceTree<Race>(@".\Data\Races\race_*");
+        public static List<Race> ListOfRaces => GetSourceTree<Race>(@".\Data\Races\race_*");
 
-        public static readonly IReadOnlyList<Scenario> ListOfScenarios =
-            GetSourceTree<Scenario>(@".\Data\Scenarios\scenarios_*");
+        public static List<Scenario> ListOfScenarios => GetSourceTree<Scenario>(@".\Data\Scenarios\scenarios_*");
 
-        public static readonly IReadOnlyList<BodyPlan> ListOfBpPlan =
-            GetSourceTree<BodyPlan>(@".\Data\Bodies\bodies_*.json");
+        public static List<BodyPlan> ListOfBpPlan => GetSourceTree<BodyPlan>(@".\Data\Bodies\bodies_*.json");
 
-        public static readonly IReadOnlyList<Language> ListOfLanguages =
-            GetSourceTree<Language>(@".\Data\Language\language_*");
+        public static List<Language> ListOfLanguages => GetSourceTree<Language>(@".\Data\Language\language_*");
 
-        public static readonly IReadOnlyList<Profession> ListOfProfessions =
-            GetSourceTree<Profession>(@".\Data\Professions\profession_*");
+        public static List<Profession> ListOfProfessions => GetSourceTree<Profession>(@".\Data\Professions\profession_*");
 
-        public static readonly IReadOnlyList<CultureTemplate> ListOfCultures =
-            GetSourceTree<CultureTemplate>(@".\Data\Cultures\cultures_*");
+        public static List<CultureTemplate> ListOfCultures => GetSourceTree<CultureTemplate>(@".\Data\Cultures\cultures_*");
 
-        public static readonly IReadOnlyList<Research> ListOfResearches =
-            GetSourceTree<Research>(@".\Data\Research\research_*");
+        public static List<Research> ListOfResearches => GetSourceTree<Research>(@".\Data\Research\research_*");
 
-        public static readonly IReadOnlyList<Reaction> ListOfReactions =
-            GetSourceTree<Reaction>(@".\Data\Reaction\reaction_*");
+        public static List<Reaction> ListOfReactions => GetSourceTree<Reaction>(@".\Data\Reaction\reaction_*");
 
-        public static readonly IReadOnlyList<Ruleset> ListOfRules =
-            GetSourceTree<Ruleset>(@".\Data\Rules\rules_*");
+        public static List<Ruleset> ListOfRules => GetSourceTree<Ruleset>(@".\Data\Rules\rules_*");
 
-        public static readonly IReadOnlyList<Plant> ListOfPlants =
-            GetSourceTree<Plant>(@".\Data\Plant\plant_*");
+        public static List<Plant> ListOfPlants => GetSourceTree<Plant>(@".\Data\Plant\plant_*");
 
-        public static readonly IReadOnlyList<TissuePlanTemplate> ListOfTissuePlans =
-            GetSourceTree<TissuePlanTemplate>(@".\Data\Bodies\tissue_*");
+        public static List<TissuePlanTemplate> ListOfTissuePlans => GetSourceTree<TissuePlanTemplate>(@".\Data\Bodies\tissue_*");
 
-        public static readonly IReadOnlyList<DamageType> ListOfDamageTypes =
-            GetSourceTree<DamageType>(@".\Data\Damage\dmg_*");
+        public static List<DamageType> ListOfDamageTypes => GetSourceTree<DamageType>(@".\Data\Damage\dmg_*");
 
         #region Descriptors
 
-        public static readonly IReadOnlyList<string> ListOfRealmsName =
-            GetSourceTree<string>(@".\Data\Descriptors\realms_*.json");
-        public static readonly IReadOnlyList<string> ListOfMagicFounts =
-            GetSourceTree<string>(@".\Data\Descriptors\magic_fount_*.json");
-        public static readonly IReadOnlyList<string> ListOfAdjectives =
-            GetSourceTree<string>(@".\Data\Descriptors\adjectives_*.json");
-        public static readonly IReadOnlyList<ShapeDescriptor> ListOfShapes =
-            GetSourceTree<ShapeDescriptor>(@".\Data\Descriptors\shapes_*.json");
+        public static List<string> ListOfRealmsName => GetSourceTree<string>(@".\Data\Descriptors\realms_*.json");
+
+        public static List<string> ListOfMagicFounts => GetSourceTree<string>(@".\Data\Descriptors\magic_fount_*.json");
+
+        public static List<string> ListOfAdjectives => GetSourceTree<string>(@".\Data\Descriptors\adjectives_*.json");
+
+        public static List<ShapeDescriptor> ListOfShapes => GetSourceTree<ShapeDescriptor>(@".\Data\Descriptors\shapes_*.json");
 
         #endregion Descriptors
 
@@ -118,34 +98,33 @@ namespace MagusEngine.Systems
 
         public static SpellBase? QuerySpellInData(string spellId, double proficiency = 0)
         {
-            var spell = ListOfSpells.FirstOrDefault(m => m.SpellId.Equals(spellId))?.Copy();
-            if(spell is not null)
+            var spell = ListOfSpells.Find(m => m.SpellId.Equals(spellId))?.Copy();
+            if (spell is not null)
                 spell.Proficiency = proficiency;
             return spell;
         }
 
         public static Limb QueryLimbInData(string limbId)
         {
-            var limb = ListOfLimbs.FirstOrDefault(l => l.Id.Equals(limbId), null);
+            var limb = ListOfLimbs.Find(l => l.Id.Equals(limbId));
             return limb?.Copy()!;
         }
 
         public static Organ? QueryOrganInData(string organId)
         {
-            var organ = ListOfOrgans.FirstOrDefault(o => o.Id.Equals(organId), null);
+            var organ = ListOfOrgans.Find(o => o.Id.Equals(organId));
             return organ?.Copy();
         }
 
-        public static Item QueryItemInData(string itemId)
-            => ListOfItems.FirstOrDefault(i => i.Id.Equals(itemId));
+        public static Item QueryItemInData(string itemId) => ListOfItems.Find(i => i.Id.Equals(itemId));
 
-        public static Furniture QueryFurnitureInData(string furnitureId)
-            => ListOfFurnitures.FirstOrDefault(i => i.FurId.Equals(furnitureId))?.Copy();
+        public static Item QueryItemInData(string itemId, Material material) => QueryItemInData(itemId).ConfigureMaterial(material);
 
-        public static RoomTemplate QueryRoomInData(string roomId)
-            => ListOfRooms.FirstOrDefault(i => i.Id.Equals(roomId));
+        public static Furniture? QueryFurnitureInData(string furnitureId) => ListOfFurnitures.Find(i => i.FurId.Equals(furnitureId))?.Copy();
 
-        public static Material QueryMaterial(string id)
+        public static RoomTemplate? QueryRoomInData(string roomId) => ListOfRooms.Find(i => i.Id.Equals(roomId));
+
+        public static Material? QueryMaterial(string id)
         {
             if (firstLoad)
             {
@@ -167,74 +146,58 @@ namespace MagusEngine.Systems
             return ListOfMaterials.Find(a => a.Id.Equals(id));
         }
 
-        public static Race QueryRaceInData(string raceId)
-            => (Race)(ListOfRaces.FirstOrDefault(c => c.Id.Equals(raceId))?.Clone());
+        public static Race? QueryRaceInData(string raceId) => ListOfRaces.Find(c => c.Id.Equals(raceId))?.Clone();
 
-        public static Scenario QueryScenarioInData(string scenarioId)
-            => ListOfScenarios.FirstOrDefault(c => c.Id.Equals(scenarioId));
+        public static Scenario? QueryScenarioInData(string scenarioId) => ListOfScenarios.Find(c => c.Id.Equals(scenarioId));
 
-        public static BodyPlan QueryBpPlanInData(string bpPlanId)
-            => ListOfBpPlan.FirstOrDefault(c => c.Id.Equals(bpPlanId));
+        public static BodyPlan? QueryBpPlanInData(string bpPlanId) => ListOfBpPlan.Find(c => c.Id?.Equals(bpPlanId) == true);
 
         public static List<BodyPart> QueryBpsPlansInDataAndReturnBodyParts(string[] bpPlansId, Race race = null!)
         {
-            List<BodyPart> bps = new();
+            List<BodyPart> bps = [];
             BodyPlanCollection collection = new();
             foreach (var id in bpPlansId)
             {
-                BodyPlan bp = QueryBpPlanInData(id);
-                collection.BodyPlans.Add(bp);
+                BodyPlan? bp = QueryBpPlanInData(id);
+                if (bp != null)
+                    collection.BodyPlans.Add(bp);
             }
             bps.AddRange(collection.ExecuteAllBodyPlans(race));
 
             return bps;
         }
 
-        public static Language QueryLanguageInData(string languageId)
-            => ListOfLanguages.FirstOrDefault(i => i.Id.Equals(languageId));
+        public static Language? QueryLanguageInData(string languageId) => ListOfLanguages.Find(i => i.Id.Equals(languageId));
 
-        public static Profession QueryProfessionInData(string professionId)
-            => ListOfProfessions.FirstOrDefault(i => i.Id.Equals(professionId));
+        public static Profession? QueryProfessionInData(string professionId) => ListOfProfessions.Find(i => i.Id.Equals(professionId));
 
-        public static ShapeDescriptor QueryShapeDescInData(string shapeId)
-            => ListOfShapes.FirstOrDefault(i => i.Id.Equals(shapeId));
+        public static ShapeDescriptor? QueryShapeDescInData(string shapeId) => ListOfShapes.Find(i => i.Id.Equals(shapeId));
 
-        public static CultureTemplate QueryCultureTemplateInData(string cultureId)
-            => ListOfCultures.FirstOrDefault(i => i.Id.Equals(cultureId));
+        public static CultureTemplate? QueryCultureTemplateInData(string cultureId) => ListOfCultures.Find(i => i.Id.Equals(cultureId));
 
-        public static List<CultureTemplate> QueryCultureTemplateFromBiome(string biomeId)
-            => ListOfCultures.Where(i => i.StartBiome.Equals(biomeId)).ToList();
+        public static List<CultureTemplate>? QueryCultureTemplateFromBiome(string biomeId) => ListOfCultures.FindAll(i => i.StartBiome.Equals(biomeId));
 
-        public static Research QueryResearchInData(string researchId)
-            => ListOfResearches.FirstOrDefault(i => i.Id.Equals(researchId));
+        public static Research? QueryResearchInData(string researchId) => ListOfResearches.Find(i => i.Id.Equals(researchId));
 
-        public static Plant QueryPlantInData(string plantId)
-            => ListOfPlants.FirstOrDefault(i => i.Id.Equals(plantId))?.Clone();
+        public static Plant? QueryPlantInData(string plantId) => ListOfPlants.Find(i => i.Id.Equals(plantId))?.Clone();
 
-        public static TissuePlanTemplate QueryTissuePlanInData(string tissuePlanId)
-            => ListOfTissuePlans.FirstOrDefault(i => i.Id.Equals(tissuePlanId));
+        public static TissuePlanTemplate? QueryTissuePlanInData(string tissuePlanId) => ListOfTissuePlans.Find(i => i.Id.Equals(tissuePlanId));
 
-        public static DamageType? QueryDamageInData(string dmgId)
-            => ListOfDamageTypes.FirstOrDefault(i => i.Id.Equals(dmgId), null);
+        public static DamageType? QueryDamageInData(string dmgId) => ListOfDamageTypes.Find(i => i.Id.Equals(dmgId));
 
         #endregion Query
 
         #region rng
 
-        public static Language RandomLangugage()
-            => ListOfLanguages.GetRandomItemFromList();
+        public static Language? RandomLangugage() => ListOfLanguages.GetRandomItemFromList();
 
-        public static string RandomRealm()
-            => ListOfRealmsName.GetRandomItemFromList();
+        public static string? RandomRealm() => ListOfRealmsName.GetRandomItemFromList();
 
-        public static Race RandomRace()
-            => ListOfRaces.GetRandomItemFromList();
+        public static Race? RandomRace() => ListOfRaces.GetRandomItemFromList();
 
-        public static Research RandomMagicalResearch()
-            => ListOfResearches.Where(i => i.IsMagical).ToList().GetRandomItemFromList();
+        public static Research? RandomMagicalResearch() => ListOfResearches.FindAll(i => i.IsMagical).GetRandomItemFromList();
 
-        public static Research RandomNonMagicalResearch()
-            => ListOfResearches.Where(i => !i.IsMagical).ToList().GetRandomItemFromList();
+        public static Research? RandomNonMagicalResearch() => ListOfResearches.FindAll(i => !i.IsMagical).GetRandomItemFromList();
 
         #endregion rng
 
@@ -242,18 +205,12 @@ namespace MagusEngine.Systems
 
         public static List<Reaction> GetProductsByTag(RoomTag tag)
         {
-            return ListOfReactions.Where(i => i.RoomTag.Contains(tag)).ToList();
+            return ListOfReactions.FindAll(i => i.RoomTag.Contains(tag));
         }
 
-        public static Material? QueryMaterialWithType(MaterialType typeToMake)
-        {
-            return ListOfMaterials.Where(i => i.Type == typeToMake).GetRandomItemFromList();
-        }
+        public static Material? QueryMaterialWithType(MaterialType typeToMake) => ListOfMaterials.FindAll(i => i.Type == typeToMake).GetRandomItemFromList();
 
-        public static Material QueryMaterialWithTrait(Trait trait)
-        {
-            return ListOfMaterials.Where(i => i.ConfersTraits?.Contains(trait) == true).GetRandomItemFromList();
-        }
+        public static Material? QueryMaterialWithTrait(Trait trait) => ListOfMaterials?.FindAll(i => i.ConfersTraits?.Contains(trait) == true).GetRandomItemFromList();
 
         #endregion helper methods
     }

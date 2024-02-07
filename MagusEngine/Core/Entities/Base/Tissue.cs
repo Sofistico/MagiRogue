@@ -1,5 +1,6 @@
 ﻿using Arquimedes.Enumerators;
 using MagusEngine.Serialization;
+using MagusEngine.Systems;
 using MagusEngine.Systems.Physics;
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace MagusEngine.Core.Entities.Base
         {
             get
             {
-                material ??= PhysicsSystem.SetMaterial(MaterialId);
+                material ??= DataManager.QueryMaterial(MaterialId);
                 return material;
             }
         }

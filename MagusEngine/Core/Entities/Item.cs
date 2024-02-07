@@ -5,8 +5,10 @@ using MagusEngine.Core.Entities.Interfaces;
 using MagusEngine.Core.WorldStuff.History;
 using MagusEngine.Serialization.EntitySerialization;
 using MagusEngine.Services;
+using MagusEngine.Systems;
 using MagusEngine.Systems.Physics;
 using MagusEngine.Utils;
+using MagusEngine.Utils.Extensions;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System;
@@ -17,7 +19,6 @@ namespace MagusEngine.Core.Entities
     /// <summary>
     /// Item: Describes things that can be picked up or used by actors, or destroyed on the map.
     /// </summary>
-    // TODO: Remove inherting from entity and add as a component.
     [JsonConverter(typeof(ItemJsonConverter))]
     public class Item : MagiEntity
     {
@@ -50,6 +51,7 @@ namespace MagusEngine.Core.Entities
                 return MathMagi.GetWeightWithDensity(Material.Density ?? 0, Volume);
             }
         }
+        public override int Volume => Length * Height * Broadness;
 
         /// <summary>
         /// In what slot can this item be equiped? None means you can't equip the item
@@ -59,7 +61,7 @@ namespace MagusEngine.Core.Entities
         /// <summary>
         /// The damage that an item will deal if hitting someone with it, should alway be 1.
         /// </summary>
-        public int BaseDmg { get; set; } = 1;
+        public int BaseDmg { get; set; } = 0;
 
         /// <summary>
         /// How fast the item is to attack, heavier itens and lenghtier item suffer
@@ -78,7 +80,7 @@ namespace MagusEngine.Core.Entities
         public List<Trait> Traits { get; set; }
         public List<Quality> Qualities { get; set; }
         public string ItemId { get; set; }
-        public WeaponType WeaponType { get; set; }
+        public WeaponType WeaponType { get; set; } = WeaponType.Misc;
 
         public Material? Material { get; set; }
         public List<Legend> Legends { get; set; }
@@ -87,6 +89,8 @@ namespace MagusEngine.Core.Entities
         public Limb HeldLimb { get; set; }
         public ArmorType ArmorType { get; set; }
         public int Coverage { get; set; }
+        public Trait? MaterialTrait { get; set; }
+        public MaterialType? MaterialType { get; set; }
 
         // By default, a new Item is sized 1x1, with a weight of 1, and at 100% condition
         public Item(Color foreground, Color background, string name, int glyph, Point coord, int size,
@@ -96,14 +100,27 @@ namespace MagusEngine.Core.Entities
         {
             Volume = size;
             Condition = condition;
-            Material = PhysicsSystem.SetMaterial(materialId);
-            Name = Material.ReturnNameFromMaterial(name) ?? "BUGGED!";
+            if (!materialId.IsNullOrEmpty())
+                ConfigureMaterial(name, materialId);
+            else
+                Name = name;
             UseAction = [];
             Traits = [];
             Qualities = [];
             Legends = [];
             Attacks = [];
         }
+
+        public Item ConfigureMaterial(string name, string materialId) => ConfigureMaterial(name, DataManager.QueryMaterial(materialId));
+
+        public Item ConfigureMaterial(string name, Material? material)
+        {
+            Material = material;
+            Name = Material?.ReturnNameFromMaterial(name) ?? "BUGGED!";
+            return this;
+        }
+
+        public Item ConfigureMaterial(Material? material) => ConfigureMaterial(Name, material);
 
         // removes this object from the MultiSpatialMap's list of entities and lets the garbage
         // collector take it out of memory automatically.
@@ -155,9 +172,9 @@ namespace MagusEngine.Core.Entities
             throw new NotImplementedException();
         }
 
-        public int DamageWhenItemStrikes(int itemAceleration)
+        public int DamageWhenItemStrikes(int itemAcceleration)
         {
-            return PhysicsSystem.CalculateMomentum(Weight, itemAceleration) + BaseDmg;
+            return PhysicsSystem.CalculateMomentum(Weight, itemAcceleration) + BaseDmg;
         }
 
         public double QualityMultiplier()

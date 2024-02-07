@@ -14,7 +14,7 @@ using System.Linq;
 namespace MagusEngine.Core.Entities.Base
 {
     [DebuggerDisplay("{DebuggerDisplay, nq}")]
-    public sealed class Race : ICloneable
+    public sealed class Race
     {
         private List<BodyPart> bodyParts;
 
@@ -91,7 +91,7 @@ namespace MagusEngine.Core.Entities.Base
 
         public Race()
         {
-            Flags = new();
+            Flags = [];
         }
 
         private void SetBodyPlan()
@@ -112,13 +112,13 @@ namespace MagusEngine.Core.Entities.Base
 
         public Color ReturnForegroundColor()
         {
-            MagiColorSerialization color = new MagiColorSerialization(RaceForeground);
+            MagiColorSerialization color = new(RaceForeground);
             return color.Color;
         }
 
         public Color ReturnBackgroundColor()
         {
-            MagiColorSerialization color = new MagiColorSerialization(RaceBackground);
+            MagiColorSerialization color = new(RaceBackground);
             return color.Color;
         }
 
@@ -201,12 +201,13 @@ namespace MagusEngine.Core.Entities.Base
             if (modifiers is null)
                 return 0;
             int rng = GlobalRandom.DefaultRNG.NextInt(modifiers.Length);
-            int value = modifiers.Length > 0 ? modifiers[rng] : 0;
-            return value;
+            return modifiers.Length > 0 ? modifiers[rng] : 0;
         }
 
         public Sex ReturnRandomSex()
         {
+            if (Genders?.Count == 0)
+                return Sex.None;
             return Enum.Parse<Sex>(Genders.GetRandomItemFromList());
         }
 
@@ -217,10 +218,9 @@ namespace MagusEngine.Core.Entities.Base
 
         public bool CanRegenarate() => Flags.Contains(SpecialFlag.Regenerator);
 
-        public int GetAverageRacialManaRange()
-            => (MaxManaRange + MinManaRange) / 2;
+        public int GetAverageRacialManaRange() => (MaxManaRange + MinManaRange) / 2;
 
-        public object Clone()
+        public Race Clone()
         {
             var race = (Race)MemberwiseClone();
             race.Flags = new List<SpecialFlag>(Flags);
@@ -231,8 +231,9 @@ namespace MagusEngine.Core.Entities.Base
         public void CustomBPSelect(Actor actor)
         {
             SetBodyPlan();
-            foreach (var item in Select)
+            for (int i = 0; i < Select?.Count; i++)
             {
+                JToken? item = Select[i];
                 if (item is JObject obj)
                 {
                     var selector = obj["Selector"].ToArray();
@@ -248,7 +249,8 @@ namespace MagusEngine.Core.Entities.Base
 
         private void SatisfyChange(JToken? change, JToken[] to, string? context)
         {
-            if (change.ToString().Equals("BodyPlan"))
+            if (change?.ToString()?.Equals("BodyPlan") == true
+                )
             {
                 var strs = new string[to.Length];
                 for (int i = 0; i < to.Length; i++)
@@ -256,7 +258,7 @@ namespace MagusEngine.Core.Entities.Base
                     JToken? item = to[i];
                     strs[i] = item.ToString();
                 }
-                BodyPlan = strs.ToArray();
+                BodyPlan = [.. strs];
                 SetBodyPlan();
                 return;
             }
@@ -290,7 +292,7 @@ namespace MagusEngine.Core.Entities.Base
                     continue;
                 }
                 if (item["LimbType"] is not null
-                    && Enum.TryParse<LimbType>(item["LimbType"].ToString(), out var resut)
+                    && Enum.TryParse<LimbType>(item["LimbType"]?.ToString(), out var resut)
                     && bodyParts.OfType<Limb>().Any(i => i.LimbType == resut))
                 {
                     satisfyCount++;

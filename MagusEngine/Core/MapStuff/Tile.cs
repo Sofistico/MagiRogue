@@ -3,6 +3,7 @@ using GoRogue.Components;
 using MagusEngine.Bus.ComponentBus;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Services;
+using MagusEngine.Systems;
 using MagusEngine.Systems.Physics;
 using SadConsole;
 using SadRogue.Primitives;
@@ -30,7 +31,7 @@ namespace MagusEngine.Core.MapStuff
 
             set
             {
-                _material = PhysicsSystem.SetMaterial(value);
+                _material = DataManager.QueryMaterial(value);
             }
         }
         public Material Material => _material;

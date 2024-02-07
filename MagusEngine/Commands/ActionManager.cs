@@ -91,7 +91,7 @@ namespace MagusEngine.Commands
             StringBuilder attackMessage = new();
             StringBuilder defenseMessage = new();
 
-            (bool hit, BodyPart limbAttacked, BodyPart limbAttacking, DamageType dmgType, Item? itemUsed, Material attackMaterial)
+            (bool hit, BodyPart limbAttacked, BodyPart limbAttacking, DamageType dmgType, Item? itemUsed, Material attackMaterial) 
                 = CombatSystem.ResolveHit(attacker, defender, attackMessage, attack, isPlayer, limbChoosen);
             double finalMomentum = CombatSystem.ResolveDefenseAndGetAttackMomentum(attacker,
                 defender,

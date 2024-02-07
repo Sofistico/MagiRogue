@@ -34,7 +34,7 @@ namespace MagusEngine.Core.Entities.Base
         /// <summary>
         /// The size is defined as cm³
         /// </summary>
-        public int Volume { get; set; }
+        public virtual int Volume { get; set; }
 
         public int Height { get; set; }
         public int Length { get; set; }

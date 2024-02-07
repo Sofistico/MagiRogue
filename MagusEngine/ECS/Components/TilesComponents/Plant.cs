@@ -1,5 +1,6 @@
 ﻿using MagusEngine.Core;
 using MagusEngine.Serialization;
+using MagusEngine.Systems;
 using MagusEngine.Systems.Physics;
 using MagusEngine.Utils.Extensions;
 using Newtonsoft.Json;
@@ -66,7 +67,7 @@ namespace MagusEngine.ECS.Components.TilesComponents
         [JsonConstructor]
         public Plant(string? materialId = null, string[] fores = null)
         {
-            Material = materialId.IsNullOrEmpty() ? Material.None : PhysicsSystem.SetMaterial(materialId)!;
+            Material = materialId.IsNullOrEmpty() ? Material.None : DataManager.QueryMaterial(materialId)!;
             Fores = fores;
             Fore = Fores.GetRandomItemFromList();
         }

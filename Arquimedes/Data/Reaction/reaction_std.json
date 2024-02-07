@@ -1,14 +1,40 @@
 ﻿[
   {
     "Id": "reaction_wood_coal",
-    "ItemId": "coal_item",
+    "ItemsId": [ "coal_item" ],
     "Name": "Produce coal from wood",
     "Amount": 10,
-    "Material": [ "wood" ],
+    "Material": [ "Wood" ],
     "Quality": [
       {
         "QualityType": "Smelt",
         "QualitySuitabiliy": 1
+      }
+    ],
+    "RoomTag": [ "Blacksmith" ]
+  },
+  {
+    "Id": "reaction_forge_sword",
+    "ItemsId": [ "short_sword" ],
+    "Name": "Produce a sword from material",
+    "Amount": 1,
+    "Material": [ "Metal", "Stone", "Wood" ],
+    "Quality": [
+      {
+        "QualityType": "Smelt",
+        "QualitySuitabiliy": 1
+      },
+      {
+        "QualityType": "Hammer",
+        "QualitySuitabiliy": 3
+      },
+      {
+        "QualityType": "Forge",
+        "QualitySuitabiliy": 2
+      },
+      {
+        "QualityType": "Anvil",
+        "QualitySuitabiliy": 3
       }
     ],
     "RoomTag": [ "Blacksmith" ]

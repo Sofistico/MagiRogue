@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GoRogue" Version="3.0.0-beta08" />
-    <PackageReference Include="SadConsole" Version="10.0.0" />
+    <PackageReference Include="GoRogue" Version="3.0.0-beta09" />
+    <PackageReference Include="SadConsole" Version="10.0.2" />
   </ItemGroup>
 
   <ItemGroup>
