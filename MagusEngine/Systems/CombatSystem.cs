@@ -36,10 +36,10 @@ namespace MagusEngine.Systems
 
                 // calculate how many part wounds the actor will receive!
                 var woundParts = CalculatePartWoundsReceived(attackMomentum,
-                    limbAttacked,
-                    actor.Body.GetArmorOnLimbIfAny(limbAttacked),
-                    attackMaterial,
-                    attack,
+                    limbAttacked!,
+                    actor.Body.GetArmorOnLimbIfAny(limbAttacked!),
+                    attackMaterial!,
+                    attack!,
                     attackVolume,
                     weapon,
                     actor.Body.Anatomy.GetAllWounds());
@@ -83,7 +83,7 @@ namespace MagusEngine.Systems
         private static void ApplyWoundsToActor(Actor actor, DamageType dmgType, List<PartWound> woundParts, BodyPart? limbAttacked)
         {
             Wound woundTaken = new(dmgType, woundParts);
-            actor.GetAnatomy().Injury(woundTaken, limbAttacked, actor);
+            actor.GetAnatomy().Injury(woundTaken, limbAttacked!, actor);
         }
 
         private static void SendWoundMessages(List<PartWound> woundParts)
@@ -163,11 +163,13 @@ namespace MagusEngine.Systems
                 if (remainingEnergy <= 0)
                     return list;
 
-                if (!tissues.TryDequeue(out Tissue tissue))
+                if (!tissues.TryDequeue(out Tissue? tissue))
                 {
                     if (partInjured.Insides.Count == 0)
                         break; // even if there is energy, there is no more tissue to penetrate... might do some stuff ltr
                     var rngInside = partInjured.Insides.GetRandomItemFromList();
+                    if (rngInside is null)
+                        continue;
                     foreach (var tis in rngInside.Tissues)
                     {
                         tissues.Enqueue(tis);
@@ -194,7 +196,7 @@ namespace MagusEngine.Systems
                     : tissue.Volume;
 
                 double strain = attackTotalContactArea / attackMomentum;
-                PartWound partWound = new(woundVolume, strain, tissue, attack.DamageType);
+                PartWound partWound = new(woundVolume, strain, tissue, attack.DamageType!);
                 if (remainingEnergy >= energyToPenetrate)
                 {
                     remainingEnergy -= energyToPenetrate;
@@ -288,7 +290,7 @@ namespace MagusEngine.Systems
         {
             int luck = Mrn.Exploding2D6Dice;
             if (effect.IsResistable || MagicManager.PenetrateResistance(spellCasted, caster, poorGuy, luck))
-                DealDamage(effect.BaseDamage, poorGuy, effect.GetDamageType(), attack: attack, spellUsed: spellCasted);
+                DealDamage(effect.BaseDamage, poorGuy, effect.GetDamageType()!, attack: attack, spellUsed: spellCasted);
             else
                 Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{poorGuy.Name} resisted the effects of {spellCasted.SpellName}"));
         }
@@ -353,7 +355,7 @@ namespace MagusEngine.Systems
 
             // Create a string that expresses the attacker and defender's names as well as the
             // attack verb
-            string person = firstPerson ? "You" : attacker.Name;
+            string? person = firstPerson ? "You" : attacker.Name;
             string verb = firstPerson ? attack.AttackVerb[0] : attack.AttackVerb[1];
             string with = attack?.AttacksUsesLimbName == true ? firstPerson
                     ? $" with your {bpAttacking.BodyPartName}"
@@ -361,9 +363,8 @@ namespace MagusEngine.Systems
                 : "";
 
             attackMessage.AppendFormat("{0} {1} the {2}{3}", person, verb, defender.Name, with);
-            var materialUsed = wieldedItem is null
-                ? bpAttacking.Tissues.Find(i => i.Flags.Contains(TissueFlag.Structural)
-                    || i.Flags.Contains(TissueFlag.Muscular)).Material
+            var materialUsed = wieldedItem is null ? bpAttacking.Tissues.Find(i => i.Flags.Contains(TissueFlag.Structural)
+                || i.Flags.Contains(TissueFlag.Muscular))?.Material
                 : wieldedItem?.Material;
             if (materialUsed is null)
             {
@@ -376,11 +377,11 @@ namespace MagusEngine.Systems
                 + Mrn.Exploding2D6Dice)
             {
                 limbAttacked ??= defender.GetAnatomy().GetRandomLimb();
-                return (true, limbAttacked, bpAttacking, attack.DamageType, wieldedItem, materialUsed);
+                return (true, limbAttacked, bpAttacking, attack!.DamageType, wieldedItem, materialUsed);
             }
             else
             {
-                return (false, null, bpAttacking, attack.DamageType, wieldedItem, materialUsed);
+                return (false, null, bpAttacking, attack!.DamageType, wieldedItem, materialUsed);
             }
         }
 
@@ -411,7 +412,7 @@ namespace MagusEngine.Systems
                 // some moar randomness!
                 attackMomentum += Mrn.Exploding2D6Dice;
 
-                var damageWithoutPenetration = attackMomentum - Mrn.Exploding2D6Dice + defender.Body.Endurance * 0.5;
+                var damageWithoutPenetration = attackMomentum - Mrn.Exploding2D6Dice + (defender.Body.Endurance * 0.5);
                 var penetrationDamage = damageWithoutPenetration * attack.PenetrationPercentage;
                 var finalDamage = damageWithoutPenetration + penetrationDamage;
                 finalDamage = MathMagi.Round(finalDamage);
@@ -492,7 +493,7 @@ namespace MagusEngine.Systems
                     // chain converts the attack damage to blunt!
                     case ArmorType.Chain:
                         attackMaterial.ImpactStrainsAtYield = 50;
-                        momentumAfterArmor = CalculateEnergyCostToPenetrateMaterial(armor.Material,
+                        momentumAfterArmor = CalculateEnergyCostToPenetrateMaterial(armor.Material!,
                             //armor.Volume,
                             attackMaterial,
                             attack,
@@ -504,7 +505,7 @@ namespace MagusEngine.Systems
 
                     case ArmorType.Leather:
                     case ArmorType.Plate:
-                        momentumAfterArmor = CalculateEnergyCostToPenetrateMaterial(armor.Material,
+                        momentumAfterArmor = CalculateEnergyCostToPenetrateMaterial(armor.Material!,
                             //armor.Volume,
                             attackMaterial,
                             attack,
@@ -532,7 +533,7 @@ namespace MagusEngine.Systems
             double armorQualityMultiplier = 0,
             double weaponQualityModifier = 0)
         {
-            return attack.DamageType.Type switch
+            return attack.DamageType?.Type switch
             {
                 DamageTypes.Blunt => CalculateBluntDefenseCost(defenseMaterial,
                                         //attackMaterial,
@@ -564,13 +565,13 @@ namespace MagusEngine.Systems
             double weaponQualityModifier,
             double attackVolume)
         {
-            double shearFRatio = (double)((double)attackMaterial.ShearFracture / (double)defenseMaterial.ShearFracture);
-            double shearYRatio = (double)((double)attackMaterial.ShearYield / (double)defenseMaterial.ShearYield);
-            var momentumReq = (shearYRatio + (attackContactArea + 1) * shearFRatio)
-                * (10 + 2 * armorQualityModifier) / (attackMaterial.MaxEdge * (weaponQualityModifier + 1));
+            double shearFRatio = (attackMaterial.ShearFracture ?? 1 / defenseMaterial.ShearFracture ?? 1);
+            double shearYRatio = (attackMaterial.ShearYield ?? 1 / defenseMaterial.ShearYield ?? 1);
+            var momentumReq = (shearYRatio + ((attackContactArea + 1) * shearFRatio)) * (10 + (2 * armorQualityModifier))
+                / (attackMaterial.MaxEdge * (weaponQualityModifier + 1));
             if (originalMomentum >= momentumReq)
             {
-                return (double)((double)originalMomentum * (double)(defenseMaterial.ShearStrainAtYield / 50000));
+                return (double)((double)originalMomentum * (defenseMaterial.ShearStrainAtYield ?? 1 / 50000));
             }
             else
             {
