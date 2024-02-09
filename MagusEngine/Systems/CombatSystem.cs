@@ -32,15 +32,7 @@ namespace MagusEngine.Systems
         {
             if (entity is Actor actor)
             {
-                double attackVolume;
-                if (spellUsed is not null)
-                    attackVolume = spellUsed.Effects.Sum(i => i.Volume); // need to do something to calculate
-                else if (weapon is not null)
-                    attackVolume = weapon.Volume;
-                else if (limbAttacking is not null)
-                    attackVolume = limbAttacking.Volume;
-                else
-                    attackVolume = 1;
+                double attackVolume = CalculateAttackVolume(spellUsed, weapon, limbAttacking);
 
                 // calculate how many part wounds the actor will receive!
                 var woundParts = CalculatePartWoundsReceived(attackMomentum,
@@ -54,32 +46,18 @@ namespace MagusEngine.Systems
 
                 if (woundParts.Count > 0)
                 {
-                    // need to redo this to take into account the new tissue based wound!
-                    Wound woundTaken = new(dmgType,
-                        woundParts);
-
-                    actor.GetAnatomy().Injury(woundTaken, limbAttacked, actor);
+                    ApplyWoundsToActor(actor, dmgType, woundParts, limbAttacked);
 
                     if (actor.CheckIfDed())
-                    {
                         ActionManager.ResolveDeath(actor);
-                    }
-                    StringBuilder woundString = new(" ");
 
-                    for (int i = 0; i < woundParts.Count; i++)
-                    {
-                        var partWound = woundParts[i];
-                        woundString.AppendLine(DetermineDamageMessage(partWound.PartDamage, partWound));
-                    }
-
-                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(woundString.ToString()));
+                    SendWoundMessages(woundParts);
                     return;
                 }
                 else
                 {
                     // no wound was received! either the armor or the tissue absorbed all damage.
-                    Locator.GetService<MessageBusService>()
-                        .SendMessage<AddMessageLog>(new($"The attack glances {entity.Name}!"));
+                    NotifyAttackGlance(entity);
                     return;
                 }
             }
@@ -88,6 +66,40 @@ namespace MagusEngine.Systems
             {
                 item.Condition -= (int)attackMomentum;
             }
+        }
+
+        private static double CalculateAttackVolume(SpellBase? spellUsed, Item? weapon, BodyPart? limbAttacking)
+        {
+            if (spellUsed != null)
+                return spellUsed.Effects.Sum(i => i.Volume);
+            else if (weapon != null)
+                return weapon.Volume;
+            else if (limbAttacking != null)
+                return limbAttacking.Volume;
+            else
+                return 1;
+        }
+
+        private static void ApplyWoundsToActor(Actor actor, DamageType dmgType, List<PartWound> woundParts, BodyPart? limbAttacked)
+        {
+            Wound woundTaken = new(dmgType, woundParts);
+            actor.GetAnatomy().Injury(woundTaken, limbAttacked, actor);
+        }
+
+        private static void SendWoundMessages(List<PartWound> woundParts)
+        {
+            StringBuilder woundString = new(" ");
+            foreach (var partWound in woundParts)
+            {
+                woundString.AppendLine(DetermineDamageMessage(partWound.PartDamage, partWound));
+            }
+            Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(woundString.ToString()));
+        }
+
+        private static void NotifyAttackGlance(MagiEntity entity)
+        {
+            Locator.GetService<MessageBusService>()
+                .SendMessage<AddMessageLog>(new($"The attack glances {entity.Name}!"));
         }
 
         /// <summary>

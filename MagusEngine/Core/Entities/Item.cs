@@ -48,7 +48,7 @@ namespace MagusEngine.Core.Entities
         {
             get
             {
-                return MathMagi.GetWeightWithDensity(Material.Density ?? 0, Volume);
+                return MathMagi.GetWeightWithDensity(Material?.Density ?? 0, Volume);
             }
         }
         public override int Volume => Length * Height * Broadness;

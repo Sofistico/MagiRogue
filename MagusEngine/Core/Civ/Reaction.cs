@@ -9,7 +9,7 @@ namespace MagusEngine.Core.Civ
     // will need to rethink this object better!
     public class Reaction
     {
-        private Dictionary<string, Item> cachedItems;
+        private readonly Dictionary<string, Item> cachedItems = [];
 
         public string Id { get; set; }
 
