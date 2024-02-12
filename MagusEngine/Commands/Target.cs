@@ -72,7 +72,7 @@ namespace MagusEngine.Commands
                 BlinkOutColor = Color.Aquamarine,
                 UseCellBackgroundColor = false,
             };
-            Cursor.SadCell.AppearanceSingle.Effect = blink;
+            Cursor.SadCell.AppearanceSingle!.Effect = blink;
             blink.Restart();
 
             State = TargetState.Resting;
@@ -81,17 +81,18 @@ namespace MagusEngine.Commands
             tileDictionary = new Dictionary<Point, Tile>();
         }
 
-        public bool EntityInTarget()
+        public bool EntityInTarget(bool ignorePlayer = true)
         {
-            if (Cursor.MagiMap.GetEntitiesAt
-                <MagiEntity>(Cursor.Position).Any(e => e.ID != Cursor.ID))
-            //&& GameLoop.World.CurrentMap.GetEntityAt<Entity>(Cursor.Position) is not Player)
-            {
-                State = TargetState.Targeting;
-                return true;
-            }
-            return false;
+            var entity = Cursor?.MagiMap?.GetEntitiesAt<MagiEntity>(Cursor.Position, Cursor.MagiMap.LayerMasker.MaskAllBelow((int)MapLayer.SPECIAL)).FirstOrDefault();
+            if (entity is null)
+                return false;
+            if (ignorePlayer && entity is Player)
+                return false;
+            State = TargetState.Targeting;
+            return true;
         }
+
+        public bool AnyTargeted() => EntityInTarget() || TileInTarget();
 
         public void OnSelectSpell(SpellBase spell, Actor caster)
         {

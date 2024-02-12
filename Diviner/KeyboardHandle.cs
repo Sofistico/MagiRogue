@@ -217,14 +217,18 @@ namespace Diviner
             {
                 targetCursor ??= new Target(getPlayer.Position);
 
-                if (world.CurrentMap.ControlledEntitiy is not Player
-                    && !targetCursor.EntityInTarget())
+                if (targetCursor.EntityInTarget())
+                {
+                    targetCursor.LookTarget();
+                }
+                else if (world?.CurrentMap?.ControlledEntitiy is not Player)
                 {
                     targetCursor.EndTargetting();
-                    return true;
                 }
-
-                targetCursor.StartTargetting();
+                else
+                {
+                    targetCursor.StartTargetting();
+                }
 
                 return true;
             }
@@ -257,7 +261,7 @@ namespace Diviner
 
             if (info.IsKeyPressed(Keys.Enter) && targetCursor?.State == TargetState.Targeting)
             {
-                if ((targetCursor.EntityInTarget() || targetCursor.TileInTarget()) && targetCursor.SpellSelected is null)
+                if (targetCursor.AnyTargeted() && targetCursor.SpellSelected is null)
                 {
                     targetCursor.LookTarget();
                     return true;
