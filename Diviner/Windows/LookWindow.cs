@@ -1,17 +1,11 @@
-﻿using GoRogue.Messaging;
-using MagusEngine;
-using MagusEngine.Bus.UiBus;
-using MagusEngine.Core;
-using MagusEngine.Core.Entities.Base;
+﻿using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
-using MagusEngine.Services;
 using System.Text;
 using Console = SadConsole.Console;
 
 namespace Diviner.Windows
 {
-    public class LookWindow : PopWindow,
-        ISubscriber<LookStuff>
+    public class LookWindow : PopWindow
     {
         private readonly MagiEntity? entityLooked;
         private readonly Tile? tileLooked;
@@ -36,7 +30,6 @@ namespace Diviner.Windows
                 lookConsole.Cursor.Print(entity.Description);
             }
             Children.Add(lookConsole);
-            RegisterSubs();
         }
 
         public LookWindow(Tile tile) : base(tile.Name)
@@ -54,25 +47,6 @@ namespace Diviner.Windows
                 lookConsole.Cursor.Print(tile.Description);
             }
             Children.Add(lookConsole);
-            RegisterSubs();
-        }
-
-        public void Handle(LookStuff message)
-        {
-            LookWindow look;
-            if (message.Tile is not null)
-                look = new LookWindow(message.Tile);
-            else
-                look = new(message.Entitiy);
-
-            look.Show(true);
-        }
-
-        private void RegisterSubs() => Locator.GetService<MessageBusService>().RegisterSubscriber(this);
-
-        ~LookWindow()
-        {
-            Locator.GetService<MessageBusService>().UnRegisterSubscriber(this);
         }
     }
 }

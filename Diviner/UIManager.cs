@@ -22,7 +22,8 @@ namespace Diviner
         ISubscriber<FocusUiManagerMessage>,
         ISubscriber<TogglePopWindowMessage>,
         ISubscriber<StartGameMessage>,
-        ISubscriber<RestartGame>
+        ISubscriber<RestartGame>,
+        ISubscriber<LookStuff>
     {
         private readonly Dictionary<WindowTag, IWindowTagContract> windows = [];
         private Universe? _universe;
@@ -264,6 +265,17 @@ namespace Diviner
         public void Handle(RestartGame message)
         {
             MainMenu.Show();
+        }
+
+        public void Handle(LookStuff message)
+        {
+            LookWindow look;
+            if (message.Tile is not null)
+                look = new LookWindow(message.Tile);
+            else
+                look = new LookWindow(message.Entitiy!);
+
+            look.Show(true);
         }
 
         ~UIManager()

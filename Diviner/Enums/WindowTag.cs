@@ -6,7 +6,8 @@
         Main,
         Map,
         Status,
-        Wait
+        Wait,
+        Look
     }
 
     public class UndefinedWindowTagException : ApplicationException

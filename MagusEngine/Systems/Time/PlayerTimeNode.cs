@@ -2,11 +2,13 @@
 {
     public class PlayerTimeNode : ITimeNode
     {
-        public PlayerTimeNode(long tick)
+        public long Tick { get; }
+        public uint Id { get; }
+
+        public PlayerTimeNode(long tick, uint id)
         {
             Tick = tick;
+            Id = id;
         }
-
-        public long Tick { get; }
     }
 }

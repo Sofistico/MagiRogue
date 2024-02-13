@@ -12,60 +12,53 @@ namespace MagusEngine.Systems.Time
     [JsonConverter(typeof(TimeJsonConverter))]
     public class TimeSystem : ITimeSystem
     {
-        // Time system inspired by https://www.gridsagegames.com/blog/2019/04/turn-time-systems/ and
-        // https://github.com/AnotherEpigone/moving-castles/tree/master/MovingCastles/GameSystems/Time
-        // Add a priority queue to represent the queue that an actor will act, or a linked
-        // dictionary, or whatever
-        private readonly SimplePriorityQueue<ITimeNode, long> turnQueue = new();
-
         public event EventHandler<TimeDefSpan>? TurnPassed;
 
         public TimeDefSpan TimePassed { get; }
         public int Turns => (int)TimePassed.Seconds;
         public long Tick => TimePassed.Ticks;
+        public SimplePriorityQueue<ITimeNode, long> Nodes { get; } = new();
 
         public TimeSystem(long initialTick = 0)
         {
             TimePassed = new TimeDefSpan(initialTick);
-            turnQueue = new SimplePriorityQueue<ITimeNode, long>();
+            Nodes = new SimplePriorityQueue<ITimeNode, long>();
         }
 
         public TimeSystem(int initialYear)
         {
             TimePassed = new TimeDefSpan(initialYear);
-            turnQueue = new SimplePriorityQueue<ITimeNode, long>();
+            Nodes = new SimplePriorityQueue<ITimeNode, long>();
         }
 
         public void RegisterEntity(ITimeNode node)
         {
-            if (!turnQueue.Contains(node))
+            if (!Nodes.Contains(node))
             {
-                turnQueue.Enqueue(node, node.Tick);
+                Nodes.Enqueue(node, node.Tick);
             }
         }
 
         public void DeRegisterEntity(ITimeNode node)
         {
-            if (turnQueue.Contains(node))
+            if (Nodes.Contains(node))
             {
-                turnQueue.Remove(node);
+                Nodes.Remove(node);
             }
         }
 
         public ITimeNode? NextNode()
         {
-            if (turnQueue.Count == 0)
+            if (Nodes.Count == 0)
                 return null;
 
-            var node = turnQueue.Dequeue();
+            var node = Nodes.Dequeue();
             TimePassed.SetTick(node.Tick);
 
             TurnPassed?.Invoke(this, TimePassed);
 
             return node;
         }
-
-        public IEnumerable<ITimeNode> Nodes => turnQueue;
 
         public long GetTimePassed(long time) => TimePassed.Ticks + time;
 

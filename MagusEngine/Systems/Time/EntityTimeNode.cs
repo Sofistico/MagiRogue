@@ -2,14 +2,14 @@
 {
     public class EntityTimeNode : ITimeNode
     {
+        public long Tick { get; }
+
+        public uint Id { get; }
+
         public EntityTimeNode(uint entityId, long tick)
         {
             Tick = tick;
-            EntityId = entityId;
+            Id = entityId;
         }
-
-        public long Tick { get; }
-
-        public uint EntityId { get; init; }
     }
 }

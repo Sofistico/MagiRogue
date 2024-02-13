@@ -24,8 +24,8 @@ namespace MagusEngine.Commands
     /// </summary>
     public class Target
     {
-        private Actor _caster;
-        private MagiEntity _lastControlledEntity;
+        private Actor? _caster;
+        private MagiEntity? _lastControlledEntity;
         private readonly Dictionary<Point, Tile> tileDictionary;
         private static readonly Radius radius = Radius.Circle;
 
@@ -37,11 +37,11 @@ namespace MagusEngine.Commands
 
         public TargetState State { get; set; }
 
-        public Path TravelPath { get; set; }
+        public Path? TravelPath { get; set; }
 
-        public int MaxDistance => SpellSelected is not null ? SpellSelected.SpellRange : 999;
+        public int MaxDistance => SpellSelected?.SpellRange ?? 999;
 
-        public SpellBase SpellSelected { get; set; }
+        public SpellBase? SpellSelected { get; set; }
 
         public Point Position => Cursor.Position;
 
@@ -77,18 +77,19 @@ namespace MagusEngine.Commands
 
             State = TargetState.Resting;
 
-            TargetList = new List<MagiEntity>();
-            tileDictionary = new Dictionary<Point, Tile>();
+            TargetList = [];
+            tileDictionary = [];
         }
 
-        public bool EntityInTarget(bool ignorePlayer = true)
+        public bool EntityInTarget(bool lookMode = false, bool ignorePlayer = true)
         {
             var entity = Cursor?.MagiMap?.GetEntitiesAt<MagiEntity>(Cursor.Position, Cursor.MagiMap.LayerMasker.MaskAllBelow((int)MapLayer.SPECIAL)).FirstOrDefault();
             if (entity is null)
                 return false;
             if (ignorePlayer && entity is Player)
                 return false;
-            State = TargetState.Targeting;
+            if (!lookMode)
+                State = TargetState.Targeting;
             return true;
         }
 
@@ -102,8 +103,7 @@ namespace MagusEngine.Commands
             {
                 TargetList.Add(_caster);
                 var (sucess, s) = EndSpellTargetting();
-                Locator.GetService<MessageBusService>()
-                    .SendMessage<ProcessTurnEvent>(new(TimeHelper.GetCastingTime(Find.Universe.Player, s), sucess));
+                Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.GetCastingTime(Find.Universe.Player, s), sucess));
                 return;
             }
 
@@ -115,12 +115,8 @@ namespace MagusEngine.Commands
         {
             if (State is TargetState.Targeting)
                 return;
-            OriginCoord = new Point(
-                Find.CurrentMap.ControlledEntitiy.Position.X,
-                Find.CurrentMap.ControlledEntitiy.Position.Y);
-            Cursor.Position = new Point(
-                 Find.CurrentMap.ControlledEntitiy.Position.X,
-                 Find.CurrentMap.ControlledEntitiy.Position.Y);
+            OriginCoord = new Point(Find.CurrentMap!.ControlledEntitiy!.Position.X, Find.CurrentMap.ControlledEntitiy.Position.Y);
+            Cursor.Position = new Point(Find.CurrentMap.ControlledEntitiy.Position.X, Find.CurrentMap.ControlledEntitiy.Position.Y);
             _lastControlledEntity = Find.CurrentMap.ControlledEntitiy;
             Locator.GetService<MessageBusService>()?.SendMessage<ChangeControlledEntitiy>(new(Cursor));
             Locator.GetService<MessageBusService>()?.SendMessage<AddEntitiyCurrentMap>(new(Cursor));
@@ -262,9 +258,11 @@ namespace MagusEngine.Commands
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Cursor_Moved(object sender, ValueChangedEventArgs<Point> e)
+        private void Cursor_Moved(object? sender, ValueChangedEventArgs<Point> e)
         {
             TargetList.Clear();
+            if (Cursor is null)
+                return;
             TravelPath = Cursor.MagiMap.AStar.ShortestPath(OriginCoord, e.NewValue)!;
             if (State is TargetState.LookMode || TravelPath is null)
             {
@@ -335,12 +333,13 @@ namespace MagusEngine.Commands
             }
         }
 
-        public bool TileInTarget()
+        public bool TileInTarget(bool lookMode = false)
         {
             if (!EntityInTarget()
                 && Cursor.MagiMap.GetTileAt(Cursor.Position) != null)
             {
-                State = TargetState.Targeting;
+                if(!lookMode)
+                    State = TargetState.Targeting;
                 return true;
             }
             return false;
@@ -384,7 +383,7 @@ namespace MagusEngine.Commands
 
         public void LookTarget()
         {
-            if (DetermineWhatToLook() is MagiEntity entity)
+            if (DetermineWhatToLook(true) is MagiEntity entity)
             {
                 Locator.GetService<MessageBusService>().SendMessage<LookStuff>(new(entity));
             }
@@ -394,19 +393,19 @@ namespace MagusEngine.Commands
 
         private Tile? TargetAtTile() => Cursor.MagiMap.GetTileAt(Cursor.Position);
 
-        public IGameObject DetermineWhatToLook()
+        private IGameObject? DetermineWhatToLook(bool lookMode = false)
         {
-            if (EntityInTarget())
+            if (EntityInTarget(lookMode))
             {
                 return TargetEntity();
             }
-            else if (TileInTarget())
+            else if (TileInTarget(lookMode))
             {
                 return TargetAtTile();
             }
             else
             {
-                throw new("Cound't find what to target!");
+                throw new InvalidOperationException("Cound't find what to target!");
             }
         }
     }

@@ -288,7 +288,7 @@ namespace MagusEngine.Systems
         private void AddEntityToTime(MagiEntity entity, int time = 0)
         {
             // register to next turn
-            if (!Time.Nodes.Cast<EntityTimeNode>().Any(i => i.EntityId.Equals(entity.ID)))
+            if (!Time.Nodes.Any(i => i.Id.Equals(entity.ID)))
                 Time.RegisterEntity(new EntityTimeNode(entity.ID, Time.GetTimePassed(time)));
         }
 
@@ -311,7 +311,7 @@ namespace MagusEngine.Systems
                     switch (turnNode)
                     {
                         case EntityTimeNode entityTurn:
-                            ProcessAiTurn(entityTurn.EntityId);
+                            ProcessAiTurn(entityTurn.Id);
                             break;
 
                         default:
@@ -368,7 +368,7 @@ namespace MagusEngine.Systems
             }
 
             Player.ProcessNeeds();
-            PlayerTimeNode playerTurn = new(Time.GetTimePassed(playerTime));
+            PlayerTimeNode playerTurn = new(Time.GetTimePassed(playerTime), Player.ID);
             Time.RegisterEntity(playerTurn);
             Player.UpdateBody();
             CurrentMap?.PlayerFOV.Calculate(Player.Position, Player.GetViewRadius());

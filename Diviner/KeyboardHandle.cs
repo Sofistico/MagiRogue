@@ -25,7 +25,7 @@ namespace Diviner
     {
         private static readonly Player? getPlayer = Find.Universe?.Player;
 
-        private static Target targetCursor = null!;
+        private static Target _targetCursor = null!;
 
         private static readonly Dictionary<Keys, Direction> MovementDirectionMapping = new Dictionary<Keys, Direction>
         {
@@ -108,7 +108,7 @@ namespace Diviner
                         // If there is a need to roll back, the code here was taking the CurrentFov
                         // and Contains(pos + posMove)
                         return world.CurrentMap.PlayerExplored[world.CurrentMap.ControlledEntitiy.Position + deltaMove]
-                            && distance <= targetCursor?.MaxDistance
+                            && distance <= _targetCursor?.MaxDistance
                             && ActionManager.MoveActorBy((Actor)world.CurrentMap.ControlledEntitiy, deltaMove);
                     }
 
@@ -123,14 +123,14 @@ namespace Diviner
         {
             int distance = 0;
 
-            if (world.CurrentMap.ControlledEntitiy == targetCursor?.Cursor)
+            if (world.CurrentMap.ControlledEntitiy == _targetCursor?.Cursor)
             {
-                if (targetCursor.TravelPath is not null)
-                    distance = targetCursor.TravelPath.LengthWithStart;
-                if (targetCursor.TravelPath is not null
-                    && targetCursor.TravelPath.LengthWithStart >= targetCursor.MaxDistance)
+                if (_targetCursor.TravelPath is not null)
+                    distance = _targetCursor.TravelPath.LengthWithStart;
+                if (_targetCursor.TravelPath is not null
+                    && _targetCursor.TravelPath.LengthWithStart >= _targetCursor.MaxDistance)
                 {
-                    distance = world.CurrentMap.AStar.ShortestPath(targetCursor.OriginCoord, world.CurrentMap.ControlledEntitiy.Position + coorToMove).Length;
+                    distance = world.CurrentMap.AStar.ShortestPath(_targetCursor.OriginCoord, world.CurrentMap.ControlledEntitiy.Position + coorToMove).Length;
                 }
             }
             return distance;
@@ -215,19 +215,15 @@ namespace Diviner
             }
             if (info.IsKeyPressed(Keys.L))
             {
-                targetCursor ??= new Target(getPlayer.Position);
+                _targetCursor ??= new Target(getPlayer.Position);
 
-                if (targetCursor.EntityInTarget())
+                if (_targetCursor.State == TargetState.LookMode)
                 {
-                    targetCursor.LookTarget();
-                }
-                else if (world?.CurrentMap?.ControlledEntitiy is not Player)
-                {
-                    targetCursor.EndTargetting();
+                    _targetCursor.EndTargetting();
                 }
                 else
                 {
-                    targetCursor.StartTargetting();
+                    _targetCursor.StartTargetting();
                 }
 
                 return true;
@@ -237,10 +233,10 @@ namespace Diviner
             {
                 SpellSelectWindow spell = new(getPlayer.Soul.CurrentMana);
 
-                targetCursor = new Target(getPlayer.Position);
+                _targetCursor = new Target(getPlayer.Position);
 
                 spell.Show(getPlayer.Magic.KnowSpells,
-                    selectedSpell => targetCursor.OnSelectSpell(selectedSpell,
+                    selectedSpell => _targetCursor.OnSelectSpell(selectedSpell,
                     (Actor)world.CurrentMap.ControlledEntitiy),
                     getPlayer.Soul.CurrentMana);
 
@@ -259,20 +255,20 @@ namespace Diviner
                 return true;
             }
 
-            if (info.IsKeyPressed(Keys.Enter) && targetCursor?.State == TargetState.Targeting)
+            if (info.IsKeyPressed(Keys.Enter) && _targetCursor is not null)
             {
-                if (targetCursor.AnyTargeted() && targetCursor.SpellSelected is null)
+                if (_targetCursor.AnyTargeted() && _targetCursor.State == TargetState.LookMode)
                 {
-                    targetCursor.LookTarget();
+                    _targetCursor.LookTarget();
                     return true;
                 }
-                if (targetCursor.EntityInTarget() || targetCursor.SpellTargetsTile())
+                if (_targetCursor.EntityInTarget() || _targetCursor.SpellTargetsTile())
                 {
-                    var (sucess, spellCasted) = targetCursor.EndSpellTargetting();
+                    var (sucess, spellCasted) = _targetCursor.EndSpellTargetting();
 
                     if (sucess)
                     {
-                        targetCursor = null;
+                        _targetCursor = null;
                         Locator.GetService<MessageBusService>()?.SendMessage<ProcessTurnEvent>(new(TimeHelper.GetCastingTime(getPlayer, spellCasted), sucess));
                     }
                     return sucess;
@@ -284,11 +280,11 @@ namespace Diviner
                 }
             }
 
-            if (info.IsKeyPressed(Keys.Escape) && (targetCursor is not null))
+            if (info.IsKeyPressed(Keys.Escape) && (_targetCursor is not null))
             {
-                targetCursor.EndTargetting();
+                _targetCursor.EndTargetting();
 
-                targetCursor = null!;
+                _targetCursor = null!;
 
                 return true;
             }
@@ -356,22 +352,22 @@ namespace Diviner
 
             if (info.IsKeyDown(Keys.LeftControl)
                 && info.IsKeyDown(Keys.LeftShift)
-                && info.IsKeyPressed(Keys.O) && targetCursor is not null)
+                && info.IsKeyPressed(Keys.O) && _targetCursor is not null)
             {
-                var (_, actor) = ActionManager.CreateTestEntity(targetCursor.Cursor.Position, world);
+                var (_, actor) = ActionManager.CreateTestEntity(_targetCursor.Cursor.Position, world);
                 actor.AddComponents(new MoveAndAttackAI(actor.GetViewRadius()));
                 return false;
             }
 
-            if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.O) && targetCursor is not null)
+            if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.O) && _targetCursor is not null)
             {
-                var (_, entity) = ActionManager.CreateTestEntity(targetCursor.Cursor.Position, world);
+                var (_, entity) = ActionManager.CreateTestEntity(_targetCursor.Cursor.Position, world);
                 entity.AddComponents(new BasicAi(entity));
                 return false;
             }
-            if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.P) && targetCursor.EntityInTarget())
+            if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.P) && _targetCursor.EntityInTarget())
             {
-                Actor actor = (Actor)targetCursor.TargetEntity();
+                Actor actor = (Actor)_targetCursor.TargetEntity();
                 actor.AddComponents(new MoveAndAttackAI(actor.GetViewRadius()));
                 Locator.GetService<MessageBusService>()
                     .SendMessage<AddMessageLog>(new($"Added attack component to {actor.Name}!"));
@@ -381,9 +377,9 @@ namespace Diviner
             if (info.IsKeyDown(Keys.LeftShift)
                 && info.IsKeyDown(Keys.LeftControl)
                 && info.IsKeyPressed(Keys.P)
-                && targetCursor.EntityInTarget())
+                && _targetCursor.EntityInTarget())
             {
-                Actor? actor = (Actor?)targetCursor.TargetEntity();
+                Actor? actor = (Actor?)_targetCursor.TargetEntity();
                 actor?.AddComponents(new NeedDrivenAi());
                 Locator.GetService<MessageBusService>()
                     .SendMessage<AddMessageLog>(new($"Added need component to {actor.Name}!"));
@@ -444,9 +440,9 @@ namespace Diviner
                 return false;
             }
 
-            if (info.IsKeyPressed(Keys.P) && (targetCursor?.EntityInTarget()) == true)
+            if (info.IsKeyPressed(Keys.P) && (_targetCursor?.EntityInTarget()) == true)
             {
-                var target = targetCursor.TargetEntity();
+                var target = _targetCursor.TargetEntity();
                 var needs = target.GetComponent<NeedCollection>();
                 for (int i = 0; i < needs.Count; i++)
                 {
