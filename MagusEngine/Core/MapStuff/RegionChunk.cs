@@ -1,6 +1,7 @@
 ﻿using Arquimedes.Enumerators;
 using MagusEngine.Core.Entities;
 using MagusEngine.Serialization.MapConverter;
+using MagusEngine.Systems;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
@@ -75,7 +76,7 @@ namespace MagusEngine.Core.MapStuff
 
         public IEnumerable<Actor> TotalPopulation()
         {
-            List<Actor> actors = new List<Actor>();
+            List<Actor> actors = [];
             for (int m = 0; m < LocalMaps.Length; m++)
             {
                 MagiMap? map = LocalMaps[m];
@@ -85,7 +86,7 @@ namespace MagusEngine.Core.MapStuff
                 {
                     if (ac[i] is Actor actor)
                     {
-                        if (map.ControlledEntitiy is not null && map.ControlledEntitiy.ID == actor.ID)
+                        if (map?.ControlledEntitiy?.ID == actor.ID || actor.ID == Find.Universe.Player.ID)
                             continue;
                         actors.Add(actor);
                     }

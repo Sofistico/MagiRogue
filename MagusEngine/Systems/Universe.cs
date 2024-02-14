@@ -33,7 +33,8 @@ namespace MagusEngine.Systems
         ISubscriber<ChangeControlledEntitiy>,
         ISubscriber<AddEntitiyCurrentMap>,
         ISubscriber<ProcessTurnEvent>,
-        ISubscriber<RemoveEntitiyCurrentMap>
+        ISubscriber<RemoveEntitiyCurrentMap>,
+        ISubscriber<AddEntityTurnNode>
     {
         /// <summary>
         /// The World map, contains the map data and the Planet data
@@ -285,20 +286,23 @@ namespace MagusEngine.Systems
             return WorldMap.AssocietatedMap;
         }
 
-        private void AddEntityToTime(MagiEntity entity, int time = 0)
+        // register to next turn
+        private void AddEntityToTime(MagiEntity entity, long time = 0) => AddEntityToTime(entity.ID, time);
+
+        private void AddEntityToTime(uint entityId, long time = 0)
         {
             // register to next turn
-            if (!Time.Nodes.Any(i => i.Id.Equals(entity.ID)))
-                Time.RegisterEntity(new EntityTimeNode(entity.ID, Time.GetTimePassed(time)));
+            if (!Time.Nodes.Any(i => i.Id.Equals(entityId)))
+                Time.RegisterEntity(new EntityTimeNode(entityId, Time.GetTimePassed(time)));
         }
 
         private void ProcessTurn(long playerTime, bool sucess)
         {
             if (sucess)
             {
-                bool playerIsDed = ProcessPlayerTurn(playerTime);
+                bool playerIsAlive = ProcessPlayerTurn(playerTime);
 
-                if (!playerIsDed)
+                if (!playerIsAlive)
                     return;
 
                 // here the player has done it's turn, so let's go to the next one
@@ -321,8 +325,7 @@ namespace MagusEngine.Systems
                     turnNode = Time.NextNode();
                     if (tries++ > maxTries)
                     {
-                        Locator.GetService<MessageBusService>()
-                            .SendMessage<AddMessageLog>(new("Something went really wrong with the processing of the AI"));
+                        Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("Something went really wrong with the processing of the AI"));
                         break;
                     }
                 }
@@ -425,7 +428,7 @@ namespace MagusEngine.Systems
                 entity.UpdateBody();
 
                 if (sucesses > 0 && totalTicks < -1)
-                    return;
+                    totalTicks = TimeHelper.Wait;
 
                 EntityTimeNode nextTurnNode = new(entityId, Time.GetTimePassed(totalTicks));
                 Time.RegisterEntity(nextTurnNode);
@@ -499,6 +502,11 @@ namespace MagusEngine.Systems
         public void Handle(ChangeControlledEntitiy message)
         {
             ChangeControlledEntity(message.ControlledEntitiy);
+        }
+
+        public void Handle(AddEntityTurnNode message)
+        {
+            AddEntityToTime(message.EntityId, message.Ticks);
         }
 
         ~Universe()
