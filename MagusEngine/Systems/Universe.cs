@@ -330,9 +330,7 @@ namespace MagusEngine.Systems
                     }
                 }
 #if DEBUG
-                // events
-                Locator.GetService<MessageBusService>()
-                    .SendMessage<AddMessageLog>(new($"Turns: {Time.Turns}, Tick: {Time.TimePassed.Ticks}"));
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"Turns: {Time.Turns}, Tick: {Time.TimePassed.Ticks}"));
 #endif
                 // makes sure that any entity that exists but has no AI, or the AI failed, get's a turn.
                 var ids = GetEntitiesIds();
@@ -359,7 +357,6 @@ namespace MagusEngine.Systems
         /// <summary>
         /// The player turn handler
         /// </summary>
-        /// <param name="playerTime"></param>
         /// <returns>returns true if the player made it's action sucessfully, false if otherwise</returns>
         private bool ProcessPlayerTurn(long playerTime)
         {

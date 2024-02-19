@@ -9,6 +9,7 @@ using MagusEngine.Core.Magic;
 using MagusEngine.Services;
 using MagusEngine.Utils;
 using MagusEngine.Utils.Extensions;
+using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -427,6 +428,18 @@ namespace MagusEngine.Systems
         }
 
         #endregion Melee hit
+
+        #region Projectile Calc
+
+        public static void CalculateRange(double force,
+            Item projectile,
+            double gravity,
+            Direction direction,
+            double angle)
+        {
+        }
+
+        #endregion Projectile Calc
 
         #region Death Resolve
 
