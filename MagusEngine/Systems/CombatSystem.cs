@@ -7,6 +7,7 @@ using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic;
 using MagusEngine.Services;
+using MagusEngine.Systems.Physics;
 using MagusEngine.Utils;
 using MagusEngine.Utils.Extensions;
 using SadRogue.Primitives;
@@ -437,6 +438,10 @@ namespace MagusEngine.Systems
             Direction direction,
             double angle)
         {
+            // interesting
+            var acceleration = PhysicsSystem.CalculateNewton2LawReturnAcceleration(projectile.Weight, force);
+
+            var displacement = PhysicsSystem.CalculateDisplacementWithAcceleration(1, 0, acceleration);
         }
 
         #endregion Projectile Calc
