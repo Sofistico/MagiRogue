@@ -433,15 +433,16 @@ namespace MagusEngine.Systems
         #region Projectile Calc
 
         public static void CalculateRange(double force,
+            Point originPoint,
             Item projectile,
-            double gravity,
-            Direction direction,
-            double angle)
+            Direction direction)
         {
             // interesting
             var acceleration = PhysicsSystem.CalculateNewton2LawReturnAcceleration(projectile.Weight, force);
 
             var displacement = PhysicsSystem.CalculateDisplacementWithAcceleration(1, 0, acceleration);
+
+
         }
 
         #endregion Projectile Calc

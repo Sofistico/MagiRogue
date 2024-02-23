@@ -173,7 +173,7 @@ namespace MagusEngine.Generators.MapGen
             }
 
             // Place walls at perimeter
-            foreach (Point location in PointUtils.GetBorderCellLocations(rectangle))
+            foreach (Point location in Utils.Extensions.PointExtensions.GetBorderCellLocations(rectangle))
             {
                 CreateAnyWall(location, wall);
             }
@@ -463,7 +463,7 @@ namespace MagusEngine.Generators.MapGen
         /// <param name="acceptsMoreThanOneDoor"></param>
         protected void CreateDoor(Room room, bool acceptsMoreThanOneDoor = false)
         {
-            List<Point> borderCells = PointUtils.GetBorderCellLocations(room.RoomRectangle);
+            List<Point> borderCells = Utils.Extensions.PointExtensions.GetBorderCellLocations(room.RoomRectangle);
             bool alreadyHasDoor = false;
 
             //go through every border cell and look for potential door candidates

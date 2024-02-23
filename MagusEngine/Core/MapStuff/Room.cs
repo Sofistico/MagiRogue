@@ -143,10 +143,10 @@ namespace MagusEngine.Core.MapStuff
             int yMax = RoomRectangle.MaxExtentY;
 
             // build a list of room border cells using a series of straight lines
-            List<Point> borderCells = PointUtils.GetTileLocationsAlongLine(xMin, yMin, xMax, yMin).ToList();
-            borderCells.AddRange(PointUtils.GetTileLocationsAlongLine(xMin, yMin, xMin, yMax));
-            borderCells.AddRange(PointUtils.GetTileLocationsAlongLine(xMin, yMax, xMax, yMax));
-            borderCells.AddRange(PointUtils.GetTileLocationsAlongLine(xMax, yMin, xMax, yMax));
+            List<Point> borderCells = PointExtensions.GetTileLocationsAlongLine(xMin, yMin, xMax, yMin).ToList();
+            borderCells.AddRange(Utils.Extensions.PointExtensions.GetTileLocationsAlongLine(xMin, yMin, xMin, yMax));
+            borderCells.AddRange(Utils.Extensions.PointExtensions.GetTileLocationsAlongLine(xMin, yMax, xMax, yMax));
+            borderCells.AddRange(Utils.Extensions.PointExtensions.GetTileLocationsAlongLine(xMax, yMin, xMax, yMax));
 
             return borderCells;
         }

@@ -27,8 +27,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.Effects
         {
             if (Parent is null)
                 return;
-            Point pointDir = new Point(Direction.DeltaX * TilesToMovePerTurn, Direction.DeltaY * TilesToMovePerTurn);
-            Point pointToGo = Parent.Position + pointDir;
+            var pointToGo = Direction.TransformToPointFromOrigin(Parent.Position, TilesToMovePerTurn);
             Point finalPoint = Point.None;
             int distance = (int)Parent.Position.GetDistance(pointToGo);
             BodyPart? bp = null;
@@ -45,7 +44,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.Effects
                     damage *= currentTile.Material.Density ?? 1; // massive damage by hitting a wall, multiplied by something i dunno
                     CombatSystem.DealDamage(PhysicsSystem.CalculateMomentum(Parent.Weight, damage),
                         Parent,
-                        DataManager.QueryDamageInData("blunt"),
+                        DataManager.QueryDamageInData("blunt")!,
                         currentTile?.Material,
                         currentTile?.ReturnAttack(),
                         limbAttacked: bp);

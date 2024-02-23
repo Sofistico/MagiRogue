@@ -2,7 +2,7 @@
 
 namespace MagusEngine.Utils.Extensions
 {
-    public static class ArrayUtils
+    public static class ArrayExtensions
     {
         public static T[] Transform2DTo1D<T>(this T[,] t)
         {

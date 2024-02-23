@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace MagusEngine.Utils.Extensions
 {
-    public static class PointUtils
+    public static class PointExtensions
     {
         public static float PointMagnitude(this Point point) =>
             MathF.Sqrt((point.X * point.X) + (point.Y * point.Y));
