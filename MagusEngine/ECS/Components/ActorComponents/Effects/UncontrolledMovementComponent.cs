@@ -27,7 +27,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.Effects
         {
             if (Parent is null)
                 return;
-            var pointToGo = Direction.TransformToPointFromOrigin(Parent.Position, TilesToMovePerTurn);
+            var pointToGo = Direction.GetPointToGoFromOrigin(Parent.Position, TilesToMovePerTurn);
             Point finalPoint = Point.None;
             int distance = (int)Parent.Position.GetDistance(pointToGo);
             BodyPart? bp = null;

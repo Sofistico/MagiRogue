@@ -440,9 +440,10 @@ namespace MagusEngine.Systems
             // interesting
             var acceleration = PhysicsSystem.CalculateNewton2LawReturnAcceleration(projectile.Weight, force);
 
-            var displacement = PhysicsSystem.CalculateDisplacementWithAcceleration(1, 0, acceleration);
+            int displacement = (int)PhysicsSystem.CalculateDisplacementWithAcceleration(1, 0, acceleration);
 
-
+            int turnsToDestination = (int)PhysicsSystem.CalculateTimeToTravelDistanceFromAcceleration(acceleration, displacement);
+            var pointToGo = direction.GetPointToGoFromOrigin(originPoint, displacement);
         }
 
         #endregion Projectile Calc
