@@ -7,7 +7,7 @@ namespace MagusEngine.ECS
 {
     public sealed class EntityRegistry
     {
-        private readonly Dictionary<Type, IComponentStore> _data = new();
+        private readonly Dictionary<Type, IComponentStore> _data = [];
         private readonly uint _maxComponents;
 
         public EntityRegistry(uint maxComponents)

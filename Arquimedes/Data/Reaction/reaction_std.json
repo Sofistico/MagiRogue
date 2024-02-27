@@ -2,7 +2,9 @@
   {
     "Id": "reaction_wood_coal",
     "ItemsId": [ "coal_item" ],
+    "Time": "12 h",
     "Name": "Produce coal from wood",
+    "Oversight": false,
     "Amount": 10,
     "Material": [ "Wood" ],
     "Quality": [
@@ -16,6 +18,8 @@
   {
     "Id": "reaction_forge_sword",
     "ItemsId": [ "short_sword" ],
+    "Oversight": true,
+    "Time": "1 h",
     "Name": "Produce a sword from material",
     "Amount": 1,
     "Material": [ "Metal", "Stone", "Wood" ],

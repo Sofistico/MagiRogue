@@ -12,6 +12,8 @@ namespace MagusEngine.Core.Civ
         private readonly Dictionary<string, Item> cachedItems = [];
 
         public string Id { get; set; }
+        public string Time { get; set; }
+        public bool Oversight { get; set; }
 
         /// <summary>
         /// The items that is produced
