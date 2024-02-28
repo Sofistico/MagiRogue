@@ -1,7 +1,8 @@
 ﻿using Arquimedes.Enumerators;
-using MagusEngine.Core;
+using GoRogue.Random;
 using MagusEngine.Core.Civ;
 using MagusEngine.Core.MapStuff;
+using MagusEngine.ECS.Components.TilesComponents;
 using MagusEngine.Factory;
 using MagusEngine.Serialization.MapConverter;
 using MagusEngine.Systems;
@@ -56,11 +57,23 @@ namespace MagusEngine.Generators.MapGen
                 CreateRoom(room,
                     w, f);
                 CreateDoor(room);
-                room.LockedDoorsRng();
+                LockedDoorsRng(room);
                 _rooms.Add(new Building(room));
                 _map.AddRoom(room);
             }
             /*_map.AddRooms(_rooms);*/
+        }
+
+        private static void LockedDoorsRng(Room room)
+        {
+            int half = GoRogue.DiceNotation.Dice.Roll("1d2");
+
+            if (half == 1)
+            {
+                int indexDoor = GlobalRandom.DefaultRNG.NextInt(room.Doors.Count);
+                if (room.Doors.Count > 0)
+                    room.Doors[indexDoor].GoRogueComponents.GetFirst<DoorComponent>().Locked = true;
+            }
         }
 
         private void PopulateMapWithRoomsWithVariableMaterials(List<Building> rooms,

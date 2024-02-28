@@ -27,7 +27,7 @@ namespace Diviner
 
         private static Target _targetCursor = null!;
 
-        private static readonly Dictionary<Keys, Direction> MovementDirectionMapping = new Dictionary<Keys, Direction>
+        private static readonly Dictionary<Keys, Direction> _movementDirectionMapping = new()
         {
             { Keys.NumPad7, Direction.UpLeft }, { Keys.NumPad8, Direction.Up }, { Keys.NumPad9, Direction.UpRight },
             { Keys.NumPad4, Direction.Left }, { Keys.NumPad6, Direction.Right },
@@ -91,11 +91,11 @@ namespace Diviner
 
             #endregion WorldMovement
 
-            foreach (Keys key in MovementDirectionMapping.Keys)
+            foreach (Keys key in _movementDirectionMapping.Keys)
             {
                 if (info.IsKeyPressed(key) && world.CurrentMap is not null)
                 {
-                    Direction moveDirection = MovementDirectionMapping[key];
+                    Direction moveDirection = _movementDirectionMapping[key];
                     Point deltaMove = new(moveDirection.DeltaX, moveDirection.DeltaY);
 
                     if (world.CurrentMap.ControlledEntitiy is not Player)
@@ -105,8 +105,6 @@ namespace Diviner
 
                         int distance = HandleNonPlayerMoveAndReturnDistance(world, deltaMove);
 
-                        // If there is a need to roll back, the code here was taking the CurrentFov
-                        // and Contains(pos + posMove)
                         return world.CurrentMap.PlayerExplored[world.CurrentMap.ControlledEntitiy.Position + deltaMove]
                             && distance <= _targetCursor?.MaxDistance
                             && ActionManager.MoveActorBy((Actor)world.CurrentMap.ControlledEntitiy, deltaMove);
@@ -173,6 +171,12 @@ namespace Diviner
             if (info.IsKeyPressed(Keys.NumPad5) || info.IsKeyPressed(Keys.OemPeriod))
             {
                 Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.Wait, true));
+                return true;
+            }
+
+            if (info.IsKeyPressed(Keys.OemComma))
+            {
+                Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(10, true));
                 return true;
             }
 

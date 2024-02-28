@@ -566,7 +566,7 @@ namespace MagusEngine.Commands
             bool tileIsInvalid;
             do
             {
-                var posToGo = Utils.Extensions.PointExtensions.GetPointNextToWithCardinals();
+                var posToGo = Utils.Extensions.MagiPointExtensions.GetPointNextToWithCardinals();
                 tileIsInvalid = !MoveActorBy(actor, posToGo);
                 tries++;
             } while (tileIsInvalid && tries <= maxTries);

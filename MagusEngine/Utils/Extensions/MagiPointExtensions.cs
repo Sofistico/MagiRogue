@@ -7,12 +7,12 @@ using System.Linq;
 
 namespace MagusEngine.Utils.Extensions
 {
-    public static class PointExtensions
+    public static class MagiPointExtensions
     {
         public static float PointMagnitude(this Point point) =>
             MathF.Sqrt((point.X * point.X) + (point.Y * point.Y));
 
-        public static IEnumerable<Point> GetTileLocationsAlongLine(int xOrigin,
+        public static IEnumerable<Point> GetTileLocationsAlongLine(this int xOrigin,
             int yOrigin,
             int xDestination,
             int yDestination)

@@ -41,7 +41,13 @@ namespace MagusEngine.Core.MapStuff
 
         #endregion Props
 
-        public Room(Rectangle roomRectangle, RoomTag tag) : this(roomRectangle)
+        #region ctors
+
+        public Room()
+        {
+        }
+
+        public Room(RoomTag tag)
         {
             Tag = tag;
         }
@@ -49,6 +55,11 @@ namespace MagusEngine.Core.MapStuff
         public Room(Point[] points)
         {
             RoomPoints = points;
+        }
+
+        public Room(Point[] points, RoomTag tag) : this(points)
+        {
+            Tag = tag;
         }
 
         public Room(IEnumerable<Point> points) : this(points.ToArray())
@@ -59,7 +70,14 @@ namespace MagusEngine.Core.MapStuff
         {
         }
 
-        public Room(Point[] points, RoomTag tag) : this(points)
+        public Room(Rectangle roomRectangle)
+        {
+            RoomRectangle = roomRectangle;
+            RoomPoints = [.. roomRectangle.Positions()];
+            Tag = RoomTag.Generic;
+        }
+
+        public Room(Rectangle roomRectangle, RoomTag tag) : this(roomRectangle)
         {
             Tag = tag;
         }
@@ -73,35 +91,7 @@ namespace MagusEngine.Core.MapStuff
             Terrain = terrain;
         }
 
-        public Room(Rectangle roomRectangle)
-        {
-            RoomRectangle = roomRectangle;
-            RoomPoints = roomRectangle.Positions().ToArray();
-            Tag = RoomTag.Generic;
-        }
-
-        public Room()
-        {
-        }
-
-        public Room(RoomTag tag)
-        {
-            Tag = tag;
-        }
-
-        public List<Tile> GetAllDoorsInRoom()
-        {
-            List<Tile> doors = new List<Tile>();
-
-            //for (int i = 0; i < DoorsPoint.Count; i++)
-            //{
-            //    Point point = DoorsPoint[i];
-            //    Tile? door = null;
-            //    doors.Add(door!);
-            //}
-
-            return doors;
-        }
+        #endregion ctors
 
         public void UpdateListOfDoorPoints()
         {
@@ -109,18 +99,6 @@ namespace MagusEngine.Core.MapStuff
             {
                 Point point = Doors[i].Position;
                 DoorsPoint.Add(point);
-            }
-        }
-
-        public void LockedDoorsRng()
-        {
-            int half = GoRogue.DiceNotation.Dice.Roll("1d2");
-
-            if (half == 1)
-            {
-                int indexDoor = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(Doors.Count);
-                if (Doors.Count > 0)
-                    Doors[indexDoor].GoRogueComponents.GetFirst<DoorComponent>().Locked = true;
             }
         }
 
@@ -132,23 +110,6 @@ namespace MagusEngine.Core.MapStuff
                 if (comp is not null)
                     comp.Locked = false;
             }
-        }
-
-        public List<Point> ReturnRecPerimiter()
-        {
-            //establish room boundaries
-            int xMin = RoomRectangle.MinExtentX;
-            int xMax = RoomRectangle.MaxExtentX;
-            int yMin = RoomRectangle.MinExtentY;
-            int yMax = RoomRectangle.MaxExtentY;
-
-            // build a list of room border cells using a series of straight lines
-            List<Point> borderCells = PointExtensions.GetTileLocationsAlongLine(xMin, yMin, xMax, yMin).ToList();
-            borderCells.AddRange(Utils.Extensions.PointExtensions.GetTileLocationsAlongLine(xMin, yMin, xMin, yMax));
-            borderCells.AddRange(Utils.Extensions.PointExtensions.GetTileLocationsAlongLine(xMin, yMax, xMax, yMax));
-            borderCells.AddRange(Utils.Extensions.PointExtensions.GetTileLocationsAlongLine(xMax, yMin, xMax, yMax));
-
-            return borderCells;
         }
 
         public Point ReturnRandomPosRoom()

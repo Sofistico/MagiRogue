@@ -16,8 +16,4 @@
     <ProjectReference Include="..\MagusEngine\MagusEngine.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Animation\" />
-  </ItemGroup>
-
 </Project>

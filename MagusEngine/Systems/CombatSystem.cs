@@ -432,18 +432,29 @@ namespace MagusEngine.Systems
 
         #region Projectile Calc
 
-        public static void CalculateRange(double force,
-            Point originPoint,
+        public static void ShootProjectile(double force,
+            Point origin,
             Item projectile,
             Direction direction)
         {
+            if (projectile is null)
+                return;
             // interesting
             var acceleration = PhysicsSystem.CalculateNewton2LawReturnAcceleration(projectile.Weight, force);
 
             int displacement = (int)PhysicsSystem.CalculateDisplacementWithAcceleration(1, 0, acceleration);
 
-            int turnsToDestination = (int)PhysicsSystem.CalculateTimeToTravelDistanceFromAcceleration(acceleration, displacement);
-            var pointToGo = direction.GetPointToGoFromOrigin(originPoint, displacement);
+            int secondsToDestination = (int)PhysicsSystem.CalculateTimeToTravelDistanceFromAcceleration(acceleration, displacement);
+            var pointToGo = direction.GetPointToGoFromOrigin(origin, displacement);
+
+            var projectileTravel = new Projectile(secondsToDestination,
+                origin,
+                pointToGo,
+                direction,
+                true,
+                null,
+                projectile.SadCell.AppearanceSingle.Appearance.Foreground,
+                projectile.SadCell.AppearanceSingle.Appearance.Background);
         }
 
         #endregion Projectile Calc

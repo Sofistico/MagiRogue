@@ -4,7 +4,7 @@ using SadRogue.Primitives;
 
 namespace MagusEngine.Core.Entities
 {
-    public class ProjectileTravelling : MagiEntity
+    public class Projectile : MagiEntity
     {
         private static readonly char[] _defaultGlyphs = [
             '.',
@@ -27,7 +27,7 @@ namespace MagusEngine.Core.Entities
         /// </summary>
         public char[] Glyphs { get; set; }
 
-        public ProjectileTravelling(int turnsToMove,
+        public Projectile(int turnsToMove,
             Point origin,
             Point finalPoint,
             Direction direction,

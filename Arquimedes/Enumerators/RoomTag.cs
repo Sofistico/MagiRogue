@@ -6,8 +6,8 @@ namespace Arquimedes.Enumerators
     [JsonConverter(typeof(StringEnumConverter))]
     public enum RoomTag
     {
-        Debug,
         Generic,
+        Debug,
         Inn,
         Temple,
         Blacksmith,
