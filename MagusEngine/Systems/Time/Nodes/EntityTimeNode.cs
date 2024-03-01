@@ -1,4 +1,4 @@
-﻿namespace MagusEngine.Systems.Time
+﻿namespace MagusEngine.Systems.Time.Nodes
 {
     public class EntityTimeNode : ITimeNode
     {

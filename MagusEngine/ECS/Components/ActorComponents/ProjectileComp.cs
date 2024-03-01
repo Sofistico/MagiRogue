@@ -1,10 +1,10 @@
-﻿using Arquimedes.Enumerators;
-using MagusEngine.Core.Entities.Base;
+﻿using GoRogue.Pathing;
+using MagusEngine.Core.MapStuff;
 using SadRogue.Primitives;
 
-namespace MagusEngine.Core.Entities
+namespace MagusEngine.ECS.Components.ActorComponents
 {
-    public class Projectile : MagiEntity
+    public class ProjectileComp
     {
         private static readonly char[] _defaultGlyphs = [
             '.',
@@ -17,7 +17,11 @@ namespace MagusEngine.Core.Entities
             '-',
             '/'
         ];
+        private Path? _path;
+        private int _currentStep;
+
         public int TurnsToMove { get; set; }
+        public Point Origin { get; set; }
         public Point FinalPoint { get; set; }
         public Direction Direciton { get; set; }
         public bool IsPhysical { get; set; }
@@ -27,17 +31,16 @@ namespace MagusEngine.Core.Entities
         /// </summary>
         public char[] Glyphs { get; set; }
 
-        public Projectile(int turnsToMove,
+        public ProjectileComp(int turnsToMove,
             Point origin,
             Point finalPoint,
             Direction direction,
             bool isPhysical,
-            char[]? glyphs,
-            Color foreground,
-            Color background) : base(foreground, background, TranslateDirToGlyph(direction, glyphs ?? _defaultGlyphs), origin, (int)MapLayer.SPECIAL)
+            char[]? glyphs)
         {
             Direciton = direction;
             TurnsToMove = turnsToMove;
+            Origin = origin;
             FinalPoint = finalPoint;
             IsPhysical = isPhysical;
             Glyphs = glyphs ?? _defaultGlyphs;
@@ -51,6 +54,18 @@ namespace MagusEngine.Core.Entities
         public char TranslateDirToGlyph(Direction dir)
         {
             return TranslateDirToGlyph(dir, Glyphs);
+        }
+
+        public void UpdatePath(MagiMap map)
+        {
+            _path = map.AStar.ShortestPath(Origin, FinalPoint);
+        }
+
+        public Point PointInCurrentPath()
+        {
+            if (_path != null)
+                return _path.GetStep(_currentStep++);
+            return Point.None;
         }
 
         private static char TranslateDirToGlyph(Direction dir, char[] glyphs)

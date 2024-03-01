@@ -15,6 +15,7 @@ using MagusEngine.Generators.MapGen;
 using MagusEngine.Serialization;
 using MagusEngine.Services;
 using MagusEngine.Systems.Time;
+using MagusEngine.Systems.Time.Nodes;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System;
@@ -318,6 +319,10 @@ namespace MagusEngine.Systems
                             ProcessAiTurn(entityTurn.Id);
                             break;
 
+                        case ComponentNode componentTurn:
+                            ProcessComponentTurn(componentTurn);
+                            break;
+
                         default:
                             throw new NotSupportedException($"Unhandled time node type: {turnNode.GetType()}");
                     }
@@ -336,6 +341,11 @@ namespace MagusEngine.Systems
                 var ids = GetEntitiesIds();
                 RegisterInTime(ids);
             }
+        }
+
+        private void ProcessComponentTurn(ComponentNode componentTurn)
+        {
+            var nextInvoke = componentTurn.Action.Invoke();
         }
 
         private IEnumerable<Actor> GetEntitiesIds()

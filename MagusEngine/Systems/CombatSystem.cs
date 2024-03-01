@@ -6,6 +6,7 @@ using MagusEngine.Core;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic;
+using MagusEngine.ECS.Components.ActorComponents;
 using MagusEngine.Services;
 using MagusEngine.Systems.Physics;
 using MagusEngine.Utils;
@@ -444,17 +445,17 @@ namespace MagusEngine.Systems
 
             int displacement = (int)PhysicsSystem.CalculateDisplacementWithAcceleration(1, 0, acceleration);
 
-            int secondsToDestination = (int)PhysicsSystem.CalculateTimeToTravelDistanceFromAcceleration(acceleration, displacement);
+            int msToHit = (int)PhysicsSystem.CalculateTimeToTravelDistanceFromAcceleration(acceleration, displacement) / 100;
             var pointToGo = direction.GetPointToGoFromOrigin(origin, displacement);
 
-            var projectileTravel = new Projectile(secondsToDestination,
+            var projectileComp = new ProjectileComp(msToHit,
                 origin,
                 pointToGo,
                 direction,
                 true,
-                null,
-                projectile.SadCell.AppearanceSingle.Appearance.Foreground,
-                projectile.SadCell.AppearanceSingle.Appearance.Background);
+                null);
+
+            projectile.AddComponent(projectileComp);
         }
 
         #endregion Projectile Calc
