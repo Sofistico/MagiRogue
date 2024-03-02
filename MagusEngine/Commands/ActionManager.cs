@@ -33,17 +33,6 @@ namespace MagusEngine.Commands
         private const int maxTries = 10;
 
         /// <summary>
-        /// Move the actor BY +/- X&Y coordinates returns true if the move was successful
-        /// and false if unable to move there
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <param name="positionChange"></param>
-        public static bool MoveActorBy(MagiEntity entity, Point positionChange)
-        {
-            return entity.MoveBy(positionChange);
-        }
-
-        /// <summary>
         /// Moves the actor To a position, by means of teleport returns true if the move was
         /// successful and false if unable to move
         /// </summary>
@@ -150,7 +139,7 @@ namespace MagusEngine.Commands
 
             foreach (Point direction in directions)
             {
-                Actor monsterLocation = attacker.MagiMap.GetEntityAt<Actor>(direction);
+                Actor monsterLocation = attacker.CurrentMagiMap.GetEntityAt<Actor>(direction);
 
                 if (monsterLocation != null && monsterLocation != attacker)
                 {
@@ -210,7 +199,7 @@ namespace MagusEngine.Commands
             {
                 door.Open();
                 Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{actor.Name} opened a {doorName}"));
-                actor.MagiMap.ForceFovCalculation();
+                actor.CurrentMagiMap.ForceFovCalculation();
                 return true;
             }
             return false;
@@ -225,13 +214,13 @@ namespace MagusEngine.Commands
         {
             foreach (Point points in actor.Position.GetDirectionPoints())
             {
-                var tile = actor.MagiMap.GetTileAt<DoorComponent>(points);
+                var tile = actor.CurrentMagiMap.GetTileAt<DoorComponent>(points);
                 var possibleDoor = tile.GetComponent<DoorComponent>();
                 if (possibleDoor?.IsOpen == true)
                 {
                     possibleDoor.Close();
                     Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{actor.Name} closed a {tile.Name}"));
-                    actor.MagiMap.ForceFovCalculation();
+                    actor.CurrentMagiMap.ForceFovCalculation();
                     return true;
                 }
             }
@@ -250,7 +239,7 @@ namespace MagusEngine.Commands
                 Item item = inv.Inventory[0];
                 inv.Inventory.Remove(item);
                 item.Position = inv.Position;
-                inv.MagiMap.AddMagiEntity(item);
+                inv.CurrentMagiMap.AddMagiEntity(item);
                 Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{inv.Name} dropped {item.Name}"));
                 return true;
             }
@@ -511,9 +500,9 @@ namespace MagusEngine.Commands
                 return false;
             for (int i = 0; i < turns; i++)
             {
-                foreach (Point p in actor.MagiMap.PlayerFOV.NewlySeen)
+                foreach (Point p in actor.CurrentMagiMap.PlayerFOV.NewlySeen)
                 {
-                    Actor? possibleActor = actor.MagiMap.GetEntityAt<Actor>(p);
+                    Actor? possibleActor = actor.CurrentMagiMap.GetEntityAt<Actor>(p);
                     if (possibleActor?.Equals(actor) == false && canBeInterrupted)
                     {
                         Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("There is an enemy in view, stop resting!"));
@@ -567,7 +556,7 @@ namespace MagusEngine.Commands
             do
             {
                 var posToGo = Utils.Extensions.MagiPointExtensions.GetPointNextToWithCardinals();
-                tileIsInvalid = !MoveActorBy(actor, posToGo);
+                tileIsInvalid = !actor.MoveBy(posToGo);
                 tries++;
             } while (tileIsInvalid && tries <= maxTries);
             return TimeHelper.GetWalkTime(actor, actor.Position);

@@ -83,7 +83,7 @@ namespace MagusEngine.Commands
 
         public bool EntityInTarget(bool lookMode = false, bool ignorePlayer = true)
         {
-            var entity = Cursor?.MagiMap?.GetEntitiesAt<MagiEntity>(Cursor.Position, Cursor.MagiMap.LayerMasker.MaskAllBelow((int)MapLayer.SPECIAL)).FirstOrDefault();
+            var entity = Cursor?.CurrentMagiMap?.GetEntitiesAt<MagiEntity>(Cursor.Position, Cursor.CurrentMagiMap.LayerMasker.MaskAllBelow((int)MapLayer.SPECIAL)).FirstOrDefault();
             if (entity is null)
                 return false;
             if (ignorePlayer && entity is Player)
@@ -200,7 +200,7 @@ namespace MagusEngine.Commands
             // if there is anything in the path, clear it
             foreach (Point point in tileDictionary.Keys)
             {
-                Tile tile = Cursor.MagiMap.GetTileAt(point);
+                Tile tile = Cursor.CurrentMagiMap.GetTileAt(point);
                 if (tile is not null)
                     tile.Appearence.Background = tile.LastSeenAppereance.Background;
             }
@@ -263,10 +263,10 @@ namespace MagusEngine.Commands
             TargetList.Clear();
             if (Cursor is null)
                 return;
-            TravelPath = Cursor.MagiMap.AStar.ShortestPath(OriginCoord, e.NewValue)!;
+            TravelPath = Cursor.CurrentMagiMap.AStar.ShortestPath(OriginCoord, e.NewValue)!;
             if (State is TargetState.LookMode || TravelPath is null)
             {
-                TravelPath = Cursor.MagiMap
+                TravelPath = Cursor.CurrentMagiMap
                     .AStarWithAllWalkable().ShortestPath(OriginCoord, e.NewValue)!;
                 ClearTileDictionary();
                 return;
@@ -276,7 +276,7 @@ namespace MagusEngine.Commands
                 foreach (Point pos in TravelPath.Steps)
                 {
                     // gets each point in the travel path steps and change the background of the wall
-                    var halp = Cursor.MagiMap.GetTileAt(pos);
+                    var halp = Cursor.CurrentMagiMap.GetTileAt(pos);
                     halp.Appearence.Background = Color.Yellow;
                     tileDictionary.TryAdd(pos, halp);
                 }
@@ -287,7 +287,7 @@ namespace MagusEngine.Commands
                 {
                     if (!TravelPath.Steps.Contains(item))
                     {
-                        Tile llop = Cursor.MagiMap.GetTileAt(item);
+                        Tile llop = Cursor.CurrentMagiMap.GetTileAt(item);
                         if (llop is not null)
                         {
                             llop.Appearence.Background = llop.LastSeenAppereance.Background;
@@ -336,7 +336,7 @@ namespace MagusEngine.Commands
         public bool TileInTarget(bool lookMode = false)
         {
             if (!EntityInTarget()
-                && Cursor.MagiMap.GetTileAt(Cursor.Position) != null)
+                && Cursor.CurrentMagiMap.GetTileAt(Cursor.Position) != null)
             {
                 if(!lookMode)
                     State = TargetState.Targeting;
@@ -351,7 +351,7 @@ namespace MagusEngine.Commands
         /// <param name="point"></param>
         private void AddTileToDictionary(Point point, bool ignoresWall = false)
         {
-            var halp = Cursor.MagiMap.GetTileAt(point);
+            var halp = Cursor.CurrentMagiMap.GetTileAt(point);
             if (halp is not null && (halp.IsTransparent || ignoresWall))
             {
                 halp.Appearence.Background = Color.Yellow;
@@ -373,7 +373,7 @@ namespace MagusEngine.Commands
         /// <param name="point"></param>
         private void AddEntityToList(Point point)
         {
-            var entity = Cursor.MagiMap.GetEntityAt<MagiEntity>(point);
+            var entity = Cursor.CurrentMagiMap.GetEntityAt<MagiEntity>(point);
             if (entity is not null && !TargetList.Contains(entity))
                 TargetList.Add(entity);
         }
@@ -389,9 +389,9 @@ namespace MagusEngine.Commands
             }
         }
 
-        public MagiEntity? TargetEntity() => Cursor.MagiMap.GetEntityAt<MagiEntity>(Cursor.Position);
+        public MagiEntity? TargetEntity() => Cursor.CurrentMagiMap.GetEntityAt<MagiEntity>(Cursor.Position);
 
-        private Tile? TargetAtTile() => Cursor.MagiMap.GetTileAt(Cursor.Position);
+        private Tile? TargetAtTile() => Cursor.CurrentMagiMap.GetTileAt(Cursor.Position);
 
         private IGameObject? DetermineWhatToLook(bool lookMode = false)
         {

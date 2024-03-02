@@ -23,7 +23,7 @@ namespace MagusEngine.Core.Magic.Effects
 
         public void ApplyEffect(Point target, Actor caster, SpellBase spellCasted)
         {
-            var entity = caster.MagiMap.GetEntityAt<MagiEntity>(target);
+            var entity = caster.CurrentMagiMap.GetEntityAt<MagiEntity>(target);
             var hit = CombatSystem.ResolveSpellHit(entity, caster, spellCasted, this);
             if (hit)
                 PhysicsSystem.DealWithPushes(entity, BaseDamage, Direction.GetDirection(entity.Position - caster.Position));

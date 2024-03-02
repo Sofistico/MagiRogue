@@ -2,7 +2,6 @@
 using GoRogue.GameFramework;
 using GoRogue.Pathing;
 using GoRogue.Random;
-using MagusEngine.Bus.MapBus;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.ECS;
@@ -10,9 +9,7 @@ using MagusEngine.ECS.Components.ActorComponents;
 using MagusEngine.ECS.Components.TilesComponents;
 using MagusEngine.Factory;
 using MagusEngine.Serialization.MapConverter;
-using MagusEngine.Services;
 using MagusEngine.Systems;
-using MagusEngine.Systems.Time;
 using MagusEngine.Utils;
 using MagusEngine.Utils.Extensions;
 using Newtonsoft.Json;
@@ -161,33 +158,13 @@ namespace MagusEngine.Core.MapStuff
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public bool IsTileWalkable(Point location)
+        public bool IsTileWalkable(Point location, bool ignoreWalkability = false)
         {
             // first make sure that actor isn't trying to move off the limits of the map
             if (CheckForIndexOutOfBounds(location))
                 return false;
-
             // then return whether the tile is walkable
-            return Terrain[(location.Y * Width) + location.X]?.IsWalkable == true;
-        }
-
-        /// <summary>
-        /// IsTileWalkable checks to see if the actor has tried to walk off the map or into a
-        /// non-walkable tile Returns true if the tile location is walkable false if tile location
-        /// is not walkable or is off-map
-        /// </summary>
-        /// <param name="location"></param>
-        /// <returns></returns>
-        public bool IsTileWalkable(Point location, MagiEntity entity)
-        {
-            // first make sure that actor isn't trying to move off the limits of the map
-            if (CheckForIndexOutOfBounds(location))
-                return false;
-            if (entity.IgnoresWalls)
-                return true;
-
-            // then return whether the tile is walkable
-            return Terrain[(location.Y * Width) + location.X]?.IsWalkable == true;
+            return Terrain[(location.Y * Width) + location.X]?.IsWalkable == true || ignoreWalkability;
         }
 
         /// <summary>

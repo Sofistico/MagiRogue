@@ -34,7 +34,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.Effects
             double damage = Force;
             for (int i = 0; i < distance; i++)
             {
-                var currentTile = (Parent?.MagiMap?.GetTileAt(finalPoint == Point.None ? Parent.Position + Direction : finalPoint + Direction))
+                var currentTile = (Parent?.CurrentMagiMap?.GetTileAt(finalPoint == Point.None ? Parent.Position + Direction : finalPoint + Direction))
                     ?? throw new ApplicationException("The tile was null can't push!");
                 // is this enough?
                 if (Parent is Actor actor)

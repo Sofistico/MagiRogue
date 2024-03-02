@@ -97,43 +97,43 @@ namespace MagusEngine.Core.Entities
         // able to move, false if failed to move Checks for Monsters, and allows the Actor to commit
         // an action if one is present.
         // TODO: an autopickup feature for items
-        public override bool MoveBy(Point positionChange)
+        public override bool MoveBy(Point deltaPositionChange)
         {
             // Check the current map if we can move to this new position
-            if (MagiMap?.IsTileWalkable(Position + positionChange, this) == true)
+            if (CurrentMagiMap?.IsTileWalkable(Position + deltaPositionChange, IgnoresWalls) == true)
             {
-                bool attacked = CheckIfCanAttack(positionChange);
+                bool attacked = CheckIfCanAttack(deltaPositionChange);
 
                 if (attacked)
                     return attacked;
 
-                Position += positionChange;
+                Position += deltaPositionChange;
 
                 return true;
             }
             else // Handle situations where there are non-walkable tiles that CAN be used
             {
-                bool doorThere = CheckIfThereIsDoor(positionChange);
+                bool doorThere = CheckIfThereIsDoor(deltaPositionChange);
 
                 if (doorThere)
                     return doorThere;
 
                 // true means that he entered inside a map, and thus the turn moved, a false means
                 // that there wasn't anything there
-                return CheckForChangeMapChunk(Position, positionChange);
+                return CheckForChangeMapChunk(Position, deltaPositionChange);
             }
         }
 
         private bool CheckForChangeMapChunk(Point pos, Point positionChange)
         {
             Direction dir = Direction.GetCardinalDirection(positionChange);
-            if (MagiMap.MapZoneConnections.TryGetValue(dir, out MagiMap value) &&
-                MagiMap.CheckForIndexOutOfBounds(pos + positionChange))
+            if (CurrentMagiMap.MapZoneConnections.TryGetValue(dir, out MagiMap value) &&
+                CurrentMagiMap.CheckForIndexOutOfBounds(pos + positionChange))
             {
                 MagiMap mapToGo = value;
                 Point actorPosInChunk = GetNextMapPos(mapToGo, pos + positionChange);
                 // if tile in the other map isn't walkable, then it should't be possible to go there!
-                if (!mapToGo.IsTileWalkable(actorPosInChunk, this))
+                if (!mapToGo.IsTileWalkable(actorPosInChunk, IgnoresWalls))
                     return false;
                 //Find.Universe.ChangePlayerMap(mapToGo, actorPosInChunk, Find.CurrentMap);
                 Locator.GetService<MessageBusService>()
@@ -156,7 +156,7 @@ namespace MagusEngine.Core.Entities
         private bool CheckIfCanAttack(Point positionChange)
         {
             // if there's a monster here, do a bump attack
-            Actor actor = MagiMap.GetEntityAt<Actor>(Position + positionChange);
+            Actor actor = CurrentMagiMap.GetEntityAt<Actor>(Position + positionChange);
 
             if (actor != null && CanBeAttacked)
             {
@@ -173,7 +173,7 @@ namespace MagusEngine.Core.Entities
         private bool CheckIfThereIsDoor(Point positionChange)
         {
             // Check for the presence of a door
-            Tile door = MagiMap.GetTileAt<DoorComponent>(Position + positionChange);
+            Tile door = CurrentMagiMap.GetTileAt<DoorComponent>(Position + positionChange);
 
             // if there's a door here, try to use it
             if (door != null && CanInteract)

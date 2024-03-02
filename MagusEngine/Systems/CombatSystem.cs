@@ -9,6 +9,7 @@ using MagusEngine.Core.Magic;
 using MagusEngine.ECS.Components.ActorComponents;
 using MagusEngine.Services;
 using MagusEngine.Systems.Physics;
+using MagusEngine.Systems.Time.Nodes;
 using MagusEngine.Utils;
 using MagusEngine.Utils.Extensions;
 using SadRogue.Primitives;
@@ -438,14 +439,14 @@ namespace MagusEngine.Systems
             Item projectile,
             Direction direction)
         {
-            if (projectile is null)
+            if (projectile is null && projectile?.CurrentMagiMap is null)
                 return;
             // interesting
             var acceleration = PhysicsSystem.CalculateNewton2LawReturnAcceleration(projectile.Weight, force);
 
             int displacement = (int)PhysicsSystem.CalculateDisplacementWithAcceleration(1, 0, acceleration);
 
-            int msToHit = (int)PhysicsSystem.CalculateTimeToTravelDistanceFromAcceleration(acceleration, displacement) / 100;
+            long msToHit = (long)PhysicsSystem.CalculateTimeToTravelDistanceFromAcceleration(acceleration, displacement) / 100;
             var pointToGo = direction.GetPointToGoFromOrigin(origin, displacement);
 
             var projectileComp = new ProjectileComp(msToHit,
@@ -453,9 +454,11 @@ namespace MagusEngine.Systems
                 pointToGo,
                 direction,
                 true,
-                null);
-
-            projectile.AddComponent(projectileComp);
+                null,
+                acceleration);
+            projectile.AddComponent(projectileComp, ProjectileComp.Tag);
+            projectileComp.UpdatePath(projectile.CurrentMagiMap);
+            Find.Universe.Time.RegisterNode(new ComponentTimeNode(msToHit, projectile.ID, projectileComp.Travel));
         }
 
         #endregion Projectile Calc

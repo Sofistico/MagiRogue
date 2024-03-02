@@ -1,10 +1,16 @@
-﻿using GoRogue.Pathing;
+﻿using GoRogue.Components.ParentAware;
+using GoRogue.Pathing;
+using MagusEngine.Bus.ComponentBus;
+using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
+using MagusEngine.Services;
+using SadConsole.Effects;
 using SadRogue.Primitives;
+using System;
 
 namespace MagusEngine.ECS.Components.ActorComponents
 {
-    public class ProjectileComp
+    public class ProjectileComp : ParentAwareComponentBase<MagiEntity>
     {
         private static readonly char[] _defaultGlyphs = [
             '.',
@@ -20,40 +26,64 @@ namespace MagusEngine.ECS.Components.ActorComponents
         private Path? _path;
         private int _currentStep;
 
-        public int TurnsToMove { get; set; }
+        public const string Tag = "projectile";
+        public long TicksToMoveOneStep { get; set; }
         public Point Origin { get; set; }
         public Point FinalPoint { get; set; }
         public Direction Direciton { get; set; }
-        public bool IsPhysical { get; set; }
+        public bool IgnoresObstacles { get; set; }
+        public double Acceleration { get; set; }
 
         /// <summary>
         /// Must follow the Direction.Types enum
         /// </summary>
         public char[] Glyphs { get; set; }
 
-        public ProjectileComp(int turnsToMove,
+        public ProjectileComp(long ticksToMoveOneStep,
             Point origin,
             Point finalPoint,
             Direction direction,
             bool isPhysical,
-            char[]? glyphs)
+            char[]? glyphs,
+            double acceleration)
         {
             Direciton = direction;
-            TurnsToMove = turnsToMove;
+            TicksToMoveOneStep = ticksToMoveOneStep;
             Origin = origin;
             FinalPoint = finalPoint;
-            IsPhysical = isPhysical;
+            IgnoresObstacles = isPhysical;
             Glyphs = glyphs ?? _defaultGlyphs;
+            Acceleration = acceleration;
         }
 
-        public char TranslateDirToGlyph()
+        public long Travel()
         {
-            return TranslateDirToGlyph(Direciton, Glyphs);
-        }
+            if (_currentStep == 0)
+            {
+                var blinkGlyph = new BlinkGlyph()
+                {
+                    BlinkCount = -1,
+                    RunEffectOnApply = true,
+                    BlinkSpeed = TimeSpan.FromSeconds(0.5),
+                    GlyphIndex = TranslateDirToGlyph(),
+                    RemoveOnFinished = true,
+                    RestoreCellOnRemoved = true
+                };
+                Parent.SadCell.AppearanceSingle.Effect = blinkGlyph;
+                blinkGlyph.Restart();
+            }
+            if (_path.Length == _currentStep)
+            {
+            }
+            if (!Parent.MoveTo(_path.GetStep(_currentStep++), IgnoresObstacles))
+            {
+                // handle hit logic!
 
-        public char TranslateDirToGlyph(Direction dir)
-        {
-            return TranslateDirToGlyph(dir, Glyphs);
+                // remove itself
+                Parent.RemoveComponent(Tag);
+            }
+
+            return TicksToMoveOneStep;
         }
 
         public void UpdatePath(MagiMap map)
@@ -61,7 +91,17 @@ namespace MagusEngine.ECS.Components.ActorComponents
             _path = map.AStar.ShortestPath(Origin, FinalPoint);
         }
 
-        public Point PointInCurrentPath()
+        private char TranslateDirToGlyph()
+        {
+            return TranslateDirToGlyph(Direciton, Glyphs);
+        }
+
+        private char TranslateDirToGlyph(Direction dir)
+        {
+            return TranslateDirToGlyph(dir, Glyphs);
+        }
+
+        private Point PointInCurrentPath()
         {
             if (_path != null)
                 return _path.GetStep(_currentStep++);
@@ -70,6 +110,8 @@ namespace MagusEngine.ECS.Components.ActorComponents
 
         private static char TranslateDirToGlyph(Direction dir, char[] glyphs)
         {
+            if (glyphs.Length == 1)
+                return glyphs[0];
             return glyphs[(int)dir.Type];
         }
     }

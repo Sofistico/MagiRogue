@@ -184,7 +184,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.Ai
 
         private int MoveActorAStep(Actor actor, MagiMap map)
         {
-            ActionManager.MoveActorBy(actor, previousKnowPath.GetStep(step++).Subtract(actor.Position));
+            actor.MoveBy(previousKnowPath.GetStep(step++).Subtract(actor.Position));
             return TimeHelper.GetWalkTime(actor, map.GetTileAt(actor.Position));
         }
 

@@ -68,7 +68,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.Ai
             }
 
             var coord = new Point(direction.DeltaX, direction.DeltaY);
-            return ActionManager.MoveActorBy(actor, coord);
+            return actor.MoveBy(coord);
         }
     }
 }

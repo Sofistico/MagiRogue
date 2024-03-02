@@ -4,14 +4,15 @@ using SadConsole.Components;
 
 namespace MagusEngine.ECS.Components.ActorComponents
 {
-    public class AnimationComponent : GoRogue.Components.ParentAware.ParentAwareComponentBase<MagiEntity>
+    public class RepeatAnimationComponent : GoRogue.Components.ParentAware.ParentAwareComponentBase<MagiEntity>
     {
         private readonly ColoredGlyph[] _animationFrames;
         private readonly Timer _timer;
         protected int animationIndex;
+
         public bool Animating { get; protected set; }
 
-        public AnimationComponent(Timer animationTimer, params ColoredGlyph[] animationFrames)
+        public RepeatAnimationComponent(Timer animationTimer, params ColoredGlyph[] animationFrames)
         {
             _animationFrames = animationFrames;
             _timer = animationTimer;
@@ -23,8 +24,7 @@ namespace MagusEngine.ECS.Components.ActorComponents
         public void Stop()
         {
             Animating = false;
-            var parent = Parent;
-            parent.SadCell.AppearanceSingle.Appearance.Glyph = _animationFrames[0].Glyph;
+            Parent.SadCell.AppearanceSingle.Appearance.Glyph = _animationFrames[0].Glyph;
             animationIndex = 0;
         }
 
@@ -39,8 +39,7 @@ namespace MagusEngine.ECS.Components.ActorComponents
             }
             else
             {
-                var parent = Parent;
-                parent.SadCell.AppearanceSingle.Appearance.CopyAppearanceFrom(_animationFrames[animationIndex]);
+                Parent.SadCell.AppearanceSingle.Appearance.CopyAppearanceFrom(_animationFrames[animationIndex]);
                 animationIndex++;
             }
         }

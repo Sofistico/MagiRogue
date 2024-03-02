@@ -23,7 +23,7 @@ namespace MagusEngine.Core.Entities.Base
 
         #region Fields
 
-        public MapStuff.MagiMap? MagiMap => (MapStuff.MagiMap?)CurrentMap;
+        public MapStuff.MagiMap? CurrentMagiMap => (MapStuff.MagiMap?)CurrentMap;
 
         public int HistoryId { get; set; } // stores the history id of the entitiy
         public string? Name { get; set; }
@@ -156,16 +156,26 @@ namespace MagusEngine.Core.Entities.Base
             return entity;
         }
 
-        public virtual bool MoveBy(Point positionChange)
+        /// <summary>
+        /// Moves an actor by a delta position change
+        /// </summary>
+        /// <param name="deltaPositionChange"></param>
+        /// <returns></returns>
+        public virtual bool MoveBy(Point deltaPositionChange)
         {
-            return MagiMap.IsTileWalkable(Position + positionChange, this);
+            return CurrentMagiMap.IsTileWalkable(Position + deltaPositionChange, IgnoresWalls);
         }
 
-        // Moves the Actor TO newPosition location returns true if actor was able to move, false if
-        // failed to move
-        public bool MoveTo(Point newPosition)
+        /// <summary>
+        /// Moves the Actor TO newPosition location returns true if actor was able to move, false if
+        /// failed to move
+        /// </summary>
+        /// <param name="newPosition"></param>
+        /// <param name="ignoreWalkable"></param>
+        /// <returns></returns>
+        public bool MoveTo(Point newPosition, bool ignoreWalkable = false)
         {
-            if (MagiMap?.IsTileWalkable(newPosition) == true)
+            if (CurrentMagiMap?.IsTileWalkable(newPosition, ignoreWalkable) == true)
             {
                 Position = newPosition;
                 return true;
