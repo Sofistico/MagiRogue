@@ -31,7 +31,7 @@ namespace MagusEngine.Serialization.EntitySerialization
             }
 
             SpellBase createdSpell = new(
-                (string)spell["SpellId"]!,
+                (string)spell["Id"]!,
                 (string)spell["SpellName"]!,
                 StringToSchool((string)spell["MagicArt"]!),
                 (int)spell["SpellRange"]!,
@@ -146,7 +146,7 @@ namespace MagusEngine.Serialization.EntitySerialization
         public int SpellRange { get; set; }
 
         public double MagicCost { get; set; }
-        public string SpellId { get; set; }
+        public string Id { get; set; }
         public List<SpellContext>? Context { get; set; } = [];
         public List<string>? Keywords { get; set; } = [];
         public string ShapingAbility { get; set; }
@@ -162,14 +162,14 @@ namespace MagusEngine.Serialization.EntitySerialization
             MagicArt = magicArt;
             SpellRange = spellRange;
             MagicCost = magicCost;
-            SpellId = spellId;
+            Id = spellId;
             Context = context;
             ShapingAbility = shapingAbility;
         }
 
         public static implicit operator SpellBase(SpellTemplate spellTemplate)
         {
-            return new(spellTemplate.SpellId, spellTemplate.SpellName,
+            return new(spellTemplate.Id, spellTemplate.SpellName,
                 spellTemplate.MagicArt, spellTemplate.SpellRange, spellTemplate.ShapingAbility, spellTemplate.SpellLevel,
                 spellTemplate.MagicCost)
             {
@@ -184,7 +184,7 @@ namespace MagusEngine.Serialization.EntitySerialization
         public static implicit operator SpellTemplate(SpellBase spell)
         {
             return new SpellTemplate(spell.SpellLevel, spell.Effects, spell.SpellName,
-                spell.Description, spell.MagicArt, spell.SpellRange, spell.MagicCost, spell.SpellId, spell.Context, spell.ShapingAbility)
+                spell.Description, spell.MagicArt, spell.SpellRange, spell.MagicCost, spell.Id, spell.Context, spell.ShapingAbility)
             {
                 Proficiency = spell.Proficiency,
                 Keywords = spell.Keywords,

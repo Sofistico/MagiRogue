@@ -16,7 +16,7 @@
     "MagicArt": "BloodMagic",
     "SpellRange": 1,
     "MagicCost": 3.5,
-    "SpellId": "minor_cure",
+    "Id": "minor_cure",
     "Context": [ "Healing" ]
   }
 ]

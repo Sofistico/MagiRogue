@@ -18,10 +18,15 @@ namespace MagusEngine.Core.Magic
     /// the effects that it will have.
     /// </summary>
     [JsonConverter(typeof(SpellJsonConverter))]
-    public class SpellBase
+    public class SpellBase : IJsonKey
     {
         private double proficency;
         private string errorMessage = "Can't cast the spell";
+
+        /// <summary>
+        /// The id of the spell, required for quick look up and human redable serialization.
+        /// </summary>
+        public string Id { get; set; }
 
         /// <summary>
         /// The required shaping skill to cast the spell at it's most basic parameters.
@@ -65,11 +70,6 @@ namespace MagusEngine.Core.Magic
         /// The total mana cost of the spell, ranging from 0.1 for simple feats of magic to anything beyond
         /// </summary>
         public double MagicCost { get; set; }
-
-        /// <summary>
-        /// The id of the spell, required for quick look up and human redable serialization.
-        /// </summary>
-        public string SpellId { get; set; }
 
         /// <summary>
         /// The total proficiency, goes up slowly as you use the spell or train with it in your
@@ -136,7 +136,7 @@ namespace MagusEngine.Core.Magic
             int spellLevel = 1,
             double magicCost = 0.1)
         {
-            SpellId = spellId;
+            Id = spellId;
             SpellName = spellName;
             MagicArt = magicArt;
             SpellRange = spellRange;
@@ -263,7 +263,7 @@ namespace MagusEngine.Core.Magic
                 Effects = Effects,
                 MagicCost = MagicCost,
                 Proficiency = Proficiency,
-                SpellId = SpellId,
+                Id = Id,
                 SpellLevel = SpellLevel,
                 SpellName = SpellName,
                 SpellRange = SpellRange,
@@ -289,7 +289,7 @@ namespace MagusEngine.Core.Magic
 
         public override int GetHashCode()
         {
-            return SpellId.GetHashCode();
+            return Id.GetHashCode();
         }
 
         public override bool Equals(object? obj)

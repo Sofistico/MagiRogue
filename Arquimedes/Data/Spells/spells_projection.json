@@ -1,6 +1,6 @@
 [
   {
-    "SpellId": "magic_missile",
+    "Id": "magic_missile",
     "ShapingAbility": "Mana Shaping",
     "SpellName": "Magic Missile",
     "Description": "Magic missile, the first real combat magic any prospecting wizard will learn, it's many use will carry you for a long time.\r\nIt's said that the greatest of training in this magic permits one to shape it as a piercer or as a cutter, make it invisible or add a homing function to it.",
@@ -22,7 +22,7 @@
     "Context": [ "Offensive" ]
   },
   {
-    "SpellId": "push",
+    "Id": "push",
     "ShapingAbility": "Mana Shaping",
     "SpellName": "Push",
     "Description": "A simple spell, shapes mana to fling a concussive force that damages and throws away enemies and objects",
@@ -62,7 +62,7 @@
     "MagicArt": "Projection",
     "SpellRange": 5,
     "MagicCost": 2.5,
-    "SpellId": "fire_ray",
+    "Id": "fire_ray",
     "Context": [ "Offensive" ]
   },
   {
@@ -95,7 +95,7 @@
     "MagicArt": "Projection",
     "SpellRange": 6,
     "MagicCost": 5.5,
-    "SpellId": "lightning_bolt",
+    "Id": "lightning_bolt",
     "Context": [ "Offensive", "Debuff" ]
   },
   {
@@ -117,7 +117,7 @@
     "MagicArt": "Projection",
     "SpellRange": 7,
     "MagicCost": 5.0,
-    "SpellId": "fire_ball",
+    "Id": "fire_ball",
     "Context": [ "Offensive" ]
   },
   {
@@ -137,7 +137,7 @@
     "MagicArt": "Projection",
     "SpellRange": 5,
     "MagicCost": 3.0,
-    "SpellId": "sever_whip",
+    "Id": "sever_whip",
     "Context": [ "Offensive" ]
   },
   {
@@ -161,7 +161,7 @@
     "MagicArt": "Projection",
     "SpellRange": 1,
     "MagicCost": 8.0,
-    "SpellId": "cone_cold",
+    "Id": "cone_cold",
     "Context": [ "Offensive" ],
     "AffectsTile": true
   }

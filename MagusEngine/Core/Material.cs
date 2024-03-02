@@ -1,4 +1,5 @@
 ﻿using Arquimedes.Enumerators;
+using MagusEngine.Core.Entities.Base;
 using MagusEngine.Serialization;
 using MagusEngine.Systems;
 using MagusEngine.Systems.Physics;
@@ -10,7 +11,7 @@ using System.Diagnostics;
 namespace MagusEngine.Core
 {
     [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
-    public class Material
+    public class Material : IJsonKey
     {
         private MagiColorSerialization? magiColorSerialization;
 

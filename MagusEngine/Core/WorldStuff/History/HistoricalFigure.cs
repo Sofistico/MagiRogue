@@ -187,8 +187,7 @@ namespace MagusEngine.Core.WorldStuff.History
 
         private bool DetermineProfessionFromBestSkills(Ability bestAbility, Ability secondBest)
         {
-            var professions = DataManager.ListOfProfessions
-                .Where(i => i.Ability[0] == bestAbility.Category).ToList();
+            var professions = DataManager.ListOfProfessions.Values.Where(i => i.Ability[0] == bestAbility.Category).ToList();
 
             if (professions.Count > 0)
             {
@@ -570,9 +569,9 @@ namespace MagusEngine.Core.WorldStuff.History
         {
             List<Research> researches;
             if (isMagical)
-                researches = new List<Research>(DataManager.ListOfResearches);
+                researches = new List<Research>(DataManager.ListOfResearches.Values);
             else
-                researches = new List<Research>(DataManager.ListOfResearches.Where(i => !i.IsMagical));
+                researches = new List<Research>(DataManager.ListOfResearches.Values.Where(i => !i.IsMagical));
             ResearchTree = new ResearchTree();
             foreach (Research item in researches)
             {

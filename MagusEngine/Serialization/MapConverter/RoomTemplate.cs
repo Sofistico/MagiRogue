@@ -1,11 +1,12 @@
 ﻿using Arquimedes.Enumerators;
+using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
 using SadRogue.Primitives;
 using System.Collections.Generic;
 
 namespace MagusEngine.Serialization.MapConverter
 {
-    public class RoomTemplate
+    public class RoomTemplate : IJsonKey
     {
         // prefab maps
         public string Id { get; set; }

@@ -22,7 +22,7 @@ namespace MagiRogue.Test.Data
         {
             string spellSerialized = JsonConvert.SerializeObject(missile, Formatting.Indented);
             SpellBase spellDeserialized = JsonConvert.DeserializeObject<SpellBase>(spellSerialized);
-            Assert.Equal(spellDeserialized.SpellId, missile.SpellId);
+            Assert.Equal(spellDeserialized.Id, missile.Id);
         }
     }
 }

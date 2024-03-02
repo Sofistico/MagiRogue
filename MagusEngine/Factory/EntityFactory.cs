@@ -132,8 +132,7 @@ namespace MagusEngine.Factory
                         var enumConverted = Enum.Parse<SpellContext>(strArray[1].FirstLetterUpper());
                         var levelOfSpell = int.Parse(strArray[2]);
 
-                        var spells = DataManager.ListOfSpells.Where(i =>
-                            i.Context?.Contains(enumConverted) == true && i.SpellLevel == levelOfSpell).ToList();
+                        var spells = DataManager.ListOfSpells.Values.Where(i => i.Context?.Contains(enumConverted) == true && i.SpellLevel == levelOfSpell).ToList();
                         queriedSpell = spells.GetRandomItemFromList();
                     }
                 }

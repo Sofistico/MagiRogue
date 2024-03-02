@@ -16,7 +16,7 @@
     "MagicArt": "Dimensionalism",
     "SpellRange": 5,
     "MagicCost": 8.0,
-    "SpellId": "teleport",
+    "Id": "teleport",
     "Context": [ "Teleport" ]
   },
   {
@@ -39,7 +39,7 @@
     "MagicArt": "Dimensionalism",
     "SpellRange": 0,
     "MagicCost": 10.0,
-    "SpellId": "haste_self",
+    "Id": "haste_self",
     "Context": [ "Buff" ]
   }
 ]

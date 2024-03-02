@@ -31,7 +31,7 @@ namespace MagusEngine.Systems.Time
             Nodes = new SimplePriorityQueue<ITimeNode, long>();
         }
 
-        public void RegisterEntity(ITimeNode node)
+        public void RegisterNode(ITimeNode node)
         {
             if (!Nodes.Contains(node))
             {
@@ -39,7 +39,7 @@ namespace MagusEngine.Systems.Time
             }
         }
 
-        public void DeRegisterEntity(ITimeNode node)
+        public void RemoveNode(ITimeNode node)
         {
             if (Nodes.Contains(node))
             {

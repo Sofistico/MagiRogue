@@ -9,7 +9,7 @@ using System.Linq;
 namespace MagusEngine.Core.Entities.Base
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public abstract class BodyPart
+    public abstract class BodyPart : IJsonKey
     {
         public string Id { get; set; }
 

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace MagusEngine.Core.Civ
 {
     // will need to rethink this object better!
-    public class Reaction
+    public class Reaction : IJsonKey
     {
         private readonly Dictionary<string, Item> cachedItems = [];
 

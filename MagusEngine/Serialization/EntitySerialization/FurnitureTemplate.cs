@@ -254,7 +254,7 @@ namespace MagusEngine.Serialization.EntitySerialization
                 UseActions = fur.UseActions,
                 Traits = fur.Traits,
                 MapIdConnection = fur.MapIdConnection,
-                Id = fur.FurId,
+                Id = fur.Id,
                 Qualities = Quality.ReturnQualityListAsString(fur.Qualities),
             };
             DetermineInventoryFromItem(fur, template);

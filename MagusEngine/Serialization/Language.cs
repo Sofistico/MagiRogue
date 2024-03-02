@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using MagusEngine.Core.Entities.Base;
+using System.Collections.Generic;
 
 namespace MagusEngine.Serialization
 {
-    public class Language
+    public class Language : IJsonKey
     {
         public string Id { get; set; }
 

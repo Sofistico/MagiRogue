@@ -22,17 +22,19 @@ namespace MagusEngine.Core.WorldStuff.History
         {
         }
 
-        public List<Myth> GenerateMyths(List<Race> races,
+        public List<Myth> GenerateMyths(Dictionary<string, Race> races,
             List<HistoricalFigure> figures, PlanetMap planet)
         {
             // there is lot that will need some tune up and some rewrite in the future but for now,
             // let's see to where i can go with it!
-            List<Myth> myths = new List<Myth>();
-            // generate the primordials hfs (gods, demons, world, etc) and also define who or what
-            // created the world!
-            myths.AddRange(WhoCreatedTheWorld(figures, races, planet.Name));
-            myths.AddRange(CreateSomeMinorMyths(figures, races, nmbrOfNewMyths));
-            myths.AddRange(BunchOfMythsInteraction(races, figures, planet, nmbrInteractions));
+            List<Myth> myths =
+            [
+                // generate the primordials hfs (gods, demons, world, etc) and also define who or what
+                // created the world!
+                .. WhoCreatedTheWorld(figures, races, planet.Name),
+                .. CreateSomeMinorMyths(figures, races, nmbrOfNewMyths),
+                .. BunchOfMythsInteraction(races, figures, planet, nmbrInteractions),
+            ];
 
             foreach (var item in figures)
             {
@@ -48,7 +50,7 @@ namespace MagusEngine.Core.WorldStuff.History
         }
 
         private static IEnumerable<Myth> CreateSomeMinorMyths(List<HistoricalFigure> figures,
-            List<Race> races,
+            Dictionary<string, Race> races,
             int nmbrOfMythsToCreate)
         {
             List<Myth> myths = new();
@@ -77,7 +79,7 @@ namespace MagusEngine.Core.WorldStuff.History
             return myths;
         }
 
-        private static IEnumerable<Myth> BunchOfMythsInteraction(List<Race> races,
+        private static IEnumerable<Myth> BunchOfMythsInteraction(Dictionary<string, Race> races,
             List<HistoricalFigure> figures, PlanetMap planet, int nmbrOfIterations)
         {
             List<Myth> myths = new();
@@ -136,7 +138,7 @@ namespace MagusEngine.Core.WorldStuff.History
         }
 
         //TODO: REmove all hardcode from this shit!
-        private List<Myth> WhoCreatedTheWorld(List<HistoricalFigure> figures, List<Race> races, string planetName)
+        private List<Myth> WhoCreatedTheWorld(List<HistoricalFigure> figures, Dictionary<string, Race> races, string planetName)
         {
             string[] adjectives = DataManager.ListOfAdjectives.ToArray();
 
@@ -146,7 +148,7 @@ namespace MagusEngine.Core.WorldStuff.History
             HistoricalFigure precursorFigure;
 
             bool alive = GlobalRandom.DefaultRNG.NextBool();
-            Race race = races.GetRandomItemFromList();
+            Race race = races.GetRandomItemFromList().Value;
             bool createdRace = false;
 
             switch (precursor)
@@ -169,7 +171,7 @@ namespace MagusEngine.Core.WorldStuff.History
 
                 case MythWho.Chaos:
                     precursorFigure = new HistoricalFigure($"{adjectives.GetRandomItemFromList()} chaos",
-                        $"A primordial chaos in the shape of a {DataManager.ListOfShapes.GetRandomItemFromList().Name[0]}");
+                        $"A primordial chaos in the shape of a {DataManager.ListOfShapes.GetRandomItemFromList().Value.Name[0]}");
                     break;
 
                 case MythWho.Chance:
@@ -235,7 +237,7 @@ namespace MagusEngine.Core.WorldStuff.History
 
                 default:
                     precursorFigure = new HistoricalFigure($"{adjectives.GetRandomItemFromList()} {RandomNames.RandomNamesFromRandomLanguage()}",
-                        $"A figure shaped like {DataManager.ListOfShapes.GetRandomItemFromList().Name[0]}");
+                        $"A figure shaped like {DataManager.ListOfShapes.GetRandomItemFromList().Value.Name[0]}");
 
                     break;
             }

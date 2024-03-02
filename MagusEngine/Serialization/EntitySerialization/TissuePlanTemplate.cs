@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace MagusEngine.Serialization.EntitySerialization
 {
-    public class TissuePlanTemplate
+    public class TissuePlanTemplate : IJsonKey
     {
         [JsonRequired]
         public string Id { get; set; }

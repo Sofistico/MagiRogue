@@ -51,7 +51,7 @@ namespace MagiRogue.Test.Data
 
             var fur = JsonConvert.DeserializeObject<Furniture>(json);
 
-            Assert.Contains(fur.FurId, json);
+            Assert.Contains(fur.Id, json);
         }
 
         [Fact]

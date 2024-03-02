@@ -14,7 +14,7 @@ using System.Linq;
 namespace MagusEngine.Core.Entities.Base
 {
     [DebuggerDisplay("{DebuggerDisplay, nq}")]
-    public sealed class Race
+    public sealed class Race : IJsonKey
     {
         private List<BodyPart> bodyParts;
 

@@ -1,6 +1,8 @@
-﻿namespace MagusEngine.Serialization
+﻿using MagusEngine.Core.Entities.Base;
+
+namespace MagusEngine.Serialization
 {
-    public class ShapeDescriptor
+    public class ShapeDescriptor : IJsonKey
     {
         public string Id { get; set; }
         public string[] Name { get; set; }

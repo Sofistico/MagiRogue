@@ -51,7 +51,7 @@ namespace MagusEngine.Core.Magic
 
         public SpellBase? QuerySpell(string spellId)
         {
-            return KnowSpells.Find(i => i.SpellId.Equals(spellId));
+            return KnowSpells.Find(i => i.Id.Equals(spellId));
         }
 
         public bool AddToSpellList(SpellBase spell)
@@ -68,7 +68,7 @@ namespace MagusEngine.Core.Magic
                 if (sp is null)
                 {
                     Locator.GetService<MagiLog>()
-                        .Log($"Spell effect is null! Something went wrong \nSpell Name: {spell.SpellName} \nSpell Id: {spell.SpellId} \nSpell effects: {spell.Effects}");
+                        .Log($"Spell effect is null! Something went wrong \nSpell Name: {spell.SpellName} \nSpell Id: {spell.Id} \nSpell effects: {spell.Effects}");
                     continue;
                 }
                 if (!KnowEffects.Contains(sp.EffectType))
@@ -86,7 +86,7 @@ namespace MagusEngine.Core.Magic
     {
         public bool Equals(SpellBase? x, SpellBase? y)
         {
-            return x!.SpellId.Equals(y!.SpellId);
+            return x!.Id.Equals(y!.Id);
         }
 
         public int GetHashCode([DisallowNull] SpellBase obj)

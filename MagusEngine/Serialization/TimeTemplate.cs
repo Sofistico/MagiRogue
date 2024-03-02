@@ -41,7 +41,7 @@ namespace MagusEngine.Serialization
 
             foreach (var item in serialized.Nodes)
             {
-                time.RegisterEntity(item);
+                time.RegisterNode(item);
             }
 
             return time;

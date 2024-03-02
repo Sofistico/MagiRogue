@@ -28,7 +28,7 @@ namespace MagusEngine.Serialization.EntitySerialization
         }
     }
 
-    public class ItemTemplate
+    public class ItemTemplate : IJsonKey
     {
         public string Id { get; set; }
 

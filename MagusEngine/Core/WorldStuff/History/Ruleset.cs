@@ -1,4 +1,5 @@
 ﻿using Arquimedes.Enumerators;
+using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.WorldStuff.History.HistoryActions;
 using MagusEngine.Services;
 using MagusEngine.Utils;

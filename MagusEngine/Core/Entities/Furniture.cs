@@ -13,11 +13,11 @@ using System.Collections.Generic;
 namespace MagusEngine.Core.Entities
 {
     [JsonConverter(typeof(FurnitureJsonConverter))]
-    public class Furniture : MagiEntity
+    public class Furniture : MagiEntity, IJsonKey
     {
+        public string Id { get; set; }
         public FurnitureType FurnitureType { get; set; }
         public int? MapIdConnection { get; set; }
-        public string FurId { get; set; }
         public int Durability { get; set; }
         public List<Trait> Traits { get; set; }
         public List<IActivable> UseActions { get; set; }
@@ -46,7 +46,7 @@ namespace MagusEngine.Core.Entities
             // which is quite stupid, if i say so myself...
             Name = Material.ReturnNameFromMaterial(name);
             Durability = (int)(Material?.Hardness ?? 1 * Material.Density) + durability;
-            FurId = furId;
+            Id = furId;
             Inventory = [];
         }
 
@@ -57,7 +57,7 @@ namespace MagusEngine.Core.Entities
                 baseEntity.SadCell.AppearanceSingle.Appearance.Background,
                 baseEntity.SadCell.AppearanceSingle.Appearance.Glyph,
                 baseEntity.Position,
-                FurnitureType, Material.Id, Name, FurId, Durability)
+                FurnitureType, Material.Id, Name, Id, Durability)
             {
                 Traits = Traits,
                 UseActions = UseActions,

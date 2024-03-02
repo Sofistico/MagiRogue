@@ -2,7 +2,7 @@
 
 namespace MagusEngine.Core.Entities.Base
 {
-    public class Profession
+    public class Profession : IJsonKey
     {
         public string Id { get; set; }
         public string Name { get; set; }

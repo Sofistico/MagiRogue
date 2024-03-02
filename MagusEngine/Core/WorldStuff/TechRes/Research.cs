@@ -1,9 +1,10 @@
 ﻿using Arquimedes.Enumerators;
+using MagusEngine.Core.Entities.Base;
 using System.Collections.Generic;
 
 namespace MagusEngine.Core.WorldStuff.TechRes
 {
-    public class Research
+    public class Research : IJsonKey
     {
         public string Id { get; set; }
         public string Name { get; set; }

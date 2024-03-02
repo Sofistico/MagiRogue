@@ -64,8 +64,8 @@ namespace MagusEngine.Core.WorldStuff.History
                 "rainforests"
             };
             string[] possibleOrigins = DataManager.ListOfMagicFounts.ToArray();
-            string[] possibleWhys = new string[]
-            {
+            string[] possibleWhys =
+            [
                 "of fear",
                 "of love",
                 "of indifference",
@@ -75,7 +75,7 @@ namespace MagusEngine.Core.WorldStuff.History
                 "the world lost it's creational power",
                 "because it's magic was fading",
                 "magic needed to pass though him first"
-            };
+            ];
             string[] possibleMagic = new string[]
             {
                 "the gift of magic",
@@ -99,7 +99,7 @@ namespace MagusEngine.Core.WorldStuff.History
                 "death was liberation from the mortal coil"
             };
 
-            race = race is null ? DataManager.ListOfRaces.GetRandomItemFromList() : race;
+            race ??= DataManager.ListOfRaces.GetRandomItemFromList().Value;
 
             var legend = new Legend()
             {
@@ -244,7 +244,7 @@ namespace MagusEngine.Core.WorldStuff.History
                     break;
 
                 case MythWhat.Reagent:
-                    Material temp = DataManager.ListOfMaterials.GetRandomItemFromList();
+                    Material temp = DataManager.ListOfMaterials.GetRandomItemFromList().Value;
                     happening.Append($"the secrets of material {temp.Name} to creation!");
 
                     break;
@@ -348,12 +348,12 @@ namespace MagusEngine.Core.WorldStuff.History
                     break;
 
                 case MythWhat.Item:
-                    Item ite = DataManager.ListOfItems.GetRandomItemFromList();
+                    Item ite = DataManager.ListOfItems.GetRandomItemFromList().Value;
                     happening.Append($"the creation of the item {ite}");
                     break;
 
                 case MythWhat.Reagent:
-                    Material temp = DataManager.ListOfMaterials.GetRandomItemFromList();
+                    Material temp = DataManager.ListOfMaterials.GetRandomItemFromList().Value;
                     happening.Append($"the creation of the reagent {temp.Name}");
                     break;
 
@@ -446,19 +446,18 @@ namespace MagusEngine.Core.WorldStuff.History
                     break;
 
                 case MythWhat.God:
-                    string name = RandomNames.RandomNamesFromLanguage(
-                        DataManager.ListOfLanguages.GetRandomItemFromList());
+                    string name = RandomNames.RandomNamesFromLanguage(DataManager.ListOfLanguages.GetRandomItemFromList().Value);
                     happening.Append($"the god {name}");
                     legend.WithWho = new(name, $"a god born of {myth.Name}");
                     break;
 
                 case MythWhat.Item:
-                    string itemName = DataManager.ListOfItems.GetRandomItemFromList().Name;
+                    string itemName = DataManager.ListOfItems.GetRandomItemFromList().Value.Name;
                     happening.Append($"the {itemName}");
                     break;
 
                 case MythWhat.Reagent:
-                    Material temp = DataManager.ListOfMaterials.GetRandomItemFromList();
+                    Material temp = DataManager.ListOfMaterials.GetRandomItemFromList().Value;
                     happening.Append($"the material {temp.Name}");
                     break;
 
@@ -477,9 +476,8 @@ namespace MagusEngine.Core.WorldStuff.History
                     break;
 
                 case MythWhat.Individual:
-                    string indName = RandomNames.RandomNamesFromLanguage
-                        (DataManager.ListOfLanguages.GetRandomItemFromList());
-                    Race indRace = DataManager.ListOfRaces.GetRandomItemFromList();
+                    string indName = RandomNames.RandomNamesFromLanguage(DataManager.ListOfLanguages.GetRandomItemFromList().Value);
+                    Race indRace = DataManager.ListOfRaces.GetRandomItemFromList().Value;
                     happening.Append($"the {indName} of {indRace.RaceName}");
                     legend.WithWho = new HistoricalFigure(indName, indRace.Description,
                         indRace.ReturnRandomSex(), indRace.Id, true);
@@ -517,14 +515,12 @@ namespace MagusEngine.Core.WorldStuff.History
                     break;
 
                 case MythWhat.Land:
-                    string landName = RandomNames.RandomNamesFromLanguage(
-                        DataManager.ListOfLanguages.GetRandomItemFromList());
+                    string landName = RandomNames.RandomNamesFromLanguage(DataManager.ListOfLanguages.GetRandomItemFromList().Value);
                     happening.Append($"the lost land of {landName}");
                     break;
 
                 case MythWhat.Region:
-                    string regionName = RandomNames.RandomNamesFromLanguage(
-                        DataManager.ListOfLanguages.GetRandomItemFromList());
+                    string regionName = RandomNames.RandomNamesFromLanguage(DataManager.ListOfLanguages.GetRandomItemFromList().Value);
                     happening.Append($"the lost region of {regionName}");
 
                     break;
@@ -535,20 +531,17 @@ namespace MagusEngine.Core.WorldStuff.History
                     break;
 
                 case MythWhat.God:
-                    string godName = RandomNames.RandomNamesFromLanguage(
-                        DataManager.ListOfLanguages.GetRandomItemFromList());
+                    string godName = RandomNames.RandomNamesFromLanguage(DataManager.ListOfLanguages.GetRandomItemFromList().Value);
                     happening.Append($"the god {godName}");
                     break;
 
                 case MythWhat.Item:
-                    string lostItem = RandomNames.RandomNamesFromLanguage(
-                        DataManager.ListOfLanguages.GetRandomItemFromList());
+                    string lostItem = RandomNames.RandomNamesFromLanguage(DataManager.ListOfLanguages.GetRandomItemFromList().Value);
                     happening.Append($"the item {lostItem}, thus making sure that it won't exist");
                     break;
 
                 case MythWhat.Reagent:
-                    string lostReagent = RandomNames.RandomNamesFromLanguage(
-                        DataManager.ListOfLanguages.GetRandomItemFromList());
+                    string lostReagent = RandomNames.RandomNamesFromLanguage(DataManager.ListOfLanguages.GetRandomItemFromList().Value);
                     happening.Append($"the reagent {lostReagent}, thus making sure that it won't exist");
                     break;
 

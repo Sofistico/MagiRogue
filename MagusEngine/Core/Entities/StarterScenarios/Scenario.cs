@@ -1,4 +1,5 @@
 ﻿using Arquimedes.Enumerators;
+using MagusEngine.Core.Entities.Base;
 using MagusEngine.Serialization.EntitySerialization;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MagusEngine.Core.Entities.StarterScenarios
 {
-    public class Scenario
+    public class Scenario : IJsonKey
     {
         #region Properties
 

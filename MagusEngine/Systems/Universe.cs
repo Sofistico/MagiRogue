@@ -294,7 +294,7 @@ namespace MagusEngine.Systems
         {
             // register to next turn
             if (!Time.Nodes.Any(i => i.Id.Equals(entityId)))
-                Time.RegisterEntity(new EntityTimeNode(entityId, Time.GetTimePassed(time)));
+                Time.RegisterNode(new EntityTimeNode(entityId, Time.GetTimePassed(time)));
         }
 
         private void ProcessTurn(long playerTime, bool sucess)
@@ -319,7 +319,7 @@ namespace MagusEngine.Systems
                             ProcessAiTurn(entityTurn.Id);
                             break;
 
-                        case ComponentNode componentTurn:
+                        case ComponentTimeNode componentTurn:
                             ProcessComponentTurn(componentTurn);
                             break;
 
@@ -343,9 +343,11 @@ namespace MagusEngine.Systems
             }
         }
 
-        private void ProcessComponentTurn(ComponentNode componentTurn)
+        private void ProcessComponentTurn(ComponentTimeNode componentTurn)
         {
             var nextInvoke = componentTurn.Action.Invoke();
+            if(nextInvoke > 0)
+                Time.RegisterNode(new ComponentTimeNode(nextInvoke, componentTurn.Id, componentTurn.Action));
         }
 
         private IEnumerable<Actor> GetEntitiesIds()
@@ -379,7 +381,7 @@ namespace MagusEngine.Systems
 
             Player.ProcessNeeds();
             PlayerTimeNode playerTurn = new(Time.GetTimePassed(playerTime), Player.ID);
-            Time.RegisterEntity(playerTurn);
+            Time.RegisterNode(playerTurn);
             Player.UpdateBody();
             CurrentMap?.PlayerFOV.Calculate(Player.Position, Player.GetViewRadius());
 
@@ -438,7 +440,7 @@ namespace MagusEngine.Systems
                     totalTicks = TimeHelper.Wait;
 
                 EntityTimeNode nextTurnNode = new(entityId, Time.GetTimePassed(totalTicks));
-                Time.RegisterEntity(nextTurnNode);
+                Time.RegisterNode(nextTurnNode);
             }
         }
 

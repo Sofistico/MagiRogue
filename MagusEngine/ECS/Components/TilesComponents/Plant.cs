@@ -1,4 +1,5 @@
 ﻿using MagusEngine.Core;
+using MagusEngine.Core.Entities.Base;
 using MagusEngine.Serialization;
 using MagusEngine.Systems;
 using MagusEngine.Systems.Physics;
@@ -9,7 +10,7 @@ using SadRogue.Primitives;
 
 namespace MagusEngine.ECS.Components.TilesComponents
 {
-    public class Plant
+    public class Plant : IJsonKey
     {
         private ColoredGlyph sadGlyph;
         private MagiColorSerialization fore;

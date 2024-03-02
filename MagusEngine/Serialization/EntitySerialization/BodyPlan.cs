@@ -30,13 +30,13 @@ namespace MagusEngine.Serialization.EntitySerialization
         }
     }
 
-    public class BodyPlan
+    public class BodyPlan : IJsonKey
     {
         private readonly ConcurrentDictionary<string, Tissue> _raceTissue = new();
         private readonly List<TissueLayeringTemplate> _raceTissueLayering = new();
         private readonly object _lockObj = new();
 
-        public string? Id { get; set; }
+        public string Id { get; set; }
         public List<string> BodyParts { get; set; }
 
         //public List<Tissue> Tissues { get; set; }

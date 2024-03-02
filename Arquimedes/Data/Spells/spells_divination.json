@@ -18,7 +18,7 @@
     "MagicArt": "Divination",
     "SpellRange": 0,
     "MagicCost": 0.5,
-    "SpellId": "mage_sight",
+    "Id": "mage_sight",
     "Context": [ "Perception" ]
   }
 ]

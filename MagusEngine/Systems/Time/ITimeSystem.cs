@@ -2,9 +2,9 @@
 {
     public interface ITimeSystem
     {
-        void RegisterEntity(ITimeNode node);
+        void RegisterNode(ITimeNode node);
 
-        void DeRegisterEntity(ITimeNode node);
+        void RemoveNode(ITimeNode node);
 
         ITimeNode? NextNode();
     }

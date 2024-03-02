@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace MagusEngine.Serialization
 {
-    public sealed class CultureTemplate
+    public sealed class CultureTemplate : IJsonKey
     {
         public string Id { get; set; }
         public string[] Races { get; set; }
