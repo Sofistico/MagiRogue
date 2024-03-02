@@ -97,7 +97,7 @@ namespace Diviner
                 {
                     Direction moveDirection = _movementDirectionMapping[key];
                     Point deltaMove = new(moveDirection.DeltaX, moveDirection.DeltaY);
-
+                    var actor = (Actor)world.CurrentMap.ControlledEntitiy;
                     if (world.CurrentMap.ControlledEntitiy is not Player)
                     {
                         if (world.CurrentMap.CheckForIndexOutOfBounds(world.CurrentMap.ControlledEntitiy.Position + deltaMove))
@@ -107,10 +107,10 @@ namespace Diviner
 
                         return world.CurrentMap.PlayerExplored[world.CurrentMap.ControlledEntitiy.Position + deltaMove]
                             && distance <= _targetCursor?.MaxDistance
-                            && ActionManager.MoveActorBy((Actor)world.CurrentMap.ControlledEntitiy, deltaMove);
+                            && actor.MoveBy(deltaMove);
                     }
 
-                    return ActionManager.MoveActorBy((Actor)world.CurrentMap.ControlledEntitiy, deltaMove);
+                    return actor.MoveBy(deltaMove);
                 }
             }
 
