@@ -27,44 +27,44 @@ namespace MagusEngine.Systems
 
         #region jsons
 
-        public static Dictionary<string, ItemTemplate> ListOfItems => GetSourceTree<ItemTemplate>(@".\Data\Items\items_*");
+        public static Dictionary<string, ItemTemplate> ListOfItems => GetSourceTreeDict<ItemTemplate>(@".\Data\Items\items_*");
 
-        public static Dictionary<string, Material> ListOfMaterials => GetSourceTree<Material>(@".\Data\Materials\material_*");
+        public static Dictionary<string, Material> ListOfMaterials => GetSourceTreeDict<Material>(@".\Data\Materials\material_*");
 
-        public static Dictionary<string, SpellBase> ListOfSpells => GetSourceTree<SpellBase>(@".\Data\Spells\spells_*");
+        public static Dictionary<string, SpellBase> ListOfSpells => GetSourceTreeDict<SpellBase>(@".\Data\Spells\spells_*");
 
-        public static Dictionary<string, Organ> ListOfOrgans => GetSourceTree<Organ>(@".\Data\Bodies\organs_*");
+        public static Dictionary<string, Organ> ListOfOrgans => GetSourceTreeDict<Organ>(@".\Data\Bodies\organs_*");
 
-        public static Dictionary<string, Limb> ListOfLimbs => GetSourceTree<Limb>(@".\Data\Bodies\limbs_*");
+        public static Dictionary<string, Limb> ListOfLimbs => GetSourceTreeDict<Limb>(@".\Data\Bodies\limbs_*");
 
-        public static Dictionary<string, Furniture> ListOfFurnitures => GetSourceTree<Furniture>(@".\Data\Furniture\fur_*");
+        public static Dictionary<string, Furniture> ListOfFurnitures => GetSourceTreeDict<Furniture>(@".\Data\Furniture\fur_*");
 
-        public static Dictionary<string, RoomTemplate> ListOfRooms => GetSourceTree<RoomTemplate>(@".\Data\Rooms\room_*");
+        public static Dictionary<string, RoomTemplate> ListOfRooms => GetSourceTreeDict<RoomTemplate>(@".\Data\Rooms\room_*");
 
         // races can be dynamically generated ingame
-        public static Dictionary<string, Race> ListOfRaces => GetSourceTree<Race>(@".\Data\Races\race_*");
+        public static Dictionary<string, Race> ListOfRaces => GetSourceTreeDict<Race>(@".\Data\Races\race_*");
 
-        public static Dictionary<string, Scenario> ListOfScenarios => GetSourceTree<Scenario>(@".\Data\Scenarios\scenarios_*");
+        public static Dictionary<string, Scenario> ListOfScenarios => GetSourceTreeDict<Scenario>(@".\Data\Scenarios\scenarios_*");
 
-        public static Dictionary<string, BodyPlan> ListOfBpPlan => GetSourceTree<BodyPlan>(@".\Data\Bodies\bodies_*.json");
+        public static Dictionary<string, BodyPlan> ListOfBpPlan => GetSourceTreeDict<BodyPlan>(@".\Data\Bodies\bodies_*.json");
 
-        public static Dictionary<string, Language> ListOfLanguages => GetSourceTree<Language>(@".\Data\Language\language_*");
+        public static Dictionary<string, Language> ListOfLanguages => GetSourceTreeDict<Language>(@".\Data\Language\language_*");
 
-        public static Dictionary<string, Profession> ListOfProfessions => GetSourceTree<Profession>(@".\Data\Professions\profession_*");
+        public static Dictionary<string, Profession> ListOfProfessions => GetSourceTreeDict<Profession>(@".\Data\Professions\profession_*");
 
-        public static Dictionary<string, CultureTemplate> ListOfCultures => GetSourceTree<CultureTemplate>(@".\Data\Cultures\cultures_*");
+        public static Dictionary<string, CultureTemplate> ListOfCultures => GetSourceTreeDict<CultureTemplate>(@".\Data\Cultures\cultures_*");
 
-        public static Dictionary<string, Research> ListOfResearches => GetSourceTree<Research>(@".\Data\Research\research_*");
+        public static Dictionary<string, Research> ListOfResearches => GetSourceTreeDict<Research>(@".\Data\Research\research_*");
 
-        public static Dictionary<string, Reaction> ListOfReactions => GetSourceTree<Reaction>(@".\Data\Reaction\reaction_*");
+        public static Dictionary<string, Reaction> ListOfReactions => GetSourceTreeDict<Reaction>(@".\Data\Reaction\reaction_*");
 
         public static List<Ruleset> ListOfRules => GetSourceTreeList<Ruleset>(@".\Data\Rules\rules_*");
 
-        public static Dictionary<string, Plant> ListOfPlants => GetSourceTree<Plant>(@".\Data\Plant\plant_*");
+        public static Dictionary<string, Plant> ListOfPlants => GetSourceTreeDict<Plant>(@".\Data\Plant\plant_*");
 
-        public static Dictionary<string, TissuePlanTemplate> ListOfTissuePlans => GetSourceTree<TissuePlanTemplate>(@".\Data\Bodies\tissue_*");
+        public static Dictionary<string, TissuePlanTemplate> ListOfTissuePlans => GetSourceTreeDict<TissuePlanTemplate>(@".\Data\Bodies\tissue_*");
 
-        public static Dictionary<string, DamageType> ListOfDamageTypes => GetSourceTree<DamageType>(@".\Data\Damage\dmg_*");
+        public static Dictionary<string, DamageType> ListOfDamageTypes => GetSourceTreeDict<DamageType>(@".\Data\Damage\dmg_*");
 
         #region Descriptors
 
@@ -74,13 +74,13 @@ namespace MagusEngine.Systems
 
         public static List<string> ListOfAdjectives => GetSourceTreeList<string>(@".\Data\Descriptors\adjectives_*.json");
 
-        public static Dictionary<string, ShapeDescriptor> ListOfShapes => GetSourceTree<ShapeDescriptor>(@".\Data\Descriptors\shapes_*.json");
+        public static Dictionary<string, ShapeDescriptor> ListOfShapes => GetSourceTreeDict<ShapeDescriptor>(@".\Data\Descriptors\shapes_*.json");
 
         #endregion Descriptors
 
         #endregion jsons
 
-        private static Dictionary<string, T> GetSourceTree<T>(string wildCard) where T : IJsonKey
+        private static Dictionary<string, T> GetSourceTreeDict<T>(string wildCard) where T : IJsonKey
         {
             string[] files = FileUtils.GetFiles(wildCard);
 
@@ -112,31 +112,47 @@ namespace MagusEngine.Systems
 
         public static SpellBase? QuerySpellInData(string spellId, double proficiency = 0)
         {
-            var spell = ListOfSpells[spellId]?.Copy();
-            if (spell is not null)
-                spell.Proficiency = proficiency;
-            return spell;
+            if (ListOfSpells.TryGetValue(spellId, out var spell))
+                return spell.Copy(proficiency);
+            return null;
         }
 
-        public static Limb QueryLimbInData(string limbId)
+        public static Limb? QueryLimbInData(string limbId)
         {
-            var limb = ListOfLimbs[limbId];
-            return limb?.Copy()!;
+            if (ListOfLimbs.TryGetValue(limbId, out var limb))
+                return limb.Copy();
+            return null;
         }
 
         public static Organ? QueryOrganInData(string organId)
         {
-            var organ = ListOfOrgans[organId];
-            return organ?.Copy();
+            if (ListOfOrgans.TryGetValue(organId, out var organ))
+                return organ.Copy();
+            return null;
         }
 
-        public static Item? QueryItemInData(string itemId) => ListOfItems[itemId];
+        public static Item? QueryItemInData(string itemId)
+        {
+            if (ListOfItems.TryGetValue(itemId, out var item))
+                return item;
+            return null;
+        }
 
         public static Item? QueryItemInData(string itemId, Material material) => QueryItemInData(itemId)?.ConfigureMaterial(material);
 
-        public static Furniture? QueryFurnitureInData(string furnitureId) => ListOfFurnitures[furnitureId].Copy();
+        public static Furniture? QueryFurnitureInData(string furnitureId)
+        {
+            if (ListOfFurnitures.TryGetValue(furnitureId, out var fur))
+                return fur;
+            return null;
+        }
 
-        public static RoomTemplate? QueryRoomInData(string roomId) => ListOfRooms[roomId];
+        public static RoomTemplate? QueryRoomInData(string roomId)
+        {
+            if (ListOfRooms.TryGetValue(roomId, out var room))
+                return room;
+            return null;
+        }
 
         public static Material? QueryMaterial(string id)
         {
@@ -149,8 +165,7 @@ namespace MagusEngine.Systems
                     var mat = list[i];
                     if (mat is null)
                         continue;
-                    var inheirtFrom = ListOfMaterials[mat.InheirtFrom];
-                    if (inheirtFrom is null)
+                    if (!ListOfMaterials.TryGetValue(mat.InheirtFrom, out var inheirtFrom))
                     {
                         Locator.GetService<MagiLog>().Log($"Material to inheirt from was null! Id: {mat.InheirtFrom}");
                         continue;
@@ -159,14 +174,31 @@ namespace MagusEngine.Systems
                     inheirtFrom.CopyTo(mat);
                 }
             }
-            return ListOfMaterials[id];
+            if (ListOfMaterials.TryGetValue(id, out var material))
+                return material.Copy();
+            return null;
         }
 
-        public static Race? QueryRaceInData(string raceId) => ListOfRaces[raceId]?.Clone();
+        public static Race? QueryRaceInData(string raceId)
+        {
+            if (ListOfRaces.TryGetValue(raceId, out var race))
+                return race.Clone();
+            return null;
+        }
 
-        public static Scenario? QueryScenarioInData(string scenarioId) => ListOfScenarios[scenarioId];
+        public static Scenario? QueryScenarioInData(string scenarioId)
+        {
+            if (ListOfScenarios.TryGetValue(scenarioId, out var val))
+                return val;
+            return null;
+        }
 
-        public static BodyPlan? QueryBpPlanInData(string bpPlanId) => ListOfBpPlan[bpPlanId];
+        public static BodyPlan? QueryBpPlanInData(string bpPlanId)
+        {
+            if (ListOfBpPlan.TryGetValue(bpPlanId, out var val))
+                return val;
+            return null;
+        }
 
         public static List<BodyPart> QueryBpsPlansInDataAndReturnBodyParts(string[] bpPlansId, Race race = null!)
         {
@@ -183,23 +215,63 @@ namespace MagusEngine.Systems
             return bps;
         }
 
-        public static Language? QueryLanguageInData(string languageId) => ListOfLanguages[languageId];
+        public static Language? QueryLanguageInData(string languageId)
+        {
+            if (ListOfLanguages.TryGetValue(languageId, out var lang))
+                return lang;
+            return null;
+        }
 
-        public static Profession? QueryProfessionInData(string professionId) => ListOfProfessions[professionId];
+        public static Profession? QueryProfessionInData(string professionId)
+        {
+            if (ListOfProfessions.TryGetValue(professionId, out var val))
+                return val;
+            return null;
+        }
 
-        public static ShapeDescriptor? QueryShapeDescInData(string shapeId) => ListOfShapes[shapeId];
+        public static ShapeDescriptor? QueryShapeDescInData(string shapeId)
+        {
+            if (ListOfShapes.TryGetValue(shapeId, out var val))
+                return val;
+            return null;
+        }
 
-        public static CultureTemplate? QueryCultureTemplateInData(string cultureId) => ListOfCultures[cultureId];
+        public static CultureTemplate? QueryCultureTemplateInData(string cultureId)
+        {
+            if (ListOfCultures.TryGetValue(cultureId, out var val))
+                return val;
+            return null;
+        }
 
         public static List<CultureTemplate>? QueryCultureTemplateFromBiome(string biomeId) => ListOfCultures.Values.Where(i => i.StartBiome.Equals(biomeId)).ToList();
 
-        public static Research? QueryResearchInData(string researchId) => ListOfResearches[researchId];
+        public static Research? QueryResearchInData(string researchId)
+        {
+            if (ListOfResearches.TryGetValue(researchId, out var val))
+                return val;
+            return null;
+        }
 
-        public static Plant? QueryPlantInData(string plantId) => ListOfPlants[plantId]?.Clone();
+        public static Plant? QueryPlantInData(string plantId)
+        {
+            if (ListOfPlants.TryGetValue(plantId, out var val))
+                return val.Copy();
+            return null;
+        }
 
-        public static TissuePlanTemplate? QueryTissuePlanInData(string tissuePlanId) => ListOfTissuePlans[tissuePlanId];
+        public static TissuePlanTemplate? QueryTissuePlanInData(string tissuePlanId)
+        {
+            if (ListOfTissuePlans.TryGetValue(tissuePlanId, out var val))
+                return val;
+            return null;
+        }
 
-        public static DamageType? QueryDamageInData(string dmgId) => ListOfDamageTypes[dmgId];
+        public static DamageType? QueryDamageInData(string dmgId)
+        {
+            if (ListOfDamageTypes.TryGetValue(dmgId, out var dmg))
+                return dmg;
+            return null;
+        }
 
         #endregion Query
 

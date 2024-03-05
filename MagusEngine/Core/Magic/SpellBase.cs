@@ -276,6 +276,13 @@ namespace MagusEngine.Core.Magic
             };
         }
 
+        public SpellBase Copy(double proficiency)
+        {
+            var copy = Copy();
+            copy.Proficiency = proficiency;
+            return copy;
+        }
+
         private void TickProfiency() => Proficiency = MathMagi.Round(Proficiency + 0.01);
 
         public override string ToString()

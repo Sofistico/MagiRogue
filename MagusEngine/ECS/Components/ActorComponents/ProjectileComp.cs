@@ -77,7 +77,7 @@ namespace MagusEngine.ECS.Components.ActorComponents
                 var entity = Parent.CurrentMagiMap.GetEntityAt<MagiEntity>(Parent.Position);
                 if (entity != null)
                 {
-                    CombatSystem.();
+                    //CombatSystem.();
                 }
 
                 Parent?.RemoveComponent(Tag);

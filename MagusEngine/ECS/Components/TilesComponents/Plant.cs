@@ -87,7 +87,7 @@ namespace MagusEngine.ECS.Components.TilesComponents
             Glyphs = glyphs;
         }
 
-        public Plant Clone()
+        public Plant Copy()
         {
             return new Plant(Fores.GetRandomItemFromList(), Background, Glyphs)
             {

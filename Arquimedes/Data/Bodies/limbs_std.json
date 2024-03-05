@@ -5,8 +5,7 @@
     "RelativeVolume": 0.18,
     "BodyPartName": "Upper Body",
     "Orientation": "Center",
-    "BodyPartFunction": "Root",
-    "Attached": true
+    "BodyPartFunction": "Root"
   },
   {
     "Id": "lower_body",
@@ -15,8 +14,7 @@
     "BodyPartName": "Lower Body",
     "Orientation": "Center",
     "BodyPartFunction": "Vital",
-    "ConnectedTo": "upper_body",
-    "Attached": true
+    "ConnectedTo": "upper_body"
   },
   {
     "Id": "neck",

@@ -154,7 +154,7 @@
   {
     "Id": "skull",
     "Name": "Skull",
-    "RleativeSize": 0.10,
+    "RelativeVolume": 0.10,
     "InsideOf": "head",
     "Orientation": "Center",
     "BodyPartFunction": "Protection",
