@@ -114,6 +114,11 @@ namespace MagusEngine.Commands
             return TimeHelper.GetAttackTime(attacker, attack);
         }
 
+        public static void ProjectileAttack(MagiEntity projectile, Actor target)
+        {
+
+        }
+
         /// <summary>
         /// Removes an Actor that has died and displays a message showing the actor that has died,
         /// and the loot they dropped

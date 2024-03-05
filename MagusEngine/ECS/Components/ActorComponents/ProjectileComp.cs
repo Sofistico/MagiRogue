@@ -2,6 +2,7 @@
 using GoRogue.Pathing;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
+using MagusEngine.Systems;
 using SadConsole.Effects;
 using SadRogue.Primitives;
 using System;
@@ -73,7 +74,11 @@ namespace MagusEngine.ECS.Components.ActorComponents
             if (_path?.Length == _currentStep || Parent?.MoveTo(_path.GetStep(_currentStep++), IgnoresObstacles) == false)
             {
                 // handle hit logic!
-
+                var entity = Parent.CurrentMagiMap.GetEntityAt<MagiEntity>(Parent.Position);
+                if (entity != null)
+                {
+                    CombatSystem.();
+                }
 
                 Parent?.RemoveComponent(Tag);
             }
