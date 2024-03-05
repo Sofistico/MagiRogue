@@ -1,9 +1,7 @@
 ﻿using GoRogue.Components.ParentAware;
 using GoRogue.Pathing;
-using MagusEngine.Bus.ComponentBus;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
-using MagusEngine.Services;
 using SadConsole.Effects;
 using SadRogue.Primitives;
 using System;
@@ -72,15 +70,12 @@ namespace MagusEngine.ECS.Components.ActorComponents
                 Parent.SadCell.AppearanceSingle.Effect = blinkGlyph;
                 blinkGlyph.Restart();
             }
-            if (_path.Length == _currentStep)
-            {
-            }
-            if (!Parent.MoveTo(_path.GetStep(_currentStep++), IgnoresObstacles))
+            if (_path?.Length == _currentStep || Parent?.MoveTo(_path.GetStep(_currentStep++), IgnoresObstacles) == false)
             {
                 // handle hit logic!
 
-                // remove itself
-                Parent.RemoveComponent(Tag);
+
+                Parent?.RemoveComponent(Tag);
             }
 
             return TicksToMoveOneStep;
