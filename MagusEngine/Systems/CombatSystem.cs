@@ -461,7 +461,7 @@ namespace MagusEngine.Systems
             Find.Universe.Time.RegisterNode(new ComponentTimeNode(msToHit, projectile.ID, projectileComp.Travel));
         }
 
-        public static void HitProjectile()
+        public static void HitProjectile(MagiEntity? parent, double acceleration, bool ignoresObstacles)
         {
 
         }

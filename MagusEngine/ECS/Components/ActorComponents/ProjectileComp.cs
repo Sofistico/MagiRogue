@@ -76,7 +76,7 @@ namespace MagusEngine.ECS.Components.ActorComponents
             if (_path?.Length == _currentStep || Parent?.MoveTo(_path.GetStep(_currentStep++), IgnoresObstacles) == false)
             {
                 // handle hit logic!
-                CombatSystem.HitProjectile();
+                CombatSystem.HitProjectile(Parent, Acceleration, IgnoresObstacles);
 
                 Parent?.RemoveComponent(Tag);
             }
