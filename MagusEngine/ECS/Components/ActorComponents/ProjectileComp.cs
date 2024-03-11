@@ -76,14 +76,7 @@ namespace MagusEngine.ECS.Components.ActorComponents
             if (_path?.Length == _currentStep || Parent?.MoveTo(_path.GetStep(_currentStep++), IgnoresObstacles) == false)
             {
                 // handle hit logic!
-                var entity = Parent.CurrentMagiMap.GetEntityAt<MagiEntity>(Parent.Position);
-                if (entity != null)
-                {
-                    CombatSystem.ShootProjectile(PhysicsSystem.CalculateNewton2Law(Parent.Weight, Acceleration), Origin, (Item)Parent, Direciton);
-                }
-                else
-                {
-                }
+                CombatSystem.HitProjectile();
 
                 Parent?.RemoveComponent(Tag);
             }

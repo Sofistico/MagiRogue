@@ -461,6 +461,11 @@ namespace MagusEngine.Systems
             Find.Universe.Time.RegisterNode(new ComponentTimeNode(msToHit, projectile.ID, projectileComp.Travel));
         }
 
+        public static void HitProjectile()
+        {
+
+        }
+
         #endregion Projectile Calc
 
         #region Death Resolve
