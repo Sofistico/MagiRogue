@@ -1,8 +1,10 @@
 ﻿using GoRogue.Components.ParentAware;
 using GoRogue.Pathing;
+using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.Systems;
+using MagusEngine.Systems.Physics;
 using SadConsole.Effects;
 using SadRogue.Primitives;
 using System;
@@ -77,7 +79,10 @@ namespace MagusEngine.ECS.Components.ActorComponents
                 var entity = Parent.CurrentMagiMap.GetEntityAt<MagiEntity>(Parent.Position);
                 if (entity != null)
                 {
-                    //CombatSystem.();
+                    CombatSystem.ShootProjectile(PhysicsSystem.CalculateNewton2Law(Parent.Weight, Acceleration), Origin, (Item)Parent, Direciton);
+                }
+                else
+                {
                 }
 
                 Parent?.RemoveComponent(Tag);
