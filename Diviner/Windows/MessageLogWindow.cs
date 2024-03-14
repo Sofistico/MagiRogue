@@ -131,7 +131,7 @@ namespace Diviner.Windows
 
                 // Determines the scrollbar's max vertical position
                 // Thanks @Kaev for simplifying this math!
-                messageScrollBar.Maximum = scrollBarCurrentPosition - windowBorderThickness;
+                messageScrollBar.MaximumValue = scrollBarCurrentPosition - windowBorderThickness;
 
                 // This will follow the cursor since we move the render area in the event.
                 messageScrollBar.Value = scrollBarCurrentPosition;
