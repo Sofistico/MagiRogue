@@ -463,7 +463,34 @@ namespace MagusEngine.Systems
 
         public static void HitProjectile(MagiEntity? parent, double acceleration, bool ignoresObstacles)
         {
+            // get the parent.Position properyy and check if there is anything in pos
+            // if there is, get the first item in the list
+            // if it is an actor, resolve the hit
+            // if it is an item, resolve the hit
+            // if it is an wall, resolve if will get stuck or not
+            if (parent is null || parent.CurrentMagiMap is null)
+                return;
+            var point = parent.Position;
+            var map = parent.CurrentMagiMap;
+            var entities = map.GetEntitiesAt<MagiEntity>(point, map.LayerMasker.Mask((int)MapLayer.ACTORS, (int)MapLayer.ITEMS, (int)MapLayer.FURNITURE));
+            if (entities.Any())
+            {
+                var entity = entities.GetRandomItemFromList();
+                if (entity is Actor actor)
+                {
+                }
+                else if (entity is Item item)
+                {
+                }
+                else if (entity is Furniture fur)
+                {
 
+                }
+            }
+            else
+            {
+                // probably a wall or somestuff like that!
+            }
         }
 
         #endregion Projectile Calc
