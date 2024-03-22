@@ -6,6 +6,7 @@ using MagusEngine.Core;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic;
+using MagusEngine.Core.MapStuff;
 using MagusEngine.ECS.Components.ActorComponents;
 using MagusEngine.Services;
 using MagusEngine.Systems.Physics;
@@ -437,31 +438,36 @@ namespace MagusEngine.Systems
         public static void ShootProjectile(double force,
             Point origin,
             Item projectile,
-            Direction direction)
+            Direction direction,
+            double angle,
+            MagiMap map,
+            MagiEntity shooter)
         {
-            if (projectile is null && projectile?.CurrentMagiMap is null)
+            if (projectile is null)
                 return;
-            // interesting
-            var acceleration = PhysicsSystem.CalculateNewton2LawReturnAcceleration(projectile.Weight, force);
+            // interesting but wrong!
+            var v0 = PhysicsSystem.CalculateInitialVelocityFromMassAndForce(force, projectile.Weight);
+            if (v0 == 0)
+            {
+                DropItem(projectile, origin, map, shooter);
+            }
+            var range = PhysicsSystem.CalculateProjectileRange(v0, angle, PhysicsConstants.PlanetGravity);
+            var time = (long)(PhysicsSystem.CalculateProjectileTime(v0, angle, PhysicsConstants.PlanetGravity) / 100);
+            var pointToGo = direction.GetPointToGoFromOrigin(origin, (int)range);
 
-            int displacement = (int)PhysicsSystem.CalculateDisplacementWithAcceleration(1, 0, acceleration);
-
-            long msToHit = (long)PhysicsSystem.CalculateTimeToTravelDistanceFromAcceleration(acceleration, displacement) / 100;
-            var pointToGo = direction.GetPointToGoFromOrigin(origin, displacement);
-
-            var projectileComp = new ProjectileComp(msToHit,
+            var projectileComp = new ProjectileComp(time,
                 origin,
                 pointToGo,
                 direction,
                 true,
                 null,
-                acceleration);
+                force);
             projectile.AddComponent(projectileComp, ProjectileComp.Tag);
             projectileComp.UpdatePath(projectile.CurrentMagiMap);
-            Find.Universe.Time.RegisterNode(new ComponentTimeNode(msToHit, projectile.ID, projectileComp.Travel));
+            Find.Universe.Time.RegisterNode(new ComponentTimeNode(time, projectile.ID, projectileComp.Travel));
         }
 
-        public static void HitProjectile(MagiEntity? parent, double acceleration, bool ignoresObstacles)
+        public static void HitProjectile(MagiEntity? parent, double force, bool ignoresObstacles)
         {
             // get the parent.Position properyy and check if there is anything in pos
             // if there is, get the first item in the list
@@ -484,7 +490,6 @@ namespace MagusEngine.Systems
                 }
                 else if (entity is Furniture fur)
                 {
-
                 }
             }
             else

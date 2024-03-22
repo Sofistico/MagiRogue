@@ -1,6 +1,7 @@
 ﻿using Arquimedes.Enumerators;
 using GoRogue.GameFramework;
 using GoRogue.Pathing;
+using GoRogue.Random;
 using MagusEngine.Bus;
 using MagusEngine.Bus.MapBus;
 using MagusEngine.Bus.UiBus;
@@ -18,6 +19,7 @@ using MagusEngine.Systems.Time;
 using MagusEngine.Utils;
 using MagusEngine.Utils.Extensions;
 using SadConsole;
+using SadRogue.Primitives;
 using System.Collections.Generic;
 using System.Text;
 using MagiMap = MagusEngine.Core.MapStuff.MagiMap;
@@ -80,7 +82,7 @@ namespace MagusEngine.Commands
             StringBuilder attackMessage = new();
             StringBuilder defenseMessage = new();
 
-            (bool hit, BodyPart limbAttacked, BodyPart limbAttacking, DamageType dmgType, Item? itemUsed, Material attackMaterial) 
+            (bool hit, BodyPart limbAttacked, BodyPart limbAttacking, DamageType dmgType, Item? itemUsed, Material attackMaterial)
                 = CombatSystem.ResolveHit(attacker, defender, attackMessage, attack, isPlayer, limbChoosen);
             double finalMomentum = CombatSystem.ResolveDefenseAndGetAttackMomentum(attacker,
                 defender,
@@ -114,9 +116,14 @@ namespace MagusEngine.Commands
             return TimeHelper.GetAttackTime(attacker, attack);
         }
 
-        public static void ProjectileAttack(MagiEntity projectile, Actor target)
+        public static void ShootProjectile(double force,
+            Point origin,
+            Item projectile,
+            Direction direction,
+            MagiEntity shooter)
         {
-
+            var angle = GlobalRandom.DefaultRNG.NextInt(25, 95);
+            CombatSystem.ShootProjectile(force, origin, projectile, direction, angle, shooter.CurrentMagiMap, shooter);
         }
 
         /// <summary>
@@ -232,7 +239,7 @@ namespace MagusEngine.Commands
             return false;
         }
 
-        public static bool DropItems(Actor inv)
+        public static bool DropTopItemInv(Actor inv)
         {
             if (inv.Inventory.Count == 0)
             {
@@ -243,11 +250,17 @@ namespace MagusEngine.Commands
             {
                 Item item = inv.Inventory[0];
                 inv.Inventory.Remove(item);
-                item.Position = inv.Position;
-                inv.CurrentMagiMap.AddMagiEntity(item);
-                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{inv.Name} dropped {item.Name}"));
-                return true;
+                return DropItem(item, inv.Position, inv.CurrentMagiMap, inv);
             }
+        }
+
+        public static bool DropItem(Item item, Point pos, MagiMap map, MagiEntity entity = null)
+        {
+            item.Position = pos;
+            map.AddMagiEntity(item);
+            if (entity != null)
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{entity.Name} dropped {item.Name}"));
+            return true;
         }
 
         public static bool NodeDrain(Actor actor)

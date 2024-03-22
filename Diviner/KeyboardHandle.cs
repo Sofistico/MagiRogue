@@ -23,7 +23,7 @@ namespace Diviner
 {
     public static class KeyboardHandle
     {
-        private static readonly Player? getPlayer = Find.Universe?.Player;
+        private static readonly Player? _getPlayer = Find.Universe?.Player;
 
         private static Target _targetCursor = null!;
 
@@ -136,27 +136,30 @@ namespace Diviner
 
         private static bool HandleActions(Keyboard info, Universe world, UIManager ui)
         {
+            if (_getPlayer == null || world == null)
+                return false;
+
             // Work around for a > symbol, must be top to not make the char wait
             if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.OemPeriod))
             {
-                return ActionManager.EnterDownMovement(getPlayer.Position);
+                return ActionManager.EnterDownMovement(_getPlayer.Position);
             }
             // Work around for a < symbol, must be top to not make the char wait
             if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.OemComma))
             {
-                return ActionManager.EnterUpMovement(getPlayer.Position);
+                return ActionManager.EnterUpMovement(_getPlayer.Position);
             }
             if (HandleMove(info, world, ui))
             {
-                if (!getPlayer.Bumped && world.CurrentMap.ControlledEntitiy is Player)
+                if (!_getPlayer.Bumped && world?.CurrentMap?.ControlledEntitiy is Player)
                 {
-                    Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.GetWalkTime(getPlayer,
-                        world.CurrentMap.GetTileAt<Tile>(getPlayer.Position)), true));
+                    Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.GetWalkTime(_getPlayer,
+                        world.CurrentMap.GetTileAt<Tile>(_getPlayer.Position)), true));
                 }
-                else if (world.CurrentMap.ControlledEntitiy is Player)
+                else if (world?.CurrentMap?.ControlledEntitiy is Player)
                 {
-                    Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.GetAttackTime(getPlayer,
-                        getPlayer.GetAttacks().GetRandomItemFromList()),
+                    Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.GetAttackTime(_getPlayer,
+                        _getPlayer.GetAttacks().GetRandomItemFromList()),
                         true));
                 }
 
@@ -165,7 +168,7 @@ namespace Diviner
 
             if (info.IsKeyPressed(Keys.NumPad5) && info.IsKeyDown(Keys.LeftControl))
             {
-                return ActionManager.RestTillFull(getPlayer);
+                return ActionManager.RestTillFull(_getPlayer);
             }
 
             if (info.IsKeyPressed(Keys.NumPad5) || info.IsKeyPressed(Keys.OemPeriod))
@@ -196,7 +199,7 @@ namespace Diviner
             }
             if (info.IsKeyPressed(Keys.D))
             {
-                bool sucess = ActionManager.DropItems(world.Player);
+                bool sucess = ActionManager.DropTopItemInv(world.Player);
                 ui.InventoryScreen.ShowItems(world.Player);
                 Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.Interact, sucess));
                 return sucess;
@@ -214,12 +217,12 @@ namespace Diviner
             //}
             if (info.IsKeyPressed(Keys.H) && info.IsKeyDown(Keys.LeftShift))
             {
-                bool sucess = ActionManager.NodeDrain(getPlayer);
+                bool sucess = ActionManager.NodeDrain(_getPlayer);
                 Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.MagicalThings, sucess));
             }
             if (info.IsKeyPressed(Keys.L))
             {
-                _targetCursor ??= new Target(getPlayer.Position);
+                _targetCursor ??= new Target(_getPlayer.Position);
 
                 if (_targetCursor.State == TargetState.LookMode)
                 {
@@ -235,14 +238,14 @@ namespace Diviner
 
             if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.Z))
             {
-                SpellSelectWindow spell = new(getPlayer.Soul.CurrentMana);
+                SpellSelectWindow spell = new(_getPlayer.Soul.CurrentMana);
 
-                _targetCursor = new Target(getPlayer.Position);
+                _targetCursor = new Target(_getPlayer.Position);
 
-                spell.Show(getPlayer.Magic.KnowSpells,
+                spell.Show(_getPlayer.Magic.KnowSpells,
                     selectedSpell => _targetCursor.OnSelectSpell(selectedSpell,
                     (Actor)world.CurrentMap.ControlledEntitiy),
-                    getPlayer.Soul.CurrentMana);
+                    _getPlayer.Soul.CurrentMana);
 
                 return true;
             }
@@ -273,7 +276,7 @@ namespace Diviner
                     if (sucess)
                     {
                         _targetCursor = null;
-                        Locator.GetService<MessageBusService>()?.SendMessage<ProcessTurnEvent>(new(TimeHelper.GetCastingTime(getPlayer, spellCasted), sucess));
+                        Locator.GetService<MessageBusService>()?.SendMessage<ProcessTurnEvent>(new(TimeHelper.GetCastingTime(_getPlayer, spellCasted), sucess));
                     }
                     return sucess;
                 }
@@ -349,9 +352,16 @@ namespace Diviner
 
             if (info.IsKeyPressed(Keys.NumPad0))
             {
-                LookWindow w = new LookWindow(getPlayer);
+                LookWindow w = new LookWindow(_getPlayer);
                 w.Show();
                 return false;
+            }
+
+            if (info.IsKeyPressed(Keys.M))
+            {
+                ActionManager.ShootProjectile(5000, _getPlayer.Position, DataManager.QueryItemInData("test"), Direction.Left);
+
+                return true;
             }
 
             if (info.IsKeyDown(Keys.LeftControl)
@@ -369,6 +379,7 @@ namespace Diviner
                 entity.AddComponents(new BasicAi(entity));
                 return false;
             }
+
             if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.P) && _targetCursor.EntityInTarget())
             {
                 Actor actor = (Actor)_targetCursor.TargetEntity();
@@ -390,31 +401,19 @@ namespace Diviner
                 return false;
             }
 
-            //if (info.IsKeyPressed(Keys.T))
-            //{
-            //    foreach (NodeTile node in world.CurrentMap.Tiles.OfType<NodeTile>())
-            //    {
-            //        if (node.TrueAppearence.Matches(node))
-            //        {
-            //            break;
-            //        }
-            //        node.RestoreOriginalAppearence();
-            //    }
-            //    return false;
-            //}
-
             if (info.IsKeyPressed(Keys.Tab))
             {
                 ActionManager.CreateNewMapForTesting();
                 return false;
             }
+
             if (info.IsKeyPressed(Keys.OemPlus))
             {
                 try
                 {
                     // the map is being saved, but it isn't being properly deserialized
-                    MagiMap map = (MagiMap)getPlayer.CurrentMap;
-                    map.LastPlayerPosition = getPlayer.Position;
+                    MagiMap map = (MagiMap)_getPlayer.CurrentMap;
+                    map.LastPlayerPosition = _getPlayer.Position;
                     if (Find.Universe.MapIsWorld(map))
                     {
                         string json = JsonConvert.SerializeObject(Find.Universe.WorldMap);
@@ -423,7 +422,7 @@ namespace Diviner
                     }
                     else
                     {
-                        string json = map.SaveMapToJson(getPlayer);
+                        string json = map.SaveMapToJson(_getPlayer);
 
                         // The universe class also isn't being serialized properly, crashing newtonsoft
                         // TODO: Revise this line of code when the time comes to work on the save system.

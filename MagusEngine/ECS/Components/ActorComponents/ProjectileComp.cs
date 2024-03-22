@@ -33,7 +33,7 @@ namespace MagusEngine.ECS.Components.ActorComponents
         public Point FinalPoint { get; set; }
         public Direction Direciton { get; set; }
         public bool IgnoresObstacles { get; set; }
-        public double Acceleration { get; set; }
+        public double Force { get; set; }
 
         /// <summary>
         /// Must follow the Direction.Types enum
@@ -46,7 +46,7 @@ namespace MagusEngine.ECS.Components.ActorComponents
             Direction direction,
             bool isPhysical,
             char[]? glyphs,
-            double acceleration)
+            double force)
         {
             Direciton = direction;
             TicksToMoveOneStep = ticksToMoveOneStep;
@@ -54,9 +54,10 @@ namespace MagusEngine.ECS.Components.ActorComponents
             FinalPoint = finalPoint;
             IgnoresObstacles = isPhysical;
             Glyphs = glyphs ?? _defaultGlyphs;
-            Acceleration = acceleration;
+            Force = force;
         }
 
+        // test this way, if it doesn't won't work, make this as an Time event.
         public long Travel()
         {
             if (_currentStep == 0)
@@ -76,7 +77,7 @@ namespace MagusEngine.ECS.Components.ActorComponents
             if (_path?.Length == _currentStep || Parent?.MoveTo(_path.GetStep(_currentStep++), IgnoresObstacles) == false)
             {
                 // handle hit logic!
-                CombatSystem.HitProjectile(Parent, Acceleration, IgnoresObstacles);
+                CombatSystem.HitProjectile(Parent, Force, IgnoresObstacles);
 
                 Parent?.RemoveComponent(Tag);
             }

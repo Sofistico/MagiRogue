@@ -1,5 +1,4 @@
 ﻿using MagusEngine.Bus.UiBus;
-using MagusEngine.Core;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.ECS.Components.ActorComponents.Effects;
@@ -57,6 +56,27 @@ namespace MagusEngine.Systems.Physics
             return force * frictionCoeficient;
         }
 
+        public static double CalculateInitialVelocityFromMassAndForce(double mass, double force)
+        {
+            return Math.Sqrt(2 * force / mass);
+        }
+
+        public static double CalculateProjectileRange(double v0, double angle, double g)
+        {
+            return Math.Pow(v0, 2) * Math.Sin(2 * angle) / g;
+        }
+
+        public static double CalculateProjectileTime(double v0, double angle, double g)
+        {
+            return 2 * v0 * Math.Sin(angle) / g;
+        }
+
+        // create a CalculateProjectileHeight
+        public static double CalculateProjectileHeight(double v0, double angle, double g)
+        {
+            return Math.Pow(v0, 2) * Math.Pow(Math.Sin(angle), 2) / (2 * g);
+        }
+
         /// <summary>
         /// displacement based on the acceleration
         /// </summary>
@@ -64,8 +84,7 @@ namespace MagusEngine.Systems.Physics
         /// <param name="u">Initial velocity m/s</param>
         /// <param name="a">Acceleration m/s^2</param>
         /// <returns>s - distance in meters (tiles)</returns>
-        public static double CalculateDisplacementWithAcceleration(double t, double u, double a) =>
-            (u * t) + (0.5 * a * Math.Pow(t, 2));
+        public static double CalculateDisplacementWithAcceleration(double t, double u, double a) => (u * t) + ((0.5 * a) * Math.Pow(t, 2));
 
         /// <summary>
         /// The total displacement given by velocity * time

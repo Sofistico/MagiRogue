@@ -93,12 +93,12 @@ namespace MagusEngine.Core.Entities
         public MaterialType? MaterialType { get; set; }
 
         // By default, a new Item is sized 1x1, with a weight of 1, and at 100% condition
-        public Item(Color foreground, Color background, string name, int glyph, Point coord, int size,
+        public Item(Color foreground, Color background, string name, int glyph, Point coord, int volume,
             int condition = 100, int layer = (int)MapLayer.ITEMS,
             string materialId = "null") :
             base(foreground, background, glyph, coord, layer)
         {
-            Volume = size;
+            Volume = volume;
             Condition = condition;
             if (!materialId.IsNullOrEmpty())
                 ConfigureMaterial(name, materialId);

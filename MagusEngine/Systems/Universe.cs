@@ -346,7 +346,7 @@ namespace MagusEngine.Systems
         private void ProcessComponentTurn(ComponentTimeNode componentTurn)
         {
             var nextInvoke = componentTurn.Action.Invoke();
-            if(nextInvoke > 0)
+            if (nextInvoke > 0)
                 Time.RegisterNode(new ComponentTimeNode(nextInvoke, componentTurn.Id, componentTurn.Action));
         }
 
