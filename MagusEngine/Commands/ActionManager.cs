@@ -123,7 +123,7 @@ namespace MagusEngine.Commands
             MagiEntity shooter)
         {
             var angle = GlobalRandom.DefaultRNG.NextInt(25, 95);
-            CombatSystem.ShootProjectile(force, origin, projectile, direction, angle, shooter.CurrentMagiMap, shooter);
+            CombatSystem.ShootProjectile(force, origin, projectile, direction, angle, shooter);
         }
 
         /// <summary>

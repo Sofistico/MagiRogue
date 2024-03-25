@@ -440,13 +440,13 @@ namespace MagusEngine.Systems
             Item projectile,
             Direction direction,
             int angle,
-            MagiMap map,
             MagiEntity shooter)
         {
             if (projectile is null || shooter?.CurrentMagiMap is null)
                 return;
             // interesting but wrong!
             var initialVelocity = PhysicsSystem.CalculateInitialVelocityFromMassAndForce(projectile.Mass, force);
+            var map = shooter.CurrentMagiMap;
             if (initialVelocity == 0)
                 ActionManager.DropItem(projectile, origin, map, shooter);
 
