@@ -359,7 +359,7 @@ namespace Diviner
 
             if (info.IsKeyPressed(Keys.M))
             {
-                ActionManager.ShootProjectile(5000, _getPlayer.Position, DataManager.QueryItemInData("test"), Direction.Left);
+                ActionManager.ShootProjectile(5000, _getPlayer.Position, DataManager.QueryItemInData("test"), Direction.Left, _getPlayer);
 
                 return true;
             }

@@ -439,23 +439,22 @@ namespace MagusEngine.Systems
             Point origin,
             Item projectile,
             Direction direction,
-            double angle,
+            int angle,
             MagiMap map,
             MagiEntity shooter)
         {
-            if (projectile is null)
+            if (projectile is null || shooter?.CurrentMagiMap is null)
                 return;
             // interesting but wrong!
-            var v0 = PhysicsSystem.CalculateInitialVelocityFromMassAndForce(force, projectile.Weight);
-            if (v0 == 0)
-            {
-                DropItem(projectile, origin, map, shooter);
-            }
-            var range = PhysicsSystem.CalculateProjectileRange(v0, angle, PhysicsConstants.PlanetGravity);
-            var time = (long)(PhysicsSystem.CalculateProjectileTime(v0, angle, PhysicsConstants.PlanetGravity) / 100);
+            var initialVelocity = PhysicsSystem.CalculateInitialVelocityFromMassAndForce(projectile.Mass, force);
+            if (initialVelocity == 0)
+                ActionManager.DropItem(projectile, origin, map, shooter);
+
+            var range = PhysicsSystem.CalculateProjectileRange(initialVelocity, angle, PhysicsConstants.PlanetGravity);
+            var time = PhysicsSystem.CalculateProjectileTime(initialVelocity, angle, PhysicsConstants.PlanetGravity);
             var pointToGo = direction.GetPointToGoFromOrigin(origin, (int)range);
 
-            var projectileComp = new ProjectileComp(time,
+            var projectileComp = new ProjectileComp((long)time,
                 origin,
                 pointToGo,
                 direction,
@@ -463,8 +462,8 @@ namespace MagusEngine.Systems
                 null,
                 force);
             projectile.AddComponent(projectileComp, ProjectileComp.Tag);
-            projectileComp.UpdatePath(projectile.CurrentMagiMap);
-            Find.Universe.Time.RegisterNode(new ComponentTimeNode(time, projectile.ID, projectileComp.Travel));
+            projectileComp.UpdatePath(shooter.CurrentMagiMap);
+            Find.Universe.Time.RegisterNode(new ComponentTimeNode((long)time, projectile.ID, projectileComp.Travel));
         }
 
         public static void HitProjectile(MagiEntity? parent, double force, bool ignoresObstacles)

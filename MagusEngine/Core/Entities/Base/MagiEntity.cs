@@ -1,6 +1,7 @@
 ﻿using MagusEngine.Bus.ComponentBus;
 using MagusEngine.Core.Magic;
 using MagusEngine.Services;
+using MagusEngine.Systems.Physics;
 using SadConsole.Entities;
 using SadRogue.Primitives;
 using System;
@@ -30,6 +31,8 @@ namespace MagusEngine.Core.Entities.Base
 
         // I think it's in kilograms
         public virtual double Weight { get; set; }
+
+        public double Mass => Weight / PhysicsConstants.PlanetGravity;
 
         /// <summary>
         /// The size is defined as cm³
