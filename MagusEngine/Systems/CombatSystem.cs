@@ -451,7 +451,7 @@ namespace MagusEngine.Systems
                 ActionManager.DropItem(projectile, origin, map, shooter);
 
             var range = PhysicsSystem.CalculateProjectileRange(initialVelocity, angle, PhysicsConstants.PlanetGravity);
-            var time = PhysicsSystem.CalculateProjectileTime(initialVelocity, angle, PhysicsConstants.PlanetGravity);
+            var time = Convert.ToInt64(PhysicsSystem.CalculateProjectileTime(initialVelocity, angle, PhysicsConstants.PlanetGravity));
             var pointToGo = direction.GetPointToGoFromOrigin(origin, (int)range);
 
             var projectileComp = new ProjectileComp((long)time,
