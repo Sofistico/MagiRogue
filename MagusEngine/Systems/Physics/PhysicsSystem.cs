@@ -81,10 +81,11 @@ namespace MagusEngine.Systems.Physics
             return angleInDegrees * Math.PI / 180.0;
         }
 
-        // create a CalculateProjectileHeight
-        public static double CalculateProjectileHeight(double v0, int angle, double g)
+        public static double CalculateProjectileHeight(double v0, int angleInDegrees, double g)
         {
-            return Math.Pow(v0, 2) * Math.Pow(Math.Sin(angle), 2) / (2 * g);
+            double angleInRadians = GetAngleInRadians(angleInDegrees);
+
+            return Math.Pow(v0, 2) * Math.Pow(Math.Sin(angleInRadians), 2) / (2 * g);
         }
 
         /// <summary>
@@ -94,7 +95,7 @@ namespace MagusEngine.Systems.Physics
         /// <param name="u">Initial velocity m/s</param>
         /// <param name="a">Acceleration m/s^2</param>
         /// <returns>s - distance in meters (tiles)</returns>
-        public static double CalculateDisplacementWithAcceleration(double t, double u, double a) => (u * t) + ((0.5 * a) * Math.Pow(t, 2));
+        public static double CalculateDisplacementWithAcceleration(double t, double u, double a) => (u * t) + (0.5 * a * Math.Pow(t, 2));
 
         /// <summary>
         /// The total displacement given by velocity * time
@@ -131,7 +132,7 @@ namespace MagusEngine.Systems.Physics
             if (tiles == 0)
             {
                 Locator.GetService<MessageBusService>()
-                    .SendMessage<AddMessageLog>(new($"The {entity?.Name} resists being flung!", Find.CurrentMap?.PlayerFOV.CurrentFOV.Contains(entity.Position) ?? false));
+                    .SendMessage<AddMessageLog>(new($"The {entity?.Name} resists being flung!", Find.CurrentMap?.PlayerFOV.CurrentFOV.Contains(entity!.Position) ?? false));
                 return;
             }
             // the force is applied exactly once
