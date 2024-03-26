@@ -3,11 +3,10 @@
     "Id": "short_sword",
     "Name": "Sword",
     "Description": "This is a short sword",
-    "Foreground": "DarkGrey",
     "Glyph": "/",
     "Length": 60,
     "Broadness": 5,
-    "Height": 6,
+    "Height": 3,
     "ItemType": "Weapon",
     "WeaponType": "Sword"
   }

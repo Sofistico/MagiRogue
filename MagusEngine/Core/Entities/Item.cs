@@ -22,27 +22,9 @@ namespace MagusEngine.Core.Entities
     [JsonConverter(typeof(ItemJsonConverter))]
     public class Item : MagiEntity
     {
-        // backing field for Condition
-        private int condition;
-
         // physical condition of item, in percent 100 = item undamaged 0 = item is destroyed
-        public int Condition
-        {
-            get { return condition; }
-
-            set
-            {
-                condition = value;
-                if (condition < 0)
-                {
-                    if (CurrentMap is not null)
-                    {
-                        RemoveFromMap();
-                    }
-                    condition = 0;
-                }
-            }
-        }
+        public int Condition { get; set; }
+        public bool Broken => Condition > 0;
 
         public override double Weight
         {
@@ -122,13 +104,6 @@ namespace MagusEngine.Core.Entities
 
         public Item ConfigureMaterial(Material? material) => ConfigureMaterial(Name, material);
 
-        // removes this object from the MultiSpatialMap's list of entities and lets the garbage
-        // collector take it out of memory automatically.
-        public void RemoveFromMap()
-        {
-            CurrentMagiMap.RemoveMagiEntity(this);
-        }
-
         public bool Equip(Actor actor)
         {
             // We need to store our modifiers in variables before adding them to the stat. just
@@ -143,8 +118,7 @@ namespace MagusEngine.Core.Entities
                 return false;
             }
 
-            if (!actor.GetEquipment().TryAdd(actor.GetAnatomy().Limbs.Find
-                (l => l.LimbType.ToString() == EquipType.ToString()).Id, this))
+            if (!actor.GetEquipment().TryAdd(actor.GetAnatomy().Limbs.Find(l => l.LimbType.ToString() == EquipType.ToString()).Id, this))
             {
                 Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{actor.Name} has already an item equiped in addHere!"));
                 return false;
@@ -172,9 +146,9 @@ namespace MagusEngine.Core.Entities
             throw new NotImplementedException();
         }
 
-        public int DamageWhenItemStrikes(int itemAcceleration)
+        public double DamageWhenItemStrikes(int itemAcceleration)
         {
-            return PhysicsSystem.CalculateMomentum(Weight, itemAcceleration) + BaseDmg;
+            return (PhysicsSystem.CalculateMomentum(Weight, itemAcceleration) + BaseDmg) * QualityMultiplier();
         }
 
         public double QualityMultiplier()

@@ -180,7 +180,7 @@ namespace MagusEngine.Commands
             {
                 actor.Inventory.Add(item);
                 Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{actor.Name} picked up {item.Name}"));
-                item.RemoveFromMap();
+                actor?.CurrentMagiMap?.RemoveMagiEntity(item);
                 return true;
             }
             else

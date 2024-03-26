@@ -39,8 +39,19 @@ namespace MagusEngine.Core.Entities.Base
         /// </summary>
         public virtual int Volume { get; set; }
 
+        /// <summary>
+        /// The height in cm
+        /// </summary>
         public int Height { get; set; }
+
+        /// <summary>
+        /// The length in cm
+        /// </summary>
         public int Length { get; set; }
+
+        /// <summary>
+        /// The broadness in cm
+        /// </summary>
         public int Broadness { get; set; }
 
         /// <summary>

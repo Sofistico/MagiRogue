@@ -6,6 +6,7 @@ using MagusEngine.Core.Entities.Interfaces;
 using MagusEngine.Core.Magic;
 using MagusEngine.Systems;
 using MagusEngine.Utils;
+using MagusEngine.Utils.Extensions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -50,7 +51,7 @@ namespace MagusEngine.Serialization.EntitySerialization
 
         public int Volume { get; set; }
 
-        public int Condition { get; set; }
+        public int Condition { get; set; } = 100;
 
         public string Description { get; set; }
 
@@ -119,7 +120,7 @@ namespace MagusEngine.Serialization.EntitySerialization
             Condition = condition;
             Volume = size;
             MaterialId = materialId;
-            Material = DataManager.QueryMaterial(materialId);
+            Material = DataManager.QueryMaterial(materialId)!;
             MagicStuff = magic;
         }
 
@@ -168,8 +169,15 @@ namespace MagusEngine.Serialization.EntitySerialization
             if (itemTemplate is null)
                 return null;
             int glyph = GlyphHelper.GlyphExistInDictionary(itemTemplate.Glyph) ? GlyphHelper.GetGlyph(itemTemplate.Glyph) : itemTemplate.Glyph;
-            MagiColorSerialization foreground = new(itemTemplate.Foreground);
-            MagiColorSerialization background = new(itemTemplate.Background);
+            Material material;
+            if (itemTemplate.Material != null)
+                material = itemTemplate.Material;
+            else if (!itemTemplate.MaterialId.IsNullOrEmpty())
+                material = DataManager.QueryMaterial(itemTemplate.MaterialId);
+            else
+                material = DataManager.QueryMaterialWithType(itemTemplate.MaterialType.Value);
+            MagiColorSerialization foreground = new(itemTemplate.Foreground ?? material.Color);
+            MagiColorSerialization background = new(itemTemplate.Background ?? "Black");
 
             Item item = new(foreground.Color,
                 background.Color,
@@ -178,7 +186,7 @@ namespace MagusEngine.Serialization.EntitySerialization
                 Point.None,
                 itemTemplate.Volume,
                 itemTemplate.Condition,
-                materialId: itemTemplate.MaterialId)
+                materialId: material.Id)
             {
                 BaseDmg = itemTemplate.BaseDamage,
                 CanInteract = itemTemplate.CanInteract,
@@ -195,19 +203,15 @@ namespace MagusEngine.Serialization.EntitySerialization
                 ArmorType = itemTemplate.ArmorType,
                 Coverage = itemTemplate.Coverage,
                 MaterialTrait = itemTemplate.MaterialTrait,
-                MaterialType = itemTemplate.MaterialType,
+                MaterialType = material.Type,
             };
             if (itemTemplate.Traits is not null)
                 item.Traits = itemTemplate.Traits;
             if (itemTemplate.Condition != 100)
-            {
                 item.Condition = itemTemplate.Condition;
-            }
             item.Description = itemTemplate.Description;
             if (item?.Material?.ConfersTraits?.Count > 0)
-            {
                 item.Traits.AddRange(item.Material.ConfersTraits);
-            }
 
             item!.Broadness = itemTemplate.Broadness;
             item!.Height = itemTemplate.Height;
