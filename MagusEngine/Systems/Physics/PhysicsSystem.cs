@@ -61,14 +61,24 @@ namespace MagusEngine.Systems.Physics
             return Math.Sqrt(2 * force / mass);
         }
 
-        public static double CalculateProjectileRange(double v0, int angle, double g)
+        public static double CalculateProjectileRange(double v0, int angleInDegrees, double g)
         {
-            return Math.Pow(v0, 2) * Math.Sin(2 * angle) / g;
+            double angleInRadians = GetAngleInRadians(angleInDegrees);
+
+            return Math.Pow(v0, 2) * Math.Sin(2 * angleInRadians) / g;
         }
 
-        public static double CalculateProjectileTime(double v0, int angle, double g)
+        public static double CalculateProjectileTime(double v0, int angleInDegrees, double g)
         {
-            return (2 * (v0 * Math.Sin(angle))) / g;
+            // Convert angle from degrees to radians
+            double angleInRadians = GetAngleInRadians(angleInDegrees);
+
+            return 2 * (v0 * Math.Sin(angleInRadians)) / g;
+        }
+
+        private static double GetAngleInRadians(int angleInDegrees)
+        {
+            return angleInDegrees * Math.PI / 180.0;
         }
 
         // create a CalculateProjectileHeight
