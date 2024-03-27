@@ -1,10 +1,8 @@
 ﻿using GoRogue.Components.ParentAware;
 using GoRogue.Pathing;
-using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.Systems;
-using MagusEngine.Systems.Physics;
 using SadConsole.Effects;
 using SadRogue.Primitives;
 using System;
@@ -52,7 +50,7 @@ namespace MagusEngine.ECS.Components.ActorComponents
             TicksToMoveOneStep = ticksToMoveOneStep;
             Origin = origin;
             FinalPoint = finalPoint;
-            IgnoresObstacles = isPhysical;
+            IgnoresObstacles = !isPhysical;
             Glyphs = glyphs ?? _defaultGlyphs;
             Force = force;
         }
@@ -88,6 +86,8 @@ namespace MagusEngine.ECS.Components.ActorComponents
         public void UpdatePath(MagiMap map)
         {
             _path = map.AStar.ShortestPath(Origin, FinalPoint);
+            if (_path == null)
+                throw new ApplicationException($"Path is null, can't update path. origin: {Origin}, end: {FinalPoint}");
         }
 
         private char TranslateDirToGlyph()
