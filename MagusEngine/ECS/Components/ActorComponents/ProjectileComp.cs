@@ -1,7 +1,9 @@
 ﻿using GoRogue.Components.ParentAware;
 using GoRogue.Pathing;
+using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
+using MagusEngine.Services;
 using MagusEngine.Systems;
 using SadConsole.Effects;
 using SadRogue.Primitives;
@@ -76,9 +78,12 @@ namespace MagusEngine.ECS.Components.ActorComponents
             {
                 // handle hit logic!
                 CombatSystem.HitProjectile(Parent, Force, IgnoresObstacles);
-
+                if (Parent?.SadCell?.AppearanceSingle?.Effect != null)
+                    Parent.SadCell.AppearanceSingle.Effect = null;
                 Parent?.RemoveComponent(Tag);
+                return 0;
             }
+            Locator.GetService<MessageBusService>().SendMessage<MapConsoleIsDirty>();
 
             return TicksToMoveOneStep;
         }

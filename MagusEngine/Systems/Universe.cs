@@ -347,12 +347,12 @@ namespace MagusEngine.Systems
         {
             var nextInvoke = componentTurn.Action.Invoke();
             if (nextInvoke > 0)
-                Time.RegisterNode(new ComponentTimeNode(nextInvoke, componentTurn.Id, componentTurn.Action));
+                Time.RegisterNode(new ComponentTimeNode(Time.GetTimePassed(nextInvoke), componentTurn.Id, componentTurn.Action));
         }
 
         private IEnumerable<Actor> GetEntitiesIds()
         {
-            return CurrentChunk?.TotalPopulation() ?? Enumerable.Empty<Actor>();
+            return CurrentChunk?.TotalPopulation() ?? [];
         }
 
         private void RegisterInTime(IEnumerable<Actor> population)

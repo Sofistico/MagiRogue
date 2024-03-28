@@ -482,6 +482,22 @@ namespace MagusEngine.Core.MapStuff
                 || point.X >= Width || point.Y >= Height;
         }
 
+        public Point NormalizePointInsideMap(Point point)
+        {
+            var x = NormalizePoint(point.X, Width);
+            var y = NormalizePoint(point.Y, Height);
+            return new Point(x, y);
+        }
+
+        private static int NormalizePoint(int pointPart, int comparator)
+        {
+            if (pointPart < 0)
+                return 0;
+            else if (pointPart >= comparator)
+                return comparator - 1;
+            return pointPart;
+        }
+
         private string GetDebuggerDisplay()
         {
             return MapName;

@@ -6,7 +6,6 @@ using MagusEngine.Core;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic;
-using MagusEngine.Core.MapStuff;
 using MagusEngine.ECS.Components.ActorComponents;
 using MagusEngine.Services;
 using MagusEngine.Systems.Physics;
@@ -454,6 +453,9 @@ namespace MagusEngine.Systems
             var time = Convert.ToInt64(PhysicsSystem.CalculateProjectileTime(initialVelocity, angle, PhysicsConstants.PlanetGravity));
             var pointToGo = direction.GetPointToGoFromOrigin(origin, (int)range);
 
+            if (map.CheckForIndexOutOfBounds(pointToGo))
+                pointToGo = map.NormalizePointInsideMap(pointToGo);
+
             var projectileComp = new ProjectileComp((long)time,
                 origin,
                 pointToGo,
@@ -464,6 +466,7 @@ namespace MagusEngine.Systems
             projectile.AddComponent(projectileComp, ProjectileComp.Tag);
             projectileComp.UpdatePath(shooter.CurrentMagiMap);
             Find.Universe.Time.RegisterNode(new ComponentTimeNode((long)time, projectile.ID, projectileComp.Travel));
+            Locator.GetService<MessageBusService>().SendMessage<AddEntitiyCurrentMap>(new(projectile));
         }
 
         public static void HitProjectile(MagiEntity? parent, double force, bool ignoresObstacles)
