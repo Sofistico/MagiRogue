@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MagusEngine.Systems
 {
@@ -321,6 +322,7 @@ namespace MagusEngine.Systems
 
                         case ComponentTimeNode componentTurn:
                             ProcessComponentTurn(componentTurn);
+                            Task.Delay(100).Wait();
                             break;
 
                         default:

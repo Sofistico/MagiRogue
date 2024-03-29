@@ -23,9 +23,9 @@ namespace MagusEngine.ECS.Components.ActorComponents.Ai
 
         public object? Parent { get; set; }
 
-        public (bool sucess, long ticks) RunAi(MagiMap map)
+        public (bool sucess, long ticks) RunAi(MagiMap? map)
         {
-            if (Parent is not IGameObject)
+            if (Parent is not IGameObject || map is null)
             {
                 return (false, -1);
             }
@@ -38,7 +38,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.Ai
                 if (needs is null)
                     return (false, -1);
 
-                int timeTakenAction = 0;
+                long timeTakenAction = 0;
                 needs.GetPriority(out Need? need);
                 FindIfDangerExists(map, actor);
                 if (commitedToNeed is not null)
@@ -50,7 +50,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.Ai
             return (false, -1);
         }
 
-        private int ActOnNeed(MagiMap map, Actor actor, int timeTakenAction, Need need)
+        private long ActOnNeed(MagiMap map, Actor actor, long timeTakenAction, Need need)
         {
             if (previousKnowPath is not null && step < previousKnowPath.Length)
             {
@@ -176,13 +176,13 @@ namespace MagusEngine.ECS.Components.ActorComponents.Ai
             }
         }
 
-        private int FindPathAndMoveOneStep(MagiMap map, Actor actor, IGameObject item)
+        private long FindPathAndMoveOneStep(MagiMap map, Actor actor, IGameObject item)
         {
             previousKnowPath = map.AStar.ShortestPath(actor.Position, item.Position)!;
             return MoveActorAStep(actor, map);
         }
 
-        private int MoveActorAStep(Actor actor, MagiMap map)
+        private long MoveActorAStep(Actor actor, MagiMap map)
         {
             actor.MoveBy(previousKnowPath.GetStep(step++).Subtract(actor.Position));
             return TimeHelper.GetWalkTime(actor, map.GetTileAt(actor.Position));

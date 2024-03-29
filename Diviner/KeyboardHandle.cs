@@ -17,13 +17,15 @@ using MagusEngine.Utils.Extensions;
 using Newtonsoft.Json;
 using SadConsole.Input;
 using SadRogue.Primitives;
+using System.Diagnostics.CodeAnalysis;
 using Color = SadRogue.Primitives.Color;
 
 namespace Diviner
 {
     public static class KeyboardHandle
     {
-        private static readonly Player? _getPlayer = Find.Universe?.Player;
+        [NotNull]
+        private static readonly Player _getPlayer = Find.Universe?.Player;
 
         private static Target _targetCursor = null!;
 
@@ -134,9 +136,9 @@ namespace Diviner
             return distance;
         }
 
-        private static bool HandleActions(Keyboard info, Universe world, UIManager ui)
+        private static bool HandleActions(Keyboard info, Universe uni, UIManager ui)
         {
-            if (_getPlayer == null || world == null)
+            if (_getPlayer == null || uni == null)
                 return false;
 
             // Work around for a > symbol, must be top to not make the char wait
@@ -149,14 +151,14 @@ namespace Diviner
             {
                 return ActionManager.EnterUpMovement(_getPlayer.Position);
             }
-            if (HandleMove(info, world, ui))
+            if (HandleMove(info, uni, ui))
             {
-                if (!_getPlayer.Bumped && world?.CurrentMap?.ControlledEntitiy is Player)
+                if (!_getPlayer.Bumped && uni?.CurrentMap?.ControlledEntitiy is Player)
                 {
                     Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.GetWalkTime(_getPlayer,
-                        world.CurrentMap.GetTileAt<Tile>(_getPlayer.Position)), true));
+                        uni.CurrentMap.GetTileAt<Tile>(_getPlayer.Position)), true));
                 }
-                else if (world?.CurrentMap?.ControlledEntitiy is Player)
+                else if (uni?.CurrentMap?.ControlledEntitiy is Player)
                 {
                     Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.GetAttackTime(_getPlayer,
                         _getPlayer.GetAttacks().GetRandomItemFromList()),
@@ -191,22 +193,22 @@ namespace Diviner
             //} // some other thing will be in here!
             if (info.IsKeyPressed(Keys.G))
             {
-                Item item = world.CurrentMap.GetEntityAt<Item>(world.Player.Position);
-                bool sucess = ActionManager.PickUp(world.Player, item);
-                ui.InventoryScreen.ShowItems(world.Player);
+                Item item = uni.CurrentMap.GetEntityAt<Item>(uni.Player.Position);
+                bool sucess = ActionManager.PickUp(uni.Player, item);
+                ui.InventoryScreen.ShowItems(uni.Player);
                 Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.Interact, sucess));
                 return sucess;
             }
             if (info.IsKeyPressed(Keys.D))
             {
-                bool sucess = ActionManager.DropTopItemInv(world.Player);
-                ui.InventoryScreen.ShowItems(world.Player);
+                bool sucess = ActionManager.DropTopItemInv(uni.Player);
+                ui.InventoryScreen.ShowItems(uni.Player);
                 Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.Interact, sucess));
                 return sucess;
             }
             if (info.IsKeyPressed(Keys.C))
             {
-                bool sucess = ActionManager.CloseDoor(world.Player);
+                bool sucess = ActionManager.CloseDoor(uni.Player);
                 Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.Interact, sucess));
                 ui.MapWindow.MapConsole.IsDirty = true;
             }
@@ -244,7 +246,7 @@ namespace Diviner
 
                 spell.Show(_getPlayer.Magic.KnowSpells,
                     selectedSpell => _targetCursor.OnSelectSpell(selectedSpell,
-                    (Actor)world.CurrentMap.ControlledEntitiy),
+                    (Actor)uni.CurrentMap.ControlledEntitiy),
                     _getPlayer.Soul.CurrentMana);
 
                 return true;
@@ -297,7 +299,7 @@ namespace Diviner
             }
 
 #if DEBUG
-            if (HandleDebugActions(info, world, ui))
+            if (HandleDebugActions(info, uni, ui))
             {
                 return true;
             }
@@ -308,35 +310,35 @@ namespace Diviner
 
 #if DEBUG
 
-        private static bool HandleDebugActions(Keyboard info, Universe world, UIManager ui)
+        private static bool HandleDebugActions(Keyboard info, Universe uni, UIManager ui)
         {
             if (info.IsKeyPressed(Keys.F10))
             {
                 ActionManager.ToggleFOV();
                 ui.MapWindow.MapConsole.IsDirty = true;
-                int c = world.CurrentMap.PlayerExplored.Count;
+                int c = uni.CurrentMap.PlayerExplored.Count;
                 for (int i = 0; i < c; i++)
                 {
-                    world.CurrentMap.PlayerExplored[i] = true;
+                    uni.CurrentMap.PlayerExplored[i] = true;
                 }
                 return false;
             }
 
             if (info.IsKeyPressed(Keys.F8))
             {
-                world.CurrentMap.ControlledEntitiy.AddComponents(new TestComponent());
+                uni.CurrentMap.ControlledEntitiy.AddComponents(new TestComponent());
                 return false;
             }
 
             if (info.IsKeyPressed(Keys.F6))
             {
-                if (world.CurrentMap.Rooms?.Count > 0)
+                if (uni.CurrentMap.Rooms?.Count > 0)
                 {
-                    foreach (Room room in world.CurrentMap.Rooms)
+                    foreach (Room room in uni.CurrentMap.Rooms)
                     {
                         foreach (Point point in room.RoomPoints)
                         {
-                            world.CurrentMap.SetTerrain(new Tile(Color.ForestGreen,
+                            uni.CurrentMap.SetTerrain(new Tile(Color.ForestGreen,
                                 Color.FloralWhite,
                                 '$',
                                 true,
@@ -359,8 +361,9 @@ namespace Diviner
 
             if (info.IsKeyPressed(Keys.M))
             {
-                ActionManager.ShootProjectile(5000, _getPlayer.Position, DataManager.QueryItemInData("ingot", DataManager.QueryMaterial("iron")), Direction.Left, _getPlayer);
-
+                Item item = DataManager.QueryItemInData("ingot", DataManager.QueryMaterial("iron")!)!;
+                ActionManager.ShootProjectile(5000, _getPlayer.Position, item, Direction.Left, _getPlayer);
+                Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.GetShootingTime(_getPlayer, item.Mass), true));
                 return true;
             }
 
@@ -368,14 +371,14 @@ namespace Diviner
                 && info.IsKeyDown(Keys.LeftShift)
                 && info.IsKeyPressed(Keys.O) && _targetCursor is not null)
             {
-                var (_, actor) = ActionManager.CreateTestEntity(_targetCursor.Cursor.Position, world);
+                var (_, actor) = ActionManager.CreateTestEntity(_targetCursor.Cursor.Position, uni);
                 actor.AddComponents(new MoveAndAttackAI(actor.GetViewRadius()));
                 return false;
             }
 
             if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.O) && _targetCursor is not null)
             {
-                var (_, entity) = ActionManager.CreateTestEntity(_targetCursor.Cursor.Position, world);
+                var (_, entity) = ActionManager.CreateTestEntity(_targetCursor.Cursor.Position, uni);
                 entity.AddComponents(new BasicAi(entity));
                 return false;
             }

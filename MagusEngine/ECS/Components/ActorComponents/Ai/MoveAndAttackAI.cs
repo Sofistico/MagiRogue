@@ -33,7 +33,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.Ai
 
             if (TryGetDirectionMove(map, actor))
             {
-                int walkSpeed = TimeHelper.GetWalkTime(actor, actor.Position);
+                var walkSpeed = TimeHelper.GetWalkTime(actor, actor.Position);
                 return (true, walkSpeed);
             }
             else

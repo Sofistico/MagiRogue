@@ -69,7 +69,7 @@ namespace MagusEngine.ECS.Components.ActorComponents
                     BlinkSpeed = TimeSpan.FromSeconds(0.5),
                     GlyphIndex = TranslateDirToGlyph(),
                     RemoveOnFinished = true,
-                    RestoreCellOnRemoved = true
+                    RestoreCellOnRemoved = true,
                 };
                 Parent.SadCell.AppearanceSingle.Effect = blinkGlyph;
                 blinkGlyph.Restart();

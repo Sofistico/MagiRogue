@@ -53,7 +53,7 @@ namespace MagusEngine.Commands
         /// </summary>
         /// <param name="attacker"></param>
         /// <param name="defender"></param>
-        public static int MeleeAttack(Actor attacker,
+        public static long MeleeAttack(Actor attacker,
             Actor defender,
             Attack? attack = null,
             Limb? limbChoosen = null)
@@ -567,7 +567,7 @@ namespace MagusEngine.Commands
             return commitedToNeed;
         }
 
-        public static int Wander(Actor actor)
+        public static long Wander(Actor actor)
         {
             int tries = 0;
             bool tileIsInvalid;
