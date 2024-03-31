@@ -465,8 +465,8 @@ namespace MagusEngine.Systems
                 force);
             projectile.AddComponent(projectileComp, ProjectileComp.Tag);
             projectileComp.UpdatePath(shooter.CurrentMagiMap);
-            Find.Universe.Time.RegisterNode(new ComponentTimeNode((long)time, projectile.ID, projectileComp.Travel));
             Locator.GetService<MessageBusService>().SendMessage<AddEntitiyCurrentMap>(new(projectile));
+            Locator.GetService<MessageBusService>().SendMessage<AddTurnNode<ComponentTimeNode>>(new(new ComponentTimeNode(time, projectile.ID, projectileComp.Travel)));
         }
 
         public static void HitProjectile(MagiEntity? parent, double force, bool ignoresObstacles)

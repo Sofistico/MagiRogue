@@ -36,7 +36,7 @@ namespace MagusEngine.Systems
         ISubscriber<AddEntitiyCurrentMap>,
         ISubscriber<ProcessTurnEvent>,
         ISubscriber<RemoveEntitiyCurrentMap>,
-        ISubscriber<AddEntityTurnNode>
+        ISubscriber<AddTurnNode<ITimeNode>>
     {
         /// <summary>
         /// The World map, contains the map data and the Planet data
@@ -335,6 +335,7 @@ namespace MagusEngine.Systems
                         Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("Something went really wrong with the processing of the AI"));
                         break;
                     }
+                    Locator.GetService<MessageBusService>().SendMessage<MapConsoleIsDirty>();
                 }
 #if DEBUG
                 Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"Turns: {Time.Turns}, Tick: {Time.TimePassed.Ticks}"));
@@ -349,7 +350,12 @@ namespace MagusEngine.Systems
         {
             var nextInvoke = componentTurn.Action.Invoke();
             if (nextInvoke > 0)
-                Time.RegisterNode(new ComponentTimeNode(Time.GetTimePassed(nextInvoke), componentTurn.Id, componentTurn.Action));
+                AddComponentToTime(componentTurn, nextInvoke);
+        }
+
+        private void AddComponentToTime(ComponentTimeNode componentTurn, long ticks)
+        {
+            Time.RegisterNode(new ComponentTimeNode(Time.GetTimePassed(ticks), componentTurn.Id, componentTurn.Action));
         }
 
         private IEnumerable<Actor> GetEntitiesIds()
@@ -515,9 +521,18 @@ namespace MagusEngine.Systems
             ChangeControlledEntity(message.ControlledEntitiy);
         }
 
-        public void Handle(AddEntityTurnNode message)
+        public void Handle(AddTurnNode<ITimeNode> message)
         {
-            AddEntityToTime(message.EntityId, message.Ticks);
+            switch (message.Node)
+            {
+                case EntityTimeNode:
+                    AddEntityToTime(message.Node.Id, message.Node.Tick);
+                    break;
+
+                case ComponentTimeNode component:
+                    AddComponentToTime(component, component.Tick);
+                    break;
+            }
         }
 
         ~Universe()

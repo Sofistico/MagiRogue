@@ -83,7 +83,6 @@ namespace MagusEngine.ECS.Components.ActorComponents
                 Parent?.RemoveComponent(Tag);
                 return 0;
             }
-            Locator.GetService<MessageBusService>().SendMessage<MapConsoleIsDirty>();
 
             return TicksToMoveOneStep;
         }
