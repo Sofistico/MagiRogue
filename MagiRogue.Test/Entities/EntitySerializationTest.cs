@@ -66,7 +66,7 @@ namespace MagiRogue.Test.Entities
                 "Test",
                 Sex.None,
                 "new_wiz");
-            var eyes = playa.GetAnatomy().Organs.FindAll(i => i.OrganType is OrganType.Visual);
+            var eyes = playa.ActorAnatomy.Organs.FindAll(i => i.OrganType is OrganType.Visual);
             foreach (var item in eyes)
             {
                 item.Working = false;
@@ -74,7 +74,7 @@ namespace MagiRogue.Test.Entities
             var json = JsonConvert.SerializeObject(playa);
             var deserialized = JsonConvert.DeserializeObject<Actor>(json);
 
-            Assert.False(deserialized.GetAnatomy().CanSee);
+            Assert.False(deserialized.ActorAnatomy.CanSee);
         }
 
         [Fact]
@@ -88,7 +88,7 @@ namespace MagiRogue.Test.Entities
             var json = JsonConvert.SerializeObject(playa);
             var deserialized = JsonConvert.DeserializeObject<Actor>(json);
 
-            Assert.True(deserialized.GetAnatomy().CanSee);
+            Assert.True(deserialized.ActorAnatomy.CanSee);
         }
     }
 }

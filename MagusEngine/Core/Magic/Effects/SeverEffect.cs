@@ -42,16 +42,16 @@ namespace MagusEngine.Core.Magic.Effects
             Actor? poorGuy = Find.CurrentMap?.GetEntityAt<Actor>(target);
             int luck = GoRogue.DiceNotation.Dice.Roll($"{spellCasted.SpellLevel}d{spellCasted.Power}");
 
-            if (poorGuy?.GetAnatomy().Limbs.Count > 0
+            if (poorGuy?.ActorAnatomy.Limbs.Count > 0
                 && MagicManager.PenetrateResistance(spellCasted, caster, poorGuy, luck))
             {
                 var rng = GoRogue.Random.GlobalRandom.DefaultRNG;
-                int i = rng.NextInt(poorGuy.GetAnatomy().Limbs.Count);
+                int i = rng.NextInt(poorGuy.ActorAnatomy.Limbs.Count);
 
-                Limb limbToLose = poorGuy.GetAnatomy().Limbs[i];
+                Limb limbToLose = poorGuy.ActorAnatomy.Limbs[i];
 
                 Wound injury = new(GetDamageType(), limbToLose.Tissues);
-                poorGuy.GetAnatomy().Injury(injury, limbToLose, poorGuy);
+                poorGuy.ActorAnatomy.Injury(injury, limbToLose, poorGuy);
 
                 if (poorGuy is not null)
                 {

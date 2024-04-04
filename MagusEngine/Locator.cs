@@ -7,7 +7,7 @@ namespace MagusEngine
 {
     public static class Locator
     {
-        private static readonly Dictionary<Type, object> _services = [];
+        private static readonly Dictionary<Type, object> _services = InitializeSingletonServices();
 
         public static object? GetService(Type serviceType)
         {
@@ -29,12 +29,15 @@ namespace MagusEngine
             _services[type] = instance;
         }
 
-        public static void InitializeSingletonServices()
+        private static Dictionary<Type, object> InitializeSingletonServices()
         {
-            AddService<MessageBusService>(new());
-            AddService<IDGenerator>(new());
-            AddService<SavingService>(new());
-            AddService(new MagiLog());
+            return new()
+            {
+                { typeof(MessageBusService), new MessageBusService() },
+                { typeof(IDGenerator), new IDGenerator() },
+                { typeof(SavingService), new SavingService() },
+                { typeof(MagiLog), new MagiLog() }
+            };
         }
     }
 }

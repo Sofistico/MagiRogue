@@ -119,7 +119,7 @@ namespace MagusEngine.Core.WorldStuff.History
             figure.SpecialFlags.Add(SpecialFlag.Supernatural);
             figure.SpecialFlags.Add(SpecialFlag.Magical);
             figure.SpecialFlags.Add(SpecialFlag.Sapient);
-            figure.GetAnatomy().Ages = false;
+            figure.HfAnatomy.Ages = false;
             return figure;
         }
 

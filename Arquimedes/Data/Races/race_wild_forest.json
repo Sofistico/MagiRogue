@@ -1,5 +1,4 @@
 ﻿[
-
   {
     "Id": "deer",
     "RaceName": "Deer",
@@ -44,7 +43,8 @@
       {
         "Selector": [ { "Genders": "Male" } ],
         "Change": "BodyPlan",
-        "To": [ "quadruped_hoof", "animal_tail", "humanoid_organs", "2head_horns" ]
+        "To": [ "2head_horns" ],
+        "Context": "Add"
       },
       {
         "Selector": [ { "Genders": "Male" } ],

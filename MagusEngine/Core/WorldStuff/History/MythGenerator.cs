@@ -68,7 +68,7 @@ namespace MagusEngine.Core.WorldStuff.History
                 HistoricalFigure createdFigure = newMyth.CreateFigureFromMyth(figures[0].Name);
                 if (createdFigure is not null)
                 {
-                    createdFigure.GetAnatomy().Ages = false;
+                    createdFigure.HfAnatomy.Ages = false;
 
                     figures[0].AddRelatedHf(createdFigure.Id, HfRelationType.Creator);
                     figures.Add(createdFigure);
@@ -250,7 +250,7 @@ namespace MagusEngine.Core.WorldStuff.History
             Legend legend = Legend.CreateLegendFromMyth(myth, ref precursorFigure, worldName: planetName);
             precursorFigure.AddLegend(legend);
             precursorFigure.MythWho = precursor;
-            precursorFigure.GetAnatomy().Ages = false;
+            precursorFigure.HfAnatomy.Ages = false;
 
             if (createdRace)
             {

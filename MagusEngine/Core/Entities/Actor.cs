@@ -47,6 +47,8 @@ namespace MagusEngine.Core.Entities
         /// </summary>
         public Body Body { get; set; }
 
+        public Anatomy ActorAnatomy => Body.Anatomy;
+
         /// <summary>
         /// Sets if the char has bumbed in something
         /// </summary>
@@ -59,7 +61,7 @@ namespace MagusEngine.Core.Entities
         public List<Item> Inventory { get; set; }
 
         public bool IsPlayer { get; set; }
-        public List<SpecialFlag> Flags { get => GetAnatomy().Race.Flags; }
+        public List<SpecialFlag> Flags { get => ActorAnatomy.Race.Flags; }
 
         /// <summary>
         /// The current state of the actor, should be usd to track multi turns stuff
@@ -191,7 +193,7 @@ namespace MagusEngine.Core.Entities
         {
             if (!Body.Anatomy.HasAnyHands)
                 return null;
-            return Body?.Equipment!.GetValueOrDefault(GetAnatomy().Limbs.Find(l =>
+            return Body?.Equipment!.GetValueOrDefault(ActorAnatomy.Limbs.Find(l =>
                 l.BodyPartFunction == BodyPartFunction.Grasp)?.Id, null);
         }
 
@@ -202,7 +204,7 @@ namespace MagusEngine.Core.Entities
             List<Item> items = new();
             foreach (var item in Body.Equipment)
             {
-                var limb = GetAnatomy().Limbs.Find(i => i.Id.Equals(item.Key));
+                var limb = ActorAnatomy.Limbs.Find(i => i.Id.Equals(item.Key));
                 if (limb?.BodyPartFunction == BodyPartFunction.Grasp
                     && item.Value.EquipType == EquipType.Held)
                 {
@@ -226,7 +228,7 @@ namespace MagusEngine.Core.Entities
         {
             if (attack.LimbFunction is not null)
             {
-                return GetAnatomy().AllBPs.FindAll(i =>
+                return ActorAnatomy.AllBPs.FindAll(i =>
                     i.BodyPartFunction == attack.LimbFunction)
                     .GetRandomItemFromList();
             }
@@ -250,7 +252,7 @@ namespace MagusEngine.Core.Entities
 
         public bool CheckIfDed()
         {
-            return !GetAnatomy().EnoughBodyToLive();
+            return !ActorAnatomy.EnoughBodyToLive();
         }
 
         #endregion Utils
@@ -266,8 +268,8 @@ namespace MagusEngine.Core.Entities
 
         public void ApplyBodyRegen()
         {
-            bool regens = GetAnatomy().Race.CanRegenarate();
-            var limbsHeal = GetAnatomy().Limbs.FindAll(i => i.NeedsHeal || (regens && !i.Attached));
+            bool regens = ActorAnatomy.Race.CanRegenarate();
+            var limbsHeal = ActorAnatomy.Limbs.FindAll(i => i.NeedsHeal || (regens && !i.Attached));
             int limbCount = limbsHeal.Count;
             for (int i = 0; i < limbCount; i++)
             {
@@ -277,7 +279,7 @@ namespace MagusEngine.Core.Entities
                     limb.ApplyHeal(GetNormalLimbRegen(), regens);
                 if (regens && !limb.Attached)
                 {
-                    List<Limb> connectedLimbs = GetAnatomy().GetAllParentConnectionLimb(limb);
+                    List<Limb> connectedLimbs = ActorAnatomy.GetAllParentConnectionLimb(limb);
                     if (connectedLimbs.All(i => i.Attached))
                     {
                         limb.ApplyHeal(GetNormalLimbRegen(), regens);
@@ -315,9 +317,9 @@ namespace MagusEngine.Core.Entities
 
         public double GetBloodCoagulation()
         {
-            if (GetAnatomy().HasBlood)
+            if (ActorAnatomy.HasBlood)
             {
-                return GetAnatomy().Race.BleedRegenaration + (Body.Toughness * 0.2);
+                return ActorAnatomy.Race.BleedRegenaration + (Body.Toughness * 0.2);
             }
             return 0;
         }
@@ -327,13 +329,11 @@ namespace MagusEngine.Core.Entities
             return Soul.BaseManaRegen;
         }
 
-        public Anatomy GetAnatomy() => Body.Anatomy;
-
         public Dictionary<string, Item> GetEquipment() => Body.Equipment;
 
         public double GetStaminaRegen()
         {
-            return Body.StaminaRegen * GetAnatomy().FitLevel;
+            return Body.StaminaRegen * ActorAnatomy.FitLevel;
         }
 
         public double GetActorSpeed()
@@ -421,7 +421,7 @@ namespace MagusEngine.Core.Entities
 
         public Sex GetGender()
         {
-            return GetAnatomy().Gender;
+            return ActorAnatomy.Gender;
         }
 
         public Actor WithComponents(params object[] objs)
@@ -451,7 +451,7 @@ namespace MagusEngine.Core.Entities
 
         public override int GetMagicResistance()
         {
-            return GetRelevantAbility(AbilityCategory.MagicResistance) + GetAnatomy().Race.BaseMagicResistance;
+            return GetRelevantAbility(AbilityCategory.MagicResistance) + ActorAnatomy.Race.BaseMagicResistance;
         }
 
         public override int GetPenetration()
@@ -554,12 +554,12 @@ namespace MagusEngine.Core.Entities
 
         public List<Attack> GetRaceAttacks()
         {
-            return GetAnatomy().Race.Attacks;
+            return ActorAnatomy.Race.Attacks;
         }
 
         public void UpdateBody()
         {
-            var anatomy = GetAnatomy();
+            var anatomy = ActorAnatomy;
             if (anatomy.BloodCount <= 0)
                 ActionManager.ResolveDeath(this);
             ApplyAllRegen();

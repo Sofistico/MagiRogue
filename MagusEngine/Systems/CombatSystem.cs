@@ -87,7 +87,7 @@ namespace MagusEngine.Systems
         private static void ApplyWoundsToActor(Actor actor, DamageType dmgType, List<PartWound> woundParts, BodyPart? limbAttacked)
         {
             Wound woundTaken = new(dmgType, woundParts);
-            actor.GetAnatomy().Injury(woundTaken, limbAttacked!, actor);
+            actor.ActorAnatomy.Injury(woundTaken, limbAttacked!, actor);
         }
 
         private static void SendWoundMessages(List<PartWound> woundParts)
@@ -363,7 +363,7 @@ namespace MagusEngine.Systems
             string verb = firstPerson ? attack.AttackVerb[0] : attack.AttackVerb[1];
             string with = attack?.AttacksUsesLimbName == true ? firstPerson
                     ? $" with your {bpAttacking.BodyPartName}"
-                    : $" with {attacker.GetAnatomy().Pronoum()} {bpAttacking.BodyPartName}"
+                    : $" with {attacker.ActorAnatomy.Pronoum()} {bpAttacking.BodyPartName}"
                 : "";
 
             attackMessage.AppendFormat("{0} {1} the {2}{3}", person, verb, defender.Name, with);
@@ -380,7 +380,7 @@ namespace MagusEngine.Systems
                 defender.GetDefenseAbility()
                 + Mrn.Exploding2D6Dice)
             {
-                limbAttacked ??= defender.GetAnatomy().GetRandomLimb();
+                limbAttacked ??= defender.ActorAnatomy.GetRandomLimb();
                 return (true, limbAttacked, bpAttacking, attack!.DamageType, wieldedItem, materialUsed);
             }
             else

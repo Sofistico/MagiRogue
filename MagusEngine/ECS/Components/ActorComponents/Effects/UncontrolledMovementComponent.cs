@@ -38,7 +38,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.Effects
                     ?? throw new ApplicationException("The tile was null can't push!");
                 // is this enough?
                 if (Parent is Actor actor)
-                    bp = actor.GetAnatomy().Limbs.GetRandomItemFromList();
+                    bp = actor.ActorAnatomy.Limbs.GetRandomItemFromList();
                 if (currentTile?.IsWalkable == false)
                 {
                     damage *= currentTile.Material.Density ?? 1; // massive damage by hitting a wall, multiplied by something i dunno

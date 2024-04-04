@@ -14,7 +14,6 @@ namespace MagiRogue.Test.Data
         public RoomTemplateTest()
         {
             room = DataManager.QueryRoomInData("room_city1");
-            Locator.InitializeSingletonServices();
         }
 
         [Fact]

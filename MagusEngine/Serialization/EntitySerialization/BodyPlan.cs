@@ -59,6 +59,7 @@ namespace MagusEngine.Serialization.EntitySerialization
                     tissueGroup?.Tissues?.ForEach(i => _raceTissue?.TryAdd(i.Id, i));
                     if (tissueGroup?.TissueLayering?.Count > 0)
                     {
+                        // why is it locked?
                         lock (_lockObj)
                         {
                             _raceTissueLayering?.AddRange(tissueGroup.TissueLayering);
@@ -72,17 +73,13 @@ namespace MagusEngine.Serialization.EntitySerialization
                 Limb? limb = DataManager.QueryLimbInData(bp);
                 Organ? organ = DataManager.QueryOrganInData(bp);
                 if (limb is not null)
-                {
                     returnParts.Add(limb);
-                }
                 if (organ is not null)
-                {
                     returnParts.Add(organ);
-                }
                 if (limb is null && organ is null)
                     throw new ApplicationException($"Coudn't find a valid body part! bodypart id: {bp}");
 
-                if (_raceTissueLayering.Count > 0 && !_raceTissue.IsEmpty)
+                if (_raceTissueLayering?.Count > 0 && !_raceTissue.IsEmpty)
                 {
                     SetBodyPartTissueLayering((BodyPart?)limb ?? organ!);
                 }

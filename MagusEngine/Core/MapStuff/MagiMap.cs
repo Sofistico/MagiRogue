@@ -420,7 +420,7 @@ namespace MagusEngine.Core.MapStuff
         private void FovCalculate(Actor actor)
         {
             /*if (PlayerFOV.CurrentFOV.Count() >= actor.Stats.ViewRadius)*/
-            if (actor.GetAnatomy().CanSee)
+            if (actor.ActorAnatomy.CanSee)
             {
                 PlayerFOV.Calculate(actor.Position, actor.GetViewRadius(), Radius.Circle);
                 FOVRecalculated?.Invoke(this, EventArgs.Empty);

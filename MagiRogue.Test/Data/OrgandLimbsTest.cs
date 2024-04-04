@@ -106,20 +106,20 @@ namespace MagiRogue.Test.Data
         public void RegenActorLostLimb()
         {
             Actor actor = EntityFactory.ActorCreator(Point.None, "test_race", "test dummy", 20, Sex.None);
-            var arms = actor.GetAnatomy().Limbs.FindAll(l => l.LimbType is LimbType.Arm);
+            var arms = actor.ActorAnatomy.Limbs.FindAll(l => l.LimbType is LimbType.Arm);
             foreach (var arm in arms)
             {
-                actor.GetAnatomy().Injury(new Wound(DataManager.QueryDamageInData("sharp"), arm.Tissues), arm, actor);
+                actor.ActorAnatomy.Injury(new Wound(DataManager.QueryDamageInData("sharp"), arm.Tissues), arm, actor);
             }
             bool healing = true;
             while (healing)
             {
                 actor.ApplyAllRegen();
-                if (actor.GetAnatomy().Limbs.All(i => i.Attached))
+                if (actor.ActorAnatomy.Limbs.All(i => i.Attached))
                     healing = false;
             }
 
-            Assert.True(actor.GetAnatomy().Limbs.All(i => i.Attached));
+            Assert.True(actor.ActorAnatomy.Limbs.All(i => i.Attached));
         }
 
         [Fact]
@@ -136,7 +136,14 @@ namespace MagiRogue.Test.Data
         public void CustomSelectorCode()
         {
             var wildMaleDeer = EntityFactory.ActorCreator(Point.Zero, "deer", "Test Deer", 10, Sex.Male);
-            Assert.Contains(wildMaleDeer.GetAnatomy().Limbs, i => i.BodyPartName.Contains("Horn"));
+            Assert.Contains(wildMaleDeer.ActorAnatomy.Limbs, i => i.BodyPartName.Contains("Horn"));
+        }
+
+        [Fact]
+        public void DeerLosingTeeth()
+        {
+            var wildMaleDeer = EntityFactory.ActorCreator(Point.Zero, "deer", "Test Deer", 10, Sex.Male);
+            Assert.Contains(wildMaleDeer.ActorAnatomy.AllBPs, i => i.BodyPartFunction == BodyPartFunction.Teeth);
         }
     }
 }

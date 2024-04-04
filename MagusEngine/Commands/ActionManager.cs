@@ -61,7 +61,7 @@ namespace MagusEngine.Commands
             if (!defender.CanBeAttacked)
                 return 0;
 
-            if (!attacker.GetAnatomy().HasAnyRaceAttack)
+            if (!attacker.ActorAnatomy.HasAnyRaceAttack)
             {
                 attack = Attack.PushAttack();
             }
@@ -329,7 +329,7 @@ namespace MagusEngine.Commands
         //    if (actor.Soul.CurrentMana != maxMana)
         //    {
         //        //actor.Anatomy.Health -= 1;
-        //        actor.GetAnatomy().BloodCount -= 100f;
+        //        actor.Anatomy.BloodCount -= 100f;
         //        int roll = Dice.Roll("1d3");
         //        float bloodyManaGained = float.Parse($"0.{roll}", CultureInfo.InvariantCulture.NumberFormat);
         //        actor.Soul.CurrentMana = MathMagi.Round(actor.Soul.CurrentMana + bloodyManaGained);
@@ -535,7 +535,7 @@ namespace MagusEngine.Commands
 
         public static Need? FindFood(Actor actor, MagiMap map)
         {
-            var whatToEat = actor.GetAnatomy().WhatToEat();
+            var whatToEat = actor.ActorAnatomy.WhatToEat();
             var foodItem = map.FindTypeOfFood(whatToEat, actor);
             Need? commitedToNeed = null;
             if (foodItem is null)
@@ -644,7 +644,7 @@ namespace MagusEngine.Commands
                         continue;
                     // ignore if it's the same species
                     // TODO: Implement eater of same species
-                    if (danger.GetAnatomy().RaceId.Equals(actor.GetAnatomy().RaceId))
+                    if (danger.ActorAnatomy.RaceId.Equals(actor.ActorAnatomy.RaceId))
                         continue;
                     if (!actor.CanSee(danger.Position))
                         continue;

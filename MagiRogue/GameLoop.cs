@@ -25,7 +25,6 @@ public static class GameLoop
     {
         ConfigureBeforeCreateGame(args);
 
-        ConfigureServices();
         // Setup the engine and create the main window.
         var config = new Builder()
             .SetScreenSize(GameWidth, GameHeight)
@@ -37,11 +36,6 @@ public static class GameLoop
         Game.Instance.Run();
         // Code here will not run until the game window closes.
         Game.Instance.Dispose();
-    }
-
-    private static void ConfigureServices()
-    {
-        Locator.InitializeSingletonServices();
     }
 
     // runs each frame

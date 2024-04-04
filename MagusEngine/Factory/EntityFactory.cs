@@ -100,7 +100,7 @@ namespace MagusEngine.Factory
         {
             Scenario scenario = DataManager.QueryScenarioInData(scenarioId)
                 ?? throw new ApplicationException($"Scenario {scenarioId} was null!");
-            actor.GetAnatomy().Gender = sex;
+            actor.ActorAnatomy.Gender = sex;
             SetupScenarioStats(scenario, actor);
             SetupAbilities(actor, scenario.Abilities);
             SetupScenarioMagic(actor, scenario);
@@ -143,7 +143,7 @@ namespace MagusEngine.Factory
         private static void SetupScenarioStats(Scenario scenario, Actor actor)
         {
             Body body = actor.Body;
-            Anatomy anatomy = actor.GetAnatomy();
+            Anatomy anatomy = actor.ActorAnatomy;
             Mind mind = actor.Mind;
             Soul soul = actor.Soul;
 
@@ -163,7 +163,7 @@ namespace MagusEngine.Factory
             mind.Precision += scenario.Precision;
 
             soul.WillPower += scenario.WillPower;
-            soul.InitialMana(mind.Inteligence, actor.GetAnatomy().Race);
+            soul.InitialMana(mind.Inteligence, actor.ActorAnatomy.Race);
             soul.MaxMana += scenario.MaxMana;
             soul.CurrentMana = soul.MaxMana;
             soul.BaseManaRegen += scenario.ManaRegen;
@@ -186,7 +186,7 @@ namespace MagusEngine.Factory
         private static void SetupBodySoulAndMind(Race race, Actor actor, int actorAge, Sex sex)
         {
             Body body = actor.Body;
-            Anatomy anatomy = actor.GetAnatomy();
+            Anatomy anatomy = actor.ActorAnatomy;
             MagicManager magic = actor.Magic;
             Mind mind = actor.Mind;
             Soul soul = actor.Soul;

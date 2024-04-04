@@ -40,7 +40,6 @@ namespace MagiRogue.Test.System
             uni = new(new PlanetMap(50, 50), null, null,
                 new TimeSystem(10), true,
                 SeasonType.Spring, chunck);
-            Locator.InitializeSingletonServices();
             PrepareForChunkTest();
         }
 

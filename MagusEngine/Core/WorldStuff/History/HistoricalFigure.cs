@@ -79,6 +79,8 @@ namespace MagusEngine.Core.WorldStuff.History
 
         public Point CurrentPos { get; private set; }
 
+        public Anatomy HfAnatomy => Body.Anatomy;
+
         #endregion Props
 
         #region Ctor
@@ -104,8 +106,8 @@ namespace MagusEngine.Core.WorldStuff.History
             IsAlive = isAlive;
             Description = desc;
             Id = SequentialIdGenerator.HistoricalFigureId;
-            GetAnatomy().RaceId = raceId;
-            GetAnatomy().Gender = hFGender;
+            HfAnatomy.RaceId = raceId;
+            HfAnatomy.Gender = hFGender;
         }
 
         public HistoricalFigure(string name, string description, Sex hFGender, string race, bool isAlive)
@@ -113,8 +115,8 @@ namespace MagusEngine.Core.WorldStuff.History
             Name = name;
             Description = description;
             HFGender = hFGender;
-            GetAnatomy().RaceId = race;
-            GetAnatomy().Gender = hFGender;
+            HfAnatomy.RaceId = race;
+            HfAnatomy.Gender = hFGender;
             IsAlive = isAlive;
             Id = SequentialIdGenerator.HistoricalFigureId;
         }
@@ -743,19 +745,14 @@ namespace MagusEngine.Core.WorldStuff.History
 
         internal bool CheckIfIsChildOrBabyForRace()
         {
-            var group = GetRace().GetAgeGroup(GetAnatomy().CurrentAge, GetAnatomy().Ages);
+            var group = GetRace().GetAgeGroup(HfAnatomy.CurrentAge, HfAnatomy.Ages);
             return group is AgeGroup.Baby || group is AgeGroup.Child;
-        }
-
-        public Anatomy GetAnatomy()
-        {
-            return Body.Anatomy;
         }
 
         public void SetBasicAnatomy()
         {
             SetStandardRaceFlags();
-            GetAnatomy().BasicSetup();
+            HfAnatomy.BasicSetup();
         }
 
         public bool CheckForWanderlust()
@@ -827,12 +824,12 @@ namespace MagusEngine.Core.WorldStuff.History
             }
         }
 
-        public string GetRaceId() => GetAnatomy().RaceId;
+        public string GetRaceId() => HfAnatomy.RaceId;
 
         internal void SetRace(Race figureRace)
         {
-            GetAnatomy().Race = figureRace;
-            GetAnatomy().RaceId = figureRace.Id;
+            HfAnatomy.Race = figureRace;
+            HfAnatomy.RaceId = figureRace.Id;
         }
     }
 }

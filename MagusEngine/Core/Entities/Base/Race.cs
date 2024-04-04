@@ -239,18 +239,18 @@ namespace MagusEngine.Core.Entities.Base
                     var selector = obj["Selector"].ToArray();
                     var change = obj["Change"];
                     var to = obj["To"].ToArray();
+                    var extraContext = obj["Context"]?.ToString();
                     if (ActorSatisfiesSelector(actor, selector, out var context))
                     {
-                        SatisfyChange(change, to, context);
+                        SatisfyChange(change, to, context, extraContext);
                     }
                 }
             }
         }
 
-        private void SatisfyChange(JToken? change, JToken[] to, string? context)
+        private void SatisfyChange(JToken? change, JToken[] to, string? context, string? extraContext)
         {
-            if (change?.ToString()?.Equals("BodyPlan") == true
-                )
+            if (change?.ToString()?.Equals("BodyPlan") == true)
             {
                 var strs = new string[to.Length];
                 for (int i = 0; i < to.Length; i++)
@@ -258,12 +258,27 @@ namespace MagusEngine.Core.Entities.Base
                     JToken? item = to[i];
                     strs[i] = item.ToString();
                 }
-                BodyPlan = [.. strs];
+                if (extraContext?.Equals("Add") == true)
+                {
+                    var newArr = new string[BodyPlan.Length + strs.Length];
+                    for (int i = 0; i < newArr.Length; i++)
+                    {
+                        if(i < BodyPlan.Length)
+                            newArr[i] = BodyPlan[i];
+                        else
+                            newArr[i] = strs[i - BodyPlan.Length];
+                    }
+                    BodyPlan = newArr;
+                }
+                else
+                {
+                    BodyPlan = strs;
+                }
+
                 SetBodyPlan();
                 return;
             }
-            if (change.ToString().Equals("LastBodyPartName")
-                && !string.IsNullOrEmpty(context))
+            if (change?.ToString()?.Equals("LastBodyPartName") == true && !string.IsNullOrEmpty(context))
             {
                 var limbs = bodyParts.OfType<Limb>().Where(i => i.LimbType == Enum.Parse<LimbType>(context)).ToArray();
                 for (int i = 0; i < limbs.Length; i++)
@@ -277,6 +292,7 @@ namespace MagusEngine.Core.Entities.Base
                 Attacks.AddRange(JsonConvert.DeserializeObject<List<Attack>>(context));
                 return;
             }
+            return;
         }
 
         private bool ActorSatisfiesSelector(Actor actor, JToken[] selector, out string? context)
@@ -291,13 +307,10 @@ namespace MagusEngine.Core.Entities.Base
                     satisfyCount++;
                     continue;
                 }
-                if (item["LimbType"] is not null
-                    && Enum.TryParse<LimbType>(item["LimbType"]?.ToString(), out var resut)
-                    && bodyParts.OfType<Limb>().Any(i => i.LimbType == resut))
+                if (item["LimbType"] is not null && Enum.TryParse<LimbType>(item["LimbType"]?.ToString(), out var resut) && bodyParts.OfType<Limb>().Any(i => i.LimbType == resut))
                 {
                     satisfyCount++;
                     context = resut.ToString();
-                    continue;
                 }
             }
 

@@ -127,7 +127,7 @@ namespace MagusEngine.Core.Entities
                 return false;
             }
 
-            if (!actor.GetEquipment().TryAdd(actor.GetAnatomy().Limbs.Find(l => l.LimbType.ToString() == EquipType.ToString()).Id, this))
+            if (!actor.GetEquipment().TryAdd(actor.ActorAnatomy.Limbs.Find(l => l.LimbType.ToString() == EquipType.ToString()).Id, this))
             {
                 Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{actor.Name} has already an item equiped in addHere!"));
                 return false;
