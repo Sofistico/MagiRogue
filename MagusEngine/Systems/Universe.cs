@@ -36,7 +36,7 @@ namespace MagusEngine.Systems
         ISubscriber<AddEntitiyCurrentMap>,
         ISubscriber<ProcessTurnEvent>,
         ISubscriber<RemoveEntitiyCurrentMap>,
-        ISubscriber<AddTurnNode<ITimeNode>>
+        ISubscriber<AddTurnNode>
     {
         /// <summary>
         /// The World map, contains the map data and the Planet data
@@ -322,7 +322,6 @@ namespace MagusEngine.Systems
 
                         case ComponentTimeNode componentTurn:
                             ProcessComponentTurn(componentTurn);
-                            Task.Delay(100).Wait();
                             break;
 
                         default:
@@ -521,7 +520,7 @@ namespace MagusEngine.Systems
             ChangeControlledEntity(message.ControlledEntitiy);
         }
 
-        public void Handle(AddTurnNode<ITimeNode> message)
+        public void Handle(AddTurnNode message)
         {
             switch (message.Node)
             {

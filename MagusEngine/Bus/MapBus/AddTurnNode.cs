@@ -2,11 +2,11 @@
 
 namespace MagusEngine.Bus.MapBus
 {
-    public class AddTurnNode<T> where T : ITimeNode
+    public class AddTurnNode
     {
-        public T Node { get; set; }
+        public ITimeNode Node { get; set; }
 
-        public AddTurnNode(T node)
+        public AddTurnNode(ITimeNode node)
         {
             Node = node;
         }
