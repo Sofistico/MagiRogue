@@ -3,6 +3,7 @@ using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Entities.Interfaces;
 using MagusEngine.Core.WorldStuff.History;
+using MagusEngine.Serialization;
 using MagusEngine.Serialization.EntitySerialization;
 using MagusEngine.Services;
 using MagusEngine.Systems;
@@ -73,6 +74,7 @@ namespace MagusEngine.Core.Entities
         public int Coverage { get; set; }
         public Trait? MaterialTrait { get; set; }
         public MaterialType? MaterialType { get; set; }
+        public string ObjectName { get; set; }
 
         // By default, a new Item is sized 1x1, with a weight of 1, and at 100% condition
         public Item(Color foreground, Color background, string name, int glyph, Point coord, int volume,
@@ -82,8 +84,9 @@ namespace MagusEngine.Core.Entities
         {
             Volume = volume;
             Condition = condition;
+            ObjectName = name;
             if (!materialId.IsNullOrEmpty())
-                ConfigureMaterial(name, materialId);
+                ConfigureMaterial(materialId);
             else
                 Name = name;
             UseAction = [];
@@ -93,16 +96,22 @@ namespace MagusEngine.Core.Entities
             Attacks = [];
         }
 
-        public Item ConfigureMaterial(string name, string materialId) => ConfigureMaterial(name, DataManager.QueryMaterial(materialId));
+        public Item ConfigureMaterial(string materialId) => ConfigureMaterial(ObjectName, DataManager.QueryMaterial(materialId));
 
-        public Item ConfigureMaterial(string name, Material? material)
+        public Item ConfigureMaterial(string name, Material material, bool resetColor = false)
         {
+            ArgumentNullException.ThrowIfNull(material);
             Material = material;
             Name = Material?.ReturnNameFromMaterial(name) ?? "BUGGED!";
+            if (SadCell is not null && resetColor)
+            {
+                MagiColorSerialization foreground = new(material.Color);
+                SadCell.AppearanceSingle!.Appearance.Foreground = foreground.Color;
+            }
             return this;
         }
 
-        public Item ConfigureMaterial(Material? material) => ConfigureMaterial(Name, material);
+        public Item ConfigureMaterial(Material? material) => ConfigureMaterial(ObjectName, material, true);
 
         public bool Equip(Actor actor)
         {
