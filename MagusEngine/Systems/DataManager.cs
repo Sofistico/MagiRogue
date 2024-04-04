@@ -80,19 +80,7 @@ namespace MagusEngine.Systems
 
         #endregion jsons
 
-        private static Dictionary<string, T> GetSourceTreeDict<T>(string wildCard) where T : IJsonKey
-        {
-            string[] files = FileUtils.GetFiles(wildCard);
-
-            List<List<T>> listTList = [];
-
-            for (int i = 0; i < files.Length; i++)
-            {
-                var tList = JsonUtils.JsonDeseralize<List<T>>(files[i])!;
-                listTList.Add(tList);
-            }
-            return listTList.ReturnListListTAsListT().ToDictionary(val => val.Id);
-        }
+        private static Dictionary<string, T> GetSourceTreeDict<T>(string wildCard) where T : IJsonKey => GetSourceTreeList<T>(wildCard).ToDictionary(val => val.Id);
 
         private static List<T> GetSourceTreeList<T>(string wildCard)
         {
