@@ -1,5 +1,6 @@
 ﻿using GoRogue.Messaging;
 using System;
+using System.Diagnostics;
 
 namespace MagusEngine.Services
 {
@@ -12,16 +13,19 @@ namespace MagusEngine.Services
             _messageBus = new();
         }
 
+        [DebuggerStepThrough]
         public void SendMessage(object obj)
         {
             _messageBus.Send(obj);
         }
 
+        [DebuggerStepThrough]
         public void SendMessage<T>(T obj) where T : notnull
         {
             _messageBus.Send(obj);
         }
 
+        [DebuggerStepThrough]
         public void SendMessage<T>() where T : notnull, new()
         {
             var instance = Activator.CreateInstance(typeof(T));
