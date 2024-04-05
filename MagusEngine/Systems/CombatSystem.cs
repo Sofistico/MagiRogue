@@ -346,8 +346,7 @@ namespace MagusEngine.Systems
         /// <param name="attackMessage"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">throws if the attack is null</exception>
-        public static (bool, BodyPart?, BodyPart, DamageType?, Item?, Material) ResolveHit(
-            Actor attacker,
+        public static (bool, BodyPart?, BodyPart, DamageType?, Item?, Material) ResolveHit(Actor attacker,
             Actor defender,
             StringBuilder attackMessage,
             Attack attack,
