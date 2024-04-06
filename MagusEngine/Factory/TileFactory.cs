@@ -63,9 +63,9 @@ namespace MagusEngine.Factory
             return GenericStoneWall(Point.None);
         }
 
-        internal static Tile GenericStoneWall(Point pos)
+        internal static Tile GenericStoneWall(Point pos, bool useCachedMaterial = false)
         {
-            return CreateTile(pos, TileType.Wall, "stone");
+            return CreateTile(pos, TileType.Wall, "stone", useCacheMaterial: useCachedMaterial);
         }
 
         internal static Tile GenericStoneFloor()
@@ -73,9 +73,9 @@ namespace MagusEngine.Factory
             return GenericStoneFloor(Point.None);
         }
 
-        internal static Tile GenericStoneFloor(Point pos)
+        internal static Tile GenericStoneFloor(Point pos, bool useCachedMaterial = false)
         {
-            return CreateTile(pos, TileType.Floor, "stone");
+            return CreateTile(pos, TileType.Floor, "stone", useCacheMaterial: useCachedMaterial);
         }
 
         public static Tile GenericTreeTrunk(Point pos)
@@ -87,10 +87,10 @@ namespace MagusEngine.Factory
             TileType tileType,
             string? materialId = null,
             MaterialType typeToMake = MaterialType.None,
-            bool cacheMaterial = false)
+            bool useCacheMaterial = false)
         {
             Material material;
-            if (cachedMaterial is not null)
+            if (useCacheMaterial && cachedMaterial?.Id.Equals(materialId) == true)
             {
                 material = cachedMaterial;
             }
@@ -102,14 +102,11 @@ namespace MagusEngine.Factory
             {
                 material = DataManager.QueryMaterialWithType(typeToMake);
             }
-            if (cacheMaterial)
-            {
-                cachedMaterial = material;
-            }
+            cachedMaterial = material;
             return CreateTile(pos, tileType, material);
         }
 
-        public static Tile CreateTile(Point pos,
+        private static Tile CreateTile(Point pos,
             TileType tileType,
             Material material)
         {

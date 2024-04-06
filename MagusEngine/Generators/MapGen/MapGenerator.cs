@@ -65,8 +65,9 @@ namespace MagusEngine.Generators.MapGen
         {
             foreach (var pos in _map.Positions())
             {
-                _map.SetTerrain(TileFactory.GenericStoneFloor(pos));
+                _map.SetTerrain(TileFactory.GenericStoneFloor(pos, true));
             }
+            TileFactory.ResetCachedMaterial();
         }
 
         /// <summary>
@@ -149,9 +150,10 @@ namespace MagusEngine.Generators.MapGen
             {
                 if (pos.X == 0 || pos.Y == 0 || pos.X == _map.Width - 1 || pos.Y == _map.Height - 1)
                 {
-                    _map.SetTerrain(TileFactory.GenericStoneWall(pos));
+                    _map.SetTerrain(TileFactory.GenericStoneWall(pos, true));
                 }
             }
+            TileFactory.ResetCachedMaterial();
         }
 
         /// <summary>
@@ -206,16 +208,6 @@ namespace MagusEngine.Generators.MapGen
         }
 
         /// <summary>
-        /// Creates a Wall tile at the specified X/Y location
-        /// </summary>
-        /// <param name="location"></param>
-        protected void CreateStoneWall(Point location)
-        {
-            Tile wall = TileFactory.GenericStoneWall(location);
-            _map.SetTerrain(wall);
-        }
-
-        /// <summary>
         /// Create any type of wall
         /// </summary>
         /// <param name="wall"></param>
@@ -238,9 +230,10 @@ namespace MagusEngine.Generators.MapGen
         {
             for (int i = 0; i < _map.Terrain.Count; i++)
             {
-                Tile wall = TileFactory.GenericStoneWall(Point.FromIndex(i, _map.Width));
+                Tile wall = TileFactory.GenericStoneWall(Point.FromIndex(i, _map.Width), true);
                 _map.SetTerrain(wall);
             }
+            TileFactory.ResetCachedMaterial();
         }
 
         /// <summary>

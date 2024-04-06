@@ -24,10 +24,23 @@ namespace MagusEngine.Systems
     {
         // TODO: change all List to dictionaries! and make it all private
         private static bool firstLoad = true;
+        // convert all properties to fields respecting type
+        private static Dictionary<string, ItemTemplate> _items = GetSourceTreeDict<ItemTemplate>(@".\Data\Items\items_*");
+        private static Dictionary<string, Material> _materials = GetSourceTreeDict<ItemTemplate>(@".\Data\Items\items_*");
+        private static Dictionary<string, SpellBase> _spells = GetSourceTreeDict<ItemTemplate>(@".\Data\Items\items_*");
+        private static Dictionary<string, Organ> _organs = GetSourceTreeDict<ItemTemplate>(@".\Data\Items\items_*");
+        private static Dictionary<string, Limb> _limbs = GetSourceTreeDict<ItemTemplate>(@".\Data\Items\items_*");
+        private static Dictionary<string, Furniture> _furs = GetSourceTreeDict<ItemTemplate>(@".\Data\Items\items_*");
+        private static Dictionary<string, RoomTemplate> _rooms = GetSourceTreeDict<ItemTemplate>(@".\Data\Items\items_*");
+        private static Dictionary<string, Race> _races = GetSourceTreeDict<ItemTemplate>(@".\Data\Items\items_*");
+        private static Dictionary<string, Scenario> _scenarios = GetSourceTreeDict<ItemTemplate>(@".\Data\Items\items_*");
+        private static Dictionary<string, BodyPlan> _bodyPlans = GetSourceTreeDict<ItemTemplate>(@".\Data\Items\items_*");
+        private static Dictionary<string, Language> _languages = GetSourceTreeDict<ItemTemplate>(@".\Data\Items\items_*");
+        private static Dictionary<string, Profession> _professions = GetSourceTreeDict<ItemTemplate>(@".\Data\Items\items_*");
 
         #region jsons
 
-        public static Dictionary<string, ItemTemplate> ListOfItems => GetSourceTreeDict<ItemTemplate>(@".\Data\Items\items_*");
+        public static Dictionary<string, ItemTemplate> ListOfItems => _items;
 
         public static Dictionary<string, Material> ListOfMaterials => GetSourceTreeDict<Material>(@".\Data\Materials\material_*");
 

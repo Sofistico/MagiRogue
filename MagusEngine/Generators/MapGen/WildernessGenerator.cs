@@ -418,17 +418,17 @@ namespace MagusEngine.Generators.MapGen
         private static MagiMap GenericBiomeMap(WorldTile worldTile,
             string materialId = null,
             MaterialType typeToMake = MaterialType.None,
-            bool cacheMaterial = false)
+            bool useCacheMaterial = false)
         {
             MagiMap map = new MagiMap($"{worldTile.BiomeType}");
             // create a height map in the future
             for (int i = 0; i < map.Terrain.Count; i++)
             {
                 Point pos = Point.FromIndex(i, map.Width);
-                Tile tile = TileFactory.CreateTile(pos, TileType.Floor, materialId, typeToMake, cacheMaterial);
+                Tile tile = TileFactory.CreateTile(pos, TileType.Floor, materialId, typeToMake, useCacheMaterial);
                 PrepareForAnyFloor(tile, map);
             }
-            if (cacheMaterial)
+            if (useCacheMaterial)
                 TileFactory.ResetCachedMaterial();
             return map;
         }
