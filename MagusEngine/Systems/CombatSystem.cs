@@ -455,7 +455,7 @@ namespace MagusEngine.Systems
             if (map.CheckForIndexOutOfBounds(pointToGo))
                 pointToGo = map.NormalizePointInsideMap(pointToGo);
 
-            var projectileComp = new ProjectileComp((long)time,
+            var projectileComp = new ProjectileComp(time,
                 origin,
                 pointToGo,
                 direction,
@@ -468,17 +468,17 @@ namespace MagusEngine.Systems
             Locator.GetService<MessageBusService>().SendMessage<AddTurnNode>(new(new ComponentTimeNode(time, projectile.ID, projectileComp.Travel)));
         }
 
-        public static void HitProjectile(MagiEntity? parent, double force, bool ignoresObstacles)
+        public static void HitProjectile(MagiEntity? projectile, Point lastPoint, double force, bool ignoresObstacles)
         {
             // get the parent.Position properyy and check if there is anything in pos
             // if there is, get the first item in the list
             // if it is an actor, resolve the hit
             // if it is an item, resolve the hit
             // if it is an wall, resolve if will get stuck or not
-            if (parent is null || parent.CurrentMagiMap is null)
+            if (projectile is null || projectile.CurrentMagiMap is null)
                 return;
-            var point = parent.Position;
-            var map = parent.CurrentMagiMap;
+            var point = projectile.Position;
+            var map = projectile.CurrentMagiMap;
             var entities = map.GetEntitiesAt<MagiEntity>(point, map.LayerMasker.Mask((int)MapLayer.ACTORS, (int)MapLayer.ITEMS, (int)MapLayer.FURNITURE));
             if (entities.Any())
             {
