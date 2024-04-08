@@ -3,6 +3,7 @@ using Arquimedes.Settings;
 using Arquimedes.Utils;
 using Diviner;
 using MagusEngine;
+using MagusEngine.Services;
 using SadConsole;
 using SadConsole.Configuration;
 using System;
@@ -33,9 +34,20 @@ public static class GameLoop
             .IsStartingScreenFocused(true)
             .ConfigureFonts((f, _) => f.UseBuiltinFontExtended());
         Game.Create(config);
-        Game.Instance.Run();
-        // Code here will not run until the game window closes.
-        Game.Instance.Dispose();
+        try
+        {
+            Game.Instance.Run();
+        }
+        catch (Exception ex)
+        {
+            Locator.GetService<MagiLog>().Log($"An error occurred during the game loop - Ex: {ex.Message} \nStackTrace - {ex.StackTrace}");
+            throw;
+        }
+        finally
+        {
+            // Code here will not run until the game window closes.
+            Game.Instance.Dispose();
+        }
     }
 
     // runs each frame
