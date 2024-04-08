@@ -24,84 +24,60 @@ namespace MagusEngine.Systems
     {
         #region fields
 
-        // TODO: change all List to dictionaries! and make it all private
         private static bool firstLoad = true;
-        private static readonly Dictionary<string, ItemTemplate> _items = GetSourceTreeDict<ItemTemplate>(@".\Data\Items\items_*");
-        private static readonly Dictionary<string, Material> _materials = GetSourceTreeDict<Material>(@".\Data\Items\items_*");
-        private static readonly Dictionary<string, SpellBase> _spells = GetSourceTreeDict<SpellBase>(@".\Data\Items\items_*");
-        private static readonly Dictionary<string, Organ> _organs = GetSourceTreeDict<Organ>(@".\Data\Items\items_*");
-        private static readonly Dictionary<string, Limb> _limbs = GetSourceTreeDict<Limb>(@".\Data\Items\items_*");
-        private static readonly Dictionary<string, Furniture> _furs = GetSourceTreeDict<Furniture>(@".\Data\Items\items_*");
-        private static readonly Dictionary<string, RoomTemplate> _rooms = GetSourceTreeDict<RoomTemplate>(@".\Data\Items\items_*");
-        private static readonly Dictionary<string, Race> _races = GetSourceTreeDict<Race>(@".\Data\Items\items_*");
-        private static readonly Dictionary<string, Scenario> _scenarios = GetSourceTreeDict<Scenario>(@".\Data\Items\items_*");
-        private static readonly Dictionary<string, BodyPlan> _bodyPlans = GetSourceTreeDict<BodyPlan>(@".\Data\Items\items_*");
-        private static readonly Dictionary<string, Language> _languages = GetSourceTreeDict<Language>(@".\Data\Items\items_*");
-        private static readonly Dictionary<string, Profession> _professions = GetSourceTreeDict<Profession>(@".\Data\Items\items_*");
-        private static readonly Dictionary<string, CultureTemplate> _cultures = GetSourceTreeDict<CultureTemplate>(@".\Data\Items\items_*");
-        private static readonly Dictionary<string, Research> _researches = GetSourceTreeDict<Research>(@".\Data\Items\items_*");
-        private static readonly Dictionary<string, Reaction> _reactions = GetSourceTreeDict<Reaction>(@".\Data\Items\items_*");
-        private static readonly List<Ruleset> _rules = GetSourceTreeList<Ruleset>(@".\Data\Items\items_*");
-        private static readonly Dictionary<string, Plant> _plants = GetSourceTreeDict<Plant>(@".\Data\Items\items_*");
-        private static readonly Dictionary<string, DamageType> _damageTypes = GetSourceTreeDict<DamageType>(@".\Data\Items\items_*");
-        private static readonly Dictionary<string, TissuePlanTemplate> _tissuePlans = GetSourceTreeDict<TissuePlanTemplate>(@".\Data\Items\items_*");
-        private static readonly List<string> _realmsNames = GetSourceTreeList<string>(@".\Data\Items\items_*");
-        private static readonly List<string> _magicFounts = GetSourceTreeList<string>(@".\Data\Items\items_*");
-        private static readonly List<string> _adjectives = GetSourceTreeList<string>(@".\Data\Items\items_*");
-        private static readonly Dictionary<string, ShapeDescriptor> _shapes = GetSourceTreeDict<ShapeDescriptor>(@".\Data\Items\items_*");
 
         #endregion fields
 
         #region jsons
 
-        public static Dictionary<string, ItemTemplate> ListOfItems => _items;
+        public static Dictionary<string, ItemTemplate> ListOfItems { get; } = GetSourceTreeDict<ItemTemplate>(@".\Data\Items\items_*");
 
-        public static Dictionary<string, Material> ListOfMaterials => _materials;
+        public static Dictionary<string, Material> ListOfMaterials { get; } = GetSourceTreeDict<Material>(@".\Data\Items\items_*");
 
-        public static Dictionary<string, SpellBase> ListOfSpells => _spells;
+        public static Dictionary<string, SpellBase> ListOfSpells { get; } = GetSourceTreeDict<SpellBase>(@".\Data\Items\items_*");
 
-        public static Dictionary<string, Organ> ListOfOrgans => _organs;
+        public static Dictionary<string, Organ> ListOfOrgans { get; } = GetSourceTreeDict<Organ>(@".\Data\Items\items_*");
 
-        public static Dictionary<string, Limb> ListOfLimbs => _limbs;
+        public static Dictionary<string, Limb> ListOfLimbs { get; } = GetSourceTreeDict<Limb>(@".\Data\Items\items_*");
 
-        public static Dictionary<string, Furniture> ListOfFurnitures => _furs;
+        public static Dictionary<string, Furniture> ListOfFurnitures { get; } = GetSourceTreeDict<Furniture>(@".\Data\Items\items_*");
 
-        public static Dictionary<string, RoomTemplate> ListOfRooms => _rooms;
+        public static Dictionary<string, RoomTemplate> ListOfRooms { get; } = GetSourceTreeDict<RoomTemplate>(@".\Data\Items\items_*");
 
         // races can be dynamically generated ingame
-        public static Dictionary<string, Race> ListOfRaces => _races;
+        public static Dictionary<string, Race> ListOfRaces { get; } = GetSourceTreeDict<Race>(@".\Data\Items\items_*");
 
-        public static Dictionary<string, Scenario> ListOfScenarios => _scenarios;
+        public static Dictionary<string, Scenario> ListOfScenarios { get; } = GetSourceTreeDict<Scenario>(@".\Data\Items\items_*");
 
-        public static Dictionary<string, BodyPlan> ListOfBpPlan => _bodyPlans;
+        public static Dictionary<string, BodyPlan> ListOfBpPlan { get; } = GetSourceTreeDict<BodyPlan>(@".\Data\Items\items_*");
 
-        public static Dictionary<string, Language> ListOfLanguages => _languages;
+        public static Dictionary<string, Language> ListOfLanguages { get; } = GetSourceTreeDict<Language>(@".\Data\Items\items_*");
 
-        public static Dictionary<string, Profession> ListOfProfessions => _professions;
+        public static Dictionary<string, Profession> ListOfProfessions { get; } = GetSourceTreeDict<Profession>(@".\Data\Items\items_*");
 
-        public static Dictionary<string, CultureTemplate> ListOfCultures => _cultures;
+        public static Dictionary<string, CultureTemplate> ListOfCultures { get; } = GetSourceTreeDict<CultureTemplate>(@".\Data\Items\items_*");
 
-        public static Dictionary<string, Research> ListOfResearches => _researches;
+        public static Dictionary<string, Research> ListOfResearches { get; } = GetSourceTreeDict<Research>(@".\Data\Items\items_*");
 
-        public static Dictionary<string, Reaction> ListOfReactions => _reactions;
+        public static Dictionary<string, Reaction> ListOfReactions { get; } = GetSourceTreeDict<Reaction>(@".\Data\Items\items_*");
 
-        public static List<Ruleset> ListOfRules => _rules;
+        public static List<Ruleset> ListOfRules { get; } = GetSourceTreeList<Ruleset>(@".\Data\Items\items_*");
 
-        public static Dictionary<string, Plant> ListOfPlants => _plants;
+        public static Dictionary<string, Plant> ListOfPlants { get; } = GetSourceTreeDict<Plant>(@".\Data\Items\items_*");
 
-        public static Dictionary<string, TissuePlanTemplate> ListOfTissuePlans => _tissuePlans;
+        public static Dictionary<string, TissuePlanTemplate> ListOfTissuePlans { get; } = GetSourceTreeDict<TissuePlanTemplate>(@".\Data\Items\items_*");
 
-        public static Dictionary<string, DamageType> ListOfDamageTypes => _damageTypes;
+        public static Dictionary<string, DamageType> ListOfDamageTypes { get; } = GetSourceTreeDict<DamageType>(@".\Data\Items\items_*");
 
         #region Descriptors
 
-        public static List<string> ListOfRealmsName => _realmsNames;
+        public static List<string> ListOfRealmsName { get; } = GetSourceTreeList<string>(@".\Data\Items\items_*");
 
-        public static List<string> ListOfMagicFounts => _magicFounts;
+        public static List<string> ListOfMagicFounts { get; } = GetSourceTreeList<string>(@".\Data\Items\items_*");
 
-        public static List<string> ListOfAdjectives => _adjectives;
+        public static List<string> ListOfAdjectives { get; } = GetSourceTreeList<string>(@".\Data\Items\items_*");
 
-        public static Dictionary<string, ShapeDescriptor> ListOfShapes => _shapes;
+        public static Dictionary<string, ShapeDescriptor> ListOfShapes { get; } = GetSourceTreeDict<ShapeDescriptor>(@".\Data\Items\items_*");
 
         #endregion Descriptors
 
