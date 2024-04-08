@@ -22,9 +22,10 @@ namespace MagusEngine.Systems
 {
     public static class DataManager
     {
+        #region fields
+
         // TODO: change all List to dictionaries! and make it all private
         private static bool firstLoad = true;
-        // convert all properties to fields respecting type
         private static readonly Dictionary<string, ItemTemplate> _items = GetSourceTreeDict<ItemTemplate>(@".\Data\Items\items_*");
         private static readonly Dictionary<string, Material> _materials = GetSourceTreeDict<Material>(@".\Data\Items\items_*");
         private static readonly Dictionary<string, SpellBase> _spells = GetSourceTreeDict<SpellBase>(@".\Data\Items\items_*");
@@ -48,6 +49,8 @@ namespace MagusEngine.Systems
         private static readonly List<string> _magicFounts = GetSourceTreeList<string>(@".\Data\Items\items_*");
         private static readonly List<string> _adjectives = GetSourceTreeList<string>(@".\Data\Items\items_*");
         private static readonly Dictionary<string, ShapeDescriptor> _shapes = GetSourceTreeDict<ShapeDescriptor>(@".\Data\Items\items_*");
+
+        #endregion fields
 
         #region jsons
 
