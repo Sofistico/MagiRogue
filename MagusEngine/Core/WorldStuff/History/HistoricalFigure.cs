@@ -189,7 +189,7 @@ namespace MagusEngine.Core.WorldStuff.History
 
         private bool DetermineProfessionFromBestSkills(Ability bestAbility, Ability secondBest)
         {
-            var professions = DataManager.ListOfProfessions.Values.Where(i => i.Ability[0] == bestAbility.Category).ToList();
+            var professions = DataManager.ListOfProfessions.FindAll(i => i.Ability[0] == bestAbility.Category);
 
             if (professions.Count > 0)
             {

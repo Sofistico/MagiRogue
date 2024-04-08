@@ -32,52 +32,52 @@ namespace MagusEngine.Systems
 
         public static Dictionary<string, ItemTemplate> ListOfItems { get; } = GetSourceTreeDict<ItemTemplate>(@".\Data\Items\items_*");
 
-        public static Dictionary<string, Material> ListOfMaterials { get; } = GetSourceTreeDict<Material>(@".\Data\Items\items_*");
+        public static Dictionary<string, Material> ListOfMaterials { get; } = GetSourceTreeDict<Material>(@".\Data\Materials\material_*");
 
-        public static Dictionary<string, SpellBase> ListOfSpells { get; } = GetSourceTreeDict<SpellBase>(@".\Data\Items\items_*");
+        public static Dictionary<string, SpellBase> ListOfSpells { get; } = GetSourceTreeDict<SpellBase>(@".\Data\Spells\spells_*");
 
-        public static Dictionary<string, Organ> ListOfOrgans { get; } = GetSourceTreeDict<Organ>(@".\Data\Items\items_*");
+        public static Dictionary<string, Organ> ListOfOrgans { get; } = GetSourceTreeDict<Organ>(@".\Data\Bodies\organs_*");
 
-        public static Dictionary<string, Limb> ListOfLimbs { get; } = GetSourceTreeDict<Limb>(@".\Data\Items\items_*");
+        public static Dictionary<string, Limb> ListOfLimbs { get; } = GetSourceTreeDict<Limb>(@".\Data\Bodies\limbs_*");
 
-        public static Dictionary<string, Furniture> ListOfFurnitures { get; } = GetSourceTreeDict<Furniture>(@".\Data\Items\items_*");
+        public static Dictionary<string, Furniture> ListOfFurnitures { get; } = GetSourceTreeDict<Furniture>(@".\Data\Furniture\fur_*");
 
-        public static Dictionary<string, RoomTemplate> ListOfRooms { get; } = GetSourceTreeDict<RoomTemplate>(@".\Data\Items\items_*");
+        public static Dictionary<string, RoomTemplate> ListOfRooms { get; } = GetSourceTreeDict<RoomTemplate>(@".\Data\Rooms\room_*");
 
         // races can be dynamically generated ingame
-        public static Dictionary<string, Race> ListOfRaces { get; } = GetSourceTreeDict<Race>(@".\Data\Items\items_*");
+        public static Dictionary<string, Race> ListOfRaces { get; } = GetSourceTreeDict<Race>(@".\Data\Races\race_*");
 
-        public static Dictionary<string, Scenario> ListOfScenarios { get; } = GetSourceTreeDict<Scenario>(@".\Data\Items\items_*");
+        public static Dictionary<string, Scenario> ListOfScenarios { get; } = GetSourceTreeDict<Scenario>(@".\Data\Scenarios\scenarios_*");
 
-        public static Dictionary<string, BodyPlan> ListOfBpPlan { get; } = GetSourceTreeDict<BodyPlan>(@".\Data\Items\items_*");
+        public static Dictionary<string, BodyPlan> ListOfBpPlan { get; } = GetSourceTreeDict<BodyPlan>(@".\Data\Bodies\bodies_*");
 
-        public static Dictionary<string, Language> ListOfLanguages { get; } = GetSourceTreeDict<Language>(@".\Data\Items\items_*");
+        public static Dictionary<string, Language> ListOfLanguages { get; } = GetSourceTreeDict<Language>(@".\Data\Language\language_*");
 
-        public static Dictionary<string, Profession> ListOfProfessions { get; } = GetSourceTreeDict<Profession>(@".\Data\Items\items_*");
+        public static List<Profession> ListOfProfessions { get; } = GetSourceTreeList<Profession>(@".\Data\Professions\profession_*");
 
-        public static Dictionary<string, CultureTemplate> ListOfCultures { get; } = GetSourceTreeDict<CultureTemplate>(@".\Data\Items\items_*");
+        public static Dictionary<string, CultureTemplate> ListOfCultures { get; } = GetSourceTreeDict<CultureTemplate>(@".\Data\Cultures\cultures_*");
 
-        public static Dictionary<string, Research> ListOfResearches { get; } = GetSourceTreeDict<Research>(@".\Data\Items\items_*");
+        public static Dictionary<string, Research> ListOfResearches { get; } = GetSourceTreeDict<Research>(@".\Data\Research\research_*");
 
-        public static Dictionary<string, Reaction> ListOfReactions { get; } = GetSourceTreeDict<Reaction>(@".\Data\Items\items_*");
+        public static Dictionary<string, Reaction> ListOfReactions { get; } = GetSourceTreeDict<Reaction>(@".\Data\Reaction\reaction_*");
 
-        public static List<Ruleset> ListOfRules { get; } = GetSourceTreeList<Ruleset>(@".\Data\Items\items_*");
+        public static List<Ruleset> ListOfRules { get; } = GetSourceTreeList<Ruleset>(@".\Data\Rules\rules_*");
 
-        public static Dictionary<string, Plant> ListOfPlants { get; } = GetSourceTreeDict<Plant>(@".\Data\Items\items_*");
+        public static Dictionary<string, Plant> ListOfPlants { get; } = GetSourceTreeDict<Plant>(@".\Data\Plant\plant_*");
 
-        public static Dictionary<string, TissuePlanTemplate> ListOfTissuePlans { get; } = GetSourceTreeDict<TissuePlanTemplate>(@".\Data\Items\items_*");
+        public static Dictionary<string, TissuePlanTemplate> ListOfTissuePlans { get; } = GetSourceTreeDict<TissuePlanTemplate>(@".\Data\Bodies\tissue_*");
 
-        public static Dictionary<string, DamageType> ListOfDamageTypes { get; } = GetSourceTreeDict<DamageType>(@".\Data\Items\items_*");
+        public static Dictionary<string, DamageType> ListOfDamageTypes { get; } = GetSourceTreeDict<DamageType>(@".\Data\Damage\dmg_*");
 
         #region Descriptors
 
-        public static List<string> ListOfRealmsName { get; } = GetSourceTreeList<string>(@".\Data\Items\items_*");
+        public static List<string> ListOfRealmsName { get; } = GetSourceTreeList<string>(@".\Data\Descriptors\realms_*");
 
-        public static List<string> ListOfMagicFounts { get; } = GetSourceTreeList<string>(@".\Data\Items\items_*");
+        public static List<string> ListOfMagicFounts { get; } = GetSourceTreeList<string>(@".\Data\Descriptors\fount_*");
 
-        public static List<string> ListOfAdjectives { get; } = GetSourceTreeList<string>(@".\Data\Items\items_*");
+        public static List<string> ListOfAdjectives { get; } = GetSourceTreeList<string>(@".\Data\Descriptors\adjectives_*");
 
-        public static Dictionary<string, ShapeDescriptor> ListOfShapes { get; } = GetSourceTreeDict<ShapeDescriptor>(@".\Data\Items\items_*");
+        public static Dictionary<string, ShapeDescriptor> ListOfShapes { get; } = GetSourceTreeDict<ShapeDescriptor>(@".\Data\Descriptors\shapes_*");
 
         #endregion Descriptors
 
@@ -215,9 +215,7 @@ namespace MagusEngine.Systems
 
         public static Profession? QueryProfessionInData(string professionId)
         {
-            if (ListOfProfessions.TryGetValue(professionId, out var val))
-                return val;
-            return null;
+            return ListOfProfessions.Find(i => i.Id.Equals(professionId));
         }
 
         public static ShapeDescriptor? QueryShapeDescInData(string shapeId)
