@@ -49,7 +49,7 @@ namespace MagusEngine.Core.Entities.Base
             return new Attack()
             {
                 AttackAbility = AbilityCategory.None,
-                AttackVerb = new[] { "push", "pushes" },
+                AttackVerb = ["push", "pushes"],
                 ContactArea = 100,
                 DamageTypeId = "blunt",
                 LimbFunction = BodyPartFunction.Root,
@@ -57,6 +57,19 @@ namespace MagusEngine.Core.Entities.Base
                 Name = "Push",
                 PrepareVelocity = 5,
                 RecoverVelocity = 5,
+            };
+        }
+
+        public static Attack ConstructGenericAttack(string attackName, string[] attackVerb, string dmgId, bool projectile)
+        {
+            return new Attack()
+            {
+                AttackVerb = attackVerb,
+                ContactArea = 100,
+                DamageTypeId = dmgId,
+                Main = true,
+                Name = attackName,
+                Projectile = projectile,
             };
         }
     }

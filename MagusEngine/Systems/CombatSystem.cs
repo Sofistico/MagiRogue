@@ -468,7 +468,7 @@ namespace MagusEngine.Systems
             Locator.GetService<MessageBusService>().SendMessage<AddTurnNode>(new(new ComponentTimeNode(time, projectile.ID, projectileComp.Travel)));
         }
 
-        public static void HitProjectile(MagiEntity? projectile, Point lastPoint, double force, bool ignoresObstacles)
+        public static void HitProjectile(MagiEntity? projectile, Point lastPoint, DamageType dmg, Material material, double force, bool ignoresObstacles)
         {
             // get the parent.Position properyy and check if there is anything in pos
             // if there is, get the first item in the list
@@ -483,15 +483,13 @@ namespace MagusEngine.Systems
             if (entities.Any())
             {
                 var entity = entities.GetRandomItemFromList();
-                if (entity is Actor actor)
+                if (entity == null)
                 {
+                    Locator.GetService<MagiLog>().Log($"An error occured, Entity is null! - Point: {point}, Map: {map.MapId}");
+                    return;
                 }
-                else if (entity is Item item)
-                {
-                }
-                else if (entity is Furniture fur)
-                {
-                }
+                var projectileAttack = Attack.ConstructGenericAttack(projectile.Name, ["hit", "hits"], dmg.Id, true);
+                DealDamage(force, entity, dmg, material, projectileAttack);
             }
             else
             {
