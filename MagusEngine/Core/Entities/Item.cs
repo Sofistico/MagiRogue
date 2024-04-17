@@ -165,6 +165,11 @@ namespace MagusEngine.Core.Entities
             return Qualities.Find(i => i.QualityType is QualityType.ItemQuality).QualitySuitabiliy * 0.3;
         }
 
+        public override Material GetMaterial()
+        {
+            return Material;
+        }
+
         public override string ToString()
         {
             return $"{Name} : Equip {EquipType}";

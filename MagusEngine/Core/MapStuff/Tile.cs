@@ -4,7 +4,6 @@ using MagusEngine.Bus.ComponentBus;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Services;
 using MagusEngine.Systems;
-using MagusEngine.Systems.Physics;
 using SadConsole;
 using SadRogue.Primitives;
 using System.Collections.Generic;
@@ -126,11 +125,10 @@ namespace MagusEngine.Core.MapStuff
         public void AddComponent<T>(T value, string? tag = null) where T : class
         {
             GoRogueComponents.Add(value, tag);
-            Locator.GetService<MessageBusService>()
-                ?.SendMessage<ComponentAddedCommand<T>>(new(ID, value));
+            Locator.GetService<MessageBusService>()?.SendMessage<ComponentAddedCommand<T>>(new(ID, value));
         }
 
-        public Attack? ReturnAttack()
+        public static Attack? ReturnAttack()
         {
             return new()
             {

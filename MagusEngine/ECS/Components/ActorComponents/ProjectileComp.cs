@@ -1,6 +1,7 @@
 ﻿using GoRogue.Components.ParentAware;
 using GoRogue.Pathing;
-using MagusEngine.Core.Entities.Base;
+using MagusEngine.Core;
+using MagusEngine.Core.Entities;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.Systems;
 using SadConsole.Effects;
@@ -9,7 +10,7 @@ using System;
 
 namespace MagusEngine.ECS.Components.ActorComponents
 {
-    public class ProjectileComp : ParentAwareComponentBase<MagiEntity>
+    public class ProjectileComp : ParentAwareComponentBase<Item>
     {
         private static readonly char[] _defaultGlyphs = [
             '.',
@@ -75,7 +76,8 @@ namespace MagusEngine.ECS.Components.ActorComponents
             if (_path?.Length == _currentStep || Parent?.MoveTo(_path!.GetStep(_currentStep++), IgnoresObstacles) == false)
             {
                 // handle hit logic!
-                CombatSystem.HitProjectile(Parent, _path.GetStep(_currentStep), Force, IgnoresObstacles);
+                var dmgType = new DamageType(Parent.ItemDamageType);
+                CombatSystem.HitProjectile(Parent, _path.GetStep(_currentStep), dmgType, Parent.Material, Force, IgnoresObstacles);
                 if (Parent?.SadCell?.AppearanceSingle?.Effect != null)
                     Parent.SadCell.AppearanceSingle.Effect = null;
                 Parent?.RemoveComponent(Tag);

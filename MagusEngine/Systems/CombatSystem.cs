@@ -431,7 +431,7 @@ namespace MagusEngine.Systems
 
         #endregion Melee hit
 
-        #region Projectile Calc
+        #region Projectile
 
         public static void ShootProjectile(double force,
             Point origin,
@@ -493,11 +493,32 @@ namespace MagusEngine.Systems
             }
             else
             {
+                string? message = null;
                 // probably a wall or somestuff like that!
+                if (!map.IsTileWalkable(point, ignoresObstacles))
+                {
+                    var tile = map.GetTileAt(point);
+                    message = $"The {projectile.Name} hits the {tile.Name}!";
+                    projectile.Position = lastPoint;
+                    //var projectileMaterial = projectile.GetMaterial();
+                    // check to see if the wall or the projectile will get hurt by the impact
+                    //TODO: See if it's in pascals or mega pascals
+                    if (projectile is Item item && tile.Material.ImpactStrainsAtYield >= item.Material.ImpactFractureMpa)
+                    {
+                        item.Condition -= (int)Math.Sqrt((double)(item.Material.ImpactFractureMpa - tile.Material.ImpactStrainsAtYield));
+                    }
+                }
+                else
+                {
+                    projectile.Position = point;
+                    // the projectile hit a wall!
+                }
+                if (!message.IsNullOrEmpty())
+                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(message));
             }
         }
 
-        #endregion Projectile Calc
+        #endregion Projectile
 
         #region Death Resolve
 

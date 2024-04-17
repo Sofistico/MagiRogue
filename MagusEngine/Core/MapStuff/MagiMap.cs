@@ -157,7 +157,7 @@ namespace MagusEngine.Core.MapStuff
         /// is not walkable or is off-map
         /// </summary>
         /// <param name="location"></param>
-        /// <returns></returns>
+        /// <returns>true if it's walkable and false if it isn't</returns>
         public bool IsTileWalkable(Point location, bool ignoreWalkability = false)
         {
             // first make sure that actor isn't trying to move off the limits of the map

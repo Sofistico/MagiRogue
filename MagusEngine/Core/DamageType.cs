@@ -19,6 +19,11 @@ namespace MagusEngine.Core
         {
         }
 
+        public DamageType(DamageTypes dmgType)
+        {
+            Type = dmgType;
+        }
+
         public DamageType(string id, string name, string[] severityDmgString, string[]? combinatedFrom)
         {
             Id = id;

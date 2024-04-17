@@ -114,6 +114,8 @@ namespace MagusEngine.Core.Entities.Base
 
         #endregion events
 
+        #region Methods
+
         #region Virtual Methods
 
         public virtual string? GetDescriptor()
@@ -180,6 +182,15 @@ namespace MagusEngine.Core.Entities.Base
             return CurrentMagiMap.IsTileWalkable(Position + deltaPositionChange, IgnoresWalls);
         }
 
+        public virtual Material GetMaterial()
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion Virtual Methods
+
+        #endregion Methods
+
         /// <summary>
         /// Moves the Actor TO newPosition location returns true if actor was able to move, false if
         /// failed to move
@@ -199,8 +210,6 @@ namespace MagusEngine.Core.Entities.Base
                 return false;
             }
         }
-
-        #endregion Virtual Methods
 
         #region Components
 
