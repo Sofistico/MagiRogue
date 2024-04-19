@@ -46,7 +46,7 @@
     "Id": "rock_use",
     "Name": "Rock Uses",
     "Difficulty": 4,
-    "AbilityRequired": [ "AnyCraft", "Enginner" ],
+    "AbilityRequired": [ "Mason", "Enginner" ],
     "RequiredRes": [ "basic_craft" ],
     "TechResearched": [ "Stonecrafting" ]
   },
@@ -62,7 +62,7 @@
     "Id": "concrete",
     "Name": "Concrete use",
     "Difficulty": 13,
-    "AbilityRequired": [ "AnyCraft", "Enginner" ],
+    "AbilityRequired": [ "Mason", "Enginner" ],
     "RequiredRes": [ "engineering", "rock_use" ],
     "TechResearched": [ "Concrete" ]
   },
@@ -70,7 +70,7 @@
     "Id": "great_concrete",
     "Name": "Great Concrete",
     "Difficulty": 13,
-    "AbilityRequired": [ "AnyCraft", "Enginner" ],
+    "AbilityRequired": [ "Mason", "Enginner" ],
     "RequiredRes": [ "concrete", "intermediare_mathematics" ],
     "TechResearched": [ "GConcrete" ]
   },
