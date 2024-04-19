@@ -43,12 +43,36 @@
     "TechResearched": [ "Glassmaking" ]
   },
   {
+    "Id": "rock_use",
+    "Name": "Rock Uses",
+    "Difficulty": 4,
+    "AbilityRequired": [ "AnyCraft", "Enginner" ],
+    "RequiredRes": [ "basic_craft" ],
+    "TechResearched": [ "Stonecrafting" ]
+  },
+  {
     "Id": "engineering",
     "Name": "Basic Engineering",
     "Difficulty": 10,
     "AbilityRequired": [ "AnyCraft", "Enginner" ],
-    "RequiredRes": [ "forge", "steel_making", "intermediare_mathematics" ],
+    "RequiredRes": [ "forge", "steel_making", "intermediare_mathematics", "rock_use" ],
     "TechResearched": [ "Engineering" ]
+  },
+  {
+    "Id": "concrete",
+    "Name": "Concrete use",
+    "Difficulty": 13,
+    "AbilityRequired": [ "AnyCraft", "Enginner" ],
+    "RequiredRes": [ "engineering", "rock_use" ],
+    "TechResearched": [ "Concrete" ]
+  },
+  {
+    "Id": "great_concrete",
+    "Name": "Great Concrete",
+    "Difficulty": 13,
+    "AbilityRequired": [ "AnyCraft", "Enginner" ],
+    "RequiredRes": [ "concrete", "intermediare_mathematics" ],
+    "TechResearched": [ "GConcrete" ]
   },
   {
     "Id": "steel_making",
