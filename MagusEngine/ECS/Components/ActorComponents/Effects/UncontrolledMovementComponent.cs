@@ -1,6 +1,7 @@
 ﻿using MagusEngine.Commands;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
+using MagusEngine.Core.MapStuff;
 using MagusEngine.Systems;
 using MagusEngine.Systems.Physics;
 using MagusEngine.Utils.Extensions;
@@ -46,7 +47,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.Effects
                         Parent,
                         DataManager.QueryDamageInData("blunt")!,
                         currentTile?.Material,
-                        currentTile?.ReturnAttack(),
+                        Tile.ReturnAttack(),
                         limbAttacked: bp);
                     break;
                 }
@@ -56,7 +57,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.Effects
                         Parent,
                         DataManager.QueryDamageInData("blunt"),
                         currentTile?.Material,
-                        currentTile?.ReturnAttack(),
+                        Tile.ReturnAttack(),
                         limbAttacked: bp);
 
                     finalPoint = currentTile!.Position;
