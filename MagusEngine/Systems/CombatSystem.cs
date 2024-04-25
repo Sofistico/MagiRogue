@@ -7,6 +7,7 @@ using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic;
 using MagusEngine.ECS.Components.ActorComponents;
+using MagusEngine.ECS.Components.TilesComponents;
 using MagusEngine.Services;
 using MagusEngine.Systems.Physics;
 using MagusEngine.Systems.Time.Nodes;
@@ -503,9 +504,15 @@ namespace MagusEngine.Systems
                     //var projectileMaterial = projectile.GetMaterial();
                     // check to see if the wall or the projectile will get hurt by the impact
                     //TODO: See if it's in pascals or mega pascals
-                    if (projectile is Item item && tile.Material.ImpactStrainsAtYield >= item.Material.ImpactFractureMpa)
+                    if (tile.Material.ImpactStrainsAtYield >= projectile.GetMaterial().ImpactFractureMpa)
                     {
+                        var item = (Item)projectile;
                         item.Condition -= (int)Math.Sqrt((double)(item.Material.ImpactFractureMpa - tile.Material.ImpactStrainsAtYield));
+                    }
+                    else
+                    {
+                        var damage = (int)Math.Sqrt((double)(tile.Material.ImpactStrainsAtYield - projectile.GetMaterial().ImpactFractureMpa);
+                        tile.AddComponent(new DamagedTileComponent(damage), DamagedTileComponent.Tag);
                     }
                 }
                 else
