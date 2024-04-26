@@ -511,7 +511,7 @@ namespace MagusEngine.Systems
                     }
                     else
                     {
-                        var damage = (int)Math.Sqrt((double)(tile.Material.ImpactStrainsAtYield - projectile.GetMaterial().ImpactFractureMpa);
+                        var damage = (int)Math.Sqrt((double)(tile.Material.ImpactStrainsAtYield - projectile.GetMaterial().ImpactFractureMpa));
                         tile.AddComponent(new DamagedTileComponent(damage), DamagedTileComponent.Tag);
                     }
                 }
