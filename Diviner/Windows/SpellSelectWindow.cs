@@ -81,7 +81,7 @@ namespace Diviner.Windows
 
             Controls.Add(_castButton);
 
-            SetupSelectionButtons(BuildHotKeysButtons(listSpells, OnSpellSelected));
+            SetupSelectionButtons(BuildHotKeysButtons(listSpells, OnSpellSelected, new Func<SpellBase, bool>(s => _currentMana >= s.MagicCost)));
         }
     }
 }

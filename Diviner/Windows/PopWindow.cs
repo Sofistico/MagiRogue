@@ -90,7 +90,9 @@ namespace Diviner.Windows
 
         public void PrintConsole(int x, int y, string text) => _descriptionArea.Print(x, y, text);
 
-        protected List<MagiButton> BuildHotKeysButtons<T>(List<T> listItems, Action<T> action) where T : INamed
+        protected List<MagiButton> BuildHotKeysButtons<T>(List<T> listItems, 
+            Action<T> action,
+            Func<T, bool>? isEnabledFunc = null) where T : INamed
         {
             _hotKeys.Clear();
 
@@ -107,6 +109,7 @@ namespace Diviner.Windows
                 {
                     Text = $"{hotkeyLetter}. {item.Name}",
                     Position = new Point(1, yCount++),
+                    IsEnabled = isEnabledFunc?.Invoke(item) ?? true,
                     Action = () => action(item)
                 };
                 button.Click += (_, __) => button.Action.Invoke();
