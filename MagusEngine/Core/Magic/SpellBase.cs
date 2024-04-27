@@ -130,7 +130,7 @@ namespace MagusEngine.Core.Magic
         /// <param name="spellLevel">The level of the spell, going from 1 to 9</param>
         /// <param name="magicCost">The mana cost of the spell, should be more than 0.1</param>
         public SpellBase(string spellId,
-            string Name,
+            string name,
             ArtMagic magicArt,
             int spellRange,
             string shapingAbility,
@@ -138,7 +138,7 @@ namespace MagusEngine.Core.Magic
             double magicCost = 0.1)
         {
             Id = spellId;
-            Name = Name;
+            Name = name;
             MagicArt = magicArt;
             SpellRange = spellRange;
             SpellLevel = spellLevel;

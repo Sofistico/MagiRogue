@@ -151,13 +151,13 @@ namespace MagusEngine.Serialization.EntitySerialization
         public List<string>? Keywords { get; set; } = [];
         public string ShapingAbility { get; set; }
 
-        public SpellTemplate(int spellLevel, List<ISpellEffect> effects, string Name, string? description,
+        public SpellTemplate(int spellLevel, List<ISpellEffect> effects, string name, string? description,
             ArtMagic magicArt, int spellRange, double magicCost, string spellId,
             List<SpellContext>? context, string shapingAbility)
         {
             SpellLevel = spellLevel;
             Effects = effects;
-            Name = Name;
+            Name = name;
             Description = description;
             MagicArt = magicArt;
             SpellRange = spellRange;
