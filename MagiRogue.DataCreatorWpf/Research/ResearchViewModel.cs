@@ -1,6 +1,6 @@
 ﻿using Arquimedes.Enumerators;
 
-namespace MagusEngine.SystemsCreatorWpf
+namespace MagiRogue.DataCreatorWpf.Research
 {
     public class ResearchViewModel : ObservableObject, IPageView
     {

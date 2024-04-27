@@ -1,4 +1,5 @@
 ﻿using Arquimedes.Enumerators;
+using Arquimedes.Interfaces;
 using GoRogue.Random;
 using MagusEngine.Serialization;
 using MagusEngine.Systems;

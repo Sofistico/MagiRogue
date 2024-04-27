@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagusEngine.SystemsCreatorWpf
+namespace MagiRogue.DataCreatorWpf
 {
     public abstract class ObservableObject : INotifyPropertyChanged
     {
@@ -27,7 +27,7 @@ namespace MagusEngine.SystemsCreatorWpf
             {
                 string msg = "Invalid property name: " + propertyName;
 
-                if (this.ThrowOnInvalidPropertyName)
+                if (ThrowOnInvalidPropertyName)
                     throw new Exception(msg);
                 else
                     Debug.Fail(msg);
@@ -52,7 +52,7 @@ namespace MagusEngine.SystemsCreatorWpf
         /// <param name="propertyName">Property name to update. Is case-sensitive.</param>
         public virtual void RaisePropertyChanged(string propertyName)
         {
-            this.VerifyPropertyName(propertyName);
+            VerifyPropertyName(propertyName);
             OnPropertyChanged(propertyName);
         }
 
@@ -67,9 +67,9 @@ namespace MagusEngine.SystemsCreatorWpf
         /// <param name="propertyName">The property that has a new value.</param>
         protected virtual void OnPropertyChanged(string propertyName)
         {
-            this.VerifyPropertyName(propertyName);
+            VerifyPropertyName(propertyName);
 
-            PropertyChangedEventHandler handler = this.PropertyChanged;
+            PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null)
             {
                 var e = new PropertyChangedEventArgs(propertyName);

@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagiRogue.DataCreatorWpf
+namespace Arquimedes.Interfaces
 {
-    public interface IPageView
+    public interface INamed
     {
-        string PageName { get; }
+        public string Name { get; set; }
     }
 }

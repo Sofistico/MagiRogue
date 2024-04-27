@@ -32,7 +32,7 @@ namespace MagusEngine.Serialization.EntitySerialization
 
             SpellBase createdSpell = new(
                 (string)spell["Id"]!,
-                (string)spell["SpellName"]!,
+                (string)spell["Name"]!,
                 StringToSchool((string)spell["MagicArt"]!),
                 (int)spell["SpellRange"]!,
                 spell["ShapingAbility"]!.ToString(),
@@ -137,7 +137,7 @@ namespace MagusEngine.Serialization.EntitySerialization
 
         public double? Proficiency { get; set; }
 
-        public string SpellName { get; set; }
+        public string Name { get; set; }
 
         public string? Description { get; set; }
 
@@ -151,13 +151,13 @@ namespace MagusEngine.Serialization.EntitySerialization
         public List<string>? Keywords { get; set; } = [];
         public string ShapingAbility { get; set; }
 
-        public SpellTemplate(int spellLevel, List<ISpellEffect> effects, string spellName, string? description,
+        public SpellTemplate(int spellLevel, List<ISpellEffect> effects, string Name, string? description,
             ArtMagic magicArt, int spellRange, double magicCost, string spellId,
             List<SpellContext>? context, string shapingAbility)
         {
             SpellLevel = spellLevel;
             Effects = effects;
-            SpellName = spellName;
+            Name = Name;
             Description = description;
             MagicArt = magicArt;
             SpellRange = spellRange;
@@ -169,7 +169,7 @@ namespace MagusEngine.Serialization.EntitySerialization
 
         public static implicit operator SpellBase(SpellTemplate spellTemplate)
         {
-            return new(spellTemplate.Id, spellTemplate.SpellName,
+            return new(spellTemplate.Id, spellTemplate.Name,
                 spellTemplate.MagicArt, spellTemplate.SpellRange, spellTemplate.ShapingAbility, spellTemplate.SpellLevel,
                 spellTemplate.MagicCost)
             {
@@ -183,7 +183,7 @@ namespace MagusEngine.Serialization.EntitySerialization
 
         public static implicit operator SpellTemplate(SpellBase spell)
         {
-            return new SpellTemplate(spell.SpellLevel, spell.Effects, spell.SpellName,
+            return new SpellTemplate(spell.SpellLevel, spell.Effects, spell.Name,
                 spell.Description, spell.MagicArt, spell.SpellRange, spell.MagicCost, spell.Id, spell.Context, spell.ShapingAbility)
             {
                 Proficiency = spell.Proficiency,

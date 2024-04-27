@@ -11,7 +11,7 @@
         "IsHealing": true
       }
     ],
-    "SpellName": "Minor Cure",
+    "Name": "Minor Cure",
     "Description": "The caster focus mana on his fingertips and cure some scratches from the target.\r\nThe first thing any aspiring mage healer learns, the spell is notouriosly difficult to get right.",
     "MagicArt": "BloodMagic",
     "SpellRange": 1,

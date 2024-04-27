@@ -1,5 +1,5 @@
 ﻿using Arquimedes.Enumerators;
-using MagusEngine.Core.Entities.Base;
+using Arquimedes.Interfaces;
 using MagusEngine.Core.MapStuff;
 using SadRogue.Primitives;
 using System.Collections.Generic;

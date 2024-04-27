@@ -1,4 +1,4 @@
-﻿namespace MagusEngine.Core.Entities.Base
+﻿namespace Arquimedes.Interfaces
 {
     public interface IJsonKey
     {

@@ -11,15 +11,12 @@ namespace Diviner.Windows
     public class SpellSelectWindow : PopWindow
     {
         private readonly MagiButton _castButton;
-        private readonly Dictionary<char, SpellBase> _hotKeys;
-
         private SpellBase _selectedSpell;
         private Action<SpellBase> _onCast;
         private double _currentMana;
 
         public SpellSelectWindow(double currentMana) : base("Select your spell")
         {
-            _hotKeys = new Dictionary<char, SpellBase>();
             _currentMana = currentMana;
 
             const string castText = "Cast";
@@ -41,7 +38,7 @@ namespace Diviner.Windows
         {
             foreach (var key in info.KeysPressed)
             {
-                if (_hotKeys.TryGetValue(key.Character, out var spell) && _currentMana >= spell.MagicCost)
+                if (_hotKeys.TryGetValue(key.Character, out var objSpell) && objSpell is SpellBase spell && _currentMana >= spell.MagicCost)
                 {
                     _onCast(spell);
                     Hide();
@@ -66,45 +63,6 @@ namespace Diviner.Windows
             base.Show(true);
         }
 
-        private List<MagiButton> BuildSpellsControls(List<SpellBase> listSpells)
-        {
-            _hotKeys.Clear();
-
-            int yCount = 1;
-
-            var spellOrdered = listSpells
-                .OrderBy(s => s.SpellName)
-                .ToArray();
-            var list = new List<MagiButton>(spellOrdered.Length);
-            for (int i = 0; i < spellOrdered.Length; i++)
-            {
-                var hotkeyLetter = (char)(96 + yCount);
-                var s = spellOrdered[i];
-                _hotKeys.Add(hotkeyLetter, s);
-                var spellButton = new MagiButton(ButtonWidth - 2)
-                {
-                    Text = $"{hotkeyLetter}. {s.SpellName}",
-                    Position = new Point(1, yCount++),
-                    IsEnabled = _currentMana >= s.MagicCost,
-                    Action = () => OnSpellSelected(s),
-                };
-                spellButton.Click += (_, __) =>
-                {
-                    _onCast(s);
-                    Hide();
-                };
-                spellButton.Focused += (_, __) => spellButton.Action.Invoke();
-                list.Add(spellButton);
-            }
-            for (int i = 1; i < list.Count; i++)
-            {
-                list[i - 1].NextSelection = list[i];
-                list[i].PreviousSelection = list[i - 1];
-            }
-
-            return list;
-        }
-
         public void OnSpellSelected(SpellBase spell)
         {
             _selectedSpell = spell;
@@ -123,7 +81,7 @@ namespace Diviner.Windows
 
             Controls.Add(_castButton);
 
-            SetupSelectionButtons(BuildSpellsControls(listSpells));
+            SetupSelectionButtons(BuildHotKeysButtons(listSpells, OnSpellSelected));
         }
     }
 }

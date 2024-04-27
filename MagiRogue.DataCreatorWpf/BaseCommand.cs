@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagusEngine.SystemsCreatorWpf
+namespace MagiRogue.DataCreatorWpf
 {
     public abstract class BaseCommand : System.Windows.Input.ICommand
     {

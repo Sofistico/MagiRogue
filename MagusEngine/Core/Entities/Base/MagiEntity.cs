@@ -1,4 +1,5 @@
-﻿using MagusEngine.Bus.ComponentBus;
+﻿using Arquimedes.Interfaces;
+using MagusEngine.Bus.ComponentBus;
 using MagusEngine.Core.Magic;
 using MagusEngine.Services;
 using MagusEngine.Systems.Physics;
@@ -12,7 +13,7 @@ namespace MagusEngine.Core.Entities.Base
 {
     // Extends the SadConsole.Entities.Entity class by adding the IGameObject of SadConsole
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public class MagiEntity : MagiGameObject
+    public class MagiEntity : MagiGameObject, INamed
     {
         private string DebuggerDisplay
         {
@@ -27,7 +28,7 @@ namespace MagusEngine.Core.Entities.Base
         public MapStuff.MagiMap? CurrentMagiMap => (MapStuff.MagiMap?)CurrentMap;
 
         public int HistoryId { get; set; } // stores the history id of the entitiy
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
         // I think it's in kilograms
         public virtual double Weight { get; set; }

@@ -1,4 +1,4 @@
-﻿using MagusEngine.Core.Entities.Base;
+﻿using Arquimedes.Interfaces;
 
 namespace MagusEngine.Serialization
 {

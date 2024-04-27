@@ -1,10 +1,11 @@
-﻿using System;
+﻿using MagiRogue.DataCreatorWpf.Research;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagusEngine.SystemsCreatorWpf
+namespace MagiRogue.DataCreatorWpf
 {
     public class MainWindowViewModel : ObservableObject
     {

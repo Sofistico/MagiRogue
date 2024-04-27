@@ -297,7 +297,7 @@ namespace MagusEngine.Systems
             if (effect.IsResistable || MagicManager.PenetrateResistance(spellCasted, caster, poorGuy, luck))
                 DealDamage(effect.BaseDamage, poorGuy, effect.GetDamageType()!, attack: attack, spellUsed: spellCasted);
             else
-                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{poorGuy.Name} resisted the effects of {spellCasted.SpellName}"));
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{poorGuy.Name} resisted the effects of {spellCasted.Name}"));
         }
 
         public static void ResolveSpellHit(MagiEntity poorGuy, Actor caster, SpellBase spellCasted, ISpellEffect effect, Attack attack)

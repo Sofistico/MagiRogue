@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MagiRogue.DataCreatorWpf;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;

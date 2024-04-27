@@ -1,5 +1,5 @@
 ﻿using Arquimedes.Enumerators;
-using MagusEngine.Core.Entities.Base;
+using Arquimedes.Interfaces;
 using MagusEngine.Serialization;
 using MagusEngine.Systems;
 using MagusEngine.Systems.Physics;

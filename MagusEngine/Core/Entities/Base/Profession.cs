@@ -1,4 +1,5 @@
 ﻿using Arquimedes.Enumerators;
+using Arquimedes.Interfaces;
 
 namespace MagusEngine.Core.Entities.Base
 {

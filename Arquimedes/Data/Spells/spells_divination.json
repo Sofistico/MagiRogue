@@ -13,7 +13,7 @@
         "BaseDamage": 0
       }
     ],
-    "SpellName": "Mage Sight",
+    "Name": "Mage Sight",
     "Description": "The first thing taught to any prospecting student of magic, and right after that is learning how to dispel their own mana.",
     "MagicArt": "Divination",
     "SpellRange": 0,

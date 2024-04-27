@@ -1,4 +1,5 @@
 ﻿using Arquimedes.Enumerators;
+using Arquimedes.Interfaces;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
@@ -18,7 +19,7 @@ namespace MagusEngine.Core.Magic
     /// the effects that it will have.
     /// </summary>
     [JsonConverter(typeof(SpellJsonConverter))]
-    public class SpellBase : IJsonKey
+    public class SpellBase : IJsonKey, INamed
     {
         private double proficency;
         private string errorMessage = "Can't cast the spell";
@@ -44,7 +45,7 @@ namespace MagusEngine.Core.Magic
         /// <summary>
         /// Spell name
         /// </summary>
-        public string SpellName { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Description of the spell
@@ -123,13 +124,13 @@ namespace MagusEngine.Core.Magic
         /// The spell being created.
         /// </summary>
         /// <param name="spellId">Should be something unique with spaces separated by _</param>
-        /// <param name="spellName">The name of the spell</param>
+        /// <param name="Name">The name of the spell</param>
         /// <param name="magicArt">What school is this spell part of?</param>
         /// <param name="spellRange">The range of the spell</param>
         /// <param name="spellLevel">The level of the spell, going from 1 to 9</param>
         /// <param name="magicCost">The mana cost of the spell, should be more than 0.1</param>
         public SpellBase(string spellId,
-            string spellName,
+            string Name,
             ArtMagic magicArt,
             int spellRange,
             string shapingAbility,
@@ -137,7 +138,7 @@ namespace MagusEngine.Core.Magic
             double magicCost = 0.1)
         {
             Id = spellId;
-            SpellName = spellName;
+            Name = Name;
             MagicArt = magicArt;
             SpellRange = spellRange;
             SpellLevel = spellLevel;
@@ -204,7 +205,7 @@ namespace MagusEngine.Core.Magic
             if (entity is null)
                 return false;
 
-            Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{caster.Name} casted {SpellName}"));
+            Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{caster.Name} casted {Name}"));
 
             foreach (ISpellEffect effect in Effects)
             {
@@ -234,7 +235,7 @@ namespace MagusEngine.Core.Magic
             }
             else if (CanCast(caster.Magic, caster) && target.Count > 0)
             {
-                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{caster.Name} casted {SpellName}"));
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{caster.Name} casted {Name}"));
 
                 foreach (var pos in target)
                 {
@@ -265,7 +266,7 @@ namespace MagusEngine.Core.Magic
                 Proficiency = Proficiency,
                 Id = Id,
                 SpellLevel = SpellLevel,
-                SpellName = SpellName,
+                Name = Name,
                 SpellRange = SpellRange,
                 MagicArt = MagicArt,
                 AffectsTile = AffectsTile,
@@ -287,7 +288,7 @@ namespace MagusEngine.Core.Magic
 
         public override string ToString()
         {
-            return new StringBuilder().Append(SpellName).Append(": ").Append(SpellLevel)
+            return new StringBuilder().Append(Name).Append(": ").Append(SpellLevel)
                 .Append(", Range: ").Append(SpellRange)
                 .Append(", Proficiency: ").Append(Proficiency).Append(" \r\n")
                 .Append("Required shape skills: ").Append(RequiredShapingSkill)
