@@ -121,7 +121,7 @@ namespace MagusEngine.Generators
             _width = width;
             _height = height;
             maxCivsWorld = nmbCivilizations;
-            _civilizations = new();
+            _civilizations = [];
             HeightData = new float[width, height];
             HeatData = new float[width, height];
             MoistureData = new float[width, height];

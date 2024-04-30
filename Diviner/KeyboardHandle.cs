@@ -217,7 +217,7 @@ namespace Diviner
             //    bool sucess = ActionManager.SacrificeLifeEnergyToMana(world.Player);
             //    world.ProcessTurn(TimeHelper.MagicalThings, sucess);
             //}
-            if (info.IsKeyPressed(Keys.H) && info.IsKeyDown(Keys.LeftShift))
+            if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.H))
             {
                 bool sucess = ActionManager.NodeDrain(_getPlayer);
                 Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.MagicalThings, sucess));
