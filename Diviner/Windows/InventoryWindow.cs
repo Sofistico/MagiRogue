@@ -57,9 +57,9 @@ namespace Diviner.Windows
             inventoryConsole.Surface.Surface.View = new Rectangle(0, invScrollBar.Value + WindowBorderThickness, inventoryConsole.Width, inventoryConsole.ViewHeight);
         }
 
-        public void ShowItems(Actor actorInventory)
+        public void ShowItems(Actor actorInventory, Action<Item> itemAction = null)
         {
-            SetupSelectionButtons(BuildHotKeysButtons<Item>(actorInventory.Inventory, OnItemSelected));
+            SetupSelectionButtons(BuildHotKeysButtons(actorInventory.Inventory, itemAction ?? OnItemSelected));
         }
 
         private void OnItemSelected(Item item)
@@ -69,7 +69,7 @@ namespace Diviner.Windows
             _descriptionArea.Cursor.Print(item.ToString());
             _descriptionArea.Cursor.Position = new Point(0, 5);
             if (!item.Description.IsNullOrEmpty())
-                _descriptionArea.Cursor.Print(item.Description);
+                _descriptionArea.Cursor.Print(item.Description!);
         }
     }
 }

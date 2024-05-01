@@ -27,6 +27,9 @@ namespace MagusEngine.Core.Entities
         public int Condition { get; set; }
         public bool Broken => Condition > 0;
 
+        /// <summary>
+        /// In KG
+        /// </summary>
         public override double Weight
         {
             get

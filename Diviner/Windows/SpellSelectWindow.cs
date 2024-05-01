@@ -1,5 +1,6 @@
 ﻿using Diviner.Controls;
 using MagusEngine.Core.Magic;
+using MagusEngine.Utils.Extensions;
 using SadConsole;
 using SadConsole.Input;
 
@@ -20,12 +21,10 @@ namespace Diviner.Windows
             _currentMana = currentMana;
 
             const string castText = "Cast";
-            int castButtonWidth = castText.Length + 2;
 
-            _castButton = new MagiButton(castButtonWidth)
+            _castButton = new MagiButton(castText, Width, Height)
             {
                 Text = castText,
-                Position = new Point(Width - castButtonWidth - 1, Height - 2)
             };
             _castButton.Click += (_, __) =>
             {
@@ -70,8 +69,8 @@ namespace Diviner.Windows
             _descriptionArea.Cursor.Position = new Point(0, 1);
             _descriptionArea.Cursor.Print(_selectedSpell.ToString());
             _descriptionArea.Cursor.Position = new Point(0, 5);
-            if (_selectedSpell.Description is not null)
-                _descriptionArea.Cursor.Print(_selectedSpell.Description);
+            if (!_selectedSpell.Description.IsNullOrEmpty())
+                _descriptionArea.Cursor.Print(_selectedSpell.Description!);
             _castButton.IsEnabled = true;
         }
 

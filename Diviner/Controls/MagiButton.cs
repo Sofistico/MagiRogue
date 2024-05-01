@@ -39,6 +39,29 @@ namespace Diviner.Controls
         }
 
         /// <summary>
+        /// Creates a new Selection Button with a specific text.
+        /// </summary>
+        /// <param name="text">The text of the selection button.</param>
+        public MagiButton(string text, int windowWidth, int windowHeight, int height = 1) : this(text.Length + 2, height)
+        {
+            Text = text;
+            Position = new Point(windowWidth - Width - 1, windowHeight - 2);
+        }
+
+        /// <summary>
+        /// Creates a new Selection Button with a specific text and click action.
+        /// </summary>
+        /// <param name="text">The text of the selection button.</param>
+        /// <param name="action">The action of the button</param>
+        /// <param name="pos">The position in the console</param>
+        /// <param name="height">The height of the button</param>
+        public MagiButton(string text, Action action, int windowWidth, int windowHeight, int height = 1) : this(text, windowWidth, windowHeight, height)
+        {
+            Action = action;
+            Click += (_, __) => action?.Invoke();
+        }
+
+        /// <summary>
         /// Creates a new Selection Button with a specific text and click action.
         /// </summary>
         /// <param name="text">The text of the selection button.</param>
@@ -47,7 +70,6 @@ namespace Diviner.Controls
         /// <param name="height">The height of the button</param>
         public MagiButton(string text, Action action, Point pos, int height = 1) : this(text, height)
         {
-            Text = text;
             Action = action;
             Click += (_, __) => action?.Invoke();
             Position = pos;

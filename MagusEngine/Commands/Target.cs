@@ -28,6 +28,8 @@ namespace MagusEngine.Commands
         private MagiEntity? _lastControlledEntity;
         private readonly Dictionary<Point, Tile> tileDictionary;
         private static readonly Radius radius = Radius.Circle;
+        private SpellBase? _selectedSpell;
+        private Item? _selectedItem;
 
         public MagiEntity Cursor { get; set; }
 
@@ -39,9 +41,7 @@ namespace MagusEngine.Commands
 
         public Path? TravelPath { get; set; }
 
-        public int MaxDistance => SpellSelected?.SpellRange ?? 999;
-
-        public SpellBase? SpellSelected { get; set; }
+        public int MaxDistance { get; private set; } = 999;
 
         public Point Position => Cursor.Position;
 
@@ -97,9 +97,9 @@ namespace MagusEngine.Commands
 
         public void OnSelectSpell(SpellBase spell, Actor caster)
         {
-            SpellSelected = spell;
+            _selectedSpell = spell;
             _caster = caster;
-            if (SpellSelected.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Self))
+            if (_selectedSpell.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Self))
             {
                 TargetList.Add(_caster);
                 var (sucess, s) = EndSpellTargetting();
@@ -109,6 +109,17 @@ namespace MagusEngine.Commands
 
             StartTargetting();
             State = TargetState.Targeting;
+            MaxDistance = _selectedSpell?.SpellRange ?? 999;
+        }
+
+        public void OnSelectItem(Item item, Actor entity)
+        {
+            _selectedItem = item;
+            _caster = entity;
+            StartTargetting();
+            State = TargetState.Targeting;
+            // minimum is always at least one tile
+            MaxDistance = (int)MathMagi.FastRound((entity.Body.Strength + 1 + Mrn.Exploding2D6Dice) / item.Weight);
         }
 
         public void StartTargetting()
@@ -131,18 +142,18 @@ namespace MagusEngine.Commands
         {
             int distance = (int)Distance.Chebyshev.Calculate(OriginCoord, Cursor.Position);
 
-            if (SpellSelected.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Beam))
+            if (_selectedSpell.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Beam))
             {
                 return AffectPath();
             }
 
-            if (SpellSelected.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Ball)
-                || SpellSelected.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Cone))
+            if (_selectedSpell.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Ball)
+                || _selectedSpell.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Cone))
             {
                 return AffectArea();
             }
 
-            if (distance <= SpellSelected.SpellRange)
+            if (distance <= _selectedSpell.SpellRange)
             {
                 return AffectTarget();
             }
@@ -155,11 +166,11 @@ namespace MagusEngine.Commands
             bool casted;
             if (TargetList.Count > 0)
             {
-                casted = SpellSelected.CastSpell(TargetList[0].Position, _caster);
+                casted = _selectedSpell.CastSpell(TargetList[0].Position, _caster);
             }
             else if (TravelPath is not null)
             {
-                casted = SpellSelected.CastSpell(TravelPath.End, _caster);
+                casted = _selectedSpell.CastSpell(TravelPath.End, _caster);
             }
             else
             {
@@ -167,7 +178,7 @@ namespace MagusEngine.Commands
                 Locator.GetService<MessageBusService>()
                     .SendMessage<AddMessageLog>(new("An error ocurred, cound't find a target!"));
             }
-            var spellCasted = SpellSelected;
+            var spellCasted = _selectedSpell;
             EndTargetting();
             return (casted, spellCasted);
         }
@@ -179,7 +190,7 @@ namespace MagusEngine.Commands
                 State = TargetState.Resting;
                 TargetList.Clear();
 
-                SpellSelected = null;
+                _selectedSpell = null;
                 _caster = null;
 
                 if (TravelPath is not null)
@@ -211,9 +222,9 @@ namespace MagusEngine.Commands
         {
             if (TravelPath?.Length >= 1)
             {
-                bool sucess = SpellSelected.CastSpell(TravelPath.Steps.ToList(), _caster);
+                bool sucess = _selectedSpell.CastSpell(TravelPath.Steps.ToList(), _caster);
 
-                var casted = SpellSelected;
+                var casted = _selectedSpell;
 
                 EndTargetting();
 
@@ -225,7 +236,7 @@ namespace MagusEngine.Commands
 
         private (bool, SpellBase?) AffectArea()
         {
-            if (SpellSelected.Effects.Any(e => e.Radius > 0))
+            if (_selectedSpell.Effects.Any(e => e.Radius > 0))
             {
                 var allPos = new List<Point>();
 
@@ -235,7 +246,7 @@ namespace MagusEngine.Commands
                         allPos.Add(entity.Position);
                 }
 
-                if (SpellSelected.AffectsTile)
+                if (_selectedSpell.AffectsTile)
                 {
                     foreach (var pos in tileDictionary.Keys)
                     {
@@ -244,11 +255,11 @@ namespace MagusEngine.Commands
                     }
                 }
 
-                var sucess = SpellSelected.CastSpell(allPos, _caster);
+                var sucess = _selectedSpell.CastSpell(allPos, _caster);
 
                 EndTargetting();
 
-                return (sucess, SpellSelected);
+                return (sucess, _selectedSpell);
             }
             return (false, null);
         }
@@ -305,9 +316,9 @@ namespace MagusEngine.Commands
 
         private void SpellAreaHelper()
         {
-            if (SpellSelected is not null)
+            if (_selectedSpell is not null)
             {
-                if (SpellSelected.Effects.Any(a => a.AreaOfEffect is SpellAreaEffect.Ball))
+                if (_selectedSpell.Effects.Any(a => a.AreaOfEffect is SpellAreaEffect.Ball))
                 {
                     var eff = GetSpellAreaEffect(SpellAreaEffect.Ball);
                     if (eff is null) { return; }
@@ -315,18 +326,18 @@ namespace MagusEngine.Commands
 
                     foreach (Point point in radius.PositionsInRadius(radiusLocation))
                     {
-                        AddTileToDictionary(point, SpellSelected.IgnoresWall);
+                        AddTileToDictionary(point, _selectedSpell.IgnoresWall);
                         AddEntityToList(point);
                     }
                 }
 
-                if (SpellSelected.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Cone))
+                if (_selectedSpell.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Cone))
                 {
                     ISpellEffect effect = GetSpellAreaEffect(SpellAreaEffect.Cone);
                     foreach (Point point in
                         OriginCoord.Cone(effect.Radius, this, effect.ConeCircleSpan).Points)
                     {
-                        AddTileToDictionary(point, SpellSelected.IgnoresWall);
+                        AddTileToDictionary(point, _selectedSpell.IgnoresWall);
                         AddEntityToList(point);
                     }
                 }
@@ -338,7 +349,7 @@ namespace MagusEngine.Commands
             if (!EntityInTarget()
                 && Cursor.CurrentMagiMap.GetTileAt(Cursor.Position) != null)
             {
-                if(!lookMode)
+                if (!lookMode)
                     State = TargetState.Targeting;
                 return true;
             }
@@ -363,8 +374,8 @@ namespace MagusEngine.Commands
 
         public bool SpellTargetsTile()
         {
-            return SpellSelected is not null && (SpellSelected.Effects.Any(a => a.TargetsTile)
-                || SpellSelected.Effects.Any(a => a.AreaOfEffect is not SpellAreaEffect.Target));
+            return _selectedSpell is not null && (_selectedSpell.Effects.Any(a => a.TargetsTile)
+                || _selectedSpell.Effects.Any(a => a.AreaOfEffect is not SpellAreaEffect.Target));
         }
 
         /// <summary>
@@ -379,7 +390,7 @@ namespace MagusEngine.Commands
         }
 
         private ISpellEffect GetSpellAreaEffect(SpellAreaEffect areaEffect) =>
-            SpellSelected.Effects.Find(e => e.AreaOfEffect == areaEffect);
+            _selectedSpell.Effects.Find(e => e.AreaOfEffect == areaEffect);
 
         public void LookTarget()
         {

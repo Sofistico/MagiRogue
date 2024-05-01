@@ -46,8 +46,17 @@ namespace Diviner
         {
             if (info.IsKeyPressed(Keys.I))
             {
-                ui.InventoryScreen.Show();
+                ui.InventoryScreen.ShowItems(_getPlayer);
                 return true;
+            }
+
+            if (info.IsKeyPressed(Keys.T))
+            {
+                ui.InventoryScreen.ShowItems(_getPlayer, item =>
+                {
+                    _targetCursor ??= new Target(_getPlayer.Position);
+                    _targetCursor.OnSelectItem(item, _getPlayer);
+                });
             }
 
             if (info.IsKeyPressed(Keys.Escape) && ui.NoPopWindow)
@@ -199,6 +208,7 @@ namespace Diviner
                 Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.Interact, sucess));
                 return sucess;
             }
+
             if (info.IsKeyPressed(Keys.D))
             {
                 bool sucess = ActionManager.DropTopItemInv(uni.Player);
@@ -212,11 +222,6 @@ namespace Diviner
                 Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.Interact, sucess));
                 ui.MapWindow.MapConsole.IsDirty = true;
             }
-            //if (info.IsKeyPressed(Keys.H) && !info.IsKeyDown(Keys.LeftShift))
-            //{
-            //    bool sucess = ActionManager.SacrificeLifeEnergyToMana(world.Player);
-            //    world.ProcessTurn(TimeHelper.MagicalThings, sucess);
-            //}
             if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.H))
             {
                 bool sucess = ActionManager.NodeDrain(_getPlayer);
@@ -242,7 +247,7 @@ namespace Diviner
             {
                 SpellSelectWindow spell = new(_getPlayer.Soul.CurrentMana);
 
-                _targetCursor = new Target(_getPlayer.Position);
+                _targetCursor ??= new Target(_getPlayer.Position);
 
                 spell.Show(_getPlayer.Magic.KnowSpells,
                     selectedSpell => _targetCursor.OnSelectSpell(selectedSpell,
@@ -354,7 +359,7 @@ namespace Diviner
 
             if (info.IsKeyPressed(Keys.NumPad0))
             {
-                LookWindow w = new LookWindow(_getPlayer);
+                var w = new LookWindow(_getPlayer);
                 w.Show();
                 return false;
             }
