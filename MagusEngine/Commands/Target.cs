@@ -305,41 +305,39 @@ namespace MagusEngine.Commands
                         }
                     }
                 }
-
-                SpellAreaHelper();
+                if (_selectedSpell is not null)
+                    SpellAreaHelper();
             }
             catch (Exception)
             {
+                Locator.GetService<MagiLog>().Log("An error occured in the Cursor targetting!");
                 throw new Exception("An error occured in the Cursor targetting!");
             }
         }
 
         private void SpellAreaHelper()
         {
-            if (_selectedSpell is not null)
+            if (_selectedSpell.Effects.Any(a => a.AreaOfEffect is SpellAreaEffect.Ball))
             {
-                if (_selectedSpell.Effects.Any(a => a.AreaOfEffect is SpellAreaEffect.Ball))
-                {
-                    var eff = GetSpellAreaEffect(SpellAreaEffect.Ball);
-                    if (eff is null) { return; }
-                    RadiusLocationContext radiusLocation = new(Cursor.Position, eff.Radius);
+                var eff = GetSpellAreaEffect(SpellAreaEffect.Ball);
+                if (eff is null) { return; }
+                RadiusLocationContext radiusLocation = new(Cursor.Position, eff.Radius);
 
-                    foreach (Point point in radius.PositionsInRadius(radiusLocation))
-                    {
-                        AddTileToDictionary(point, _selectedSpell.IgnoresWall);
-                        AddEntityToList(point);
-                    }
+                foreach (Point point in radius.PositionsInRadius(radiusLocation))
+                {
+                    AddTileToDictionary(point, _selectedSpell.IgnoresWall);
+                    AddEntityToList(point);
                 }
+            }
 
-                if (_selectedSpell.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Cone))
+            if (_selectedSpell.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Cone))
+            {
+                ISpellEffect effect = GetSpellAreaEffect(SpellAreaEffect.Cone);
+                foreach (Point point in
+                    OriginCoord.Cone(effect.Radius, this, effect.ConeCircleSpan).Points)
                 {
-                    ISpellEffect effect = GetSpellAreaEffect(SpellAreaEffect.Cone);
-                    foreach (Point point in
-                        OriginCoord.Cone(effect.Radius, this, effect.ConeCircleSpan).Points)
-                    {
-                        AddTileToDictionary(point, _selectedSpell.IgnoresWall);
-                        AddEntityToList(point);
-                    }
+                    AddTileToDictionary(point, _selectedSpell.IgnoresWall);
+                    AddEntityToList(point);
                 }
             }
         }
