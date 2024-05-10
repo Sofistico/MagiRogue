@@ -57,7 +57,7 @@ namespace Diviner.Windows
             inventoryConsole.Surface.Surface.View = new Rectangle(0, invScrollBar.Value + WindowBorderThickness, inventoryConsole.Width, inventoryConsole.ViewHeight);
         }
 
-        public void ShowItems(Actor actorInventory, Action<Item> itemAction = null)
+        public void ShowItems(Actor actorInventory, Action<Item>? itemAction = null)
         {
             SetupSelectionButtons(BuildHotKeysButtons(actorInventory.Inventory, itemAction ?? OnItemSelected));
         }
