@@ -2,8 +2,8 @@
 {
     public enum TargetState
     {
-        Resting,
         LookMode,
-        Targeting
+        TargetingSpell,
+        TargetingItem,
     }
 }

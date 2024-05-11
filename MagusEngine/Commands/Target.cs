@@ -75,21 +75,17 @@ namespace MagusEngine.Commands
             Cursor.SadCell.AppearanceSingle!.Effect = blink;
             blink.Restart();
 
-            State = TargetState.Resting;
-
             TargetList = [];
             tileDictionary = [];
         }
 
-        public bool EntityInTarget(bool lookMode = false, bool ignorePlayer = true)
+        public bool EntityInTarget(bool ignorePlayer = true)
         {
             var entity = Cursor?.CurrentMagiMap?.GetEntitiesAt<MagiEntity>(Cursor.Position, Cursor.CurrentMagiMap.LayerMasker.MaskAllBelow((int)MapLayer.SPECIAL)).FirstOrDefault();
             if (entity is null)
                 return false;
             if (ignorePlayer && entity is Player)
                 return false;
-            if (!lookMode)
-                State = TargetState.Targeting;
             return true;
         }
 
@@ -108,7 +104,7 @@ namespace MagusEngine.Commands
             }
 
             StartTargetting();
-            State = TargetState.Targeting;
+            State = TargetState.TargetingSpell;
             MaxDistance = _selectedSpell?.SpellRange ?? 999;
         }
 
@@ -117,14 +113,14 @@ namespace MagusEngine.Commands
             _selectedItem = item;
             _caster = entity;
             StartTargetting();
-            State = TargetState.Targeting;
+            State = TargetState.TargetingItem;
             // minimum is always at least one tile
             MaxDistance = (int)MathMagi.FastRound((entity.Body.Strength + 1 + Mrn.Exploding2D6Dice) / item.Weight);
         }
 
         public void StartTargetting()
         {
-            if (State is TargetState.Targeting)
+            if (State is TargetState.TargetingSpell || State is TargetState.TargetingItem)
                 return;
             OriginCoord = new Point(Find.CurrentMap!.ControlledEntitiy!.Position.X, Find.CurrentMap.ControlledEntitiy.Position.Y);
             Cursor.Position = new Point(Find.CurrentMap.ControlledEntitiy.Position.X, Find.CurrentMap.ControlledEntitiy.Position.Y);
@@ -138,24 +134,37 @@ namespace MagusEngine.Commands
         }
 
         // TODO: Customize who should you target
-        public (bool, SpellBase) EndSpellTargetting()
+        public (bool, SpellBase?) EndSpellTargetting()
         {
             int distance = (int)Distance.Chebyshev.Calculate(OriginCoord, Cursor.Position);
 
-            if (_selectedSpell.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Beam))
+            if (_selectedSpell?.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Beam) == true)
             {
                 return AffectPath();
             }
 
-            if (_selectedSpell.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Ball)
-                || _selectedSpell.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Cone))
+            if (_selectedSpell?.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Ball) == true || _selectedSpell?.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Cone) == true)
             {
                 return AffectArea();
             }
 
-            if (distance <= _selectedSpell.SpellRange)
+            if (distance <= _selectedSpell?.SpellRange)
             {
                 return AffectTarget();
+            }
+            Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("The target is too far!"));
+            return (false, null);
+        }
+
+        public (bool, Item) EndItemTargetting()
+        {
+            int distance = (int)Distance.Chebyshev.Calculate(OriginCoord, Cursor.Position);
+
+            if (distance <= MaxDistance && _selectedItem is not null)
+            {
+                ActionManager.ShootProjectileAction(_caster.Position, Cursor.Position, _selectedItem, _caster);
+                EndTargetting();
+                return (true, _selectedItem);
             }
             Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("The target is too far!"));
             return (false, null);
@@ -187,10 +196,10 @@ namespace MagusEngine.Commands
         {
             if (Cursor.CurrentMap is not null)
             {
-                State = TargetState.Resting;
                 TargetList.Clear();
 
                 _selectedSpell = null;
+                _selectedItem = null;
                 _caster = null;
 
                 if (TravelPath is not null)
@@ -342,13 +351,12 @@ namespace MagusEngine.Commands
             }
         }
 
-        public bool TileInTarget(bool lookMode = false)
+        public bool TileInTarget()
         {
-            if (!EntityInTarget()
-                && Cursor.CurrentMagiMap.GetTileAt(Cursor.Position) != null)
+            if (!EntityInTarget() && Cursor?.CurrentMagiMap?.GetTileAt(Cursor.Position) != null)
             {
-                if (!lookMode)
-                    State = TargetState.Targeting;
+                //if (!lookMode)
+                //    State = TargetState.TargetingSpell;
                 return true;
             }
             return false;
@@ -370,10 +378,14 @@ namespace MagusEngine.Commands
             // sanity check
         }
 
-        public bool SpellTargetsTile()
+        public bool TargetsTile()
         {
-            return _selectedSpell is not null && (_selectedSpell.Effects.Any(a => a.TargetsTile)
-                || _selectedSpell.Effects.Any(a => a.AreaOfEffect is not SpellAreaEffect.Target));
+            if (State == TargetState.TargetingSpell)
+                return _selectedSpell?.Effects.Any(a => a.TargetsTile) == true || _selectedSpell?.Effects.Any(a => a.AreaOfEffect is not SpellAreaEffect.Target) == true;
+            else if (State == TargetState.TargetingItem)
+                return _selectedItem is not null;
+            else
+                return false;
         }
 
         /// <summary>
@@ -392,7 +404,7 @@ namespace MagusEngine.Commands
 
         public void LookTarget()
         {
-            if (DetermineWhatToLook(true) is MagiEntity entity)
+            if (DetermineWhatToLook() is MagiEntity entity)
             {
                 Locator.GetService<MessageBusService>().SendMessage<LookStuff>(new(entity));
             }
@@ -402,13 +414,13 @@ namespace MagusEngine.Commands
 
         private Tile? TargetAtTile() => Cursor.CurrentMagiMap.GetTileAt(Cursor.Position);
 
-        private IGameObject? DetermineWhatToLook(bool lookMode = false)
+        private IGameObject? DetermineWhatToLook()
         {
-            if (EntityInTarget(lookMode))
+            if (EntityInTarget())
             {
                 return TargetEntity();
             }
-            else if (TileInTarget(lookMode))
+            else if (TileInTarget())
             {
                 return TargetAtTile();
             }

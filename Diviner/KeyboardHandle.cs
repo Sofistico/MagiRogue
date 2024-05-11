@@ -27,7 +27,8 @@ namespace Diviner
         [NotNull]
         private static readonly Player _getPlayer = Find.Universe?.Player;
 
-        private static Target _targetCursor = null!;
+        [AllowNull]
+        private static Target? _targetCursor;
 
         private static readonly Dictionary<Keys, Direction> _movementDirectionMapping = new()
         {
@@ -271,20 +272,33 @@ namespace Diviner
 
             if (info.IsKeyPressed(Keys.Enter) && _targetCursor is not null)
             {
-                if (_targetCursor.AnyTargeted() && _targetCursor.State == TargetState.LookMode)
+                if (_targetCursor.AnyTargeted())
                 {
-                    _targetCursor.LookTarget();
-                    return true;
-                }
-                if (_targetCursor.EntityInTarget() || _targetCursor.SpellTargetsTile())
-                {
-                    var (sucess, spellCasted) = _targetCursor.EndSpellTargetting();
-
+                    bool sucess = false;
+                    long timeTaken = 0;
+                    if (_targetCursor.State == TargetState.LookMode)
+                    {
+                        _targetCursor.LookTarget();
+                        return true;
+                    }
+                    else if (_targetCursor.State == TargetState.TargetingSpell)
+                    {
+                        (sucess, var spellCasted) = _targetCursor.EndSpellTargetting();
+                        if (sucess)
+                            timeTaken = TimeHelper.GetCastingTime(_getPlayer, spellCasted);
+                    }
+                    else
+                    {
+                        (sucess, var item) = _targetCursor.EndItemTargetting();
+                        if (sucess)
+                            timeTaken = TimeHelper.GetShootingTime(_getPlayer, item.Mass);
+                    }
                     if (sucess)
                     {
                         _targetCursor = null;
-                        Locator.GetService<MessageBusService>()?.SendMessage<ProcessTurnEvent>(new(TimeHelper.GetCastingTime(_getPlayer, spellCasted), sucess));
+                        Locator.GetService<MessageBusService>()?.SendMessage<ProcessTurnEvent>(new(timeTaken, sucess));
                     }
+
                     return sucess;
                 }
                 else
@@ -364,13 +378,13 @@ namespace Diviner
                 return false;
             }
 
-            if (info.IsKeyPressed(Keys.M))
-            {
-                Item item = DataManager.QueryItemInData("ingot", DataManager.QueryMaterial("iron")!)!;
-                ActionManager.ShootProjectile(5000, _getPlayer.Position, item, Direction.Left, _getPlayer);
-                Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.GetShootingTime(_getPlayer, item.Mass), true));
-                return true;
-            }
+            //if (info.IsKeyPressed(Keys.M))
+            //{
+            //    Item item = DataManager.QueryItemInData("ingot", DataManager.QueryMaterial("iron")!)!;
+            //    ActionManager.ShootProjectile(5000, _getPlayer.Position, item, Direction.Left, _getPlayer);
+            //    Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.GetShootingTime(_getPlayer, item.Mass), true));
+            //    return true;
+            //}
 
             if (info.IsKeyDown(Keys.LeftControl)
                 && info.IsKeyDown(Keys.LeftShift)
@@ -417,30 +431,22 @@ namespace Diviner
 
             if (info.IsKeyPressed(Keys.OemPlus))
             {
-                try
+                MagiMap map = (MagiMap)_getPlayer.CurrentMap;
+                map.LastPlayerPosition = _getPlayer.Position;
+                if (Find.Universe.MapIsWorld(map))
                 {
-                    // the map is being saved, but it isn't being properly deserialized
-                    MagiMap map = (MagiMap)_getPlayer.CurrentMap;
-                    map.LastPlayerPosition = _getPlayer.Position;
-                    if (Find.Universe.MapIsWorld(map))
-                    {
-                        string json = JsonConvert.SerializeObject(Find.Universe.WorldMap);
+                    string json = JsonConvert.SerializeObject(Find.Universe.WorldMap);
 
-                        Locator.GetService<SavingService>().SaveJsonToSaveFolder(json);
-                    }
-                    else
-                    {
-                        string json = map.SaveMapToJson(_getPlayer);
-
-                        // The universe class also isn't being serialized properly, crashing newtonsoft
-                        // TODO: Revise this line of code when the time comes to work on the save system.
-                        //var gameState = JsonConvert.SerializeObject(new GameState().Universe);
-                        MapTemplate mapDeJsonified = JsonConvert.DeserializeObject<MagiMap>(json);
-                    }
+                    Locator.GetService<SavingService>().SaveJsonToSaveFolder(json);
                 }
-                catch
+                else
                 {
-                    throw;
+                    string json = map.SaveMapToJson(_getPlayer);
+
+                    // The universe class also isn't being serialized properly, crashing newtonsoft
+                    // TODO: Revise this line of code when the time comes to work on the save system.
+                    //var gameState = JsonConvert.SerializeObject(new GameState().Universe);
+                    MapTemplate mapDeJsonified = JsonConvert.DeserializeObject<MagiMap>(json);
                 }
                 return false;
             }

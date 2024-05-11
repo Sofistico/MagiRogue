@@ -116,13 +116,14 @@ namespace MagusEngine.Commands
             return TimeHelper.GetAttackTime(attacker, attack);
         }
 
-        public static void ShootProjectile(double force,
-            Point origin,
+        public static void ShootProjectileAction(Point origin,
+            Point target,
             Item projectile,
-            Direction direction,
             MagiEntity shooter)
         {
+            var direction = Direction.GetDirection(origin - target);
             var angle = GlobalRandom.DefaultRNG.NextInt(25, 95);
+            double force = 0;
             CombatSystem.ShootProjectile(force, origin, projectile, direction, angle, shooter);
         }
 
