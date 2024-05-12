@@ -76,7 +76,7 @@ namespace MagusEngine.Serialization.EntitySerialization
         public int BaseDamage { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public bool CanInteract { get; set; }
+        public bool CanInteract { get; set; } = true;
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public DamageTypes DamageType { get; set; }

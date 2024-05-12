@@ -132,6 +132,8 @@ namespace MagusEngine.Systems
 
         public static Item? QueryItemInData(string itemId, Material material) => QueryItemInData(itemId)?.ConfigureMaterial(material);
 
+        public static Item? QueryItemInData(string itemId, Material material, Point point) => QueryItemInData(itemId)?.ConfigureMaterial(material).ConfigurePoint(point);
+
         public static Furniture? QueryFurnitureInData(string furnitureId)
         {
             if (ListOfFurnitures.TryGetValue(furnitureId, out var fur))

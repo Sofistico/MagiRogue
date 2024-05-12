@@ -53,13 +53,13 @@ namespace MagusEngine.Core.Entities.StarterScenarios
 
         #endregion Skills
 
-        #region itens
+        #region items
 
         public List<string[]> Inventory { get; set; }
 
         public List<string[]> Equipment { get; set; }
 
-        #endregion itens
+        #endregion items
 
         public string[] RacesAllowed { get; set; }
 

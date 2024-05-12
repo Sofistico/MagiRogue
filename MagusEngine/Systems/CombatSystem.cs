@@ -439,7 +439,8 @@ namespace MagusEngine.Systems
             Item projectile,
             Direction direction,
             int angle,
-            MagiEntity shooter)
+            MagiEntity shooter,
+            Point? target = null)
         {
             if (projectile is null || shooter?.CurrentMagiMap is null)
                 return;
@@ -451,7 +452,7 @@ namespace MagusEngine.Systems
 
             var range = PhysicsSystem.CalculateProjectileRange(initialVelocity, angle, PhysicsConstants.PlanetGravity);
             var time = Convert.ToInt64(PhysicsSystem.CalculateProjectileTime(initialVelocity, angle, PhysicsConstants.PlanetGravity));
-            var pointToGo = direction.GetPointToGoFromOrigin(origin, (int)range);
+            Point pointToGo = target ?? direction.GetPointToGoFromOrigin(origin, (int)range);
 
             if (map.CheckForIndexOutOfBounds(pointToGo))
                 pointToGo = map.NormalizePointInsideMap(pointToGo);

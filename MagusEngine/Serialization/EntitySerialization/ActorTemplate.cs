@@ -210,7 +210,7 @@ namespace MagusEngine.Serialization.EntitySerialization
                     actor.Inventory.Add(actorTemplate.Inventory[i]);
                 }
             }
-            // needs to add the equiped itens.
+            // needs to add the equiped items.
             actor.Magic = actorTemplate.MagicStuff;
             if (actorTemplate.Equip is not null)
             {

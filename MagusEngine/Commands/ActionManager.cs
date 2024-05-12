@@ -123,8 +123,19 @@ namespace MagusEngine.Commands
         {
             var direction = Direction.GetDirection(origin - target);
             var angle = GlobalRandom.DefaultRNG.NextInt(25, 95);
-            double force = 0;
-            CombatSystem.ShootProjectile(force, origin, projectile, direction, angle, shooter);
+            double force;
+            if (shooter is Actor actor)
+            {
+                force = CombatSystem.GetAttackMomentumWithItem(actor,
+                    projectile,
+                    Attack.ConstructGenericAttack("throw", ["throw", "throws"], projectile.ItemDamageType.ToString().ToLower(), true));
+            }
+            else
+            {
+                force = 0;
+            }
+
+            CombatSystem.ShootProjectile(force, origin, projectile, direction, angle, shooter, target);
         }
 
         /// <summary>
@@ -186,7 +197,7 @@ namespace MagusEngine.Commands
             }
             else
             {
-                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("There are no itens here"));
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("There are no items here"));
                 return false;
             }
         }
@@ -255,12 +266,12 @@ namespace MagusEngine.Commands
             }
         }
 
-        public static bool DropItem(Item item, Point pos, MagiMap map, MagiEntity entity = null)
+        public static bool DropItem(Item item, Point pos, MagiMap map, MagiEntity entityNotPlayer = null)
         {
             item.Position = pos;
             map.AddMagiEntity(item);
-            if (entity != null)
-                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{entity.Name} dropped {item.Name}"));
+            if (entityNotPlayer != null)
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{entityNotPlayer.Name} dropped {item.Name}"));
             return true;
         }
 

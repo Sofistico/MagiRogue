@@ -203,19 +203,21 @@ namespace Diviner
             //} // some other thing will be in here!
             if (info.IsKeyPressed(Keys.G))
             {
-                Item item = uni.CurrentMap.GetEntityAt<Item>(uni.Player.Position);
+                Item item = uni.CurrentMap.GetEntityAt<Item>(uni.CurrentMap.ControlledEntitiy.Position);
                 bool sucess = ActionManager.PickUp(uni.Player, item);
-                ui.InventoryScreen.ShowItems(uni.Player);
                 Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.Interact, sucess));
                 return sucess;
             }
 
             if (info.IsKeyPressed(Keys.D))
             {
-                bool sucess = ActionManager.DropTopItemInv(uni.Player);
-                ui.InventoryScreen.ShowItems(uni.Player);
-                Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.Interact, sucess));
-                return sucess;
+                //bool sucess = ActionManager.DropTopItemInv(uni.Player);
+                ui.InventoryScreen.ShowItems((Actor)uni.CurrentMap.ControlledEntitiy, item =>
+                {
+                    var sucess = ActionManager.DropItem(item, _getPlayer.Position, uni.CurrentMap);
+                    Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.Interact, sucess));
+                });
+                return false;
             }
             if (info.IsKeyPressed(Keys.C))
             {
@@ -378,13 +380,13 @@ namespace Diviner
                 return false;
             }
 
-            //if (info.IsKeyPressed(Keys.M))
-            //{
-            //    Item item = DataManager.QueryItemInData("ingot", DataManager.QueryMaterial("iron")!)!;
-            //    ActionManager.ShootProjectile(5000, _getPlayer.Position, item, Direction.Left, _getPlayer);
-            //    Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.GetShootingTime(_getPlayer, item.Mass), true));
-            //    return true;
-            //}
+            if (info.IsKeyPressed(Keys.M))
+            {
+                Item item = DataManager.QueryItemInData("ingot", DataManager.QueryMaterial("iron")!, _getPlayer.Position)!;
+                //ActionManager.ShootProjectile(5000, _getPlayer.Position, item, Direction.Left, _getPlayer);
+                Locator.GetService<MessageBusService>().SendMessage<AddEntitiyCurrentMap>(new(item));
+                return true;
+            }
 
             if (info.IsKeyDown(Keys.LeftControl)
                 && info.IsKeyDown(Keys.LeftShift)

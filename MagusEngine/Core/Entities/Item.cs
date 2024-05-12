@@ -50,7 +50,7 @@ namespace MagusEngine.Core.Entities
         public int BaseDmg { get; set; } = 0;
 
         /// <summary>
-        /// How fast the item is to attack, heavier itens and lenghtier item suffer
+        /// How fast the item is to attack, heavier items and lenghtier item suffer
         /// </summary>
         public int SpeedOfAttack { get; set; } = 100;
 
@@ -99,8 +99,6 @@ namespace MagusEngine.Core.Entities
             Attacks = [];
         }
 
-        public Item ConfigureMaterial(string materialId) => ConfigureMaterial(ObjectName, DataManager.QueryMaterial(materialId));
-
         public Item ConfigureMaterial(string name, Material material, bool resetColor = false)
         {
             ArgumentNullException.ThrowIfNull(material);
@@ -114,7 +112,15 @@ namespace MagusEngine.Core.Entities
             return this;
         }
 
+        public Item ConfigureMaterial(string materialId) => ConfigureMaterial(ObjectName, DataManager.QueryMaterial(materialId));
+
         public Item ConfigureMaterial(Material? material) => ConfigureMaterial(ObjectName, material, true);
+
+        public Item? ConfigurePoint(Point point)
+        {
+            Position = point;
+            return this;
+        }
 
         public bool Equip(Actor actor)
         {
