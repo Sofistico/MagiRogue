@@ -95,8 +95,6 @@ namespace MagusEngine.Core.MapStuff
         /// 0-Furniture, 1-ghosts, 2-Items, 3-Actors, 4-Player. \nMaps can have any size, but the
         /// default is 60x60, for a nice 3600 tiles per map
         /// </summary>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
         public MagiMap(string mapName, int width = 60, int height = 60, bool usesWeighEvaluation = true) :
             base(width, height, Enum.GetNames(typeof(MapLayer)).Length - 1,
             Distance.Euclidean,
@@ -108,9 +106,9 @@ namespace MagusEngine.Core.MapStuff
             // Treat the fov as a component.
             GoRogueComponents.Add(new MagiRogueFOVVisibilityHandler(this, Color.DarkSlateGray, (int)MapLayer.GHOSTS));
 
-            _entityManager = new();
+            _entityManager = [];
             MapName = mapName;
-            MapZoneConnections = new();
+            MapZoneConnections = [];
 
             // pathfinding
             if (usesWeighEvaluation)
@@ -123,7 +121,7 @@ namespace MagusEngine.Core.MapStuff
                 AStar = new AStar(WalkabilityView, Distance.Euclidean, weights, 0.01);
             }
 
-            _idMap = new();
+            _idMap = [];
             ObjectAdded += OnObjectAdded;
             ObjectRemoved += OnObjectRemoved;
         }
@@ -350,9 +348,9 @@ namespace MagusEngine.Core.MapStuff
             return GetTileAt<T>(location.X, location.Y);
         }
 
-        public T? GetComponentInTileAt<T>(Point location, string? tag = null) where T : class
+        public T? GetComponentInTileAt<T>(Point location) where T : class
         {
-            return GetTileAt<T>(location.X, location.Y)?.GetComponent<T>(tag);
+            return GetTileAt<T>(location.X, location.Y)?.GetComponent<T>();
         }
 
         public Tile? GetTileAt(Point location) => GetTileAt<Tile>(location);

@@ -6,13 +6,17 @@ using MagusEngine.Core.MapStuff;
 using MagusEngine.ECS.Components.ActorComponents;
 using MagusEngine.ECS.Components.TilesComponents;
 using MagusEngine.Systems;
+using SadConsole;
 using SadRogue.Primitives;
+using System.Collections.Generic;
 
 namespace MagusEngine.Factory
 {
     public static class TileFactory
     {
         private static Material? cachedMaterial;
+
+        private static Dictionary<char, ColoredGlyph> appearenceCache = new();
 
         public static Tile GenericGrass(Point pos)
         {

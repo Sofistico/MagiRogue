@@ -1,10 +1,7 @@
-﻿using MagusEngine.Core.Entities.Interfaces;
-using MagusEngine.ECS.Interfaces;
-using SadConsole.Entities;
+﻿using MagusEngine.ECS.Interfaces;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 
 namespace MagusEngine.ECS
 {
@@ -35,6 +32,15 @@ namespace MagusEngine.ECS
         {
             foreach (var store in _data.Values)
                 store.RemoveIfContains(entity);
+        }
+
+        // TODO: This method probably won't work and is wrong, will need heavy testing and refactoring and reflection as well
+        public List<dynamic> GetAllContains(uint entity)
+        {
+            List<dynamic> list = [];
+            foreach (var store in _data.Values)
+                list.AddRange(store.GetIfContains(entity));
+            return list;
         }
 
         public ref T GetComponent<T>(uint obj) => ref Assure<T>().Get(obj);

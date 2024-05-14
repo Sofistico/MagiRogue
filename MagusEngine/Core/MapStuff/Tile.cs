@@ -18,18 +18,18 @@ namespace MagusEngine.Core.MapStuff
         public int MoveTimeCost { get; set; } = 100;
         public string? Name { get; set; }
         public string? Description { get; set; }
-        public List<Trait> Traits { get; set; } = new();
+        public List<Trait> Traits { get; set; } = [];
 
         public string MaterialId
         {
             get
             {
-                return _material?.Id;
+                return _material?.Id!;
             }
 
             set
             {
-                _material = DataManager.QueryMaterial(value);
+                _material = DataManager.QueryMaterial(value)!;
             }
         }
         public Material Material => _material;
@@ -40,7 +40,7 @@ namespace MagusEngine.Core.MapStuff
             bool isWalkable,
             bool isTransparent,
             Point pos,
-            IComponentCollection collection = null) : base(pos,
+            IComponentCollection? collection = null) : base(pos,
                 (int)MapLayer.TERRAIN,
                 isWalkable, isTransparent,
                 Locator.GetService<IDGenerator>() is not null ? Locator.GetService<IDGenerator>().UseID : null,
@@ -84,40 +84,41 @@ namespace MagusEngine.Core.MapStuff
             MaterialId = tile.MaterialId;
         }
 
-        public T? GetComponent<T>(string? tag = null) where T : class
-            => GoRogueComponents.GetFirst<T>(tag);
+        public T? GetComponent<T>() where T : class
+            => Locator.GetService<EntityRegistry>().GetComponent<T>(ID);
 
-        public bool GetComponent<T>(out T? comp, string? tag = null) where T : class
+        public bool GetComponent<T>(out T? comp) where T : class
         {
-            //comp = GoRogueComponents.GetFirstOrDefault<T>(tag)!;
-
             return Locator.GetService<EntityRegistry>().TryGetComponent(ID, out comp);
-            //return comp != null;
         }
 
-        public bool HasComponent<TFind>(string? tag = null) where TFind : class
+        public bool HasComponent<TFind>() where TFind : class
         {
             return Locator.GetService<EntityRegistry>().Contains<TFind>(ID);
-            //return GoRogueComponents.Contains<TFind>(tag);
         }
 
         public void RemoveComponent<T>(T comp) where T : class
         {
-            if(GoRogueComponents.Contains<T>())
+            if (GoRogueComponents.Contains<T>())
                 GoRogueComponents.Remove(comp);
             Locator.GetService<EntityRegistry>().RemoveComponent<T>(ID);
         }
 
-        //public void RemoveComponent(string tag)
-        //{
-        //    GoRogueComponents.Remove(tag);
-        //}
-
+        /// <summary>
+        /// Copies the given tile and returns it, deep copy, but not copying the components
+        /// </summary>
+        /// <returns></returns>
         public Tile Copy()
         {
             return new Tile(this);
         }
 
+        /// <summary>
+        /// Copy the tile with the pos set to the given value.
+        /// Won't copy the components right now
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
         public Tile Copy(Point pos)
         {
             var tile = Copy();
@@ -128,7 +129,7 @@ namespace MagusEngine.Core.MapStuff
 
         public void AddComponent<T>(T value, string? tag = null, bool addGoRogueComponents = false) where T : class
         {
-            if(addGoRogueComponents)
+            if (addGoRogueComponents)
                 GoRogueComponents.Add(value, tag);
             Locator.GetService<EntityRegistry>()?.AddComponent(ID, value);
         }

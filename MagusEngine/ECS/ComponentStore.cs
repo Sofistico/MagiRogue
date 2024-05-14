@@ -1,4 +1,5 @@
 ﻿using MagusEngine.ECS.Interfaces;
+using System.Collections.Generic;
 
 namespace MagusEngine.ECS
 {
@@ -30,6 +31,13 @@ namespace MagusEngine.ECS
         public void RemoveIfContains(uint entityId)
         {
             if (Contains(entityId)) Remove(entityId);
+        }
+
+        public List<dynamic> GetIfContains(uint entityId)
+        {
+            List<dynamic> list = [];
+            if (Contains(entityId)) list.Add(Get(entityId));
+            return list;
         }
 
         private void Remove(uint entityId) => Set.Remove(entityId);
