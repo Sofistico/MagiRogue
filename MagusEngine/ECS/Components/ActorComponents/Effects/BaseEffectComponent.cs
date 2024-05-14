@@ -40,7 +40,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.Effects
                 return;
             if (e.Ticks >= TickToRemove && _isActive)
             {
-                Parent?.RemoveComponent(Tag);
+                Parent?.RemoveComponent(this);
                 Locator.GetService<MessageBusService>()?
                     .SendMessage<AddMessageLog>(new(EffectMessage, Parent == Find.Universe.Player));
                 Find.Universe.Time.TurnPassed -= GetTime_TurnPassed;

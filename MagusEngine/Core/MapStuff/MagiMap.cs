@@ -43,7 +43,6 @@ namespace MagusEngine.Core.MapStuff
         private Lazy<Tile[]> lazyTiles = new();
 
         private readonly Dictionary<uint, IGameObject> _idMap;
-        private readonly EntityRegistry _registry = new(500);
 
         #endregion Fields
 
@@ -143,7 +142,7 @@ namespace MagusEngine.Core.MapStuff
                     RemoveEntity(item);
             }
 
-            _registry.RemoveComponentAll();
+            Locator.GetService<EntityRegistry>().RemoveComponentAll();
         }
 
         public void SetSeed(ulong seed, uint x, uint y, uint i)
@@ -253,7 +252,7 @@ namespace MagusEngine.Core.MapStuff
                 entity.PositionChanged -= OnPositionChanged;
 
                 _needsToUpdateActorsDict = true;
-                _registry.Destroy(entity.ID);
+                Locator.GetService<EntityRegistry>().Destroy(entity.ID);
             }
             if (_entityManager.Contains(entity.SadCell))
             {
@@ -297,7 +296,7 @@ namespace MagusEngine.Core.MapStuff
 
         public void AddComponentToEntity<T>(uint id, T component)
         {
-            _registry.AddComponent(id, component);
+            Locator.GetService<EntityRegistry>().AddComponent(id, component);
         }
 
         /// <summary>
@@ -804,14 +803,14 @@ namespace MagusEngine.Core.MapStuff
             }
         }
 
-        public IGameObject FindTypeOfFood(Food whatToEat, IGameObject entity)
+        public IGameObject? FindTypeOfFood(Food whatToEat, IGameObject entity)
         {
             const int defaultSearchRange = 25;
-
-            foreach (var objId in _registry.CompView<FoodComponent>())
+            var registry = Locator.GetService<EntityRegistry>();
+            foreach (var objId in registry.CompView<FoodComponent>())
             {
                 var searchEntity = _idMap[objId];
-                var foodComp = _registry.GetComponent<FoodComponent>(searchEntity.ID);
+                var foodComp = registry.GetComponent<FoodComponent>(searchEntity.ID);
                 if (foodComp.FoodType.HasFlag(whatToEat)
                     && searchEntity.Position.GetDistance(entity.Position) <= defaultSearchRange)
                 {
@@ -824,7 +823,7 @@ namespace MagusEngine.Core.MapStuff
 
         public Tile[] GetAllTilesWithComponents<TFind>() where TFind : class
         {
-            List<Tile> tiles = new();
+            List<Tile> tiles = [];
             foreach (var item in Terrain.Positions())
             {
                 var tile = (Tile?)Terrain[item];
@@ -833,7 +832,7 @@ namespace MagusEngine.Core.MapStuff
                     tiles.Add(tile);
                 }
             }
-            return tiles.ToArray();
+            return [.. tiles];
         }
 
         public List<Room?> FindRoomsByTag(RoomTag tag) => Rooms?.FindAll(i => i.Tag == tag)!;

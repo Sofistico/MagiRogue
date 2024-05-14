@@ -1,4 +1,5 @@
-﻿using MagusEngine.Core.Entities.Base;
+﻿using MagusEngine.Core.Entities;
+using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.ECS.Components.ActorComponents;
 using MagusEngine.ECS.Components.TilesComponents;
@@ -123,21 +124,16 @@ namespace MagusEngine.Systems
         {
             terrain.Appearence.IsVisible = true;
 
-            if (terrain.GoRogueComponents.Contains<IllusionComponent>())
-            {
-                var illusion = terrain.GoRogueComponents.GetFirstOrDefault<IllusionComponent>();
-                terrain.LastSeenAppereance?.CopyAppearanceFrom(illusion!.FakeAppearence);
-            }
-
             // If the appearances don't match currently, synchronize them
             if (terrain.LastSeenAppereance?.Matches(terrain.Appearence) == false)
             {
                 terrain.Appearence.CopyAppearanceFrom(terrain.LastSeenAppereance);
             }
-            if (terrain.GetComponent<Plant>(out var plant))
-            {
-                terrain.Appearence.CopyAppearanceFrom(plant!.SadGlyph);
-            }
+
+            if (terrain.GetComponent<ExtraAppearanceComponent>(out var appearance))
+                terrain.Appearence.CopyAppearanceFrom(appearance!.SadGlyph);
+            if (terrain.GetComponent<IllusionComponent>(out var illusion))
+                terrain.LastSeenAppereance?.CopyAppearanceFrom(illusion!.FakeAppearence);
         }
 
         /// <summary>

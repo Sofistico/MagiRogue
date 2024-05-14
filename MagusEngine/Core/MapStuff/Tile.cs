@@ -1,8 +1,7 @@
 ﻿using Arquimedes.Enumerators;
 using GoRogue.Components;
-using MagusEngine.Bus.ComponentBus;
 using MagusEngine.Core.Entities.Base;
-using MagusEngine.Services;
+using MagusEngine.ECS;
 using MagusEngine.Systems;
 using SadConsole;
 using SadRogue.Primitives;
@@ -35,10 +34,6 @@ namespace MagusEngine.Core.MapStuff
         }
         public Material Material => _material;
 
-        public Tile() : this(Color.BlueViolet, Color.Wheat, '@', true, true, Point.None)
-        {
-        }
-
         public Tile(Color foreground,
             Color background,
             char glyph,
@@ -53,6 +48,10 @@ namespace MagusEngine.Core.MapStuff
         {
             Appearence = new ColoredGlyph(foreground, background, glyph);
             LastSeenAppereance = (ColoredGlyph)Appearence.Clone();
+        }
+
+        public Tile() : this(Color.BlueViolet, Color.Wheat, '@', true, true, Point.None)
+        {
         }
 
         public Tile(Color foreground,
@@ -90,24 +89,29 @@ namespace MagusEngine.Core.MapStuff
 
         public bool GetComponent<T>(out T? comp, string? tag = null) where T : class
         {
-            comp = GoRogueComponents.GetFirstOrDefault<T>(tag)!;
-            return comp != null;
+            //comp = GoRogueComponents.GetFirstOrDefault<T>(tag)!;
+
+            return Locator.GetService<EntityRegistry>().TryGetComponent(ID, out comp);
+            //return comp != null;
         }
 
         public bool HasComponent<TFind>(string? tag = null) where TFind : class
         {
-            return GoRogueComponents.Contains<TFind>(tag);
+            return Locator.GetService<EntityRegistry>().Contains<TFind>(ID);
+            //return GoRogueComponents.Contains<TFind>(tag);
         }
 
-        public void RemoveComponent(object comp)
+        public void RemoveComponent<T>(T comp) where T : class
         {
-            GoRogueComponents.Remove(comp);
+            if(GoRogueComponents.Contains<T>())
+                GoRogueComponents.Remove(comp);
+            Locator.GetService<EntityRegistry>().RemoveComponent<T>(ID);
         }
 
-        public void RemoveComponent(string tag)
-        {
-            GoRogueComponents.Remove(tag);
-        }
+        //public void RemoveComponent(string tag)
+        //{
+        //    GoRogueComponents.Remove(tag);
+        //}
 
         public Tile Copy()
         {
@@ -122,10 +126,11 @@ namespace MagusEngine.Core.MapStuff
             return tile;
         }
 
-        public void AddComponent<T>(T value, string? tag = null) where T : class
+        public void AddComponent<T>(T value, string? tag = null, bool addGoRogueComponents = false) where T : class
         {
-            GoRogueComponents.Add(value, tag);
-            Locator.GetService<MessageBusService>()?.SendMessage<ComponentAddedCommand<T>>(new(ID, value));
+            if(addGoRogueComponents)
+                GoRogueComponents.Add(value, tag);
+            Locator.GetService<EntityRegistry>()?.AddComponent(ID, value);
         }
 
         public static Attack? ReturnAttack()

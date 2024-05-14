@@ -1,6 +1,7 @@
 ﻿using Arquimedes;
 using Arquimedes.Enumerators;
 using MagusEngine.Core;
+using MagusEngine.Core.Entities;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.ECS.Components.ActorComponents;
 using MagusEngine.ECS.Components.TilesComponents;
@@ -17,16 +18,18 @@ namespace MagusEngine.Factory
         {
             var tile = CreateTile(pos, TileType.Floor, "dirt");
             var plant = DataManager.QueryPlantInData("grass");
-            AddVegetation(tile, plant);
+            if (plant != null)
+                AddVegetation(tile, plant);
             return tile;
         }
 
         public static void AddVegetation(Tile tile, Plant plant)
         {
-            tile.AddComponent(plant);
-            if (plant.Material.ConfersTraits.Contains(Trait.GrazerEatable))
+            tile.AddComponent(new PlantComponent(plant));
+            tile.AddComponent(new ExtraAppearanceComponent(plant.GetRandomSadGlyph()));
+            if (plant?.Material?.ConfersTraits?.Contains(Trait.GrazerEatable) == true)
             {
-                tile.AddComponent(new FoodComponent(Food.Herbivore));
+                tile.AddComponent(FoodComponent.Herbivore);
                 tile.Traits.Add(Trait.GrazerEatable);
             }
         }

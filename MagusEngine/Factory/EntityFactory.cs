@@ -216,9 +216,7 @@ namespace MagusEngine.Factory
             soul.InitialMana(mind.Inteligence, race);
 
             if (anatomy.AllBPs.Any(i => i.Tissues.Any(i => i.Material.Type == MaterialType.Meat)))
-            {
-                actor.AddComponents(new FoodComponent(Food.Carnivore));
-            }
+                actor.AddComponents(FoodComponent.Carnivore);
         }
 
         public static Item ItemCreator(Point position, ItemTemplate itemTemplate)

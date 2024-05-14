@@ -465,9 +465,8 @@ namespace MagusEngine.Core.Entities
 
         public void ProcessNeeds()
         {
-            if (GoRogueComponents.Contains(typeof(NeedCollection)))
+            if (GetComponent<NeedCollection>(out var needs))
             {
-                NeedCollection needs = GetComponent<NeedCollection>();
                 int count = needs.Count;
                 for (int i = 0; i < count; i++)
                 {

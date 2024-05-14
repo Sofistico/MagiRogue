@@ -71,7 +71,7 @@ namespace MagusEngine.Generators.MapGen
             {
                 int indexDoor = GlobalRandom.DefaultRNG.NextInt(room.Doors.Count);
                 if (room.Doors.Count > 0)
-                    room.Doors[indexDoor].GoRogueComponents.GetFirst<DoorComponent>().Locked = true;
+                    room.Doors[indexDoor].GetComponent<DoorComponent>().Locked = true;
             }
         }
 

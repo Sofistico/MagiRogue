@@ -4,7 +4,7 @@
     "Name": "Grass",
     "Fores": [ "GrassColor", "DarkGrassColor" ],
     "MaterialId": "grass",
-    "Bundle": 4,
+    "MaxBundle": 4,
     "Glyphs": [ ".", ";", ",", "'", ":", "`" ]
   }
 ]

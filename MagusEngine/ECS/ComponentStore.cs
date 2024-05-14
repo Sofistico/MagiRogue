@@ -1,13 +1,8 @@
-﻿using GoRogue.Messaging;
-using MagusEngine.Bus.ComponentBus;
-using MagusEngine.ECS.Interfaces;
-using MagusEngine.Services;
+﻿using MagusEngine.ECS.Interfaces;
 
 namespace MagusEngine.ECS
 {
-    public class ComponentStore<T> : IComponentStore,
-        ISubscriber<ComponentAddedCommand<T>>,
-        ISubscriber<ComponentRemovedCommand>
+    public class ComponentStore<T> : IComponentStore
     {
         private readonly T[] instances;
         private readonly bool initialized;
@@ -20,7 +15,6 @@ namespace MagusEngine.ECS
             Set = new SparseSet(maxComponents);
             instances = new T[maxComponents];
             initialized = true;
-            Locator.GetService<MessageBusService>().RegisterAllSubscriber(this);
         }
 
         public void Add(uint entityId, T value)
@@ -39,22 +33,5 @@ namespace MagusEngine.ECS
         }
 
         private void Remove(uint entityId) => Set.Remove(entityId);
-
-        public void Handle(ComponentAddedCommand<T> message)
-        {
-            if (initialized)
-                Add(message.Id, message.Component);
-        }
-
-        public void Handle(ComponentRemovedCommand message)
-        {
-            if (initialized)
-                Remove(message.Id);
-        }
-
-        ~ComponentStore()
-        {
-            Locator.GetService<MessageBusService>().UnRegisterAllSubscriber(this);
-        }
     }
 }

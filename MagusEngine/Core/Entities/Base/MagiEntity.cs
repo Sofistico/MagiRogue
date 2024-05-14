@@ -1,7 +1,6 @@
 ﻿using Arquimedes.Interfaces;
-using MagusEngine.Bus.ComponentBus;
 using MagusEngine.Core.Magic;
-using MagusEngine.Services;
+using MagusEngine.ECS;
 using MagusEngine.Systems.Physics;
 using SadConsole.Entities;
 using SadRogue.Primitives;
@@ -220,15 +219,14 @@ namespace MagusEngine.Core.Entities.Base
             {
                 if (component is null)
                     continue;
-                GoRogueComponents.Add(component);
-                Locator.GetService<MessageBusService>()?.SendMessage<ComponentAddedCommand<T>>(new(ID, component));
+                AddComponent(component);
             }
         }
 
         public void AddComponent<T>(T component, string? tag = null) where T : class
         {
             GoRogueComponents.Add(component, tag);
-            Locator.GetService<MessageBusService>().SendMessage<ComponentAddedCommand<T>>(new(ID, component));
+            Locator.GetService<EntityRegistry>()?.AddComponent(ID, component);
         }
 
         public T GetComponent<T>() where T : class
@@ -240,30 +238,29 @@ namespace MagusEngine.Core.Entities.Base
             return component != null;
         }
 
-        public IEnumerable<T> GetComponents<T>() where T : class
-            => GoRogueComponents.GetAll<T>();
+        public IEnumerable<T> GetComponents<T>() where T : class => GoRogueComponents.GetAll<T>();
 
-        public void RemoveComponent<T>() where T : class
+        public void RemoveComponent<T>(T obj) where T : class
         {
             if (GetComponent(out T comp))
             {
                 GoRogueComponents.Remove(comp);
-                Locator.GetService<MessageBusService>().SendMessage<ComponentRemovedCommand>(new(ID));
+                Locator.GetService<EntityRegistry>().RemoveComponent<T>(ID);
             }
         }
 
-        public void RemoveComponent(string tag)
-        {
-            try
-            {
-                GoRogueComponents.Remove(tag);
-                Locator.GetService<MessageBusService>().SendMessage<ComponentRemovedCommand>(new(ID));
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+        //public void RemoveComponent(string tag)
+        //{
+        //    try
+        //    {
+        //        GoRogueComponents.Remove(tag);
+        //        Locator.GetService<EntityRegistry>().RemoveComponent<T>(ID);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //}
 
         #endregion Components
 

@@ -119,6 +119,7 @@ namespace MagusEngine.Core
                 ShearStrainAtYield = ShearStrainAtYield,
                 GasTurnsInto = GasTurnsInto,
                 SolidTurnsInto = SolidTurnsInto,
+                magiColorSerialization = magiColorSerialization
             };
         }
 
@@ -142,7 +143,7 @@ namespace MagusEngine.Core
             return magiColorSerialization ?? default;
         }
 
-        public Material GetMaterialThatLiquidTurns()
+        public Material? GetMaterialThatLiquidTurns()
         {
             if (string.IsNullOrEmpty(LiquidTurnsInto))
                 return null;

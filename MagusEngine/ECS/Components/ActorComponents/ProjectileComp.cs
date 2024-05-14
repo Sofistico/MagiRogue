@@ -80,7 +80,7 @@ namespace MagusEngine.ECS.Components.ActorComponents
                 CombatSystem.HitProjectile(Parent, _path.GetStep(_currentStep), dmgType, Parent.Material, Force, IgnoresObstacles);
                 if (Parent?.SadCell?.AppearanceSingle?.Effect != null)
                     Parent.SadCell.AppearanceSingle.Effect = null;
-                Parent?.RemoveComponent(Tag);
+                Parent?.RemoveComponent(this);
                 return 0;
             }
 

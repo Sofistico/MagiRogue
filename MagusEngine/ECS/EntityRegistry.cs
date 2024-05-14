@@ -1,7 +1,10 @@
-﻿using MagusEngine.ECS.Interfaces;
+﻿using MagusEngine.Core.Entities.Interfaces;
+using MagusEngine.ECS.Interfaces;
+using SadConsole.Entities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace MagusEngine.ECS
 {
@@ -36,7 +39,7 @@ namespace MagusEngine.ECS
 
         public ref T GetComponent<T>(uint obj) => ref Assure<T>().Get(obj);
 
-        public bool TryGetComponent<T>(uint entity, ref T component)
+        public bool TryGetComponent<T>(uint entity, out T? component)
         {
             var store = Assure<T>();
             if (store.Contains(entity))
@@ -44,8 +47,14 @@ namespace MagusEngine.ECS
                 component = store.Get(entity);
                 return true;
             }
-
+            component = default;
             return false;
+        }
+
+        public bool Contains<T>(uint entity) where T : class
+        {
+            var store = Assure<T>();
+            return store.Contains(entity);
         }
 
         public void RemoveComponent<T>(uint entity) => Assure<T>().RemoveIfContains(entity);

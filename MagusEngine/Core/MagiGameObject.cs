@@ -159,7 +159,6 @@ namespace MagusEngine.Core
         }
 
         /// <inheritdoc />
-        public void OnMapChanged(Map? newMap)
-            => this.SafelySetCurrentMap(ref _currentMap, newMap, AddedToMap, RemovedFromMap);
+        public void OnMapChanged(Map? newMap) => this.SafelySetCurrentMap(ref _currentMap, newMap, AddedToMap, RemovedFromMap);
     }
 }

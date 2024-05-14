@@ -569,9 +569,9 @@ namespace MagusEngine.Commands
                     Objective = foodItem
                 };
             }
-            if (foodItem is Tile tilePlant && tilePlant.GetComponent<Plant>(out var plant))
+            if (foodItem is Tile tilePlant && tilePlant.GetComponent<PlantComponent>(out var plantComp))
             {
-                commitedToNeed = new Need($"Eat {plant.Name}", false, 0, Actions.Eat, "Greed", $"eat {tilePlant.ID}")
+                commitedToNeed = new Need($"Eat {plantComp.Plant.Name}", false, 0, Actions.Eat, "Greed", $"eat {tilePlant.ID}")
                 {
                     Objective = foodItem
                 };
@@ -618,7 +618,7 @@ namespace MagusEngine.Commands
                 item.Condition -= 100;
                 Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"The {actor.Name} ate {item.Name}"));
             }
-            if (whatToEat is Tile tile && tile.GetComponent<Plant>(out var plant))
+            if (whatToEat is Tile tile && tile.GetComponent<PlantComponent>(out var plant))
             {
                 if (need is not null)
                     need?.Fulfill();
@@ -626,7 +626,7 @@ namespace MagusEngine.Commands
                 {
                     tile.RemoveComponent(plant);
                 }
-                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"The {actor.Name} ate {plant.Name}"));
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"The {actor.Name} ate {plant.Plant.Name}"));
             }
             return TimeHelper.Interact;
         }

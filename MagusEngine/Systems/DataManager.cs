@@ -9,7 +9,6 @@ using MagusEngine.Core.Entities.StarterScenarios;
 using MagusEngine.Core.Magic;
 using MagusEngine.Core.WorldStuff.History;
 using MagusEngine.Core.WorldStuff.TechRes;
-using MagusEngine.ECS.Components.TilesComponents;
 using MagusEngine.Serialization;
 using MagusEngine.Serialization.EntitySerialization;
 using MagusEngine.Serialization.MapConverter;
@@ -169,14 +168,14 @@ namespace MagusEngine.Systems
                 }
             }
             if (ListOfMaterials.TryGetValue(id, out var material))
-                return material.Copy();
+                return material; // when there is a need to copy the material, for now let's try the flyweight pattern
             return null;
         }
 
         public static Race? QueryRaceInData(string raceId)
         {
             if (ListOfRaces.TryGetValue(raceId, out var race))
-                return race.Clone();
+                return race;
             return null;
         }
 
@@ -247,7 +246,7 @@ namespace MagusEngine.Systems
         public static Plant? QueryPlantInData(string plantId)
         {
             if (ListOfPlants.TryGetValue(plantId, out var val))
-                return val.Copy();
+                return val;
             return null;
         }
 

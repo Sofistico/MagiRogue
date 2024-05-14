@@ -1,18 +1,15 @@
 ﻿using Arquimedes.Interfaces;
-using MagusEngine.Core;
 using MagusEngine.Serialization;
 using MagusEngine.Systems;
-using MagusEngine.Systems.Physics;
 using MagusEngine.Utils.Extensions;
 using Newtonsoft.Json;
 using SadConsole;
 using SadRogue.Primitives;
 
-namespace MagusEngine.ECS.Components.TilesComponents
+namespace MagusEngine.Core.Entities
 {
     public class Plant : IJsonKey
     {
-        private ColoredGlyph sadGlyph;
         private MagiColorSerialization fore;
         private MagiColorSerialization back;
 
@@ -54,7 +51,6 @@ namespace MagusEngine.ECS.Components.TilesComponents
         [JsonRequired]
         public char[] Glyphs { get; set; }
 
-        public ColoredGlyph SadGlyph => sadGlyph ??= new ColoredGlyph(Foreground, Background, Glyphs.GetRandomItemFromList());
         public Color Foreground => fore.Color;
         public Color Background => back.Color;
 
@@ -63,7 +59,7 @@ namespace MagusEngine.ECS.Components.TilesComponents
 
         public Material Material { get; set; }
 
-        public int Bundle { get; set; }
+        public int MaxBundle { get; set; }
 
         [JsonConstructor]
         public Plant(string? materialId = null, string[] fores = null)
@@ -77,7 +73,7 @@ namespace MagusEngine.ECS.Components.TilesComponents
         {
             fore = new(glyph.Foreground);
             back = new(glyph.Background);
-            Glyphs = new char[] { (char)glyph.Glyph };
+            Glyphs = [(char)glyph.Glyph];
         }
 
         public Plant(string foreground, Color background, char[] glyphs)
@@ -93,12 +89,14 @@ namespace MagusEngine.ECS.Components.TilesComponents
             {
                 Id = Id,
                 Name = Name,
-                Bundle = Bundle,
+                MaxBundle = MaxBundle,
                 Material = Material,
                 MaterialId = MaterialId,
                 Fores = Fores,
                 Glyphs = Glyphs,
             };
         }
+
+        public ColoredGlyph GetRandomSadGlyph() => new(Foreground, Background, Glyphs.GetRandomItemFromList());
     }
 }
