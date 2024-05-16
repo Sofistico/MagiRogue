@@ -34,10 +34,7 @@ namespace MagusEngine.Core.MapStuff
         }
         public Material Material => _material;
 
-        public Tile(Color foreground,
-            Color background,
-            char glyph,
-            bool isWalkable,
+        public Tile(bool isWalkable,
             bool isTransparent,
             Point pos,
             IComponentCollection? collection = null) : base(pos,
@@ -45,6 +42,16 @@ namespace MagusEngine.Core.MapStuff
                 isWalkable, isTransparent,
                 Locator.GetService<IDGenerator>() is not null ? Locator.GetService<IDGenerator>().UseID : null,
                 collection)
+        {
+        }
+
+        public Tile(Color foreground,
+            Color background,
+            char glyph,
+            bool isWalkable,
+            bool isTransparent,
+            Point pos,
+            IComponentCollection? collection = null) : this(isWalkable, isTransparent, pos, collection)
         {
             Appearence = new ColoredGlyph(foreground, background, glyph);
             LastSeenAppereance = (ColoredGlyph)Appearence.Clone();
@@ -64,9 +71,20 @@ namespace MagusEngine.Core.MapStuff
             string idMaterial,
             int moveTimeCost = 100) : this(foreground, background, glyph, isWalkable, isTransparent, pos)
         {
-            MoveTimeCost = moveTimeCost;
-            Name = name;
-            MaterialId = idMaterial;
+            SetUpSomeBasicProps(name, idMaterial, moveTimeCost);
+        }
+
+        public Tile(ColoredGlyph glyph,
+            bool isWalkable,
+            bool isTransparent,
+            Point pos,
+            string? name,
+            string idMaterial,
+            int moveTimeCost = 100) : this(isWalkable, isTransparent, pos)
+        {
+            SetUpSomeBasicProps(name, idMaterial, moveTimeCost);
+            Appearence = glyph;
+            LastSeenAppereance = (ColoredGlyph)glyph.Clone();
         }
 
         private Tile(Tile tile)
@@ -143,6 +161,13 @@ namespace MagusEngine.Core.MapStuff
                 AttackAbility = AbilityCategory.None,
                 DamageTypeId = "blunt",
             };
+        }
+
+        private void SetUpSomeBasicProps(string? name, string idMaterial, int moveTimeCost)
+        {
+            MoveTimeCost = moveTimeCost;
+            Name = name;
+            MaterialId = idMaterial;
         }
     }
 }

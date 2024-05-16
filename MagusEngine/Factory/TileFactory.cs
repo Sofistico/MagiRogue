@@ -16,8 +16,6 @@ namespace MagusEngine.Factory
     {
         private static Material? cachedMaterial;
 
-        private static Dictionary<char, ColoredGlyph> appearenceCache = new();
-
         public static Tile GenericGrass(Point pos)
         {
             var tile = CreateTile(pos, TileType.Floor, "dirt");
@@ -117,15 +115,13 @@ namespace MagusEngine.Factory
             TileType tileType,
             Material material)
         {
-            var (foreground, background, glyph, isWalkable, isTransparent, name)
-                = DetermineTileLookAndName(material, tileType);
+            var (foreground, background, glyph, isWalkable, isTransparent, name) = DetermineTileLookAndName(material, tileType);
             return new Tile(foreground, background, glyph, isWalkable, isTransparent, pos, name, material.Id);
         }
 
         public static void ResetCachedMaterial() => cachedMaterial = null;
 
-        private static (Color, Color, char, bool, bool, string) DetermineTileLookAndName(Material? material,
-            TileType tileType)
+        private static (Color, Color, char, bool, bool, string) DetermineTileLookAndName(Material? material, TileType tileType)
         {
             char glyph;
             bool isTransparent;
