@@ -60,6 +60,7 @@ namespace Diviner.Windows
         public void ShowItems(Actor actorInventory, Action<Item>? itemAction = null)
         {
             SetupSelectionButtons(BuildHotKeysButtons(actorInventory.Inventory, itemAction ?? OnItemSelected));
+            Show(true);
         }
 
         private void OnItemSelected(Item item)
