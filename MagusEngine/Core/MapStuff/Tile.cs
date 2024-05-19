@@ -2,7 +2,6 @@
 using GoRogue.Components;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.ECS;
-using MagusEngine.Factory;
 using MagusEngine.Systems;
 using SadConsole;
 using SadRogue.Primitives;
@@ -101,18 +100,11 @@ namespace MagusEngine.Core.MapStuff
             SetUpSomeBasicProps(tile.Name, tile.MaterialId, tile.MoveTimeCost);
         }
 
-        public T? GetComponent<T>() where T : class
-            => Locator.GetService<EntityRegistry>().GetComponent<T>(ID);
+        public T? GetComponent<T>() where T : class => Locator.GetService<EntityRegistry>().GetComponent<T>(ID);
 
-        public bool GetComponent<T>(out T? comp) where T : class
-        {
-            return Locator.GetService<EntityRegistry>().TryGetComponent(ID, out comp);
-        }
+        public bool GetComponent<T>(out T? comp) where T : class => Locator.GetService<EntityRegistry>().TryGetComponent(ID, out comp);
 
-        public bool HasComponent<TFind>() where TFind : class
-        {
-            return Locator.GetService<EntityRegistry>().Contains<TFind>(ID);
-        }
+        public bool HasComponent<TFind>() where TFind : class => Locator.GetService<EntityRegistry>().Contains<TFind>(ID);
 
         public void RemoveComponent<T>(T comp) where T : class
         {
@@ -125,10 +117,7 @@ namespace MagusEngine.Core.MapStuff
         /// Copies the given tile and returns it, deep copy, but not copying the components
         /// </summary>
         /// <returns></returns>
-        public Tile Copy()
-        {
-            return new Tile(this);
-        }
+        public Tile Copy() => new(this);
 
         /// <summary>
         /// Copy the tile with the pos set to the given value.
