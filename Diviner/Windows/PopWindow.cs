@@ -90,7 +90,7 @@ namespace Diviner.Windows
 
         public void PrintConsole(int x, int y, string text) => _descriptionArea.Print(x, y, text);
 
-        protected List<MagiButton> BuildHotKeysButtons<T>(List<T> listItems, 
+        protected List<MagiButton> BuildHotKeysButtons<T>(List<T> listItems,
             Action<T> action,
             Func<T, bool>? isEnabledFunc = null) where T : INamed
         {

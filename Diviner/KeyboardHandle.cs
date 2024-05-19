@@ -56,7 +56,13 @@ namespace Diviner
                 ui.InventoryScreen.ShowItems(_getPlayer, item =>
                 {
                     _targetCursor ??= new Target(_getPlayer.Position);
+                    if (item is null)
+                    {
+                        Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("No item selected!"));
+                        return;
+                    }
                     _targetCursor.OnSelectItem(item, _getPlayer);
+                    ui.InventoryScreen.Hide();
                 });
             }
 

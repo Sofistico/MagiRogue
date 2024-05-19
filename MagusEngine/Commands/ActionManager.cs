@@ -121,7 +121,7 @@ namespace MagusEngine.Commands
             Item projectile,
             MagiEntity shooter)
         {
-            var direction = Direction.GetDirection(origin - target);
+            var direction = Direction.GetDirection(target - origin);
             var angle = GlobalRandom.DefaultRNG.NextInt(25, 95);
             double force;
             if (shooter is Actor actor)

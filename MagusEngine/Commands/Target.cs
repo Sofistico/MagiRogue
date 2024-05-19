@@ -163,8 +163,9 @@ namespace MagusEngine.Commands
             if (distance <= MaxDistance && _selectedItem is not null)
             {
                 ActionManager.ShootProjectileAction(_caster.Position, Cursor.Position, _selectedItem, _caster);
+                var item = _selectedItem;
                 EndTargetting();
-                return (true, _selectedItem);
+                return (true, item);
             }
             Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("The target is too far!"));
             return (false, null);
@@ -265,10 +266,11 @@ namespace MagusEngine.Commands
                 }
 
                 var sucess = _selectedSpell.CastSpell(allPos, _caster);
+                var spell = _selectedSpell;
 
                 EndTargetting();
 
-                return (sucess, _selectedSpell);
+                return (sucess, spell);
             }
             return (false, null);
         }

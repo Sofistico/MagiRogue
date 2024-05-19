@@ -77,7 +77,7 @@ namespace MagusEngine.ECS.Components.ActorComponents
             {
                 // handle hit logic!
                 var dmgType = new DamageType(Parent.ItemDamageType);
-                CombatSystem.HitProjectile(Parent, _path.GetStep(_currentStep), dmgType, Parent.Material, Force, IgnoresObstacles);
+                CombatSystem.HitProjectile(Parent, _path.GetStep(_currentStep > 0 ? _currentStep - 1 : 0), dmgType, Parent.Material, Force, IgnoresObstacles);
                 if (Parent?.SadCell?.AppearanceSingle?.Effect != null)
                     Parent.SadCell.AppearanceSingle.Effect = null;
                 Parent?.RemoveComponent(this);

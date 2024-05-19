@@ -36,7 +36,7 @@ namespace Diviner.Windows
 
         public void SetupSelectionButtons(List<MagiButton> buttonsSelectionAction)
         {
-            _selectionButtons ??= new(buttonsSelectionAction);
+            _selectionButtons = new(buttonsSelectionAction);
             if (_selectionButtons.Count < 1)
             {
                 return;

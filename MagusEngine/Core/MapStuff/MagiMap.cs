@@ -274,7 +274,7 @@ namespace MagusEngine.Core.MapStuff
                 entity.Position = GetRandomWalkableTile();
                 AddEntity(entity);
 #if DEBUG
-                Debug.Print("An entity tried to telefrag in a place where it couldn't");
+                Debug.Print("An entity tried to telefrag in a place where it couldn't and/or being added more than once in the same map!");
 #endif
             }
             // Initilizes the field of view of the player, will do different for monsters
