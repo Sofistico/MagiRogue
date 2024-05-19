@@ -2,6 +2,7 @@
 using GoRogue.Components;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.ECS;
+using MagusEngine.Factory;
 using MagusEngine.Systems;
 using SadConsole;
 using SadRogue.Primitives;
@@ -11,10 +12,10 @@ namespace MagusEngine.Core.MapStuff
 {
     public class Tile : MagiGameObject
     {
-        private Material _material;
+        private Material? _material;
 
-        public ColoredGlyph Appearence { get; set; }
-        public ColoredGlyph? LastSeenAppereance { get; set; }
+        public ColoredGlyph Appearence { get; } = null!;
+        public ColoredGlyph? LastSeenAppereance { get; }
         public int MoveTimeCost { get; set; } = 100;
         public string? Name { get; set; }
         public string? Description { get; set; }
@@ -32,7 +33,7 @@ namespace MagusEngine.Core.MapStuff
                 _material = DataManager.QueryMaterial(value)!;
             }
         }
-        public Material Material => _material;
+        public Material Material => _material!;
 
         public Tile(bool isWalkable,
             bool isTransparent,
@@ -53,7 +54,7 @@ namespace MagusEngine.Core.MapStuff
             Point pos,
             IComponentCollection? collection = null) : this(isWalkable, isTransparent, pos, collection)
         {
-            Appearence = new ColoredGlyph(foreground, background, glyph);
+            Appearence = new(foreground, background, glyph);
             LastSeenAppereance = (ColoredGlyph)Appearence.Clone();
         }
 
@@ -97,9 +98,7 @@ namespace MagusEngine.Core.MapStuff
                 tile.GoRogueComponents)
         {
             Traits = tile.Traits;
-            Name = tile.Name;
-            MoveTimeCost = tile.MoveTimeCost;
-            MaterialId = tile.MaterialId;
+            SetUpSomeBasicProps(tile.Name, tile.MaterialId, tile.MoveTimeCost);
         }
 
         public T? GetComponent<T>() where T : class

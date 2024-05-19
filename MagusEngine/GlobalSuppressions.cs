@@ -5,5 +5,5 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-//[assembly: SuppressMessage("Style", "IDE0090:Usar 'new(...)'", Justification = "<Pendente>", Scope = "module")]
 [assembly: SuppressMessage("Style", "CS8602", Justification = "<Pendente>", Scope = "module")]
+[assembly: SuppressMessage("Style", "IDE0290:Usar construtor primário", Justification = "I don't like it", Scope = "module")]
