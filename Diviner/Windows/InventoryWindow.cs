@@ -15,6 +15,8 @@ namespace Diviner.Windows
 
         private readonly ScrollBar invScrollBar;
 
+        private Action<Item>? _actionContext;
+
         /// <summary>
         /// This constructor creates a new inventory window and defines the inventory console inside this window
         /// </summary>
@@ -42,14 +44,20 @@ namespace Diviner.Windows
             {
                 if (_hotKeys.TryGetValue(key.Character, out var item))
                 {
-                    // Do Something here on base of what the object is
-                    // something like item.UseObject()
+                    _actionContext?.Invoke((Item)item);
 
                     return true;
                 }
             }
 
             return base.ProcessKeyboard(info);
+        }
+
+        public override void Hide()
+        {
+            // when it closes, remove any action context!
+            _actionContext = null;
+            base.Hide();
         }
 
         private void InvScrollBar_ValueChanged(object sender, EventArgs e)
@@ -60,6 +68,7 @@ namespace Diviner.Windows
         public void ShowItems(Actor actorInventory, Action<Item>? itemAction = null)
         {
             SetupSelectionButtons(BuildHotKeysButtons(actorInventory.Inventory, itemAction ?? OnItemSelected));
+            _actionContext = itemAction;
             Show(true);
         }
 
