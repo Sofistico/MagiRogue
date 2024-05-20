@@ -60,7 +60,7 @@ namespace Diviner.Windows
             base.Hide();
         }
 
-        private void InvScrollBar_ValueChanged(object sender, EventArgs e)
+        private void InvScrollBar_ValueChanged(object? sender, EventArgs e)
         {
             inventoryConsole.Surface.Surface.View = new Rectangle(0, invScrollBar.Value + WindowBorderThickness, inventoryConsole.Width, inventoryConsole.ViewHeight);
         }
