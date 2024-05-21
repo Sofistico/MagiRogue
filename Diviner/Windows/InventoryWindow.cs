@@ -42,9 +42,9 @@ namespace Diviner.Windows
         {
             foreach (var key in info.KeysPressed)
             {
-                if (_hotKeys.TryGetValue(key.Character, out var item))
+                if (_hotKeys.TryGetValue(key.Character, out var tuple) && tuple.Item2)
                 {
-                    _actionContext?.Invoke((Item)item);
+                    _actionContext?.Invoke((Item)tuple.Item1);
 
                     return true;
                 }
@@ -56,7 +56,6 @@ namespace Diviner.Windows
         public override void Hide()
         {
             // when it closes, remove any action context!
-            _actionContext = null;
             base.Hide();
         }
 
@@ -67,8 +66,7 @@ namespace Diviner.Windows
 
         public void ShowItems(Actor actorInventory, Action<Item>? itemAction = null)
         {
-            SetupSelectionButtons(BuildHotKeysButtons(actorInventory.Inventory, itemAction ?? OnItemSelected));
-            _actionContext = itemAction;
+            RefreshControls(actorInventory, itemAction);
             Show(true);
         }
 
@@ -80,6 +78,14 @@ namespace Diviner.Windows
             _descriptionArea.Cursor.Position = new Point(0, 5);
             if (!item.Description.IsNullOrEmpty())
                 _descriptionArea.Cursor.Print(item.Description!);
+        }
+
+        private void RefreshControls(Actor actorInventory, Action<Item>? itemAction)
+        {
+            Controls.Clear();
+
+            SetupSelectionButtons(BuildHotKeysButtons(actorInventory.Inventory, itemAction ?? OnItemSelected));
+            _actionContext = itemAction;
         }
     }
 }

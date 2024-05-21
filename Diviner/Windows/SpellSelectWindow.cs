@@ -1,5 +1,6 @@
 ﻿using Diviner.Controls;
 using MagusEngine.Core.Magic;
+using MagusEngine.Systems;
 using MagusEngine.Utils.Extensions;
 using SadConsole;
 using SadConsole.Input;
@@ -37,9 +38,9 @@ namespace Diviner.Windows
         {
             foreach (var key in info.KeysPressed)
             {
-                if (_hotKeys.TryGetValue(key.Character, out var objSpell) && objSpell is SpellBase spell && _currentMana >= spell.MagicCost)
+                if (_hotKeys.TryGetValue(key.Character, out var tuple) && tuple.Item2)
                 {
-                    _onCast(spell);
+                    _onCast((SpellBase)tuple.Item1);
                     Hide();
 
                     return true;
@@ -80,7 +81,7 @@ namespace Diviner.Windows
 
             Controls.Add(_castButton);
 
-            SetupSelectionButtons(BuildHotKeysButtons(listSpells, OnSpellSelected, new Func<SpellBase, bool>(s => _currentMana >= s.MagicCost)));
+            SetupSelectionButtons(BuildHotKeysButtons(listSpells, OnSpellSelected, new Func<SpellBase, bool>(s => s.CanCast(Find.Universe.Player, false))));
         }
     }
 }

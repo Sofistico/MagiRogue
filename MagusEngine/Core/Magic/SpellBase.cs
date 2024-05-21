@@ -147,14 +147,19 @@ namespace MagusEngine.Core.Magic
             ShapingAbility = shapingAbility;
         }
 
-        public bool CanCast(MagicManager magicSkills, Actor stats)
+        public bool CanCast(Actor actor, bool tickProficiency = true)
+        {
+            return CanCast(actor.Magic, actor, tickProficiency);
+        }
+
+        public bool CanCast(MagicManager magicSkills, Actor actor, bool tickProficiency = true)
         {
             if (magicSkills.KnowSpells.Contains(this))
             {
                 int reqShapingWithDiscount;
                 try
                 {
-                    reqShapingWithDiscount = (int)(RequiredShapingSkill / (double)((stats.Soul.WillPower * 0.3) + 1));
+                    reqShapingWithDiscount = (int)(RequiredShapingSkill / (double)((actor.Soul.WillPower * 0.3) + 1));
                 }
                 catch (DivideByZeroException)
                 {
@@ -163,15 +168,15 @@ namespace MagusEngine.Core.Magic
                 }
                 bool canCast = false;
 
-                if (stats.Soul.CurrentMana <= MagicCost)
+                if (actor.Soul.CurrentMana <= MagicCost)
                 {
                     errorMessage = "You don't have enough mana to cast the spell!";
                     return canCast;
                 }
 
-                canCast = reqShapingWithDiscount <= stats.GetShapingAbility(ShapingAbility);
+                canCast = reqShapingWithDiscount <= actor.GetShapingAbility(ShapingAbility);
 
-                if (!canCast)
+                if (!canCast && tickProficiency)
                 {
                     TickProfiency();
                     errorMessage = "Can't cast the spell because you don't have the required shaping skills and/or the proficiency";

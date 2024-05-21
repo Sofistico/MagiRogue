@@ -2,7 +2,6 @@
 using Diviner.Controls;
 using MagusEngine;
 using MagusEngine.Bus.UiBus;
-using MagusEngine.Core.Entities;
 using MagusEngine.Services;
 using SadConsole;
 using SadConsole.UI.Controls;
@@ -21,7 +20,7 @@ namespace Diviner.Windows
         private readonly Button _cancelButton;
 
         protected readonly Console _descriptionArea;
-        protected readonly Dictionary<char, object> _hotKeys = [];
+        protected readonly Dictionary<char, (object, bool)> _hotKeys = [];
 
         public PopWindow(int width, int height, string title) : base(width, height, title)
         {
@@ -104,7 +103,6 @@ namespace Diviner.Windows
             {
                 var hotkeyLetter = (char)(96 + yCount);
                 var item = orderedItems[i];
-                _hotKeys.Add(hotkeyLetter, item);
                 var button = new MagiButton(ButtonWidth - 2)
                 {
                     Text = $"{hotkeyLetter}. {item.Name}",
@@ -112,8 +110,9 @@ namespace Diviner.Windows
                     IsEnabled = isEnabledFunc?.Invoke(item) ?? true,
                     Action = () => action(item)
                 };
+                _hotKeys.Add(hotkeyLetter, (item, button.IsEnabled));
                 button.Click += (_, __) => button.Action.Invoke();
-                button.Focused += (_, __) => button.Action.Invoke();
+                //button.Focused += (_, __) => button.Action.Invoke();
 
                 controlList.Add(button);
             }

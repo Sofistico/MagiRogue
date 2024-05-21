@@ -63,6 +63,7 @@ namespace Diviner
                     }
                     _targetCursor.OnSelectItem(item, _getPlayer);
                     ui.InventoryScreen.Hide();
+                    _getPlayer.Inventory.Remove(item);
                 });
             }
 
