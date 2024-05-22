@@ -35,7 +35,7 @@ namespace Diviner
 
         public MessageLogWindow MessageLog { get; set; }
         public InventoryWindow InventoryScreen { get; set; }
-        public StatusWindow StatusWindow { get; set; }
+        public BottomStatusWindow StatusWindow { get; set; }
         public MainMenuWindow MainMenu { get; set; }
         public CharacterCreationWindow CharCreationWindow { get; set; }
 
@@ -114,7 +114,7 @@ namespace Diviner
             Children.Add(InventoryScreen);
             InventoryScreen.Hide();
             const int statusWindowHeight = 4;
-            StatusWindow = new StatusWindow(width - MessageLog.Width, statusWindowHeight, "Status Window");
+            StatusWindow = new BottomStatusWindow(width - MessageLog.Width, statusWindowHeight, "Status Window");
             StatusWindow.ChangePositionToBottomPage();
             // Build the Window
             CreateMapWindow(width - MessageLog.Width, height - StatusWindow.Height, "Game Map");

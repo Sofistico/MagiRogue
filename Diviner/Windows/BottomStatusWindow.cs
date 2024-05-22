@@ -9,14 +9,14 @@ using Console = SadConsole.Console;
 
 namespace Diviner.Windows
 {
-    public class StatusWindow : MagiBaseWindow
+    public class BottomStatusWindow : MagiBaseWindow
     {
         private readonly Player? player;
         private readonly Console statsConsole;
 
         private const int windowBorderThickness = 2;
 
-        public StatusWindow(int width, int heigth, string title) : base(width, heigth, title)
+        public BottomStatusWindow(int width, int heigth, string title) : base(width, heigth, title)
         {
             player = Find.Universe.Player;
 
@@ -52,7 +52,7 @@ namespace Diviner.Windows
             Position = new Point(0, Locator.GetService<GlobalSettings>().ScreenHeight - Height);
         }
 
-        ~StatusWindow()
+        ~BottomStatusWindow()
         {
             Locator.GetService<MessageBusService>().UnRegisterAllSubscriber(this);
         }
