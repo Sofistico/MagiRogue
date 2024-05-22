@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Arquimedes.Enumerators
 {
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum Actions
+    public enum ActionsEnum
     {
         None,
         Eat,

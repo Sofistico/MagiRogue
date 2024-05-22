@@ -62,7 +62,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.Ai
                 previousKnowPath = null;
                 switch (need?.ActionToFulfillNeed)
                 {
-                    case Actions.Eat:
+                    case ActionsEnum.Eat:
                         commitedToNeed ??= ActionManager.FindFood(actor, map);
                         if (commitedToNeed?.Objective is not null)
                         {
@@ -79,7 +79,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.Ai
                         }
                         break;
 
-                    case Actions.Sleep:
+                    case ActionsEnum.Sleep:
                         commitedToNeed = ActionManager.Sleep(actor, need);
                         timeTakenAction = 100;
                         if (commitedToNeed?.TurnCounter == 0)
@@ -89,7 +89,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.Ai
 
                         break;
 
-                    case Actions.Drink:
+                    case ActionsEnum.Drink:
                         if (ActionManager.FindWater(actor, map, out var water))
                         {
                             if (map.DistanceMeasurement.Calculate(actor.Position - water.Position) <= 1) // right next to the water tile or in it
@@ -103,25 +103,25 @@ namespace MagusEngine.ECS.Components.ActorComponents.Ai
                         }
                         break;
 
-                    case Actions.Fun:
+                    case ActionsEnum.Fun:
                         break;
 
-                    case Actions.Train:
+                    case ActionsEnum.Train:
                         break;
 
-                    case Actions.Pray:
+                    case ActionsEnum.Pray:
                         break;
 
-                    case Actions.Study:
+                    case ActionsEnum.Study:
                         break;
 
-                    case Actions.Teach:
+                    case ActionsEnum.Teach:
                         break;
 
-                    case Actions.Craft:
+                    case ActionsEnum.Craft:
                         break;
 
-                    case Actions.Fight:
+                    case ActionsEnum.Fight:
                         var enemy = (Actor)need.Objective;
                         if (enemy is null) { break; }
                         if (map.DistanceMeasurement.Calculate(actor.Position - enemy.Position) <= actor.AttackRange())
@@ -134,10 +134,10 @@ namespace MagusEngine.ECS.Components.ActorComponents.Ai
                         }
                         break;
 
-                    case Actions.Bully:
+                    case ActionsEnum.Bully:
                         break;
 
-                    case Actions.PickUp:
+                    case ActionsEnum.PickUp:
                         Item item = (Item)need.Objective;
                         if (item is null) { break; }
                         if (map.DistanceMeasurement.Calculate(actor.Position, item.Position) <= 1)
@@ -151,7 +151,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.Ai
                         }
                         break;
 
-                    case Actions.Wander:
+                    case ActionsEnum.Wander:
                         timeTakenAction = ActionManager.Wander(actor);
 #if DEBUG
                         Locator.GetService<MessageBusService>()
@@ -160,7 +160,7 @@ namespace MagusEngine.ECS.Components.ActorComponents.Ai
                         need?.Fulfill();
                         break;
 
-                    case Actions.Flee:
+                    case ActionsEnum.Flee:
                         break;
                 }
             }

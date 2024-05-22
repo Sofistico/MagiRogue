@@ -21,7 +21,7 @@ namespace MagusEngine.ECS.Components.ActorComponents
         // fight in response to fighting
         public double Priority { get; set; } // what is the priority of the need? how many times must it be fulfilled?
         public double PerceivedPriority => PercentFulfilled.HasValue ? Math.Pow(1 - PercentFulfilled.Value, Priority + 1) : (int)Priority;
-        public Actions ActionToFulfillNeed { get; set; }
+        public ActionsEnum ActionToFulfillNeed { get; set; }
         public string PersonalityTrait { get; set; }
         public string HintFulfill { get; set; }
 
@@ -39,7 +39,7 @@ namespace MagusEngine.ECS.Components.ActorComponents
         public Need(string name,
             bool vital,
             double priority,
-            Actions actionsToFulfillNeed,
+            ActionsEnum actionsToFulfillNeed,
             string personalityTrait,
             string hintFulfill)
         {
@@ -53,10 +53,10 @@ namespace MagusEngine.ECS.Components.ActorComponents
 
         public static List<Need> CommonNeeds() => new()
         {
-            new Need("Eat", true, 1, Actions.Eat, "SelfControl", "food" ),
-            new Need("Drink", true, 0.75, Actions.Drink, "Temperance", "drink" ),
-            new Need("Sleep", true, 2, Actions.Sleep, "Lazyness", "rest" ),
-            new Need("Restlessness", false, 0.00007, Actions.Wander, "Patience", "wander"),
+            new Need("Eat", true, 1, ActionsEnum.Eat, "SelfControl", "food" ),
+            new Need("Drink", true, 0.75, ActionsEnum.Drink, "Temperance", "drink" ),
+            new Need("Sleep", true, 2, ActionsEnum.Sleep, "Lazyness", "rest" ),
+            new Need("Restlessness", false, 0.00007, ActionsEnum.Wander, "Patience", "wander"),
             //new Need("Fight", false, 0, Actions.Fight, "Peace", "battle" ),
         };
 
@@ -157,9 +157,9 @@ namespace MagusEngine.ECS.Components.ActorComponents
     public class NeedFulfill
     {
         public double FulfillPercent { get; set; }
-        public Actions AssocietedAction { get; set; }
+        public ActionsEnum AssocietedAction { get; set; }
 
-        public NeedFulfill(double fulfill, Actions actions)
+        public NeedFulfill(double fulfill, ActionsEnum actions)
         {
             FulfillPercent = fulfill;
             AssocietedAction = actions;

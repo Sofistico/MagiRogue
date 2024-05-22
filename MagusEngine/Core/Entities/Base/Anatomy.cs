@@ -246,17 +246,17 @@ namespace MagusEngine.Core.Entities.Base
             actor.AddComponents(needs);
             if (flags.Contains(SpecialFlag.NoSleep))
             {
-                var sleep = needs.FirstOrDefault(i => i.ActionToFulfillNeed is Actions.Sleep);
+                var sleep = needs.FirstOrDefault(i => i.ActionToFulfillNeed is ActionsEnum.Sleep);
                 needs.Remove(sleep);
             }
             if (flags.Contains(SpecialFlag.NoEat))
             {
-                var eat = needs.FirstOrDefault(i => i.ActionToFulfillNeed is Actions.Eat);
+                var eat = needs.FirstOrDefault(i => i.ActionToFulfillNeed is ActionsEnum.Eat);
                 needs.Remove(eat);
             }
             if (flags.Contains(SpecialFlag.NoDrink))
             {
-                var drink = needs.FirstOrDefault(i => i.ActionToFulfillNeed is Actions.Drink);
+                var drink = needs.FirstOrDefault(i => i.ActionToFulfillNeed is ActionsEnum.Drink);
                 needs.Remove(drink);
             }
         }

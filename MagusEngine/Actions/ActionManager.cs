@@ -557,21 +557,21 @@ namespace MagusEngine.Actions
             }
             if (foodItem is Actor victim)
             {
-                commitedToNeed = new Need($"Kill {victim}", false, 0, Actions.Fight, "Peace", $"eat {victim.ID}")
+                commitedToNeed = new Need($"Kill {victim}", false, 0, ActionsEnum.Fight, "Peace", $"eat {victim.ID}")
                 {
                     Objective = actor,
                 };
             }
             if (foodItem is Item item)
             {
-                commitedToNeed = new Need($"Pickup {item.Name}", false, 0, Actions.PickUp, "Greed", $"eat {item.ID}")
+                commitedToNeed = new Need($"Pickup {item.Name}", false, 0, ActionsEnum.PickUp, "Greed", $"eat {item.ID}")
                 {
                     Objective = foodItem
                 };
             }
             if (foodItem is Tile tilePlant && tilePlant.GetComponent<PlantComponent>(out var plantComp))
             {
-                commitedToNeed = new Need($"Eat {plantComp.Plant.Name}", false, 0, Actions.Eat, "Greed", $"eat {tilePlant.ID}")
+                commitedToNeed = new Need($"Eat {plantComp.Plant.Name}", false, 0, ActionsEnum.Eat, "Greed", $"eat {tilePlant.ID}")
                 {
                     Objective = foodItem
                 };
