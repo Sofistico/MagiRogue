@@ -11,35 +11,30 @@ namespace Diviner.Windows
     {
         private const string waitTitle = "How long you want to wait?";
         private const string wait = "{0} - Wait {1} {2}";
-        private readonly Dictionary<char, MagiButton> hotKeys = new();
 
         public WaitWindow() : base(waitTitle)
         {
             int yCount = 1;
-            var wait1Hour = new MagiButton(string.Format(wait, CharExtension.GetCharHotkey(yCount), 1, "hour"),
-                () =>
+            var wait1Hour = new MagiButton(string.Format(wait, CharExtension.GetCharHotkey(yCount), 1, "hour"), () =>
                 {
-                    ActionManager.WaitForNTurns(Find.Universe.Time.GetNHoursFromTurn(1),
-                        (Actor)Find.CurrentMap?.ControlledEntitiy);
+                    ActionManager.WaitForNTurns(Find.Universe.Time.GetNHoursFromTurn(1), (Actor)Find.CurrentMap?.ControlledEntitiy);
                     Hide();
                 }, new SadRogue.Primitives.Point(ButtonWidth, yCount));
-            var wait3Hour = new MagiButton(string.Format(wait, CharExtension.GetCharHotkey(yCount++), 3, "hours"),
-                () =>
+            var wait3Hour = new MagiButton(string.Format(wait, CharExtension.GetCharHotkey(yCount++), 3, "hours"), () =>
                 {
                     ActionManager.WaitForNTurns(Find.Universe.Time.GetNHoursFromTurn(3),
                         (Actor)Find.CurrentMap?.ControlledEntitiy);
                     Hide();
                 }, new SadRogue.Primitives.Point(ButtonWidth, yCount));
-            var wait6Hour = new MagiButton(string.Format(wait, CharExtension.GetCharHotkey(yCount++), 6, "hours"),
-                () =>
+            var wait6Hour = new MagiButton(string.Format(wait, CharExtension.GetCharHotkey(yCount++), 6, "hours"), () =>
                 {
                     ActionManager.WaitForNTurns(Find.Universe.Time.GetNHoursFromTurn(6),
                         (Actor)Find.CurrentMap?.ControlledEntitiy);
                     Hide();
                 }, new SadRogue.Primitives.Point(ButtonWidth, yCount));
-            hotKeys.Add('a', wait1Hour);
-            hotKeys.Add('b', wait3Hour);
-            hotKeys.Add('c', wait6Hour);
+            _hotKeys.Add('a', (wait1Hour, true));
+            _hotKeys.Add('b', (wait3Hour, true));
+            _hotKeys.Add('c', (wait6Hour, true));
             SetupSelectionButtons(wait1Hour, wait3Hour, wait6Hour);
             Tag = Enums.WindowTag.Wait;
         }
@@ -48,10 +43,9 @@ namespace Diviner.Windows
         {
             foreach (var key in info.KeysPressed)
             {
-                if (hotKeys.TryGetValue(key.Character, out var button))
+                if (_hotKeys.TryGetValue(key.Character, out var tuple))
                 {
-                    button.Action?.Invoke();
-                    //Hide();
+                    ((MagiButton)tuple.Item1).Action?.Invoke();
 
                     return true;
                 }
