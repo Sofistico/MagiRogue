@@ -24,7 +24,7 @@ using System.Collections.Generic;
 using System.Text;
 using MagiMap = MagusEngine.Core.MapStuff.MagiMap;
 
-namespace MagusEngine.Commands
+namespace MagusEngine.Actions
 {
     /// <summary>
     /// Contains all generic actions performed on entities and tiles including combat, movement, and
@@ -109,7 +109,7 @@ namespace MagusEngine.Commands
                 itemUsed,
                 limbAttacking);
             var staminaDiscount = attacker.Body.Stamina
-                - (attack.PrepareVelocity * 10) + (attacker.Body.Endurance * 0.5);
+                - attack.PrepareVelocity * 10 + attacker.Body.Endurance * 0.5;
             // discount stamina from the attacker
             attacker.Body.Stamina = MathMagi.Round(staminaDiscount);
 
@@ -585,7 +585,7 @@ namespace MagusEngine.Commands
             bool tileIsInvalid;
             do
             {
-                var posToGo = Utils.Extensions.MagiPointExtensions.GetPointNextToWithCardinals();
+                var posToGo = MagiPointExtensions.GetPointNextToWithCardinals();
                 tileIsInvalid = !actor.MoveBy(posToGo);
                 tries++;
             } while (tileIsInvalid && tries <= maxTries);
@@ -664,9 +664,9 @@ namespace MagusEngine.Commands
                         continue;
                     var dis = map.DistanceMeasurement.Calculate(actor.Position, danger.Position);
 
-                    bool considersDangerBasedOnSize = (danger.Flags.Contains(SpecialFlag.Predator)
-                        && actor.Volume < danger.Volume * 4)
-                        || actor.Volume < (danger.Volume * 2) - (actor.Soul.WillPower * actor.Body.Strength);
+                    bool considersDangerBasedOnSize = danger.Flags.Contains(SpecialFlag.Predator)
+                        && actor.Volume < danger.Volume * 4
+                        || actor.Volume < danger.Volume * 2 - actor.Soul.WillPower * actor.Body.Strength;
                     bool getifDangerOnViewNecessaryToworry = dis <= 15 && dis <= actor.GetViewRadius(); // 15 or view radius, whatever is lower.
 
                     return considersDangerBasedOnSize && getifDangerOnViewNecessaryToworry;

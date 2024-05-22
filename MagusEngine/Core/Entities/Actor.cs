@@ -1,8 +1,8 @@
 ﻿using Arquimedes.Enumerators;
 using GoRogue.FOV;
+using MagusEngine.Actions;
 using MagusEngine.Bus;
 using MagusEngine.Bus.UiBus;
-using MagusEngine.Commands;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.ECS.Components.ActorComponents;

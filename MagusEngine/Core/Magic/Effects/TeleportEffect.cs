@@ -1,4 +1,5 @@
 ﻿using Arquimedes.Enumerators;
+using MagusEngine.Actions;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
 using MagusEngine.Services;
@@ -32,7 +33,7 @@ namespace MagusEngine.Core.Magic.Effects
 
         public void ApplyEffect(Point target, Actor caster, SpellBase spellCasted)
         {
-            if (Commands.ActionManager.MoveActorTo(caster, target))
+            if (ActionManager.MoveActorTo(caster, target))
             {
                 Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{caster.Name} disappeared!"));
             }

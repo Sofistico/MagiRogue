@@ -2,9 +2,9 @@
 using Diviner.Enums;
 using Diviner.Windows;
 using MagusEngine;
+using MagusEngine.Actions;
 using MagusEngine.Bus.MapBus;
 using MagusEngine.Bus.UiBus;
-using MagusEngine.Commands;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.ECS.Components.ActorComponents;

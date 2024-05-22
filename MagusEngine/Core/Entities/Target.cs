@@ -1,9 +1,9 @@
 ﻿using Arquimedes.Enumerators;
 using GoRogue.GameFramework;
 using GoRogue.Pathing;
+using MagusEngine.Actions;
 using MagusEngine.Bus.MapBus;
 using MagusEngine.Bus.UiBus;
-using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic;
 using MagusEngine.Core.MapStuff;
@@ -17,7 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MagusEngine.Commands
+namespace MagusEngine.Core.Entities
 {
     /// <summary>
     /// Defines an target system.

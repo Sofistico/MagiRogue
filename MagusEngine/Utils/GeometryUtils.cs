@@ -1,5 +1,5 @@
 ﻿using GoRogue.FOV;
-using MagusEngine.Commands;
+using MagusEngine.Core.Entities;
 using MagusEngine.Systems;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;

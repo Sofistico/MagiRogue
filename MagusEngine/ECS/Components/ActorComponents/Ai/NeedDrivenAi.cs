@@ -1,8 +1,8 @@
 ﻿using Arquimedes.Enumerators;
 using GoRogue.GameFramework;
 using GoRogue.Pathing;
+using MagusEngine.Actions;
 using MagusEngine.Bus.UiBus;
-using MagusEngine.Commands;
 using MagusEngine.Core.Entities;
 using MagusEngine.Services;
 using MagusEngine.Systems.Time;

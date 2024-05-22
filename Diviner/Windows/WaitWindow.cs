@@ -1,5 +1,5 @@
 ﻿using Diviner.Controls;
-using MagusEngine.Commands;
+using MagusEngine.Actions;
 using MagusEngine.Core.Entities;
 using MagusEngine.Systems;
 using MagusEngine.Utils.Extensions;
