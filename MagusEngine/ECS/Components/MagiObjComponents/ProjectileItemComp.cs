@@ -20,7 +20,6 @@ namespace MagusEngine.ECS.Components.MagiObjComponents
         {
         }
 
-        // test this way, if it doesn't won't work, make this as an Time event.
         public override long Travel()
         {
             if (_currentStep == 0)
