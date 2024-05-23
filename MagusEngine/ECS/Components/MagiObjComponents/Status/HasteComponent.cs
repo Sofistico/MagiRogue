@@ -1,6 +1,6 @@
-﻿using MagusEngine.ECS.Components.ActorComponents.Effects;
+﻿using MagusEngine.ECS.Components.MagiObjComponents.Effects;
 
-namespace MagusEngine.ECS.Components.ActorComponents.Status
+namespace MagusEngine.ECS.Components.MagiObjComponents.Status
 {
     public class HasteComponent : BaseEffectComponent
     {

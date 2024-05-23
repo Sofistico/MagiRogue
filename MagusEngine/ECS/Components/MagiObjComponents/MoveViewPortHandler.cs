@@ -4,7 +4,7 @@ using SadConsole.Input;
 using System;
 using Console = SadConsole.Console;
 
-namespace MagusEngine.ECS.Components.ActorComponents
+namespace MagusEngine.ECS.Components.MagiObjComponents
 {
     public class MoveViewPortHandler : KeyboardConsoleComponent
     {

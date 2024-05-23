@@ -5,7 +5,7 @@ using MagusEngine.Services;
 using MagusEngine.Systems;
 using MagusEngine.Systems.Time;
 
-namespace MagusEngine.ECS.Components.ActorComponents.Effects
+namespace MagusEngine.ECS.Components.MagiObjComponents.Effects
 {
     public abstract class BaseEffectComponent : ParentAwareComponentBase<MagiEntity>
     {

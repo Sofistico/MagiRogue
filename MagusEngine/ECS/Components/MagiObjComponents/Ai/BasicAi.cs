@@ -5,7 +5,7 @@ using MagusEngine.Services;
 using MagusEngine.Systems.Time;
 using MagusEngine.Utils;
 
-namespace MagusEngine.ECS.Components.ActorComponents.Ai
+namespace MagusEngine.ECS.Components.MagiObjComponents.Ai
 {
     public class BasicAi : IAiComponent
     {

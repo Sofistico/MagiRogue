@@ -2,7 +2,7 @@
 using MagusEngine.Services;
 using MagusEngine.Systems;
 
-namespace MagusEngine.ECS.Components.ActorComponents
+namespace MagusEngine.ECS.Components.MagiObjComponents
 {
     public class TestComponent
     {

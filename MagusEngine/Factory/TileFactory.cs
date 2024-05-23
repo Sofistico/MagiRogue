@@ -3,7 +3,7 @@ using Arquimedes.Enumerators;
 using MagusEngine.Core;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.MapStuff;
-using MagusEngine.ECS.Components.ActorComponents;
+using MagusEngine.ECS.Components.MagiObjComponents;
 using MagusEngine.ECS.Components.TilesComponents;
 using MagusEngine.Systems;
 using SadConsole;

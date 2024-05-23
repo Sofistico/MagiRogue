@@ -2,7 +2,7 @@
 using MagusEngine.Core.MapStuff;
 using System;
 
-namespace MagusEngine.ECS.Components.ActorComponents.Ai
+namespace MagusEngine.ECS.Components.MagiObjComponents.Ai
 {
     public class SpellCastingAI : IAiComponent
     {

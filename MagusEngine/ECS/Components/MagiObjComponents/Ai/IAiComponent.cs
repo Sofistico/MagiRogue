@@ -1,6 +1,6 @@
 ﻿using MagusEngine.Core.MapStuff;
 
-namespace MagusEngine.ECS.Components.ActorComponents.Ai
+namespace MagusEngine.ECS.Components.MagiObjComponents.Ai
 {
     public interface IAiComponent : GoRogue.Components.ParentAware.IParentAwareComponent
     {

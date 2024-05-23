@@ -1,7 +1,7 @@
 ﻿using MagusEngine.Core.MapStuff;
 using SadConsole;
 
-namespace MagusEngine.ECS.Components.ActorComponents
+namespace MagusEngine.ECS.Components.MagiObjComponents
 {
     public class IllusionComponent
     {

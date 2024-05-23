@@ -6,7 +6,7 @@ using MagusEngine.Core;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic;
-using MagusEngine.ECS.Components.ActorComponents;
+using MagusEngine.ECS.Components.MagiObjComponents;
 using MagusEngine.ECS.Components.TilesComponents;
 using MagusEngine.Services;
 using MagusEngine.Systems.Physics;

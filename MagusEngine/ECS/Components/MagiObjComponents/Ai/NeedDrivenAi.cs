@@ -4,13 +4,14 @@ using GoRogue.Pathing;
 using MagusEngine.Actions;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
+using MagusEngine.ECS.Components.MagiObjComponents;
 using MagusEngine.Services;
 using MagusEngine.Systems.Time;
 using SadRogue.Primitives;
 using System;
 using MagiMap = MagusEngine.Core.MapStuff.MagiMap;
 
-namespace MagusEngine.ECS.Components.ActorComponents.Ai
+namespace MagusEngine.ECS.Components.MagiObjComponents.Ai
 {
     // refactor the shit out of this class when i'm done with it!
     public class NeedDrivenAi : IAiComponent, IDisposable

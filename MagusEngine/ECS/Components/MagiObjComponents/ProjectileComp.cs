@@ -8,7 +8,7 @@ using SadConsole.Effects;
 using SadRogue.Primitives;
 using System;
 
-namespace MagusEngine.ECS.Components.ActorComponents
+namespace MagusEngine.ECS.Components.MagiObjComponents
 {
     public class ProjectileComp : ParentAwareComponentBase<Item>
     {
