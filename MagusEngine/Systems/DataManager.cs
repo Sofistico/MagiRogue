@@ -34,7 +34,7 @@ namespace MagusEngine.Systems
 
         public static Dictionary<string, Material> ListOfMaterials { get; } = GetSourceTreeDict<Material>(@".\Data\Materials\material_*");
 
-        public static Dictionary<string, SpellBase> ListOfSpells { get; } = GetSourceTreeDict<SpellBase>(@".\Data\Spells\spells_*");
+        public static Dictionary<string, Spell> ListOfSpells { get; } = GetSourceTreeDict<Spell>(@".\Data\Spells\spells_*");
 
         public static Dictionary<string, Organ> ListOfOrgans { get; } = GetSourceTreeDict<Organ>(@".\Data\Bodies\organs_*");
 
@@ -101,7 +101,7 @@ namespace MagusEngine.Systems
 
         #region Query
 
-        public static SpellBase? QuerySpellInData(string spellId, double proficiency = 0)
+        public static Spell? QuerySpellInData(string spellId, double proficiency = 0)
         {
             if (ListOfSpells.TryGetValue(spellId, out var spell))
                 return spell.Copy(proficiency);

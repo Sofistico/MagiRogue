@@ -28,7 +28,7 @@ namespace MagusEngine.Core.Entities
         private MagiEntity? _lastControlledEntity;
         private readonly Dictionary<Point, Tile> tileDictionary;
         private static readonly Radius radius = Radius.Circle;
-        private SpellBase? _selectedSpell;
+        private Spell? _selectedSpell;
         private Item? _selectedItem;
 
         public MagiEntity Cursor { get; set; }
@@ -91,7 +91,7 @@ namespace MagusEngine.Core.Entities
 
         public bool AnyTargeted() => EntityInTarget() || TileInTarget();
 
-        public void OnSelectSpell(SpellBase spell, Actor caster)
+        public void OnSelectSpell(Spell spell, Actor caster)
         {
             _selectedSpell = spell;
             _caster = caster;
@@ -134,7 +134,7 @@ namespace MagusEngine.Core.Entities
         }
 
         // TODO: Customize who should you target
-        public (bool, SpellBase?) EndSpellTargetting()
+        public (bool, Spell?) EndSpellTargetting()
         {
             int distance = (int)Distance.Chebyshev.Calculate(OriginCoord, Cursor.Position);
 
@@ -171,7 +171,7 @@ namespace MagusEngine.Core.Entities
             return (false, null);
         }
 
-        private (bool, SpellBase) AffectTarget()
+        private (bool, Spell) AffectTarget()
         {
             bool casted;
             if (TargetList.Count > 0)
@@ -228,7 +228,7 @@ namespace MagusEngine.Core.Entities
             tileDictionary.Clear();
         }
 
-        private (bool, SpellBase?) AffectPath()
+        private (bool, Spell?) AffectPath()
         {
             if (TravelPath?.Length >= 1)
             {
@@ -244,7 +244,7 @@ namespace MagusEngine.Core.Entities
             return (false, null);
         }
 
-        private (bool, SpellBase?) AffectArea()
+        private (bool, Spell?) AffectArea()
         {
             if (_selectedSpell.Effects.Any(e => e.Radius > 0))
             {

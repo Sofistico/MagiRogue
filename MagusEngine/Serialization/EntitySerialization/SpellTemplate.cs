@@ -8,10 +8,10 @@ using System.Collections.Generic;
 
 namespace MagusEngine.Serialization.EntitySerialization
 {
-    public class SpellJsonConverter : JsonConverter<SpellBase>
+    public class SpellJsonConverter : JsonConverter<Spell>
     {
-        public override SpellBase ReadJson(JsonReader reader, Type objectType,
-            SpellBase? existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override Spell ReadJson(JsonReader reader, Type objectType,
+            Spell? existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
             JObject spell = JObject.Load(reader);
             IEnumerable<JToken> listEffectsJson = spell.SelectTokens("$.Effects[*]");
@@ -30,7 +30,7 @@ namespace MagusEngine.Serialization.EntitySerialization
                 effectsList.Add(eff);
             }
 
-            SpellBase createdSpell = new(
+            Spell createdSpell = new(
                 (string)spell["Id"]!,
                 (string)spell["Name"]!,
                 StringToSchool((string)spell["MagicArt"]!),
@@ -54,7 +54,7 @@ namespace MagusEngine.Serialization.EntitySerialization
             return createdSpell;
         }
 
-        public override void WriteJson(JsonWriter writer, SpellBase? value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, Spell? value, JsonSerializer serializer)
         {
             //serializer.Formatting = Formatting.Indented;
             serializer.NullValueHandling = NullValueHandling.Ignore;
@@ -167,7 +167,7 @@ namespace MagusEngine.Serialization.EntitySerialization
             ShapingAbility = shapingAbility;
         }
 
-        public static implicit operator SpellBase(SpellTemplate spellTemplate)
+        public static implicit operator Spell(SpellTemplate spellTemplate)
         {
             return new(spellTemplate.Id, spellTemplate.Name,
                 spellTemplate.MagicArt, spellTemplate.SpellRange, spellTemplate.ShapingAbility, spellTemplate.SpellLevel,
@@ -181,7 +181,7 @@ namespace MagusEngine.Serialization.EntitySerialization
             };
         }
 
-        public static implicit operator SpellTemplate(SpellBase spell)
+        public static implicit operator SpellTemplate(Spell spell)
         {
             return new SpellTemplate(spell.SpellLevel, spell.Effects, spell.Name,
                 spell.Description, spell.MagicArt, spell.SpellRange, spell.MagicCost, spell.Id, spell.Context, spell.ShapingAbility)

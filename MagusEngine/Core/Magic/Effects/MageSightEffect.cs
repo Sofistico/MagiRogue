@@ -32,7 +32,7 @@ namespace MagusEngine.Core.Magic.Effects
             AreaOfEffect = SpellAreaEffect.Self;
         }
 
-        public void ApplyEffect(Point target, Actor caster, SpellBase spellCasted)
+        public void ApplyEffect(Point target, Actor caster, Spell spellCasted)
         {
             if (caster.GetComponent(out SightComponent _))
             {

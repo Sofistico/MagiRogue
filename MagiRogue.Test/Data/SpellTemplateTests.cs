@@ -7,7 +7,7 @@ namespace MagiRogue.Test.Data
 {
     public class SpellTemplateTests
     {
-        private readonly SpellBase missile = new("magic_missile",
+        private readonly Spell missile = new("magic_missile",
             "Magic Missile",
             ArtMagic.Projection,
             5,
@@ -21,7 +21,7 @@ namespace MagiRogue.Test.Data
         public void SpellTemplateSerializationTest()
         {
             string spellSerialized = JsonConvert.SerializeObject(missile, Formatting.Indented);
-            SpellBase spellDeserialized = JsonConvert.DeserializeObject<SpellBase>(spellSerialized);
+            Spell spellDeserialized = JsonConvert.DeserializeObject<Spell>(spellSerialized);
             Assert.Equal(spellDeserialized.Id, missile.Id);
         }
     }

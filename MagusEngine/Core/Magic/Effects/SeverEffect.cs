@@ -31,12 +31,12 @@ namespace MagusEngine.Core.Magic.Effects
             BaseDamage = dmg;
         }
 
-        public void ApplyEffect(Point target, Actor caster, SpellBase spellCasted)
+        public void ApplyEffect(Point target, Actor caster, Spell spellCasted)
         {
             CutLimb(target, caster, spellCasted);
         }
 
-        private void CutLimb(Point target, Actor caster, SpellBase spellCasted)
+        private void CutLimb(Point target, Actor caster, Spell spellCasted)
         {
             // Actor because only actor have an anatomy
             Actor? poorGuy = Find.CurrentMap?.GetEntityAt<Actor>(target);

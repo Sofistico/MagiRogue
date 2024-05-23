@@ -18,7 +18,7 @@ namespace MagiRogue.Test.System.Magic
         [Fact]
         public void TestCasting()
         {
-            List<SpellBase> spellBase = new(GetListSpells());
+            List<Spell> spellBase = new(GetListSpells());
             const int weakShaping = 5;
             const int mediumShaping = 10;
             const int strongShaping = 20;
@@ -93,9 +93,9 @@ namespace MagiRogue.Test.System.Magic
                 && (canStrongCast.Count(a => a).Equals(4)));
         }
 
-        private static List<SpellBase> GetListSpells()
+        private static List<Spell> GetListSpells()
         {
-            SpellBase missile = new("magic_missile",
+            Spell missile = new("magic_missile",
                  "Magic Missile",
                 ArtMagic.Projection, 5,
                 "Mana Shaping",
@@ -104,19 +104,19 @@ namespace MagiRogue.Test.System.Magic
                 Proficiency = 1
             };
 
-            SpellBase cure = new("cure_test", "Cure Test",
+            Spell cure = new("cure_test", "Cure Test",
                 ArtMagic.BloodMagic, 0, "Mana Shaping", 1, 4)
             {
                 Proficiency = 1
             };
 
-            SpellBase haste = new("haste_self", "Haste",
+            Spell haste = new("haste_self", "Haste",
                 ArtMagic.Dimensionalism, 0, "Mana Shaping", 1, 7)
             {
                 Proficiency = 1
             };
 
-            SpellBase mageSight = new("mage_sight", "Mage Sight",
+            Spell mageSight = new("mage_sight", "Mage Sight",
                 ArtMagic.Divination, 0, "Mana Shaping", 1, 8)
             {
                 Proficiency = 1

@@ -21,7 +21,7 @@ namespace MagusEngine.Core.Magic.Effects
         public string? EffectMessage { get; set; }
         public int Volume { get; set; }
 
-        public void ApplyEffect(Point target, Actor caster, SpellBase spellCasted)
+        public void ApplyEffect(Point target, Actor caster, Spell spellCasted)
         {
             var entity = caster.CurrentMagiMap.GetEntityAt<MagiEntity>(target);
             var hit = CombatSystem.ResolveSpellHit(entity, caster, spellCasted, this);

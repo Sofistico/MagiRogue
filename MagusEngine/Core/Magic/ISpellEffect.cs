@@ -26,7 +26,7 @@ namespace MagusEngine.Core.Magic
         int Volume { get; set; }
         bool IsResistable { get; set; }
 
-        void ApplyEffect(Point target, Actor caster, SpellBase spellCasted);
+        void ApplyEffect(Point target, Actor caster, Spell spellCasted);
 
         DamageType? GetDamageType();
     }

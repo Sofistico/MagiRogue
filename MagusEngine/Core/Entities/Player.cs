@@ -24,26 +24,26 @@ namespace MagusEngine.Core.Entities
 
             player.Magic.KnowSpells[0].Proficiency = 1;
 
-            SpellBase cure = DataManager.QuerySpellInData("minor_cure", 1);
+            Spell cure = DataManager.QuerySpellInData("minor_cure", 1);
 
-            SpellBase haste = DataManager.QuerySpellInData("haste_self", 1);
+            Spell haste = DataManager.QuerySpellInData("haste_self", 1);
 
-            SpellBase mageSight = DataManager.QuerySpellInData("mage_sight", 1);
+            Spell mageSight = DataManager.QuerySpellInData("mage_sight", 1);
 
-            SpellBase fireRay = DataManager.QuerySpellInData("fire_ray", 1);
+            Spell fireRay = DataManager.QuerySpellInData("fire_ray", 1);
 
-            SpellBase fireBall = DataManager.QuerySpellInData("fire_ball", 1);
+            Spell fireBall = DataManager.QuerySpellInData("fire_ball", 1);
 
-            SpellBase severWhip = DataManager.QuerySpellInData("sever_whip", 1);
+            Spell severWhip = DataManager.QuerySpellInData("sever_whip", 1);
 
-            SpellBase teleport = DataManager.QuerySpellInData("teleport", 1);
+            Spell teleport = DataManager.QuerySpellInData("teleport", 1);
 
-            SpellBase coneOfCold = DataManager.QuerySpellInData("cone_cold", 1);
-            SpellBase fingerOfDeath = DataManager.QuerySpellInData("finger_death", 1);
+            Spell coneOfCold = DataManager.QuerySpellInData("cone_cold", 1);
+            Spell fingerOfDeath = DataManager.QuerySpellInData("finger_death", 1);
 
-            SpellBase knockBack = DataManager.QuerySpellInData("push", 1);
+            Spell knockBack = DataManager.QuerySpellInData("push", 1);
 
-            List<SpellBase> testSpells = new()
+            List<Spell> testSpells = new()
             {
                 cure,
                 haste,

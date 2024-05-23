@@ -16,7 +16,7 @@ namespace MagusEngine.Core.Magic
     public class MagicManager
     {
         // Create a magic inspired by Mother of learning
-        public List<SpellBase> KnowSpells { get; set; }
+        public List<Spell> KnowSpells { get; set; }
         public List<EffectType> KnowEffects { get; set; }
         public List<SpellAreaEffect> KnowArea { get; set; }
         public List<DamageTypes> KnowDamageTypes { get; set; }
@@ -35,7 +35,7 @@ namespace MagusEngine.Core.Magic
             Enchantments = [];
         }
 
-        public static int CalculateSpellDamage(Actor entityStats, SpellBase spellCasted)
+        public static int CalculateSpellDamage(Actor entityStats, Spell spellCasted)
         {
             int baseDamage = (int)(spellCasted.Power + spellCasted.SpellLevel
                 + entityStats.Mind.Inteligence + (entityStats.Soul.WillPower * 0.5));
@@ -44,17 +44,17 @@ namespace MagusEngine.Core.Magic
             return (int)(rngDmg * spellCasted.Proficiency);
         }
 
-        public static bool PenetrateResistance(SpellBase spellCasted, MagiEntity caster, MagiEntity defender,
+        public static bool PenetrateResistance(Spell spellCasted, MagiEntity caster, MagiEntity defender,
             int bonusLuck) =>
             (int)((0.3 * spellCasted.Proficiency) + (caster.GetShapingAbility(spellCasted.ShapingAbility) * 0.5)
             + caster.GetPenetration()) + bonusLuck >= defender.GetMagicResistance() * 2;
 
-        public SpellBase? QuerySpell(string spellId)
+        public Spell? QuerySpell(string spellId)
         {
             return KnowSpells.Find(i => i.Id.Equals(spellId));
         }
 
-        public bool AddToSpellList(SpellBase spell)
+        public bool AddToSpellList(Spell spell)
         {
             if (KnowSpells.Contains(spell, new SpellComparator()))
             {
@@ -82,14 +82,14 @@ namespace MagusEngine.Core.Magic
         }
     }
 
-    public class SpellComparator : IEqualityComparer<SpellBase>
+    public class SpellComparator : IEqualityComparer<Spell>
     {
-        public bool Equals(SpellBase? x, SpellBase? y)
+        public bool Equals(Spell? x, Spell? y)
         {
             return x!.Id.Equals(y!.Id);
         }
 
-        public int GetHashCode([DisallowNull] SpellBase obj)
+        public int GetHashCode([DisallowNull] Spell obj)
         {
             return obj.GetHashCode();
         }

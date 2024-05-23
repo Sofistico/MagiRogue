@@ -35,7 +35,7 @@ namespace MagusEngine.Core.Magic.Effects
             Duration = duration;
         }
 
-        public void ApplyEffect(Point target, Actor caster, SpellBase spellCasted)
+        public void ApplyEffect(Point target, Actor caster, Spell spellCasted)
         {
             switch (AreaOfEffect)
             {

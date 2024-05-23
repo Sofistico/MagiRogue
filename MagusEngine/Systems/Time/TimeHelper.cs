@@ -42,7 +42,7 @@ namespace MagusEngine.Systems.Time
             return (long)actor.GetAttackVelocity(attack) / ((int)attack.RecoverVelocity + 1);
         }
 
-        public static long GetCastingTime(Actor actor, SpellBase spellCasted)
+        public static long GetCastingTime(Actor actor, Spell spellCasted)
         {
             return (long)(MagicalThings * (spellCasted.SpellLevel + spellCasted.MagicCost) / actor.GetActorBaseCastingSpeed(spellCasted.ShapingAbility));
         }

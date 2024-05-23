@@ -33,7 +33,7 @@ namespace MagusEngine.Systems
             BodyPart? limbAttacked = null,
             Item? weapon = null,
             BodyPart? limbAttacking = null,
-            SpellBase? spellUsed = null)
+            Spell? spellUsed = null)
         {
             if (entity is Actor actor)
             {
@@ -73,7 +73,7 @@ namespace MagusEngine.Systems
             }
         }
 
-        private static double CalculateAttackVolume(SpellBase? spellUsed, Item? weapon, BodyPart? limbAttacking)
+        private static double CalculateAttackVolume(Spell? spellUsed, Item? weapon, BodyPart? limbAttacking)
         {
             if (spellUsed != null)
                 return spellUsed.Effects.Sum(i => i.Volume);
@@ -289,7 +289,7 @@ namespace MagusEngine.Systems
 
         private static void ResolveResist(MagiEntity poorGuy,
             Actor caster,
-            SpellBase spellCasted,
+            Spell spellCasted,
             ISpellEffect effect,
             Attack attack)
         {
@@ -300,7 +300,7 @@ namespace MagusEngine.Systems
                 Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{poorGuy.Name} resisted the effects of {spellCasted.Name}"));
         }
 
-        public static void ResolveSpellHit(MagiEntity poorGuy, Actor caster, SpellBase spellCasted, ISpellEffect effect, Attack attack)
+        public static void ResolveSpellHit(MagiEntity poorGuy, Actor caster, Spell spellCasted, ISpellEffect effect, Attack attack)
         {
             var hit = ResolveSpellHit(poorGuy, caster, spellCasted, effect);
             if (hit)
@@ -309,7 +309,7 @@ namespace MagusEngine.Systems
             }
         }
 
-        public static bool ResolveSpellHit(MagiEntity poorGuy, Actor caster, SpellBase spellCasted, ISpellEffect effect)
+        public static bool ResolveSpellHit(MagiEntity poorGuy, Actor caster, Spell spellCasted, ISpellEffect effect)
         {
             if (!effect.CanMiss)
             {

@@ -31,7 +31,7 @@ namespace MagusEngine.Core.Magic.Effects
             Radius = radius;
         }
 
-        public void ApplyEffect(Point target, Actor caster, SpellBase spellCasted)
+        public void ApplyEffect(Point target, Actor caster, Spell spellCasted)
         {
             if (ActionManager.MoveActorTo(caster, target))
             {

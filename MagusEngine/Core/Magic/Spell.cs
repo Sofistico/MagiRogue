@@ -19,7 +19,7 @@ namespace MagusEngine.Core.Magic
     /// the effects that it will have.
     /// </summary>
     [JsonConverter(typeof(SpellJsonConverter))]
-    public class SpellBase : IJsonKey, INamed
+    public sealed class Spell : IJsonKey, INamed
     {
         private double proficency;
         private string errorMessage = "Can't cast the spell";
@@ -116,7 +116,7 @@ namespace MagusEngine.Core.Magic
         /// <summary>
         /// Empty constructor, a waste of space
         /// </summary>
-        public SpellBase()
+        public Spell()
         {
         }
 
@@ -129,7 +129,7 @@ namespace MagusEngine.Core.Magic
         /// <param name="spellRange">The range of the spell</param>
         /// <param name="spellLevel">The level of the spell, going from 1 to 9</param>
         /// <param name="magicCost">The mana cost of the spell, should be more than 0.1</param>
-        public SpellBase(string spellId,
+        public Spell(string spellId,
             string name,
             ArtMagic magicArt,
             int spellRange,
@@ -261,7 +261,7 @@ namespace MagusEngine.Core.Magic
             return false;
         }
 
-        public SpellBase Copy()
+        public Spell Copy()
         {
             return new()
             {
@@ -282,7 +282,7 @@ namespace MagusEngine.Core.Magic
             };
         }
 
-        public SpellBase Copy(double proficiency)
+        public Spell Copy(double proficiency)
         {
             var copy = Copy();
             copy.Proficiency = proficiency;

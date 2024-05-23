@@ -22,7 +22,7 @@ namespace MagusEngine.Core.Magic.Effects
         public string? EffectMessage { get; set; }
         public int Volume { get; set; }
 
-        public void ApplyEffect(Point target, Actor caster, SpellBase spellCasted)
+        public void ApplyEffect(Point target, Actor caster, Spell spellCasted)
         {
             throw new NotImplementedException();
         }

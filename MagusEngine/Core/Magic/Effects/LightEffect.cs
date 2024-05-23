@@ -18,7 +18,7 @@ namespace MagusEngine.Core.Magic.Effects
         public int Duration { get; set; }
         public int Volume { get; set; }
 
-        public void ApplyEffect(Point target, Actor caster, SpellBase spellCasted)
+        public void ApplyEffect(Point target, Actor caster, Spell spellCasted)
         {
             throw new System.NotImplementedException();
         }

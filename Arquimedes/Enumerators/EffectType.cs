@@ -12,5 +12,6 @@
         TELEPORT,
         KNOCKBACK,
         LIGHT,
+        KINESIS,
     }
 }

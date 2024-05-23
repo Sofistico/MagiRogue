@@ -13,8 +13,8 @@ namespace Diviner.Windows
     public class SpellSelectWindow : PopWindow
     {
         private readonly MagiButton _castButton;
-        private SpellBase _selectedSpell;
-        private Action<SpellBase> _onCast;
+        private Spell _selectedSpell;
+        private Action<Spell> _onCast;
         private double _currentMana;
 
         public SpellSelectWindow(double currentMana) : base("Select your spell")
@@ -40,7 +40,7 @@ namespace Diviner.Windows
             {
                 if (_hotKeys.TryGetValue(key.Character, out var tuple) && tuple.Item2)
                 {
-                    _onCast((SpellBase)tuple.Item1);
+                    _onCast((Spell)tuple.Item1);
                     Hide();
 
                     return true;
@@ -49,7 +49,7 @@ namespace Diviner.Windows
             return base.ProcessKeyboard(info);
         }
 
-        public void Show(List<SpellBase> listSpells, Action<SpellBase> onCast, double currentMana)
+        public void Show(List<Spell> listSpells, Action<Spell> onCast, double currentMana)
         {
             _currentMana = currentMana;
             _onCast = onCast;
@@ -63,7 +63,7 @@ namespace Diviner.Windows
             base.Show(true);
         }
 
-        public void OnSpellSelected(SpellBase spell)
+        public void OnSpellSelected(Spell spell)
         {
             _selectedSpell = spell;
             _descriptionArea.Clear();
@@ -75,13 +75,13 @@ namespace Diviner.Windows
             _castButton.IsEnabled = true;
         }
 
-        private void RefreshControls(List<SpellBase> listSpells)
+        private void RefreshControls(List<Spell> listSpells)
         {
             Controls.Clear();
 
             Controls.Add(_castButton);
 
-            SetupSelectionButtons(BuildHotKeysButtons(listSpells, OnSpellSelected, new Func<SpellBase, bool>(s => s.CanCast(Find.Universe.Player, false))));
+            SetupSelectionButtons(BuildHotKeysButtons(listSpells, OnSpellSelected, new Func<Spell, bool>(s => s.CanCast(Find.Universe.Player, false))));
         }
     }
 }

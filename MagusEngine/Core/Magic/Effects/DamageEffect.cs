@@ -53,7 +53,7 @@ namespace MagusEngine.Core.Magic.Effects
             IsResistable = isResistable;
         }
 
-        public void ApplyEffect(Point target, Actor caster, SpellBase spellCasted)
+        public void ApplyEffect(Point target, Actor caster, Spell spellCasted)
         {
             switch (AreaOfEffect)
             {
@@ -70,7 +70,7 @@ namespace MagusEngine.Core.Magic.Effects
             }
         }
 
-        private void DmgEff(Point target, Actor caster, SpellBase spellCasted)
+        private void DmgEff(Point target, Actor caster, Spell spellCasted)
         {
             BaseDamage = MagicManager.CalculateSpellDamage(caster, spellCasted);
 
@@ -94,7 +94,7 @@ namespace MagusEngine.Core.Magic.Effects
             CombatSystem.ResolveSpellHit(poorGuy, caster, spellCasted, this, ReturnAttack());
         }
 
-        private void HealEffect(Point target, Actor caster, SpellBase spellCasted)
+        private void HealEffect(Point target, Actor caster, Spell spellCasted)
         {
             BaseDamage = MagicManager.CalculateSpellDamage(caster, spellCasted);
 
