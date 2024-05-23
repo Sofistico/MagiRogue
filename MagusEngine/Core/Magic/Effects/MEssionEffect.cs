@@ -21,6 +21,7 @@ namespace MagusEngine.Core.Magic.Effects
         public bool IsResistable { get; set; }
         public string? EffectMessage { get; set; }
         public int Volume { get; set; }
+        public bool IgnoresWall { get; set; }
 
         public void ApplyEffect(Point target, Actor caster, Spell spellCasted)
         {

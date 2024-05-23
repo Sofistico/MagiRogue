@@ -81,40 +81,16 @@ namespace MagusEngine.Serialization.EntitySerialization
         /// </summary>
         private static ISpellEffect? EnumToEffect(EffectType effect, JToken jToken)
         {
-            bool? canMiss = (bool?)jToken["CanMiss"];
-            bool? isHealing = (bool?)jToken["IsHealing"];
-            int? radius = (int?)jToken["Radius"];
-            bool? resistable = (bool?)jToken["IsResistable"];
-            string? damageId = (string?)jToken["SpellDamageTypeId"];
-            int? velocityMulti = (int?)jToken["VelocityMultiplier"];
-            double? penetrationPercent = (double?)jToken["PenetrationPercentage"];
-            int? volume = (int?)jToken["Volume"];
             return effect switch
             {
-                EffectType.DAMAGE => new DamageEffect((int)jToken["BaseDamage"]!, StringToAreaEffect((string)jToken["AreaOfEffect"]!), damageId!)
-                {
-                    CanMiss = canMiss ?? false,
-                    IsHealing = isHealing ?? false,
-                    Radius = radius ?? 0,
-                    IsResistable = resistable ?? false,
-                    PenetrationPercentage = penetrationPercent ?? 0,
-                    VelocityMultiplier = velocityMulti ?? 0,
-                    Volume = volume ?? 0,
-                },
-                EffectType.HASTE => new HasteEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]!),
-                    (int)jToken["HastePower"]!,
-                    (int)jToken["Duration"]!,
-                    damageId!),
-                EffectType.MAGESIGHT => new MageSightEffect((int)jToken["Duration"]!),
-                EffectType.SEVER => new SeverEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]!),
-                    damageId!,
-                    (int)jToken["Radius"]!, (int)jToken["BaseDamage"]!),
-                EffectType.TELEPORT => new TeleportEffect(StringToAreaEffect((string)jToken["AreaOfEffect"]!),
-                    damageId!,
-                    (int)jToken["Radius"]!),
-                EffectType.KNOCKBACK => JsonConvert.DeserializeObject<KnockbackEffect>(jToken.ToString()),
-                EffectType.LIGHT => JsonConvert.DeserializeObject<LightEffect>(jToken.ToString()),
-                EffectType.MEMISSION => JsonConvert.DeserializeObject<MEssionEffect>(jToken.ToString()),
+                EffectType.DAMAGE => jToken.ToObject<DamageEffect>(),
+                EffectType.HASTE => jToken.ToObject<HasteEffect>()!,
+                EffectType.MAGESIGHT => jToken.ToObject<MageSightEffect>(),
+                EffectType.SEVER => jToken.ToObject<SeverEffect>(),
+                EffectType.TELEPORT => jToken.ToObject<TeleportEffect>(),
+                EffectType.KNOCKBACK => jToken.ToObject<KnockbackEffect>(),
+                EffectType.LIGHT => jToken.ToObject<LightEffect>(),
+                EffectType.MEMISSION => jToken.ToObject<MEssionEffect>(),
                 _ => null,
             };
         }

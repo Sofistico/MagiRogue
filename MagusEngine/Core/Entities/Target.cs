@@ -336,7 +336,7 @@ namespace MagusEngine.Core.Entities
 
                 foreach (Point point in radius.PositionsInRadius(radiusLocation))
                 {
-                    AddTileToDictionary(point, _selectedSpell.IgnoresWall);
+                    AddTileToDictionary(point, eff.IgnoresWall);
                     AddEntityToList(point);
                 }
             }
@@ -347,7 +347,7 @@ namespace MagusEngine.Core.Entities
                 foreach (Point point in
                     OriginCoord.Cone(effect.Radius, this, effect.ConeCircleSpan).Points)
                 {
-                    AddTileToDictionary(point, _selectedSpell.IgnoresWall);
+                    AddTileToDictionary(point, effect.IgnoresWall);
                     AddEntityToList(point);
                 }
             }

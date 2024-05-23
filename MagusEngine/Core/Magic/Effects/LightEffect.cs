@@ -17,6 +17,7 @@ namespace MagusEngine.Core.Magic.Effects
         public string? EffectMessage { get; set; }
         public int Duration { get; set; }
         public int Volume { get; set; }
+        public bool IgnoresWall { get; set; }
 
         public void ApplyEffect(Point target, Actor caster, Spell spellCasted)
         {

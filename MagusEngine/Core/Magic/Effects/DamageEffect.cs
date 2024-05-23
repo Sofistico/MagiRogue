@@ -30,6 +30,7 @@ namespace MagusEngine.Core.Magic.Effects
         public int Volume { get; set; }
         public int VelocityMultiplier { get; set; }
         public double PenetrationPercentage { get; set; }
+        public bool IgnoresWall { get; set; }
 
         public DamageEffect()
         {

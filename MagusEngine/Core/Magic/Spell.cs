@@ -21,8 +21,9 @@ namespace MagusEngine.Core.Magic
     [JsonConverter(typeof(SpellJsonConverter))]
     public sealed class Spell : IJsonKey, INamed
     {
-        private double proficency;
-        private string errorMessage = "Can't cast the spell";
+        private const double _maxProficiency = 3.0;
+        private double _proficency;
+        private string _errorMessage = "Can't cast the spell";
 
         /// <summary>
         /// The id of the spell, required for quick look up and human redable serialization.
@@ -32,10 +33,7 @@ namespace MagusEngine.Core.Magic
         /// <summary>
         /// The required shaping skill to cast the spell at it's most basic parameters.
         /// </summary>
-        public int RequiredShapingSkill
-        {
-            get => (int)MathMagi.Round(Power * 6 / Proficiency);
-        }
+        public int RequiredShapingSkill => (int)MathMagi.Round(Power * 6 / Proficiency);
 
         /// <summary>
         /// All the effects that the spell can have
@@ -75,41 +73,37 @@ namespace MagusEngine.Core.Magic
         /// <summary>
         /// The total proficiency, goes up slowly as you use the spell or train with it in your
         /// downtime, makes it more effective and cost less, goes from 0.0(not learned) to
-        /// 2.0(double effectiviness), for newly trained spell shoud be 0.5, see
+        /// maxProficiency(x effectiviness, works as a percentage multiplier), for newly trained spell shoud be 0.01, see
         /// <see cref="MagicManager.ShapingSkill"/> for more details about the shaping of mana
         /// </summary>
         public double Proficiency
         {
             get
             {
-                if (proficency == 0)
-                    proficency = 0.5;
+                if (_proficency == 0)
+                    _proficency = 0.01;
 
-                return proficency;
+                return _proficency;
             }
 
             set
             {
-                if (value >= 2.0)
-                    proficency = 2.0;
-                if (value <= 0.0)
-                    proficency = 0.0;
-
-                proficency = value;
+                if (value >= _maxProficiency)
+                    _proficency = _maxProficiency;
+                else if (value <= 0.0)
+                    _proficency = 0.0;
+                else
+                    _proficency = value;
             }
-        } // multiplier, going from 0.0 to 2.0
+        }
 
         /// <summary>
         /// Normally can be referred as the base damage of a spell, without any kind of spell caster modifier
         /// </summary>
-        public int Power
-        {
-            get => (int)(SpellLevel + MagicCost);
-        }
+        public int Power => (int)((SpellLevel + MagicCost) * Proficiency);
 
         public List<string>? Keywords { get; set; } = [];
         public List<SpellContext>? Context { get; set; }
-        public bool IgnoresWall { get; set; }
         public bool AffectsTile { get; set; }
         public string ShapingAbility { get; set; }
 
@@ -170,7 +164,7 @@ namespace MagusEngine.Core.Magic
 
                 if (actor.Soul.CurrentMana <= MagicCost)
                 {
-                    errorMessage = "You don't have enough mana to cast the spell!";
+                    _errorMessage = "You don't have enough mana to cast the spell!";
                     return canCast;
                 }
 
@@ -179,7 +173,7 @@ namespace MagusEngine.Core.Magic
                 if (!canCast && tickProficiency)
                 {
                     TickProfiency();
-                    errorMessage = "Can't cast the spell because you don't have the required shaping skills and/or the proficiency";
+                    _errorMessage = "Can't cast the spell because you don't have the required shaping skills and/or the proficiency";
                 }
 
                 return canCast;
@@ -198,8 +192,8 @@ namespace MagusEngine.Core.Magic
         {
             if (!CanCast(caster.Magic, caster))
             {
-                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(errorMessage));
-                errorMessage = "Can't cast the spell";
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(_errorMessage));
+                _errorMessage = "Can't cast the spell";
 
                 return false;
             }
@@ -236,7 +230,7 @@ namespace MagusEngine.Core.Magic
         {
             if (target.Count == 0)
             {
-                errorMessage = "Can't cast the spell, there must be an entity to target";
+                _errorMessage = "Can't cast the spell, there must be an entity to target";
             }
             else if (CanCast(caster.Magic, caster) && target.Count > 0)
             {
@@ -256,7 +250,7 @@ namespace MagusEngine.Core.Magic
 
                 return true;
             }
-            Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(errorMessage));
+            Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(_errorMessage));
 
             return false;
         }
@@ -276,7 +270,6 @@ namespace MagusEngine.Core.Magic
                 MagicArt = MagicArt,
                 AffectsTile = AffectsTile,
                 Context = Context,
-                IgnoresWall = IgnoresWall,
                 Keywords = Keywords,
                 ShapingAbility = ShapingAbility,
             };
