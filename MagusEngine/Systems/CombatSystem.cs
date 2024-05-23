@@ -457,14 +457,14 @@ namespace MagusEngine.Systems
             if (map.CheckForIndexOutOfBounds(pointToGo))
                 pointToGo = map.NormalizePointInsideMap(pointToGo);
 
-            var projectileComp = new ProjectileComp(time,
+            var projectileComp = new ProjectileItemComp(time,
                 origin,
                 pointToGo,
                 direction,
                 true,
                 null,
                 force);
-            projectile.AddComponent(projectileComp, ProjectileComp.Tag);
+            projectile.AddComponent(projectileComp, ProjectileItemComp.Tag);
             projectileComp.UpdatePath(shooter.CurrentMagiMap);
             Locator.GetService<MessageBusService>().SendMessage<AddEntitiyCurrentMap>(new(projectile));
             Locator.GetService<MessageBusService>().SendMessage<AddTurnNode>(new(new ComponentTimeNode(time, projectile.ID, projectileComp.Travel)));

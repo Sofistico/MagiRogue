@@ -1,6 +1,4 @@
-﻿using GoRogue.Components.ParentAware;
-using GoRogue.Pathing;
-using MagusEngine.Core;
+﻿using MagusEngine.Core;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.Systems;
@@ -10,36 +8,9 @@ using System;
 
 namespace MagusEngine.ECS.Components.MagiObjComponents
 {
-    public class ProjectileComp : ParentAwareComponentBase<Item>
+    public class ProjectileItemComp : ProjectileBaseComp<Item>
     {
-        private static readonly char[] _defaultGlyphs = [
-            '.',
-            '|',
-            '/',
-            '-',
-            '\\',
-            '|',
-            '\\',
-            '-',
-            '/'
-        ];
-        private Path? _path;
-        private int _currentStep;
-
-        public const string Tag = "projectile";
-        public long TicksToMoveOneStep { get; set; }
-        public Point Origin { get; set; }
-        public Point FinalPoint { get; set; }
-        public Direction Direciton { get; set; }
-        public bool IgnoresObstacles { get; set; }
-        public double Force { get; set; }
-
-        /// <summary>
-        /// Must follow the Direction.Types enum
-        /// </summary>
-        public char[] Glyphs { get; set; }
-
-        public ProjectileComp(long ticksToMoveOneStep,
+        public ProjectileItemComp(long ticksToMoveOneStep,
             Point origin,
             Point finalPoint,
             Direction direction,
@@ -57,7 +28,7 @@ namespace MagusEngine.ECS.Components.MagiObjComponents
         }
 
         // test this way, if it doesn't won't work, make this as an Time event.
-        public long Travel()
+        public override long Travel()
         {
             if (_currentStep == 0)
             {
@@ -87,35 +58,11 @@ namespace MagusEngine.ECS.Components.MagiObjComponents
             return TicksToMoveOneStep;
         }
 
-        public void UpdatePath(MagiMap map)
+        public override void UpdatePath(MagiMap map)
         {
             _path = map.AStar.ShortestPath(Origin, FinalPoint);
             if (_path == null)
                 throw new ApplicationException($"Path is null, can't update path. origin: {Origin}, end: {FinalPoint}");
-        }
-
-        private char TranslateDirToGlyph()
-        {
-            return TranslateDirToGlyph(Direciton, Glyphs);
-        }
-
-        private char TranslateDirToGlyph(Direction dir)
-        {
-            return TranslateDirToGlyph(dir, Glyphs);
-        }
-
-        private Point PointInCurrentPath()
-        {
-            if (_path != null)
-                return _path.GetStep(_currentStep++);
-            return Point.None;
-        }
-
-        private static char TranslateDirToGlyph(Direction dir, char[] glyphs)
-        {
-            if (glyphs.Length == 1)
-                return glyphs[0];
-            return glyphs[(int)dir.Type];
         }
     }
 }
