@@ -16,15 +16,8 @@ namespace MagusEngine.ECS.Components.MagiObjComponents
             Direction direction,
             bool isPhysical,
             char[]? glyphs,
-            double force)
+            double force) : base(ticksToMoveOneStep, origin, finalPoint, direction, isPhysical, glyphs, force)
         {
-            Direciton = direction;
-            TicksToMoveOneStep = ticksToMoveOneStep;
-            Origin = origin;
-            FinalPoint = finalPoint;
-            IgnoresObstacles = !isPhysical;
-            Glyphs = glyphs ?? _defaultGlyphs;
-            Force = force;
         }
 
         // test this way, if it doesn't won't work, make this as an Time event.

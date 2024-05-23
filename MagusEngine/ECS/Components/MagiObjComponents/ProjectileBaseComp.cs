@@ -34,6 +34,24 @@ namespace MagusEngine.ECS.Components.MagiObjComponents
         /// </summary>
         public char[] Glyphs { get; set; }
 
+
+        protected ProjectileBaseComp(long ticksToMoveOneStep,
+            Point origin,
+            Point finalPoint,
+            Direction direction,
+            bool isPhysical,
+            char[]? glyphs,
+            double force)
+        {
+            Direciton = direction;
+            TicksToMoveOneStep = ticksToMoveOneStep;
+            Origin = origin;
+            FinalPoint = finalPoint;
+            IgnoresObstacles = !isPhysical;
+            Glyphs = glyphs ?? _defaultGlyphs;
+            Force = force;
+        }
+
         public abstract long Travel();
 
         public abstract void UpdatePath(MagiMap map);
