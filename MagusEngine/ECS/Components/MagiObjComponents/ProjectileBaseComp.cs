@@ -2,6 +2,7 @@
 using GoRogue.Pathing;
 using MagusEngine.Core.MapStuff;
 using SadRogue.Primitives;
+using System;
 
 namespace MagusEngine.ECS.Components.MagiObjComponents
 {
@@ -34,7 +35,6 @@ namespace MagusEngine.ECS.Components.MagiObjComponents
         /// </summary>
         public char[] Glyphs { get; set; }
 
-
         protected ProjectileBaseComp(long ticksToMoveOneStep,
             Point origin,
             Point finalPoint,
@@ -54,7 +54,12 @@ namespace MagusEngine.ECS.Components.MagiObjComponents
 
         public abstract long Travel();
 
-        public abstract void UpdatePath(MagiMap map);
+        public void UpdatePath(MagiMap map)
+        {
+            _path = map.AStar.ShortestPath(Origin, FinalPoint);
+            if (_path == null)
+                throw new ApplicationException($"Path is null, can't update path. origin: {Origin}, end: {FinalPoint}");
+        }
 
         protected char TranslateDirToGlyph()
         {

@@ -50,12 +50,5 @@ namespace MagusEngine.ECS.Components.MagiObjComponents
 
             return TicksToMoveOneStep;
         }
-
-        public override void UpdatePath(MagiMap map)
-        {
-            _path = map.AStar.ShortestPath(Origin, FinalPoint);
-            if (_path == null)
-                throw new ApplicationException($"Path is null, can't update path. origin: {Origin}, end: {FinalPoint}");
-        }
     }
 }
