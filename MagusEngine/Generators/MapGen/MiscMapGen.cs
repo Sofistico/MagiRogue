@@ -17,7 +17,6 @@ namespace MagusEngine.Generators.MapGen
         public MagiMap GenerateTestMap()
         {
             _map = new MagiMap("Test Map", 160, 160);
-
             PrepareForFloors();
             PrepareForOuterWalls();
             AppendForestTestMap();

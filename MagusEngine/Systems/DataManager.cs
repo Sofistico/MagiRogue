@@ -24,7 +24,7 @@ namespace MagusEngine.Systems
     {
         #region fields
 
-        private static bool firstLoad = true;
+        private static bool _firstLoad = true;
 
         #endregion fields
 
@@ -35,6 +35,8 @@ namespace MagusEngine.Systems
         public static Dictionary<string, Material> ListOfMaterials { get; } = GetSourceTreeDict<Material>(@".\Data\Materials\material_*");
 
         public static Dictionary<string, Spell> ListOfSpells { get; } = GetSourceTreeDict<Spell>(@".\Data\Spells\spells_*");
+
+        public static Dictionary<string, SpellEntity> ListOfSpellsEntities { get; } = GetSourceTreeDict<SpellEntity>(@".\Data\Spells\Entities\e_spells_*");
 
         public static Dictionary<string, Organ> ListOfOrgans { get; } = GetSourceTreeDict<Organ>(@".\Data\Bodies\organs_*");
 
@@ -149,9 +151,9 @@ namespace MagusEngine.Systems
 
         public static Material? QueryMaterial(string id)
         {
-            if (firstLoad)
+            if (_firstLoad)
             {
-                firstLoad = false;
+                _firstLoad = false;
                 var list = ListOfMaterials.Values.Where(i => !string.IsNullOrEmpty(i.InheirtFrom)).ToArray();
                 for (int i = 0; i < list.Length; i++)
                 {
