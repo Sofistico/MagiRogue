@@ -2,26 +2,42 @@
 {
     public struct Point3D
     {
-        private Point internalPoint;
-
-        public int X { readonly get => internalPoint.X; set => internalPoint = internalPoint.WithX(value); }
-        public int Y { readonly get => internalPoint.Y; set => internalPoint = internalPoint.WithY(value); }
+        public int X { get; set; }
+        public int Y { get; set; }
         public int Z { get; set; }
 
-        public Point3D(Point point)
+        public Point3D(int x, int y)
         {
-            internalPoint = point;
+            X = x;
+            Y = y;
             Z = 0;
         }
 
-        public Point3D(Point point, int z)
+        public Point3D(int x, int y, int z)
         {
-            internalPoint = point;
+            X = x;
+            Y = y;
             Z = z;
         }
 
-        public readonly Point InternalPoint() => internalPoint;
+        public Point3D(Point point) : this(point.X, point.Y)
+        {
+        }
+
+        public Point3D(Point point, int z) : this(point.X, point.Y, z)
+        {
+        }
 
         public readonly int ToIndex(int width, int height) => X + (Y * width) + (Z * width * height);
+
+        public static implicit operator Point(Point3D point)
+        {
+            return new Point(point.X, point.Y);
+        }
+
+        public static implicit operator Point3D(Point point)
+        {
+            return new Point3D(point.X, point.Y);
+        }
     }
 }
