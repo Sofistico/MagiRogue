@@ -10,8 +10,6 @@ namespace MagusEngine.Core.Entities.Base
         public int MaxMana { get; set; }
         public double CurrentMana { get; set; }
         public int WillPower { get => Stats["WillPower"]; set => Stats["WillPower"] = value; }
-
-        //public int WildMana { get; set; }
         public double BaseManaRegen { get; set; }
 
         /// <summary>

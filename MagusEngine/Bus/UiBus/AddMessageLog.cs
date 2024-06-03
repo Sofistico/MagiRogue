@@ -1,4 +1,5 @@
 ﻿using Arquimedes.Enumerators;
+using MagusEngine.Utils.Extensions;
 
 namespace MagusEngine.Bus.UiBus
 {
@@ -12,6 +13,13 @@ namespace MagusEngine.Bus.UiBus
         {
             Message = message;
             PlayerCanSee = playerSees;
+            Person = firstOrThirdPerson;
+        }
+
+        public AddMessageLog(string message, Point playerPoint, Point actionPoint, int playerFieldOfView, PointOfView firstOrThirdPerson = PointOfView.First)
+        {
+            Message = message;
+            PlayerCanSee = playerPoint.GetDistance(actionPoint) <= playerFieldOfView;
             Person = firstOrThirdPerson;
         }
     }

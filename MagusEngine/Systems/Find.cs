@@ -1,5 +1,6 @@
 ﻿using Arquimedes.Enumerators;
 using MagusEngine.Core.Civ;
+using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.Core.WorldStuff.History;
 using MagusEngine.ECS.Components.TilesComponents;
@@ -25,6 +26,7 @@ namespace MagusEngine.Systems
         public static string PlayerDeathReason { get; set; } = "undefined!";
         public static Universe Universe { get; set; } = null!;
         public static MagiMap? CurrentMap => Universe?.CurrentMap;
+        public static MagiEntity? ControlledEntity => CurrentMap?.ControlledEntitiy;
         public static TimeSystem Time => Universe.Time;
 
         public static void PopulateValues(AccumulatedHistory h, WorldTile[,] tiles)

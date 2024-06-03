@@ -6,6 +6,7 @@ using MagusEngine.Core;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic;
+using MagusEngine.Core.MapStuff;
 using MagusEngine.ECS.Components.MagiObjComponents;
 using MagusEngine.ECS.Components.TilesComponents;
 using MagusEngine.Services;
@@ -472,13 +473,52 @@ namespace MagusEngine.Systems
 
         public static void HitProjectile(MagiEntity? projectile, Point lastPoint, DamageType dmg, Material material, double force, bool ignoresObstacles)
         {
+            var (sucess, entity, tile) = GetWhatToHitProjectile(projectile, lastPoint, ignoresObstacles);
+            if (!sucess)
+                return;
+            if (entity != null)
+            {
+                var projectileAttack = Attack.ConstructGenericAttack(projectile.Name, ["hit", "hits"], dmg.Id, true);
+                DealDamage(force, entity, dmg, material, projectileAttack);
+            }
+            if (tile != null)
+            {
+                string? message = $"The {projectile.Name} hits the {tile.Name}!";
+                var point = projectile.Position;
+                // check to see if the wall or the projectile will get hurt by the impact
+                //TODO: See if it's in pascals or mega pascals
+                if (tile.Material.ImpactStrainsAtYield >= projectile.GetMaterial().ImpactFractureMpa)
+                {
+                    var item = (Item)projectile;
+                    item.Condition -= (int)Math.Sqrt((double)(item.Material.ImpactFractureMpa - tile.Material.ImpactStrainsAtYield));
+                }
+                else
+                {
+                    var damage = (int)Math.Sqrt((double)(tile.Material.ImpactStrainsAtYield - projectile.GetMaterial().ImpactFractureMpa));
+                    tile.AddComponent(new DamagedTileComponent(damage), DamagedTileComponent.Tag);
+                }
+
+                if (!message.IsNullOrEmpty())
+                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(message, Find.ControlledEntity.Position, point, Find.Universe.Player.Body.ViewRadius));
+            }
+        }
+
+        public static void HitProjectile(MagiEntity? projectile, Point lastPoint, Spell spell, double force, bool ignoresObstacles)
+        {
+            var (sucess, entity, tile) = GetWhatToHitProjectile(projectile, lastPoint, ignoresObstacles);
+            if (!sucess)
+                return;
+        }
+
+        private static (bool, MagiEntity?, Tile?) GetWhatToHitProjectile(MagiEntity? projectile, Point lastPoint, bool ignoresObstacles)
+        {
             // get the parent.Position properyy and check if there is anything in pos
             // if there is, get the first item in the list
             // if it is an actor, resolve the hit
             // if it is an item, resolve the hit
             // if it is an wall, resolve if will get stuck or not
             if (projectile is null || projectile.CurrentMagiMap is null)
-                return;
+                return (false, null, null);
             var point = projectile.Position;
             var map = projectile.CurrentMagiMap;
             var entities = map.GetEntitiesAt<MagiEntity>(point, map.LayerMasker.Mask((int)MapLayer.ACTORS, (int)MapLayer.ITEMS, (int)MapLayer.FURNITURE));
@@ -488,41 +528,23 @@ namespace MagusEngine.Systems
                 if (entity == null)
                 {
                     Locator.GetService<MagiLog>().Log($"An error occured, Entity is null! - Point: {point}, Map: {map.MapId}");
-                    return;
+                    return (false, null, null);
                 }
-                var projectileAttack = Attack.ConstructGenericAttack(projectile.Name, ["hit", "hits"], dmg.Id, true);
-                DealDamage(force, entity, dmg, material, projectileAttack);
+                return (true, entity, null);
             }
             else
             {
-                string? message = null;
+                var tile = map.GetTileAt(point);
                 // probably a wall or somestuff like that!
                 if (!map.IsTileWalkable(point, ignoresObstacles))
                 {
-                    var tile = map.GetTileAt(point);
-                    message = $"The {projectile.Name} hits the {tile.Name}!";
                     projectile.Position = lastPoint;
-                    //var projectileMaterial = projectile.GetMaterial();
-                    // check to see if the wall or the projectile will get hurt by the impact
-                    //TODO: See if it's in pascals or mega pascals
-                    if (tile.Material.ImpactStrainsAtYield >= projectile.GetMaterial().ImpactFractureMpa)
-                    {
-                        var item = (Item)projectile;
-                        item.Condition -= (int)Math.Sqrt((double)(item.Material.ImpactFractureMpa - tile.Material.ImpactStrainsAtYield));
-                    }
-                    else
-                    {
-                        var damage = (int)Math.Sqrt((double)(tile.Material.ImpactStrainsAtYield - projectile.GetMaterial().ImpactFractureMpa));
-                        tile.AddComponent(new DamagedTileComponent(damage), DamagedTileComponent.Tag);
-                    }
                 }
                 else
                 {
                     projectile.Position = point;
-                    // the projectile hit a wall!
                 }
-                if (!message.IsNullOrEmpty())
-                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(message));
+                return (true, null, tile);
             }
         }
 
