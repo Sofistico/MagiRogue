@@ -10,11 +10,11 @@
 		<Description>A roguelike created with SadConsole 9.x and GoRogue 3.x</Description>
 		<ApplicationIcon>Wizard.ico</ApplicationIcon>
 		<Nullable>enable</Nullable>
-		<Win32Resource />
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 		<Copyright>Sofistico</Copyright>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageLicenseFile>C:\Users\joaorodrigues\source\repos\MagiRogue\LICENSE</PackageLicenseFile>
+		<PublishAot>true</PublishAot>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -31,7 +31,6 @@
 	<ItemGroup>
 		<EmbeddedResource Include="Icon.bmp" />
 	</ItemGroup>
-
 
 	<ItemGroup>
 		<None Include="..\README.md">
