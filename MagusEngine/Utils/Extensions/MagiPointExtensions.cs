@@ -49,7 +49,7 @@ namespace MagusEngine.Utils.Extensions
         /// </summary>
         /// <param name="room"></param>
         /// <returns></returns>
-        public static List<Point> GetBorderCellLocations(Rectangle room)
+        public static List<Point> GetBorderCellLocations(this Rectangle room)
         {
             //establish room boundaries
             int xMin = room.MinExtentX;

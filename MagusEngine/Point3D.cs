@@ -35,9 +35,21 @@
             return new Point(point.X, point.Y);
         }
 
+        public static implicit operator Point3D((int x, int y) val)
+        {
+            return new Point3D(val.x, val.y);
+        }
+
+        public static implicit operator Point3D((int x, int y, int z) val)
+        {
+            return new Point3D(val.x, val.y, val.z);
+        }
+
         public static implicit operator Point3D(Point point)
         {
             return new Point3D(point.X, point.Y);
         }
+
+
     }
 }

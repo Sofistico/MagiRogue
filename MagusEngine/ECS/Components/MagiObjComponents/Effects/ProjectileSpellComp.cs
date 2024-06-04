@@ -27,7 +27,6 @@ namespace MagusEngine.ECS.Components.MagiObjComponents.Effects
                 if (Parent?.SadCell?.AppearanceSingle?.Effect != null)
                     Parent.SadCell.AppearanceSingle.Effect = null;
                 Parent?.RemoveComponent(this);
-                //return 0;
                 return 0;
             }
 
