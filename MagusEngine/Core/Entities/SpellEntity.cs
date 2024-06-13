@@ -5,16 +5,21 @@ using SadRogue.Primitives;
 
 namespace MagusEngine.Core.Entities
 {
-    public class SpellEntity : MagiEntity, IJsonKey
+    public class SpellEntity : IJsonKey
     {
-        public string Id { get; set; }
+        public string Id { get; set; } = null!;
         public string SpellId { get; set; }
         public MagiEntity Caster { get; set; }
 
         [JsonConstructor]
-        public SpellEntity(Color foreground, Color background, int glyph, Point coord, int layer, string spellId) : base(foreground, background, glyph, coord, layer)
+        public SpellEntity()
+        {
+        }
+
+        public SpellEntity(Color foreground, Color background, int glyph, Point coord, int layer, string spellId, MagiEntity caster) /*: base(foreground, background, glyph, coord, layer)*/
         {
             SpellId = spellId;
+            Caster = caster;
         }
     }
 }
