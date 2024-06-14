@@ -1,11 +1,9 @@
-﻿using Newtonsoft.Json;
-using SadRogue.Primitives;
+﻿using SadRogue.Primitives;
 
 namespace MagusEngine.Serialization
 {
     public readonly struct MagiColorSerialization
     {
-        [JsonIgnore]
         public readonly Color Color { get; }
         public readonly string? ColorName { get; }
 
@@ -34,5 +32,11 @@ namespace MagusEngine.Serialization
             Color = color;
             ColorName = "Empty Color";
         }
+
+        public static implicit operator Color(MagiColorSerialization color) => color.Color;
+
+        public static implicit operator MagiColorSerialization(string colorName) => new(colorName);
+
+        public static implicit operator MagiColorSerialization(uint packedValue) => new(packedValue);
     }
 }

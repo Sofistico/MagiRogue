@@ -1,5 +1,5 @@
 ﻿using Arquimedes.Interfaces;
-using MagusEngine.Factory;
+using MagusEngine.Core.Entities.Interfaces;
 using MagusEngine.Serialization;
 using MagusEngine.Systems;
 using MagusEngine.Utils.Extensions;
@@ -9,7 +9,7 @@ using SadRogue.Primitives;
 
 namespace MagusEngine.Core.Entities
 {
-    public class Plant : IJsonKey
+    public class Plant : IJsonKey, IAppearence
     {
         private MagiColorSerialization fore;
         private MagiColorSerialization back;
@@ -22,6 +22,8 @@ namespace MagusEngine.Core.Entities
 
         [JsonRequired]
         public string[] Fores { get; set; }
+
+        public string[] Backs { get; set; }
 
         public string Fore
         {
@@ -52,8 +54,8 @@ namespace MagusEngine.Core.Entities
         [JsonRequired]
         public char[] Glyphs { get; set; }
 
-        public Color Foreground => fore.Color;
-        public Color Background => back.Color;
+        public Color Foreground => fore;
+        public Color Background => back;
 
         [JsonRequired]
         public string MaterialId { get; set; }
