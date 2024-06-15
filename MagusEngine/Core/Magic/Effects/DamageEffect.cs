@@ -73,7 +73,7 @@ namespace MagusEngine.Core.Magic.Effects
 
         private void DmgEff(Point target, Actor caster, Spell spellCasted)
         {
-            BaseDamage = MagicManager.CalculateSpellDamage(caster, spellCasted);
+            BaseDamage = MagicComponent.CalculateSpellDamage(caster, spellCasted);
 
             MagiEntity? poorGuy = Find.CurrentMap?.GetEntityAt<MagiEntity>(target);
 
@@ -97,7 +97,7 @@ namespace MagusEngine.Core.Magic.Effects
 
         private void HealEffect(Point target, Actor caster, Spell spellCasted)
         {
-            BaseDamage = MagicManager.CalculateSpellDamage(caster, spellCasted);
+            BaseDamage = MagicComponent.CalculateSpellDamage(caster, spellCasted);
 
             if (AreaOfEffect is SpellAreaEffect.Self)
             {

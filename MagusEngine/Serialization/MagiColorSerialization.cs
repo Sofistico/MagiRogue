@@ -1,4 +1,5 @@
-﻿using SadRogue.Primitives;
+﻿using Newtonsoft.Json;
+using SadRogue.Primitives;
 
 namespace MagusEngine.Serialization
 {
@@ -7,6 +8,7 @@ namespace MagusEngine.Serialization
         public readonly Color Color { get; }
         public readonly string? ColorName { get; }
 
+        [JsonConstructor]
         public MagiColorSerialization(string colorName)
         {
             if (colorName is not null && ColorExtensions2.ColorMappings.ContainsKey(colorName.ToLower()))

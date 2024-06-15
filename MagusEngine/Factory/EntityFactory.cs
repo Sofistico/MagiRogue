@@ -136,7 +136,7 @@ namespace MagusEngine.Factory
                         queriedSpell = spells.GetRandomItemFromList();
                     }
                 }
-                actor.Magic.AddToSpellList(queriedSpell);
+                actor.GetComponent<MagicComponent>().AddToSpellList(queriedSpell);
             }
         }
 
@@ -187,7 +187,7 @@ namespace MagusEngine.Factory
         {
             Body body = actor.Body;
             Anatomy anatomy = actor.ActorAnatomy;
-            MagicManager magic = actor.Magic;
+            MagicComponent magic = actor.GetComponent<MagicComponent>();
             Mind mind = actor.Mind;
             Soul soul = actor.Soul;
 

@@ -10,7 +10,6 @@ using System.Diagnostics;
 
 namespace MagusEngine.Core.Entities.Base
 {
-    // Extends the SadConsole.Entities.Entity class by adding the IGameObject of SadConsole
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public class MagiEntity : MagiGameObject, INamed
     {
@@ -61,8 +60,6 @@ namespace MagusEngine.Core.Entities.Base
 
         public string? Description { get; set; }
 
-        public MagicManager Magic { get; set; }
-
         /// <summary>
         /// Defines if this entity can be killed
         /// </summary>
@@ -98,8 +95,7 @@ namespace MagusEngine.Core.Entities.Base
             {
                 Position = coord
             };
-            Magic = new MagicManager();
-
+            AddComponent<MagicComponent>(new(), MagicComponent.Tag);
             PositionChanged += MagiEntity_PositionChanged;
         }
 
@@ -151,7 +147,6 @@ namespace MagusEngine.Core.Entities.Base
                 Position,
                 Layer)
             {
-                Magic = Magic,
                 AlwaySeen = AlwaySeen,
                 CanBeAttacked = CanBeAttacked,
                 CanBeKilled = CanBeKilled,

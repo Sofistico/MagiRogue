@@ -70,7 +70,7 @@ namespace MagusEngine.Core
         public event EventHandler<GameObjectCurrentMapChanged>? RemovedFromMap;
 
         /// <inheritdoc />
-        public IComponentCollection GoRogueComponents { get; }
+        public IComponentCollection GoRogueComponents { get; set; }
 
         /// <summary>
         /// Constructor.

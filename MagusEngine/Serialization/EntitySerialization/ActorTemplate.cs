@@ -2,7 +2,6 @@
 using GoRogue.Components;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
-using MagusEngine.Core.Magic;
 using MagusEngine.Utils;
 using Newtonsoft.Json;
 using System;
@@ -89,8 +88,6 @@ namespace MagusEngine.Serialization.EntitySerialization
 
         public bool? IsPlayer { get; set; }
 
-        public MagicManager MagicStuff { get; set; }
-
         public List<EquipTemplate> Equip { get; set; } = [];
 
         public Mind Mind { get; set; }
@@ -115,7 +112,7 @@ namespace MagusEngine.Serialization.EntitySerialization
         /// <param name="weight"></param>
         public ActorTemplate(string name, uint foreground, uint background, int glyph,
             int layer, Body body, int size, double weight,
-            List<AbilityTemplate> abilities, MagicManager magic, Soul soul, Mind mind)
+            List<AbilityTemplate> abilities, Soul soul, Mind mind)
         {
             Name = name;
             Glyph = (char)glyph;
@@ -125,8 +122,6 @@ namespace MagusEngine.Serialization.EntitySerialization
             Layer = layer;
             Volume = size;
             Weight = weight;
-            MagicStuff = magic;
-
             ForegroundBackingField = new MagiColorSerialization(foreground);
             BackgroundBackingField = new MagiColorSerialization(background);
             ForegroundPackedValue = foreground;
@@ -211,7 +206,6 @@ namespace MagusEngine.Serialization.EntitySerialization
                 }
             }
             // needs to add the equiped items.
-            actor.Magic = actorTemplate.MagicStuff;
             if (actorTemplate.Equip is not null)
             {
                 for (int i = 0; i < actorTemplate.Equip.Count; i++)
@@ -270,7 +264,6 @@ namespace MagusEngine.Serialization.EntitySerialization
                actor.Volume,
                actor.Weight,
                abilitylist,
-               actor.Magic,
                actor.Soul,
                actor.Mind);
             if (!string.IsNullOrWhiteSpace(actor.Description))

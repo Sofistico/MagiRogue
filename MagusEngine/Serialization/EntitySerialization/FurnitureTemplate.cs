@@ -32,6 +32,8 @@ namespace MagusEngine.Serialization.EntitySerialization
 
     public class FurnitureTemplate
     {
+        public const string EntityType = "Furniture";
+
         public string Id { get; set; }
 
         public string Name { get; set; }
@@ -64,10 +66,6 @@ namespace MagusEngine.Serialization.EntitySerialization
 
         public string MaterialId { get; set; }
 
-        public MagicManager MagicStuff { get; set; }
-
-        public const string EntityType = "Furniture";
-
         public uint ForegroundPackedValue { get; set; }
 
         public uint BackgroundPackedValue { get; set; }
@@ -93,7 +91,6 @@ namespace MagusEngine.Serialization.EntitySerialization
             int size,
             string description,
             string materialId,
-            MagicManager magicStuff,
             Point position,
             FurnitureType furnitureType)
         {
@@ -107,7 +104,6 @@ namespace MagusEngine.Serialization.EntitySerialization
             Volume = size;
             Description = description;
             MaterialId = materialId;
-            MagicStuff = magicStuff;
             ForegroundPackedValue = ForegroundBackingField.Color.PackedValue;
             BackgroundPackedValue = BackgroundBackingField.Color.PackedValue;
             Position = position;
@@ -123,7 +119,6 @@ namespace MagusEngine.Serialization.EntitySerialization
             int size,
             string description,
             string materialId,
-            MagicManager magicStuff,
             Point position,
             FurnitureType furnitureType)
         {
@@ -133,7 +128,6 @@ namespace MagusEngine.Serialization.EntitySerialization
             Volume = size;
             Description = description;
             MaterialId = materialId;
-            MagicStuff = magicStuff;
             ForegroundPackedValue = foreground;
             BackgroundPackedValue = background;
             ForegroundBackingField = new MagiColorSerialization(foreground);
@@ -190,7 +184,7 @@ namespace MagusEngine.Serialization.EntitySerialization
 
         public static implicit operator Furniture(FurnitureTemplate template)
         {
-            if (template.Id == null && template.MagicStuff == null)
+            if (template.Id == null)
                 return null;
             if (string.IsNullOrEmpty(template.MaterialId))
             {
@@ -213,7 +207,6 @@ namespace MagusEngine.Serialization.EntitySerialization
                 template.FurnitureType, template.MaterialId, template.Name, template.Id, template.Durability)
             {
                 UseActions = template.UseActions,
-                Magic = template.MagicStuff,
                 MapIdConnection = template.MapIdConnection,
                 Volume = template.Volume,
                 Description = template.Description,
@@ -246,7 +239,6 @@ namespace MagusEngine.Serialization.EntitySerialization
                 fur.Volume,
                 fur.Description,
                 fur.Material.Id,
-                fur.Magic,
                 fur.Position,
                 fur.FurnitureType)
             {

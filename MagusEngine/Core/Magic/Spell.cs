@@ -3,6 +3,7 @@ using Arquimedes.Interfaces;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
+using MagusEngine.Core.Magic.Practices;
 using MagusEngine.Serialization.EntitySerialization;
 using MagusEngine.Services;
 using MagusEngine.Systems;
@@ -19,7 +20,7 @@ namespace MagusEngine.Core.Magic
     /// the effects that it will have.
     /// </summary>
     [JsonConverter(typeof(SpellJsonConverter))]
-    public sealed class Spell : IJsonKey, INamed
+    public sealed class Spell : IJsonKey, INamed, ISpell
     {
         private const double _maxProficiency = 3.0;
         private double _proficency;
@@ -74,7 +75,7 @@ namespace MagusEngine.Core.Magic
         /// The total proficiency, goes up slowly as you use the spell or train with it in your
         /// downtime, makes it more effective and cost less, goes from 0.0(not learned) to
         /// maxProficiency(x effectiviness, works as a percentage multiplier), for newly trained spell shoud be 0.01, see
-        /// <see cref="MagicManager.ShapingSkill"/> for more details about the shaping of mana
+        /// <see cref="MagicComponent.ShapingSkill"/> for more details about the shaping of mana
         /// </summary>
         public double Proficiency
         {
@@ -143,11 +144,7 @@ namespace MagusEngine.Core.Magic
 
         public bool CanCast(Actor actor, bool tickProficiency = true)
         {
-            return CanCast(actor.Magic, actor, tickProficiency);
-        }
-
-        public bool CanCast(MagicManager magicSkills, Actor actor, bool tickProficiency = true)
-        {
+            var magicSkills = actor.GetComponent<MagicComponent>();
             if (magicSkills.KnowSpells.Contains(this))
             {
                 int reqShapingWithDiscount;
@@ -190,7 +187,7 @@ namespace MagusEngine.Core.Magic
         /// <returns>whetever the cast was successful</returns>
         public bool CastSpell(Point target, Actor caster)
         {
-            if (!CanCast(caster.Magic, caster))
+            if (!CanCast(caster))
             {
                 Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(_errorMessage));
                 _errorMessage = "Can't cast the spell";
@@ -232,7 +229,7 @@ namespace MagusEngine.Core.Magic
             {
                 _errorMessage = "Can't cast the spell, there must be an entity to target";
             }
-            else if (CanCast(caster.Magic, caster) && target.Count > 0)
+            else if (CanCast(caster) && target.Count > 0)
             {
                 Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{caster.Name} casted {Name}"));
 

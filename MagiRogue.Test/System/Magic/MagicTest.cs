@@ -11,9 +11,9 @@ namespace MagiRogue.Test.System.Magic
 {
     public class MagicTest
     {
-        private MagicManager weakMagic;
-        private MagicManager mediumMagic;
-        private MagicManager strongMagic;
+        private MagicComponent weakMagic;
+        private MagicComponent mediumMagic;
+        private MagicComponent strongMagic;
 
         [Fact]
         public void TestCasting()
@@ -52,24 +52,24 @@ namespace MagiRogue.Test.System.Magic
             strongMind.AddAbilityToDictionary(strongShape);
             Actor weakSpellCaster = new("Test1", Color.Black, Color.Black, 't', Point.None)
             {
-                Magic = weakMagic,
                 Soul = soul,
                 Mind = weakMind
             };
+            weakSpellCaster.AddComponent(weakMagic);
 
             Actor mediumSpellCaster = new("Test2", Color.Black, Color.Black, 't', Point.None)
             {
-                Magic = mediumMagic,
                 Soul = soul,
                 Mind = mediumMind
             };
+            mediumSpellCaster.AddComponent(mediumMagic);
 
             Actor strongSpellCaster = new("Test3", Color.Black, Color.Black, 't', Point.None)
             {
-                Magic = strongMagic,
                 Soul = soul,
                 Mind = strongMind
             };
+            strongSpellCaster.AddComponent(strongMagic);
 
             List<bool> canWeakCast = [];
             List<bool> canMediumCast = [];
@@ -77,20 +77,18 @@ namespace MagiRogue.Test.System.Magic
 
             foreach (var item in weakMagic.KnowSpells)
             {
-                canWeakCast.Add(item.CanCast(weakMagic, weakSpellCaster));
+                canWeakCast.Add(item.CanCast(weakSpellCaster));
             }
             foreach (var item in mediumMagic.KnowSpells)
             {
-                canMediumCast.Add(item.CanCast(mediumMagic, mediumSpellCaster));
+                canMediumCast.Add(item.CanCast(mediumSpellCaster));
             }
             foreach (var item in strongMagic.KnowSpells)
             {
-                canStrongCast.Add(item.CanCast(strongMagic, strongSpellCaster));
+                canStrongCast.Add(item.CanCast(strongSpellCaster));
             }
 
-            Assert.True((canWeakCast.Count(a => a).Equals(1))
-                && (canMediumCast.Count(a => a).Equals(2))
-                && (canStrongCast.Count(a => a).Equals(4)));
+            Assert.True(canWeakCast.Count(a => a).Equals(1) && canMediumCast.Count(a => a).Equals(2) && canStrongCast.Count(a => a).Equals(4));
         }
 
         private static List<Spell> GetListSpells()

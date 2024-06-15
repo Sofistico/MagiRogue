@@ -44,7 +44,7 @@ namespace MagusEngine.Core.Magic.Effects
             int luck = GoRogue.DiceNotation.Dice.Roll($"{spellCasted.SpellLevel}d{spellCasted.Power}");
 
             if (poorGuy?.ActorAnatomy.Limbs.Count > 0
-                && MagicManager.PenetrateResistance(spellCasted, caster, poorGuy, luck))
+                && MagicComponent.PenetrateResistance(spellCasted, caster, poorGuy, luck))
             {
                 var rng = GoRogue.Random.GlobalRandom.DefaultRNG;
                 int i = rng.NextInt(poorGuy.ActorAnatomy.Limbs.Count);

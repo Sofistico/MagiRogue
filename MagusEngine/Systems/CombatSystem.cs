@@ -295,7 +295,7 @@ namespace MagusEngine.Systems
             Attack attack)
         {
             int luck = Mrn.Exploding2D6Dice;
-            if (effect.IsResistable || MagicManager.PenetrateResistance(spellCasted, caster, poorGuy, luck))
+            if (effect.IsResistable || MagicComponent.PenetrateResistance(spellCasted, caster, poorGuy, luck))
                 DealDamage(effect.BaseDamage, poorGuy, effect.GetDamageType()!, attack: attack, spellUsed: spellCasted);
             else
                 Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{poorGuy.Name} resisted the effects of {spellCasted.Name}"));

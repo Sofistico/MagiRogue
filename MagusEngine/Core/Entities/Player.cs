@@ -21,8 +21,8 @@ namespace MagusEngine.Core.Entities
                 Arquimedes.Enumerators.Sex.Female, "new_wiz");
 
             player.Mind.AddAbilityToDictionary(new(Arquimedes.Enumerators.AbilityCategory.MagicShaping, 25));
-
-            player.Magic.KnowSpells[0].Proficiency = 1;
+            var magic = player.GetComponent<MagicComponent>();
+            magic.KnowSpells[0].Proficiency = 1;
 
             Spell cure = DataManager.QuerySpellInData("minor_cure", 1);
 
@@ -60,7 +60,7 @@ namespace MagusEngine.Core.Entities
             int co = testSpells.Count;
             for (int i = 0; i < co; i++)
             {
-                player.Magic.AddToSpellList(testSpells[i]);
+                magic.AddToSpellList(testSpells[i]);
             }
 
             return player;
@@ -77,7 +77,6 @@ namespace MagusEngine.Core.Entities
                 actor.Position)
             {
                 Inventory = actor.Inventory,
-                Magic = actor.Magic,
                 Volume = actor.Volume,
                 Weight = actor.Weight,
                 Body = actor.Body,
@@ -89,7 +88,8 @@ namespace MagusEngine.Core.Entities
                 IsPlayer = true,
                 Height = actor.Height,
                 Broadness = actor.Broadness,
-                Length = actor.Length
+                Length = actor.Length,
+                GoRogueComponents = actor.GoRogueComponents,
             };
         }
 

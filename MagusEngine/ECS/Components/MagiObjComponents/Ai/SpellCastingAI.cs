@@ -6,11 +6,11 @@ namespace MagusEngine.ECS.Components.MagiObjComponents.Ai
 {
     public class SpellCastingAI : IAiComponent
     {
-        private readonly MagicManager _spellsKnow;
+        private readonly MagicComponent _spellsKnow;
 
         public object Parent { get; set; }
 
-        public SpellCastingAI(MagicManager spellsKnow)
+        public SpellCastingAI(MagicComponent spellsKnow)
         {
             _spellsKnow = spellsKnow;
         }

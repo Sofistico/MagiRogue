@@ -13,8 +13,10 @@ namespace MagusEngine.Core.Magic
     /// <summary>
     /// The class that is the manager of the magic system to an entity
     /// </summary>
-    public class MagicManager
+    public class MagicComponent
     {
+        public const string Tag = "magic_manager";
+
         // Create a magic inspired by Mother of learning
         public List<Spell> KnowSpells { get; set; }
         public List<EffectType> KnowEffects { get; set; }
@@ -26,7 +28,7 @@ namespace MagusEngine.Core.Magic
         /// </summary>
         public List<ISpellEffect> Enchantments { get; set; }
 
-        public MagicManager()
+        public MagicComponent()
         {
             KnowSpells = [];
             KnowEffects = [];
@@ -44,8 +46,7 @@ namespace MagusEngine.Core.Magic
             return (int)(rngDmg * spellCasted.Proficiency);
         }
 
-        public static bool PenetrateResistance(Spell spellCasted, MagiEntity caster, MagiEntity defender,
-            int bonusLuck) =>
+        public static bool PenetrateResistance(Spell spellCasted, MagiEntity caster, MagiEntity defender, int bonusLuck) =>
             (int)((0.3 * spellCasted.Proficiency) + (caster.GetShapingAbility(spellCasted.ShapingAbility) * 0.5)
             + caster.GetPenetration()) + bonusLuck >= defender.GetMagicResistance() * 2;
 

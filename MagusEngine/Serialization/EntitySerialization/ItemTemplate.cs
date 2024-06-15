@@ -62,7 +62,7 @@ namespace MagusEngine.Serialization.EntitySerialization
 
         public Material Material { get; set; }
 
-        public MagicManager MagicStuff { get; set; }
+        //public MagicComponent MagicStuff { get; set; }
 
         public const string EntityType = "Item";
 
@@ -109,7 +109,7 @@ namespace MagusEngine.Serialization.EntitySerialization
         public int Coverage { get; set; }
 
         public ItemTemplate(string name, uint foreground, uint background, int glyph,
-            double weight, int size, string materialId, MagicManager magic, int condition = 100)
+            double weight, int size, string materialId, int condition = 100)
         {
             Name = name;
             ForegroundBackingField = new MagiColorSerialization(foreground);
@@ -122,7 +122,6 @@ namespace MagusEngine.Serialization.EntitySerialization
             Volume = size;
             MaterialId = materialId;
             Material = DataManager.QueryMaterial(materialId)!;
-            MagicStuff = magic;
         }
 
         public ItemTemplate()
@@ -138,7 +137,6 @@ namespace MagusEngine.Serialization.EntitySerialization
                 item.Weight,
                 item.Volume,
                 item.Material.Id,
-                item.Magic,
                 item.Condition
                 )
             {
