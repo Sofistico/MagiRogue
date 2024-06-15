@@ -6,6 +6,7 @@ using MagusEngine.Actions;
 using MagusEngine.Bus.MapBus;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
+using MagusEngine.Core.Magic;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.ECS.Components.MagiObjComponents;
 using MagusEngine.ECS.Components.MagiObjComponents.Ai;
@@ -258,11 +259,8 @@ namespace Diviner
                 SpellSelectWindow spell = new(_getPlayer.Soul.CurrentMana);
 
                 _targetCursor ??= new Target(_getPlayer.Position);
-
-                spell.Show(_getPlayer.Magic.KnowSpells,
-                    selectedSpell => _targetCursor.OnSelectSpell(selectedSpell,
-                    (Actor)uni.CurrentMap.ControlledEntitiy),
-                    _getPlayer.Soul.CurrentMana);
+                var magic = _getPlayer.GetComponent<MagicComponent>();
+                spell.Show(magic.KnowSpells, selectedSpell => _targetCursor.OnSelectSpell(selectedSpell, (Actor)uni.CurrentMap!.ControlledEntitiy!), _getPlayer.Soul.CurrentMana);
 
                 return true;
             }
