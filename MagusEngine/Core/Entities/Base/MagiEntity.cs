@@ -189,8 +189,6 @@ namespace MagusEngine.Core.Entities.Base
 
         #endregion Virtual Methods
 
-        #endregion Methods
-
         /// <summary>
         /// Moves the Actor TO newPosition location returns true if actor was able to move, false if
         /// failed to move
@@ -210,6 +208,8 @@ namespace MagusEngine.Core.Entities.Base
                 return false;
             }
         }
+
+        #endregion Methods
 
         #region Components
 

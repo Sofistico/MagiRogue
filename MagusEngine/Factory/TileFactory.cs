@@ -28,7 +28,7 @@ namespace MagusEngine.Factory
         public static void AddVegetation(Tile tile, Plant plant)
         {
             tile.AddComponent(new PlantComponent(plant));
-            tile.AddComponent(new ExtraAppearanceComponent(plant.GetRandomSadGlyph()));
+            tile.AddComponent(new ExtraAppearanceComponent(plant.GetSadGlyph()));
             if (plant?.Material?.ConfersTraits?.Contains(Trait.GrazerEatable) == true)
             {
                 tile.AddComponent(FoodComponent.Herbivore);

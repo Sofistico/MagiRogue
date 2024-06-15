@@ -1,14 +1,19 @@
 ﻿using Arquimedes.Interfaces;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Entities.Interfaces;
+using MagusEngine.Serialization;
 using MagusEngine.Utils.Extensions;
 using Newtonsoft.Json;
+using SadConsole;
 using SadRogue.Primitives;
 
 namespace MagusEngine.Core.Entities
 {
     public class SpellEntity : IJsonKey, IAppearence
     {
+        private MagiColorSerialization _fore;
+        private MagiColorSerialization _back;
+
         [JsonRequired]
         public string Id { get; set; } = null!;
 
@@ -18,14 +23,40 @@ namespace MagusEngine.Core.Entities
 
         [JsonRequired]
         public string[] Fores { get; set; }
-        public string Fore { get; set; }
+
+        public string Fore
+        {
+            get
+            {
+                return _fore.ColorName;
+            }
+
+            set
+            {
+                _fore = new MagiColorSerialization(value);
+            }
+        }
+
+        public string Back
+        {
+            get
+            {
+                return _back.ColorName;
+            }
+
+            set
+            {
+                _back = new MagiColorSerialization(value);
+            }
+        }
 
         [JsonRequired]
         public string[] Backs { get; set; }
-        public string Back { get; set; }
 
         [JsonRequired]
         public char[] Glyphs { get; set; }
+        public Color Foreground => _fore;
+        public Color Background => _back;
 
         [JsonConstructor]
         public SpellEntity(string id, string[] fores, string[] backs, string spellId)
@@ -42,6 +73,11 @@ namespace MagusEngine.Core.Entities
         {
             SpellId = spellId;
             Caster = caster;
+        }
+
+        public ColoredGlyph GetSadGlyph()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

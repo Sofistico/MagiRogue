@@ -1,4 +1,5 @@
-﻿using SadRogue.Primitives;
+﻿using SadConsole;
+using SadRogue.Primitives;
 
 namespace MagusEngine.Core.Entities.Interfaces
 {
@@ -16,5 +17,7 @@ namespace MagusEngine.Core.Entities.Interfaces
 
         public Color Foreground { get; }
         public Color Background { get; }
+
+        public ColoredGlyph GetSadGlyph();
     }
 }

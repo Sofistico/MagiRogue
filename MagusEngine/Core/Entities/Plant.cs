@@ -100,6 +100,6 @@ namespace MagusEngine.Core.Entities
             };
         }
 
-        public ColoredGlyph GetRandomSadGlyph() => new(Foreground, Background, Glyphs.GetRandomItemFromList());
+        public ColoredGlyph GetSadGlyph() => new(Foreground, Background, Glyphs.GetRandomItemFromList());
     }
 }
