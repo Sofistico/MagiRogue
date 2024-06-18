@@ -22,10 +22,5 @@ namespace MagusEngine.Core.Entities
             Id = id;
             SpellId = spellId;
         }
-
-        public ColoredGlyph GetSadGlyph()
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }
