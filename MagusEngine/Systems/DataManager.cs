@@ -36,8 +36,6 @@ namespace MagusEngine.Systems
 
         public static Dictionary<string, Spell> ListOfSpells { get; } = GetSourceTreeDict<Spell>(@".\Data\Spells\spells_*");
 
-        public static Dictionary<string, SpellEntity> ListOfSpellsEntities { get; } = GetSourceTreeDict<SpellEntity>(@".\Data\Spells\Entities\e_spells_*");
-
         public static Dictionary<string, Organ> ListOfOrgans { get; } = GetSourceTreeDict<Organ>(@".\Data\Bodies\organs_*");
 
         public static Dictionary<string, Limb> ListOfLimbs { get; } = GetSourceTreeDict<Limb>(@".\Data\Bodies\limbs_*");
