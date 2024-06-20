@@ -111,6 +111,7 @@ namespace MagusEngine.Core.Magic
         public string Fore { get; set; }
         public string Back { get; set; }
         public char[] Glyphs { get; set; }
+        public List<IMagicStep> Steps { get; set; }
 
         /// <summary>
         /// Empty constructor, a waste of space
