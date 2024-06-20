@@ -1,11 +1,10 @@
 ﻿using Arquimedes.Enumerators;
-using MagusEngine.Core.Entities;
-using MagusEngine.Core;
+using MagusEngine.Core.Magic.Interfaces;
 using System.Collections.Generic;
 
 namespace MagusEngine.Core.Magic
 {
-    public class Rituals
+    public class Ritual
     {
         /// <summary>
         /// Also means the spell level, goes from 1 to 10.
@@ -20,7 +19,7 @@ namespace MagusEngine.Core.Magic
         public int DurationOfRitual { get; set; }
         public int RitualRange { get; set; }
 
-        public Rituals(int baseDifficulty,
+        public Ritual(int baseDifficulty,
             List<ISpellEffect> ritualEffect,
             string ritualName,
             string ritualDescription,

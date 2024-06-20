@@ -1,6 +1,7 @@
 ﻿using Arquimedes.Enumerators;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
+using MagusEngine.Core.Magic.Interfaces;
 using MagusEngine.Systems;
 using MagusEngine.Systems.Physics;
 using SadRogue.Primitives;

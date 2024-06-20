@@ -1,5 +1,6 @@
 ﻿using Arquimedes.Enumerators;
 using MagusEngine.Core.Entities;
+using MagusEngine.Core.Magic.Interfaces;
 using MagusEngine.Systems;
 using Newtonsoft.Json;
 
@@ -44,7 +45,7 @@ namespace MagusEngine.Core.Magic.Effects
             int luck = GoRogue.DiceNotation.Dice.Roll($"{spellCasted.SpellLevel}d{spellCasted.Power}");
 
             if (poorGuy?.ActorAnatomy.Limbs.Count > 0
-                && MagicComponent.PenetrateResistance(spellCasted, caster, poorGuy, luck))
+                && Magic.PenetrateResistance(spellCasted, caster, poorGuy, luck))
             {
                 var rng = GoRogue.Random.GlobalRandom.DefaultRNG;
                 int i = rng.NextInt(poorGuy.ActorAnatomy.Limbs.Count);

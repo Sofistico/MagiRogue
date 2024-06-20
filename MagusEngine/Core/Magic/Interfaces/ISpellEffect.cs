@@ -3,7 +3,7 @@ using MagusEngine.Core.Entities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace MagusEngine.Core.Magic
+namespace MagusEngine.Core.Magic.Interfaces
 {
     /// <summary>
     /// Defines the interface that a new effect will have

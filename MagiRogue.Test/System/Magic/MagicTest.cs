@@ -11,9 +11,9 @@ namespace MagiRogue.Test.System.Magic
 {
     public class MagicTest
     {
-        private MagicComponent weakMagic;
-        private MagicComponent mediumMagic;
-        private MagicComponent strongMagic;
+        private MagusEngine.Core.Magic.Magic weakMagic;
+        private MagusEngine.Core.Magic.Magic mediumMagic;
+        private MagusEngine.Core.Magic.Magic strongMagic;
 
         [Fact]
         public void TestCasting()

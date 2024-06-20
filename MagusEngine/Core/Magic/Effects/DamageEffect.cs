@@ -2,6 +2,7 @@
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
+using MagusEngine.Core.Magic.Interfaces;
 using MagusEngine.Services;
 using MagusEngine.Systems;
 using Newtonsoft.Json;
@@ -73,7 +74,7 @@ namespace MagusEngine.Core.Magic.Effects
 
         private void DmgEff(Point target, Actor caster, Spell spellCasted)
         {
-            BaseDamage = MagicComponent.CalculateSpellDamage(caster, spellCasted);
+            BaseDamage = Magic.CalculateSpellDamage(caster, spellCasted);
 
             MagiEntity? poorGuy = Find.CurrentMap?.GetEntityAt<MagiEntity>(target);
 
@@ -97,7 +98,7 @@ namespace MagusEngine.Core.Magic.Effects
 
         private void HealEffect(Point target, Actor caster, Spell spellCasted)
         {
-            BaseDamage = MagicComponent.CalculateSpellDamage(caster, spellCasted);
+            BaseDamage = Magic.CalculateSpellDamage(caster, spellCasted);
 
             if (AreaOfEffect is SpellAreaEffect.Self)
             {

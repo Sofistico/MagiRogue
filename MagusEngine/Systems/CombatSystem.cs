@@ -6,6 +6,7 @@ using MagusEngine.Core;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic;
+using MagusEngine.Core.Magic.Interfaces;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.ECS.Components.MagiObjComponents;
 using MagusEngine.ECS.Components.TilesComponents;
@@ -295,7 +296,7 @@ namespace MagusEngine.Systems
             Attack attack)
         {
             int luck = Mrn.Exploding2D6Dice;
-            if (effect.IsResistable || MagicComponent.PenetrateResistance(spellCasted, caster, poorGuy, luck))
+            if (effect.IsResistable || Magic.PenetrateResistance(spellCasted, caster, poorGuy, luck))
                 DealDamage(effect.BaseDamage, poorGuy, effect.GetDamageType()!, attack: attack, spellUsed: spellCasted);
             else
                 Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{poorGuy.Name} resisted the effects of {spellCasted.Name}"));

@@ -2,6 +2,7 @@
 using GoRogue.DiceNotation;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
+using MagusEngine.Core.Magic.Interfaces;
 using MagusEngine.Services;
 using MagusEngine.Utils.Extensions;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace MagusEngine.Core.Magic
     /// <summary>
     /// The class that is the manager of the magic system to an entity
     /// </summary>
-    public class MagicComponent
+    public class Magic
     {
         public const string Tag = "magic_manager";
 
@@ -28,7 +29,7 @@ namespace MagusEngine.Core.Magic
         /// </summary>
         public List<ISpellEffect> Enchantments { get; set; }
 
-        public MagicComponent()
+        public Magic()
         {
             KnowSpells = [];
             KnowEffects = [];

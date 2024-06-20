@@ -3,11 +3,12 @@ using Arquimedes.Interfaces;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
-using MagusEngine.Core.Magic.Practices;
+using MagusEngine.Core.Magic.Interfaces;
 using MagusEngine.Serialization.EntitySerialization;
 using MagusEngine.Services;
 using MagusEngine.Systems;
 using MagusEngine.Utils;
+using MagusEngine.Utils.Extensions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -75,7 +76,7 @@ namespace MagusEngine.Core.Magic
         /// The total proficiency, goes up slowly as you use the spell or train with it in your
         /// downtime, makes it more effective and cost less, goes from 0.0(not learned) to
         /// maxProficiency(x effectiviness, works as a percentage multiplier), for newly trained spell shoud be 0.01, see
-        /// <see cref="MagicComponent.ShapingSkill"/> for more details about the shaping of mana
+        /// <see cref="Magic.ShapingSkill"/> for more details about the shaping of mana
         /// </summary>
         public double Proficiency
         {
@@ -107,6 +108,9 @@ namespace MagusEngine.Core.Magic
         public List<SpellContext>? Context { get; set; }
         public bool AffectsTile { get; set; }
         public string ShapingAbility { get; set; }
+        public string Fore { get; set; }
+        public string Back { get; set; }
+        public char[] Glyphs { get; set; }
 
         /// <summary>
         /// Empty constructor, a waste of space
@@ -144,7 +148,7 @@ namespace MagusEngine.Core.Magic
 
         public bool CanCast(Actor actor, bool tickProficiency = true)
         {
-            var magicSkills = actor.GetComponent<MagicComponent>();
+            var magicSkills = actor.GetComponent<Magic>();
             if (magicSkills.KnowSpells.Contains(this))
             {
                 int reqShapingWithDiscount;
@@ -298,6 +302,11 @@ namespace MagusEngine.Core.Magic
         public override bool Equals(object? obj)
         {
             return GetHashCode() == obj?.GetHashCode();
+        }
+
+        public SpellEntity GetSpellEntity(MagiEntity caster)
+        {
+            return new SpellEntity(Id, Fore, Back, Glyphs.GetRandomItemFromList(), Id, this, caster);
         }
     }
 }

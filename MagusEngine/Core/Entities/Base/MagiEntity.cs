@@ -95,7 +95,7 @@ namespace MagusEngine.Core.Entities.Base
             {
                 Position = coord
             };
-            AddComponent<MagicComponent>(new(), MagicComponent.Tag);
+            AddComponent((Magic.Magic)new(), Magic.Magic.Tag);
             PositionChanged += MagiEntity_PositionChanged;
         }
 

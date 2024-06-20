@@ -2,6 +2,7 @@
 using MagusEngine.Actions;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
+using MagusEngine.Core.Magic.Interfaces;
 using MagusEngine.Services;
 using Newtonsoft.Json;
 

@@ -21,7 +21,7 @@ namespace MagusEngine.Core.Entities
                 Arquimedes.Enumerators.Sex.Female, "new_wiz");
 
             player.Mind.AddAbilityToDictionary(new(Arquimedes.Enumerators.AbilityCategory.MagicShaping, 25));
-            var magic = player.GetComponent<MagicComponent>();
+            var magic = player.GetComponent<Magic.Magic>();
             magic.KnowSpells[0].Proficiency = 1;
 
             Spell cure = DataManager.QuerySpellInData("minor_cure", 1);

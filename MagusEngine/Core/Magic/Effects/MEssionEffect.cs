@@ -1,5 +1,6 @@
 ﻿using Arquimedes.Enumerators;
 using MagusEngine.Core.Entities;
+using MagusEngine.Core.Magic.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

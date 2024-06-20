@@ -259,7 +259,7 @@ namespace Diviner
                 SpellSelectWindow spell = new(_getPlayer.Soul.CurrentMana);
 
                 _targetCursor ??= new Target(_getPlayer.Position);
-                var magic = _getPlayer.GetComponent<MagicComponent>();
+                var magic = _getPlayer.GetComponent<Magic>();
                 spell.Show(magic.KnowSpells, selectedSpell => _targetCursor.OnSelectSpell(selectedSpell, (Actor)uni.CurrentMap!.ControlledEntitiy!), _getPlayer.Soul.CurrentMana);
 
                 return true;

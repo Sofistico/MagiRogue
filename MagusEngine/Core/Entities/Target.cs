@@ -6,6 +6,7 @@ using MagusEngine.Bus.MapBus;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic;
+using MagusEngine.Core.Magic.Interfaces;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.Services;
 using MagusEngine.Systems;
