@@ -25,11 +25,11 @@ namespace MagusEngine.Core.Entities
 
         public string[] Backs { get; set; }
 
-        public string Fore
+        public MagiColorSerialization Fore
         {
             get
             {
-                return fore.ColorName;
+                return fore;
             }
 
             set
@@ -38,11 +38,11 @@ namespace MagusEngine.Core.Entities
             }
         }
 
-        public string Back
+        public MagiColorSerialization Back
         {
             get
             {
-                return back.ColorName;
+                return back;
             }
 
             set
@@ -53,9 +53,6 @@ namespace MagusEngine.Core.Entities
 
         [JsonRequired]
         public char[] Glyphs { get; set; }
-
-        public Color Foreground => fore;
-        public Color Background => back;
 
         [JsonRequired]
         public string MaterialId { get; set; }
@@ -88,7 +85,7 @@ namespace MagusEngine.Core.Entities
 
         public Plant Copy()
         {
-            return new Plant(Fores.GetRandomItemFromList(), Background, Glyphs)
+            return new Plant(Fores.GetRandomItemFromList(), Back, Glyphs)
             {
                 Id = Id,
                 Name = Name,
@@ -100,6 +97,6 @@ namespace MagusEngine.Core.Entities
             };
         }
 
-        public ColoredGlyph GetSadGlyph() => new(Foreground, Background, Glyphs.GetRandomItemFromList());
+        public ColoredGlyph GetSadGlyph() => new(Fore, Back, Glyphs.GetRandomItemFromList());
     }
 }
