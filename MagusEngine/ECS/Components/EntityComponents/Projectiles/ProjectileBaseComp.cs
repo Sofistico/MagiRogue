@@ -1,12 +1,16 @@
 ﻿using GoRogue.Components.ParentAware;
 using GoRogue.Pathing;
+using MagusEngine.Core;
+using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
+using MagusEngine.Systems;
+using SadConsole.Effects;
 using SadRogue.Primitives;
 using System;
 
 namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
 {
-    public abstract class ProjectileBaseComp<T> : ParentAwareComponentBase<T> where T : class
+    public abstract class ProjectileBaseComp<T> : ParentAwareComponentBase<T> where T : MagiEntity
     {
         protected static readonly char[] _defaultGlyphs = [
             '.',
@@ -52,7 +56,36 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
             Force = force;
         }
 
-        public abstract long Travel();
+        public virtual long Travel()
+        {
+            if (_currentStep == 0)
+            {
+                var blinkGlyph = new BlinkGlyph()
+                {
+                    BlinkCount = -1,
+                    RunEffectOnApply = true,
+                    BlinkSpeed = TimeSpan.FromSeconds(0.5),
+                    GlyphIndex = TranslateDirToGlyph(),
+                    RemoveOnFinished = true,
+                    RestoreCellOnRemoved = true,
+                };
+                Parent!.SadCell.AppearanceSingle!.Effect = blinkGlyph;
+                blinkGlyph.Restart();
+            }
+            if (_path?.Length == _currentStep || Parent?.MoveTo(_path!.GetStep(_currentStep++), IgnoresObstacles) == false)
+            {
+                // handle hit logic!
+                OnHit();
+                if (Parent?.SadCell?.AppearanceSingle?.Effect != null)
+                    Parent.SadCell.AppearanceSingle.Effect = null;
+                Parent?.RemoveComponent(this);
+                return 0;
+            }
+
+            return TicksToMoveOneStep;
+        }
+
+        protected abstract void OnHit();
 
         public void UpdatePath(MagiMap map)
         {

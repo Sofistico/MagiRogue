@@ -10,6 +10,7 @@ using MagusEngine.Systems;
 using MagusEngine.Utils;
 using MagusEngine.Utils.Extensions;
 using Newtonsoft.Json;
+using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -110,7 +111,7 @@ namespace MagusEngine.Core.Magic
         public string ShapingAbility { get; set; }
         public string Fore { get; set; } = "{Caster}";
         public string Back { get; set; } = "Transparent";
-        public char[] Glyphs { get; set; }
+        public char[] Glyphs { get; set; } = ['*'];
         public List<IMagicStep> Steps { get; set; }
 
         /// <summary>
@@ -305,9 +306,29 @@ namespace MagusEngine.Core.Magic
             return GetHashCode() == obj?.GetHashCode();
         }
 
-        public SpellEntity GetSpellEntity(MagiEntity caster)
+        public SpellEntity GetSpellEntity(MagiEntity caster, Direction dir)
         {
-            return new SpellEntity(Id, Fore, Back, Glyphs.GetRandomItemFromList(), Id, this, caster);
+            char glyph;
+            if (Glyphs.Length == 1)
+            {
+                glyph = Glyphs[0];
+            }
+            else
+            {
+                glyph = dir.Type switch
+                {
+                    Direction.Types.Left => Glyphs[0],
+                    Direction.Types.Up => Glyphs[1],
+                    Direction.Types.Right => Glyphs[2],
+                    Direction.Types.Down => Glyphs[3],
+                    Direction.Types.UpLeft => Glyphs[4],
+                    Direction.Types.UpRight => Glyphs[5],
+                    Direction.Types.DownLeft => Glyphs[6],
+                    Direction.Types.DownRight => Glyphs[7],
+                    _ => Glyphs.GetRandomItemFromList()
+                };
+            }
+            return new SpellEntity(Id, Fore, Back, glyph, Id, this, caster);
         }
     }
 }

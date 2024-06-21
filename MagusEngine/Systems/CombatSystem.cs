@@ -504,7 +504,7 @@ namespace MagusEngine.Systems
             }
         }
 
-        public static void HitProjectile(MagiEntity? projectile, Point lastPoint, Spell spell, double force, bool ignoresObstacles)
+        public static void HitProjectile(MagiEntity? projectile, Point lastPoint, ISpell spell, double force, bool ignoresObstacles)
         {
             var (sucess, entity, tile) = GetWhatToHitProjectile(projectile, lastPoint, ignoresObstacles);
             if (!sucess)

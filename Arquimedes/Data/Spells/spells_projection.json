@@ -19,7 +19,7 @@
         "CanMiss": true
       }
     ],
-    "Glyphs": [""],
+    "Glyphs": [ "←", "↑", "→", "↓" ],
     "Context": [ "Offensive" ]
   },
   {

@@ -4,11 +4,11 @@ namespace MagusEngine.Utils
 {
     public static class GlyphHelper
     {
-        private static readonly Dictionary<char, int> GlyphsMapping;
+        private static readonly Dictionary<char, int> _glyphsMapping;
 
         static GlyphHelper()
         {
-            GlyphsMapping = new Dictionary<char, int>
+            _glyphsMapping = new Dictionary<char, int>
             {
                 {'│', 179},
                 {'┤', 180},
@@ -147,15 +147,15 @@ namespace MagusEngine.Utils
 
         public static int GetGlyph(char symbol)
         {
-            if (GlyphsMapping.ContainsKey(symbol))
-                return GlyphsMapping[symbol];
+            if (_glyphsMapping.TryGetValue(symbol, out int value))
+                return value;
 
             return symbol;
         }
 
         public static bool GlyphExistInDictionary(char glyph)
         {
-            return GlyphsMapping.ContainsKey(glyph);
+            return _glyphsMapping.ContainsKey(glyph);
         }
     }
 }

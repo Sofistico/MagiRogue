@@ -20,34 +20,10 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
         {
         }
 
-        public override long Travel()
+        protected override void OnHit()
         {
-            if (_currentStep == 0)
-            {
-                var blinkGlyph = new BlinkGlyph()
-                {
-                    BlinkCount = -1,
-                    RunEffectOnApply = true,
-                    BlinkSpeed = TimeSpan.FromSeconds(0.5),
-                    GlyphIndex = TranslateDirToGlyph(),
-                    RemoveOnFinished = true,
-                    RestoreCellOnRemoved = true,
-                };
-                Parent!.SadCell.AppearanceSingle!.Effect = blinkGlyph;
-                blinkGlyph.Restart();
-            }
-            if (_path?.Length == _currentStep || Parent?.MoveTo(_path!.GetStep(_currentStep++), IgnoresObstacles) == false)
-            {
-                // handle hit logic!
-                var dmgType = new DamageType(Parent.ItemDamageType);
-                CombatSystem.HitProjectile(Parent, _path.GetStep(_currentStep > 0 ? _currentStep - 1 : 0), dmgType, Parent.Material, Force, IgnoresObstacles);
-                if (Parent?.SadCell?.AppearanceSingle?.Effect != null)
-                    Parent.SadCell.AppearanceSingle.Effect = null;
-                Parent?.RemoveComponent(this);
-                return 0;
-            }
-
-            return TicksToMoveOneStep;
+            var dmgType = new DamageType(Parent.ItemDamageType);
+            CombatSystem.HitProjectile(Parent, _path.GetStep(_currentStep > 0 ? _currentStep - 1 : 0), dmgType, Parent.Material, Force, IgnoresObstacles);
         }
     }
 }

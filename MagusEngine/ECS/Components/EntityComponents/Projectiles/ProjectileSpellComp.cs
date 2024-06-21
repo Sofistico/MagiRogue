@@ -14,23 +14,9 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
         {
         }
 
-        public override long Travel()
+        protected override void OnHit()
         {
-            if (_currentStep == 0)
-            {
-            }
-            if (_path?.Length == _currentStep || Parent?.MoveTo(_path!.GetStep(_currentStep++), IgnoresObstacles) == false)
-            {
-                // handle hit logic!
-                Spell spell = DataManager.QuerySpellInData(Parent!.SpellId)!;
-                CombatSystem.HitProjectile(Parent, _path.GetStep(_currentStep > 0 ? _currentStep - 1 : 0), spell, Force, IgnoresObstacles);
-                if (Parent?.SadCell?.AppearanceSingle?.Effect != null)
-                    Parent.SadCell.AppearanceSingle.Effect = null;
-                Parent?.RemoveComponent(this);
-                return 0;
-            }
-
-            return TicksToMoveOneStep;
+            CombatSystem.HitProjectile(Parent, _path.GetStep(_currentStep > 0 ? _currentStep - 1 : 0), Parent.Spell, Force, IgnoresObstacles);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
+using SadRogue.Primitives;
 using System.Collections.Generic;
 
 namespace MagusEngine.Core.Magic.Interfaces
@@ -14,6 +15,6 @@ namespace MagusEngine.Core.Magic.Interfaces
 
         public bool CastSpell(List<Point> target, Actor caster);
 
-        public SpellEntity GetSpellEntity(MagiEntity caster);
+        public SpellEntity GetSpellEntity(MagiEntity caster, Direction dir);
     }
 }
