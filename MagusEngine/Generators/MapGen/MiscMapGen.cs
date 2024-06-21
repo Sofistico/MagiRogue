@@ -1,6 +1,6 @@
 ﻿using Arquimedes.Enumerators;
 using MagusEngine.Core.MapStuff;
-using MagusEngine.ECS.Components.MagiObjComponents.Ai;
+using MagusEngine.ECS.Components.EntityComponents.Ai;
 using MagusEngine.Factory;
 using MagusEngine.Systems;
 using MagusEngine.Utils;
