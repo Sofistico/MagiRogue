@@ -1,4 +1,5 @@
 ﻿using MagusEngine.Core.Entities;
+using MagusEngine.Core.MapStuff;
 using MagusEngine.Systems;
 using SadRogue.Primitives;
 
@@ -6,7 +7,14 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
 {
     public class ProjectileSpellComp : ProjectileBaseComp<SpellEntity>
     {
-        public ProjectileSpellComp(long ticksToMoveOneStep, Point origin, Point finalPoint, Direction? direction, bool isPhysical, char[]? glyphs, double force) : base(ticksToMoveOneStep, origin, finalPoint, direction, isPhysical, glyphs, force)
+        public ProjectileSpellComp(long ticksToMoveOneStep,
+            Point origin,
+            Point finalPoint,
+            Direction? direction,
+            bool isPhysical,
+            char[]? glyphs,
+            double force,
+            MagiMap map) : base(ticksToMoveOneStep, origin, finalPoint, direction, isPhysical, glyphs, force, map)
         {
         }
 

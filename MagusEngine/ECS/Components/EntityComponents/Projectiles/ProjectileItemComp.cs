@@ -1,5 +1,6 @@
 ﻿using MagusEngine.Core;
 using MagusEngine.Core.Entities;
+using MagusEngine.Core.MapStuff;
 using MagusEngine.Systems;
 using SadRogue.Primitives;
 
@@ -13,7 +14,8 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
             Direction? direction,
             bool isPhysical,
             char[]? glyphs,
-            double force) : base(ticksToMoveOneStep, origin, finalPoint, direction, isPhysical, glyphs, force)
+            double force,
+            MagiMap map) : base(ticksToMoveOneStep, origin, finalPoint, direction, isPhysical, glyphs, force, map)
         {
         }
 

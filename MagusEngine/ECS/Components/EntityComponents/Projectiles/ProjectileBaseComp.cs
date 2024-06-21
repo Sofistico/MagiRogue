@@ -42,7 +42,8 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
             Direction? direction,
             bool isPhysical,
             char[]? glyphs,
-            double force)
+            double force,
+            MagiMap? map = null)
         {
             TravelDirection = direction ?? Direction.GetDirection(origin, finalPoint);
             TicksToMoveOneStep = ticksToMoveOneStep;
@@ -51,6 +52,8 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
             IgnoresObstacles = !isPhysical;
             Glyphs = glyphs ?? _defaultTravelingGlyphs;
             Force = force;
+            if (map != null)
+                UpdatePath(map);
         }
 
         public long Travel()
