@@ -54,7 +54,7 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
             Force = force;
         }
 
-        public virtual long Travel()
+        public long Travel()
         {
             if (_currentStep == 0)
             {
