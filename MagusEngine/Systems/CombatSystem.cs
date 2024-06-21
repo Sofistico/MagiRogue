@@ -466,7 +466,7 @@ namespace MagusEngine.Systems
                 true,
                 null,
                 force);
-            projectile.AddComponent(projectileComp, ProjectileItemComp.Tag);
+            projectile.AddComponent(projectileComp, ProjectileHelper.Tag);
             projectileComp.UpdatePath(shooter.CurrentMagiMap);
             Locator.GetService<MessageBusService>().SendMessage<AddEntitiyCurrentMap>(new(projectile));
             Locator.GetService<MessageBusService>().SendMessage<AddTurnNode>(new(new ComponentTimeNode(time, projectile.ID, projectileComp.Travel)));

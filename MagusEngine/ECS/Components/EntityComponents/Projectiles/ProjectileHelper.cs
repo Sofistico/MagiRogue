@@ -21,9 +21,6 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
         /// This follows a custom convetion of mine, first 4 are the cardinal directions starting on left,
         /// then the next 4 are the diagonals that starts as well on left and goes clockwise
         /// </summary>
-        /// <param name="dir"></param>
-        /// <param name="glyphs"></param>
-        /// <returns></returns>
         public static char TranslateDirToGlyph(this Direction dir, char[] glyphs)
         {
             return glyphs.Length == 1 ? glyphs[0] : dir.Type switch
