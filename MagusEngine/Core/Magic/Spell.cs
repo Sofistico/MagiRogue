@@ -4,6 +4,7 @@ using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic.Interfaces;
+using MagusEngine.ECS.Components.EntityComponents.Projectiles;
 using MagusEngine.Serialization.EntitySerialization;
 using MagusEngine.Services;
 using MagusEngine.Systems;
@@ -308,27 +309,7 @@ namespace MagusEngine.Core.Magic
 
         public SpellEntity GetSpellEntity(MagiEntity caster, Direction dir)
         {
-            char glyph;
-            if (Glyphs.Length == 1)
-            {
-                glyph = Glyphs[0];
-            }
-            else
-            {
-                glyph = dir.Type switch
-                {
-                    Direction.Types.Left => Glyphs[0],
-                    Direction.Types.Up => Glyphs[1],
-                    Direction.Types.Right => Glyphs[2],
-                    Direction.Types.Down => Glyphs[3],
-                    Direction.Types.UpLeft => Glyphs[4],
-                    Direction.Types.UpRight => Glyphs[5],
-                    Direction.Types.DownLeft => Glyphs[6],
-                    Direction.Types.DownRight => Glyphs[7],
-                    _ => Glyphs.GetRandomItemFromList()
-                };
-            }
-            return new SpellEntity(Id, Fore, Back, glyph, Id, this, caster);
+            return new SpellEntity(Id, Fore, Back, dir.TranslateDirToGlyph(Glyphs), Id, this, caster);
         }
     }
 }

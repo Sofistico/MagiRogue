@@ -100,7 +100,7 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
 
         protected char TranslateDirToGlyph()
         {
-            return TranslateDirToGlyph(TravelDirection, Glyphs);
+            return TravelDirection.TranslateDirTypeToGlyph(Glyphs);
         }
 
         protected Point PointInCurrentPath()
@@ -109,17 +109,5 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
                 return _path.GetStep(_currentStep++);
             return Point.None;
         }
-
-        protected static char TranslateDirToGlyph(Direction dir, char[] glyphs)
-        {
-            if (glyphs.Length == 1)
-                return glyphs[0];
-            return glyphs[(int)dir.Type];
-        }
-    }
-
-    public static class ProjectileHelper
-    {
-        public const string Tag = "projectile";
     }
 }
