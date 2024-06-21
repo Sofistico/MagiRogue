@@ -139,15 +139,19 @@ namespace MagusEngine.Core.Entities
         {
             int distance = (int)Distance.Chebyshev.Calculate(OriginCoord, Cursor.Position);
 
+            // for now, let's assume the beam and cone will be so fast as to be instantaneous
             if (_selectedSpell?.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Beam) == true)
             {
                 return AffectPath();
             }
-
-            if (_selectedSpell?.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Ball) == true || _selectedSpell?.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Cone) == true)
+            if (_selectedSpell?.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Cone) == true)
             {
                 return AffectArea();
             }
+            //if (_selectedSpell?.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Ball) == true)
+            //{
+            //    return AffectArea();
+            //}
 
             if (distance <= _selectedSpell?.SpellRange)
             {
