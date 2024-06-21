@@ -2,7 +2,7 @@
 using SadConsole;
 using SadConsole.Components;
 
-namespace MagusEngine.ECS.Components.MagiObjComponents
+namespace MagusEngine.ECS.Components.EntityComponents
 {
     public class RepeatAnimationComponent : GoRogue.Components.ParentAware.ParentAwareComponentBase<MagiEntity>
     {

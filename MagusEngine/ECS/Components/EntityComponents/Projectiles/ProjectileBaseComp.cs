@@ -4,7 +4,7 @@ using MagusEngine.Core.MapStuff;
 using SadRogue.Primitives;
 using System;
 
-namespace MagusEngine.ECS.Components.MagiObjComponents
+namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
 {
     public abstract class ProjectileBaseComp<T> : ParentAwareComponentBase<T> where T : class
     {

@@ -6,7 +6,7 @@ using SadConsole.Effects;
 using SadRogue.Primitives;
 using System;
 
-namespace MagusEngine.ECS.Components.MagiObjComponents.Effects
+namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
 {
     public class ProjectileSpellComp : ProjectileBaseComp<SpellEntity>
     {

@@ -8,7 +8,7 @@ using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic;
 using MagusEngine.Core.Magic.Interfaces;
 using MagusEngine.Core.MapStuff;
-using MagusEngine.ECS.Components.MagiObjComponents;
+using MagusEngine.ECS.Components.EntityComponents.Projectiles;
 using MagusEngine.ECS.Components.TilesComponents;
 using MagusEngine.Services;
 using MagusEngine.Systems.Physics;

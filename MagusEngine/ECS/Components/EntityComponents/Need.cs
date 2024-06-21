@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MagusEngine.ECS.Components.MagiObjComponents
+namespace MagusEngine.ECS.Components.EntityComponents
 {
     public class Need
     {

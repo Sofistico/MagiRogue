@@ -8,7 +8,7 @@ using MagusEngine.Utils.Extensions;
 using SadRogue.Primitives;
 using System;
 
-namespace MagusEngine.ECS.Components.MagiObjComponents.Effects
+namespace MagusEngine.ECS.Components.EntityComponents.Effects
 {
     public class UncontrolledMovementComponent : BaseEffectComponent
     {

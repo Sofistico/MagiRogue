@@ -1,7 +1,7 @@
 ﻿using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
-using MagusEngine.ECS.Components.MagiObjComponents.Effects;
+using MagusEngine.ECS.Components.EntityComponents.Effects;
 using MagusEngine.Services;
 using MagusEngine.Utils;
 using SadRogue.Primitives;

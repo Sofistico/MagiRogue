@@ -28,6 +28,7 @@ namespace MagusEngine.Core.Magic
         /// Any enchantment that affects something
         /// </summary>
         public List<ISpellEffect> Enchantments { get; set; }
+        public string MagicColor { get; set; }
 
         public Magic()
         {

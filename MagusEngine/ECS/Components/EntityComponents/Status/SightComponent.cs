@@ -1,6 +1,6 @@
-﻿using MagusEngine.ECS.Components.MagiObjComponents.Effects;
+﻿using MagusEngine.ECS.Components.EntityComponents.Effects;
 
-namespace MagusEngine.ECS.Components.MagiObjComponents.Status
+namespace MagusEngine.ECS.Components.EntityComponents.Status
 {
     public class SightComponent : BaseEffectComponent
     {

@@ -5,7 +5,7 @@ using GoRogue.Random;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.ECS;
-using MagusEngine.ECS.Components.MagiObjComponents;
+using MagusEngine.ECS.Components.EntityComponents;
 using MagusEngine.ECS.Components.TilesComponents;
 using MagusEngine.Factory;
 using MagusEngine.Serialization.MapConverter;

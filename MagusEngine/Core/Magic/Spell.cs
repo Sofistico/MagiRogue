@@ -108,8 +108,8 @@ namespace MagusEngine.Core.Magic
         public List<SpellContext>? Context { get; set; }
         public bool AffectsTile { get; set; }
         public string ShapingAbility { get; set; }
-        public string Fore { get; set; }
-        public string Back { get; set; }
+        public string Fore { get; set; } = "{Caster}";
+        public string Back { get; set; } = "Transparent";
         public char[] Glyphs { get; set; }
         public List<IMagicStep> Steps { get; set; }
 

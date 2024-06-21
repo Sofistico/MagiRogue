@@ -8,6 +8,8 @@ using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Magic;
 using MagusEngine.Core.MapStuff;
+using MagusEngine.ECS.Components.EntitiyComponents;
+using MagusEngine.ECS.Components.EntityComponents;
 using MagusEngine.ECS.Components.MagiObjComponents;
 using MagusEngine.ECS.Components.MagiObjComponents.Ai;
 using MagusEngine.Serialization.MapConverter;

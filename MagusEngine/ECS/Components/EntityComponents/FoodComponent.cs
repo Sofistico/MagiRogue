@@ -1,6 +1,6 @@
 ﻿using Arquimedes.Enumerators;
 
-namespace MagusEngine.ECS.Components.MagiObjComponents
+namespace MagusEngine.ECS.Components.EntityComponents
 {
     public sealed class FoodComponent
     {
