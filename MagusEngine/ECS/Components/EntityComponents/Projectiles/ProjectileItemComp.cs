@@ -1,10 +1,7 @@
 ﻿using MagusEngine.Core;
 using MagusEngine.Core.Entities;
-using MagusEngine.Core.MapStuff;
 using MagusEngine.Systems;
-using SadConsole.Effects;
 using SadRogue.Primitives;
-using System;
 
 namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
 {
@@ -13,7 +10,7 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
         public ProjectileItemComp(long ticksToMoveOneStep,
             Point origin,
             Point finalPoint,
-            Direction direction,
+            Direction? direction,
             bool isPhysical,
             char[]? glyphs,
             double force) : base(ticksToMoveOneStep, origin, finalPoint, direction, isPhysical, glyphs, force)

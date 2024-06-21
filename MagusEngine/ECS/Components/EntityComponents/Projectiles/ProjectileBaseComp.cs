@@ -10,7 +10,7 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
 {
     public abstract class ProjectileBaseComp<T> : ParentAwareComponentBase<T> where T : MagiEntity
     {
-        protected static readonly char[] _defaultGlyphs = [
+        protected static readonly char[] _defaultTravelingGlyphs = [
             '.',
             '|',
             '/',
@@ -28,7 +28,7 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
         public long TicksToMoveOneStep { get; set; }
         public Point Origin { get; set; }
         public Point FinalPoint { get; set; }
-        public Direction Direciton { get; set; }
+        public Direction TravelDirection { get; set; }
         public bool IgnoresObstacles { get; set; }
         public double Force { get; set; }
 
@@ -40,17 +40,17 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
         protected ProjectileBaseComp(long ticksToMoveOneStep,
             Point origin,
             Point finalPoint,
-            Direction direction,
+            Direction? direction,
             bool isPhysical,
             char[]? glyphs,
             double force)
         {
-            Direciton = direction;
+            TravelDirection = direction ?? Direction.GetDirection(origin, finalPoint);
             TicksToMoveOneStep = ticksToMoveOneStep;
             Origin = origin;
             FinalPoint = finalPoint;
             IgnoresObstacles = !isPhysical;
-            Glyphs = glyphs ?? _defaultGlyphs;
+            Glyphs = glyphs ?? _defaultTravelingGlyphs;
             Force = force;
         }
 
@@ -101,12 +101,7 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
 
         protected char TranslateDirToGlyph()
         {
-            return TranslateDirToGlyph(Direciton, Glyphs);
-        }
-
-        protected char TranslateDirToGlyph(Direction dir)
-        {
-            return TranslateDirToGlyph(dir, Glyphs);
+            return TranslateDirToGlyph(TravelDirection, Glyphs);
         }
 
         protected Point PointInCurrentPath()
