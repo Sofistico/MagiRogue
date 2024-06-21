@@ -1,9 +1,7 @@
 ﻿using GoRogue.Components.ParentAware;
 using GoRogue.Pathing;
-using MagusEngine.Core;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
-using MagusEngine.Systems;
 using SadConsole.Effects;
 using SadRogue.Primitives;
 using System;
@@ -60,19 +58,9 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
         {
             if (_currentStep == 0)
             {
-                var blinkGlyph = new BlinkGlyph()
-                {
-                    BlinkCount = -1,
-                    RunEffectOnApply = true,
-                    BlinkSpeed = TimeSpan.FromSeconds(0.5),
-                    GlyphIndex = TranslateDirToGlyph(),
-                    RemoveOnFinished = true,
-                    RestoreCellOnRemoved = true,
-                };
-                Parent!.SadCell.AppearanceSingle!.Effect = blinkGlyph;
-                blinkGlyph.Restart();
+                TravelAnimation();
             }
-            if (_path?.Length == _currentStep || Parent?.MoveTo(_path!.GetStep(_currentStep++), IgnoresObstacles) == false)
+            if (TickMovement())
             {
                 // handle hit logic!
                 OnHit();
@@ -84,6 +72,23 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
 
             return TicksToMoveOneStep;
         }
+
+        protected virtual void TravelAnimation()
+        {
+            var blinkGlyph = new BlinkGlyph()
+            {
+                BlinkCount = -1,
+                RunEffectOnApply = true,
+                BlinkSpeed = TimeSpan.FromSeconds(0.5),
+                GlyphIndex = TranslateDirToGlyph(),
+                RemoveOnFinished = true,
+                RestoreCellOnRemoved = true,
+            };
+            Parent!.SadCell.AppearanceSingle!.Effect = blinkGlyph;
+            blinkGlyph.Restart();
+        }
+
+        protected virtual bool TickMovement() => _path?.Length == _currentStep || Parent?.MoveTo(_path!.GetStep(_currentStep++), IgnoresObstacles) == false;
 
         protected abstract void OnHit();
 
