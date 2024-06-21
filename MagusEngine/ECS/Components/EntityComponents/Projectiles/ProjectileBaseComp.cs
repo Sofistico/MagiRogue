@@ -24,7 +24,6 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
         protected Path? _path;
         protected int _currentStep;
 
-        public const string Tag = "projectile";
         public long TicksToMoveOneStep { get; set; }
         public Point Origin { get; set; }
         public Point FinalPoint { get; set; }
@@ -117,5 +116,10 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
                 return glyphs[0];
             return glyphs[(int)dir.Type];
         }
+    }
+
+    public static class ProjectileHelper
+    {
+        public const string Tag = "projectile";
     }
 }
