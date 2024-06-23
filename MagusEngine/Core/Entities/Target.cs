@@ -155,7 +155,9 @@ namespace MagusEngine.Core.Entities
 
             if (distance <= _selectedSpell?.SpellRange)
             {
-                return AffectTarget();
+                ActionManager.CastProjectileSpell(_selectedSpell, _caster, OriginCoord, Cursor.Position);
+                //return AffectTarget();
+                return (true, _selectedSpell);
             }
             Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("The target is too far!"));
             return (false, null);

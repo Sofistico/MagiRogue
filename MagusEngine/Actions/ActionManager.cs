@@ -8,6 +8,7 @@ using MagusEngine.Bus.UiBus;
 using MagusEngine.Core;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
+using MagusEngine.Core.Magic;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.ECS.Components.EntityComponents;
 using MagusEngine.ECS.Components.TilesComponents;
@@ -695,6 +696,11 @@ namespace MagusEngine.Actions
             if (!actor.HasMemory(MemoryType.WaterLoc, water))
                 actor.AddMemory(water.Position, MemoryType.WaterLoc, water);
             return true;
+        }
+
+        public static void CastProjectileSpell(Spell spell, MagiEntity? caster, Point originCoord, Point endPos)
+        {
+            var spellEntity = spell.GetSpellEntity(caster, Direction.GetDirection(originCoord, endPos));
         }
     }
 }
