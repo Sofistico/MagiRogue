@@ -117,6 +117,6 @@ namespace MagusEngine.Utils
             => RandomNamesFromLanguage(DataManager.QueryLanguageInData(languageId));
 
         public static string? RandomNamesFromRandomLanguage()
-            => RandomNamesFromLanguage(DataManager.ListOfLanguages.GetRandomItemFromList().Value);
+            => RandomNamesFromLanguage(DataManager.ListOfLanguages.GetRandomItemFromCollection().Value);
     }
 }

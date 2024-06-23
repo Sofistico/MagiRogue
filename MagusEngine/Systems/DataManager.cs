@@ -268,15 +268,15 @@ namespace MagusEngine.Systems
 
         #region rng
 
-        public static Language? RandomLangugage() => ListOfLanguages.GetRandomItemFromList().Value;
+        public static Language? RandomLangugage() => ListOfLanguages.GetRandomItemFromCollection().Value;
 
         public static string? RandomRealm() => ListOfRealmsName.GetRandomItemFromList();
 
-        public static Race? RandomRace() => ListOfRaces.GetRandomItemFromList().Value;
+        public static Race? RandomRace() => ListOfRaces.GetRandomItemFromCollection().Value;
 
-        public static Research? RandomMagicalResearch() => ListOfResearches.Values.Where(i => i.IsMagical).GetRandomItemFromList();
+        public static Research? RandomMagicalResearch() => ListOfResearches.Values.Where(i => i.IsMagical).GetRandomItemFromCollection();
 
-        public static Research? RandomNonMagicalResearch() => ListOfResearches.Values.Where(i => !i.IsMagical).GetRandomItemFromList();
+        public static Research? RandomNonMagicalResearch() => ListOfResearches.Values.Where(i => !i.IsMagical).GetRandomItemFromCollection();
 
         #endregion rng
 
@@ -284,9 +284,9 @@ namespace MagusEngine.Systems
 
         public static List<Reaction> GetProductsByTag(RoomTag tag) => ListOfReactions.Values.Where(i => i.RoomTag.Contains(tag)).ToList();
 
-        public static Material? QueryMaterialWithType(MaterialType typeToMake) => ListOfMaterials.Values.Where(i => i.Type == typeToMake).GetRandomItemFromList();
+        public static Material? QueryMaterialWithType(MaterialType typeToMake) => ListOfMaterials.Values.Where(i => i.Type == typeToMake).GetRandomItemFromCollection();
 
-        public static Material? QueryMaterialWithTrait(Trait trait) => ListOfMaterials?.Values.Where(i => i.ConfersTraits?.Contains(trait) == true).GetRandomItemFromList();
+        public static Material? QueryMaterialWithTrait(Trait trait) => ListOfMaterials?.Values.Where(i => i.ConfersTraits?.Contains(trait) == true).GetRandomItemFromCollection();
 
         #endregion helper methods
     }

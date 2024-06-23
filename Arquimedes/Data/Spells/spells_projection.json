@@ -49,7 +49,7 @@
     "ShapingAbility": "Mana Shaping",
     "Effects": [
       {
-        "AreaOfEffect": "Beam",
+        "AreaOfEffect": "Ray",
         "SpellDamageTypeId": "fire",
         "BaseDamage": 3,
         "Radius": 0,

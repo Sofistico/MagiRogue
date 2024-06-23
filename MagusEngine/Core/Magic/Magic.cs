@@ -5,6 +5,7 @@ using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic.Interfaces;
 using MagusEngine.Services;
 using MagusEngine.Utils.Extensions;
+using SadRogue.Primitives;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -37,6 +38,7 @@ namespace MagusEngine.Core.Magic
             KnowArea = [];
             KnowDamageTypes = [];
             Enchantments = [];
+            MagicColor = ColorExtensions2.ColorMappings.GetRandomItemFromCollection().Key;
         }
 
         public static int CalculateSpellDamage(Actor entityStats, Spell spellCasted)

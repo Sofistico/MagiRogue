@@ -4,13 +4,11 @@ using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic.Interfaces;
-using MagusEngine.Core.MapStuff;
 using MagusEngine.ECS.Components.EntityComponents.Projectiles;
 using MagusEngine.Serialization.EntitySerialization;
 using MagusEngine.Services;
 using MagusEngine.Systems;
 using MagusEngine.Utils;
-using MagusEngine.Utils.Extensions;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System;
@@ -71,9 +69,11 @@ namespace MagusEngine.Core.Magic
         public int SpellLevel { get; set; }
 
         /// <summary>
-        /// The total mana cost of the spell, ranging from 0.1 for simple feats of magic to anything beyond
+        /// The total cost of the spell, ranging from 0.1 for simple feats of magic to anything beyond, should be scalated to the specified cost
         /// </summary>
         public double MagicCost { get; set; }
+
+        public SpellCostType CostType { get; set; } = SpellCostType.Mana;
 
         /// <summary>
         /// The total proficiency, goes up slowly as you use the spell or train with it in your

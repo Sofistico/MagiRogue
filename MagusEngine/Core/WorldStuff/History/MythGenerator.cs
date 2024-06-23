@@ -148,7 +148,7 @@ namespace MagusEngine.Core.WorldStuff.History
             HistoricalFigure precursorFigure;
 
             bool alive = GlobalRandom.DefaultRNG.NextBool();
-            Race race = races.GetRandomItemFromList().Value;
+            Race race = races.GetRandomItemFromCollection().Value;
             bool createdRace = false;
 
             switch (precursor)
@@ -171,7 +171,7 @@ namespace MagusEngine.Core.WorldStuff.History
 
                 case MythWho.Chaos:
                     precursorFigure = new HistoricalFigure($"{adjectives.GetRandomItemFromList()} chaos",
-                        $"A primordial chaos in the shape of a {DataManager.ListOfShapes.GetRandomItemFromList().Value.Name[0]}");
+                        $"A primordial chaos in the shape of a {DataManager.ListOfShapes.GetRandomItemFromCollection().Value.Name[0]}");
                     break;
 
                 case MythWho.Chance:
@@ -237,7 +237,7 @@ namespace MagusEngine.Core.WorldStuff.History
 
                 default:
                     precursorFigure = new HistoricalFigure($"{adjectives.GetRandomItemFromList()} {RandomNames.RandomNamesFromRandomLanguage()}",
-                        $"A figure shaped like {DataManager.ListOfShapes.GetRandomItemFromList().Value.Name[0]}");
+                        $"A figure shaped like {DataManager.ListOfShapes.GetRandomItemFromCollection().Value.Name[0]}");
 
                     break;
             }

@@ -42,7 +42,7 @@ namespace MagusEngine.Utils.Extensions
             return list[rng];
         }
 
-        public static T? GetRandomItemFromList<T>(this IEnumerable<T> enumerable)
+        public static T? GetRandomItemFromCollection<T>(this IEnumerable<T> enumerable)
         {
             if (!enumerable.Any())
                 return default;

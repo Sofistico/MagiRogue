@@ -157,7 +157,9 @@ namespace MagusEngine.Core.Entities
             {
                 ActionManager.CastProjectileSpell(_selectedSpell, _caster, OriginCoord, Cursor.Position);
                 //return AffectTarget();
-                return (true, _selectedSpell);
+                var spellCasted = _selectedSpell;
+                EndTargetting();
+                return (true, spellCasted);
             }
             Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("The target is too far!"));
             return (false, null);
@@ -192,8 +194,7 @@ namespace MagusEngine.Core.Entities
             else
             {
                 casted = false;
-                Locator.GetService<MessageBusService>()
-                    .SendMessage<AddMessageLog>(new("An error ocurred, cound't find a target!"));
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("An error ocurred, cound't find a target!"));
             }
             var spellCasted = _selectedSpell;
             EndTargetting();

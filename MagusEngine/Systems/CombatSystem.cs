@@ -525,7 +525,7 @@ namespace MagusEngine.Systems
             var entities = map.GetEntitiesAt<MagiEntity>(point, map.LayerMasker.Mask((int)MapLayer.ACTORS, (int)MapLayer.ITEMS, (int)MapLayer.FURNITURE));
             if (entities.Any())
             {
-                var entity = entities.GetRandomItemFromList();
+                var entity = entities.GetRandomItemFromCollection();
                 if (entity == null)
                 {
                     Locator.GetService<MagiLog>().Log($"An error occured, Entity is null! - Point: {point}, Map: {map.MapId}");
