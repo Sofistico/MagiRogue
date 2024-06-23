@@ -698,9 +698,10 @@ namespace MagusEngine.Actions
             return true;
         }
 
-        public static void CastProjectileSpell(Spell spell, MagiEntity? caster, Point originCoord, Point endPos)
+        public static void CastManifestedSpell(Spell spell, MagiEntity? caster, Point originCoord, Point endPos)
         {
             var spellEntity = spell.GetSpellEntity(caster, Direction.GetDirection(originCoord, endPos));
+
         }
     }
 }

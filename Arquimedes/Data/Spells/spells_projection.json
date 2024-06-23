@@ -20,6 +20,7 @@
       }
     ],
     "Glyphs": [ "←", "↑", "→", "↓" ],
+    "Manifestation": "Projectile",
     "Context": [ "Offensive" ]
   },
   {
@@ -49,7 +50,7 @@
     "ShapingAbility": "Mana Shaping",
     "Effects": [
       {
-        "AreaOfEffect": "Ray",
+        "AreaOfEffect": "Target",
         "SpellDamageTypeId": "fire",
         "BaseDamage": 3,
         "Radius": 0,
@@ -61,6 +62,7 @@
     "Name": "Fire Ray",
     "Description": "A ray of fire leaves your finger and strikes the opponent!",
     "MagicArt": "Projection",
+    "Manifestation": "Ray",
     "SpellRange": 5,
     "MagicCost": 2.5,
     "Id": "fire_ray",

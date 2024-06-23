@@ -74,6 +74,7 @@ namespace MagusEngine.Core.Magic
         public double MagicCost { get; set; }
 
         public SpellCostType CostType { get; set; } = SpellCostType.Mana;
+        public SpellManifestation Manifestation { get; set; }
 
         /// <summary>
         /// The total proficiency, goes up slowly as you use the spell or train with it in your

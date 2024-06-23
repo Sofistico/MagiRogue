@@ -3,6 +3,9 @@ using Newtonsoft.Json.Converters;
 
 namespace Arquimedes.Enumerators
 {
+    /// <summary>
+    /// The area of effect of a spell effect
+    /// </summary>
     [JsonConverter(typeof(StringEnumConverter))]
     public enum SpellAreaEffect
     {
@@ -15,17 +18,9 @@ namespace Arquimedes.Enumerators
         /// </summary>
         Struck,
         /// <summary>
-        /// Affects the specified target instantly
+        /// Affects the specified target
         /// </summary>
         Target,
-        /// <summary>
-        /// Targets the specified target as a projectile
-        /// </summary>
-        Projectile,
-        /// <summary>
-        /// It's a ray, targets the first thing specified
-        /// </summary>
-        Ray,
         /// <summary>
         /// Targets everything in a circle radius
         /// </summary>

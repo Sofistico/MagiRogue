@@ -137,26 +137,29 @@ namespace MagusEngine.Core.Entities
         // TODO: Customize who should you target
         public (bool, Spell?) EndSpellTargetting()
         {
-            int distance = (int)Distance.Chebyshev.Calculate(OriginCoord, Cursor.Position);
-
-            // for now, let's assume the beam and cone will be so fast as to be instantaneous
-            if (_selectedSpell?.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Beam) == true)
+            bool spellInRange = (int)Distance.Chebyshev.Calculate(OriginCoord, Cursor.Position) <= _selectedSpell?.SpellRange;
+            if (_selectedSpell?.Manifestation == SpellManifestation.Instantaneous)
             {
-                return AffectPath();
+                if (_selectedSpell?.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Beam) == true)
+                {
+                    return AffectPath();
+                }
+                if (_selectedSpell?.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Cone) == true)
+                {
+                    return AffectArea();
+                }
+                if (_selectedSpell?.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Ball) == true)
+                {
+                    return AffectArea();
+                }
+                if (spellInRange)
+                {
+                    return AffectTarget();
+                }
             }
-            if (_selectedSpell?.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Cone) == true)
+            if (spellInRange)
             {
-                return AffectArea();
-            }
-            //if (_selectedSpell?.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Ball) == true)
-            //{
-            //    return AffectArea();
-            //}
-
-            if (distance <= _selectedSpell?.SpellRange)
-            {
-                ActionManager.CastProjectileSpell(_selectedSpell, _caster, OriginCoord, Cursor.Position);
-                //return AffectTarget();
+                ActionManager.CastManifestedSpell(_selectedSpell!, _caster, OriginCoord, Cursor.Position);
                 var spellCasted = _selectedSpell;
                 EndTargetting();
                 return (true, spellCasted);
