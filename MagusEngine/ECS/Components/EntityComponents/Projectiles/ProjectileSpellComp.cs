@@ -13,14 +13,18 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
             Direction? direction,
             bool isPhysical,
             char[]? glyphs,
-            double force,
-            MagiMap map) : base(ticksToMoveOneStep, origin, finalPoint, direction, isPhysical, glyphs, force, map)
+            MagiMap map) : base(ticksToMoveOneStep, origin, finalPoint, direction, isPhysical, glyphs, map)
         {
         }
 
         protected override void OnHit()
         {
-            CombatSystem.HitProjectile(Parent, _path.GetStep(_currentStep > 0 ? _currentStep - 1 : 0), Parent.Spell, Force, IgnoresObstacles);
+            CombatSystem.HitProjectile(Parent, _path.GetStep(_currentStep > 0 ? _currentStep - 1 : 0), IgnoresObstacles);
+        }
+
+        protected override char TranslateDirToGlyph()
+        {
+            return TravelDirection.TranslateDirToGlyph(Glyphs);
         }
     }
 }

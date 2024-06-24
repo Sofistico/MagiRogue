@@ -11,6 +11,7 @@ using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.ECS.Components.EntityComponents;
+using MagusEngine.ECS.Components.EntityComponents.Projectiles;
 using MagusEngine.ECS.Components.TilesComponents;
 using MagusEngine.Factory;
 using MagusEngine.Generators;
@@ -22,6 +23,7 @@ using MagusEngine.Utils.Extensions;
 using SadConsole;
 using SadRogue.Primitives;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using MagiMap = MagusEngine.Core.MapStuff.MagiMap;
 
@@ -700,8 +702,9 @@ namespace MagusEngine.Actions
 
         public static void CastManifestedSpell(Spell spell, MagiEntity? caster, Point originCoord, Point endPos)
         {
-            var spellEntity = spell.GetSpellEntity(caster, Direction.GetDirection(originCoord, endPos));
-
+            var dir = Direction.GetDirection(originCoord, endPos);
+            var spellEntity = spell.GetSpellEntity(caster, dir);
+            var projectileComponent = new ProjectileSpellComp(spell.Velocity, originCoord, endPos, dir, spell.Effects.Any(i => !i.IgnoresWall), spell.Glyphs, caster.CurrentMagiMap);
         }
     }
 }

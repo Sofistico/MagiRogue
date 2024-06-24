@@ -6,6 +6,16 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
     public static class ProjectileHelper
     {
         public const string Tag = "projectile";
+        public static readonly char[] DefaultTravelingGlyphs = [
+            '.',
+            '|',
+            '/',
+            '-',
+            '\\',
+            '|',
+            '\\',
+            '-',
+            '/'];
 
         /// <summary>
         /// This follows the convention of Direction.Types

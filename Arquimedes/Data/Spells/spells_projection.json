@@ -21,6 +21,7 @@
     ],
     "Glyphs": [ "←", "↑", "→", "↓" ],
     "Manifestation": "Projectile",
+    "Velocity": 50,
     "Context": [ "Offensive" ]
   },
   {

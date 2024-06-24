@@ -8,6 +8,8 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
 {
     public class ProjectileItemComp : ProjectileBaseComp<Item>
     {
+        private readonly double _force;
+
         public ProjectileItemComp(long ticksToMoveOneStep,
             Point origin,
             Point finalPoint,
@@ -15,14 +17,15 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
             bool isPhysical,
             char[]? glyphs,
             double force,
-            MagiMap map) : base(ticksToMoveOneStep, origin, finalPoint, direction, isPhysical, glyphs, force, map)
+            MagiMap map) : base(ticksToMoveOneStep, origin, finalPoint, direction, isPhysical, glyphs, map)
         {
+            _force = force;
         }
 
         protected override void OnHit()
         {
             var dmgType = new DamageType(Parent.ItemDamageType);
-            CombatSystem.HitProjectile(Parent, _path.GetStep(_currentStep > 0 ? _currentStep - 1 : 0), dmgType, Parent.Material, Force, IgnoresObstacles);
+            CombatSystem.HitProjectile(Parent, _path.GetStep(_currentStep > 0 ? _currentStep - 1 : 0), dmgType, Parent.Material, _force, IgnoresObstacles);
         }
     }
 }

@@ -10,26 +10,15 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
 {
     public abstract class ProjectileBaseComp<T> : ParentAwareComponentBase<T> where T : MagiEntity
     {
-        protected static readonly char[] _defaultTravelingGlyphs = [
-            '.',
-            '|',
-            '/',
-            '-',
-            '\\',
-            '|',
-            '\\',
-            '-',
-            '/'
-        ];
         protected Path? _path;
         protected int _currentStep;
+        protected readonly bool _animate;
 
         public long TicksToMoveOneStep { get; set; }
         public Point Origin { get; set; }
         public Point FinalPoint { get; set; }
         public Direction TravelDirection { get; set; }
         public bool IgnoresObstacles { get; set; }
-        public double Force { get; set; }
 
         /// <summary>
         /// Must follow the Direction.Types enum
@@ -42,18 +31,18 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
             Direction? direction,
             bool isPhysical,
             char[]? glyphs,
-            double force,
-            MagiMap? map = null)
+            MagiMap? map = null,
+            bool animate = true)
         {
             TravelDirection = direction ?? Direction.GetDirection(origin, finalPoint);
             TicksToMoveOneStep = ticksToMoveOneStep;
             Origin = origin;
             FinalPoint = finalPoint;
             IgnoresObstacles = !isPhysical;
-            Glyphs = glyphs ?? _defaultTravelingGlyphs;
-            Force = force;
+            Glyphs = glyphs ?? ProjectileHelper.DefaultTravelingGlyphs;
             if (map != null)
                 UpdatePath(map);
+            _animate = animate;
         }
 
         public long Travel()
@@ -77,17 +66,20 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
 
         protected virtual void TravelAnimation()
         {
-            var blinkGlyph = new BlinkGlyph()
+            if (_animate)
             {
-                BlinkCount = -1,
-                RunEffectOnApply = true,
-                BlinkSpeed = TimeSpan.FromSeconds(0.5),
-                GlyphIndex = TranslateDirToGlyph(),
-                RemoveOnFinished = true,
-                RestoreCellOnRemoved = true,
-            };
-            Parent!.SadCell.AppearanceSingle!.Effect = blinkGlyph;
-            blinkGlyph.Restart();
+                var blinkGlyph = new BlinkGlyph()
+                {
+                    BlinkCount = -1,
+                    RunEffectOnApply = true,
+                    BlinkSpeed = TimeSpan.FromSeconds(0.5),
+                    GlyphIndex = TranslateDirToGlyph(),
+                    RemoveOnFinished = true,
+                    RestoreCellOnRemoved = true,
+                };
+                Parent!.SadCell.AppearanceSingle!.Effect = blinkGlyph;
+                blinkGlyph.Restart();
+            }
         }
 
         protected virtual bool TickMovement() => _path?.Length == _currentStep || Parent?.MoveTo(_path!.GetStep(_currentStep++), IgnoresObstacles) == false;
@@ -101,7 +93,7 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
                 throw new ApplicationException($"Path is null, can't update path. origin: {Origin}, end: {FinalPoint}");
         }
 
-        protected char TranslateDirToGlyph()
+        protected virtual char TranslateDirToGlyph()
         {
             return TravelDirection.TranslateDirTypeToGlyph(Glyphs);
         }

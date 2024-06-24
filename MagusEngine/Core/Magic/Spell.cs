@@ -115,7 +115,9 @@ namespace MagusEngine.Core.Magic
         public string Fore { get; set; } = "{Caster}";
         public string Back { get; set; } = "Transparent";
         public char[] Glyphs { get; set; } = ['*'];
-        public List<IMagicStep> Steps { get; set; }
+        public List<IMagicStep> Steps { get; set; } = [];
+
+        public int Velocity { get; set; } = 100; // is in ticks
 
         /// <summary>
         /// Empty constructor, a waste of space
@@ -278,6 +280,13 @@ namespace MagusEngine.Core.Magic
                 Context = Context,
                 Keywords = Keywords,
                 ShapingAbility = ShapingAbility,
+                Back = Back,
+                Fore = Fore,
+                CostType = CostType,
+                Manifestation = Manifestation,
+                Glyphs = Glyphs,
+                Steps = Steps,
+                Velocity = Velocity,
             };
         }
 

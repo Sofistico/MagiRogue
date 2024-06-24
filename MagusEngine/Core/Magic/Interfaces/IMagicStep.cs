@@ -9,6 +9,8 @@ namespace MagusEngine.Core.Magic.Interfaces
     /// </summary>
     public interface IMagicStep
     {
+        public int Ticks { get; set; }
+
         public bool ExecuteStep(MagiEntity caster);
     }
 }

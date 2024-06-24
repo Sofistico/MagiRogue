@@ -24,10 +24,10 @@ namespace MagusEngine.Serialization.EntitySerialization
                 var eff = EnumToEffect(effect, token);
                 if (eff is null)
                     continue;
-                if (token["ConeCircleSpan"] != null)
-                    eff.ConeCircleSpan = (double)token["ConeCircleSpan"]!;
-                if (token["EffectMessage"] != null)
-                    eff.EffectMessage = token["EffectMessage"]?.ToString();
+                //if (token["ConeCircleSpan"] != null)
+                //    eff.ConeCircleSpan = (double)token["ConeCircleSpan"]!;
+                //if (token["EffectMessage"] != null)
+                //    eff.EffectMessage = token["EffectMessage"]?.ToString();
                 effectsList.Add(eff);
             }
 
@@ -42,6 +42,7 @@ namespace MagusEngine.Serialization.EntitySerialization
             {
                 Description = spell["Description"]?.ToString(),
                 Effects = effectsList,
+                //Steps = JsonConvert.DeserializeObject<List<IMagicStep>>(spell["Steps"]!.ToString())!,
             };
             if (spell.ContainsKey("Proficiency"))
                 createdSpell.Proficiency = (double)spell["Proficiency"]!;
@@ -51,6 +52,14 @@ namespace MagusEngine.Serialization.EntitySerialization
                 createdSpell.Context = JsonConvert.DeserializeObject<List<SpellContext>>(spell["Context"]!.ToString())!;
             if (spell.ContainsKey("AffectsTile"))
                 createdSpell.AffectsTile = (bool)spell["AffectsTile"]!;
+            if (spell.ContainsKey("Back"))
+                createdSpell.Back = spell["Back"]!.ToString();
+            if (spell.ContainsKey("Fore"))
+                createdSpell.Fore = spell["Fore"]!.ToString();
+            if (spell.ContainsKey("Glyphs"))
+                createdSpell.Glyphs = spell["Glyphs"]?.ToObject<char[]>()!;
+            if (spell.ContainsKey("Velocity"))
+                createdSpell.Velocity = (int)spell["Velocity"]!;
 
             return createdSpell;
         }
@@ -59,7 +68,7 @@ namespace MagusEngine.Serialization.EntitySerialization
         {
             //serializer.Formatting = Formatting.Indented;
             serializer.NullValueHandling = NullValueHandling.Ignore;
-            serializer.Serialize(writer, (SpellTemplate)value!);
+            serializer.Serialize(writer, value!);
         }
 
         /// <summary>
@@ -70,11 +79,6 @@ namespace MagusEngine.Serialization.EntitySerialization
         private static EffectType StringToEnumEffectType(string st)
         {
             return Enum.Parse<EffectType>(st);
-        }
-
-        private static SpellAreaEffect StringToAreaEffect(string st)
-        {
-            return Enum.Parse<SpellAreaEffect>(st);
         }
 
         /// <summary>
@@ -102,7 +106,7 @@ namespace MagusEngine.Serialization.EntitySerialization
         }
     }
 
-    /// <summary>
+    /*/// <summary>
     /// This class will deal with the serialization of the spells and it's effects, will use a tag
     /// like CDDA does to determine the effects
     /// </summary>
@@ -127,6 +131,18 @@ namespace MagusEngine.Serialization.EntitySerialization
         public List<SpellContext>? Context { get; set; } = [];
         public List<string>? Keywords { get; set; } = [];
         public string ShapingAbility { get; set; }
+        public SpellCostType CostType { get; set; } = SpellCostType.Mana;
+        public SpellManifestation Manifestation { get; set; }
+        public string Fore { get; set; } = "{Caster}";
+        public string Back { get; set; } = "Transparent";
+        public char[] Glyphs { get; set; } = ['*'];
+        public List<IMagicStep> Steps { get; set; }
+        public int Velocity { get; set; } // is in ticks
+        public bool AffectsTile { get; set; }
+
+        public SpellTemplate()
+        {
+        }
 
         public SpellTemplate(int spellLevel, List<ISpellEffect> effects, string name, string? description,
             ArtMagic magicArt, int spellRange, double magicCost, string spellId,
@@ -155,6 +171,14 @@ namespace MagusEngine.Serialization.EntitySerialization
                 Keywords = spellTemplate.Keywords,
                 Description = spellTemplate.Description,
                 Effects = spellTemplate.Effects,
+                Back = spellTemplate.Back,
+                AffectsTile = spellTemplate.AffectsTile,
+                CostType = spellTemplate.CostType,
+                Fore = spellTemplate.Fore,
+                Glyphs = spellTemplate.Glyphs,
+                Manifestation = spellTemplate.Manifestation,
+                Steps = spellTemplate.Steps,
+                Velocity = spellTemplate.Velocity,
             };
         }
 
@@ -167,5 +191,5 @@ namespace MagusEngine.Serialization.EntitySerialization
                 Keywords = spell.Keywords,
             };
         }
-    }
+    }*/
 }
