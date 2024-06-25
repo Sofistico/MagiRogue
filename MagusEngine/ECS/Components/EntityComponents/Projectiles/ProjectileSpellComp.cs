@@ -7,6 +7,8 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
 {
     public class ProjectileSpellComp : ProjectileBaseComp<SpellEntity>
     {
+        public const string Tag = "magic_projectile";
+
         public ProjectileSpellComp(long ticksToMoveOneStep,
             Point origin,
             Point finalPoint,

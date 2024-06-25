@@ -703,8 +703,10 @@ namespace MagusEngine.Actions
         public static void CastManifestedSpell(Spell spell, MagiEntity? caster, Point originCoord, Point endPos)
         {
             var dir = Direction.GetDirection(originCoord, endPos);
-            var spellEntity = spell.GetSpellEntity(caster, dir);
-            var projectileComponent = new ProjectileSpellComp(spell.Velocity, originCoord, endPos, dir, spell.Effects.Any(i => !i.IgnoresWall), spell.Glyphs, caster.CurrentMagiMap);
+            var spellEntity = spell.GetSpellEntity(caster, dir, originCoord + dir);
+            spellEntity.AddComponent(new ProjectileSpellComp(spell.Velocity, originCoord, endPos, dir, spell.Effects.Any(i => !i.IgnoresWall), spell.Glyphs, caster.CurrentMagiMap),
+                ProjectileSpellComp.Tag);
+            caster.CurrentMagiMap.AddMagiEntity(spellEntity);
         }
     }
 }

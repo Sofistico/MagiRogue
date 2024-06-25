@@ -24,7 +24,7 @@ namespace MagusEngine.Core.Magic
     [JsonConverter(typeof(SpellJsonConverter))]
     public sealed class Spell : IJsonKey, INamed, ISpell
     {
-        private const double _maxProficiency = 3.0;
+        private const double _maxSpellProficiency = 3.0;
         private double _proficency;
         private string _errorMessage = "Can't cast the spell";
 
@@ -94,8 +94,8 @@ namespace MagusEngine.Core.Magic
 
             set
             {
-                if (value >= _maxProficiency)
-                    _proficency = _maxProficiency;
+                if (value >= _maxSpellProficiency)
+                    _proficency = _maxSpellProficiency;
                 else if (value <= 0.0)
                     _proficency = 0.0;
                 else
@@ -318,9 +318,9 @@ namespace MagusEngine.Core.Magic
             return GetHashCode() == obj?.GetHashCode();
         }
 
-        public SpellEntity GetSpellEntity(MagiEntity caster, Direction dir)
+        public SpellEntity GetSpellEntity(MagiEntity caster, Direction dir, Point pos)
         {
-            return new SpellEntity(Id, Fore, Back, dir.TranslateDirToGlyph(Glyphs), Id, this, caster);
+            return new SpellEntity(Id, Fore, Back, dir.TranslateDirToGlyph(Glyphs), Id, this, pos, caster);
         }
     }
 }

@@ -15,6 +15,6 @@ namespace MagusEngine.Core.Magic.Interfaces
 
         public bool CastSpell(List<Point> target, Actor caster);
 
-        public SpellEntity GetSpellEntity(MagiEntity caster, Direction dir);
+        public SpellEntity GetSpellEntity(MagiEntity caster, Direction dir, Point pos);
     }
 }
