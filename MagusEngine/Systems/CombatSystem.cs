@@ -18,6 +18,7 @@ using MagusEngine.Utils.Extensions;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 
@@ -504,11 +505,22 @@ namespace MagusEngine.Systems
             }
         }
 
-        public static void HitProjectile(MagiEntity? projectile, Point lastPoint, bool ignoresObstacles)
+        public static void HitSpellProjectile([NotNull] MagiEntity projectile, ISpell spell, Point lastPoint, bool ignoresObstacles)
         {
             var (sucess, entity, tile) = GetWhatToHitProjectile(projectile, lastPoint, ignoresObstacles);
             if (!sucess)
                 return;
+            var spellEntity = (SpellEntity)projectile;
+            if (entity is not null)
+            {
+                spell.CastSpell(projectile.Position, (Actor)spellEntity.Caster);
+            }
+            if (tile is not null)
+            {
+            }
+
+            var map = projectile?.CurrentMagiMap;
+            map?.RemoveMagiEntity(projectile);
         }
 
         private static (bool, MagiEntity?, Tile?) GetWhatToHitProjectile(MagiEntity? projectile, Point lastPoint, bool ignoresObstacles)

@@ -320,7 +320,7 @@ namespace MagusEngine.Core.Magic
 
         public SpellEntity GetSpellEntity(MagiEntity caster, Direction dir, Point pos)
         {
-            return new SpellEntity(Id, Fore, Back, dir.TranslateDirToGlyph(Glyphs), Id, this, pos, caster);
+            return new SpellEntity(Id, Fore, Back, dir.TranslateDirToGlyph(Glyphs), this, pos, caster);
         }
     }
 }
