@@ -13,15 +13,11 @@ namespace MagusEngine.Core.Entities
         public MagiEntity? Caster { get; set; }
         public ISpell Spell { get; set; } = null!;
 
-        public SpellEntity(string id, MagiColorSerialization fore, MagiColorSerialization back, char glyph, string spellId, ISpell spell, Point pos) : base(fore, back, glyph, pos, (int)MapLayer.ITEMS)
+        public SpellEntity(string id, MagiColorSerialization fore, MagiColorSerialization back, char glyph, string spellId, ISpell spell, Point pos, MagiEntity caster) : base(fore, back, glyph, pos, (int)MapLayer.ITEMS)
         {
             Id = id;
             SpellId = spellId;
             Spell = spell;
-        }
-
-        public SpellEntity(string id, MagiColorSerialization fore, MagiColorSerialization back, char glyph, string spellId, ISpell spell, Point pos, MagiEntity caster) : this(id, fore, back, glyph, spellId, spell, pos)
-        {
             Caster = caster;
         }
     }
