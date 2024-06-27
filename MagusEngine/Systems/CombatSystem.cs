@@ -507,17 +507,11 @@ namespace MagusEngine.Systems
 
         public static void HitSpellProjectile([NotNull] MagiEntity projectile, ISpell spell, Point lastPoint, bool ignoresObstacles)
         {
-            var (sucess, entity, tile) = GetWhatToHitProjectile(projectile, lastPoint, ignoresObstacles);
+            var (sucess, _, _) = GetWhatToHitProjectile(projectile, lastPoint, ignoresObstacles);
             if (!sucess)
                 return;
             var spellEntity = (SpellEntity)projectile;
-            if (entity is not null)
-            {
-                spell.CastSpell(projectile.Position, (Actor)spellEntity.Caster);
-            }
-            if (tile is not null)
-            {
-            }
+            spell.CastSpell(projectile.Position, (Actor)spellEntity.Caster);
 
             var map = projectile?.CurrentMagiMap;
             map?.RemoveMagiEntity(projectile);
