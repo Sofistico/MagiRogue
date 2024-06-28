@@ -33,18 +33,36 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
         /// </summary>
         public static char TranslateDirToGlyph(this Direction dir, char[] glyphs)
         {
-            return glyphs.Length == 1 ? glyphs[0] : dir.Type switch
+            if (glyphs.Length == 1)
             {
-                Direction.Types.Left => glyphs[0],
-                Direction.Types.Up => glyphs[1],
-                Direction.Types.Right => glyphs[2],
-                Direction.Types.Down => glyphs[3],
-                Direction.Types.UpLeft => glyphs[4],
-                Direction.Types.UpRight => glyphs[5],
-                Direction.Types.DownLeft => glyphs[6],
-                Direction.Types.DownRight => glyphs[7],
-                _ => glyphs.GetRandomItemFromList()
-            };
+                return glyphs[0];
+            }
+            else if (glyphs.Length <= 4)
+            {
+                return dir.Type switch
+                {
+                    Direction.Types.Left => glyphs[0],
+                    Direction.Types.Up => glyphs[1],
+                    Direction.Types.Right => glyphs[2],
+                    Direction.Types.Down => glyphs[3],
+                    _ => glyphs.GetRandomItemFromList()
+                };
+            }
+            else
+            {
+                return dir.Type switch
+                {
+                    Direction.Types.Left => glyphs[0],
+                    Direction.Types.Up => glyphs[1],
+                    Direction.Types.Right => glyphs[2],
+                    Direction.Types.Down => glyphs[3],
+                    Direction.Types.UpLeft => glyphs[4],
+                    Direction.Types.UpRight => glyphs[5],
+                    Direction.Types.DownLeft => glyphs[6],
+                    Direction.Types.DownRight => glyphs[7],
+                    _ => glyphs.GetRandomItemFromList()
+                };
+            }
         }
     }
 }

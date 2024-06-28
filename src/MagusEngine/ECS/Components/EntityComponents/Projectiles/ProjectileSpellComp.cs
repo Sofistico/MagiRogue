@@ -15,7 +15,8 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
             Direction? direction,
             bool isPhysical,
             char[]? glyphs,
-            MagiMap map) : base(ticksToMoveOneStep, origin, finalPoint, direction, isPhysical, glyphs, map)
+            MagiMap map,
+            bool animate = false) : base(ticksToMoveOneStep, origin, finalPoint, direction, isPhysical, glyphs, map, animate)
         {
         }
 

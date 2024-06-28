@@ -196,6 +196,7 @@ namespace MagusEngine.Actions
             {
                 actor.Inventory.Add(item);
                 Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{actor.Name} picked up {item.Name}"));
+                item.RemoveComponent<ProjectileItemComp>(null);
                 actor?.CurrentMagiMap?.RemoveMagiEntity(item);
                 return true;
             }

@@ -234,7 +234,7 @@ namespace MagusEngine.Core.Entities.Base
 
         public IEnumerable<T> GetComponents<T>() where T : class => GoRogueComponents.GetAll<T>();
 
-        public void RemoveComponent<T>(T obj) where T : class
+        public void RemoveComponent<T>(T t) where T : class
         {
             if (GetComponent(out T comp))
             {
