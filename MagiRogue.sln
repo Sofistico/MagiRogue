@@ -3,14 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32922.545
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MagiRogue", "MagiRogue\MagiRogue.csproj", "{07446F58-66E1-4B55-84FB-70C67E6E0BC8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "src\MagiRogue", "src\MagiRogue\MagiRogue.csproj", "{07446F58-66E1-4B55-84FB-70C67E6E0BC8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MagiRogue.Test", "MagiRogue.Test\MagiRogue.Test.csproj", "{16CADFB2-73B0-4322-B266-0527B9A12B49}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "src\MagiRogue.Test", "src\MagiRogue.Test\MagiRogue.Test.csproj", "{16CADFB2-73B0-4322-B266-0527B9A12B49}"
 	ProjectSection(ProjectDependencies) = postProject
 		{07446F58-66E1-4B55-84FB-70C67E6E0BC8} = {07446F58-66E1-4B55-84FB-70C67E6E0BC8}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MagiRogue.LegendsConsoleViewer", "MagiRogue.LegendsConsoleViewer\MagiRogue.LegendsConsoleViewer.csproj", "{6AA2F259-2D24-4663-B56B-242700954B45}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "src\MagiRogue.LegendsConsoleViewer", "src\MagiRogue.LegendsConsoleViewer\MagiRogue.LegendsConsoleViewer.csproj", "{6AA2F259-2D24-4663-B56B-242700954B45}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Game", "1 - Game", "{8454D3F7-7624-4B8C-BD1D-BBFF955E8251}"
 EndProject
@@ -18,7 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Tools", "2 - Tools", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Test", "3 - Test", "{CEC24325-48A3-475C-B109-92CA2C13C327}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MagiRogue.Benchmarks", "MagiRogue.Benchmarks\MagiRogue.Benchmarks.csproj", "{ABB63633-6A69-4AB2-AC9B-A81B0D6D5C48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "src\MagiRogue.Benchmarks", "src\MagiRogue.Benchmarks\MagiRogue.Benchmarks.csproj", "{ABB63633-6A69-4AB2-AC9B-A81B0D6D5C48}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.2 - Engine", "1.2 - Engine", "{3CD9D6CB-0811-4B61-AE22-01682A8C1BBA}"
 EndProject
@@ -26,13 +26,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.3 - Render", "1.3 - Rende
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.1 - Data", "1.1 - Data", "{D827073E-B105-43FF-B31F-562E0D027FF7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MagusEngine", "MagusEngine\MagusEngine.csproj", "{EAEC4804-2679-4AF4-9950-603FCD26637B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "src\MagusEngine", "src\MagusEngine\MagusEngine.csproj", "{EAEC4804-2679-4AF4-9950-603FCD26637B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diviner", "Diviner\Diviner.csproj", "{97163240-F09C-4D10-AD6C-C0B5EECA8AF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "src\Diviner", "src\Diviner\Diviner.csproj", "{97163240-F09C-4D10-AD6C-C0B5EECA8AF3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arquimedes", "Arquimedes\Arquimedes.csproj", "{080269A8-61A1-4BC4-BE3F-97783290A92A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "src\Arquimedes", "src\Arquimedes\Arquimedes.csproj", "{080269A8-61A1-4BC4-BE3F-97783290A92A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalNoiseLibrary", "AccidentalNoiseLibrary\AccidentalNoiseLibrary.csproj", "{7035D27D-B870-4D0F-8FAC-3B3C2682B5DA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "src\AccidentalNoiseLibrary", "src\AccidentalNoiseLibrary\AccidentalNoiseLibrary.csproj", "{7035D27D-B870-4D0F-8FAC-3B3C2682B5DA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
