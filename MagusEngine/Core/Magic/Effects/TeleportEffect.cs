@@ -2,6 +2,7 @@
 using MagusEngine.Actions;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
+using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic.Interfaces;
 using MagusEngine.Services;
 using Newtonsoft.Json;
@@ -35,9 +36,10 @@ namespace MagusEngine.Core.Magic.Effects
 
         public void ApplyEffect(Point target, Actor caster, Spell spellCasted)
         {
-            if (ActionManager.MoveActorTo(caster, target))
+            var entity = caster?.CurrentMagiMap?.GetEntityAt<MagiEntity>(target);
+            if (ActionManager.MoveActorTo(entity, target))
             {
-                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{caster.Name} disappeared!"));
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{entity.Name} disappeared!"));
             }
         }
 

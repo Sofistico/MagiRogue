@@ -7,6 +7,7 @@ namespace MagusEngine.Core.Magic.Interfaces
 {
     public interface ISpell
     {
+        public List<ISpellEffect> Effects { get; set; }
         public List<IMagicStep> Steps { get; set; }
 
         public bool CanCast(Actor caster, bool tickProficiency = true);

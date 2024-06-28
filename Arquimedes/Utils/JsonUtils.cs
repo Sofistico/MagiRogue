@@ -8,22 +8,12 @@ namespace Arquimedes.Utils
     {
         private static readonly JsonSerializerSettings settings = new()
         {
-            Error = (sender, args) =>
-            {
-                errors?.Add(args.ErrorContext.Error.Message);
-                args.ErrorContext.Handled = true;
-            },
+            Error = (sender, args) => throw new JsonException(args.ErrorContext.Error.Message),
             Converters = { new IsoDateTimeConverter() }
         };
-        private static readonly List<string> errors = new();
 
         public static T? JsonDeseralize<T>(string path)
         {
-            // TODO: maybe do this by removing the Messenger Bus from the engine
-            //if (errors.Count > 0)
-            //{
-            //    GameLoop.WriteToLog(errors);
-            //}
             var str = FileUtils.GetAllTextFromFile(new FileInfo(path));
             return str is not null ? JsonConvert.DeserializeObject<T>(str, settings) : throw new ApplicationException("Tried to read a empty file!");
         }

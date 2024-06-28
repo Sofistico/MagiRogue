@@ -23,6 +23,7 @@ using MagusEngine.Utils.Extensions;
 using SadConsole;
 using SadRogue.Primitives;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using MagiMap = MagusEngine.Core.MapStuff.MagiMap;
@@ -44,9 +45,9 @@ namespace MagusEngine.Actions
         /// <param name="entity"></param>
         /// <param name="position"></param>
         /// <returns></returns>
-        public static bool MoveActorTo(MagiEntity entity, Point position)
+        public static bool MoveActorTo([NotNullWhen(true)] MagiEntity? entity, Point position)
         {
-            return entity.MoveTo(position);
+            return entity?.MoveTo(position) == true;
         }
 
         // TODO: An df inspired menu with body parts located.

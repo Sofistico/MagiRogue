@@ -1,5 +1,4 @@
 ﻿using GoRogue.FOV;
-using MagusEngine.Core.Entities;
 using MagusEngine.Systems;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
@@ -20,14 +19,14 @@ namespace MagusEngine.Utils
         /// <returns></returns>
         public static Shape Cone(this Point originCoordinate,
             double radius,
-            Target target,
+            Point target,
             double coneSpan = 90,
             bool ignoresWalls = false)
         {
             double angle = 0;
-            if (target.TravelPath.Length > 0)
+            if (target != originCoordinate)
             {
-                angle = Point.BearingOfLine(target.TravelPath.GetStep(0) - originCoordinate);
+                angle = Point.BearingOfLine(target - originCoordinate);
             }
             RecursiveShadowcastingFOV coneFov;
             if (!ignoresWalls)
@@ -42,7 +41,7 @@ namespace MagusEngine.Utils
                 coneFov = new(boolArray);
             }
 
-            coneFov.Calculate(target.TravelPath.GetStep(0).X, target.TravelPath.GetStep(0).Y, radius, Distance.Euclidean, angle, coneSpan);
+            coneFov.Calculate(target.X, target.Y, radius, Distance.Euclidean, angle, coneSpan);
 
             return new Shape(coneFov.CurrentFOV);
         }

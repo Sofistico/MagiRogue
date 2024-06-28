@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace MagusEngine.Core.Magic
@@ -110,7 +111,7 @@ namespace MagusEngine.Core.Magic
 
         public List<string>? Keywords { get; set; } = [];
         public List<SpellContext>? Context { get; set; }
-        public bool AffectsTile { get; set; }
+        public bool AffectsTile => Effects.Any(i => i.TargetsTile);
         public string ShapingAbility { get; set; }
         public string Fore { get; set; } = "{Caster}";
         public string Back { get; set; } = "Transparent";
@@ -118,6 +119,7 @@ namespace MagusEngine.Core.Magic
         public List<IMagicStep> Steps { get; set; } = [];
 
         public int Velocity { get; set; } = 100; // is in ticks
+        public bool IgnoresWall => Effects.Any(i => i.IgnoresWall);
 
         /// <summary>
         /// Empty constructor, a waste of space
@@ -207,25 +209,61 @@ namespace MagusEngine.Core.Magic
             }
 
             MagiEntity? entity = Find.CurrentMap?.GetEntityAt<MagiEntity>(target);
-            caster.Soul.CurrentMana -= (float)MagicCost;
 
-            if (entity is null)
+            if (entity is null && !AffectsTile)
+            {
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("Can't cast the spell, there must be an entity to target"));
+
                 return false;
+            }
 
             Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{caster.Name} casted {Name}"));
 
-            foreach (ISpellEffect effect in Effects)
-            {
-                if ((entity.CanBeAttacked && (effect.AreaOfEffect is SpellAreaEffect.Self || !entity.Equals(caster)))
-                    || effect.TargetsTile)
-                {
-                    effect.ApplyEffect(target, caster, this);
-                }
-            }
+            ApplyEffects(target, caster, entity);
+
+            HandleCost(caster);
 
             TickProfiency();
 
             return true;
+        }
+
+        private void HandleCost(Actor caster)
+        {
+            switch (CostType)
+            {
+                case SpellCostType.Mana:
+                    caster.Soul.CurrentMana -= MagicCost;
+                    break;
+
+                case SpellCostType.Stamina:
+                    caster.Body.Stamina -= MagicCost;
+                    break;
+
+                case SpellCostType.Blood:
+                    caster.ActorAnatomy.BloodCount -= MagicCost;
+                    break;
+
+                case SpellCostType.Soul:
+                    caster.Soul.SenseOfSelf -= (int)MagicCost;
+                    break;
+            }
+        }
+
+        private void ApplyEffects(Point target, Actor caster, MagiEntity? entity)
+        {
+            foreach (ISpellEffect effect in Effects)
+            {
+                if (effect.AreaOfEffect is SpellAreaEffect.Self)
+                {
+                    effect.ApplyEffect(caster.Position, caster, this);
+                    continue;
+                }
+                if ((entity?.CanInteract == true && !entity.Equals(caster)) || effect.TargetsTile)
+                {
+                    effect.ApplyEffect(target, caster, this);
+                }
+            }
         }
 
         /// <summary>
@@ -240,17 +278,14 @@ namespace MagusEngine.Core.Magic
             {
                 _errorMessage = "Can't cast the spell, there must be an entity to target";
             }
-            else if (CanCast(caster) && target.Count > 0)
+            if (CanCast(caster))
             {
                 Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{caster.Name} casted {Name}"));
 
                 foreach (var pos in target)
                 {
                     MagiEntity entity = Find.CurrentMap.GetEntityAt<MagiEntity>(pos);
-                    foreach (ISpellEffect effect in Effects)
-                    {
-                        effect.ApplyEffect(pos, caster, this);
-                    }
+                    ApplyEffects(pos, caster, entity);
                 }
 
                 caster.Soul.CurrentMana -= MagicCost;
@@ -276,7 +311,6 @@ namespace MagusEngine.Core.Magic
                 Name = Name,
                 SpellRange = SpellRange,
                 MagicArt = MagicArt,
-                AffectsTile = AffectsTile,
                 Context = Context,
                 Keywords = Keywords,
                 ShapingAbility = ShapingAbility,

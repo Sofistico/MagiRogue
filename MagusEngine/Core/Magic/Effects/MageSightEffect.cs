@@ -36,14 +36,13 @@ namespace MagusEngine.Core.Magic.Effects
 
         public void ApplyEffect(Point target, Actor caster, Spell spellCasted)
         {
-            if (caster.GetComponent(out SightComponent _))
+            var actor = Find.CurrentMap?.GetEntityAt<Actor>(target);
+            if (actor?.GetComponent(out SightComponent _) == true)
             {
                 Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("You already have your Sight active"));
                 return;
             }
             SightComponent effect = new(Find.Universe.Time.Tick, Find.Universe.Time.Tick + (Duration * TimeDefSpan.CentisecondsPerSecond), EffectMessage);
-
-            var actor = Find.CurrentMap?.GetEntityAt<Actor>(target);
             actor?.AddComponent(effect);
         }
 

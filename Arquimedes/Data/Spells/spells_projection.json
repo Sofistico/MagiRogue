@@ -166,7 +166,6 @@
     "SpellRange": 1,
     "MagicCost": 8.0,
     "Id": "cone_cold",
-    "Context": [ "Offensive" ],
-    "AffectsTile": true
+    "Context": [ "Offensive" ]
   }
 ]

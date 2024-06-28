@@ -50,8 +50,6 @@ namespace MagusEngine.Serialization.EntitySerialization
                 createdSpell.Keywords = JsonConvert.DeserializeObject<List<string>>(spell["Keywords"]!.ToString())!;
             if (spell.ContainsKey("Context"))
                 createdSpell.Context = JsonConvert.DeserializeObject<List<SpellContext>>(spell["Context"]!.ToString())!;
-            if (spell.ContainsKey("AffectsTile"))
-                createdSpell.AffectsTile = (bool)spell["AffectsTile"]!;
             if (spell.ContainsKey("Back"))
                 createdSpell.Back = spell["Back"]!.ToString();
             if (spell.ContainsKey("Fore"))
@@ -60,6 +58,8 @@ namespace MagusEngine.Serialization.EntitySerialization
                 createdSpell.Glyphs = spell["Glyphs"]?.ToObject<char[]>()!;
             if (spell.ContainsKey("Velocity"))
                 createdSpell.Velocity = (int)spell["Velocity"]!;
+            if (spell.ContainsKey("Manifestation"))
+                createdSpell.Manifestation = spell["Manifestation"]!.ToObject<SpellManifestation>()!;
 
             return createdSpell;
         }
@@ -172,7 +172,6 @@ namespace MagusEngine.Serialization.EntitySerialization
                 Description = spellTemplate.Description,
                 Effects = spellTemplate.Effects,
                 Back = spellTemplate.Back,
-                AffectsTile = spellTemplate.AffectsTile,
                 CostType = spellTemplate.CostType,
                 Fore = spellTemplate.Fore,
                 Glyphs = spellTemplate.Glyphs,

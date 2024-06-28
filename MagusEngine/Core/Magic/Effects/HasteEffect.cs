@@ -39,16 +39,7 @@ namespace MagusEngine.Core.Magic.Effects
 
         public void ApplyEffect(Point target, Actor caster, Spell spellCasted)
         {
-            switch (AreaOfEffect)
-            {
-                case SpellAreaEffect.Self:
-                    Haste(caster);
-                    break;
-
-                default:
-                    Haste(target);
-                    break;
-            }
+            Haste(target);
         }
 
         private void Haste(Point target)

@@ -22,7 +22,6 @@ namespace MagusEngine.Core.Magic.Interfaces
         [JsonConverter(typeof(StringEnumConverter))]
         EffectType EffectType { get; set; }
         bool CanMiss { get; set; }
-        string? EffectMessage { get; set; }
         int Volume { get; set; }
         bool IsResistable { get; set; }
         bool IgnoresWall { get; set; }

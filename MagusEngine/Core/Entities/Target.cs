@@ -6,7 +6,6 @@ using MagusEngine.Bus.MapBus;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic;
-using MagusEngine.Core.Magic.Interfaces;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.Services;
 using MagusEngine.Systems;
@@ -214,6 +213,8 @@ namespace MagusEngine.Core.Entities
                 _selectedItem = null;
                 _caster = null;
 
+                State = TargetState.LookMode;
+
                 if (TravelPath is not null)
                 {
                     ClearTileDictionary();
@@ -299,8 +300,7 @@ namespace MagusEngine.Core.Entities
             TravelPath = Cursor.CurrentMagiMap.AStar.ShortestPath(OriginCoord, e.NewValue)!;
             if (State is TargetState.LookMode || TravelPath is null)
             {
-                TravelPath = Cursor.CurrentMagiMap
-                    .AStarWithAllWalkable().ShortestPath(OriginCoord, e.NewValue)!;
+                TravelPath = Cursor.CurrentMagiMap.AStarWithAllWalkable().ShortestPath(OriginCoord, e.NewValue)!;
                 ClearTileDictionary();
                 return;
             }
@@ -328,7 +328,13 @@ namespace MagusEngine.Core.Entities
                     }
                 }
                 if (_selectedSpell is not null)
-                    SpellAreaHelper();
+                {
+                    foreach (var point in TargetHelper.SpellAreaHelper(_selectedSpell, Position, e.NewValue, radius)!)
+                    {
+                        AddTileToDictionary(point, _selectedSpell.IgnoresWall);
+                        AddEntityToList(point);
+                    }
+                }
             }
             catch (Exception)
             {
@@ -337,32 +343,30 @@ namespace MagusEngine.Core.Entities
             }
         }
 
-        private void SpellAreaHelper()
-        {
-            if (_selectedSpell.Effects.Any(a => a.AreaOfEffect is SpellAreaEffect.Ball))
-            {
-                var eff = GetSpellAreaEffect(SpellAreaEffect.Ball);
-                if (eff is null) { return; }
-                RadiusLocationContext radiusLocation = new(Cursor.Position, eff.Radius);
+        //public static void SpellAreaHelper(ISpell spell)
+        //{
+        //    if (TargetHelper.GetSpellAreaEffect(_selectedSpell, SpellAreaEffect.Ball, out ISpellEffect eff))
+        //    {
+        //        if (eff is null)
+        //            return;
+        //        RadiusLocationContext radiusLocation = new(Cursor.Position, eff.Radius);
 
-                foreach (Point point in radius.PositionsInRadius(radiusLocation))
-                {
-                    AddTileToDictionary(point, eff.IgnoresWall);
-                    AddEntityToList(point);
-                }
-            }
+        //        foreach (Point point in radius.PositionsInRadius(radiusLocation))
+        //        {
+        //            AddTileToDictionary(point, eff.IgnoresWall);
+        //            AddEntityToList(point);
+        //        }
+        //    }
 
-            if (_selectedSpell.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Cone))
-            {
-                ISpellEffect effect = GetSpellAreaEffect(SpellAreaEffect.Cone);
-                foreach (Point point in
-                    OriginCoord.Cone(effect.Radius, this, effect.ConeCircleSpan).Points)
-                {
-                    AddTileToDictionary(point, effect.IgnoresWall);
-                    AddEntityToList(point);
-                }
-            }
-        }
+        //    else if (TargetHelper.GetSpellAreaEffect(_selectedSpell, SpellAreaEffect.Cone, out eff))
+        //    {
+        //        foreach (Point point in OriginCoord.Cone(eff.Radius, this, eff.ConeCircleSpan).Points)
+        //        {
+        //            AddTileToDictionary(point, eff.IgnoresWall);
+        //            AddEntityToList(point);
+        //        }
+        //    }
+        //}
 
         public bool TileInTarget()
         {
@@ -387,8 +391,6 @@ namespace MagusEngine.Core.Entities
                 halp.Appearence.Background = Color.Yellow;
                 tileDictionary.TryAdd(point, halp);
             }
-
-            // sanity check
         }
 
         public bool TargetsTile()
@@ -411,9 +413,6 @@ namespace MagusEngine.Core.Entities
             if (entity is not null && !TargetList.Contains(entity))
                 TargetList.Add(entity);
         }
-
-        private ISpellEffect GetSpellAreaEffect(SpellAreaEffect areaEffect) =>
-            _selectedSpell.Effects.Find(e => e.AreaOfEffect == areaEffect);
 
         public void LookTarget()
         {

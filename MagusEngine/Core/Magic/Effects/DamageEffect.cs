@@ -25,6 +25,7 @@ namespace MagusEngine.Core.Magic.Effects
         public bool IsResistable { get; set; }
         public string? EffectMessage { get; set; }
         public string SpellDamageTypeId { get; set; }
+
         /// <summary>
         /// The volume occupied by the spell, should take into account only the volume that "hits" something, should be in cm3
         /// </summary>
@@ -57,19 +58,10 @@ namespace MagusEngine.Core.Magic.Effects
 
         public void ApplyEffect(Point target, Actor caster, Spell spellCasted)
         {
-            switch (AreaOfEffect)
-            {
-                case SpellAreaEffect.Self:
-                    HealEffect(Point.None, caster, spellCasted);
-                    break;
-
-                default:
-                    if (!IsHealing)
-                        DmgEff(target, caster, spellCasted);
-                    else
-                        HealEffect(target, caster, spellCasted);
-                    break;
-            }
+            if (!IsHealing)
+                DmgEff(target, caster, spellCasted);
+            else
+                HealEffect(target, caster, spellCasted);
         }
 
         private void DmgEff(Point target, Actor caster, Spell spellCasted)

@@ -9,7 +9,7 @@ namespace MagusEngine.ECS.Components.EntityComponents.Status
         public HasteComponent(double hastePower,
             long tickApplied,
             long tickToRemove,
-            string effectMessage) : base(tickApplied, tickToRemove, effectMessage, "haste")
+            string effectMessage) : base(tickApplied, tickToRemove, effectMessage, "haste", removeMessage: "You feel yourself slowing down")
         {
             HastePower = hastePower;
         }
