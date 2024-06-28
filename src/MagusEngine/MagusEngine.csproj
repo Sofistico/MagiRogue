@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AccidentalNoiseLibrary\AccidentalNoiseLibrary.csproj" />
     <ProjectReference Include="..\Arquimedes\Arquimedes.csproj" />
   </ItemGroup>
 
