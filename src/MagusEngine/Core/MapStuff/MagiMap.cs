@@ -101,6 +101,7 @@ namespace MagusEngine.Core.MapStuff
             entityLayersSupportingMultipleItems: LayerMasker.Default.Mask((int)MapLayer.ITEMS,
                 (int)MapLayer.GHOSTS,
                 (int)MapLayer.ACTORS,
+                (int)MapLayer.PROJECTILE,
                 (int)MapLayer.SPECIAL))
         {
             // Treat the fov as a component.
@@ -191,7 +192,7 @@ namespace MagusEngine.Core.MapStuff
         /// <returns></returns>
         public T? GetEntityAt<T>(Point location) where T : MagiEntity
         {
-            return Entities.GetItemsAt(location).OfType<T>().FirstOrDefault(e => e.CanInteract);
+            return Entities.GetItemsAt(location).OfType<T>().FirstOrDefault(e => e.CanBeAttacked);
         }
 
         public Tile GetClosestWaterTile(int range, Point position)

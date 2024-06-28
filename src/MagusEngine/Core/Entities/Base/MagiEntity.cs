@@ -1,5 +1,4 @@
 ﻿using Arquimedes.Interfaces;
-using MagusEngine.Core.Magic;
 using MagusEngine.ECS;
 using MagusEngine.Systems.Physics;
 using SadConsole.Entities;

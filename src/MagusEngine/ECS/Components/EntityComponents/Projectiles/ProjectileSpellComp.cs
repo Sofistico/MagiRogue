@@ -21,7 +21,7 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
 
         protected override void OnHit()
         {
-            CombatSystem.HitSpellProjectile(Parent, Parent.Spell, _path.GetStep(_currentStep > 0 ? _currentStep - 1 : 0), IgnoresObstacles);
+            CombatSystem.HitSpellProjectile(Parent!, Parent!.Spell, _path!.GetStep(_currentStep > 0 ? _currentStep - 1 : 0), IgnoresObstacles);
         }
 
         protected override char TranslateDirToGlyph()

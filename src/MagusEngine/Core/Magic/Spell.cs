@@ -132,7 +132,7 @@ namespace MagusEngine.Core.Magic
         /// The spell being created.
         /// </summary>
         /// <param name="spellId">Should be something unique with spaces separated by _</param>
-        /// <param name="Name">The name of the spell</param>
+        /// <param name="name">The name of the spell</param>
         /// <param name="magicArt">What school is this spell part of?</param>
         /// <param name="spellRange">The range of the spell</param>
         /// <param name="spellLevel">The level of the spell, going from 1 to 9</param>
@@ -212,7 +212,8 @@ namespace MagusEngine.Core.Magic
 
             if (entity is null && !AffectsTile)
             {
-                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("Can't cast the spell, there must be an entity to target"));
+                if (Manifestation == SpellManifestation.Instantaneous)
+                    Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("Can't cast the spell, there must be an entity to target"));
 
                 return false;
             }
@@ -288,7 +289,7 @@ namespace MagusEngine.Core.Magic
                     ApplyEffects(pos, caster, entity);
                 }
 
-                caster.Soul.CurrentMana -= MagicCost;
+                HandleCost(caster);
                 TickProfiency();
 
                 return true;
@@ -355,7 +356,10 @@ namespace MagusEngine.Core.Magic
         public SpellEntity GetSpellEntity(MagiEntity caster, Direction dir, Point pos)
         {
             string foreground = Fore.Equals("{caster}") ? caster.GetComponent<Magic>().MagicColor : Fore;
-            return new SpellEntity(Id, foreground, Back, dir.TranslateDirToGlyph(Glyphs), this, pos, caster);
+            return new SpellEntity(Id, foreground, Back, dir.TranslateDirToGlyph(Glyphs), this, pos, caster)
+            {
+                Name = Name
+            };
         }
     }
 }
