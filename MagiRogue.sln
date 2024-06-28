@@ -32,6 +32,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diviner", "Diviner\Diviner.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arquimedes", "Arquimedes\Arquimedes.csproj", "{080269A8-61A1-4BC4-BE3F-97783290A92A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentalNoiseLibrary", "AccidentalNoiseLibrary\AccidentalNoiseLibrary.csproj", "{7035D27D-B870-4D0F-8FAC-3B3C2682B5DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,6 +68,10 @@ Global
 		{080269A8-61A1-4BC4-BE3F-97783290A92A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{080269A8-61A1-4BC4-BE3F-97783290A92A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{080269A8-61A1-4BC4-BE3F-97783290A92A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7035D27D-B870-4D0F-8FAC-3B3C2682B5DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7035D27D-B870-4D0F-8FAC-3B3C2682B5DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7035D27D-B870-4D0F-8FAC-3B3C2682B5DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7035D27D-B870-4D0F-8FAC-3B3C2682B5DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -81,6 +87,7 @@ Global
 		{EAEC4804-2679-4AF4-9950-603FCD26637B} = {3CD9D6CB-0811-4B61-AE22-01682A8C1BBA}
 		{97163240-F09C-4D10-AD6C-C0B5EECA8AF3} = {F2FC3775-ED52-48AA-A445-F047A661CDEA}
 		{080269A8-61A1-4BC4-BE3F-97783290A92A} = {D827073E-B105-43FF-B31F-562E0D027FF7}
+		{7035D27D-B870-4D0F-8FAC-3B3C2682B5DA} = {D827073E-B105-43FF-B31F-562E0D027FF7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2FE90E55-E44A-4EF3-9614-020E1112F28A}
