@@ -3,7 +3,6 @@ using MagusEngine.Factory;
 using MagusEngine.Systems;
 using MagusEngine.Utils;
 using SadRogue.Primitives;
-using System.Collections.Generic;
 
 namespace MagusEngine.Core.Entities
 {
@@ -13,38 +12,42 @@ namespace MagusEngine.Core.Entities
         public Player(string name, Color foreground, Color background, Point position) :
             base(name, foreground, background, '@', position)
         {
+            Description = "Here is you, you are beautiful";
         }
 
         public static Player TestPlayer()
         {
             Player player = EntityFactory.PlayerCreatorFromZeroForTest(new Point(), "human", "Playa", 25,
-                Arquimedes.Enumerators.Sex.Female, "new_wiz");
+                Arquimedes.Enumerators.Sex.Male, "new_wiz");
 
             player.Mind.AddAbilityToDictionary(new(Arquimedes.Enumerators.AbilityCategory.MagicShaping, 25));
             var magic = player.GetComponent<Magic.Magic>();
             magic.KnowSpells[0].Proficiency = 1;
-
-            Spell cure = DataManager.QuerySpellInData("minor_cure", 1);
-
-            Spell haste = DataManager.QuerySpellInData("haste_self", 1);
-
-            Spell mageSight = DataManager.QuerySpellInData("mage_sight", 1);
-
-            Spell fireRay = DataManager.QuerySpellInData("fire_ray", 1);
-
-            Spell fireBall = DataManager.QuerySpellInData("fire_ball", 1);
-
-            Spell severWhip = DataManager.QuerySpellInData("sever_whip", 1);
-
-            Spell teleport = DataManager.QuerySpellInData("teleport", 1);
-
-            Spell coneOfCold = DataManager.QuerySpellInData("cone_cold", 1);
-            Spell fingerOfDeath = DataManager.QuerySpellInData("finger_death", 1);
-
-            Spell knockBack = DataManager.QuerySpellInData("push", 1);
-
-            List<Spell> testSpells = new()
+            if (!magic.KnowSpells.Exists(x => x.Id == "magic_missile"))
             {
+                Spell missile = DataManager.QuerySpellInData("magic_missile", 2)!;
+                magic.AddToSpellList(missile);
+            }
+            Spell cure = DataManager.QuerySpellInData("minor_cure", 1)!;
+
+            Spell haste = DataManager.QuerySpellInData("haste_self", 1)!;
+
+            Spell mageSight = DataManager.QuerySpellInData("mage_sight", 1)!;
+
+            Spell fireRay = DataManager.QuerySpellInData("fire_ray", 1)!;
+
+            Spell fireBall = DataManager.QuerySpellInData("fire_ball", 1)!;
+
+            Spell severWhip = DataManager.QuerySpellInData("sever_whip", 1)!;
+
+            Spell teleport = DataManager.QuerySpellInData("teleport", 1)!;
+
+            Spell coneOfCold = DataManager.QuerySpellInData("cone_cold", 1)!;
+            Spell fingerOfDeath = DataManager.QuerySpellInData("finger_death", 1)!;
+
+            Spell knockBack = DataManager.QuerySpellInData("push", 1)!;
+
+            magic.AddToSpellList([
                 cure,
                 haste,
                 mageSight,
@@ -55,13 +58,7 @@ namespace MagusEngine.Core.Entities
                 coneOfCold,
                 fingerOfDeath,
                 knockBack
-            };
-
-            int co = testSpells.Count;
-            for (int i = 0; i < co; i++)
-            {
-                magic.AddToSpellList(testSpells[i]);
-            }
+            ]);
 
             return player;
         }
@@ -90,6 +87,15 @@ namespace MagusEngine.Core.Entities
                 Broadness = actor.Broadness,
                 Length = actor.Length,
                 GoRogueComponents = actor.GoRogueComponents,
+                AlwaySeen = actor.AlwaySeen,
+                CanBeAttacked = actor.CanBeAttacked,
+                CanInteract = actor.CanInteract,
+                HistoryId = actor.HistoryId,
+                IsTransparent = actor.IsTransparent,
+                IsWalkable = actor.IsWalkable,
+                LeavesGhost = actor.LeavesGhost,
+                SituationalFlags = actor.SituationalFlags,
+                State = actor.State,
             };
         }
 

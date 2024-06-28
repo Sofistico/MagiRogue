@@ -274,7 +274,6 @@ namespace MagusEngine.Systems
 
                     Player = player;
                     Player.Position = pos;
-                    Player.Description = "Here is you, you are beautiful";
                     break;
                 }
             }

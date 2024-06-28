@@ -85,6 +85,15 @@ namespace MagusEngine.Core.Magic
             }
             return true;
         }
+
+        public bool AddToSpellList(IEnumerable<Spell> spells)
+        {
+            foreach (var spell in spells)
+            {
+                AddToSpellList(spell);
+            }
+            return KnowSpells.Count > 0;
+        }
     }
 
     public class SpellComparator : IEqualityComparer<Spell>

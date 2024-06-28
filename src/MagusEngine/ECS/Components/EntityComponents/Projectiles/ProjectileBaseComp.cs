@@ -1,7 +1,10 @@
 ﻿using GoRogue.Components.ParentAware;
 using GoRogue.Pathing;
+using MagusEngine.Bus.MapBus;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
+using MagusEngine.Services;
+using MagusEngine.Systems.Time.Nodes;
 using SadConsole.Effects;
 using SadRogue.Primitives;
 using System;
@@ -103,6 +106,13 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
             if (_path != null)
                 return _path.GetStep(_currentStep++);
             return Point.None;
+        }
+
+        public void AddMap(T projectile, string tag)
+        {
+            projectile.AddComponent(this, tag);
+            Locator.GetService<MessageBusService>().SendMessage<AddEntitiyCurrentMap>(new(projectile));
+            Locator.GetService<MessageBusService>().SendMessage<AddTurnNode>(new(new ComponentTimeNode(TicksToMoveOneStep, projectile.ID, Travel)));
         }
     }
 }

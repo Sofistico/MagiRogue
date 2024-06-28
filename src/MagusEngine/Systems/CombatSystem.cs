@@ -12,7 +12,6 @@ using MagusEngine.ECS.Components.EntityComponents.Projectiles;
 using MagusEngine.ECS.Components.TilesComponents;
 using MagusEngine.Services;
 using MagusEngine.Systems.Physics;
-using MagusEngine.Systems.Time.Nodes;
 using MagusEngine.Utils;
 using MagusEngine.Utils.Extensions;
 using SadRogue.Primitives;
@@ -468,9 +467,7 @@ namespace MagusEngine.Systems
                 null,
                 force,
                 shooter.CurrentMagiMap);
-            projectile.AddComponent(projectileComp, ProjectileHelper.Tag);
-            Locator.GetService<MessageBusService>().SendMessage<AddEntitiyCurrentMap>(new(projectile));
-            Locator.GetService<MessageBusService>().SendMessage<AddTurnNode>(new(new ComponentTimeNode(time, projectile.ID, projectileComp.Travel)));
+            projectileComp.AddMap(projectile, ProjectileHelper.Tag);
         }
 
         public static void HitProjectile(MagiEntity? projectile, Point lastPoint, DamageType dmg, Material material, double force, bool ignoresObstacles)

@@ -701,13 +701,11 @@ namespace MagusEngine.Actions
             return true;
         }
 
-        public static void CastManifestedSpell(Spell spell, MagiEntity? caster, Point originCoord, Point endPos)
+        public static void CastManifestedSpell(Spell spell, MagiEntity caster, Point originCoord, Point endPos)
         {
             var dir = Direction.GetDirection(originCoord, endPos);
-            var spellEntity = spell.GetSpellEntity(caster, dir, originCoord + dir);
-            spellEntity.AddComponent(new ProjectileSpellComp(spell.Velocity, originCoord, endPos, dir, spell.Effects.Any(i => !i.IgnoresWall), spell.Glyphs, caster.CurrentMagiMap),
-                ProjectileSpellComp.Tag);
-            caster.CurrentMagiMap.AddMagiEntity(spellEntity);
+            var comp = new ProjectileSpellComp(spell.Velocity, originCoord, endPos, dir, spell.Effects.Any(i => !i.IgnoresWall), spell.Glyphs, Find.CurrentMap!);
+            comp.AddMap(spell.GetSpellEntity(caster, dir, originCoord + dir), ProjectileSpellComp.Tag);
         }
     }
 }

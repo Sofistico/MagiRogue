@@ -113,7 +113,7 @@ namespace MagusEngine.Core.Magic
         public List<SpellContext>? Context { get; set; }
         public bool AffectsTile => Effects.Any(i => i.TargetsTile);
         public string ShapingAbility { get; set; }
-        public string Fore { get; set; } = "{Caster}";
+        public string Fore { get; set; } = "{caster}";
         public string Back { get; set; } = "Transparent";
         public char[] Glyphs { get; set; } = ['*'];
         public List<IMagicStep> Steps { get; set; } = [];
@@ -354,7 +354,8 @@ namespace MagusEngine.Core.Magic
 
         public SpellEntity GetSpellEntity(MagiEntity caster, Direction dir, Point pos)
         {
-            return new SpellEntity(Id, Fore, Back, dir.TranslateDirToGlyph(Glyphs), this, pos, caster);
+            string foreground = Fore.Equals("{caster}") ? caster.GetComponent<Magic>().MagicColor : Fore;
+            return new SpellEntity(Id, foreground, Back, dir.TranslateDirToGlyph(Glyphs), this, pos, caster);
         }
     }
 }

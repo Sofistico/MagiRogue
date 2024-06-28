@@ -106,9 +106,8 @@ namespace MagusEngine.Factory
             SetupScenarioMagic(actor, scenario);
             SetupInventory(actor, scenario);
             SetupEquipment(actor, scenario);
-            Player player = Player.ReturnPlayerFromActor(actor);
 
-            return player;
+            return Player.ReturnPlayerFromActor(actor);
         }
 
         private static void SetupEquipment(Actor actor, Scenario scenario)
