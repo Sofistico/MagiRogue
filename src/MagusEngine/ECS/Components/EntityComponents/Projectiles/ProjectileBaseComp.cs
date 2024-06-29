@@ -53,9 +53,6 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
             if (_currentStep == 0)
             {
                 TravelAnimation();
-                Parent.SadCell.AppearanceSingle.Appearance.Foreground = Color.Blue;
-                //Parent.SadCell.AppearanceSingle.Appearance.Background = Color.White;
-                Parent.SadCell.AppearanceSingle.Appearance.Glyph = 'a';
             }
             if (TickMovement())
             {

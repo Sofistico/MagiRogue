@@ -1,4 +1,5 @@
-﻿using MagusEngine.Utils.Extensions;
+﻿using MagusEngine.Utils;
+using MagusEngine.Utils.Extensions;
 using SadRogue.Primitives;
 
 namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
@@ -33,13 +34,14 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
         /// </summary>
         public static char TranslateDirToGlyph(this Direction dir, char[] glyphs)
         {
+            char glyph;
             if (glyphs.Length == 1)
             {
-                return glyphs[0];
+                glyph = glyphs[0];
             }
             else if (glyphs.Length <= 4)
             {
-                return dir.Type switch
+                glyph = dir.Type switch
                 {
                     Direction.Types.Left => glyphs[0],
                     Direction.Types.Up => glyphs[1],
@@ -50,7 +52,7 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
             }
             else
             {
-                return dir.Type switch
+                glyph = dir.Type switch
                 {
                     Direction.Types.Left => glyphs[0],
                     Direction.Types.Up => glyphs[1],
@@ -63,6 +65,7 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
                     _ => glyphs.GetRandomItemFromList()
                 };
             }
+            return (char)GlyphHelper.GetGlyph(glyph);
         }
     }
 }
