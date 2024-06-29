@@ -12,9 +12,7 @@ namespace MagusEngine.Core.Magic.Interfaces
 
         public bool CanCast(Actor caster, bool tickProficiency = true);
 
-        public bool CastSpell(Point target, Actor caster);
-
-        public bool CastSpell(List<Point> target, Actor caster);
+        public bool CastSpell(Point target, Actor caster, MagiEntity? selectedEntity = null);
 
         public SpellEntity GetSpellEntity(MagiEntity caster, Direction dir, Point pos);
     }

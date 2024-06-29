@@ -46,6 +46,17 @@ namespace MagusEngine.Utils
             return new Shape(coneFov.CurrentFOV);
         }
 
+        public static Shape Beam(this Point origin, Point endPoint, int radius)
+        {
+            Rectangle rectangle = new(origin * radius, endPoint * radius);
+            return new Shape(rectangle.Positions());
+        }
+
+        public static BresenhamEnumerator Line(this Point origin, Point endPoint)
+        {
+            return Lines.GetBresenhamLine(origin, endPoint);
+        }
+
         private static IEnumerable<Point> GetConePointsFromRadius(Point origin, Point target, double radius, double span)
         {
             var apex = GetApexFromRadius(origin, target, radius, Distance.Chebyshev);

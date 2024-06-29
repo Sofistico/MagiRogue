@@ -508,6 +508,7 @@ namespace MagusEngine.Systems
             if (!sucess)
                 return;
             var spellEntity = (SpellEntity)projectile;
+
             spell.CastSpell(projectile.Position, (Actor)spellEntity.Caster);
 
             var map = projectile?.CurrentMagiMap;

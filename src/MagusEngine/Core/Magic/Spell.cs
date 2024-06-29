@@ -4,6 +4,7 @@ using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic.Interfaces;
+using MagusEngine.Core.MapStuff;
 using MagusEngine.ECS.Components.EntityComponents.Projectiles;
 using MagusEngine.Serialization.EntitySerialization;
 using MagusEngine.Services;
@@ -198,7 +199,7 @@ namespace MagusEngine.Core.Magic
         /// <param name="target">The target pos</param>
         /// <param name="caster">the caster</param>
         /// <returns>whetever the cast was successful</returns>
-        public bool CastSpell(Point target, Actor caster)
+        public bool CastSpell(Point target, Actor caster, MagiEntity? selectedEntity = null)
         {
             if (!CanCast(caster))
             {
@@ -208,9 +209,9 @@ namespace MagusEngine.Core.Magic
                 return false;
             }
 
-            MagiEntity? entity = Find.CurrentMap?.GetEntityAt<MagiEntity>(target);
+            selectedEntity ??= Find.CurrentMap?.GetEntityAt<MagiEntity>(target);
 
-            if (entity is null && !AffectsTile)
+            if (selectedEntity is null && !AffectsTile)
             {
                 if (Manifestation == SpellManifestation.Instantaneous)
                     Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("Can't cast the spell, there must be an entity to target"));
@@ -220,7 +221,7 @@ namespace MagusEngine.Core.Magic
 
             Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{caster.Name} casted {Name}"));
 
-            ApplyEffects(target, caster, entity);
+            ApplyEffects(target, caster, selectedEntity);
 
             HandleCost(caster);
 
@@ -251,20 +252,41 @@ namespace MagusEngine.Core.Magic
             }
         }
 
-        private void ApplyEffects(Point target, Actor caster, MagiEntity? entity)
+        private void ApplyEffects(Point target, Actor caster, MagiEntity? entity = null)
         {
             foreach (ISpellEffect effect in Effects)
             {
-                if (effect.AreaOfEffect is SpellAreaEffect.Self)
+                switch (effect.AreaOfEffect)
                 {
-                    effect.ApplyEffect(caster.Position, caster, this);
-                    continue;
-                }
-                if ((entity?.CanInteract == true && !entity.Equals(caster)) || effect.TargetsTile)
-                {
-                    effect.ApplyEffect(target, caster, this);
+                    case SpellAreaEffect.Self:
+                        effect.ApplyEffect(caster.Position, caster, this);
+                        continue;
+                    case SpellAreaEffect.Target:
+                        entity ??= Find.CurrentMap.GetEntityAt<MagiEntity>(target);
+                        if (!CanTarget(caster, entity, effect))
+                        {
+                            continue;
+                        }
+                        effect.ApplyEffect(target, caster, this);
+                        break;
+
+                    default:
+                        foreach (var pos in TargetHelper.SpellAreaHelper(this, caster.Position, target)!)
+                        {
+                            MagiEntity? entityAt = Find.CurrentMap.GetEntityAt<MagiEntity>(pos);
+                            if (!CanTarget(caster, entityAt, effect))
+                                continue;
+
+                            effect.ApplyEffect(pos, caster, this);
+                        }
+                        break;
                 }
             }
+        }
+
+        private static bool CanTarget(Actor caster, MagiEntity? entity, ISpellEffect effect)
+        {
+            return (entity?.CanInteract == true && !entity.Equals(caster)) || effect.TargetsTile;
         }
 
         /// <summary>

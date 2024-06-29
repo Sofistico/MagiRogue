@@ -26,8 +26,7 @@ namespace MagusEngine.Core.Entities
     {
         private Actor? _caster;
         private MagiEntity? _lastControlledEntity;
-        private readonly Dictionary<Point, Tile> tileDictionary;
-        private static readonly Radius radius = Radius.Circle;
+        private readonly Dictionary<Point, Tile> _tileDictionary;
         private Spell? _selectedSpell;
         private Item? _selectedItem;
 
@@ -76,7 +75,7 @@ namespace MagusEngine.Core.Entities
             blink.Restart();
 
             TargetList = [];
-            tileDictionary = [];
+            _tileDictionary = [];
         }
 
         public bool EntityInTarget(bool ignorePlayer = true)
@@ -143,14 +142,14 @@ namespace MagusEngine.Core.Entities
                 {
                     return AffectPath();
                 }
-                if (_selectedSpell?.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Cone) == true)
-                {
-                    return AffectArea();
-                }
-                if (_selectedSpell?.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Ball) == true)
-                {
-                    return AffectArea();
-                }
+                //if (_selectedSpell?.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Cone) == true)
+                //{
+                //    return AffectArea();
+                //}
+                //if (_selectedSpell?.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Ball) == true)
+                //{
+                //    return AffectArea();
+                //}
                 if (spellInRange)
                 {
                     return AffectTarget();
@@ -185,11 +184,11 @@ namespace MagusEngine.Core.Entities
         private (bool, Spell) AffectTarget()
         {
             bool casted;
-            if (TargetList.Count > 0)
-            {
-                casted = _selectedSpell.CastSpell(TargetList[0].Position, _caster);
-            }
-            else if (TravelPath is not null)
+            //if (TargetList.Count > 0)
+            //{
+            //    casted = _selectedSpell.CastSpell(TargetList[0].Position, _caster);
+            //}
+            if (TravelPath is not null)
             {
                 casted = _selectedSpell.CastSpell(TravelPath.End, _caster);
             }
@@ -229,22 +228,22 @@ namespace MagusEngine.Core.Entities
 
         private void ClearTileDictionary()
         {
-            if (tileDictionary.Count == 0) return;
+            if (_tileDictionary.Count == 0) return;
             // if there is anything in the path, clear it
-            foreach (Point point in tileDictionary.Keys)
+            foreach (Point point in _tileDictionary.Keys)
             {
                 Tile tile = Cursor.CurrentMagiMap.GetTileAt(point);
                 if (tile is not null)
                     tile.Appearence.Background = tile.LastSeenAppereance.Background;
             }
-            tileDictionary.Clear();
+            _tileDictionary.Clear();
         }
 
         private (bool, Spell?) AffectPath()
         {
             if (TravelPath?.Length >= 1)
             {
-                bool sucess = _selectedSpell.CastSpell(TravelPath.Steps.ToList(), _caster);
+                bool sucess = _selectedSpell.CastSpell(TravelPath.End, _caster);
 
                 var casted = _selectedSpell;
 
@@ -256,36 +255,36 @@ namespace MagusEngine.Core.Entities
             return (false, null);
         }
 
-        private (bool, Spell?) AffectArea()
-        {
-            if (_selectedSpell.Effects.Any(e => e.Radius > 0))
-            {
-                var allPos = new List<Point>();
+        //private (bool, Spell?) AffectArea()
+        //{
+        //    if (_selectedSpell.Effects.Any(e => e.Radius > 0))
+        //    {
+        //        var allPos = new List<Point>();
 
-                foreach (var entity in TargetList)
-                {
-                    if (entity.CanBeAttacked)
-                        allPos.Add(entity.Position);
-                }
+        //        foreach (var entity in TargetList)
+        //        {
+        //            if (entity.CanBeAttacked)
+        //                allPos.Add(entity.Position);
+        //        }
 
-                if (_selectedSpell.AffectsTile)
-                {
-                    foreach (var pos in tileDictionary.Keys)
-                    {
-                        if (!allPos.Contains(pos))
-                            allPos.Add(pos);
-                    }
-                }
+        //        if (_selectedSpell.AffectsTile)
+        //        {
+        //            foreach (var pos in _tileDictionary.Keys)
+        //            {
+        //                if (!allPos.Contains(pos))
+        //                    allPos.Add(pos);
+        //            }
+        //        }
 
-                var sucess = _selectedSpell.CastSpell(allPos, _caster);
-                var spell = _selectedSpell;
+        //        var sucess = _selectedSpell.CastSpell(allPos, _caster);
+        //        var spell = _selectedSpell;
 
-                EndTargetting();
+        //        EndTargetting();
 
-                return (sucess, spell);
-            }
-            return (false, null);
-        }
+        //        return (sucess, spell);
+        //    }
+        //    return (false, null);
+        //}
 
         /// <summary>
         /// Makes the render and the path to the target
@@ -311,12 +310,12 @@ namespace MagusEngine.Core.Entities
                     // gets each point in the travel path steps and change the background of the wall
                     var halp = Cursor.CurrentMagiMap.GetTileAt(pos);
                     halp.Appearence.Background = Color.Yellow;
-                    tileDictionary.TryAdd(pos, halp);
+                    _tileDictionary.TryAdd(pos, halp);
                 }
 
                 // This loops makes sure that all the pos that aren't in the TravelPath gets it's
                 // proper appearence
-                foreach (Point item in tileDictionary.Keys)
+                foreach (Point item in _tileDictionary.Keys)
                 {
                     if (!TravelPath.Steps.Contains(item))
                     {
@@ -329,7 +328,7 @@ namespace MagusEngine.Core.Entities
                 }
                 if (_selectedSpell is not null)
                 {
-                    foreach (var point in TargetHelper.SpellAreaHelper(_selectedSpell, Position, e.NewValue, radius)!)
+                    foreach (var point in TargetHelper.SpellAreaHelper(_selectedSpell, Position, e.NewValue)!)
                     {
                         AddTileToDictionary(point, _selectedSpell.IgnoresWall);
                         AddEntityToList(point);
@@ -380,7 +379,7 @@ namespace MagusEngine.Core.Entities
         }
 
         /// <summary>
-        /// Adds the tile to the <see cref="tileDictionary"/>.
+        /// Adds the tile to the <see cref="_tileDictionary"/>.
         /// </summary>
         /// <param name="point"></param>
         private void AddTileToDictionary(Point point, bool ignoresWall = false)
@@ -389,7 +388,7 @@ namespace MagusEngine.Core.Entities
             if (halp is not null && (halp.IsTransparent || ignoresWall))
             {
                 halp.Appearence.Background = Color.Yellow;
-                tileDictionary.TryAdd(point, halp);
+                _tileDictionary.TryAdd(point, halp);
             }
         }
 
