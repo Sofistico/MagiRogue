@@ -32,8 +32,6 @@ namespace MagusEngine.Core.Entities
 
         public MagiEntity Cursor { get; set; }
 
-        public List<MagiEntity> TargetList { get; set; }
-
         public Point OriginCoord { get; set; }
 
         public TargetState State { get; set; }
@@ -74,7 +72,6 @@ namespace MagusEngine.Core.Entities
             Cursor.SadCell.AppearanceSingle!.Effect = blink;
             blink.Restart();
 
-            TargetList = [];
             _tileDictionary = [];
         }
 
@@ -96,7 +93,6 @@ namespace MagusEngine.Core.Entities
             _caster = caster;
             if (_selectedSpell.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Self))
             {
-                TargetList.Add(_caster);
                 var (sucess, s) = EndSpellTargetting();
                 Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.GetCastingTime(Find.Universe.Player, s), sucess));
                 return;
@@ -138,10 +134,10 @@ namespace MagusEngine.Core.Entities
             bool spellInRange = (int)Distance.Chebyshev.Calculate(OriginCoord, Cursor.Position) <= _selectedSpell?.SpellRange;
             if (_selectedSpell?.Manifestation == SpellManifestation.Instantaneous)
             {
-                if (_selectedSpell?.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Beam) == true)
-                {
-                    return AffectPath();
-                }
+                //if (_selectedSpell?.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Beam) == true)
+                //{
+                //    return AffectPath();
+                //}
                 //if (_selectedSpell?.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Cone) == true)
                 //{
                 //    return AffectArea();
@@ -184,20 +180,16 @@ namespace MagusEngine.Core.Entities
         private (bool, Spell) AffectTarget()
         {
             bool casted;
-            //if (TargetList.Count > 0)
-            //{
-            //    casted = _selectedSpell.CastSpell(TargetList[0].Position, _caster);
-            //}
             if (TravelPath is not null)
             {
-                casted = _selectedSpell.CastSpell(TravelPath.End, _caster);
+                casted = _selectedSpell?.CastSpell(TravelPath.End, _caster!) ?? false;
             }
             else
             {
                 casted = false;
                 Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("An error ocurred, cound't find a target!"));
             }
-            var spellCasted = _selectedSpell;
+            Spell spellCasted = _selectedSpell!.Copy();
             EndTargetting();
             return (casted, spellCasted);
         }
@@ -206,8 +198,6 @@ namespace MagusEngine.Core.Entities
         {
             if (Cursor.CurrentMap is not null)
             {
-                TargetList.Clear();
-
                 _selectedSpell = null;
                 _selectedItem = null;
                 _caster = null;
@@ -237,22 +227,6 @@ namespace MagusEngine.Core.Entities
                     tile.Appearence.Background = tile.LastSeenAppereance.Background;
             }
             _tileDictionary.Clear();
-        }
-
-        private (bool, Spell?) AffectPath()
-        {
-            if (TravelPath?.Length >= 1)
-            {
-                bool sucess = _selectedSpell.CastSpell(TravelPath.End, _caster);
-
-                var casted = _selectedSpell;
-
-                EndTargetting();
-
-                return (sucess, casted);
-            }
-
-            return (false, null);
         }
 
         //private (bool, Spell?) AffectArea()
@@ -293,7 +267,6 @@ namespace MagusEngine.Core.Entities
         /// <param name="e"></param>
         private void Cursor_Moved(object? sender, ValueChangedEventArgs<Point> e)
         {
-            TargetList.Clear();
             if (Cursor is null)
                 return;
             TravelPath = Cursor.CurrentMagiMap.AStar.ShortestPath(OriginCoord, e.NewValue)!;
@@ -331,7 +304,6 @@ namespace MagusEngine.Core.Entities
                     foreach (var point in TargetHelper.SpellAreaHelper(_selectedSpell, Position, e.NewValue)!)
                     {
                         AddTileToDictionary(point, _selectedSpell.IgnoresWall);
-                        AddEntityToList(point);
                     }
                 }
             }
@@ -341,31 +313,6 @@ namespace MagusEngine.Core.Entities
                 throw new Exception("An error occured in the Cursor targetting!");
             }
         }
-
-        //public static void SpellAreaHelper(ISpell spell)
-        //{
-        //    if (TargetHelper.GetSpellAreaEffect(_selectedSpell, SpellAreaEffect.Ball, out ISpellEffect eff))
-        //    {
-        //        if (eff is null)
-        //            return;
-        //        RadiusLocationContext radiusLocation = new(Cursor.Position, eff.Radius);
-
-        //        foreach (Point point in radius.PositionsInRadius(radiusLocation))
-        //        {
-        //            AddTileToDictionary(point, eff.IgnoresWall);
-        //            AddEntityToList(point);
-        //        }
-        //    }
-
-        //    else if (TargetHelper.GetSpellAreaEffect(_selectedSpell, SpellAreaEffect.Cone, out eff))
-        //    {
-        //        foreach (Point point in OriginCoord.Cone(eff.Radius, this, eff.ConeCircleSpan).Points)
-        //        {
-        //            AddTileToDictionary(point, eff.IgnoresWall);
-        //            AddEntityToList(point);
-        //        }
-        //    }
-        //}
 
         public bool TileInTarget()
         {
@@ -390,27 +337,6 @@ namespace MagusEngine.Core.Entities
                 halp.Appearence.Background = Color.Yellow;
                 _tileDictionary.TryAdd(point, halp);
             }
-        }
-
-        public bool TargetsTile()
-        {
-            if (State == TargetState.TargetingSpell)
-                return _selectedSpell?.Effects.Any(a => a.TargetsTile) == true || _selectedSpell?.Effects.Any(a => a.AreaOfEffect is not SpellAreaEffect.Target) == true;
-            else if (State == TargetState.TargetingItem)
-                return _selectedItem is not null;
-            else
-                return false;
-        }
-
-        /// <summary>
-        /// Adds an entity to the <see cref="TargetList"/>.
-        /// </summary>
-        /// <param name="point"></param>
-        private void AddEntityToList(Point point)
-        {
-            var entity = Cursor.CurrentMagiMap.GetEntityAt<MagiEntity>(point);
-            if (entity is not null && !TargetList.Contains(entity))
-                TargetList.Add(entity);
         }
 
         public void LookTarget()

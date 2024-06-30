@@ -289,38 +289,6 @@ namespace MagusEngine.Core.Magic
             return (entity?.CanInteract == true && !entity.Equals(caster)) || effect.TargetsTile;
         }
 
-        /// <summary>
-        /// Multi spell targetting
-        /// </summary>
-        /// <param name="target">The list of pos</param>
-        /// <param name="caster">the caster</param>
-        /// <returns>whetever the cast was successful</returns>
-        public bool CastSpell(List<Point> target, Actor caster)
-        {
-            if (target.Count == 0)
-            {
-                _errorMessage = "Can't cast the spell, there must be an entity to target";
-            }
-            if (CanCast(caster))
-            {
-                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{caster.Name} casted {Name}"));
-
-                foreach (var pos in target)
-                {
-                    MagiEntity entity = Find.CurrentMap.GetEntityAt<MagiEntity>(pos);
-                    ApplyEffects(pos, caster, entity);
-                }
-
-                HandleCost(caster);
-                TickProfiency();
-
-                return true;
-            }
-            Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new(_errorMessage));
-
-            return false;
-        }
-
         public Spell Copy()
         {
             return new()
