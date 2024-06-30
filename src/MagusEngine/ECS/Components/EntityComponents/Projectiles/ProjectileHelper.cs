@@ -65,7 +65,7 @@ namespace MagusEngine.ECS.Components.EntityComponents.Projectiles
                     _ => glyphs.GetRandomItemFromList()
                 };
             }
-            return (char)GlyphHelper.GetGlyph(glyph);
+            return (char)glyph.GetGlyph();
         }
     }
 }

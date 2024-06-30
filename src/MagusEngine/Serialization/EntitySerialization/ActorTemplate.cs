@@ -174,8 +174,8 @@ namespace MagusEngine.Serialization.EntitySerialization
         {
             if (actorTemplate is null)
                 return null;
-            int glyph = GlyphHelper.GlyphExistInDictionary(actorTemplate.Glyph) ?
-                GlyphHelper.GetGlyph(actorTemplate.Glyph) : actorTemplate.Glyph;
+            int glyph = actorTemplate.Glyph.GlyphExistInDictionary() ?
+                actorTemplate.Glyph.GetGlyph() : actorTemplate.Glyph;
 
             Actor actor =
                 new(actorTemplate.Name, actorTemplate.ForegroundBackingField.Color,

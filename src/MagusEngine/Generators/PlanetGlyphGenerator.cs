@@ -349,17 +349,17 @@ namespace MagusEngine.Generators
 
                     if (site.SiteInfluence.SiteType is SiteType.Camp)
                     {
-                        tile.Parent.Appearence.Glyph = GlyphHelper.GetGlyph('☼');
+                        tile.Parent.Appearence.Glyph = '☼'.GetGlyph();
                         tile.Parent.Appearence.Foreground = Color.AnsiYellow;
                     }
                     if (site.SiteInfluence.SiteType is SiteType.Tower)
                     {
-                        tile.Parent.Appearence.Glyph = GlyphHelper.GetGlyph('T');
+                        tile.Parent.Appearence.Glyph = 'T'.GetGlyph();
                         tile.Parent.Appearence.Foreground = Color.MediumPurple;
                     }
                     if (site.SiteInfluence.SiteType is SiteType.Dungeon)
                     {
-                        tile.Parent.Appearence.Glyph = GlyphHelper.GetGlyph('D');
+                        tile.Parent.Appearence.Glyph = 'D'.GetGlyph();
                         tile.Parent.Appearence.Foreground = Color.MediumPurple;
                     }
 

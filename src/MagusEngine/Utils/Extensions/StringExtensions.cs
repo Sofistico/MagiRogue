@@ -22,16 +22,14 @@ namespace MagusEngine.Utils.Extensions
             var result = string.Empty;
             foreach (var symbol in text)
             {
-                result += (char)GlyphHelper.GetGlyph(symbol);
+                result += (char)symbol.GetGlyph();
             }
 
             return result;
         }
 
         public static string SeparateByUpperLetter(this string text)
-        {
-            return Regex.Replace(text, @"(\p{Lu})(?<=\p{Ll}\1|(\p{Lu}|\p{Ll})\1(?=\p{Ll}))", " $1", RegexOptions.None, TimeSpan.FromSeconds(10)).Trim();
-        }
+            => Regex.Replace(text, @"(\p{Lu})(?<=\p{Ll}\1|(\p{Lu}|\p{Ll})\1(?=\p{Ll}))", " $1", RegexOptions.None, TimeSpan.FromSeconds(10)).Trim();
 
         public static string FirstLetterUpper(this string? input) =>
             input switch

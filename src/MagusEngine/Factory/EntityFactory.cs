@@ -38,8 +38,8 @@ namespace MagusEngine.Factory
             string actorName, int actorAge, Sex sex)
         {
             Race race = DataManager.QueryRaceInData(raceId);
-            int glyph = GlyphHelper.GlyphExistInDictionary(race.RaceGlyph) ?
-                GlyphHelper.GetGlyph(race.RaceGlyph) : race.RaceGlyph;
+            int glyph = race?.RaceGlyph.GlyphExistInDictionary() == true ?
+                race.RaceGlyph.GetGlyph() : race.RaceGlyph;
 
             Actor actor = new Actor(actorName,
                 race.ReturnForegroundColor(),
@@ -58,8 +58,8 @@ namespace MagusEngine.Factory
         public static Actor ActorCreator(Point position, string raceId, Sex sex, AgeGroup age, string? name = null)
         {
             Race race = DataManager.QueryRaceInData(raceId);
-            int glyph = GlyphHelper.GlyphExistInDictionary(race.RaceGlyph) ?
-                GlyphHelper.GetGlyph(race.RaceGlyph) : race.RaceGlyph;
+            int glyph = race?.RaceGlyph.GlyphExistInDictionary() == true ?
+                race.RaceGlyph.GetGlyph() : race.RaceGlyph;
 
             Actor actor = new Actor(name.IsNullOrEmpty() ? race.RaceName : name,
                 race.ReturnForegroundColor(),
@@ -78,8 +78,8 @@ namespace MagusEngine.Factory
         public static Actor ActorCreator(Point position, string raceId, int actorAge, Sex sex, string? name = null)
         {
             Race race = DataManager.QueryRaceInData(raceId);
-            int glyph = GlyphHelper.GlyphExistInDictionary(race.RaceGlyph) ?
-                GlyphHelper.GetGlyph(race.RaceGlyph) : race.RaceGlyph;
+            int glyph = race.RaceGlyph.GlyphExistInDictionary() ?
+                race.RaceGlyph.GetGlyph() : race.RaceGlyph;
 
             Actor actor = new(name.IsNullOrEmpty() ? race.RaceName : name,
                 race.ReturnForegroundColor(),

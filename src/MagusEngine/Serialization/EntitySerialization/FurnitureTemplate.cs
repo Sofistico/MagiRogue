@@ -199,7 +199,7 @@ namespace MagusEngine.Serialization.EntitySerialization
                 template.ForegroundBackingField = material.ReturnMagiColor();
             }
 
-            int glpyh = GlyphHelper.GlyphExistInDictionary(template.Glyph) ? GlyphHelper.GetGlyph(template.Glyph)
+            int glpyh = template.Glyph.GlyphExistInDictionary() ? template.Glyph.GetGlyph()
                 : template.Glyph;
 
             var objFur = new Furniture(template.ForegroundBackingField.Color,

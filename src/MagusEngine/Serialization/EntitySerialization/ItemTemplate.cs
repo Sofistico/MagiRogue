@@ -167,7 +167,7 @@ namespace MagusEngine.Serialization.EntitySerialization
         {
             if (itemTemplate is null)
                 return null;
-            int glyph = GlyphHelper.GlyphExistInDictionary(itemTemplate.Glyph) ? GlyphHelper.GetGlyph(itemTemplate.Glyph) : itemTemplate.Glyph;
+            int glyph = itemTemplate.Glyph.GlyphExistInDictionary() ? itemTemplate.Glyph.GetGlyph() : itemTemplate.Glyph;
             Material material;
             if (itemTemplate.Material != null)
                 material = itemTemplate.Material;

@@ -145,7 +145,7 @@ namespace MagusEngine.Utils
             };
         }
 
-        public static int GetGlyph(char symbol)
+        public static int GetGlyph(this char symbol)
         {
             if (_glyphsMapping.TryGetValue(symbol, out int value))
                 return value;
@@ -153,7 +153,7 @@ namespace MagusEngine.Utils
             return symbol;
         }
 
-        public static bool GlyphExistInDictionary(char glyph)
+        public static bool GlyphExistInDictionary(this char glyph)
         {
             return _glyphsMapping.ContainsKey(glyph);
         }
