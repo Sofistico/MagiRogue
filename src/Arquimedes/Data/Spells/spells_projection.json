@@ -14,14 +14,14 @@
         "SpellDamageTypeId": "blunt",
         "BaseDamage": 2,
         "EffectType": "DAMAGE",
-        "VelocityMultiplier": 1,
+        "VelocityAttackMultiplier": 1,
         "Volume": 150,
         "CanMiss": true
       }
     ],
     "Glyphs": [ "←", "↑", "→", "↓" ],
     "Manifestation": "Projectile",
-    "Velocity": 50,
+    "Velocity": 10,
     "Context": [ "Offensive" ]
   },
   {
@@ -63,7 +63,7 @@
     "Name": "Fire Ray",
     "Description": "A ray of fire leaves your finger and strikes the opponent!",
     "MagicArt": "Projection",
-    "Manifestation": "Ray",
+    //"Manifestation": "Instant",
     "SpellRange": 5,
     "MagicCost": 2.5,
     "Id": "fire_ray",
@@ -83,7 +83,7 @@
         "EffectType": "DAMAGE",
         "Volume": 150,
         "PenetrationPercentage": 0.5,
-        "VelocityMultiplier": 3,
+        "VelocityAttackMultiplier": 3,
         "IsResistable": true
       },
       {
@@ -119,6 +119,8 @@
     "Name": "Fire Ball",
     "Description": "A fireball is projected from your hand towards your opponent!",
     "MagicArt": "Projection",
+    "Manifestation": "Projectile",
+    "Velocity": 50,
     "SpellRange": 7,
     "MagicCost": 5.0,
     "Id": "fire_ball",

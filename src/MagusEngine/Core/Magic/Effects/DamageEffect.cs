@@ -30,7 +30,7 @@ namespace MagusEngine.Core.Magic.Effects
         /// The volume occupied by the spell, should take into account only the volume that "hits" something, should be in cm3
         /// </summary>
         public int Volume { get; set; }
-        public int VelocityMultiplier { get; set; }
+        public int VelocityAttackMultiplier { get; set; }
         public double PenetrationPercentage { get; set; }
         public bool IgnoresWall { get; set; }
 
@@ -126,7 +126,7 @@ namespace MagusEngine.Core.Magic.Effects
             {
                 AttackAbility = AbilityCategory.MagicShaping,
                 DamageTypeId = SpellDamageTypeId,
-                VelocityMultiplier = VelocityMultiplier,
+                VelocityAttackMultiplier = VelocityAttackMultiplier,
                 ContactArea = Volume,
                 PenetrationPercentage = PenetrationPercentage,
                 PrepareVelocity = 1,

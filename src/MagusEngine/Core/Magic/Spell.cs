@@ -119,7 +119,7 @@ namespace MagusEngine.Core.Magic
         public char[] Glyphs { get; set; } = ['*'];
         public List<IMagicStep> Steps { get; set; } = [];
 
-        public int Velocity { get; set; } = 100; // is in ticks
+        public int Velocity { get; set; } = 10; // is in ticks
         public bool IgnoresWall => Effects.Any(i => i.IgnoresWall);
 
         /// <summary>

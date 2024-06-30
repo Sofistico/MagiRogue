@@ -32,7 +32,7 @@ namespace MagusEngine.Core.Entities.Base
         /// </summary>
         public int ContactArea { get; set; }
         public double PenetrationPercentage { get; set; }
-        public int VelocityMultiplier { get; set; }
+        public int VelocityAttackMultiplier { get; set; }
 
         public BodyPartFunction? LimbFunction { get; set; }
         public bool Main { get; set; }
