@@ -78,17 +78,7 @@ namespace MagusEngine.Core.Entities.Base
 
         public int GetAbility(string ability)
         {
-            int abilityScore = 0;
-            foreach (var item in Abilities)
-            {
-                if (item.Value.Name?.Equals(ability) == true)
-                {
-                    abilityScore = item.Value.Score;
-                    break;
-                }
-            }
-
-            return abilityScore;
+            return Abilities.Values.FirstOrDefault(i => i.Name?.Equals(ability) == true).Score;
         }
 
         public Ability ReturnAbilityFromName(AbilityCategory ability)

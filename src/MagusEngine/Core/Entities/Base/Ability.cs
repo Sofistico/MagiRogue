@@ -52,8 +52,7 @@ namespace MagusEngine.Core.Entities.Base
             try
             {
                 string test = name.Replace(" ", "");
-                AbilityCategory ability = Enum.Parse<AbilityCategory>(test);
-                return ability;
+                return Enum.Parse<AbilityCategory>(test);
             }
             catch (AbilityNotFoundExepction)
             {

@@ -20,8 +20,8 @@ namespace MagusEngine.Core.Entities
             Player player = EntityFactory.PlayerCreatorFromZeroForTest(new Point(), "human", "Playa", 25,
                 Arquimedes.Enumerators.Sex.Male, "new_wiz");
 
-            player.Mind.AddAbilityToDictionary(new(Arquimedes.Enumerators.AbilityCategory.MagicShaping, 25));
             var magic = player.GetComponent<Magic.Magic>();
+            player.Mind.AddAbilityToDictionary(new(magic.GetMagicShapingAbility(), Arquimedes.Enumerators.AbilityCategory.MagicShaping, 50));
             magic.KnowSpells[0].Proficiency = 1;
             if (!magic.KnowSpells.Exists(x => x.Id == "magic_missile"))
             {
@@ -36,7 +36,7 @@ namespace MagusEngine.Core.Entities
 
             Spell fireRay = DataManager.QuerySpellInData("fire_ray", 1)!;
 
-            Spell fireBall = DataManager.QuerySpellInData("fire_ball", 1)!;
+            Spell fireBall = DataManager.QuerySpellInData("fire_ball", 2)!;
 
             Spell severWhip = DataManager.QuerySpellInData("sever_whip", 1)!;
 

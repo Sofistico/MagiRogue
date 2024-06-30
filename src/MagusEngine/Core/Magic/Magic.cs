@@ -15,7 +15,7 @@ namespace MagusEngine.Core.Magic
     /// <summary>
     /// The class that is the manager of the magic system to an entity
     /// </summary>
-    public class Magic
+    public class Magic : IMagic
     {
         public const string Tag = "magic_manager";
 
@@ -94,6 +94,8 @@ namespace MagusEngine.Core.Magic
             }
             return KnowSpells.Count > 0;
         }
+
+        public string GetMagicShapingAbility() => "Mana Shaping";
     }
 
     public class SpellComparator : IEqualityComparer<Spell>
