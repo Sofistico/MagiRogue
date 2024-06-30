@@ -120,6 +120,7 @@
     "Description": "A fireball is projected from your hand towards your opponent!",
     "MagicArt": "Projection",
     "Manifestation": "Projectile",
+    "Fore": "Red",
     "Velocity": 50,
     "SpellRange": 7,
     "MagicCost": 5.0,
