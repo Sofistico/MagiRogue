@@ -87,7 +87,7 @@ namespace MagusEngine.Core.Entities.Base
             return Abilities.TryGetValue(possibleId, out Ability value) ? value : null;
         }
 
-        public Ability GetAbility(string ability) => Abilities.Values.FirstOrDefault(i => i.Name?.Equals(ability) == true);
+        public Ability? GetAbility(string ability) => Abilities.Values.FirstOrDefault(i => i.Name?.Equals(ability) == true);
 
         public List<AbilityCategory> CheckForCombatAbilities()
         {
