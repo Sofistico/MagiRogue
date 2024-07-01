@@ -410,7 +410,7 @@ namespace MagusEngine.Core.WorldStuff.History
             foreach (AbilityCategory abiName in abilitiesIntersection)
             {
                 // research should take years, but let's observe if will take too long as well...
-                int abilityScore = Mind.GetAbility(abiName);
+                int abilityScore = Mind.GetAbilityScore(abiName);
                 totalRes += abilityScore * Mrn.Exploding2D6Dice;
             }
             CheckForAnxious();
@@ -497,7 +497,7 @@ namespace MagusEngine.Core.WorldStuff.History
             StringBuilder victim = new();
 
             // TODO: Generalize this in the future
-            if (Mind.GetAbility(combatAbilityAttacker) >= deadThing.Mind.GetAbility(defensiveAbilyDefender))
+            if (Mind.GetAbilityScore(combatAbilityAttacker) >= deadThing.Mind.GetAbilityScore(defensiveAbilyDefender))
             {
                 deadThing.KillIt(year);
                 killer.Append("the ").Append(Name).Append(" killed ").Append(deadThing.Name);
@@ -510,7 +510,7 @@ namespace MagusEngine.Core.WorldStuff.History
                 deadThing.AddLegend(new Legend(victim.ToString(), year));
                 return;
             }
-            if (Mind.GetAbility(combatAbilityDefender) <= deadThing.Mind.GetAbility(defensiveAbilityAttacker))
+            if (Mind.GetAbilityScore(combatAbilityDefender) <= deadThing.Mind.GetAbilityScore(defensiveAbilityAttacker))
             {
                 KillIt(year);
                 killer.Append("the ").Append(deadThing.Name).Append(" killed ").Append(Name);
@@ -612,12 +612,9 @@ namespace MagusEngine.Core.WorldStuff.History
                 }
                 else
                 {
-                    Ability ability = Mind.ReturnAbilityFromName(TrainingFocus);
+                    Ability ability = Mind.GetAbility(TrainingFocus);
                     if (ability.Category is not AbilityCategory.None)
-                    {
-                        ability.XpTotal +=
-                            Mind.Personality.HardWork + (Mrn.Exploding2D6Dice * Mind.Inteligence);
-                    }
+                        ability.AdvanceXp(Mind.Personality.HardWork + (Mrn.Exploding2D6Dice * Mind.Inteligence));
                     if (ability.Score >= whatScoreToSettleForTrainingAbility)
                         TrainingFocus = AbilityCategory.None;
                 }

@@ -21,7 +21,8 @@ namespace MagusEngine.Core.Entities
                 Arquimedes.Enumerators.Sex.Male, "new_wiz");
 
             var magic = player.GetComponent<Magic.Magic>();
-            player.Mind.AddAbilityToDictionary(new(magic.GetMagicShapingAbility(), Arquimedes.Enumerators.AbilityCategory.MagicShaping, 50));
+            var abb = player.Mind.GetAbility(magic.GetMagicShapingAbility());
+            abb.Score = 55;
             magic.KnowSpells[0].Proficiency = 1;
             if (!magic.KnowSpells.Exists(x => x.Id == "magic_missile"))
             {

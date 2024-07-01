@@ -304,7 +304,7 @@ namespace MagusEngine.Core.Civ
                 int resource = civParent.CivsTradingWith.Count * 5;
                 if (SiteLeader is not null)
                 {
-                    resource *= SiteLeader.Mind.GetAbility(AbilityCategory.Negotiator) + 1;
+                    resource *= SiteLeader.Mind.GetAbilityScore(AbilityCategory.Negotiator) + 1;
                 }
                 MundaneResources += resource;
             }

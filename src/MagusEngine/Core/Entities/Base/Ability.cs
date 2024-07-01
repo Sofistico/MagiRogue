@@ -6,14 +6,15 @@ using System.Text.RegularExpressions;
 
 namespace MagusEngine.Core.Entities.Base
 {
-    public struct Ability
+    public class Ability
     {
         public string Name { get; }
         public AbilityCategory Category { get; set; }
         public int Score { get; set; }
         public int Id { get; }
-        public int XpTotal { get; set; }
-        public readonly int XpRequiredForNextLevel { get => (Score + 1) * 1000 * 2; }
+        public int CurrentXp { get; set; }
+        public int XpTotal => (Score * 1000) + CurrentXp;
+        public int XpRequiredForNextLevel { get => (int)Math.Pow(Score + 1, 2) * 2; }
 
         public Ability(string name, AbilityCategory category, int abilityScore)
         {
@@ -21,11 +22,21 @@ namespace MagusEngine.Core.Entities.Base
             Category = category;
             Score = abilityScore;
             Id = SequentialIdGenerator.AbilityId;
-            XpTotal = abilityScore * 1000;
         }
 
         public Ability(AbilityCategory name, int abilityScore) : this(ReturnEnumString(name), name, abilityScore)
         {
+        }
+
+        public void AdvanceXp(int xp)
+        {
+            CurrentXp += xp;
+            while (CurrentXp >= XpRequiredForNextLevel)
+            {
+                CurrentXp -= XpRequiredForNextLevel;
+
+                Score++;
+            }
         }
 
         private static string ReturnEnumString(Enum name)

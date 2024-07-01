@@ -64,7 +64,7 @@ namespace MagusEngine.Core.Entities.Base
             }
         }
 
-        public int GetAbility(AbilityCategory ability)
+        public int GetAbilityScore(AbilityCategory ability)
         {
             int possibleId = (int)Ability.ReturnAbilityEnumFromString(ability.ToString());
             int abilityScore = 0;
@@ -76,16 +76,18 @@ namespace MagusEngine.Core.Entities.Base
             return abilityScore;
         }
 
-        public int GetAbility(string ability)
+        public int GetAbilityScore(string ability)
         {
             return Abilities.Values.FirstOrDefault(i => i.Name?.Equals(ability) == true).Score;
         }
 
-        public Ability ReturnAbilityFromName(AbilityCategory ability)
+        public Ability? GetAbility(AbilityCategory ability)
         {
             int possibleId = (int)Ability.ReturnAbilityEnumFromString(ability.ToString());
-            return Abilities.TryGetValue(possibleId, out Ability value) ? value : new Ability();
+            return Abilities.TryGetValue(possibleId, out Ability value) ? value : null;
         }
+
+        public Ability GetAbility(string ability) => Abilities.Values.FirstOrDefault(i => i.Name?.Equals(ability) == true);
 
         public List<AbilityCategory> CheckForCombatAbilities()
         {

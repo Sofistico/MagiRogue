@@ -379,12 +379,12 @@ namespace MagusEngine.Core.Entities
 
         public int GetRelevantAbility(AbilityCategory ability)
         {
-            return Mind.GetAbility(ability);
+            return Mind.GetAbilityScore(ability);
         }
 
         public int GetRelevantAbility(string ability)
         {
-            return Mind.GetAbility(ability);
+            return Mind.GetAbilityScore(ability);
         }
 
         public int GetRelevantAttackAbility(Item? item = null)
