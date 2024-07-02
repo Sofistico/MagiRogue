@@ -27,6 +27,8 @@ namespace MagusEngine.Core.MapStuff
         {
             if (eff.AreaOfEffect == SpellAreaEffect.Ball)
             {
+                // this needs to better respect fov
+                origin.Circl
                 RadiusLocationContext radiusLocation = new(origin, eff.Radius);
                 return Radius.Circle.PositionsInRadius(radiusLocation).ToList();
             }

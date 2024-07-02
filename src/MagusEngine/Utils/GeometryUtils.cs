@@ -28,7 +28,7 @@ namespace MagusEngine.Utils
             {
                 angle = Point.BearingOfLine(target - originCoordinate);
             }
-            RecursiveShadowcastingFOV coneFov;
+            RecursiveShadowcastingBooleanBasedFOV coneFov;
             if (!ignoresWalls)
             {
                 coneFov = new(Find.CurrentMap.TransparencyView);
