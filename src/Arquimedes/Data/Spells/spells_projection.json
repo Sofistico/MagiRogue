@@ -21,7 +21,7 @@
     ],
     "Glyphs": [ "←", "↑", "→", "↓" ],
     "Manifestation": "Projectile",
-    "Velocity": 10,
+    "Velocity": 5,
     "Context": [ "Offensive" ]
   },
   {
@@ -121,7 +121,7 @@
     "MagicArt": "Projection",
     "Manifestation": "Projectile",
     "Fore": "Red",
-    "Velocity": 50,
+    "Velocity": 10,
     "SpellRange": 7,
     "MagicCost": 5.0,
     "Id": "fire_ball",

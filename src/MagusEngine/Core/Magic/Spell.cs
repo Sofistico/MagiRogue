@@ -116,7 +116,7 @@ namespace MagusEngine.Core.Magic
         public bool AffectsTile => Effects.Any(i => i.TargetsTile);
         public string ShapingAbility { get; set; }
         public string Fore { get; set; } = "{caster}";
-        public string Back { get; set; } = "Transparent";
+        public string Back { get; set; } = "Black";
         public char[] Glyphs { get; set; } = ['*'];
         public List<IMagicStep> Steps { get; set; } = [];
 
