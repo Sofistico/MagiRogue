@@ -29,6 +29,7 @@ namespace MagusEngine.Core.Magic
         private const double _maxSpellProficiency = 3.0;
         private double _proficency;
         private string _errorMessage = "Can't cast the spell";
+        private Lazy<bool> _ignoresWall;
 
         /// <summary>
         /// The id of the spell, required for quick look up and human redable serialization.
@@ -120,7 +121,8 @@ namespace MagusEngine.Core.Magic
         public List<IMagicStep> Steps { get; set; } = [];
 
         public int Velocity { get; set; } = 10; // is in ticks
-        public bool IgnoresWall => Effects.Any(i => i.IgnoresWall);
+
+        public bool IgnoresWall => _ignoresWall.Value;
 
         /// <summary>
         /// Empty constructor, a waste of space
@@ -154,6 +156,7 @@ namespace MagusEngine.Core.Magic
             MagicCost = magicCost;
             Effects = [];
             ShapingAbility = shapingAbility;
+            _ignoresWall = new(() => Effects.Any(i => i.IgnoresWall));
         }
 
         public bool CanCast(Actor actor, bool tickProficiency = true)
@@ -312,6 +315,7 @@ namespace MagusEngine.Core.Magic
                 Glyphs = Glyphs,
                 Steps = Steps,
                 Velocity = Velocity,
+                _ignoresWall = _ignoresWall,
             };
         }
 

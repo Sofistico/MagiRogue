@@ -1,4 +1,5 @@
 ﻿using Arquimedes.Enumerators;
+using GoRogue.FOV;
 using MagusEngine.Core.Magic.Interfaces;
 using MagusEngine.Systems;
 using MagusEngine.Utils;
@@ -6,13 +7,12 @@ using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 namespace MagusEngine.Core.MapStuff
 {
     public static class TargetHelper
     {
-        public static List<Point> SpellAreaHelper(ISpell spell, Point origin, Point targetPoint)
+        public static IEnumerable<Point> SpellAreaHelper(ISpell spell, Point origin, Point targetPoint)
         {
             if (GetIfSpellHasSpecificAreaEffect(spell, SpellAreaEffect.Ball, out ISpellEffect eff)
                 || GetIfSpellHasSpecificAreaEffect(spell, SpellAreaEffect.Cone, out eff)
@@ -23,22 +23,30 @@ namespace MagusEngine.Core.MapStuff
             return [];
         }
 
-        public static List<Point> SpellAreaHelper(ISpellEffect eff, Point origin, Point targetPoint)
+        public static IEnumerable<Point> SpellAreaHelper(ISpellEffect eff, Point origin, Point targetPoint)
         {
             if (eff.AreaOfEffect == SpellAreaEffect.Ball)
             {
-                // this needs to better respect fov
-                origin.Circl
-                RadiusLocationContext radiusLocation = new(origin, eff.Radius);
-                return Radius.Circle.PositionsInRadius(radiusLocation).ToList();
+                if (eff.IgnoresWall)
+                {
+                    RadiusLocationContext radiusLocation = new(origin, eff.Radius);
+                    return Radius.Circle.PositionsInRadius(radiusLocation);
+                }
+                else
+                {
+                    // move this to another class for ease of use
+                    RecursiveShadowcastingBooleanBasedFOV fov = new(Find.CurrentMap!.TransparencyView);
+                    fov.Calculate(origin, eff.Radius, Distance.Euclidean);
+                    return fov.CurrentFOV;
+                }
             }
             else if (eff.AreaOfEffect == SpellAreaEffect.Cone)
             {
-                return origin.Cone(eff.Radius, targetPoint, eff.ConeCircleSpan).Points.ToList();
+                return origin.Cone(eff.Radius, targetPoint, eff.ConeCircleSpan).Points;
             }
             else if (eff.AreaOfEffect == SpellAreaEffect.Beam)
             {
-                return origin.Beam(targetPoint, eff.Radius).Points.ToList();
+                return origin.Beam(targetPoint, eff.Radius).Points;
             }
             else if (eff.AreaOfEffect == SpellAreaEffect.Level)
             {

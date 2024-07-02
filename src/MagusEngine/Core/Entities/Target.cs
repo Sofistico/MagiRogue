@@ -51,7 +51,8 @@ namespace MagusEngine.Core.Entities
             Cursor = new Actor("Target Cursor",
                 targetColor,
                 Color.AnsiYellow,
-                'X', spawnCoord,
+                'X',
+                spawnCoord,
                 (int)MapLayer.SPECIAL)
             {
                 IsWalkable = true,
@@ -274,6 +275,7 @@ namespace MagusEngine.Core.Entities
             {
                 TravelPath = Cursor.CurrentMagiMap.AStarWithAllWalkable().ShortestPath(OriginCoord, e.NewValue)!;
                 ClearTileDictionary();
+                Cursor.IgnoresWalls = true;
                 return;
             }
             try
@@ -301,6 +303,7 @@ namespace MagusEngine.Core.Entities
                 }
                 if (_selectedSpell is not null)
                 {
+                    Cursor.IgnoresWalls = _selectedSpell.IgnoresWall;
                     foreach (var point in TargetHelper.SpellAreaHelper(_selectedSpell, Position, e.NewValue)!)
                     {
                         AddTileToDictionary(point, _selectedSpell.IgnoresWall);

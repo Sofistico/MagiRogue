@@ -104,10 +104,8 @@ namespace MagusEngine.Core.Entities
             // Check the current map if we can move to this new position
             if (CurrentMagiMap?.IsTileWalkable(Position + deltaPositionChange, IgnoresWalls) == true)
             {
-                bool attacked = CheckIfCanAttack(deltaPositionChange);
-
-                if (attacked)
-                    return attacked;
+                if (CheckIfCanAttack(deltaPositionChange))
+                    return true;
 
                 Position += deltaPositionChange;
 
@@ -115,10 +113,8 @@ namespace MagusEngine.Core.Entities
             }
             else // Handle situations where there are non-walkable tiles that CAN be used
             {
-                bool doorThere = CheckIfThereIsDoor(deltaPositionChange);
-
-                if (doorThere)
-                    return doorThere;
+                if (CheckIfThereIsDoor(deltaPositionChange))
+                    return true;
 
                 // true means that he entered inside a map, and thus the turn moved, a false means
                 // that there wasn't anything there
@@ -175,7 +171,7 @@ namespace MagusEngine.Core.Entities
         private bool CheckIfThereIsDoor(Point positionChange)
         {
             // Check for the presence of a door
-            Tile door = CurrentMagiMap.GetTileAt<DoorComponent>(Position + positionChange);
+            Tile? door = CurrentMagiMap?.GetTileAt<DoorComponent>(Position + positionChange);
 
             // if there's a door here, try to use it
             if (door != null && CanInteract)
