@@ -121,7 +121,7 @@
     "MagicArt": "Projection",
     "Manifestation": "Projectile",
     "Fore": "Red",
-    "Velocity": 10,
+    "Velocity": 20,
     "SpellRange": 7,
     "MagicCost": 5.0,
     "Id": "fire_ball",
