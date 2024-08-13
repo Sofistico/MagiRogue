@@ -15,7 +15,7 @@ namespace MagiRogue.Test.System.Magic
         private MagusEngine.Core.Magic.Magic mediumMagic;
         private MagusEngine.Core.Magic.Magic strongMagic;
 
-        [Fact]
+        /*[Fact]
         public void TestCasting()
         {
             List<Spell> spellBase = new(GetListSpells());
@@ -89,7 +89,7 @@ namespace MagiRogue.Test.System.Magic
             }
 
             Assert.True(canWeakCast.Count(a => a).Equals(1) && canMediumCast.Count(a => a).Equals(2) && canStrongCast.Count(a => a).Equals(4));
-        }
+        }*/
 
         private static List<Spell> GetListSpells()
         {

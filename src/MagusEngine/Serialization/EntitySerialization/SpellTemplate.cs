@@ -106,7 +106,7 @@ namespace MagusEngine.Serialization.EntitySerialization
         }
     }
 
-    /*/// <summary>
+    /// <summary>
     /// This class will deal with the serialization of the spells and it's effects, will use a tag
     /// like CDDA does to determine the effects
     /// </summary>
@@ -190,5 +190,5 @@ namespace MagusEngine.Serialization.EntitySerialization
                 Keywords = spell.Keywords,
             };
         }
-    }*/
+    }
 }

@@ -5,18 +5,29 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": ".NET Core Launch (console)",
+            "name": "MagiRogue",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/MagiRogue/bin/Debug/net8.0/MagiRogue.dll",
+            "program": "${workspaceFolder}/src/MagiRogue/bin/Debug/net8.0/MagiRogue.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/MagiRogue",
+            "cwd": "${workspaceFolder}/src/MagiRogue",
             "console": "internalConsole",
             "stopAtEntry": false
         },
         {
-            "name": ".NET Core Attach",
+            "name": "MagiRogue-TestMap",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/src/MagiRogue/bin/Debug/net8.0/MagiRogue.dll",
+            "args": ["test"],
+            "cwd": "${workspaceFolder}/src/MagiRogue",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": ".NET Attach",
             "type": "coreclr",
             "request": "attach"
         }

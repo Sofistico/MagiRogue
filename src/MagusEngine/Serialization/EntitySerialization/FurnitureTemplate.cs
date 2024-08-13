@@ -6,6 +6,7 @@ using MagusEngine.Core.Magic;
 using MagusEngine.Systems;
 using MagusEngine.Systems.Physics;
 using MagusEngine.Utils;
+using MagusEngine.Utils.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SadRogue.Primitives;
@@ -184,7 +185,7 @@ namespace MagusEngine.Serialization.EntitySerialization
 
         public static implicit operator Furniture(FurnitureTemplate template)
         {
-            if (template.Id == null)
+            if (template.Id == null && template.Name.IsNullOrEmpty())
                 return null;
             if (string.IsNullOrEmpty(template.MaterialId))
             {

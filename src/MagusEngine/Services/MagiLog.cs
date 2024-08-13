@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using MagusEngine.Bus.UiBus;
 
 namespace MagusEngine.Services
 {
@@ -15,8 +16,10 @@ namespace MagusEngine.Services
             {
                 if (errors.Count == 0)
                     return;
-                var path = new StringBuilder(AppDomain.CurrentDomain.BaseDirectory).Append(@"\log.txt").ToString();
-                StringBuilder str = new($"{DateTime.Now:dd/MM/yyyy} ");
+                var path = new StringBuilder(AppDomain.CurrentDomain.BaseDirectory)
+                    .Append(@"\log.txt")
+                    .ToString();
+                StringBuilder str = new($"{DateTime.Now:dd/MM/yyyy HH:mm:ss} ");
                 foreach (var item in errors)
                 {
                     str.AppendLine(item);
@@ -26,10 +29,14 @@ namespace MagusEngine.Services
                 {
                     File.Create(path).Close();
                 }
-
+                while (IsFileLocked(new FileInfo(path)))
+                {
+                }
                 File.AppendAllText(path, str.ToString());
 #if DEBUG
-                //AddMessageLog("Logged an error in the logs file!");
+                Locator
+                    .GetService<MessageBusService>()
+                    .SendMessage(new AddMessageLog("Logged an error in the logs file!"));
 #endif
             });
         }
@@ -37,6 +44,30 @@ namespace MagusEngine.Services
         public void Log(string error)
         {
             Log(new List<string>() { error });
+        }
+
+        private static bool IsFileLocked(FileInfo file)
+        {
+            try
+            {
+                using (
+                    FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None)
+                )
+                {
+                    stream.Close();
+                }
+            }
+            catch (IOException)
+            {
+                //the file is unavailable because it is:
+                //still being written to
+                //or being processed by another thread
+                //or does not exist (has already been processed)
+                return true;
+            }
+
+            //file is not locked
+            return false;
         }
     }
 }

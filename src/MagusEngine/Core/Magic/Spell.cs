@@ -27,7 +27,9 @@ namespace MagusEngine.Core.Magic
     public sealed class Spell : IJsonKey, INamed, ISpell
     {
         private const double _maxSpellProficiency = 3.0;
+        [JsonProperty(PropertyName = "Proficiency")]
         private double _proficency;
+        [JsonIgnore]
         private string _errorMessage = "Can't cast the spell";
         private Lazy<bool> _ignoresWall;
 
@@ -79,6 +81,7 @@ namespace MagusEngine.Core.Magic
         public SpellCostType CostType { get; set; } = SpellCostType.Mana;
         public SpellManifestation Manifestation { get; set; }
 
+        [JsonIgnore]
         /// <summary>
         /// The total proficiency, goes up slowly as you use the spell or train with it in your
         /// downtime, makes it more effective and cost less, goes from 0.0(not learned) to

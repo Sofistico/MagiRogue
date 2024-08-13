@@ -1,4 +1,5 @@
-﻿using MagusEngine.Exceptions;
+﻿using Arquimedes;
+using MagusEngine.Exceptions;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
 
@@ -40,6 +41,8 @@ namespace MagusEngine.Serialization
 
         public static implicit operator MagiColorSerialization(string colorName)
         {
+            if (ColorExtensions2.ColorMappings.Count == 0)
+                MagiPalette.AddToColorDictionary();
             if (!ColorExtensions2.ColorMappings.ContainsKey(colorName.ToLower()))
                 throw new ColorNotFoundException(colorName);
             return new(colorName);

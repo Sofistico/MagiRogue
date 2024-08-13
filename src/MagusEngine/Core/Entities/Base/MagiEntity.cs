@@ -1,5 +1,6 @@
 ﻿using Arquimedes.Interfaces;
 using MagusEngine.ECS;
+using MagusEngine.Services;
 using MagusEngine.Systems.Physics;
 using SadConsole.Entities;
 using SadRogue.Primitives;
@@ -16,7 +17,7 @@ namespace MagusEngine.Core.Entities.Base
         {
             get
             {
-                return string.Format($"{nameof(MagiEntity)} : {Name}");
+                return ToString();
             }
         }
 
@@ -160,7 +161,7 @@ namespace MagusEngine.Core.Entities.Base
 
             foreach (var item in GoRogueComponents)
             {
-                entity.GoRogueComponents.Add(item.Component, item.Tag);
+                entity.AddComponent(item.Component, item.Tag);
             }
 
             return entity;
@@ -219,8 +220,17 @@ namespace MagusEngine.Core.Entities.Base
 
         public void AddComponent<T>(T component, string? tag = null) where T : class
         {
-            GoRogueComponents.Add(component, tag);
-            Locator.GetService<EntityRegistry>()?.AddComponent(ID, component);
+            // if (GoRogueComponents.Contains<T>(tag))
+            //     return;
+            try
+            {
+                GoRogueComponents.Add(component, tag);
+                Locator.GetService<EntityRegistry>()?.AddComponent(ID, component);
+            }
+            catch (System.Exception)
+            {
+                Locator.GetService<MagiLog>().Log($"Component {component} is null for entity {ID}-{this}");
+            }
         }
 
         public T GetComponent<T>() where T : class
@@ -257,6 +267,11 @@ namespace MagusEngine.Core.Entities.Base
         //}
 
         #endregion Components
+
+        public override string ToString()
+        {
+            return string.Format($"{nameof(MagiEntity)} : {Name}");                
+        }
 
         #region Deconstructor
 

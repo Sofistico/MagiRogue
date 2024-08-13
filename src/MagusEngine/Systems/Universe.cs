@@ -442,8 +442,11 @@ namespace MagusEngine.Systems
                 entity.ProcessNeeds();
                 entity.UpdateBody();
 
-                if (sucesses > 0 && totalTicks < -1)
+                if (sucesses >= 0 && totalTicks <= 0)
+                {
                     totalTicks = TimeHelper.Wait;
+                    Locator.GetService<MagiLog>().Log($"The {entity.Name} with id {entityId} has reported no success on AI");
+                }
 
                 EntityTimeNode nextTurnNode = new(entityId, Time.GetTimePassed(totalTicks));
                 Time.RegisterNode(nextTurnNode);

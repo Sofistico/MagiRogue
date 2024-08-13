@@ -1,5 +1,6 @@
 ﻿using Arquimedes.Enumerators;
 using MagusEngine.Core.Magic;
+using MagusEngine.Systems;
 using Newtonsoft.Json;
 using Xunit;
 
@@ -11,16 +12,19 @@ namespace MagiRogue.Test.Data
             "Magic Missile",
             ArtMagic.Projection,
             5,
-            "Mana Shaping",
+           "Mana Shaping",
             magicCost: 1.0)
         {
             Proficiency = 1
         };
 
-        [Fact()]
+        [Fact]
         public void SpellTemplateSerializationTest()
         {
-            string spellSerialized = JsonConvert.SerializeObject(missile, Formatting.Indented);
+            var spell = DataManager.QuerySpellInData("magic_missile");
+
+
+            string spellSerialized = JsonConvert.SerializeObject(spell, Formatting.Indented);
             Spell spellDeserialized = JsonConvert.DeserializeObject<Spell>(spellSerialized);
             Assert.Equal(spellDeserialized.Id, missile.Id);
         }

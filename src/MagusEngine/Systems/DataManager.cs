@@ -136,7 +136,7 @@ namespace MagusEngine.Systems
         public static Furniture? QueryFurnitureInData(string furnitureId)
         {
             if (ListOfFurnitures.TryGetValue(furnitureId, out var fur))
-                return fur;
+                return fur.Copy();
             return null;
         }
 

@@ -608,9 +608,8 @@ namespace MagusEngine.Core.MapStuff
                     }
                     r.Terrain.TryGetValue(c.ToString(), out var ter);
                     TryToPutTerrain(pos, ter);
-                    if (r.Furniture is not null)
+                    if (r?.Furniture?.TryGetValue(c.ToString(), out var fur) == true)
                     {
-                        r.Furniture.TryGetValue(c.ToString(), out var fur);
                         TryToPutFurniture(pos, fur);
                     }
                 }
