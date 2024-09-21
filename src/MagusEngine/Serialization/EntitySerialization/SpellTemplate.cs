@@ -20,7 +20,7 @@ namespace MagusEngine.Serialization.EntitySerialization
 
             foreach (JToken token in listEffectsJson)
             {
-                EffectType effect = StringToEnumEffectType((string)token["EffectType"]!);
+                EffectType effect = Enum.Parse<EffectType>((string)token["EffectType"]!);
                 var eff = EnumToEffect(effect, token);
                 if (eff is null)
                     continue;
@@ -68,17 +68,7 @@ namespace MagusEngine.Serialization.EntitySerialization
         {
             //serializer.Formatting = Formatting.Indented;
             serializer.NullValueHandling = NullValueHandling.Ignore;
-            serializer.Serialize(writer, value!);
-        }
-
-        /// <summary>
-        /// This is used to convert a string to an enum of <see cref="EffectType">EffectType</see>
-        /// </summary>
-        /// <param name="st"></param>
-        /// <returns></returns>
-        private static EffectType StringToEnumEffectType(string st)
-        {
-            return Enum.Parse<EffectType>(st);
+            serializer.Serialize(writer, (SpellTemplate)value!); // Need to have this conversion, the pure value throws a self reference loop exception
         }
 
         /// <summary>
@@ -138,7 +128,6 @@ namespace MagusEngine.Serialization.EntitySerialization
         public char[] Glyphs { get; set; } = ['*'];
         public List<IMagicStep> Steps { get; set; }
         public int Velocity { get; set; } // is in ticks
-        public bool AffectsTile { get; set; }
 
         public SpellTemplate()
         {
@@ -178,6 +167,9 @@ namespace MagusEngine.Serialization.EntitySerialization
                 Manifestation = spellTemplate.Manifestation,
                 Steps = spellTemplate.Steps,
                 Velocity = spellTemplate.Velocity,
+                MagicArt = spellTemplate.MagicArt,
+                MagicCost = spellTemplate.MagicCost,
+                ShapingAbility = spellTemplate.ShapingAbility,
             };
         }
 
@@ -188,6 +180,14 @@ namespace MagusEngine.Serialization.EntitySerialization
             {
                 Proficiency = spell.Proficiency,
                 Keywords = spell.Keywords,
+                ShapingAbility = spell.ShapingAbility,
+                Manifestation = spell.Manifestation,
+                Steps = spell.Steps,
+                Velocity = spell.Velocity,
+                CostType = spell.CostType,
+                Fore = spell.Fore,
+                Back = spell.Back,
+                Glyphs = spell.Glyphs,
             };
         }
     }

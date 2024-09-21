@@ -31,6 +31,7 @@ namespace MagusEngine.Core.Magic
         private double _proficency;
         [JsonIgnore]
         private string _errorMessage = "Can't cast the spell";
+        [JsonIgnore]
         private Lazy<bool> _ignoresWall;
 
         /// <summary>
@@ -130,6 +131,7 @@ namespace MagusEngine.Core.Magic
         /// <summary>
         /// Empty constructor, a waste of space
         /// </summary>
+        [JsonConstructor]
         public Spell()
         {
         }
@@ -340,15 +342,15 @@ namespace MagusEngine.Core.Magic
                 .AppendLine(MagicArt.ToString()).ToString();
         }
 
-        public override int GetHashCode()
-        {
-            return Id.GetHashCode();
-        }
-
-        public override bool Equals(object? obj)
-        {
-            return GetHashCode() == obj?.GetHashCode();
-        }
+        // public override int GetHashCode()
+        // {
+        //     return Id.GetHashCode();
+        // }
+        //
+        // public override bool Equals(object? obj)
+        // {
+        //     return GetHashCode() == obj?.GetHashCode();
+        // }
 
         public SpellEntity GetSpellEntity(MagiEntity caster, Direction dir, Point pos)
         {
