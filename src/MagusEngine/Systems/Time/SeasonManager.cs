@@ -1,5 +1,5 @@
-﻿using Arquimedes.Enumerators;
-using System;
+﻿using System;
+using Arquimedes.Enumerators;
 
 namespace MagusEngine.Systems.Time
 {
@@ -23,8 +23,10 @@ namespace MagusEngine.Systems.Time
         {
             if (monthOfYear <= 0 || monthOfYear > 12)
             {
-                throw new Exception("An error occurred when " +
-                    $"trying to determine the current season! Month of year {monthOfYear}");
+                throw new Exception(
+                    "An error occurred when "
+                        + $"trying to determine the current season! Month of year {monthOfYear}"
+                );
             }
 
             if (monthOfYear <= 3)
@@ -33,10 +35,9 @@ namespace MagusEngine.Systems.Time
                 return SeasonType.Summer;
             else if (monthOfYear > 6 && monthOfYear <= 9)
                 return SeasonType.Autumn;
-            else if (monthOfYear > 9 && monthOfYear <= 12)
-                return SeasonType.Winter;
             else
-                throw new Exception("An error occured in the if else statement to determine current season");
+                return SeasonType.Winter;
         }
     }
 }
+

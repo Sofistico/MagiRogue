@@ -34,13 +34,17 @@ namespace MagusEngine.Core.WorldStuff.History.HistoryActions
             if (!civId.HasValue)
                 return false;
             Civilization currentCiv = Find.Civs.Find(i => i.Id == civId);
-            if (currentCiv?.Sites.Count > 1 || changedCiv)
+            if (currentCiv == null)
+                return false;
+            if (currentCiv?.Sites?.Count > 1 || changedCiv)
             {
-                var siteId = figure.GetCurrentStayingSiteId(currentCiv.Sites);
-                var result = siteId.HasValue ? currentCiv.Sites
+                var siteId = figure.GetCurrentStayingSiteId(currentCiv?.Sites);
+                var result = siteId.HasValue ? currentCiv?.Sites
                     .Where(i => i.Id != siteId.Value)
                     .ToList()
-                    .GetRandomItemFromList() : currentCiv.Sites.GetRandomItemFromList();
+                    .GetRandomItemFromList() : currentCiv?.Sites?.GetRandomItemFromList();
+                if(result == null)
+                    return false;
                 Find.ChangeFigureLivingSite(figure, result);
                 Find.ChangeFigureFamilyLivingSite(figure, changedCiv, result);
                 return true;

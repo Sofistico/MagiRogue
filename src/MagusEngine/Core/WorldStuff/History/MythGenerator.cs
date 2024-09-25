@@ -122,7 +122,6 @@ namespace MagusEngine.Core.WorldStuff.History
                 if (currentIteration >= nmbrOfIterations)
                 {
                     processingMyths = false;
-                    stack.Clear();
                 }
 
                 foreach (HistoricalFigure figure in figures)

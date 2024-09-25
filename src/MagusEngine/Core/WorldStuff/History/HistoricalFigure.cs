@@ -732,7 +732,7 @@ namespace MagusEngine.Core.WorldStuff.History
             if (family?.Length == 0)
                 return null;
             var child = family?.GetRandomItemFromList();
-            return child.Figure;
+            return child?.Figure;
         }
 
         public bool HasPotentialToBeAWizard()

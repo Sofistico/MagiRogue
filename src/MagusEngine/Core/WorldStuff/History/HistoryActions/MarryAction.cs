@@ -1,13 +1,9 @@
 ﻿using MagusEngine.Systems;
-using MagusEngine.Core;
 using MagusEngine.Utils.Extensions;
 using MagusEngine.Core.Civ;
-using MagusEngine.Core.WorldStuff.History;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace MagusEngine.Core.WorldStuff.History.HistoryActions
 {
@@ -22,8 +18,10 @@ namespace MagusEngine.Core.WorldStuff.History.HistoryActions
             return RomanceSomeoneInsideSameSite(figure);
         }
 
-        private static bool RomanceSomeoneInsideSameSite(HistoricalFigure figure)
+        private static bool RomanceSomeoneInsideSameSite(HistoricalFigure? figure)
         {
+            if (figure is null)
+                return false;
             Site site = Find.GetFigureStayingSiteIfAny(figure);
             int year = Find.Year;
             if (site is not null

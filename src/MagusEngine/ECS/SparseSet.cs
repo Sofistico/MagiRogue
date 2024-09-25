@@ -60,6 +60,6 @@ namespace MagusEngine.ECS
 
         public override bool Equals(object? obj) => throw new Exception("Why are you comparing SparseSets?");
 
-        public override int GetHashCode() => System.HashCode.Combine(size, dense, sparse, Count);
+        // public override int GetHashCode() => System.HashCode.Combine(size, dense, sparse, Count);
     }
 }
