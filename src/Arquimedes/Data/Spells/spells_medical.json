@@ -1,0 +1,22 @@
+﻿[
+  {
+    "SpellLevel": 3,
+    "ShapingAbility": "Mana Shaping",
+    "Effects": [
+      {
+        "AreaOfEffect": "Target",
+        "BaseDamage": 2,
+        "Radius": 0,
+        "EffectType": "DAMAGE",
+        "IsHealing": true
+      }
+    ],
+    "Name": "Minor Cure",
+    "Description": "The caster focus mana on his fingertips and cure some scratches from the target.\r\nThe first thing any aspiring mage healer learns, the spell is notouriosly difficult to get right.",
+    "MagicArt": "BloodMagic",
+    "SpellRange": 1,
+    "MagicCost": 3.5,
+    "Id": "minor_cure",
+    "Context": [ "Healing" ]
+  }
+]

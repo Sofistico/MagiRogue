@@ -1,0 +1,158 @@
+﻿[
+  {
+    "Id": "deer",
+    "RaceName": "Deer",
+    "NamePlural": "Deers",
+    "Adjective": "deer",
+    "Description": "A medium-sized hoofed forest creature that grows its antlers back each year.",
+    "RaceGlyph": "D",
+    "RaceForeground": "Brown",
+    "RaceBackground": "Black",
+    "ChildVolume": 14000,
+    "MidVolume": 70000,
+    "MaxVolume": 140000,
+    "LifespanMax": 30,
+    "LifespanMin": 20,
+    "ChildAge": 0,
+    "ChildName": "Deer Fawn",
+    "AdulthoodAge": 1,
+    "RaceViewRadius": 15,
+    "BaseStrenght": 10,
+    "BaseToughness": 8,
+    "BaseEndurance": 13,
+    "BaseInt": 5,
+    "BaseWillPower": 8,
+    "BasePrecision": 0,
+    "GeneralSpeed": 2.0,
+    "BaseManaRegen": 0.05,
+    "BaseMagicResistance": 1,
+    "RaceNormalLimbRegen": 0.6,
+    "BleedRegenaration": 0.6,
+    "BodyPlan": [ "quadruped_hoof", "animal_tail", "humanoid_organs", "generic_teeth" ],
+    "Tissues": [
+      "standard_tissues",
+      "standard_tissues_layering"
+    ],
+    "HeightModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
+    "BroadnessModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
+    "LenghtModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
+    "Genders": [ "Male", "Female" ],
+    "CreatureClass": [ "Mammal", "General" ],
+    "Flags": [ "Animal", "Diurnal", "Wild", "Pet", "Grazer" ],
+    "Select": [
+      {
+        "Selector": [ { "Genders": "Male" } ],
+        "Change": "BodyPlan",
+        "To": [ "2head_horns" ],
+        "Context": "Add"
+      },
+      {
+        "Selector": [ { "Genders": "Male" } ],
+        "Change": "Attacks",
+        "To": [
+          {
+            "LimbFunction": "Horn",
+            "Main": true,
+            "AttacksUsesLimbName": false,
+            "Name": "Gore",
+            "AttackVerb": [ "gore", "gores" ],
+            "AttackAbility": "Bite",
+            "PrepareVelocity": 3,
+            "RecoverVelocity": 3,
+            "DamageTypeId": "pierce",
+            "ContactArea": 100,
+            "PenetrationPercentage": 1.5
+          }
+        ]
+      },
+      {
+        "Selector": [ { "LimbType": "Horn" } ],
+        "Change": "LastBodyPartName",
+        "To": [ "{0} Antler" ]
+      }
+    ],
+    "Attacks": [
+      {
+        "LimbFunction": "Teeth",
+        "Main": true,
+        "AttacksUsesLimbName": false,
+        "Name": "Bite",
+        "AttackVerb": [ "bite", "bites" ],
+        "AttackAbility": "Bite",
+        "PrepareVelocity": 3,
+        "RecoverVelocity": 3,
+        "DamageTypeId": "pierce",
+        "ContactArea": 100,
+        "PenetrationPercentage": 1
+      },
+      {
+        "LimbFunction": "Stance",
+        "Main": false,
+        "AttacksUsesLimbName": true,
+        "Name": "Kick",
+        "AttackVerb": [ "kick", "kicks" ],
+        "AttackAbility": "Unarmed",
+        "PrepareVelocity": 4,
+        "RecoverVelocity": 4,
+        "DamageTypeId": "blunt",
+        "ContactArea": 100
+      }
+    ]
+  },
+  {
+    "Id": "wolf",
+    "RaceName": "Wolf",
+    "NamePlural": "Wolves",
+    "Adjective": "cunning",
+    "Description": "A large canine found in temperate regions. It is territorial and hunts in packs.",
+    "RaceGlyph": "w",
+    "RaceForeground": "Gray",
+    "RaceBackground": "Black",
+    "ChildVolume": 4000,
+    "MidVolume": 20000,
+    "MaxVolume": 40000,
+    "LifespanMax": 20,
+    "LifespanMin": 10,
+    "ChildAge": 0,
+    "ChildName": "Puppy",
+    "AdulthoodAge": 1,
+    "RaceViewRadius": 15,
+    "BaseStrenght": 8,
+    "BaseToughness": 9,
+    "BaseEndurance": 12,
+    "BaseInt": 7,
+    "BaseWillPower": 12,
+    "BasePrecision": 2,
+    "GeneralSpeed": 1.8,
+    "BaseManaRegen": 0.10,
+    "BaseMagicResistance": 4,
+    "RaceNormalLimbRegen": 0.7,
+    "BleedRegenaration": 0.7,
+    "BodyPlan": [ "quadruped_limbs", "animal_tail", "humanoid_organs", "4toes", "generic_teeth" ],
+    "Tissues": [
+      "standard_tissues",
+      "standard_tissues_layering"
+    ],
+    "HeightModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
+    "BroadnessModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
+    "LenghtModifier": [ 75, 95, 98, 100, 102, 105, 125 ],
+    "Genders": [ "Male", "Female" ],
+    "CreatureClass": [ "Mammal", "General" ],
+    "Flags": [ "Diurnal", "Wild", "Pet", "Predator", "PackAnimal" ],
+    "Attacks": [
+      {
+        "LimbFunction": "Teeth",
+        "Main": true,
+        "AttacksUsesLimbName": false,
+        "Name": "Bite",
+        "AttackVerb": [ "bite", "bites" ],
+        "AttackAbility": "Bite",
+        "PrepareVelocity": 3,
+        "RecoverVelocity": 3,
+        "DamageTypeId": "pierce",
+        "ContactArea": 100,
+        "PenetrationPercentage": 1
+      }
+    ]
+  }
+]

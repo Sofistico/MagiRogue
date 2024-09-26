@@ -1,0 +1,10 @@
+﻿[
+  {
+    "Id": "grass",
+    "Name": "Grass",
+    "Fores": [ "GrassColor", "DarkGrassColor" ],
+    "MaterialId": "grass",
+    "MaxBundle": 4,
+    "Glyphs": [ ".", ";", ",", "'", ":", "`" ]
+  }
+]

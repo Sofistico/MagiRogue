@@ -1,0 +1,14 @@
+﻿[
+  {
+    "Id": "short_sword",
+    "Name": "Sword",
+    "Description": "This is a short sword",
+    "Glyph": "/",
+    "Length": 60,
+    "Broadness": 5,
+    "Height": 3,
+    "ItemType": "Weapon",
+    "WeaponType": "Sword",
+    "MaterialType": "Metal"
+  }
+]

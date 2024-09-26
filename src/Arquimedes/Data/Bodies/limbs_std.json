@@ -1,0 +1,343 @@
+﻿[
+  {
+    "Id": "upper_body",
+    "LimbType": "UpperBody",
+    "RelativeVolume": 0.18,
+    "BodyPartName": "Upper Body",
+    "Orientation": "Center",
+    "BodyPartFunction": "Root"
+  },
+  {
+    "Id": "lower_body",
+    "LimbType": "LowerBody",
+    "RelativeVolume": 0.18,
+    "BodyPartName": "Lower Body",
+    "Orientation": "Center",
+    "BodyPartFunction": "Vital",
+    "ConnectedTo": "upper_body"
+  },
+  {
+    "Id": "neck",
+    "LimbType": "Neck",
+    "RelativeVolume": 0.018,
+    "BodyPartName": "Neck",
+    "Orientation": "Center",
+    "BodyPartFunction": "Vital",
+    "ConnectedTo": "upper_body"
+  },
+  {
+    "Id": "head",
+    "LimbType": "Head",
+    "RelativeVolume": 0.054,
+    "BodyPartName": "Head",
+    "Orientation": "Center",
+    "BodyPartFunction": "Thought",
+    "ConnectedTo": "neck"
+  },
+  {
+    "Id": "l_arm",
+    "LimbType": "Arm",
+    "RelativeVolume": 0.072,
+    "BodyPartName": "Left Arm",
+    "Orientation": "Left",
+    "BodyPartFunction": "Limb",
+    "ConnectedTo": "upper_body"
+  },
+  {
+    "Id": "r_arm",
+    "LimbType": "Arm",
+    "RelativeVolume": 0.072,
+    "BodyPartName": "Right Arm",
+    "Orientation": "Right",
+    "BodyPartFunction": "Limb",
+    "ConnectedTo": "upper_body"
+  },
+  {
+    "Id": "r_leg",
+    "LimbType": "Leg",
+    "RelativeVolume": 0.163,
+    "BodyPartName": "Right Leg",
+    "Orientation": "Right",
+    "BodyPartFunction": "Limb",
+    "ConnectedTo": "lower_body"
+  },
+  {
+    "Id": "l_leg",
+    "LimbType": "Leg",
+    "RelativeVolume": 0.163,
+    "BodyPartName": "Left Leg",
+    "Orientation": "Left",
+    "BodyPartFunction": "Limb",
+    "ConnectedTo": "lower_body"
+  },
+  {
+    "Id": "l_hand",
+    "LimbType": "Hand",
+    "RelativeVolume": 0.014,
+    "BodyPartName": "Left Hand",
+    "Orientation": "Left",
+    "BodyPartFunction": "Grasp",
+    "ConnectedTo": "l_arm"
+  },
+  {
+    "Id": "r_hand",
+    "LimbType": "Hand",
+    "RelativeVolume": 0.014,
+    "BodyPartName": "Right Hand",
+    "Orientation": "Right",
+    "BodyPartFunction": "Grasp",
+    "ConnectedTo": "r_arm"
+  },
+  {
+    "Id": "r_foot",
+    "LimbType": "Foot",
+    "RelativeVolume": 0.022,
+    "BodyPartName": "Right Foot",
+    "Orientation": "Right",
+    "BodyPartFunction": "Stance",
+    "ConnectedTo": "r_leg"
+  },
+  {
+    "Id": "l_foot",
+    "LimbType": "Foot",
+    "RelativeVolume": 0.022,
+    "BodyPartName": "Left Foot",
+    "Orientation": "Left",
+    "BodyPartFunction": "Stance",
+    "ConnectedTo": "l_leg"
+  },
+  {
+    "Id": "finger1",
+    "LimbType": "Finger",
+    "RelativeVolume": 0.015,
+    "BodyPartName": "{0} Thumb",
+    "Orientation": "Tbd",
+    "BodyPartFunction": "Digit",
+    "ConnectedTo": "{0}"
+  },
+  {
+    "Id": "finger2",
+    "LimbType": "Finger",
+    "RelativeVolume": 0.021,
+    "BodyPartName": "{0} First Finger",
+    "Orientation": "Tbd",
+    "BodyPartFunction": "Digit",
+    "ConnectedTo": "{0}"
+  },
+  {
+    "Id": "finger3",
+    "LimbType": "Finger",
+    "RelativeVolume": 0.023,
+    "BodyPartName": "{0} Second Finger",
+    "Orientation": "Tbd",
+    "BodyPartFunction": "Digit",
+    "ConnectedTo": "{0}"
+  },
+  {
+    "Id": "finger4",
+    "LimbType": "Finger",
+    "RelativeVolume": 0.021,
+    "BodyPartName": "{0} Third Finger",
+    "Orientation": "Tbd",
+    "BodyPartFunction": "Digit",
+    "ConnectedTo": "{0}"
+  },
+  {
+    "Id": "finger5",
+    "LimbType": "Finger",
+    "RelativeVolume": 0.012,
+    "BodyPartName": "{0} Fourth Finger",
+    "Orientation": "Tbd",
+    "BodyPartFunction": "Digit",
+    "ConnectedTo": "{0}"
+  },
+  {
+    "Id": "toe1",
+    "LimbType": "Toe",
+    "RelativeVolume": 0.017,
+    "BodyPartName": "{0} First Thumb",
+    "Orientation": "Tbd",
+    "BodyPartFunction": "Digit",
+    "ConnectedTo": "{0}"
+  },
+  {
+    "Id": "toe2",
+    "LimbType": "Toe",
+    "RelativeVolume": 0.011,
+    "BodyPartName": "{0} Second Toe",
+    "Orientation": "Tbd",
+    "BodyPartFunction": "Digit",
+    "ConnectedTo": "{0}"
+  },
+  {
+    "Id": "toe3",
+    "LimbType": "Toe",
+    "RelativeVolume": 0.011,
+    "BodyPartName": "{0} Third Toe",
+    "Orientation": "Tbd",
+    "BodyPartFunction": "Digit",
+    "ConnectedTo": "{0}"
+  },
+  {
+    "Id": "toe4",
+    "LimbType": "Toe",
+    "RelativeVolume": 0.011,
+    "BodyPartName": "{0} Fourth Toe",
+    "Orientation": "Tbd",
+    "BodyPartFunction": "Digit",
+    "ConnectedTo": "{0}"
+  },
+  {
+    "Id": "toe5",
+    "LimbType": "Toe",
+    "RelativeVolume": 0.008,
+    "BodyPartName": "{0} Fifth Toe",
+    "Orientation": "Tbd",
+    "BodyPartFunction": "Digit",
+    "ConnectedTo": "{0}"
+  },
+  {
+    "Id": "right_f_leg",
+    "LimbType": "Leg",
+    "RelativeVolume": 0.072,
+    "BodyPartName": "Right Front Leg",
+    "Orientation": "Right",
+    "BodyPartFunction": "Limb",
+    "ConnectedTo": "upper_body"
+  },
+  {
+    "Id": "right_r_leg",
+    "LimbType": "Leg",
+    "RelativeVolume": 0.072,
+    "BodyPartName": "Right Rear Leg",
+    "Orientation": "Right",
+    "BodyPartFunction": "Limb",
+    "ConnectedTo": "lower_body"
+  },
+  {
+    "Id": "left_f_leg",
+    "LimbType": "Leg",
+    "RelativeVolume": 0.072,
+    "BodyPartName": "Left Front Leg",
+    "Orientation": "Left",
+    "BodyPartFunction": "Limb",
+    "ConnectedTo": "upper_body"
+  },
+  {
+    "Id": "left_r_leg",
+    "LimbType": "Leg",
+    "RelativeVolume": 0.072,
+    "BodyPartName": "Left Rear Leg",
+    "Orientation": "Left",
+    "BodyPartFunction": "Limb",
+    "ConnectedTo": "lower_body"
+  },
+  {
+    "Id": "right_f_paw",
+    "LimbType": "Foot",
+    "RelativeVolume": 0.022,
+    "BodyPartName": "Right Front Paw",
+    "Orientation": "Right",
+    "BodyPartFunction": "Stance",
+    "ConnectedTo": "right_f_leg"
+  },
+  {
+    "Id": "right_r_paw",
+    "LimbType": "Foot",
+    "RelativeVolume": 0.022,
+    "BodyPartName": "Right Rear Paw",
+    "Orientation": "Right",
+    "BodyPartFunction": "Stance",
+    "ConnectedTo": "right_r_leg"
+  },
+  {
+    "Id": "left_f_paw",
+    "LimbType": "Foot",
+    "RelativeVolume": 0.022,
+    "BodyPartName": "Left Front Paw",
+    "Orientation": "Left",
+    "BodyPartFunction": "Stance",
+    "ConnectedTo": "left_f_leg"
+  },
+  {
+    "Id": "left_r_paw",
+    "LimbType": "Foot",
+    "RelativeVolume": 0.022,
+    "BodyPartName": "Left Rear Paw",
+    "Orientation": "Left",
+    "BodyPartFunction": "Stance",
+    "ConnectedTo": "left_r_leg"
+  },
+  {
+    "Id": "right_f_hoof",
+    "LimbType": "Hoof",
+    "RelativeVolume": 0.022,
+    "BodyPartName": "Right Front Hoof",
+    "Orientation": "Right",
+    "BodyPartFunction": "Stance",
+    "ConnectedTo": "right_f_leg"
+  },
+  {
+    "Id": "right_r_hoof",
+    "LimbType": "Hoof",
+    "RelativeVolume": 0.022,
+    "BodyPartName": "Right Rear Hoof",
+    "Orientation": "Right",
+    "BodyPartFunction": "Stance",
+    "ConnectedTo": "right_r_leg"
+  },
+  {
+    "Id": "left_f_hoof",
+    "LimbType": "Hoof",
+    "RelativeVolume": 0.022,
+    "BodyPartName": "Left Front Hoof",
+    "Orientation": "Left",
+    "BodyPartFunction": "Stance",
+    "ConnectedTo": "left_f_leg"
+  },
+  {
+    "Id": "left_r_hoof",
+    "LimbType": "Hoof",
+    "RelativeVolume": 0.022,
+    "BodyPartName": "Left Rear Hoof",
+    "Orientation": "Left",
+    "BodyPartFunction": "Stance",
+    "ConnectedTo": "left_r_leg"
+  },
+  {
+    "Id": "animal_tail",
+    "LimbType": "Tail",
+    "RelativeVolume": 0.065,
+    "BodyPartName": "Tail",
+    "Orientation": "Center",
+    "BodyPartFunction": "Limb",
+    "ConnectedTo": "lower_body"
+  },
+  {
+    "Id": "horn_left",
+    "LimbType": "Horn",
+    "RelativeVolume": 0.065,
+    "BodyPartName": "Left Horn",
+    "Orientation": "Left",
+    "BodyPartFunction": "Horn",
+    "ConnectedTo": "head"
+  },
+  {
+    "Id": "horn_right",
+    "LimbType": "Horn",
+    "RelativeVolume": 0.065,
+    "BodyPartName": "Right Horn",
+    "Orientation": "Left",
+    "BodyPartFunction": "Horn",
+    "ConnectedTo": "head"
+  },
+  {
+    "Id": "horn_center",
+    "LimbType": "Horn",
+    "RelativeVolume": 0.065,
+    "BodyPartName": "Horn",
+    "Orientation": "Center",
+    "BodyPartFunction": "Horn",
+    "ConnectedTo": "head"
+  }
+]

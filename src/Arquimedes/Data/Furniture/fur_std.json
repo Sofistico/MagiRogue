@@ -1,0 +1,62 @@
+﻿[
+  {
+    "Id": "wood_chair",
+    "MaterialId": "wood",
+    "Name": "Wood Chair",
+    "Description": "This is a chair. \nYou can sit on it. \nIt looks pretty confortable.",
+    "Glyph": "π",
+    "Weight": 45,
+    "Size": 45,
+    "Durability": 2,
+    "FurnitureType": "Chair",
+    "UseActions": [ "Sit" ],
+    "Traits": [ "Confortable" ]
+  },
+  {
+    "Id": "wood_table",
+    "MaterialId": "wood",
+    "Name": "Wood Table",
+    "Description": "This is a table, you can eat food on it or study, the choice is yours.",
+    "Glyph": "╤",
+    "Weight": 50,
+    "Size": 65,
+    "FurnitureType": "Table",
+    "UseActions": [ "Study" ],
+    "Traits": [ "Confortable", "Research", "HoldItems" ]
+  },
+  {
+    "Id": "wood_chest",
+    "MaterialId": "wood",
+    "Name": "Wood Chest",
+    "Description": "Here is a good chest, can hold items for you.",
+    "Glyph": "Æ",
+    "Weight": 25,
+    "Size": 40,
+    "FurnitureType": "General",
+    "Traits": [ "Storage" ],
+    "UseAction": [ "Store" ]
+  },
+  {
+    "Id": "wood_throne",
+    "MaterialId": "wood",
+    "Name": "Wood Throne",
+    "Description": "Here is a good Throne, to sit like a king.",
+    "Glyph": "╥",
+    "Weight": 37,
+    "Size": 170,
+    "FurnitureType": "General",
+    "Traits": [ "Regal", "WorkItem", "Inspirational" ]
+  },
+  {
+    "Id": "wood_bed",
+    "MaterialId": "wood",
+    "Name": "Wood Bed",
+    "Description": "Here is a good bed, to rest like a dirt poor peasant who can't afford better than wood.",
+    "Glyph": "8",
+    "Weight": 55,
+    "Size": 175,
+    "FurnitureType": "General",
+    "Traits": [ "SuperConfortable" ],
+    "UseAction": [ "Rest" ]
+  }
+]

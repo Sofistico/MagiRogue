@@ -1,0 +1,174 @@
+[
+  {
+    "Id": "magic_missile",
+    "ShapingAbility": "Mana Shaping",
+    "Name": "Magic Missile",
+    "Description": "Magic missile, the first real combat magic any prospecting wizard will learn, it's many use will carry you for a long time.\r\nIt's said that the greatest of training in this magic permits one to shape it as a piercer or as a cutter, make it invisible or add a homing function to it.",
+    "SpellLevel": 1,
+    "MagicCost": 1.0,
+    "MagicArt": "Projection",
+    "SpellRange": 5,
+    "Effects": [
+      {
+        "AreaOfEffect": "Target",
+        "SpellDamageTypeId": "blunt",
+        "BaseDamage": 2,
+        "EffectType": "DAMAGE",
+        "VelocityAttackMultiplier": 1,
+        "Volume": 150,
+        "CanMiss": true
+      }
+    ],
+    "Glyphs": [ "←", "↑", "→", "↓" ],
+    "Manifestation": "Projectile",
+    "Velocity": 5,
+    "Context": [ "Offensive" ]
+  },
+  {
+    "Id": "push",
+    "ShapingAbility": "Mana Shaping",
+    "Name": "Push",
+    "Description": "A simple spell, shapes mana to fling a concussive force that damages and throws away enemies and objects",
+    "SpellLevel": 1,
+    "MagicCost": 1.5,
+    "MagicArt": "Projection",
+    "SpellRange": 3,
+    "Effects": [
+      {
+        "AreaOfEffect": "Target",
+        "SpellDamageTypeId": "blunt",
+        "BaseDamage": 3000,
+        "EffectType": "KNOCKBACK",
+        "CanMiss": true,
+        "EffectMessage": "You push away {0}!|{0} pushes {1} away!"
+      }
+    ],
+    "Context": [ "Offensive", "Distance" ]
+  },
+  {
+    "/": "In the future should have here an effect to represent the increasing of temperature!",
+    "SpellLevel": 2,
+    "ShapingAbility": "Mana Shaping",
+    "Effects": [
+      {
+        "AreaOfEffect": "Target",
+        "SpellDamageTypeId": "fire",
+        "BaseDamage": 3,
+        "Radius": 0,
+        "Volume": 150,
+        "EffectType": "DAMAGE",
+        "CanMiss": true
+      }
+    ],
+    "Name": "Fire Ray",
+    "Description": "A ray of fire leaves your finger and strikes the opponent!",
+    "MagicArt": "Projection",
+    //"Manifestation": "Instant",
+    "SpellRange": 5,
+    "MagicCost": 2.5,
+    "Id": "fire_ray",
+    "Context": [ "Offensive" ]
+  },
+  {
+    "/": "In the future should have here an effect to represent the increasing of temperature!",
+    "SpellLevel": 3,
+    "ShapingAbility": "Mana Shaping",
+    "Effects": [
+      {
+        "AreaOfEffect": "Beam",
+        "SpellDamageTypeId": "lightning",
+        "BaseDamage": 6,
+        "Radius": 0,
+        "TargetsTile": true,
+        "EffectType": "DAMAGE",
+        "Volume": 150,
+        "PenetrationPercentage": 0.5,
+        "VelocityAttackMultiplier": 3,
+        "IsResistable": true
+      },
+      {
+        "/": "Add the code for this in the future!",
+        "AreaOfEffect": "Struck",
+        "EffectType": "DEBUFF",
+        "CauseEffect": [ "Nausea", "Paralyzed" ],
+        "EffectMessage": "{0} locks up!"
+      }
+    ],
+    "Name": "Bolt of Lightning",
+    "Description": "A bolt of lightning leaves your finger to strike your opponent on a line",
+    "MagicArt": "Projection",
+    "SpellRange": 6,
+    "MagicCost": 5.5,
+    "Id": "lightning_bolt",
+    "Context": [ "Offensive", "Debuff" ]
+  },
+  {
+    "/": "In the future should have here an effect to represent the increasing of temperature!",
+    "SpellLevel": 3,
+    "ShapingAbility": "Mana Shaping",
+    "Effects": [
+      {
+        "AreaOfEffect": "Ball",
+        "SpellDamageTypeId": "fire",
+        "BaseDamage": 6,
+        "Radius": 3,
+        "Volume": 500,
+        "EffectType": "DAMAGE"
+      }
+    ],
+    "Name": "Fire Ball",
+    "Description": "A fireball is projected from your hand towards your opponent!",
+    "MagicArt": "Projection",
+    "Manifestation": "Projectile",
+    "Fore": "Red",
+    "Velocity": 20,
+    "SpellRange": 7,
+    "MagicCost": 5.0,
+    "Id": "fire_ball",
+    "Context": [ "Offensive" ]
+  },
+  {
+    "SpellLevel": 4,
+    "ShapingAbility": "Mana Shaping",
+    "Effects": [
+      {
+        "AreaOfEffect": "Target",
+        "SpellDamageTypeId": "sharp",
+        "Radius": 1,
+        "EffectType": "SEVER",
+        "BaseDamage": 5
+      }
+    ],
+    "Name": "Sever Whip",
+    "Description": "You project a severing force towards your opponent, to sever it's limb!'",
+    "MagicArt": "Projection",
+    "SpellRange": 5,
+    "MagicCost": 3.0,
+    "Id": "sever_whip",
+    "Context": [ "Offensive" ]
+  },
+  {
+    "/": "In the future should have here an effect to represent the lowering of temperature!",
+    "SpellLevel": 5,
+    "ShapingAbility": "Mana Shaping",
+    "Effects": [
+      {
+        "AreaOfEffect": "Cone",
+        "SpellDamageTypeId": "cold",
+        "BaseDamage": 5,
+        "Radius": 10,
+        "Volume": 1000,
+        "ConeCircleSpan": 95,
+        "TargetsTile": true,
+        "EffectType": "DAMAGE"
+      }
+    ],
+    "Name": "Cone of Cold",
+    "Description": "A cone of cold busts forth from your hands!",
+    "MagicArt": "Projection",
+    "SpellRange": 1,
+    "MagicCost": 8.0,
+    "Id": "cone_cold",
+    "Context": [ "Offensive" ]
+  }
+]

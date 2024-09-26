@@ -1,0 +1,55 @@
+﻿[
+  {
+    "Id": "new_wiz",
+    "ScenarioName": "New Wizard",
+    "Description": "You have recently completed your own apprenticeship under your master, finally you can be free to pursue your own magical interest!",
+    "AgeGroup": "Adult",
+    "Strenght": -3,
+    "Endurance": 2,
+    "Toughness": -1,
+    "Inteligence": 3,
+    "Precision": 1,
+    "WillPower": 0,
+    "MaxMana": 2,
+    "MaxStamina": -200,
+    "StaminaRegen": 0.0,
+    "ManaRegen": 0.0,
+    "LimbRegen": 0.0,
+    "FitLevel": -0.1,
+    "Abilities": [
+      {
+        "Category": "MagicLore",
+        "Score": 3
+      },
+      {
+        "Category": "Staff",
+        "Score": 1
+      },
+      {
+        "Category": "Alchemy",
+        "Score": 1
+      },
+      {
+        "Category": "Enchantment",
+        "Score": 1
+      },
+      {
+        "Category": "Read",
+        "Score": 5
+      },
+      {
+        "Name": "Mana Shaping",
+        "Category": "MagicShaping",
+        "Score": 8
+      }
+    ],
+    "Inventory": [ [ "read_item", "magical", "subject:random_level_spell:1:5" ] ],
+    "Equipment": [
+      [ "cap", "plant" ],
+      [ "robe", "plant" ],
+      [ "shoes", "leather" ]
+    ],
+    "RacesAllowed": [ "human", "elf", "dwarf" ],
+    "SpellsKnow": [ "any_offensive:1" ]
+  }
+]
