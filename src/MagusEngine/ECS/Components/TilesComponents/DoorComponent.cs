@@ -5,8 +5,8 @@
         public bool IsOpen { get; set; }
         public bool Locked { get; set; }
         public int LockPower { get; set; }
-        public char OpenGlyph { get; set; }
-        public char ClosedGlyph { get; set; }
+        public char OpenGlyph { get; set; } = '-';
+        public char ClosedGlyph { get; set; } = '+';
 
         //closes a door
         public void Close()

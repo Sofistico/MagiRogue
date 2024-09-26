@@ -116,7 +116,16 @@ namespace MagusEngine.Factory
             Material material)
         {
             var (foreground, background, glyph, isWalkable, isTransparent, name) = DetermineTileLookAndName(material, tileType);
-            return new Tile(foreground, background, glyph, isWalkable, isTransparent, pos, name, material.Id);
+            var tile = new Tile(foreground, background, glyph, isWalkable, isTransparent, pos, name, material.Id);
+            switch (tileType)
+            {
+                case TileType.Door:
+                    tile.AddComponent(new DoorComponent());
+                    break;
+                default:
+                    break;
+            }
+            return tile;
         }
 
         public static void ResetCachedMaterial() => cachedMaterial = null;

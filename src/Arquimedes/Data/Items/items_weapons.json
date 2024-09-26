@@ -8,6 +8,7 @@
     "Broadness": 5,
     "Height": 3,
     "ItemType": "Weapon",
-    "WeaponType": "Sword"
+    "WeaponType": "Sword",
+    "MaterialType": "Metal"
   }
 ]

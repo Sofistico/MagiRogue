@@ -1,9 +1,10 @@
-﻿using Arquimedes.Enumerators;
+﻿using System.Collections.Generic;
+using Arquimedes.Enumerators;
 using Arquimedes.Interfaces;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Systems;
-using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace MagusEngine.Core.Civ
 {
@@ -44,16 +45,18 @@ namespace MagusEngine.Core.Civ
 
         public List<string> Query { get; set; }
 
+        [JsonIgnore]
         /// <summary> The total volume that the <see cref="Material"/ of the item will be needed!> </summary>
         public int VolumeOfMaterialNeededToProduce
         {
             get
             {
-                if (!cachedItems.TryGetValue(SelectedItemId, out var cachedItem))
+                if (!cachedItems.TryGetValue(SelectedItemId, out var cachedItem) == true)
                 {
                     cachedItem = DataManager.QueryItemInData(SelectedItemId);
                     cachedItems.Add(SelectedItemId, cachedItem);
                 }
+
                 return cachedItem.Volume * Amount;
             }
         }
@@ -64,13 +67,9 @@ namespace MagusEngine.Core.Civ
         public List<Quality> Quality { get; set; } = [];
         public List<RoomTag> RoomTag { get; set; } = [];
 
-        public Reaction()
-        {
-        }
+        public Reaction() { }
 
-        public Reaction(string itemId,
-            int amount,
-            List<MaterialType> material)
+        public Reaction(string itemId, int amount, List<MaterialType> material)
         {
             ItemsId = [itemId];
             SelectedItemId = itemId;

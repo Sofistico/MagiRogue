@@ -70,7 +70,7 @@ namespace MagusEngine.Generators.MapGen
             if (half == 1)
             {
                 int indexDoor = GlobalRandom.DefaultRNG.NextInt(room.Doors.Count);
-                if (room.Doors.Count > 0)
+                if (room?.Doors?.Count > 0)
                     room.Doors[indexDoor].GetComponent<DoorComponent>().Locked = true;
             }
         }

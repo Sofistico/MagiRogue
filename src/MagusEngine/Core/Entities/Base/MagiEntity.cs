@@ -225,7 +225,7 @@ namespace MagusEngine.Core.Entities.Base
             try
             {
                 GoRogueComponents.Add(component, tag);
-                Locator.GetService<EntityRegistry>()?.AddComponent(ID, component);
+                // Locator.GetService<EntityRegistry>()?.AddComponent(ID, component);
             }
             catch (System.Exception)
             {
@@ -249,7 +249,7 @@ namespace MagusEngine.Core.Entities.Base
             if (GetComponent(out T comp))
             {
                 GoRogueComponents.Remove(comp);
-                Locator.GetService<EntityRegistry>().RemoveComponent<T>(ID);
+                // Locator.GetService<EntityRegistry>().RemoveComponent<T>(ID);
             }
         }
 

@@ -141,7 +141,7 @@ namespace MagusEngine.Core.MapStuff
                     RemoveEntity(item);
             }
 
-            Locator.GetService<EntityRegistry>().RemoveComponentAll();
+            // Locator.GetService<EntityRegistry>().RemoveComponentAll();
         }
 
         public void SetSeed(ulong seed, uint x, uint y, uint i)
@@ -251,7 +251,7 @@ namespace MagusEngine.Core.MapStuff
                 entity.PositionChanged -= OnPositionChanged;
 
                 _needsToUpdateActorsDict = true;
-                Locator.GetService<EntityRegistry>().Destroy(entity.ID);
+                // Locator.GetService<EntityRegistry>().Destroy(entity.ID);
             }
             if (_entityManager.Contains(entity.SadCell))
             {
@@ -291,11 +291,6 @@ namespace MagusEngine.Core.MapStuff
             _entityManager.Add(entity.SadCell);
 
             _needsToUpdateActorsDict = true;
-        }
-
-        public void AddComponentToEntity<T>(uint id, T component)
-        {
-            Locator.GetService<EntityRegistry>().AddComponent(id, component);
         }
 
         /// <summary>
@@ -804,17 +799,18 @@ namespace MagusEngine.Core.MapStuff
         public IGameObject? FindTypeOfFood(Food whatToEat, IGameObject entity)
         {
             const int defaultSearchRange = 25;
-            var registry = Locator.GetService<EntityRegistry>();
-            foreach (var objId in registry.CompView<FoodComponent>())
-            {
-                var searchEntity = _idMap[objId];
-                var foodComp = registry.GetComponent<FoodComponent>(searchEntity.ID);
-                if (foodComp.FoodType.HasFlag(whatToEat)
-                    && searchEntity.Position.GetDistance(entity.Position) <= defaultSearchRange)
-                {
-                    return searchEntity;
-                }
-            }
+            throw new NotImplementedException("Lazy");
+            // var registry = Locator.GetService<EntityRegistry>();
+            // foreach (var objId in registry.CompView<FoodComponent>())
+            // {
+            //     var searchEntity = _idMap[objId];
+            //     var foodComp = registry.GetComponent<FoodComponent>(searchEntity.ID);
+            //     if (foodComp.FoodType.HasFlag(whatToEat)
+            //         && searchEntity.Position.GetDistance(entity.Position) <= defaultSearchRange)
+            //     {
+            //         return searchEntity;
+            //     }
+            // }
 
             return null;
         }

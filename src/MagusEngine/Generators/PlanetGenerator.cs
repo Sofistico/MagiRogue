@@ -182,14 +182,14 @@ namespace MagusEngine.Generators
                 int x = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, _width);
                 int y = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(0, _height);
                 WorldTile tile = tiles[x, y];
-                Tile Parent = tile.Parent!;
+                Tile parent = tile.Parent!;
 
                 if (tile.HeightType == HeightType.DeepWater
                     || tile.HeightType == HeightType.ShallowWater
                     || tile.HeightType == HeightType.River)
                     continue;
 
-                if (Parent.GetComponent<SiteTile>(out var site))
+                if (parent.GetComponent<SiteTile>(out var site))
                     continue;
 
                 var possibleCivs = DataManager.QueryCultureTemplateFromBiome(tile.BiomeType.ToString());
@@ -202,7 +202,7 @@ namespace MagusEngine.Generators
                 int rng = GoRogue.Random.GlobalRandom.DefaultRNG.NextInt(25, 50);
 
                 int popNmr = (int)(rng * ((int)tile.HeightType * tile.MoistureValue + 1));
-                Site set = new Site(Parent.Position, civ.RandomSiteFromLanguageName(), new Population(popNmr, civ.PrimaryRace.Id))
+                Site set = new Site(parent.Position, civ.RandomSiteFromLanguageName(), new Population(popNmr, civ.PrimaryRace.Id))
                 {
                     MundaneResources = (int)tile.GetResources()
                 };
@@ -210,7 +210,7 @@ namespace MagusEngine.Generators
                 set.Buildings.Add(new Building(room));
                 set.DefineSiteSize();
 
-                Parent.AddComponent<SiteTile>(new(set));
+                parent.AddComponent<SiteTile>(new(set));
                 civ.AddSiteToCiv(set);
                 if (civ.Territory.Count == 0)
                     throw new Exception();
@@ -254,7 +254,7 @@ namespace MagusEngine.Generators
                 for (int y = 0; y < _height; y++)
                 {
                     WorldTile worldTile = new();
-                    Tile Parent = new()
+                    Tile parent = new()
                     {
                         Position = new Point(x, y)
                     };
@@ -324,23 +324,23 @@ namespace MagusEngine.Generators
                     //adjust moisture based on height
                     if (worldTile.HeightType == HeightType.DeepWater)
                     {
-                        MoistureData[Parent.Position.X, Parent.Position.Y] += 8f * worldTile.HeightValue;
+                        MoistureData[parent.Position.X, parent.Position.Y] += 8f * worldTile.HeightValue;
                     }
                     else if (worldTile.HeightType == HeightType.ShallowWater)
                     {
-                        MoistureData[Parent.Position.X, Parent.Position.Y] += 3f * worldTile.HeightValue;
+                        MoistureData[parent.Position.X, parent.Position.Y] += 3f * worldTile.HeightValue;
                     }
                     else if (worldTile.HeightType == HeightType.Shore)
                     {
-                        MoistureData[Parent.Position.X, Parent.Position.Y] += 1f * worldTile.HeightValue;
+                        MoistureData[parent.Position.X, parent.Position.Y] += 1f * worldTile.HeightValue;
                     }
                     else if (worldTile.HeightType == HeightType.Sand)
                     {
-                        MoistureData[Parent.Position.X, Parent.Position.Y] += 0.25f * worldTile.HeightValue;
+                        MoistureData[parent.Position.X, parent.Position.Y] += 0.25f * worldTile.HeightValue;
                     }
                     else if (worldTile.HeightType == HeightType.Snow)
                     {
-                        MoistureData[Parent.Position.X, Parent.Position.Y] += 2f * worldTile.HeightValue;
+                        MoistureData[parent.Position.X, parent.Position.Y] += 2f * worldTile.HeightValue;
                     }
 
                     //set moisture type
@@ -353,27 +353,27 @@ namespace MagusEngine.Generators
 
                     if (worldTile.HeightType == HeightType.Forest)
                     {
-                        HeatData[Parent.Position.X, Parent.Position.Y] -= 0.1f * worldTile.HeightValue;
+                        HeatData[parent.Position.X, parent.Position.Y] -= 0.1f * worldTile.HeightValue;
                     }
                     else if (worldTile.HeightType == HeightType.Mountain)
                     {
-                        HeatData[Parent.Position.X, Parent.Position.Y] -= 0.25f * worldTile.HeightValue;
+                        HeatData[parent.Position.X, parent.Position.Y] -= 0.25f * worldTile.HeightValue;
                     }
                     else if (worldTile.HeightType == HeightType.HighMountain)
                     {
-                        HeatData[Parent.Position.X, Parent.Position.Y] -= 0.5f * worldTile.HeightValue;
+                        HeatData[parent.Position.X, parent.Position.Y] -= 0.5f * worldTile.HeightValue;
                     }
                     else if (worldTile.HeightType == HeightType.Snow)
                     {
-                        HeatData[Parent.Position.X, Parent.Position.Y] -= 0.7f * worldTile.HeightValue;
+                        HeatData[parent.Position.X, parent.Position.Y] -= 0.7f * worldTile.HeightValue;
                     }
                     else
                     {
-                        HeatData[Parent.Position.X, Parent.Position.Y] += 0.01f * worldTile.HeightValue;
+                        HeatData[parent.Position.X, parent.Position.Y] += 0.01f * worldTile.HeightValue;
                     }
 
                     // Set heat value
-                    float heatModValue = MathMagi.ReturnPositive(HeatData[Parent.Position.X, Parent.Position.Y]);
+                    float heatModValue = MathMagi.ReturnPositive(HeatData[parent.Position.X, parent.Position.Y]);
                     worldTile.HeatValue = heatModValue;
 
                     // set heat type
@@ -389,7 +389,7 @@ namespace MagusEngine.Generators
                     if (worldTile.MagicalAuraStrength >= 10)
                         worldTile.SpecialLandType = SpecialLandType.MagicLand;
 
-                    Parent.AddComponent(worldTile);
+                    parent.AddComponent(worldTile);
                     tiles[x, y] = worldTile;
                 }
             }

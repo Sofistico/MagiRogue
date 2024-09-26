@@ -8,6 +8,7 @@ using MagusEngine.Factory;
 using MagusEngine.Systems;
 using MagusEngine.Utils;
 using MagusEngine.Utils.Extensions;
+using Newtonsoft.Json;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 using ShaiRandom.Generators;
@@ -825,7 +826,7 @@ namespace MagusEngine.Generators.MapGen
                     break;
 
                 default:
-                    throw new ApplicationException("Type of room not defined!");
+                    throw new ApplicationException($"Type of room not defined! room: {JsonConvert.SerializeObject(room)}");
             }
         }
 

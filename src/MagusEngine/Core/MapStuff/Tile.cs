@@ -1,11 +1,13 @@
-﻿using Arquimedes.Enumerators;
+﻿using System;
+using System.Collections.Generic;
+using Arquimedes.Enumerators;
 using GoRogue.Components;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.ECS;
+using MagusEngine.Services;
 using MagusEngine.Systems;
 using SadConsole;
 using SadRogue.Primitives;
-using System.Collections.Generic;
 
 namespace MagusEngine.Core.MapStuff
 {
@@ -22,46 +24,48 @@ namespace MagusEngine.Core.MapStuff
 
         public string MaterialId
         {
-            get
-            {
-                return _material?.Id!;
-            }
-
-            set
-            {
-                _material = DataManager.QueryMaterial(value)!;
-            }
+            get { return _material?.Id!; }
+            set { _material = DataManager.QueryMaterial(value)!; }
         }
         public Material Material => _material!;
 
-        public Tile(bool isWalkable,
+        public Tile(
+            bool isWalkable,
             bool isTransparent,
             Point pos,
-            IComponentCollection? collection = null) : base(pos,
+            IComponentCollection? collection = null
+        )
+            : base(
+                pos,
                 (int)MapLayer.TERRAIN,
-                isWalkable, isTransparent,
-                Locator.GetService<IDGenerator>() is not null ? Locator.GetService<IDGenerator>().UseID : null,
-                collection)
-        {
-        }
+                isWalkable,
+                isTransparent,
+                Locator.GetService<IDGenerator>() is not null
+                    ? Locator.GetService<IDGenerator>().UseID
+                    : null,
+                collection
+            ) { }
 
-        public Tile(Color foreground,
+        public Tile(
+            Color foreground,
             Color background,
             char glyph,
             bool isWalkable,
             bool isTransparent,
             Point pos,
-            IComponentCollection? collection = null) : this(isWalkable, isTransparent, pos, collection)
+            IComponentCollection? collection = null
+        )
+            : this(isWalkable, isTransparent, pos, collection)
         {
             Appearence = new(foreground, background, glyph);
             LastSeenAppereance = (ColoredGlyph)Appearence.Clone();
         }
 
-        public Tile() : this(Color.BlueViolet, Color.Wheat, '@', true, true, Point.None)
-        {
-        }
+        public Tile()
+            : this(Color.BlueViolet, Color.Wheat, '@', true, true, Point.None) { }
 
-        public Tile(Color foreground,
+        public Tile(
+            Color foreground,
             Color background,
             char glyph,
             bool isWalkable,
@@ -69,18 +73,23 @@ namespace MagusEngine.Core.MapStuff
             Point pos,
             string? name,
             string idMaterial,
-            int moveTimeCost = 100) : this(foreground, background, glyph, isWalkable, isTransparent, pos)
+            int moveTimeCost = 100
+        )
+            : this(foreground, background, glyph, isWalkable, isTransparent, pos)
         {
             SetUpSomeBasicProps(name, idMaterial, moveTimeCost);
         }
 
-        public Tile(ColoredGlyph glyph,
+        public Tile(
+            ColoredGlyph glyph,
             bool isWalkable,
             bool isTransparent,
             Point pos,
             string? name,
             string idMaterial,
-            int moveTimeCost = 100) : this(isWalkable, isTransparent, pos)
+            int moveTimeCost = 100
+        )
+            : this(isWalkable, isTransparent, pos)
         {
             SetUpSomeBasicProps(name, idMaterial, moveTimeCost);
             Appearence = glyph;
@@ -88,29 +97,38 @@ namespace MagusEngine.Core.MapStuff
         }
 
         private Tile(Tile tile)
-            : this(tile.Appearence.Foreground,
+            : this(
+                tile.Appearence.Foreground,
                 tile.Appearence.Background,
                 tile.Appearence.GlyphCharacter,
                 tile.IsWalkable,
                 tile.IsTransparent,
                 tile.Position,
-                tile.GoRogueComponents)
+                tile.GoRogueComponents
+            )
         {
             Traits = tile.Traits;
             SetUpSomeBasicProps(tile.Name, tile.MaterialId, tile.MoveTimeCost);
         }
 
-        public T? GetComponent<T>() where T : class => Locator.GetService<EntityRegistry>().GetComponent<T>(ID);
+        public T? GetComponent<T>(string? tag = null)
+            where T : class => GoRogueComponents.GetFirstOrDefault<T>(tag);
 
-        public bool GetComponent<T>(out T? comp) where T : class => Locator.GetService<EntityRegistry>().TryGetComponent(ID, out comp);
+        public bool GetComponent<T>(out T? comp)
+            where T : class
+        {
+            comp = GoRogueComponents.GetFirstOrDefault<T>();
+            return comp != null;
+        }
 
-        public bool HasComponent<TFind>() where TFind : class => Locator.GetService<EntityRegistry>().Contains<TFind>(ID);
+        public bool HasComponent<TFind>()
+            where TFind : class => GoRogueComponents.Contains<TFind>();
 
-        public void RemoveComponent<T>(T comp) where T : class
+        public void RemoveComponent<T>(T comp)
+            where T : class
         {
             if (GoRogueComponents.Contains<T>())
                 GoRogueComponents.Remove(comp);
-            Locator.GetService<EntityRegistry>().RemoveComponent<T>(ID);
         }
 
         /// <summary>
@@ -133,11 +151,17 @@ namespace MagusEngine.Core.MapStuff
             return tile;
         }
 
-        public void AddComponent<T>(T value, string? tag = null, bool addGoRogueComponents = false) where T : class
+        public void AddComponent<T>(T value, string? tag = null)
+            where T : class
         {
-            if (addGoRogueComponents)
+            try
+            {
                 GoRogueComponents.Add(value, tag);
-            Locator.GetService<EntityRegistry>()?.AddComponent(ID, value);
+            }
+            catch (Exception ex)
+            {
+                Locator.GetService<MagiLog>().Log($"Tried to add component {value} to {this} which caused {ex.Message}");
+            }
         }
 
         public static Attack? ReturnAttack()

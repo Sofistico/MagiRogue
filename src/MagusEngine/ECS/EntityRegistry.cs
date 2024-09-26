@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 namespace MagusEngine.ECS
 {
+    // will be removed, too much bugs
     public sealed class EntityRegistry
     {
         private readonly Dictionary<Type, IComponentStore> _data = [];

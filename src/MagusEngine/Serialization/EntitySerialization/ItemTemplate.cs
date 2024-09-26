@@ -174,7 +174,12 @@ namespace MagusEngine.Serialization.EntitySerialization
             else if (!itemTemplate.MaterialId.IsNullOrEmpty())
                 material = DataManager.QueryMaterial(itemTemplate.MaterialId);
             else
+            {
+                System.Console.WriteLine(itemTemplate.MaterialType);
+                if(itemTemplate.MaterialType == null)
+                    throw new NullReferenceException($"Something wrong went with the {itemTemplate.Id}");
                 material = DataManager.QueryMaterialWithType(itemTemplate.MaterialType.Value);
+            }
             MagiColorSerialization foreground = new(itemTemplate.Foreground ?? material.Color);
             MagiColorSerialization background = new(itemTemplate.Background ?? "Black");
 

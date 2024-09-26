@@ -16,6 +16,11 @@ namespace MagusEngine.Core.Entities.Base
         public int XpTotal => (Score * 1000) + CurrentXp;
         public int XpRequiredForNextLevel { get => (int)Math.Pow(Score + 1, 2) * 2; }
 
+        public Ability()
+        {
+
+        }
+
         public Ability(string name, AbilityCategory category, int abilityScore)
         {
             Name = name;
