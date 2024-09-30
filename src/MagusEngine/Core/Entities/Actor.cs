@@ -1,13 +1,13 @@
-﻿using Arquimedes.Enumerators;
+using Arquimedes.Enumerators;
 using GoRogue.FOV;
 using MagusEngine.Actions;
 using MagusEngine.Bus;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
-using MagusEngine.ECS.Components.EntityComponents;
-using MagusEngine.ECS.Components.EntityComponents.Status;
-using MagusEngine.ECS.Components.TilesComponents;
+using MagusEngine.Components.EntityComponents;
+using MagusEngine.Components.EntityComponents.Status;
+using MagusEngine.Components.TilesComponents;
 using MagusEngine.Serialization.EntitySerialization;
 using MagusEngine.Services;
 using MagusEngine.Systems.Physics;
@@ -467,12 +467,7 @@ namespace MagusEngine.Core.Entities
                 for (int i = 0; i < count; i++)
                 {
                     Need need = needs[i];
-                    if (need.TickNeed())
-                    {
-#if DEBUG
-                        Locator.GetService<MagiLog>().Log($"Need {need.Name} is in dire need!");
-#endif
-                    }
+                    need.TickNeed();
                 }
             }
         }

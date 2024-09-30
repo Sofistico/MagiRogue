@@ -1,4 +1,4 @@
-﻿using Arquimedes.Enumerators;
+using Arquimedes.Enumerators;
 using Diviner.Enums;
 using Diviner.Windows;
 using MagusEngine;
@@ -8,8 +8,8 @@ using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Magic;
 using MagusEngine.Core.MapStuff;
-using MagusEngine.ECS.Components.EntityComponents;
-using MagusEngine.ECS.Components.EntityComponents.Ai;
+using MagusEngine.Components.EntityComponents;
+using MagusEngine.Components.EntityComponents.Ai;
 using MagusEngine.Serialization.MapConverter;
 using MagusEngine.Services;
 using MagusEngine.Systems;

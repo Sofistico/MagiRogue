@@ -1,5 +1,5 @@
-﻿using Arquimedes.Enumerators;
-using MagusEngine.ECS.Components.TilesComponents;
+using Arquimedes.Enumerators;
+using MagusEngine.Components.TilesComponents;
 using System.Collections.Generic;
 
 // Used in flood fill algorithm

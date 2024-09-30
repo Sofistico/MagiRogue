@@ -1,6 +1,6 @@
-﻿using Arquimedes;
+using Arquimedes;
 using Arquimedes.Enumerators;
-using MagusEngine.ECS.Components.TilesComponents;
+using MagusEngine.Components.TilesComponents;
 using MagusEngine.Utils;
 using SadConsole;
 using SadRogue.Primitives;

@@ -1,8 +1,8 @@
-﻿using Arquimedes.Enumerators;
+using Arquimedes.Enumerators;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Magic.Interfaces;
-using MagusEngine.ECS.Components.EntityComponents.Status;
+using MagusEngine.Components.EntityComponents.Status;
 using MagusEngine.Services;
 using MagusEngine.Systems;
 using MagusEngine.Systems.Time;

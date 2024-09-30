@@ -112,7 +112,7 @@
         "SpellDamageTypeId": "fire",
         "BaseDamage": 6,
         "Radius": 3,
-        "Volume": 500,
+        "Volume": 1000,
         "EffectType": "DAMAGE"
       }
     ],
@@ -122,7 +122,7 @@
     "Manifestation": "Projectile",
     "Fore": "Red",
     "Velocity": 20,
-    "SpellRange": 7,
+    "SpellRange": 10,
     "MagicCost": 5.0,
     "Id": "fire_ball",
     "Context": [ "Offensive" ]

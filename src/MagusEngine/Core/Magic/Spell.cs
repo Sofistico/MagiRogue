@@ -1,11 +1,11 @@
-﻿using Arquimedes.Enumerators;
+using Arquimedes.Enumerators;
 using Arquimedes.Interfaces;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic.Interfaces;
 using MagusEngine.Core.MapStuff;
-using MagusEngine.ECS.Components.EntityComponents.Projectiles;
+using MagusEngine.Components.EntityComponents.Projectiles;
 using MagusEngine.Serialization.EntitySerialization;
 using MagusEngine.Services;
 using MagusEngine.Systems;

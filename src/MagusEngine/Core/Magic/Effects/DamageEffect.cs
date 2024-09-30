@@ -5,6 +5,7 @@ using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic.Interfaces;
 using MagusEngine.Services;
 using MagusEngine.Systems;
+using MagusEngine.Systems.Physics;
 using Newtonsoft.Json;
 
 namespace MagusEngine.Core.Magic.Effects
@@ -86,6 +87,9 @@ namespace MagusEngine.Core.Magic.Effects
             }
 
             CombatSystem.ResolveSpellHit(poorGuy, caster, spellCasted, this, ReturnAttack());
+
+            if(GetDamageType().TerrainInteraction != TerrainInteractionEnum.None)
+                PhysicsSystem.DealWithTileInteraction(BaseDamage, Radius, Volume, GetDamageType();
         }
 
         private void HealEffect(Point target, Actor caster, Spell spellCasted)

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -13,8 +13,8 @@ using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic;
 using MagusEngine.Core.Magic.Interfaces;
 using MagusEngine.Core.MapStuff;
-using MagusEngine.ECS.Components.EntityComponents.Projectiles;
-using MagusEngine.ECS.Components.TilesComponents;
+using MagusEngine.Components.EntityComponents.Projectiles;
+using MagusEngine.Components.TilesComponents;
 using MagusEngine.Services;
 using MagusEngine.Systems.Physics;
 using MagusEngine.Utils;

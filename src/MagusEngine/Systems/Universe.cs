@@ -1,4 +1,4 @@
-﻿using Arquimedes.Enumerators;
+using Arquimedes.Enumerators;
 using Arquimedes.Settings;
 using Arquimedes.Utils;
 using GoRogue.Messaging;
@@ -9,7 +9,7 @@ using MagusEngine.Core.Civ;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
-using MagusEngine.ECS.Components.EntityComponents.Ai;
+using MagusEngine.Components.EntityComponents.Ai;
 using MagusEngine.Generators;
 using MagusEngine.Generators.MapGen;
 using MagusEngine.Serialization;
