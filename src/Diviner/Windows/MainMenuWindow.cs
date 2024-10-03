@@ -167,9 +167,10 @@ namespace Diviner.Windows
         private void PositionButtons()
         {
             int i = 0;
+            int x = Position.X / 2;
             foreach (ControlBase button in Controls)
             {
-                button.Position = new Point(55, 2 + (i * 2));
+                button.Position = new Point(x, 2 + (i * 2));
                 ++i;
             }
         }
