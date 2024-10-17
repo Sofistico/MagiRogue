@@ -137,17 +137,17 @@ namespace MagusEngine.Core
             return ReturnNameFromMaterial(Name, objectName);
         }
 
-        public MagiColorSerialization ReturnMagiColor()
+        public MagiColorSerialization? ReturnMagiColor()
         {
-            magiColorSerialization ??= new MagiColorSerialization(Color);
-            return magiColorSerialization ?? default;
+            magiColorSerialization ??= new MagiColorSerialization(Color!);
+            return magiColorSerialization;
         }
 
         public Material? GetMaterialThatLiquidTurns()
         {
-            if (string.IsNullOrEmpty(LiquidTurnsInto))
+            if (LiquidTurnsInto.IsNullOrEmpty())
                 return null;
-            return DataManager.QueryMaterial(LiquidTurnsInto);
+            return DataManager.QueryMaterial(LiquidTurnsInto!);
         }
 
         private string GetDebuggerDisplay()

@@ -36,7 +36,7 @@ namespace MagusEngine.Components.EntityComponents.Projectiles
             if(!_animate)
                 return;
 
-            if(Parent!.GetComponent<IAnimationHit>(out var animation, "spell-animation"))
+            if (Parent!.GetComponent<IAnimationHit>(out var animation, "spell-animation"))
             {
                 animation.AnimateFrames();
             }
