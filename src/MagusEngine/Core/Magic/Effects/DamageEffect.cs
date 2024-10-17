@@ -88,8 +88,9 @@ namespace MagusEngine.Core.Magic.Effects
 
             CombatSystem.ResolveSpellHit(poorGuy, caster, spellCasted, this, ReturnAttack());
 
-            if(GetDamageType().TerrainInteraction != TerrainInteractionEnum.None)
-                PhysicsSystem.DealWithTileInteraction(BaseDamage, Radius, Volume, GetDamageType();
+            //TODO: Make this work later
+            // if (GetDamageType().TerrainInteraction != TerrainInteractionEnum.None)
+            //     PhysicsSystem.DealWithTileInteraction(BaseDamage, Radius, Volume, GetDamageType();
         }
 
         private void HealEffect(Point target, Actor caster, Spell spellCasted)

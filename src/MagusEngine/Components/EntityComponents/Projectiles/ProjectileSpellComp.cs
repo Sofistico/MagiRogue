@@ -17,7 +17,7 @@ namespace MagusEngine.Components.EntityComponents.Projectiles
             bool isPhysical,
             char[]? glyphs,
             MagiMap map,
-            bool animate = false) : base(ticksToMoveOneStep, origin, finalPoint, direction, isPhysical, glyphs, map, animate)
+            bool animate = true) : base(ticksToMoveOneStep, origin, finalPoint, direction, isPhysical, glyphs, map, animate)
         {
         }
 
@@ -38,7 +38,7 @@ namespace MagusEngine.Components.EntityComponents.Projectiles
 
             if (Parent!.GetComponent<IAnimationHit>(out var animation, "spell-animation"))
             {
-                animation.AnimateFrames();
+                animation.AnimateHit();
             }
         }
     }

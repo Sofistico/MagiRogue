@@ -342,22 +342,22 @@ namespace MagusEngine.Core.Magic
                 .AppendLine(MagicArt.ToString()).ToString();
         }
 
-        // public override int GetHashCode()
-        // {
-        //     return Id.GetHashCode();
-        // }
-        //
-        // public override bool Equals(object? obj)
-        // {
-        //     return GetHashCode() == obj?.GetHashCode();
-        // }
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return GetHashCode() == obj?.GetHashCode();
+        }
 
         public SpellEntity GetSpellEntity(MagiEntity caster, Direction dir, Point pos)
         {
-            string foreground = Fore.Equals("{caster}") ? caster.GetComponent<Magic>().MagicColor : Fore;
+            string foreground = Fore.Equals("{caster}", StringComparison.Ordinal) ? caster.GetComponent<Magic>().MagicColor : Fore;
             return new SpellEntity(Id, foreground, Back, dir.TranslateDirToGlyph(Glyphs), this, pos, caster)
             {
-                Name = Name
+                Name = Name,
             };
         }
     }
