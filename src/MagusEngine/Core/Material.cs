@@ -137,10 +137,10 @@ namespace MagusEngine.Core
             return ReturnNameFromMaterial(Name, objectName);
         }
 
-        public MagiColorSerialization? ReturnMagiColor()
+        public MagiColorSerialization ReturnMagiColor()
         {
             magiColorSerialization ??= new MagiColorSerialization(Color!);
-            return magiColorSerialization;
+            return magiColorSerialization.Value;
         }
 
         public Material? GetMaterialThatLiquidTurns()
