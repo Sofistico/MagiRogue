@@ -23,7 +23,8 @@ namespace Diviner
         ISubscriber<TogglePopWindowMessage>,
         ISubscriber<StartGameMessage>,
         ISubscriber<RestartGame>,
-        ISubscriber<LookStuff>
+        ISubscriber<LookStuff>,
+        ISubscriber<ShowGlyphOnConsole>
     {
         private readonly Dictionary<WindowTag, IWindowTagContract> windows = [];
         private Universe? _universe;
@@ -123,7 +124,7 @@ namespace Diviner
             MapWindow.LoadMap(uni.CurrentMap);
             // Start the game with the camera focused on the player
             MapWindow.CenterOnActor(uni.Player);
-
+            AddWindowToList(MapWindow);
             Children.Add(StatusWindow);
             Children.Add(MessageLog);
             StatusWindow.Show();
@@ -276,6 +277,12 @@ namespace Diviner
                 look = new LookWindow(message.Entitiy!);
 
             look.Show(true);
+        }
+
+        public void Handle(ShowGlyphOnConsole message)
+        {
+            var windowTag = (WindowTag)message.WindowTagId;
+            
         }
 
         ~UIManager()

@@ -1,4 +1,5 @@
-﻿using GoRogue.Messaging;
+﻿using Diviner.Interfaces;
+using GoRogue.Messaging;
 using MagusEngine;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
@@ -15,7 +16,8 @@ namespace Diviner.Windows
     public class MapWindow : MagiBaseWindow,
         ISubscriber<ChangeCenteredActor>,
         ISubscriber<LoadMapMessage>,
-        ISubscriber<MapConsoleIsDirty>
+        ISubscriber<MapConsoleIsDirty>,
+        IWindowTagContract
     {
         private MagiMap _mapDisplayed;
         private readonly SadConsole.Components.SurfaceComponentFollowTarget followComponent;
@@ -26,6 +28,7 @@ namespace Diviner.Windows
             followComponent = new SadConsole.Components.SurfaceComponentFollowTarget();
             UseMouse = false;
             Locator.GetService<MessageBusService>().RegisterAllSubscriber(this);
+            Tag = Enums.WindowTag.Map;
         }
 
         /// <summary>
