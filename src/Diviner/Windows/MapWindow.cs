@@ -1,4 +1,5 @@
-﻿using Diviner.Interfaces;
+﻿using Arquimedes.Enumerators;
+using Diviner.Interfaces;
 using GoRogue.Messaging;
 using MagusEngine;
 using MagusEngine.Bus.UiBus;
@@ -27,7 +28,7 @@ namespace Diviner.Windows
             followComponent = new SadConsole.Components.SurfaceComponentFollowTarget();
             UseMouse = false;
             Locator.GetService<MessageBusService>().RegisterAllSubscriber(this);
-            Tag = Enums.WindowTag.Map;
+            Tag = WindowTag.Map;
         }
 
         /// <summary>

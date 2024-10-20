@@ -1,4 +1,4 @@
-﻿using Diviner.Enums;
+﻿using Arquimedes.Enumerators;
 
 namespace Diviner.Interfaces
 {

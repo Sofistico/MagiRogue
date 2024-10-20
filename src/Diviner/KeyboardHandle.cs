@@ -1,5 +1,4 @@
 using Arquimedes.Enumerators;
-using Diviner.Enums;
 using Diviner.Windows;
 using MagusEngine;
 using MagusEngine.Actions;

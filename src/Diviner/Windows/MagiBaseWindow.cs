@@ -1,6 +1,6 @@
-﻿using CommunityToolkit.HighPerformance;
+﻿using Arquimedes.Enumerators;
+using CommunityToolkit.HighPerformance;
 using Diviner.Controls;
-using Diviner.Enums;
 using Diviner.Interfaces;
 using SadConsole;
 using SadConsole.UI;

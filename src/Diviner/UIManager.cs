@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Arquimedes.Enumerators;
 using Arquimedes.Settings;
-using Diviner.Enums;
+using Diviner.Exceptions;
 using Diviner.Interfaces;
 using Diviner.Windows;
 using GoRogue.Messaging;
