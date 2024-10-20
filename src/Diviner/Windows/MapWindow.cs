@@ -16,8 +16,7 @@ namespace Diviner.Windows
     public class MapWindow : MagiBaseWindow,
         ISubscriber<ChangeCenteredActor>,
         ISubscriber<LoadMapMessage>,
-        ISubscriber<MapConsoleIsDirty>,
-        IWindowTagContract
+        ISubscriber<MapConsoleIsDirty>
     {
         private MagiMap _mapDisplayed;
         private readonly SadConsole.Components.SurfaceComponentFollowTarget followComponent;

@@ -26,7 +26,7 @@ namespace Diviner
         ISubscriber<LookStuff>,
         ISubscriber<ShowGlyphOnConsole>
     {
-        private readonly Dictionary<WindowTag, IWindowTagContract> windows = [];
+        private readonly Dictionary<WindowTag, IWindowTagContract> _windows = [];
         private Universe? _universe;
 
         #region Managers
@@ -232,7 +232,7 @@ namespace Diviner
 
         public T? GetWindow<T>(WindowTag tag) where T : IWindowTagContract
         {
-            windows.TryGetValue(tag, out var window);
+            _windows.TryGetValue(tag, out var window);
             return (T?)window;
         }
 
@@ -242,7 +242,7 @@ namespace Diviner
             {
                 throw new UndefinedWindowTagException($"The tag for the window was undefined! Window: {window}");
             }
-            windows.Add(window.Tag, window);
+            _windows.Add(window.Tag, window);
         }
 
         #endregion HelperMethods
@@ -279,10 +279,12 @@ namespace Diviner
             look.Show(true);
         }
 
-        public void Handle(ShowGlyphOnConsole message)
+        public void Handle([NotNull] ShowGlyphOnConsole message)
         {
             var windowTag = (WindowTag)message.WindowTagId;
-            
+            var window = GetWindow<MagiBaseWindow>(windowTag);
+            var originalGlyph = window.GetGlyph(message.Position.X, message.Position.Y);
+            window.SetGlyph(message.Position.X, message.Position.Y, message.Glyph);
         }
 
         ~UIManager()
