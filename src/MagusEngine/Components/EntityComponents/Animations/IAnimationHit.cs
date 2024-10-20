@@ -1,6 +1,7 @@
-namespace MagusEngine.Components.EntityComponents.Animations;
-
-public interface IAnimationHit
+namespace MagusEngine.Components.EntityComponents.Animations
 {
-    void AnimateHit();
+    public interface IAnimationHit
+    {
+        void AnimateHit(Point position);
+    }
 }

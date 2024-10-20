@@ -26,7 +26,7 @@ namespace MagusEngine.Core.Magic
     [JsonConverter(typeof(SpellJsonConverter))]
     public sealed class Spell : IJsonKey, INamed, ISpell
     {
-        private const double _maxSpellProficiency = 3.0;
+        private const double _maxSpellProficiency = 10.0;
         [JsonProperty(PropertyName = "Proficiency")]
         private double _proficency;
         [JsonIgnore]
@@ -355,10 +355,11 @@ namespace MagusEngine.Core.Magic
         public SpellEntity GetSpellEntity(MagiEntity caster, Direction dir, Point pos)
         {
             string foreground = Fore.Equals("{caster}", StringComparison.Ordinal) ? caster.GetComponent<Magic>().MagicColor : Fore;
-            return new SpellEntity(Id, foreground, Back, dir.TranslateDirToGlyph(Glyphs), this, pos, caster)
+            var entity = new SpellEntity(Id, foreground, Back, dir.TranslateDirToGlyph(Glyphs), this, pos, caster)
             {
                 Name = Name,
             };
+            return entity;
         }
     }
 }

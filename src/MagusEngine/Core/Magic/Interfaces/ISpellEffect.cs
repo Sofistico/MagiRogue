@@ -12,16 +12,18 @@ namespace MagusEngine.Core.Magic.Interfaces
     {
         [JsonConverter(typeof(StringEnumConverter))]
         SpellAreaEffect AreaOfEffect { get; set; }
-
         string SpellDamageTypeId { get; set; }
         int Radius { get; set; }
         double ConeCircleSpan { get; set; }
         bool TargetsTile { get; set; }
         int BaseDamage { get; set; }
-
         [JsonConverter(typeof(StringEnumConverter))]
         EffectType EffectType { get; set; }
         bool CanMiss { get; set; }
+
+        /// <summary>
+        /// The volume occupied by the spell, should take into account only the volume that "hits" something, should be in cm3
+        /// </summary>
         int Volume { get; set; }
         bool IsResistable { get; set; }
         bool IgnoresWall { get; set; }
@@ -29,6 +31,28 @@ namespace MagusEngine.Core.Magic.Interfaces
         void ApplyEffect(Point target, Actor caster, Spell spellCasted);
 
         DamageType? GetDamageType();
+    }
+
+    public abstract class SpellEffectBase : ISpellEffect
+    {
+        public SpellAreaEffect AreaOfEffect { get; set; }
+        public int BaseDamage { get; set; }
+        public int Radius { get; set; }
+        public double ConeCircleSpan { get; set; }
+        public bool TargetsTile { get; set; }
+        public EffectType EffectType { get; set; }
+        public bool CanMiss { get; set; }
+        public bool IsResistable { get; set; }
+        public string SpellDamageTypeId { get; set; }
+
+        /// <summary>
+        /// The volume occupied by the spell, should take into account only the volume that "hits" something, should be in cm3
+        /// </summary>
+        public int Volume { get; set; }
+        public bool IgnoresWall { get; set; }
+
+        public abstract void ApplyEffect(Point target, Actor caster, Spell spellCasted);
+        public abstract DamageType? GetDamageType();
     }
 
     public interface IPermEffect

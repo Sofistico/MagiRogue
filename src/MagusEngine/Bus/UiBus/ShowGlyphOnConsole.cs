@@ -1,15 +1,19 @@
+using Arquimedes.Enumerators;
+
 namespace MagusEngine.Bus.UiBus
 {
     public class ShowGlyphOnConsole
     {
         public char Glyph { get; set; }
         public Point Position { get; set; }
-        public int WindowTagId { get; set; }
+        public WindowTag WindowTag { get; set; }
 
-        public ShowGlyphOnConsole(char glyph, int windowTagId, Point position)
+        public int LastUsedGlyph { get; set; }
+
+        public ShowGlyphOnConsole(char glyph, WindowTag windowTag, Point position)
         {
             Glyph = glyph;
-            WindowTagId = windowTagId;
+            WindowTag = windowTag;
             Position = position;
         }
     }

@@ -33,12 +33,12 @@ namespace MagusEngine.Components.EntityComponents.Projectiles
 
         protected override void OnHitAnimation()
         {
-            if(!_animate)
+            if (!_animate)
                 return;
 
             if (Parent!.GetComponent<IAnimationHit>(out var animation, "spell-animation"))
             {
-                animation.AnimateHit();
+                animation.AnimateHit(Parent.Position);
             }
         }
     }

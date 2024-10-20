@@ -1,15 +1,5 @@
-﻿namespace Diviner.Enums
+﻿namespace Diviner.Exceptions
 {
-    public enum WindowTag
-    {
-        Undefined,
-        Main,
-        Map,
-        Status,
-        Wait,
-        Look
-    }
-
     public class UndefinedWindowTagException : ApplicationException
     {
         public UndefinedWindowTagException() : base()

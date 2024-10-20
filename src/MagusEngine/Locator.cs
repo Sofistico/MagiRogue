@@ -37,7 +37,6 @@ namespace MagusEngine
                 { typeof(IDGenerator), new IDGenerator() },
                 { typeof(SavingService), new SavingService() },
                 { typeof(MagiLog), new MagiLog() },
-                // { typeof(EntityRegistry), new EntityRegistry(100000u) },
             };
         }
     }

@@ -63,7 +63,7 @@
     "Name": "Fire Ray",
     "Description": "A ray of fire leaves your finger and strikes the opponent!",
     "MagicArt": "Projection",
-    //"Manifestation": "Instant",
+    "Manifestation": "Instant",
     "SpellRange": 5,
     "MagicCost": 2.5,
     "Id": "fire_ray",
@@ -113,7 +113,8 @@
         "BaseDamage": 6,
         "Radius": 3,
         "Volume": 1000,
-        "EffectType": "DAMAGE"
+        "EffectType": "DAMAGE",
+        "Animation": "Kaboom"
       }
     ],
     "Name": "Fire Ball",

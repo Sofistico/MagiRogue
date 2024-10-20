@@ -1,4 +1,6 @@
-﻿using Arquimedes.Settings;
+﻿using System.Diagnostics.CodeAnalysis;
+using Arquimedes.Enumerators;
+using Arquimedes.Settings;
 using Diviner.Enums;
 using Diviner.Interfaces;
 using Diviner.Windows;
@@ -281,10 +283,10 @@ namespace Diviner
 
         public void Handle([NotNull] ShowGlyphOnConsole message)
         {
-            var windowTag = (WindowTag)message.WindowTagId;
-            var window = GetWindow<MagiBaseWindow>(windowTag);
+            var window = GetWindow<MagiBaseWindow>(message.WindowTag);
             var originalGlyph = window.GetGlyph(message.Position.X, message.Position.Y);
             window.SetGlyph(message.Position.X, message.Position.Y, message.Glyph);
+            message.LastUsedGlyph = originalGlyph;
         }
 
         ~UIManager()
