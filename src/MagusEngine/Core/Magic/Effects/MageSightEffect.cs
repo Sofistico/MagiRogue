@@ -10,31 +10,20 @@ using Newtonsoft.Json;
 
 namespace MagusEngine.Core.Magic.Effects
 {
-    public class MageSightEffect : ISpellEffect
+    public class MageSightEffect : SpellEffectBase
     {
-        public SpellAreaEffect AreaOfEffect { get; set; }
-        public string SpellDamageTypeId { get; set; }
-
         public int Duration { get; set; }
-        public int Radius { get; set; }
-        public double ConeCircleSpan { get; set; }
-        public bool IsResistable { get; set; }
-        public bool TargetsTile { get; set; }
-        public EffectType EffectType { get; set; } = EffectType.MAGESIGHT;
-        public int BaseDamage { get; set; } = 0;
-        public bool CanMiss { get; set; }
-        public string? EffectMessage { get; set; }
-        public int Volume { get; set; }
-        public bool IgnoresWall { get; set; }
+        public string EffectMessage { get; set; }
 
         [JsonConstructor]
         public MageSightEffect(int duration)
         {
             Duration = duration;
             AreaOfEffect = SpellAreaEffect.Self;
+            EffectType = EffectType.MAGESIGHT;
         }
 
-        public void ApplyEffect(Point target, Actor caster, Spell spellCasted)
+        public override void ApplyEffect(Point target, Actor caster, Spell spellCasted)
         {
             var actor = Find.CurrentMap?.GetEntityAt<Actor>(target);
             if (actor?.GetComponent(out SightComponent _) == true)
@@ -44,11 +33,6 @@ namespace MagusEngine.Core.Magic.Effects
             }
             SightComponent effect = new(Find.Universe.Time.Tick, Find.Universe.Time.Tick + (Duration * TimeDefSpan.CentisecondsPerSecond), EffectMessage);
             actor?.AddComponent(effect);
-        }
-
-        public DamageType? GetDamageType()
-        {
-            return null;
         }
     }
 }

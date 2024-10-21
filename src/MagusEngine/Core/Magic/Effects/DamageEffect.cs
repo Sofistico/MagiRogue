@@ -22,6 +22,7 @@ namespace MagusEngine.Core.Magic.Effects
         public DamageEffect()
         {
             EffectType = EffectType.DAMAGE;
+            SpellDamageTypeId = "blunt";
         }
 
         [JsonConstructor]
@@ -48,6 +49,8 @@ namespace MagusEngine.Core.Magic.Effects
                 DmgEff(target, caster, spellCasted);
             else
                 HealEffect(target, caster, spellCasted);
+
+            base.ApplyEffect(target, caster, spellCasted);
         }
 
         private void DmgEff(Point target, Actor caster, Spell spellCasted)
@@ -105,12 +108,7 @@ namespace MagusEngine.Core.Magic.Effects
             }
         }
 
-        public override DamageType GetDamageType()
-        {
-            return DataManager.QueryDamageInData(SpellDamageTypeId);
-        }
-
-        public Attack ReturnAttack()
+        private Attack ReturnAttack()
         {
             return new()
             {
