@@ -168,9 +168,9 @@ namespace Diviner.Windows
         {
             int i = 0;
             int x = Width / 2;
-            foreach (ControlBase button in Controls)
+            foreach (MagiButton button in Controls.Cast<MagiButton>())
             {
-                button.Position = new Point(x, 2 + (i * 2));
+                button.Position = new Point(x - Title.Length, 2 + (i * 2));
                 ++i;
             }
         }
