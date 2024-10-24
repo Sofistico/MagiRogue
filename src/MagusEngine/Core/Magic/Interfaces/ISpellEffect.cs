@@ -56,7 +56,6 @@ namespace MagusEngine.Core.Magic.Interfaces
 
         public virtual void ApplyEffect(Point target, Actor caster, Spell spellCasted)
         {
-
         }
 
         public virtual DamageType? GetDamageType()
@@ -66,7 +65,6 @@ namespace MagusEngine.Core.Magic.Interfaces
 
         public virtual void AnimateEffect(Point target, Actor caster, Spell spellCasted)
         {
-
         }
     }
 }

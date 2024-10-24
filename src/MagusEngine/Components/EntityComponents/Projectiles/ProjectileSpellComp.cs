@@ -36,10 +36,11 @@ namespace MagusEngine.Components.EntityComponents.Projectiles
             if (!_animate)
                 return;
 
-            if (Parent!.GetComponent<IAnimationHit>(out var animation, "spell-animation"))
-            {
-                animation.AnimateHit(Parent.Position);
-            }
+            // let me see if i apply the animation effect on the spell effect, rather than on here
+            // if (Parent!.GetComponent<IAnimationHit>(out var animation, "spell-animation"))
+            // {
+            //     animation.AnimateHit(Parent.Position);
+            // }
         }
     }
 }

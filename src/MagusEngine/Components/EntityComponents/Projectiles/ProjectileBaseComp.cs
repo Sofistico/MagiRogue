@@ -118,7 +118,7 @@ namespace MagusEngine.Components.EntityComponents.Projectiles
         {
             projectile.AddComponent(this, tag);
             Locator.GetService<MessageBusService>().SendMessage<AddEntitiyCurrentMap>(new(projectile));
-            Locator.GetService<MessageBusService>().SendMessage<AddTurnNode>(new(new ComponentTimeNode(TicksToMoveOneStep, projectile.ID, Travel)));
+            Locator.GetService<MessageBusService>().SendMessage<AddTurnNode>(new(new TickActionNode(TicksToMoveOneStep, projectile.ID, Travel)));
         }
     }
 }

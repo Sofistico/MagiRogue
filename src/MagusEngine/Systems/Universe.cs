@@ -22,21 +22,20 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace MagusEngine.Systems
 {
     /// <summary>
     /// All game state data is stored in the Universe also creates and processes generators for map creation
     /// </summary>
+    // TODO: Break down the universe in more discrete systems
     [JsonConverter(typeof(UniverseJsonConverter))]
     public sealed class Universe :
         ISubscriber<ChangeControlledActorMap>,
         ISubscriber<ChangeControlledEntitiy>,
         ISubscriber<AddEntitiyCurrentMap>,
         ISubscriber<ProcessTurnEvent>,
-        ISubscriber<RemoveEntitiyCurrentMap>,
-        ISubscriber<AddTurnNode>
+        ISubscriber<RemoveEntitiyCurrentMap>
     {
         /// <summary>
         /// The World map, contains the map data and the Planet data
@@ -225,7 +224,7 @@ namespace MagusEngine.Systems
         public void AddEntityToCurrentMap(MagiEntity entity)
         {
             CurrentMap.AddMagiEntity(entity);
-            AddEntityToTime(entity);
+            Locator.GetService<MessageBusService>().SendMessage(new AddTurnNode(new EntityTimeNode(entity.ID, 0)));
         }
 
         public static void ChangeActorMap(MagiEntity entity, MagiMap mapToGo, Point pos, MagiMap? previousMap)
@@ -239,17 +238,6 @@ namespace MagusEngine.Systems
         {
             Locator.GetService<SavingService>().SaveGameToFolder(this, saveName);
         }
-
-        /*/// <summary>
-        /// Sets up anything that needs to be set up after map gen and after placing entities, like
-        /// the nodes turn system </summary>
-        private void SetUpStuff(Map map)
-        {
-            foreach (NodeTile node in map.Tiles.OfType<NodeTile>())
-            {
-                node.SetUpNodeTurn(this);
-            }
-        }*/
 
         private void CreateTestMap()
         {
@@ -287,16 +275,6 @@ namespace MagusEngine.Systems
             return WorldMap.AssocietatedMap;
         }
 
-        // register to next turn
-        private void AddEntityToTime(MagiEntity entity, long time = 0) => AddEntityToTime(entity.ID, time);
-
-        private void AddEntityToTime(uint entityId, long time = 0)
-        {
-            // register to next turn
-            if (!Time.Nodes.Any(i => i.Id.Equals(entityId)))
-                Time.RegisterNode(new EntityTimeNode(entityId, Time.GetTimePassed(time)));
-        }
-
         private void ProcessTurn(long playerTime, bool sucess)
         {
             if (sucess)
@@ -319,7 +297,7 @@ namespace MagusEngine.Systems
                             ProcessAiTurn(entityTurn.Id);
                             break;
 
-                        case ComponentTimeNode componentTurn:
+                        case TickActionNode componentTurn:
                             ProcessComponentTurn(componentTurn);
                             break;
 
@@ -344,16 +322,13 @@ namespace MagusEngine.Systems
             }
         }
 
-        private void ProcessComponentTurn(ComponentTimeNode componentTurn)
+        private void ProcessComponentTurn(TickActionNode componentTurn)
         {
             var nextInvoke = componentTurn.Action.Invoke();
             if (nextInvoke > 0)
-                AddComponentToTime(componentTurn, nextInvoke);
-        }
-
-        private void AddComponentToTime(ComponentTimeNode componentTurn, long ticks)
-        {
-            Time.RegisterNode(new ComponentTimeNode(Time.GetTimePassed(ticks), componentTurn.Id, componentTurn.Action));
+            {
+                Locator.GetService<MessageBusService>().SendMessage(new AddTurnNode(componentTurn, nextInvoke));
+            }
         }
 
         private IEnumerable<Actor> GetEntitiesIds()
@@ -361,14 +336,14 @@ namespace MagusEngine.Systems
             return CurrentChunk?.TotalPopulation() ?? [];
         }
 
-        private void RegisterInTime(IEnumerable<Actor> population)
+        private static void RegisterInTime(IEnumerable<Actor> population)
         {
             // called only once, to properly register the entity
             if (population is null)
                 return;
             foreach (Actor actor in population)
             {
-                AddEntityToTime(actor);
+                Locator.GetService<MessageBusService>().SendMessage(new AddTurnNode(new EntityTimeNode(actor.ID, 0)));
             }
         }
 
@@ -520,20 +495,6 @@ namespace MagusEngine.Systems
         public void Handle(ChangeControlledEntitiy message)
         {
             ChangeControlledEntity(message.ControlledEntitiy);
-        }
-
-        public void Handle(AddTurnNode message)
-        {
-            switch (message.Node)
-            {
-                case EntityTimeNode:
-                    AddEntityToTime(message.Node.Id, message.Node.Tick);
-                    break;
-
-                case ComponentTimeNode component:
-                    AddComponentToTime(component, component.Tick);
-                    break;
-            }
         }
 
         ~Universe()
