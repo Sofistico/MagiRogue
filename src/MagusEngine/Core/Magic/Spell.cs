@@ -349,7 +349,10 @@ namespace MagusEngine.Core.Magic
 
         public override bool Equals(object? obj)
         {
-            return GetHashCode() == obj?.GetHashCode();
+            if (obj is null) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return string.Equals(Id, ((Spell)obj).Id);
         }
 
         public SpellEntity GetSpellEntity(MagiEntity caster, Direction dir, Point pos)

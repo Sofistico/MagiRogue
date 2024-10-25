@@ -29,7 +29,8 @@ namespace MagusEngine.Core.Magic.Effects
             var entity = caster?.CurrentMagiMap?.GetEntityAt<MagiEntity>(target);
             if (ActionManager.MoveActorTo(entity, target))
             {
-                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{entity.Name} disappeared!"));
+                var entityName = entity?.Name ?? "Unknown entity";
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{entityName} disappeared!"));
             }
         }
     }

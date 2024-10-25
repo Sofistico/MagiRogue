@@ -139,7 +139,9 @@ namespace MagusEngine.Core
 
         public MagiColorSerialization ReturnMagiColor()
         {
-            magiColorSerialization ??= new MagiColorSerialization(Color!);
+            if (Color == null)
+                throw new InvalidOperationException("Color property must be initialized before calling ReturnMagiColor");
+            magiColorSerialization ??= new MagiColorSerialization(Color);
             return magiColorSerialization.Value;
         }
 

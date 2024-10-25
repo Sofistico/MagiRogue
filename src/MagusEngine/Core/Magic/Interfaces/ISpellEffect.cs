@@ -23,7 +23,7 @@ namespace MagusEngine.Core.Magic.Interfaces
         bool CanMiss { get; set; }
 
         /// <summary>
-        /// The volume occupied by the spell, should take into account only the volume that "hits" something, should be in cm3
+        /// The volume occupied by the spell, should take into account only the volume that "hits" something, should be in cm³
         /// </summary>
         int Volume { get; set; }
         bool IsResistable { get; set; }
