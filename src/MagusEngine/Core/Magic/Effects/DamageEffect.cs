@@ -12,30 +12,17 @@ namespace MagusEngine.Core.Magic.Effects
     /// <summary>
     /// Basic damage effect, can determine if it auto hits or if it heals
     /// </summary>
-    public class DamageEffect : ISpellEffect
+    public class DamageEffect : SpellEffectBase
     {
-        public SpellAreaEffect AreaOfEffect { get; set; }
-        public int BaseDamage { get; set; }
-        public int Radius { get; set; }
-        public double ConeCircleSpan { get; set; }
-        public bool TargetsTile { get; set; }
-        public EffectType EffectType { get; set; } = EffectType.DAMAGE;
         public bool IsHealing { get; set; }
-        public bool CanMiss { get; set; }
-        public bool IsResistable { get; set; }
         public string? EffectMessage { get; set; }
-        public string SpellDamageTypeId { get; set; }
-
-        /// <summary>
-        /// The volume occupied by the spell, should take into account only the volume that "hits" something, should be in cm3
-        /// </summary>
-        public int Volume { get; set; }
         public int VelocityAttackMultiplier { get; set; }
         public double PenetrationPercentage { get; set; }
-        public bool IgnoresWall { get; set; }
 
         public DamageEffect()
         {
+            EffectType = EffectType.DAMAGE;
+            SpellDamageTypeId = "blunt";
         }
 
         [JsonConstructor]
@@ -56,12 +43,14 @@ namespace MagusEngine.Core.Magic.Effects
             IsResistable = isResistable;
         }
 
-        public void ApplyEffect(Point target, Actor caster, Spell spellCasted)
+        public override void ApplyEffect(Point target, Actor caster, Spell spellCasted)
         {
             if (!IsHealing)
                 DmgEff(target, caster, spellCasted);
             else
                 HealEffect(target, caster, spellCasted);
+
+            base.ApplyEffect(target, caster, spellCasted);
         }
 
         private void DmgEff(Point target, Actor caster, Spell spellCasted)
@@ -86,6 +75,10 @@ namespace MagusEngine.Core.Magic.Effects
             }
 
             CombatSystem.ResolveSpellHit(poorGuy, caster, spellCasted, this, ReturnAttack());
+
+            //TODO: Make this work later
+            // if (GetDamageType().TerrainInteraction != TerrainInteractionEnum.None)
+            //     PhysicsSystem.DealWithTileInteraction(BaseDamage, Radius, Volume, GetDamageType();
         }
 
         private void HealEffect(Point target, Actor caster, Spell spellCasted)
@@ -115,12 +108,7 @@ namespace MagusEngine.Core.Magic.Effects
             }
         }
 
-        public DamageType GetDamageType()
-        {
-            return DataManager.QueryDamageInData(SpellDamageTypeId);
-        }
-
-        public Attack ReturnAttack()
+        private Attack ReturnAttack()
         {
             return new()
             {

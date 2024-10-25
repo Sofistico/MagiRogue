@@ -5,6 +5,7 @@ using MagusEngine.Systems;
 using MagusEngine.Systems.Physics;
 using MagusEngine.Utils;
 using MagusEngine.Utils.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -139,15 +140,17 @@ namespace MagusEngine.Core
 
         public MagiColorSerialization ReturnMagiColor()
         {
+            if (Color == null)
+                throw new InvalidOperationException("Color property must be initialized before calling ReturnMagiColor");
             magiColorSerialization ??= new MagiColorSerialization(Color);
-            return magiColorSerialization ?? default;
+            return magiColorSerialization.Value;
         }
 
         public Material? GetMaterialThatLiquidTurns()
         {
-            if (string.IsNullOrEmpty(LiquidTurnsInto))
+            if (LiquidTurnsInto.IsNullOrEmpty())
                 return null;
-            return DataManager.QueryMaterial(LiquidTurnsInto);
+            return DataManager.QueryMaterial(LiquidTurnsInto!);
         }
 
         private string GetDebuggerDisplay()

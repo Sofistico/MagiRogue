@@ -1,5 +1,4 @@
 ﻿using Arquimedes.Interfaces;
-using MagusEngine.ECS;
 using MagusEngine.Services;
 using MagusEngine.Systems.Physics;
 using SadConsole.Entities;
@@ -220,21 +219,21 @@ namespace MagusEngine.Core.Entities.Base
 
         public void AddComponent<T>(T component, string? tag = null) where T : class
         {
-            // if (GoRogueComponents.Contains<T>(tag))
-            //     return;
             try
             {
+                if (GoRogueComponents.Contains<T>(tag))
+                    return;
                 GoRogueComponents.Add(component, tag);
                 // Locator.GetService<EntityRegistry>()?.AddComponent(ID, component);
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
-                Locator.GetService<MagiLog>().Log($"Component {component} is null for entity {ID}-{this}");
+                Locator.GetService<MagiLog>().Log($"Component {component} has throw an exception {ex.Message} for entity {ID}-{this}");
             }
         }
 
-        public T GetComponent<T>() where T : class
-            => GoRogueComponents?.GetFirstOrDefault<T>()!;
+        public T GetComponent<T>(string? tag = null) where T : class
+            => GoRogueComponents?.GetFirstOrDefault<T>(tag)!;
 
         public bool GetComponent<T>(out T component, string? tag = null) where T : class
         {

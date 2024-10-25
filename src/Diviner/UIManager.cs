@@ -1,5 +1,7 @@
-﻿using Arquimedes.Settings;
-using Diviner.Enums;
+﻿using System.Diagnostics.CodeAnalysis;
+using Arquimedes.Enumerators;
+using Arquimedes.Settings;
+using Diviner.Exceptions;
 using Diviner.Interfaces;
 using Diviner.Windows;
 using GoRogue.Messaging;
@@ -23,9 +25,10 @@ namespace Diviner
         ISubscriber<TogglePopWindowMessage>,
         ISubscriber<StartGameMessage>,
         ISubscriber<RestartGame>,
-        ISubscriber<LookStuff>
+        ISubscriber<LookStuff>,
+        ISubscriber<ShowGlyphOnConsole>
     {
-        private readonly Dictionary<WindowTag, IWindowTagContract> windows = [];
+        private readonly Dictionary<WindowTag, IWindowTagContract> _windows = [];
         private Universe? _universe;
 
         #region Managers
@@ -123,7 +126,7 @@ namespace Diviner
             MapWindow.LoadMap(uni.CurrentMap);
             // Start the game with the camera focused on the player
             MapWindow.CenterOnActor(uni.Player);
-
+            AddWindowToList(MapWindow);
             Children.Add(StatusWindow);
             Children.Add(MessageLog);
             StatusWindow.Show();
@@ -231,7 +234,7 @@ namespace Diviner
 
         public T? GetWindow<T>(WindowTag tag) where T : IWindowTagContract
         {
-            windows.TryGetValue(tag, out var window);
+            _windows.TryGetValue(tag, out var window);
             return (T?)window;
         }
 
@@ -241,7 +244,7 @@ namespace Diviner
             {
                 throw new UndefinedWindowTagException($"The tag for the window was undefined! Window: {window}");
             }
-            windows.Add(window.Tag, window);
+            _windows.Add(window.Tag, window);
         }
 
         #endregion HelperMethods
@@ -276,6 +279,14 @@ namespace Diviner
                 look = new LookWindow(message.Entitiy!);
 
             look.Show(true);
+        }
+
+        public void Handle([NotNull] ShowGlyphOnConsole message)
+        {
+            var window = GetWindow<MagiBaseWindow>(message.WindowTag);
+            var originalGlyph = window.GetGlyph(message.Position.X, message.Position.Y);
+            window.SetGlyph(message.Position.X, message.Position.Y, message.Glyph);
+            message.LastUsedGlyph = originalGlyph;
         }
 
         ~UIManager()

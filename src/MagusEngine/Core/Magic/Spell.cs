@@ -1,11 +1,11 @@
-﻿using Arquimedes.Enumerators;
+using Arquimedes.Enumerators;
 using Arquimedes.Interfaces;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic.Interfaces;
 using MagusEngine.Core.MapStuff;
-using MagusEngine.ECS.Components.EntityComponents.Projectiles;
+using MagusEngine.Components.EntityComponents.Projectiles;
 using MagusEngine.Serialization.EntitySerialization;
 using MagusEngine.Services;
 using MagusEngine.Systems;
@@ -26,7 +26,7 @@ namespace MagusEngine.Core.Magic
     [JsonConverter(typeof(SpellJsonConverter))]
     public sealed class Spell : IJsonKey, INamed, ISpell
     {
-        private const double _maxSpellProficiency = 3.0;
+        private const double _maxSpellProficiency = 10.0;
         [JsonProperty(PropertyName = "Proficiency")]
         private double _proficency;
         [JsonIgnore]
@@ -342,23 +342,27 @@ namespace MagusEngine.Core.Magic
                 .AppendLine(MagicArt.ToString()).ToString();
         }
 
-        // public override int GetHashCode()
-        // {
-        //     return Id.GetHashCode();
-        // }
-        //
-        // public override bool Equals(object? obj)
-        // {
-        //     return GetHashCode() == obj?.GetHashCode();
-        // }
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is null) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return string.Equals(Id, ((Spell)obj).Id);
+        }
 
         public SpellEntity GetSpellEntity(MagiEntity caster, Direction dir, Point pos)
         {
-            string foreground = Fore.Equals("{caster}") ? caster.GetComponent<Magic>().MagicColor : Fore;
-            return new SpellEntity(Id, foreground, Back, dir.TranslateDirToGlyph(Glyphs), this, pos, caster)
+            string foreground = Fore.Equals("{caster}", StringComparison.Ordinal) ? caster.GetComponent<Magic>().MagicColor : Fore;
+            var entity = new SpellEntity(Id, foreground, Back, dir.TranslateDirToGlyph(Glyphs), this, pos, caster)
             {
-                Name = Name
+                Name = Name,
             };
+            return entity;
         }
     }
 }

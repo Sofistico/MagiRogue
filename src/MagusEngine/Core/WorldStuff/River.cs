@@ -1,4 +1,4 @@
-﻿using MagusEngine.ECS.Components.TilesComponents;
+using MagusEngine.Components.TilesComponents;
 using System.Collections.Generic;
 
 namespace MagusEngine.Core.WorldStuff

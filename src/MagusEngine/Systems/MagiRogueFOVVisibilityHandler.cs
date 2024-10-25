@@ -1,8 +1,8 @@
-﻿using MagusEngine.Core.Entities;
+using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
-using MagusEngine.ECS.Components.EntityComponents;
-using MagusEngine.ECS.Components.TilesComponents;
+using MagusEngine.Components.EntityComponents;
+using MagusEngine.Components.TilesComponents;
 using SadRogue.Primitives;
 using System.Collections.Generic;
 

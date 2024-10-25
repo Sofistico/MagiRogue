@@ -1,8 +1,13 @@
-﻿using MagusEngine.Serialization;
-using Priority_Queue;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
+using GoRogue.Messaging;
+using MagusEngine.Bus.MapBus;
+using MagusEngine.Core.Entities.Base;
+using MagusEngine.Serialization;
+using MagusEngine.Systems.Time.Nodes;
+using Priority_Queue;
 
 namespace MagusEngine.Systems.Time
 {
@@ -10,7 +15,7 @@ namespace MagusEngine.Systems.Time
     /// Time system using nodes and a priority queue
     /// </summary>
     [JsonConverter(typeof(TimeJsonConverter))]
-    public class TimeSystem : ITimeSystem
+    public class TimeSystem : ITimeSystem, ISubscriber<AddTurnNode>
     {
         public event EventHandler<TimeDefSpan>? TurnPassed;
 
@@ -65,6 +70,32 @@ namespace MagusEngine.Systems.Time
         public int GetNHoursFromTurn(int hours)
         {
             return Turns * TimeDefSpan.SecondsPerHour * hours;
+        }
+
+        public void Handle(AddTurnNode message)
+        {
+            switch (message.Node)
+            {
+                case EntityTimeNode:
+                    AddEntityToTime(message.Node.Id, message.Node.Tick);
+                    break;
+
+                case TickActionNode component:
+                    AddComponentToTime(component, component.Tick);
+                    break;
+            }
+        }
+
+        private void AddComponentToTime(TickActionNode componentTurn, long ticks)
+        {
+            RegisterNode(new TickActionNode(GetTimePassed(ticks), componentTurn.Id, componentTurn.Action));
+        }
+
+        private void AddEntityToTime(uint entityId, long time = 0)
+        {
+            // register to next turn
+            if (!Nodes.Any(i => i.Id.Equals(entityId)))
+                RegisterNode(new EntityTimeNode(entityId, GetTimePassed(time)));
         }
     }
 }

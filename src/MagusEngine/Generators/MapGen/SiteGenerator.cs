@@ -1,8 +1,8 @@
-﻿using Arquimedes.Enumerators;
+using Arquimedes.Enumerators;
 using GoRogue.Random;
 using MagusEngine.Core.Civ;
 using MagusEngine.Core.MapStuff;
-using MagusEngine.ECS.Components.TilesComponents;
+using MagusEngine.Components.TilesComponents;
 using MagusEngine.Factory;
 using MagusEngine.Serialization.MapConverter;
 using MagusEngine.Systems;

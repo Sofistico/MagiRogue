@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Arquimedes.Enumerators;
 using GoRogue.Components;
 using MagusEngine.Core.Entities.Base;
-using MagusEngine.ECS;
 using MagusEngine.Services;
 using MagusEngine.Systems;
 using SadConsole;

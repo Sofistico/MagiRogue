@@ -1,4 +1,5 @@
-﻿using Diviner.Controls;
+﻿using Arquimedes.Enumerators;
+using Diviner.Controls;
 using MagusEngine.Actions;
 using MagusEngine.Core.Entities;
 using MagusEngine.Systems;
@@ -36,7 +37,7 @@ namespace Diviner.Windows
             _hotKeys.Add('b', (wait3Hour, true));
             _hotKeys.Add('c', (wait6Hour, true));
             SetupSelectionButtons(wait1Hour, wait3Hour, wait6Hour);
-            Tag = Enums.WindowTag.Wait;
+            Tag = WindowTag.Wait;
         }
 
         public override bool ProcessKeyboard(Keyboard info)

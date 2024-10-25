@@ -1,7 +1,7 @@
-﻿using Arquimedes.Enumerators;
+using Arquimedes.Enumerators;
 using MagusEngine.Core.Civ;
 using MagusEngine.Core.WorldStuff.TechRes;
-using MagusEngine.ECS.Components.TilesComponents;
+using MagusEngine.Components.TilesComponents;
 using MagusEngine.Systems;
 using MagusEngine.Utils;
 using MagusEngine.Utils.Extensions;

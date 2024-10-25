@@ -1,9 +1,9 @@
-﻿using Arquimedes.Enumerators;
+using Arquimedes.Enumerators;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.Core.WorldStuff.History;
 using MagusEngine.Core.WorldStuff.TechRes;
-using MagusEngine.ECS.Components.TilesComponents;
+using MagusEngine.Components.TilesComponents;
 using MagusEngine.Generators;
 using MagusEngine.Serialization;
 using MagusEngine.Systems;

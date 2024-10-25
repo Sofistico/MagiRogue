@@ -1,10 +1,10 @@
-﻿using Arquimedes.Enumerators;
+using Arquimedes.Enumerators;
 using GoRogue.DiceNotation;
 using MagusEngine.Core.Civ;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.Core.WorldStuff;
 using MagusEngine.Core.WorldStuff.History;
-using MagusEngine.ECS.Components.TilesComponents;
+using MagusEngine.Components.TilesComponents;
 using MagusEngine.Systems;
 using MagusEngine.Utils;
 using MagusEngine.Utils.Extensions;

@@ -22,7 +22,8 @@
     "Id": "fire",
     "Name": "Fire",
     "SeverityDmgString": [ "scorching", "burning", "incinerating" ],
-    "Type": "Fire"
+    "Type": "Fire",
+    "TerrainInteraction": "CreateField"
   },
   {
     "Id": "cold",

@@ -1,7 +1,7 @@
-﻿using Arquimedes.Enumerators;
+using Arquimedes.Enumerators;
 using MagusEngine.Core;
 using MagusEngine.Core.MapStuff;
-using MagusEngine.ECS.Components.TilesComponents;
+using MagusEngine.Components.TilesComponents;
 using MagusEngine.Factory;
 using SadRogue.Primitives;
 using System;

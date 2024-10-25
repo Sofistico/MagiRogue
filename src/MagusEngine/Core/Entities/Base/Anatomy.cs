@@ -1,8 +1,8 @@
-﻿using Arquimedes.Enumerators;
+using Arquimedes.Enumerators;
 using GoRogue.Random;
 using MagusEngine.Actions;
 using MagusEngine.Bus.UiBus;
-using MagusEngine.ECS.Components.EntityComponents;
+using MagusEngine.Components.EntityComponents;
 using MagusEngine.Services;
 using MagusEngine.Systems;
 using MagusEngine.Utils;

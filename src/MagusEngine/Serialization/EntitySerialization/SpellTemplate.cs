@@ -24,10 +24,6 @@ namespace MagusEngine.Serialization.EntitySerialization
                 var eff = EnumToEffect(effect, token);
                 if (eff is null)
                     continue;
-                //if (token["ConeCircleSpan"] != null)
-                //    eff.ConeCircleSpan = (double)token["ConeCircleSpan"]!;
-                //if (token["EffectMessage"] != null)
-                //    eff.EffectMessage = token["EffectMessage"]?.ToString();
                 effectsList.Add(eff);
             }
 
@@ -42,7 +38,7 @@ namespace MagusEngine.Serialization.EntitySerialization
             {
                 Description = spell["Description"]?.ToString(),
                 Effects = effectsList,
-                //Steps = JsonConvert.DeserializeObject<List<IMagicStep>>(spell["Steps"]!.ToString())!,
+                Steps = JsonConvert.DeserializeObject<List<IMagicStep>>(spell["Steps"]!.ToString())!,
             };
             if (spell.ContainsKey("Proficiency"))
                 createdSpell.Proficiency = (double)spell["Proficiency"]!;

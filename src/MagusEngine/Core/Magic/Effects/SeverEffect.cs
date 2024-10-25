@@ -9,20 +9,9 @@ namespace MagusEngine.Core.Magic.Effects
     /// <summary>
     /// Spell like a blade, designed to chop people limbs off
     /// </summary>
-    public class SeverEffect : ISpellEffect
+    public class SeverEffect : SpellEffectBase
     {
-        public SpellAreaEffect AreaOfEffect { get; set; }
-        public string SpellDamageTypeId { get; set; }
-        public int Radius { get; set; }
-        public double ConeCircleSpan { get; set; }
-        public bool IsResistable { get; set; }
-        public bool TargetsTile { get; set; }
-        public EffectType EffectType { get; set; } = EffectType.SEVER;
-        public int BaseDamage { get; set; }
-        public bool CanMiss { get; set; }
         public string? EffectMessage { get; set; }
-        public int Volume { get; set; }
-        public bool IgnoresWall { get; set; }
 
         [JsonConstructor]
         public SeverEffect(SpellAreaEffect areaOfEffect, string spellDamageTypeId, int radius, int dmg)
@@ -31,9 +20,11 @@ namespace MagusEngine.Core.Magic.Effects
             SpellDamageTypeId = spellDamageTypeId;
             Radius = radius;
             BaseDamage = dmg;
+            EffectType = EffectType.SEVER;
+            SpellDamageTypeId = "sharp";
         }
 
-        public void ApplyEffect(Point target, Actor caster, Spell spellCasted)
+        public override void ApplyEffect(Point target, Actor caster, Spell spellCasted)
         {
             CutLimb(target, caster, spellCasted);
         }
@@ -66,11 +57,6 @@ namespace MagusEngine.Core.Magic.Effects
                     damage.ApplyEffect(target, caster, spellCasted);
                 }
             }
-        }
-
-        public DamageType? GetDamageType()
-        {
-            return DataManager.QueryDamageInData(SpellDamageTypeId);
         }
     }
 }

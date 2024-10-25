@@ -1,12 +1,11 @@
-﻿using Arquimedes.Enumerators;
+using Arquimedes.Enumerators;
 using GoRogue.GameFramework;
 using GoRogue.Pathing;
 using GoRogue.Random;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
-using MagusEngine.ECS;
-using MagusEngine.ECS.Components.EntityComponents;
-using MagusEngine.ECS.Components.TilesComponents;
+using MagusEngine.Components.EntityComponents;
+using MagusEngine.Components.TilesComponents;
 using MagusEngine.Factory;
 using MagusEngine.Serialization.MapConverter;
 using MagusEngine.Systems;
