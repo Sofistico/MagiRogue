@@ -1,3 +1,5 @@
+using System;
+
 namespace MagusEngine.Components.TilesComponents;
 
 /// <summary>
@@ -46,7 +48,7 @@ public abstract class BaseTileField : BaseEffectComponent
             throw new ArgumentException("Tag cannot be null or empty", nameof(tag));
         if (basePower < 0)
             throw new ArgumentException("Base power cannot be negative", nameof(basePower));
-            
+
         BasePower = basePower;
     }
 

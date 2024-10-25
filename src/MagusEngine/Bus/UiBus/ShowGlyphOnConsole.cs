@@ -1,3 +1,4 @@
+using System;
 using Arquimedes.Enumerators;
 
 namespace MagusEngine.Bus.UiBus

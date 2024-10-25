@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace MagusEngine.Core.Magic.Effects
 {
-    public class PermEffect : IPermEffect
+    public class PermEffect //: IPermEffect
     {
         // Will be here for remembering, do not know how it will proced
         // 18/12/2021 - I don't really remember why i made it
