@@ -60,6 +60,11 @@ namespace MagusEngine.Core.Magic.Interfaces
 
         public virtual DamageType? GetDamageType()
         {
+            if (string.IsNullOrEmpty(SpellDamageTypeId))
+            {
+                // Handle invalid ID appropriately, e.g., return null or throw an exception
+                return null;
+            }
             return DataManager.QueryDamageInData(SpellDamageTypeId);
         }
 

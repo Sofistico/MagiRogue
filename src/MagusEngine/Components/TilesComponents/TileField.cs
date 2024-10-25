@@ -24,7 +24,13 @@ public class BaseTileField : BaseEffectComponent
             removeMessage
         ) { }
 
-    public override void ExecutePerTurn()
-    {
-    }
+    /// <summary>
+    /// Executes the field effect's per-turn behavior.
+    /// </summary>
+    /// <remarks>
+    /// Derived classes must implement this method to define how the field effect
+    /// behaves each turn, typically using the BasePower property to determine
+    /// the strength of the effect.
+    /// </remarks>
+    public abstract override void ExecutePerTurn();
 }

@@ -1,6 +1,6 @@
 ﻿namespace Diviner.Exceptions
 {
-    public class UndefinedWindowTagException : ApplicationException
+    public class UndefinedWindowTagException : Exception
     {
         public UndefinedWindowTagException() : base()
         {
