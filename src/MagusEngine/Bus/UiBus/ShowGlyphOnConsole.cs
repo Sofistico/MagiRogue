@@ -17,13 +17,13 @@ namespace MagusEngine.Bus.UiBus
         /// <param name="glyph">The character to display</param>
         /// <param name="windowTag">The target window identifier</param>
         /// <param name="position">The position where the glyph will be displayed</param>
-        /// <exception cref="ArgumentNullException">Thrown when position or windowTag is null</exception>
+        /// <exception cref="ArgumentException">Thrown when position or windowTag is null</exception>
         public ShowGlyphOnConsole(char glyph, WindowTag windowTag, Point position)
         {
-            if (windowTag == null)
-                throw new ArgumentNullException(nameof(windowTag));
-            if (position == null)
-                throw new ArgumentNullException(nameof(position));
+            if (windowTag == WindowTag.Undefined)
+                throw new ArgumentException(null, nameof(windowTag));
+            if (position == Point.None)
+                throw new ArgumentException(null, nameof(position));
 
             Glyph = glyph;
             WindowTag = windowTag;

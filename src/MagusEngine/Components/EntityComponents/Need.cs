@@ -27,7 +27,7 @@ namespace MagusEngine.Components.EntityComponents
 
         public int TurnCounter { get; set; }
 
-        public int? MaxTurnCounter { get => Priority == 0 ? null : (int)(Priority * 100000); }
+        public int? MaxTurnCounter => Priority <= 0 ? null : (int)(Priority * 100000);
 
         /// <summary>
         /// Percent of how much it's fulfilled
