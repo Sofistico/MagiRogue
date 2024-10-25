@@ -1,6 +1,10 @@
 namespace MagusEngine.Components.TilesComponents;
 
-public class BaseTileField : BaseEffectComponent
+/// <summary>
+/// Base class for tile-based field effects that can be applied to the game terrain.
+/// Provides core functionality for managing field effects with customizable power levels.
+/// </summary>
+public abstract class BaseTileField : BaseEffectComponent
 {
     public int BasePower { get; set; }
 
