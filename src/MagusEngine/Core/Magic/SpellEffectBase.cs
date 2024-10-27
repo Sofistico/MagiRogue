@@ -15,14 +15,14 @@ namespace MagusEngine.Core.Magic
         public EffectType EffectType { get; set; }
         public bool CanMiss { get; set; }
         public bool IsResistable { get; set; }
-        public string SpellDamageTypeId { get; set; }
+        public string? SpellDamageTypeId { get; set; }
 
         /// <summary>
         /// The volume occupied by the spell, should take into account only the volume that "hits" something, should be in cm3
         /// </summary>
         public int Volume { get; set; }
         public bool IgnoresWall { get; set; }
-        public string Animation { get; set; }
+        public string? Animation { get; set; }
 
         public virtual void ApplyEffect(Point target, Actor caster, Spell spellCasted)
         {
@@ -32,7 +32,7 @@ namespace MagusEngine.Core.Magic
         {
             if (string.IsNullOrEmpty(SpellDamageTypeId))
             {
-                // Handle invalid ID appropriately, e.g., return null or throw an exception
+                // Handle invalid ID appropriately, e.g., return null
                 return null;
             }
             return DataManager.QueryDamageInData(SpellDamageTypeId);

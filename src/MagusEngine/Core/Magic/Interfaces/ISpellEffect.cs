@@ -12,7 +12,7 @@ namespace MagusEngine.Core.Magic.Interfaces
     {
         [JsonConverter(typeof(StringEnumConverter))]
         SpellAreaEffect AreaOfEffect { get; set; }
-        string SpellDamageTypeId { get; set; }
+        string? SpellDamageTypeId { get; set; }
         int Radius { get; set; }
         double ConeCircleSpan { get; set; }
         bool TargetsTile { get; set; }
@@ -27,7 +27,7 @@ namespace MagusEngine.Core.Magic.Interfaces
         int Volume { get; set; }
         bool IsResistable { get; set; }
         bool IgnoresWall { get; set; }
-        string Animation { get; set; }
+        string? Animation { get; set; }
 
         void ApplyEffect(Point target, Actor caster, Spell spellCasted);
 

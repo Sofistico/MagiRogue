@@ -1,4 +1,4 @@
-namespace MagusEngine.Components.EntityComponents.Animations
+namespace MagusEngine.Core.Animations.Interfaces
 {
     public interface IAnimationHit
     {

@@ -1,0 +1,7 @@
+[
+  {
+    "AnimationId": "kaboom",
+    "Glyphs": ["*", "+", "#", "-", "."],
+    "Colors": ["#FF4500", "#FF6347", "#FFD700"]
+  }
+]
