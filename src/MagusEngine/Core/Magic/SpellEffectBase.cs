@@ -22,7 +22,7 @@ namespace MagusEngine.Core.Magic
         /// </summary>
         public int Volume { get; set; }
         public bool IgnoresWall { get; set; }
-        public string? Animation { get; set; }
+        public string? AnimationId { get; set; }
 
         public virtual void ApplyEffect(Point target, Actor caster, Spell spellCasted)
         {

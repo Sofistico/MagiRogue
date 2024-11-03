@@ -1,3 +1,4 @@
+using Arquimedes.Enumerators;
 using Arquimedes.Interfaces;
 
 namespace MagusEngine.Core.Animations
@@ -7,9 +8,8 @@ namespace MagusEngine.Core.Animations
     /// </summary>
     public abstract class AnimationBase : IJsonKey
     {
-        public string Id { get; set; }
-        public required string AnimationId { get; set; }
-        public int LingeringTicks { get; set; }
+        public required string Id { get; set; }
+        public AnimationType AnimationType { get; set; }
 
         /// <summary>
         /// This should be the glphs the animation will use.

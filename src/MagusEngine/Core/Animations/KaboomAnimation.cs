@@ -8,6 +8,7 @@ namespace MagusEngine.Core.Animations
     public class KaboomAnimation : AnimationBase, IAnimationHit
     {
         public int Radius { get; set; }
+        public int LingerinTicks { get; set; }
 
         public KaboomAnimation(int radius)
         {

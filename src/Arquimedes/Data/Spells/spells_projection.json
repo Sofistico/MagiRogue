@@ -114,7 +114,7 @@
         "Radius": 3,
         "Volume": 1000,
         "EffectType": "DAMAGE",
-        "Animation": "Kaboom"
+        "AnimationId": "kaboom"
       }
     ],
     "Name": "Fire Ball",
