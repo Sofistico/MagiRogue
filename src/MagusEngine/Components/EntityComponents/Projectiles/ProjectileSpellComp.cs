@@ -1,4 +1,3 @@
-using MagusEngine.Components.EntityComponents.Animations;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.Systems;
@@ -36,6 +35,7 @@ namespace MagusEngine.Components.EntityComponents.Projectiles
             if (!_animate)
                 return;
 
+            Parent.Spell.Effects;
             // let me see if i apply the animation effect on the spell effect, rather than on here
             // if (Parent!.GetComponent<IAnimationHit>(out var animation, "spell-animation"))
             // {

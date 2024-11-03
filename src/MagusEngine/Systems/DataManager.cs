@@ -2,6 +2,7 @@
 using Arquimedes.Interfaces;
 using Arquimedes.Utils;
 using MagusEngine.Core;
+using MagusEngine.Core.Animations;
 using MagusEngine.Core.Civ;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
@@ -68,6 +69,8 @@ namespace MagusEngine.Systems
         public static Dictionary<string, TissuePlanTemplate> ListOfTissuePlans { get; } = GetSourceTreeDict<TissuePlanTemplate>(@".\Data\Bodies\tissue_*");
 
         public static Dictionary<string, DamageType> ListOfDamageTypes { get; } = GetSourceTreeDict<DamageType>(@".\Data\Damage\dmg_*");
+
+        public static Dictionary<string, AnimationBase> ListOfAnimations { get; } = GetSourceTreeDict<AnimationBase>(@".\Data\Animations\*_animations*");
 
         #region Descriptors
 
