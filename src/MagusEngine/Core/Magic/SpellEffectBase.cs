@@ -37,9 +37,5 @@ namespace MagusEngine.Core.Magic
             }
             return DataManager.QueryDamageInData(SpellDamageTypeId);
         }
-
-        public virtual void AnimateEffect(Point target, Actor caster, Spell spellCasted)
-        {
-        }
     }
 }

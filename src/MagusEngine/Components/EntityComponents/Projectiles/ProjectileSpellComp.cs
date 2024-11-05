@@ -1,6 +1,8 @@
+using MagusEngine.Core.Animations.Interfaces;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.Systems;
+using MagusEngine.Utils.Extensions;
 using SadRogue.Primitives;
 
 namespace MagusEngine.Components.EntityComponents.Projectiles
@@ -35,12 +37,16 @@ namespace MagusEngine.Components.EntityComponents.Projectiles
             if (!_animate)
                 return;
 
-            Parent.Spell.Effects;
-            // let me see if i apply the animation effect on the spell effect, rather than on here
-            // if (Parent!.GetComponent<IAnimationHit>(out var animation, "spell-animation"))
-            // {
-            //     animation.AnimateHit(Parent.Position);
-            // }
+            var effects = Parent?.Spell?.Effects ?? [];
+            foreach (var effect in effects)
+            {
+                if (effect?.AnimationId?.IsNullOrEmpty() == true)
+                    continue;
+                var animation = DataManager.ListOfAnimations[effect!.AnimationId!];
+                if (animation is not IAnimationHit hit)
+                    continue;
+                hit.AnimateHit(Parent!.Position);
+            }
         }
     }
 }
