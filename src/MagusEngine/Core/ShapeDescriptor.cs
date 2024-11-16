@@ -1,6 +1,6 @@
 ﻿using Arquimedes.Interfaces;
 
-namespace MagusEngine.Serialization
+namespace MagusEngine.Core
 {
     public class ShapeDescriptor : IJsonKey
     {

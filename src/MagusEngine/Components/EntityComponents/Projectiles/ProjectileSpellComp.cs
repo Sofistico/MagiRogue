@@ -38,11 +38,12 @@ namespace MagusEngine.Components.EntityComponents.Projectiles
                 return;
 
             var effects = Parent?.Spell?.Effects ?? [];
+
             foreach (var effect in effects)
             {
                 if (effect?.AnimationId?.IsNullOrEmpty() == true)
                     continue;
-                var animation = DataManager.ListOfAnimations[effect!.AnimationId!];
+                var animation = DataManager.QueryAnimationInData(effect!.AnimationId!);
                 if (animation is not IAnimationHit hit)
                     continue;
                 hit.AnimateHit(Parent!.Position);

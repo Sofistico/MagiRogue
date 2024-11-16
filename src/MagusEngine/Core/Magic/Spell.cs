@@ -1,21 +1,21 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Arquimedes.Enumerators;
 using Arquimedes.Interfaces;
 using MagusEngine.Bus.UiBus;
+using MagusEngine.Components.EntityComponents.Projectiles;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic.Interfaces;
 using MagusEngine.Core.MapStuff;
-using MagusEngine.Components.EntityComponents.Projectiles;
 using MagusEngine.Serialization.EntitySerialization;
 using MagusEngine.Services;
 using MagusEngine.Systems;
 using MagusEngine.Utils;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace MagusEngine.Core.Magic
 {
@@ -117,7 +117,7 @@ namespace MagusEngine.Core.Magic
 
         public List<string>? Keywords { get; set; } = [];
         public List<SpellContext>? Context { get; set; }
-        public bool AffectsTile => Effects.Any(i => i.TargetsTile);
+        public bool AffectsTile => Effects.Any(static i => i.TargetsTile);
         public string ShapingAbility { get; set; }
         public string Fore { get; set; } = "{caster}";
         public string Back { get; set; } = "Black";
@@ -349,10 +349,7 @@ namespace MagusEngine.Core.Magic
 
         public override bool Equals(object? obj)
         {
-            if (obj is null) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-            return string.Equals(Id, ((Spell)obj).Id);
+            return obj is not null && (ReferenceEquals(this, obj) || (obj.GetType() == GetType() && string.Equals(Id, ((Spell)obj).Id, StringComparison.Ordinal)));
         }
 
         public SpellEntity GetSpellEntity(MagiEntity caster, Direction dir, Point pos)

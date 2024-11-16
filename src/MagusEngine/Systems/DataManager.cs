@@ -86,7 +86,7 @@ namespace MagusEngine.Systems
 
         #endregion jsons
 
-        private static Dictionary<string, T> GetSourceTreeDict<T>(string wildCard) where T : IJsonKey => GetSourceTreeList<T>(wildCard).ToDictionary(val => val.Id);
+        private static Dictionary<string, T> GetSourceTreeDict<T>(string wildCard) where T : IJsonKey => GetSourceTreeList<T>(wildCard).ToDictionary(static val => val.Id);
 
         private static List<T> GetSourceTreeList<T>(string wildCard)
         {
@@ -106,30 +106,22 @@ namespace MagusEngine.Systems
 
         public static Spell? QuerySpellInData(string spellId, double proficiency = 0)
         {
-            if (ListOfSpells.TryGetValue(spellId, out var spell))
-                return spell.Copy(proficiency);
-            return null;
+            return ListOfSpells.TryGetValue(spellId, out var spell) ? spell.Copy(proficiency) : null;
         }
 
         public static Limb? QueryLimbInData(string limbId)
         {
-            if (ListOfLimbs.TryGetValue(limbId, out var limb))
-                return limb.Copy();
-            return null;
+            return ListOfLimbs.TryGetValue(limbId, out var limb) ? limb.Copy() : null;
         }
 
         public static Organ? QueryOrganInData(string organId)
         {
-            if (ListOfOrgans.TryGetValue(organId, out var organ))
-                return organ.Copy();
-            return null;
+            return ListOfOrgans.TryGetValue(organId, out var organ) ? organ.Copy() : null;
         }
 
         public static Item? QueryItemInData(string itemId)
         {
-            if (ListOfItems.TryGetValue(itemId, out var item))
-                return item;
-            return null;
+            return ListOfItems.TryGetValue(itemId, out var item) ? (Item?)item : null;
         }
 
         public static Item? QueryItemInData(string itemId, Material material) => QueryItemInData(itemId)?.ConfigureMaterial(material);
@@ -138,16 +130,12 @@ namespace MagusEngine.Systems
 
         public static Furniture? QueryFurnitureInData(string furnitureId)
         {
-            if (ListOfFurnitures.TryGetValue(furnitureId, out var fur))
-                return fur.Copy();
-            return null;
+            return ListOfFurnitures.TryGetValue(furnitureId, out var fur) ? fur.Copy() : null;
         }
 
         public static RoomTemplate? QueryRoomInData(string roomId)
         {
-            if (ListOfRooms.TryGetValue(roomId, out var room))
-                return room;
-            return null;
+            return ListOfRooms.TryGetValue(roomId, out var room) ? room : null;
         }
 
         public static Material? QueryMaterial(string id)
@@ -155,13 +143,13 @@ namespace MagusEngine.Systems
             if (_firstLoad)
             {
                 _firstLoad = false;
-                var list = ListOfMaterials.Values.Where(i => !string.IsNullOrEmpty(i.InheirtFrom)).ToArray();
+                var list = ListOfMaterials.Values.Where(static i => !string.IsNullOrEmpty(i.InheirtFrom)).ToArray();
                 for (int i = 0; i < list.Length; i++)
                 {
                     var mat = list[i];
                     if (mat is null)
                         continue;
-                    if (!ListOfMaterials.TryGetValue(mat.InheirtFrom, out var inheirtFrom))
+                    if (!ListOfMaterials.TryGetValue(mat.InheirtFrom!, out var inheirtFrom))
                     {
                         Locator.GetService<MagiLog>().Log($"Material to inheirt from was null! Id: {mat.InheirtFrom}");
                         continue;
@@ -177,23 +165,17 @@ namespace MagusEngine.Systems
 
         public static Race? QueryRaceInData(string raceId)
         {
-            if (ListOfRaces.TryGetValue(raceId, out var race))
-                return race;
-            return null;
+            return ListOfRaces.TryGetValue(raceId, out var race) ? race : null;
         }
 
         public static Scenario? QueryScenarioInData(string scenarioId)
         {
-            if (ListOfScenarios.TryGetValue(scenarioId, out var val))
-                return val;
-            return null;
+            return ListOfScenarios.TryGetValue(scenarioId, out var val) ? val : null;
         }
 
         public static BodyPlan? QueryBpPlanInData(string bpPlanId)
         {
-            if (ListOfBpPlan.TryGetValue(bpPlanId, out var val))
-                return val;
-            return null;
+            return ListOfBpPlan.TryGetValue(bpPlanId, out var val) ? val : null;
         }
 
         public static List<BodyPart> QueryBpsPlansInDataAndReturnBodyParts(string[] bpPlansId, Race race = null!)
@@ -213,9 +195,7 @@ namespace MagusEngine.Systems
 
         public static Language? QueryLanguageInData(string languageId)
         {
-            if (ListOfLanguages.TryGetValue(languageId, out var lang))
-                return lang;
-            return null;
+            return ListOfLanguages.TryGetValue(languageId, out var lang) ? lang : null;
         }
 
         public static Profession? QueryProfessionInData(string professionId)
@@ -225,46 +205,39 @@ namespace MagusEngine.Systems
 
         public static ShapeDescriptor? QueryShapeDescInData(string shapeId)
         {
-            if (ListOfShapes.TryGetValue(shapeId, out var val))
-                return val;
-            return null;
+            return ListOfShapes.TryGetValue(shapeId, out var val) ? val : null;
         }
 
         public static CultureTemplate? QueryCultureTemplateInData(string cultureId)
         {
-            if (ListOfCultures.TryGetValue(cultureId, out var val))
-                return val;
-            return null;
+            return ListOfCultures.TryGetValue(cultureId, out var val) ? val : null;
         }
 
         public static List<CultureTemplate>? QueryCultureTemplateFromBiome(string biomeId) => ListOfCultures.Values.Where(i => i.StartBiome.Equals(biomeId)).ToList();
 
         public static Research? QueryResearchInData(string researchId)
         {
-            if (ListOfResearches.TryGetValue(researchId, out var val))
-                return val;
-            return null;
+            return ListOfResearches.TryGetValue(researchId, out var val) ? val : null;
         }
 
         public static Plant? QueryPlantInData(string plantId)
         {
-            if (ListOfPlants.TryGetValue(plantId, out var val))
-                return val;
-            return null;
+            return ListOfPlants.TryGetValue(plantId, out var val) ? val : null;
         }
 
         public static TissuePlanTemplate? QueryTissuePlanInData(string tissuePlanId)
         {
-            if (ListOfTissuePlans.TryGetValue(tissuePlanId, out var val))
-                return val;
-            return null;
+            return ListOfTissuePlans.TryGetValue(tissuePlanId, out var val) ? val : null;
         }
 
         public static DamageType? QueryDamageInData(string dmgId)
         {
-            if (ListOfDamageTypes.TryGetValue(dmgId, out var dmg))
-                return dmg;
-            return null;
+            return ListOfDamageTypes.TryGetValue(dmgId, out var dmg) ? dmg : null;
+        }
+
+        public static AnimationBase? QueryAnimationInData(string animationId)
+        {
+            return ListOfAnimations.TryGetValue(animationId, out var value) ? value : null;
         }
 
         #endregion Query
@@ -277,9 +250,9 @@ namespace MagusEngine.Systems
 
         public static Race? RandomRace() => ListOfRaces.GetRandomItemFromCollection().Value;
 
-        public static Research? RandomMagicalResearch() => ListOfResearches.Values.Where(i => i.IsMagical).GetRandomItemFromCollection();
+        public static Research? RandomMagicalResearch() => ListOfResearches.Values.Where(static i => i.IsMagical).GetRandomItemFromCollection();
 
-        public static Research? RandomNonMagicalResearch() => ListOfResearches.Values.Where(i => !i.IsMagical).GetRandomItemFromCollection();
+        public static Research? RandomNonMagicalResearch() => ListOfResearches.Values.Where(static i => !i.IsMagical).GetRandomItemFromCollection();
 
         #endregion rng
 
