@@ -1,7 +1,7 @@
 ﻿using Arquimedes.Enumerators;
 using MagusEngine.Core.Magic;
-using MagusEngine.Core.Magic.Effects;
 using MagusEngine.Core.Magic.Interfaces;
+using MagusEngine.Factory;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -11,6 +11,7 @@ namespace MagusEngine.Serialization.EntitySerialization
 {
     public class SpellJsonConverter : JsonConverter<Spell>
     {
+
         public override Spell ReadJson(JsonReader reader, Type objectType,
             Spell? existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
@@ -21,8 +22,7 @@ namespace MagusEngine.Serialization.EntitySerialization
             foreach (JToken token in listEffectsJson)
             {
                 EffectType effect = Enum.Parse<EffectType>((string)token["EffectType"]!);
-                var eff = EnumToEffect(effect, token);
-                if (eff is null)
+                if (!SpellEffectFactory.TryGetSpellEffect(effect, token, out var eff))
                     continue;
                 effectsList.Add(eff);
             }
@@ -40,6 +40,14 @@ namespace MagusEngine.Serialization.EntitySerialization
                 Effects = effectsList,
                 Steps = JsonConvert.DeserializeObject<List<IMagicStep>>(spell["Steps"]!.ToString())!,
             };
+
+            PopulateOptionalProperties(spell, createdSpell);
+
+            return createdSpell;
+        }
+
+        private static void PopulateOptionalProperties(JObject spell, Spell createdSpell)
+        {
             if (spell.ContainsKey("Proficiency"))
                 createdSpell.Proficiency = (double)spell["Proficiency"]!;
             if (spell.ContainsKey("Keywords"))
@@ -56,8 +64,6 @@ namespace MagusEngine.Serialization.EntitySerialization
                 createdSpell.Velocity = (int)spell["Velocity"]!;
             if (spell.ContainsKey("Manifestation"))
                 createdSpell.Manifestation = spell["Manifestation"]!.ToObject<SpellManifestation>()!;
-
-            return createdSpell;
         }
 
         public override void WriteJson(JsonWriter writer, Spell? value, JsonSerializer serializer)
@@ -65,25 +71,6 @@ namespace MagusEngine.Serialization.EntitySerialization
             //serializer.Formatting = Formatting.Indented;
             serializer.NullValueHandling = NullValueHandling.Ignore;
             serializer.Serialize(writer, (SpellTemplate)value!); // Need to have this conversion, the pure value throws a self reference loop exception
-        }
-
-        /// <summary>
-        /// Is used to instantiate and return any number of possible effects
-        /// </summary>
-        private static ISpellEffect? EnumToEffect(EffectType effect, JToken jToken)
-        {
-            return effect switch
-            {
-                EffectType.DAMAGE => jToken.ToObject<DamageEffect>(),
-                EffectType.HASTE => jToken.ToObject<HasteEffect>()!,
-                EffectType.MAGESIGHT => jToken.ToObject<MageSightEffect>(),
-                EffectType.SEVER => jToken.ToObject<SeverEffect>(),
-                EffectType.TELEPORT => jToken.ToObject<TeleportEffect>(),
-                EffectType.KNOCKBACK => jToken.ToObject<KnockbackEffect>(),
-                EffectType.LIGHT => jToken.ToObject<LightEffect>(),
-                EffectType.MEMISSION => jToken.ToObject<MEssionEffect>(),
-                _ => null,
-            };
         }
 
         private static ArtMagic StringToSchool(string st)

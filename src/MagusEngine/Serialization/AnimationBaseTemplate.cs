@@ -1,6 +1,7 @@
 using System;
 using Arquimedes.Enumerators;
 using MagusEngine.Core.Animations;
+using MagusEngine.Factory;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -12,6 +13,7 @@ namespace MagusEngine.Serialization
         {
             JObject animation = JObject.Load(reader);
             var animationType = animation.Value<AnimationType>("AnimationType");
+            var animation = AnimationFactory.
         }
 
         public override void WriteJson(JsonWriter writer, AnimationBase? value, JsonSerializer serializer)
