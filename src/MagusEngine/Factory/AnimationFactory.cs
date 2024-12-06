@@ -7,6 +7,7 @@ namespace MagusEngine.Factory
 {
     public static class AnimationFactory
     {
+        private readonly Dictionary<
 
     }
 }
