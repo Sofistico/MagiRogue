@@ -7,7 +7,9 @@ namespace MagusEngine.Factory
 {
     public static class AnimationFactory
     {
-        private readonly Dictionary<
-
+        public static readonly Dictionary<string, Func<JToken, AnimationBase>> AnimationDictionary = new()
+        {
+            { "Kaboom", static token => token.ToObject<KaboomAnimation>()! },
+        };
     }
 }
