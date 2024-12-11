@@ -19,7 +19,7 @@ namespace MagusEngine.Serialization
         {
             JObject jsonNimation = JObject.Load(reader);
             var animationType = jsonNimation.Value<AnimationType>("AnimationType");
-            var animation = AnimationFactory.Get(animationType);
+            var animation = Locator.GetService<AnimationFactory>().GetValueFromKey(animationType.ToString(), jsonNimation);
             return animation;
         }
 

@@ -1,15 +1,12 @@
-using System;
-using System.Collections.Generic;
 using MagusEngine.Core.Animations;
-using Newtonsoft.Json.Linq;
 
 namespace MagusEngine.Factory
 {
-    public static class AnimationFactory
+    public sealed class AnimationFactory : GenericFactory<AnimationBase>
     {
-        public static readonly Dictionary<string, Func<JToken, AnimationBase>> AnimationDictionary = new()
+        public AnimationFactory()
         {
-            { "Kaboom", static token => token.ToObject<KaboomAnimation>()! },
-        };
+            Register("Kaboom", static token => token.ToObject<KaboomAnimation>()!);
+        }
     }
 }
