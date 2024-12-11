@@ -94,10 +94,18 @@ namespace MagusEngine.Systems
 
             List<List<T>> listTList = [];
 
-            for (int i = 0; i < files.Length; i++)
+            try
             {
-                var tList = JsonUtils.JsonDeseralize<List<T>>(files[i])!;
-                listTList.Add(tList);
+                for (int i = 0; i < files.Length; i++)
+                {
+                    var tList = JsonUtils.JsonDeseralize<List<T>>(files[i])!;
+                    listTList.Add(tList);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Locator.GetService<MagiLog>().Log(ex);
+                throw;
             }
             return listTList.ReturnListListTAsListT();
         }

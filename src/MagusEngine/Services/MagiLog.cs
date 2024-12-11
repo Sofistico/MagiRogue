@@ -43,19 +43,20 @@ namespace MagusEngine.Services
 
         public void Log(string error)
         {
-            Log(new List<string>() { error });
+            Log([error]);
+        }
+
+        public void Log(Exception ex)
+        {
+            Log([$"An exception has occurred.\nEX: {ex}"]);
         }
 
         private static bool IsFileLocked(FileInfo file)
         {
             try
             {
-                using (
-                    FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None)
-                )
-                {
-                    stream.Close();
-                }
+                using FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None);
+                stream.Close();
             }
             catch (IOException)
             {
