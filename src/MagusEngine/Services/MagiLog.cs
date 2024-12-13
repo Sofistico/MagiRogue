@@ -9,7 +9,7 @@ namespace MagusEngine.Services
 {
     public class MagiLog
     {
-        public void Log(List<string> errors)
+        public void Log(List<string> errors, string fileName)
         {
             // so that it doesn't block the main thread!
             Task.Run(() =>
@@ -17,7 +17,7 @@ namespace MagusEngine.Services
                 if (errors.Count == 0)
                     return;
                 var path = new StringBuilder(AppDomain.CurrentDomain.BaseDirectory)
-                    .Append(@"\log.txt")
+                    .Append($@"\{fileName}.txt")
                     .ToString();
                 StringBuilder str = new($"{DateTime.Now:dd/MM/yyyy HH:mm:ss} ");
                 foreach (var item in errors)
@@ -41,14 +41,14 @@ namespace MagusEngine.Services
             });
         }
 
-        public void Log(string error)
+        public void Log(string error, string fileName = "log")
         {
-            Log([error]);
+            Log([error], fileName);
         }
 
-        public void Log(Exception ex)
+        public void Log(Exception ex, string fileName = "log")
         {
-            Log([$"An exception has occurred.\nEX: {ex}"]);
+            Log([$"An exception has occurred.\nEX: {ex}"], fileName);
         }
 
         private static bool IsFileLocked(FileInfo file)

@@ -41,7 +41,7 @@ public static class GameLoop
         catch (Exception ex)
         {
             string message = $"An error occurred during the game loop:\n- Ex: {ex.Message} \n- StackTrace - {ex.StackTrace}";
-            Locator.GetService<MagiLog>().Log(message);
+            Locator.GetService<MagiLog>().Log(message, "crash");
             System.Console.WriteLine(message);
             throw;
         }
