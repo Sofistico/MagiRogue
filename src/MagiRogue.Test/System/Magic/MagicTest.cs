@@ -15,7 +15,7 @@ namespace MagiRogue.Test.System.Magic
         private MagusEngine.Core.Magic.Magic mediumMagic;
         private MagusEngine.Core.Magic.Magic strongMagic;
 
-        /*[Fact]
+        /*[ct]
         public void TestCasting()
         {
             List<Spell> spellBase = new(GetListSpells());

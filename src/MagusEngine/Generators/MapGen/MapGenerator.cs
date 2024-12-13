@@ -826,7 +826,8 @@ namespace MagusEngine.Generators.MapGen
                     break;
 
                 default:
-                    throw new ApplicationException($"Type of room not defined! room: {JsonConvert.SerializeObject(room)}");
+                    break;
+                    // throw new ApplicationException($"Type of room not defined! room: {JsonConvert.SerializeObject(room)}");
             }
         }
 
