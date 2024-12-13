@@ -2,10 +2,10 @@ using Arquimedes.Enumerators;
 using MagusEngine.Core;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.Components.TilesComponents;
-using MagusEngine.Factory;
 using SadRogue.Primitives;
 using System;
 using System.Collections.Generic;
+using MagusEngine.Services.Factory;
 
 namespace MagusEngine.Generators.MapGen
 {

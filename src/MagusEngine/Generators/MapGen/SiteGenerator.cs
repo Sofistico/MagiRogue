@@ -3,13 +3,13 @@ using GoRogue.Random;
 using MagusEngine.Core.Civ;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.Components.TilesComponents;
-using MagusEngine.Factory;
 using MagusEngine.Serialization.MapConverter;
 using MagusEngine.Systems;
 using MagusEngine.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MagusEngine.Services.Factory;
 
 namespace MagusEngine.Generators.MapGen
 {

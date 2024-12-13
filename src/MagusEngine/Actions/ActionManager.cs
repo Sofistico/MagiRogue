@@ -13,7 +13,7 @@ using MagusEngine.Core.MapStuff;
 using MagusEngine.Components.EntityComponents;
 using MagusEngine.Components.EntityComponents.Projectiles;
 using MagusEngine.Components.TilesComponents;
-using MagusEngine.Factory;
+using MagusEngine.Services.Factory;
 using MagusEngine.Generators;
 using MagusEngine.Services;
 using MagusEngine.Systems;

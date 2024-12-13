@@ -6,15 +6,22 @@
 
         public static string[] GetFiles(string wildCard)
         {
-            string originalWildCard = wildCard;
+            try
+            {
+                string originalWildCard = wildCard;
 
-            string pattern = Path.GetFileName(originalWildCard);
-            string realDir = originalWildCard[..^pattern.Length];
+                string pattern = Path.GetFileName(originalWildCard);
+                string realDir = originalWildCard[..^pattern.Length];
 
-            // Get absolutepath
-            string absPath = Path.GetFullPath(Path.Combine(_appDomain, realDir));
+                // Get absolutepath
+                string absPath = Path.GetFullPath(Path.Combine(_appDomain, realDir));
 
-            return Directory.GetFiles(absPath, pattern, SearchOption.AllDirectories);
+                return Directory.GetFiles(absPath, pattern, SearchOption.AllDirectories);
+            }
+            catch (Exception)
+            {
+                return [];
+            }
         }
 
         public static string? GetAllTextFromFile(FileInfo file)

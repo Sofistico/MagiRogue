@@ -13,7 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MagusEngine.Factory
+namespace MagusEngine.Services.Factory
 {
     /// <summary>
     /// Utility method for easy creating an actor and item, along with any possible function and extra.

@@ -221,7 +221,7 @@ namespace MagusEngine.Core.Magic
 
             if (selectedEntity is null && !AffectsTile)
             {
-                if (Manifestation == SpellManifestation.Instantaneous)
+                if (Manifestation == SpellManifestation.Instant)
                     Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("Can't cast the spell, there must be an entity to target"));
 
                 return false;

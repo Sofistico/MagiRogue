@@ -1,5 +1,5 @@
 ﻿using MagusEngine.Core.MapStuff;
-using MagusEngine.Factory;
+using MagusEngine.Services.Factory;
 using SadRogue.Primitives;
 using System.Collections.Generic;
 using System.Linq;

@@ -90,6 +90,7 @@ namespace MagusEngine.Systems
 
         private static List<T> GetSourceTreeList<T>(string wildCard)
         {
+            throw new System.Exception();
             string[] files = FileUtils.GetFiles(wildCard);
 
             List<List<T>> listTList = [];

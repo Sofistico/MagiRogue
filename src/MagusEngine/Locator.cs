@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using MagusEngine.Factory;
 using MagusEngine.Services;
+using MagusEngine.Services.Factory;
 using SadRogue.Primitives;
 
 namespace MagusEngine

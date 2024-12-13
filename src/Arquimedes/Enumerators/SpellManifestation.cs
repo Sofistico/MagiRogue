@@ -9,7 +9,7 @@ namespace Arquimedes.Enumerators
         /// <summary>
         /// The magic manifests at the target location pretty much instantaneously
         /// </summary>
-        Instantaneous,
+        Instant,
         /// <summary>
         /// The magic manifests as a projectile that must travel to it's target
         /// </summary>

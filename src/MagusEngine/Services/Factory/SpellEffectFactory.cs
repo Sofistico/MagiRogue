@@ -4,7 +4,7 @@ using MagusEngine.Core.Magic.Effects;
 using MagusEngine.Core.Magic.Interfaces;
 using Newtonsoft.Json.Linq;
 
-namespace MagusEngine.Factory
+namespace MagusEngine.Services.Factory
 {
     public sealed class SpellEffectFactory : GenericFactory<ISpellEffect?>
     {

@@ -1,6 +1,6 @@
 using MagusEngine.Core.Animations;
 
-namespace MagusEngine.Factory
+namespace MagusEngine.Services.Factory
 {
     public sealed class AnimationFactory : GenericFactory<AnimationBase>
     {

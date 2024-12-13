@@ -6,7 +6,6 @@ using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Components.EntityComponents;
 using MagusEngine.Components.TilesComponents;
-using MagusEngine.Factory;
 using MagusEngine.Serialization.MapConverter;
 using MagusEngine.Systems;
 using MagusEngine.Utils;
@@ -22,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using MagusEngine.Services.Factory;
 
 namespace MagusEngine.Core.MapStuff
 {

@@ -6,11 +6,9 @@ using MagusEngine.Core.MapStuff;
 using MagusEngine.Components.EntityComponents;
 using MagusEngine.Components.TilesComponents;
 using MagusEngine.Systems;
-using SadConsole;
 using SadRogue.Primitives;
-using System.Collections.Generic;
 
-namespace MagusEngine.Factory
+namespace MagusEngine.Services.Factory
 {
     public static class TileFactory
     {

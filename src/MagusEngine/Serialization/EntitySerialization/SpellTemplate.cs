@@ -1,7 +1,7 @@
 ﻿using Arquimedes.Enumerators;
 using MagusEngine.Core.Magic;
 using MagusEngine.Core.Magic.Interfaces;
-using MagusEngine.Factory;
+using MagusEngine.Services.Factory;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -38,7 +38,7 @@ namespace MagusEngine.Serialization.EntitySerialization
             {
                 Description = spell["Description"]?.ToString(),
                 Effects = effectsList,
-                Steps = JsonConvert.DeserializeObject<List<IMagicStep>>(spell["Steps"]!.ToString())!,
+                Steps = spell["Steps"] is null ? [] : JsonConvert.DeserializeObject<List<IMagicStep>>(spell["Steps"]!.ToString())!,
             };
 
             PopulateOptionalProperties(spell, createdSpell);

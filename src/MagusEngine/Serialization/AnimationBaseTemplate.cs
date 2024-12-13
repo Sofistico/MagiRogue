@@ -1,7 +1,7 @@
 using System;
 using Arquimedes.Enumerators;
 using MagusEngine.Core.Animations;
-using MagusEngine.Factory;
+using MagusEngine.Services.Factory;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 

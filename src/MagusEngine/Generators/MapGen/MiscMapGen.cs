@@ -1,9 +1,9 @@
 using Arquimedes.Enumerators;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.Components.EntityComponents.Ai;
-using MagusEngine.Factory;
 using MagusEngine.Systems;
 using MagusEngine.Utils;
+using MagusEngine.Services.Factory;
 
 namespace MagusEngine.Generators.MapGen
 {
