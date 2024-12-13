@@ -82,7 +82,7 @@ namespace MagiRogue.Test.System
                 var json = JsonConvert.SerializeObject(uni);
                 // make it so that the object only reference other files
                 UniverseTemplate obj = JsonConvert.DeserializeObject<Universe>(json, settings);
-                Debug.WriteLine(traceWriter);
+                //Debug.WriteLine(traceWriter);
                 Assert.Equal(name, obj.WorldMap.Name);
             }
             catch (global::System.Exception)

@@ -35,7 +35,7 @@ namespace MagusEngine.Core.MapStuff
         #region Fields
 
         private MagiEntity? _gameObjectControlled;
-        private EntityManager _entityManager;
+        private EntityManager _entityManager = [];
         private bool _disposed;
         private Dictionary<Func<Actor, bool>, Actor[]> _lastCalledActors = [];
         private bool _needsToUpdateActorsDict;
@@ -105,8 +105,6 @@ namespace MagusEngine.Core.MapStuff
         {
             // Treat the fov as a component.
             GoRogueComponents.Add(new MagiRogueFOVVisibilityHandler(this, Color.DarkSlateGray, (int)MapLayer.GHOSTS));
-
-            _entityManager = [];
             MapName = mapName;
             MapZoneConnections = [];
 
@@ -252,7 +250,7 @@ namespace MagusEngine.Core.MapStuff
                 _needsToUpdateActorsDict = true;
                 // Locator.GetService<EntityRegistry>().Destroy(entity.ID);
             }
-            if (_entityManager.Contains(entity.SadCell))
+            if (_entityManager.Entities is not null && _entityManager.Contains(entity.SadCell))
             {
                 _entityManager.Remove(entity.SadCell);
                 _entityManager.IsDirty = true;
