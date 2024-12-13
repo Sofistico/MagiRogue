@@ -38,6 +38,8 @@ namespace MagusEngine.Services.Factory
             string actorName, int actorAge, Sex sex)
         {
             Race race = DataManager.QueryRaceInData(raceId);
+            if (race is null)
+                throw new NullReferenceException($"Race is null - {nameof(race)}");
             int glyph = race?.RaceGlyph.GlyphExistInDictionary() == true ?
                 race.RaceGlyph.GetGlyph() : race.RaceGlyph;
 
@@ -58,6 +60,8 @@ namespace MagusEngine.Services.Factory
         public static Actor ActorCreator(Point position, string raceId, Sex sex, AgeGroup age, string? name = null)
         {
             Race race = DataManager.QueryRaceInData(raceId);
+            if (race is null)
+                throw new NullReferenceException($"Race is null - {nameof(race)}");
             int glyph = race?.RaceGlyph.GlyphExistInDictionary() == true ?
                 race.RaceGlyph.GetGlyph() : race.RaceGlyph;
 
