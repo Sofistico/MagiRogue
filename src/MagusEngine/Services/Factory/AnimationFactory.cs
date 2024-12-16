@@ -1,4 +1,5 @@
 using MagusEngine.Core.Animations;
+using MagusEngine.Services.Factory.Base;
 
 namespace MagusEngine.Services.Factory
 {

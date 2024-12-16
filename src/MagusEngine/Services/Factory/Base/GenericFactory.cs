@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Newtonsoft.Json.Linq;
 
-namespace MagusEngine.Services.Factory
+namespace MagusEngine.Services.Factory.Base
 {
     public abstract class GenericFactory<T>
     {

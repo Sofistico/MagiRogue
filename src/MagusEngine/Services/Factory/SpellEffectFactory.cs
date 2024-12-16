@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using Arquimedes.Enumerators;
 using MagusEngine.Core.Magic.Effects;
 using MagusEngine.Core.Magic.Interfaces;
+using MagusEngine.Services.Factory.Base;
 using Newtonsoft.Json.Linq;
 
 namespace MagusEngine.Services.Factory
