@@ -12,6 +12,7 @@ using MagusEngine.Utils.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MagusEngine.Exceptions;
 
 namespace MagusEngine.Services.Factory
 {
@@ -37,13 +38,11 @@ namespace MagusEngine.Services.Factory
         public static Actor ActorCreator(Point position, string raceId,
             string actorName, int actorAge, Sex sex)
         {
-            Race race = DataManager.QueryRaceInData(raceId);
-            if (race is null)
-                throw new NullReferenceException($"Race is null - {nameof(race)}");
-            int glyph = race?.RaceGlyph.GlyphExistInDictionary() == true ?
-                race.RaceGlyph.GetGlyph() : race.RaceGlyph;
+            Race race = DataManager.QueryRaceInData(raceId) ?? throw new NullValueException(nameof(race));
 
-            Actor actor = new Actor(actorName,
+            int glyph = race?.RaceGlyph.GlyphExistInDictionary() == true ? race.RaceGlyph.GetGlyph() : race!.RaceGlyph;
+
+            Actor actor = new(actorName,
                 race.ReturnForegroundColor(),
                 race.ReturnBackgroundColor(),
                 glyph,
@@ -59,13 +58,10 @@ namespace MagusEngine.Services.Factory
 
         public static Actor ActorCreator(Point position, string raceId, Sex sex, AgeGroup age, string? name = null)
         {
-            Race race = DataManager.QueryRaceInData(raceId);
-            if (race is null)
-                throw new NullReferenceException($"Race is null - {nameof(race)}");
-            int glyph = race?.RaceGlyph.GlyphExistInDictionary() == true ?
-                race.RaceGlyph.GetGlyph() : race.RaceGlyph;
+            Race race = DataManager.QueryRaceInData(raceId) ?? throw new NullValueException(nameof(race));
+            int glyph = race?.RaceGlyph.GlyphExistInDictionary() == true ? race.RaceGlyph.GetGlyph() : race!.RaceGlyph;
 
-            Actor actor = new Actor(name.IsNullOrEmpty() ? race.RaceName : name,
+            Actor actor = new(name.IsNullOrEmpty() ? race.RaceName : name!,
                 race.ReturnForegroundColor(),
                 race.ReturnBackgroundColor(),
                 glyph,
@@ -81,11 +77,11 @@ namespace MagusEngine.Services.Factory
 
         public static Actor ActorCreator(Point position, string raceId, int actorAge, Sex sex, string? name = null)
         {
-            Race race = DataManager.QueryRaceInData(raceId);
+            Race race = DataManager.QueryRaceInData(raceId) ?? throw new NullValueException(nameof(race));
             int glyph = race.RaceGlyph.GlyphExistInDictionary() ?
                 race.RaceGlyph.GetGlyph() : race.RaceGlyph;
 
-            Actor actor = new(name.IsNullOrEmpty() ? race.RaceName : name,
+            Actor actor = new(name.IsNullOrEmpty() ? race.RaceName : name!,
                 race.ReturnForegroundColor(),
                 race.ReturnBackgroundColor(),
                 glyph,
@@ -103,7 +99,7 @@ namespace MagusEngine.Services.Factory
             string scenarioId, Sex sex)
         {
             Scenario scenario = DataManager.QueryScenarioInData(scenarioId)
-                ?? throw new ApplicationException($"Scenario {scenarioId} was null!");
+                ?? throw new NullValueException($"Scenario {scenarioId} was null!", null);
             actor.ActorAnatomy.Gender = sex;
             SetupScenarioStats(scenario, actor);
             SetupAbilities(actor, scenario.Abilities);
@@ -111,7 +107,7 @@ namespace MagusEngine.Services.Factory
             SetupInventory(actor, scenario);
             SetupEquipment(actor, scenario);
 
-            return Player.ReturnPlayerFromActor(actor);
+            return Player.ReturnPlayerFromActor(actor)!;
         }
 
         private static void SetupEquipment(Actor actor, Scenario scenario)
@@ -126,21 +122,26 @@ namespace MagusEngine.Services.Factory
         {
             foreach (var str in scenario.SpellsKnow)
             {
-                var queriedSpell = DataManager.QuerySpellInData(str);
+                var queriedSpell = DataManager.QuerySpellInData(str) ?? ReturnSpellFromString(str);
                 if (queriedSpell is null)
-                {
-                    var strArray = str.Split('_', ':');
-                    if (strArray[0].Contains("any"))
-                    {
-                        var enumConverted = Enum.Parse<SpellContext>(strArray[1].FirstLetterUpper());
-                        var levelOfSpell = int.Parse(strArray[2]);
-
-                        var spells = DataManager.ListOfSpells.Values.Where(i => i.Context?.Contains(enumConverted) == true && i.SpellLevel == levelOfSpell).ToList();
-                        queriedSpell = spells.GetRandomItemFromList();
-                    }
-                }
+                    continue;
                 actor.GetComponent<Magic>().AddToSpellList(queriedSpell);
             }
+        }
+
+        private static Spell? ReturnSpellFromString(string str)
+        {
+            var strArray = str.Split('_', ':');
+            if (strArray[0].Contains("any"))
+            {
+                var enumConverted = Enum.Parse<SpellContext>(strArray[1].FirstLetterUpper());
+                var levelOfSpell = int.Parse(strArray[2], System.Globalization.CultureInfo.InvariantCulture);
+
+                var spells = DataManager.ListOfSpells.Values.Where(i => i.Context?.Contains(enumConverted) == true && i.SpellLevel == levelOfSpell).ToList();
+                return spells.GetRandomItemFromList();
+            }
+
+            return null;
         }
 
         private static void SetupScenarioStats(Scenario scenario, Actor actor)
@@ -246,8 +247,8 @@ namespace MagusEngine.Services.Factory
         public static Player PlayerCreatorFromZero(Point pos, string race, string name, Sex sex,
             string scenarioId)
         {
-            var scenario = DataManager.QueryScenarioInData(scenarioId);
-            var foundRace = DataManager.QueryRaceInData(race);
+            Scenario scenario = DataManager.QueryScenarioInData(scenarioId) ?? throw new NullValueException(nameof(scenario));
+            Race foundRace = DataManager.QueryRaceInData(race) ?? throw new NullValueException(nameof(foundRace));
             int age = foundRace.GetAgeFromAgeGroup(scenario.AgeGroup);
             Actor actor = ActorCreator(pos, race, name, age, sex);
             return PlayerCreatorFromActor(actor, scenarioId, sex);
