@@ -73,7 +73,7 @@ namespace MagusEngine.Core.WorldStuff.History
             bool firstYearOnly = true;
             MythGenerator mythGenerator = new MythGenerator();
             Myths = mythGenerator.GenerateMyths(
-                DataManager.ListOfRaces,
+                DataManager.ListOfRaces.GetEnumerableCollection().ToList(),
                 Figures,
                 planet);
             PopulateFindValues(tiles);

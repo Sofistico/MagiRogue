@@ -1,4 +1,7 @@
-﻿namespace Arquimedes.Utils
+﻿using System.Collections.Concurrent;
+using Arquimedes.Interfaces;
+
+namespace Arquimedes.Utils
 {
     public static class FileUtils
     {
@@ -36,6 +39,48 @@
             {
                 throw;
             }
+        }
+
+        public static Dictionary<string, T> GetSourceTreeDict<T>(string wildCard) where T : IJsonKey
+        {
+            return GetSourceTreeList<T>(wildCard).ToDictionary(static val => val.Id);
+        }
+
+        public static List<T> GetSourceTreeList<T>(string wildCard)
+        {
+            string[] files = FileUtils.GetFiles(wildCard);
+
+            // List<List<T>> listTList = [];
+            ConcurrentBag<T> result = [];
+
+            try
+            {
+                Parallel.ForEach(files, file =>
+                {
+                    try
+                    {
+                        foreach (T? item in JsonUtils.JsonDeseralize<List<T>>(file)!)
+                        {
+                            result.Add(item);
+                        }
+
+                    }
+                    catch (System.Exception ex)
+                    {
+                        // Locator.GetService<MagiLog>().Log($"Failed to load file {file}: {ex.Message}");
+                        System.Console.WriteLine($"Something went wrong {ex}");
+                        return;
+                    }
+                    // listTList.Add(tList);
+                });
+            }
+            catch (System.Exception ex)
+            {
+                // Locator.GetService<MagiLog>().Log(ex);
+                System.Console.WriteLine($"Something went wrong {ex}");
+                throw;
+            }
+            return [.. result];
         }
     }
 }

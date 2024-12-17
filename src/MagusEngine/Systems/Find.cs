@@ -33,7 +33,7 @@ namespace MagusEngine.Systems
         {
             history = h;
             Tiles = tiles;
-            Rules ??= new(DataManager.ListOfRules);
+            Rules ??= new(DataManager.ListOfRules.GetEnumerableCollection());
         }
 
         public static Site? GetFigureStayingSiteIfAny(HistoricalFigure hf)

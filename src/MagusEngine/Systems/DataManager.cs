@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Arquimedes.Data;
 using Arquimedes.Enumerators;
 using Arquimedes.Interfaces;
 using Arquimedes.Utils;
@@ -33,117 +34,81 @@ namespace MagusEngine.Systems
 
         #region jsons
 
-        public static Dictionary<string, ItemTemplate> ListOfItems { get; } = GetSourceTreeDict<ItemTemplate>(@".\Data\Items\items_*");
+        public static KeyedDataRepository<ItemTemplate> ListOfItems { get; } = new(@".\Data\Items\items_*");
 
-        public static Dictionary<string, Material> ListOfMaterials { get; } = GetSourceTreeDict<Material>(@".\Data\Materials\material_*");
+        public static KeyedDataRepository<Material> ListOfMaterials { get; } = new(@".\Data\Materials\material_*");
 
-        public static Dictionary<string, Spell> ListOfSpells { get; } = GetSourceTreeDict<Spell>(@".\Data\Spells\spells_*");
+        public static KeyedDataRepository<Spell> ListOfSpells { get; } = new(@".\Data\Spells\spells_*");
 
-        public static Dictionary<string, Organ> ListOfOrgans { get; } = GetSourceTreeDict<Organ>(@".\Data\Bodies\organs_*");
+        public static KeyedDataRepository<Organ> ListOfOrgans { get; } = new(@".\Data\Bodies\organs_*");
 
-        public static Dictionary<string, Limb> ListOfLimbs { get; } = GetSourceTreeDict<Limb>(@".\Data\Bodies\limbs_*");
+        public static KeyedDataRepository<Limb> ListOfLimbs { get; } = new(@".\Data\Bodies\limbs_*");
 
-        public static Dictionary<string, Furniture> ListOfFurnitures { get; } = GetSourceTreeDict<Furniture>(@".\Data\Furniture\fur_*");
+        public static KeyedDataRepository<Furniture> ListOfFurnitures { get; } = new(@".\Data\Furniture\fur_*");
 
-        public static Dictionary<string, RoomTemplate> ListOfRooms { get; } = GetSourceTreeDict<RoomTemplate>(@".\Data\Rooms\room_*");
+        public static KeyedDataRepository<RoomTemplate> ListOfRooms { get; } = new(@".\Data\Rooms\room_*");
 
         // races can be dynamically generated ingame
-        public static Dictionary<string, Race> ListOfRaces { get; } = GetSourceTreeDict<Race>(@".\Data\Races\race_*");
+        public static KeyedDataRepository<Race> ListOfRaces { get; } = new(@".\Data\Races\race_*");
 
-        public static Dictionary<string, Scenario> ListOfScenarios { get; } = GetSourceTreeDict<Scenario>(@".\Data\Scenarios\scenarios_*");
+        public static KeyedDataRepository<Scenario> ListOfScenarios { get; } = new(@".\Data\Scenarios\scenarios_*");
 
-        public static Dictionary<string, BodyPlan> ListOfBpPlan { get; } = GetSourceTreeDict<BodyPlan>(@".\Data\Bodies\bodies_*");
+        public static KeyedDataRepository<BodyPlan> ListOfBpPlan { get; } = new(@".\Data\Bodies\bodies_*");
 
-        public static Dictionary<string, Language> ListOfLanguages { get; } = GetSourceTreeDict<Language>(@".\Data\Language\language_*");
+        public static KeyedDataRepository<Language> ListOfLanguages { get; } = new(@".\Data\Language\language_*");
 
-        public static List<Profession> ListOfProfessions { get; } = GetSourceTreeList<Profession>(@".\Data\Professions\profession_*");
+        public static KeyedDataRepository<Profession> ListOfProfessions { get; } = new(@".\Data\Professions\profession_*");
 
-        public static Dictionary<string, CultureTemplate> ListOfCultures { get; } = GetSourceTreeDict<CultureTemplate>(@".\Data\Cultures\cultures_*");
+        public static KeyedDataRepository<CultureTemplate> ListOfCultures { get; } = new(@".\Data\Cultures\cultures_*");
 
-        public static Dictionary<string, Research> ListOfResearches { get; } = GetSourceTreeDict<Research>(@".\Data\Research\research_*");
+        public static KeyedDataRepository<Research> ListOfResearches { get; } = new(@".\Data\Research\research_*");
 
-        public static Dictionary<string, Reaction> ListOfReactions { get; } = GetSourceTreeDict<Reaction>(@".\Data\Reaction\reaction_*");
+        public static KeyedDataRepository<Reaction> ListOfReactions { get; } = new(@".\Data\Reaction\reaction_*");
 
-        public static List<Ruleset> ListOfRules { get; } = GetSourceTreeList<Ruleset>(@".\Data\Rules\rules_*");
+        public static ListDataRepository<Ruleset> ListOfRules { get; } = new(@".\Data\Rules\rules_*");
 
-        public static Dictionary<string, Plant> ListOfPlants { get; } = GetSourceTreeDict<Plant>(@".\Data\Plant\plant_*");
+        public static KeyedDataRepository<Plant> ListOfPlants { get; } = new(@".\Data\Plant\plant_*");
 
-        public static Dictionary<string, TissuePlanTemplate> ListOfTissuePlans { get; } = GetSourceTreeDict<TissuePlanTemplate>(@".\Data\Bodies\tissue_*");
+        public static KeyedDataRepository<TissuePlanTemplate> ListOfTissuePlans { get; } = new(@".\Data\Bodies\tissue_*");
 
-        public static Dictionary<string, DamageType> ListOfDamageTypes { get; } = GetSourceTreeDict<DamageType>(@".\Data\Damage\dmg_*");
+        public static KeyedDataRepository<DamageType> ListOfDamageTypes { get; } = new(@".\Data\Damage\dmg_*");
 
-        public static Dictionary<string, AnimationBase> ListOfAnimations { get; } = GetSourceTreeDict<AnimationBase>(@".\Data\Animations\*_animations*");
+        public static KeyedDataRepository<AnimationBase> ListOfAnimations { get; } = new(@".\Data\Animations\*_animations*");
 
         #region Descriptors
 
-        public static List<string> ListOfRealmsName { get; } = GetSourceTreeList<string>(@".\Data\Descriptors\realms_*");
+        public static ListDataRepository<string> ListOfRealmsName { get; } = new ListDataRepository<string>(@".\Data\Descriptors\realms_*");
 
-        public static List<string> ListOfMagicFounts { get; } = GetSourceTreeList<string>(@".\Data\Descriptors\fount_*");
+        public static ListDataRepository<string> ListOfMagicFounts { get; } = new ListDataRepository<string>(@".\Data\Descriptors\fount_*");
 
-        public static List<string> ListOfAdjectives { get; } = GetSourceTreeList<string>(@".\Data\Descriptors\adjectives_*");
+        public static ListDataRepository<string> ListOfAdjectives { get; } = new ListDataRepository<string>(@".\Data\Descriptors\adjectives_*");
 
-        public static Dictionary<string, ShapeDescriptor> ListOfShapes { get; } = GetSourceTreeDict<ShapeDescriptor>(@".\Data\Descriptors\shapes_*");
+        public static KeyedDataRepository<ShapeDescriptor> ListOfShapes { get; } = new KeyedDataRepository<ShapeDescriptor>(@".\Data\Descriptors\shapes_*");
 
         #endregion Descriptors
 
         #endregion jsons
 
-        private static Dictionary<string, T> GetSourceTreeDict<T>(string wildCard) where T : IJsonKey => GetSourceTreeList<T>(wildCard).ToDictionary(static val => val.Id);
-
-        private static List<T> GetSourceTreeList<T>(string wildCard)
-        {
-            string[] files = FileUtils.GetFiles(wildCard);
-
-            // List<List<T>> listTList = [];
-            ConcurrentBag<T> result = [];
-
-            try
-            {
-                Parallel.ForEach(files, file =>
-                {
-                    try
-                    {
-                        foreach (T? item in JsonUtils.JsonDeseralize<List<T>>(file)!)
-                        {
-                            result.Add(item);
-                        }
-
-                    }
-                    catch (System.Exception ex)
-                    {
-                        Locator.GetService<MagiLog>().Log($"Failed to load file {file}: {ex.Message}");
-                    }
-                    // listTList.Add(tList);
-                });
-            }
-            catch (System.Exception ex)
-            {
-                Locator.GetService<MagiLog>().Log(ex);
-                throw;
-            }
-            return [.. result];
-        }
-
         #region Query
 
         public static Spell? QuerySpellInData(string spellId, double proficiency = 0)
         {
-            return Query(ListOfSpells, spellId)?.Copy(proficiency);
+            return ListOfSpells.Query(spellId)?.Copy(proficiency);
         }
 
         public static Limb? QueryLimbInData(string limbId)
         {
-            return Query(ListOfLimbs, limbId)?.Copy();
+            return ListOfLimbs.Query(limbId)?.Copy();
         }
 
         public static Organ? QueryOrganInData(string organId)
         {
-            return Query(ListOfOrgans, organId)?.Copy();
+            return ListOfOrgans.Query(organId)?.Copy();
         }
 
         public static Item? QueryItemInData(string itemId)
         {
-            return Query(ListOfItems, itemId);
+            return ListOfItems.Query(itemId);
         }
 
         public static Item? QueryItemInData(string itemId, Material material) => QueryItemInData(itemId)?.ConfigureMaterial(material);
@@ -152,12 +117,12 @@ namespace MagusEngine.Systems
 
         public static Furniture? QueryFurnitureInData(string furnitureId)
         {
-            return Query(ListOfFurnitures, furnitureId)?.Copy();
+            return ListOfFurnitures.Query(furnitureId)?.Copy();
         }
 
         public static RoomTemplate? QueryRoomInData(string roomId)
         {
-            return Query(ListOfRooms, roomId);
+            return ListOfRooms.Query(roomId);
         }
 
         public static Material? QueryMaterial(string id)
@@ -165,13 +130,14 @@ namespace MagusEngine.Systems
             if (_firstLoad)
             {
                 _firstLoad = false;
-                var list = ListOfMaterials.Values.Where(static i => !string.IsNullOrEmpty(i.InheirtFrom)).ToArray();
+                var list = ListOfMaterials.GetEnumerableCollection().Where(static i => !string.IsNullOrEmpty(i.InheirtFrom)).ToArray();
                 for (int i = 0; i < list.Length; i++)
                 {
                     var mat = list[i];
                     if (mat is null)
                         continue;
-                    if (!ListOfMaterials.TryGetValue(mat.InheirtFrom!, out var inheirtFrom))
+                    Material? inheirtFrom = ListOfMaterials.Query(mat.InheirtFrom!);
+                    if (inheirtFrom is null)
                     {
                         Locator.GetService<MagiLog>().Log($"Material to inheirt from was null! Id: {mat.InheirtFrom}");
                         continue;
@@ -180,24 +146,22 @@ namespace MagusEngine.Systems
                     inheirtFrom.CopyTo(mat);
                 }
             }
-            if (ListOfMaterials.TryGetValue(id, out var material))
-                return material; // when there is a need to copy the material, for now let's try the flyweight pattern
-            return null;
+            return ListOfMaterials.Query(id);
         }
 
         public static Race? QueryRaceInData(string raceId)
         {
-            return Query(ListOfRaces, raceId);
+            return ListOfRaces.Query(raceId);
         }
 
         public static Scenario? QueryScenarioInData(string scenarioId)
         {
-            return Query(ListOfScenarios, scenarioId);
+            return ListOfScenarios.Query(scenarioId);
         }
 
         public static BodyPlan? QueryBpPlanInData(string bpPlanId)
         {
-            return Query(ListOfBpPlan, bpPlanId);
+            return ListOfBpPlan.Query(bpPlanId);
         }
 
         public static List<BodyPart> QueryBpsPlansInDataAndReturnBodyParts(string[] bpPlansId, Race race = null!)
@@ -217,79 +181,74 @@ namespace MagusEngine.Systems
 
         public static Language? QueryLanguageInData(string languageId)
         {
-            return Query(ListOfLanguages, languageId);
+            return ListOfLanguages.Query(languageId);
         }
 
         public static Profession? QueryProfessionInData(string professionId)
         {
-            return ListOfProfessions.Find(i => i.Id.Equals(professionId));
+            return ListOfProfessions.Query(professionId);
         }
 
         public static ShapeDescriptor? QueryShapeDescInData(string shapeId)
         {
-            return Query(ListOfShapes, shapeId);
+            return ListOfShapes.Query(shapeId);
         }
 
         public static CultureTemplate? QueryCultureTemplateInData(string cultureId)
         {
-            return Query(ListOfCultures, cultureId);
+            return ListOfCultures.Query(cultureId);
         }
 
-        public static List<CultureTemplate>? QueryCultureTemplateFromBiome(string biomeId) => ListOfCultures.Values.Where(i => i.StartBiome.Equals(biomeId)).ToList();
+        public static List<CultureTemplate>? QueryCultureTemplateFromBiome(string biomeId) => ListOfCultures.GetEnumerableCollection().Where(i => i.StartBiome.Equals(biomeId)).ToList();
 
         public static Research? QueryResearchInData(string researchId)
         {
-            return Query(ListOfResearches, researchId);
+            return ListOfResearches.Query(researchId);
         }
 
         public static Plant? QueryPlantInData(string plantId)
         {
-            return Query(ListOfPlants, plantId);
+            return ListOfPlants.Query(plantId);
         }
 
         public static TissuePlanTemplate? QueryTissuePlanInData(string tissuePlanId)
         {
-            return Query(ListOfTissuePlans, tissuePlanId);
+            return ListOfTissuePlans.Query(tissuePlanId);
         }
 
         public static DamageType? QueryDamageInData(string dmgId)
         {
-            return Query(ListOfDamageTypes, dmgId);
+            return ListOfDamageTypes.Query(dmgId);
         }
 
         public static AnimationBase? QueryAnimationInData(string animationId)
         {
-            return Query(ListOfAnimations, animationId);
+            return ListOfAnimations.Query(animationId);
         }
 
         #endregion Query
 
         #region rng
 
-        public static Language? RandomLangugage() => ListOfLanguages.GetRandomItemFromCollection().Value;
+        public static Language? RandomLangugage() => ListOfLanguages.GetEnumerableCollection().GetRandomItemFromCollection();
 
-        public static string? RandomRealm() => ListOfRealmsName.GetRandomItemFromList();
+        public static string? RandomRealm() => ListOfRealmsName.GetEnumerableCollection().GetRandomItemFromCollection();
 
-        public static Race? RandomRace() => ListOfRaces.GetRandomItemFromCollection().Value;
+        public static Race? RandomRace() => ListOfRaces.GetEnumerableCollection().GetRandomItemFromCollection();
 
-        public static Research? RandomMagicalResearch() => ListOfResearches.Values.Where(static i => i.IsMagical).GetRandomItemFromCollection();
+        public static Research? RandomMagicalResearch() => ListOfResearches.GetEnumerableCollection().Where(static i => i.IsMagical).GetRandomItemFromCollection();
 
-        public static Research? RandomNonMagicalResearch() => ListOfResearches.Values.Where(static i => !i.IsMagical).GetRandomItemFromCollection();
+        public static Research? RandomNonMagicalResearch() => ListOfResearches.GetEnumerableCollection().Where(static i => !i.IsMagical).GetRandomItemFromCollection();
 
         #endregion rng
 
         #region helper methods
 
-        public static List<Reaction> GetProductsByTag(RoomTag tag) => ListOfReactions.Values.Where(i => i.RoomTag.Contains(tag)).ToList();
+        public static List<Reaction> GetProductsByTag(RoomTag tag) => ListOfReactions.GetEnumerableCollection().Where(i => i.RoomTag.Contains(tag)).ToList();
 
-        public static Material? QueryMaterialWithType(MaterialType typeToMake) => ListOfMaterials.Values.Where(i => i.Type == typeToMake).GetRandomItemFromCollection();
+        public static Material? QueryMaterialWithType(MaterialType typeToMake) => ListOfMaterials.GetEnumerableCollection().Where(i => i.Type == typeToMake).GetRandomItemFromCollection();
 
-        public static Material? QueryMaterialWithTrait(Trait trait) => ListOfMaterials?.Values.Where(i => i.ConfersTraits?.Contains(trait) == true).GetRandomItemFromCollection();
-
-        private static T? Query<T>(Dictionary<string, T> source, string id) where T : class
-        {
-            return source.TryGetValue(id, out var value) ? value : null;
-        }
+        public static Material? QueryMaterialWithTrait(Trait trait) => ListOfMaterials?.GetEnumerableCollection().Where(i => i.ConfersTraits?.Contains(trait) == true).GetRandomItemFromCollection();
 
         #endregion helper methods
     }
