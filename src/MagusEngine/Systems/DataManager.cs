@@ -1,4 +1,9 @@
-﻿using Arquimedes.Enumerators;
+﻿using System.Buffers;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Arquimedes.Enumerators;
 using Arquimedes.Interfaces;
 using Arquimedes.Utils;
 using MagusEngine.Core;
@@ -15,9 +20,6 @@ using MagusEngine.Serialization.EntitySerialization;
 using MagusEngine.Serialization.MapConverter;
 using MagusEngine.Services;
 using MagusEngine.Utils.Extensions;
-using System.Buffers;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace MagusEngine.Systems
 {
@@ -92,22 +94,27 @@ namespace MagusEngine.Systems
         {
             string[] files = FileUtils.GetFiles(wildCard);
 
-            List<List<T>> listTList = [];
+            // List<List<T>> listTList = [];
+            var result = new ConcurrentBag<T>();
 
             try
             {
-                for (int i = 0; i < files.Length; i++)
+                Parallel.ForEach(files, file =>
                 {
-                    var tList = JsonUtils.JsonDeseralize<List<T>>(files[i])!;
-                    listTList.Add(tList);
-                }
+                    var tList = JsonUtils.JsonDeseralize<List<T>>(file)!;
+                    foreach (var item in tList)
+                    {
+                        result.Add(item);
+                    }
+                    // listTList.Add(tList);
+                });
             }
             catch (System.Exception ex)
             {
                 Locator.GetService<MagiLog>().Log(ex);
                 throw;
             }
-            return listTList.ReturnListListTAsListT();
+            return [.. result];
         }
 
         #region Query
