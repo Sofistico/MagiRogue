@@ -62,8 +62,6 @@ namespace MagusEngine.Components.TilesComponents
 
         public int BiomeBitmask { get; set; }
 
-        //public Road? Road { get; internal set; }
-
         public bool Visited { get; internal set; }
 
         /// <summary>
@@ -73,8 +71,8 @@ namespace MagusEngine.Components.TilesComponents
 
         public Point Position
         {
-            get => Parent.Position;
-            set => Parent.Position = value;
+            get => Parent!.Position;
+            set => Parent!.Position = value;
         }
 
         public void UpdateBiomeBitmask()

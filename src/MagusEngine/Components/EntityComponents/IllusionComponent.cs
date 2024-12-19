@@ -7,14 +7,15 @@ namespace MagusEngine.Components.EntityComponents
     {
         public const string Tag = "illusion";
 
-        public readonly ColoredGlyph FakeAppearence;
-        //public IObjectWithComponents? Parent { get; set; }
+        public ColoredGlyph FakeAppearence { get; }
 
         public IllusionComponent(Tile fakeAppearence)
         {
             FakeAppearence = new ColoredGlyph(fakeAppearence.Appearence.Foreground,
-                fakeAppearence.Appearence.Background, fakeAppearence.Appearence.Glyph);
-            FakeAppearence.IsVisible = true;
+                fakeAppearence.Appearence.Background, fakeAppearence.Appearence.Glyph)
+            {
+                IsVisible = true
+            };
         }
     }
 }

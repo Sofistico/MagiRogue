@@ -1,7 +1,6 @@
 using Arquimedes.Enumerators;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
-using MagusEngine.Core.Magic.Interfaces;
 using MagusEngine.Components.EntityComponents.Status;
 using MagusEngine.Services;
 using MagusEngine.Systems;
@@ -14,7 +13,7 @@ namespace MagusEngine.Core.Magic.Effects
     {
         public float HastePower { get; set; }
         public int Duration { get; set; }
-        public string EffectMessage { get; set; }
+        public string? EffectMessage { get; set; }
 
         [JsonConstructor]
         public HasteEffect(SpellAreaEffect areaOfEffect, float hastePower, int duration, string spellDamageTypeId = "force")
@@ -48,7 +47,7 @@ namespace MagusEngine.Core.Magic.Effects
             HasteComponent haste = new(HastePower,
                 Find.Universe.Time.Tick,
                 Find.Universe.Time.Tick + (Duration * TimeDefSpan.CentisecondsPerSecond),
-                EffectMessage);
+                EffectMessage ?? "You feel yourself speeding up");
             actor.AddComponent(haste);
         }
     }

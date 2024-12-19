@@ -24,8 +24,8 @@ namespace MagusEngine.Components.EntityComponents.Projectiles
 
         protected override void OnHit()
         {
-            var dmgType = new DamageType(Parent.ItemDamageType);
-            CombatSystem.HitProjectile(Parent, _path.GetStep(_currentStep > 0 ? _currentStep - 1 : 0), dmgType, Parent.Material, _force, IgnoresObstacles);
+            var dmgType = new DamageType(Parent?.ItemDamageType ?? default);
+            CombatSystem.HitProjectile(Parent, _path!.GetStep(_currentStep > 0 ? _currentStep - 1 : 0), dmgType, Parent!.Material!, _force, IgnoresObstacles);
         }
     }
 }

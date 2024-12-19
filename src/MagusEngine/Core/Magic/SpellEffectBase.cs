@@ -1,6 +1,7 @@
 using Arquimedes.Enumerators;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Magic.Interfaces;
+using MagusEngine.Exceptions;
 using MagusEngine.Systems;
 
 namespace MagusEngine.Core.Magic
@@ -28,14 +29,14 @@ namespace MagusEngine.Core.Magic
         {
         }
 
-        public virtual DamageType? GetDamageType()
+        public virtual DamageType GetDamageType()
         {
             if (string.IsNullOrEmpty(SpellDamageTypeId))
             {
                 // Handle invalid ID appropriately, e.g., return null
-                return null;
+                throw new NullValueException(nameof(SpellDamageTypeId));
             }
-            return DataManager.QueryDamageInData(SpellDamageTypeId);
+            return DataManager.QueryDamageInData(SpellDamageTypeId) ?? throw new NullValueException("DamageType was null", null);
         }
     }
 }

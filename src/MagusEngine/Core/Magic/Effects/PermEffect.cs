@@ -28,16 +28,5 @@ namespace MagusEngine.Core.Magic.Effects
             EnchantName = enchantName;
             EnchantDesc = enchantDesc;
         }
-
-        public void Enchant(int solidManaSacrificed)
-        {
-            //if (nodesSacrificed >= NodeCost)
-            //{
-            //    Enchantment.ApplyEffect(Caster.Position, Caster, new SpellBase());
-            //}
-            //else
-            //    GameLoop.UIManager.MessageLog
-            //        .PrintMessage($"{Caster.Name} does not have enough nodes for the enchantment");
-        }
     }
 }

@@ -322,7 +322,7 @@ namespace MagusEngine.Systems
             }
         }
 
-        private void ProcessComponentTurn(TickActionNode componentTurn)
+        private static void ProcessComponentTurn(TickActionNode componentTurn)
         {
             var nextInvoke = componentTurn.Action.Invoke();
             if (nextInvoke > 0)

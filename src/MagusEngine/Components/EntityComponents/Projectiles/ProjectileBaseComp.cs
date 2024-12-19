@@ -3,6 +3,7 @@ using GoRogue.Pathing;
 using MagusEngine.Bus.MapBus;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
+using MagusEngine.Exceptions;
 using MagusEngine.Services;
 using MagusEngine.Systems.Time.Nodes;
 using SadConsole.Effects;
@@ -92,14 +93,13 @@ namespace MagusEngine.Components.EntityComponents.Projectiles
 
         protected virtual void OnHitAnimation()
         {
-            return;
         }
 
         public void UpdatePath(MagiMap map)
         {
             _path = map.AStar.ShortestPath(Origin, FinalPoint);
             if (_path == null)
-                throw new ApplicationException($"Path is null, can't update path. origin: {Origin}, end: {FinalPoint}");
+                throw new GenericException($"Path is null, can't update path. origin: {Origin}, end: {FinalPoint}");
         }
 
         protected virtual char TranslateDirToGlyph()

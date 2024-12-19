@@ -30,7 +30,7 @@ public abstract class BaseTileField : BaseEffectComponent
         int basePower,
         bool customTurnTimer = false,
         bool freezesTurn = false,
-        string removeMessage = null
+        string? removeMessage = null
     )
         : base(
             tickApplied,

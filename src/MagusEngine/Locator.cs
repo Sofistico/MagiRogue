@@ -20,7 +20,7 @@ namespace MagusEngine
         {
             var result = (T?)GetService(typeof(T));
             return result is null
-                ? throw new ArgumentNullException("Trying to pass a service as null")
+                ? throw new ArgumentNullException($"Trying to pass a service as null - {nameof(T)}")
                 : result;
         }
 

@@ -193,7 +193,13 @@ namespace MagusEngine.Components.EntityComponents.Ai
         /// </summary>
         public void Dispose()
         {
+            Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            // Cleanup
             parent?.GoRogueComponents.Remove(this);
             ClearCommit();
             needs = null;

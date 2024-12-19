@@ -189,13 +189,13 @@ namespace MagusEngine.Generators
                     || tile.HeightType == HeightType.River)
                     continue;
 
-                if (parent.GetComponent<SiteTile>(out var site))
+                if (parent.HasComponent<SiteTile>())
                     continue;
 
                 var possibleCivs = DataManager.QueryCultureTemplateFromBiome(tile.BiomeType.ToString());
                 Civilization civ;
-                if (possibleCivs.Count > 0)
-                    civ = possibleCivs.GetRandomItemFromList().ConvertToCivilization();
+                if (possibleCivs?.Count > 0)
+                    civ = possibleCivs!.GetRandomItemFromList()!.ConvertToCivilization();
                 else
                     continue;
 

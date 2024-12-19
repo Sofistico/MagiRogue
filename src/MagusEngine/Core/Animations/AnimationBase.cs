@@ -6,7 +6,7 @@ namespace MagusEngine.Core.Animations
     /// <summary>
     /// This class implements the properties that a animation should use
     /// </summary>
-    public abstract class AnimationBase : IJsonKey
+    public class AnimationBase : IJsonKey
     {
         public required string Id { get; set; }
         public AnimationType AnimationType { get; set; }

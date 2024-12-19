@@ -32,6 +32,4 @@ namespace MagusEngine.Serialization
             throw new NotImplementedException();
         }
     }
-
-    public class AnimationBaseTemplate { }
 }

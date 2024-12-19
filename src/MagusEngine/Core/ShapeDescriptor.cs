@@ -4,9 +4,9 @@ namespace MagusEngine.Core
 {
     public class ShapeDescriptor : IJsonKey
     {
-        public string Id { get; set; }
-        public string[] Name { get; set; }
-        public string[] Adjectives { get; set; }
-        public string Tile { get; set; }
+        public required string Id { get; set; }
+        public required string[] Name { get; set; }
+        public required string[] Adjectives { get; set; }
+        public required string Tile { get; set; }
     }
 }

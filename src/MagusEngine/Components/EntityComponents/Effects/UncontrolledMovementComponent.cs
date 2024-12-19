@@ -2,6 +2,7 @@ using MagusEngine.Actions;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
+using MagusEngine.Exceptions;
 using MagusEngine.Systems;
 using MagusEngine.Systems.Physics;
 using MagusEngine.Utils.Extensions;
@@ -36,7 +37,7 @@ namespace MagusEngine.Components.EntityComponents.Effects
             for (int i = 0; i < distance; i++)
             {
                 var currentTile = (Parent?.CurrentMagiMap?.GetTileAt(finalPoint == Point.None ? Parent.Position + Direction : finalPoint + Direction))
-                    ?? throw new ApplicationException("The tile was null can't push!");
+                    ?? throw new NullValueException("The tile was null can't push!");
                 // is this enough?
                 if (Parent is Actor actor)
                     bp = actor.ActorAnatomy.Limbs.GetRandomItemFromList();
@@ -46,7 +47,7 @@ namespace MagusEngine.Components.EntityComponents.Effects
                     CombatSystem.DealDamage(PhysicsSystem.CalculateMomentum(Parent.Weight, damage),
                         Parent,
                         DataManager.QueryDamageInData("blunt")!,
-                        currentTile?.Material,
+                        currentTile.Material,
                         Tile.ReturnAttack(),
                         limbAttacked: bp);
                     break;
@@ -55,8 +56,8 @@ namespace MagusEngine.Components.EntityComponents.Effects
                 {
                     CombatSystem.DealDamage(PhysicsSystem.CalculateMomentum(Parent.Weight, damage),
                         Parent,
-                        DataManager.QueryDamageInData("blunt"),
-                        currentTile?.Material,
+                        DataManager.QueryDamageInData("blunt")!,
+                        currentTile!.Material,
                         Tile.ReturnAttack(),
                         limbAttacked: bp);
 

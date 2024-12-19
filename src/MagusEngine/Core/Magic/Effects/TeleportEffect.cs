@@ -15,7 +15,7 @@ namespace MagusEngine.Core.Magic.Effects
 
         [JsonConstructor]
         public TeleportEffect(SpellAreaEffect areaOfEffect = SpellAreaEffect.Target,
-            string spellDamageTypeId = null, int radius = 0)
+            string? spellDamageTypeId = null, int radius = 0)
         {
             AreaOfEffect = areaOfEffect;
             SpellDamageTypeId = spellDamageTypeId;
@@ -29,7 +29,7 @@ namespace MagusEngine.Core.Magic.Effects
             var entity = caster?.CurrentMagiMap?.GetEntityAt<MagiEntity>(target);
             if (ActionManager.MoveActorTo(entity, target))
             {
-                var entityName = entity?.Name ?? "Unknown entity";
+                var entityName = entity.Name ?? "Unknown entity";
                 Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{entityName} disappeared!"));
             }
         }

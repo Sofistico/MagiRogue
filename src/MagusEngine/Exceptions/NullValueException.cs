@@ -2,7 +2,7 @@ using System;
 
 namespace MagusEngine.Exceptions
 {
-    public class NullValueException : ApplicationException
+    public class NullValueException : Exception
     {
         public NullValueException() { }
 

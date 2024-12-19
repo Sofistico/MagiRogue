@@ -21,8 +21,6 @@ namespace MagusEngine.Services.Factory
     /// </summary>
     public static class EntityFactory
     {
-        private static Actor? actorField;
-
         public static Actor ActorCreator(HistoricalFigure figure, Point pos)
         {
             var actor = ActorCreator(pos,
@@ -40,7 +38,7 @@ namespace MagusEngine.Services.Factory
         {
             Race race = DataManager.QueryRaceInData(raceId) ?? throw new NullValueException(nameof(race));
 
-            int glyph = race?.RaceGlyph.GlyphExistInDictionary() == true ? race.RaceGlyph.GetGlyph() : race!.RaceGlyph;
+            int glyph = race.RaceGlyph.GlyphExistInDictionary() ? race.RaceGlyph.GetGlyph() : race!.RaceGlyph;
 
             Actor actor = new(actorName,
                 race.ReturnForegroundColor(),
@@ -50,7 +48,6 @@ namespace MagusEngine.Services.Factory
             {
                 Description = race.Description,
             };
-            actorField = actor;
             SetupBodySoulAndMind(race, actor, actorAge, sex);
 
             return actor;
@@ -59,7 +56,7 @@ namespace MagusEngine.Services.Factory
         public static Actor ActorCreator(Point position, string raceId, Sex sex, AgeGroup age, string? name = null)
         {
             Race race = DataManager.QueryRaceInData(raceId) ?? throw new NullValueException(nameof(race));
-            int glyph = race?.RaceGlyph.GlyphExistInDictionary() == true ? race.RaceGlyph.GetGlyph() : race!.RaceGlyph;
+            int glyph = race.RaceGlyph.GlyphExistInDictionary() ? race.RaceGlyph.GetGlyph() : race!.RaceGlyph;
 
             Actor actor = new(name.IsNullOrEmpty() ? race.RaceName : name!,
                 race.ReturnForegroundColor(),
@@ -69,7 +66,6 @@ namespace MagusEngine.Services.Factory
             {
                 Description = race.Description,
             };
-            actorField = actor;
             SetupBodySoulAndMind(race, actor, race.GetAgeFromAgeGroup(age), sex);
 
             return actor;
@@ -89,7 +85,6 @@ namespace MagusEngine.Services.Factory
             {
                 Description = race.Description,
             };
-            actorField = actor;
             SetupBodySoulAndMind(race, actor, actorAge, sex);
 
             return actor;
@@ -112,10 +107,12 @@ namespace MagusEngine.Services.Factory
 
         private static void SetupEquipment(Actor actor, Scenario scenario)
         {
+            // this will be used in the future oneday
         }
 
         private static void SetupInventory(Actor actor, Scenario scenario)
         {
+            // this will be used in the future oneday
         }
 
         private static void SetupScenarioMagic(Actor actor, Scenario scenario)
@@ -131,7 +128,7 @@ namespace MagusEngine.Services.Factory
 
         private static Spell? ReturnSpellFromString(string str)
         {
-            var strArray = str.Split('_', ':');
+            var strArray = str.Split(['_', ':']);
             if (strArray[0].Contains("any"))
             {
                 var enumConverted = Enum.Parse<SpellContext>(strArray[1].FirstLetterUpper());
@@ -191,7 +188,6 @@ namespace MagusEngine.Services.Factory
         {
             Body body = actor.Body;
             Anatomy anatomy = actor.ActorAnatomy;
-            Magic magic = actor.GetComponent<Magic>();
             Mind mind = actor.Mind;
             Soul soul = actor.Soul;
 

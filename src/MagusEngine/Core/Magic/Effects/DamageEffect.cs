@@ -91,7 +91,7 @@ namespace MagusEngine.Core.Magic.Effects
             }
             else
             {
-                Actor happyGuy = Find.CurrentMap.GetEntityAt<Actor>(target);
+                Actor happyGuy = Find.CurrentMap!.GetEntityAt<Actor>(target)!;
 
                 if (happyGuy == null)
                 {

@@ -27,7 +27,7 @@ namespace MagusEngine.Services.Factory
         {
             tile.AddComponent(new PlantComponent(plant));
             tile.AddComponent(new ExtraAppearanceComponent(plant.GetSadGlyph()));
-            if (plant?.Material?.ConfersTraits?.Contains(Trait.GrazerEatable) == true)
+            if (plant.Material?.ConfersTraits?.Contains(Trait.GrazerEatable) == true)
             {
                 tile.AddComponent(FoodComponent.Herbivore);
                 tile.Traits.Add(Trait.GrazerEatable);
@@ -99,14 +99,14 @@ namespace MagusEngine.Services.Factory
             }
             else if (!string.IsNullOrEmpty(materialId))
             {
-                material = DataManager.QueryMaterial(materialId);
+                material = DataManager.QueryMaterial(materialId)!;
             }
             else
             {
-                material = DataManager.QueryMaterialWithType(typeToMake);
+                material = DataManager.QueryMaterialWithType(typeToMake)!;
             }
             cachedMaterial = material;
-            return CreateTile(pos, tileType, material);
+            return CreateTile(pos, tileType, material!);
         }
 
         private static Tile CreateTile(Point pos,
@@ -171,13 +171,13 @@ namespace MagusEngine.Services.Factory
                     isWalkable = true;
                     break;
             }
-            string name = material.Name + " " + tileType.ToString();
+            string name = material!.Name + " " + tileType.ToString();
             return (material.ReturnMagiColor().Color, Color.Black, glyph, isWalkable, isTransparent, name);
         }
 
         public static Tile CreateTile(Point pos, TileType type, Trait trait)
         {
-            Material mat = DataManager.QueryMaterialWithTrait(trait);
+            Material mat = DataManager.QueryMaterialWithTrait(trait)!;
             return CreateTile(pos, type, mat);
         }
     }
