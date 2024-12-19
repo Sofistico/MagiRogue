@@ -43,7 +43,7 @@ namespace MagusEngine.Components.EntityComponents.Ai
                 FindIfDangerExists(map, actor);
                 if (commitedToNeed is not null)
                     need = commitedToNeed;
-                timeTakenAction = ActOnNeed(map, actor, timeTakenAction, need);
+                timeTakenAction = ActOnNeed(map, actor, timeTakenAction, need!);
 
                 return (true, need is null ? 100 : timeTakenAction); // if need is null, then it must check next turn again!
             }
@@ -122,23 +122,18 @@ namespace MagusEngine.Components.EntityComponents.Ai
                         break;
 
                     case ActionsEnum.Fight:
-                        var enemy = (Actor)need.Objective;
+                        var enemy = (Actor)need.Objective!;
                         if (enemy is null) { break; }
-                        if (map.DistanceMeasurement.Calculate(actor.Position - enemy.Position) <= actor.AttackRange())
-                        {
-                            timeTakenAction = ActionManager.MeleeAttack(actor, enemy);
-                        }
-                        else
-                        {
-                            timeTakenAction = FindPathAndMoveOneStep(map, actor, enemy);
-                        }
+                        timeTakenAction = map.DistanceMeasurement.Calculate(actor.Position - enemy.Position) <= actor.AttackRange()
+                            ? ActionManager.MeleeAttack(actor, enemy)
+                            : FindPathAndMoveOneStep(map, actor, enemy);
                         break;
 
                     case ActionsEnum.Bully:
                         break;
 
                     case ActionsEnum.PickUp:
-                        Item item = (Item)need.Objective;
+                        Item item = (Item)need.Objective!;
                         if (item is null) { break; }
                         if (map.DistanceMeasurement.Calculate(actor.Position, item.Position) <= 1)
                         {
@@ -157,7 +152,7 @@ namespace MagusEngine.Components.EntityComponents.Ai
                         Locator.GetService<MessageBusService>()
                             .SendMessage<AddMessageLog>(new($"{actor.Name} wanders", true));
 #endif
-                        need?.Fulfill();
+                        need.Fulfill();
                         break;
 
                     case ActionsEnum.Flee:
@@ -184,8 +179,10 @@ namespace MagusEngine.Components.EntityComponents.Ai
 
         private long MoveActorAStep(Actor actor, MagiMap map)
         {
-            actor.MoveBy(previousKnowPath.GetStep(step++).Subtract(actor.Position));
-            return TimeHelper.GetWalkTime(actor, map.GetTileAt(actor.Position));
+            if (actor is null || map is null)
+                return 0;
+            actor.MoveBy(previousKnowPath!.GetStep(step++).Subtract(actor.Position));
+            return TimeHelper.GetWalkTime(actor, map.GetTileAt(actor.Position)!);
         }
 
         private void ClearCommit() => commitedToNeed = null;
@@ -194,11 +191,9 @@ namespace MagusEngine.Components.EntityComponents.Ai
         /// Performs application-defined tasks associated with freeing, releasing, or resetting
         /// unmanaged resources.
         /// </summary>
-#pragma warning disable CA1816 // Dispose methods should call SuppressFinalize
-
         public void Dispose()
-#pragma warning restore CA1816 // Dispose methods should call SuppressFinalize
         {
+            GC.SuppressFinalize(this);
             parent?.GoRogueComponents.Remove(this);
             ClearCommit();
             needs = null;

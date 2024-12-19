@@ -6,6 +6,7 @@ using Diviner.Interfaces;
 using Diviner.Windows;
 using GoRogue.Messaging;
 using MagusEngine;
+using MagusEngine.Exceptions;
 using MagusEngine.Bus;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
@@ -283,7 +284,7 @@ namespace Diviner
 
         public void Handle([NotNull] ShowGlyphOnConsole message)
         {
-            var window = GetWindow<MagiBaseWindow>(message.WindowTag);
+            MagiBaseWindow window = GetWindow<MagiBaseWindow>(message.WindowTag) ?? throw new NullValueException(nameof(window));
             var originalGlyph = window.GetGlyph(message.Position.X, message.Position.Y);
             window.SetGlyph(message.Position.X, message.Position.Y, message.Glyph);
             message.LastUsedGlyph = originalGlyph;

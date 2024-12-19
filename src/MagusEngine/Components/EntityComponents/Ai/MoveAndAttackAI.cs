@@ -1,11 +1,11 @@
 using GoRogue.Pathing;
-using MagusEngine.Actions;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.Systems;
 using MagusEngine.Systems.Time;
 using SadRogue.Primitives;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace MagusEngine.Components.EntityComponents.Ai
@@ -21,17 +21,17 @@ namespace MagusEngine.Components.EntityComponents.Ai
 
         public object? Parent { get; set; }
 
-        public (bool sucess, long ticks) RunAi(MagiMap map)
+        public (bool sucess, long ticks) RunAi(MagiMap? map)
         {
-            // TODO: Fix, because it hardly works, at least i saw the actor attacking
-            if (Parent is not GoRogue.GameFramework.IGameObject parent)
+            // Fix, because it hardly works, at least i saw the actor attacking
+            if (Parent is not GoRogue.GameFramework.IGameObject parent || map is null)
             {
                 return (false, -1);
             }
 
             Actor? actor = (Actor?)Find.CurrentMap?.GetEntityById(parent.ID);
 
-            if (TryGetDirectionMove(map, actor))
+            if (actor is not null && TryGetDirectionMove(map, actor))
             {
                 var walkSpeed = TimeHelper.GetWalkTime(actor, actor.Position);
                 return (true, walkSpeed);
@@ -42,12 +42,15 @@ namespace MagusEngine.Components.EntityComponents.Ai
             }
         }
 
-        public bool TryGetDirectionMove(MagiMap map, Actor actor)
+        public bool TryGetDirectionMove([NotNull] MagiMap map, [NotNull] Actor actor)
         {
-            Path shortPath = map.AStar.ShortestPath(actor.Position, Find.Universe.Player.Position);
+            Path? shortPath = map.AStar.ShortestPath(actor.Position, Find.Universe!.Player!.Position);
 
-            GoRogue.GameFramework.IGameObject iGame = (GoRogue.GameFramework.IGameObject)Parent;
-            var parent = Find.CurrentMap.GetEntityById(iGame.ID);
+            GoRogue.GameFramework.IGameObject iGame = (GoRogue.GameFramework.IGameObject)Parent!;
+            var parent = Find.CurrentMap?.GetEntityById(iGame.ID);
+
+            if (parent is null)
+                return false;
 
             Direction direction;
 

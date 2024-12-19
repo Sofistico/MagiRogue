@@ -1,8 +1,8 @@
 namespace Arquimedes.Interfaces
 {
-    public interface IDataRepository<T, TQuery>
+    public interface IDataRepository<out TData, in TQuery>
     {
-        public T? Query(TQuery id);
-        public IEnumerable<T> GetEnumerableCollection();
+        public TData? Query(TQuery id);
+        public IEnumerable<TData> GetEnumerableCollection();
     }
 }

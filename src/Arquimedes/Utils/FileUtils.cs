@@ -50,7 +50,6 @@ namespace Arquimedes.Utils
         {
             string[] files = FileUtils.GetFiles(wildCard);
 
-            // List<List<T>> listTList = [];
             ConcurrentBag<T> result = [];
 
             try
@@ -67,16 +66,13 @@ namespace Arquimedes.Utils
                     }
                     catch (System.Exception ex)
                     {
-                        // Locator.GetService<MagiLog>().Log($"Failed to load file {file}: {ex.Message}");
                         System.Console.WriteLine($"Something went wrong {ex}");
                         return;
                     }
-                    // listTList.Add(tList);
                 });
             }
             catch (System.Exception ex)
             {
-                // Locator.GetService<MagiLog>().Log(ex);
                 System.Console.WriteLine($"Something went wrong {ex}");
                 throw;
             }

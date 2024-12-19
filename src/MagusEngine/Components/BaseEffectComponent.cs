@@ -19,7 +19,7 @@ namespace MagusEngine.Components
         public string Tag { get; set; }
         public bool FreezesTurn { get; set; }
 
-        protected BaseEffectComponent(long tickApplied, long tickToRemove, string effectMessage, string tag, bool customTurnTimer = false, bool freezesTurn = false, string removeMessage = null)
+        protected BaseEffectComponent(long tickApplied, long tickToRemove, string effectMessage, string tag, bool customTurnTimer = false, bool freezesTurn = false, string? removeMessage = null)
         {
             TickToRemove = tickToRemove;
             TickApplied = tickApplied;
@@ -31,7 +31,7 @@ namespace MagusEngine.Components
             RemoveMessage = removeMessage;
         }
 
-        public virtual void ConfigureTurnTimer()
+        public void ConfigureTurnTimer()
         {
             if (Find.Universe is not null)
                 Find.Universe.Time.TurnPassed += GetTime_TurnPassed;
