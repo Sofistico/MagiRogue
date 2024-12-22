@@ -128,7 +128,7 @@ namespace MagusEngine.Services.Factory
 
         private static Spell? ReturnSpellFromString(string str)
         {
-            var strArray = str.Split(['_', ':']);
+            var strArray = str.Split('_', ':');
             if (strArray[0].Contains("any"))
             {
                 var enumConverted = Enum.Parse<SpellContext>(strArray[1].FirstLetterUpper());

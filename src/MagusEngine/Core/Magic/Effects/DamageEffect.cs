@@ -2,7 +2,6 @@
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
-using MagusEngine.Core.Magic.Interfaces;
 using MagusEngine.Services;
 using MagusEngine.Systems;
 using Newtonsoft.Json;
@@ -113,7 +112,7 @@ namespace MagusEngine.Core.Magic.Effects
             return new()
             {
                 AttackAbility = AbilityCategory.MagicShaping,
-                DamageTypeId = SpellDamageTypeId,
+                DamageTypeId = SpellDamageTypeId ?? "blunt",
                 VelocityAttackMultiplier = VelocityAttackMultiplier,
                 ContactArea = Volume,
                 PenetrationPercentage = PenetrationPercentage,

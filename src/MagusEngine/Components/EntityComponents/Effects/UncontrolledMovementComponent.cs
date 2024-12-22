@@ -41,7 +41,7 @@ namespace MagusEngine.Components.EntityComponents.Effects
                 // is this enough?
                 if (Parent is Actor actor)
                     bp = actor.ActorAnatomy.Limbs.GetRandomItemFromList();
-                if (currentTile?.IsWalkable == false)
+                if (!currentTile.IsWalkable)
                 {
                     damage *= currentTile.Material.Density ?? 1; // massive damage by hitting a wall, multiplied by something i dunno
                     CombatSystem.DealDamage(PhysicsSystem.CalculateMomentum(Parent.Weight, damage),

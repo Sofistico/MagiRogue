@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using MagusEngine.Exceptions;
 using MagusEngine.Services;
 using MagusEngine.Services.Factory;
 using SadRogue.Primitives;
@@ -20,7 +21,7 @@ namespace MagusEngine
         {
             var result = (T?)GetService(typeof(T));
             return result is null
-                ? throw new ArgumentNullException($"Trying to pass a service as null - {nameof(T)}")
+                ? throw new NullValueException($"Trying to pass a service as null - {nameof(T)}", null)
                 : result;
         }
 

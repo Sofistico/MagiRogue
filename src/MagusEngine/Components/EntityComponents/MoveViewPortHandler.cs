@@ -10,7 +10,7 @@ namespace MagusEngine.Components.EntityComponents
     {
         public override void OnAdded(IScreenObject host)
         {
-            if (host is not Console con)
+            if (host is not Console)
             {
                 throw new GenericException($"{nameof(MoveViewPortHandler)} can only be used on {nameof(Console)}");
             }
