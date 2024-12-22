@@ -23,7 +23,7 @@ namespace MagusEngine.Core.WorldStuff.History
         {
         }
 
-        public List<Myth> GenerateMyths(List<Race> races,
+        public static List<Myth> GenerateMyths(List<Race> races,
             List<HistoricalFigure> figures, PlanetMap planet)
         {
             // there is lot that will need some tune up and some rewrite in the future but for now,
