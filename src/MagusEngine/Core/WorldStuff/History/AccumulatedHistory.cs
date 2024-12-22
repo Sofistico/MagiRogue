@@ -53,12 +53,12 @@ namespace MagusEngine.Core.WorldStuff.History
 
         #region Public Properties
 
-        public List<Site> AllSites { get; set; } = new();
+        public List<Site> AllSites { get; set; } = [];
         public List<Civilization> Civs { get; set; }
         public int CreationYear { get; set; }
         public List<HistoricalFigure> Figures { get; set; }
-        public List<ItemTemplate> ImportantItems { get; set; } = new();
-        public List<Myth> Myths { get; set; } = new();
+        public List<ItemTemplate> ImportantItems { get; set; } = [];
+        public List<Myth> Myths { get; set; } = [];
         public int Year { get; set; }
 
         #endregion Public Properties
@@ -71,8 +71,7 @@ namespace MagusEngine.Core.WorldStuff.History
             Civs = civilizations;
             planetData = planet;
             bool firstYearOnly = true;
-            MythGenerator mythGenerator = new MythGenerator();
-            Myths = mythGenerator.GenerateMyths(
+            Myths = MythGenerator.GenerateMyths(
                 DataManager.ListOfRaces.GetEnumerableCollection().ToList(),
                 Figures,
                 planet);

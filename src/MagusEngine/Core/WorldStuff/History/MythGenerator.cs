@@ -19,10 +19,6 @@ namespace MagusEngine.Core.WorldStuff.History
         private const int nmbrInteractions = 5;
         private const int nmbrOfNewMyths = 3;
 
-        public MythGenerator()
-        {
-        }
-
         public static List<Myth> GenerateMyths(List<Race> races,
             List<HistoricalFigure> figures, PlanetMap planet)
         {
