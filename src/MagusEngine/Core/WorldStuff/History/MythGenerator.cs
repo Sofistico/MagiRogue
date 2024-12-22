@@ -33,8 +33,8 @@ namespace MagusEngine.Core.WorldStuff.History
                 // generate the primordials hfs (gods, demons, world, etc) and also define who or what
                 // created the world!
                 .. WhoCreatedTheWorld(figures, races, planet.Name),
-                .. CreateSomeMinorMyths(figures, races, nmbrOfNewMyths),
-                .. BunchOfMythsInteraction(races, figures, planet, nmbrInteractions),
+                .. CreateSomeMinorMyths(figures, nmbrOfNewMyths),
+                .. BunchOfMythsInteraction(figures, planet, nmbrInteractions),
             ];
 
             foreach (var item in figures)
@@ -51,7 +51,6 @@ namespace MagusEngine.Core.WorldStuff.History
         }
 
         private static IEnumerable<Myth> CreateSomeMinorMyths(List<HistoricalFigure> figures,
-            List<Race> races,
             int nmbrOfMythsToCreate)
         {
             List<Myth> myths = new();
@@ -66,7 +65,7 @@ namespace MagusEngine.Core.WorldStuff.History
                 };
                 Myth newMyth = new Myth(figures[0].Name, figures[0].MythWho,
                     MythAction.Created, num.GetRandomItemFromList());
-                HistoricalFigure createdFigure = newMyth.CreateFigureFromMyth(figures[0].Name);
+                HistoricalFigure createdFigure = newMyth!.CreateFigureFromMyth(figures[0].Name)!;
                 if (createdFigure is not null)
                 {
                     createdFigure.HfAnatomy.Ages = false;
@@ -80,13 +79,12 @@ namespace MagusEngine.Core.WorldStuff.History
             return myths;
         }
 
-        private static IEnumerable<Myth> BunchOfMythsInteraction(List<Race> races,
-            List<HistoricalFigure> figures, PlanetMap planet, int nmbrOfIterations)
+        private static List<Myth> BunchOfMythsInteraction(List<HistoricalFigure> figures, PlanetMap planet, int nmbrOfIterations)
         {
-            List<Myth> myths = new();
+            List<Myth> myths = [];
             bool processingMyths = true;
             int currentIteration = 0;
-            Stack<HistoricalFigure> stack = new Stack<HistoricalFigure>(figures);
+            Stack<HistoricalFigure> stack = new(figures);
 
             while (processingMyths)
             {
@@ -110,7 +108,7 @@ namespace MagusEngine.Core.WorldStuff.History
                         || myth.MythWhat is MythWhat.Spirit
                         || myth.MythWhat is MythWhat.Region))
                     {
-                        HistoricalFigure createdFigure = myth.CreateFigureFromMyth(figure.Name);
+                        HistoricalFigure createdFigure = myth!.CreateFigureFromMyth(figure.Name)!;
                         if (createdFigure is not null)
                             figures.Add(createdFigure);
                     }
@@ -138,7 +136,7 @@ namespace MagusEngine.Core.WorldStuff.History
         }
 
         //TODO: REmove all hardcode from this shit!
-        private List<Myth> WhoCreatedTheWorld(List<HistoricalFigure> figures, List<Race> races, string planetName)
+        private static List<Myth> WhoCreatedTheWorld(List<HistoricalFigure> figures, List<Race> races, string planetName)
         {
             string[] adjectives = DataManager.ListOfAdjectives.GetEnumerableCollection().ToArray();
 

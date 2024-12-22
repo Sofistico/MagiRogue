@@ -2,7 +2,6 @@
 using MagusEngine.Core.Civ;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
-using MagusEngine.Serialization;
 using MagusEngine.Systems;
 using MagusEngine.Utils;
 using MagusEngine.Utils.Extensions;
@@ -20,6 +19,13 @@ namespace MagusEngine.Core.WorldStuff.History
         public HistoricalFigure? WithWho { get; set; }
         public List<HistoricalFigure>? WithWhos { get; set; }
         public string? Where { get; set; }
+
+#nullable disable
+        public Legend()
+        {
+
+        }
+#nullable enable
 
         public Legend(string happening, int yearWhen)
         {
