@@ -1,9 +1,9 @@
-﻿using Arquimedes.Enumerators;
+using Arquimedes.Enumerators;
 using MagusEngine.Core.Civ;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.Core.WorldStuff.History;
-using MagusEngine.ECS.Components.TilesComponents;
+using MagusEngine.Components.TilesComponents;
 using MagusEngine.Serialization.EntitySerialization;
 using MagusEngine.Systems.Time;
 using MagusEngine.Utils.Extensions;
@@ -33,7 +33,7 @@ namespace MagusEngine.Systems
         {
             history = h;
             Tiles = tiles;
-            Rules ??= new(DataManager.ListOfRules);
+            Rules ??= new(DataManager.ListOfRules.GetEnumerableCollection());
         }
 
         public static Site? GetFigureStayingSiteIfAny(HistoricalFigure hf)

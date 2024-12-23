@@ -1,21 +1,21 @@
-﻿using Arquimedes.Enumerators;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Arquimedes.Enumerators;
 using Arquimedes.Interfaces;
 using MagusEngine.Bus.UiBus;
+using MagusEngine.Components.EntityComponents.Projectiles;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic.Interfaces;
 using MagusEngine.Core.MapStuff;
-using MagusEngine.ECS.Components.EntityComponents.Projectiles;
 using MagusEngine.Serialization.EntitySerialization;
 using MagusEngine.Services;
 using MagusEngine.Systems;
 using MagusEngine.Utils;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace MagusEngine.Core.Magic
 {
@@ -26,7 +26,7 @@ namespace MagusEngine.Core.Magic
     [JsonConverter(typeof(SpellJsonConverter))]
     public sealed class Spell : IJsonKey, INamed, ISpell
     {
-        private const double _maxSpellProficiency = 3.0;
+        private const double _maxSpellProficiency = 10.0;
         [JsonProperty(PropertyName = "Proficiency")]
         private double _proficency;
         [JsonIgnore]
@@ -117,7 +117,7 @@ namespace MagusEngine.Core.Magic
 
         public List<string>? Keywords { get; set; } = [];
         public List<SpellContext>? Context { get; set; }
-        public bool AffectsTile => Effects.Any(i => i.TargetsTile);
+        public bool AffectsTile => Effects.Any(static i => i.TargetsTile);
         public string ShapingAbility { get; set; }
         public string Fore { get; set; } = "{caster}";
         public string Back { get; set; } = "Black";
@@ -221,7 +221,7 @@ namespace MagusEngine.Core.Magic
 
             if (selectedEntity is null && !AffectsTile)
             {
-                if (Manifestation == SpellManifestation.Instantaneous)
+                if (Manifestation == SpellManifestation.Instant)
                     Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("Can't cast the spell, there must be an entity to target"));
 
                 return false;
@@ -342,23 +342,24 @@ namespace MagusEngine.Core.Magic
                 .AppendLine(MagicArt.ToString()).ToString();
         }
 
-        // public override int GetHashCode()
-        // {
-        //     return Id.GetHashCode();
-        // }
-        //
-        // public override bool Equals(object? obj)
-        // {
-        //     return GetHashCode() == obj?.GetHashCode();
-        // }
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is not null && (ReferenceEquals(this, obj) || (obj.GetType() == GetType() && string.Equals(Id, ((Spell)obj).Id, StringComparison.Ordinal)));
+        }
 
         public SpellEntity GetSpellEntity(MagiEntity caster, Direction dir, Point pos)
         {
-            string foreground = Fore.Equals("{caster}") ? caster.GetComponent<Magic>().MagicColor : Fore;
-            return new SpellEntity(Id, foreground, Back, dir.TranslateDirToGlyph(Glyphs), this, pos, caster)
+            string foreground = Fore.Equals("{caster}", StringComparison.Ordinal) ? caster.GetComponent<Magic>().MagicColor : Fore;
+            var entity = new SpellEntity(Id, foreground, Back, dir.TranslateDirToGlyph(Glyphs), this, pos, caster)
             {
-                Name = Name
+                Name = Name,
             };
+            return entity;
         }
     }
 }

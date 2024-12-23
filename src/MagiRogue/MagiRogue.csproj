@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<OutputType>WinExe</OutputType>
+		<OutputType>Exe</OutputType>
 		<TargetFramework>net8.0</TargetFramework>
 		<StartupObject>MagiRogue.GameLoop</StartupObject>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
@@ -41,8 +41,8 @@
 	<ItemGroup>
 		<PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="SadConsole" Version="10.4.1" />
-		<PackageReference Include="SadConsole.Host.MonoGame" Version="10.4.1" />
+		<PackageReference Include="SadConsole" Version="10.5.0" />
+		<PackageReference Include="SadConsole.Host.MonoGame" Version="10.5.0" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -12,32 +12,25 @@ namespace MagusEngine.Core.Magic.Interfaces
     {
         [JsonConverter(typeof(StringEnumConverter))]
         SpellAreaEffect AreaOfEffect { get; set; }
-
-        string SpellDamageTypeId { get; set; }
+        string? SpellDamageTypeId { get; set; }
         int Radius { get; set; }
         double ConeCircleSpan { get; set; }
         bool TargetsTile { get; set; }
         int BaseDamage { get; set; }
-
         [JsonConverter(typeof(StringEnumConverter))]
         EffectType EffectType { get; set; }
         bool CanMiss { get; set; }
+
+        /// <summary>
+        /// The volume occupied by the spell, should take into account only the volume that "hits" something, should be in cm³
+        /// </summary>
         int Volume { get; set; }
         bool IsResistable { get; set; }
         bool IgnoresWall { get; set; }
+        string? AnimationId { get; set; }
 
         void ApplyEffect(Point target, Actor caster, Spell spellCasted);
 
         DamageType? GetDamageType();
-    }
-
-    public interface IPermEffect
-    {
-        public int NodeCost { get; set; }
-
-        public ISpellEffect Enchantment { get; set; }
-        public Actor Caster { get; set; }
-
-        public void Enchant(int nodesSacrificed);
     }
 }

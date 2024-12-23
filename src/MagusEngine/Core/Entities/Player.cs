@@ -1,5 +1,5 @@
 ﻿using MagusEngine.Core.Magic;
-using MagusEngine.Factory;
+using MagusEngine.Services.Factory;
 using MagusEngine.Systems;
 using MagusEngine.Utils;
 using SadRogue.Primitives;

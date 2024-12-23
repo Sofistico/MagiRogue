@@ -1,13 +1,11 @@
-﻿using Arquimedes.Enumerators;
+using Arquimedes.Enumerators;
 using GoRogue.GameFramework;
 using GoRogue.Pathing;
 using GoRogue.Random;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
-using MagusEngine.ECS;
-using MagusEngine.ECS.Components.EntityComponents;
-using MagusEngine.ECS.Components.TilesComponents;
-using MagusEngine.Factory;
+using MagusEngine.Components.EntityComponents;
+using MagusEngine.Components.TilesComponents;
 using MagusEngine.Serialization.MapConverter;
 using MagusEngine.Systems;
 using MagusEngine.Utils;
@@ -23,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using MagusEngine.Services.Factory;
 
 namespace MagusEngine.Core.MapStuff
 {
@@ -36,7 +35,7 @@ namespace MagusEngine.Core.MapStuff
         #region Fields
 
         private MagiEntity? _gameObjectControlled;
-        private EntityManager _entityManager;
+        private EntityManager _entityManager = [];
         private bool _disposed;
         private Dictionary<Func<Actor, bool>, Actor[]> _lastCalledActors = [];
         private bool _needsToUpdateActorsDict;
@@ -106,8 +105,6 @@ namespace MagusEngine.Core.MapStuff
         {
             // Treat the fov as a component.
             GoRogueComponents.Add(new MagiRogueFOVVisibilityHandler(this, Color.DarkSlateGray, (int)MapLayer.GHOSTS));
-
-            _entityManager = [];
             MapName = mapName;
             MapZoneConnections = [];
 
@@ -253,7 +250,7 @@ namespace MagusEngine.Core.MapStuff
                 _needsToUpdateActorsDict = true;
                 // Locator.GetService<EntityRegistry>().Destroy(entity.ID);
             }
-            if (_entityManager.Contains(entity.SadCell))
+            if (_entityManager.Entities is not null && _entityManager.Contains(entity.SadCell))
             {
                 _entityManager.Remove(entity.SadCell);
                 _entityManager.IsDirty = true;

@@ -12,7 +12,7 @@ namespace MagusEngine.Core.WorldStuff.History
 
         public static void Act(HistoricalFigure figure)
         {
-            var rules = Find.Rules;
+            List<Ruleset> rules = new(DataManager.ListOfRules.GetEnumerableCollection());
             var fulfilledRules = rules.AllFulfilled(figure); // some list for every fulfilled rule
             fulfilledRules.ShuffleAlgorithm();
             var moreThanOneActRules = fulfilledRules.FindAll(i => i.AllowMoreThanOneAction);

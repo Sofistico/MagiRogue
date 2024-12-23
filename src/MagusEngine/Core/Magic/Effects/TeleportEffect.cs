@@ -9,43 +9,29 @@ using Newtonsoft.Json;
 
 namespace MagusEngine.Core.Magic.Effects
 {
-    public class TeleportEffect : ISpellEffect
+    public class TeleportEffect : SpellEffectBase
     {
-        public SpellAreaEffect AreaOfEffect { get; set; }
-        public string SpellDamageTypeId { get; set; }
-        public int Radius { get; set; }
-        public double ConeCircleSpan { get; set; }
-        public bool TargetsTile { get; set; } = true;
-
-        public EffectType EffectType { get; set; } = EffectType.TELEPORT;
-        public int BaseDamage { get; set; } = 0;
-        public bool CanMiss { get; set; }
-        public bool IsResistable { get; set; }
         public string? EffectMessage { get; set; }
-        public int Volume { get; set; }
-        public bool IgnoresWall { get; set; }
 
         [JsonConstructor]
         public TeleportEffect(SpellAreaEffect areaOfEffect = SpellAreaEffect.Target,
-            string spellDamageTypeId = null, int radius = 0)
+            string? spellDamageTypeId = null, int radius = 0)
         {
             AreaOfEffect = areaOfEffect;
             SpellDamageTypeId = spellDamageTypeId;
             Radius = radius;
+            TargetsTile = true;
+            EffectType = EffectType.TELEPORT;
         }
 
-        public void ApplyEffect(Point target, Actor caster, Spell spellCasted)
+        public override void ApplyEffect(Point target, Actor caster, Spell spellCasted)
         {
             var entity = caster?.CurrentMagiMap?.GetEntityAt<MagiEntity>(target);
             if (ActionManager.MoveActorTo(entity, target))
             {
-                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{entity.Name} disappeared!"));
+                var entityName = entity.Name ?? "Unknown entity";
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"{entityName} disappeared!"));
             }
-        }
-
-        public DamageType? GetDamageType()
-        {
-            return null;
         }
     }
 }

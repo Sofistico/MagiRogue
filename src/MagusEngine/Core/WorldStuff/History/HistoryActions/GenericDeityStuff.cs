@@ -64,7 +64,7 @@ namespace MagusEngine.Core.WorldStuff.History.HistoryActions
             {
                 // deities ignore pre-requisites!
                 // TODO: See the impact
-                Research gift = DataManager.ListOfResearches.Values.Where(i => i.ValidDeityGift)
+                Research gift = DataManager.ListOfResearches.GetEnumerableCollection().Where(i => i.ValidDeityGift)
                     .ToArray().GetRandomItemFromList();
 
                 Civilization civ = figure.GetRelatedCivFromFigure(RelationType.PatronDeity, Find.Civs);

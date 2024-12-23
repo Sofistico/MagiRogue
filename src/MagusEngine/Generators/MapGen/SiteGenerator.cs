@@ -1,15 +1,15 @@
-﻿using Arquimedes.Enumerators;
+using Arquimedes.Enumerators;
 using GoRogue.Random;
 using MagusEngine.Core.Civ;
 using MagusEngine.Core.MapStuff;
-using MagusEngine.ECS.Components.TilesComponents;
-using MagusEngine.Factory;
+using MagusEngine.Components.TilesComponents;
 using MagusEngine.Serialization.MapConverter;
 using MagusEngine.Systems;
 using MagusEngine.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MagusEngine.Services.Factory;
 
 namespace MagusEngine.Generators.MapGen
 {
@@ -43,10 +43,10 @@ namespace MagusEngine.Generators.MapGen
             {
                 Room? room = rooms[i].PhysicalRoom;
                 if (Mrn.OneIn(10)
-                    && DataManager.ListOfRooms.Values.Any(r => r.CompareRectanglesSameSize(room.RoomRectangle)
+                    && DataManager.ListOfRooms.GetEnumerableCollection().Any(r => r.CompareRectanglesSameSize(room.RoomRectangle)
                     && r.Obj.Tag is not RoomTag.Debug))
                 {
-                    RoomTemplate tempRoom = DataManager.ListOfRooms.Values.First(r => r.CompareRectanglesSameSize(room.RoomRectangle));
+                    RoomTemplate tempRoom = DataManager.ListOfRooms.GetEnumerableCollection().First(r => r.CompareRectanglesSameSize(room.RoomRectangle));
                     room = tempRoom.ConfigureRoom(room.RoomRectangle.Position);
                     _rooms.Add(new Building(room));
                     _map.AddRoom(room);

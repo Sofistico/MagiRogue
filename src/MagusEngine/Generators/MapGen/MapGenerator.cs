@@ -1,10 +1,9 @@
-﻿using Arquimedes.Enumerators;
+using Arquimedes.Enumerators;
 using GoRogue.Random;
 using MagusEngine.Core.Civ;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.MapStuff;
-using MagusEngine.ECS.Components.TilesComponents;
-using MagusEngine.Factory;
+using MagusEngine.Components.TilesComponents;
 using MagusEngine.Systems;
 using MagusEngine.Utils;
 using MagusEngine.Utils.Extensions;
@@ -15,6 +14,7 @@ using ShaiRandom.Generators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MagusEngine.Services.Factory;
 
 namespace MagusEngine.Generators.MapGen
 {
@@ -826,7 +826,7 @@ namespace MagusEngine.Generators.MapGen
                     break;
 
                 default:
-                    throw new ApplicationException($"Type of room not defined! room: {JsonConvert.SerializeObject(room)}");
+                    break;
             }
         }
 

@@ -1,6 +1,6 @@
 ﻿using Arquimedes.Enumerators;
 using MagusEngine.Core.Entities;
-using MagusEngine.Factory;
+using MagusEngine.Services.Factory;
 using MagusEngine.Systems;
 using SadRogue.Primitives;
 using Xunit;

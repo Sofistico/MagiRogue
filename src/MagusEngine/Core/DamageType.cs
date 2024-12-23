@@ -1,5 +1,6 @@
 ﻿using Arquimedes.Enumerators;
 using Arquimedes.Interfaces;
+using MagusEngine.Components.TilesComponents;
 
 namespace MagusEngine.Core
 {
@@ -14,6 +15,8 @@ namespace MagusEngine.Core
         public string[] SeverityDmgString { get; set; } = null!;
         public string[]? CombinatedFrom { get; set; }
         public DamageTypes Type { get; set; }
+        public TerrainInteractionEffect TerrainInteraction { get; set; }
+        public BaseTileField? Field { get; set; }
 
         public DamageType()
         {

@@ -1,10 +1,10 @@
 ﻿using Arquimedes.Enumerators;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.MapStuff;
-using MagusEngine.Factory;
 using MagusEngine.Generators;
 using MagusEngine.Serialization.EntitySerialization;
 using MagusEngine.Serialization.MapConverter;
+using MagusEngine.Services.Factory;
 using MagusEngine.Systems;
 using Newtonsoft.Json;
 using SadRogue.Primitives;

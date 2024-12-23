@@ -1,10 +1,10 @@
-﻿using Arquimedes.Enumerators;
+using Arquimedes.Enumerators;
 using GoRogue.DiceNotation;
 using MagusEngine.Core.Civ;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.Core.WorldStuff;
 using MagusEngine.Core.WorldStuff.History;
-using MagusEngine.ECS.Components.TilesComponents;
+using MagusEngine.Components.TilesComponents;
 using MagusEngine.Systems;
 using MagusEngine.Utils;
 using MagusEngine.Utils.Extensions;
@@ -189,13 +189,13 @@ namespace MagusEngine.Generators
                     || tile.HeightType == HeightType.River)
                     continue;
 
-                if (parent.GetComponent<SiteTile>(out var site))
+                if (parent.HasComponent<SiteTile>())
                     continue;
 
                 var possibleCivs = DataManager.QueryCultureTemplateFromBiome(tile.BiomeType.ToString());
                 Civilization civ;
-                if (possibleCivs.Count > 0)
-                    civ = possibleCivs.GetRandomItemFromList().ConvertToCivilization();
+                if (possibleCivs?.Count > 0)
+                    civ = possibleCivs!.GetRandomItemFromList()!.ConvertToCivilization();
                 else
                     continue;
 

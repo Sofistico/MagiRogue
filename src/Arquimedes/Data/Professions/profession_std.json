@@ -1,16 +1,16 @@
 ﻿[
   {
-    "Id": "magic_teach",
+    "Id": "basic_mage",
     "Name": "Mage",
     "Ability": [ "MagicTheory" ]
   },
   {
-    "Id": "magic_teach",
+    "Id": "academy_mage",
     "Name": "Academy Mage",
     "Ability": [ "MagicTheory" ]
   },
   {
-    "Id": "magic_teach",
+    "Id": "apprentice_mage",
     "Name": "Apprentice Mage",
     "Ability": [ "Student", "MagicTheory" ]
   },
@@ -90,7 +90,7 @@
     "Ability": [ "ArmorUse", "Discipline" ]
   },
   {
-    "Id": "soldier",
+    "Id": "m_soldier",
     "Name": "Mage Soldier",
     "Ability": [ "MagicTheory", "Discipline" ]
   },

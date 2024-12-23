@@ -1,8 +1,9 @@
-﻿using MagusEngine.ECS;
-using MagusEngine.Services;
-using SadRogue.Primitives;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using MagusEngine.Exceptions;
+using MagusEngine.Services;
+using MagusEngine.Services.Factory;
+using SadRogue.Primitives;
 
 namespace MagusEngine
 {
@@ -19,7 +20,9 @@ namespace MagusEngine
         public static T GetService<T>()
         {
             var result = (T?)GetService(typeof(T));
-            return result is null ? throw new ArgumentNullException("Trying to pass a service as null") : result;
+            return result is null
+                ? throw new NullValueException($"Trying to pass a service as null - {nameof(T)}", null)
+                : result;
         }
 
         public static void AddService<T>(T instance)
@@ -38,7 +41,8 @@ namespace MagusEngine
                 { typeof(IDGenerator), new IDGenerator() },
                 { typeof(SavingService), new SavingService() },
                 { typeof(MagiLog), new MagiLog() },
-                // { typeof(EntityRegistry), new EntityRegistry(100000u) },
+                { typeof(SpellEffectFactory), new SpellEffectFactory() },
+                { typeof(AnimationFactory), new AnimationFactory() },
             };
         }
     }

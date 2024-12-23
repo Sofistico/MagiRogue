@@ -8,7 +8,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="SadConsole" Version="10.4.1" />
+		<PackageReference Include="SadConsole" Version="10.5.0" />
 	</ItemGroup>
 
 	<ItemGroup>

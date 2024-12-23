@@ -6,8 +6,8 @@ using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Entities.StarterScenarios;
-using MagusEngine.Factory;
 using MagusEngine.Services;
+using MagusEngine.Services.Factory;
 using MagusEngine.Systems;
 using SadConsole;
 using SadConsole.Instructions;
@@ -131,13 +131,13 @@ namespace Diviner.Windows
 
         private void SetupCharCreationButtons()
         {
-            Point scenarioPoint = new SadRogue.Primitives.Point(Width / 4 - 15, Height / 2 - 10);
+            Point scenarioPoint = new((Width / 4) - 15, (Height / 2) - 10);
             scenarioChooser = new ListBox(30, 10)
             {
                 Position = scenarioPoint,
                 DrawBorder = true,
             };
-            foreach (var item in DataManager.ListOfScenarios)
+            foreach (Scenario item in DataManager.ListOfScenarios.GetEnumerableCollection())
             {
                 scenarioChooser.Items.Add(item);
             }
@@ -146,12 +146,12 @@ namespace Diviner.Windows
             const string scenarioText = "Select your starting scenario:";
             PrintUpFromPosition(scenarioPoint, scenarioText);
 
-            sexChooser = new List<RadioButton>();
-            Point starterPosSexRadio = new SadRogue.Primitives.Point(Width / 2 - 10, Height / 2 - 10);
-            foreach (var item in Enum.GetValues(typeof(Sex)))
+            sexChooser = [];
+            Point starterPosSexRadio = new((Width / 2) - 10, (Height / 2) - 10);
+            foreach (object? item in Enum.GetValues(typeof(Sex)))
             {
-                string text = item.ToString();
-                RadioButton radio = new RadioButton(text.Length + 4, 1)
+                string text = item.ToString()!;
+                RadioButton radio = new(text.Length + 4, 1)
                 {
                     Position = starterPosSexRadio,
                     Text = text,
@@ -163,13 +163,13 @@ namespace Diviner.Windows
 
             for (int i = 1; i < sexChooser.Count; i++)
             {
-                var current = sexChooser[i];
-                var previous = sexChooser[i - 1];
+                RadioButton current = sexChooser[i];
+                RadioButton previous = sexChooser[i - 1];
                 Controls.Add(previous);
                 current.PlaceRelativeTo(previous, Direction.Types.Right);
             }
 
-            Point racePoint = new SadRogue.Primitives.Point(Width / 2 + 20, Height / 2 - 10);
+            Point racePoint = new((Width / 2) + 20, (Height / 2) - 10);
             raceChooser = new ListBox(20, 10)
             {
                 Position = racePoint,
@@ -182,7 +182,7 @@ namespace Diviner.Windows
             scenarioChooser.SelectedItemChanged += (_, __) =>
             {
                 PrintUpFromPosition(starterPosSexRadio, "Choose your sex:");
-                foreach (var item in sexChooser)
+                foreach (RadioButton item in sexChooser)
                 {
                     item.IsVisible = true;
                 }
@@ -194,10 +194,10 @@ namespace Diviner.Windows
             PrintUpFromPosition(raceChooser.Position, "Now, choose from the available races:");
             raceChooser.IsVisible = true;
             raceChooser.Items.Clear();
-            Scenario scenario = (Scenario)scenarioChooser.SelectedItem;
+            Scenario scenario = (Scenario)scenarioChooser.SelectedItem!;
             foreach (string race in scenario.RacesAllowed)
             {
-                raceChooser.Items.Add(DataManager.QueryRaceInData(race));
+                raceChooser.Items.Add(DataManager.QueryRaceInData(race)!);
             }
 
             raceChooser.SelectedItemChanged += (_, __) =>
@@ -217,31 +217,31 @@ namespace Diviner.Windows
                 #endif*/
 
                 ShowError("You need to insert a name!");
-                return null;
+                return null!;
             }
-            if (!sexChooser.Exists(i => i.IsSelected))
+            if (!sexChooser.Exists(static i => i.IsSelected))
             {
                 ShowError("You need to select a sex!");
-                return null;
+                return null!;
             }
             if (scenarioChooser.SelectedItem is null)
             {
                 ShowError("You need to select a scenario!");
-                return null;
+                return null!;
             }
             if (raceChooser.SelectedItem is null)
             {
                 ShowError("You need to select a race!");
-                return null;
+                return null!;
             }
 
-            var scenario = (Scenario)scenarioChooser.SelectedItem;
-            var race = (Race)raceChooser.SelectedItem;
-            var sex = sexChooser.Find(i => i.IsSelected);
+            Scenario scenario = (Scenario)scenarioChooser.SelectedItem;
+            Race race = (Race)raceChooser.SelectedItem;
+            RadioButton? sex = sexChooser.Find(static i => i.IsSelected);
             player = EntityFactory.PlayerCreatorFromZero(Point.None,
                 race.Id,
                 charName.Text,
-                Enum.Parse<Sex>(sex.Text),
+                Enum.Parse<Sex>(sex!.Text),
                 scenario.Id);
 
             return player;
@@ -249,7 +249,7 @@ namespace Diviner.Windows
 
         private static void ShowError(string textError)
         {
-            PopWindow error = new PopWindow("Error");
+            PopWindow error = new("Error");
             error.Surface.Clear();
             error.Surface.Print(1, 1, textError);
             error.Show(true);

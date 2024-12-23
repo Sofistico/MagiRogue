@@ -2,7 +2,7 @@
 using Arquimedes.Utils;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
-using MagusEngine.Factory;
+using MagusEngine.Services.Factory;
 using MagusEngine.Systems;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

@@ -133,7 +133,7 @@ namespace MagusEngine.Core.Entities
         public (bool, Spell?) EndSpellTargetting()
         {
             bool spellInRange = (int)Distance.Chebyshev.Calculate(OriginCoord, Cursor.Position) <= _selectedSpell?.SpellRange;
-            if (_selectedSpell?.Manifestation == SpellManifestation.Instantaneous)
+            if (_selectedSpell?.Manifestation == SpellManifestation.Instant)
             {
                 //if (_selectedSpell?.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Beam) == true)
                 //{
