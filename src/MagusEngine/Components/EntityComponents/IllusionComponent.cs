@@ -8,6 +8,8 @@ namespace MagusEngine.Components.EntityComponents
         public const string Tag = "illusion";
 
         public ColoredGlyph FakeAppearence { get; }
+        public bool IsMagical { get; set; }
+        public bool CanBeBypassed { get; set; }
 
         public IllusionComponent(Tile fakeAppearence)
         {

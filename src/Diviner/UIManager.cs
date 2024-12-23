@@ -287,6 +287,7 @@ namespace Diviner
             MagiBaseWindow window = GetWindow<MagiBaseWindow>(message.WindowTag) ?? throw new NullValueException(nameof(window));
             var originalGlyph = window.GetGlyph(message.Position.X, message.Position.Y);
             window.SetGlyph(message.Position.X, message.Position.Y, message.Glyph);
+            // How will i recover the last used glyph if the message will be destroyed?
             message.LastUsedGlyph = originalGlyph;
         }
 

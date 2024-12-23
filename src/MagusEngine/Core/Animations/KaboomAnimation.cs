@@ -18,8 +18,9 @@ namespace MagusEngine.Core.Animations
 
         public void AnimateHit(Point position)
         {
-            var request = new ShowGlyphOnConsole(Glyphs[0], WindowTag.Map, position);
-            Locator.GetService<MessageBusService>().SendMessage(request);
+            // var request = new ShowGlyphOnConsole(Glyphs[0], WindowTag.Map, position);
+            // Locator.GetService<MessageBusService>().SendMessage(request);
+
         }
     }
 }
