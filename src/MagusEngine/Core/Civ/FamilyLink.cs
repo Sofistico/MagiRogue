@@ -1,8 +1,8 @@
-﻿using Arquimedes.Enumerators;
+﻿using Arquimedes.DataStructures;
+using Arquimedes.Enumerators;
 using MagusEngine.Core.WorldStuff.History;
 using MagusEngine.Services;
 using MagusEngine.Systems;
-using MagusEngine.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ namespace MagusEngine.Core.Civ
     {
         public FamilyLink()
         {
-            Nodes = new();
+            Nodes = [];
         }
 
         public FamilyLink(List<FamilyNode> family)
@@ -30,7 +30,7 @@ namespace MagusEngine.Core.Civ
             if (otherFigure is null)
                 return;
             if (!Nodes!.Any(i => i.OtherFigureId == otherFigure.Id))
-                Nodes?.Add(new FamilyNode(type, figure, otherFigure));
+                Nodes?.Add(new FamilyNode(type, figure!, otherFigure));
         }
 
         public FamilyNode[]? GetOtherFamilyNodesByRelations(HfRelationType toFind)
@@ -54,7 +54,7 @@ namespace MagusEngine.Core.Civ
                 SetChildMotherFather(hfMother, hfChild, hfFather);
 
                 // gods why
-                StringBuilder bb = new StringBuilder();
+                StringBuilder bb = new();
                 if (hfFather is not null)
                 {
                     string father = $"{bb} the {hfFather.Name} had a child with {hfMother.Name}, the child was named {hfChild.Name}";
@@ -103,12 +103,12 @@ namespace MagusEngine.Core.Civ
 
         public void SetMarriedRelation(HistoricalFigure hfOne, HistoricalFigure hfTwo)
         {
-            this.AddToFamilyLink(hfOne, HfRelationType.Married, hfTwo);
+            AddToFamilyLink(hfOne, HfRelationType.Married, hfTwo);
         }
 
         public HistoricalFigure? GetSpouseIfAny()
         {
-            return Nodes?.Find(i => i.Relation is HfRelationType.Married)?.OtherFigure;
+            return Nodes?.Find(static i => i.Relation is HfRelationType.Married)?.OtherFigure;
         }
     }
 
@@ -117,10 +117,10 @@ namespace MagusEngine.Core.Civ
         public HfRelationType Relation { get; set; }
 
         [JsonIgnore]
-        public HistoricalFigure OtherFigure => Find.Figures.Find(i => i.Id == OtherFigureId);
+        public HistoricalFigure OtherFigure => Find.Figures!.Find(i => i.Id == OtherFigureId)!;
 
         [JsonIgnore]
-        public HistoricalFigure Figure => Find.Figures.Find(i => i.Id == FigureId);
+        public HistoricalFigure Figure => Find.Figures!.Find(i => i.Id == FigureId)!;
         public int OtherFigureId { get; set; }
         public int FigureId { get; set; }
 

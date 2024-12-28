@@ -1,4 +1,5 @@
-﻿using Arquimedes.Enumerators;
+﻿using Arquimedes.DataStructures;
+using Arquimedes.Enumerators;
 using MagusEngine.Core.WorldStuff.History;
 using MagusEngine.Utils;
 using MagusEngine.Utils.Extensions;
@@ -15,12 +16,12 @@ namespace MagusEngine.Core.WorldStuff.TechRes
 
         public ResearchTree()
         {
-            Nodes = new();
+            Nodes = [];
         }
 
         public void ConfigureNodes()
         {
-            foreach (ResearchTreeNode node in Nodes)
+            foreach (ResearchTreeNode node in Nodes!)
             {
                 Research res = node.Research;
                 if (res.RequiredRes.Count > 0)
@@ -35,44 +36,45 @@ namespace MagusEngine.Core.WorldStuff.TechRes
 
         public void GetNodeForResearch(HistoricalFigure figure)
         {
-            if (Nodes.Any(i => !i.Finished))
+            if (!Nodes?.Any(static i => !i.Finished) == true)
             {
-                ResearchTreeNode[] nodes = GetUnfinishedNodes();
-                // priotize by roots first
-                if (nodes.Any(i => i?.IsRoot == true))
+                return;
+            }
+            ResearchTreeNode[] nodes = GetUnfinishedNodes();
+            // priotize by roots first
+            if (nodes.Any(static i => i?.IsRoot == true))
+            {
+                const int maxTries = 30;
+                int tries = 0;
+                while (tries <= maxTries)
                 {
-                    const int maxTries = 30;
-                    int tries = 0;
-                    while (tries <= maxTries)
+                    var getRoot = nodes.Where(static i => i?.IsRoot == true).ToList().GetRandomItemFromList()!;
+                    bool hasAnyAbility = CheckIfHasAbilityToResearchNode(figure, getRoot);
+                    if (hasAnyAbility)
                     {
-                        var getRoot = nodes.Where(i => i?.IsRoot == true).ToList().GetRandomItemFromList();
-                        bool hasAnyAbility = CheckIfHasAbilityToResearchNode(figure, getRoot);
-                        if (hasAnyAbility)
-                        {
-                            CurrentResearchFocus = getRoot;
-                            return;
-                        }
-                        tries++;
-                        if (figure.TrainingFocus is not AbilityCategory.None)
-                            return;
+                        CurrentResearchFocus = getRoot;
+                        return;
                     }
+                    tries++;
+                    if (figure.TrainingFocus is not AbilityCategory.None)
+                        return;
                 }
-                // if all roots are researched, then go select any that has all parents researched!
-                if (nodes.Any(i => i.Parents.All(i => i.Finished)))
+            }
+            // if all roots are researched, then go select any that has all parents researched!
+            if (nodes.Any(static i => i.Parents?.All(static i => i.Finished) == true))
+            {
+                ResearchTreeNode[] nodesWithParentsDone =
+                    nodes.Where(static i => i.Parents?.All(static i => i.Finished) == true).ToArray();
+                List<ResearchTreeNode> nodesWithEnoughAbilitiesForRes = [];
+                for (int i = 0; i < nodesWithParentsDone.Length; i++)
                 {
-                    ResearchTreeNode[] nodesWithParentsDone =
-                        nodes.Where(i => i.Parents.All(i => i.Finished)).ToArray();
-                    List<ResearchTreeNode> nodesWithEnoughAbilitiesForRes = new();
-                    for (int i = 0; i < nodesWithParentsDone.Length; i++)
-                    {
-                        ResearchTreeNode possibleNode = nodesWithParentsDone[i];
-                        bool hasAbility = CheckIfHasAbilityToResearchNode(figure, possibleNode);
-                        if (hasAbility)
-                            nodesWithEnoughAbilitiesForRes.Add(possibleNode);
-                    }
-                    if (nodesWithEnoughAbilitiesForRes.Count > 0)
-                        CurrentResearchFocus = nodesWithEnoughAbilitiesForRes.GetRandomItemFromList();
+                    ResearchTreeNode possibleNode = nodesWithParentsDone[i];
+                    bool hasAbility = CheckIfHasAbilityToResearchNode(figure, possibleNode);
+                    if (hasAbility)
+                        nodesWithEnoughAbilitiesForRes.Add(possibleNode);
                 }
+                if (nodesWithEnoughAbilitiesForRes.Count > 0)
+                    CurrentResearchFocus = nodesWithEnoughAbilitiesForRes.GetRandomItemFromList();
             }
         }
 
@@ -84,12 +86,12 @@ namespace MagusEngine.Core.WorldStuff.TechRes
 
         private ResearchTreeNode[] GetUnfinishedNodes()
         {
-            return Nodes.Where(i => !i.Finished).ToArray();
+            return Nodes?.Where(static i => !i.Finished)?.ToArray() ?? [];
         }
 
         private void DefineNodeRelation(ResearchTreeNode childNode, string str)
         {
-            var parentNode = Nodes.Find(i => i.Research.Id.Equals(str));
+            ResearchTreeNode? parentNode = Nodes?.Find(i => i.Research.Id.Equals(str, StringComparison.Ordinal));
             if (parentNode is not null)
             {
                 childNode?.Parents?.Add(parentNode);
@@ -102,20 +104,17 @@ namespace MagusEngine.Core.WorldStuff.TechRes
     {
         public Research Research { get; set; }
 
-        //public List<ResearchTreeNode> Children { get; set; }
-        //public List<ResearchTreeNode> Parents { get; set; }
         public int RequiredRP { get; set; } // RP = Research Points
         public int CurrentRP { get; set; }
-        public bool Finished { get => CurrentRP >= RequiredRP; }
-        //public bool IsRoot { get => Parents.Count <= 0; }
+        public bool Finished => CurrentRP >= RequiredRP;
 
         public ResearchTreeNode(Research research, int currentRpIfAny = 0)
         {
             Research = research;
             CurrentRP = currentRpIfAny;
             RequiredRP = Research.Difficulty * (Mrn.Exploding2D6Dice / 2);
-            Parents = new();
-            Children = new();
+            Parents = [];
+            Children = [];
         }
 
         public void ForceFinish()
@@ -126,7 +125,7 @@ namespace MagusEngine.Core.WorldStuff.TechRes
         public List<AbilityCategory> GetRequisiteAbilitiesForResearch()
         {
             var getResAbilities = Research.AbilityRequired;
-            List<AbilityCategory> abilitiesNeeded = new();
+            List<AbilityCategory> abilitiesNeeded = [];
             int count = getResAbilities.Count;
             // special handling for unusual cases for AnyCraft, AnyResearch, AnyMagic, AnyCombat and AnyJob
             for (int i = 0; i < count; i++)
@@ -135,8 +134,8 @@ namespace MagusEngine.Core.WorldStuff.TechRes
                 switch (abilityString)
                 {
                     case "AnyCraft":
-                        abilitiesNeeded.AddRange(new AbilityCategory[]
-                        {
+                        abilitiesNeeded.AddRange(
+                        [
                             AbilityCategory.Mason,
                             AbilityCategory.WoodCraft,
                             AbilityCategory.Forge,
@@ -145,12 +144,12 @@ namespace MagusEngine.Core.WorldStuff.TechRes
                             AbilityCategory.Alchemy,
                             AbilityCategory.Enchantment,
                             AbilityCategory.GlassMaking
-                        });
+                        ]);
                         break;
 
                     case "AnyResearch":
-                        abilitiesNeeded.AddRange(new AbilityCategory[]
-                        {
+                        abilitiesNeeded.AddRange(
+                        [
                             AbilityCategory.MagicTheory,
                             AbilityCategory.MagicLore,
                             AbilityCategory.Research,
@@ -159,20 +158,20 @@ namespace MagusEngine.Core.WorldStuff.TechRes
                             AbilityCategory.Chemist,
                             AbilityCategory.Physics,
                             AbilityCategory.Enginner,
-                        });
+                        ]);
                         break;
 
                     case "AnyMagic":
-                        abilitiesNeeded.AddRange(new AbilityCategory[]
-                        {
+                        abilitiesNeeded.AddRange(
+                        [
                             AbilityCategory.MagicTheory,
                             AbilityCategory.MagicLore
-                        });
+                        ]);
                         break;
 
                     case "AnyCombat":
-                        abilitiesNeeded.AddRange(new AbilityCategory[]
-                        {
+                        abilitiesNeeded.AddRange(
+                        [
                             AbilityCategory.Unarmed,
                             AbilityCategory.Misc,
                             AbilityCategory.Sword,
@@ -180,19 +179,19 @@ namespace MagusEngine.Core.WorldStuff.TechRes
                             AbilityCategory.Hammer,
                             AbilityCategory.Spear,
                             AbilityCategory.Axe,
-                        });
+                        ]);
                         break;
 
                     case "AnyJob":
-                        abilitiesNeeded.AddRange(new AbilityCategory[]
-                        {
+                        abilitiesNeeded.AddRange(
+                        [
                             AbilityCategory.Farm,
                             AbilityCategory.Medicine,
                             AbilityCategory.Surgeon,
                             AbilityCategory.Miner,
                             AbilityCategory.Brewer,
                             AbilityCategory.Cook,
-                        });
+                        ]);
                         break;
 
                     default:
