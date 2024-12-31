@@ -938,7 +938,7 @@ namespace MagusEngine.Generators
             const double decayRate = 0.025;
             // Adjust decay factor dynamically if needed
             double decayFactor = decayRate / distance;
-            if (!double.IsNormal(decayFactor))
+            if (!double.IsNormal(decayFactor) || decayFactor <= 0)
                 return;
             AddMoisture(targetTile, (int)decayFactor);
         }
