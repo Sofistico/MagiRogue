@@ -9,8 +9,12 @@ namespace MagusEngine.Utils.Extensions
 {
     public static class MagiPointExtensions
     {
-        public static float PointMagnitude(this Point point) =>
-            MathF.Sqrt((point.X * point.X) + (point.Y * point.Y));
+        public static float PointMagnitude(this Point point)
+        {
+            if (point.X < 0 || point.Y < 0)
+                return 0;
+            return MathF.Sqrt((point.X * point.X) + (point.Y * point.Y));
+        }
 
         public static IEnumerable<Point> GetTileLocationsAlongLine(this int xOrigin,
             int yOrigin,

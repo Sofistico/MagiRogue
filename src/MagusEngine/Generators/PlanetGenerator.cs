@@ -893,6 +893,8 @@ namespace MagusEngine.Generators
 
         private void AdjustMoistureMap()
         {
+            int radius = (int)(Math.Min(_width, _height) * 0.05); // 5% of the smaller dimension
+
             for (var x = 0; x < _width; x++)
             {
                 for (var y = 0; y < _height; y++)
@@ -900,7 +902,7 @@ namespace MagusEngine.Generators
                     WorldTile t = tiles[x, y];
                     if (t.HeightType == HeightType.River)
                     {
-                        AddMoisture(t, 60);
+                        AddMoisture(t, radius);
                     }
                 }
             }
@@ -909,35 +911,36 @@ namespace MagusEngine.Generators
         private void AddMoisture(WorldTile t, int radius)
         {
             Point center = new(t.Parent.Position.X, t.Parent.Position.Y);
-            int curr = radius;
 
-            while (curr > 0)
+            for (int curr = radius; curr > 0; curr--)
             {
                 int x1 = MathMagi.Mod(t.Parent.Position.X - curr, _width);
                 int x2 = MathMagi.Mod(t.Parent.Position.X + curr, _width);
                 int y = t.Parent.Position.Y;
 
-                AddMoisture(tiles[x1, y],
-                    (int)(0.025f / (center - new Point(x1, y)).PointMagnitude()));
+                SpreadMoistureToTile(x1, y, center);
+                SpreadMoistureToTile(x2, y, center);
 
                 for (int i = 0; i < curr; i++)
                 {
-                    AddMoisture(tiles[x1, MathMagi.Mod(y + i + 1, _height)],
-                        (int)(0.025f / (center - new Point(x1,
-                        MathMagi.Mod(y + i + 1, _height))).PointMagnitude()));
-                    AddMoisture(tiles[x1, MathMagi.Mod(y - (i + 1), _height)],
-                        (int)(0.025f / (center - new Point(x1,
-                        MathMagi.Mod(y - (i + 1), _height))).PointMagnitude()));
-
-                    AddMoisture(tiles[x2, MathMagi.Mod(y + i + 1, _height)],
-                        (int)(0.025f / (center - new Point(x2,
-                        MathMagi.Mod(y + i + 1, _height))).PointMagnitude()));
-                    AddMoisture(tiles[x2, MathMagi.Mod(y - (i + 1), _height)],
-                        (int)(0.025f / (center - new Point(x2,
-                        MathMagi.Mod(y - (i + 1), _height))).PointMagnitude()));
+                    SpreadMoistureToTile(x1, MathMagi.Mod(y + i + 1, _height), center);
+                    SpreadMoistureToTile(x1, MathMagi.Mod(y - (i + 1), _height), center);
+                    SpreadMoistureToTile(x2, MathMagi.Mod(y + i + 1, _height), center);
+                    SpreadMoistureToTile(x2, MathMagi.Mod(y - (i + 1), _height), center);
                 }
-                curr--;
             }
+        }
+
+        private void SpreadMoistureToTile(int x, int y, Point center)
+        {
+            WorldTile targetTile = tiles[x, y];
+            double distance = (center - new Point(x, y)).PointMagnitude();
+            const double decayRate = 0.025;
+            // Adjust decay factor dynamically if needed
+            double decayFactor = decayRate / distance;
+            if (!double.IsNormal(decayFactor))
+                return;
+            AddMoisture(targetTile, (int)decayFactor);
         }
 
         // Dig river based on a parent river vein

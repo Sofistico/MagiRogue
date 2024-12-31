@@ -46,8 +46,6 @@ namespace MagiRogue.Test.System
         [Fact]
         public void SerializeUniverse()
         {
-            PrepareForChunkTest();
-
             var json = JsonConvert.SerializeObject(uni, Formatting.Indented);
 
             Assert.Contains(uni.Time.TimePassed.Ticks.ToString(), json);
@@ -131,8 +129,6 @@ namespace MagiRogue.Test.System
         [Fact]
         public void SerializeChunkDirectTest()
         {
-            PrepareForChunkTest();
-
             var json = JsonConvert.SerializeObject(uni.CurrentChunk);
 
             Assert.Contains("X", json);
@@ -141,8 +137,6 @@ namespace MagiRogue.Test.System
         [Fact]
         public void DeserializeChunck()
         {
-            PrepareForChunkTest();
-
             var json = JsonConvert.SerializeObject(uni.CurrentChunk);
             RegionChunk chunks = JsonConvert.DeserializeObject<RegionChunk>(json);
 
@@ -166,7 +160,6 @@ namespace MagiRogue.Test.System
         [Fact]
         public void TestIdSerializationUniverse()
         {
-            PrepareForChunkTest();
             string json = JsonConvert.SerializeObject(uni);
             Universe newUni = JsonConvert.DeserializeObject<Universe>(json);
 
