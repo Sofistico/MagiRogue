@@ -35,7 +35,6 @@ namespace MagusEngine.Core.MapStuff
         #region Fields
 
         private MagiEntity? _gameObjectControlled;
-        private EntityManager _entityManager = [];
         private bool _disposed;
         private Dictionary<Func<Actor, bool>, Actor[]> _lastCalledActors = [];
         private bool _needsToUpdateActorsDict;
@@ -83,7 +82,7 @@ namespace MagusEngine.Core.MapStuff
         public Dictionary<Direction, MagiMap> MapZoneConnections { get; set; }
         public List<Room>? Rooms { get; set; }
 
-        public EntityManager EntityRender { get => _entityManager; }
+        public EntityManager EntityRender { get; private set; } = [];
 
         #endregion Properties
 
@@ -250,10 +249,10 @@ namespace MagusEngine.Core.MapStuff
                 _needsToUpdateActorsDict = true;
                 // Locator.GetService<EntityRegistry>().Destroy(entity.ID);
             }
-            if (_entityManager.Entities is not null && _entityManager.Contains(entity.SadCell))
+            if (EntityRender.Entities is not null && EntityRender.Contains(entity.SadCell))
             {
-                _entityManager.Remove(entity.SadCell);
-                _entityManager.IsDirty = true;
+                EntityRender.Remove(entity.SadCell);
+                EntityRender.IsDirty = true;
             }
         }
 
@@ -285,7 +284,7 @@ namespace MagusEngine.Core.MapStuff
                 entity.PositionChanged += OnPositionChanged;
             }
 
-            _entityManager.Add(entity.SadCell);
+            EntityRender.Add(entity.SadCell);
 
             _needsToUpdateActorsDict = true;
         }
@@ -303,7 +302,7 @@ namespace MagusEngine.Core.MapStuff
                 FovCalculate(player);
                 LastPlayerPosition = player.Position;
             }
-            _entityManager.IsDirty = true;
+            EntityRender.IsDirty = true;
         }
 
         /// <summary>
@@ -376,17 +375,17 @@ namespace MagusEngine.Core.MapStuff
 
         public void ConfigureRender(ScreenSurface renderer)
         {
-            if (renderer.SadComponents.Contains(_entityManager))
+            if (renderer.SadComponents.Contains(EntityRender))
             {
                 return;
             }
-            _entityManager = new();
-            renderer.SadComponents.Add(_entityManager);
-            _entityManager.DoEntityUpdate = true;
+            EntityRender = new();
+            renderer.SadComponents.Add(EntityRender);
+            EntityRender.DoEntityUpdate = true;
 
             foreach (var spatialMap in Entities.GetLayersInMask(LayerMasker.MaskAllAbove((int)MapLayer.TERRAIN)))
             {
-                _entityManager.AddRange(spatialMap.Items.Cast<MagiEntity>().Select(i => i.SadCell));
+                EntityRender.AddRange(spatialMap.Items.Cast<MagiEntity>().Select(i => i.SadCell));
             }
             //_entityRender.AddRange(Entities.Items.Cast<MagiEntity>());
             renderer.IsDirty = true;
@@ -779,7 +778,7 @@ namespace MagusEngine.Core.MapStuff
             _lastCalledActors = null!;
             ControlledGameObjectChanged = null!;
             ControlledEntitiy = null!;
-            _entityManager = null!;
+            EntityRender = null!;
             GoRogueComponents.Clear();
             _disposed = true;
         }
