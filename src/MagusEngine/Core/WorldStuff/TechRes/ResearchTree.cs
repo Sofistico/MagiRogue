@@ -86,7 +86,7 @@ namespace MagusEngine.Core.WorldStuff.TechRes
 
         private ResearchTreeNode[] GetUnfinishedNodes()
         {
-            return Nodes!.Where(static i => !i.Finished)?.ToArray() ?? [];
+            return Nodes?.Where(static i => !i.Finished).ToArray() ?? [];
         }
 
         private void DefineNodeRelation(ResearchTreeNode childNode, string str)
