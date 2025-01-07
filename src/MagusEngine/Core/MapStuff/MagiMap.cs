@@ -94,7 +94,7 @@ namespace MagusEngine.Core.MapStuff
         /// default is 60x60, for a nice 3600 tiles per map
         /// </summary>
         public MagiMap(string mapName, int width = 60, int height = 60, bool usesWeighEvaluation = true) :
-            base(width, height, Enum.GetNames(typeof(MapLayer)).Length - 1,
+            base(width, height, Enum.GetNames<MapLayer>().Length - 1,
             Distance.Euclidean,
             entityLayersSupportingMultipleItems: LayerMasker.Default.Mask((int)MapLayer.ITEMS,
                 (int)MapLayer.GHOSTS,
