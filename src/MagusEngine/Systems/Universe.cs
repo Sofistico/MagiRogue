@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using MagusEngine.Exceptions;
 
 namespace MagusEngine.Systems
 {
@@ -40,7 +41,7 @@ namespace MagusEngine.Systems
         /// <summary>
         /// The World map, contains the map data and the Planet data
         /// </summary>
-        public PlanetMap WorldMap { get; set; }
+        public PlanetMap WorldMap { get; set; } = null!;
 
         /// <summary>
         /// Stores the current map
@@ -50,7 +51,7 @@ namespace MagusEngine.Systems
         /// <summary>
         /// Stores the current chunk that is loaded
         /// </summary>
-        public RegionChunk CurrentChunk { get; set; }
+        public RegionChunk CurrentChunk { get; set; } = null!;
 
         /// <summary>
         /// Player data
@@ -67,8 +68,6 @@ namespace MagusEngine.Systems
 
         public SeasonType CurrentSeason { get; set; }
 
-        public int ZLevel { get; set; }
-
         public PlanetGenSettings? PlanetSettings { get; set; }
 
         /// <summary>
@@ -83,23 +82,22 @@ namespace MagusEngine.Systems
                 "Settings",
                 "planet_gen_setting.json"));
 
+            Player = player ?? throw new NullValueException(nameof(player));
+
             if (!testGame)
             {
                 WorldMap = new PlanetGenerator().CreatePlanet(PlanetSettings!.PlanetWidth,
                     PlanetSettings!.PlanetHeight,
                     PlanetSettings!.PlanetMaxInitialCivs);
                 Time = WorldMap.GetTimePassed();
-                WorldMap.AssocietatedMap.IsActive = true;
+                WorldMap.PlacePlayerOnWorld(player);
                 CurrentMap = WorldMap.AssocietatedMap;
-                PlacePlayerOnWorld(player);
-                if (player is not null)
-                    SaveGame(player.Name);
+                SaveGame(player.Name);
             }
             else
             {
                 CreateTestMap();
 
-                PlacePlayer(player);
             }
             Locator.GetService<MessageBusService>().RegisterAllSubscriber(this);
         }
@@ -139,48 +137,19 @@ namespace MagusEngine.Systems
             Locator.GetService<MessageBusService>()?.RegisterAllSubscriber(this);
         }
 
-        private void PlacePlayerOnWorld(Player player)
-        {
-            if (player != null)
-            {
-                try
-                {
-                    Civilization? startTown = WorldMap.Civilizations
-                        .Find(a => a.Tendency == CivilizationTendency.Neutral);
-                    if (startTown is not null)
-                        player.Position = startTown.ReturnAllLandTerritory(WorldMap.AssocietatedMap)[0].Position;
-                    else
-                        throw new ApplicationException("There was an error on trying to find the start town to place the player!");
-                    Player = player;
-
-                    CurrentMap.AddMagiEntity(Player);
-                }
-                catch (ApplicationException ex)
-                {
-                    Locator.GetService<MagiLog>().Log(ex.Message);
-                    throw;
-                }
-                catch (Exception e)
-                {
-                    Locator.GetService<MagiLog>().Log(e.Message);
-                    throw;
-                }
-            }
-        }
-
         public void PlacePlayerOnLoad()
         {
             if (Player != null)
             {
                 // since we are just loading from memory, better make sure!
-                CurrentMap.NeedsUpdate = true;
+                CurrentMap!.NeedsUpdate = true;
                 Player.Position = CurrentMap.LastPlayerPosition;
                 UpdateIfNeedTheMap(CurrentMap);
                 CurrentMap.AddMagiEntity(Player);
             }
             else
             {
-                throw new Exception("Coudn't load the player, it was null!");
+                throw new NullValueException("Coudn't load the player, it was null!", null);
             }
         }
 
@@ -246,13 +215,14 @@ namespace MagusEngine.Systems
             CurrentMap = map;
             CurrentChunk = new RegionChunk(0, 0);
             CurrentChunk.LocalMaps[0] = map;
+            PlacePlayer();
         }
 
         // Create a player using the Player class and set its starting position
-        private void PlacePlayer(Player player)
+        private void PlacePlayer()
         {
             // Place the player on the first non-movement-blocking tile on the map
-            for (int i = 0; i < CurrentMap.Terrain.Count; i++)
+            for (int i = 0; i < CurrentMap?.Terrain.Count; i++)
             {
                 if (CurrentMap.Terrain[i]?.IsWalkable == true
                     && !CurrentMap.GetEntitiesAt<MagiEntity>(Point.FromIndex(i, CurrentMap.Width)).Any())
@@ -260,14 +230,13 @@ namespace MagusEngine.Systems
                     // Set the player's position to the index of the current map position
                     var pos = Point.FromIndex(i, CurrentMap.Width);
 
-                    Player = player;
                     Player.Position = pos;
                     break;
                 }
             }
 
             // add the player to the Map's collection of Entities
-            CurrentMap.AddMagiEntity(Player);
+            CurrentMap?.AddMagiEntity(Player);
         }
 
         public MagiMap GetWorldMap()

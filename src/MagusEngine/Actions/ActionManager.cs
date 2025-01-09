@@ -419,7 +419,6 @@ namespace MagusEngine.Actions
             {
                 MagiMap map = Universe.GetMapById(possibleStairs.MapIdConnection.Value);
                 Locator.GetService<MessageBusService>().SendMessage<ChangeControlledActorMap>(new(map, map.GetRandomWalkableTile(), currentMap));
-                Find.Universe.ZLevel -= map.ZAmount;
 
                 return true;
             }
@@ -471,7 +470,6 @@ namespace MagusEngine.Actions
                 {
                     MagiMap map = Universe.GetMapById(possibleStairs.MapIdConnection.Value);
                     Locator.GetService<MessageBusService>().SendMessage<ChangeControlledActorMap>(new(map, map.GetRandomWalkableTile(), currentMap));
-                    Find.Universe.ZLevel += map.ZAmount;
 
                     return true;
                 }

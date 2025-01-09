@@ -7,20 +7,6 @@ namespace MagusEngine.Core.Animations
 {
     public class KaboomAnimation : AnimationBase, IAnimationScheduled
     {
-        //    *
-        //   ***
-        //  #***#
-        // +#***#+
-        //-+#***#+-
-        // +#***#+
-        //  #***#
-        //   ***
-        //    *
-        //  *
-        // ***
-        //*****
-        // ***
-        //  *
         public int Radius { get; set; }
         public int LingeringTicks { get; set; }
         public int GlyphChangeDistance { get; set; }
