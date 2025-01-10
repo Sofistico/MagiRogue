@@ -31,7 +31,7 @@ namespace MagusEngine.Components.EntityComponents.Ai
             }
 
             parent ??= (IGameObject)Parent;
-            if (parent.GoRogueComponents.Contains(typeof(NeedCollection))
+            if (parent.GoRogueComponents.Contains<NeedCollection>()
                 && map.GetEntityById(parent.ID) is Actor actor)
             {
                 needs ??= actor.GetComponent<NeedCollection>();
