@@ -678,7 +678,7 @@ namespace MagusEngine.Actions
             return false;
         }
 
-        public static bool FindWater(Actor actor, MagiMap map, out Tile water)
+        public static bool FindWater(Actor actor, MagiMap map, out Tile? water)
         {
             water = map.GetClosestWaterTile(actor.Body.ViewRadius, actor.Position);
 

@@ -18,7 +18,7 @@ namespace MagusEngine.Core.MapStuff
         /// <summary>
         /// The max amount of local maps the region chunks hold, should be 3*3 = 9 maps.
         /// </summary>
-        public const int MAX_LOCAL_MAPS = 3 * 3;
+        public const int MaxLocalMaps = 3 * 3;
 
         public int X { get; }
         public int Y { get; }
@@ -28,23 +28,23 @@ namespace MagusEngine.Core.MapStuff
         {
             X = x;
             Y = y;
-            LocalMaps = new MagiMap[MAX_LOCAL_MAPS];
+            LocalMaps = new MagiMap[MaxLocalMaps];
         }
 
         public RegionChunk(Point point)
         {
             X = point.X;
             Y = point.Y;
-            LocalMaps = new MagiMap[MAX_LOCAL_MAPS];
+            LocalMaps = new MagiMap[MaxLocalMaps];
         }
 
-        public Point ChunckPos() => new Point(X, Y);
+        public Point ChunckPos => new(X, Y);
 
         public int ToIndex(int width) => Point.ToIndex(X, Y, width);
 
         public bool MapsAreConnected()
         {
-            for (int i = 0; i < MAX_LOCAL_MAPS; i++)
+            for (int i = 0; i < MaxLocalMaps; i++)
             {
                 MagiMap map = LocalMaps[i];
                 if (map.MapZoneConnections.Count <= 0)
@@ -68,7 +68,7 @@ namespace MagusEngine.Core.MapStuff
 
         internal void SetMapsToUpdate()
         {
-            for (int i = 0; i < MAX_LOCAL_MAPS; i++)
+            for (int i = 0; i < MaxLocalMaps; i++)
             {
                 LocalMaps[i].NeedsUpdate = true;
             }

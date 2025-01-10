@@ -1,14 +1,15 @@
-﻿using Arquimedes.Utils;
-using MagusEngine.Core.MapStuff;
-using MagusEngine.Systems;
-using Newtonsoft.Json;
-using SadConsole;
-using SadRogue.Primitives;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using Arquimedes.Utils;
+using MagusEngine.Core.MapStuff;
+using MagusEngine.Exceptions;
+using MagusEngine.Systems;
+using Newtonsoft.Json;
+using SadConsole;
+using SadRogue.Primitives;
 
 namespace MagusEngine.Services
 {
@@ -17,7 +18,7 @@ namespace MagusEngine.Services
     /// </summary>
     public sealed class SavingService
     {
-        private const string _folderName = "Saves";
+        private const string _folderName = "saves";
         private const int chunkPartition = 500;
         private static readonly string dir = AppDomain.CurrentDomain.BaseDirectory;
         private readonly JsonSerializerSettings settings;
@@ -68,7 +69,7 @@ namespace MagusEngine.Services
 
             try
             {
-                Serializer.Save(gameState, @$"{_folderName}\{saveName}\GameState.mr", true);
+                Serializer.Save(gameState, @$"{_folderName}\{saveName}\game_state.mr", true);
             }
             catch (Exception)
             {
@@ -103,13 +104,14 @@ namespace MagusEngine.Services
         {
             try
             {
-                List<RegionChunk> newChunks = new List<RegionChunk>();
                 if (chunks is null) return;
                 int countArray = chunks.Length;
+                List<RegionChunk> newChunks = [];
                 for (int i = 0; i < countArray; i++)
                 {
-                    if (chunks[i] is not null)
-                        newChunks.Add(chunks[i]);
+                    if (chunks[i] is null)
+                        continue;
+                    newChunks.Add(chunks[i]);
                 }
                 int countList = newChunks.Count;
 
@@ -118,9 +120,9 @@ namespace MagusEngine.Services
                     if (i % chunkPartition == 0 || i != 0 || i == chunks.Length)
                     {
                         if (indexToStart == 0)
-                            Serializer.Save(newChunks, @$"{_folderName}\{SavePathName}\Chunks_{i / chunkPartition}.mr", true);
+                            Serializer.Save(newChunks, @$"{_folderName}\{SavePathName}\chunks_{i / chunkPartition}.mr", true);
                         else
-                            Serializer.Save(newChunks, @$"{_folderName}\{SavePathName}\Chunks_{indexToStart / chunkPartition}.mr", true);
+                            Serializer.Save(newChunks, @$"{_folderName}\{SavePathName}\chunks_{indexToStart / chunkPartition}.mr", true);
                         break;
                     }
                 }
@@ -149,7 +151,7 @@ namespace MagusEngine.Services
         {
             try
             {
-                string path = $@"{_folderName}\{saveName}\GameState.mr";
+                string path = $@"{_folderName}\{saveName}\game_state.mr";
                 return Serializer.Load<Universe>(path, true);
             }
             catch (Exception ex)
@@ -195,12 +197,13 @@ namespace MagusEngine.Services
             }
             else
             {
-                List<RegionChunk> chunks = LoadChunks(SavePathName,
-                    chunk.ToIndex(Find.Universe.WorldMap.AssocietatedMap.Width)).ToList();
-                chunks.RemoveAll(c => c.ChunckPos() == chunk.ChunckPos());
+                if (SavePathName is null)
+                    throw new NullValueException(nameof(SavePathName));
+                List<RegionChunk> chunks = [.. LoadChunks(SavePathName, chunk.ToIndex(Find.Universe.WorldMap.AssocietatedMap.Width))];
+                chunks.RemoveAll(c => c.ChunckPos == chunk.ChunckPos);
                 chunks.Add(chunk);
 
-                SaveChuncksToFile(chunks.ToArray(), index);
+                SaveChuncksToFile([.. chunks], index);
             }
         }
 
@@ -212,7 +215,7 @@ namespace MagusEngine.Services
         private string? GetChunckFile(int index)
         {
             // need to remake, so that it will only load the relevant chunk
-            string path = $@"{SaveDir}\Chunks_{index / chunkPartition}.mr";
+            string path = $@"{SaveDir}\chunks_{index / chunkPartition}.mr";
             string pattern = Path.GetFileName(path);
             string realDir = path[..^pattern.Length];
             string fullPath = Path.Combine(dir, realDir);
@@ -221,7 +224,7 @@ namespace MagusEngine.Services
 
         private string GetChunckRelativeFile(int index)
         {
-            return $@"{_folderName}\{SavePathName}\Chunks_{index / chunkPartition}.mr";
+            return $@"{_folderName}\{SavePathName}\chunks_{index / chunkPartition}.mr";
         }
 
         /// <summary>
@@ -233,7 +236,7 @@ namespace MagusEngine.Services
         private static string GetChunckFileStatic(string saveName, int currentChunkIndex)
         {
             // need to remake, so that it will only load the relevant chunk
-            string file = $@"Saves\{saveName}\Chunks_{currentChunkIndex / chunkPartition}.mr";
+            string file = $@"saves\{saveName}\chunks_{currentChunkIndex / chunkPartition}.mr";
             /*string pattern = Path.GetFileName(path);
             string realDir = path[..^pattern.Length];
             string fullPath = Path.Combine(dir, realDir);
@@ -248,7 +251,7 @@ namespace MagusEngine.Services
         /// <param name="chunk"></param>
         private void SaveChunckToFile(RegionChunk chunk, int index)
         {
-            SaveChuncksToFile(new RegionChunk[] { chunk }, index);
+            SaveChuncksToFile([chunk], index);
         }
 
         /// <summary>
@@ -262,7 +265,7 @@ namespace MagusEngine.Services
             {
                 string[] files = SaveUtils.GetSaveNameArray(SaveUtils.ReturnAllSaveFiles());
 
-                return files.Any(s => saveName.Equals(s));
+                return files.Any(saveName.Equals);
             }
             else
             {
@@ -302,7 +305,7 @@ namespace MagusEngine.Services
 
         public static MagiMap? LoadMapById(int id)
         {
-            const string pathWildcard = @"SaveDir\Chunks_*.mr";
+            const string pathWildcard = @"save_dir\chunks_*.mr";
             string[] list = FileUtils.GetFiles(pathWildcard);
 
             for (int i = 0; i < list.Length; i++)

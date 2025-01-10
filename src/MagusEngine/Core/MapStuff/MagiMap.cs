@@ -188,14 +188,14 @@ namespace MagusEngine.Core.MapStuff
         /// <returns></returns>
         public T? GetEntityAt<T>(Point location) where T : MagiEntity
         {
-            return Entities.GetItemsAt(location).OfType<T>().FirstOrDefault(e => e.CanBeAttacked);
+            return Entities.GetItemsAt(location).OfType<T>().FirstOrDefault(static e => e.CanBeAttacked);
         }
 
-        public Tile GetClosestWaterTile(int range, Point position)
+        public Tile? GetClosestWaterTile(int range, Point position)
         {
             var waters = GetAllTilesWithComponents<WaterTile>();
 
-            return position.GetClosest<Tile>(range, waters, null);
+            return position.GetClosest(range, waters, null);
         }
 
         public Actor[] GetAllActors(Func<Actor, bool>? actionToRunInActors = null)
