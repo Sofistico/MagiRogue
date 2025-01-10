@@ -11,6 +11,7 @@ using MagusEngine.Services;
 using System;
 using MagusEngine.Core.Entities;
 using Arquimedes.Enumerators;
+using MagusEngine.Exceptions;
 
 namespace MagusEngine.Core.MapStuff
 {
@@ -77,18 +78,10 @@ namespace MagusEngine.Core.MapStuff
                 try
                 {
                     Civilization? startTown = Civilizations
-                        .Find(static a => a.Tendency == CivilizationTendency.Neutral);
-                    if (startTown is not null)
-                        player.Position = startTown.ReturnAllLandTerritory(AssocietatedMap)[0].Position;
-                    else
-                        throw new ApplicationException("There was an error on trying to find the start town to place the player!");
+                        .Find(static a => a.Tendency == CivilizationTendency.Neutral) ?? throw new NullValueException("Error on trying to find the start town to place the player!", null);
+                    player.Position = startTown.ReturnAllLandTerritory(AssocietatedMap)[0].Position;
                     AssocietatedMap.AddMagiEntity(player);
                     AssocietatedMap.IsActive = true;
-                }
-                catch (ApplicationException ex)
-                {
-                    Locator.GetService<MagiLog>().Log(ex.Message);
-                    throw;
                 }
                 catch (Exception e)
                 {
