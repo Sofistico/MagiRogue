@@ -4,7 +4,6 @@ using Arquimedes.Utils;
 using Diviner;
 using MagusEngine;
 using MagusEngine.Services;
-using MagusEngine.Systems;
 using SadConsole;
 using SadConsole.Configuration;
 using System;
@@ -26,8 +25,6 @@ namespace MagiRogue
         private static void Main(string[] args)
         {
             ConfigureBeforeCreateGame(args);
-            DataManager.RandomLangugage();
-            return;
 
             // Setup the engine and create the main window.
             var config = new Builder()
