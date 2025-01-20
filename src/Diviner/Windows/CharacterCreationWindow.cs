@@ -20,7 +20,7 @@ namespace Diviner.Windows
     public class CharacterCreationWindow : MagiBaseWindow
     {
         private Player player;
-        private const string helpText = " WARNING! NO LONGER RELEVANT! SUBJECT TO CHANGE\n\rHere we begin the process of creating your player, there is much to be" +
+        private const string helpText = " WARNING! NO LONGER RELEVANT! SUBJECT TO CHANGE\n\nHere we begin the process of creating your player, there is much to be" +
             " done before you can create, you must first decide the 3 most important attributes that determine" +
             " what your character can and can't do. \n\nThese are the Body Stat(Used to determine various effects that" +
             " your body will have, like total hp, how likely you are to dogde or how likely you are to " +

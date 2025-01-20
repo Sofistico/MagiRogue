@@ -691,13 +691,13 @@ namespace MagusEngine.Core.MapStuff
                 int mod = 10;
                 if (s.StartsWith('['))
                 {
-                    var test = s.Split("\r\n");
+                    var test = s.Split("\n");
                     mod -= int.Parse(test[2]);
                 }
                 bool gotIt = Mrn.OneIn(mod);
                 if (gotIt)
                 {
-                    obj = s.StartsWith('[') ? s.Split("\r\n")[1].Replace(',', ' ').Replace('\"', ' ').Trim()
+                    obj = s.StartsWith('[') ? s.Split("\n")[1].Replace(',', ' ').Replace('\"', ' ').Trim()
                         : s;
                 }
             }

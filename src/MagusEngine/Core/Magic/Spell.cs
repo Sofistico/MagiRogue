@@ -337,7 +337,7 @@ namespace MagusEngine.Core.Magic
         {
             return new StringBuilder().Append(Name).Append(": ").Append(SpellLevel)
                 .Append(", Range: ").Append(SpellRange)
-                .Append(", Proficiency: ").Append(Proficiency).Append(" \r\n")
+                .Append(", Proficiency: ").Append(Proficiency).Append(" \n")
                 .Append("Required shape skills: ").Append(RequiredShapingSkill)
                 .AppendLine(MagicArt.ToString()).ToString();
         }

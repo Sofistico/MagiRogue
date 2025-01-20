@@ -3,7 +3,7 @@
     "Id": "magic_missile",
     "ShapingAbility": "Mana Shaping",
     "Name": "Magic Missile",
-    "Description": "Magic missile, the first real combat magic any prospecting wizard will learn, it's many use will carry you for a long time.\r\nIt's said that the greatest of training in this magic permits one to shape it as a piercer or as a cutter, make it invisible or add a homing function to it.",
+    "Description": "Magic missile, the first real combat magic any prospecting wizard will learn, it's many use will carry you for a long time.\n\nIt's said that the greatest of training in this magic permits one to shape it as a piercer or as a cutter, make it invisible or add a homing function to it.",
     "SpellLevel": 1,
     "MagicCost": 1.0,
     "MagicArt": "Projection",

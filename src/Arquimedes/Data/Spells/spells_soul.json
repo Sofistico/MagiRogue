@@ -4,7 +4,7 @@
     "ShapingAbility": "Mana Shaping",
     "Name": "Finger of Death",
     "SpellLevel": 7,
-    "Description": "This spell was created by an powerful mage using extensive knowledge about the soul to make his enemies die by a point of his finger. \r\nIt's said that he also tried to create the Gaze of Death, but sadly died when he tested the spell and blinked.",
+    "Description": "This spell was created by an powerful mage using extensive knowledge about the soul to make his enemies die by a point of his finger. \n\nIt's said that he also tried to create the Gaze of Death, but sadly died when he tested the spell and blinked.",
     "SpellRange": 5,
     "MagicCost": 20,
     "MagicArt": "SoulMagic",
