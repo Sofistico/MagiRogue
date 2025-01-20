@@ -9,22 +9,16 @@ namespace Arquimedes.Utils
 
         public static string[] GetFiles(string wildCard)
         {
-            try
-            {
-                string originalWildCard = wildCard;
+            // Normalize the wildcard path to use correct separators
+            string originalWildCard = wildCard;
 
-                string pattern = Path.GetFileName(originalWildCard);
-                string realDir = originalWildCard[..^pattern.Length];
+            string pattern = Path.GetFileName(originalWildCard);
+            string realDir = originalWildCard[..^pattern.Length];
 
-                // Get absolutepath
-                string absPath = Path.GetFullPath(Path.Combine(_appDomain, realDir));
+            // Get absolutepath
+            string absPath = Path.GetFullPath(Path.Combine(_appDomain, realDir)).Replace('\\', Path.DirectorySeparatorChar);
 
-                return Directory.GetFiles(absPath, pattern, SearchOption.AllDirectories);
-            }
-            catch (Exception)
-            {
-                return [];
-            }
+            return Directory.GetFiles(absPath, pattern, SearchOption.AllDirectories);
         }
 
         public static string? GetAllTextFromFile(FileInfo file)
@@ -55,21 +49,21 @@ namespace Arquimedes.Utils
             try
             {
                 Parallel.ForEach(files, file =>
-                {
-                    try
-                    {
+                        {
+                        try
+                        {
                         foreach (T? item in JsonUtils.JsonDeseralize<List<T>>(file)!)
                         {
-                            result.Add(item);
+                        result.Add(item);
                         }
 
-                    }
-                    catch (System.Exception ex)
-                    {
+                        }
+                        catch (System.Exception ex)
+                        {
                         System.Console.WriteLine($"Something went wrong {ex}");
                         return;
-                    }
-                });
+                        }
+                        });
             }
             catch (System.Exception ex)
             {
