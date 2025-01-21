@@ -19,7 +19,7 @@ namespace Diviner.Windows
 {
     public class CharacterCreationWindow : MagiBaseWindow
     {
-        private Player player;
+        private Player player = null!;
         private const string helpText = " WARNING! NO LONGER RELEVANT! SUBJECT TO CHANGE\n\nHere we begin the process of creating your player, there is much to be" +
             " done before you can create, you must first decide the 3 most important attributes that determine" +
             " what your character can and can't do. \n\nThese are the Body Stat(Used to determine various effects that" +
@@ -29,22 +29,23 @@ namespace Diviner.Windows
             "\n\nThe Soul Stat(Your mp stat, how high that is your innate resistance before trainging as well a major" +
             " effect across the board in the spell casting portion). \n\nYou will have 120 points to distribute as you see" +
             " fit for your base stats.";
-        private TextBox charName;
-        private ListBox scenarioChooser;
-        private ListBox raceChooser;
-        private List<RadioButton> sexChooser;
+        private TextBox charName = null!;
+        private ListBox scenarioChooser = null!;
+        private ListBox raceChooser = null!;
+        private List<RadioButton> sexChooser = null!;
 
         // for later, see https://discord.com/channels/501465397518925843/501465397518925850/1010610089939435712
         private readonly List<Console> consolePatches;
-        private List<RadioButton> raceRadio;
-        private Console basicConsole;
-        private Console raceConsole;
-        private Console scenarioConsole;
+        private readonly List<RadioButton> raceRadio;
+        private readonly Console? basicConsole;
+        private readonly Console? raceConsole;
+        private readonly Console? scenarioConsole;
 
         public CharacterCreationWindow(int width, int height) : base(width, height, "Character Creation")
         {
             SetUpButtons(width);
-            consolePatches = new();
+            consolePatches = [];
+            raceRadio = [];
         }
 
         private void SetUpButtons(int width)
@@ -148,7 +149,7 @@ namespace Diviner.Windows
 
             sexChooser = [];
             Point starterPosSexRadio = new((Width / 2) - 10, (Height / 2) - 10);
-            foreach (object? item in Enum.GetValues(typeof(Sex)))
+            foreach (Sex item in Enum.GetValues<Sex>())
             {
                 string text = item.ToString()!;
                 RadioButton radio = new(text.Length + 4, 1)
