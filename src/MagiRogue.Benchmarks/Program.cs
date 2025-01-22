@@ -11,7 +11,8 @@ namespace MagiRogue.Benchmarks
             "Map",
             "Save",
             "OpenAi Tests",
-            "Maths"
+            "Maths",
+            "Data"
         };
 
         private static void Main()
@@ -49,6 +50,10 @@ namespace MagiRogue.Benchmarks
 
                 case 4:
                     BenchmarkRunner.Run<MathBenchs>();
+                    break;
+
+                case 5:
+                    BenchmarkRunner.Run<DataBenchmarks>();
                     break;
 
                 default:
