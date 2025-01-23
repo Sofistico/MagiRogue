@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Arquimedes.Enumerators;
 using Arquimedes.Settings;
 using Arquimedes.Utils;
@@ -5,11 +9,11 @@ using GoRogue.Messaging;
 using MagusEngine.Bus;
 using MagusEngine.Bus.MapBus;
 using MagusEngine.Bus.UiBus;
-using MagusEngine.Core.Civ;
+using MagusEngine.Components.EntityComponents.Ai;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
-using MagusEngine.Components.EntityComponents.Ai;
+using MagusEngine.Exceptions;
 using MagusEngine.Generators;
 using MagusEngine.Generators.MapGen;
 using MagusEngine.Serialization;
@@ -18,11 +22,6 @@ using MagusEngine.Systems.Time;
 using MagusEngine.Systems.Time.Nodes;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using MagusEngine.Exceptions;
 
 namespace MagusEngine.Systems
 {
@@ -68,7 +67,7 @@ namespace MagusEngine.Systems
 
         public SeasonType CurrentSeason { get; set; }
 
-        public PlanetGenSettings? PlanetSettings { get; set; }
+        public PlanetGenSettings PlanetSettings { get; set; } = null!;
 
         /// <summary>
         /// Creates a new game world and stores it in a publicly accessible constructor.
@@ -80,7 +79,7 @@ namespace MagusEngine.Systems
             PlanetSettings = JsonUtils.JsonDeseralize<PlanetGenSettings>(Path
                 .Combine(AppDomain.CurrentDomain.BaseDirectory,
                 "Settings",
-                "planet_gen_setting.json"));
+                "planet_gen_setting.json"))!;
 
             Player = player ?? throw new NullValueException(nameof(player));
 
@@ -192,7 +191,7 @@ namespace MagusEngine.Systems
 
         public void AddEntityToCurrentMap(MagiEntity entity)
         {
-            CurrentMap.AddMagiEntity(entity);
+            CurrentMap?.AddMagiEntity(entity);
             Locator.GetService<MessageBusService>().SendMessage(new AddTurnNode(new EntityTimeNode(entity.ID, 0)));
         }
 
@@ -271,7 +270,7 @@ namespace MagusEngine.Systems
                             break;
 
                         default:
-                            throw new NotSupportedException($"Unhandled time node type: {turnNode.GetType()}");
+                            throw new NotSupportedException($"Unhandled time node type: {turnNode?.GetType()}");
                     }
 
                     turnNode = Time.NextNode();
@@ -401,7 +400,7 @@ namespace MagusEngine.Systems
         {
             CurrentMap!.ControlledEntitiy = entity;
             // event
-            Locator.GetService<MessageBusService>().SendMessage<ChangeCenteredActor>(new(entity));
+            Locator.GetService<MessageBusService>().SendMessage<ChangeCenteredActor>(new(entity!));
         }
 
         public RegionChunk GenerateChunck(Point posGenerated)
@@ -421,7 +420,7 @@ namespace MagusEngine.Systems
 
         public RegionChunk? GetChunckByPos(Point playerPoint)
         {
-            return Locator.GetService<SavingService>().GetChunkAtIndex(playerPoint, PlanetSettings.PlanetWidth);
+            return Locator.GetService<SavingService>().GetChunkAtIndex(playerPoint, PlanetSettings!.PlanetWidth);
         }
 
         public static MagiMap? GetMapById(int id)

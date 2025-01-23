@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 using GoRogue.Messaging;
 using MagusEngine.Bus.MapBus;
-using MagusEngine.Core.Entities.Base;
 using MagusEngine.Serialization;
+using MagusEngine.Services;
 using MagusEngine.Systems.Time.Nodes;
 using Priority_Queue;
 
@@ -28,12 +27,14 @@ namespace MagusEngine.Systems.Time
         {
             TimePassed = new TimeDefSpan(initialTick);
             Nodes = new SimplePriorityQueue<ITimeNode, long>();
+            Locator.GetService<MessageBusService>().RegisterAllSubscriber(this);
         }
 
         public TimeSystem(int initialYear)
         {
             TimePassed = new TimeDefSpan(initialYear);
             Nodes = new SimplePriorityQueue<ITimeNode, long>();
+            Locator.GetService<MessageBusService>().RegisterAllSubscriber(this);
         }
 
         public void RegisterNode(ITimeNode node)
