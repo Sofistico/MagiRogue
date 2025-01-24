@@ -98,5 +98,10 @@ namespace MagusEngine.Systems.Time
             if (!Nodes.Any(i => i.Id.Equals(entityId)))
                 RegisterNode(new EntityTimeNode(entityId, GetTimePassed(time)));
         }
+
+        ~TimeSystem()
+        {
+            Locator.GetService<MessageBusService>().UnRegisterAllSubscriber(this);
+        }
     }
 }
