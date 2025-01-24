@@ -37,6 +37,7 @@ namespace MagusEngine.Services
                 Locator
                     .GetService<MessageBusService>()
                     .SendMessage(new AddMessageLog("Logged an error in the logs file!"));
+                System.Console.WriteLine(str.ToString());
 #endif
             });
         }

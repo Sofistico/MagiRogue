@@ -35,7 +35,7 @@ namespace MagusEngine.Generators.MapGen
             var point = r.GetCenter();
             var actor = EntityFactory
                 .ActorCreator(point, "dwarf", "Blacksmith", 25, EntityFactory.GetRandomSex())
-                .WithComponents(new NeedDrivenAi());
+                .WithComponent(new NeedDrivenAi());
 
             _map.AddMagiEntity(actor);
         }
@@ -97,7 +97,7 @@ namespace MagusEngine.Generators.MapGen
                         "deer",
                         Sex.Male,
                         AgeGroup.Adult)
-                        .WithComponents(new NeedDrivenAi());
+                        .WithComponent(new NeedDrivenAi());
                     _map.AddMagiEntity(actor);
                 }
                 else
@@ -106,7 +106,7 @@ namespace MagusEngine.Generators.MapGen
                         "wolf",
                         Sex.Male,
                         AgeGroup.Adult)
-                        .WithComponents(new NeedDrivenAi());
+                        .WithComponent(new NeedDrivenAi());
                     _map.AddMagiEntity(actor);
                 }
             }
