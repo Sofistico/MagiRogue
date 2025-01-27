@@ -34,6 +34,7 @@ namespace MagiRogue
                 .IsStartingScreenFocused(true)
                 .ConfigureFonts(static (f, _) => f.UseBuiltinFontExtended());
             Game.Create(config);
+            Locator.GetService<MagiLog>().Log("Game started!");
             try
             {
                 Game.Instance.Run();
