@@ -7,7 +7,7 @@
     "SpellLevel": 1,
     "MagicCost": 1.0,
     "MagicArt": "Projection",
-    "SpellRange": 5,
+    "SpellRange": 10,
     "Effects": [
       {
         "AreaOfEffect": "Target",
@@ -32,7 +32,7 @@
     "SpellLevel": 1,
     "MagicCost": 1.5,
     "MagicArt": "Projection",
-    "SpellRange": 3,
+    "SpellRange": 4,
     "Effects": [
       {
         "AreaOfEffect": "Target",
@@ -64,7 +64,7 @@
     "Description": "A ray of fire leaves your finger and strikes the opponent!",
     "MagicArt": "Projection",
     "Manifestation": "Instant",
-    "SpellRange": 5,
+    "SpellRange": 15,
     "MagicCost": 2.5,
     "Id": "fire_ray",
     "Context": [ "Offensive" ]
@@ -97,7 +97,7 @@
     "Name": "Bolt of Lightning",
     "Description": "A bolt of lightning leaves your finger to strike your opponent on a line",
     "MagicArt": "Projection",
-    "SpellRange": 6,
+    "SpellRange": 15,
     "MagicCost": 5.5,
     "Id": "lightning_bolt",
     "Context": [ "Offensive", "Debuff" ]
@@ -123,7 +123,7 @@
     "Manifestation": "Projectile",
     "Fore": "Red",
     "Velocity": 20,
-    "SpellRange": 10,
+    "SpellRange": 20,
     "MagicCost": 5.0,
     "Id": "fire_ball",
     "Context": [ "Offensive" ]

@@ -37,6 +37,11 @@ namespace MagusEngine.Systems
         ISubscriber<ProcessTurnEvent>,
         ISubscriber<RemoveEntitiyCurrentMap>
     {
+        private readonly MessageBusService _messageBus;
+        private readonly SavingService _savingService;
+        private readonly MagiLog _log;
+        private readonly IDGenerator _idGenerator;
+
         /// <summary>
         /// The World map, contains the map data and the Planet data
         /// </summary>
@@ -69,10 +74,21 @@ namespace MagusEngine.Systems
 
         public PlanetGenSettings PlanetSettings { get; set; } = null!;
 
+        private Universe()
+        {
+            _messageBus = Locator.GetService<MessageBusService>();
+            _messageBus.RegisterAllSubscriber(this);
+            _log = Locator.GetService<MagiLog>();
+            _savingService = Locator.GetService<SavingService>();
+            _idGenerator = Locator.GetService<IDGenerator>();
+            Player = null!;
+            Time = null!;
+        }
+
         /// <summary>
         /// Creates a new game world and stores it in a publicly accessible constructor.
         /// </summary>
-        public Universe(Player player, bool testGame = false)
+        public Universe(Player player, bool testGame = false) : this()
         {
             Time = new TimeSystem();
             CurrentSeason = SeasonType.Spring;
@@ -96,9 +112,7 @@ namespace MagusEngine.Systems
             else
             {
                 CreateTestMap();
-
             }
-            Locator.GetService<MessageBusService>().RegisterAllSubscriber(this);
         }
 
         [JsonConstructor]
@@ -108,7 +122,7 @@ namespace MagusEngine.Systems
             TimeSystem time,
             bool possibleChangeMap,
             SeasonType currentSeason,
-            RegionChunk currentChunk)
+            RegionChunk currentChunk) : this()
         {
             WorldMap = worldMap;
             CurrentChunk = currentChunk;
@@ -133,7 +147,6 @@ namespace MagusEngine.Systems
             Time = time;
             PossibleChangeMap = possibleChangeMap;
             CurrentSeason = currentSeason;
-            Locator.GetService<MessageBusService>()?.RegisterAllSubscriber(this);
         }
 
         public void PlacePlayerOnLoad()
@@ -170,8 +183,8 @@ namespace MagusEngine.Systems
             }
 
             // transform into event
-            Locator.GetService<MessageBusService>().SendMessage<LoadMapMessage>(new(CurrentMap));
-            Locator.GetService<MessageBusService>().SendMessage<ChangeCenteredActor>(new(Player));
+            _messageBus.SendMessage<LoadMapMessage>(new(CurrentMap));
+            _messageBus.SendMessage<ChangeCenteredActor>(new(Player));
         }
 
         private void UpdateIfNeedTheMap(MagiMap mapToGo)
@@ -192,7 +205,7 @@ namespace MagusEngine.Systems
         public void AddEntityToCurrentMap(MagiEntity entity)
         {
             CurrentMap?.AddMagiEntity(entity);
-            Locator.GetService<MessageBusService>().SendMessage(new AddTurnNode(new EntityTimeNode(entity.ID, 0)));
+            _messageBus.SendMessage(new AddTurnNode(new EntityTimeNode(entity.ID, 0)));
         }
 
         public static void ChangeActorMap(MagiEntity entity, MagiMap mapToGo, Point pos, MagiMap? previousMap)
@@ -204,7 +217,7 @@ namespace MagusEngine.Systems
 
         public void SaveGame(string saveName)
         {
-            Locator.GetService<SavingService>().SaveGameToFolder(this, saveName);
+            _savingService.SaveGameToFolder(this, saveName);
         }
 
         private void CreateTestMap()
@@ -272,17 +285,16 @@ namespace MagusEngine.Systems
                         default:
                             throw new NotSupportedException($"Unhandled time node type: {turnNode?.GetType()}");
                     }
-
                     turnNode = Time.NextNode();
                     if (tries++ > maxTries)
                     {
-                        Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("Something went really wrong with the processing of the AI"));
+                        _messageBus.SendMessage<AddMessageLog>(new("Something went really wrong with the processing of the AI"));
                         break;
                     }
-                    Locator.GetService<MessageBusService>().SendMessage<MapConsoleIsDirty>();
+                    _messageBus.SendMessage<MapConsoleIsDirty>();
                 }
 #if DEBUG
-                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"Turns: {Time.Turns}, Tick: {Time.TimePassed.Ticks}"));
+                _messageBus.SendMessage<AddMessageLog>(new($"Turns: {Time.Turns}, Tick: {Time.TimePassed.Ticks}"));
 #endif
                 // makes sure that any entity that exists but has no AI, or the AI failed, get's a turn.
                 var ids = GetEntitiesIds();
@@ -290,12 +302,13 @@ namespace MagusEngine.Systems
             }
         }
 
-        private static void ProcessComponentTurn(TickActionNode componentTurn)
+        private void ProcessComponentTurn(TickActionNode componentTurn)
         {
             var nextInvoke = componentTurn.Action.Invoke();
             if (nextInvoke > 0)
             {
-                Locator.GetService<MessageBusService>().SendMessage(new AddTurnNode(componentTurn, nextInvoke));
+                var tickActionNode = new TickActionNode(nextInvoke, componentTurn.Id, componentTurn.Action);
+                _messageBus.SendMessage(new AddTurnNode(tickActionNode));
             }
         }
 
@@ -304,14 +317,14 @@ namespace MagusEngine.Systems
             return CurrentChunk?.TotalPopulation() ?? [];
         }
 
-        private static void RegisterInTime(IEnumerable<Actor> population)
+        private void RegisterInTime(IEnumerable<Actor> population)
         {
             // called only once, to properly register the entity
             if (population is null)
                 return;
             foreach (Actor actor in population)
             {
-                Locator.GetService<MessageBusService>().SendMessage(new AddTurnNode(new EntityTimeNode(actor.ID, 0)));
+                _messageBus.SendMessage(new AddTurnNode(new EntityTimeNode(actor.ID, 0)));
             }
         }
 
@@ -329,8 +342,8 @@ namespace MagusEngine.Systems
             }
 
             Player.ProcessNeeds();
-            PlayerTimeNode playerTurn = new(Time.GetTimePassed(playerTime), Player.ID);
-            Time.RegisterNode(playerTurn);
+            PlayerTimeNode playerTurn = new(playerTime, Player.ID);
+            _messageBus.SendMessage<AddTurnNode>(new(playerTurn));
             Player.UpdateBody();
             CurrentMap?.PlayerFOV.Calculate(Player.Position, Player.GetViewRadius());
 
@@ -358,7 +371,7 @@ namespace MagusEngine.Systems
             WorldMap = null!;
 
             // event
-            Locator.GetService<MessageBusService>().SendMessage<RestartGame>(new());
+            _messageBus.SendMessage<RestartGame>(new());
         }
 
         private void ProcessAiTurn(uint entityId)
@@ -388,11 +401,11 @@ namespace MagusEngine.Systems
                 if (sucesses >= 0 && totalTicks <= 0)
                 {
                     totalTicks = TimeHelper.Wait;
-                    Locator.GetService<MagiLog>().Log($"The {entity.Name} with id {entityId} has reported no success on AI");
+                    _log.Log($"The {entity.Name} with id {entityId} has reported no success on AI");
                 }
 
-                EntityTimeNode nextTurnNode = new(entityId, Time.GetTimePassed(totalTicks));
-                Time.RegisterNode(nextTurnNode);
+                EntityTimeNode nextTurnNode = new(entityId, totalTicks);
+                _messageBus.SendMessage<AddTurnNode>(new(nextTurnNode));
             }
         }
 
@@ -400,7 +413,7 @@ namespace MagusEngine.Systems
         {
             CurrentMap!.ControlledEntitiy = entity;
             // event
-            Locator.GetService<MessageBusService>().SendMessage<ChangeCenteredActor>(new(entity!));
+            _messageBus.SendMessage<ChangeCenteredActor>(new(entity!));
         }
 
         public RegionChunk GenerateChunck(Point posGenerated)
@@ -412,7 +425,7 @@ namespace MagusEngine.Systems
 
             for (int i = 0; i < newChunck.LocalMaps.Length; i++)
             {
-                newChunck.LocalMaps[i].SetId(Locator.GetService<IDGenerator>().UseID());
+                newChunck.LocalMaps[i].SetId(_idGenerator.UseID());
             }
 
             return newChunck;
@@ -420,7 +433,7 @@ namespace MagusEngine.Systems
 
         public RegionChunk? GetChunckByPos(Point playerPoint)
         {
-            return Locator.GetService<SavingService>().GetChunkAtIndex(playerPoint, PlanetSettings!.PlanetWidth);
+            return _savingService.GetChunkAtIndex(playerPoint, PlanetSettings!.PlanetWidth);
         }
 
         public static MagiMap? GetMapById(int id)
@@ -467,7 +480,7 @@ namespace MagusEngine.Systems
 
         ~Universe()
         {
-            Locator.GetService<MessageBusService>().UnRegisterAllSubscriber(this);
+            _messageBus.UnRegisterAllSubscriber(this);
         }
     }
 }

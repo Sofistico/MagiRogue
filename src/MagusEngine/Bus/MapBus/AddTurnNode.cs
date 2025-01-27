@@ -5,12 +5,10 @@ namespace MagusEngine.Bus.MapBus
     public class AddTurnNode
     {
         public ITimeNode Node { get; set; }
-        public long Tick { get; set; }
 
-        public AddTurnNode(ITimeNode node, long tick = 0)
+        public AddTurnNode(ITimeNode node)
         {
             Node = node;
-            Tick = tick;
         }
     }
 }

@@ -16,6 +16,8 @@ namespace Arquimedes.Data
 
         public T? Query(string id)
         {
+            if (string.IsNullOrEmpty(id))
+                return default;
             ref T val = ref CollectionsMarshal.GetValueRefOrNullRef(_data.Value, id);
             return Unsafe.IsNullRef(ref val) ? default : val;
         }

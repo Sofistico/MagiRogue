@@ -95,7 +95,7 @@ namespace MagusEngine.Components.EntityComponents.Projectiles
         {
         }
 
-        public void UpdatePath(MagiMap map)
+        public virtual void UpdatePath(MagiMap map)
         {
             _path = map.AStar.ShortestPath(Origin, FinalPoint);
             if (_path == null)

@@ -66,7 +66,7 @@ namespace MagusEngine.Systems.Time
             return node;
         }
 
-        public long GetTimePassed(long time) => TimePassed.Ticks + time;
+        private long GetTimePassed(long ticks) => TimePassed.Ticks + ticks;
 
         public int GetNHoursFromTurn(int hours)
         {
@@ -83,6 +83,10 @@ namespace MagusEngine.Systems.Time
 
                 case TickActionNode component:
                     AddComponentToTime(component, component.Tick);
+                    break;
+
+                case PlayerTimeNode:
+                    RegisterNode(new PlayerTimeNode(GetTimePassed(message.Node.Tick), message.Node.Id));
                     break;
             }
         }
