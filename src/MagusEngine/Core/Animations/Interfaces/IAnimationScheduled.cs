@@ -2,6 +2,6 @@ namespace MagusEngine.Core.Animations.Interfaces
 {
     public interface IAnimationScheduled
     {
-        void ScheduledTickAnimation(Point originPos);
+        void ScheduleTickAnimation(Point originPos);
     }
 }

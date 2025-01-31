@@ -1,4 +1,5 @@
 ﻿using Arquimedes.Interfaces;
+using MagusEngine.Exceptions;
 using MagusEngine.Services;
 using MagusEngine.Systems.Physics;
 using SadConsole.Entities;
@@ -12,20 +13,14 @@ namespace MagusEngine.Core.Entities.Base
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public class MagiEntity : MagiGameObject, INamed
     {
-        private string DebuggerDisplay
-        {
-            get
-            {
-                return ToString();
-            }
-        }
+        private string DebuggerDisplay => ToString();
 
         #region Fields
 
         public MapStuff.MagiMap? CurrentMagiMap => (MapStuff.MagiMap?)CurrentMap;
 
         public int HistoryId { get; set; } // stores the history id of the entitiy
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         // I think it's in kilograms
         public virtual double Weight { get; set; }
@@ -120,7 +115,7 @@ namespace MagusEngine.Core.Entities.Base
 
         public virtual string GetCurrentStatus()
         {
-            throw new ApplicationException("Must define the get status for the class!");
+            throw new GenericException("Must define the get status for the class!");
         }
 
         public virtual int GetShapingAbility(string shapingAbility)
@@ -173,7 +168,7 @@ namespace MagusEngine.Core.Entities.Base
         /// <returns></returns>
         public virtual bool MoveBy(Point deltaPositionChange)
         {
-            return CurrentMagiMap.IsTileWalkable(Position + deltaPositionChange, IgnoresWalls);
+            return CurrentMagiMap!.IsTileWalkable(Position + deltaPositionChange, IgnoresWalls);
         }
 
         public virtual Material GetMaterial()
@@ -248,28 +243,38 @@ namespace MagusEngine.Core.Entities.Base
             if (GetComponent(out T comp))
             {
                 GoRogueComponents.Remove(comp);
-                // Locator.GetService<EntityRegistry>().RemoveComponent<T>(ID);
             }
         }
 
-        //public void RemoveComponent(string tag)
-        //{
-        //    try
-        //    {
-        //        GoRogueComponents.Remove(tag);
-        //        Locator.GetService<EntityRegistry>().RemoveComponent<T>(ID);
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw;
-        //    }
-        //}
+        public void RemoveComponent(string tag)
+        {
+            try
+            {
+                GoRogueComponents.Remove(tag);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public void RemoveComponent(params string[] tags)
+        {
+            try
+            {
+                GoRogueComponents.Remove(tags);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         #endregion Components
 
         public override string ToString()
         {
-            return string.Format($"{nameof(MagiEntity)} : {Name}");                
+            return string.Format($"{nameof(MagiEntity)} : {Name}");
         }
 
         #region Deconstructor

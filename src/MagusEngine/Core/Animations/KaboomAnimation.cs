@@ -15,6 +15,9 @@ namespace MagusEngine.Core.Animations
         {
         }
 
-        public void ScheduledTickAnimation(Point originPos) { }
+        public void ScheduleTickAnimation(Point originPos)
+        {
+            
+        }
     }
 }

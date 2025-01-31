@@ -46,7 +46,7 @@ namespace MagusEngine.Components.EntityComponents.Projectiles
                 var animation = DataManager.QueryAnimationInData(effect!.AnimationId!);
                 if (animation is not IAnimationScheduled hit)
                     continue;
-                hit.ScheduledTickAnimation(Parent!.Position);
+                hit.ScheduleTickAnimation(Parent!.Position);
             }
         }
     }
