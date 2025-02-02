@@ -6,6 +6,11 @@ namespace Arquimedes.DataStructures
     {
         private T[] _array = new T[size];
 
+        /// <summary>
+        /// Defines if it's empty, if it is, it should be finalized
+        /// </summary>
+        public bool Empty { get; private set; }
+
         public T this[int index]
         {
             get => _array[index];
@@ -17,9 +22,12 @@ namespace Arquimedes.DataStructures
             T? val = _array[index];
             _array[index] = _array[^1];
             Array.Resize(ref _array, _array.Length - 1);
+            if (_array.Length == 0)
+                Empty = true;
 
             return val;
         }
+
 
         public IEnumerator<T> GetEnumerator()
         {
