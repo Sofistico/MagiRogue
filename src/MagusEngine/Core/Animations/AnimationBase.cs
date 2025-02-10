@@ -1,12 +1,13 @@
 using Arquimedes.Enumerators;
 using Arquimedes.Interfaces;
+using MagusEngine.Core.Animations.Interfaces;
 
 namespace MagusEngine.Core.Animations
 {
     /// <summary>
     /// This class implements the properties that a animation should use
     /// </summary>
-    public class AnimationBase : IJsonKey
+    public class AnimationBase : IAnimationScheduled
     {
         public required string Id { get; set; }
         public AnimationType AnimationType { get; set; }
@@ -21,6 +22,9 @@ namespace MagusEngine.Core.Animations
         /// </summary>
         public required string[] Colors { get; set; }
 
-        public AnimationBase() { }
+        public virtual void ScheduleTickAnimation(Point originPos)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

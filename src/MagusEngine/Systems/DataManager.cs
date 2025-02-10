@@ -5,6 +5,7 @@ using Arquimedes.Data;
 using Arquimedes.Enumerators;
 using MagusEngine.Core;
 using MagusEngine.Core.Animations;
+using MagusEngine.Core.Animations.Interfaces;
 using MagusEngine.Core.Civ;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
@@ -69,7 +70,7 @@ namespace MagusEngine.Systems
 
         public static KeyedDataRepository<DamageType> ListOfDamageTypes { get; } = new(@"./Data/Damage/dmg_*");
 
-        public static KeyedDataRepository<AnimationBase> ListOfAnimations { get; } = new(@"./Data/Animations/*_animations*");
+        public static KeyedDataRepository<IAnimationScheduled> ListOfAnimations { get; } = new(@"./Data/Animations/*_animations*");
 
         #region Descriptors
 
@@ -217,7 +218,7 @@ namespace MagusEngine.Systems
             return ListOfDamageTypes.Query(dmgId);
         }
 
-        public static AnimationBase? QueryAnimationInData(string animationId)
+        public static IAnimationScheduled? QueryAnimationInData(string animationId)
         {
             return ListOfAnimations.Query(animationId);
         }

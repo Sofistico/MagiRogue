@@ -12,26 +12,24 @@ namespace MagusEngine.Services
         Info,
         Warn,
         Error,
-        Critical
     }
 
     public class MagiLog
     {
-        public void Log(List<string> errors, string fileName)
+        public void Log(List<string> messages, string fileName, LogLevel logLevel = LogLevel.Info)
         {
             // so that it doesn't block the main thread!
             Task.Run(() =>
             {
-                if (errors.Count == 0)
+                if (messages.Count == 0)
                     return;
                 var path = new StringBuilder(AppDomain.CurrentDomain.BaseDirectory)
                     .Append($@"\{fileName}.txt")
                     .ToString();
                 StringBuilder str = new($"{DateTime.Now:dd/MM/yyyy HH:mm:ss} ");
-                foreach (var item in errors)
+                foreach (var item in messages)
                 {
-                    str.AppendLine(item);
-                    str.AppendLine();
+                    str.Append(logLevel.ToString() + ": " + item);
                 }
                 if (!File.Exists(path))
                 {
@@ -50,14 +48,14 @@ namespace MagusEngine.Services
             });
         }
 
-        public void Log(string error, string fileName = "log")
+        public void Log(string error, string fileName = "log", LogLevel logLevel = LogLevel.Info)
         {
-            Log([error], fileName);
+            Log([error], fileName, logLevel);
         }
 
         public void Log(Exception ex, string fileName = "log")
         {
-            Log([$"An exception has occurred.\nEX: {ex}"], fileName);
+            Log([$"An exception has occurred.\nEX: {ex}"], fileName, LogLevel.Error);
         }
 
         private static bool IsFileLocked(FileInfo file)

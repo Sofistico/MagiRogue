@@ -1,6 +1,11 @@
+using Arquimedes.Interfaces;
+using MagusEngine.Serialization;
+using Newtonsoft.Json;
+
 namespace MagusEngine.Core.Animations.Interfaces
 {
-    public interface IAnimationScheduled
+    [JsonConverter(typeof(AnimationBaseJsonConverter))]
+    public interface IAnimationScheduled : IJsonKey
     {
         void ScheduleTickAnimation(Point originPos);
     }

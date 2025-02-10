@@ -13,7 +13,7 @@ using SadRogue.Primitives;
 
 namespace MagusEngine.Core.Animations
 {
-    public class KaboomAnimation : AnimationBase, IAnimationScheduled
+    public class KaboomAnimation : AnimationBase
     {
         public int Radius { get; set; }
         public int LingeringTicks { get; set; }
@@ -23,7 +23,7 @@ namespace MagusEngine.Core.Animations
         {
         }
 
-        public void ScheduleTickAnimation(Point originPos)
+        public override void ScheduleTickAnimation(Point originPos)
         {
             var circle = GeometryUtils.CircleFromOriginPoint(originPos, Radius);
             var totalGlyphs = Glyphs.Length;
