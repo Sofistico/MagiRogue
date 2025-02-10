@@ -7,6 +7,14 @@ using MagusEngine.Bus.UiBus;
 
 namespace MagusEngine.Services
 {
+    public enum LogLevel
+    {
+        Info,
+        Warn,
+        Error,
+        Critical
+    }
+
     public class MagiLog
     {
         public void Log(List<string> errors, string fileName)
