@@ -14,9 +14,9 @@ namespace MagusEngine.Services
         Error,
     }
 
-    public class MagiLog
+    public sealed class MagiLog
     {
-        public void Log(List<string> messages, string fileName, LogLevel logLevel = LogLevel.Info)
+        private static void Log(List<string> messages, string fileName, LogLevel logLevel = LogLevel.Info)
         {
             // so that it doesn't block the main thread!
             Task.Run(() =>
