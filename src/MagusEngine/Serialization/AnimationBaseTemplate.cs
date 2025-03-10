@@ -1,6 +1,5 @@
 using System;
 using Arquimedes.Enumerators;
-using MagusEngine.Core.Animations;
 using MagusEngine.Core.Animations.Interfaces;
 using MagusEngine.Exceptions;
 using MagusEngine.Services.Factory;
@@ -9,12 +8,12 @@ using Newtonsoft.Json.Linq;
 
 namespace MagusEngine.Serialization
 {
-    public class AnimationBaseJsonConverter : JsonConverter<IAnimationScheduled>
+    public class AnimationBaseJsonConverter : JsonConverter<IAnimation>
     {
-        public override AnimationBase? ReadJson(
+        public override IAnimation? ReadJson(
             JsonReader reader,
             Type objectType,
-            IAnimationScheduled? existingValue,
+            IAnimation? existingValue,
             bool hasExistingValue,
             JsonSerializer serializer
         )
@@ -27,7 +26,7 @@ namespace MagusEngine.Serialization
 
         public override void WriteJson(
             JsonWriter writer,
-            IAnimationScheduled? value,
+            IAnimation? value,
             JsonSerializer serializer
         )
         {

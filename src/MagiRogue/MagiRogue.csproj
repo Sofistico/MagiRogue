@@ -43,6 +43,7 @@
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="SadConsole" Version="10.5.0" />
 		<PackageReference Include="SadConsole.Host.MonoGame" Version="10.5.0" />
+    <PackageReference Include="SadConsole.Debug.MonoGame" Version="10.5.0" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -1,5 +1,7 @@
 using System.Linq;
 using MagusEngine.Components.TilesComponents;
+using MagusEngine.Core.MapStuff;
+using MagusEngine.Exceptions;
 using MagusEngine.Services;
 using MagusEngine.Systems;
 using MagusEngine.Utils;
@@ -25,14 +27,15 @@ namespace MagusEngine.Core.Animations
             //     var particleGroup = new ParticlesGroup();
             // }
             var pos = circle.Points.First();
-            var terrain = Find.CurrentMap.GetTileAt(pos);
+            Tile terrain = Find.CurrentMap?.GetTileAt(pos)! ?? throw new NullValueException();
             var component = new ExtraAppearanceComponent(
                 new ColoredGlyph(Color.GreenYellow, Color.LightBlue, Glyphs[0])
             );
             Locator.GetService<MagiLog>().Log($"{component.SadGlyph.Glyph}");
             Locator.GetService<MagiLog>().Log($"{pos}");
             var currentComp = terrain.GetComponent<ExtraAppearanceComponent>();
-            terrain.RemoveComponent(currentComp);
+            if (currentComp is not null)
+                terrain.RemoveComponent(currentComp);
             terrain.AddComponent(component);
         }
     }

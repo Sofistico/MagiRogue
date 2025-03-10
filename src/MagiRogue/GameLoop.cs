@@ -6,6 +6,7 @@ using MagusEngine;
 using MagusEngine.Services;
 using SadConsole;
 using SadConsole.Configuration;
+using SadConsole.Input;
 using System;
 using System.IO;
 
@@ -32,7 +33,11 @@ namespace MagiRogue
                 .OnStart(Init) // Hook the start event so we can add consoles to the system.
                 .SetStartingScreen<UIManager>()
                 .IsStartingScreenFocused(true)
+#if DEBUG
+                .EnableImGuiDebugger(Keys.F12)
+#endif
                 .ConfigureFonts(static (f, _) => f.UseBuiltinFontExtended());
+
             Game.Create(config);
             Locator.GetService<MagiLog>().Log("Game started!");
             try

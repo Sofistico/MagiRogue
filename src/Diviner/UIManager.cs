@@ -35,13 +35,13 @@ namespace Diviner
         #region Managers
 
         // Here are the managers, in the future will be a dictionary
-        public MapWindow MapWindow { get; set; }
+        public MapWindow MapWindow { get; set; } = null!;
 
-        public MessageLogWindow MessageLog { get; set; }
-        public InventoryWindow InventoryScreen { get; set; }
-        public BottomStatusWindow StatusWindow { get; set; }
-        public MainMenuWindow MainMenu { get; set; }
-        public CharacterCreationWindow CharCreationWindow { get; set; }
+        public MessageLogWindow MessageLog { get; set; } = null!;
+        public InventoryWindow InventoryScreen { get; set; } = null!;
+        public BottomStatusWindow StatusWindow { get; set; } = null!;
+        public MainMenuWindow MainMenu { get; set; } = null!;
+        public CharacterCreationWindow CharCreationWindow { get; set; } = null!;
 
         public bool NoPopWindow { get; set; } = true;
 
@@ -49,7 +49,7 @@ namespace Diviner
 
         #region Field
 
-        public SadConsole.UI.Colors CustomColors { get; private set; }
+        public SadConsole.UI.Colors CustomColors { get; private set; } = null!;
 
         #endregion Field
 
@@ -90,7 +90,7 @@ namespace Diviner
 
             if (uni is not null)
             {
-                if (uni.CurrentMap.LastPlayerPosition == Point.None)
+                if (uni.CurrentMap!.LastPlayerPosition == Point.None)
                     throw new Exception("The player position was invalid, an error occured!");
                 uni.PlacePlayerOnLoad();
             }
