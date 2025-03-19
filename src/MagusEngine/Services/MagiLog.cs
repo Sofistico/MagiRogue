@@ -30,6 +30,7 @@ namespace MagusEngine.Services
                 foreach (var item in messages)
                 {
                     str.Append(logLevel.ToString() + ": " + item);
+                    str.AppendLine();
                 }
                 if (!File.Exists(path))
                 {
