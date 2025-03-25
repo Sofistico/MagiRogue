@@ -85,7 +85,7 @@ namespace MagusEngine.Core.MapStuff
                 }
                 catch (Exception e)
                 {
-                    Locator.GetService<MagiLog>().Log(e.Message);
+                    MagiLog.Log(e.Message);
                     throw;
                 }
             }

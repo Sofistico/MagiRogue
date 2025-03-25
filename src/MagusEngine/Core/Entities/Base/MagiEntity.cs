@@ -1,4 +1,4 @@
-﻿using Arquimedes.Interfaces;
+using Arquimedes.Interfaces;
 using MagusEngine.Exceptions;
 using MagusEngine.Services;
 using MagusEngine.Systems.Physics;
@@ -223,7 +223,7 @@ namespace MagusEngine.Core.Entities.Base
             }
             catch (System.Exception ex)
             {
-                Locator.GetService<MagiLog>().Log($"Component {component} has throw an exception {ex.Message} for entity {ID}-{this}");
+                MagiLog.Log($"Component {component} has throw an exception {ex.Message} for entity {ID}-{this}");
             }
         }
 

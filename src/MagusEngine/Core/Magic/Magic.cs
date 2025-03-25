@@ -72,8 +72,7 @@ namespace MagusEngine.Core.Magic
                 var sp = spell.Effects[i];
                 if (sp is null)
                 {
-                    Locator.GetService<MagiLog>()
-                        .Log($"Spell effect is null! Something went wrong \nSpell Name: {spell.Name} \nSpell Id: {spell.Id} \nSpell effects: {spell.Effects}");
+                    MagiLog.Log($"Spell effect is null! Something went wrong \nSpell Name: {spell.Name} \nSpell Id: {spell.Id} \nSpell effects: {spell.Effects}");
                     continue;
                 }
                 if (!KnowEffects.Contains(sp.EffectType))

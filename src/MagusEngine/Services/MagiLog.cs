@@ -9,14 +9,17 @@ namespace MagusEngine.Services
 {
     public enum LogLevel
     {
-        Info,
-        Warn,
+        Debug,
+        Trace,
+        Information,
+        Warning,
         Error,
+        Critical,
     }
 
-    public sealed class MagiLog
+    public static class MagiLog
     {
-        private static void Log(List<string> messages, string fileName, LogLevel logLevel = LogLevel.Info)
+        private static void Log(List<string> messages, string fileName, LogLevel logLevel = LogLevel.Information)
         {
             // so that it doesn't block the main thread!
             Task.Run(() =>
@@ -49,12 +52,12 @@ namespace MagusEngine.Services
             });
         }
 
-        public void Log(string error, string fileName = "log", LogLevel logLevel = LogLevel.Info)
+        public static void Log(string error, string fileName = "log", LogLevel logLevel = LogLevel.Information)
         {
             Log([error], fileName, logLevel);
         }
 
-        public void Log(Exception ex, string fileName = "log")
+        public static void Log(Exception ex, string fileName = "log")
         {
             Log([$"An exception has occurred.\nEX: {ex}"], fileName, LogLevel.Error);
         }

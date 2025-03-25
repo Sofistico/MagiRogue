@@ -1,4 +1,4 @@
-﻿using Arquimedes;
+using Arquimedes;
 using Arquimedes.Settings;
 using Arquimedes.Utils;
 using Diviner;
@@ -39,7 +39,7 @@ namespace MagiRogue
                 .ConfigureFonts(static (f, _) => f.UseBuiltinFontExtended());
 
             Game.Create(config);
-            Locator.GetService<MagiLog>().Log("Game started!");
+            MagiLog.Log("Game started!");
             try
             {
                 Game.Instance.Run();
@@ -47,7 +47,7 @@ namespace MagiRogue
             catch (Exception ex)
             {
                 string message = $"An error occurred during the game loop:\n- Ex: {ex.Message} \n- StackTrace - {ex.StackTrace}";
-                Locator.GetService<MagiLog>().Log(message, "crash");
+                MagiLog.Log(message, "crash");
                 System.Console.WriteLine(message);
                 throw;
             }
@@ -71,7 +71,7 @@ namespace MagiRogue
             Settings.WindowTitle = "MagiRogue";
             Settings.AllowWindowResize = true;
             // It's ugly, but it's the best
-            Settings.ResizeMode = SadConsole.Settings.WindowResizeOptions.Stretch;
+            Settings.ResizeMode = Settings.WindowResizeOptions.Stretch;
             // Let's see how this one can be done, will be used in a future serialization work
             Settings.AutomaticAddColorsToMappings = true;
 

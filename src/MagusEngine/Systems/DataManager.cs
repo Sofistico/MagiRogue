@@ -1,4 +1,4 @@
-﻿using System.Buffers;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 using Arquimedes.Data;
@@ -135,7 +135,7 @@ namespace MagusEngine.Systems
                     Material? inheirtFrom = ListOfMaterials.Query(mat.InheirtFrom!);
                     if (inheirtFrom is null)
                     {
-                        Locator.GetService<MagiLog>().Log($"Material to inheirt from was null! Id: {mat.InheirtFrom}");
+                        MagiLog.Log($"Material to inheirt from was null! Id: {mat.InheirtFrom}");
                         continue;
                     }
 

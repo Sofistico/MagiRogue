@@ -176,7 +176,7 @@ namespace MagusEngine.Core.Magic
                 }
                 catch (DivideByZeroException)
                 {
-                    Locator.GetService<MagiLog>().Log("Tried to divide your non existant will by zero! The universe almost exploded because of you");
+                    MagiLog.Log("Tried to divide your non existant will by zero! The universe almost exploded because of you");
                     return false;
                 }
                 bool canCast = false;

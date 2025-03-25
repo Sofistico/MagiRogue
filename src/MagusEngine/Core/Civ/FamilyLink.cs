@@ -83,7 +83,7 @@ namespace MagusEngine.Core.Civ
             }
             catch (Exception)
             {
-                Locator.GetService<MagiLog>().Log($"Something went wrong in the creation of children! Mother: {hfMother.Id} Child: {hfChild.Id}");
+                MagiLog.Log($"Something went wrong in the creation of children! Mother: {hfMother.Id} Child: {hfChild.Id}");
             }
         }
 

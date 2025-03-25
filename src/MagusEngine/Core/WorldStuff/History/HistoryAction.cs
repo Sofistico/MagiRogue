@@ -22,7 +22,7 @@ namespace MagusEngine.Core.WorldStuff.History
             {
                 var act = rule.DoAction(figure);
                 if (act is null)
-                    Locator.GetService<MagiLog>().Log($"For some reason the action was null, here is the action: {rule.RuleFor}");
+                    MagiLog.Log($"For some reason the action was null, here is the action: {rule.RuleFor}");
             });
 
             bool acted = false;
@@ -32,7 +32,7 @@ namespace MagusEngine.Core.WorldStuff.History
                 {
                     var act = rule.DoAction(figure);
                     if (act is null)
-                        Locator.GetService<MagiLog>().Log($"For some reason the action was null, here is the action: {rule.RuleFor}");
+                        MagiLog.Log($"For some reason the action was null, here is the action: {rule.RuleFor}");
                     if (act.GetValueOrDefault())
                         acted = true;
                 }

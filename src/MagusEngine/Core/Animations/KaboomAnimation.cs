@@ -31,8 +31,8 @@ namespace MagusEngine.Core.Animations
             var component = new ExtraAppearanceComponent(
                 new ColoredGlyph(Color.GreenYellow, Color.LightBlue, Glyphs[0])
             );
-            Locator.GetService<MagiLog>().Log($"{component.SadGlyph.Glyph}");
-            Locator.GetService<MagiLog>().Log($"{pos}");
+            MagiLog.Log($"{component.SadGlyph.Glyph}");
+            MagiLog.Log($"{pos}");
             var currentComp = terrain.GetComponent<ExtraAppearanceComponent>();
             if (currentComp is not null)
                 terrain.RemoveComponent(currentComp);

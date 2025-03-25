@@ -39,7 +39,6 @@ namespace MagusEngine.Systems
     {
         private readonly MessageBusService _messageBus;
         private readonly SavingService _savingService;
-        private readonly MagiLog _log;
         private readonly IDGenerator _idGenerator;
 
         /// <summary>
@@ -78,7 +77,6 @@ namespace MagusEngine.Systems
         {
             _messageBus = Locator.GetService<MessageBusService>();
             _messageBus.RegisterAllSubscriber(this);
-            _log = Locator.GetService<MagiLog>();
             _savingService = Locator.GetService<SavingService>();
             _idGenerator = Locator.GetService<IDGenerator>();
             Player = null!;
@@ -401,7 +399,7 @@ namespace MagusEngine.Systems
                 if (sucesses >= 0 && totalTicks <= 0)
                 {
                     totalTicks = TimeHelper.Wait;
-                    _log.Log($"The {entity.Name} with id {entityId} has reported no success on AI");
+                    MagiLog.Log($"The {entity.Name} with id {entityId} has reported no success on AI");
                 }
 
                 EntityTimeNode nextTurnNode = new(entityId, totalTicks);
