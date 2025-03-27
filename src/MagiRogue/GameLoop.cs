@@ -58,7 +58,6 @@ namespace MagiRogue
             }
         }
 
-        // runs each frame
         private static void ConfigureBeforeCreateGame(string[] args)
         {
             foreach (var arg in args)
