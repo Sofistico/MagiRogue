@@ -1,55 +1,56 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<OutputType>Exe</OutputType>
-		<TargetFramework>net9.0</TargetFramework>
-		<StartupObject>MagiRogue.GameLoop</StartupObject>
-		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-		<Authors>Sofistico</Authors>
-		<Company>Sofistico</Company>
-		<Description>A roguelike created with SadConsole 9.x and GoRogue 3.x</Description>
-		<ApplicationIcon>Wizard.ico</ApplicationIcon>
-		<Nullable>enable</Nullable>
-		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-		<Copyright>Sofistico</Copyright>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageLicenseFile>C:\Users\joaorodrigues\source\repos\MagiRogue\LICENSE</PackageLicenseFile>
-	</PropertyGroup>
+        <PropertyGroup>
+                <OutputType>Exe</OutputType>
+                <TargetFramework>net9.0</TargetFramework>
+                <StartupObject>MagiRogue.GameLoop</StartupObject>
+                <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+                <Authors>Sofistico</Authors>
+                <Company>Sofistico</Company>
+                <Description>
+                        A roguelike created with SadConsole 9.x and GoRogue 3.x
+                </Description>
+                <ApplicationIcon>Wizard.ico</ApplicationIcon>
+                <Nullable>enable</Nullable>
+                <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+                <Copyright>Sofistico</Copyright>
+                <PackageReadmeFile>README.md</PackageReadmeFile>
+                <PackageLicenseFile>
+                        C:\Users\joaorodrigues\source\repos\MagiRogue\LICENSE
+                </PackageLicenseFile>
+        </PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<NoWarn>1701;1702;8765;8618;8604;8602;8600;8603</NoWarn>
-	</PropertyGroup>
+        <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+                <NoWarn>1701;1702;8765;8618;8604;8602;8600;8603</NoWarn>
+        </PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-		<NoWarn>1701;1702;8765;8618;8604;8602;8600;8603</NoWarn>
-	</PropertyGroup>
+        <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+                <NoWarn>1701;1702;8765;8618;8604;8602;8600;8603</NoWarn>
+        </PropertyGroup>
 
-	<ItemGroup>
-		<Content Include="Wizard.ico" />
-	</ItemGroup>
-	<ItemGroup>
-		<EmbeddedResource Include="Icon.bmp" />
-	</ItemGroup>
+        <ItemGroup>
+                <Content Include="Wizard.ico" />
+        </ItemGroup>
+        <ItemGroup>
+                <EmbeddedResource Include="Icon.bmp" />
+        </ItemGroup>
 
-	<ItemGroup>
-		<None Include="..\README.md">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
-		<None Include="./Roboto-Regular.ttf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-	</ItemGroup>
+        <ItemGroup>
+                <None Include="..\README.md">
+                        <Pack>True</Pack>
+                        <PackagePath>\</PackagePath>
+                </None>
+        </ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="SadConsole" Version="10.5.0" />
-		<PackageReference Include="SadConsole.Host.MonoGame" Version="10.5.0" />
-		<PackageReference Include="SadConsole.Debug.MonoGame" Version="10.5.0" />
-	</ItemGroup>
+        <ItemGroup>
+                <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
+                <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+                <PackageReference Include="SadConsole" Version="10.5.0" />
+                <PackageReference Include="SadConsole.Host.MonoGame" Version="10.5.0" />
+                <PackageReference Include="SadConsole.Debug.MonoGame" Version="10.5.0" />
+        </ItemGroup>
 
-	<ItemGroup>
-	  <ProjectReference Include="..\Diviner\Diviner.csproj" />
-	</ItemGroup>
+        <ItemGroup>
+                <ProjectReference Include="..\Diviner\Diviner.csproj" />
+        </ItemGroup>
 </Project>
