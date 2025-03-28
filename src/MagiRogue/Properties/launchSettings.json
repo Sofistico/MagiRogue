@@ -2,12 +2,17 @@
   "profiles": {
     "MagiRogue": {
       "commandName": "Project",
-      "nativeDebugging": false
+      "nativeDebugging": false,
+      "workingDirectory": "$(ProjectDir)",
+      "dotnetRunMessages": true
     },
     "MagiRogue-TestMap": {
       "commandName": "Project",
       "nativeDebugging": false,
-      "commandLineArgs": "test"
+      "commandLineArgs": "test",
+      "workingDirectory": "$(ProjectDir)",
+      "dotnetRunMessages": true
     }
   }
 }
+
