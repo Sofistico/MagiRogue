@@ -1,4 +1,5 @@
-﻿using SadRogue.Primitives;
+﻿using SadConsole.UI;
+using SadRogue.Primitives;
 
 namespace Arquimedes
 {
@@ -112,6 +113,33 @@ namespace Arquimedes
             ColorExtensions2.ColorMappings.Add(nameof(UnclearGlass).ToLower(), UnclearGlass);
 
             ColorExtensions2.ColorMappings.Add(nameof(DarkGrassColor).ToLower(), DarkGrassColor);
+        }
+
+        /// <summary>
+        /// Convert a hex string to a Color object
+        /// </summary>
+        /// <param name="hex">Should follow the format #rrggbb, for now doesn't support alpha</param>
+        /// <returns>Returns an Color object</returns>
+        public static Color FromHexString(string hex)
+        {
+            if (hex.StartsWith('#'))
+                hex = hex[1..];
+
+            if (hex.Length != 6)
+                throw new ArgumentException("Hex color must be 6 characters long (RRGGBB)");
+
+            byte r = Convert.ToByte(hex[0..2], 16);
+            byte g = Convert.ToByte(hex[2..4], 16);
+            byte b = Convert.ToByte(hex[4..6], 16);
+            byte a = 255; // fully opaque
+
+            // Pack to RGBA (Red is most significant byte)
+            // This is the the layout it should have in memory, since uint is a 32 byte:
+            // Bits:   [RRRRRRRR][GGGGGGGG][BBBBBBBB][AAAAAAAA]
+            // Index:     24-31     16-23     8-15       0-7
+            uint packedValue = (uint)((r << 24) | (g << 16) | (b << 8) | a);
+
+            return new Color(packedValue);
         }
     }
 }

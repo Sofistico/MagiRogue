@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using MagusEngine.Bus.UiBus;
+using MagusEngine.Utils.Extensions;
 
 namespace MagusEngine.Services
 {
@@ -44,10 +45,13 @@ namespace MagusEngine.Services
                 }
                 File.AppendAllText(path, str.ToString());
 #if DEBUG
-                Locator
-                    .GetService<MessageBusService>()
-                    .SendMessage(new AddMessageLog("Logged an error in the logs file!"));
-                System.Console.WriteLine(str.ToString());
+                if (logLevel == LogLevel.Error)
+                {
+                    Locator
+                        .GetService<MessageBusService>()
+                        .SendMessage(new AddMessageLog("Logged an error in the logs file!"));
+                    System.Console.WriteLine(str.ToString());
+                }
 #endif
             });
         }
@@ -57,9 +61,10 @@ namespace MagusEngine.Services
             Log([error], fileName, logLevel);
         }
 
-        public static void Log(Exception ex, string fileName = "log")
+        public static void Log(Exception ex, string message = "", string fileName = "log")
         {
-            Log([$"An exception has occurred.\nEX: {ex}"], fileName, LogLevel.Error);
+            var messageFormated = message.IsNullOrEmpty() ? "" : $"\nMessage: {message}";
+            Log([$"An exception has occurred.{messageFormated}\nEX: {ex}"], fileName, LogLevel.Error);
         }
 
         private static bool IsFileLocked(FileInfo file)

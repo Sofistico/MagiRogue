@@ -40,6 +40,11 @@
                         <Pack>True</Pack>
                         <PackagePath>\</PackagePath>
                 </None>
+                <None Include="./Roboto-Regular.ttf">
+                        <CopyToOutputDirectory>
+                                PreserveNewest
+                        </CopyToOutputDirectory>
+                </None>
         </ItemGroup>
 
         <ItemGroup>

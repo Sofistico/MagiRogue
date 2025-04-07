@@ -47,7 +47,7 @@ namespace MagiRogue
             catch (Exception ex)
             {
                 string message = $"An error occurred during the game loop:\n- Ex: {ex.Message} \n- StackTrace - {ex.StackTrace}";
-                MagiLog.Log(message, "crash");
+                MagiLog.Log(message, "crash", LogLevel.Critical);
                 System.Console.WriteLine(message);
                 throw;
             }

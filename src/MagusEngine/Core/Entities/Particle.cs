@@ -1,4 +1,5 @@
 using Arquimedes.Enumerators;
+using MagusEngine.Components.EntityComponents;
 using MagusEngine.Core.Entities.Base;
 using SadRogue.Primitives;
 
@@ -6,17 +7,19 @@ namespace MagusEngine.Core.Entities
 {
     public class Particle : MagiEntity
     {
-        public Particle(Color foreground, Color background, int glyph, Point coord, int layer = (int)MapLayer.SPECIAL) : base(foreground, background, glyph, coord, layer)
+        public Particle(Color foreground, Color background, int glyph, Point coord, uint ticks, int layer = (int)MapLayer.SPECIAL) : base(foreground, background, glyph, coord, layer)
         {
+            AddComponent(new LimitedLifeComponent(ticks));
         }
 
-        public static Particle[] CreateVariousParticles(int count, Color foreground, Color background, int glyph)
+        public static Particle[] CreateVariousParticles(Color foreground, Color background, char[] glyphs, uint ticks)
         {
-            var particles = new Particle[count];
+            var particles = new Particle[glyphs.Length];
 
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < glyphs.Length; i++)
             {
-                var particle = new Particle(foreground, background, glyph, Point.None);
+                var glyph = glyphs[i];
+                var particle = new Particle(foreground, background, glyph, Point.None, ticks);
 
                 particles[i] = particle;
             }
@@ -28,9 +31,9 @@ namespace MagusEngine.Core.Entities
     {
         public Particle[] Particles { get; set; }
 
-        public ParticlesGroup(int count, Color foreground, Color background, int glyph)
+        public ParticlesGroup(Color foreground, Color background, char[] glyphs, uint ticks)
         {
-            Particles = Particle.CreateVariousParticles(count, foreground, background, glyph);
+            Particles = Particle.CreateVariousParticles(foreground, background, glyphs, ticks);
         }
     }
 }

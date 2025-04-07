@@ -310,10 +310,10 @@ namespace MagusEngine.Core.Entities
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MagiLog.Log("An error occured in the Cursor targetting!");
-                throw new Exception("An error occured in the Cursor targetting!");
+                MagiLog.Log(ex, "An error occured in the Cursor targetting!");
+                throw;
             }
         }
 

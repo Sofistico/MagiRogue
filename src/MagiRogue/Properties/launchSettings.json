@@ -6,7 +6,7 @@
       "workingDirectory": "$(ProjectDir)",
       "dotnetRunMessages": true
     },
-    "MagiRogue-TestMap": {
+    "TestMap": {
       "commandName": "Project",
       "nativeDebugging": false,
       "commandLineArgs": "test",

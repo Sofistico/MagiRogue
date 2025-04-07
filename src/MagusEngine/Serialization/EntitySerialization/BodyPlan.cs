@@ -151,7 +151,7 @@ namespace MagusEngine.Serialization.EntitySerialization
             }
             if (finalList is null)
             {
-                MagiLog.Log("No final list for layering tissue found!");
+                MagiLog.Log("No final list for layering tissue found!", logLevel: LogLevel.Error);
                 throw new ApplicationException("No final list for layering tissue found!");
             }
 

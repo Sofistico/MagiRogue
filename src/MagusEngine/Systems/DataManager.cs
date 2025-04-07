@@ -135,7 +135,7 @@ namespace MagusEngine.Systems
                     Material? inheirtFrom = ListOfMaterials.Query(mat.InheirtFrom!);
                     if (inheirtFrom is null)
                     {
-                        MagiLog.Log($"Material to inheirt from was null! Id: {mat.InheirtFrom}");
+                        MagiLog.Log($"Material to inheirt from was null! Id: {mat.InheirtFrom}", logLevel: LogLevel.Error);
                         continue;
                     }
 

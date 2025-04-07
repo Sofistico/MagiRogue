@@ -159,7 +159,7 @@ namespace MagusEngine.Core.MapStuff
             }
             catch (Exception ex)
             {
-                MagiLog.Log($"Tried to add component {value} to {this} which caused {ex.Message}");
+                MagiLog.Log(ex, $"Tried to add component {value} to {this} which caused {ex.Message}");
             }
         }
 

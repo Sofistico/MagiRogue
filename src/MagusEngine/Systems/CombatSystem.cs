@@ -197,7 +197,7 @@ namespace MagusEngine.Systems
             {
 #if DEBUG
                 if (++loopAmount == 1000)
-                    MagiLog.Log("Something went really wrong...");
+                    MagiLog.Log("Something went really wrong...", logLevel: LogLevel.Debug);
 #endif
                 if (remainingEnergy <= 0)
                     return list;
@@ -471,7 +471,7 @@ namespace MagusEngine.Systems
                 : wieldedItem?.Material;
             if (materialUsed is null)
             {
-                MagiLog.Log("Material was null!");
+                MagiLog.Log("Material was null!", logLevel: LogLevel.Error);
                 materialUsed = bpAttacking.Tissues[0].Material;
             }
             // TODO: Granularize this more!
@@ -712,7 +712,8 @@ namespace MagusEngine.Systems
                 if (entity == null)
                 {
                     MagiLog.Log(
-                        $"An error occured, Entity is null! - Point: {point}, Map: {map.MapId}"
+                        $"An error occured, Entity is null! - Point: {point}, Map: {map.MapId}",
+                        logLevel: LogLevel.Error
                     );
                     return (false, null, null);
                 }

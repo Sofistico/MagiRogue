@@ -81,9 +81,9 @@ namespace MagusEngine.Core.Civ
                 hfChild.AddLegend(child, year);
                 hfMother.AddLegend(mother, year);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MagiLog.Log($"Something went wrong in the creation of children! Mother: {hfMother.Id} Child: {hfChild.Id}");
+                MagiLog.Log(ex, $"Something went wrong in the creation of children! Mother: {hfMother.Id} Child: {hfChild.Id}");
             }
         }
 

@@ -310,7 +310,7 @@ namespace MagusEngine.Core.Entities.Base
             }
             catch (Exception ex)
             {
-                MagiLog.Log(ex.Message);
+                MagiLog.Log(ex, ex.Message);
             }
         }
 

@@ -637,7 +637,7 @@ namespace MagusEngine.Actions
         public static Path FindFleeAction(MagiMap map, Actor actor, Actor? danger)
         {
 #if DEBUG
-            MagiLog.Log($"{actor.Name} considers {danger?.Name} dangerous!");
+            MagiLog.Log($"{actor.Name} considers {danger?.Name} dangerous!", logLevel: LogLevel.Trace);
 #endif
 
             Point rngPoint = map.GetRandomWalkableTile();

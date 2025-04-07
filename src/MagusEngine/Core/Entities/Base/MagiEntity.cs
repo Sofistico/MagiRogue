@@ -223,7 +223,7 @@ namespace MagusEngine.Core.Entities.Base
             }
             catch (System.Exception ex)
             {
-                MagiLog.Log($"Component {component} has throw an exception {ex.Message} for entity {ID}-{this}");
+                MagiLog.Log(ex, $"Component {component} has throw an exception {ex.Message} for entity {ID}-{this}");
             }
         }
 
