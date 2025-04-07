@@ -7,7 +7,6 @@ using MagusEngine.Systems;
 using MagusEngine.Systems.Physics;
 using MagusEngine.Utils.Extensions;
 using SadRogue.Primitives;
-using System;
 
 namespace MagusEngine.Components.EntityComponents.Effects
 {
@@ -25,7 +24,7 @@ namespace MagusEngine.Components.EntityComponents.Effects
             Force = force;
         }
 
-        public override void ExecutePerTurn()
+        public override void ExecuteEffect()
         {
             if (Parent is null)
                 return;

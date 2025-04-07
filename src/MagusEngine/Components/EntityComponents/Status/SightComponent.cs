@@ -9,7 +9,7 @@ namespace MagusEngine.Components.EntityComponents.Status
         {
         }
 
-        public override void ExecutePerTurn()
+        public override void ExecuteEffect()
         {
         }
     }

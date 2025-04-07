@@ -1,18 +1,19 @@
 using Arquimedes.Enumerators;
-using MagusEngine.Components.EntityComponents;
+using MagusEngine.Components.EntityComponents.Effects;
 using MagusEngine.Core.Entities.Base;
+using MagusEngine.Systems;
 using SadRogue.Primitives;
 
 namespace MagusEngine.Core.Entities
 {
     public class Particle : MagiEntity
     {
-        public Particle(Color foreground, Color background, int glyph, Point coord, uint ticks, int layer = (int)MapLayer.SPECIAL) : base(foreground, background, glyph, coord, layer)
+        public Particle(Color foreground, Color background, int glyph, Point coord, long ticks, int layer = (int)MapLayer.SPECIAL) : base(foreground, background, glyph, coord, layer)
         {
-            AddComponent(new LimitedLifeComponent(ticks));
+            AddComponent(new LimitedLifeComponent(Find.Time.Tick, Find.Time.Tick + ticks));
         }
 
-        public static Particle[] CreateVariousParticles(Color foreground, Color background, char[] glyphs, uint ticks)
+        public static Particle[] CreateVariousParticles(Color foreground, Color background, char[] glyphs, long ticks)
         {
             var particles = new Particle[glyphs.Length];
 
@@ -31,7 +32,7 @@ namespace MagusEngine.Core.Entities
     {
         public Particle[] Particles { get; set; }
 
-        public ParticlesGroup(Color foreground, Color background, char[] glyphs, uint ticks)
+        public ParticlesGroup(Color foreground, Color background, char[] glyphs, long ticks)
         {
             Particles = Particle.CreateVariousParticles(foreground, background, glyphs, ticks);
         }

@@ -8,18 +8,25 @@ using MagusEngine.Utils.Extensions;
 
 namespace MagusEngine.Components
 {
+    public enum ExecutionType
+    {
+        PerTurn,
+        OnEnd
+    }
+
     public abstract class BaseEffectComponent : ParentAwareComponentBase<MagiEntity>
     {
         private bool _isActive;
 
         public long TickToRemove { get; set; }
         public long TickApplied { get; set; }
-        public string EffectMessage { get; set; }
+        public string? EffectMessage { get; set; }
         public string? RemoveMessage { get; set; }
         public string Tag { get; set; }
         public bool FreezesTurn { get; set; }
+        public ExecutionType Execution { get; set; }
 
-        protected BaseEffectComponent(long tickApplied, long tickToRemove, string effectMessage, string tag, bool customTurnTimer = false, bool freezesTurn = false, string? removeMessage = null)
+        protected BaseEffectComponent(long tickApplied, long tickToRemove, string? effectMessage, string tag, bool customTurnTimer = false, bool freezesTurn = false, string? removeMessage = null, ExecutionType execution = ExecutionType.PerTurn)
         {
             TickToRemove = tickToRemove;
             TickApplied = tickApplied;
@@ -29,6 +36,7 @@ namespace MagusEngine.Components
                 ConfigureTurnTimer();
             FreezesTurn = freezesTurn;
             RemoveMessage = removeMessage;
+            Execution = execution;
         }
 
         public void ConfigureTurnTimer()
@@ -48,14 +56,17 @@ namespace MagusEngine.Components
                     Locator.GetService<MessageBusService>()?.SendMessage<AddMessageLog>(new(RemoveMessage!, Parent == Find.Universe.Player));
                 Find.Universe.Time.TurnPassed -= GetTime_TurnPassed;
                 _isActive = false;
+                if (Execution == ExecutionType.OnEnd)
+                    ExecuteEffect();
                 return;
             }
             _isActive = true;
             // let me think better...
-            ExecutePerTurn();
+            if (Execution == ExecutionType.PerTurn)
+                ExecuteEffect();
         }
 
-        public abstract void ExecutePerTurn();
+        public abstract void ExecuteEffect();
 
         ~BaseEffectComponent()
         {

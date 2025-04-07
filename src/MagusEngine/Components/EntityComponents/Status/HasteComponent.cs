@@ -14,7 +14,7 @@ namespace MagusEngine.Components.EntityComponents.Status
             HastePower = hastePower;
         }
 
-        public override void ExecutePerTurn()
+        public override void ExecuteEffect()
         {
         }
     }
