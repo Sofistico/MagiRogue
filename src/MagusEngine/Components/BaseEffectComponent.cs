@@ -51,13 +51,13 @@ namespace MagusEngine.Components
                 return;
             if (e.Ticks >= TickToRemove && _isActive)
             {
+                if (Execution == ExecutionType.OnEnd)
+                    ExecuteEffect();
                 Parent?.RemoveComponent(this);
                 if (!RemoveMessage.IsNullOrEmpty())
                     Locator.GetService<MessageBusService>()?.SendMessage<AddMessageLog>(new(RemoveMessage!, Parent == Find.Universe.Player));
                 Find.Universe.Time.TurnPassed -= GetTime_TurnPassed;
                 _isActive = false;
-                if (Execution == ExecutionType.OnEnd)
-                    ExecuteEffect();
                 return;
             }
             _isActive = true;

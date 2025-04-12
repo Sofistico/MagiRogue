@@ -10,7 +10,8 @@ namespace MagusEngine.Core.Entities
     {
         public Particle(Color foreground, Color background, int glyph, Point coord, long ticks, int layer = (int)MapLayer.SPECIAL) : base(foreground, background, glyph, coord, layer)
         {
-            AddComponent(new LimitedLifeComponent(Find.Time.Tick, Find.Time.Tick + ticks));
+            var comp = new LimitedLifeComponent(Find.Time.Tick, Find.Time.Tick + ticks);
+            AddComponent(comp, comp.Tag);
         }
 
         public static Particle[] CreateVariousParticles(Color foreground, Color background, char[] glyphs, long ticks)

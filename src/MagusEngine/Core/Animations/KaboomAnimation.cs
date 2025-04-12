@@ -1,13 +1,12 @@
 using System.Linq;
 using Arquimedes;
-using MagusEngine.Components.TilesComponents;
+using MagusEngine.Bus.MapBus;
 using MagusEngine.Core.Entities;
-using MagusEngine.Core.MapStuff;
+using MagusEngine.Core.Entities.Base;
 using MagusEngine.Exceptions;
 using MagusEngine.Services;
 using MagusEngine.Systems;
 using MagusEngine.Utils;
-using SadConsole;
 using SadRogue.Primitives;
 
 namespace MagusEngine.Core.Animations
@@ -29,6 +28,22 @@ namespace MagusEngine.Core.Animations
                 Glyphs,
                 (uint)LingeringTicks
             );
+            var busService = Locator.GetService<MessageBusService>();
+            MagiEntity particle = particleGroup.Particles[1];
+            particle.Position = circle.Points.First();
+            busService.SendMessage(new AddEntitiyCurrentMap(particle));
+
+            // foreach (var particle in particleGroup.Particles)
+            // {
+            //     // particle.Position = circle.Points[counter++];
+            //     currentMap.AddMagiEntity(particle.);
+            // }
+            // foreach (var point in circle.Points)
+            // {
+            //     var particle = particleGroup.Particles[0];
+            //     particle.Position = point;
+            //     currentMap.AddMagiEntity(particle.);
+            // }
         }
     }
 }
