@@ -420,12 +420,9 @@ namespace MagusEngine.Core.Entities
             return ActorAnatomy.Gender;
         }
 
-        public Actor WithComponents(params object[] objs)
+        public Actor WithComponent<T>(T component, string? tag = null) where T : class
         {
-            for (int i = 0; i < objs.Length; i++)
-            {
-                AddComponents(objs[i]);
-            }
+            AddComponent(component, tag);
             return this;
         }
 

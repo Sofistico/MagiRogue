@@ -21,7 +21,7 @@ namespace MagusEngine.Generators.MapGen
 
         public MagiMap[] GenerateMapWithWorldParam(PlanetMap worldMap, Point posGenerated)
         {
-            MagiMap[] maps = new MagiMap[RegionChunk.MAX_LOCAL_MAPS];
+            MagiMap[] maps = new MagiMap[RegionChunk.MaxLocalMaps];
             var worldTile = worldMap.AssocietatedMap.GetTileAt<WorldTile>(posGenerated).GetComponent<WorldTile>();
             int settlmentCounter = 0;
             for (int i = 0; i < maps.Length; i++)

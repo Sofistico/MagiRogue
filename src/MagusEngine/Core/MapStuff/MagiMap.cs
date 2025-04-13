@@ -35,7 +35,6 @@ namespace MagusEngine.Core.MapStuff
         #region Fields
 
         private MagiEntity? _gameObjectControlled;
-        private EntityManager _entityManager = [];
         private bool _disposed;
         private Dictionary<Func<Actor, bool>, Actor[]> _lastCalledActors = [];
         private bool _needsToUpdateActorsDict;
@@ -83,7 +82,7 @@ namespace MagusEngine.Core.MapStuff
         public Dictionary<Direction, MagiMap> MapZoneConnections { get; set; }
         public List<Room>? Rooms { get; set; }
 
-        public EntityManager EntityRender { get => _entityManager; }
+        public EntityManager EntityRender { get; private set; } = [];
 
         #endregion Properties
 
@@ -95,7 +94,7 @@ namespace MagusEngine.Core.MapStuff
         /// default is 60x60, for a nice 3600 tiles per map
         /// </summary>
         public MagiMap(string mapName, int width = 60, int height = 60, bool usesWeighEvaluation = true) :
-            base(width, height, Enum.GetNames(typeof(MapLayer)).Length - 1,
+            base(width, height, Enum.GetNames<MapLayer>().Length - 1,
             Distance.Euclidean,
             entityLayersSupportingMultipleItems: LayerMasker.Default.Mask((int)MapLayer.ITEMS,
                 (int)MapLayer.GHOSTS,
@@ -189,14 +188,14 @@ namespace MagusEngine.Core.MapStuff
         /// <returns></returns>
         public T? GetEntityAt<T>(Point location) where T : MagiEntity
         {
-            return Entities.GetItemsAt(location).OfType<T>().FirstOrDefault(e => e.CanBeAttacked);
+            return Entities.GetItemsAt(location).OfType<T>().FirstOrDefault(static e => e.CanBeAttacked);
         }
 
-        public Tile GetClosestWaterTile(int range, Point position)
+        public Tile? GetClosestWaterTile(int range, Point position)
         {
             var waters = GetAllTilesWithComponents<WaterTile>();
 
-            return position.GetClosest<Tile>(range, waters, null);
+            return position.GetClosest(range, waters, null);
         }
 
         public Actor[] GetAllActors(Func<Actor, bool>? actionToRunInActors = null)
@@ -250,10 +249,10 @@ namespace MagusEngine.Core.MapStuff
                 _needsToUpdateActorsDict = true;
                 // Locator.GetService<EntityRegistry>().Destroy(entity.ID);
             }
-            if (_entityManager.Entities is not null && _entityManager.Contains(entity.SadCell))
+            if (EntityRender.Entities is not null && EntityRender.Contains(entity.SadCell))
             {
-                _entityManager.Remove(entity.SadCell);
-                _entityManager.IsDirty = true;
+                EntityRender.Remove(entity.SadCell);
+                EntityRender.IsDirty = true;
             }
         }
 
@@ -285,7 +284,7 @@ namespace MagusEngine.Core.MapStuff
                 entity.PositionChanged += OnPositionChanged;
             }
 
-            _entityManager.Add(entity.SadCell);
+            EntityRender.Add(entity.SadCell);
 
             _needsToUpdateActorsDict = true;
         }
@@ -303,7 +302,7 @@ namespace MagusEngine.Core.MapStuff
                 FovCalculate(player);
                 LastPlayerPosition = player.Position;
             }
-            _entityManager.IsDirty = true;
+            EntityRender.IsDirty = true;
         }
 
         /// <summary>
@@ -376,17 +375,17 @@ namespace MagusEngine.Core.MapStuff
 
         public void ConfigureRender(ScreenSurface renderer)
         {
-            if (renderer.SadComponents.Contains(_entityManager))
+            if (renderer.SadComponents.Contains(EntityRender))
             {
                 return;
             }
-            _entityManager = new();
-            renderer.SadComponents.Add(_entityManager);
-            _entityManager.DoEntityUpdate = true;
+            EntityRender = new();
+            renderer.SadComponents.Add(EntityRender);
+            EntityRender.DoEntityUpdate = true;
 
             foreach (var spatialMap in Entities.GetLayersInMask(LayerMasker.MaskAllAbove((int)MapLayer.TERRAIN)))
             {
-                _entityManager.AddRange(spatialMap.Items.Cast<MagiEntity>().Select(i => i.SadCell));
+                EntityRender.AddRange(spatialMap.Items.Cast<MagiEntity>().Select(i => i.SadCell));
             }
             //_entityRender.AddRange(Entities.Items.Cast<MagiEntity>());
             renderer.IsDirty = true;
@@ -692,13 +691,13 @@ namespace MagusEngine.Core.MapStuff
                 int mod = 10;
                 if (s.StartsWith('['))
                 {
-                    var test = s.Split("\r\n");
+                    var test = s.Split("\n");
                     mod -= int.Parse(test[2]);
                 }
                 bool gotIt = Mrn.OneIn(mod);
                 if (gotIt)
                 {
-                    obj = s.StartsWith('[') ? s.Split("\r\n")[1].Replace(',', ' ').Replace('\"', ' ').Trim()
+                    obj = s.StartsWith('[') ? s.Split("\n")[1].Replace(',', ' ').Replace('\"', ' ').Trim()
                         : s;
                 }
             }
@@ -779,7 +778,7 @@ namespace MagusEngine.Core.MapStuff
             _lastCalledActors = null!;
             ControlledGameObjectChanged = null!;
             ControlledEntitiy = null!;
-            _entityManager = null!;
+            EntityRender = null!;
             GoRogueComponents.Clear();
             _disposed = true;
         }

@@ -1,4 +1,4 @@
-﻿using Arquimedes;
+using Arquimedes;
 using Arquimedes.Settings;
 using Arquimedes.Utils;
 using Diviner;
@@ -6,88 +6,93 @@ using MagusEngine;
 using MagusEngine.Services;
 using SadConsole;
 using SadConsole.Configuration;
+using SadConsole.Input;
 using System;
 using System.IO;
 
-namespace MagiRogue;
-
-public static class GameLoop
+namespace MagiRogue
 {
-    private static GlobalSettings settings;
-    private static bool beginTest;
-    private static UIManager ui;
-
-    public static int GameWidth => settings.ScreenWidth;
-    public static int GameHeight => settings.ScreenHeight;
-
-    #region configuration
-
-    private static void Main(string[] args)
+    public static class GameLoop
     {
-        ConfigureBeforeCreateGame(args);
+        private static GlobalSettings settings;
+        private static bool beginTest;
+        private static UIManager ui;
 
-        // Setup the engine and create the main window.
-        var config = new Builder()
-            .SetScreenSize(GameWidth, GameHeight)
-            .OnStart(Init) // Hook the start event so we can add consoles to the system.
-            .SetStartingScreen<UIManager>()
-            .IsStartingScreenFocused(true)
-            .ConfigureFonts((f, _) => f.UseBuiltinFontExtended());
-        Game.Create(config);
-        try
+        public static int GameWidth => settings.ScreenWidth;
+        public static int GameHeight => settings.ScreenHeight;
+
+        #region configuration
+
+        private static void Main(string[] args)
         {
-            Game.Instance.Run();
+            ConfigureBeforeCreateGame(args);
+
+            // Setup the engine and create the main window.
+            var config = new Builder()
+                .SetScreenSize(GameWidth, GameHeight)
+                .OnStart(Init) // Hook the start event so we can add consoles to the system.
+                .SetStartingScreen<UIManager>()
+                .IsStartingScreenFocused(true)
+#if DEBUG
+                .EnableImGuiDebugger(Keys.F12)
+#endif
+                .ConfigureFonts(static (f, _) => f.UseBuiltinFontExtended());
+
+            Game.Create(config);
+            MagiLog.Log("Game started!");
+            try
+            {
+                Game.Instance.Run();
+            }
+            catch (Exception ex)
+            {
+                string message = $"An error occurred during the game loop:\n- Ex: {ex.Message} \n- StackTrace - {ex.StackTrace}";
+                MagiLog.Log(message, "crash", LogLevel.Critical);
+                System.Console.WriteLine(message);
+                throw;
+            }
+            finally
+            {
+                // Code here will not run until the game window closes.
+                Game.Instance.Dispose();
+            }
         }
-        catch (Exception ex)
+
+        private static void ConfigureBeforeCreateGame(string[] args)
         {
-            string message = $"An error occurred during the game loop:\n- Ex: {ex.Message} \n- StackTrace - {ex.StackTrace}";
-            Locator.GetService<MagiLog>().Log(message, "crash");
-            System.Console.WriteLine(message);
-            throw;
+            foreach (var arg in args)
+            {
+                // TODO!
+                if (arg.Equals("test", StringComparison.Ordinal))
+                    beginTest = true;
+            }
+            // Pre options before creating the game, defines the title and if can resize
+            Settings.WindowTitle = "MagiRogue";
+            Settings.AllowWindowResize = true;
+            // It's ugly, but it's the best
+            Settings.ResizeMode = Settings.WindowResizeOptions.Stretch;
+            // Let's see how this one can be done, will be used in a future serialization work
+            Settings.AutomaticAddColorsToMappings = true;
+
+            settings = JsonUtils.JsonDeseralize<GlobalSettings>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Settings", "global_setting.json"))!;
+            Locator.AddService(settings);
         }
-        finally
+
+        private static void Init(object? sender, GameHost e)
         {
-            // Code here will not run until the game window closes.
-            Game.Instance.Dispose();
+            MagiPalette.AddToColorDictionary();
+            // Makes so that no excpetion happens for a custom control
+            //SadConsole.UI.Themes.Library.Default.SetControlTheme(typeof(UI.Controls.MagiButton),
+            //   typeof(SadConsole.UI.Themes.ButtonTheme));
+
+            //Instantiate the UIManager
+            ui = (UIManager)GameHost.Instance.Screen!;
+
+            // Now let the UIManager create its consoles so they can use the World data
+            ui.InitMainMenu(GameHeight, GameWidth, beginTest);
+            Locator.AddService(ui);
         }
+
+        #endregion configuration
     }
-
-    // runs each frame
-    private static void ConfigureBeforeCreateGame(string[] args)
-    {
-        foreach (var arg in args)
-        {
-            // TODO!
-            if (arg.Equals("test"))
-                beginTest = true;
-        }
-        // Pre options before creating the game, defines the title and if can resize
-        SadConsole.Settings.WindowTitle = "MagiRogue";
-        SadConsole.Settings.AllowWindowResize = true;
-        // It's ugly, but it's the best
-        SadConsole.Settings.ResizeMode = SadConsole.Settings.WindowResizeOptions.Stretch;
-        // Let's see how this one can be done, will be used in a future serialization work
-        SadConsole.Settings.AutomaticAddColorsToMappings = true;
-
-        settings = JsonUtils.JsonDeseralize<GlobalSettings>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-            "Settings", "global_setting.json"));
-        Locator.AddService(settings);
-    }
-
-    private static void Init(object? sender, GameHost e)
-    {
-        MagiPalette.AddToColorDictionary();
-        // Makes so that no excpetion happens for a custom control
-        //SadConsole.UI.Themes.Library.Default.SetControlTheme(typeof(UI.Controls.MagiButton),
-        //   typeof(SadConsole.UI.Themes.ButtonTheme));
-
-        //Instantiate the UIManager
-        ui = (UIManager)GameHost.Instance.Screen!;
-
-        // Now let the UIManager create its consoles so they can use the World data
-        ui.InitMainMenu(GameHeight, GameWidth, beginTest);
-        Locator.AddService(ui);
-    }
-
-    #endregion configuration
 }

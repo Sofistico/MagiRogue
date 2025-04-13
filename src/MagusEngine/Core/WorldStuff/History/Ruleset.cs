@@ -1,4 +1,4 @@
-﻿using Arquimedes.Enumerators;
+using Arquimedes.Enumerators;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.WorldStuff.History.HistoryActions;
 using MagusEngine.Services;
@@ -33,7 +33,7 @@ namespace MagusEngine.Core.WorldStuff.History
             switch (RuleFor)
             {
                 case RuleFor.Null:
-                    Locator.GetService<MagiLog>().Log($"The {RuleFor} is not supported");
+                    MagiLog.Log($"The {RuleFor} is not supported");
                     throw new ApplicationException($"The rule isn't supported! {Triggers.First()}");
 
                 case RuleFor.Marriage:
@@ -85,7 +85,7 @@ namespace MagusEngine.Core.WorldStuff.History
                     break;
 
                 default:
-                    Locator.GetService<MagiLog>().Log($"The {RuleFor} is not supported!");
+                    MagiLog.Log($"The {RuleFor} is not supported!");
                     break;
             }
         }

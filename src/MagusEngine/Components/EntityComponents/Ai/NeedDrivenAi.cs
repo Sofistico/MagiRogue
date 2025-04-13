@@ -31,7 +31,7 @@ namespace MagusEngine.Components.EntityComponents.Ai
             }
 
             parent ??= (IGameObject)Parent;
-            if (parent.GoRogueComponents.Contains(typeof(NeedCollection))
+            if (parent.GoRogueComponents.Contains<NeedCollection>()
                 && map.GetEntityById(parent.ID) is Actor actor)
             {
                 needs ??= actor.GetComponent<NeedCollection>();
@@ -92,14 +92,11 @@ namespace MagusEngine.Components.EntityComponents.Ai
                     case ActionsEnum.Drink:
                         if (ActionManager.FindWater(actor, map, out var water))
                         {
-                            if (map.DistanceMeasurement.Calculate(actor.Position - water.Position) <= 1) // right next to the water tile or in it
-                            {
-                                timeTakenAction = ActionManager.Drink(actor, water.Material, 25, need);
-                            }
-                            else
-                            {
-                                timeTakenAction = FindPathAndMoveOneStep(map, actor, water);
-                            }
+                            if (water is null)
+                                break;
+                            timeTakenAction = map.DistanceMeasurement.Calculate(actor.Position - water.Position) <= 1
+                                ? ActionManager.Drink(actor, water.Material, 25, need)
+                                : FindPathAndMoveOneStep(map, actor, water);
                         }
                         break;
 

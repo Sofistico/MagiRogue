@@ -191,7 +191,7 @@ namespace MagusEngine.Systems
         /// <param name="entity">Entity to modify.</param>
         protected abstract void UpdateEntityUnseen(MagiEntity entity);
 
-        private void Map_ObjectMoved(object sender, ItemMovedEventArgs<IGameObject> e)
+        private void Map_ObjectMoved(object? sender, ItemMovedEventArgs<IGameObject> e)
         {
             if (!IsEnabled) return;
 
@@ -201,7 +201,7 @@ namespace MagusEngine.Systems
                 UpdateEntityUnseen((MagiEntity)e.Item);
         }
 
-        private void Map_ObjectAdded(object sender, ItemEventArgs<IGameObject> e)
+        private void Map_ObjectAdded(object? sender, ItemEventArgs<IGameObject> e)
         {
             if (!IsEnabled) return;
             if (e.Item.Layer == (int)MapLayer.TERRAIN) // terrain
@@ -220,7 +220,7 @@ namespace MagusEngine.Systems
             }
         }
 
-        private void Map_FOVRecalculated(object sender, EventArgs e)
+        private void Map_FOVRecalculated(object? sender, EventArgs e)
         {
             if (!IsEnabled) return;
 
@@ -251,7 +251,7 @@ namespace MagusEngine.Systems
             Map.ObjectAdded -= Map_ObjectAdded;
             Map.ObjectMoved -= Map_ObjectMoved;
             Map.FOVRecalculated -= Map_FOVRecalculated;
-            Map = null;
+            Map = null!;
         }
 
         ~FOVHandler()

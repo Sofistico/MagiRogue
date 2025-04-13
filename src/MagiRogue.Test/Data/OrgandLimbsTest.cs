@@ -25,7 +25,7 @@ namespace MagiRogue.Test.Data
         {
             var path = AppDomain.CurrentDomain.BaseDirectory;
             List<Organ> organs = JsonUtils.JsonDeseralize<List<Organ>>
-                (path + @"\Data\Bodies\organs_std.json");
+                (path + @"/Data/Bodies/organs_std.json");
 
             var otg = DataManager.QueryOrganInData("brain");
 
@@ -38,7 +38,7 @@ namespace MagiRogue.Test.Data
             var path = AppDomain.CurrentDomain.BaseDirectory;
 
             List<Limb> limb = JsonUtils.JsonDeseralize<List<Limb>>
-                (path + @"\Data\Bodies\limbs_std.json");
+                (path + @"/Data/Bodies/limbs_std.json");
 
             var otherLimb = DataManager.QueryLimbInData("upper_body");
 

@@ -51,14 +51,14 @@ namespace MagusEngine.Components.EntityComponents
             HintFulfill = hintFulfill;
         }
 
-        public static List<Need> CommonNeeds() => new()
-        {
+        public static List<Need> CommonNeeds() =>
+        [
             new Need("Eat", true, 1, ActionsEnum.Eat, "SelfControl", "food" ),
             new Need("Drink", true, 0.75, ActionsEnum.Drink, "Temperance", "drink" ),
             new Need("Sleep", true, 2, ActionsEnum.Sleep, "Lazyness", "rest" ),
             new Need("Restlessness", false, 0.00007, ActionsEnum.Wander, "Patience", "wander"),
             //new Need("Fight", false, 0, Actions.Fight, "Peace", "battle" ),
-        };
+        ];
 
         public bool TickNeed()
         {

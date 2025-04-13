@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using Arquimedes.Interfaces;
 using Arquimedes.Utils;
 
@@ -14,7 +16,10 @@ namespace Arquimedes.Data
 
         public T? Query(string id)
         {
-            return _data.Value.TryGetValue(id, out T? value) ? value : default;
+            if (string.IsNullOrEmpty(id))
+                return default;
+            ref T val = ref CollectionsMarshal.GetValueRefOrNullRef(_data.Value, id);
+            return Unsafe.IsNullRef(ref val) ? default : val;
         }
     }
 }

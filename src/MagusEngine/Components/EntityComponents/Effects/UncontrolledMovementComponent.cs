@@ -7,7 +7,6 @@ using MagusEngine.Systems;
 using MagusEngine.Systems.Physics;
 using MagusEngine.Utils.Extensions;
 using SadRogue.Primitives;
-using System;
 
 namespace MagusEngine.Components.EntityComponents.Effects
 {
@@ -18,14 +17,14 @@ namespace MagusEngine.Components.EntityComponents.Effects
         public Direction Direction { get; }
 
         public UncontrolledMovementComponent(double force, int tilesToMove, Direction dir, long turnApplied, long turnToRemove, string effectMessage)
-            : base(turnApplied, turnToRemove, effectMessage, "uncont_mov", freezesTurn: true)
+            : base(new(turnApplied, turnToRemove, effectMessage, "uncont_mov", freezesTurn: true))
         {
             TilesToMovePerTurn = tilesToMove;
             Direction = dir;
             Force = force;
         }
 
-        public override void ExecutePerTurn()
+        public override void ExecuteEffect()
         {
             if (Parent is null)
                 return;

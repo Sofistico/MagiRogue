@@ -33,13 +33,14 @@ namespace MagusEngine.Components.TilesComponents
             string? removeMessage = null
         )
             : base(
+                new(
                 tickApplied,
                 tickToRemove,
                 effectMessage,
                 tag,
-                customTurnTimer,
                 freezesTurn,
-                removeMessage
+                removeMessage),
+                customTurnTimer
             )
         {
             if (string.IsNullOrEmpty(effectMessage))
@@ -60,6 +61,6 @@ namespace MagusEngine.Components.TilesComponents
         /// behaves each turn, typically using the BasePower property to determine
         /// the strength of the effect.
         /// </remarks>
-        public abstract override void ExecutePerTurn();
+        public abstract override void ExecuteEffect();
     }
 }

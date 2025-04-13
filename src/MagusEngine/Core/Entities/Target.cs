@@ -1,4 +1,4 @@
-﻿using Arquimedes.Enumerators;
+using Arquimedes.Enumerators;
 using GoRogue.GameFramework;
 using GoRogue.Pathing;
 using MagusEngine.Actions;
@@ -310,10 +310,10 @@ namespace MagusEngine.Core.Entities
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                Locator.GetService<MagiLog>().Log("An error occured in the Cursor targetting!");
-                throw new Exception("An error occured in the Cursor targetting!");
+                MagiLog.Log(ex, "An error occured in the Cursor targetting!");
+                throw;
             }
         }
 

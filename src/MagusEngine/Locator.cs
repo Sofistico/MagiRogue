@@ -40,7 +40,6 @@ namespace MagusEngine
                 { typeof(MessageBusService), new MessageBusService() },
                 { typeof(IDGenerator), new IDGenerator() },
                 { typeof(SavingService), new SavingService() },
-                { typeof(MagiLog), new MagiLog() },
                 { typeof(SpellEffectFactory), new SpellEffectFactory() },
                 { typeof(AnimationFactory), new AnimationFactory() },
             };

@@ -19,13 +19,14 @@ using SadConsole.Input;
 using SadRogue.Primitives;
 using System.Diagnostics.CodeAnalysis;
 using Color = SadRogue.Primitives.Color;
+using MagusEngine.Exceptions;
 
 namespace Diviner
 {
     public static class KeyboardHandle
     {
         [NotNull]
-        private static readonly Player _getPlayer = Find.Universe?.Player;
+        private static readonly Player _getPlayer = Find.Universe?.Player!;
 
         [AllowNull]
         private static Target? _targetCursor;
@@ -116,20 +117,20 @@ namespace Diviner
                 {
                     Direction moveDirection = _movementDirectionMapping[key];
                     Point deltaMove = new(moveDirection.DeltaX, moveDirection.DeltaY);
-                    var actor = (Actor)world.CurrentMap.ControlledEntitiy;
+                    var actor = (Actor)world.CurrentMap.ControlledEntitiy!;
                     if (world.CurrentMap.ControlledEntitiy is not Player)
                     {
-                        if (world.CurrentMap.CheckForIndexOutOfBounds(world.CurrentMap.ControlledEntitiy.Position + deltaMove))
+                        if (world.CurrentMap.CheckForIndexOutOfBounds(world.CurrentMap.ControlledEntitiy!.Position + deltaMove))
                             return false;
 
                         int distance = HandleNonPlayerMoveAndReturnDistance(world, deltaMove);
 
                         return world.CurrentMap.PlayerExplored[world.CurrentMap.ControlledEntitiy.Position + deltaMove]
                             && distance <= _targetCursor?.MaxDistance
-                            && actor.MoveBy(deltaMove);
+                            && actor!.MoveBy(deltaMove);
                     }
 
-                    return actor.MoveBy(deltaMove);
+                    return actor!.MoveBy(deltaMove);
                 }
             }
 
@@ -139,15 +140,17 @@ namespace Diviner
         private static int HandleNonPlayerMoveAndReturnDistance(Universe world, Point coorToMove)
         {
             int distance = 0;
+            _ = world.CurrentMap ?? throw new NullValueException(nameof(world.CurrentMap));
 
             if (world.CurrentMap.ControlledEntitiy == _targetCursor?.Cursor)
             {
+                _ = _targetCursor ?? throw new NullValueException(nameof(_targetCursor));
+
                 if (_targetCursor.TravelPath is not null)
                     distance = _targetCursor.TravelPath.LengthWithStart;
-                if (_targetCursor.TravelPath is not null
-                    && _targetCursor.TravelPath.LengthWithStart >= _targetCursor.MaxDistance)
+                if (_targetCursor.TravelPath is not null && _targetCursor.TravelPath.LengthWithStart >= _targetCursor.MaxDistance)
                 {
-                    distance = world.CurrentMap.AStar.ShortestPath(_targetCursor.OriginCoord, world.CurrentMap.ControlledEntitiy.Position + coorToMove).Length;
+                    distance = world!.CurrentMap!.AStar!.ShortestPath(_targetCursor.OriginCoord, world!.CurrentMap!.ControlledEntitiy!.Position + coorToMove)!.Length;
                 }
             }
             return distance;
@@ -173,13 +176,12 @@ namespace Diviner
                 if (!_getPlayer.Bumped && uni?.CurrentMap?.ControlledEntitiy is Player)
                 {
                     Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.GetWalkTime(_getPlayer,
-                        uni.CurrentMap.GetTileAt<Tile>(_getPlayer.Position)), true));
+                        uni.CurrentMap.GetTileAt<Tile>(_getPlayer.Position)!), true));
                 }
                 else if (uni?.CurrentMap?.ControlledEntitiy is Player)
                 {
-                    Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.GetAttackTime(_getPlayer,
-                        _getPlayer.GetAttacks().GetRandomItemFromList()),
-                        true));
+                    var attack = _getPlayer.GetAttacks().GetRandomItemFromList() ?? throw new NullValueException("Attack was null", null);
+                    Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.GetAttackTime(_getPlayer, attack), true));
                 }
 
                 return true;
@@ -210,8 +212,8 @@ namespace Diviner
             //} // some other thing will be in here!
             if (info.IsKeyPressed(Keys.G))
             {
-                Item item = uni.CurrentMap.GetEntityAt<Item>(uni.CurrentMap.ControlledEntitiy.Position);
-                bool sucess = ActionManager.PickUp(uni.Player, item);
+                Item item = uni.CurrentMap!.GetEntityAt<Item>(uni.CurrentMap.ControlledEntitiy!.Position)!;
+                bool sucess = ActionManager.PickUp(uni.Player, item!);
                 Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.Interact, sucess));
                 return sucess;
             }
@@ -219,7 +221,7 @@ namespace Diviner
             if (info.IsKeyPressed(Keys.D))
             {
                 //bool sucess = ActionManager.DropTopItemInv(uni.Player);
-                ui.InventoryScreen.ShowItems((Actor)uni.CurrentMap.ControlledEntitiy, item =>
+                ui.InventoryScreen.ShowItems((Actor)uni!.CurrentMap!.ControlledEntitiy!, item =>
                 {
                     var sucess = ActionManager.DropItem(item, _getPlayer.Position, uni.CurrentMap);
                     Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.Interact, sucess));
@@ -291,7 +293,7 @@ namespace Diviner
                     {
                         (sucess, var spellCasted) = _targetCursor.EndSpellTargetting();
                         if (sucess)
-                            timeTaken = TimeHelper.GetCastingTime(_getPlayer, spellCasted);
+                            timeTaken = TimeHelper.GetCastingTime(_getPlayer, spellCasted!);
                     }
                     else
                     {
@@ -341,7 +343,7 @@ namespace Diviner
             {
                 ActionManager.ToggleFOV();
                 ui.MapWindow.MapConsole.IsDirty = true;
-                int c = uni.CurrentMap.PlayerExplored.Count;
+                int c = uni!.CurrentMap!.PlayerExplored.Count;
                 for (int i = 0; i < c; i++)
                 {
                     uni.CurrentMap.PlayerExplored[i] = true;
@@ -351,13 +353,13 @@ namespace Diviner
 
             if (info.IsKeyPressed(Keys.F8))
             {
-                uni.CurrentMap.ControlledEntitiy.AddComponents(new TestComponent());
+                uni!.CurrentMap!.ControlledEntitiy!.AddComponents(new TestComponent());
                 return false;
             }
 
             if (info.IsKeyPressed(Keys.F6))
             {
-                if (uni.CurrentMap.Rooms?.Count > 0)
+                if (uni?.CurrentMap?.Rooms?.Count > 0)
                 {
                     foreach (Room room in uni.CurrentMap.Rooms)
                     {
@@ -408,9 +410,9 @@ namespace Diviner
                 return false;
             }
 
-            if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.P) && _targetCursor.EntityInTarget())
+            if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.P) && _targetCursor!.EntityInTarget())
             {
-                Actor actor = (Actor)_targetCursor.TargetEntity();
+                Actor actor = (Actor)_targetCursor.TargetEntity()!;
                 actor.AddComponents(new MoveAndAttackAI(actor.GetViewRadius()));
                 Locator.GetService<MessageBusService>()
                     .SendMessage<AddMessageLog>(new($"Added attack component to {actor.Name}!"));
@@ -420,12 +422,12 @@ namespace Diviner
             if (info.IsKeyDown(Keys.LeftShift)
                 && info.IsKeyDown(Keys.LeftControl)
                 && info.IsKeyPressed(Keys.P)
-                && _targetCursor.EntityInTarget())
+                && _targetCursor!.EntityInTarget())
             {
                 Actor? actor = (Actor?)_targetCursor.TargetEntity();
                 actor?.AddComponents(new NeedDrivenAi());
                 Locator.GetService<MessageBusService>()
-                    .SendMessage<AddMessageLog>(new($"Added need component to {actor.Name}!"));
+                    .SendMessage<AddMessageLog>(new($"Added need component to {actor?.Name}!"));
                 return false;
             }
 
@@ -437,7 +439,7 @@ namespace Diviner
 
             if (info.IsKeyPressed(Keys.OemPlus))
             {
-                MagiMap map = (MagiMap)_getPlayer.CurrentMap;
+                MagiMap map = (MagiMap)_getPlayer.CurrentMap!;
                 map.LastPlayerPosition = _getPlayer.Position;
                 if (Find.Universe.MapIsWorld(map))
                 {
@@ -452,7 +454,7 @@ namespace Diviner
                     // The universe class also isn't being serialized properly, crashing newtonsoft
                     // TODO: Revise this line of code when the time comes to work on the save system.
                     //var gameState = JsonConvert.SerializeObject(new GameState().Universe);
-                    MapTemplate mapDeJsonified = JsonConvert.DeserializeObject<MagiMap>(json);
+                    // MapTemplate mapDeJsonified = JsonConvert.DeserializeObject<MagiMap>(json)!;
                 }
                 return false;
             }
@@ -466,7 +468,7 @@ namespace Diviner
             if (info.IsKeyPressed(Keys.P) && (_targetCursor?.EntityInTarget()) == true)
             {
                 var target = _targetCursor.TargetEntity();
-                var needs = target.GetComponent<NeedCollection>();
+                var needs = target!.GetComponent<NeedCollection>();
                 for (int i = 0; i < needs.Count; i++)
                 {
                     var need = needs[i];

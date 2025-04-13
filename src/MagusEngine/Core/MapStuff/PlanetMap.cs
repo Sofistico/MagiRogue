@@ -7,6 +7,11 @@ using MagusEngine.Systems.Time;
 using MagusEngine.Utils;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using MagusEngine.Services;
+using System;
+using MagusEngine.Core.Entities;
+using Arquimedes.Enumerators;
+using MagusEngine.Exceptions;
 
 namespace MagusEngine.Core.MapStuff
 {
@@ -20,20 +25,20 @@ namespace MagusEngine.Core.MapStuff
 
         public MagiMap AssocietatedMap { get; }
 
-        public int YearSinceCreation { get => WorldHistory.CreationYear; }
+        public int YearSinceCreation => WorldHistory.CreationYear;
 
-        public AccumulatedHistory WorldHistory { get; set; }
+        public AccumulatedHistory WorldHistory { get; set; } = null!;
 
         public string Name => AssocietatedMap.MapName;
 
-        public List<River> Rivers { get; set; } = new();
+        public List<River> Rivers { get; set; } = [];
 
         public PlanetMap(int width, int height)
         {
             _height = height;
             _width = width;
-            AssocietatedMap = new(RandomNames.RandomNamesFromRandomLanguage(), width, height, false);
-            Civilizations = new List<Civilization>();
+            AssocietatedMap = new(RandomNames.RandomNamesFromRandomLanguage()!, width, height, false);
+            Civilizations = [];
             WorldHistory = new();
         }
 
@@ -50,13 +55,13 @@ namespace MagusEngine.Core.MapStuff
 
         public void SetWorldTiles(WorldTile[,] tiles)
         {
-            AssocietatedMap.GoRogueComponents.GetFirstOrDefault<FOVHandler>().Disable();
+            AssocietatedMap!.GoRogueComponents!.GetFirstOrDefault<FOVHandler>()!.Disable();
 
             for (int x = 0; x < _width; x++)
             {
                 for (int y = 0; y < _height; y++)
                 {
-                    AssocietatedMap.SetTerrain(tiles[x, y].Parent);
+                    AssocietatedMap.SetTerrain(tiles[x, y].Parent!);
                 }
             }
         }
@@ -64,6 +69,26 @@ namespace MagusEngine.Core.MapStuff
         public TimeSystem GetTimePassed()
         {
             return new TimeSystem(YearSinceCreation);
+        }
+
+        public void PlacePlayerOnWorld(Player player)
+        {
+            if (player != null)
+            {
+                try
+                {
+                    Civilization? startTown = Civilizations
+                        .Find(static a => a.Tendency == CivilizationTendency.Neutral) ?? throw new NullValueException("Error on trying to find the start town to place the player!", null);
+                    player.Position = startTown.ReturnAllLandTerritory(AssocietatedMap)[0].Position;
+                    AssocietatedMap.AddMagiEntity(player);
+                    AssocietatedMap.IsActive = true;
+                }
+                catch (Exception e)
+                {
+                    MagiLog.Log(e, e.Message);
+                    throw;
+                }
+            }
         }
     }
 }

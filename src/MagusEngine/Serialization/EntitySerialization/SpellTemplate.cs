@@ -11,7 +11,6 @@ namespace MagusEngine.Serialization.EntitySerialization
 {
     public class SpellJsonConverter : JsonConverter<Spell>
     {
-
         public override Spell ReadJson(JsonReader reader, Type objectType,
             Spell? existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
@@ -26,12 +25,11 @@ namespace MagusEngine.Serialization.EntitySerialization
                     continue;
                 effectsList.Add(eff);
             }
-
             Spell createdSpell = new(
                 (string)spell["Id"]!,
                 (string)spell["Name"]!,
                 StringToSchool((string)spell["MagicArt"]!),
-                (int)spell["SpellRange"]!,
+                (int?)spell["SpellRange"] ?? 0,
                 spell["ShapingAbility"]!.ToString(),
                 (int)spell["SpellLevel"]!,
                 (double)spell["MagicCost"]!)

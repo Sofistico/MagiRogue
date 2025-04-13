@@ -6,6 +6,7 @@ using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
+using MagusEngine.Exceptions;
 using MagusEngine.Services;
 using SadConsole;
 using SadRogue.Primitives;
@@ -19,9 +20,8 @@ namespace Diviner.Windows
         ISubscriber<LoadMapMessage>,
         ISubscriber<MapConsoleIsDirty>
     {
-        private MagiMap _mapDisplayed;
         private readonly SadConsole.Components.SurfaceComponentFollowTarget followComponent;
-        public ScreenSurface MapConsole { get; set; }
+        public ScreenSurface MapConsole { get; set; } = null!;
 
         public MapWindow(int width, int height, string title) : base(width, height, title)
         {
@@ -68,8 +68,10 @@ namespace Diviner.Windows
         /// Loads a Map into the MapConsole
         /// </summary>
         /// <param name="map"></param>
-        public void LoadMap(MagiMap map)
+        public void LoadMap(MagiMap? map)
         {
+            if (map is null)
+                throw new NullValueException(nameof(map));
             //make console short enough to show the window title
             //and borders, and position it away from borders
             int mapConsoleWidth = Width - 2;
@@ -98,8 +100,6 @@ namespace Diviner.Windows
             SyncMapEntities(map);
 
             IsDirty = true;
-
-            _mapDisplayed = map;
 
             Title = map.MapName;
 

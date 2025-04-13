@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 using GoRogue.Messaging;
 using MagusEngine.Bus.MapBus;
-using MagusEngine.Core.Entities.Base;
 using MagusEngine.Serialization;
+using MagusEngine.Services;
 using MagusEngine.Systems.Time.Nodes;
 using Priority_Queue;
 
@@ -28,12 +27,14 @@ namespace MagusEngine.Systems.Time
         {
             TimePassed = new TimeDefSpan(initialTick);
             Nodes = new SimplePriorityQueue<ITimeNode, long>();
+            Locator.GetService<MessageBusService>().RegisterAllSubscriber(this);
         }
 
         public TimeSystem(int initialYear)
         {
             TimePassed = new TimeDefSpan(initialYear);
             Nodes = new SimplePriorityQueue<ITimeNode, long>();
+            Locator.GetService<MessageBusService>().RegisterAllSubscriber(this);
         }
 
         public void RegisterNode(ITimeNode node)
@@ -65,7 +66,7 @@ namespace MagusEngine.Systems.Time
             return node;
         }
 
-        public long GetTimePassed(long time) => TimePassed.Ticks + time;
+        private long GetTimePassed(long ticks) => TimePassed.Ticks + ticks;
 
         public int GetNHoursFromTurn(int hours)
         {
@@ -83,6 +84,10 @@ namespace MagusEngine.Systems.Time
                 case TickActionNode component:
                     AddComponentToTime(component, component.Tick);
                     break;
+
+                case PlayerTimeNode:
+                    RegisterNode(new PlayerTimeNode(GetTimePassed(message.Node.Tick), message.Node.Id));
+                    break;
             }
         }
 
@@ -96,6 +101,11 @@ namespace MagusEngine.Systems.Time
             // register to next turn
             if (!Nodes.Any(i => i.Id.Equals(entityId)))
                 RegisterNode(new EntityTimeNode(entityId, GetTimePassed(time)));
+        }
+
+        ~TimeSystem()
+        {
+            Locator.GetService<MessageBusService>().UnRegisterAllSubscriber(this);
         }
     }
 }

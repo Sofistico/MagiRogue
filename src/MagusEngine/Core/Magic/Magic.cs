@@ -43,8 +43,10 @@ namespace MagusEngine.Core.Magic
 
         public static int CalculateSpellDamage(Actor entityStats, Spell spellCasted)
         {
-            int baseDamage = (int)(spellCasted.Power + spellCasted.SpellLevel
-                + entityStats.Mind.Inteligence + (entityStats.Soul.WillPower * 0.5));
+            int baseDamage = spellCasted.Power + spellCasted.SpellLevel;
+
+            if (entityStats is not null)
+                baseDamage += (int)(entityStats.Mind.Inteligence + (entityStats.Soul.WillPower * 0.5));
 
             int rngDmg = Dice.Roll($"{spellCasted.SpellLevel}d{baseDamage}");
             return (int)(rngDmg * spellCasted.Proficiency);
@@ -72,8 +74,7 @@ namespace MagusEngine.Core.Magic
                 var sp = spell.Effects[i];
                 if (sp is null)
                 {
-                    Locator.GetService<MagiLog>()
-                        .Log($"Spell effect is null! Something went wrong \nSpell Name: {spell.Name} \nSpell Id: {spell.Id} \nSpell effects: {spell.Effects}");
+                    MagiLog.Log($"Spell effect is null! Something went wrong \nSpell Name: {spell.Name} \nSpell Id: {spell.Id} \nSpell effects: {spell.Effects}", logLevel: LogLevel.Error);
                     continue;
                 }
                 if (!KnowEffects.Contains(sp.EffectType))

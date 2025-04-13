@@ -32,12 +32,12 @@ namespace MagusEngine.Core.Magic
         [JsonIgnore]
         private string _errorMessage = "Can't cast the spell";
         [JsonIgnore]
-        private Lazy<bool> _ignoresWall;
+        private Lazy<bool> _ignoresWall = null!;
 
         /// <summary>
         /// The id of the spell, required for quick look up and human redable serialization.
         /// </summary>
-        public string Id { get; set; }
+        public string Id { get; set; } = null!;
 
         /// <summary>
         /// The required shaping skill to cast the spell at it's most basic parameters.
@@ -47,12 +47,12 @@ namespace MagusEngine.Core.Magic
         /// <summary>
         /// All the effects that the spell can have
         /// </summary>
-        public List<ISpellEffect> Effects { get; set; }
+        public List<ISpellEffect> Effects { get; set; } = [];
 
         /// <summary>
         /// Spell name
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         /// <summary>
         /// Description of the spell
@@ -118,7 +118,7 @@ namespace MagusEngine.Core.Magic
         public List<string>? Keywords { get; set; } = [];
         public List<SpellContext>? Context { get; set; }
         public bool AffectsTile => Effects.Any(static i => i.TargetsTile);
-        public string ShapingAbility { get; set; }
+        public string ShapingAbility { get; set; } = null!;
         public string Fore { get; set; } = "{caster}";
         public string Back { get; set; } = "Black";
         public char[] Glyphs { get; set; } = ['*'];
@@ -176,7 +176,7 @@ namespace MagusEngine.Core.Magic
                 }
                 catch (DivideByZeroException)
                 {
-                    Locator.GetService<MagiLog>().Log("Tried to divide your non existant will by zero! The universe almost exploded because of you");
+                    MagiLog.Log("Tried to divide your non existant will by zero! The universe almost exploded because of you", logLevel: LogLevel.Error);
                     return false;
                 }
                 bool canCast = false;
@@ -270,7 +270,7 @@ namespace MagusEngine.Core.Magic
                         effect.ApplyEffect(caster.Position, caster, this);
                         continue;
                     case SpellAreaEffect.Target:
-                        entity ??= Find.CurrentMap.GetEntityAt<MagiEntity>(target);
+                        entity ??= Find.CurrentMap?.GetEntityAt<MagiEntity>(target);
                         if (!CanTarget(caster, entity, effect))
                         {
                             continue;
@@ -281,7 +281,7 @@ namespace MagusEngine.Core.Magic
                     default:
                         foreach (var pos in TargetHelper.SpellAreaHelper(this, caster.Position, target)!)
                         {
-                            MagiEntity? entityAt = Find.CurrentMap.GetEntityAt<MagiEntity>(pos);
+                            MagiEntity? entityAt = Find.CurrentMap?.GetEntityAt<MagiEntity>(pos);
                             if (!CanTarget(caster, entityAt, effect))
                                 continue;
 
@@ -337,7 +337,7 @@ namespace MagusEngine.Core.Magic
         {
             return new StringBuilder().Append(Name).Append(": ").Append(SpellLevel)
                 .Append(", Range: ").Append(SpellRange)
-                .Append(", Proficiency: ").Append(Proficiency).Append(" \r\n")
+                .Append(", Proficiency: ").Append(Proficiency).Append(" \n")
                 .Append("Required shape skills: ").Append(RequiredShapingSkill)
                 .AppendLine(MagicArt.ToString()).ToString();
         }

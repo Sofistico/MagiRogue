@@ -1,11 +1,6 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MagusEngine.Utils
+namespace Arquimedes.DataStructures
 {
     public abstract class BasicTreeStructure<T>
     {
@@ -18,6 +13,6 @@ namespace MagusEngine.Utils
         public List<T>? Children { get; set; }
 
         [JsonIgnore]
-        public bool? IsRoot { get => Parents?.Count <= 0; }
+        public bool? IsRoot => Parents?.Count <= 0;
     }
 }

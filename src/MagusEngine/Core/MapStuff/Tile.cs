@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Arquimedes.Enumerators;
 using GoRogue.Components;
@@ -159,7 +159,7 @@ namespace MagusEngine.Core.MapStuff
             }
             catch (Exception ex)
             {
-                Locator.GetService<MagiLog>().Log($"Tried to add component {value} to {this} which caused {ex.Message}");
+                MagiLog.Log(ex, $"Tried to add component {value} to {this} which caused {ex.Message}");
             }
         }
 

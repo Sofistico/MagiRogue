@@ -4,25 +4,36 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using MagusEngine.Bus.UiBus;
+using MagusEngine.Utils.Extensions;
 
 namespace MagusEngine.Services
 {
-    public class MagiLog
+    public enum LogLevel
     {
-        public void Log(List<string> errors, string fileName)
+        Debug,
+        Trace,
+        Information,
+        Warning,
+        Error,
+        Critical,
+    }
+
+    public static class MagiLog
+    {
+        private static void Log(List<string> messages, string fileName, LogLevel logLevel = LogLevel.Information)
         {
             // so that it doesn't block the main thread!
             Task.Run(() =>
             {
-                if (errors.Count == 0)
+                if (messages.Count == 0)
                     return;
                 var path = new StringBuilder(AppDomain.CurrentDomain.BaseDirectory)
                     .Append($@"\{fileName}.txt")
                     .ToString();
                 StringBuilder str = new($"{DateTime.Now:dd/MM/yyyy HH:mm:ss} ");
-                foreach (var item in errors)
+                foreach (var item in messages)
                 {
-                    str.AppendLine(item);
+                    str.Append(logLevel.ToString() + ": " + item);
                     str.AppendLine();
                 }
                 if (!File.Exists(path))
@@ -34,21 +45,26 @@ namespace MagusEngine.Services
                 }
                 File.AppendAllText(path, str.ToString());
 #if DEBUG
-                Locator
-                    .GetService<MessageBusService>()
-                    .SendMessage(new AddMessageLog("Logged an error in the logs file!"));
+                if (logLevel == LogLevel.Error)
+                {
+                    Locator
+                        .GetService<MessageBusService>()
+                        .SendMessage(new AddMessageLog("Logged an error in the logs file!"));
+                    System.Console.WriteLine(str.ToString());
+                }
 #endif
             });
         }
 
-        public void Log(string error, string fileName = "log")
+        public static void Log(string error, string fileName = "log", LogLevel logLevel = LogLevel.Information)
         {
-            Log([error], fileName);
+            Log([error], fileName, logLevel);
         }
 
-        public void Log(Exception ex, string fileName = "log")
+        public static void Log(Exception ex, string message = "", string fileName = "log")
         {
-            Log([$"An exception has occurred.\nEX: {ex}"], fileName);
+            var messageFormated = message.IsNullOrEmpty() ? "" : $"\nMessage: {message}";
+            Log([$"An exception has occurred.{messageFormated}\nEX: {ex}"], fileName, LogLevel.Error);
         }
 
         private static bool IsFileLocked(FileInfo file)

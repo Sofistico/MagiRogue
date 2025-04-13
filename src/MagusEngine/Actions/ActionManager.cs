@@ -419,7 +419,6 @@ namespace MagusEngine.Actions
             {
                 MagiMap map = Universe.GetMapById(possibleStairs.MapIdConnection.Value);
                 Locator.GetService<MessageBusService>().SendMessage<ChangeControlledActorMap>(new(map, map.GetRandomWalkableTile(), currentMap));
-                Find.Universe.ZLevel -= map.ZAmount;
 
                 return true;
             }
@@ -471,7 +470,6 @@ namespace MagusEngine.Actions
                 {
                     MagiMap map = Universe.GetMapById(possibleStairs.MapIdConnection.Value);
                     Locator.GetService<MessageBusService>().SendMessage<ChangeControlledActorMap>(new(map, map.GetRandomWalkableTile(), currentMap));
-                    Find.Universe.ZLevel += map.ZAmount;
 
                     return true;
                 }
@@ -639,7 +637,7 @@ namespace MagusEngine.Actions
         public static Path FindFleeAction(MagiMap map, Actor actor, Actor? danger)
         {
 #if DEBUG
-            Locator.GetService<MagiLog>().Log($"{actor.Name} considers {danger?.Name} dangerous!");
+            MagiLog.Log($"{actor.Name} considers {danger?.Name} dangerous!", logLevel: LogLevel.Trace);
 #endif
 
             Point rngPoint = map.GetRandomWalkableTile();
@@ -680,7 +678,7 @@ namespace MagusEngine.Actions
             return false;
         }
 
-        public static bool FindWater(Actor actor, MagiMap map, out Tile water)
+        public static bool FindWater(Actor actor, MagiMap map, out Tile? water)
         {
             water = map.GetClosestWaterTile(actor.Body.ViewRadius, actor.Position);
 

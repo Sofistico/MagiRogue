@@ -1,3 +1,4 @@
+using MagusEngine.Core.Animations;
 using MagusEngine.Core.Animations.Interfaces;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.MapStuff;
@@ -44,9 +45,7 @@ namespace MagusEngine.Components.EntityComponents.Projectiles
                 if (effect?.AnimationId?.IsNullOrEmpty() == true)
                     continue;
                 var animation = DataManager.QueryAnimationInData(effect!.AnimationId!);
-                if (animation is not IAnimationHit hit)
-                    continue;
-                hit.AnimateHit(Parent!.Position);
+                animation?.ScheduleTickAnimation(Parent!.Position, effect.IgnoresWall);
             }
         }
     }

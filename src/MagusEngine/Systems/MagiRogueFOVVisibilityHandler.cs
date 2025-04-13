@@ -1,4 +1,3 @@
-using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.Components.EntityComponents;
@@ -11,7 +10,7 @@ namespace MagusEngine.Systems
     /// <summary>
     /// Handler that will make all terrain/entities inside FOV visible as normal, all entities
     /// outside of FOV invisible, all terrain outside of FOV invisible if unexplored, and set its
-    /// foreground to <see cref="ExploredColorTint"/> if explored but out of FOV.
+    /// foreground to <see cref="_exploredColorTint"/> if explored but out of FOV.
     /// </summary>
     public sealed class MagiRogueFOVVisibilityHandler : FOVHandler
     {
@@ -21,7 +20,8 @@ namespace MagusEngine.Systems
         /// <summary>
         /// Foreground color to set to all terrain that is outside of FOV but has been explored.
         /// </summary>
-        public Color ExploredColorTint { get; }
+        private readonly Color _exploredColorTint;
+
 
         /// <summary>
         /// Creates a DefaultFOVVisibilityHandler that will manage visibility of objects for the
@@ -36,7 +36,7 @@ namespace MagusEngine.Systems
             FovState startingState = FovState.Enabled) :
             base(map, startingState)
         {
-            ExploredColorTint = unexploredColor;
+            _exploredColorTint = unexploredColor;
             _ghostLayer = ghostLayer;
         }
 
@@ -81,8 +81,8 @@ namespace MagusEngine.Systems
 
         private void RemoveEntityGhost(MagiEntity entity)
         {
-            var value = ghosts[entity.ID];
-            ghosts.Remove(entity.ID);
+            MagiEntity value = ghosts[entity.ID];
+            _ = ghosts.Remove(entity.ID);
             Map.RemoveMagiEntity(value);
         }
 
@@ -101,7 +101,7 @@ namespace MagusEngine.Systems
                 && entity.LeavesGhost
                 && !ghosts.ContainsKey(entity.ID))
             {
-                MagiEntity ghost = new(ExploredColorTint,
+                MagiEntity ghost = new(_exploredColorTint,
                     entity.SadCell.AppearanceSingle!.Appearance.Background!,
                     entity.SadCell.AppearanceSingle.Appearance.Glyph,
                     entity.Position,
@@ -138,7 +138,7 @@ namespace MagusEngine.Systems
 
         /// <summary>
         /// Makes terrain invisible if it is not explored. Makes terrain visible but sets its
-        /// foreground to <see cref="ExploredColorTint"/> if it is explored.
+        /// foreground to <see cref="_exploredColorTint"/> if it is explored.
         /// </summary>
         /// <param name="terrain">Terrain to modify.</param>
         protected override void UpdateTerrainUnseen(Tile terrain)
@@ -156,7 +156,7 @@ namespace MagusEngine.Systems
 
         private void ApplyMemoryAppearance(Tile tile)
         {
-            tile.Appearence.Foreground = ExploredColorTint;
+            tile.Appearence.Foreground = _exploredColorTint;
         }
     }
 }

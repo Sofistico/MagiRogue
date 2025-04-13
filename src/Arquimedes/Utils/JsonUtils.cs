@@ -8,19 +8,24 @@ namespace Arquimedes.Utils
     {
         private static readonly JsonSerializerSettings settings = new()
         {
-            Error = (sender, args) => throw new JsonException(args.ErrorContext.Error.Message),
-            Converters = { new IsoDateTimeConverter() }
+            Error = (sender, args) =>
+            {
+                Console.WriteLine(args.ErrorContext.Error.Message);
+            },
+            Converters = { new IsoDateTimeConverter(), new StringEnumConverter() },
         };
 
         public static T? JsonDeseralize<T>(string path)
         {
             var str = FileUtils.GetAllTextFromFile(new FileInfo(path));
-            return str is not null ? JsonConvert.DeserializeObject<T>(str, settings) : throw new ApplicationException("Tried to read a empty file!");
+            return str is not null
+                ? JsonConvert.DeserializeObject<T>(str, settings)
+                : throw new FileNotFoundException("Tried to read a empty file!");
         }
 
         public static List<T>? JsonDeseralize<T>(string[] arrayOfStreams)
         {
-            List<T> list = new();
+            List<T> list = [];
             foreach (string stream in arrayOfStreams)
             {
                 list.Add(JsonConvert.DeserializeObject<T>(File.ReadAllText(stream))!);
@@ -29,14 +34,19 @@ namespace Arquimedes.Utils
             return list;
         }
 
-        public static T? JsonDeseralize<T>(string stream, JsonConverter converter) => JsonConvert.DeserializeObject<T>(File.ReadAllText(stream), converter);
+        public static T? JsonDeseralize<T>(string stream, JsonConverter converter) =>
+            JsonConvert.DeserializeObject<T>(File.ReadAllText(stream), converter);
 
-        public static T? JsonDeseralize<T>(string stream, JsonSerializerSettings settings) => JsonConvert.DeserializeObject<T>(File.ReadAllText(stream), settings);
+        public static T? JsonDeseralize<T>(string stream, JsonSerializerSettings settings) =>
+            JsonConvert.DeserializeObject<T>(File.ReadAllText(stream), settings);
     }
 
     public static class JsonExtensions
     {
-        public static string SerializeObjectNoCache<T>(this T obj, JsonSerializerSettings? settings = null)
+        public static string SerializeObjectNoCache<T>(
+            this T obj,
+            JsonSerializerSettings? settings = null
+        )
         {
             settings ??= new JsonSerializerSettings();
             bool reset = settings.ContractResolver == null;

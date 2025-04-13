@@ -12,9 +12,9 @@
       }
     ],
     "Name": "Blink",
-    "Description": "The major first spell taught to any Dimensionalism student, also the one that causes most students death on it's first try.\r\nIt's said that the Berjoar method of teaching created a variant of this that weaponizes it's teleportation.",
+    "Description": "The major first spell taught to any Dimensionalism student, also the one that causes most students death on it's first try.\n\nIt's said that the Berjoar method of teaching created a variant of this that weaponizes it's teleportation.",
     "MagicArt": "Dimensionalism",
-    "SpellRange": 5,
+    "SpellRange": 10,
     "MagicCost": 8.0,
     "Id": "teleport",
     "Context": [ "Teleport" ]
@@ -35,9 +35,8 @@
       }
     ],
     "Name": "Haste",
-    "Description": "A powerful spell, speeds up the caster local time.\r\nAs many other spells of the Dimensionalism school of magic, has extreme high mana cost and needs great shaping skills to be able to pull of on the battle.",
+    "Description": "A powerful spell, speeds up the caster local time.\n\nAs many other spells of the Dimensionalism school of magic, has extreme high mana cost and needs great shaping skills to be able to pull of on the battle.",
     "MagicArt": "Dimensionalism",
-    "SpellRange": 0,
     "MagicCost": 10.0,
     "Id": "haste_self",
     "Context": [ "Buff" ]

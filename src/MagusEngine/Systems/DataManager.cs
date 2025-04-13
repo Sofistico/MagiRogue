@@ -1,14 +1,10 @@
-﻿using System.Buffers;
-using System.Collections.Concurrent;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Arquimedes.Data;
 using Arquimedes.Enumerators;
-using Arquimedes.Interfaces;
-using Arquimedes.Utils;
 using MagusEngine.Core;
-using MagusEngine.Core.Animations;
+using MagusEngine.Core.Animations.Interfaces;
 using MagusEngine.Core.Civ;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
@@ -34,56 +30,56 @@ namespace MagusEngine.Systems
 
         #region jsons
 
-        public static KeyedDataRepository<ItemTemplate> ListOfItems { get; } = new(@".\Data\Items\items_*");
+        public static KeyedDataRepository<ItemTemplate> ListOfItems { get; } = new(@"./Data/Items/items_*");
 
-        public static KeyedDataRepository<Material> ListOfMaterials { get; } = new(@".\Data\Materials\material_*");
+        public static KeyedDataRepository<Material> ListOfMaterials { get; } = new(@"./Data/Materials/material_*");
 
-        public static KeyedDataRepository<Spell> ListOfSpells { get; } = new(@".\Data\Spells\spells_*");
+        public static KeyedDataRepository<Spell> ListOfSpells { get; } = new(@"./Data/Spells/spells_*");
 
-        public static KeyedDataRepository<Organ> ListOfOrgans { get; } = new(@".\Data\Bodies\organs_*");
+        public static KeyedDataRepository<Organ> ListOfOrgans { get; } = new(@"./Data/Bodies/organs_*");
 
-        public static KeyedDataRepository<Limb> ListOfLimbs { get; } = new(@".\Data\Bodies\limbs_*");
+        public static KeyedDataRepository<Limb> ListOfLimbs { get; } = new(@"./Data/Bodies/limbs_*");
 
-        public static KeyedDataRepository<Furniture> ListOfFurnitures { get; } = new(@".\Data\Furniture\fur_*");
+        public static KeyedDataRepository<Furniture> ListOfFurnitures { get; } = new(@"./Data/Furniture/fur_*");
 
-        public static KeyedDataRepository<RoomTemplate> ListOfRooms { get; } = new(@".\Data\Rooms\room_*");
+        public static KeyedDataRepository<RoomTemplate> ListOfRooms { get; } = new(@"./Data/Rooms/room_*");
 
         // races can be dynamically generated ingame
-        public static KeyedDataRepository<Race> ListOfRaces { get; } = new(@".\Data\Races\race_*");
+        public static KeyedDataRepository<Race> ListOfRaces { get; } = new(@"./Data/Races/race_*");
 
-        public static KeyedDataRepository<Scenario> ListOfScenarios { get; } = new(@".\Data\Scenarios\scenarios_*");
+        public static KeyedDataRepository<Scenario> ListOfScenarios { get; } = new(@"./Data/Scenarios/scenarios_*");
 
-        public static KeyedDataRepository<BodyPlan> ListOfBpPlan { get; } = new(@".\Data\Bodies\bodies_*");
+        public static KeyedDataRepository<BodyPlan> ListOfBpPlan { get; } = new(@"./Data/Bodies/bodies_*");
 
-        public static KeyedDataRepository<Language> ListOfLanguages { get; } = new(@".\Data\Language\language_*");
+        public static KeyedDataRepository<Language> ListOfLanguages { get; } = new(@"./Data/Language/language_*");
 
-        public static KeyedDataRepository<Profession> ListOfProfessions { get; } = new(@".\Data\Professions\profession_*");
+        public static KeyedDataRepository<Profession> ListOfProfessions { get; } = new(@"./Data/Professions/profession_*");
 
-        public static KeyedDataRepository<CultureTemplate> ListOfCultures { get; } = new(@".\Data\Cultures\cultures_*");
+        public static KeyedDataRepository<CultureTemplate> ListOfCultures { get; } = new(@"./Data/Cultures/cultures_*");
 
-        public static KeyedDataRepository<Research> ListOfResearches { get; } = new(@".\Data\Research\research_*");
+        public static KeyedDataRepository<Research> ListOfResearches { get; } = new(@"./Data/Research/research_*");
 
-        public static KeyedDataRepository<Reaction> ListOfReactions { get; } = new(@".\Data\Reaction\reaction_*");
+        public static KeyedDataRepository<Reaction> ListOfReactions { get; } = new(@"./Data/Reaction/reaction_*");
 
-        public static ListDataRepository<Ruleset> ListOfRules { get; } = new(@".\Data\Rules\rules_*");
+        public static ListDataRepository<Ruleset> ListOfRules { get; } = new(@"./Data/Rules/rules_*");
 
-        public static KeyedDataRepository<Plant> ListOfPlants { get; } = new(@".\Data\Plant\plant_*");
+        public static KeyedDataRepository<Plant> ListOfPlants { get; } = new(@"./Data/Plant/plant_*");
 
-        public static KeyedDataRepository<TissuePlanTemplate> ListOfTissuePlans { get; } = new(@".\Data\Bodies\tissue_*");
+        public static KeyedDataRepository<TissuePlanTemplate> ListOfTissuePlans { get; } = new(@"./Data/Bodies/tissue_*");
 
-        public static KeyedDataRepository<DamageType> ListOfDamageTypes { get; } = new(@".\Data\Damage\dmg_*");
+        public static KeyedDataRepository<DamageType> ListOfDamageTypes { get; } = new(@"./Data/Damage/dmg_*");
 
-        public static KeyedDataRepository<AnimationBase> ListOfAnimations { get; } = new(@".\Data\Animations\*_animations*");
+        public static KeyedDataRepository<IAnimation> ListOfAnimations { get; } = new(@"./Data/Animations/*_animations*");
 
         #region Descriptors
 
-        public static ListDataRepository<string> ListOfRealmsName { get; } = new ListDataRepository<string>(@".\Data\Descriptors\realms_*");
+        public static ListDataRepository<string> ListOfRealmsName { get; } = new ListDataRepository<string>(@"./Data/Descriptors/realms_*");
 
-        public static ListDataRepository<string> ListOfMagicFounts { get; } = new ListDataRepository<string>(@".\Data\Descriptors\fount_*");
+        public static ListDataRepository<string> ListOfMagicFounts { get; } = new ListDataRepository<string>(@"./Data/Descriptors/fount_*");
 
-        public static ListDataRepository<string> ListOfAdjectives { get; } = new ListDataRepository<string>(@".\Data\Descriptors\adjectives_*");
+        public static ListDataRepository<string> ListOfAdjectives { get; } = new ListDataRepository<string>(@"./Data/Descriptors/adjectives_*");
 
-        public static KeyedDataRepository<ShapeDescriptor> ListOfShapes { get; } = new KeyedDataRepository<ShapeDescriptor>(@".\Data\Descriptors\shapes_*");
+        public static KeyedDataRepository<ShapeDescriptor> ListOfShapes { get; } = new KeyedDataRepository<ShapeDescriptor>(@"./Data/Descriptors/shapes_*");
 
         #endregion Descriptors
 
@@ -139,7 +135,7 @@ namespace MagusEngine.Systems
                     Material? inheirtFrom = ListOfMaterials.Query(mat.InheirtFrom!);
                     if (inheirtFrom is null)
                     {
-                        Locator.GetService<MagiLog>().Log($"Material to inheirt from was null! Id: {mat.InheirtFrom}");
+                        MagiLog.Log($"Material to inheirt from was null! Id: {mat.InheirtFrom}", logLevel: LogLevel.Error);
                         continue;
                     }
 
@@ -199,7 +195,7 @@ namespace MagusEngine.Systems
             return ListOfCultures.Query(cultureId);
         }
 
-        public static List<CultureTemplate>? QueryCultureTemplateFromBiome(string biomeId) => ListOfCultures.GetEnumerableCollection().Where(i => i.StartBiome.Equals(biomeId)).ToList();
+        public static List<CultureTemplate>? QueryCultureTemplateFromBiome(string biomeId) => [.. ListOfCultures.GetEnumerableCollection().Where(i => i.StartBiome.Equals(biomeId))];
 
         public static Research? QueryResearchInData(string researchId)
         {
@@ -221,7 +217,7 @@ namespace MagusEngine.Systems
             return ListOfDamageTypes.Query(dmgId);
         }
 
-        public static AnimationBase? QueryAnimationInData(string animationId)
+        public static IAnimation? QueryAnimationInData(string animationId)
         {
             return ListOfAnimations.Query(animationId);
         }
@@ -244,7 +240,7 @@ namespace MagusEngine.Systems
 
         #region helper methods
 
-        public static List<Reaction> GetProductsByTag(RoomTag tag) => ListOfReactions.GetEnumerableCollection().Where(i => i.RoomTag.Contains(tag)).ToList();
+        public static List<Reaction> GetProductsByTag(RoomTag tag) => [.. ListOfReactions.GetEnumerableCollection().Where(i => i.RoomTag.Contains(tag))];
 
         public static Material? QueryMaterialWithType(MaterialType typeToMake) => ListOfMaterials.GetEnumerableCollection().Where(i => i.Type == typeToMake).GetRandomItemFromCollection();
 
