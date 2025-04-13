@@ -10,7 +10,7 @@ namespace MagusEngine.Core.Animations
         public required char[] Glyphs { get; set; }
         public required string[] Colors { get; set; }
 
-        public virtual void ScheduleTickAnimation(Point originPos)
+        public virtual void ScheduleTickAnimation(Point originPos, bool ignoreWall)
         {
             throw new System.NotImplementedException();
         }

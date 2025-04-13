@@ -23,6 +23,6 @@ namespace MagusEngine.Core.Animations.Interfaces
         /// </summary>
         public string[] Colors { get; set; }
 
-        void ScheduleTickAnimation(Point originPos);
+        void ScheduleTickAnimation(Point originPos, bool ignoreWall);
     }
 }

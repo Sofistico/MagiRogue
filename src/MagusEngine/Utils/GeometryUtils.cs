@@ -147,6 +147,7 @@ namespace MagusEngine.Utils
     public readonly struct Shape
     {
         public readonly IEnumerable<Point> Points { get; }
+        public readonly Point Center { get; }
 
         public Shape(IEnumerable<Point> points)
         {

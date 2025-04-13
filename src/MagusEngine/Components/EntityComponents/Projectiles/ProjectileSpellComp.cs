@@ -45,7 +45,7 @@ namespace MagusEngine.Components.EntityComponents.Projectiles
                 if (effect?.AnimationId?.IsNullOrEmpty() == true)
                     continue;
                 var animation = DataManager.QueryAnimationInData(effect!.AnimationId!);
-                animation?.ScheduleTickAnimation(Parent!.Position);
+                animation?.ScheduleTickAnimation(Parent!.Position, effect.IgnoresWall);
             }
         }
     }

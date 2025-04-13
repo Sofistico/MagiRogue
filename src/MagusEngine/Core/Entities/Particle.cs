@@ -13,29 +13,5 @@ namespace MagusEngine.Core.Entities
             var comp = new LimitedLifeComponent(Find.Time.Tick, Find.Time.Tick + ticks);
             AddComponent(comp, comp.Tag);
         }
-
-        public static Particle[] CreateVariousParticles(Color foreground, Color background, char[] glyphs, long ticks)
-        {
-            var particles = new Particle[glyphs.Length];
-
-            for (int i = 0; i < glyphs.Length; i++)
-            {
-                var glyph = glyphs[i];
-                var particle = new Particle(foreground, background, glyph, Point.None, ticks);
-
-                particles[i] = particle;
-            }
-            return particles;
-        }
-    }
-
-    public class ParticlesGroup
-    {
-        public Particle[] Particles { get; set; }
-
-        public ParticlesGroup(Color foreground, Color background, char[] glyphs, long ticks)
-        {
-            Particles = Particle.CreateVariousParticles(foreground, background, glyphs, ticks);
-        }
     }
 }

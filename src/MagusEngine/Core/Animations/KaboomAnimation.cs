@@ -1,12 +1,11 @@
-using System.Linq;
+using System;
 using Arquimedes;
 using MagusEngine.Bus.MapBus;
 using MagusEngine.Core.Entities;
-using MagusEngine.Core.Entities.Base;
-using MagusEngine.Exceptions;
 using MagusEngine.Services;
 using MagusEngine.Systems;
 using MagusEngine.Utils;
+using MagusEngine.Utils.Extensions;
 using SadRogue.Primitives;
 
 namespace MagusEngine.Core.Animations
@@ -19,31 +18,27 @@ namespace MagusEngine.Core.Animations
 
         public KaboomAnimation() { }
 
-        public override void ScheduleTickAnimation(Point originPos)
+        public override void ScheduleTickAnimation(Point originPos, bool ignoreWall)
         {
             var circle = GeometryUtils.CircleFromOriginPoint(originPos, Radius);
-            var particleGroup = new ParticlesGroup(
-                MagiPalette.FromHexString(Colors[0]),
-                Color.Black,
-                Glyphs,
-                (uint)LingeringTicks
-            );
             var busService = Locator.GetService<MessageBusService>();
-            MagiEntity particle = particleGroup.Particles[1];
-            particle.Position = circle.Points.First();
-            busService.SendMessage(new AddEntitiyCurrentMap(particle));
 
-            // foreach (var particle in particleGroup.Particles)
-            // {
-            //     // particle.Position = circle.Points[counter++];
-            //     currentMap.AddMagiEntity(particle.);
-            // }
-            // foreach (var point in circle.Points)
-            // {
-            //     var particle = particleGroup.Particles[0];
-            //     particle.Position = point;
-            //     currentMap.AddMagiEntity(particle.);
-            // }
+            foreach (var point in circle.Points)
+            {
+                var index = Math.Clamp((int)originPos.GetDistance(point), 0, Glyphs.Length - 1);
+                var particle = new Particle(
+                    MagiPalette.FromHexString(Colors[index]),
+                    Color.Black,
+                    Glyphs[index],
+                    point,
+                    LingeringTicks
+                );
+                var isWall = Find.CurrentMap?.IsTileWalkable(point) ?? false;
+                if (!ignoreWall && !isWall)
+                    continue;
+
+                busService.SendMessage(new AddEntitiyCurrentMap(particle));
+            }
         }
     }
 }
