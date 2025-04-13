@@ -20,7 +20,6 @@ namespace Diviner.Windows
         ISubscriber<LoadMapMessage>,
         ISubscriber<MapConsoleIsDirty>
     {
-        private MagiMap _mapDisplayed = null!;
         private readonly SadConsole.Components.SurfaceComponentFollowTarget followComponent;
         public ScreenSurface MapConsole { get; set; } = null!;
 
@@ -101,8 +100,6 @@ namespace Diviner.Windows
             SyncMapEntities(map);
 
             IsDirty = true;
-
-            _mapDisplayed = map;
 
             Title = map.MapName;
 

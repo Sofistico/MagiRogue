@@ -14,6 +14,28 @@ namespace MagusEngine.Components
         OnEnd
     }
 
+    public readonly struct BaseEffectConfig
+    {
+        public long TickToRemove { get; }
+        public long TickApplied { get; }
+        public string? EffectMessage { get; }
+        public string? RemoveMessage { get; }
+        public string Tag { get; }
+        public bool FreezesTurn { get; }
+        public ExecutionType Execution { get; } = ExecutionType.PerTurn;
+
+        public BaseEffectConfig(long tickApplied, long tickToRemove, string? effectMessage, string tag, bool freezesTurn = false, string? removeMessage = null, ExecutionType execution = ExecutionType.PerTurn)
+        {
+            TickToRemove = tickToRemove;
+            TickApplied = tickApplied;
+            EffectMessage = effectMessage;
+            RemoveMessage = removeMessage;
+            Tag = tag;
+            FreezesTurn = freezesTurn;
+            Execution = execution;
+        }
+    }
+
     public abstract class BaseEffectComponent : ParentAwareComponentBase<MagiEntity>
     {
         private bool _isActive;
@@ -26,17 +48,17 @@ namespace MagusEngine.Components
         public bool FreezesTurn { get; set; }
         public ExecutionType Execution { get; set; }
 
-        protected BaseEffectComponent(long tickApplied, long tickToRemove, string? effectMessage, string tag, bool customTurnTimer = false, bool freezesTurn = false, string? removeMessage = null, ExecutionType execution = ExecutionType.PerTurn)
+        protected BaseEffectComponent(BaseEffectConfig config, bool customTurnTimer = false)
         {
-            TickToRemove = tickToRemove;
-            TickApplied = tickApplied;
-            EffectMessage = effectMessage;
-            Tag = tag;
+            TickToRemove = config.TickToRemove;
+            TickApplied = config.TickApplied;
+            EffectMessage = config.EffectMessage;
+            Tag = config.Tag;
             if (!customTurnTimer)
                 ConfigureTurnTimer();
-            FreezesTurn = freezesTurn;
-            RemoveMessage = removeMessage;
-            Execution = execution;
+            FreezesTurn = config.FreezesTurn;
+            RemoveMessage = config.RemoveMessage;
+            Execution = config.Execution;
         }
 
         public void ConfigureTurnTimer()

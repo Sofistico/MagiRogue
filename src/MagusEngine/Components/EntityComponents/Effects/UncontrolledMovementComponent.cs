@@ -17,7 +17,7 @@ namespace MagusEngine.Components.EntityComponents.Effects
         public Direction Direction { get; }
 
         public UncontrolledMovementComponent(double force, int tilesToMove, Direction dir, long turnApplied, long turnToRemove, string effectMessage)
-            : base(turnApplied, turnToRemove, effectMessage, "uncont_mov", freezesTurn: true)
+            : base(new(turnApplied, turnToRemove, effectMessage, "uncont_mov", freezesTurn: true))
         {
             TilesToMovePerTurn = tilesToMove;
             Direction = dir;

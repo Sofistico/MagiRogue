@@ -33,13 +33,14 @@ namespace MagusEngine.Components.TilesComponents
             string? removeMessage = null
         )
             : base(
+                new(
                 tickApplied,
                 tickToRemove,
                 effectMessage,
                 tag,
-                customTurnTimer,
                 freezesTurn,
-                removeMessage
+                removeMessage),
+                customTurnTimer
             )
         {
             if (string.IsNullOrEmpty(effectMessage))

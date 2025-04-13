@@ -10,7 +10,7 @@ namespace Arquimedes.Utils
         {
             Error = (sender, args) =>
             {
-                // System.Console.WriteLine(args.ErrorContext.Error.Message);
+                Console.WriteLine(args.ErrorContext.Error.Message);
             },
             Converters = { new IsoDateTimeConverter(), new StringEnumConverter() },
         };
@@ -20,12 +20,12 @@ namespace Arquimedes.Utils
             var str = FileUtils.GetAllTextFromFile(new FileInfo(path));
             return str is not null
                 ? JsonConvert.DeserializeObject<T>(str, settings)
-                : throw new ApplicationException("Tried to read a empty file!");
+                : throw new FileNotFoundException("Tried to read a empty file!");
         }
 
         public static List<T>? JsonDeseralize<T>(string[] arrayOfStreams)
         {
-            List<T> list = new();
+            List<T> list = [];
             foreach (string stream in arrayOfStreams)
             {
                 list.Add(JsonConvert.DeserializeObject<T>(File.ReadAllText(stream))!);

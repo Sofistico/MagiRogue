@@ -248,26 +248,12 @@ namespace MagusEngine.Core.Entities.Base
 
         public void RemoveComponent(string tag)
         {
-            try
-            {
-                GoRogueComponents.Remove(tag);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            GoRogueComponents.Remove(tag);
         }
 
         public void RemoveComponent(params string[] tags)
         {
-            try
-            {
-                GoRogueComponents.Remove(tags);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            GoRogueComponents.Remove(tags);
         }
 
         #endregion Components

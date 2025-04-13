@@ -12,7 +12,7 @@ namespace MagusEngine.Components.EntityComponents.Effects
             string effectMessage = "",
             string tag = "limited_time"
         )
-            : base(tickApplied, tickToRemove, effectMessage, tag, execution: ExecutionType.OnEnd)
+            : base(new(tickApplied, tickToRemove, effectMessage, tag, execution: ExecutionType.OnEnd))
         { }
 
         public override void ExecuteEffect()
