@@ -5,8 +5,8 @@ namespace MagusEngine.Components.EntityComponents.Status
         public SightComponent(long tickToRemove, long tickApplied, string effectMessage)
             : base(
                 new(
-                    tickToRemove,
                     tickApplied,
+                    tickToRemove,
                     effectMessage,
                     "mage_sight",
                     removeMessage: "You stop seeing"
