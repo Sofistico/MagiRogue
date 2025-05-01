@@ -20,7 +20,7 @@ namespace MagusEngine.Core.Magic.Effects
 
         public DamageEffect()
         {
-            EffectType = EffectType.DAMAGE;
+            EffectType = Arquimedes.Enumerators.SpellEffectType.DAMAGE.ToString();
             SpellDamageTypeId = "blunt";
         }
 

@@ -20,7 +20,7 @@ namespace MagusEngine.Serialization.EntitySerialization
 
             foreach (JToken token in listEffectsJson)
             {
-                EffectType effect = Enum.Parse<EffectType>((string)token["EffectType"]!);
+                SpellEffectType effect = Enum.Parse<SpellEffectType>((string)token["EffectType"]!);
                 if (!Locator.GetService<SpellEffectFactory>().TryGetSpellEffect(effect, token, out var eff))
                     continue;
                 effectsList.Add(eff);

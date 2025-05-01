@@ -21,7 +21,7 @@ namespace MagusEngine.Core.Magic.Effects
             SpellDamageTypeId = spellDamageTypeId;
             Radius = radius;
             TargetsTile = true;
-            EffectType = EffectType.TELEPORT;
+            EffectType = Arquimedes.Enumerators.SpellEffectType.TELEPORT.ToString();
         }
 
         public override void ApplyEffect(Point target, Actor caster, Spell spellCasted)

@@ -19,13 +19,15 @@ namespace MagusEngine.Services.Factory
             Register("KNOCKBACK", static token => token.ToObject<KnockbackEffect>());
             Register("LIGHT", static token => token.ToObject<LightEffect>());
             Register("MEMISSION", static token => token.ToObject<MEssionEffect>());
+            Register("RAISEWALL", static token => token.ToObject<RaiseWallEffect>());
+            Register("DIG", static token => token.ToObject<DigEffect>());
         }
 
-        public ISpellEffect? GetSpellEffect(EffectType effect, JToken token) =>
+        public ISpellEffect? GetSpellEffect(SpellEffectType effect, JToken token) =>
             GetValueFromKey(effect.ToString(), token);
 
         public bool TryGetSpellEffect(
-            EffectType key,
+            SpellEffectType key,
             JToken token,
             [NotNullWhen(true)] out ISpellEffect? effect
         ) => TryGetValueFromKey(key.ToString(), token, out effect);

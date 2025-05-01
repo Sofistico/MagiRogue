@@ -11,7 +11,7 @@ namespace MagusEngine.Core.Magic.Effects
 
         public LightEffect()
         {
-            EffectType = EffectType.LIGHT;
+            EffectType = Arquimedes.Enumerators.SpellEffectType.LIGHT.ToString();
         }
 
         public override void ApplyEffect(Point target, Actor caster, Spell spellCasted)

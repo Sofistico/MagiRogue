@@ -17,8 +17,7 @@ namespace MagusEngine.Core.Magic.Interfaces
         double ConeCircleSpan { get; set; }
         bool TargetsTile { get; set; }
         int BaseDamage { get; set; }
-        [JsonConverter(typeof(StringEnumConverter))]
-        EffectType EffectType { get; set; }
+        string EffectType { get; set; }
         bool CanMiss { get; set; }
 
         /// <summary>

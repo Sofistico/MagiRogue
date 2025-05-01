@@ -21,7 +21,7 @@ namespace MagusEngine.Core.Magic
 
         // Create a magic inspired by Mother of learning
         public List<Spell> KnowSpells { get; set; }
-        public List<EffectType> KnowEffects { get; set; }
+        public List<string> KnowEffects { get; set; }
         public List<SpellAreaEffect> KnowArea { get; set; }
         public List<DamageTypes> KnowDamageTypes { get; set; }
 

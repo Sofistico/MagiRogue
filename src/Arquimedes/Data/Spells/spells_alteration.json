@@ -1,0 +1,40 @@
+[
+  {
+    "Id": "raise_wall",
+    "ShapingAbility": "Mana Shaping",
+    "Name": "Raise wall",
+    "SpellLevel": 2,
+    "Description": "This spell raises a wall at the desired location, it uses the material found on the floor to raise this wall",
+    "SpellRange": 10,
+    "MagicCost": 2.5,
+    "MagicArt": "Alteration",
+    "Effects": [
+      {
+        "AreaOfEffect": "Target",
+        "EffectType": "RAISEWALL",
+        "TargetsTile": true
+      }
+    ],
+    "Manifestation": "Target",
+    "Context": ["Terraforming", "BlocksSight"]
+  },
+  {
+    "Id": "wall_into_floor",
+    "ShapingAbility": "Mana Shaping",
+    "Name": "Dig wall",
+    "SpellLevel": 2,
+    "Description": "This spell transmutates the targeted wall into rubble",
+    "SpellRange": 8,
+    "MagicCost": 5,
+    "MagicArt": "Alteration",
+    "Effects": [
+      {
+        "AreaOfEffect": "Target",
+        "EffectType": "DIG",
+        "TargetsTile": true
+      }
+    ],
+    "Manifestation": "Target",
+    "Context": ["Terraforming", "Dig"]
+  }
+]
