@@ -128,6 +128,17 @@ namespace MagusEngine.Services.Factory
 
         public static void ResetCachedMaterial() => cachedMaterial = null;
 
+        public static void ChangeTileType(this Tile tile, TileType type)
+        {
+            var (foreground, background, glyph, isWalkable, isTransparent, name) = DetermineTileLookAndName(tile.Material, type);
+            tile.Appearence.Foreground = foreground;
+            tile.Appearence.Background = background;
+            tile.Appearence.Glyph = glyph;
+            tile.IsWalkable = isWalkable;
+            tile.IsTransparent = isTransparent;
+            tile.Name = name;
+        }
+
         private static (Color, Color, char, bool, bool, string) DetermineTileLookAndName(Material? material, TileType tileType)
         {
             char glyph;

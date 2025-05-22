@@ -48,6 +48,8 @@ namespace MagusEngine.Core.Entities
 
             Spell knockBack = DataManager.QuerySpellInData("push", 1)!;
 
+            Spell dig = DataManager.QuerySpellInData("dig", 2)!;
+
             magic.AddToSpellList([
                 cure,
                 haste,
@@ -58,7 +60,8 @@ namespace MagusEngine.Core.Entities
                 teleport,
                 coneOfCold,
                 fingerOfDeath,
-                knockBack
+                knockBack,
+                dig
             ]);
 
             return player;

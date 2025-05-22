@@ -19,9 +19,9 @@
     "Context": ["Terraforming", "BlocksSight"]
   },
   {
-    "Id": "wall_into_floor",
+    "Id": "dig",
     "ShapingAbility": "Mana Shaping",
-    "Name": "Dig wall",
+    "Name": "Dig",
     "SpellLevel": 2,
     "Description": "This spell transmutates the targeted wall into rubble",
     "SpellRange": 8,

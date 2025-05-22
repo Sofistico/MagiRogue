@@ -1,10 +1,36 @@
+using Arquimedes.Enumerators;
+using MagusEngine.Bus.UiBus;
+using MagusEngine.Core.Entities;
+using MagusEngine.Core.MapStuff;
+using MagusEngine.Services;
+using MagusEngine.Services.Factory;
+using MagusEngine.Systems.Physics;
+
 namespace MagusEngine.Core.Magic.Effects
 {
     public class DigEffect : SpellEffectBase
     {
         public DigEffect()
         {
-            EffectType = Arquimedes.Enumerators.SpellEffectType.DIG.ToString();
+            EffectType = SpellEffectType.DIG.ToString();
+        }
+
+        public override void ApplyEffect(Point target, Actor caster, Spell spellCasted)
+        {
+            if (caster is null || caster?.CurrentMagiMap is null)
+                return;
+
+            var tile = caster.CurrentMagiMap?.GetTileAt<Tile>(target)!;
+            if (tile.IsWalkable)
+            {
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("There is nothing to dig there", firstOrThirdPerson: PointOfView.Third));
+                return;
+            }
+            var threashold = PhysicsSystem.GetMiningDificulty(tile.Material);
+            if (spellCasted.Power * 2 <= threashold)
+                return;
+
+            tile.ChangeTileType(TileType.Wall);
         }
     }
 }
