@@ -15,7 +15,7 @@
         "TargetsTile": true
       }
     ],
-    "Manifestation": "Target",
+    "Manifestation": "Instant",
     "Context": ["Terraforming", "BlocksSight"]
   },
   {
@@ -25,16 +25,17 @@
     "SpellLevel": 2,
     "Description": "This spell transmutates the targeted wall into rubble",
     "SpellRange": 8,
-    "MagicCost": 5,
+    "MagicCost": 7,
     "MagicArt": "Alteration",
     "Effects": [
       {
         "AreaOfEffect": "Target",
         "EffectType": "DIG",
-        "TargetsTile": true
+        "TargetsTile": true,
+        "IgnoresWall": true
       }
     ],
-    "Manifestation": "Target",
+    "Manifestation": "Instant",
     "Context": ["Terraforming", "Dig"]
   }
 ]

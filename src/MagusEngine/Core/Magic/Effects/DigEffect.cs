@@ -5,6 +5,7 @@ using MagusEngine.Core.MapStuff;
 using MagusEngine.Services;
 using MagusEngine.Services.Factory;
 using MagusEngine.Systems.Physics;
+using MagusEngine.Utils;
 
 namespace MagusEngine.Core.Magic.Effects
 {
@@ -27,10 +28,10 @@ namespace MagusEngine.Core.Magic.Effects
                 return;
             }
             var threashold = PhysicsSystem.GetMiningDificulty(tile.Material);
-            if (spellCasted.Power * 2 <= threashold)
+            if ((spellCasted.Power * (125 + Mrn.Normal1D100Dice)) <= threashold)
                 return;
 
-            tile.ChangeTileType(TileType.Wall);
+            tile.ChangeTileType(TileType.Floor);
         }
     }
 }
