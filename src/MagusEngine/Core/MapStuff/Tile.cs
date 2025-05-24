@@ -15,7 +15,7 @@ namespace MagusEngine.Core.MapStuff
         private Material? _material;
 
         public ColoredGlyph Appearence { get; } = null!;
-        public ColoredGlyph? LastSeenAppereance { get; }
+        public ColoredGlyph? LastSeenAppereance { get; private set; }
         public int MoveTimeCost { get; set; } = 100;
         public string? Name { get; set; }
         public string? Description { get; set; }
@@ -43,7 +43,8 @@ namespace MagusEngine.Core.MapStuff
                     ? Locator.GetService<IDGenerator>().UseID
                     : null,
                 collection
-            ) { }
+            )
+        { }
 
         public Tile(
             Color foreground,
@@ -57,7 +58,7 @@ namespace MagusEngine.Core.MapStuff
             : this(isWalkable, isTransparent, pos, collection)
         {
             Appearence = new(foreground, background, glyph);
-            LastSeenAppereance = (ColoredGlyph)Appearence.Clone();
+            UpdateLastSeenAppearence();
         }
 
         public Tile()
@@ -92,7 +93,7 @@ namespace MagusEngine.Core.MapStuff
         {
             SetUpSomeBasicProps(name, idMaterial, moveTimeCost);
             Appearence = glyph;
-            LastSeenAppereance = (ColoredGlyph)glyph.Clone();
+            UpdateLastSeenAppearence();
         }
 
         private Tile(Tile tile)
@@ -179,6 +180,11 @@ namespace MagusEngine.Core.MapStuff
             MoveTimeCost = moveTimeCost;
             Name = name;
             MaterialId = idMaterial;
+        }
+
+        public void UpdateLastSeenAppearence()
+        {
+            LastSeenAppereance = (ColoredGlyph)Appearence.Clone();
         }
     }
 }

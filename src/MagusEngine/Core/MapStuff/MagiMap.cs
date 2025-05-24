@@ -1,12 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using Arquimedes.Enumerators;
 using GoRogue.GameFramework;
 using GoRogue.Pathing;
 using GoRogue.Random;
-using MagusEngine.Core.Entities;
-using MagusEngine.Core.Entities.Base;
 using MagusEngine.Components.EntityComponents;
 using MagusEngine.Components.TilesComponents;
+using MagusEngine.Core.Entities;
+using MagusEngine.Core.Entities.Base;
 using MagusEngine.Serialization.MapConverter;
+using MagusEngine.Services.Factory;
 using MagusEngine.Systems;
 using MagusEngine.Utils;
 using MagusEngine.Utils.Extensions;
@@ -17,11 +22,6 @@ using SadConsole.Entities;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 using SadRogue.Primitives.SpatialMaps;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using MagusEngine.Services.Factory;
 
 namespace MagusEngine.Core.MapStuff
 {
@@ -408,7 +408,6 @@ namespace MagusEngine.Core.MapStuff
 
         private void FovCalculate(Actor actor)
         {
-            /*if (PlayerFOV.CurrentFOV.Count() >= actor.Stats.ViewRadius)*/
             if (actor.ActorAnatomy.CanSee)
             {
                 PlayerFOV.Calculate(actor.Position, actor.GetViewRadius(), Radius.Circle);

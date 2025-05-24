@@ -96,6 +96,8 @@ namespace MagusEngine.Core.Entities.Base
         {
             get
             {
+                if (Organs.Count == 0)
+                    return false;
                 return Organs.Exists(o => o.OrganType is OrganType.Visual && o.Working);
             }
         }
@@ -105,6 +107,8 @@ namespace MagusEngine.Core.Entities.Base
         {
             get
             {
+                if (Limbs.Count == 0)
+                    return false;
                 return Limbs.Exists(l => l.LimbType is LimbType.UpperBody && l.Attached);
             }
         }

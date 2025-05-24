@@ -137,6 +137,7 @@ namespace MagusEngine.Services.Factory
             tile.IsWalkable = isWalkable;
             tile.IsTransparent = isTransparent;
             tile.Name = name;
+            tile.UpdateLastSeenAppearence();
         }
 
         private static (Color, Color, char, bool, bool, string) DetermineTileLookAndName(Material? material, TileType tileType)

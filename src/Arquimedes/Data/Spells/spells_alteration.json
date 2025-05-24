@@ -5,14 +5,15 @@
     "Name": "Raise wall",
     "SpellLevel": 2,
     "Description": "This spell raises a wall at the desired location, it uses the material found on the floor to raise this wall",
-    "SpellRange": 10,
-    "MagicCost": 2.5,
+    "SpellRange": 4,
+    "MagicCost": 7,
     "MagicArt": "Alteration",
     "Effects": [
       {
         "AreaOfEffect": "Target",
         "EffectType": "RAISEWALL",
-        "TargetsTile": true
+        "TargetsTile": true,
+        "IgnoresWall": true
       }
     ],
     "Manifestation": "Instant",
@@ -24,7 +25,7 @@
     "Name": "Dig",
     "SpellLevel": 2,
     "Description": "This spell transmutates the targeted wall into rubble",
-    "SpellRange": 8,
+    "SpellRange": 4,
     "MagicCost": 7,
     "MagicArt": "Alteration",
     "Effects": [
