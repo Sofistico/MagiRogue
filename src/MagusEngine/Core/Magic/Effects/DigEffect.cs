@@ -1,6 +1,5 @@
 using Arquimedes.Enumerators;
 using MagusEngine.Bus.UiBus;
-using MagusEngine.Components.TilesComponents;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.Services;

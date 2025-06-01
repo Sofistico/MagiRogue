@@ -6,7 +6,6 @@ using Arquimedes.Enumerators;
 using GoRogue.GameFramework;
 using GoRogue.Pathing;
 using GoRogue.Random;
-using MagusEngine.Components.EntityComponents;
 using MagusEngine.Components.TilesComponents;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
@@ -30,7 +29,7 @@ namespace MagusEngine.Core.MapStuff
     /// </summary>
     [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
     [JsonConverter(typeof(MapJsonConverter))]
-    public sealed class MagiMap : GoRogue.GameFramework.Map, IDisposable
+    public sealed class MagiMap : Map, IDisposable
     {
         #region Fields
 
@@ -100,7 +99,7 @@ namespace MagusEngine.Core.MapStuff
                 (int)MapLayer.GHOSTS,
                 (int)MapLayer.ACTORS,
                 (int)MapLayer.PROJECTILE,
-                (int)MapLayer.SPECIAL))
+                (int)MapLayer.SPECIAL), useCachedGridViews: true)
         {
             // Treat the fov as a component.
             GoRogueComponents.Add(new MagiRogueFOVVisibilityHandler(this, Color.DarkSlateGray, (int)MapLayer.GHOSTS));
@@ -174,7 +173,7 @@ namespace MagusEngine.Core.MapStuff
                 for (int t = 0; t < room.DoorsPoint.Count; t++)
                 {
                     Tile? door = GetTileAt<DoorComponent>(room.DoorsPoint[t]);
-                    room.Doors.Add(door);
+                    room.Doors.Add(door!);
                 }
             }
         }
@@ -210,13 +209,13 @@ namespace MagusEngine.Core.MapStuff
             Actor[] search;
             if (actionToRunInActors is null)
             {
-                search = Entities.GetLayer((int)MapLayer.ACTORS).Items.Cast<Actor>().ToArray();
+                search = [.. Entities.GetLayer((int)MapLayer.ACTORS).Items.Cast<Actor>()];
             }
             else
             {
-                search = Entities.GetLayer((int)MapLayer.ACTORS).Items.Cast<Actor>().Where(actionToRunInActors).ToArray();
+                search = [.. Entities.GetLayer((int)MapLayer.ACTORS).Items.Cast<Actor>().Where(actionToRunInActors)];
             }
-            _lastCalledActors.TryAdd(actionToRunInActors, search);
+            _lastCalledActors.TryAdd(actionToRunInActors!, search);
 
             return search;
         }
@@ -370,7 +369,7 @@ namespace MagusEngine.Core.MapStuff
             {
                 return (T)filter.Item;
             }
-            return default;
+            return default!;
         }
 
         public void ConfigureRender(ScreenSurface renderer)
@@ -379,7 +378,7 @@ namespace MagusEngine.Core.MapStuff
             {
                 return;
             }
-            EntityRender = new();
+            EntityRender = [];
             renderer.SadComponents.Add(EntityRender);
             EntityRender.DoEntityUpdate = true;
 
@@ -429,7 +428,7 @@ namespace MagusEngine.Core.MapStuff
         /// </summary>
         public void ForceFovCalculation()
         {
-            Actor actor = (Actor)ControlledEntitiy;
+            Actor actor = (Actor)ControlledEntitiy!;
             FovCalculate(actor);
         }
 
@@ -440,7 +439,7 @@ namespace MagusEngine.Core.MapStuff
         /// <returns>Returns an Point to a tile that is walkable and there is no actor there</returns>
         public Point GetRandomWalkableTile()
         {
-            var rng = GoRogue.Random.GlobalRandom.DefaultRNG;
+            var rng = GlobalRandom.DefaultRNG;
             Point rngPoint = new(rng.NextInt(Width - 1), rng.NextInt(Height - 1));
 
             while (!IsTileWalkable(rngPoint))
@@ -512,7 +511,7 @@ namespace MagusEngine.Core.MapStuff
 
         public List<Tile> ReturnAllTrees()
         {
-            List<Tile> result = new();
+            List<Tile> result = [];
             foreach (Point p in Terrain.Positions())
             {
                 var tree = (Tile?)Terrain[p];
@@ -531,7 +530,7 @@ namespace MagusEngine.Core.MapStuff
         /// <param name="r"></param>
         public void AddRoom(Room r)
         {
-            Rooms ??= new List<Room>();
+            Rooms ??= [];
             int tries = 1000;
             while (!CheckIfRoomFitsInsideMap(r) && --tries != 0)
             {
@@ -576,7 +575,7 @@ namespace MagusEngine.Core.MapStuff
         /// <param name="r"></param>
         public void AddRooms(List<Room> r)
         {
-            Rooms ??= new List<Room>();
+            Rooms ??= [];
             Rooms.AddRange(r);
         }
 
@@ -584,13 +583,13 @@ namespace MagusEngine.Core.MapStuff
         {
             Point[] posRoom = r.RoomPoints;
 
-            for (int x = 0; x < r.Template.Obj.Rows.Length; x++)
+            for (int x = 0; x < r!.Template!.Obj!.Rows.Length; x++)
             {
                 string currentRow = r.Template.Obj.Rows[x];
                 for (int y = 0; y < currentRow.Length; y++)
                 {
                     char c = currentRow[y];
-                    Point pos = posRoom[Point.ToIndex(x, y, r.Template.Obj.Rows.Length)];
+                    Point pos = posRoom[Point.ToIndex(x, y, r!.Template.Obj.Rows.Length)];
                     if (CheckForIndexOutOfBounds(pos))
                     {
                         // skip over if not in the map
@@ -617,11 +616,11 @@ namespace MagusEngine.Core.MapStuff
                 }
                 else
                 {
-                    str = fur.ToString();
+                    str = fur!.ToString()!;
                 }
                 try
                 {
-                    Furniture furniture = DataManager.QueryFurnitureInData(str);
+                    Furniture furniture = DataManager.QueryFurnitureInData(str)!;
                     furniture.Position = pos;
                     AddMagiEntity(furniture);
                 }
@@ -644,7 +643,7 @@ namespace MagusEngine.Core.MapStuff
                 }
                 else
                 {
-                    str = ter.ToString();
+                    str = ter.ToString()!;
                 }
                 try
                 {
@@ -674,7 +673,7 @@ namespace MagusEngine.Core.MapStuff
 
         private static string ParseRandomChance(JArray array)
         {
-            List<string> strs = new();
+            List<string> strs = [];
             for (int i = 0; i < array.Count; i++)
             {
                 var child = array[i];
@@ -793,7 +792,7 @@ namespace MagusEngine.Core.MapStuff
 
         public IGameObject? FindTypeOfFood(Food whatToEat, IGameObject entity)
         {
-            const int defaultSearchRange = 25;
+            // const int defaultSearchRange = 25;
             throw new NotImplementedException("Lazy");
             // var registry = Locator.GetService<EntityRegistry>();
             // foreach (var objId in registry.CompView<FoodComponent>())
@@ -807,7 +806,7 @@ namespace MagusEngine.Core.MapStuff
             //     }
             // }
 
-            return null;
+            // return null;
         }
 
         public Tile[] GetAllTilesWithComponents<TFind>() where TFind : class
