@@ -18,7 +18,7 @@ namespace Arquimedes.Utils
             // Get absolutepath
             string absPath = Path.GetFullPath(Path.Combine(_appDomain, realDir)).Replace('\\', Path.DirectorySeparatorChar);
 
-            return Directory.GetFiles(absPath, pattern, SearchOption.AllDirectories);
+            return Directory.GetFiles(absPath, pattern, SearchOption.TopDirectoryOnly);
         }
 
         public static string? GetAllTextFromFile(FileInfo file)
@@ -49,21 +49,21 @@ namespace Arquimedes.Utils
             try
             {
                 Parallel.ForEach(files, file =>
-                        {
-                        try
-                        {
+                {
+                    try
+                    {
                         foreach (T? item in JsonUtils.JsonDeseralize<List<T>>(file)!)
                         {
-                        result.Add(item);
+                            result.Add(item);
                         }
 
-                        }
-                        catch (System.Exception ex)
-                        {
+                    }
+                    catch (System.Exception ex)
+                    {
                         System.Console.WriteLine($"Something went wrong {ex}");
                         return;
-                        }
-                        });
+                    }
+                });
             }
             catch (System.Exception ex)
             {
