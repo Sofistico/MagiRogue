@@ -31,12 +31,12 @@ namespace MagusEngine.Utils
 
                 if (roll1 == 6)
                 {
-                    roll1 = Dice.Roll("1d6 - 1");
+                    roll1 = Dice.Roll("1d6-1");
                     sumRoll1 += roll1;
                 }
                 if (roll2 == 6)
                 {
-                    roll2 = Dice.Roll("1d6 - 1");
+                    roll2 = Dice.Roll("1d6-1");
                     sumRoll2 += roll2;
                 }
 
