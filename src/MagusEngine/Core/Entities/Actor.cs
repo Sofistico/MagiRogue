@@ -481,7 +481,7 @@ namespace MagusEngine.Core.Entities
             return 1; // to be implemented item range that permits attacking and stuff!
         }
 
-        public bool CanSee(Point pos)
+        public override bool CanSee(Point pos)
         {
             UpdateFov();
             return actorFov.BooleanResultView[pos];

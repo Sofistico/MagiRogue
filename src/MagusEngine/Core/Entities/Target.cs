@@ -129,38 +129,22 @@ namespace MagusEngine.Core.Entities
             Cursor.IgnoresWalls = true;
         }
 
-        // TODO: Customize who should you target
         public (bool, Spell?) EndSpellTargetting()
         {
             bool spellInRange = (int)Distance.Chebyshev.Calculate(OriginCoord, Cursor.Position) <= _selectedSpell?.SpellRange;
+            if (!spellInRange)
+            {
+                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("The target is too far!"));
+                return (false, null);
+            }
             if (_selectedSpell?.Manifestation == SpellManifestation.Instant)
             {
-                //if (_selectedSpell?.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Beam) == true)
-                //{
-                //    return AffectPath();
-                //}
-                //if (_selectedSpell?.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Cone) == true)
-                //{
-                //    return AffectArea();
-                //}
-                //if (_selectedSpell?.Effects.Any(e => e.AreaOfEffect is SpellAreaEffect.Ball) == true)
-                //{
-                //    return AffectArea();
-                //}
-                if (spellInRange)
-                {
-                    return AffectTarget();
-                }
+                return AffectTarget();
             }
-            if (spellInRange)
-            {
-                ActionManager.CastManifestedSpell(_selectedSpell!, _caster!, OriginCoord, Cursor.Position);
-                var spellCasted = _selectedSpell;
-                EndTargetting();
-                return (true, spellCasted);
-            }
-            Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("The target is too far!"));
-            return (false, null);
+            ActionManager.CastManifestedSpell(_selectedSpell!, _caster!, OriginCoord, Cursor.Position);
+            var spellCasted = _selectedSpell;
+            EndTargetting();
+            return (true, spellCasted);
         }
 
         public (bool, Item?) EndItemTargetting()
@@ -181,7 +165,11 @@ namespace MagusEngine.Core.Entities
         private (bool, Spell) AffectTarget()
         {
             bool casted;
-            if (TravelPath is not null)
+            if (_selectedSpell?.Effects?.Any(i => i.AreaOfEffect == SpellAreaEffect.Self) == true)
+            {
+                casted = _selectedSpell?.CastSpell(_caster!.Position, _caster) ?? false;
+            }
+            else if (TravelPath is not null)
             {
                 casted = _selectedSpell?.CastSpell(TravelPath.End, _caster!) ?? false;
             }
