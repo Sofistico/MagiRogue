@@ -138,8 +138,6 @@ namespace MagusEngine.Core.Entities
                 Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("The target is too far!"));
                 return (false, null);
             }
-            if (_selectedSpell is null)
-                throw new NullValueException(nameof(_selectedSpell));
             if (_selectedSpell!.Manifestation == SpellManifestation.Instant)
             {
                 return AffectTarget();
