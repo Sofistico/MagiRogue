@@ -10,6 +10,7 @@ using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic;
 using MagusEngine.Core.MapStuff;
+using MagusEngine.Exceptions;
 using MagusEngine.Services;
 using MagusEngine.Systems;
 using MagusEngine.Systems.Time;
@@ -165,13 +166,16 @@ namespace MagusEngine.Core.Entities
         private (bool, Spell) AffectTarget()
         {
             bool casted;
-            if (_selectedSpell?.Effects?.Any(i => i.AreaOfEffect == SpellAreaEffect.Self) == true)
+            if (_selectedSpell is null)
+                throw new NullValueException(nameof(_selectedSpell));
+
+            if (_selectedSpell.Effects?.Any(i => i.AreaOfEffect == SpellAreaEffect.Self) == true)
             {
-                casted = _selectedSpell?.CastSpell(_caster!.Position, _caster) ?? false;
+                casted = _selectedSpell.CastSpell(_caster!.Position, _caster);
             }
             else if (TravelPath is not null)
             {
-                casted = _selectedSpell?.CastSpell(TravelPath.End, _caster!) ?? false;
+                casted = _selectedSpell!.CastSpell(TravelPath.End, _caster!);
             }
             else
             {
