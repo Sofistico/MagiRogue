@@ -75,9 +75,9 @@ namespace MagusEngine.Components
             {
                 if (Execution == ExecutionType.OnEnd)
                     ExecuteEffect();
-                Parent?.RemoveComponent(this);
                 if (!RemoveMessage.IsNullOrEmpty())
-                    Locator.GetService<MessageBusService>()?.SendMessage<AddMessageLog>(new(RemoveMessage!, Parent == Find.Universe.Player));
+                    Locator.GetService<MessageBusService>()?.SendMessage<AddMessageLog>(new(RemoveMessage!, Parent));
+                Parent?.RemoveComponent(this);
                 Find.Universe.Time.TurnPassed -= GetTime_TurnPassed;
                 _isActive = false;
                 return;

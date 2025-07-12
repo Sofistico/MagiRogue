@@ -1,12 +1,13 @@
+using System;
+using System.Linq;
 using MagusEngine.Bus.UiBus;
+using MagusEngine.Components.EntityComponents.Effects;
+using MagusEngine.Core;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
-using MagusEngine.Components.EntityComponents.Effects;
 using MagusEngine.Services;
 using MagusEngine.Utils;
 using SadRogue.Primitives;
-using System;
-using System.Linq;
 
 namespace MagusEngine.Systems.Physics
 {
@@ -144,6 +145,13 @@ namespace MagusEngine.Systems.Physics
                 Find.Time.Tick + 1, // should run exactly once
                 effectMessage);
             entity?.AddComponent(comp, comp.Tag);
+        }
+
+        public static double GetMiningDificulty(Material? material)
+        {
+            if (material is null)
+                return 0;
+            return material.DensityKgM3 ?? 1 * material.Hardness ?? 1 / (material.ImpactFractureMpa ?? 1 + 1);
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Arquimedes.Enumerators
 {
-    public enum EffectType
+    public enum SpellEffectType
     {
         DAMAGE,
         MEMISSION,
@@ -13,5 +13,7 @@
         KNOCKBACK,
         LIGHT,
         KINESIS,
+        RAISEWALL,
+        DIG
     }
 }

@@ -20,7 +20,7 @@ namespace MagusEngine.Core.Magic.Effects
         {
             Duration = duration;
             AreaOfEffect = SpellAreaEffect.Self;
-            EffectType = EffectType.MAGESIGHT;
+            EffectType = Arquimedes.Enumerators.SpellEffectType.MAGESIGHT.ToString();
         }
 
         public override void ApplyEffect(Point target, Actor caster, Spell spellCasted)

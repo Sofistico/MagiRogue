@@ -22,7 +22,7 @@ namespace MagusEngine.Core.Magic.Effects
             SpellDamageTypeId = spellDamageTypeId;
             HastePower = hastePower;
             Duration = duration;
-            EffectType = EffectType.HASTE;
+            EffectType = Arquimedes.Enumerators.SpellEffectType.HASTE.ToString();
         }
 
         public override void ApplyEffect(Point target, Actor caster, Spell spellCasted)

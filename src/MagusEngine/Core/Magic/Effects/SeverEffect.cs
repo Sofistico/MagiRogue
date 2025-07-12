@@ -1,6 +1,5 @@
 ﻿using Arquimedes.Enumerators;
 using MagusEngine.Core.Entities;
-using MagusEngine.Exceptions;
 using MagusEngine.Systems;
 using Newtonsoft.Json;
 
@@ -20,7 +19,7 @@ namespace MagusEngine.Core.Magic.Effects
             SpellDamageTypeId = spellDamageTypeId;
             Radius = radius;
             BaseDamage = dmg;
-            EffectType = EffectType.SEVER;
+            EffectType = SpellEffectType.SEVER.ToString();
             SpellDamageTypeId = "sharp";
         }
 

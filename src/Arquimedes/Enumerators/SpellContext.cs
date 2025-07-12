@@ -14,6 +14,9 @@ namespace Arquimedes.Enumerators
         Buff,
         Debuff,
         Teleport,
-        Distance
+        Distance,
+        Terraforming,
+        Dig,
+        BlocksSight,
     }
 }

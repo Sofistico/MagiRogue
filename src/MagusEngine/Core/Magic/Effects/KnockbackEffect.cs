@@ -15,7 +15,7 @@ namespace MagusEngine.Core.Magic.Effects
         public KnockbackEffect()
         {
             SpellDamageTypeId = "blunt";
-            EffectType = EffectType.KNOCKBACK;
+            EffectType = Arquimedes.Enumerators.SpellEffectType.KNOCKBACK.ToString();
         }
 
         public override void ApplyEffect(Point target, Actor caster, Spell spellCasted)

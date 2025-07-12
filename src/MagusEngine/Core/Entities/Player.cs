@@ -22,7 +22,7 @@ namespace MagusEngine.Core.Entities
 
             var magic = player.GetComponent<Magic.Magic>();
             var abb = player.Mind.GetAbility(magic.GetMagicShapingAbility());
-            abb.Score = 55;
+            abb.Score = 65;
             magic.KnowSpells[0].Proficiency = 1;
             if (!magic.KnowSpells.Exists(x => x.Id == "magic_missile"))
             {
@@ -48,6 +48,9 @@ namespace MagusEngine.Core.Entities
 
             Spell knockBack = DataManager.QuerySpellInData("push", 1)!;
 
+            Spell dig = DataManager.QuerySpellInData("dig", 2)!;
+            Spell raiseWall = DataManager.QuerySpellInData("raise_wall", 2)!;
+
             magic.AddToSpellList([
                 cure,
                 haste,
@@ -58,7 +61,9 @@ namespace MagusEngine.Core.Entities
                 teleport,
                 coneOfCold,
                 fingerOfDeath,
-                knockBack
+                knockBack,
+                dig,
+                raiseWall,
             ]);
 
             return player;

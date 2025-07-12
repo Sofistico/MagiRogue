@@ -1,4 +1,6 @@
 ﻿using Arquimedes.Enumerators;
+using MagusEngine.Core.Entities.Base;
+using MagusEngine.Systems;
 using MagusEngine.Utils.Extensions;
 
 namespace MagusEngine.Bus.UiBus
@@ -13,6 +15,14 @@ namespace MagusEngine.Bus.UiBus
         {
             Message = message;
             PlayerCanSee = playerSees;
+            Person = firstOrThirdPerson;
+        }
+
+        public AddMessageLog(string message, MagiEntity? entity, PointOfView firstOrThirdPerson = PointOfView.First)
+        {
+            Message = message;
+            if (Find.ControlledEntity is not null && entity is not null)
+                PlayerCanSee = Find.ControlledEntity.CanSee(entity!.Position);
             Person = firstOrThirdPerson;
         }
 

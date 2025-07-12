@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Arquimedes.Enumerators;
 using MagusEngine.Core.Entities;
-using MagusEngine.Core.Magic.Interfaces;
 
 namespace MagusEngine.Core.Magic.Effects
 {
@@ -15,7 +9,7 @@ namespace MagusEngine.Core.Magic.Effects
 
         public MEssionEffect()
         {
-            EffectType = EffectType.MEMISSION;
+            EffectType = Arquimedes.Enumerators.SpellEffectType.MEMISSION.ToString();
         }
 
         public override void ApplyEffect(Point target, Actor caster, Spell spellCasted)

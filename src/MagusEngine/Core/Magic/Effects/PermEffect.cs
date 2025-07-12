@@ -12,7 +12,7 @@ namespace MagusEngine.Core.Magic.Effects
         // private const int _totalTime = Time.TimeHelper.Year;
 
         public int SolidManaCost { get; set; }
-        public EffectType EffectType { get; set; }
+        public SpellEffectType EffectType { get; set; }
         public ISpellEffect Enchantment { get; set; }
         public Actor Caster { get; set; }
         public string EnchantName { get; set; }

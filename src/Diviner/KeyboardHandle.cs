@@ -1,25 +1,23 @@
+using System.Diagnostics.CodeAnalysis;
 using Arquimedes.Enumerators;
 using Diviner.Windows;
 using MagusEngine;
 using MagusEngine.Actions;
 using MagusEngine.Bus.MapBus;
 using MagusEngine.Bus.UiBus;
+using MagusEngine.Components.EntityComponents;
+using MagusEngine.Components.EntityComponents.Ai;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Magic;
 using MagusEngine.Core.MapStuff;
-using MagusEngine.Components.EntityComponents;
-using MagusEngine.Components.EntityComponents.Ai;
-using MagusEngine.Serialization.MapConverter;
+using MagusEngine.Exceptions;
 using MagusEngine.Services;
 using MagusEngine.Systems;
 using MagusEngine.Systems.Time;
 using MagusEngine.Utils.Extensions;
-using Newtonsoft.Json;
 using SadConsole.Input;
 using SadRogue.Primitives;
-using System.Diagnostics.CodeAnalysis;
 using Color = SadRogue.Primitives.Color;
-using MagusEngine.Exceptions;
 
 namespace Diviner
 {
@@ -110,30 +108,26 @@ namespace Diviner
             }
 
             #endregion WorldMovement
-
-            foreach (Keys key in _movementDirectionMapping.Keys)
+            if (world.CurrentMap is null)
+                return false;
+            var key = _movementDirectionMapping.Keys.FirstOrDefault(info.IsKeyPressed);
+            if (_movementDirectionMapping.TryGetValue(key, out var moveDirection))
             {
-                if (info.IsKeyPressed(key) && world.CurrentMap is not null)
+                Point deltaMove = new(moveDirection.DeltaX, moveDirection.DeltaY);
+                var actor = (Actor)world.CurrentMap.ControlledEntitiy!;
+                if (world.CurrentMap.ControlledEntitiy is not Player)
                 {
-                    Direction moveDirection = _movementDirectionMapping[key];
-                    Point deltaMove = new(moveDirection.DeltaX, moveDirection.DeltaY);
-                    var actor = (Actor)world.CurrentMap.ControlledEntitiy!;
-                    if (world.CurrentMap.ControlledEntitiy is not Player)
-                    {
-                        if (world.CurrentMap.CheckForIndexOutOfBounds(world.CurrentMap.ControlledEntitiy!.Position + deltaMove))
-                            return false;
+                    if (world.CurrentMap.CheckForIndexOutOfBounds(world.CurrentMap.ControlledEntitiy!.Position + deltaMove))
+                        return false;
 
-                        int distance = HandleNonPlayerMoveAndReturnDistance(world, deltaMove);
+                    int distance = HandleNonPlayerMoveAndReturnDistance(world, deltaMove);
 
-                        return world.CurrentMap.PlayerExplored[world.CurrentMap.ControlledEntitiy.Position + deltaMove]
-                            && distance <= _targetCursor?.MaxDistance
-                            && actor!.MoveBy(deltaMove);
-                    }
-
-                    return actor!.MoveBy(deltaMove);
+                    return world.CurrentMap.PlayerExplored[world.CurrentMap.ControlledEntitiy.Position + deltaMove]
+                        && distance <= _targetCursor?.MaxDistance
+                        && actor!.MoveBy(deltaMove);
                 }
+                return actor!.MoveBy(deltaMove);
             }
-
             return false;
         }
 
@@ -299,7 +293,7 @@ namespace Diviner
                     {
                         (sucess, var item) = _targetCursor.EndItemTargetting();
                         if (sucess)
-                            timeTaken = TimeHelper.GetShootingTime(_getPlayer, item.Mass);
+                            timeTaken = TimeHelper.GetShootingTime(_getPlayer, item!.Mass);
                     }
                     if (sucess)
                     {
@@ -348,6 +342,19 @@ namespace Diviner
                 {
                     uni.CurrentMap.PlayerExplored[i] = true;
                 }
+                return false;
+            }
+
+            if (info.IsKeyPressed(Keys.F2))
+            {
+                uni!.CurrentMap!.ForceFovCalculation();
+                return false;
+            }
+
+            if (info.IsKeyPressed(Keys.K) && _targetCursor?.TileInTarget() == true)
+            {
+                Tile tile = uni!.CurrentMap!.GetTileAt(_targetCursor.Position)!;
+                tile!.IsTransparent = !tile.IsTransparent;
                 return false;
             }
 
@@ -434,34 +441,6 @@ namespace Diviner
             if (info.IsKeyPressed(Keys.Tab))
             {
                 ActionManager.CreateNewMapForTesting();
-                return false;
-            }
-
-            if (info.IsKeyPressed(Keys.OemPlus))
-            {
-                MagiMap map = (MagiMap)_getPlayer.CurrentMap!;
-                map.LastPlayerPosition = _getPlayer.Position;
-                if (Find.Universe.MapIsWorld(map))
-                {
-                    string json = JsonConvert.SerializeObject(Find.Universe.WorldMap);
-
-                    Locator.GetService<SavingService>().SaveJsonToSaveFolder(json);
-                }
-                else
-                {
-                    string json = map.SaveMapToJson(_getPlayer);
-
-                    // The universe class also isn't being serialized properly, crashing newtonsoft
-                    // TODO: Revise this line of code when the time comes to work on the save system.
-                    //var gameState = JsonConvert.SerializeObject(new GameState().Universe);
-                    // MapTemplate mapDeJsonified = JsonConvert.DeserializeObject<MagiMap>(json)!;
-                }
-                return false;
-            }
-
-            if (info.IsKeyPressed(Keys.OemMinus))
-            {
-                Locator.GetService<SavingService>().SaveGameToFolder(Find.Universe, "TestFile");
                 return false;
             }
 

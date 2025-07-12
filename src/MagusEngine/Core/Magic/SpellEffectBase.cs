@@ -13,7 +13,7 @@ namespace MagusEngine.Core.Magic
         public int Radius { get; set; }
         public double ConeCircleSpan { get; set; }
         public bool TargetsTile { get; set; }
-        public EffectType EffectType { get; set; }
+        public string EffectType { get; set; } = null!; // this can't be null
         public bool CanMiss { get; set; }
         public bool IsResistable { get; set; }
         public string? SpellDamageTypeId { get; set; }

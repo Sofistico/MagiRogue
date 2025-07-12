@@ -269,6 +269,9 @@ namespace MagusEngine.Core.Magic
                     case SpellAreaEffect.Self:
                         effect.ApplyEffect(caster.Position, caster, this);
                         continue;
+                    case SpellAreaEffect.TargetSelf:
+                        effect.ApplyEffect(target, caster, this);
+                        continue;
                     case SpellAreaEffect.Target:
                         entity ??= Find.CurrentMap?.GetEntityAt<MagiEntity>(target);
                         if (!CanTarget(caster, entity, effect))

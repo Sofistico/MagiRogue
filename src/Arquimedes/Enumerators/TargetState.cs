@@ -2,6 +2,7 @@
 {
     public enum TargetState
     {
+        IdleMode,
         LookMode,
         TargetingSpell,
         TargetingItem,

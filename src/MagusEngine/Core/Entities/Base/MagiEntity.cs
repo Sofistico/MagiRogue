@@ -1,12 +1,12 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using Arquimedes.Interfaces;
 using MagusEngine.Exceptions;
 using MagusEngine.Services;
 using MagusEngine.Systems.Physics;
 using SadConsole.Entities;
 using SadRogue.Primitives;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace MagusEngine.Core.Entities.Base
 {
@@ -197,6 +197,8 @@ namespace MagusEngine.Core.Entities.Base
                 return false;
             }
         }
+
+        public virtual bool CanSee(Point pos) => false;
 
         #endregion Methods
 
