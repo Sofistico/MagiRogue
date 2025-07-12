@@ -22,6 +22,10 @@ namespace Arquimedes.Enumerators
         /// </summary>
         Target,
         /// <summary>
+        /// Applies the effect to the caster at the specified target location (e.g., teleporting the caster to a tile).
+        /// </summary>
+        TargetSelf,
+        /// <summary>
         /// Targets everything in a circle radius
         /// </summary>
         Ball,

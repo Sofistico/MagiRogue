@@ -229,9 +229,9 @@ namespace MagusEngine.Core.Entities
         /// <param name="e"></param>
         private void Cursor_Moved(object? sender, ValueChangedEventArgs<Point> e)
         {
-            if (Cursor is null)
+            if (Cursor is null || Cursor.CurrentMagiMap is null)
                 return;
-            TravelPath = Cursor!.CurrentMagiMap!.AStar.ShortestPath(OriginCoord, e.NewValue)!;
+            TravelPath = Cursor.CurrentMagiMap.AStar.ShortestPath(OriginCoord, e.NewValue)!;
             if (State is TargetState.LookMode || TravelPath is null)
             {
                 TravelPath = Cursor.CurrentMagiMap.AStarWithAllWalkable().ShortestPath(OriginCoord, e.NewValue)!;

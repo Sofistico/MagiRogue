@@ -4,7 +4,7 @@
     "ShapingAbility": "Mana Shaping",
     "Effects": [
       {
-        "AreaOfEffect": "Target",
+        "AreaOfEffect": "TargetSelf",
         "Radius": 0,
         "TargetsTile": true,
         "EffectType": "TELEPORT",

@@ -3,7 +3,6 @@ using MagusEngine.Actions;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
-using MagusEngine.Core.Magic.Interfaces;
 using MagusEngine.Services;
 using Newtonsoft.Json;
 
@@ -21,12 +20,16 @@ namespace MagusEngine.Core.Magic.Effects
             SpellDamageTypeId = spellDamageTypeId;
             Radius = radius;
             TargetsTile = true;
-            EffectType = Arquimedes.Enumerators.SpellEffectType.TELEPORT.ToString();
+            EffectType = SpellEffectType.TELEPORT.ToString();
         }
 
         public override void ApplyEffect(Point target, Actor caster, Spell spellCasted)
         {
-            var entity = caster?.CurrentMagiMap?.GetEntityAt<MagiEntity>(target);
+            var entity = AreaOfEffect switch
+            {
+                SpellAreaEffect.TargetSelf => caster,
+                _ => caster?.CurrentMagiMap?.GetEntityAt<MagiEntity>(target),
+            };
             if (ActionManager.MoveActorTo(entity, target))
             {
                 var entityName = entity.Name ?? "Unknown entity";
