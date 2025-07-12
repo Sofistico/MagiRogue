@@ -110,28 +110,23 @@ namespace Diviner
             #endregion WorldMovement
             if (world.CurrentMap is null)
                 return false;
-
-            foreach (Keys key in _movementDirectionMapping.Keys.Where(info.IsKeyPressed))
+            var key = _movementDirectionMapping.Keys.FirstOrDefault(info.IsKeyPressed);
+            Direction moveDirection = _movementDirectionMapping[key];
+            Point deltaMove = new(moveDirection.DeltaX, moveDirection.DeltaY);
+            var actor = (Actor)world.CurrentMap.ControlledEntitiy!;
+            if (world.CurrentMap.ControlledEntitiy is not Player)
             {
-                Direction moveDirection = _movementDirectionMapping[key];
-                Point deltaMove = new(moveDirection.DeltaX, moveDirection.DeltaY);
-                var actor = (Actor)world.CurrentMap.ControlledEntitiy!;
-                if (world.CurrentMap.ControlledEntitiy is not Player)
-                {
-                    if (world.CurrentMap.CheckForIndexOutOfBounds(world.CurrentMap.ControlledEntitiy!.Position + deltaMove))
-                        return false;
+                if (world.CurrentMap.CheckForIndexOutOfBounds(world.CurrentMap.ControlledEntitiy!.Position + deltaMove))
+                    return false;
 
-                    int distance = HandleNonPlayerMoveAndReturnDistance(world, deltaMove);
+                int distance = HandleNonPlayerMoveAndReturnDistance(world, deltaMove);
 
-                    return world.CurrentMap.PlayerExplored[world.CurrentMap.ControlledEntitiy.Position + deltaMove]
-                        && distance <= _targetCursor?.MaxDistance
-                        && actor!.MoveBy(deltaMove);
-                }
-
-                return actor!.MoveBy(deltaMove);
+                return world.CurrentMap.PlayerExplored[world.CurrentMap.ControlledEntitiy.Position + deltaMove]
+                    && distance <= _targetCursor?.MaxDistance
+                    && actor!.MoveBy(deltaMove);
             }
 
-            return false;
+            return actor!.MoveBy(deltaMove);
         }
 
         private static int HandleNonPlayerMoveAndReturnDistance(Universe world, Point coorToMove)
