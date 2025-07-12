@@ -151,7 +151,7 @@ namespace MagusEngine.Systems.Physics
         {
             if (material is null)
                 return 0;
-            return material.DensityKgM3 ?? 1 * material?.Hardness ?? 1 / (material?.ImpactFractureMpa ?? 1 + 1);
+            return material.DensityKgM3 ?? 1 * material.Hardness ?? 1 / (material.ImpactFractureMpa ?? 1 + 1);
         }
     }
 }

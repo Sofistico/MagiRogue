@@ -54,7 +54,7 @@ namespace Diviner.Windows
                 desc.Append("This tile is walkable").AppendLine();
             else
                 desc.Append("This tile isn't walkable").AppendLine();
-            if (tile?.Traits?.Count > 0)
+            if (tile.Traits?.Count > 0)
             {
                 desc.AppendLine("This tile has the following properties:");
                 foreach (var trait in tile.Traits)
@@ -77,13 +77,13 @@ namespace Diviner.Windows
 
         private Console CreateLookConsole()
         {
-            var lookConsole = new Console(Width - 2, Height - 3)
+            var console = new Console(Width - 2, Height - 3)
             {
                 Position = new Point(1, 1),
             };
 
-            lookConsole.Cursor.Position = new Point(0, 0);
-            return lookConsole;
+            console.Cursor.Position = new Point(0, 0);
+            return console;
         }
     }
 }

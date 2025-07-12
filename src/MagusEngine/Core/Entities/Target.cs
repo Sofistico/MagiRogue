@@ -251,15 +251,12 @@ namespace MagusEngine.Core.Entities
 
                 // This loops makes sure that all the pos that aren't in the TravelPath gets it's
                 // proper appearence
-                foreach (Point item in _tileDictionary.Keys)
+                foreach (Point item in _tileDictionary.Keys.Where(i => !TravelPath.Steps.Contains(i)))
                 {
-                    if (!TravelPath.Steps.Contains(item))
+                    Tile llop = Cursor.CurrentMagiMap.GetTileAt(item)!;
+                    if (llop is not null)
                     {
-                        Tile llop = Cursor.CurrentMagiMap.GetTileAt(item)!;
-                        if (llop is not null)
-                        {
-                            llop.Appearence.Background = llop.LastSeenAppereance!.Background;
-                        }
+                        llop.Appearence.Background = llop.LastSeenAppereance!.Background;
                     }
                 }
                 if (_selectedSpell is not null)

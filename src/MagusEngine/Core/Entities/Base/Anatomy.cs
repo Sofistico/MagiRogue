@@ -1,3 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.Text;
 using Arquimedes.Enumerators;
 using GoRogue.Random;
 using MagusEngine.Actions;
@@ -6,12 +11,8 @@ using MagusEngine.Components.EntityComponents;
 using MagusEngine.Services;
 using MagusEngine.Systems;
 using MagusEngine.Utils;
+using MagusEngine.Utils.Extensions;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
 
 namespace MagusEngine.Core.Entities.Base
 {
@@ -354,14 +355,11 @@ namespace MagusEngine.Core.Entities.Base
                 CalculateTissueVolume(bp);
             }
 
-            foreach (var organ in Organs)
+            foreach (var organ in Organs.Where(i => !i.InsideOf.IsNullOrEmpty()))
             {
-                if (!string.IsNullOrEmpty(organ.InsideOf))
-                {
-                    var limb = AllBPs.Find(i => i.Id.Equals(organ.InsideOf))
-                        ?? throw new ApplicationException($"Something went really wrong! Cound't find the limb for organ {organ.Id} with insides {organ.InsideOf}");
-                    limb.Insides.Add(organ);
-                }
+                var limb = AllBPs.Find(i => i.Id.Equals(organ.InsideOf))
+                    ?? throw new ApplicationException($"Something went really wrong! Cound't find the limb for organ {organ.Id} with insides {organ.InsideOf}");
+                limb.Insides.Add(organ);
             }
         }
 

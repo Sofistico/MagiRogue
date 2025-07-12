@@ -10,7 +10,7 @@ namespace MagusEngine.Core.MapStuff
     {
         public static bool ChangeTileEffect(Point target, Actor actor, int modifier, TileType change)
         {
-            if (actor is null || actor?.CurrentMagiMap is null)
+            if (actor is null || actor.CurrentMagiMap is null)
                 return false;
 
             var tile = actor.CurrentMagiMap?.GetTileAt<Tile>(target)!;
