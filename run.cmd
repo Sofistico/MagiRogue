@@ -1,1 +1,1 @@
-dotnet run --project ./src/MagiRogue
+dotnet run --project ./src/MagiRogue -- test 
