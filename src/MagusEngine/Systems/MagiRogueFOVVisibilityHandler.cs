@@ -98,6 +98,7 @@ namespace MagusEngine.Systems
 
             if (entity.Layer != _ghostLayer
                 && Map.PlayerExplored[entity.Position]
+                && !Map.PlayerFOV.BooleanResultView[entity.Position]
                 && entity.LeavesGhost
                 && !ghosts.ContainsKey(entity.ID))
             {
