@@ -48,11 +48,11 @@
         </ItemGroup>
 
         <ItemGroup>
-                <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
+                <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.4" />
                 <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-                <PackageReference Include="SadConsole" Version="10.5.0" />
-                <PackageReference Include="SadConsole.Host.MonoGame" Version="10.5.0" />
-                <PackageReference Include="SadConsole.Debug.MonoGame" Version="10.5.0" />
+                <PackageReference Include="SadConsole" Version="10.6.0" />
+                <PackageReference Include="SadConsole.Host.MonoGame" Version="10.6.0" />
+                <PackageReference Include="SadConsole.Debug.MonoGame" Version="10.6.0" />
         </ItemGroup>
 
         <ItemGroup>
