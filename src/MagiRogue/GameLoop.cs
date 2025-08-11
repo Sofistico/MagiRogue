@@ -28,8 +28,9 @@ namespace MagiRogue
             ConfigureBeforeCreateGame(args);
 
             // Setup the engine and create the main window.
-            var config = new Builder()
-                .SetScreenSize(GameWidth, GameHeight)
+
+            var config = Builder.GetBuilder()
+                .SetWindowSizeInCells(GameWidth, GameHeight)
                 .OnStart(Init) // Hook the start event so we can add consoles to the system.
                 .SetStartingScreen<UIManager>()
                 .IsStartingScreenFocused(true)
