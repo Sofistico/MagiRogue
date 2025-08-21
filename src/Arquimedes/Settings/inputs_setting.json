@@ -1,0 +1,42 @@
+[
+  {
+    "Key": ["up_arrow", "numpad_8"],
+    "Action": "MoveUp",
+    "Category": "Movement"
+  },
+  {
+    "Key": ["down_arrow", "numpad_2"],
+    "Action": "MoveDown",
+    "Category": "Movement"
+  },
+  {
+    "Key": ["left_arrow", "numpad_4"],
+    "Action": "MoveLeft",
+    "Category": "Movement"
+  },
+  {
+    "Key": ["right_arrow", "numpad6"],
+    "Action": "MoveRight",
+    "Category": "Movement"
+  },
+  {
+    "Key": ["numpad_7"],
+    "Action": "MoveUpLeft",
+    "Category": "Movement"
+  },
+  {
+    "Key": ["numpad_9"],
+    "Action": "MoveUpRight",
+    "Category": "Movement"
+  },
+  {
+    "Key": ["numpad_1"],
+    "Action": "MoveDownLeft",
+    "Category": "Movement"
+  },
+  {
+    "Key": ["numpad_3"],
+    "Action": "MoveDownRight",
+    "Category": "Movement"
+  }
+]
