@@ -18,9 +18,8 @@ namespace MagusEngine.Services
     /// </summary>
     public sealed class SavingService
     {
-        private const string _folderName = "saves";
         private const int chunkPartition = 500;
-        private static readonly string dir = AppDomain.CurrentDomain.BaseDirectory;
+        private readonly static string _dirPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "saves");
         private readonly JsonSerializerSettings settings;
 
         [DataMember]
@@ -46,9 +45,9 @@ namespace MagusEngine.Services
         /// </summary>
         private static void CreateNewSaveFolder()
         {
-            if (!Directory.Exists(dir + $@"\{_folderName}"))
+            if (!Directory.Exists(_dirPath))
             {
-                Directory.CreateDirectory(_folderName);
+                Directory.CreateDirectory(_dirPath);
             }
         }
 
@@ -69,11 +68,11 @@ namespace MagusEngine.Services
 
             try
             {
-                Serializer.Save(gameState, @$"{_folderName}\{saveName}\game_state.mr", true);
+                Serializer.Save(gameState, Path.Combine(_dirPath, saveName, "game_state.mr"), true);
             }
             catch (Exception)
             {
-                Directory.Delete(Path.Combine(dir, _folderName, saveName), true);
+                Directory.Delete(Path.Combine(_dirPath, saveName), true);
                 throw;
             }
         }
@@ -86,7 +85,7 @@ namespace MagusEngine.Services
         {
             if (SavePathName?.Equals(saveName) == true) return;
             SavePathName = saveName;
-            string path = dir + $@"{_folderName}\{saveName}";
+            string path = Path.Combine(_dirPath, saveName);
 
             if (!Directory.Exists(path))
             {
@@ -120,9 +119,9 @@ namespace MagusEngine.Services
                     if (i % chunkPartition == 0 || i != 0 || i == chunks.Length)
                     {
                         if (indexToStart == 0)
-                            Serializer.Save(newChunks, @$"{_folderName}\{SavePathName}\chunks_{i / chunkPartition}.mr", true);
+                            Serializer.Save(newChunks, Path.Combine(_dirPath, SavePathName!, $"chunks_{i / chunkPartition}.mr"), true);
                         else
-                            Serializer.Save(newChunks, @$"{_folderName}\{SavePathName}\chunks_{indexToStart / chunkPartition}.mr", true);
+                            Serializer.Save(newChunks, Path.Combine(_dirPath, SavePathName!, $"chunks_{indexToStart / chunkPartition}.mr"), true);
                         break;
                     }
                 }
@@ -151,7 +150,7 @@ namespace MagusEngine.Services
         {
             try
             {
-                string path = $@"{_folderName}\{saveName}\game_state.mr";
+                string path = Path.Combine(_dirPath, saveName, "game_state.mr");
                 return Serializer.Load<Universe>(path, true);
             }
             catch (Exception ex)
@@ -215,16 +214,14 @@ namespace MagusEngine.Services
         private string? GetChunckFile(int index)
         {
             // need to remake, so that it will only load the relevant chunk
-            string path = $@"{SaveDir}\chunks_{index / chunkPartition}.mr";
+            string path = Path.Combine(SaveDir!, $"chunks_{index / chunkPartition}.mr");
             string pattern = Path.GetFileName(path);
-            string realDir = path[..^pattern.Length];
-            string fullPath = Path.Combine(dir, realDir);
-            return Directory.GetFiles(fullPath, pattern, SearchOption.TopDirectoryOnly).FirstOrDefault();
+            return Directory.GetFiles(_dirPath, pattern, SearchOption.TopDirectoryOnly).FirstOrDefault();
         }
 
         private string GetChunckRelativeFile(int index)
         {
-            return $@"{_folderName}\{SavePathName}\chunks_{index / chunkPartition}.mr";
+            return Path.Combine(_dirPath, SavePathName!, $"chunks_{index / chunkPartition}.mr");
         }
 
         /// <summary>
@@ -281,7 +278,7 @@ namespace MagusEngine.Services
         {
             try
             {
-                Directory.Delete(Path.Combine(dir, _folderName, saveName), true);
+                Directory.Delete(Path.Combine(_dirPath, saveName), true);
             }
             catch (Exception)
             {
