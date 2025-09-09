@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using Arquimedes;
 using Arquimedes.Settings;
 using Arquimedes.Utils;
@@ -7,8 +9,8 @@ using MagusEngine.Services;
 using SadConsole;
 using SadConsole.Configuration;
 using SadConsole.Input;
-using System;
-using System.IO;
+using SadConsole.UI.Windows;
+using static SadConsole.Settings;
 
 namespace MagiRogue
 {
@@ -92,6 +94,9 @@ namespace MagiRogue
             // Now let the UIManager create its consoles so they can use the World data
             ui.InitMainMenu(GameHeight, GameWidth, beginTest);
             Locator.AddService(ui);
+#if DEBUG
+            GlyphSelectPopup.AddRootComponent(Keys.F11);
+#endif
         }
 
         #endregion configuration
