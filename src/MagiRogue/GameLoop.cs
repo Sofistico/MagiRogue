@@ -10,7 +10,6 @@ using SadConsole;
 using SadConsole.Configuration;
 using SadConsole.Input;
 using SadConsole.UI.Windows;
-using static SadConsole.Settings;
 
 namespace MagiRogue
 {
