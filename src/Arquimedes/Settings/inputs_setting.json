@@ -38,5 +38,18 @@
     "Key": ["numpad_3"],
     "Action": "MoveDownRight",
     "Category": "Movement"
+  },
+  {
+    "Key": ["i"],
+    "Action": "OpenInventory",
+    "Category": "Ui"
+  },
+  {
+    "Key": ["t"],
+    "Action": "ThownItem",
+    "Category": "Interaction"
+  },
+  {
+
   }
 ]
