@@ -1,7 +1,7 @@
 [
-  "MoveNorth": {
+  {
     "Key": ["up_arrow", "numpad_8"],
-    //"Action": "MoveNorth",
+    "Action": "MoveNorth",
     "Category": "Movement"
   },
   {
