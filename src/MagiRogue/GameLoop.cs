@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Arquimedes;
 using Arquimedes.Settings;
@@ -78,6 +79,8 @@ namespace MagiRogue
 
             settings = JsonUtils.JsonDeseralize<GlobalSettings>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Settings", "global_setting.json"))!;
             Locator.AddService(settings);
+            var input = JsonUtils.JsonDeseralize<List<InputSetting>>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Settings", "inputs_settings.json"))!;
+            Locator.AddService(input);
         }
 
         private static void Init(object? sender, GameHost e)

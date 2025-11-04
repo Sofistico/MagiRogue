@@ -1,12 +1,12 @@
 [
-  {
+  "MoveNorth": {
     "Key": ["up_arrow", "numpad_8"],
-    "Action": "MoveUp",
+    //"Action": "MoveNorth",
     "Category": "Movement"
   },
   {
     "Key": ["down_arrow", "numpad_2"],
-    "Action": "MoveDown",
+    "Action": "MoveSouth",
     "Category": "Movement"
   },
   {
@@ -21,22 +21,22 @@
   },
   {
     "Key": ["numpad_7"],
-    "Action": "MoveUpLeft",
+    "Action": "MoveNorthLeft",
     "Category": "Movement"
   },
   {
     "Key": ["numpad_9"],
-    "Action": "MoveUpRight",
+    "Action": "MoveNorthRight",
     "Category": "Movement"
   },
   {
     "Key": ["numpad_1"],
-    "Action": "MoveDownLeft",
+    "Action": "MoveSouthLeft",
     "Category": "Movement"
   },
   {
     "Key": ["numpad_3"],
-    "Action": "MoveDownRight",
+    "Action": "MoveSouthRight",
     "Category": "Movement"
   },
   {
@@ -50,6 +50,78 @@
     "Category": "Interaction"
   },
   {
-
+    "Key": ["esc"],
+    "Action": "EscapeMenu",
+    "Category": "Ui"
+  },
+  {
+    "Key": ["."],
+    "Action": "MoveDown",
+    "Category": "Movement",
+    "Modifier": ["Shift"]
+  },
+  {
+    "Key": [","],
+    "Action": "MoveUp",
+    "Category": "Movement",
+    "Modifier": ["Shift"]
+  },
+  {
+    "Key": ["numpad_5"],
+    "Action": "WaitTillRested",
+    "Category": "Misc",
+    "Modifier": ["Control"]
+  },
+  {
+    "Key": [".", "numpad_5"],
+    "Action": "WaitOneSecond",
+    "Category": "Misc"
+  },
+  {
+    "Key": [","],
+    "Action": "WaitOneMoment",
+    "Category": "Misc"
+  },
+  {
+    "Key": ["g"],
+    "Action": "PickUp",
+    "Category": "Interaction"
+  },
+  {
+    "Key": ["d"],
+    "Action": "DropItem",
+    "Category": "Interaction"
+  },
+  {
+    "Key": ["c"],
+    "Action": "CloseDoor",
+    "Category": "Interaction"
+  },
+  {
+    "Key": ["l"],
+    "Action": "Look",
+    "Category": "Ui"
+  },
+  {
+    "Key": ["z"],
+    "Action": "SpellCasting",
+    "Category": "Interaction",
+    "Modifier": ["Shift"]
+  },
+  {
+    "Key": ["r"],
+    "Action": "Wait",
+    "Category": "Ui",
+    "Modifier": ["Shift"]
+  },
+  {
+    "Key": ["enter"],
+    "Action": "ConfirmAction",
+    "Category": "Ui"
+  },
+  {
+    "Key": ["esc"],
+    "Action": "CancelAction",
+    "Category": "Ui"
   }
 ]

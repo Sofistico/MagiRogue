@@ -6,13 +6,30 @@ namespace Arquimedes.Enumerators
     [JsonConverter(typeof(StringEnumConverter))]
     public enum KeymapAction
     {
-        MoveUp,
-        MoveDown,
+        MoveNorth,
+        MoveSouth,
         MoveLeft,
         MoveRight,
-        MoveUpLeft,
-        MoveUpRight,
-        MoveDownLeft,
-        MoveDownRight
+        MoveNorthLeft,
+        MoveNorthRight,
+        MoveSouthLeft,
+        MoveSouthRight,
+        MoveUp,
+        MoveDown,
+        OpenInventory,
+        ThownItem,
+        EscapeMenu,
+        WaitTillRested,
+        WaitOneSecond,
+        WaitOneMoment,
+        PickUp,
+        DropItem,
+        CloseDoor,
+        OpenDoor,
+        Look,
+        SpellCasting,
+        Wait,
+        ConfirmAction,
+        CancelAction
     }
 }

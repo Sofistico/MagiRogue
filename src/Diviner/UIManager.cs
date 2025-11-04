@@ -168,7 +168,7 @@ namespace Diviner
                 && (_universe.CurrentMap.ControlledEntitiy is not null
                 || _universe.WorldMap.AssocietatedMap.Equals(_universe.CurrentMap)))
             {
-                if (KeyboardHandle.HandleMapKeys(info, this, _universe))
+                if (KeyboardHandle.HandleActions(info, _universe, this))
                 {
                     return true;
                 }

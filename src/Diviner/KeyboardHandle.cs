@@ -1,5 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Arquimedes.Enumerators;
+using Arquimedes.Settings;
+using Arquimedes.Utils;
 using Diviner.Windows;
 using MagusEngine;
 using MagusEngine.Actions;
@@ -37,14 +39,10 @@ namespace Diviner
             { Keys.Up, Direction.Up }, { Keys.Down, Direction.Down }, { Keys.Left, Direction.Left }, { Keys.Right, Direction.Right }
         };
 
-        public static bool HandleMapKeys(Keyboard input, UIManager ui, Universe world)
-        {
-            return HandleActions(input, world, ui);
-        }
-
         public static bool HandleUiKeys(Keyboard info, UIManager ui)
         {
-            if (info.IsKeyPressed(Keys.I))
+            var inputSettings = Locator.GetService<List<InputSetting>>();
+            if (inputSettings.(i => i.Action == KeymapAction.OpenInventory))
             {
                 ui.InventoryScreen.ShowItems(_getPlayer);
                 return true;
@@ -150,8 +148,9 @@ namespace Diviner
             return distance;
         }
 
-        private static bool HandleActions(Keyboard info, Universe uni, UIManager ui)
+        public static bool HandleActions(Keyboard info, Universe uni, UIManager ui)
         {
+            var inputSettings = Locator.GetService<List<InputSetting>>();
             if (_getPlayer == null || uni == null)
                 return false;
 
