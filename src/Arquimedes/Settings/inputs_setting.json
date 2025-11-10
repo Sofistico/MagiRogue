@@ -15,7 +15,7 @@
     "Category": "Movement"
   },
   {
-    "Key": ["right_arrow", "numpad6"],
+    "Key": ["right_arrow", "numpad_6"],
     "Action": "MoveRight",
     "Category": "Movement"
   },

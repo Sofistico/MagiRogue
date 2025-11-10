@@ -41,8 +41,8 @@ namespace Diviner
 
         public static bool HandleUiKeys(Keyboard info, UIManager ui)
         {
-            var inputSettings = Locator.GetService<List<InputSetting>>();
-            if (inputSettings.(i => i.Action == KeymapAction.OpenInventory))
+            var inputSettings = Locator.GetService<Dictionary<KeymapAction, InputSetting>>();
+            if ()
             {
                 ui.InventoryScreen.ShowItems(_getPlayer);
                 return true;
