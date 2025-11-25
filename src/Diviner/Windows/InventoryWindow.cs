@@ -1,4 +1,6 @@
-﻿using MagusEngine.Core.Entities;
+﻿using GoRogue.Messaging;
+using MagusEngine.Bus.UiBus;
+using MagusEngine.Core.Entities;
 using MagusEngine.Utils.Extensions;
 using SadConsole;
 using SadConsole.Input;
@@ -8,7 +10,7 @@ using Console = SadConsole.Console;
 
 namespace Diviner.Windows
 {
-    public class InventoryWindow : PopWindow
+    public class InventoryWindow : PopWindow, ISubscriber<InventoryActionBus>
     {
         // Create the field
         private readonly Console inventoryConsole;
@@ -86,6 +88,11 @@ namespace Diviner.Windows
 
             SetupSelectionButtons(BuildHotKeysButtons(actorInventory.Inventory, itemAction ?? OnItemSelected));
             _actionContext = itemAction;
+        }
+
+        public void Handle(InventoryActionBus message)
+        {
+            ShowItems(message.ActorInventory, message.Action);
         }
     }
 }

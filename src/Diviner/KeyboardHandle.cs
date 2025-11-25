@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using Arquimedes.Enumerators;
 using Arquimedes.Settings;
 using Arquimedes.Utils;
+using Diviner.Extensions;
 using Diviner.Windows;
 using MagusEngine;
 using MagusEngine.Actions;
@@ -42,7 +43,7 @@ namespace Diviner
         public static bool HandleUiKeys(Keyboard info, UIManager ui)
         {
             var inputSettings = Locator.GetService<Dictionary<KeymapAction, InputSetting>>();
-            if ()
+            if (ui.AbsolutePosition == Point.None)
             {
                 ui.InventoryScreen.ShowItems(_getPlayer);
                 return true;

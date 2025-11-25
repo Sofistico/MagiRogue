@@ -138,7 +138,7 @@ namespace Diviner.Extensions
             ["backslash_alt"] = Keys.OemBackslash
         };
 
-        public static bool TryGetInputAction(this Keyboard info, KeymapAction action, Dictionary<KeymapAction, InputSetting> inputs)
+        public static bool IsInputOffAction(this Keyboard info, KeymapAction action, Dictionary<KeymapAction, InputSetting> inputs)
         {
             if (!inputs.TryGetValue(action, out var input))
                 return false;
@@ -161,6 +161,14 @@ namespace Diviner.Extensions
                 }
             }
             return isKeyInSettings;
+        }
+
+        public static InputSetting GetInputAction(this Keyboard info, Dictionary<KeymapAction, InputSetting> inputs)
+        {
+            foreach (var key in info.KeysPressed)
+            {
+                
+            }
         }
     }
 }
