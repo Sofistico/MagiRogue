@@ -1,16 +1,26 @@
 using MagusEngine.Actions.Interfaces;
+using MagusEngine.Bus.UiBus;
+using MagusEngine.Services;
 using MagusEngine.Systems;
 
-namespace Diviner.KeyboardActions
+namespace MagusEngine.Actions
 {
     public class EscapeMenuAction : IExecuteAction
     {
-        public bool Execute(UIManager ui, Universe world)
+        private readonly MessageBusService _bus;
+
+        public EscapeMenuAction()
         {
-            if (!ui.NoPopWindow)
-                return false;
-            ui.MainMenu.Show();
-            ui.MainMenu.IsFocused = true;
+            _bus = Locator.GetService<MessageBusService>();
+        }
+
+        public bool Execute(Universe world)
+        {
+            _bus.SendMessage<ShowMainMenuMessage>();
+            // if (!ui.NoPopWindow)
+            //     return false;
+            // ui.MainMenu.Show();
+            // ui.MainMenu.IsFocused = true;
             return true;
         }
     }

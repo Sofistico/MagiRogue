@@ -5,13 +5,13 @@ namespace MagusEngine.Bus.UiBus
 {
     public class InventoryActionBus
     {
-        public Action<Item> Action { get; }
         public Actor ActorInventory { get; }
+        public Action<Item>? Action { get; }
 
-        public InventoryActionBus(Action<Item> action, Actor actorInventory)
+        public InventoryActionBus(Actor actorInventory, Action<Item>? action)
         {
-            Action = action;
             ActorInventory = actorInventory;
+            Action = action;
         }
     }
 }

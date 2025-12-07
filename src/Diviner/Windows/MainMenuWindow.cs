@@ -1,6 +1,5 @@
 ﻿using Arquimedes.Utils;
 using Diviner.Controls;
-using GoRogue.Messaging;
 using MagusEngine;
 using MagusEngine.Bus;
 using MagusEngine.Bus.UiBus;
@@ -12,8 +11,7 @@ using SadConsole.UI.Controls;
 
 namespace Diviner.Windows
 {
-    public class MainMenuWindow : MagiBaseWindow,
-        ISubscriber<ShowMainMenuMessage>
+    public class MainMenuWindow : MagiBaseWindow
     {
         private readonly MagiButton startGame;
         private readonly MagiButton testMap;
@@ -21,6 +19,7 @@ namespace Diviner.Windows
         private readonly MagiButton saveGame; // neither does this
         private ListBox? savesBox;
         private PopWindow? loadPop;
+
         public bool GameStarted { get; set; }
 
         public MainMenuWindow(int width, int height, string title = "Main Menu") : base(width, height, title)
@@ -38,7 +37,7 @@ namespace Diviner.Windows
             {
                 Text = "Test Map"
             };
-            MagiButton quitGame = new MagiButton(11, 1)
+            MagiButton quitGame = new(11, 1)
             {
                 Text = "Quit Game"
             };
@@ -76,7 +75,7 @@ namespace Diviner.Windows
                     loadPop = new PopWindow(30, 15, "Load Game");
                     const string text = "Load!";
                     // The load button
-                    MagiButton loadGame = new MagiButton(text.Length + 2)
+                    MagiButton loadGame = new(text.Length + 2)
                     {
                         Text = text,
                         Position = new Point(3, loadPop.Height - 2)
@@ -90,7 +89,7 @@ namespace Diviner.Windows
                         Position = new Point((loadPop.Width / 2) - 10, (loadPop.Height / 2) - 5)
                     };
                     const string delete = "Delete";
-                    MagiButton deleteSaveBtn = new MagiButton(delete.Length + 2)
+                    MagiButton deleteSaveBtn = new(delete.Length + 2)
                     {
                         Text = delete,
                         Position = new Point((loadPop.Width / 2) - 5, loadPop.Height - 3)
@@ -113,10 +112,10 @@ namespace Diviner.Windows
 
         private void DeleteSaveBtn_Click(object? sender, EventArgs e)
         {
-            if (savesBox.SelectedItem != null)
+            if (savesBox?.SelectedItem != null)
             {
-                SavingService.DeleteSave(savesBox.SelectedItem?.ToString());
-                savesBox.Items.Remove(savesBox.SelectedItem);
+                SavingService.DeleteSave(savesBox.SelectedItem?.ToString()!);
+                savesBox.Items.Remove(savesBox.SelectedItem!);
                 savesBox.IsDirty = true;
             }
         }
@@ -124,10 +123,10 @@ namespace Diviner.Windows
         private void LoadGame_Click(object? sender, EventArgs e)
         {
             if (savesBox?.SelectedItem != null
-                && SavingService.CheckIfStringIsValidSave(savesBox.SelectedItem.ToString()))
+                && SavingService.CheckIfStringIsValidSave(savesBox.SelectedItem.ToString()!))
             {
-                loadPop.Hide();
-                Universe uni = SavingService.LoadGame(savesBox.SelectedItem.ToString());
+                loadPop?.Hide();
+                Universe uni = SavingService.LoadGame(savesBox.SelectedItem.ToString()!);
                 Locator.GetService<MessageBusService>().SendMessage<StartGameMessage>(new(uni.Player, uni));
             }
         }
@@ -141,7 +140,7 @@ namespace Diviner.Windows
             for (int i = 0; i < saves.Length; i++)
             {
                 string save = SaveUtils.GetSaveName(saves[i]);
-                savesBox.Items.Add(save);
+                savesBox?.Items?.Add(save);
             }
         }
 
@@ -189,7 +188,7 @@ namespace Diviner.Windows
             {
                 // makes so that there can only be one save per player name!
                 Find.Universe.SaveGame(Find.Universe.Player.Name);
-                PopWindow alert = new PopWindow(30, 10, "Save Done!");
+                PopWindow alert = new(30, 10, "Save Done!");
                 // makes it a variable so that it can be properly accounted for in the print command
                 const string text = "Save Sucessful!";
                 alert.Print((alert.Width - text.Length) / 2, 3, text);
@@ -211,26 +210,6 @@ namespace Diviner.Windows
             GameStarted = false;
             Find.Universe = null!;
             RefreshButtons();
-
-            //foreach (SadConsole.Console item in GameLoop.UIManager.Children.Cast<SadConsole.Console>())
-            //{
-            //    if (!item.Equals(this))
-            //        item.Dispose();
-            //}
-
-            //GameLoop.UIManager.MessageLog = null!;
-            //GameLoop.UIManager.MapWindow = null!;
-            //GameLoop.UIManager.StatusWindow = null!;
-            //GameLoop.UIManager.InventoryScreen = null!;
-            //GameLoop.UIManager.CharCreationWindow = null!;
-            //GameLoop.UIManager.Children.Clear();
-            //GameLoop.UIManager.Children.Add(this);
-
-            Show();
-        }
-
-        public void Handle(ShowMainMenuMessage message)
-        {
             Show();
         }
     }

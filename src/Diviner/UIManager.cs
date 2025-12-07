@@ -6,10 +6,10 @@ using Diviner.Interfaces;
 using Diviner.Windows;
 using GoRogue.Messaging;
 using MagusEngine;
-using MagusEngine.Exceptions;
 using MagusEngine.Bus;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
+using MagusEngine.Exceptions;
 using MagusEngine.Services;
 using MagusEngine.Systems;
 using MagusEngine.Utils;
@@ -27,7 +27,10 @@ namespace Diviner
         ISubscriber<StartGameMessage>,
         ISubscriber<RestartGame>,
         ISubscriber<LookStuff>,
-        ISubscriber<ShowGlyphOnConsole>
+        ISubscriber<ShowGlyphOnConsole>,
+        ISubscriber<CloseWindowMessage>,
+        ISubscriber<ShowMainMenuMessage>,
+        ISubscriber<ScrollConsoleMessage>
     {
         private readonly Dictionary<WindowTag, IWindowTagContract> _windows = [];
         private Universe? _universe;
@@ -115,7 +118,7 @@ namespace Diviner
 #endif
             // Inventory initialization
             InventoryScreen = new InventoryWindow(width / 2, height / 2);
-            Children.Add(InventoryScreen);
+            AddWindowToList(InventoryScreen);
             InventoryScreen.Hide();
             const int statusWindowHeight = 4;
             StatusWindow = new BottomStatusWindow(width - MessageLog.Width, statusWindowHeight, "Status Window");
@@ -168,11 +171,7 @@ namespace Diviner
                 && (_universe.CurrentMap.ControlledEntitiy is not null
                 || _universe.WorldMap.AssocietatedMap.Equals(_universe.CurrentMap)))
             {
-                if (KeyboardHandle.HandleActions(info, _universe, this))
-                {
-                    return true;
-                }
-                if (KeyboardHandle.HandleUiKeys(info, this))
+                if (KeyboardHandle.HandleKeys(info))
                 {
                     return true;
                 }
@@ -289,6 +288,26 @@ namespace Diviner
             window.SetGlyph(message.Position.X, message.Position.Y, message.Glyph);
             // How will i recover the last used glyph if the message will be destroyed?
             message.LastUsedGlyph = originalGlyph;
+        }
+
+        public void Handle(CloseWindowMessage message)
+        {
+            MagiBaseWindow window = GetWindow<MagiBaseWindow>(message.Tag) ?? throw new NullValueException(nameof(window));
+            window.Hide();
+        }
+
+        public void Handle(ShowMainMenuMessage message)
+        {
+            if (!NoPopWindow)
+                return;
+            MainMenu.Show();
+            MainMenu.IsFocused = true;
+        }
+
+        public void Handle(ScrollConsoleMessage message)
+        {
+            var console = MapWindow.MapConsole;
+            console.Surface.ViewPosition = console.Surface.ViewPosition.Translate(message.Delta);
         }
 
         ~UIManager()

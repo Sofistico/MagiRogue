@@ -1,5 +1,4 @@
 ﻿using Arquimedes.Enumerators;
-using Diviner.Interfaces;
 using GoRogue.Messaging;
 using MagusEngine;
 using MagusEngine.Bus.UiBus;

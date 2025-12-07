@@ -1,3 +1,4 @@
+using Arquimedes.Enumerators;
 using MagusEngine;
 using MagusEngine.Actions.Interfaces;
 using MagusEngine.Bus.UiBus;
@@ -22,8 +23,7 @@ namespace MagusEngine.Actions
             Actor? controlledActor = (Actor?)world?.CurrentMap?.ControlledEntitiy;
             if (controlledActor is null)
                 return false;
-            _bus.SendMessage<>
-            ui.InventoryScreen.ShowItems(controlledActor, item =>
+            _bus.SendMessage<InventoryActionBus>(new(controlledActor, item =>
             {
                 _targetCursor ??= new Target(controlledActor.Position);
                 if (item is null)
@@ -32,9 +32,9 @@ namespace MagusEngine.Actions
                     return;
                 }
                 _targetCursor.OnSelectItem(item, controlledActor);
-                ui.InventoryScreen.Hide();
+                _bus.SendMessage<CloseWindowMessage>(new(WindowTag.Inv));
                 controlledActor.Inventory.Remove(item);
-            });
+            }));
             return true;
         }
     }

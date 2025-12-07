@@ -1,17 +1,27 @@
 using MagusEngine.Actions.Interfaces;
+using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
+using MagusEngine.Services;
 using MagusEngine.Systems;
 
-namespace Diviner.KeyboardActions
+namespace MagusEngine.Actions
 {
     public class OpenInventoryAction : IExecuteAction
     {
-        public bool Execute(UIManager ui, Universe world)
+        private readonly MessageBusService _bus;
+
+        public OpenInventoryAction()
+        {
+            _bus = Locator.GetService<MessageBusService>();
+        }
+
+        public bool Execute(Universe world)
         {
             Actor? controlledActor = (Actor?)world?.CurrentMap?.ControlledEntitiy;
             if (controlledActor is null)
                 return false;
-            ui.InventoryScreen.ShowItems(controlledActor);
+
+            _bus.SendMessage<InventoryActionBus>(new(controlledActor, null));
             return true;
         }
     }

@@ -1,8 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Arquimedes.Enumerators;
 using Arquimedes.Settings;
-using Arquimedes.Utils;
-using Diviner.Extensions;
 using Diviner.Windows;
 using MagusEngine;
 using MagusEngine.Actions;
@@ -19,7 +17,6 @@ using MagusEngine.Systems;
 using MagusEngine.Systems.Time;
 using MagusEngine.Utils.Extensions;
 using SadConsole.Input;
-using SadRogue.Primitives;
 using Color = SadRogue.Primitives.Color;
 
 namespace Diviner
@@ -32,126 +29,15 @@ namespace Diviner
         [AllowNull]
         private static Target? _targetCursor;
 
-        private static readonly Dictionary<Keys, Direction> _movementDirectionMapping = new()
-        {
-            { Keys.NumPad7, Direction.UpLeft }, { Keys.NumPad8, Direction.Up }, { Keys.NumPad9, Direction.UpRight },
-            { Keys.NumPad4, Direction.Left }, { Keys.NumPad6, Direction.Right },
-            { Keys.NumPad1, Direction.DownLeft }, { Keys.NumPad2, Direction.Down }, { Keys.NumPad3, Direction.DownRight },
-            { Keys.Up, Direction.Up }, { Keys.Down, Direction.Down }, { Keys.Left, Direction.Left }, { Keys.Right, Direction.Right }
-        };
-
-        public static bool HandleUiKeys(Keyboard info, UIManager ui)
+        public static bool HandleKeys(Keyboard info)
         {
             var inputSettings = Locator.GetService<Dictionary<KeymapAction, InputSetting>>();
-            if (ui.AbsolutePosition == Point.None)
-            {
-                ui.InventoryScreen.ShowItems(_getPlayer);
-                return true;
-            }
-
-            if (info.IsKeyPressed(Keys.T))
-            {
-                ui.InventoryScreen.ShowItems(_getPlayer, item =>
-                {
-                    _targetCursor ??= new Target(_getPlayer.Position);
-                    if (item is null)
-                    {
-                        Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("No item selected!"));
-                        return;
-                    }
-                    _targetCursor.OnSelectItem(item, _getPlayer);
-                    ui.InventoryScreen.Hide();
-                    _getPlayer.Inventory.Remove(item);
-                });
-            }
-
-            if (info.IsKeyPressed(Keys.Escape) && ui.NoPopWindow)
-            {
-                ui.MainMenu.Show();
-                ui.MainMenu.IsFocused = true;
-                return true;
-            }
 
             return false;
-        }
-
-        private static bool HandleMove(Keyboard info, Universe world, UIManager ui)
-        {
-            #region WorldMovement
-
-            if (CurrentMapIsPlanetView(world))
-            {
-                var console = ui.MapWindow.MapConsole;
-
-                if (info.IsKeyDown(Keys.Left))
-                {
-                    console.Surface.ViewPosition = console.Surface.ViewPosition.Translate((-1, 0));
-                }
-
-                if (info.IsKeyDown(Keys.Right))
-                {
-                    console.Surface.ViewPosition = console.Surface.ViewPosition.Translate((1, 0));
-                }
-
-                if (info.IsKeyDown(Keys.Up))
-                {
-                    console.Surface.ViewPosition = console.Surface.ViewPosition.Translate((0, -1));
-                }
-
-                if (info.IsKeyDown(Keys.Down))
-                {
-                    console.Surface.ViewPosition = console.Surface.ViewPosition.Translate((0, +1));
-                }
-                // Must return false, because there isn't any movement of the actor
-                return false;
-            }
-
-            #endregion WorldMovement
-            if (world.CurrentMap is null)
-                return false;
-            var key = _movementDirectionMapping.Keys.FirstOrDefault(info.IsKeyPressed);
-            if (_movementDirectionMapping.TryGetValue(key, out var moveDirection))
-            {
-                Point deltaMove = new(moveDirection.DeltaX, moveDirection.DeltaY);
-                var actor = (Actor)world.CurrentMap.ControlledEntitiy!;
-                if (world.CurrentMap.ControlledEntitiy is not Player)
-                {
-                    if (world.CurrentMap.CheckForIndexOutOfBounds(world.CurrentMap.ControlledEntitiy!.Position + deltaMove))
-                        return false;
-
-                    int distance = HandleNonPlayerMoveAndReturnDistance(world, deltaMove);
-
-                    return world.CurrentMap.PlayerExplored[world.CurrentMap.ControlledEntitiy.Position + deltaMove]
-                        && distance <= _targetCursor?.MaxDistance
-                        && actor!.MoveBy(deltaMove);
-                }
-                return actor!.MoveBy(deltaMove);
-            }
-            return false;
-        }
-
-        private static int HandleNonPlayerMoveAndReturnDistance(Universe world, Point coorToMove)
-        {
-            int distance = 0;
-            _ = world.CurrentMap ?? throw new NullValueException(nameof(world.CurrentMap));
-
-            if (world.CurrentMap.ControlledEntitiy == _targetCursor?.Cursor)
-            {
-                _ = _targetCursor ?? throw new NullValueException(nameof(_targetCursor));
-
-                if (_targetCursor.TravelPath is not null)
-                    distance = _targetCursor.TravelPath.LengthWithStart;
-                if (_targetCursor.TravelPath is not null && _targetCursor.TravelPath.LengthWithStart >= _targetCursor.MaxDistance)
-                {
-                    distance = world!.CurrentMap!.AStar!.ShortestPath(_targetCursor.OriginCoord, world!.CurrentMap!.ControlledEntitiy!.Position + coorToMove)!.Length;
-                }
-            }
-            return distance;
         }
 
         public static bool HandleActions(Keyboard info, Universe uni, UIManager ui)
         {
-            var inputSettings = Locator.GetService<List<InputSetting>>();
             if (_getPlayer == null || uni == null)
                 return false;
 
@@ -464,8 +350,5 @@ namespace Diviner
         }
 
 #endif
-
-        private static bool CurrentMapIsPlanetView(Universe world) =>
-            world.WorldMap != null && world.WorldMap.AssocietatedMap == world.CurrentMap && world.Player == null;
     }
 }
