@@ -163,11 +163,25 @@ namespace Diviner.Extensions
             return isKeyInSettings;
         }
 
-        public static InputSetting GetInputAction(this Keyboard info, Dictionary<KeymapAction, InputSetting> inputs)
+        public static InputSetting GetInputAction(this Keyboard info, Dictionary<Keys, InputSetting> inputs)
         {
             foreach (var key in info.KeysPressed)
             {
-                
+                if (!inputs.TryGetValue(key.Key, out var input))
+                    continue;
+                if (input.Key.Length == 1 && _map.ContainsKey(input.Key[0]))
+                {
+                    return input;
+                }
+                else
+                {
+                    foreach (var inputKey in input.Key)
+                    {
+                        if (!_map.ContainsKey(inputKey))
+                            continue;
+                        return input;
+                    }
+                }
             }
         }
     }
