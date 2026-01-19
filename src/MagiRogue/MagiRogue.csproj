@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -49,7 +49,7 @@
 
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.4" />
-    <PackageReference Include="SadConsole.Debug.MonoGame" Version="10.7.0" />
+    <PackageReference Include="SadConsole.Debug.MonoGame" Version="10.8.0" />
   </ItemGroup>
 
   <ItemGroup>
