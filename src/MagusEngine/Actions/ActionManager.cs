@@ -27,6 +27,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using MagiMap = MagusEngine.Core.MapStuff.MagiMap;
+using System;
 
 namespace MagusEngine.Actions
 {
@@ -112,16 +113,16 @@ namespace MagusEngine.Actions
                 attack,
                 itemUsed,
                 limbAttacking);
-                
+
             // Improved stamina cost calculation
             var staminaCost = CalculateStaminaCost(attacker, attack, itemUsed);
             attacker.Body.Stamina = Math.Max(0, attacker.Body.Stamina - staminaCost);
 
-            return itemUsed != null ? 
+            return itemUsed != null ?
                 TimeHelper.GetAttackTimeWithWeapon(attacker, attack, itemUsed) :
                 TimeHelper.GetAttackTime(attacker, attack);
         }
-        
+
         /// <summary>
         /// Calculates realistic stamina cost for attacks based on weapon weight, strength, and endurance
         /// </summary>
@@ -131,9 +132,8 @@ namespace MagusEngine.Actions
             double weaponWeight = weapon?.Mass ?? 1.0;
             double strengthFactor = Math.Max(0.1, 1.0 - (attacker.GetStrenght() * 0.01));
             double enduranceFactor = Math.Max(0.5, 1.0 - (attacker.Body.Endurance * 0.005));
-            
+
             return baseCost * weaponWeight * strengthFactor * enduranceFactor;
-        }
         }
 
         public static void ShootProjectileAction(Point origin,
