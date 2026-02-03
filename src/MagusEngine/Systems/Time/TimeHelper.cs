@@ -39,7 +39,23 @@ namespace MagusEngine.Systems.Time
 
         public static long GetAttackTime(Actor actor, Attack attack)
         {
-            return (long)actor.GetAttackVelocity(attack) / ((int)attack.RecoverVelocity + 1);
+            // Improved attack time calculation with realistic physics
+            double baseTime = attack.PrepareVelocity + attack.RecoverVelocity;
+            double actorSpeed = actor.GetActorSpeed();
+            double skillBonus = Math.Max(0.5, 1.0 - (actor.GetRelevantAttackAbility(actor.WieldedItem()) * 0.01));
+            
+            return (long)(baseTime * skillBonus / Math.Max(actorSpeed, 0.1));
+        }
+        
+        public static long GetAttackTimeWithWeapon(Actor actor, Attack attack, Item weapon)
+        {
+            double baseTime = attack.PrepareVelocity + attack.RecoverVelocity;
+            double weaponWeight = weapon?.Mass ?? 1.0;
+            double actorSpeed = actor.GetActorSpeed();
+            double skillBonus = Math.Max(0.5, 1.0 - (actor.GetRelevantAttackAbility(weapon) * 0.01));
+            double strengthFactor = Math.Max(0.5, 1.0 + (actor.GetStrenght() - weaponWeight) * 0.01);
+            
+            return (long)(baseTime * weaponWeight * skillBonus * strengthFactor / Math.Max(actorSpeed, 0.1));
         }
 
         public static long GetCastingTime(Actor actor, Spell spellCasted)

@@ -12,12 +12,12 @@
     "ColdDamageTemp": -56,
     "Color": "Gray",
     "Type": "Skin",
-    "ShearYield": 20000,
-    "ShearFracture": 20000,
-    "ShearStrainAtYield": 50000,
-    "ImpactYield": 10000,
-    "ImpactFracture": 10000,
-    "ImpactStrainsAtYield": 50000
+    "ShearYield": 1000,
+    "ShearFracture": 2000,
+    "ShearStrainAtYield": 25000,
+    "ImpactYield": 500,
+    "ImpactFracture": 1000,
+    "ImpactStrainsAtYield": 25000
   },
   {
     "Id": "fat",
@@ -53,12 +53,12 @@
     "ColdDamageTemp": -56,
     "Color": "Red",
     "Type": "Meat",
-    "ShearYield": 10000,
-    "ShearFracture": 10000,
-    "ShearStrainAtYield": 50000,
-    "ImpactYield": 10000,
-    "ImpactFracture": 10000,
-    "ImpactStrainsAtYield": 50000
+    "ShearYield": 800,
+    "ShearFracture": 1500,
+    "ShearStrainAtYield": 30000,
+    "ImpactYield": 400,
+    "ImpactFracture": 800,
+    "ImpactStrainsAtYield": 30000
   },
   {
     "Id": "bone",
@@ -73,12 +73,12 @@
     "Density": 0.5,
     "Color": "White",
     "Type": "Bone",
-    "ShearYield": 115000,
-    "ShearFracture": 130000,
-    "ShearStrainAtYield": 100,
-    "ImpactYield": 20000,
-    "ImpactFracture": 20000,
-    "ImpactStrainsAtYield": 100,
+    "ShearYield": 50000,
+    "ShearFracture": 80000,
+    "ShearStrainAtYield": 5000,
+    "ImpactYield": 15000,
+    "ImpactFracture": 25000,
+    "ImpactStrainsAtYield": 5000,
     "MaxEdge": 100
   },
   {
@@ -95,7 +95,6 @@
     "Density": 0.6,
     "Color": "White",
     "Type": "Teeth",
-    // same from bone
     "MaxEdge": 1000
   },
   {
@@ -191,7 +190,6 @@
     "Type": "None"
   },
   {
-    // todo: Fix these values
     "Id": "hair",
     "Name": "hair material",
     "InheirtFrom": "skin",
@@ -203,7 +201,6 @@
     "Type": "None"
   },
   {
-    // TODO: to fix this layer
     "Id": "cartilage",
     "Name": "cartilage material",
     "InheirtFrom": "skin",
@@ -258,7 +255,6 @@
     "Density": 0.5,
     "Color": "Gray",
     "Type": "Bone",
-    // more elastic than bone
     "ImpactYield": 200000,
     "ImpactFracture": 200000,
     "ImpactStrainsAtYield": 5000,

@@ -8,12 +8,12 @@
     "MeltingPoint": 1538,
     "BoilingPoint": 2862,
     "ConfersTraits": [ "Durable", "MagicallyWeak" ],
-    "ShearYield": 15000,
-    "ShearFracture": 15000,
-    "ShearStrainAtYield": 100,
-    "ImpactYield": 120000,
-    "ImpactFracture": 120000,
-    "ImpactStrainsAtYield": 100,
+    "ShearYield": 80000,
+    "ShearFracture": 120000,
+    "ShearStrainAtYield": 1000,
+    "ImpactYield": 200000,
+    "ImpactFracture": 300000,
+    "ImpactStrainsAtYield": 1000,
     "MaxEdge": 1000
   },
   {
