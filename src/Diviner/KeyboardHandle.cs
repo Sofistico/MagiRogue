@@ -9,13 +9,9 @@ using MagusEngine.Bus.UiBus;
 using MagusEngine.Components.EntityComponents;
 using MagusEngine.Components.EntityComponents.Ai;
 using MagusEngine.Core.Entities;
-using MagusEngine.Core.Magic;
 using MagusEngine.Core.MapStuff;
-using MagusEngine.Exceptions;
 using MagusEngine.Services;
 using MagusEngine.Systems;
-using MagusEngine.Systems.Time;
-using MagusEngine.Utils.Extensions;
 using SadConsole.Input;
 using Color = SadRogue.Primitives.Color;
 
@@ -27,202 +23,28 @@ namespace Diviner
         private static readonly Player _getPlayer = Find.Universe?.Player!;
 
         [AllowNull]
-        private static Target? _targetCursor;
+        private static readonly Target? _targetCursor;
 
         public static bool HandleKeys(Keyboard info)
         {
             var inputSettings = Locator.GetService<Dictionary<KeymapAction, InputSetting>>();
 
-            return false;
-        }
-
-        public static bool HandleActions(Keyboard info, Universe uni, UIManager ui)
-        {
-            if (_getPlayer == null || uni == null)
-                return false;
-
-            // Work around for a > symbol, must be top to not make the char wait
-            if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.OemPeriod))
-            {
-                return ActionManager.EnterDownMovement(_getPlayer.Position);
-            }
-            // Work around for a < symbol, must be top to not make the char wait
-            if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.OemComma))
-            {
-                return ActionManager.EnterUpMovement(_getPlayer.Position);
-            }
-            if (HandleMove(info, uni, ui))
-            {
-                if (!_getPlayer.Bumped && uni?.CurrentMap?.ControlledEntitiy is Player)
-                {
-                    Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.GetWalkTime(_getPlayer,
-                        uni.CurrentMap.GetTileAt<Tile>(_getPlayer.Position)!), true));
-                }
-                else if (uni?.CurrentMap?.ControlledEntitiy is Player)
-                {
-                    var attack = _getPlayer.GetAttacks().GetRandomItemFromList() ?? throw new NullValueException("Attack was null", null);
-                    Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.GetAttackTime(_getPlayer, attack), true));
-                }
-
-                return true;
-            }
-
-            if (info.IsKeyPressed(Keys.NumPad5) && info.IsKeyDown(Keys.LeftControl))
-            {
-                return ActionManager.RestTillFull(_getPlayer);
-            }
-
-            if (info.IsKeyPressed(Keys.NumPad5) || info.IsKeyPressed(Keys.OemPeriod))
-            {
-                Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.Wait, true));
-                return true;
-            }
-
-            if (info.IsKeyPressed(Keys.OemComma))
-            {
-                Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(10, true));
-                return true;
-            }
-
-            //if (info.IsKeyPressed(Keys.A))
-            //{
-            //    bool sucess = ActionManager.DirectAttack(world.Player);
-            //    world.ProcessTurn(TimeHelper.GetAttackTime(world.Player), sucess);
-            //    return sucess;
-            //} // some other thing will be in here!
-            if (info.IsKeyPressed(Keys.G))
-            {
-                Item item = uni.CurrentMap!.GetEntityAt<Item>(uni.CurrentMap.ControlledEntitiy!.Position)!;
-                bool sucess = ActionManager.PickUp(uni.Player, item!);
-                Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.Interact, sucess));
-                return sucess;
-            }
-
-            if (info.IsKeyPressed(Keys.D))
-            {
-                //bool sucess = ActionManager.DropTopItemInv(uni.Player);
-                ui.InventoryScreen.ShowItems((Actor)uni!.CurrentMap!.ControlledEntitiy!, item =>
-                {
-                    var sucess = ActionManager.DropItem(item, _getPlayer.Position, uni.CurrentMap);
-                    Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.Interact, sucess));
-                });
-                return false;
-            }
-            if (info.IsKeyPressed(Keys.C))
-            {
-                bool sucess = ActionManager.CloseDoor(uni.Player);
-                Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.Interact, sucess));
-                ui.MapWindow.MapConsole.IsDirty = true;
-            }
-            if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.H))
-            {
-                bool sucess = ActionManager.NodeDrain(_getPlayer);
-                Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.MagicalThings, sucess));
-            }
-            if (info.IsKeyPressed(Keys.L))
-            {
-                _targetCursor ??= new Target(_getPlayer.Position);
-
-                if (_targetCursor.State == TargetState.LookMode)
-                {
-                    _targetCursor.EndTargetting();
-                }
-                else
-                {
-                    _targetCursor.StartTargetting();
-                }
-
-                return true;
-            }
-
-            if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.Z))
-            {
-                SpellSelectWindow spell = new(_getPlayer.Soul.CurrentMana);
-
-                _targetCursor ??= new Target(_getPlayer.Position);
-                var magic = _getPlayer.GetComponent<Magic>();
-                spell.Show(magic.KnowSpells, selectedSpell => _targetCursor.OnSelectSpell(selectedSpell, (Actor)uni.CurrentMap!.ControlledEntitiy!), _getPlayer.Soul.CurrentMana);
-
-                return true;
-            }
-
-            if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.R))
-            {
-                var wait = ui.GetWindow<WaitWindow>(WindowTag.Wait);
-                if (wait is null)
-                {
-                    wait = new();
-                    ui.AddWindowToList(wait);
-                }
-                wait.Show(true);
-                return true;
-            }
-
-            if (info.IsKeyPressed(Keys.Enter) && _targetCursor is not null)
-            {
-                if (_targetCursor.AnyTargeted())
-                {
-                    bool sucess = false;
-                    long timeTaken = 0;
-                    if (_targetCursor.State == TargetState.LookMode)
-                    {
-                        _targetCursor.LookTarget();
-                        return true;
-                    }
-                    else if (_targetCursor.State == TargetState.TargetingSpell)
-                    {
-                        (sucess, var spellCasted) = _targetCursor.EndSpellTargetting();
-                        if (sucess)
-                            timeTaken = TimeHelper.GetCastingTime(_getPlayer, spellCasted!);
-                    }
-                    else
-                    {
-                        (sucess, var item) = _targetCursor.EndItemTargetting();
-                        if (sucess)
-                            timeTaken = TimeHelper.GetShootingTime(_getPlayer, item!.Mass);
-                    }
-                    if (sucess)
-                    {
-                        _targetCursor = null;
-                        Locator.GetService<MessageBusService>()?.SendMessage<ProcessTurnEvent>(new(timeTaken, sucess));
-                    }
-
-                    return sucess;
-                }
-                else
-                {
-                    Locator.GetService<MessageBusService>()?.SendMessage<AddMessageLog>(new("Invalid target!"));
-                    return false;
-                }
-            }
-
-            if (info.IsKeyPressed(Keys.Escape) && (_targetCursor is not null))
-            {
-                _targetCursor.EndTargetting();
-
-                _targetCursor = null!;
-
-                return true;
-            }
-
 #if DEBUG
-            if (HandleDebugActions(info, uni, ui))
+            if (HandleDebugActions(info, Find.Universe))
             {
                 return true;
             }
 #endif
-
             return false;
         }
 
 #if DEBUG
 
-        private static bool HandleDebugActions(Keyboard info, Universe uni, UIManager ui)
+        private static bool HandleDebugActions(Keyboard info, Universe uni)
         {
             if (info.IsKeyPressed(Keys.F10))
             {
                 ActionManager.ToggleFOV();
-                ui.MapWindow.MapConsole.IsDirty = true;
                 int c = uni!.CurrentMap!.PlayerExplored.Count;
                 for (int i = 0; i < c; i++)
                 {

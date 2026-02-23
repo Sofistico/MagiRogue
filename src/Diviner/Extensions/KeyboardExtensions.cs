@@ -163,7 +163,7 @@ namespace Diviner.Extensions
             return isKeyInSettings;
         }
 
-        public static InputSetting GetInputAction(this Keyboard info, Dictionary<Keys, InputSetting> inputs)
+        public static InputSetting? GetInputAction(this Keyboard info, Dictionary<Keys, InputSetting> inputs)
         {
             foreach (var key in info.KeysPressed)
             {
@@ -183,6 +183,7 @@ namespace Diviner.Extensions
                     }
                 }
             }
+            return null;
         }
     }
 }
