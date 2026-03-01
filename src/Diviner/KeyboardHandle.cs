@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Arquimedes.Enumerators;
 using Arquimedes.Settings;
+using Diviner.Extensions;
 using Diviner.Windows;
 using MagusEngine;
 using MagusEngine.Actions;
@@ -27,7 +28,14 @@ namespace Diviner
 
         public static bool HandleKeys(Keyboard info)
         {
-            var inputSettings = Locator.GetService<Dictionary<KeymapAction, InputSetting>>();
+            var action = info.GetActionFromKey();
+            if (action is null)
+                return false;
+            switch (action)
+            {
+                default:
+                    return false;
+            }
 
 #if DEBUG
             if (HandleDebugActions(info, Find.Universe))

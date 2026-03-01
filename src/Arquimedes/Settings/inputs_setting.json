@@ -1,126 +1,126 @@
 [
   {
-    "Key": ["up_arrow", "numpad_8"],
+    "Keys": ["up_arrow", "numpad_8"],
     "Action": "MoveNorth",
     "Category": "Movement"
   },
   {
-    "Key": ["down_arrow", "numpad_2"],
+    "Keys": ["down_arrow", "numpad_2"],
     "Action": "MoveSouth",
     "Category": "Movement"
   },
   {
-    "Key": ["left_arrow", "numpad_4"],
+    "Keys": ["left_arrow", "numpad_4"],
     "Action": "MoveLeft",
     "Category": "Movement"
   },
   {
-    "Key": ["right_arrow", "numpad_6"],
+    "Keys": ["right_arrow", "numpad_6"],
     "Action": "MoveRight",
     "Category": "Movement"
   },
   {
-    "Key": ["numpad_7"],
+    "Keys": ["numpad_7"],
     "Action": "MoveNorthLeft",
     "Category": "Movement"
   },
   {
-    "Key": ["numpad_9"],
+    "Keys": ["numpad_9"],
     "Action": "MoveNorthRight",
     "Category": "Movement"
   },
   {
-    "Key": ["numpad_1"],
+    "Keys": ["numpad_1"],
     "Action": "MoveSouthLeft",
     "Category": "Movement"
   },
   {
-    "Key": ["numpad_3"],
+    "Keys": ["numpad_3"],
     "Action": "MoveSouthRight",
     "Category": "Movement"
   },
   {
-    "Key": ["i"],
+    "Keys": ["i"],
     "Action": "OpenInventory",
     "Category": "Ui"
   },
   {
-    "Key": ["t"],
+    "Keys": ["t"],
     "Action": "ThownItem",
     "Category": "Interaction"
   },
   {
-    "Key": ["esc"],
+    "Keys": ["esc"],
     "Action": "EscapeMenu",
     "Category": "Ui"
   },
   {
-    "Key": ["."],
+    "Keys": ["."],
     "Action": "MoveDown",
     "Category": "Movement",
     "Modifier": ["Shift"]
   },
   {
-    "Key": [","],
+    "Keys": [","],
     "Action": "MoveUp",
     "Category": "Movement",
     "Modifier": ["Shift"]
   },
   {
-    "Key": ["numpad_5"],
+    "Keys": ["numpad_5"],
     "Action": "WaitTillRested",
     "Category": "Misc",
     "Modifier": ["Control"]
   },
   {
-    "Key": [".", "numpad_5"],
+    "Keys": [".", "numpad_5"],
     "Action": "WaitOneSecond",
     "Category": "Misc"
   },
   {
-    "Key": [","],
+    "Keys": [","],
     "Action": "WaitOneMoment",
     "Category": "Misc"
   },
   {
-    "Key": ["g"],
+    "Keys": ["g"],
     "Action": "PickUp",
     "Category": "Interaction"
   },
   {
-    "Key": ["d"],
+    "Keys": ["d"],
     "Action": "DropItem",
     "Category": "Interaction"
   },
   {
-    "Key": ["c"],
+    "Keys": ["c"],
     "Action": "CloseDoor",
     "Category": "Interaction"
   },
   {
-    "Key": ["l"],
+    "Keys": ["l"],
     "Action": "Look",
     "Category": "Ui"
   },
   {
-    "Key": ["z"],
+    "Keys": ["z"],
     "Action": "SpellCasting",
     "Category": "Interaction",
     "Modifier": ["Shift"]
   },
   {
-    "Key": ["r"],
+    "Keys": ["r"],
     "Action": "Wait",
     "Category": "Ui",
     "Modifier": ["Shift"]
   },
   {
-    "Key": ["enter"],
+    "Keys": ["enter"],
     "Action": "ConfirmAction",
     "Category": "Ui"
   },
   {
-    "Key": ["esc"],
+    "Keys": ["esc"],
     "Action": "CancelAction",
     "Category": "Ui"
   }

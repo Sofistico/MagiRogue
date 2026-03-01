@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
+using System.Linq;
 using Arquimedes;
 using Arquimedes.Settings;
 using Arquimedes.Utils;
 using Diviner;
+using Diviner.Extensions;
 using MagusEngine;
 using MagusEngine.Services;
 using SadConsole;
@@ -14,7 +17,7 @@ using SadConsole.UI.Windows;
 
 namespace MagiRogue
 {
-    public static class GameLoop
+    public static class Program
     {
         private static GlobalSettings settings;
         private static bool beginTest;
@@ -65,7 +68,6 @@ namespace MagiRogue
         {
             foreach (var arg in args)
             {
-                // TODO!
                 if (arg.Equals("test", StringComparison.Ordinal))
                     beginTest = true;
             }
@@ -79,8 +81,24 @@ namespace MagiRogue
 
             settings = JsonUtils.JsonDeseralize<GlobalSettings>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Settings", "global_setting.json"))!;
             Locator.AddService(settings);
-            var input = JsonUtils.JsonDeseralize<List<InputSetting>>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Settings", "inputs_settings.json"))!;
-            Locator.AddService(input);
+
+            ConfigureKeys();
+        }
+
+        private static void ConfigureKeys()
+        {
+            var listInputs = JsonUtils.JsonDeseralize<List<InputSetting>>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Settings", "inputs_setting.json"))!;
+            var dictInput = new Dictionary<InputKey, InputSetting>(listInputs.Count);
+            foreach (var input in listInputs)
+            {
+                foreach (var key in input.Keys)
+                {
+                    var keyEnum = KeyboardExtensions.GetKeyFromString(key);
+                    var inputKey = new InputKey(keyEnum, input.Modifier);
+                    dictInput.TryAdd(inputKey, input);
+                }
+            }
+            Locator.AddService(dictInput);
         }
 
         private static void Init(object? sender, GameHost e)

@@ -1,4 +1,5 @@
-﻿using GoRogue.Messaging;
+﻿using Arquimedes.Enumerators;
+using GoRogue.Messaging;
 using MagusEngine;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
@@ -43,6 +44,7 @@ namespace Diviner.Windows
             invScrollBar.ValueChanged += InvScrollBar_ValueChanged;
             Controls.Add(invScrollBar);
             _bus.RegisterAllSubscriber(this);
+            Tag = WindowTag.Inv;
         }
 
         public override bool ProcessKeyboard(Keyboard info)

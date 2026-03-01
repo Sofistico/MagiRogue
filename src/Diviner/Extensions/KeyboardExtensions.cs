@@ -1,5 +1,6 @@
 using Arquimedes.Enumerators;
 using Arquimedes.Settings;
+using MagusEngine;
 using SadConsole.Input;
 
 namespace Diviner.Extensions
@@ -138,50 +139,38 @@ namespace Diviner.Extensions
             ["backslash_alt"] = Keys.OemBackslash
         };
 
-        public static bool IsInputOffAction(this Keyboard info, KeymapAction action, Dictionary<KeymapAction, InputSetting> inputs)
+        public static Keys GetKeyFromString(string str)
         {
-            if (!inputs.TryGetValue(action, out var input))
-                return false;
-            bool isKeyInSettings = false;
-            foreach (var key in info.KeysPressed)
-            {
-                if (input.Key.Length == 1 && _map.TryGetValue(input.Key[0], out var code))
-                {
-                    isKeyInSettings = code == key;
-                }
-                else
-                {
-                    foreach (var inputKey in input.Key)
-                    {
-                        if (!_map.TryGetValue(inputKey, out code))
-                            continue;
-                        isKeyInSettings = code == key;
-                        break;
-                    }
-                }
-            }
-            return isKeyInSettings;
+            if (!_map.TryGetValue(str, out var key))
+                return Keys.None;
+            return key;
         }
 
-        public static InputSetting? GetInputAction(this Keyboard info, Dictionary<Keys, InputSetting> inputs)
+        public static KeymapAction? GetActionFromKey(this Keyboard info)
         {
+            var inputs = Locator.GetService<Dictionary<InputKey, InputSetting>>();
+
             foreach (var key in info.KeysPressed)
             {
-                if (!inputs.TryGetValue(key.Key, out var input))
-                    continue;
-                if (input.Key.Length == 1 && _map.ContainsKey(input.Key[0]))
+                var modifiers = info.KeysDown.Where(i =>
+                    i.Key == Keys.LeftShift ||
+                    i.Key == Keys.RightShift ||
+                    i.Key == Keys.LeftControl ||
+                    i.Key == Keys.RightControl ||
+                    i.Key == Keys.LeftAlt ||
+                    i.Key == Keys.RightAlt
+                ).Select(i =>
                 {
-                    return input;
-                }
-                else
-                {
-                    foreach (var inputKey in input.Key)
-                    {
-                        if (!_map.ContainsKey(inputKey))
-                            continue;
-                        return input;
-                    }
-                }
+                    var key = i.Key.ToString();
+                    if (key.Contains("shift", StringComparison.OrdinalIgnoreCase))
+                        return "Shift";
+                    if (key.Contains("control", StringComparison.OrdinalIgnoreCase))
+                        return "Control";
+                    return "Alt";
+                }).ToArray();
+                if (!inputs.TryGetValue(new(key.Key, modifiers), out var input))
+                    break;
+                return input.Action;
             }
             return null;
         }

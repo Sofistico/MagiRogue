@@ -4,8 +4,8 @@ namespace Arquimedes.Settings
 {
     public class InputSetting : IEquatable<InputSetting>
     {
-        public required string[] Key { get; set; }
         public required KeymapAction Action { get; set; }
+        public required string[] Keys { get; set; }
         public string Category { get; set; } = "Misc";
         public string[]? Modifier { get; set; }
 

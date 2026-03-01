@@ -3,7 +3,6 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
-    <StartupObject>MagiRogue.GameLoop</StartupObject>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Authors>Sofistico</Authors>
     <Company>Sofistico</Company>
@@ -48,7 +47,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.4" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.4.1" />
     <PackageReference Include="SadConsole.Debug.MonoGame" Version="10.8.0" />
   </ItemGroup>
 
