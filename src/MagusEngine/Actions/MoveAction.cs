@@ -8,9 +8,9 @@ namespace MagusEngine.Actions
     public class MoveAction : IExecuteAction
     {
         private readonly Point _delta;
-        private readonly Target _targetCursor;
+        private readonly Target? _targetCursor;
 
-        public MoveAction(Point delta, Target targetCursor)
+        public MoveAction(Point delta, Target? targetCursor)
         {
             _delta = delta;
             _targetCursor = targetCursor;

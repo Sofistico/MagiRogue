@@ -13,19 +13,26 @@ namespace MagusEngine.Actions
     {
         private readonly int _zDelta;
         private readonly MessageBusService _bus;
-        private readonly Point _point;
 
-        public UpDownMovement(int zDelta, Point point)
+        public UpDownMovement(int zDelta)
         {
             _zDelta = zDelta;
             _bus = Locator.GetService<MessageBusService>();
-            _point = point;
         }
 
         public bool Execute(Universe world)
         {
+            if (_zDelta > 0)
+                return UpMovement();
+            else
+                return DownMovement();
+        }
+
+        private bool UpMovement()
+        {
+            var point = Find.CurrentMap!.ControlledEntitiy!.Position;
             bool possibleChangeMap = Find.Universe.PossibleChangeMap;
-            Furniture? possibleStairs = Find.CurrentMap?.GetEntityAt<Furniture>(_point);
+            Furniture? possibleStairs = Find.CurrentMap?.GetEntityAt<Furniture>(point);
             MagiMap? currentMap = Find.CurrentMap;
 
             if (possibleChangeMap)
@@ -73,8 +80,9 @@ namespace MagusEngine.Actions
 
         private bool DownMovement()
         {
-            Furniture? possibleStairs = Find.CurrentMap?.GetEntityAt<Furniture>(_point);
-            var possibleWorldTileHere = Find.CurrentMap?.GetComponentInTileAt<WorldTile>(_point);
+            var point = Find.CurrentMap!.ControlledEntitiy!.Position;
+            Furniture? possibleStairs = Find.CurrentMap?.GetEntityAt<Furniture>(point);
+            var possibleWorldTileHere = Find.CurrentMap?.GetComponentInTileAt<WorldTile>(point);
             MagiMap currentMap = Find.CurrentMap!;
             if (possibleStairs?.MapIdConnection.HasValue == true)
             {
@@ -92,7 +100,7 @@ namespace MagusEngine.Actions
             {
                 possibleWorldTileHere.Visited = true;
 
-                RegionChunk chunk = Find.Universe.GenerateChunck(_point);
+                RegionChunk chunk = Find.Universe.GenerateChunck(point);
                 Find.Universe.CurrentChunk = chunk;
                 Locator.GetService<MessageBusService>().SendMessage<ChangeControlledActorMap>(new(chunk.LocalMaps[0],
                     chunk.LocalMaps[0].GetRandomWalkableTile(), currentMap));
@@ -100,7 +108,7 @@ namespace MagusEngine.Actions
             }
             else if (possibleWorldTileHere?.Visited == true)
             {
-                RegionChunk chunk = Find.Universe.GetChunckByPos(_point)!;
+                RegionChunk chunk = Find.Universe.GetChunckByPos(point)!;
                 Find.Universe.CurrentChunk = chunk;
                 // if entering the map again, set to update
                 chunk.SetMapsToUpdate();

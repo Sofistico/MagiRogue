@@ -1,10 +1,10 @@
 using System.Diagnostics.CodeAnalysis;
 using Arquimedes.Enumerators;
-using Arquimedes.Settings;
 using Diviner.Extensions;
 using Diviner.Windows;
 using MagusEngine;
 using MagusEngine.Actions;
+using MagusEngine.Actions.Interfaces;
 using MagusEngine.Bus.MapBus;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Components.EntityComponents;
@@ -26,24 +26,46 @@ namespace Diviner
         [AllowNull]
         private static readonly Target? _targetCursor;
 
+        private static readonly Dictionary<KeymapAction, Func<IExecuteAction?>> _actionFactory = new()
+        {
+            [KeymapAction.MoveNorth] = () => new MoveAction((0, -1), _targetCursor),
+            [KeymapAction.MoveSouth] = () => new MoveAction((0, 1), _targetCursor),
+            [KeymapAction.MoveLeft] = () => new MoveAction((-1, 0), _targetCursor),
+            [KeymapAction.MoveRight] = () => new MoveAction((1, 0), _targetCursor),
+            [KeymapAction.MoveNorthLeft] = () => new MoveAction((-1, -1), _targetCursor),
+            [KeymapAction.MoveNorthRight] = () => new MoveAction((1, -1), _targetCursor),
+            [KeymapAction.MoveSouthLeft] = () => new MoveAction((-1, 1), _targetCursor),
+            [KeymapAction.MoveSouthRight] = () => new MoveAction((1, 1), _targetCursor),
+            [KeymapAction.MoveUp] = () => new UpDownMovement(1),
+            [KeymapAction.MoveDown] = () => new UpDownMovement(-1),
+            [KeymapAction.OpenInventory] = () => new OpenInventoryAction(),
+            [KeymapAction.ThownItem] = () => new ThrowItemAction(),
+            [KeymapAction.EscapeMenu] = () => new EscapeMenuAction(),
+        };
+
+
         public static bool HandleKeys(Keyboard info)
         {
             var action = info.GetActionFromKey();
             if (action is null)
                 return false;
-            switch (action)
-            {
-                default:
-                    return false;
-            }
-
 #if DEBUG
             if (HandleDebugActions(info, Find.Universe))
             {
                 return true;
             }
 #endif
-            return false;
+            var executeAction = GetExecuteAction(action.Value);
+            if (executeAction is null)
+                return false;
+            return executeAction.Execute(Find.Universe);
+        }
+
+        private static IExecuteAction? GetExecuteAction(KeymapAction action)
+        {
+            if (_actionFactory.TryGetValue(action, out var factory))
+                return factory();
+            return null;
         }
 
 #if DEBUG
