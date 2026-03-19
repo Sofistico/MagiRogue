@@ -80,7 +80,7 @@ namespace MagusEngine.Actions
                     .SendMessage<AddMessageLog>(new($"You are too tired to attack|{attacker.Name} is too tired to attack!",
                     showMessage,
                     isPlayer ? PointOfView.First : PointOfView.Third));
-                return TimeHelper.Wait;
+                return TimeHelper.OneSecond;
             }
 
             // Create two messages that describe the outcome of the attack and defense
@@ -374,34 +374,6 @@ namespace MagusEngine.Actions
         //    return false;
         //}
 
-        public static bool RestTillFull(Actor actor)
-        {
-            Body bodyStats = actor.Body;
-            //Mind mindStats = actor.Mind;
-            Soul soulStats = actor.Soul;
-
-            if (bodyStats.Stamina < bodyStats.MaxStamina || soulStats.CurrentMana < soulStats.MaxMana)
-            {
-                // calculate here the amount of time that it will take in turns to rest to full
-                double staminaDif, manaDif;
-
-                staminaDif = MathMagi.Round((bodyStats.MaxStamina - bodyStats.Stamina) / actor.GetStaminaRegen());
-                manaDif = MathMagi.Round((soulStats.MaxMana - soulStats.CurrentMana) / actor.GetManaRegen());
-
-                double totalTurnsWait = staminaDif + manaDif;
-
-                bool sus = WaitForNTurns((int)totalTurnsWait, actor);
-
-                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"You have rested for {totalTurnsWait} turns"));
-
-                return sus;
-            }
-
-            Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("You have no need to rest"));
-
-            return false;
-        }
-
         /// <summary>
         /// Equips an item
         /// </summary>
@@ -559,7 +531,7 @@ namespace MagusEngine.Actions
                     }
                 }
 
-                Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.Wait, true));
+                Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.OneSecond, true));
             }
             return true;
         }

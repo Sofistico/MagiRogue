@@ -398,7 +398,7 @@ namespace MagusEngine.Systems
 
                 if (sucesses >= 0 && totalTicks <= 0)
                 {
-                    totalTicks = TimeHelper.Wait;
+                    totalTicks = TimeHelper.OneSecond;
                     MagiLog.Log($"The {entity.Name} with id {entityId} has reported no success on AI");
                 }
 

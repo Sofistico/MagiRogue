@@ -13,6 +13,7 @@ using MagusEngine.Core.Entities;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.Services;
 using MagusEngine.Systems;
+using MagusEngine.Systems.Time;
 using SadConsole.Input;
 using Color = SadRogue.Primitives.Color;
 
@@ -36,11 +37,16 @@ namespace Diviner
             [KeymapAction.MoveNorthRight] = () => new MoveAction((1, -1), _targetCursor),
             [KeymapAction.MoveSouthLeft] = () => new MoveAction((-1, 1), _targetCursor),
             [KeymapAction.MoveSouthRight] = () => new MoveAction((1, 1), _targetCursor),
-            [KeymapAction.MoveUp] = () => new UpDownMovement(1),
-            [KeymapAction.MoveDown] = () => new UpDownMovement(-1),
+            [KeymapAction.MoveUp] = () => new UpDownMovementAction(1),
+            [KeymapAction.MoveDown] = () => new UpDownMovementAction(-1),
             [KeymapAction.OpenInventory] = () => new OpenInventoryAction(),
             [KeymapAction.ThownItem] = () => new ThrowItemAction(),
             [KeymapAction.EscapeMenu] = () => new EscapeMenuAction(),
+            [KeymapAction.WaitScreen] = () => new OpenWaitAction(),
+            [KeymapAction.WaitTillRested] = () => new RestAction(_getPlayer),
+            [KeymapAction.WaitOneMoment] = () => new WaitAction(TimeHelper.OneMoment),
+            [KeymapAction.WaitOneSecond] = () => new WaitAction(TimeHelper.OneSecond),
+            [KeymapAction.PickUp] = () => new PickupPlayerAction(_getPlayer),
         };
 
 

@@ -28,7 +28,7 @@ namespace Arquimedes.Enumerators
         OpenDoor,
         Look,
         SpellCasting,
-        Wait,
+        WaitScreen,
         ConfirmAction,
         CancelAction
     }

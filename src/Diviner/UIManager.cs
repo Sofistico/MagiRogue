@@ -30,7 +30,8 @@ namespace Diviner
         ISubscriber<ShowGlyphOnConsole>,
         ISubscriber<CloseWindowMessage>,
         ISubscriber<ShowMainMenuMessage>,
-        ISubscriber<ScrollConsoleMessage>
+        ISubscriber<ScrollConsoleMessage>,
+        ISubscriber<OpenWaitWindowMessage>
     {
         private readonly Dictionary<WindowTag, IWindowTagContract> _windows = [];
         private Universe? _universe;
@@ -308,6 +309,17 @@ namespace Diviner
         {
             var console = MapWindow.MapConsole;
             console.Surface.ViewPosition = console.Surface.ViewPosition.Translate(message.Delta);
+        }
+
+        public void Handle(OpenWaitWindowMessage message)
+        {
+            WaitWindow? wait = GetWindow<WaitWindow>(WindowTag.Wait);
+            if (wait is null)
+            {
+                wait = new();
+                AddWindowToList(wait);
+            }
+            wait.Show(true);
         }
 
         ~UIManager()

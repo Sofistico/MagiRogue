@@ -9,12 +9,12 @@ using MagusEngine.Systems;
 
 namespace MagusEngine.Actions
 {
-    public class UpDownMovement : IExecuteAction
+    public class UpDownMovementAction : IExecuteAction
     {
         private readonly int _zDelta;
         private readonly MessageBusService _bus;
 
-        public UpDownMovement(int zDelta)
+        public UpDownMovementAction(int zDelta)
         {
             _zDelta = zDelta;
             _bus = Locator.GetService<MessageBusService>();
