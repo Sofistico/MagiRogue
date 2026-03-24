@@ -15,6 +15,7 @@ using MagusEngine.Systems;
 using MagusEngine.Utils;
 using SadConsole;
 using SadConsole.Input;
+using SadConsole.Instructions;
 using Color = SadConsole.UI.AdjustableColor;
 
 namespace Diviner
@@ -31,7 +32,7 @@ namespace Diviner
         ISubscriber<CloseWindowMessage>,
         ISubscriber<ShowMainMenuMessage>,
         ISubscriber<ScrollConsoleMessage>,
-        ISubscriber<OpenWaitWindowMessage>
+        ISubscriber<OpenWindowEvent>
     {
         private readonly Dictionary<WindowTag, IWindowTagContract> _windows = [];
         private Universe? _universe;
@@ -311,15 +312,17 @@ namespace Diviner
             console.Surface.ViewPosition = console.Surface.ViewPosition.Translate(message.Delta);
         }
 
-        public void Handle(OpenWaitWindowMessage message)
+        public void Handle(OpenWindowEvent message)
         {
-            WaitWindow? wait = GetWindow<WaitWindow>(WindowTag.Wait);
-            if (wait is null)
+            var window = GetWindow<MagiBaseWindow>(message.Window);
+            if (window is null)
+                throw new NullValueException(nameof(window));
+            if (window is WaitWindow)
             {
-                wait = new();
-                AddWindowToList(wait);
+                window = new WaitWindow();
+                AddWindowToList(window);
             }
-            wait.Show(true);
+            window?.Show(true);
         }
 
         ~UIManager()

@@ -9,12 +9,12 @@ namespace MagusEngine.Actions
 {
     public class PickUpPlayerAction : IExecuteAction
     {
-        private readonly Actor _player;
+        private readonly Actor _actor;
         private readonly MessageBusService _bus;
 
-        public PickUpPlayerAction(Actor player)
+        public PickUpPlayerAction(Actor actor)
         {
-            _player = player;
+            _actor = actor;
             _bus = Locator.GetService<MessageBusService>();
         }
 

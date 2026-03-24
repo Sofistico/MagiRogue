@@ -1,3 +1,4 @@
+using Arquimedes.Enumerators;
 using MagusEngine.Actions.Interfaces;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Services;
@@ -16,7 +17,7 @@ namespace MagusEngine.Actions
 
         public bool Execute(Universe world)
         {
-            _messageBus.SendMessage<OpenWaitWindowMessage>();
+            _messageBus.SendMessage<OpenWindowEvent>(new(WindowTag.Wait));
             return true;
         }
     }

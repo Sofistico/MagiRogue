@@ -46,7 +46,15 @@ namespace Diviner
             [KeymapAction.WaitTillRested] = () => new RestAction(_getPlayer),
             [KeymapAction.WaitOneMoment] = () => new WaitAction(TimeHelper.OneMoment),
             [KeymapAction.WaitOneSecond] = () => new WaitAction(TimeHelper.OneSecond),
-            [KeymapAction.PickUp] = () => new PickupPlayerAction(_getPlayer),
+            [KeymapAction.PickUp] = () => new PickUpPlayerAction(_getPlayer),
+            [KeymapAction.DropItem] = () => new DropItemPlayerAction(),
+            [KeymapAction.CloseDoor] = () => new OpenCloseDoorAction(_getPlayer, true),
+            [KeymapAction.OpenDoor] = () => new OpenCloseDoorAction(_getPlayer, false),
+            [KeymapAction.Look] = () => new LookAction(),
+            [KeymapAction.SpellCasting] = () => new SpellCastingPlayerAction(_getPlayer),
+            [KeymapAction.Interact] = () => new InteractAction(),
+            [KeymapAction.ConfirmAction] = () => new ConfirmAction(),
+            [KeymapAction.CancelAction] = () => new CancelAction(),
         };
 
 

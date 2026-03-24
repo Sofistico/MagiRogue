@@ -30,6 +30,7 @@ namespace Arquimedes.Enumerators
         SpellCasting,
         WaitScreen,
         ConfirmAction,
-        CancelAction
+        CancelAction,
+        Interact
     }
 }

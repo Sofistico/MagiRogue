@@ -1,3 +1,4 @@
+using System;
 using MagusEngine.Actions.Interfaces;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
@@ -9,10 +10,12 @@ namespace MagusEngine.Actions
     public class OpenInventoryAction : IExecuteAction
     {
         private readonly MessageBusService _bus;
+        private readonly Action<Item>? _action;
 
-        public OpenInventoryAction()
+        public OpenInventoryAction(Action<Item>? action = null)
         {
             _bus = Locator.GetService<MessageBusService>();
+            _action = action;
         }
 
         public bool Execute(Universe world)
@@ -21,7 +24,7 @@ namespace MagusEngine.Actions
             if (controlledActor is null)
                 return false;
 
-            _bus.SendMessage<InventoryActionBus>(new(controlledActor, null));
+            _bus.SendMessage<InventoryActionBus>(new(controlledActor, _action));
             return true;
         }
     }
