@@ -1,3 +1,4 @@
+using Arquimedes.Enumerators;
 using MagusEngine.Actions.Interfaces;
 using MagusEngine.Core.Entities;
 using MagusEngine.Systems;
@@ -8,15 +9,16 @@ namespace MagusEngine.Actions
     {
         public bool Execute(Universe world)
         {
-            _targetCursor ??= new Target(_getPlayer.Position);
+            var getPlayer = Find.ControlledEntity!;
+            var targetCursor = world!.CurrentMap!.TargetCursor ??= new Target(getPlayer.Position);
 
-            if (_targetCursor.State == TargetState.LookMode)
+            if (targetCursor.State == TargetState.LookMode)
             {
-                _targetCursor.EndTargetting();
+                targetCursor.EndTargetting();
             }
             else
             {
-                _targetCursor.StartTargetting();
+                targetCursor.StartTargetting();
             }
 
             return true;

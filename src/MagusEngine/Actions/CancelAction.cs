@@ -1,6 +1,18 @@
+using MagusEngine.Actions.Interfaces;
+using MagusEngine.Systems;
 
-                _targetCursor.EndTargetting();
+namespace MagusEngine.Actions
+{
+    public class CancelAction : IExecuteAction
+    {
+        public bool Execute(Universe world)
+        {
+            var targetCursor = world?.CurrentMap?.TargetCursor;
+            targetCursor?.EndTargetting();
 
-                _targetCursor = null!;
+            world?.CurrentMap?.TargetCursor = null;
 
-                return true;
+            return true;
+        }
+    }
+}

@@ -110,7 +110,7 @@
   },
   {
     "Keys": ["r"],
-    "Action": "Wait",
+    "Action": "WaitScreen",
     "Category": "Ui",
     "Modifier": ["Shift"]
   },

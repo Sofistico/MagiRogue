@@ -32,7 +32,8 @@ namespace Diviner
         ISubscriber<CloseWindowMessage>,
         ISubscriber<ShowMainMenuMessage>,
         ISubscriber<ScrollConsoleMessage>,
-        ISubscriber<OpenWindowEvent>
+        ISubscriber<OpenWindowEvent>,
+        ISubscriber<OpenSpellCastingWindowMessage>
     {
         private readonly Dictionary<WindowTag, IWindowTagContract> _windows = [];
         private Universe? _universe;
@@ -323,6 +324,13 @@ namespace Diviner
                 AddWindowToList(window);
             }
             window?.Show(true);
+        }
+
+        public void Handle(OpenSpellCastingWindowMessage message)
+        {
+            SpellSelectWindow spell = new(message.CurrentMana);
+
+            spell.Show(message.Spells, message.OnCast!, message.CurrentMana);
         }
 
         ~UIManager()

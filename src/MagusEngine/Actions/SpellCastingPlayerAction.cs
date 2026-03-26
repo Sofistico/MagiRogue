@@ -2,9 +2,9 @@ using Arquimedes.Enumerators;
 using MagusEngine.Actions.Interfaces;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Core.Entities;
+using MagusEngine.Core.Magic;
 using MagusEngine.Services;
 using MagusEngine.Systems;
-using SadConsole.UI;
 
 namespace MagusEngine.Actions
 {
@@ -22,11 +22,11 @@ namespace MagusEngine.Actions
         public bool Execute(Universe world)
         {
             _bus.SendMessage<OpenWindowEvent>(new(WindowTag.SpellCasting));
-            // SpellSelectWindow spell = new(_getPlayer.Soul.CurrentMana);
+            var getPlayer = (Actor)Find.ControlledEntity!;
 
-            _targetCursor ??= new Target(_getPlayer.Position);
-            var magic = _getPlayer.GetComponent<Magic>();
-            spell.Show(magic.KnowSpells, selectedSpell => _targetCursor.OnSelectSpell(selectedSpell, (Actor)uni.CurrentMap!.ControlledEntitiy!), _getPlayer.Soul.CurrentMana);
+            var targetCursor = world!.CurrentMap!.TargetCursor ??= new Target(getPlayer.Position);
+            var magic = getPlayer.GetComponent<Magic>();
+            _bus.SendMessage<OpenSpellCastingWindowMessage>(new(magic.KnowSpells, getPlayer.Soul.CurrentMana, selectedSpell => targetCursor.OnSelectSpell(selectedSpell, getPlayer)));
 
             return true;
         }

@@ -82,6 +82,7 @@ namespace MagusEngine.Core.MapStuff
         public List<Room>? Rooms { get; set; }
 
         public EntityManager EntityRender { get; private set; } = [];
+        public Target? TargetCursor { get; set; }
 
         #endregion Properties
 

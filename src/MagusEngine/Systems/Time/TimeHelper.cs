@@ -64,9 +64,9 @@ namespace MagusEngine.Systems.Time
             return (long)(MagicalThingsTimeModifer * (spellCasted.SpellLevel + (spellCasted.MagicCost * 5)) / actor.GetActorBaseCastingSpeed(spellCasted.ShapingAbility));
         }
 
-        public static long GetShootingTime(Player getPlayer, double mass)
+        public static long GetShootingTime(Actor getPlayer, double mass)
         {
-            return (long)(OneSecond + (mass * 10 / (getPlayer.GetActorSpeed())));
+            return (long)(OneSecond + (mass * 10 / getPlayer.GetActorSpeed()));
         }
     }
 }
