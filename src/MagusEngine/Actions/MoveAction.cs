@@ -8,12 +8,10 @@ namespace MagusEngine.Actions
     public class MoveAction : IExecuteAction
     {
         private readonly Point _delta;
-        private readonly Target? _targetCursor;
 
-        public MoveAction(Point delta, Target? targetCursor)
+        public MoveAction(Point delta)
         {
             _delta = delta;
-            _targetCursor = targetCursor;
         }
 
         public bool Execute(Universe world)
@@ -26,29 +24,29 @@ namespace MagusEngine.Actions
                 if (world.CurrentMap.CheckForIndexOutOfBounds(world.CurrentMap.ControlledEntitiy!.Position + _delta))
                     return false;
 
-                int distance = HandleNonPlayerMoveAndReturnDistance(world, _delta);
-
+                var targetCursor = world.CurrentMap.TargetCursor;
+                int distance = HandleNonPlayerMoveAndReturnDistance(world, _delta, targetCursor);
                 return world.CurrentMap.PlayerExplored[world.CurrentMap.ControlledEntitiy.Position + _delta]
-                    && distance <= _targetCursor?.MaxDistance
+                    && distance <= targetCursor?.MaxDistance
                     && actor!.MoveBy(_delta);
             }
             return actor!.MoveBy(_delta);
         }
 
-        private int HandleNonPlayerMoveAndReturnDistance(Universe world, Point delta)
+        private int HandleNonPlayerMoveAndReturnDistance(Universe world, Point delta, Target? targetCursor)
         {
             int distance = 0;
             _ = world.CurrentMap ?? throw new NullValueException(nameof(world.CurrentMap));
 
-            if (world.CurrentMap.ControlledEntitiy == _targetCursor?.Cursor)
+            if (world.CurrentMap.ControlledEntitiy == targetCursor?.Cursor)
             {
-                _ = _targetCursor ?? throw new NullValueException(nameof(_targetCursor));
+                _ = targetCursor ?? throw new NullValueException(nameof(targetCursor));
 
-                if (_targetCursor.TravelPath is not null)
-                    distance = _targetCursor.TravelPath.LengthWithStart;
-                if (_targetCursor.TravelPath is not null && _targetCursor.TravelPath.LengthWithStart >= _targetCursor.MaxDistance)
+                if (targetCursor.TravelPath is not null)
+                    distance = targetCursor.TravelPath.LengthWithStart;
+                if (targetCursor.TravelPath is not null && targetCursor.TravelPath.LengthWithStart >= targetCursor.MaxDistance)
                 {
-                    distance = world!.CurrentMap!.AStar!.ShortestPath(_targetCursor.OriginCoord, world!.CurrentMap!.ControlledEntitiy!.Position + delta)!.Length;
+                    distance = world!.CurrentMap!.AStar!.ShortestPath(targetCursor.OriginCoord, world!.CurrentMap!.ControlledEntitiy!.Position + delta)!.Length;
                 }
             }
             return distance;

@@ -112,6 +112,7 @@ namespace Diviner.Windows
                 };
                 _hotKeys.Add(hotkeyLetter, (item, button.IsEnabled));
                 button.Click += (_, __) => button.Action.Invoke();
+                button.Focused += (_, __) => button.Action.Invoke();
 
                 controlList.Add(button);
             }

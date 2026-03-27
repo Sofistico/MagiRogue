@@ -21,7 +21,6 @@ namespace MagusEngine.Actions
 
         public bool Execute(Universe world)
         {
-            _bus.SendMessage<OpenWindowEvent>(new(WindowTag.SpellCasting));
             var getPlayer = (Actor)Find.ControlledEntity!;
 
             var targetCursor = world!.CurrentMap!.TargetCursor ??= new Target(getPlayer.Position);

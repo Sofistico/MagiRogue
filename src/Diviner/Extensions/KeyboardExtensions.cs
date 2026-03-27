@@ -168,6 +168,7 @@ namespace Diviner.Extensions
                         return "Control";
                     return "Alt";
                 }).ToArray();
+
                 if (!inputs.TryGetValue(new(key.Key, modifiers), out var input))
                     break;
                 return input.Action;

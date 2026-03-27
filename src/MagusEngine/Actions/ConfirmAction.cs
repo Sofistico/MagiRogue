@@ -21,7 +21,7 @@ namespace MagusEngine.Actions
         public bool Execute(Universe world)
         {
             var targetCursor = world?.CurrentMap?.TargetCursor;
-            Actor getPlayer = (Actor)Find.ControlledEntity!;
+            Actor getPlayer = world!.Player!;
             if (targetCursor?.AnyTargeted() == true)
             {
                 long timeTaken = 0;

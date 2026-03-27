@@ -1,7 +1,9 @@
+using Arquimedes.Enumerators;
 using MagusEngine.Actions.Interfaces;
 using MagusEngine.Bus.UiBus;
 using MagusEngine.Services;
 using MagusEngine.Systems;
+using System.Net.NetworkInformation;
 
 namespace MagusEngine.Actions
 {
@@ -16,11 +18,13 @@ namespace MagusEngine.Actions
 
         public bool Execute(Universe world)
         {
+            var targetCursor = world.CurrentMap.TargetCursor;
+            if (targetCursor is not null)
+            {
+                targetCursor.EndTargetting();
+                return true;
+            }
             _bus.SendMessage<ShowMainMenuMessage>();
-            // if (!ui.NoPopWindow)
-            //     return false;
-            // ui.MainMenu.Show();
-            // ui.MainMenu.IsFocused = true;
             return true;
         }
     }

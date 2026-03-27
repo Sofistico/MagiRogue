@@ -10,7 +10,7 @@ namespace Diviner
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Key, Modifiers);
+            return HashCode.Combine(Key, string.Join(",", Modifiers));
         }
 
         public override bool Equals([NotNullWhen(true)] object? obj)

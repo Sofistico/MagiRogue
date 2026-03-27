@@ -24,19 +24,16 @@ namespace Diviner
         [NotNull]
         private static readonly Player _getPlayer = Find.Universe?.Player!;
 
-        [AllowNull]
-        private static readonly Target? _targetCursor;
-
         private static readonly Dictionary<KeymapAction, Func<IExecuteAction?>> _actionFactory = new()
         {
-            [KeymapAction.MoveNorth] = () => new MoveAction((0, -1), _targetCursor),
-            [KeymapAction.MoveSouth] = () => new MoveAction((0, 1), _targetCursor),
-            [KeymapAction.MoveLeft] = () => new MoveAction((-1, 0), _targetCursor),
-            [KeymapAction.MoveRight] = () => new MoveAction((1, 0), _targetCursor),
-            [KeymapAction.MoveNorthLeft] = () => new MoveAction((-1, -1), _targetCursor),
-            [KeymapAction.MoveNorthRight] = () => new MoveAction((1, -1), _targetCursor),
-            [KeymapAction.MoveSouthLeft] = () => new MoveAction((-1, 1), _targetCursor),
-            [KeymapAction.MoveSouthRight] = () => new MoveAction((1, 1), _targetCursor),
+            [KeymapAction.MoveNorth] = () => new MoveAction((0, -1)),
+            [KeymapAction.MoveSouth] = () => new MoveAction((0, 1)),
+            [KeymapAction.MoveLeft] = () => new MoveAction((-1, 0)),
+            [KeymapAction.MoveRight] = () => new MoveAction((1, 0)),
+            [KeymapAction.MoveNorthLeft] = () => new MoveAction((-1, -1)),
+            [KeymapAction.MoveNorthRight] = () => new MoveAction((1, -1)),
+            [KeymapAction.MoveSouthLeft] = () => new MoveAction((-1, 1)),
+            [KeymapAction.MoveSouthRight] = () => new MoveAction((1, 1)),
             [KeymapAction.MoveUp] = () => new UpDownMovementAction(1),
             [KeymapAction.MoveDown] = () => new UpDownMovementAction(-1),
             [KeymapAction.OpenInventory] = () => new OpenInventoryAction(),
@@ -102,10 +99,10 @@ namespace Diviner
                 uni!.CurrentMap!.ForceFovCalculation();
                 return false;
             }
-
-            if (info.IsKeyPressed(Keys.K) && _targetCursor?.TileInTarget() == true)
+            var targetCursor = uni.CurrentMap.TargetCursor;
+            if (info.IsKeyPressed(Keys.K) && targetCursor?.TileInTarget() == true)
             {
-                Tile tile = uni!.CurrentMap!.GetTileAt(_targetCursor.Position)!;
+                Tile tile = uni!.CurrentMap!.GetTileAt(targetCursor.Position)!;
                 tile!.IsTransparent = !tile.IsTransparent;
                 return false;
             }
@@ -155,23 +152,23 @@ namespace Diviner
 
             if (info.IsKeyDown(Keys.LeftControl)
                 && info.IsKeyDown(Keys.LeftShift)
-                && info.IsKeyPressed(Keys.O) && _targetCursor is not null)
+                && info.IsKeyPressed(Keys.O) && targetCursor is not null)
             {
-                var (_, actor) = ActionManager.CreateTestEntity(_targetCursor.Cursor.Position, uni);
+                var (_, actor) = ActionManager.CreateTestEntity(targetCursor.Cursor.Position, uni);
                 actor.AddComponents(new MoveAndAttackAI(actor.GetViewRadius()));
                 return false;
             }
 
-            if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.O) && _targetCursor is not null)
+            if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.O) && targetCursor is not null)
             {
-                var (_, entity) = ActionManager.CreateTestEntity(_targetCursor.Cursor.Position, uni);
+                var (_, entity) = ActionManager.CreateTestEntity(targetCursor.Cursor.Position, uni);
                 entity.AddComponents(new BasicAi(entity));
                 return false;
             }
 
-            if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.P) && _targetCursor!.EntityInTarget())
+            if (info.IsKeyDown(Keys.LeftShift) && info.IsKeyPressed(Keys.P) && targetCursor!.EntityInTarget())
             {
-                Actor actor = (Actor)_targetCursor.TargetEntity()!;
+                Actor actor = (Actor)targetCursor.TargetEntity()!;
                 actor.AddComponents(new MoveAndAttackAI(actor.GetViewRadius()));
                 Locator.GetService<MessageBusService>()
                     .SendMessage<AddMessageLog>(new($"Added attack component to {actor.Name}!"));
@@ -181,9 +178,9 @@ namespace Diviner
             if (info.IsKeyDown(Keys.LeftShift)
                 && info.IsKeyDown(Keys.LeftControl)
                 && info.IsKeyPressed(Keys.P)
-                && _targetCursor!.EntityInTarget())
+                && targetCursor!.EntityInTarget())
             {
-                Actor? actor = (Actor?)_targetCursor.TargetEntity();
+                Actor? actor = (Actor?)targetCursor.TargetEntity();
                 actor?.AddComponents(new NeedDrivenAi());
                 Locator.GetService<MessageBusService>()
                     .SendMessage<AddMessageLog>(new($"Added need component to {actor?.Name}!"));
@@ -196,9 +193,9 @@ namespace Diviner
                 return false;
             }
 
-            if (info.IsKeyPressed(Keys.P) && (_targetCursor?.EntityInTarget()) == true)
+            if (info.IsKeyPressed(Keys.P) && (targetCursor?.EntityInTarget()) == true)
             {
-                var target = _targetCursor.TargetEntity();
+                var target = targetCursor.TargetEntity();
                 var needs = target!.GetComponent<NeedCollection>();
                 for (int i = 0; i < needs.Count; i++)
                 {
