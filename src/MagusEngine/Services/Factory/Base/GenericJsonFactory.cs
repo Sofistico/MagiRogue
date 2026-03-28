@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 
 namespace MagusEngine.Services.Factory.Base
 {
-    public abstract class GenericFactory<T>
+    public abstract class GenericJsonFactory<T>
     {
         protected Dictionary<string, Func<JToken, T>> Factories { get; } = [];
 
@@ -18,6 +18,18 @@ namespace MagusEngine.Services.Factory.Base
             ArgumentNullException.ThrowIfNull(factory);
 
             return Factories.TryAdd(key, factory);
+        }
+
+        public virtual bool Register(Enum key, Func<JToken, T> factory)
+        {
+            var str = key.ToString();
+            if (string.IsNullOrWhiteSpace(str))
+            {
+                throw new ArgumentException("Key cannot be null or empty.", nameof(key));
+            }
+            ArgumentNullException.ThrowIfNull(factory);
+
+            return Factories.TryAdd(str, factory);
         }
 
         public virtual T GetValueFromKey(string key, JToken token)

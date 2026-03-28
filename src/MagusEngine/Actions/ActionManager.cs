@@ -27,6 +27,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using MagiMap = MagusEngine.Core.MapStuff.MagiMap;
+using System;
 
 namespace MagusEngine.Actions
 {
@@ -79,7 +80,7 @@ namespace MagusEngine.Actions
                     .SendMessage<AddMessageLog>(new($"You are too tired to attack|{attacker.Name} is too tired to attack!",
                     showMessage,
                     isPlayer ? PointOfView.First : PointOfView.Third));
-                return TimeHelper.Wait;
+                return TimeHelper.OneSecond;
             }
 
             // Create two messages that describe the outcome of the attack and defense
@@ -112,12 +113,27 @@ namespace MagusEngine.Actions
                 attack,
                 itemUsed,
                 limbAttacking);
-            var staminaDiscount = attacker.Body.Stamina
-                - attack.PrepareVelocity * 10 + attacker.Body.Endurance * 0.5;
-            // discount stamina from the attacker
-            attacker.Body.Stamina = MathMagi.Round(staminaDiscount);
 
-            return TimeHelper.GetAttackTime(attacker, attack);
+            // Improved stamina cost calculation
+            var staminaCost = CalculateStaminaCost(attacker, attack, itemUsed);
+            attacker.Body.Stamina = Math.Max(0, attacker.Body.Stamina - staminaCost);
+
+            return itemUsed != null ?
+                TimeHelper.GetAttackTimeWithWeapon(attacker, attack, itemUsed) :
+                TimeHelper.GetAttackTime(attacker, attack);
+        }
+
+        /// <summary>
+        /// Calculates realistic stamina cost for attacks based on weapon weight, strength, and endurance
+        /// </summary>
+        private static double CalculateStaminaCost(Actor attacker, Attack attack, Item? weapon)
+        {
+            double baseCost = attack.PrepareVelocity;
+            double weaponWeight = weapon?.Mass ?? 1.0;
+            double strengthFactor = Math.Max(0.1, 1.0 - (attacker.GetStrenght() * 0.01));
+            double enduranceFactor = Math.Max(0.5, 1.0 - (attacker.Body.Endurance * 0.005));
+
+            return baseCost * weaponWeight * strengthFactor * enduranceFactor;
         }
 
         public static void ShootProjectileAction(Point origin,
@@ -358,34 +374,6 @@ namespace MagusEngine.Actions
         //    return false;
         //}
 
-        public static bool RestTillFull(Actor actor)
-        {
-            Body bodyStats = actor.Body;
-            //Mind mindStats = actor.Mind;
-            Soul soulStats = actor.Soul;
-
-            if (bodyStats.Stamina < bodyStats.MaxStamina || soulStats.CurrentMana < soulStats.MaxMana)
-            {
-                // calculate here the amount of time that it will take in turns to rest to full
-                double staminaDif, manaDif;
-
-                staminaDif = MathMagi.Round((bodyStats.MaxStamina - bodyStats.Stamina) / actor.GetStaminaRegen());
-                manaDif = MathMagi.Round((soulStats.MaxMana - soulStats.CurrentMana) / actor.GetManaRegen());
-
-                double totalTurnsWait = staminaDif + manaDif;
-
-                bool sus = WaitForNTurns((int)totalTurnsWait, actor);
-
-                Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"You have rested for {totalTurnsWait} turns"));
-
-                return sus;
-            }
-
-            Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new("You have no need to rest"));
-
-            return false;
-        }
-
         /// <summary>
         /// Equips an item
         /// </summary>
@@ -543,7 +531,7 @@ namespace MagusEngine.Actions
                     }
                 }
 
-                Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.Wait, true));
+                Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.OneSecond, true));
             }
             return true;
         }

@@ -7,7 +7,7 @@ using Newtonsoft.Json.Linq;
 
 namespace MagusEngine.Services.Factory
 {
-    public sealed class SpellEffectFactory : GenericFactory<ISpellEffect?>
+    public sealed class SpellEffectFactory : GenericJsonFactory<ISpellEffect?>
     {
         public SpellEffectFactory()
         {

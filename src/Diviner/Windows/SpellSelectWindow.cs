@@ -29,8 +29,7 @@ namespace Diviner.Windows
             };
             _castButton.Click += (_, __) =>
             {
-                _onCast?.Invoke(_selectedSpell!);
-                Hide();
+                CastSpell(_selectedSpell!);
             };
         }
 
@@ -38,15 +37,25 @@ namespace Diviner.Windows
         {
             foreach (var key in info.KeysPressed)
             {
+                if (key.Key == Keys.Enter && _selectedSpell is not null)
+                {
+                    CastSpell(_selectedSpell);
+                    return true;
+                }
                 if (_hotKeys.TryGetValue(key.Character, out var tuple) && tuple.Item2)
                 {
-                    _onCast((Spell)tuple.Item1);
-                    Hide();
+                    CastSpell((Spell)tuple.Item1);
 
                     return true;
                 }
             }
             return base.ProcessKeyboard(info);
+        }
+
+        private void CastSpell(Spell spell)
+        {
+            _onCast(spell);
+            Hide();
         }
 
         public void Show(List<Spell> listSpells, Action<Spell> onCast, double currentMana)

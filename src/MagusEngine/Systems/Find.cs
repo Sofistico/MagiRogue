@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Arquimedes.Enumerators;
 using MagusEngine.Components.TilesComponents;
 using MagusEngine.Core.Civ;
+using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.MapStuff;
 using MagusEngine.Core.WorldStuff.History;
@@ -33,7 +34,7 @@ namespace MagusEngine.Systems
         {
             history = h;
             Tiles = tiles;
-            Rules ??= new(DataManager.ListOfRules.GetEnumerableCollection());
+            Rules ??= [.. DataManager.ListOfRules.GetEnumerableCollection()];
         }
 
         public static Site? GetFigureStayingSiteIfAny(HistoricalFigure hf)

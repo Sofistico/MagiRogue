@@ -38,7 +38,7 @@ namespace MagusEngine.Components.EntityComponents.Ai
             }
             else
             {
-                return (true, TimeHelper.Wait);
+                return (true, TimeHelper.OneSecond);
             }
         }
 

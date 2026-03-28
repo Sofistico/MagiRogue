@@ -6,7 +6,7 @@ using MagusEngine.Services.Factory.Base;
 
 namespace MagusEngine.Services.Factory
 {
-    public sealed class AnimationFactory : GenericFactory<IAnimation>
+    public sealed class AnimationFactory : GenericJsonFactory<IAnimation>
     {
         public AnimationFactory()
         {

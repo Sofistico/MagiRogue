@@ -1,4 +1,9 @@
-﻿using MagusEngine.Core.Entities;
+﻿using Arquimedes.Enumerators;
+using GoRogue.Messaging;
+using MagusEngine;
+using MagusEngine.Bus.UiBus;
+using MagusEngine.Core.Entities;
+using MagusEngine.Services;
 using MagusEngine.Utils.Extensions;
 using SadConsole;
 using SadConsole.Input;
@@ -8,8 +13,9 @@ using Console = SadConsole.Console;
 
 namespace Diviner.Windows
 {
-    public class InventoryWindow : PopWindow
+    public class InventoryWindow : PopWindow, ISubscriber<InventoryActionBus>
     {
+        private readonly MessageBusService _bus;
         // Create the field
         private readonly Console inventoryConsole;
 
@@ -22,6 +28,7 @@ namespace Diviner.Windows
         /// </summary>
         public InventoryWindow(int width, int heigth, string title = "Inventory") : base(title)
         {
+            _bus = Locator.GetService<MessageBusService>();
             // define the inventory console
             inventoryConsole = new Console(width - WindowBorderThickness, heigth - WindowBorderThickness)
             {
@@ -36,6 +43,8 @@ namespace Diviner.Windows
 
             invScrollBar.ValueChanged += InvScrollBar_ValueChanged;
             Controls.Add(invScrollBar);
+            _bus.RegisterAllSubscriber(this);
+            Tag = WindowTag.Inv;
         }
 
         public override bool ProcessKeyboard(Keyboard info)
@@ -86,6 +95,16 @@ namespace Diviner.Windows
 
             SetupSelectionButtons(BuildHotKeysButtons(actorInventory.Inventory, itemAction ?? OnItemSelected));
             _actionContext = itemAction;
+        }
+
+        public void Handle(InventoryActionBus message)
+        {
+            ShowItems(message.ActorInventory, message.Action);
+        }
+
+        ~InventoryWindow()
+        {
+            _bus.UnRegisterAllSubscriber(this);
         }
     }
 }

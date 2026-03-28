@@ -1,0 +1,24 @@
+<Solution>
+  <Folder Name="/1 - Game/">
+    <Project Path="src/MagiRogue/MagiRogue.csproj" />
+  </Folder>
+  <Folder Name="/1 - Game/1.1 - Data/">
+    <Project Path="src/AccidentalNoiseLibrary/AccidentalNoiseLibrary.csproj" />
+    <Project Path="src/Arquimedes/Arquimedes.csproj" />
+  </Folder>
+  <Folder Name="/1 - Game/1.2 - Engine/">
+    <Project Path="src/MagusEngine/MagusEngine.csproj" />
+  </Folder>
+  <Folder Name="/1 - Game/1.3 - Render/">
+    <Project Path="src/Diviner/Diviner.csproj" />
+  </Folder>
+  <Folder Name="/2 - Tools/">
+    <Project Path="src/MagiRogue.Benchmarks/MagiRogue.Benchmarks.csproj" />
+    <Project Path="src/MagiRogue.LegendsConsoleViewer/MagiRogue.LegendsConsoleViewer.csproj" />
+  </Folder>
+  <Folder Name="/3 - Test/">
+    <Project Path="src/MagiRogue.Test/MagiRogue.Test.csproj">
+      <BuildDependency Project="src/MagiRogue/MagiRogue.csproj" />
+    </Project>
+  </Folder>
+</Solution>

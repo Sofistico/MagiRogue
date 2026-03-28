@@ -28,8 +28,8 @@ namespace MagusEngine.Services
         [DebuggerStepThrough]
         public void SendMessage<T>() where T : notnull, new()
         {
-            var instance = Activator.CreateInstance(typeof(T));
-            _messageBus?.Send((T)instance!);
+            var instance = Activator.CreateInstance<T>();
+            _messageBus?.Send(instance);
         }
 
         /// <summary>

@@ -1,0 +1,127 @@
+[
+  {
+    "Keys": ["up_arrow", "numpad_8"],
+    "Action": "MoveNorth",
+    "Category": "Movement"
+  },
+  {
+    "Keys": ["down_arrow", "numpad_2"],
+    "Action": "MoveSouth",
+    "Category": "Movement"
+  },
+  {
+    "Keys": ["left_arrow", "numpad_4"],
+    "Action": "MoveLeft",
+    "Category": "Movement"
+  },
+  {
+    "Keys": ["right_arrow", "numpad_6"],
+    "Action": "MoveRight",
+    "Category": "Movement"
+  },
+  {
+    "Keys": ["numpad_7"],
+    "Action": "MoveNorthLeft",
+    "Category": "Movement"
+  },
+  {
+    "Keys": ["numpad_9"],
+    "Action": "MoveNorthRight",
+    "Category": "Movement"
+  },
+  {
+    "Keys": ["numpad_1"],
+    "Action": "MoveSouthLeft",
+    "Category": "Movement"
+  },
+  {
+    "Keys": ["numpad_3"],
+    "Action": "MoveSouthRight",
+    "Category": "Movement"
+  },
+  {
+    "Keys": ["i"],
+    "Action": "OpenInventory",
+    "Category": "Ui"
+  },
+  {
+    "Keys": ["t"],
+    "Action": "ThownItem",
+    "Category": "Interaction"
+  },
+  {
+    "Keys": ["esc"],
+    "Action": "EscapeMenu",
+    "Category": "Ui"
+  },
+  {
+    "Keys": ["."],
+    "Action": "MoveDown",
+    "Category": "Movement",
+    "Modifier": ["Shift"]
+  },
+  {
+    "Keys": [","],
+    "Action": "MoveUp",
+    "Category": "Movement",
+    "Modifier": ["Shift"]
+  },
+  {
+    "Keys": ["numpad_5"],
+    "Action": "WaitTillRested",
+    "Category": "Misc",
+    "Modifier": ["Control"]
+  },
+  {
+    "Keys": [".", "numpad_5"],
+    "Action": "WaitOneSecond",
+    "Category": "Misc"
+  },
+  {
+    "Keys": [","],
+    "Action": "WaitOneMoment",
+    "Category": "Misc"
+  },
+  {
+    "Keys": ["g"],
+    "Action": "PickUp",
+    "Category": "Interaction"
+  },
+  {
+    "Keys": ["d"],
+    "Action": "DropItem",
+    "Category": "Interaction"
+  },
+  {
+    "Keys": ["c"],
+    "Action": "CloseDoor",
+    "Category": "Interaction"
+  },
+  {
+    "Keys": ["l"],
+    "Action": "Look",
+    "Category": "Ui"
+  },
+  {
+    "Keys": ["z"],
+    "Action": "SpellCasting",
+    "Category": "Interaction",
+    "Modifier": ["Shift"]
+  },
+  {
+    "Keys": ["r"],
+    "Action": "WaitScreen",
+    "Category": "Ui",
+    "Modifier": ["Shift"]
+  },
+  {
+    "Keys": ["enter"],
+    "Action": "ConfirmAction",
+    "Category": "Ui"
+  },
+  {
+    "Keys": ["esc"],
+    "Action": "CancelAction",
+    "Category": "Ui"
+  }
+]

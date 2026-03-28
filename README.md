@@ -19,5 +19,3 @@ The game also includes a coven of wizards, with deep master-apprentice relations
 
 As you progress through the game, you can play as an apprentice, honing your magical skills and climbing the ranks to become a powerful archmage. Alternatively, you can choose to abandon magic altogether and live as a common person, or even strive to become a god. The possibilities are endless in MagiRogue, and the choices you make will have a profound impact on your journey through the game.
 
-
-

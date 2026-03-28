@@ -8,5 +8,7 @@ namespace Arquimedes.Enumerators
         Status,
         Wait,
         Look,
+        Inv,
+        SpellCasting,
     }
 }

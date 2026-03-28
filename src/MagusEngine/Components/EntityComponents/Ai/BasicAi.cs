@@ -23,7 +23,7 @@ namespace MagusEngine.Components.EntityComponents.Ai
             if (rng)
             {
                 Locator.GetService<MessageBusService>().SendMessage<AddMessageLog>(new($"The {_entity.Name} waits doing nothing..."));
-                return (true, TimeHelper.Wait);
+                return (true, TimeHelper.OneSecond);
             }
             else
             {

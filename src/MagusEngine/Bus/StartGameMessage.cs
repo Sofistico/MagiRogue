@@ -9,7 +9,7 @@ namespace MagusEngine.Bus
         public Universe? Universe { get; set; }
         public bool TestGame { get; set; }
 
-        public StartGameMessage(Player player, Universe universe = null)
+        public StartGameMessage(Player player, Universe? universe = null)
         {
             Player = player;
             Universe = universe;
