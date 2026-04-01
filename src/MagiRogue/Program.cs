@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.IO;
-using System.Linq;
 using Arquimedes;
 using Arquimedes.Settings;
 using Arquimedes.Utils;
