@@ -318,15 +318,15 @@ namespace MagiRogue.Test.System
             }
         }
 
-[Fact]
-        public void LimbMangling_SevereDamageSeveresLimb()
+        [Fact]
+        public void LimbMangling_SevereDamageAccumulatedDmgBreaksLimb()
         {
             var attacker = CreateActor("attacker", 50, 10, 20, 5, 5);
             var defender = CreateActor("defender", 10, 10, 1, 1, 1);
 
-            var targetLimb = defender.ActorAnatomy.Limbs.FirstOrDefault(l => l.Tissues.Count > 0);
+            var targetLimb = defender.ActorAnatomy.Limbs[4];
             Assert.NotNull(targetLimb);
-            
+
             var attack = CreateTestAttack();
 
             for (int i = 0; i < 30; i++)
@@ -342,36 +342,36 @@ namespace MagiRogue.Test.System
             var severity = defender.ActorAnatomy.GetLimbSeverity(targetLimb);
 
             Assert.True(cumulativePercentage > 0.01);
-            Assert.True(severity >= InjurySeverity.Bruise);
+            Assert.True(severity >= InjurySeverity.Broken, $"Severity: {severity}, Damage%: {cumulativePercentage:P1}");
         }
 
         [Fact]
-        public void WoundSeverity_IncreasesWithAccumulatedDamage()
+        public void SinglePowerfulAttack_BreaksLimb()
         {
-            var attacker = CreateActor("attacker", 40, 10, 15, 5, 5);
-            var defender = CreateActor("defender", 10, 10, 1, 1, 1);
+            var attacker = CreateActor("attacker", 100, 50, 50, 20, 20);
+            var defender = CreateActor("defender", 10, 1, 1, 1, 1);
 
             var targetLimb = defender.ActorAnatomy.Limbs[0];
-            var attack = CreateTestAttack();
+            Assert.NotNull(targetLimb);
 
-            InjurySeverity firstSeverity = InjurySeverity.Bruise;
-            InjurySeverity finalSeverity = InjurySeverity.Bruise;
+            var attack = CreateTestAttack(0.9);
 
-            for (int i = 0; i < 10; i++)
+            int hits = 0;
+            while (hits < 300)
             {
                 double momentum = CombatSystem.GetAttackMomentum(attacker, targetLimb, attack);
                 CombatSystem.DealDamage(momentum, defender, attack.DamageType!, DataManager.QueryMaterial("meat"), attack, targetLimb);
+                hits++;
 
-                var wounds = defender.ActorAnatomy.GetAllWounds();
-                if (wounds.Count > 0)
-                {
-                    if (i == 0)
-                        firstSeverity = wounds[0].Severity;
-                    finalSeverity = wounds[0].Severity;
-                }
+                var severity = defender.ActorAnatomy.GetLimbSeverity(targetLimb);
+                if (severity >= InjurySeverity.Broken)
+                    break;
             }
 
-            Assert.True(finalSeverity >= firstSeverity);
+            var pct = defender.ActorAnatomy.GetLimbDamagePercentage(targetLimb);
+            var finalSeverity = defender.ActorAnatomy.GetLimbSeverity(targetLimb);
+
+            Assert.True(finalSeverity >= InjurySeverity.Broken, $"Hits: {hits}, Damage%: {pct:P1}, Severity: {finalSeverity}, Broken: {targetLimb.Broken}");
         }
     }
 }

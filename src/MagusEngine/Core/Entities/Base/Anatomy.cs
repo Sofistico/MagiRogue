@@ -187,7 +187,7 @@ namespace MagusEngine.Core.Entities.Base
                 BloodCount = MathMagi.Round(weight * Race.BloodMultiplier);
         }
 
-public void Injury(Wound wound, BodyPart bpInjured, Actor actorWounded)
+        public void Injury(Wound wound, BodyPart bpInjured, Actor actorWounded)
         {
             double injureSeverity = MathMagi.GetPercentageBasedOnMax(wound.VolumeInjury, bpInjured.Volume) / 100;
 
