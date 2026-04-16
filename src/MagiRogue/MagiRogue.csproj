@@ -15,7 +15,7 @@
     <Copyright>Sofistico</Copyright>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>
-      C:\Users\joaorodrigues\source\repos\MagiRogue\LICENSE
+      ./LICENSE
     </PackageLicenseFile>
   </PropertyGroup>
 

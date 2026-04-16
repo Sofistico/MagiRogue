@@ -523,7 +523,7 @@ namespace MagusEngine.Systems
                     attackMomentum = GetAttackMomentumWithItem(attacker, wieldedItem, attack);
 
                 var damageWithoutPenetration =
-                    attackMomentum + (defender.Body.Endurance * 0.5);
+                    Math.Max(0, attackMomentum - (defender.Body.Endurance * 0.5));
                 var penetrationDamage = damageWithoutPenetration * attack.PenetrationPercentage;
                 var finalDamage = damageWithoutPenetration + penetrationDamage;
                 finalDamage = MathMagi.Round(finalDamage);
