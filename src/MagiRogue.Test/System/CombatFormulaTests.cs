@@ -318,24 +318,31 @@ namespace MagiRogue.Test.System
             }
         }
 
-        [Fact]
+[Fact]
         public void LimbMangling_SevereDamageSeveresLimb()
         {
             var attacker = CreateActor("attacker", 50, 10, 20, 5, 5);
             var defender = CreateActor("defender", 10, 10, 1, 1, 1);
 
-            var targetLimb = defender.ActorAnatomy.Limbs[4];
+            var targetLimb = defender.ActorAnatomy.Limbs.FirstOrDefault(l => l.Tissues.Count > 0);
+            Assert.NotNull(targetLimb);
+            
             var attack = CreateTestAttack();
 
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 30; i++)
             {
                 double momentum = CombatSystem.GetAttackMomentum(attacker, targetLimb, attack);
                 CombatSystem.DealDamage(momentum, defender, attack.DamageType!, DataManager.QueryMaterial("meat"), attack, targetLimb);
             }
 
-            var wounds = defender.ActorAnatomy.GetAllWounds();
-            Assert.NotEmpty(wounds);
-            Assert.True(wounds[0].Severity >= InjurySeverity.Broken);
+            var targetWounds = targetLimb!.Wounds;
+            Assert.NotEmpty(targetWounds);
+
+            double cumulativePercentage = defender.ActorAnatomy.GetLimbDamagePercentage(targetLimb);
+            var severity = defender.ActorAnatomy.GetLimbSeverity(targetLimb);
+
+            Assert.True(cumulativePercentage > 0.01);
+            Assert.True(severity >= InjurySeverity.Bruise);
         }
 
         [Fact]

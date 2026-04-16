@@ -41,7 +41,7 @@ namespace MagusEngine.Core.Entities.Base
 
         public List<Tissue> Tissues { get; set; }
 
-        public List<Wound> Wounds { get; set; } = new();
+        public List<Wound> Wounds { get; set; } = [];
 
         public bool NeedsHeal => Wounds.Count > 0;
 
@@ -53,8 +53,8 @@ namespace MagusEngine.Core.Entities.Base
         [JsonConstructor()]
         protected BodyPart()
         {
-            Tissues = new();
-            Insides = new();
+            Tissues = [];
+            Insides = [];
         }
 
         public void ApplyHeal(double raceHealingRate, bool regenLostLimb = false)

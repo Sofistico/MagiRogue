@@ -187,7 +187,7 @@ namespace MagusEngine.Core.Entities.Base
                 BloodCount = MathMagi.Round(weight * Race.BloodMultiplier);
         }
 
-        public void Injury(Wound wound, BodyPart bpInjured, Actor actorWounded)
+public void Injury(Wound wound, BodyPart bpInjured, Actor actorWounded)
         {
             double injureSeverity = MathMagi.GetPercentageBasedOnMax(wound.VolumeInjury, bpInjured.Volume) / 100;
 
@@ -227,10 +227,63 @@ namespace MagusEngine.Core.Entities.Base
             }
 
             bpInjured.AddWound(wound);
+            UpdateWoundSeverity(bpInjured);
+
             if (wound.Severity is InjurySeverity.Missing && bpInjured is Limb limb)
             {
                 Dismember(limb, actorWounded);
             }
+        }
+
+        public void UpdateWoundSeverity(BodyPart bpInjured)
+        {
+            double totalVolumeInjury = bpInjured.Wounds.Sum(w => w.VolumeInjury);
+            double injureSeverity = MathMagi.GetPercentageBasedOnMax(totalVolumeInjury, bpInjured.Volume) / 100;
+
+            var highestSeverity = InjurySeverity.Bruise;
+
+            switch (injureSeverity)
+            {
+                case > 0 and <= 0.15:
+                    highestSeverity = InjurySeverity.Bruise;
+                    break;
+
+                case > 0.15 and <= 0.25:
+                    highestSeverity = InjurySeverity.Minor;
+                    break;
+
+                case > 0.25 and <= 0.75:
+                    highestSeverity = InjurySeverity.Inhibited;
+                    break;
+
+                case > 0.75 and < 1:
+                    highestSeverity = InjurySeverity.Broken;
+                    break;
+
+                case >= 1:
+                    highestSeverity = bpInjured is Limb ? InjurySeverity.Missing : InjurySeverity.Pulped;
+                    break;
+            }
+
+            foreach (var wound in bpInjured.Wounds)
+            {
+                if (wound.Severity < highestSeverity)
+                    wound.Severity = highestSeverity;
+            }
+        }
+
+        public double GetLimbDamagePercentage(BodyPart bp)
+        {
+            double totalVolumeInjury = bp.Wounds.Sum(w => w.VolumeInjury);
+            return totalVolumeInjury / bp.Volume;
+        }
+
+        public InjurySeverity GetLimbSeverity(BodyPart bp)
+        {
+            if (bp.Wounds.Count == 0)
+                return InjurySeverity.Bruise;
+
+            return bp.Wounds.Max(w => w.Severity);
         }
 
         public void FullSetup(Actor actor, Race race, int actorAge, Sex sex, int volume)
