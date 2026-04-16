@@ -522,11 +522,8 @@ namespace MagusEngine.Systems
                 else
                     attackMomentum = GetAttackMomentumWithItem(attacker, wieldedItem, attack);
 
-                // some moar randomness!
-                attackMomentum += Mrn.Exploding2D6Dice;
-
                 var damageWithoutPenetration =
-                    attackMomentum - Mrn.Exploding2D6Dice + (defender.Body.Endurance * 0.5);
+                    attackMomentum + (defender.Body.Endurance * 0.5);
                 var penetrationDamage = damageWithoutPenetration * attack.PenetrationPercentage;
                 var finalDamage = damageWithoutPenetration + penetrationDamage;
                 finalDamage = MathMagi.Round(finalDamage);
