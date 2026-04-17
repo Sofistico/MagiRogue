@@ -130,7 +130,7 @@ namespace MagusEngine.Actions
         {
             double baseCost = attack.PrepareVelocity;
             double weaponWeight = weapon?.Mass ?? 1.0;
-            double strengthFactor = Math.Max(0.1, 1.0 - (attacker.GetStrenght() * 0.01));
+            double strengthFactor = Math.Max(0.1, 1.0 - (attacker.GetStrength() * 0.01));
             double enduranceFactor = Math.Max(0.5, 1.0 - (attacker.Body.Endurance * 0.005));
 
             return baseCost * weaponWeight * strengthFactor * enduranceFactor;

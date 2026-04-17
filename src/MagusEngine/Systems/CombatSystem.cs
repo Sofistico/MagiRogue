@@ -92,7 +92,7 @@ namespace MagusEngine.Systems
             else if (limbAttacking != null)
                 return limbAttacking.Volume;
             else
-                return 1;
+                throw new Exceptions.GenericException("There is no limb or weapon or spell for this attack!");
         }
 
         private static void ApplyWoundsToActor(
@@ -232,7 +232,7 @@ namespace MagusEngine.Systems
                     attackVolume * (double)((double)attack.ContactArea / 100);
 
                 // let's see if it will just be better to use the tissue.volume!
-                var tissueContactArea = Math.Pow(tissue.Volume, 2 / 3);
+                var tissueContactArea = Math.Pow((tissue.Volume / 10.0), (2.0 / 3.0));
                 double woundVolume =
                     attackTotalContactArea <= tissueContactArea
                         ? (double)(
@@ -242,7 +242,7 @@ namespace MagusEngine.Systems
                         )
                         : tissue.Volume;
 
-                double strain = attackTotalContactArea / attackMomentum;
+                double strain = attackMomentum / attackTotalContactArea;
 
                 PartWound partWound = new(woundVolume, strain, tissue, attack?.DamageType);
 
@@ -979,7 +979,7 @@ namespace MagusEngine.Systems
                     MathMagi.Round(
                         (
                             (
-                                attacker.GetStrenght() + wieldedItem?.BaseDmg
+                                attacker.GetStrength() + wieldedItem?.BaseDmg
                                 ?? 0 + Mrn.Exploding2D6Dice
                             ) * attacker.GetRelevantAttackAbilityMultiplier(attack.AttackAbility)
                         ) + (10 + (2 * wieldedItem?.QualityMultiplier() ?? 1))
@@ -1008,23 +1008,19 @@ namespace MagusEngine.Systems
             Attack attack
         )
         {
-            return MathMagi.Round(
-                (
-                    (attacker.GetStrenght() + Mrn.Exploding2D6Dice)
-                    * (attacker.GetRelevantAbilityMultiplier(attack.AttackAbility) + 1)
-                    * attacker.GetAttackVelocity(attack)
-                )
-                    + (
-                        1
-                        + (
-                            attacker.Volume
-                            / (
-                                (limbAttacking.GetStructuralMaterial()?.DensityKgM3 ?? 1)
-                                * limbAttacking.Volume
-                            )
-                        )
-                    )
-            );
+            var limbMass =
+                (limbAttacking.GetStructuralMaterial()?.DensityKgM3 ?? 1)
+                * limbAttacking.Volume;
+
+            var velocity = attacker.GetAttackVelocity(attack);
+
+            var kineticEnergy = limbMass * velocity * velocity;
+
+            var statFactor =
+                (attacker.GetStrength() + Mrn.Exploding2D6Dice)
+                * (attacker.GetRelevantAbilityMultiplier(attack.AttackAbility) + 1);
+
+            return MathMagi.Round(kineticEnergy * statFactor);
         }
 
         #endregion Physics

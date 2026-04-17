@@ -189,8 +189,10 @@ namespace MagusEngine.Core.Entities.Base
 
         public void Injury(Wound wound, BodyPart bpInjured, Actor actorWounded)
         {
-            double injureSeverity = MathMagi.GetPercentageBasedOnMax(wound.VolumeInjury, bpInjured.Volume) / 100;
+            double injureSeverity =
+                wound.VolumeInjury / bpInjured.Volume;
 
+            injureSeverity = Math.Clamp(injureSeverity, 0, 1);
             switch (injureSeverity)
             {
                 case > 0 and <= 0.15:

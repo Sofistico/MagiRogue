@@ -410,7 +410,7 @@ namespace MagusEngine.Core.Entities
             return Mind.Abilities.TryGetValue((int)ability, out Ability value) ? value.Score * 0.3 : 0;
         }
 
-        public int GetStrenght()
+        public int GetStrength()
         {
             return Body.Strength;
         }

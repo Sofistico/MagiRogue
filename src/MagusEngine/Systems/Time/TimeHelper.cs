@@ -54,7 +54,7 @@ namespace MagusEngine.Systems.Time
             double weaponWeight = weapon?.Mass ?? 1.0;
             double actorSpeed = actor.GetActorSpeed();
             double skillBonus = Math.Max(0.5, 1.0 - (actor.GetRelevantAttackAbility(weapon) * 0.01));
-            double strengthFactor = Math.Max(0.5, 1.0 + (actor.GetStrenght() - weaponWeight) * 0.01);
+            double strengthFactor = Math.Max(0.5, 1.0 + (actor.GetStrength() - weaponWeight) * 0.01);
 
             return (long)(baseTime * weaponWeight * skillBonus * strengthFactor / Math.Max(actorSpeed, 0.1));
         }
