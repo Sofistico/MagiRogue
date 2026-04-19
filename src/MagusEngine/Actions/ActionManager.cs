@@ -260,7 +260,7 @@ namespace MagusEngine.Actions
             foreach (Point points in actor.Position.GetDirectionPoints())
             {
                 var tile = actor.CurrentMagiMap.GetTileAt<DoorComponent>(points);
-                var possibleDoor = tile.GetComponent<DoorComponent>();
+                var possibleDoor = tile?.GetComponent<DoorComponent>();
                 if (possibleDoor?.IsOpen == true)
                 {
                     possibleDoor.Close();
