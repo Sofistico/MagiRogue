@@ -7,14 +7,14 @@ using Arquimedes.Enumerators;
 using MagusEngine.Actions;
 using MagusEngine.Bus.MapBus;
 using MagusEngine.Bus.UiBus;
+using MagusEngine.Components.EntityComponents.Projectiles;
+using MagusEngine.Components.TilesComponents;
 using MagusEngine.Core;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic;
 using MagusEngine.Core.Magic.Interfaces;
 using MagusEngine.Core.MapStuff;
-using MagusEngine.Components.EntityComponents.Projectiles;
-using MagusEngine.Components.TilesComponents;
 using MagusEngine.Services;
 using MagusEngine.Systems.Physics;
 using MagusEngine.Utils;
@@ -475,10 +475,8 @@ namespace MagusEngine.Systems
                 materialUsed = bpAttacking.Tissues[0].Material;
             }
             // TODO: Granularize this more!
-            if (
-                attacker.GetRelevantAttackAbility(wieldedItem) + Mrn.Exploding2D6Dice
-                > defender.GetDefenseAbility() + Mrn.Exploding2D6Dice
-            )
+            if (attacker.GetRelevantAttackAbility(wieldedItem) + Mrn.Exploding2D6Dice
+                > defender.GetDefenseAbility() + Mrn.Exploding2D6Dice)
             {
                 limbAttacked ??= defender.ActorAnatomy.GetRandomLimb();
                 return (
@@ -503,7 +501,7 @@ namespace MagusEngine.Systems
         /// </summary>
         /// <param name="defender"></param>
         /// <returns></returns>
-        public static double ResolveDefenseAndGetAttackMomentum(
+        public static double GetAttackMomentum(
             Actor attacker,
             Actor defender,
             bool hit,
@@ -979,7 +977,7 @@ namespace MagusEngine.Systems
                     MathMagi.Round(
                         (
                             (
-                                attacker.GetStrength() + wieldedItem?.BaseDmg
+                                attacker.Body.Strength + wieldedItem?.BaseDmg
                                 ?? 0 + Mrn.Exploding2D6Dice
                             ) * attacker.GetRelevantAttackAbilityMultiplier(attack.AttackAbility)
                         ) + (10 + (2 * wieldedItem?.QualityMultiplier() ?? 1))
@@ -1017,7 +1015,9 @@ namespace MagusEngine.Systems
             var kineticEnergy = limbMass * velocity * velocity;
 
             var statFactor =
-                (attacker.GetStrength() + Mrn.Exploding2D6Dice)
+                (attacker.Body.Strength + Mrn.Exploding2D6Dice
+                + (Math.Max(attacker.Mind.Inteligence, 1) / 3)
+                + (Math.Max(attacker.Mind.Precision, 1) / 5))
                 * (attacker.GetRelevantAbilityMultiplier(attack.AttackAbility) + 1);
 
             return MathMagi.Round(kineticEnergy * statFactor);

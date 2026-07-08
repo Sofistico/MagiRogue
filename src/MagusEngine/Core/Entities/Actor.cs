@@ -17,6 +17,7 @@ using SadRogue.Primitives;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System;
 
 namespace MagusEngine.Core.Entities
 {
@@ -358,10 +359,11 @@ namespace MagusEngine.Core.Entities
         public int GetDefenseAbility()
         {
             // four different ways to defend
-            int shieldAbility = GetRelevantAbility(AbilityCategory.Shield);
-            int armorAbility = GetRelevantAbility(AbilityCategory.ArmorUse);
-            int dodgeAbility = GetRelevantAbility(AbilityCategory.Dodge);
-            int weaponAbility = GetRelevantAttackAbility(WieldedItem());
+            int mod = (Body.Strength + Math.Max(Mind.Inteligence, 1) / 3);
+            int shieldAbility = GetRelevantAbility(AbilityCategory.Shield) + mod;
+            int armorAbility = GetRelevantAbility(AbilityCategory.ArmorUse) + mod;
+            int dodgeAbility = GetRelevantAbility(AbilityCategory.Dodge) + mod;
+            int weaponAbility = GetRelevantAttackAbility(WieldedItem()) + mod;
 
             if (shieldAbility > weaponAbility)
                 return shieldAbility;
@@ -383,15 +385,16 @@ namespace MagusEngine.Core.Entities
             return Mind.GetAbilityScore(ability);
         }
 
-        public int GetRelevantAttackAbility(Item? item = null)
+        public int GetRelevantAttackAbility(Item? item = null, Attack attack = null)
         {
+            int mod = Body.Strength + Math.Max(Mind.Inteligence, 1) / 3;
             if (item is not null)
             {
-                return GetRelevantAttackAbility(item.WeaponType);
+                return GetRelevantAttackAbility(item.WeaponType) + mod;
             }
             else
             {
-                return 0;
+                return GetRelevantAbility(attack?.AttackAbility ?? 0) + mod;
             }
         }
 
@@ -408,11 +411,6 @@ namespace MagusEngine.Core.Entities
         public double GetRelevantAbilityMultiplier(AbilityCategory ability)
         {
             return Mind.Abilities.TryGetValue((int)ability, out Ability value) ? value.Score * 0.3 : 0;
-        }
-
-        public int GetStrength()
-        {
-            return Body.Strength;
         }
 
         public Sex GetGender()
@@ -501,7 +499,7 @@ namespace MagusEngine.Core.Entities
 
         public void AddMemory<T>(Point lastSeen, MemoryType memoryType, T obj)
         {
-            Mind.Memories.Add(new Memory<T>(lastSeen, memoryType, obj));
+            Mind.Memories.Add(new MemoryEntity<T>(lastSeen, memoryType, obj));
         }
 
         public bool HasMemory<T>(MemoryType memoryType, T obj)
@@ -510,7 +508,7 @@ namespace MagusEngine.Core.Entities
             {
                 if (item.MemoryType == memoryType)
                 {
-                    var mem = item as Memory<T>;
+                    var mem = item as MemoryEntity<T>;
                     if (mem!.ObjToRemember!.Equals(obj))
                         return true;
                 }
@@ -518,13 +516,13 @@ namespace MagusEngine.Core.Entities
             return false;
         }
 
-        public bool GetMemory<T>(MemoryType type, out Memory<T>? memory)
+        public bool GetMemory<T>(MemoryType type, out MemoryEntity<T>? memory)
         {
             foreach (var item in Mind.Memories)
             {
                 if (item.MemoryType == type)
                 {
-                    memory = (Memory<T>?)item;
+                    memory = (MemoryEntity<T>?)item;
                     return true;
                 }
             }

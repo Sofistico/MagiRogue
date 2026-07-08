@@ -52,19 +52,6 @@ namespace MagusEngine.Core.Entities.Base
 
         public static AbilityCategory ReturnAbilityEnumFromString(string name)
         {
-            //try
-            //{
-            //    return name switch
-            //    {
-            //        "Magic Lore" => AbilityName.MagicLore,
-            //        "Swin" => AbilityName.Swin,
-            //        _ => throw new AbilityNotFoundExepction("Cound't find the ability in the enum class"),
-            //    };
-            //}
-            //catch (AbilityNotFoundExepction)
-            //{
-            //    return AbilityName.None;
-            //}
             try
             {
                 string test = name.Replace(" ", "");

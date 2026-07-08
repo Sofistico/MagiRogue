@@ -41,8 +41,8 @@ namespace MagiRogue.Test.System
             var noPenetration = CreateTestAttack(0.0);
             var highPenetration = CreateTestAttack(0.5);
 
-            double noPenDamage = CombatSystem.ResolveDefenseAndGetAttackMomentum(attacker, defender, true, attacker.ActorAnatomy.Limbs[0], noPenetration);
-            double highPenDamage = CombatSystem.ResolveDefenseAndGetAttackMomentum(attacker, defender, true, attacker.ActorAnatomy.Limbs[0], highPenetration);
+            double noPenDamage = CombatSystem.GetAttackMomentum(attacker, defender, true, attacker.ActorAnatomy.Limbs[0], noPenetration);
+            double highPenDamage = CombatSystem.GetAttackMomentum(attacker, defender, true, attacker.ActorAnatomy.Limbs[0], highPenetration);
 
             Assert.True(highPenDamage > noPenDamage);
         }
@@ -55,10 +55,10 @@ namespace MagiRogue.Test.System
             defender.SituationalFlags.Add(ActorSituationalFlags.Prone);
 
             var attack = CreateTestAttack();
-            double proneDamage = CombatSystem.ResolveDefenseAndGetAttackMomentum(attacker, defender, true, attacker.ActorAnatomy.Limbs[0], attack);
+            double proneDamage = CombatSystem.GetAttackMomentum(attacker, defender, true, attacker.ActorAnatomy.Limbs[0], attack);
 
             var standingDefender = CreateActor("standing", 10, 10, 1, 1, 1);
-            double standingDamage = CombatSystem.ResolveDefenseAndGetAttackMomentum(attacker, standingDefender, true, attacker.ActorAnatomy.Limbs[0], attack);
+            double standingDamage = CombatSystem.GetAttackMomentum(attacker, standingDefender, true, attacker.ActorAnatomy.Limbs[0], attack);
 
             Assert.True(proneDamage >= standingDamage * 1.5);
         }
@@ -72,8 +72,8 @@ namespace MagiRogue.Test.System
 
             var attack = CreateTestAttack();
 
-            double highEndDamage = CombatSystem.ResolveDefenseAndGetAttackMomentum(attacker, highEnd, true, attacker.ActorAnatomy.Limbs[0], attack);
-            double lowEndDamage = CombatSystem.ResolveDefenseAndGetAttackMomentum(attacker, lowEnd, true, attacker.ActorAnatomy.Limbs[0], attack);
+            double highEndDamage = CombatSystem.GetAttackMomentum(attacker, highEnd, true, attacker.ActorAnatomy.Limbs[0], attack);
+            double lowEndDamage = CombatSystem.GetAttackMomentum(attacker, lowEnd, true, attacker.ActorAnatomy.Limbs[0], attack);
 
             Assert.True(highEndDamage < lowEndDamage);
         }
@@ -85,7 +85,7 @@ namespace MagiRogue.Test.System
             var defender = CreateActor("defender", 10, 100, 1, 1, 1);
 
             var attack = CreateTestAttack();
-            double damage = CombatSystem.ResolveDefenseAndGetAttackMomentum(attacker, defender, true, attacker.ActorAnatomy.Limbs[0], attack);
+            double damage = CombatSystem.GetAttackMomentum(attacker, defender, true, attacker.ActorAnatomy.Limbs[0], attack);
 
             Assert.True(damage >= 0);
         }
@@ -108,7 +108,7 @@ namespace MagiRogue.Test.System
             var defender = CreateActor("defender", 10, 10, 1, 1, 1);
 
             var attack = CreateTestAttack();
-            double damage = CombatSystem.ResolveDefenseAndGetAttackMomentum(attacker, defender, true, attacker.ActorAnatomy.Limbs[0], attack);
+            double damage = CombatSystem.GetAttackMomentum(attacker, defender, true, attacker.ActorAnatomy.Limbs[0], attack);
 
             Assert.True(damage >= 0);
         }

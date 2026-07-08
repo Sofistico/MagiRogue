@@ -87,32 +87,40 @@ namespace MagusEngine.Actions
             StringBuilder attackMessage = new();
             StringBuilder defenseMessage = new();
 
-            (bool hit, BodyPart limbAttacked, BodyPart limbAttacking, DamageType dmgType, Item? itemUsed, Material attackMaterial)
-                = CombatSystem.ResolveHit(attacker, defender, attackMessage, attack, isPlayer, limbChoosen);
-            double finalMomentum = CombatSystem.ResolveDefenseAndGetAttackMomentum(attacker,
-                defender,
-                hit,
-                limbAttacking,
-                attack,
-                itemUsed);
+            (bool hit, BodyPart limbAttacked, BodyPart limbAttacking, DamageType dmgType, Item? itemUsed, Material attackMaterial) = CombatSystem.ResolveHit(attacker, defender, attackMessage, attack, isPlayer, limbChoosen);
 
-            // Display the outcome of the attack & defense
-            Locator.GetService<MessageBusService>()?.SendMessage<AddMessageLog>(new(attackMessage.ToString(), showMessage));
-            if (!string.IsNullOrWhiteSpace(defenseMessage.ToString()))
+            if (attackMessage.Length > 0)
+                Locator.GetService<MessageBusService>()?.SendMessage<AddMessageLog>(new(attackMessage.ToString(), showMessage));
+
+            if (!hit)
+            {
+                string? person = isPlayer ? "Your" : attacker.Name;
+                defenseMessage.AppendFormat("The {0} dodged {1} attack!", defender.Name, person);
+            }
+            else
+            {
+                double finalMomentum = CombatSystem.GetAttackMomentum(attacker,
+                        defender,
+                        hit,
+                        limbAttacking,
+                        attack,
+                        itemUsed);
+
+                CombatSystem.ResolveDamage(defender,
+                        finalMomentum,
+                        dmgType,
+                        limbAttacked,
+                        attackMaterial,
+                        attack,
+                        itemUsed,
+                        limbAttacking);
+            }
+
+            if (defenseMessage.Length > 0)
             {
                 showMessage = isPlayer || Find.Universe.Player.CanSee(defender.Position);
                 Locator.GetService<MessageBusService>()?.SendMessage<AddMessageLog>(new(defenseMessage.ToString(), showMessage));
             }
-
-            // The defender now takes damage
-            CombatSystem.ResolveDamage(defender,
-                finalMomentum,
-                dmgType,
-                limbAttacked,
-                attackMaterial,
-                attack,
-                itemUsed,
-                limbAttacking);
 
             // Improved stamina cost calculation
             var staminaCost = CalculateStaminaCost(attacker, attack, itemUsed);
@@ -130,7 +138,7 @@ namespace MagusEngine.Actions
         {
             double baseCost = attack.PrepareVelocity;
             double weaponWeight = weapon?.Mass ?? 1.0;
-            double strengthFactor = Math.Max(0.1, 1.0 - (attacker.GetStrength() * 0.01));
+            double strengthFactor = Math.Max(0.1, 1.0 - (attacker.Body.Strength * 0.01));
             double enduranceFactor = Math.Max(0.5, 1.0 - (attacker.Body.Endurance * 0.005));
 
             return baseCost * weaponWeight * strengthFactor * enduranceFactor;
