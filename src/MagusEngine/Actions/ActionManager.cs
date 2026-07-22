@@ -123,7 +123,7 @@ namespace MagusEngine.Actions
             }
 
             // Improved stamina cost calculation
-            var staminaCost = CalculateStaminaCost(attacker, attack, itemUsed);
+            var staminaCost = CalculateStaminaAttackCost(attacker, attack, itemUsed);
             attacker.Body.Stamina = Math.Max(0, attacker.Body.Stamina - staminaCost);
 
             return itemUsed != null ?
@@ -134,7 +134,7 @@ namespace MagusEngine.Actions
         /// <summary>
         /// Calculates realistic stamina cost for attacks based on weapon weight, strength, and endurance
         /// </summary>
-        private static double CalculateStaminaCost(Actor attacker, Attack attack, Item? weapon)
+        private static double CalculateStaminaAttackCost(Actor attacker, Attack attack, Item? weapon)
         {
             double baseCost = attack.PrepareVelocity;
             double weaponWeight = weapon?.Mass ?? 1.0;

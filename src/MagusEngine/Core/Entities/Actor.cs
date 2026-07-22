@@ -1,23 +1,24 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Arquimedes.Enumerators;
 using GoRogue.FOV;
 using MagusEngine.Actions;
 using MagusEngine.Bus;
 using MagusEngine.Bus.UiBus;
-using MagusEngine.Core.Entities.Base;
-using MagusEngine.Core.MapStuff;
 using MagusEngine.Components.EntityComponents;
 using MagusEngine.Components.EntityComponents.Status;
 using MagusEngine.Components.TilesComponents;
+using MagusEngine.Core.Entities.Base;
+using MagusEngine.Core.MapStuff;
 using MagusEngine.Serialization.EntitySerialization;
 using MagusEngine.Services;
 using MagusEngine.Systems.Physics;
+using MagusEngine.Utils;
 using MagusEngine.Utils.Extensions;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System;
 
 namespace MagusEngine.Core.Entities
 {
@@ -356,14 +357,24 @@ namespace MagusEngine.Core.Entities
             return Mind.Precision;
         }
 
+        public double BaseStaminaCostAction()
+        {
+            double strengthFactor = Math.Max(0.1, 1.0 - (Body.Strength * 0.01));
+            double enduranceFactor = Math.Max(0.5, 1.0 - (Body.Endurance * 0.005));
+            double baseCost = Mass;
+
+            return baseCost * strengthFactor * enduranceFactor;
+        }
+
         public int GetDefenseAbility()
         {
             // four different ways to defend
-            int mod = (Body.Strength + Math.Max(Mind.Inteligence, 1) / 3);
+            int mod = Body.Strength + Math.Max(Mind.Inteligence, 1) / 3;
             int shieldAbility = GetRelevantAbility(AbilityCategory.Shield) + mod;
             int armorAbility = GetRelevantAbility(AbilityCategory.ArmorUse) + mod;
             int dodgeAbility = GetRelevantAbility(AbilityCategory.Dodge) + mod;
             int weaponAbility = GetRelevantAttackAbility(WieldedItem()) + mod;
+            Body.Stamina -= BaseStaminaCostAction();
 
             if (shieldAbility > weaponAbility)
                 return shieldAbility;
@@ -377,12 +388,12 @@ namespace MagusEngine.Core.Entities
 
         public int GetRelevantAbility(AbilityCategory ability)
         {
-            return Mind.GetAbilityScore(ability);
+            return (int)MathMagi.FastRound(Mind.GetAbilityScore(ability) * MathMagi.GetPercentageBasedOnMax(Body.Stamina, Body.MaxStamina));
         }
 
         public int GetRelevantAbility(string ability)
         {
-            return Mind.GetAbilityScore(ability);
+            return (int)MathMagi.FastRound(Mind.GetAbilityScore(ability) * MathMagi.GetPercentageBasedOnMax(Body.Stamina, Body.MaxStamina));
         }
 
         public int GetRelevantAttackAbility(Item? item = null, Attack attack = null)
@@ -400,7 +411,7 @@ namespace MagusEngine.Core.Entities
 
         public int GetRelevantAttackAbility(WeaponType weaponType)
         {
-            return Mind.HasSpecifiedAttackAbility(weaponType, out int abilityScore) ? abilityScore : 0;
+            return Mind.HasSpecifiedAttackAbility(weaponType, out int abilityScore) ? (int)(MathMagi.FastRound(abilityScore) * MathMagi.GetPercentageBasedOnMax(Body.Stamina, Body.MaxStamina)) : 0;
         }
 
         public double GetRelevantAttackAbilityMultiplier(AbilityCategory ability)
@@ -427,10 +438,7 @@ namespace MagusEngine.Core.Entities
         public List<Attack> GetAttacks()
         {
             List<Attack> list = [];
-            foreach (var item in GetAllWieldedItems()!.Select(i => i.Attacks))
-            {
-                list.AddRange(item);
-            }
+            GetAllWieldedItems()!.ForEach(i => list.AddRange(i.Attacks));
             list.AddRange(GetRaceAttacks());
             return list;
         }
