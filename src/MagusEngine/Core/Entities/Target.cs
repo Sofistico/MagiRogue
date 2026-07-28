@@ -61,7 +61,8 @@ namespace MagusEngine.Core.Entities
                 CanBeAttacked = false,
                 CanInteract = false,
                 LeavesGhost = false,
-                AlwaySeen = true
+                AlwaySeen = true,
+                MoveFreeTurn = true,
             };
 
             Blink blink = new()

@@ -339,7 +339,9 @@ namespace MagusEngine.Core.Entities
             var speed = Body.GeneralSpeed;
             if (GetComponent<HasteComponent>(out var haste))
                 speed += haste.HastePower;
-            return speed;
+            // add future stuff tospeed, you being more fit makes yourself faster
+            var mod = GetTiredenessMod();
+            return speed * mod;
         }
 
         public double GetActorBaseCastingSpeed(string shapingAbility)
@@ -357,7 +359,7 @@ namespace MagusEngine.Core.Entities
             return Mind.Precision;
         }
 
-        public double BaseStaminaCostAction()
+        public double CalculateBaseStaminaCostAction()
         {
             double strengthFactor = Math.Max(0.1, 1.0 - (Body.Strength * 0.01));
             double enduranceFactor = Math.Max(0.5, 1.0 - (Body.Endurance * 0.005));
@@ -368,13 +370,13 @@ namespace MagusEngine.Core.Entities
 
         public int GetDefenseAbility()
         {
+            int mod = GetPhysicalSkillModifier();
             // four different ways to defend
-            int mod = Body.Strength + Math.Max(Mind.Inteligence, 1) / 3;
             int shieldAbility = GetRelevantAbility(AbilityCategory.Shield) + mod;
             int armorAbility = GetRelevantAbility(AbilityCategory.ArmorUse) + mod;
             int dodgeAbility = GetRelevantAbility(AbilityCategory.Dodge) + mod;
             int weaponAbility = GetRelevantAttackAbility(WieldedItem()) + mod;
-            Body.Stamina -= BaseStaminaCostAction();
+            Body.Stamina -= CalculateBaseStaminaCostAction();
 
             if (shieldAbility > weaponAbility)
                 return shieldAbility;
@@ -386,19 +388,29 @@ namespace MagusEngine.Core.Entities
             return dodgeAbility;
         }
 
+        private int GetPhysicalSkillModifier()
+        {
+            return (int)((Body.Strength + Math.Max(Mind.Inteligence, 1) / 3) * GetTiredenessMod());
+        }
+
+        private double GetTiredenessMod()
+        {
+            return MathMagi.GetPercentageBasedOnMax(Body.Stamina, Body.MaxStamina) / 100;
+        }
+
         public int GetRelevantAbility(AbilityCategory ability)
         {
-            return (int)MathMagi.FastRound(Mind.GetAbilityScore(ability) * MathMagi.GetPercentageBasedOnMax(Body.Stamina, Body.MaxStamina));
+            return (int)MathMagi.FastRound(Mind.GetAbilityScore(ability));
         }
 
         public int GetRelevantAbility(string ability)
         {
-            return (int)MathMagi.FastRound(Mind.GetAbilityScore(ability) * MathMagi.GetPercentageBasedOnMax(Body.Stamina, Body.MaxStamina));
+            return (int)MathMagi.FastRound(Mind.GetAbilityScore(ability));
         }
 
         public int GetRelevantAttackAbility(Item? item = null, Attack attack = null)
         {
-            int mod = Body.Strength + Math.Max(Mind.Inteligence, 1) / 3;
+            int mod = GetPhysicalSkillModifier();
             if (item is not null)
             {
                 return GetRelevantAttackAbility(item.WeaponType) + mod;
@@ -411,7 +423,8 @@ namespace MagusEngine.Core.Entities
 
         public int GetRelevantAttackAbility(WeaponType weaponType)
         {
-            return Mind.HasSpecifiedAttackAbility(weaponType, out int abilityScore) ? (int)(MathMagi.FastRound(abilityScore) * MathMagi.GetPercentageBasedOnMax(Body.Stamina, Body.MaxStamina)) : 0;
+            Mind.HasSpecifiedAttackAbility(weaponType, out int abilityScore);
+            return (int)MathMagi.FastRound(abilityScore);
         }
 
         public double GetRelevantAttackAbilityMultiplier(AbilityCategory ability)
@@ -572,6 +585,17 @@ namespace MagusEngine.Core.Entities
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Calculates realistic stamina cost for attacks based on weapon weight, strength, and endurance
+        /// </summary>
+        public double CalculateStaminaAttackCost(Attack attack, Item? weapon)
+        {
+            double baseCost = CalculateBaseStaminaCostAction() + attack.PrepareVelocity;
+            double weaponWeight = weapon?.Mass ?? 1.0;
+
+            return baseCost * weaponWeight;
         }
 
         #endregion Methods

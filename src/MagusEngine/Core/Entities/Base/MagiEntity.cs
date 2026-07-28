@@ -74,6 +74,7 @@ namespace MagusEngine.Core.Entities.Base
         /// </summary>
         public bool IgnoresWalls { get; set; }
         public bool AlwaySeen { get; set; }
+        public bool MoveFreeTurn { get; set; }
 
         public Entity SadCell { get; set; }
 

@@ -1,7 +1,12 @@
 using MagusEngine.Actions.Interfaces;
+using MagusEngine.Bus.MapBus;
 using MagusEngine.Core.Entities;
+using MagusEngine.Core.MapStuff;
 using MagusEngine.Exceptions;
+using MagusEngine.Services;
 using MagusEngine.Systems;
+using MagusEngine.Systems.Time;
+using MagusEngine.Utils.Extensions;
 
 namespace MagusEngine.Actions
 {
@@ -19,7 +24,7 @@ namespace MagusEngine.Actions
             if (world.CurrentMap is null)
                 return false;
             var actor = (Actor)world.CurrentMap.ControlledEntitiy!;
-            if (world.CurrentMap.ControlledEntitiy is not Player)
+            if (world!.CurrentMap!.ControlledEntitiy!.MoveFreeTurn)
             {
                 if (world.CurrentMap.CheckForIndexOutOfBounds(world.CurrentMap.ControlledEntitiy!.Position + _delta))
                     return false;
@@ -30,10 +35,23 @@ namespace MagusEngine.Actions
                     && distance <= targetCursor?.MaxDistance
                     && actor!.MoveBy(_delta);
             }
+            else
+            {
+                if (!actor.Bumped)
+                {
+                    Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.GetWalkTime(actor,
+                                    world.CurrentMap.GetTileAt<Tile>(actor.Position)!), true));
+                }
+                else
+                {
+                    var attack = actor.GetAttacks().GetRandomItemFromList() ?? throw new NullValueException("Attack was null", null);
+                    Locator.GetService<MessageBusService>().SendMessage<ProcessTurnEvent>(new(TimeHelper.GetAttackTime(actor, attack), true));
+                }
+            }
             return actor!.MoveBy(_delta);
         }
 
-        private int HandleNonPlayerMoveAndReturnDistance(Universe world, Point delta, Target? targetCursor)
+        private static int HandleNonPlayerMoveAndReturnDistance(Universe world, Point delta, Target? targetCursor)
         {
             int distance = 0;
             _ = world.CurrentMap ?? throw new NullValueException(nameof(world.CurrentMap));

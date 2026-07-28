@@ -123,25 +123,12 @@ namespace MagusEngine.Actions
             }
 
             // Improved stamina cost calculation
-            var staminaCost = CalculateStaminaAttackCost(attacker, attack, itemUsed);
+            var staminaCost = attacker.CalculateStaminaAttackCost(attack, itemUsed);
             attacker.Body.Stamina = Math.Max(0, attacker.Body.Stamina - staminaCost);
 
             return itemUsed != null ?
                 TimeHelper.GetAttackTimeWithWeapon(attacker, attack, itemUsed) :
                 TimeHelper.GetAttackTime(attacker, attack);
-        }
-
-        /// <summary>
-        /// Calculates realistic stamina cost for attacks based on weapon weight, strength, and endurance
-        /// </summary>
-        private static double CalculateStaminaAttackCost(Actor attacker, Attack attack, Item? weapon)
-        {
-            double baseCost = attack.PrepareVelocity;
-            double weaponWeight = weapon?.Mass ?? 1.0;
-            double strengthFactor = Math.Max(0.1, 1.0 - (attacker.Body.Strength * 0.01));
-            double enduranceFactor = Math.Max(0.5, 1.0 - (attacker.Body.Endurance * 0.005));
-
-            return baseCost * weaponWeight * strengthFactor * enduranceFactor;
         }
 
         public static void ShootProjectileAction(Point origin,
