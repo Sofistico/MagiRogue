@@ -399,7 +399,7 @@ namespace MagusEngine.Systems
             {
                 int diceRoll = (int)
                     Math.Round(
-                        (Mrn.Exploding2D6Dice + caster.GetPrecision()) * spellCasted.Proficiency
+                        ((Mrn.Exploding2D6Dice + caster.GetPrecision()) * spellCasted.Proficiency) + effect.Precision
                     );
                 // the actor + exploding dice is the dice that the target will throw for either
                 // defense or blocking the projectile
