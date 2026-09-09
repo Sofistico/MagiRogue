@@ -152,15 +152,13 @@ namespace MagusEngine.Systems
                 );
                 remainingEnergy -= armorEffectiveness;
             }
-#if DEBUG
+
             int loopAmount = 0;
-#endif
+
             while (true) // be realllllllllly careful about this loop...
             {
-#if DEBUG
                 if (++loopAmount == 1000)
-                    MagiLog.Log("Something went really wrong...", logLevel: LogLevel.Debug);
-#endif
+                    MagiLog.Log("Something went really wrong with the combat...", logLevel: LogLevel.Debug);
                 if (remainingEnergy <= 0)
                     return list;
 
@@ -485,8 +483,7 @@ namespace MagusEngine.Systems
 
                 var damageWithoutPenetration =
                     Math.Max(0, attackMomentum - (defender.Body.Endurance * 0.5));
-                var penetrationDamage = damageWithoutPenetration * attack.PenetrationPercentage;
-                var finalDamage = damageWithoutPenetration + penetrationDamage;
+                var finalDamage = damageWithoutPenetration + Mrn.Exploding2D6Dice;
                 finalDamage = MathMagi.Round(finalDamage);
 
                 if (defender.SituationalFlags.Contains(ActorSituationalFlags.Prone))
