@@ -1,3 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Text;
 using Arquimedes.Enumerators;
 using GoRogue.GameFramework;
 using GoRogue.Pathing;
@@ -5,29 +10,24 @@ using GoRogue.Random;
 using MagusEngine.Bus;
 using MagusEngine.Bus.MapBus;
 using MagusEngine.Bus.UiBus;
+using MagusEngine.Components.EntityComponents;
+using MagusEngine.Components.EntityComponents.Projectiles;
+using MagusEngine.Components.TilesComponents;
 using MagusEngine.Core;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic;
 using MagusEngine.Core.MapStuff;
-using MagusEngine.Components.EntityComponents;
-using MagusEngine.Components.EntityComponents.Projectiles;
-using MagusEngine.Components.TilesComponents;
-using MagusEngine.Services.Factory;
 using MagusEngine.Generators;
 using MagusEngine.Services;
+using MagusEngine.Services.Factory;
 using MagusEngine.Systems;
 using MagusEngine.Systems.Time;
 using MagusEngine.Utils;
 using MagusEngine.Utils.Extensions;
 using SadConsole;
 using SadRogue.Primitives;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
 using MagiMap = MagusEngine.Core.MapStuff.MagiMap;
-using System;
 
 namespace MagusEngine.Actions
 {
@@ -106,14 +106,25 @@ namespace MagusEngine.Actions
                         attack,
                         itemUsed);
 
-                CombatSystem.ResolveDamage(defender,
+                if (finalMomentum > 0)
+                {
+                    CombatSystem.DealDamage(
                         finalMomentum,
+                        defender,
                         dmgType,
-                        limbAttacked,
                         attackMaterial,
                         attack,
+                        limbAttacked,
                         itemUsed,
-                        limbAttacking);
+                        limbAttacking
+                    );
+                }
+                else
+                {
+                    Locator
+                        .GetService<MessageBusService>()
+                        .SendMessage<AddMessageLog>(new($"{defender.Name} received no damage!", true));
+                }
             }
 
             if (defenseMessage.Length > 0)

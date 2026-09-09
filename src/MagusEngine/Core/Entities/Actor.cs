@@ -199,15 +199,11 @@ namespace MagusEngine.Core.Entities
         {
             if (!Body.Anatomy.HasAnyHands)
                 return null;
-            List<Item> items = new();
-            foreach (var item in Body.Equipment)
+            List<Item> items = [];
+            foreach (var limb in Body.Anatomy.Limbs.FindAll(i => i.BodyPartFunction == BodyPartFunction.Grasp))
             {
-                var limb = ActorAnatomy.Limbs.Find(i => i.Id.Equals(item.Key));
-                if (limb?.BodyPartFunction == BodyPartFunction.Grasp
-                    && item.Value.EquipType == EquipType.Held)
-                {
-                    items.Add(item.Value);
-                }
+                if (Body.Equipment.TryGetValue(limb.Id, out var item) && item.EquipType == EquipType.Held)
+                    items.Add(item);
             }
             return items;
         }
@@ -372,20 +368,17 @@ namespace MagusEngine.Core.Entities
         {
             int mod = GetPhysicalSkillModifier();
             // four different ways to defend
-            int shieldAbility = GetRelevantAbility(AbilityCategory.Shield) + mod;
-            int armorAbility = GetRelevantAbility(AbilityCategory.ArmorUse) + mod;
-            int dodgeAbility = GetRelevantAbility(AbilityCategory.Dodge) + mod;
-            int weaponAbility = GetRelevantAttackAbility(WieldedItem()) + mod;
+            int shieldAbility = 0;
+            int armorAbility = 0;
+            if (GetAllWieldedItems()?.Any(i => i.ItemType == ItemType.Shield) == true)
+                shieldAbility = GetRelevantAbility(AbilityCategory.Shield);
+            if (Body.Equipment.Any(i => i.Value.ItemType == ItemType.Armor))
+                armorAbility = GetRelevantAbility(AbilityCategory.ArmorUse);
+            int dodgeAbility = GetRelevantAbility(AbilityCategory.Dodge);
+            int weaponAbility = GetRelevantAttackAbility(WieldedItem());
             Body.Stamina -= CalculateBaseStaminaCostAction();
 
-            if (shieldAbility > weaponAbility)
-                return shieldAbility;
-            if (weaponAbility > armorAbility)
-                return weaponAbility;
-            if (armorAbility > dodgeAbility)
-                return armorAbility;
-
-            return dodgeAbility;
+            return Math.Max(Math.Max(shieldAbility, armorAbility), Math.Max(dodgeAbility, weaponAbility)) + mod;
         }
 
         private int GetPhysicalSkillModifier()

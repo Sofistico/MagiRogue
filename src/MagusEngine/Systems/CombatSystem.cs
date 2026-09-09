@@ -125,44 +125,6 @@ namespace MagusEngine.Systems
                 .SendMessage<AddMessageLog>(new($"The attack glances {entity.Name}!"));
         }
 
-        /// <summary>
-        /// Calculates the damage a defender takes after a successful hit and subtracts it from its
-        /// Health Then displays the outcome in the MessageLog.
-        /// </summary>
-        /// <param name="defender"></param>
-        /// <param name="momentum"></param>
-        public static void ResolveDamage(
-            MagiEntity defender,
-            double momentum,
-            DamageType dmgType,
-            BodyPart limbAttacked,
-            Material attackMaterial,
-            Attack attack,
-            Item? weapon = null,
-            BodyPart? limbAttacking = null
-        )
-        {
-            if (momentum > 0)
-            {
-                DealDamage(
-                    momentum,
-                    defender,
-                    dmgType,
-                    attackMaterial,
-                    attack,
-                    limbAttacked,
-                    weapon,
-                    limbAttacking
-                );
-            }
-            else
-            {
-                Locator
-                    .GetService<MessageBusService>()
-                    .SendMessage<AddMessageLog>(new($"{defender.Name} received no damage!", true));
-            }
-        }
-
         private static List<PartWound> CalculatePartWoundsReceived(
             double attackMomentum,
             BodyPart partInjured,
@@ -221,7 +183,7 @@ namespace MagusEngine.Systems
                     tissue.Material,
                     //tissue.Volume,
                     attackMaterial,
-                    attack,
+                    attack!,
                     attackMomentum,
                     attackVolume,
                     0,
@@ -229,10 +191,10 @@ namespace MagusEngine.Systems
                 );
 
                 var attackTotalContactArea =
-                    attackVolume * (double)((double)attack.ContactArea / 100);
+                    attackVolume * (double)((double)attack!.ContactArea / 100);
 
                 // let's see if it will just be better to use the tissue.volume!
-                var tissueContactArea = Math.Pow((tissue.Volume / 10.0), (2.0 / 3.0));
+                var tissueContactArea = Math.Pow(tissue.Volume / 10.0, 2.0 / 3.0);
                 double woundVolume =
                     attackTotalContactArea <= tissueContactArea
                         ? (double)(
@@ -244,7 +206,7 @@ namespace MagusEngine.Systems
 
                 double strain = attackMomentum / attackTotalContactArea;
 
-                PartWound partWound = new(woundVolume, strain, tissue, attack?.DamageType);
+                PartWound partWound = new(woundVolume, strain, tissue, attack?.DamageType!);
 
                 if (remainingEnergy >= energyToPenetrate)
                 {
@@ -475,8 +437,9 @@ namespace MagusEngine.Systems
                 materialUsed = bpAttacking.Tissues[0].Material;
             }
             // TODO: Granularize this more!
-            if (attacker.GetRelevantAttackAbility(wieldedItem) + Mrn.Exploding2D6Dice
-                > defender.GetDefenseAbility() + Mrn.Exploding2D6Dice)
+            var attackSkill = attacker.GetRelevantAttackAbility(wieldedItem) + Mrn.Exploding2D6Dice + MathMagi.FastRound((double)(limbAttacked!.Volume * 0.0001));
+            var defenseSkill = defender.GetDefenseAbility() + Mrn.Exploding2D6Dice;
+            if (attackSkill > defenseSkill)
             {
                 limbAttacked ??= defender.ActorAnatomy.GetRandomLimb();
                 return (
@@ -516,7 +479,7 @@ namespace MagusEngine.Systems
             {
                 double attackMomentum;
                 if (wieldedItem is null)
-                    attackMomentum = GetAttackMomentum(attacker, limbAttacking, attack);
+                    attackMomentum = GetAttackMomentumLimb(attacker, limbAttacking, attack);
                 else
                     attackMomentum = GetAttackMomentumWithItem(attacker, wieldedItem, attack);
 
@@ -609,7 +572,7 @@ namespace MagusEngine.Systems
             if (entity != null)
             {
                 var projectileAttack = Attack.ConstructGenericAttack(
-                    projectile.Name,
+                    projectile?.Name!,
                     ["hit", "hits"],
                     dmg.Id,
                     true
@@ -618,8 +581,8 @@ namespace MagusEngine.Systems
             }
             if (tile != null)
             {
-                string? message = $"The {projectile.Name} hits the {tile.Name}!";
-                var point = projectile.Position;
+                string? message = $"The {projectile!.Name} hits the {tile.Name}!";
+                var point = projectile!.Position;
                 // check to see if the wall or the projectile will get hurt by the impact
                 //TODO: See if it's in pascals or mega pascals
                 if (
@@ -630,7 +593,7 @@ namespace MagusEngine.Systems
                     item.Condition -= (int)
                         Math.Sqrt(
                             (double)(
-                                item.Material.ImpactFractureMpa - tile.Material.ImpactStrainsAtYield
+                                item!.Material!.ImpactFractureMpa - tile!.Material!.ImpactStrainsAtYield
                             )
                         );
                 }
@@ -639,8 +602,8 @@ namespace MagusEngine.Systems
                     var damage = (int)
                         Math.Sqrt(
                             (double)(
-                                tile.Material.ImpactStrainsAtYield
-                                - projectile.GetMaterial().ImpactFractureMpa
+                                tile!.Material!.ImpactStrainsAtYield
+                                - projectile!.GetMaterial()!.ImpactFractureMpa
                             )
                         );
                     tile.AddComponent(new DamagedTileComponent(damage), DamagedTileComponent.Tag);
@@ -652,7 +615,7 @@ namespace MagusEngine.Systems
                         .SendMessage<AddMessageLog>(
                             new(
                                 message,
-                                Find.ControlledEntity.Position,
+                                Find.ControlledEntity!.Position,
                                 point,
                                 Find.Universe.Player.Body.ViewRadius
                             )
@@ -672,10 +635,10 @@ namespace MagusEngine.Systems
                 return;
             var spellEntity = (SpellEntity)projectile;
 
-            spell.CastSpell(projectile.Position, (Actor)spellEntity.Caster);
+            spell.CastSpell(projectile.Position, (Actor)spellEntity.Caster!);
 
-            var map = projectile?.CurrentMagiMap;
-            map?.RemoveMagiEntity(projectile);
+            var map = projectile!.CurrentMagiMap;
+            map?.RemoveMagiEntity(projectile!);
         }
 
         private static (bool, MagiEntity?, Tile?) GetWhatToHitProjectile(
@@ -878,7 +841,7 @@ namespace MagusEngine.Systems
                         weaponQualityModifier,
                         attackVolume
                     ),
-                _ => (defenseMaterial.Hardness ?? 1) * 0.9,
+                _ => (defenseMaterial.Hardness ?? 1) * 0.1,
             };
         }
 
@@ -894,22 +857,19 @@ namespace MagusEngine.Systems
             double attackVolume
         )
         {
-            double shearFRatio = (
-                attackMaterial.ShearFracture ?? 1 / defenseMaterial.ShearFracture ?? 1
-            );
-            double shearYRatio = (attackMaterial.ShearYield ?? 1 / defenseMaterial.ShearYield ?? 1);
+            double shearFRatio = attackMaterial.ShearFracture ?? 1 / defenseMaterial.ShearFracture ?? 1;
+            double shearYRatio = attackMaterial.ShearYield ?? 1 / defenseMaterial.ShearYield ?? 1;
             var momentumReq =
                 (shearYRatio + ((attackContactArea + 1) * shearFRatio))
                 * (10 + (2 * armorQualityModifier))
                 / (attackMaterial.MaxEdge * (weaponQualityModifier + 1));
             if (originalMomentum >= momentumReq)
             {
-                return (double)(
-                    (double)originalMomentum * (defenseMaterial.ShearStrainAtYield ?? 1 / 50000)
-                );
+                return (double)(originalMomentum * 0.05);
             }
             else
             {
+                originalMomentum *= (double)(defenseMaterial.ShearStrainAtYield ?? 1 / 50000);
                 // damage is converted to blunt!
                 return CalculateBluntDefenseCost(
                     defenseMaterial,
@@ -951,11 +911,11 @@ namespace MagusEngine.Systems
                     * (attackContactArea * (weaponQualityModifier + 1));
                 if (originalMomentum >= minimumMomentum)
                 {
-                    return originalMomentum * ((defenseMaterial.ImpactStrainsAtYield ?? 1) / 50000);
+                    return originalMomentum * 0.05;
                 }
             }
 
-            return originalMomentum * 0.9;
+            return originalMomentum * ((defenseMaterial.ImpactStrainsAtYield ?? 1) / 50000);
         }
 
         /// <summary>
@@ -1000,7 +960,7 @@ namespace MagusEngine.Systems
         /// </para>
         /// </summary>
         /// <param name="attacker"></param>
-        public static double GetAttackMomentum(
+        public static double GetAttackMomentumLimb(
             Actor attacker,
             BodyPart limbAttacking,
             Attack attack

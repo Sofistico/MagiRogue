@@ -96,7 +96,7 @@ namespace MagiRogue.Test.System
             var actor = CreateActor("actor", 10, 10, 1, 1, 1);
             var attack = CreateTestAttack();
 
-            double momentum = CombatSystem.GetAttackMomentum(actor, actor.ActorAnatomy.Limbs[0], attack);
+            double momentum = CombatSystem.GetAttackMomentumLimb(actor, actor.ActorAnatomy.Limbs[0], attack);
 
             Assert.True(momentum > 0);
         }
@@ -130,7 +130,7 @@ namespace MagiRogue.Test.System
 
             var limb = defender.ActorAnatomy.Limbs[0];
             var attack = CreateTestAttack();
-            double momentum = CombatSystem.GetAttackMomentum(attacker, limb, attack);
+            double momentum = CombatSystem.GetAttackMomentumLimb(attacker, limb, attack);
 
             int initialWounds = defender.ActorAnatomy.GetAllWounds().Count;
 
@@ -148,7 +148,7 @@ namespace MagiRogue.Test.System
 
             var limb = defender.ActorAnatomy.Limbs[0];
             var attack = CreateTestAttack();
-            double momentum = CombatSystem.GetAttackMomentum(attacker, limb, attack);
+            double momentum = CombatSystem.GetAttackMomentumLimb(attacker, limb, attack);
 
             CombatSystem.DealDamage(momentum, defender, attack.DamageType!, DataManager.QueryMaterial("bone"), attack, limb, null, attacker.GetAttackingLimb(attack));
 
@@ -165,7 +165,7 @@ namespace MagiRogue.Test.System
 
             var limb = defender.ActorAnatomy.Limbs[0];
             var attack = CreateTestAttack();
-            double momentum = CombatSystem.GetAttackMomentum(attacker, limb, attack);
+            double momentum = CombatSystem.GetAttackMomentumLimb(attacker, limb, attack);
 
             CombatSystem.DealDamage(momentum, defender, attack.DamageType!, DataManager.QueryMaterial("bone"), attack, limb, null, attacker.GetAttackingLimb(attack));
 
@@ -187,8 +187,8 @@ namespace MagiRogue.Test.System
             var limbStrong = defenderStrong.ActorAnatomy.Limbs[0];
             var attack = CreateTestAttack();
 
-            double weakMomentum = CombatSystem.GetAttackMomentum(weakAttacker, limbWeak, attack);
-            double strongMomentum = CombatSystem.GetAttackMomentum(strongAttacker, limbStrong, attack);
+            double weakMomentum = CombatSystem.GetAttackMomentumLimb(weakAttacker, limbWeak, attack);
+            double strongMomentum = CombatSystem.GetAttackMomentumLimb(strongAttacker, limbStrong, attack);
 
             CombatSystem.DealDamage(weakMomentum, defenderWeak, attack.DamageType!, DataManager.QueryMaterial("bone"), attack, limbWeak, null, weakAttacker.GetAttackingLimb(attack));
             CombatSystem.DealDamage(strongMomentum, defenderStrong, attack.DamageType!, DataManager.QueryMaterial("bone"), attack, limbStrong, null, strongAttacker.GetAttackingLimb(attack));
@@ -221,8 +221,8 @@ namespace MagiRogue.Test.System
                 var limb1 = fighter1.ActorAnatomy.Limbs[rounds % fighter1.ActorAnatomy.Limbs.Count];
                 var limb2 = fighter2.ActorAnatomy.Limbs[rounds % fighter2.ActorAnatomy.Limbs.Count];
 
-                double momentum1 = CombatSystem.GetAttackMomentum(fighter1, limb1, attack);
-                double momentum2 = CombatSystem.GetAttackMomentum(fighter2, limb2, attack);
+                double momentum1 = CombatSystem.GetAttackMomentumLimb(fighter1, limb1, attack);
+                double momentum2 = CombatSystem.GetAttackMomentumLimb(fighter2, limb2, attack);
 
                 CombatSystem.DealDamage(momentum1, fighter2, attack.DamageType!, DataManager.QueryMaterial("bone"), attack, limb2, null, fighter1.GetAttackingLimb(attack));
                 CombatSystem.DealDamage(momentum2, fighter1, attack.DamageType!, DataManager.QueryMaterial("bone"), attack, limb1, null, fighter2.GetAttackingLimb(attack));
@@ -257,8 +257,8 @@ namespace MagiRogue.Test.System
                 var limb1 = fighter1.ActorAnatomy.Limbs[rounds % fighter1.ActorAnatomy.Limbs.Count];
                 var limb2 = fighter2.ActorAnatomy.Limbs[rounds % fighter2.ActorAnatomy.Limbs.Count];
 
-                double momentum1 = CombatSystem.GetAttackMomentum(fighter1, limb1, attack);
-                double momentum2 = CombatSystem.GetAttackMomentum(fighter2, limb2, attack);
+                double momentum1 = CombatSystem.GetAttackMomentumLimb(fighter1, limb1, attack);
+                double momentum2 = CombatSystem.GetAttackMomentumLimb(fighter2, limb2, attack);
 
                 CombatSystem.DealDamage(momentum1, fighter2, attack.DamageType!, DataManager.QueryMaterial("bone"), attack, limb2, null, fighter1.GetAttackingLimb(attack));
                 CombatSystem.DealDamage(momentum2, fighter1, attack.DamageType!, DataManager.QueryMaterial("bone"), attack, limb1, null, fighter2.GetAttackingLimb(attack));
@@ -281,7 +281,7 @@ namespace MagiRogue.Test.System
             var targetLimb = defender.ActorAnatomy.Limbs[0];
             var attack = CreateTestAttack();
 
-            double momentum = CombatSystem.GetAttackMomentum(attacker, targetLimb, attack);
+            double momentum = CombatSystem.GetAttackMomentumLimb(attacker, targetLimb, attack);
 
             CombatSystem.DealDamage(momentum, defender, attack.DamageType!, DataManager.QueryMaterial("bone"), attack, targetLimb, null, attacker.GetAttackingLimb(attack));
             var woundsAfterFirst = defender.ActorAnatomy.GetAllWounds();
@@ -307,7 +307,7 @@ namespace MagiRogue.Test.System
 
             for (int i = 0; i < 30; i++)
             {
-                double momentum = CombatSystem.GetAttackMomentum(attacker, targetLimb, attack);
+                double momentum = CombatSystem.GetAttackMomentumLimb(attacker, targetLimb, attack);
                 CombatSystem.DealDamage(momentum, defender, attack.DamageType!, DataManager.QueryMaterial("bone"), attack, targetLimb, null, attacker.GetAttackingLimb(attack));
             }
 
@@ -332,7 +332,7 @@ namespace MagiRogue.Test.System
 
             var attack = CreateTestAttack(1.0);
 
-            double momentum = CombatSystem.GetAttackMomentum(attacker, targetLimb, attack);
+            double momentum = CombatSystem.GetAttackMomentumLimb(attacker, targetLimb, attack);
             CombatSystem.DealDamage(momentum, defender, attack.DamageType!, DataManager.QueryMaterial("bone"), attack, targetLimb, null, attacker.GetAttackingLimb(attack));
 
             var pct = defender.ActorAnatomy.GetLimbDamagePercentage(targetLimb);
