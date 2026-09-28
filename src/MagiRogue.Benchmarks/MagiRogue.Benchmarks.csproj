@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MagiRogue\MagiRogue.csproj" />
+    <ProjectReference Include="..\Plato\Plato.csproj" />
   </ItemGroup>
 
 </Project>
