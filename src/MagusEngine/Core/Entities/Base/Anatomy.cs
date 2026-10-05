@@ -189,8 +189,7 @@ namespace MagusEngine.Core.Entities.Base
 
         public void Injury(Wound wound, BodyPart bpInjured, Actor actorWounded)
         {
-            double injureSeverity =
-                wound.VolumeInjury / bpInjured.Volume;
+            double injureSeverity = wound.VolumeInjury / 100.0;
 
             injureSeverity = Math.Clamp(injureSeverity, 0, 1);
             switch (injureSeverity)
@@ -276,6 +275,8 @@ namespace MagusEngine.Core.Entities.Base
 
         public double GetLimbDamagePercentage(BodyPart bp)
         {
+            if (bp.Wounds.All(i => i.Parts.Any(x => x.WholeTissue)))
+                return 1;
             double totalVolumeInjury = bp.Wounds.Sum(w => w.VolumeInjury);
             return totalVolumeInjury / bp.Volume;
         }

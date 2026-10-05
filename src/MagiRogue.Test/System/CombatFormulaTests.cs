@@ -22,7 +22,7 @@ namespace MagiRogue.Test.System
             return actor;
         }
 
-        private static Attack CreateTestAttack(double penetration = 0.0) => new Attack
+        private static Attack CreateTestAttack(double penetration = 0.0) => new()
         {
             Name = "Test Punch",
             AttackAbility = AbilityCategory.Unarmed,
@@ -160,7 +160,7 @@ namespace MagiRogue.Test.System
         [Fact]
         public void Wound_HasSeverity()
         {
-            var attacker = CreateActor("attacker", 20, 10, 5, 5, 5);
+            var attacker = CreateActor("attacker", 10, 10, 5, 5, 5);
             var defender = CreateActor("defender", 10, 10, 1, 1, 1);
 
             var limb = defender.ActorAnatomy.Limbs[0];
@@ -338,7 +338,7 @@ namespace MagiRogue.Test.System
             var pct = defender.ActorAnatomy.GetLimbDamagePercentage(targetLimb);
             var finalSeverity = defender.ActorAnatomy.GetLimbSeverity(targetLimb);
 
-            Assert.True(finalSeverity >= InjurySeverity.Broken, $"Damage%: {pct:P1}, Severity: {finalSeverity}, Broken: {targetLimb.Broken}");
+            Assert.True(finalSeverity >= InjurySeverity.Broken, $"Damage%: {pct:P1}, Severity: {finalSeverity}, Broken: {targetLimb.Broken}, Momentum: {momentum}");
         }
     }
 }

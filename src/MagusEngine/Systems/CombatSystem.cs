@@ -108,7 +108,7 @@ namespace MagusEngine.Systems
 
         private static void SendWoundMessages(List<PartWound> woundParts)
         {
-            StringBuilder woundString = new(" ");
+            StringBuilder woundString = new("");
             foreach (var partWound in woundParts)
             {
                 woundString.AppendLine(DetermineDamageMessage(partWound.PartDamage, partWound));
@@ -189,10 +189,10 @@ namespace MagusEngine.Systems
                 );
 
                 var attackTotalContactArea =
-                    attackVolume * (double)((double)attack!.ContactArea / 100);
+                    attackVolume * (double)(attack!.ContactArea / 100.0);
 
                 // let's see if it will just be better to use the tissue.volume!
-                var tissueContactArea = Math.Pow(tissue.Volume / 10.0, 2.0 / 3.0);
+                var tissueContactArea = (tissue.Volume / 100.0) * partInjured.Volume;
                 double woundVolume =
                     attackTotalContactArea <= tissueContactArea
                         ? (double)(
@@ -221,7 +221,7 @@ namespace MagusEngine.Systems
                 }
             }
 
-            // The projectile has penetrated all tissue layers
+            // The attack has penetrated all tissue layers
             return list;
         }
 
@@ -232,14 +232,14 @@ namespace MagusEngine.Systems
             if (partDamage.Type is DamageTypes.Blunt)
             {
                 if (
-                    wound.Tissue.Material.ImpactStrainsAtYield <= 24.999
+                    wound.Tissue.Material.ImpactStrainsAtYield <= 24_999
                     && wound.Strain >= wound.Tissue.Material.ImpactStrainsAtYield
                 )
                 {
                     baseMessage.Append(partDamage.SeverityDmgString[2]);
                 }
                 else if (
-                    wound.Tissue.Material.ImpactStrainsAtYield <= 49.999
+                    wound.Tissue.Material.ImpactStrainsAtYield <= 49_999
                     && wound.Strain >= wound.Tissue.Material.ImpactStrainsAtYield
                 )
                 {
@@ -908,7 +908,7 @@ namespace MagusEngine.Systems
                     * (attackContactArea * (weaponQualityModifier + 1));
                 if (originalMomentum >= minimumMomentum)
                 {
-                    return originalMomentum * 0.05;
+                    return originalMomentum * 0.10;
                 }
             }
 
@@ -964,7 +964,7 @@ namespace MagusEngine.Systems
         )
         {
             var limbMass =
-                (limbAttacking.GetStructuralMaterial()?.DensityKgM3 ?? 1)
+                (limbAttacking.GetStructuralMaterial()?.Density ?? 1)
                 * limbAttacking.Volume;
 
             var velocity = attacker.GetAttackVelocity(attack);
