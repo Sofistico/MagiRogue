@@ -404,10 +404,12 @@ namespace MagusEngine.Systems
             Limb? limbAttacked = null
         )
         {
+            ArgumentNullException.ThrowIfNull(defender);
             Item? wieldedItem = attacker.WieldedItem();
             BodyPart bpAttacking =
                 attacker.GetAttackingLimb(attack)
                 ?? throw new ArgumentNullException(nameof(attack));
+            limbAttacked ??= defender.ActorAnatomy.GetRandomLimb();
 
             // Create a string that expresses the attacker and defender's names as well as the
             // attack verb
@@ -439,7 +441,6 @@ namespace MagusEngine.Systems
             var defenseSkill = defender.GetDefenseAbility() + Mrn.Exploding2D6Dice;
             if (attackSkill > defenseSkill)
             {
-                limbAttacked ??= defender.ActorAnatomy.GetRandomLimb();
                 return (
                     true,
                     limbAttacked,
@@ -481,10 +482,12 @@ namespace MagusEngine.Systems
                 else
                     attackMomentum = GetAttackMomentumWithItem(attacker, wieldedItem, attack);
 
-                var damageWithoutPenetration =
-                    Math.Max(0, attackMomentum - (defender.Body.Endurance * 0.5));
-                var finalDamage = damageWithoutPenetration + Mrn.Exploding2D6Dice;
-                finalDamage = MathMagi.Round(finalDamage);
+                var penetrationBonus = 1 + Math.Max(0, attack.PenetrationPercentage);
+                var damageAfterEndurance = Math.Max(
+                    0,
+                    attackMomentum * penetrationBonus / (1 + defender.Body.Endurance * 0.1)
+                );
+                var finalDamage = MathMagi.Round(damageAfterEndurance + Mrn.Exploding2D6Dice);
 
                 if (defender.SituationalFlags.Contains(ActorSituationalFlags.Prone))
                     finalDamage *= 2;
@@ -969,15 +972,15 @@ namespace MagusEngine.Systems
 
             var velocity = attacker.GetAttackVelocity(attack);
 
-            var kineticEnergy = limbMass * velocity * velocity;
-
             var statFactor =
-                (attacker.Body.Strength + Mrn.Exploding2D6Dice
+                (attacker.Body.Strength
                 + (Math.Max(attacker.Mind.Inteligence, 1) / 3)
                 + (Math.Max(attacker.Mind.Precision, 1) / 5))
                 * (attacker.GetRelevantAbilityMultiplier(attack.AttackAbility) + 1);
 
-            return MathMagi.Round(kineticEnergy * statFactor);
+            var attackMomentum = limbMass * velocity * statFactor;
+
+            return MathMagi.Round(attackMomentum);
         }
 
         #endregion Physics
