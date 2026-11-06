@@ -35,14 +35,12 @@ namespace Arquimedes.Utils
             }
         }
 
-        public static Dictionary<string, T> GetSourceTreeDict<T>(string wildCard) where T : IJsonKey
-        {
-            return GetSourceTreeList<T>(wildCard).ToDictionary(static val => val.Id);
-        }
+        public static Dictionary<string, T> GetSourceTreeDict<T>(string wildCard) where T : IJsonKey 
+            => GetSourceTreeList<T>(wildCard).DistinctBy(static val => val.Id).ToDictionary(static val => val.Id);
 
         public static List<T> GetSourceTreeList<T>(string wildCard)
         {
-            string[] files = FileUtils.GetFiles(wildCard);
+            string[] files = GetFiles(wildCard);
 
             ConcurrentBag<T> result = [];
 

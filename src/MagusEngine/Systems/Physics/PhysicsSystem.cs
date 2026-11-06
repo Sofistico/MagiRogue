@@ -39,7 +39,7 @@ namespace MagusEngine.Systems.Physics
             }
             ability = actor.GetRelevantAbility(attack.AttackAbility);
             finalSpeed = ability != 0 ? actor.GetActorSpeed() / ability : actor.GetActorSpeed();
-            return finalSpeed * attack.VelocityAttackMultiplier * 100;
+            return finalSpeed * Math.Max(attack.VelocityAttackMultiplier, 1) * 100;
         }
 
         public static double CalculateNewton2Law(double mass, double acceleration)

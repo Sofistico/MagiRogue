@@ -1,22 +1,24 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Arquimedes.Enumerators;
 using GoRogue.FOV;
 using MagusEngine.Actions;
 using MagusEngine.Bus;
 using MagusEngine.Bus.UiBus;
-using MagusEngine.Core.Entities.Base;
-using MagusEngine.Core.MapStuff;
 using MagusEngine.Components.EntityComponents;
 using MagusEngine.Components.EntityComponents.Status;
 using MagusEngine.Components.TilesComponents;
+using MagusEngine.Core.Entities.Base;
+using MagusEngine.Core.MapStuff;
 using MagusEngine.Serialization.EntitySerialization;
 using MagusEngine.Services;
 using MagusEngine.Systems.Physics;
+using MagusEngine.Utils;
 using MagusEngine.Utils.Extensions;
 using Newtonsoft.Json;
 using SadRogue.Primitives;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace MagusEngine.Core.Entities
 {
@@ -197,15 +199,11 @@ namespace MagusEngine.Core.Entities
         {
             if (!Body.Anatomy.HasAnyHands)
                 return null;
-            List<Item> items = new();
-            foreach (var item in Body.Equipment)
+            List<Item> items = [];
+            foreach (var limb in Body.Anatomy.Limbs.FindAll(i => i.BodyPartFunction == BodyPartFunction.Grasp))
             {
-                var limb = ActorAnatomy.Limbs.Find(i => i.Id.Equals(item.Key));
-                if (limb?.BodyPartFunction == BodyPartFunction.Grasp
-                    && item.Value.EquipType == EquipType.Held)
-                {
-                    items.Add(item.Value);
-                }
+                if (Body.Equipment.TryGetValue(limb.Id, out var item) && item.EquipType == EquipType.Held)
+                    items.Add(item);
             }
             return items;
         }
@@ -337,7 +335,9 @@ namespace MagusEngine.Core.Entities
             var speed = Body.GeneralSpeed;
             if (GetComponent<HasteComponent>(out var haste))
                 speed += haste.HastePower;
-            return speed;
+            // add future stuff tospeed, you being more fit makes yourself faster
+            var mod = GetTiredenessMod();
+            return speed * mod;
         }
 
         public double GetActorBaseCastingSpeed(string shapingAbility)
@@ -355,49 +355,69 @@ namespace MagusEngine.Core.Entities
             return Mind.Precision;
         }
 
+        public double CalculateBaseStaminaCostAction()
+        {
+            double strengthFactor = Math.Max(0.1, 1.0 - (Body.Strength * 0.01));
+            double enduranceFactor = Math.Max(0.5, 1.0 - (Body.Endurance * 0.005));
+            double baseCost = Mass;
+
+            return baseCost * strengthFactor * enduranceFactor;
+        }
+
         public int GetDefenseAbility()
         {
+            int mod = GetPhysicalSkillModifier();
             // four different ways to defend
-            int shieldAbility = GetRelevantAbility(AbilityCategory.Shield);
-            int armorAbility = GetRelevantAbility(AbilityCategory.ArmorUse);
+            int shieldAbility = 0;
+            int armorAbility = 0;
+            if (GetAllWieldedItems()?.Any(i => i.ItemType == ItemType.Shield) == true)
+                shieldAbility = GetRelevantAbility(AbilityCategory.Shield);
+            if (Body.Equipment.Any(i => i.Value.ItemType == ItemType.Armor))
+                armorAbility = GetRelevantAbility(AbilityCategory.ArmorUse);
             int dodgeAbility = GetRelevantAbility(AbilityCategory.Dodge);
             int weaponAbility = GetRelevantAttackAbility(WieldedItem());
+            Body.Stamina -= CalculateBaseStaminaCostAction();
 
-            if (shieldAbility > weaponAbility)
-                return shieldAbility;
-            if (weaponAbility > armorAbility)
-                return weaponAbility;
-            if (armorAbility > dodgeAbility)
-                return armorAbility;
+            return Math.Max(Math.Max(shieldAbility, armorAbility), Math.Max(dodgeAbility, weaponAbility)) + mod;
+        }
 
-            return dodgeAbility;
+        private int GetPhysicalSkillModifier()
+        {
+            return (int)((Body.Strength + Math.Max(Mind.Inteligence, 1) / 3) * GetTiredenessMod());
+        }
+
+        private double GetTiredenessMod()
+        {
+            return MathMagi.GetPercentageBasedOnMax(Body.Stamina, Body.MaxStamina) / 100;
         }
 
         public int GetRelevantAbility(AbilityCategory ability)
         {
-            return Mind.GetAbilityScore(ability);
+            return (int)MathMagi.FastRound(Mind.GetAbilityScore(ability));
         }
 
         public int GetRelevantAbility(string ability)
         {
-            return Mind.GetAbilityScore(ability);
+            return (int)MathMagi.FastRound(Mind.GetAbilityScore(ability));
         }
 
-        public int GetRelevantAttackAbility(Item? item = null)
+        public int GetRelevantAttackAbility(Item? item = null, Attack attack = null)
         {
+            int mod = GetPhysicalSkillModifier();
             if (item is not null)
             {
-                return GetRelevantAttackAbility(item.WeaponType);
+                return GetRelevantAttackAbility(item.WeaponType) + mod;
             }
             else
             {
-                return 0;
+                return GetRelevantAbility(attack?.AttackAbility ?? 0) + mod;
             }
         }
 
         public int GetRelevantAttackAbility(WeaponType weaponType)
         {
-            return Mind.HasSpecifiedAttackAbility(weaponType, out int abilityScore) ? abilityScore : 0;
+            Mind.HasSpecifiedAttackAbility(weaponType, out int abilityScore);
+            return (int)MathMagi.FastRound(abilityScore);
         }
 
         public double GetRelevantAttackAbilityMultiplier(AbilityCategory ability)
@@ -408,11 +428,6 @@ namespace MagusEngine.Core.Entities
         public double GetRelevantAbilityMultiplier(AbilityCategory ability)
         {
             return Mind.Abilities.TryGetValue((int)ability, out Ability value) ? value.Score * 0.3 : 0;
-        }
-
-        public int GetStrenght()
-        {
-            return Body.Strength;
         }
 
         public Sex GetGender()
@@ -429,10 +444,7 @@ namespace MagusEngine.Core.Entities
         public List<Attack> GetAttacks()
         {
             List<Attack> list = [];
-            foreach (var item in GetAllWieldedItems()!.Select(i => i.Attacks))
-            {
-                list.AddRange(item);
-            }
+            GetAllWieldedItems()!.ForEach(i => list.AddRange(i.Attacks));
             list.AddRange(GetRaceAttacks());
             return list;
         }
@@ -501,7 +513,7 @@ namespace MagusEngine.Core.Entities
 
         public void AddMemory<T>(Point lastSeen, MemoryType memoryType, T obj)
         {
-            Mind.Memories.Add(new Memory<T>(lastSeen, memoryType, obj));
+            Mind.Memories.Add(new MemoryEntity<T>(lastSeen, memoryType, obj));
         }
 
         public bool HasMemory<T>(MemoryType memoryType, T obj)
@@ -510,7 +522,7 @@ namespace MagusEngine.Core.Entities
             {
                 if (item.MemoryType == memoryType)
                 {
-                    var mem = item as Memory<T>;
+                    var mem = item as MemoryEntity<T>;
                     if (mem!.ObjToRemember!.Equals(obj))
                         return true;
                 }
@@ -518,13 +530,13 @@ namespace MagusEngine.Core.Entities
             return false;
         }
 
-        public bool GetMemory<T>(MemoryType type, out Memory<T>? memory)
+        public bool GetMemory<T>(MemoryType type, out MemoryEntity<T>? memory)
         {
             foreach (var item in Mind.Memories)
             {
                 if (item.MemoryType == type)
                 {
-                    memory = (Memory<T>?)item;
+                    memory = (MemoryEntity<T>?)item;
                     return true;
                 }
             }
@@ -566,6 +578,17 @@ namespace MagusEngine.Core.Entities
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Calculates realistic stamina cost for attacks based on weapon weight, strength, and endurance
+        /// </summary>
+        public double CalculateStaminaAttackCost(Attack attack, Item? weapon)
+        {
+            double baseCost = CalculateBaseStaminaCostAction() + attack.PrepareVelocity;
+            double weaponWeight = weapon?.Mass ?? 1.0;
+
+            return baseCost * weaponWeight;
         }
 
         #endregion Methods

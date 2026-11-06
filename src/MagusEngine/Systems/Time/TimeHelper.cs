@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using MagusEngine.Core.Entities;
 using MagusEngine.Core.Entities.Base;
 using MagusEngine.Core.Magic;
@@ -41,7 +41,7 @@ namespace MagusEngine.Systems.Time
         public static long GetAttackTime(Actor actor, Attack attack)
         {
             // Improved attack time calculation with realistic physics
-            double baseTime = attack.PrepareVelocity + attack.RecoverVelocity;
+            double baseTime = (attack.PrepareVelocity + attack.RecoverVelocity) * (OneMoment * 2);
             double actorSpeed = actor.GetActorSpeed();
             double skillBonus = Math.Max(0.5, 1.0 - (actor.GetRelevantAttackAbility(actor.WieldedItem()) * 0.01));
 
@@ -50,11 +50,11 @@ namespace MagusEngine.Systems.Time
 
         public static long GetAttackTimeWithWeapon(Actor actor, Attack attack, Item weapon)
         {
-            double baseTime = attack.PrepareVelocity + attack.RecoverVelocity;
+            double baseTime = (attack.PrepareVelocity + attack.RecoverVelocity) * (OneMoment * 2);
             double weaponWeight = weapon?.Mass ?? 1.0;
             double actorSpeed = actor.GetActorSpeed();
             double skillBonus = Math.Max(0.5, 1.0 - (actor.GetRelevantAttackAbility(weapon) * 0.01));
-            double strengthFactor = Math.Max(0.5, 1.0 + (actor.GetStrenght() - weaponWeight) * 0.01);
+            double strengthFactor = Math.Max(0.5, 1.0 + (actor.Body.Strength - weaponWeight) * 0.01);
 
             return (long)(baseTime * weaponWeight * skillBonus * strengthFactor / Math.Max(actorSpeed, 0.1));
         }

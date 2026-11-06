@@ -189,8 +189,9 @@ namespace MagusEngine.Core.Entities.Base
 
         public void Injury(Wound wound, BodyPart bpInjured, Actor actorWounded)
         {
-            double injureSeverity = MathMagi.GetPercentageBasedOnMax(wound.VolumeInjury, bpInjured.Volume) / 100;
+            double injureSeverity = wound.VolumeInjury / bpInjured.Volume;
 
+            injureSeverity = Math.Clamp(injureSeverity, 0, 1);
             switch (injureSeverity)
             {
                 case > 0 and <= 0.15:
@@ -219,6 +220,18 @@ namespace MagusEngine.Core.Entities.Base
                     throw new Exception($"Error with getting percentage of the damage done to the body part: {injureSeverity}");
             }
 
+            Tissue? loadBearingTissue = wound.InitialDamageSource.Type is DamageTypes.Blunt
+                ? GetLoadBearingTissue(wound.Parts.Select(part => part.Tissue))
+                : null;
+            if (loadBearingTissue is not null
+                && wound.Parts.Any(part =>
+                    part.Tissue.Id == loadBearingTissue.Id
+                    && part.Strain >= GetBluntFractureThreshold(part.Tissue.Material))
+                && wound.Severity < InjurySeverity.Broken)
+            {
+                wound.Severity = InjurySeverity.Broken;
+            }
+
             if (wound.InitialDamageSource.Type is DamageTypes.Sharp
                 || wound.InitialDamageSource.Type is DamageTypes.Pierce)
             {
@@ -239,6 +252,23 @@ namespace MagusEngine.Core.Entities.Base
         {
             double totalVolumeInjury = bpInjured.Wounds.Sum(w => w.VolumeInjury);
             double injureSeverity = MathMagi.GetPercentageBasedOnMax(totalVolumeInjury, bpInjured.Volume) / 100;
+            var bluntStructuralParts = bpInjured.Wounds
+                .Where(wound => wound.InitialDamageSource.Type is DamageTypes.Blunt)
+                .SelectMany(wound => wound.Parts)
+                .Where(part => part.Tissue.Flags.Contains(TissueFlag.Structural))
+                .ToList();
+            Tissue? loadBearingTissue = GetLoadBearingTissue(
+                bluntStructuralParts.Select(part => part.Tissue)
+            );
+            double accumulatedStructuralFracture = loadBearingTissue is null
+                ? 0
+                : bluntStructuralParts
+                    .Where(part => part.Tissue.Id == loadBearingTissue.Id)
+                    .Sum(part =>
+                    {
+                        double fractureThreshold = GetBluntFractureThreshold(part.Tissue.Material);
+                        return fractureThreshold > 0 ? part.Strain / fractureThreshold : 0;
+                    });
 
             var highestSeverity = InjurySeverity.Bruise;
 
@@ -265,15 +295,43 @@ namespace MagusEngine.Core.Entities.Base
                     break;
             }
 
+            if (accumulatedStructuralFracture >= 1)
+                highestSeverity = InjurySeverity.Broken;
+
             foreach (var wound in bpInjured.Wounds)
             {
                 if (wound.Severity < highestSeverity)
                     wound.Severity = highestSeverity;
             }
+
+            if (highestSeverity >= InjurySeverity.Broken && bpInjured is Limb limb)
+                limb.Broken = true;
+        }
+
+        private static Tissue? GetLoadBearingTissue(IEnumerable<Tissue> tissues)
+        {
+            return tissues
+                .Where(tissue => tissue.Flags.Contains(TissueFlag.Structural))
+                .OrderByDescending(tissue => GetBluntFractureThreshold(tissue.Material))
+                .FirstOrDefault();
+        }
+
+        private static double GetBluntFractureThreshold(Material material)
+        {
+            if (material.ImpactFracture is not int impactFracture
+                || material.ImpactYield is not int impactYield)
+            {
+                return 0;
+            }
+
+            // Matches CalculateBluntDefenseCost with no armor or weapon quality modifiers.
+            return Math.Max(0, (2 * impactFracture - impactYield) * 2.0);
         }
 
         public double GetLimbDamagePercentage(BodyPart bp)
         {
+            if (bp.Wounds.All(i => i.Parts.Any(x => x.WholeTissue)))
+                return 1;
             double totalVolumeInjury = bp.Wounds.Sum(w => w.VolumeInjury);
             return totalVolumeInjury / bp.Volume;
         }
