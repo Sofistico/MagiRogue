@@ -15,8 +15,6 @@ using MagusEngine.Systems;
 using MagusEngine.Utils;
 using SadConsole;
 using SadConsole.Input;
-using SadConsole.Instructions;
-using Color = SadConsole.UI.AdjustableColor;
 
 namespace Diviner
 {
@@ -53,12 +51,6 @@ namespace Diviner
 
         #endregion Managers
 
-        #region Field
-
-        public SadConsole.UI.Colors CustomColors { get; private set; } = null!;
-
-        #endregion Field
-
         #region ConstructorAndInitCode
 
         public UIManager()
@@ -70,8 +62,6 @@ namespace Diviner
         // Initiates the game by means of going to the menu first
         public void InitMainMenu(int gameHeight, int gameWidth, bool beginOnTestMap = false)
         {
-            //SetUpCustomColors();
-
             MainMenu = new MainMenuWindow(gameWidth, gameHeight)
             {
                 IsFocused = true
@@ -203,36 +193,6 @@ namespace Diviner
 
             // Without this, the window will never be visible on screen
             MapWindow.Show();
-        }
-
-        // Build a new coloured theme based on SC's default theme and then set it as the program's
-        // default theme.
-        private void SetUpCustomColors()
-        {
-            // Create a set of default colours that we will modify
-            CustomColors = new SadConsole.UI.Colors();
-
-            // Pick a couple of background colours that we will apply to all consoles.
-            Color backgroundColor = new(CustomColors.Black, "Black");
-
-            // Set background colour for controls consoles and their controls
-            CustomColors.ControlHostBackground = backgroundColor;
-            CustomColors.ControlBackgroundNormal = backgroundColor;
-
-            // Generate background colours for dark and light themes based on
-            // the default background colour.
-            //CustomColors.ControlH = (backgroundColor * 1.3f).FillAlpha();
-            //CustomColors.ControlBackDark = (backgroundColor * 0.7f).FillAlpha();
-
-            // Set a color for currently selected controls. This should always be different from the
-            // background colour.
-            CustomColors.ControlBackgroundSelected = new Color(CustomColors.GrayDark, "Grey");
-
-            // Rebuild all objects' themes with the custom colours we picked above.
-            CustomColors.RebuildAppearances();
-
-            // Now set all of these colours as default for SC's default theme.
-            //SadConsole.UI.Themes.Library.Default.Colors = CustomColors;
         }
 
         public T? GetWindow<T>(WindowTag tag) where T : IWindowTagContract
