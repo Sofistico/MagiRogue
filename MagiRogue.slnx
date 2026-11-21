@@ -1,6 +1,6 @@
 <Solution>
   <Folder Name="/1 - Game/">
-    <Project Path="src/MagiRogue/MagiRogue.csproj" />
+    <Project Path="src/Plato/Plato.csproj" />
   </Folder>
   <Folder Name="/1 - Game/1.1 - Data/">
     <Project Path="src/AccidentalNoiseLibrary/AccidentalNoiseLibrary.csproj" />
@@ -18,7 +18,7 @@
   </Folder>
   <Folder Name="/3 - Test/">
     <Project Path="src/MagiRogue.Test/MagiRogue.Test.csproj">
-      <BuildDependency Project="src/MagiRogue/MagiRogue.csproj" />
+      <BuildDependency Project="src/Plato/Plato.csproj" />
     </Project>
   </Folder>
 </Solution>

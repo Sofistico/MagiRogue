@@ -2,18 +2,18 @@
 
 namespace MagusEngine.Core.Entities.Base
 {
-    public class Memory<T> : IMemory
+    public class MemoryEntity<T> : IMemory
     {
         public Point LastSeen { get; set; }
         public MemoryType MemoryType { get; set; }
         public T? ObjToRemember { get; set; }
         public bool Valid { get; set; }
 
-        public Memory()
+        public MemoryEntity()
         {
         }
 
-        public Memory(Point lastSeen,
+        public MemoryEntity(Point lastSeen,
             MemoryType memoryType,
             T? objToRemember)
         {

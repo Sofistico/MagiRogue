@@ -16,6 +16,7 @@ namespace Arquimedes.Enumerators
         Bar,
         Weapon,
         Armor,
+        Shield,
         Clothing,
         Fuel,
         Food,

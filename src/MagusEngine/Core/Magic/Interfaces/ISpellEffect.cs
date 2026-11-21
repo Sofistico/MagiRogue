@@ -27,6 +27,7 @@ namespace MagusEngine.Core.Magic.Interfaces
         bool IsResistable { get; set; }
         bool IgnoresWall { get; set; }
         string? AnimationId { get; set; }
+        int Precision { get; set; }
 
         void ApplyEffect(Point target, Actor caster, Spell spellCasted);
 

@@ -35,16 +35,6 @@ namespace MagusEngine.Core.Entities
         public double Recovery { get; set; }
         public bool Recovered { get; set; }
 
-        ///// <summary>
-        ///// This 0-100 percentage is related to cumulative damage. In cases where
-        ///// multiple axe hacks are necessary for severing a limb, it must reach 100
-        ///// before severing occurs.In cases where a weapon can't completely penetrate
-        ///// a tissue, it is related to the weapon's penetration number. This percentage
-        ///// heals towards 0 over time.
-        ///// </summary>
-        //public int CurrentPenetrationPercentage { get; set; }
-        //public int MaxPenetrationPercentage { get; set; }
-
         public Wound(DamageType damageSource, List<PartWound> parts)
         {
             InitialDamageSource = damageSource;

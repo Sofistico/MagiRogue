@@ -45,6 +45,8 @@ namespace MagusEngine.Utils
 
         public static double FastRound(double val)
         {
+            if (val == 0)
+                return 0;
             if (val >= 0)
             {
                 return val + 0.5d > 100 ? 100 : val + 0.5d;

@@ -13,7 +13,7 @@ using SadConsole.Configuration;
 using SadConsole.Input;
 using SadConsole.UI.Windows;
 
-namespace MagiRogue
+namespace Plato
 {
     public static class Program
     {

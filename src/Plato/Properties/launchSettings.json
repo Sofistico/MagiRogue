@@ -3,6 +3,7 @@
     "MagiRogue": {
       "commandName": "Project",
       "nativeDebugging": false,
+      "commandLineArgs": "",
       "workingDirectory": "$(ProjectDir)",
       "dotnetRunMessages": true
     },
