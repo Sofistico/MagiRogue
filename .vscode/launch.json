@@ -5,24 +5,24 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "MagiRogue",
+            "name": "Plato",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/src/MagiRogue/bin/Debug/net10.0/MagiRogue.dll",
+            "program": "${workspaceFolder}/src/Plato/bin/Debug/net11.0/Plato.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/src/MagiRogue",
+            "cwd": "${workspaceFolder}/src/Plato",
             "console": "internalConsole",
             "stopAtEntry": false
         },
         {
-            "name": "MagiRogue-TestMap",
+            "name": "Plato-TestMap",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/src/MagiRogue/bin/Debug/net10.0/MagiRogue.dll",
+            "program": "${workspaceFolder}/src/Plato/bin/Debug/net11.0/Plato.dll",
             "args": ["test"],
-            "cwd": "${workspaceFolder}/src/MagiRogue",
+            "cwd": "${workspaceFolder}/src/Plato",
             "console": "internalConsole",
             "stopAtEntry": false
         },
