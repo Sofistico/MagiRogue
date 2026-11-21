@@ -359,7 +359,7 @@ namespace MagusEngine.Core.Entities
         {
             double strengthFactor = Math.Max(0.1, 1.0 - (Body.Strength * 0.01));
             double enduranceFactor = Math.Max(0.5, 1.0 - (Body.Endurance * 0.005));
-            double baseCost = Mass;
+            double baseCost = Mass * 2;
 
             return baseCost * strengthFactor * enduranceFactor;
         }
