@@ -4,6 +4,8 @@ A roguelike using GoRogue and SadConsole
 [![Build and Test](https://github.com/Sofistico/MagiRogue/actions/workflows/dotnet-core.yml/badge.svg)](https://github.com/Sofistico/MagiRogue/actions/workflows/dotnet-core.yml) [![](https://tokei.rs/b1/github/Sofistico/MagiRogue)](https://github.com/XAMPPRocky/tokei)
 
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Sofistico/MagiRogue)](https://github.com/Sofistico/MagiRogue/graphs/contributors)
+
+
 [Discord Server](https://discord.gg/NMzsfMnx2S)
 
 # Description
