@@ -8,6 +8,10 @@ A roguelike using GoRogue and SadConsole
 
 [Discord Server](https://discord.gg/NMzsfMnx2S)
 
+# AI CONTRIBUTION
+
+Refer to [Agents.md](./Agents.md)
+
 # Description
 
 MagiRogue is an immersive 2D grid-based roguelike game set in a world generated with a completely random history, including myths of how the world came to be. As you explore this world, you will encounter deep magic systems where the sky is the limit. From enchanting items to designing spells, every aspect of magic is at your fingertips. Be warned, some spells come with costs aside from the simple mana cost!
